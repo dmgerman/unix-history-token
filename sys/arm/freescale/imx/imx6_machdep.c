@@ -74,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/arm/mpcore_timervar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/freescale/imx/imx6_anatopreg.h>
 end_include
 
@@ -91,7 +103,7 @@ end_include
 
 begin_function
 name|vm_offset_t
-name|initarm_lastaddr
+name|platform_lastaddr
 parameter_list|(
 name|void
 parameter_list|)
@@ -107,28 +119,23 @@ end_function
 
 begin_function
 name|void
-name|initarm_early_init
+name|platform_probe_and_attach
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* XXX - Get rid of this stuff soon. */
-name|boothowto
-operator||=
-name|RB_VERBOSE
-operator||
-name|RB_MULTIPLE
-expr_stmt|;
-name|bootverbose
-operator|=
-literal|1
+comment|/* Inform the MPCore timer driver that its clock is variable. */
+name|arm_tmr_change_frequency
+argument_list|(
+name|ARM_TMR_FREQUENCY_VARIES
+argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
 name|void
-name|initarm_gpio_init
+name|platform_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -137,7 +144,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_late_init
+name|platform_late_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -150,7 +157,7 @@ end_comment
 
 begin_function
 name|int
-name|initarm_devmap_init
+name|platform_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -425,6 +432,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Early putc routine for EARLY_PRINTF support.  To use, add to kernel config:  *   option SOCDEV_PA=0x02000000  *   option SOCDEV_VA=0x02000000  *   option EARLY_PRINTF  * Resist the temptation to change the #if 0 to #ifdef EARLY_PRINTF here. It  * makes sense now, but if multiple SOCs do that it will make early_putc another  * duplicate symbol to be eliminated on the path to a generic kernel.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void  imx6_early_putc(int c) { 	volatile uint32_t * UART_STAT_REG = (uint32_t *)0x02020098; 	volatile uint32_t * UART_TX_REG   = (uint32_t *)0x02020040; 	const uint32_t      UART_TXRDY    = (1<< 3);  	while ((*UART_STAT_REG& UART_TXRDY) == 0) 		continue; 	*UART_TX_REG = c; } early_putc_t *early_putc = imx6_early_putc;
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

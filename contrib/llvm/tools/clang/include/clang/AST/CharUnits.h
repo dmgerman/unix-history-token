@@ -87,12 +87,11 @@ comment|/// of the standard C type, char, on the target architecture. As an opaq
 comment|/// type, CharUnits protects you from accidentally combining operations on
 comment|/// quantities in bit units and character units.
 comment|///
-comment|/// It should be noted that characters and bytes are distinct concepts. Bytes
-comment|/// refer to addressable units of data storage on the target machine, and
-comment|/// characters are members of a set of elements used for the organization,
-comment|/// control, or representation of data. According to C99, bytes are allowed
-comment|/// to exceed characters in size, although currently, clang only supports
-comment|/// architectures where the two are the same size.
+comment|/// In both C and C++, an object of type 'char', 'signed char', or 'unsigned
+comment|/// char' occupies exactly one byte, so 'character unit' and 'byte' refer to
+comment|/// the same quantity of storage. However, we use the term 'character unit'
+comment|/// rather than 'byte' to avoid an implication that a character unit is
+comment|/// exactly 8 bits.
 comment|///
 comment|/// For portability, never assume that a target character is 8 bits wide. Use
 comment|/// CharUnit values wherever you calculate sizes, offsets, or alignments

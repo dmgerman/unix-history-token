@@ -3630,6 +3630,19 @@ name|HAL_OK
 else|:
 name|HAL_ENOTSUPP
 return|;
+case|case
+name|HAL_CAP_DO_MYBEACON
+case|:
+comment|/* Hardware supports filtering my-beacons */
+return|return
+name|pCap
+operator|->
+name|halRxDoMyBeacon
+condition|?
+name|HAL_OK
+else|:
+name|HAL_ENOTSUPP
+return|;
 default|default:
 return|return
 name|HAL_EINVAL

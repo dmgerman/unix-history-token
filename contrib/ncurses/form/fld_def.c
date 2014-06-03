@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fld_def.c,v 1.36 2007/10/13 19:29:58 tom Exp $"
+literal|"$Id: fld_def.c,v 1.40 2012/03/11 00:37:16 tom Exp $"
 argument_list|)
 end_macro
 
@@ -603,13 +603,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|assert
-argument_list|(
+if|if
+condition|(
 name|argp
 operator|!=
 literal|0
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|_nc_Free_Argument
 argument_list|(
 name|typ
@@ -637,6 +637,7 @@ argument_list|(
 name|argp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -861,7 +862,6 @@ operator|->
 name|ref
 operator|--
 expr_stmt|;
-block|}
 name|_nc_Free_Argument
 argument_list|(
 name|field
@@ -879,6 +879,7 @@ name|arg
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1022,6 +1023,10 @@ argument_list|(
 literal|"field %p"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|New_Field
 operator|)
 argument_list|)
@@ -1035,12 +1040,18 @@ name|New_Field
 operator|->
 name|rows
 operator|=
+operator|(
+name|short
+operator|)
 name|rows
 expr_stmt|;
 name|New_Field
 operator|->
 name|cols
 operator|=
+operator|(
+name|short
+operator|)
 name|cols
 expr_stmt|;
 name|New_Field
@@ -1061,12 +1072,18 @@ name|New_Field
 operator|->
 name|frow
 operator|=
+operator|(
+name|short
+operator|)
 name|frow
 expr_stmt|;
 name|New_Field
 operator|->
 name|fcol
 operator|=
+operator|(
+name|short
+operator|)
 name|fcol
 expr_stmt|;
 name|New_Field
@@ -1079,6 +1096,9 @@ name|New_Field
 operator|->
 name|nbuf
 operator|=
+operator|(
+name|short
+operator|)
 name|nbuf
 expr_stmt|;
 name|New_Field
@@ -1306,6 +1326,10 @@ argument_list|(
 literal|"free_field(%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|field
 operator|)
 argument_list|)

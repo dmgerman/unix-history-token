@@ -307,6 +307,7 @@ begin_function_decl
 name|void
 name|addfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -317,6 +318,7 @@ begin_function_decl
 name|void
 name|badcnt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -327,6 +329,7 @@ begin_function_decl
 name|void
 name|badconv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

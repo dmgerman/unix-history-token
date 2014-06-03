@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/JITMemoryManager.h"
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
 begin_include
@@ -102,13 +102,13 @@ comment|///
 comment|/// Any client using this memory manager MUST ensure that section-specific
 comment|/// page permissions have been applied before attempting to execute functions
 comment|/// in the JITed object.  Permissions can be applied either by calling
-comment|/// MCJIT::finalizeObject or by calling SectionMemoryManager::applyPermissions
+comment|/// MCJIT::finalizeObject or by calling SectionMemoryManager::finalizeMemory
 comment|/// directly.  Clients of MCJIT should call MCJIT::finalizeObject.
 name|class
 name|SectionMemoryManager
 range|:
 name|public
-name|JITMemoryManager
+name|RTDyldMemoryManager
 block|{
 name|SectionMemoryManager
 argument_list|(
@@ -151,6 +151,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|,
 argument|unsigned SectionID
+argument_list|,
+argument|StringRef SectionName
 argument_list|)
 block|;
 comment|/// \brief Allocates a memory block of (at least) the given size suitable for
@@ -169,22 +171,25 @@ argument|unsigned Alignment
 argument_list|,
 argument|unsigned SectionID
 argument_list|,
+argument|StringRef SectionName
+argument_list|,
 argument|bool isReadOnly
 argument_list|)
 block|;
-comment|/// \brief Applies section-specific memory permissions.
+comment|/// \brief Update section-specific memory permissions and other attributes.
 comment|///
 comment|/// This method is called when object loading is complete and section page
 comment|/// permissions can be applied.  It is up to the memory manager implementation
 comment|/// to decide whether or not to act on this method.  The memory manager will
 comment|/// typically allocate all sections as read-write and then apply specific
 comment|/// permissions when this method is called.  Code sections cannot be executed
-comment|/// until this function has been called.
+comment|/// until this function has been called.  In addition, any cache coherency
+comment|/// operations needed to reliably use the memory are also performed.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 name|virtual
 name|bool
-name|applyPermissions
+name|finalizeMemory
 argument_list|(
 name|std
 operator|::
@@ -195,35 +200,13 @@ operator|=
 literal|0
 argument_list|)
 block|;
-name|void
-name|registerEHFrames
-argument_list|(
-argument|StringRef SectionData
-argument_list|)
-block|;
-comment|/// This method returns the address of the specified function. As such it is
-comment|/// only useful for resolving library symbols, not code generated symbols.
-comment|///
-comment|/// If \p AbortOnFailure is false and no function with the given name is
-comment|/// found, this function returns a null pointer. Otherwise, it prints a
-comment|/// message to stderr and aborts.
-name|virtual
-name|void
-operator|*
-name|getPointerToNamedFunction
-argument_list|(
-argument|const std::string&Name
-argument_list|,
-argument|bool AbortOnFailure = true
-argument_list|)
-block|;
 comment|/// \brief Invalidate instruction cache for code sections.
 comment|///
 comment|/// Some platforms with separate data cache and instruction cache require
 comment|/// explicit cache flush, otherwise JIT code manipulations (like resolved
 comment|/// relocations) will get to the data cache but not to the instruction cache.
 comment|///
-comment|/// This method is called from applyPermissions.
+comment|/// This method is called from finalizeMemory.
 name|virtual
 name|void
 name|invalidateInstructionCache
@@ -287,228 +270,9 @@ name|RWDataMem
 block|;
 name|MemoryGroup
 name|RODataMem
-block|;
-name|public
-operator|:
-comment|///
-comment|/// Functions below are not used by MCJIT or RuntimeDyld, but must be
-comment|/// implemented because they are declared as pure virtuals in the base class.
-comment|///
-name|virtual
-name|void
-name|setMemoryWritable
-argument_list|()
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;   }
-name|virtual
-name|void
-name|setMemoryExecutable
-argument_list|()
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;   }
-name|virtual
-name|void
-name|setPoisonMemory
-argument_list|(
-argument|bool poison
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;   }
-name|virtual
-name|void
-name|AllocateGOT
-argument_list|()
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;   }
-name|virtual
-name|uint8_t
-operator|*
-name|getGOTBase
-argument_list|()
-specifier|const
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;
-return|return
-literal|0
-return|;
+block|; }
+decl_stmt|;
 block|}
-name|virtual
-name|uint8_t
-operator|*
-name|startFunctionBody
-argument_list|(
-argument|const Function *F
-argument_list|,
-argument|uintptr_t&ActualSize
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|uint8_t
-operator|*
-name|allocateStub
-argument_list|(
-argument|const GlobalValue *F
-argument_list|,
-argument|unsigned StubSize
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|void
-name|endFunctionBody
-argument_list|(
-argument|const Function *F
-argument_list|,
-argument|uint8_t *FunctionStart
-argument_list|,
-argument|uint8_t *FunctionEnd
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;   }
-name|virtual
-name|uint8_t
-operator|*
-name|allocateSpace
-argument_list|(
-argument|intptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|uint8_t
-operator|*
-name|allocateGlobal
-argument_list|(
-argument|uintptr_t Size
-argument_list|,
-argument|unsigned Alignment
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|void
-name|deallocateFunctionBody
-argument_list|(
-argument|void *Body
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;   }
-name|virtual
-name|uint8_t
-operator|*
-name|startExceptionTable
-argument_list|(
-argument|const Function *F
-argument_list|,
-argument|uintptr_t&ActualSize
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
-name|virtual
-name|void
-name|endExceptionTable
-argument_list|(
-argument|const Function *F
-argument_list|,
-argument|uint8_t *TableStart
-argument_list|,
-argument|uint8_t *TableEnd
-argument_list|,
-argument|uint8_t *FrameRegister
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;   }
-name|virtual
-name|void
-name|deallocateExceptionTable
-argument_list|(
-argument|void *ET
-argument_list|)
-block|{
-name|llvm_unreachable
-argument_list|(
-literal|"Unexpected call!"
-argument_list|)
-block|;   }
-expr|}
-block|;  }
 end_decl_stmt
 
 begin_endif

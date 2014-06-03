@@ -119,7 +119,7 @@ name|int
 name|len
 parameter_list|)
 block|{
-name|uint32_t
+name|fdt32_t
 modifier|*
 name|p
 decl_stmt|;

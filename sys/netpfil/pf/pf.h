@@ -12,7 +12,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_NET_PFAR_H_
+name|_NET_PF_H_
 end_define
 
 begin_define

@@ -2687,6 +2687,19 @@ argument_list|,
 name|KM_SLEEP
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|curthread
+operator|->
+name|td_vp_reserv
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"zfs_znode_alloc: getnewvnode without any vnodes reserved"
+operator|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|getnewvnode
@@ -3597,8 +3610,8 @@ operator|->
 name|z_replay
 condition|)
 block|{
-name|err
-operator|=
+name|VERIFY0
+argument_list|(
 name|zap_create_claim_norm
 argument_list|(
 name|zfsvfs
@@ -3619,10 +3632,6 @@ name|bonuslen
 argument_list|,
 name|tx
 argument_list|)
-expr_stmt|;
-name|ASSERT0
-argument_list|(
-name|err
 argument_list|)
 expr_stmt|;
 block|}
@@ -3660,8 +3669,8 @@ operator|->
 name|z_replay
 condition|)
 block|{
-name|err
-operator|=
+name|VERIFY0
+argument_list|(
 name|dmu_object_claim
 argument_list|(
 name|zfsvfs
@@ -3680,10 +3689,6 @@ name|bonuslen
 argument_list|,
 name|tx
 argument_list|)
-expr_stmt|;
-name|ASSERT0
-argument_list|(
-name|err
 argument_list|)
 expr_stmt|;
 block|}
@@ -3710,11 +3715,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|getnewvnode_reserve
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|ZFS_OBJ_HOLD_ENTER
 argument_list|(
 name|zfsvfs
@@ -4794,8 +4794,8 @@ operator|<
 name|ZFS_ACL_VERSION_FUID
 condition|)
 block|{
-name|err
-operator|=
+name|VERIFY0
+argument_list|(
 name|zfs_aclset_common
 argument_list|(
 operator|*
@@ -4809,10 +4809,6 @@ name|cr
 argument_list|,
 name|tx
 argument_list|)
-expr_stmt|;
-name|ASSERT0
-argument_list|(
-name|err
 argument_list|)
 expr_stmt|;
 block|}
@@ -4882,9 +4878,6 @@ name|zfsvfs
 argument_list|,
 name|obj
 argument_list|)
-expr_stmt|;
-name|getnewvnode_drop_reserve
-argument_list|()
 expr_stmt|;
 block|}
 end_function

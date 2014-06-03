@@ -558,9 +558,14 @@ name|cp
 argument_list|,
 literal|"%3d   "
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pc
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -807,6 +812,10 @@ name|cp
 argument_list|,
 literal|"if / while (branch %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pc
 operator|+
 name|c
@@ -814,6 +823,7 @@ operator|.
 name|i
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -823,6 +833,10 @@ name|cp
 argument_list|,
 literal|"until (branch %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pc
 operator|+
 name|c
@@ -830,6 +844,7 @@ operator|.
 name|i
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -856,6 +871,10 @@ name|cp
 argument_list|,
 literal|"repeat (branch %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pc
 operator|+
 name|c
@@ -863,6 +882,7 @@ operator|.
 name|i
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -880,6 +900,10 @@ name|cp
 argument_list|,
 literal|"else (branch %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pc
 operator|+
 name|c
@@ -887,6 +911,7 @@ operator|.
 name|i
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -896,6 +921,10 @@ name|cp
 argument_list|,
 literal|"endof (branch %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pc
 operator|+
 name|c
@@ -903,6 +932,7 @@ operator|.
 name|i
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -921,6 +951,10 @@ name|cp
 argument_list|,
 literal|"of (branch %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pc
 operator|+
 name|c
@@ -928,6 +962,7 @@ operator|.
 name|i
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -946,6 +981,10 @@ name|cp
 argument_list|,
 literal|"?do (leave %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|CELL
 operator|*
@@ -955,6 +994,7 @@ operator|.
 name|p
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -973,6 +1013,10 @@ name|cp
 argument_list|,
 literal|"do (leave %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|CELL
 operator|*
@@ -982,6 +1026,7 @@ operator|.
 name|p
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1000,6 +1045,10 @@ name|cp
 argument_list|,
 literal|"loop (branch %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pc
 operator|+
 name|c
@@ -1007,6 +1056,7 @@ operator|.
 name|i
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1025,6 +1075,10 @@ name|cp
 argument_list|,
 literal|"+loop (branch %d)"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pc
 operator|+
 name|c
@@ -1032,6 +1086,7 @@ operator|.
 name|i
 operator|-
 name|param0
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

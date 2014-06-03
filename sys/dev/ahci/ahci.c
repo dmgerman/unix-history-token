@@ -793,7 +793,7 @@ literal|0x43801002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP600"
+literal|"AMD SB600"
 block|,
 name|AHCI_Q_NOMSI
 block|}
@@ -803,7 +803,7 @@ literal|0x43901002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP700"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -813,7 +813,7 @@ literal|0x43911002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP700"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -823,7 +823,7 @@ literal|0x43921002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP700"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -833,7 +833,7 @@ literal|0x43931002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP700"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -843,7 +843,7 @@ literal|0x43941002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP800"
+literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -853,7 +853,7 @@ literal|0x43951002
 block|,
 literal|0x00
 block|,
-literal|"ATI IXP800"
+literal|"AMD SB8x0/SB9x0"
 block|,
 literal|0
 block|}
@@ -904,6 +904,16 @@ block|,
 literal|0x00
 block|,
 literal|"AMD Hudson-2"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x06111b21
+block|,
+literal|0x00
+block|,
+literal|"ASMedia ASM2106"
 block|,
 literal|0
 block|}
@@ -3114,6 +3124,21 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Ensure it is not a PCI bridge (some vendors use 	 * the same PID and VID in PCI bridge and AHCI cards). 	 */
+if|if
+condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIC_BRIDGE
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* Is this a possible AHCI candidate? */
 if|if
 condition|(

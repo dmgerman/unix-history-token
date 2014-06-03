@@ -362,7 +362,7 @@ comment|/** For #svn_repos_notify_dump_rev_end and #svn_repos_notify_verify_rev_
 name|svn_revnum_t
 name|revision
 decl_stmt|;
-comment|/** For #svn_repos_notify_warning, the warning object. Must be cleared       by the consumer of the notification. */
+comment|/** For #svn_repos_notify_warning, the warning object. */
 specifier|const
 name|char
 modifier|*

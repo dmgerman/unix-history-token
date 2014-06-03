@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2014 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -382,7 +382,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the transmit ring.  *  * Userspace wants to send packets up to the one before ring->cur,  * kernel knows kring->nr_hwcur is the first unsent packet.  *  * Here we push packets out (as many as possible), and possibly  * reclaim buffers from previously completed transmission.  *  * ring->avail is not used on input, but it is updated on return.  *  * The caller (netmap) guarantees that there is only one instance  * running at any time. Any interference with other driver  * methods should be handled by the individual drivers.  */
+comment|/*  * Reconcile kernel and user view of the transmit ring.  *  * All information is in the kring.  * Userspace wants to send packets up to the one before kring->rhead,  * kernel knows kring->nr_hwcur is the first unsent packet.  *  * Here we push packets out (as many as possible), and possibly  * reclaim buffers from previously completed transmission.  *  * The caller (netmap) guarantees that there is only one instance  * running at any time. Any interference with other driver  * methods should be handled by the individual drivers.  */
 end_comment
 
 begin_function
@@ -443,8 +443,6 @@ decl_stmt|;
 comment|/* index into the NIC ring */
 name|u_int
 name|n
-decl_stmt|,
-name|new_slots
 decl_stmt|;
 name|u_int
 specifier|const
@@ -458,15 +456,11 @@ literal|1
 decl_stmt|;
 name|u_int
 specifier|const
-name|cur
+name|head
 init|=
-name|nm_txsync_prologue
-argument_list|(
 name|kring
-argument_list|,
-operator|&
-name|new_slots
-argument_list|)
+operator|->
+name|rhead
 decl_stmt|;
 comment|/* 	 * interrupts on every tx packet are expensive so request 	 * them every half ring, or where NS_REPORT is set 	 */
 name|u_int
@@ -504,19 +498,6 @@ decl_stmt|;
 name|int
 name|reclaim_tx
 decl_stmt|;
-if|if
-condition|(
-name|cur
-operator|>
-name|lim
-condition|)
-comment|/* error checking in nm_txsync_prologue() */
-return|return
-name|netmap_ring_reinit
-argument_list|(
-name|kring
-argument_list|)
-return|;
 name|bus_dmamap_sync
 argument_list|(
 name|txr
@@ -535,7 +516,7 @@ name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * First part: process new packets to send. 	 * nm_i is the current index in the netmap ring, 	 * nic_i is the corresponding index in the NIC ring. 	 * The two numbers differ because upon a *_init() we reset 	 * the NIC ring but leave the netmap ring unchanged. 	 * For the transmit ring, we have 	 * 	 *		nm_i = kring->nr_hwcur 	 *		nic_i = IXGBE_TDT (not tracked in the driver) 	 * and 	 * 		nm_i == (nic_i + kring->nkr_hwofs) % ring_size 	 * 	 * In this driver kring->nkr_hwofs>= 0, but for other 	 * drivers it might be negative as well. 	 */
-comment|/* 	 * If we have packets to send (kring->nr_hwcur != ring->cur) 	 * iterate over the netmap ring, fetch length and update 	 * the corresponding slot in the NIC ring. Some drivers also 	 * need to update the buffer's physical address in the NIC slot 	 * even NS_BUF_CHANGED is not set (PNMB computes the addresses). 	 * 	 * The netmap_reload_map() calls is especially expensive, 	 * even when (as in this case) the tag is 0, so do only 	 * when the buffer has actually changed. 	 * 	 * If possible do not set the report/intr bit on all slots, 	 * but only a few times per ring or when NS_REPORT is set. 	 * 	 * Finally, on 10G and faster drivers, it might be useful 	 * to prefetch the next slot and txr entry. 	 */
+comment|/* 	 * If we have packets to send (kring->nr_hwcur != kring->rhead) 	 * iterate over the netmap ring, fetch length and update 	 * the corresponding slot in the NIC ring. Some drivers also 	 * need to update the buffer's physical address in the NIC slot 	 * even NS_BUF_CHANGED is not set (PNMB computes the addresses). 	 * 	 * The netmap_reload_map() calls is especially expensive, 	 * even when (as in this case) the tag is 0, so do only 	 * when the buffer has actually changed. 	 * 	 * If possible do not set the report/intr bit on all slots, 	 * but only a few times per ring or when NS_REPORT is set. 	 * 	 * Finally, on 10G and faster drivers, it might be useful 	 * to prefetch the next slot and txr entry. 	 */
 name|nm_i
 operator|=
 name|kring
@@ -546,7 +527,7 @@ if|if
 condition|(
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|)
 block|{
 comment|/* we have new packets to send */
@@ -589,7 +570,7 @@ literal|0
 init|;
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|;
 name|n
 operator|++
@@ -824,15 +805,7 @@ name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|cur
-expr_stmt|;
-comment|/* the saved ring->cur */
-comment|/* decrease avail by # of packets sent minus previous ones */
-name|kring
-operator|->
-name|nr_hwavail
-operator|-=
-name|new_slots
+name|head
 expr_stmt|;
 comment|/* synchronize the NIC ring */
 name|bus_dmamap_sync
@@ -890,11 +863,11 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|nm_kr_txempty
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
-operator|>
-literal|0
+argument_list|)
 condition|)
 block|{
 name|reclaim_tx
@@ -1038,32 +1011,6 @@ operator|->
 name|next_to_clean
 condition|)
 block|{
-name|n
-operator|=
-operator|(
-name|nic_i
-operator|+
-name|lim
-operator|+
-literal|1
-operator|)
-operator|-
-name|txr
-operator|->
-name|next_to_clean
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|>
-name|lim
-condition|)
-name|n
-operator|-=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
 comment|/* some tx completed, increment avail */
 name|txr
 operator|->
@@ -1073,44 +1020,25 @@ name|nic_i
 expr_stmt|;
 name|kring
 operator|->
-name|nr_hwavail
-operator|+=
-name|n
-expr_stmt|;
-if|if
-condition|(
+name|nr_hwtail
+operator|=
+name|nm_prev
+argument_list|(
+name|netmap_idx_n2k
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
-operator|>
+argument_list|,
+name|nic_i
+argument_list|)
+argument_list|,
 name|lim
-condition|)
-block|{
-name|RD
-argument_list|(
-literal|5
-argument_list|,
-literal|"bad hwavail %d"
-argument_list|,
-name|kring
-operator|->
-name|nr_hwavail
 argument_list|)
 expr_stmt|;
-return|return
-name|netmap_ring_reinit
-argument_list|(
-name|kring
-argument_list|)
-return|;
-block|}
 block|}
 block|}
 name|nm_txsync_finalize
 argument_list|(
 name|kring
-argument_list|,
-name|cur
 argument_list|)
 expr_stmt|;
 return|return
@@ -1120,7 +1048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the receive ring.  * Same as for the txsync, this routine must be efficient.  * The caller guarantees a single invocations, but races against  * the rest of the driver should be handled here.  *  * When called, userspace has released buffers up to  * ring->cur - ring->reserved (last one excluded).  *  * The last interrupt reported kring->nr_hwavail slots available  * after kring->nr_hwcur.  * We must subtract the newly consumed slots (cur - nr_hwcur)  * from nr_hwavail, make the descriptors available for the next reads,  * and set kring->nr_hwcur = ring->cur and ring->avail = kring->nr_hwavail.  *  * If (flags& NAF_FORCE_READ) also check for incoming packets irrespective  * of whether or not we received an interrupt.  */
+comment|/*  * Reconcile kernel and user view of the receive ring.  * Same as for the txsync, this routine must be efficient.  * The caller guarantees a single invocations, but races against  * the rest of the driver should be handled here.  *  * On call, kring->rhead is the first packet that userspace wants  * to keep, and kring->rcur is the wakeup point.  * The kernel has previously reported packets up to kring->rtail.  *  * If (flags& NAF_FORCE_READ) also check for incoming packets irrespective  * of whether or not we received an interrupt.  */
 end_comment
 
 begin_function
@@ -1181,8 +1109,6 @@ decl_stmt|;
 comment|/* index into the NIC ring */
 name|u_int
 name|n
-decl_stmt|,
-name|resvd
 decl_stmt|;
 name|u_int
 specifier|const
@@ -1196,17 +1122,13 @@ literal|1
 decl_stmt|;
 name|u_int
 specifier|const
-name|cur
+name|head
 init|=
 name|nm_rxsync_prologue
 argument_list|(
 name|kring
-argument_list|,
-operator|&
-name|resvd
 argument_list|)
 decl_stmt|;
-comment|/* cur + res */
 name|int
 name|force_update
 init|=
@@ -1247,7 +1169,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|cur
+name|head
 operator|>
 name|lim
 condition|)
@@ -1277,7 +1199,7 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First part: import newly received packets. 	 * 	 * nm_i is the index of the next free slot in the netmap ring, 	 * nic_i is the index of the next received packet in the NIC ring, 	 * and they may differ in case if_init() has been called while 	 * in netmap mode. For the receive ring we have 	 * 	 *	nm_i = (kring->nr_hwcur + kring->nr_hwavail) % ring_size 	 *	nic_i = rxr->next_to_check; 	 * and 	 *	nm_i == (nic_i + kring->nkr_hwofs) % ring_size 	 * 	 * rxr->next_to_check is set to 0 on a ring reinit 	 */
+comment|/* 	 * First part: import newly received packets. 	 * 	 * nm_i is the index of the next free slot in the netmap ring, 	 * nic_i is the index of the next received packet in the NIC ring, 	 * and they may differ in case if_init() has been called while 	 * in netmap mode. For the receive ring we have 	 * 	 *	nic_i = rxr->next_to_check; 	 *	nm_i = kring->nr_hwtail (previous) 	 * and 	 *	nm_i == (nic_i + kring->nkr_hwofs) % ring_size 	 * 	 * rxr->next_to_check is set to 0 on a ring reinit 	 */
 if|if
 condition|(
 name|netmap_no_pendintr
@@ -1307,6 +1229,7 @@ name|rxr
 operator|->
 name|next_to_check
 expr_stmt|;
+comment|// or also k2n(kring->nr_hwtail)
 name|nm_i
 operator|=
 name|netmap_idx_n2k
@@ -1466,9 +1389,9 @@ name|nic_i
 expr_stmt|;
 name|kring
 operator|->
-name|nr_hwavail
-operator|+=
-name|n
+name|nr_hwtail
+operator|=
+name|nm_i
 expr_stmt|;
 block|}
 name|kring
@@ -1479,7 +1402,7 @@ operator|~
 name|NKR_PENDINTR
 expr_stmt|;
 block|}
-comment|/* 	 * Second part: skip past packets that userspace has released. 	 * (kring->nr_hwcur to ring->cur - ring->reserved excluded), 	 * and make the buffers available for reception. 	 * As usual nm_i is the index in the netmap ring, 	 * nic_i is the index in the NIC ring, and 	 * nm_i == (nic_i + kring->nkr_hwofs) % ring_size 	 */
+comment|/* 	 * Second part: skip past packets that userspace has released. 	 * (kring->nr_hwcur to kring->rhead excluded), 	 * and make the buffers available for reception. 	 * As usual nm_i is the index in the netmap ring, 	 * nic_i is the index in the NIC ring, and 	 * nm_i == (nic_i + kring->nkr_hwofs) % ring_size 	 */
 name|nm_i
 operator|=
 name|kring
@@ -1490,7 +1413,7 @@ if|if
 condition|(
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|)
 block|{
 name|nic_i
@@ -1510,7 +1433,7 @@ literal|0
 init|;
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|;
 name|n
 operator|++
@@ -1666,15 +1589,9 @@ expr_stmt|;
 block|}
 name|kring
 operator|->
-name|nr_hwavail
-operator|-=
-name|n
-expr_stmt|;
-name|kring
-operator|->
 name|nr_hwcur
 operator|=
-name|cur
+name|head
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -1698,17 +1615,12 @@ expr_stmt|;
 comment|/* 		 * IMPORTANT: we must leave one free slot in the ring, 		 * so move nic_i back by one unit 		 */
 name|nic_i
 operator|=
-operator|(
+name|nm_prev
+argument_list|(
 name|nic_i
-operator|==
-literal|0
-operator|)
-condition|?
+argument_list|,
 name|lim
-else|:
-name|nic_i
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
@@ -1729,15 +1641,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* tell userspace that there might be new packets */
-name|ring
-operator|->
-name|avail
-operator|=
+name|nm_rxsync_finalize
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
-operator|-
-name|resvd
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

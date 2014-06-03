@@ -1836,7 +1836,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -1847,7 +1847,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -1881,7 +1881,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2857,7 +2857,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -2868,7 +2868,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -3167,7 +3167,7 @@ name|MCLGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3889,7 +3889,7 @@ name|m_dup
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4281,12 +4281,16 @@ name|ro
 operator|->
 name|ro_rt
 condition|)
+name|counter_u64_add
+argument_list|(
 name|ro
 operator|->
 name|ro_rt
 operator|->
-name|rt_use
-operator|++
+name|rt_pksent
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 * For input packets which are being "fastrouted", they won't 	 * go back through output filtering and miss their chance to get 	 * NAT'd and counted.  Duplicated packets aren't considered to be 	 * part of the normal packet stream, so do not NAT them or pass 	 * them through stateful checking, etc. 	 */
 if|if
@@ -4605,7 +4609,7 @@ name|MGETHDR
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)
@@ -4616,7 +4620,7 @@ name|MGET
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_HEADER
 argument_list|)

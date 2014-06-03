@@ -184,6 +184,12 @@ name|IsTParamCommand
 range|:
 literal|1
 decl_stmt|;
+comment|/// True if this command is \\throws or an alias.
+name|unsigned
+name|IsThrowsCommand
+range|:
+literal|1
+decl_stmt|;
 comment|/// True if this command is \\deprecated or an alias.
 name|unsigned
 name|IsDeprecatedCommand
@@ -359,6 +365,16 @@ literal|"the command should be known"
 argument_list|)
 expr_stmt|;
 block|}
+specifier|const
+name|CommandInfo
+modifier|*
+name|getTypoCorrectCommandInfo
+argument_list|(
+name|StringRef
+name|Typo
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|const
 name|CommandInfo
 modifier|*

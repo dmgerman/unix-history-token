@@ -360,15 +360,12 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// MCRegisterDesc - This record contains all of the information known about
-comment|/// a particular register.  The Overlaps field contains a pointer to a zero
-comment|/// terminated array of registers that this register aliases, starting with
-comment|/// itself. This is needed for architectures like X86 which have AL alias AX
-comment|/// alias EAX. The SubRegs field is a zero terminated array of registers that
-comment|/// are sub-registers of the specific register, e.g. AL, AH are sub-registers of
-comment|/// AX. The SuperRegs field is a zero terminated array of registers that are
-comment|/// super-registers of the specific register, e.g. RAX, EAX, are super-registers
-comment|/// of AX.
+comment|/// MCRegisterDesc - This record contains information about a particular
+comment|/// register.  The SubRegs field is a zero terminated array of registers that
+comment|/// are sub-registers of the specific register, e.g. AL, AH are sub-registers
+comment|/// of AX. The SuperRegs field is a zero terminated array of registers that are
+comment|/// super-registers of the specific register, e.g. RAX, EAX, are
+comment|/// super-registers of AX.
 comment|///
 struct|struct
 name|MCRegisterDesc
@@ -377,10 +374,6 @@ name|uint32_t
 name|Name
 decl_stmt|;
 comment|// Printable name for the reg (for debugging)
-name|uint32_t
-name|Overlaps
-decl_stmt|;
-comment|// Overlapping registers, described above
 name|uint32_t
 name|SubRegs
 decl_stmt|;
@@ -454,6 +447,19 @@ return|;
 block|}
 block|}
 struct|;
+comment|/// SubRegCoveredBits - Emitted by tablegen: bit range covered by a subreg
+comment|/// index, -1 in any being invalid.
+struct|struct
+name|SubRegCoveredBits
+block|{
+name|uint16_t
+name|Offset
+decl_stmt|;
+name|uint16_t
+name|Size
+decl_stmt|;
+block|}
+struct|;
 name|private
 label|:
 specifier|const
@@ -518,6 +524,13 @@ name|SubRegIndices
 decl_stmt|;
 comment|// Pointer to the subreg lookup
 comment|// array.
+specifier|const
+name|SubRegCoveredBits
+modifier|*
+name|SubRegIdxRanges
+decl_stmt|;
+comment|// Pointer to the subreg covered
+comment|// bit ranges array.
 name|unsigned
 name|NumSubRegIndices
 decl_stmt|;
@@ -713,10 +726,6 @@ name|MCSuperRegIterator
 decl_stmt|;
 name|friend
 name|class
-name|MCRegAliasIterator
-decl_stmt|;
-name|friend
-name|class
 name|MCRegUnitIterator
 decl_stmt|;
 name|friend
@@ -782,6 +791,11 @@ name|unsigned
 name|NumIndices
 argument_list|,
 specifier|const
+name|SubRegCoveredBits
+operator|*
+name|SubIdxRanges
+argument_list|,
+specifier|const
 name|uint16_t
 operator|*
 name|RET
@@ -834,6 +848,10 @@ expr_stmt|;
 name|NumSubRegIndices
 operator|=
 name|NumIndices
+expr_stmt|;
+name|SubRegIdxRanges
+operator|=
+name|SubIdxRanges
 expr_stmt|;
 name|RegEncodingTable
 operator|=
@@ -1062,6 +1080,28 @@ name|RegNo
 argument_list|,
 name|unsigned
 name|SubRegNo
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Get the size of the bit range covered by a sub-register index.
+comment|/// If the index isn't continuous, return the sum of the sizes of its parts.
+comment|/// If the index is used to access subregisters of different sizes, return -1.
+name|unsigned
+name|getSubRegIdxSize
+argument_list|(
+name|unsigned
+name|Idx
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Get the offset of the bit range covered by a sub-register index.
+comment|/// If an Offset doesn't make sense (the index isn't continuous, or is used to
+comment|/// access sub-registers at different offsets), return -1.
+name|unsigned
+name|getSubRegIdxOffset
+argument_list|(
+name|unsigned
+name|Idx
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1340,6 +1380,7 @@ comment|//===-------------------------------------------------------------------
 comment|// MCRegisterInfo provides lists of super-registers, sub-registers, and
 comment|// aliasing registers. Use these iterator classes to traverse the lists.
 comment|/// MCSubRegIterator enumerates all sub-registers of Reg.
+comment|/// If IncludeSelf is set, Reg itself is included in the list.
 name|class
 name|MCSubRegIterator
 range|:
@@ -1355,6 +1396,8 @@ argument_list|(
 argument|unsigned Reg
 argument_list|,
 argument|const MCRegisterInfo *MCRI
+argument_list|,
+argument|bool IncludeSelf = false
 argument_list|)
 block|{
 name|init
@@ -1375,16 +1418,24 @@ operator|.
 name|SubRegs
 argument_list|)
 block|;
+comment|// Initially, the iterator points to Reg itself.
+if|if
+condition|(
+operator|!
+name|IncludeSelf
+condition|)
 operator|++
 operator|*
 name|this
-block|;   }
+expr_stmt|;
 block|}
-decl_stmt|;
+expr|}
+block|;
 comment|/// MCSuperRegIterator enumerates all super-registers of Reg.
+comment|/// If IncludeSelf is set, Reg itself is included in the list.
 name|class
 name|MCSuperRegIterator
-range|:
+operator|:
 name|public
 name|MCRegisterInfo
 operator|::
@@ -1393,10 +1444,15 @@ block|{
 name|public
 operator|:
 name|MCSuperRegIterator
+argument_list|()
+block|{}
+name|MCSuperRegIterator
 argument_list|(
 argument|unsigned Reg
 argument_list|,
 argument|const MCRegisterInfo *MCRI
+argument_list|,
+argument|bool IncludeSelf = false
 argument_list|)
 block|{
 name|init
@@ -1415,51 +1471,6 @@ name|Reg
 argument_list|)
 operator|.
 name|SuperRegs
-argument_list|)
-block|;
-operator|++
-operator|*
-name|this
-block|;   }
-block|}
-decl_stmt|;
-comment|/// MCRegAliasIterator enumerates all registers aliasing Reg.
-comment|/// If IncludeSelf is set, Reg itself is included in the list.
-name|class
-name|MCRegAliasIterator
-range|:
-name|public
-name|MCRegisterInfo
-operator|::
-name|DiffListIterator
-block|{
-name|public
-operator|:
-name|MCRegAliasIterator
-argument_list|(
-argument|unsigned Reg
-argument_list|,
-argument|const MCRegisterInfo *MCRI
-argument_list|,
-argument|bool IncludeSelf
-argument_list|)
-block|{
-name|init
-argument_list|(
-name|Reg
-argument_list|,
-name|MCRI
-operator|->
-name|DiffLists
-operator|+
-name|MCRI
-operator|->
-name|get
-argument_list|(
-name|Reg
-argument_list|)
-operator|.
-name|Overlaps
 argument_list|)
 block|;
 comment|// Initially, the iterator points to Reg itself.
@@ -1535,7 +1546,7 @@ comment|// MCRegUnitIterator enumerates a list of register units for Reg. The li
 comment|// in ascending numerical order.
 name|class
 name|MCRegUnitIterator
-range|:
+operator|:
 name|public
 name|MCRegisterInfo
 operator|::
@@ -1545,6 +1556,9 @@ name|public
 operator|:
 comment|/// MCRegUnitIterator - Create an iterator that traverses the register units
 comment|/// in Reg.
+name|MCRegUnitIterator
+argument_list|()
+block|{}
 name|MCRegUnitIterator
 argument_list|(
 argument|unsigned Reg
@@ -1609,15 +1623,13 @@ name|advance
 argument_list|()
 block|;   }
 block|}
-decl_stmt|;
+block|;
 comment|// Each register unit has one or two root registers. The complete set of
 comment|// registers containing a register unit is the union of the roots and their
 comment|// super-registers. All registers aliasing Unit can be visited like this:
 comment|//
 comment|//   for (MCRegUnitRootIterator RI(Unit, MCRI); RI.isValid(); ++RI) {
-comment|//     unsigned Root = *RI;
-comment|//     visit(Root);
-comment|//     for (MCSuperRegIterator SI(Root, MCRI); SI.isValid(); ++SI)
+comment|//     for (MCSuperRegIterator SI(*RI, MCRI, true); SI.isValid(); ++SI)
 comment|//       visit(*SI);
 comment|//    }
 comment|/// MCRegUnitRootIterator enumerates the root registers of a register unit.
@@ -1626,12 +1638,25 @@ name|MCRegUnitRootIterator
 block|{
 name|uint16_t
 name|Reg0
-decl_stmt|;
+block|;
 name|uint16_t
 name|Reg1
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
+name|MCRegUnitRootIterator
+argument_list|()
+operator|:
+name|Reg0
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Reg1
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 name|MCRegUnitRootIterator
 argument_list|(
 argument|unsigned RegUnit
@@ -1650,7 +1675,7 @@ argument_list|()
 operator|&&
 literal|"Invalid register unit"
 argument_list|)
-expr_stmt|;
+block|;
 name|Reg0
 operator|=
 name|MCRI
@@ -1662,7 +1687,7 @@ index|]
 index|[
 literal|0
 index|]
-expr_stmt|;
+block|;
 name|Reg1
 operator|=
 name|MCRI
@@ -1674,8 +1699,7 @@ index|]
 index|[
 literal|1
 index|]
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Dereference to get the current root register.
 name|unsigned
 name|operator
@@ -1721,9 +1745,290 @@ name|Reg1
 operator|=
 literal|0
 block|;   }
+expr|}
+block|;
+comment|/// MCRegAliasIterator enumerates all registers aliasing Reg.  If IncludeSelf is
+comment|/// set, Reg itself is included in the list.  This iterator does not guarantee
+comment|/// any ordering or that entries are unique.
+name|class
+name|MCRegAliasIterator
+block|{
+name|private
+operator|:
+name|unsigned
+name|Reg
+block|;
+specifier|const
+name|MCRegisterInfo
+operator|*
+name|MCRI
+block|;
+name|bool
+name|IncludeSelf
+block|;
+name|MCRegUnitIterator
+name|RI
+block|;
+name|MCRegUnitRootIterator
+name|RRI
+block|;
+name|MCSuperRegIterator
+name|SI
+block|;
+name|public
+operator|:
+name|MCRegAliasIterator
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const MCRegisterInfo *MCRI
+argument_list|,
+argument|bool IncludeSelf
+argument_list|)
+operator|:
+name|Reg
+argument_list|(
+name|Reg
+argument_list|)
+block|,
+name|MCRI
+argument_list|(
+name|MCRI
+argument_list|)
+block|,
+name|IncludeSelf
+argument_list|(
+argument|IncludeSelf
+argument_list|)
+block|{
+comment|// Initialize the iterators.
+for|for
+control|(
+name|RI
+operator|=
+name|MCRegUnitIterator
+argument_list|(
+name|Reg
+argument_list|,
+name|MCRI
+argument_list|)
+init|;
+name|RI
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|RI
+control|)
+block|{
+for|for
+control|(
+name|RRI
+operator|=
+name|MCRegUnitRootIterator
+argument_list|(
+operator|*
+name|RI
+argument_list|,
+name|MCRI
+argument_list|)
+init|;
+name|RRI
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|RRI
+control|)
+block|{
+for|for
+control|(
+name|SI
+operator|=
+name|MCSuperRegIterator
+argument_list|(
+operator|*
+name|RRI
+argument_list|,
+name|MCRI
+argument_list|,
+name|true
+argument_list|)
+init|;
+name|SI
+operator|.
+name|isValid
+argument_list|()
+condition|;
+operator|++
+name|SI
+control|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+operator|!
+name|IncludeSelf
+operator|&&
+name|Reg
+operator|==
+operator|*
+name|SI
+operator|)
+condition|)
+return|return;
 block|}
-empty_stmt|;
 block|}
+block|}
+block|}
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RI
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|SI
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"Cannot dereference an invalid iterator."
+argument_list|)
+block|;
+return|return
+operator|*
+name|SI
+return|;
+block|}
+name|void
+name|advance
+argument_list|()
+block|{
+comment|// Assuming SI is valid.
+operator|++
+name|SI
+block|;
+if|if
+condition|(
+name|SI
+operator|.
+name|isValid
+argument_list|()
+condition|)
+return|return;
+operator|++
+name|RRI
+block|;
+if|if
+condition|(
+name|RRI
+operator|.
+name|isValid
+argument_list|()
+condition|)
+block|{
+name|SI
+operator|=
+name|MCSuperRegIterator
+argument_list|(
+operator|*
+name|RRI
+argument_list|,
+name|MCRI
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+operator|++
+name|RI
+expr_stmt|;
+if|if
+condition|(
+name|RI
+operator|.
+name|isValid
+argument_list|()
+condition|)
+block|{
+name|RRI
+operator|=
+name|MCRegUnitRootIterator
+argument_list|(
+operator|*
+name|RI
+argument_list|,
+name|MCRI
+argument_list|)
+expr_stmt|;
+name|SI
+operator|=
+name|MCSuperRegIterator
+argument_list|(
+operator|*
+name|RRI
+argument_list|,
+name|MCRI
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|void
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+operator|&&
+literal|"Cannot move off the end of the list."
+argument_list|)
+block|;
+do|do
+name|advance
+argument_list|()
+expr_stmt|;
+do|while
+condition|(
+operator|!
+name|IncludeSelf
+operator|&&
+name|isValid
+argument_list|()
+operator|&&
+operator|*
+name|SI
+operator|==
+name|Reg
+condition|)
+do|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

@@ -19,12 +19,6 @@ directive|define
 name|_MACHINE_PSL_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/intr.h>
-end_include
-
 begin_comment
 comment|/*  * These are the different SPL states  *  * Each state has an interrupt mask associated with it which  * indicate which interrupts are allowed.  */
 end_comment

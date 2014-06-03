@@ -136,7 +136,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -245,6 +251,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|int
 name|mca_count
 decl_stmt|;
@@ -2989,7 +2996,6 @@ argument_list|(
 expr|struct
 name|cmc_state
 operator|*
-operator|*
 argument_list|)
 argument_list|,
 name|M_MCA
@@ -3180,6 +3186,13 @@ literal|"count"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|mca_count
 argument_list|,
@@ -4009,6 +4022,8 @@ name|uint64_t
 name|mcg_status
 decl_stmt|;
 name|int
+name|old_count
+decl_stmt|,
 name|recoverable
 decl_stmt|;
 if|if
@@ -4050,6 +4065,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Scan the banks and check for any non-recoverable errors. */
+name|old_count
+operator|=
+name|mca_count
+expr_stmt|;
 name|recoverable
 operator|=
 name|mca_scan
@@ -4077,6 +4096,28 @@ name|recoverable
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|recoverable
+condition|)
+block|{
+comment|/* 		 * Wait for at least one error to be logged before 		 * panic'ing.  Some errors will assert a machine check 		 * on all CPUs, but only certain CPUs will find a valid 		 * bank to log. 		 */
+while|while
+condition|(
+name|mca_count
+operator|==
+name|old_count
+condition|)
+name|cpu_spinwait
+argument_list|()
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"Unrecoverable machine check exception"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Clear MCIP. */
 name|wrmsr
 argument_list|(
@@ -4086,16 +4127,6 @@ name|mcg_status
 operator|&
 operator|~
 name|MCG_STATUS_MCIP
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|recoverable
-condition|)
-name|panic
-argument_list|(
-literal|"Unrecoverable machine check exception"
 argument_list|)
 expr_stmt|;
 block|}

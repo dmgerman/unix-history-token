@@ -1209,7 +1209,9 @@ literal|2
 operator|+
 literal|1
 index|]
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|char
 name|bpass
 index|[
 literal|64

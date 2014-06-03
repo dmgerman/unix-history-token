@@ -963,13 +963,13 @@ name|printf
 argument_list|(
 literal|"avail memory = %lu (%lu MB)\n"
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|*
 name|PAGE_SIZE
 argument_list|,
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|/

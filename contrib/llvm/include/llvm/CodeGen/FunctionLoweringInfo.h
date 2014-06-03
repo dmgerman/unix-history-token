@@ -170,6 +170,9 @@ name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
+name|SelectionDAG
+decl_stmt|;
+name|class
 name|TargetLowering
 decl_stmt|;
 name|class
@@ -182,13 +185,13 @@ comment|///
 name|class
 name|FunctionLoweringInfo
 block|{
+specifier|const
+name|TargetMachine
+modifier|&
+name|TM
+decl_stmt|;
 name|public
 label|:
-specifier|const
-name|TargetLowering
-modifier|&
-name|TLI
-decl_stmt|;
 specifier|const
 name|Function
 modifier|*
@@ -410,29 +413,38 @@ name|ExceptionSelectorVirtReg
 decl_stmt|;
 name|explicit
 name|FunctionLoweringInfo
-parameter_list|(
+argument_list|(
 specifier|const
-name|TargetLowering
-modifier|&
-name|TLI
-parameter_list|)
-function_decl|;
+name|TargetMachine
+operator|&
+name|TM
+argument_list|)
+operator|:
+name|TM
+argument_list|(
+argument|TM
+argument_list|)
+block|{}
 comment|/// set - Initialize this FunctionLoweringInfo with the given Function
 comment|/// and its associated MachineFunction.
 comment|///
 name|void
 name|set
-parameter_list|(
+argument_list|(
 specifier|const
 name|Function
-modifier|&
+operator|&
 name|Fn
-parameter_list|,
+argument_list|,
 name|MachineFunction
-modifier|&
+operator|&
 name|MF
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SelectionDAG
+operator|*
+name|DAG
+argument_list|)
+expr_stmt|;
 comment|/// clear - Clear out all the function-specific state. This returns this
 comment|/// FunctionLoweringInfo to an empty state, ready to be used for a
 comment|/// different function.

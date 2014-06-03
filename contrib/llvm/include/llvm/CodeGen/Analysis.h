@@ -112,6 +112,9 @@ name|class
 name|TargetLowering
 decl_stmt|;
 name|class
+name|TargetLoweringBase
+decl_stmt|;
+name|class
 name|SDNode
 decl_stmt|;
 name|class
@@ -301,6 +304,33 @@ name|CS
 parameter_list|,
 specifier|const
 name|TargetLowering
+modifier|&
+name|TLI
+parameter_list|)
+function_decl|;
+comment|/// Test if given that the input instruction is in the tail call position if the
+comment|/// return type or any attributes of the function will inhibit tail call
+comment|/// optimization.
+name|bool
+name|returnTypeIsEligibleForTailCall
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|ReturnInst
+modifier|*
+name|Ret
+parameter_list|,
+specifier|const
+name|TargetLoweringBase
 modifier|&
 name|TLI
 parameter_list|)

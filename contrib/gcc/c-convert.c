@@ -169,6 +169,8 @@ block|{
 name|error
 argument_list|(
 name|invalid_conv_diag
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 return|return
@@ -320,6 +322,25 @@ name|e
 argument_list|)
 argument_list|)
 return|;
+comment|/* APPLE LOCAL begin blocks (C++ ck) */
+if|if
+condition|(
+name|code
+operator|==
+name|BLOCK_POINTER_TYPE
+condition|)
+return|return
+name|fold
+argument_list|(
+name|convert_to_block_pointer
+argument_list|(
+name|type
+argument_list|,
+name|e
+argument_list|)
+argument_list|)
+return|;
+comment|/* APPLE LOCAL end blocks (C++ ck) */
 if|if
 condition|(
 name|code

@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/DataFormatters/FormatNavigator.h"
+file|"lldb/DataFormatters/FormattersContainer.h"
 end_include
 
 begin_include
@@ -151,7 +151,7 @@ argument_list|()
 expr_stmt|;
 name|NamedSummariesMap
 modifier|&
-name|GetNamedSummaryNavigator
+name|GetNamedSummaryContainer
 parameter_list|()
 block|{
 return|return

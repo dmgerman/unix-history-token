@@ -111,6 +111,13 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 block|;
+name|unsigned
+name|getMSACtrlReg
+argument_list|(
+argument|const SDValue RegIdx
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|replaceUsesWithZeroReg
 argument_list|(
@@ -139,7 +146,7 @@ argument|SDNode *N
 argument_list|,
 argument|unsigned Opc
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|EVT Ty
 argument_list|,
@@ -158,7 +165,7 @@ argument|SDValue InFlag
 argument_list|,
 argument|SDValue CmpLHS
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SDNode *Node
 argument_list|)
@@ -167,6 +174,18 @@ block|;
 name|virtual
 name|bool
 name|selectAddrRegImm
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|selectAddrRegReg
 argument_list|(
 argument|SDValue Addr
 argument_list|,
@@ -197,6 +216,191 @@ argument_list|,
 argument|SDValue&Base
 argument_list|,
 argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|selectAddrRegImm12
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|selectIntAddrMM
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats.
+name|virtual
+name|bool
+name|selectVSplat
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|APInt&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value fits in a given integer.
+name|virtual
+name|bool
+name|selectVSplatCommon
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|,
+argument|bool Signed
+argument_list|,
+argument|unsigned ImmBitSize
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value fits in a uimm1.
+name|virtual
+name|bool
+name|selectVSplatUimm1
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value fits in a uimm2.
+name|virtual
+name|bool
+name|selectVSplatUimm2
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value fits in a uimm3.
+name|virtual
+name|bool
+name|selectVSplatUimm3
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value fits in a uimm4.
+name|virtual
+name|bool
+name|selectVSplatUimm4
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value fits in a uimm5.
+name|virtual
+name|bool
+name|selectVSplatUimm5
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value fits in a uimm6.
+name|virtual
+name|bool
+name|selectVSplatUimm6
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value fits in a uimm8.
+name|virtual
+name|bool
+name|selectVSplatUimm8
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value fits in a simm5.
+name|virtual
+name|bool
+name|selectVSplatSimm5
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value is a power of 2.
+name|virtual
+name|bool
+name|selectVSplatUimmPow2
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value is the inverse of a
+comment|/// power of 2.
+name|virtual
+name|bool
+name|selectVSplatUimmInvPow2
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value is a run of set bits
+comment|/// ending at the most significant bit
+name|virtual
+name|bool
+name|selectVSplatMaskL
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Select constant vector splats whose value is a run of set bits
+comment|/// starting at bit zero.
+name|virtual
+name|bool
+name|selectVSplatMaskR
+argument_list|(
+argument|SDValue N
+argument_list|,
+argument|SDValue&Imm
 argument_list|)
 specifier|const
 block|;

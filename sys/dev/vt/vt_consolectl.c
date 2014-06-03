@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/consio.h>
 end_include
 
@@ -156,6 +150,9 @@ operator|)
 return|;
 block|}
 default|default:
+ifdef|#
+directive|ifdef
+name|VT_CONSOLECTL_DEBUG
 name|printf
 argument_list|(
 literal|"consolectl: unknown ioctl: %c:%lx\n"
@@ -174,6 +171,8 @@ name|cmd
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOIOCTL

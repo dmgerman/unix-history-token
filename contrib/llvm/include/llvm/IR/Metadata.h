@@ -96,25 +96,11 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Constant
-decl_stmt|;
-name|class
-name|Instruction
-decl_stmt|;
-name|class
 name|LLVMContext
 decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -126,6 +112,19 @@ operator|>
 name|class
 name|SymbolTableListTraits
 expr_stmt|;
+name|enum
+name|LLVMConstants
+name|LLVM_ENUM_INT_TYPE
+parameter_list|(
+name|uint32_t
+parameter_list|)
+block|{
+name|DEBUG_METADATA_VERSION
+operator|=
+literal|1
+comment|// Current debug info version number.
+block|}
+empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// MDString - a single uniqued string.
 comment|/// These are used to efficiently contain a byte sequence for metadata.
@@ -537,6 +536,7 @@ name|unsigned
 name|i
 argument_list|)
 decl|const
+name|LLVM_READONLY
 decl_stmt|;
 comment|/// getNumOperands - Return number of MDNode operands.
 name|unsigned
@@ -607,6 +607,12 @@ operator|==
 name|MDNodeVal
 return|;
 block|}
+comment|/// Check whether MDNode is a vtable access.
+name|bool
+name|isTBAAVtableAccess
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Methods for metadata merging.
 specifier|static
 name|MDNode

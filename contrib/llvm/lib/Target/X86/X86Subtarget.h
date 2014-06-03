@@ -163,6 +163,8 @@ block|,
 name|AVX
 block|,
 name|AVX2
+block|,
+name|AVX512F
 block|}
 block|;    enum
 name|X863DNowEnum
@@ -179,6 +181,8 @@ block|{
 name|Others
 block|,
 name|IntelAtom
+block|,
+name|IntelSLM
 block|}
 block|;
 comment|/// X86ProcFamily - X86 processor family: Intel Atom, and others
@@ -240,6 +244,10 @@ comment|/// HasXOP - Target has XOP instructions
 name|bool
 name|HasXOP
 block|;
+comment|/// HasTBM - Target has TBM instructions.
+name|bool
+name|HasTBM
+block|;
 comment|/// HasMOVBE - True if the processor has the MOVBE instruction.
 name|bool
 name|HasMOVBE
@@ -279,6 +287,10 @@ block|;
 comment|/// HasADX - Processor has ADX instructions.
 name|bool
 name|HasADX
+block|;
+comment|/// HasSHA - Processor has SHA instructions.
+name|bool
+name|HasSHA
 block|;
 comment|/// HasPRFCHW - Processor has PRFCHW instructions.
 name|bool
@@ -334,6 +346,18 @@ comment|/// LEAUsesAG - True if the LEA instruction inputs have to be ready at
 comment|///             address generation (AG) time.
 name|bool
 name|LEAUsesAG
+block|;
+comment|/// Processor has AVX-512 PreFetch Instructions
+name|bool
+name|HasPFI
+block|;
+comment|/// Processor has AVX-512 Exponential and Reciprocal Instructions
+name|bool
+name|HasERI
+block|;
+comment|/// Processor has AVX-512 Conflict Detection Instructions
+name|bool
+name|HasCDI
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -629,6 +653,17 @@ name|AVX2
 return|;
 block|}
 name|bool
+name|hasAVX512
+argument_list|()
+specifier|const
+block|{
+return|return
+name|X86SSELevel
+operator|>=
+name|AVX512F
+return|;
+block|}
+name|bool
 name|hasFp256
 argument_list|()
 specifier|const
@@ -738,6 +773,15 @@ name|HasXOP
 return|;
 block|}
 name|bool
+name|hasTBM
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasTBM
+return|;
+block|}
+name|bool
 name|hasMOVBE
 argument_list|()
 specifier|const
@@ -825,6 +869,15 @@ specifier|const
 block|{
 return|return
 name|HasADX
+return|;
+block|}
+name|bool
+name|hasSHA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSHA
 return|;
 block|}
 name|bool
@@ -927,6 +980,33 @@ name|LEAUsesAG
 return|;
 block|}
 name|bool
+name|hasCDI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCDI
+return|;
+block|}
+name|bool
+name|hasPFI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasPFI
+return|;
+block|}
+name|bool
+name|hasERI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasERI
+return|;
+block|}
+name|bool
 name|isAtom
 argument_list|()
 specifier|const
@@ -1023,12 +1103,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSLinux
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Linux
 return|;
 block|}
 name|bool
@@ -1039,12 +1115,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSNaCl
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|NaCl
 return|;
 block|}
 name|bool
@@ -1170,11 +1242,22 @@ argument_list|()
 return|;
 block|}
 name|bool
+name|isOSWindows
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSWindows
+argument_list|()
+return|;
+block|}
+name|bool
 name|isTargetWin64
 argument_list|()
 specifier|const
 block|{
-comment|// FIXME: x86_64-cygwin has not been released yet.
 return|return
 name|In64BitMode
 operator|&&
@@ -1189,14 +1272,12 @@ name|isTargetWin32
 argument_list|()
 specifier|const
 block|{
-comment|// FIXME: Cygwin is included for isTargetWin64 -- should it be included
-comment|// here too?
 return|return
 operator|!
 name|In64BitMode
 operator|&&
 operator|(
-name|isTargetMingw
+name|isTargetCygMing
 argument_list|()
 operator|||
 name|isTargetWindows
@@ -1364,6 +1445,17 @@ name|hasSinCos
 argument_list|()
 specifier|const
 block|;
+comment|/// Enable the MachineScheduler pass for all X86 subtargets.
+name|bool
+name|enableMachineScheduler
+argument_list|()
+specifier|const
+name|LLVM_OVERRIDE
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// enablePostRAScheduler - run for Atom optimization.
 name|bool
 name|enablePostRAScheduler

@@ -1888,12 +1888,7 @@ condition|(
 name|error
 operator|!=
 literal|0
-condition|)
-goto|goto
-name|senderr
-goto|;
-if|if
-condition|(
+operator|||
 name|m
 operator|==
 name|NULL
@@ -1901,6 +1896,7 @@ condition|)
 goto|goto
 name|freecopy
 goto|;
+comment|/* consumed by filter */
 name|ip6
 operator|=
 name|mtod
@@ -2291,8 +2287,6 @@ name|freecopy
 goto|;
 block|}
 block|}
-name|senderr
-label|:
 if|if
 condition|(
 name|mcopy

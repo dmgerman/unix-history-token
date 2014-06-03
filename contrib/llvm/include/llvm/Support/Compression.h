@@ -159,6 +159,13 @@ name|size_t
 name|UncompressedSize
 argument_list|)
 decl_stmt|;
+name|uint32_t
+name|crc32
+parameter_list|(
+name|StringRef
+name|Buffer
+parameter_list|)
+function_decl|;
 block|}
 comment|// End of namespace zlib
 block|}

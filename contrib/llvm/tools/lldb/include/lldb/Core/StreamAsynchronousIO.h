@@ -55,12 +55,6 @@ directive|include
 file|"lldb/Core/Stream.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lldb/Core/StreamString.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -108,7 +102,9 @@ block|;
 name|uint32_t
 name|m_broadcast_event_type
 block|;
-name|StreamString
+name|std
+operator|::
+name|string
 name|m_accumulated_data
 block|; }
 decl_stmt|;

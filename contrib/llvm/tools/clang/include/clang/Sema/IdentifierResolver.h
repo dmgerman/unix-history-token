@@ -182,21 +182,6 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-comment|/// Replaces the Old declaration with the New declaration. If the
-comment|/// replacement is successful, returns true. If the old
-comment|/// declaration was not found, returns false.
-name|bool
-name|ReplaceDecl
-parameter_list|(
-name|NamedDecl
-modifier|*
-name|Old
-parameter_list|,
-name|NamedDecl
-modifier|*
-name|New
-parameter_list|)
-function_decl|;
 comment|/// \brief Insert the given declaration at the given position in the list.
 name|void
 name|InsertDecl
@@ -583,21 +568,6 @@ parameter_list|(
 name|NamedDecl
 modifier|*
 name|D
-parameter_list|)
-function_decl|;
-comment|/// Replace the decl Old with the new declaration New on its
-comment|/// identifier chain. Returns true if the old declaration was found
-comment|/// (and, therefore, replaced).
-name|bool
-name|ReplaceDecl
-parameter_list|(
-name|NamedDecl
-modifier|*
-name|Old
-parameter_list|,
-name|NamedDecl
-modifier|*
-name|New
 parameter_list|)
 function_decl|;
 comment|/// \brief Insert the given declaration after the given iterator

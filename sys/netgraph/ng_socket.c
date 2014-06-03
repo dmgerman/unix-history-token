@@ -1231,7 +1231,7 @@ name|ng_package_msg
 argument_list|(
 name|msg
 argument_list|,
-name|M_WAITOK
+name|NG_WAITOK
 argument_list|)
 expr_stmt|;
 if|if

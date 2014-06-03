@@ -69,6 +69,23 @@ decl_stmt|;
 name|class
 name|Function
 decl_stmt|;
+name|class
+name|GlobalValue
+decl_stmt|;
+name|class
+name|GlobalVariable
+decl_stmt|;
+name|template
+operator|<
+name|class
+name|PtrType
+operator|,
+name|unsigned
+name|SmallSize
+operator|>
+name|class
+name|SmallPtrSet
+expr_stmt|;
 comment|/// Append F to the list of global ctors of module M with the given Priority.
 comment|/// This wraps the function in the appropriate structure and stores it along
 comment|/// side other global constructors. For details see
@@ -104,6 +121,30 @@ name|int
 name|Priority
 parameter_list|)
 function_decl|;
+comment|/// \brief Given "llvm.used" or "llvm.compiler.used" as a global name, collect
+comment|/// the initializer elements of that global in Set and return the global itself.
+name|GlobalVariable
+modifier|*
+name|collectUsedGlobalVariables
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|,
+name|SmallPtrSet
+operator|<
+name|GlobalValue
+operator|*
+argument_list|,
+literal|8
+operator|>
+operator|&
+name|Set
+argument_list|,
+name|bool
+name|CompilerUsed
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

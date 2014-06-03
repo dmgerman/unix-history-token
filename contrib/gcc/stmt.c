@@ -554,6 +554,26 @@ init|=
 name|gen_label_rtx
 argument_list|()
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|unsigned
+name|align
+init|=
+name|DECL_ALIGN_UNIT
+argument_list|(
+name|label
+argument_list|)
+decl_stmt|;
+name|int
+name|align_log2
+init|=
+name|exact_log2
+argument_list|(
+name|align
+argument_list|)
+decl_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|SET_DECL_RTL
 argument_list|(
 name|label
@@ -580,7 +600,31 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+if|if
+condition|(
+name|align_log2
+operator|>=
+literal|0
+operator|&&
+name|align_log2
+operator|<=
+literal|0xFF
+condition|)
+name|SET_LABEL_ALIGN
+argument_list|(
+name|r
+argument_list|,
+name|align_log2
+argument_list|,
+name|align
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\     }
 return|return
 name|DECL_RTL
 argument_list|(
@@ -748,7 +792,7 @@ comment|/* Handle goto statements and the labels that they can go to.  */
 end_comment
 
 begin_comment
-comment|/* Specify the location in the RTL code of a label LABEL,    which is a LABEL_DECL tree node.     This is used for the kind of label that the user can jump to with a    goto statement, and for alternatives of a switch or case statement.    RTL labels generated for loops and conditionals don't go through here;    they are generated directly at the RTL level, by other functions below.     Note that this has nothing to do with defining label *names*.    Languages vary in how they do that and what that even means.  */
+comment|/* Specify the location in the RTL code of a label LABEL,    which is a LABEL_DECL tree node.     APPLE LOCAL begin for-fsf-4_4 3274130 5295549    This is used for those labels created by the front-end that survive    through CFG generation, including all user labels.  (Some labels    are removed by cleanup_dead_labels in tree-cfg.c.)     APPLE LOCAL end for-fsf-4_4 3274130 5295549    Note that this has nothing to do with defining label *names*.    Languages vary in how they do that and what that even means.  */
 end_comment
 
 begin_function

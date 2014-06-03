@@ -567,14 +567,14 @@ value|1
 end_define
 
 begin_comment
-comment|/*    The following #defines are hard-coded for a maximum text    resolution corresponding to a maximum framebuffer    resolution of 1600x1200 with an 8x8 font... */
+comment|/*    The following #defines are hard-coded for a maximum text    resolution corresponding to a maximum framebuffer    resolution of 1920x1200 with an 8x8 font... */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|COL
-value|200
+value|240
 end_define
 
 begin_define

@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_xtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/efi.h>
 end_include
 
 begin_include
@@ -314,12 +326,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/efi.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/elf.h>
 end_include
 
@@ -333,6 +339,12 @@ begin_include
 include|#
 directive|include
 file|<machine/intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/kdb.h>
 end_include
 
 begin_include
@@ -553,6 +565,14 @@ name|int
 name|cold
 init|=
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|unmapped_buf_allowed
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -798,20 +818,6 @@ name|kva_md_info
 name|kmi
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|Mhz
-value|1000000L
-end_define
-
-begin_define
-define|#
-directive|define
-name|Ghz
-value|(1000L*Mhz)
-end_define
 
 begin_function
 specifier|static
@@ -1216,14 +1222,14 @@ literal|"avail memory = %ld (%ld MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
@@ -2439,6 +2445,53 @@ end_function
 
 begin_function
 name|void
+name|kdb_cpu_trap
+parameter_list|(
+name|int
+name|vector
+parameter_list|,
+name|int
+name|code
+name|__unused
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_xtrace_stop
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+asm|__asm __volatile("flushrs;;");
+comment|/* Restart after the break instruction. */
+if|if
+condition|(
+name|vector
+operator|==
+name|IA64_VEC_BREAK
+operator|&&
+name|kdb_frame
+operator|->
+name|tf_special
+operator|.
+name|ifa
+operator|==
+name|IA64_FIXED_BREAK
+condition|)
+name|kdb_frame
+operator|->
+name|tf_special
+operator|.
+name|psr
+operator|+=
+name|IA64_PSR_RI_1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|map_vhpt
 parameter_list|(
 name|uintptr_t
@@ -3194,16 +3247,15 @@ name|EFI_MD_TYPE_IOPORT
 case|:
 name|ia64_port_base
 operator|=
-operator|(
-name|uintptr_t
-operator|)
-name|pmap_mapdev
+name|pmap_mapdev_priv
 argument_list|(
 name|md
 operator|->
 name|md_phys
 argument_list|,
 name|mdlen
+argument_list|,
+name|VM_MEMATTR_UNCACHEABLE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3686,6 +3738,14 @@ comment|/* 	 * Initialize the virtual memory system. 	 */
 name|pmap_bootstrap
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XTRACE
+name|ia64_xtrace_init_bsp
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
 ifdef|#
 directive|ifdef

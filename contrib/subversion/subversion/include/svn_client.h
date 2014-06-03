@@ -508,12 +508,12 @@ define|#
 directive|define
 name|SVN_CLIENT_COMMIT_ITEM_IS_COPY
 value|0x10
-comment|/** @since New in 1.2. */
+comment|/** One of the flags for a commit item.  The node has a lock token that  * should be released after a successful commit and, if the node is also  * modified, transferred to the server as part of the commit process.  *  * @since New in 1.2. */
 define|#
 directive|define
 name|SVN_CLIENT_COMMIT_ITEM_LOCK_TOKEN
 value|0x20
-comment|/** @since New in 1.8. */
+comment|/** One of the flags for a commit item.  The node is the 'moved here'  * side of a local move.  This is used to check and enforce that the  * other side of the move is also included in the commit.  *  * @since New in 1.8. */
 define|#
 directive|define
 name|SVN_CLIENT_COMMIT_ITEM_MOVED_HERE
@@ -8760,7 +8760,7 @@ modifier|*
 name|scratch_pool
 parameter_list|)
 function_decl|;
-comment|/** Similar to svn_client_open_ra_session(), but with @ wri_abspath  * always passed as NULL, and with the same pool used as both @a  * result_pool and @a scratch_pool.  *  * @since New in 1.3.  * @deprecated Provided for backward compatibility with the 1.7 API.  */
+comment|/** Similar to svn_client_open_ra_session2(), but with @ wri_abspath  * always passed as NULL, and with the same pool used as both @a  * result_pool and @a scratch_pool.  *  * @since New in 1.3.  * @deprecated Provided for backward compatibility with the 1.7 API.  */
 name|SVN_DEPRECATED
 name|svn_error_t
 modifier|*

@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -105,7 +105,7 @@ name|CHECK
 parameter_list|(
 name|expr
 parameter_list|)
-value|do {						\ 	if ((expr))							\ 		printf("ok # %d %s:%u\n", ntest, __FILE__, __LINE__);	\ 	else								\ 		printf("not ok # %d %s:%u\n", ntest, __FILE__, __LINE__);\ 	ntest++;							\ } while (0)
+value|do {						\ 	if ((expr))							\ 		printf("ok %d %s:%u\n", ntest, __FILE__, __LINE__);	\ 	else								\ 		printf("not ok %d %s:%u\n", ntest, __FILE__, __LINE__);\ 	ntest++;							\ } while (0)
 end_define
 
 begin_define
@@ -115,7 +115,7 @@ name|CHECKX
 parameter_list|(
 name|expr
 parameter_list|)
-value|do {						\ 	if ((expr)) {							\ 		printf("ok # %d %s:%u\n", ntest, __FILE__, __LINE__);	\ 	} else {							\ 		printf("not ok # %d %s:%u\n", ntest, __FILE__, __LINE__);\ 		exit(1);						\ 	}								\ } while (0)
+value|do {						\ 	if ((expr)) {							\ 		printf("ok %d %s:%u\n", ntest, __FILE__, __LINE__);	\ 	} else {							\ 		printf("not ok %d %s:%u\n", ntest, __FILE__, __LINE__);\ 		exit(1);						\ 	}								\ 	ntest++;							\ } while (0)
 end_define
 
 begin_define
@@ -8545,7 +8545,7 @@ name|cappwd
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"1..186\n"
+literal|"1..188\n"
 argument_list|)
 expr_stmt|;
 name|capcas

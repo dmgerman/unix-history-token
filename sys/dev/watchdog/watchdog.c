@@ -973,7 +973,7 @@ name|kdb_why
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|buf
+name|kdb_why
 argument_list|)
 argument_list|,
 literal|"watchdog %s timeout"

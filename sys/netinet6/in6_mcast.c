@@ -619,6 +619,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -631,6 +637,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -997,6 +1008,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR
+end_ifdef
+
 begin_comment
 comment|/*  * Inline function which wraps assertions for a valid ifp.  * The ifnet layer will set the ifma's ifp pointer to NULL if the ifp  * is detached.  */
 end_comment
@@ -1075,6 +1092,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize an in6_mfilter structure to a known state at t0, t1  * with an empty source filter list.  */
@@ -5454,9 +5476,10 @@ argument_list|)
 argument_list|,
 name|ifp
 argument_list|,
+name|if_name
+argument_list|(
 name|ifp
-operator|->
-name|if_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -5765,11 +5788,12 @@ argument_list|)
 condition|?
 literal|"null"
 else|:
+name|if_name
+argument_list|(
 name|inm
 operator|->
 name|in6m_ifp
-operator|->
-name|if_xname
+argument_list|)
 operator|)
 argument_list|,
 name|imf
@@ -6497,7 +6521,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -6507,10 +6530,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
-block|}
+else|else
+block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -6542,6 +6563,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+block|}
 name|IN6_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -7932,23 +7954,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|IN6_IS_ADDR_MULTICAST
-argument_list|(
-operator|&
-name|gsin6
-operator|->
-name|sin6_addr
-argument_list|)
-argument_list|,
-operator|(
-literal|"%s: not multicast"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|NULL
@@ -8291,12 +8296,6 @@ else|else
 block|{
 if|if
 condition|(
-name|mreq
-operator|.
-name|ipv6mr_interface
-operator|<
-literal|0
-operator|||
 name|V_if_index
 operator|<
 name|mreq
@@ -9030,9 +9029,14 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|IN6_MULTI_UNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|out_im6o_free
 goto|;
+block|}
 name|imo
 operator|->
 name|im6o_membership
@@ -9067,7 +9071,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -9077,10 +9080,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
-block|}
+else|else
+block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -9103,7 +9104,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -9113,16 +9113,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
 block|}
 block|}
 name|IN6_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
-name|out_im6f_rollback
-label|:
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
@@ -9690,10 +9685,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifindex
-operator|<
-literal|0
-operator|||
 name|V_if_index
 operator|<
 name|ifindex
@@ -10117,7 +10108,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -10127,10 +10117,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
-block|}
+else|else
+block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -10153,7 +10141,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -10168,8 +10155,6 @@ block|}
 name|IN6_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
-name|out_im6f_rollback
-label|:
 if|if
 condition|(
 name|error
@@ -10348,10 +10333,6 @@ operator|)
 return|;
 if|if
 condition|(
-name|ifindex
-operator|<
-literal|0
-operator|||
 name|V_if_index
 operator|<
 name|ifindex
@@ -11037,7 +11018,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -11047,10 +11027,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out_im6f_rollback
-goto|;
-block|}
+else|else
+block|{
 name|CTR1
 argument_list|(
 name|KTR_MLD
@@ -11082,6 +11060,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+block|}
 name|IN6_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -12129,11 +12108,12 @@ name|inm
 operator|->
 name|in6m_ifp
 argument_list|,
+name|if_name
+argument_list|(
 name|inm
 operator|->
 name|in6m_ifp
-operator|->
-name|if_xname
+argument_list|)
 argument_list|,
 name|inm
 operator|->

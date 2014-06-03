@@ -26417,6 +26417,17 @@ name|j
 expr_stmt|;
 name|p
 operator|->
+name|rx_chan_map
+operator|=
+name|get_mps_bg_map
+argument_list|(
+name|adap
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
 name|lport
 operator|=
 name|j

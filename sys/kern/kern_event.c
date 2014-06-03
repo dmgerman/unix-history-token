@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kqueue.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -38,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -1313,6 +1319,12 @@ begin_comment
 comment|/* INVARIANTS */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KN_HASHSIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1323,6 +1335,11 @@ end_define
 begin_comment
 comment|/* XXX should be tunable */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1488,10 +1505,10 @@ block|,
 comment|/* EVFILT_TIMER */
 block|{
 operator|&
-name|null_filtops
+name|file_filtops
 block|}
 block|,
-comment|/* former EVFILT_NETDEV */
+comment|/* EVFILT_PROCDESC */
 block|{
 operator|&
 name|fs_filtops
@@ -1510,6 +1527,12 @@ name|user_filtops
 block|}
 block|,
 comment|/* EVFILT_USER */
+block|{
+operator|&
+name|null_filtops
+block|}
+block|,
+comment|/* EVFILT_SENDFILE */
 block|}
 struct|;
 end_struct
@@ -2011,17 +2034,19 @@ name|struct
 name|proc
 modifier|*
 name|p
-init|=
+decl_stmt|;
+name|u_int
+name|event
+decl_stmt|;
+name|p
+operator|=
 name|kn
 operator|->
 name|kn_ptr
 operator|.
 name|p_proc
-decl_stmt|;
-name|u_int
-name|event
-decl_stmt|;
-comment|/* 	 * mask off extra data 	 */
+expr_stmt|;
+comment|/* Mask off extra data. */
 name|event
 operator|=
 operator|(
@@ -2031,7 +2056,7 @@ name|hint
 operator|&
 name|NOTE_PCTRLMASK
 expr_stmt|;
-comment|/* 	 * if the user is interested in this event, record it. 	 */
+comment|/* If the user is interested in this event, record it. */
 if|if
 condition|(
 name|kn
@@ -2046,7 +2071,7 @@ name|kn_fflags
 operator||=
 name|event
 expr_stmt|;
-comment|/* 	 * process is gone, so flag the event as finished. 	 */
+comment|/* Process is gone, so flag the event as finished. */
 if|if
 condition|(
 name|event
@@ -2079,11 +2104,9 @@ name|kn
 operator|->
 name|kn_flags
 operator||=
-operator|(
 name|EV_EOF
 operator||
 name|EV_ONESHOT
-operator|)
 expr_stmt|;
 name|kn
 operator|->
@@ -2231,7 +2254,11 @@ name|kn
 operator|->
 name|kn_status
 operator|&
+operator|(
 name|KN_INFLUX
+operator||
+name|KN_SCAN
+operator|)
 operator|)
 operator|==
 name|KN_INFLUX
@@ -2480,12 +2507,14 @@ if|if
 condition|(
 name|data
 operator|>
-name|INT64_MAX
+name|SBT_MAX
 operator|/
 name|SBT_1MS
 condition|)
 return|return
-name|INT64_MAX
+operator|(
+name|SBT_MAX
+operator|)
 return|;
 endif|#
 directive|endif
@@ -5581,6 +5610,8 @@ operator|->
 name|kn_status
 operator||=
 name|KN_INFLUX
+operator||
+name|KN_SCAN
 expr_stmt|;
 name|KQ_UNLOCK
 argument_list|(
@@ -5684,7 +5715,11 @@ operator|->
 name|kn_status
 operator|&=
 operator|~
+operator|(
 name|KN_INFLUX
+operator||
+name|KN_SCAN
+operator|)
 expr_stmt|;
 name|KN_LIST_UNLOCK
 argument_list|(
@@ -6691,7 +6726,7 @@ if|if
 condition|(
 name|asbt
 operator|<=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|rsbt
 condition|)
@@ -7199,6 +7234,8 @@ operator|->
 name|kn_status
 operator||=
 name|KN_INFLUX
+operator||
+name|KN_SCAN
 expr_stmt|;
 name|KQ_UNLOCK
 argument_list|(
@@ -7270,6 +7307,8 @@ operator||
 name|KN_ACTIVE
 operator||
 name|KN_INFLUX
+operator||
+name|KN_SCAN
 operator|)
 expr_stmt|;
 name|kq
@@ -7436,6 +7475,8 @@ operator|&=
 operator|~
 operator|(
 name|KN_INFLUX
+operator||
+name|KN_SCAN
 operator|)
 expr_stmt|;
 name|KN_LIST_UNLOCK
@@ -8826,19 +8867,6 @@ name|kn
 operator|->
 name|kn_kq
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|kn
-operator|->
-name|kn_status
-operator|&
-name|KN_INFLUX
-operator|)
-operator|!=
-name|KN_INFLUX
-condition|)
-block|{
 name|KQ_LOCK
 argument_list|(
 name|kq
@@ -8851,12 +8879,17 @@ name|kn
 operator|->
 name|kn_status
 operator|&
+operator|(
 name|KN_INFLUX
+operator||
+name|KN_SCAN
+operator|)
 operator|)
 operator|==
 name|KN_INFLUX
 condition|)
 block|{
+comment|/* 			 * Do not process the influx notes, except for 			 * the influx coming from the kq unlock in the 			 * kqueue_scan().  In the later case, we do 			 * not interfere with the scan, since the code 			 * fragment in kqueue_scan() locks the knlist, 			 * and cannot proceed until we finished. 			 */
 name|KQ_UNLOCK
 argument_list|(
 name|kq
@@ -8969,11 +9002,6 @@ name|kq
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|kq
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 if|if
 condition|(

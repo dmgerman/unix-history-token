@@ -1270,7 +1270,7 @@ literal|7
 block|,
 literal|67
 block|,
-literal|"SC Section 5.8.3.4, \"End of External Interrupt Register (EOI Ð CR67)\" on page 2:119"
+literal|"SC Section 5.8.3.4, \"End of External Interrupt Register (EOI - CR67)\" on page 2:119"
 block|, }
 block|,
 block|{
@@ -1565,7 +1565,7 @@ literal|7
 block|,
 literal|65
 block|,
-literal|"SC Section 5.8.3.2, \"External Interrupt Vector Register (IVR Ð CR65)\" on page 2:118"
+literal|"SC Section 5.8.3.2, \"External Interrupt Vector Register (IVR - CR65)\" on page 2:118"
 block|, }
 block|,
 block|{
@@ -1579,7 +1579,7 @@ literal|7
 block|,
 literal|64
 block|,
-literal|"SC Section 5.8.3.1, \"Local ID (LID Ð CR64)\" on page 2:117"
+literal|"SC Section 5.8.3.1, \"Local ID (LID - CR64)\" on page 2:117"
 block|, }
 block|,
 block|{
@@ -1650,7 +1650,7 @@ literal|7
 block|,
 literal|66
 block|,
-literal|"SC Section 5.8.3.3, \"Task Priority Register (TPR Ð CR66)\" on page 2:119"
+literal|"SC Section 5.8.3.3, \"Task Priority Register (TPR - CR66)\" on page 2:119"
 block|, }
 block|,
 block|{
@@ -4158,7 +4158,7 @@ literal|7
 block|,
 literal|67
 block|,
-literal|"SC Section 5.8.3.4, \"End of External Interrupt Register (EOI Ð CR67)\" on page 2:119"
+literal|"SC Section 5.8.3.4, \"End of External Interrupt Register (EOI - CR67)\" on page 2:119"
 block|, }
 block|,
 block|{

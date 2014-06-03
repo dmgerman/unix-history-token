@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -177,6 +177,12 @@ directive|include
 file|<cam/ctl/ctl_scsi_all.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ctld.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -194,11 +200,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"ctld.h"
-end_include
+begin_decl_stmt
+specifier|extern
+name|bool
+name|proxy_mode
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1717,7 +1724,7 @@ name|cl
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|cl
 operator|->
@@ -1919,7 +1926,7 @@ name|cl
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -2224,7 +2231,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -2242,7 +2249,7 @@ name|lun
 operator|->
 name|l_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 name|assert
@@ -3113,7 +3120,7 @@ name|conn
 operator|->
 name|conn_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3127,6 +3134,26 @@ name|target_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ICL_KERNEL_PROXY
+if|if
+condition|(
+name|proxy_mode
+condition|)
+name|req
+operator|.
+name|data
+operator|.
+name|handoff
+operator|.
+name|connection_id
+operator|=
+name|conn
+operator|->
+name|conn_socket
+expr_stmt|;
+else|else
 name|req
 operator|.
 name|data
@@ -3139,6 +3166,22 @@ name|conn
 operator|->
 name|conn_socket
 expr_stmt|;
+else|#
+directive|else
+name|req
+operator|.
+name|data
+operator|.
+name|handoff
+operator|.
+name|socket
+operator|=
+name|conn
+operator|->
+name|conn_socket
+expr_stmt|;
+endif|#
+directive|endif
 name|req
 operator|.
 name|data
@@ -3266,6 +3309,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|log_err
 argument_list|(
 literal|1
@@ -3274,6 +3318,7 @@ literal|"error issuing CTL_ISCSI ioctl; "
 literal|"dropping connection"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|req
@@ -3282,6 +3327,7 @@ name|status
 operator|!=
 name|CTL_ISCSI_OK
 condition|)
+block|{
 name|log_errx
 argument_list|(
 literal|1
@@ -3294,6 +3340,7 @@ operator|.
 name|error_str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3468,6 +3515,9 @@ name|ai
 parameter_list|,
 name|bool
 name|iser
+parameter_list|,
+name|int
+name|portal_id
 parameter_list|)
 block|{
 name|struct
@@ -3561,6 +3611,16 @@ name|ai
 operator|->
 name|ai_addrlen
 expr_stmt|;
+name|req
+operator|.
+name|data
+operator|.
+name|listen
+operator|.
+name|portal_id
+operator|=
+name|portal_id
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -3576,24 +3636,66 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|log_warn
+name|log_err
 argument_list|(
-literal|"error issuing CTL_ISCSI_LISTEN ioctl"
+literal|1
+argument_list|,
+literal|"error issuing CTL_ISCSI ioctl"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|req
+operator|.
+name|status
+operator|!=
+name|CTL_ISCSI_OK
+condition|)
+block|{
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"error returned from CTL iSCSI listen: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|kernel_accept
 parameter_list|(
-name|void
+name|int
+modifier|*
+name|connection_id
+parameter_list|,
+name|int
+modifier|*
+name|portal_id
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|client_sa
+parameter_list|,
+name|socklen_t
+modifier|*
+name|client_salen
 parameter_list|)
 block|{
 name|struct
 name|ctl_iscsi
 name|req
+decl_stmt|;
+name|struct
+name|sockaddr_storage
+name|ss
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -3612,6 +3714,22 @@ name|type
 operator|=
 name|CTL_ISCSI_ACCEPT
 expr_stmt|;
+name|req
+operator|.
+name|data
+operator|.
+name|accept
+operator|.
+name|initiator_addr
+operator|=
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|ss
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -3627,20 +3745,37 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|log_warn
+name|log_err
 argument_list|(
-literal|"error issuing CTL_ISCSI_LISTEN ioctl"
+literal|1
+argument_list|,
+literal|"error issuing CTL_ISCSI ioctl"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+if|if
+condition|(
+name|req
+operator|.
+name|status
+operator|!=
+name|CTL_ISCSI_OK
+condition|)
+block|{
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"error returned from CTL iSCSI accept: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
 block|}
-return|return
-operator|(
+operator|*
+name|connection_id
+operator|=
 name|req
 operator|.
 name|data
@@ -3648,8 +3783,40 @@ operator|.
 name|accept
 operator|.
 name|connection_id
-operator|)
-return|;
+expr_stmt|;
+operator|*
+name|portal_id
+operator|=
+name|req
+operator|.
+name|data
+operator|.
+name|accept
+operator|.
+name|portal_id
+expr_stmt|;
+operator|*
+name|client_salen
+operator|=
+name|req
+operator|.
+name|data
+operator|.
+name|accept
+operator|.
+name|initiator_addrlen
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|client_sa
+argument_list|,
+operator|&
+name|ss
+argument_list|,
+operator|*
+name|client_salen
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3749,6 +3916,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|log_err
 argument_list|(
 literal|1
@@ -3757,6 +3925,7 @@ literal|"error issuing CTL_ISCSI ioctl; "
 literal|"dropping connection"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|req
@@ -3765,6 +3934,7 @@ name|status
 operator|!=
 name|CTL_ISCSI_OK
 condition|)
+block|{
 name|log_errx
 argument_list|(
 literal|1
@@ -3777,6 +3947,7 @@ operator|.
 name|error_str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3898,6 +4069,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|log_err
 argument_list|(
 literal|1
@@ -3906,6 +4078,7 @@ literal|"error issuing CTL_ISCSI ioctl; "
 literal|"dropping connection"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|req
@@ -3914,6 +4087,7 @@ name|status
 operator|!=
 name|CTL_ISCSI_OK
 condition|)
+block|{
 name|log_errx
 argument_list|(
 literal|1
@@ -3926,6 +4100,7 @@ operator|.
 name|error_str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

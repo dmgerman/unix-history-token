@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: citrus_iso2022.c,v 1.19 2008/06/14 16:01:07 tnozaki Exp $	*/
+comment|/*	$NetBSD: citrus_iso2022.c,v 1.20 2010/12/07 22:01:45 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ struct|struct
 block|{
 name|unsigned
 name|char
-name|interm
+name|type
 decl_stmt|;
 name|unsigned
 name|char
@@ -157,7 +157,7 @@ name|final
 decl_stmt|;
 name|unsigned
 name|char
-name|type
+name|interm
 decl_stmt|;
 name|unsigned
 name|char
@@ -2366,96 +2366,27 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|void
-comment|/*ARGSUSED*/
-name|_citrus_ISO2022_pack_state
-parameter_list|(
-name|_ISO2022EncodingInfo
-modifier|*
-name|__restrict
-name|ei
-name|__unused
-parameter_list|,
-name|void
-modifier|*
-name|__restrict
-name|pspriv
-parameter_list|,
-specifier|const
-name|_ISO2022State
-modifier|*
-name|__restrict
-name|s
-parameter_list|)
-block|{
-name|memcpy
-argument_list|(
-name|pspriv
-argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|)
-name|s
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_function
-specifier|static
-name|__inline
-name|void
+begin_comment
+unit|static __inline void
 comment|/*ARGSUSED*/
-name|_citrus_ISO2022_unpack_state
-parameter_list|(
-name|_ISO2022EncodingInfo
-modifier|*
-name|__restrict
-name|ei
-name|__unused
-parameter_list|,
-name|_ISO2022State
-modifier|*
-name|__restrict
-name|s
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|__restrict
-name|pspriv
-parameter_list|)
-block|{
-name|memcpy
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|s
-argument_list|,
-name|pspriv
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_comment
+
+begin_comment
+unit|_citrus_ISO2022_pack_state(_ISO2022EncodingInfo * __restrict ei __unused,     void * __restrict pspriv, const _ISO2022State * __restrict s) {  	memcpy(pspriv, (const void *)s, sizeof(*s)); }  static __inline void
+comment|/*ARGSUSED*/
+end_comment
+
+begin_endif
+unit|_citrus_ISO2022_unpack_state(_ISO2022EncodingInfo * __restrict ei __unused,     _ISO2022State * __restrict s, const void * __restrict pspriv) {  	memcpy((void *)s, pspriv, sizeof(*s)); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

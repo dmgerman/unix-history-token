@@ -137,6 +137,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_acpi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_tasks
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|acpi_max_tasks
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum acpi tasks"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Allow the user to tune the number of task threads we start.  It seems  * some systems have problems with increased parallelism.  */
 end_comment
@@ -157,6 +178,27 @@ literal|"debug.acpi.max_threads"
 argument_list|,
 operator|&
 name|acpi_max_threads
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_acpi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_threads
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|acpi_max_threads
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum acpi threads"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_prop.c,v 1.3 2006/11/22 23:47:21 tnozaki Exp $ */
+comment|/* $NetBSD: citrus_prop.c,v 1.4 2011/03/30 08:22:01 jruoho Exp $ */
 end_comment
 
 begin_comment
@@ -1235,7 +1235,6 @@ name|hints
 parameter_list|,
 name|void
 modifier|*
-modifier|*
 name|__restrict
 name|context
 parameter_list|)
@@ -1707,12 +1706,6 @@ name|ms
 argument_list|,
 name|hints
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-name|__restrict
-operator|)
 name|context
 argument_list|)
 expr_stmt|;

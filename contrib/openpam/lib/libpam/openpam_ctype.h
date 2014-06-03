@@ -31,6 +31,21 @@ value|(ch>= '0'&& ch<= '9')
 end_define
 
 begin_comment
+comment|/*  * Evaluates to non-zero if the argument is a hex digit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|is_xdigit
+parameter_list|(
+name|ch
+parameter_list|)
+define|\
+value|((ch>= '0'&& ch<= '9') ||		\ 	 (ch>= 'a'&& ch<= 'f') ||		\ 	 (ch>= 'A'&& ch<= 'F'))
+end_define
+
+begin_comment
 comment|/*  * Evaluates to non-zero if the argument is an uppercase letter.  */
 end_comment
 
@@ -42,7 +57,7 @@ parameter_list|(
 name|ch
 parameter_list|)
 define|\
-value|(ch>= 'A'&& ch<= 'A')
+value|(ch>= 'A'&& ch<= 'Z')
 end_define
 
 begin_comment

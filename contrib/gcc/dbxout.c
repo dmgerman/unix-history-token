@@ -6650,6 +6650,10 @@ case|:
 case|case
 name|LANG_TYPE
 case|:
+comment|/* APPLE LOCAL blocks 6034272 */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
 comment|/* For a void type, just define it as itself; i.e., "5=5". 	 This makes us consider it defined 	 without saying what it is.  The debugger will make it 	 a void type when the reference is seen, and nothing will 	 ever override that default.  */
 name|dbxout_type_index
 argument_list|(

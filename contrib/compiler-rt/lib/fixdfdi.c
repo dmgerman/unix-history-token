@@ -31,6 +31,7 @@ argument_list|)
 end_macro
 
 begin_function
+name|COMPILER_RT_ABI
 name|di_int
 name|__fixdfdi
 parameter_list|(

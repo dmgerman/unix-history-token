@@ -351,6 +351,10 @@ define|#
 directive|define
 name|PR_SYSEXIT
 value|4
+define|#
+directive|define
+name|PR_SIGNALLED
+value|5
 name|int
 name|pr_what
 decl_stmt|;

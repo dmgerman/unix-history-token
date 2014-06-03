@@ -101,7 +101,7 @@ comment|// Shift value for other flags.
 block|}
 enum|;
 enum|enum
-name|SymbolFlags
+name|ELFSymbolFlags
 block|{
 name|ELF_STB_Local
 init|=

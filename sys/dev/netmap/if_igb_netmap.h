@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011 Universita` di Pisa. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2014 Universita` di Pisa. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -234,8 +234,6 @@ decl_stmt|;
 comment|/* index into the NIC ring */
 name|u_int
 name|n
-decl_stmt|,
-name|new_slots
 decl_stmt|;
 name|u_int
 specifier|const
@@ -249,15 +247,11 @@ literal|1
 decl_stmt|;
 name|u_int
 specifier|const
-name|cur
+name|head
 init|=
-name|nm_txsync_prologue
-argument_list|(
 name|kring
-argument_list|,
-operator|&
-name|new_slots
-argument_list|)
+operator|->
+name|rhead
 decl_stmt|;
 comment|/* generate an interrupt approximately every half ring */
 name|u_int
@@ -318,19 +312,6 @@ operator|)
 else|:
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|cur
-operator|>
-name|lim
-condition|)
-comment|/* error checking in nm_txsync_prologue() */
-return|return
-name|netmap_ring_reinit
-argument_list|(
-name|kring
-argument_list|)
-return|;
 name|bus_dmamap_sync
 argument_list|(
 name|txr
@@ -359,7 +340,7 @@ if|if
 condition|(
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|)
 block|{
 comment|/* we have new packets to send */
@@ -380,7 +361,7 @@ literal|0
 init|;
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|;
 name|n
 operator|++
@@ -606,15 +587,7 @@ name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|cur
-expr_stmt|;
-comment|/* the saved ring->cur */
-comment|/* decrease avail by # of packets sent minus previous ones */
-name|kring
-operator|->
-name|nr_hwavail
-operator|-=
-name|new_slots
+name|head
 expr_stmt|;
 comment|/* Set the watchdog XXX ? */
 name|txr
@@ -675,16 +648,12 @@ name|flags
 operator|&
 name|NAF_FORCE_RECLAIM
 operator|||
+name|nm_kr_txempty
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
-operator|<
-literal|1
+argument_list|)
 condition|)
 block|{
-name|int
-name|delta
-decl_stmt|;
 comment|/* record completed transmissions using TDH */
 name|nic_i
 operator|=
@@ -725,32 +694,6 @@ operator|->
 name|nkr_num_slots
 expr_stmt|;
 block|}
-name|delta
-operator|=
-name|nic_i
-operator|-
-name|txr
-operator|->
-name|next_to_clean
-expr_stmt|;
-if|if
-condition|(
-name|delta
-condition|)
-block|{
-comment|/* some completed, increment hwavail. */
-if|if
-condition|(
-name|delta
-operator|<
-literal|0
-condition|)
-name|delta
-operator|+=
-name|kring
-operator|->
-name|nkr_num_slots
-expr_stmt|;
 name|txr
 operator|->
 name|next_to_clean
@@ -759,17 +702,24 @@ name|nic_i
 expr_stmt|;
 name|kring
 operator|->
-name|nr_hwavail
-operator|+=
-name|delta
+name|nr_hwtail
+operator|=
+name|nm_prev
+argument_list|(
+name|netmap_idx_n2k
+argument_list|(
+name|kring
+argument_list|,
+name|nic_i
+argument_list|)
+argument_list|,
+name|lim
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|nm_txsync_finalize
 argument_list|(
 name|kring
-argument_list|,
-name|cur
 argument_list|)
 expr_stmt|;
 return|return
@@ -840,8 +790,6 @@ decl_stmt|;
 comment|/* index into the NIC ring */
 name|u_int
 name|n
-decl_stmt|,
-name|resvd
 decl_stmt|;
 name|u_int
 specifier|const
@@ -855,17 +803,13 @@ literal|1
 decl_stmt|;
 name|u_int
 specifier|const
-name|cur
+name|head
 init|=
 name|nm_rxsync_prologue
 argument_list|(
 name|kring
-argument_list|,
-operator|&
-name|resvd
 argument_list|)
 decl_stmt|;
-comment|/* cur + res */
 name|int
 name|force_update
 init|=
@@ -906,7 +850,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|cur
+name|head
 operator|>
 name|lim
 condition|)
@@ -1097,9 +1041,9 @@ name|nic_i
 expr_stmt|;
 name|kring
 operator|->
-name|nr_hwavail
-operator|+=
-name|n
+name|nr_hwtail
+operator|=
+name|nm_i
 expr_stmt|;
 block|}
 name|kring
@@ -1121,7 +1065,7 @@ if|if
 condition|(
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|)
 block|{
 name|nic_i
@@ -1141,7 +1085,7 @@ literal|0
 init|;
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|;
 name|n
 operator|++
@@ -1297,15 +1241,9 @@ expr_stmt|;
 block|}
 name|kring
 operator|->
-name|nr_hwavail
-operator|-=
-name|n
-expr_stmt|;
-name|kring
-operator|->
 name|nr_hwcur
 operator|=
-name|cur
+name|head
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -1329,17 +1267,12 @@ expr_stmt|;
 comment|/* 		 * IMPORTANT: we must leave one free slot in the ring, 		 * so move nic_i back by one unit 		 */
 name|nic_i
 operator|=
-operator|(
+name|nm_prev
+argument_list|(
 name|nic_i
-operator|==
-literal|0
-operator|)
-condition|?
+argument_list|,
 name|lim
-else|:
-name|nic_i
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -1360,15 +1293,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* tell userspace that there might be new packets */
-name|ring
-operator|->
-name|avail
-operator|=
+name|nm_rxsync_finalize
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
-operator|-
-name|resvd
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

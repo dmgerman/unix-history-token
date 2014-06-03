@@ -414,8 +414,7 @@ parameter_list|,
 name|struct
 name|nfslockfile
 modifier|*
-modifier|*
-name|new_lfpp
+name|new_lfp
 parameter_list|,
 name|fhandle_t
 modifier|*
@@ -9475,7 +9474,6 @@ name|new_stp
 operator|->
 name|ls_flags
 argument_list|,
-operator|&
 name|new_lfp
 argument_list|,
 name|NULL
@@ -10478,7 +10476,6 @@ name|new_stp
 operator|->
 name|ls_flags
 argument_list|,
-operator|&
 name|new_lfp
 argument_list|,
 name|NULL
@@ -15006,8 +15003,7 @@ parameter_list|,
 name|struct
 name|nfslockfile
 modifier|*
-modifier|*
-name|new_lfpp
+name|new_lfp
 parameter_list|,
 name|fhandle_t
 modifier|*
@@ -15024,11 +15020,6 @@ name|fhp
 init|=
 name|NULL
 decl_stmt|;
-name|struct
-name|nfslockfile
-modifier|*
-name|new_lfp
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -15040,10 +15031,16 @@ operator|&
 name|NFSLCK_OPEN
 condition|)
 block|{
+name|KASSERT
+argument_list|(
 name|new_lfp
-operator|=
-operator|*
-name|new_lfpp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"nfsrv_getlockfh: new_lfp NULL"
+operator|)
+argument_list|)
 expr_stmt|;
 name|fhp
 operator|=
@@ -22101,6 +22098,8 @@ name|na_size
 operator|)
 condition|)
 block|{
+name|error
+operator|=
 name|nfsvno_updfilerev
 argument_list|(
 name|vp
@@ -22130,6 +22129,12 @@ name|na_size
 expr_stmt|;
 block|}
 block|}
+else|else
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Ignore callback errors for now. */
 block|}
 else|else
 block|{
@@ -22137,10 +22142,6 @@ name|NFSUNLOCKSTATE
 argument_list|()
 expr_stmt|;
 block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|out
 label|:
 name|NFSEXITCODE2

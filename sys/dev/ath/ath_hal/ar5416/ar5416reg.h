@@ -3208,7 +3208,7 @@ begin_define
 define|#
 directive|define
 name|AR5416_SLEEP1_CAB_TIMEOUT_S
-value|22
+value|21
 end_define
 
 begin_define
@@ -3226,7 +3226,7 @@ begin_define
 define|#
 directive|define
 name|AR5416_SLEEP2_BEACON_TIMEOUT_S
-value|22
+value|21
 end_define
 
 begin_comment

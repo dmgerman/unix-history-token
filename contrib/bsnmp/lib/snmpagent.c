@@ -2524,6 +2524,18 @@ control|)
 block|{
 if|if
 condition|(
+name|resp
+operator|->
+name|nbindings
+operator|==
+name|SNMP_MAX_BINDINGS
+condition|)
+comment|/* PDU is full */
+goto|goto
+name|done
+goto|;
+if|if
+condition|(
 name|cnt
 operator|==
 literal|0

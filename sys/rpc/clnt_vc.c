@@ -410,50 +410,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|clnt_vc_errstr
-index|[]
-init|=
-literal|"%s : %s"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|clnt_vc_str
-index|[]
-init|=
-literal|"clnt_vc_create"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|clnt_read_vc_str
-index|[]
-init|=
-literal|"read_vc"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|__no_mem_str
-index|[]
-init|=
-literal|"out of memory"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Create a client handle for a connection.  * Default options are set, which the user can change using clnt_control()'s.  * The rpc/vc package does buffering similar to stdio, so the client  * must pick send and receive buffer sizes, 0 => use the default.  * NB: fd is copied into a private area.  * NB: The rpch->cl_auth is set null authentication. Caller may wish to  * set this something more useful.  *  * fd should be an open socket  */
 end_comment
@@ -1301,11 +1257,6 @@ name|err
 label|:
 if|if
 condition|(
-name|cl
-condition|)
-block|{
-if|if
-condition|(
 name|ct
 condition|)
 block|{
@@ -1343,7 +1294,6 @@ name|CLIENT
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 operator|(

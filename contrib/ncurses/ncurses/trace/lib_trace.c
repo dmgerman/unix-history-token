@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                                                 *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_trace.c,v 1.71 2008/08/23 18:04:29 tom Exp $"
+literal|"$Id: lib_trace.c,v 1.82 2013/07/06 19:42:09 tom Exp $"
 argument_list|)
 end_macro
 
@@ -83,9 +83,9 @@ name|void
 parameter_list|)
 block|{
 return|return
-name|SP
+name|CURRENT_SCREEN
 condition|?
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_tputs_trace
 else|:
@@ -110,9 +110,9 @@ name|void
 parameter_list|)
 block|{
 return|return
-name|SP
+name|CURRENT_SCREEN
 condition|?
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_outchars
 else|:
@@ -141,9 +141,9 @@ begin_block
 block|{
 if|if
 condition|(
-name|SP
+name|CURRENT_SCREEN
 condition|)
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_tputs_trace
 operator|=
@@ -177,9 +177,9 @@ begin_block
 block|{
 if|if
 condition|(
-name|SP
+name|CURRENT_SCREEN
 condition|)
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_outchars
 operator|+=
@@ -304,7 +304,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|int
+name|size_t
 name|size
 init|=
 sizeof|sizeof
@@ -354,11 +354,16 @@ operator|<=
 name|size
 argument_list|)
 expr_stmt|;
-name|strcat
+name|_nc_STRCAT
 argument_list|(
 name|TracePath
 argument_list|,
 literal|"/trace"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|TracePath
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -369,11 +374,16 @@ name|TracePath
 argument_list|)
 condition|)
 block|{
-name|strcat
+name|_nc_STRCAT
 argument_list|(
 name|TracePath
 argument_list|,
 literal|".log"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|TracePath
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -444,6 +454,9 @@ literal|0
 argument_list|,
 name|_IOLBF
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -723,6 +736,9 @@ operator|)
 condition|)
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__MINGW32__
 name|fprintf
 argument_list|(
 name|TraceFP
@@ -733,13 +749,34 @@ operator|(
 name|long
 operator|)
 operator|(
-name|void
-operator|*
+name|intptr_t
+operator|)
+name|pthread_self
+argument_list|()
+operator|.
+name|p
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|TraceFP
+argument_list|,
+literal|"%#lx:"
+argument_list|,
+operator|(
+name|long
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|pthread_self
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 if|if
@@ -868,7 +905,7 @@ end_macro
 begin_macro
 name|_nc_retrace_bool
 argument_list|(
-argument|NCURSES_BOOL code
+argument|int code
 argument_list|)
 end_macro
 
@@ -891,6 +928,47 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+name|code
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/* Trace 'char' return-values */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_retrace_char
+argument_list|(
+argument|int code
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|T
+argument_list|(
+operator|(
+name|T_RETURN
+argument_list|(
+literal|"%c"
+argument_list|)
+operator|,
+name|code
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|char
+operator|)
 name|code
 return|;
 block|}
@@ -1158,6 +1236,10 @@ argument_list|(
 literal|"%p"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|code
 operator|)
 argument_list|)
@@ -1196,6 +1278,10 @@ argument_list|(
 literal|"%p"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|code
 operator|)
 argument_list|)
@@ -1368,11 +1454,13 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|_nc_unlock_global
 argument_list|(
 name|tracef
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 

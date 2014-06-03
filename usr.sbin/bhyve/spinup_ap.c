@@ -323,6 +323,8 @@ name|fbsdrun_addcpu
 argument_list|(
 name|ctx
 argument_list|,
+name|vcpu
+argument_list|,
 name|newcpu
 argument_list|,
 name|rip

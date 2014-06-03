@@ -151,7 +151,7 @@ name|MachineBasicBlock
 modifier|*
 name|MBB
 decl_stmt|;
-comment|// If this is a pointer to a LLVM BB
+comment|// If this is a pointer to an LLVM BB
 specifier|const
 name|char
 modifier|*

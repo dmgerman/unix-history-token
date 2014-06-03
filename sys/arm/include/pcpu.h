@@ -60,7 +60,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|unsigned int pc_cpu;						\ 	unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct thread *pc_vfpcthread;					\ 	struct pmap *pc_curpmap;					\ 	char __pad[133]
+value|unsigned int pc_cpu;						\ 	unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct pmap *pc_curpmap;					\ 	char __pad[137]
 end_define
 
 begin_else
@@ -120,25 +120,64 @@ begin_comment
 comment|/* or ARM_TP_ADDRESS 	mark REMOVE ME NOTE */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CPU_MASK
+value|(0xf)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|get_pcpu
+parameter_list|()
+value|(pcpup)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|get_pcpu
+parameter_list|()
+value|__extension__ ({			  		\     	int id;								\         __asm __volatile("mrc p15, 0, %0, c0, c0, 5" : "=r" (id));	\     	(pcpup + (id& CPU_MASK));					\     })
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
 name|struct
-name|pcpu
+name|thread
 modifier|*
-name|get_pcpu
+name|get_curthread
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|void
 modifier|*
-name|pcpu
+name|ret
 decl_stmt|;
-asm|__asm __volatile("mrc p15, 0, %0, c13, c0, 4" : "=r" (pcpu));
+asm|__asm __volatile("mrc p15, 0, %0, c13, c0, 4" : "=r" (ret));
 return|return
 operator|(
-name|pcpu
+name|ret
 operator|)
 return|;
 block|}
@@ -148,14 +187,15 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|set_pcpu
+name|set_curthread
 parameter_list|(
-name|void
+name|struct
+name|thread
 modifier|*
-name|pcpu
+name|td
 parameter_list|)
 block|{
-asm|__asm __volatile("mcr p15, 0, %0, c13, c0, 4" : : "r" (pcpu));
+asm|__asm __volatile("mcr p15, 0, %0, c13, c0, 4" : : "r" (td));
 block|}
 end_function
 
@@ -196,6 +236,13 @@ block|{
 asm|__asm __volatile("mcr p15, 0, %0, c13, c0, 3" : : "r" (tls));
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|curthread
+value|get_curthread()
+end_define
 
 begin_else
 else|#

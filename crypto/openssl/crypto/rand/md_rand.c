@@ -497,6 +497,12 @@ decl_stmt|;
 name|int
 name|do_not_lock
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|num
+condition|)
+return|return;
 comment|/* 	 * (Based on the rand(3) manpage) 	 * 	 * The input is chopped up into units of 20 bytes (or less for 	 * the last block).  Each of these blocks is run through the hash 	 * function as follows:  The data passed to the hash function 	 * is the current 'md', the same number of bytes from the 'state' 	 * (the location determined by in incremented looping index) as 	 * the current 'block', the new key data 'block', and 'count' 	 * (which is incremented after each use). 	 * The result of this is kept in 'md' and also xored into the 	 * 'state' at the same locations that were used as input into the          * hash function. 	 */
 comment|/* check if we already have the lock */
 if|if
@@ -1169,6 +1175,18 @@ literal|2
 operator|)
 expr_stmt|;
 comment|/* 	 * (Based on the rand(3) manpage:) 	 * 	 * For each group of 10 bytes (or less), we do the following: 	 * 	 * Input into the hash function the local 'md' (which is initialized from 	 * the global 'md' before any bytes are generated), the bytes that are to 	 * be overwritten by the random bytes, and bytes from the 'state' 	 * (incrementing looping index). From this digest output (which is kept 	 * in 'md'), the top (up to) 10 bytes are returned to the caller and the 	 * bottom 10 bytes are xored into the 'state'. 	 *  	 * Finally, after we have finished 'num' random bytes for the 	 * caller, 'count' (which is incremented) and the local and global 'md' 	 * are fed into the hash function and the results are kept in the 	 * global 'md'. 	 */
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+comment|/* NB: in FIPS mode we are already under a lock */
+if|if
+condition|(
+operator|!
+name|FIPS_mode
+argument_list|()
+condition|)
+endif|#
+directive|endif
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_RAND
@@ -1371,6 +1389,17 @@ name|crypto_lock_rand
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+if|if
+condition|(
+operator|!
+name|FIPS_mode
+argument_list|()
+condition|)
+endif|#
+directive|endif
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_RAND
@@ -1678,6 +1707,17 @@ argument_list|,
 name|MD_DIGEST_LENGTH
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+if|if
+condition|(
+operator|!
+name|FIPS_mode
+argument_list|()
+condition|)
+endif|#
+directive|endif
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_RAND
@@ -1701,6 +1741,17 @@ argument_list|,
 name|md
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+if|if
+condition|(
+operator|!
+name|FIPS_mode
+argument_list|()
+condition|)
+endif|#
+directive|endif
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_RAND

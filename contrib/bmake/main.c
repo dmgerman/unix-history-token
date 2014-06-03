@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.224 2013/09/04 15:38:26 sjg Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.225 2013/09/14 15:09:34 matt Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: main.c,v 1.224 2013/09/04 15:38:26 sjg Exp $"
+literal|"$NetBSD: main.c,v 1.225 2013/09/14 15:09:34 matt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.224 2013/09/04 15:38:26 sjg Exp $"
+literal|"$NetBSD: main.c,v 1.225 2013/09/14 15:09:34 matt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -139,6 +139,31 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MAKE_NATIVE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SYSCTL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -274,6 +299,27 @@ end_endif
 begin_comment
 comment|/* DEFMAXLOCAL */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__arraycount
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__arraycount
+parameter_list|(
+name|__x
+parameter_list|)
+value|(sizeof(__x) / sizeof(__x[0]))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|Lst
@@ -3747,6 +3793,112 @@ operator|!
 name|machine_arch
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MAKE_NATIVE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SYSCTL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CTL_HW
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HW_MACHINE_ARCH
+argument_list|)
+specifier|static
+name|char
+name|machine_arch_buf
+index|[
+sizeof|sizeof
+argument_list|(
+name|utsname
+operator|.
+name|machine
+argument_list|)
+index|]
+decl_stmt|;
+name|int
+name|mib
+index|[
+literal|2
+index|]
+init|=
+block|{
+name|CTL_HW
+block|,
+name|HW_MACHINE_ARCH
+block|}
+decl_stmt|;
+name|size_t
+name|len
+init|=
+sizeof|sizeof
+argument_list|(
+name|machine_arch_buf
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|sysctl
+argument_list|(
+name|mib
+argument_list|,
+name|__arraycount
+argument_list|(
+name|mib
+argument_list|)
+argument_list|,
+name|machine_arch_buf
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: sysctl failed (%s).\n"
+argument_list|,
+name|progname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+name|machine_arch
+operator|=
+name|machine_arch_buf
+expr_stmt|;
+else|#
+directive|else
 ifndef|#
 directive|ifndef
 name|MACHINE_ARCH
@@ -3771,6 +3923,8 @@ name|machine_arch
 operator|=
 name|MACHINE_ARCH
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}

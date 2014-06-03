@@ -571,6 +571,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -583,6 +589,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -995,6 +1006,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR
+end_ifdef
+
 begin_comment
 comment|/*  * Inline function which wraps assertions for a valid ifp.  * The ifnet layer will set the ifma's ifp pointer to NULL if the ifp  * is detached.  */
 end_comment
@@ -1073,6 +1090,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize an in_mfilter structure to a known state at t0, t1  * with an empty source filter list.  */
@@ -6694,7 +6716,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out_imf_rollback
+name|out_in_multi_locked
 goto|;
 block|}
 name|CTR1
@@ -6726,6 +6748,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|out_in_multi_locked
+label|:
 name|IN_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -9611,9 +9635,23 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|CTR1
+argument_list|(
+name|KTR_IGMPV3
+argument_list|,
+literal|"%s: in_joingroup_locked failed"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|IN_MULTI_UNLOCK
+argument_list|()
+expr_stmt|;
 goto|goto
 name|out_imo_free
 goto|;
+block|}
 name|imo
 operator|->
 name|imo_membership
@@ -9659,7 +9697,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out_imf_rollback
+name|out_in_multi_locked
 goto|;
 block|}
 name|CTR1
@@ -9693,15 +9731,15 @@ name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out_imf_rollback
+name|out_in_multi_locked
 goto|;
 block|}
 block|}
+name|out_in_multi_locked
+label|:
 name|IN_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
-name|out_imf_rollback
-label|:
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
@@ -10610,7 +10648,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out_imf_rollback
+name|out_in_multi_locked
 goto|;
 block|}
 name|CTR1
@@ -10645,11 +10683,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|out_in_multi_locked
+label|:
 name|IN_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;
-name|out_imf_rollback
-label|:
 if|if
 condition|(
 name|error
@@ -11625,7 +11663,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
-name|out_imf_rollback
+name|out_in_multi_locked
 goto|;
 block|}
 name|CTR1
@@ -11657,6 +11695,8 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|out_in_multi_locked
+label|:
 name|IN_MULTI_UNLOCK
 argument_list|()
 expr_stmt|;

@@ -55,12 +55,20 @@ name|TF_BOLD
 value|0x01
 end_define
 
+begin_comment
+comment|/* Bold character. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TF_UNDERLINE
 value|0x02
 end_define
+
+begin_comment
+comment|/* Underline character. */
+end_comment
 
 begin_define
 define|#
@@ -69,12 +77,31 @@ name|TF_BLINK
 value|0x04
 end_define
 
+begin_comment
+comment|/* Blinking character. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TF_REVERSE
 value|0x08
 end_define
+
+begin_comment
+comment|/* Reverse rendered character. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_CJK_RIGHT
+value|0x10
+end_define
+
+begin_comment
+comment|/* Right-hand side of CJK character. */
+end_comment
 
 begin_typedef
 typedef|typedef

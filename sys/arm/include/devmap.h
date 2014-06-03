@@ -48,7 +48,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Return the lowest KVA address used in any entry in the registered devmap  * table.  This works with whatever table is registered, including the internal  * table used by arm_devmap_add_entry() if that routine was used. Platforms can  * implement initarm_lastaddr() by calling this if static device mappings are  * their only use of high KVA space.  */
+comment|/*  * Return the lowest KVA address used in any entry in the registered devmap  * table.  This works with whatever table is registered, including the internal  * table used by arm_devmap_add_entry() if that routine was used. Platforms can  * implement platform_lastaddr() by calling this if static device mappings are  * their only use of high KVA space.  */
 end_comment
 
 begin_function_decl
@@ -149,6 +149,19 @@ name|_va
 parameter_list|,
 name|vm_size_t
 name|_sz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Print the static mapping table; used for bootverbose output. */
+end_comment
+
+begin_function_decl
+name|void
+name|arm_devmap_print_table
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

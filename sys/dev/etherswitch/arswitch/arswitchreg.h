@@ -48,8 +48,58 @@ value|(((_v)& (_f))>> _f##_S)
 end_define
 
 begin_comment
+comment|/* XXX Linux define compatibility stuff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIT
+parameter_list|(
+name|_m
+parameter_list|)
+value|(1UL<< (_m))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITM
+parameter_list|(
+name|_count
+parameter_list|)
+value|((1UL<< (_count)) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITS
+parameter_list|(
+name|_shift
+parameter_list|,
+name|_count
+parameter_list|)
+value|(BITM(_count)<< (_shift))
+end_define
+
+begin_comment
 comment|/* Atheros specific MII registers */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_ATH_MMD_ADDR
+value|0x0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_ATH_MMD_DATA
+value|0x0e
+end_define
 
 begin_define
 define|#
@@ -525,15 +575,134 @@ end_define
 begin_define
 define|#
 directive|define
-name|AR8X16_REG_ARL_CTRL0
+name|AR8216_REG_ATU
 value|0x0050
 end_define
 
 begin_define
 define|#
 directive|define
-name|AR8X16_REG_ARL_CTRL1
+name|AR8216_ATU_OP
+value|BITS(0, 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_OP_NOOP
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_OP_FLUSH
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_OP_LOAD
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_OP_PURGE
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_OP_FLUSH_LOCKED
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_OP_FLUSH_UNICAST
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_OP_GET_NEXT
+value|0x6
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_ACTIVE
+value|BIT(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_PORT_NUM
+value|BITS(8, 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_FULL_VIO
+value|BIT(12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_ADDR4
+value|BITS(16, 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_ADDR5
+value|BITS(24, 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_REG_ATU_DATA
 value|0x0054
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_ADDR3
+value|BITS(0, 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_ADDR2
+value|BITS(8, 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_ADDR1
+value|BITS(16, 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_ADDR0
+value|BITS(24, 8)
 end_define
 
 begin_define
@@ -541,6 +710,34 @@ define|#
 directive|define
 name|AR8X16_REG_ARL_CTRL2
 value|0x0058
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_REG_ATU_CTRL
+value|0x005C
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_CTRL_AGE_EN
+value|BIT(17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_CTRL_AGE_TIME
+value|BITS(0, 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8216_ATU_CTRL_AGE_TIME_S
+value|0
 end_define
 
 begin_define
@@ -1603,32 +1800,6 @@ begin_comment
 comment|/*  * AR9340 switch specific definitions.  */
 end_comment
 
-begin_comment
-comment|/* XXX Linux define compatibility stuff */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITM
-parameter_list|(
-name|_count
-parameter_list|)
-value|((1<< _count) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BITS
-parameter_list|(
-name|_shift
-parameter_list|,
-name|_count
-parameter_list|)
-value|(BITM(_count)<< _shift)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -2178,6 +2349,13 @@ define|#
 directive|define
 name|AR8327_MIB_CPU_KEEP
 value|(1<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8327_REG_MDIO_CTRL
+value|0x03c
 end_define
 
 begin_define

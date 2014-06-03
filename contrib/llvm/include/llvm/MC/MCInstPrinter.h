@@ -121,7 +121,7 @@ modifier|&
 name|MRI
 decl_stmt|;
 comment|/// The current set of available features.
-name|unsigned
+name|uint64_t
 name|AvailableFeatures
 decl_stmt|;
 comment|/// True if we are printing marked up assembly.
@@ -275,7 +275,7 @@ name|RegNo
 argument_list|)
 decl|const
 decl_stmt|;
-name|unsigned
+name|uint64_t
 name|getAvailableFeatures
 argument_list|()
 specifier|const
@@ -287,7 +287,7 @@ block|}
 name|void
 name|setAvailableFeatures
 parameter_list|(
-name|unsigned
+name|uint64_t
 name|Value
 parameter_list|)
 block|{

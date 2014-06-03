@@ -450,6 +450,12 @@ literal|"vmware-reserved"
 block|,
 name|G_PART_ALIAS_VMRESERVED
 block|}
+block|,
+block|{
+literal|"vmware-vsanhdr"
+block|,
+name|G_PART_ALIAS_VMVSANHDR
+block|}
 block|, }
 struct|;
 end_struct
@@ -7224,9 +7230,18 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"%d"
+literal|"%d%s"
 argument_list|,
 name|error
+argument_list|,
+name|error
+operator|!=
+name|EBUSY
+condition|?
+literal|""
+else|:
+literal|" resizing will lead to unexpected shrinking"
+literal|" due to alignment"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11091,7 +11106,21 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"GEOM_PART: %s was automatically resized\n"
+literal|"GEOM_PART: %s was automatically resized.\n"
+literal|"  Use `gpart commit %s` to save changes or "
+literal|"`gpart undo %s` to revert them.\n"
+argument_list|,
+name|cp
+operator|->
+name|geom
+operator|->
+name|name
+argument_list|,
+name|cp
+operator|->
+name|geom
+operator|->
+name|name
 argument_list|,
 name|cp
 operator|->

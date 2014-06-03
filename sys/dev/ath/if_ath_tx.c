@@ -2753,33 +2753,35 @@ literal|"ath_tx_handoff_hw called for mcast queue"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX racy, should hold the PCU lock when checking this, 	 * and also should ensure that the TX counter is>0! 	 */
-name|KASSERT
-argument_list|(
-operator|(
+comment|/* 	 * XXX We should instead just verify that sc_txstart_cnt 	 * or ath_txproc_cnt> 0.  That would mean that 	 * the reset is going to be waiting for us to complete. 	 */
+if|if
+condition|(
 name|sc
 operator|->
-name|sc_inreset_cnt
+name|sc_txproc_cnt
 operator|==
 literal|0
-operator|)
+operator|&&
+name|sc
+operator|->
+name|sc_txstart_cnt
+operator|==
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-operator|(
-literal|"%s: TX during reset?\n"
-operator|,
+literal|"%s: TX dispatch without holding txcount/txstart refcnt!\n"
+argument_list|,
 name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * This causes a LOR. Find out where the PCU lock is being 	 * held whilst the TXQ lock is grabbed - that shouldn't 	 * be occuring. 	 */
-block|ATH_PCU_LOCK(sc); 	if (sc->sc_inreset_cnt) { 		ATH_PCU_UNLOCK(sc); 		DPRINTF(sc, ATH_DEBUG_RESET, 		    "%s: called with sc_in_reset != 0\n", 		    __func__); 		DPRINTF(sc, ATH_DEBUG_XMIT, 		    "%s: queued: TXDP[%u] = %p (%p) depth %d\n", 		    __func__, txq->axq_qnum, 		    (caddr_t)bf->bf_daddr, bf->bf_desc, 		    txq->axq_depth);
-comment|/* XXX axq_link needs to be set and updated! */
-block|ATH_TXQ_INSERT_TAIL(txq, bf, bf_list); 		if (bf->bf_state.bfs_aggr) 			txq->axq_aggr_depth++; 		return; 		} 	ATH_PCU_UNLOCK(sc);
-endif|#
-directive|endif
+block|}
+comment|/* 	 * XXX .. this is going to cause the hardware to get upset; 	 * so we really should find some way to drop or queue 	 * things. 	 */
 name|ATH_TXQ_LOCK
 argument_list|(
 name|txq
@@ -5668,7 +5670,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 expr_stmt|;
 name|ismcast
 operator|=
@@ -5782,6 +5784,21 @@ condition|)
 return|return
 name|error
 return|;
+name|KASSERT
+argument_list|(
+operator|(
+name|ni
+operator|!=
+name|NULL
+operator|)
+argument_list|,
+operator|(
+literal|"%s: ni=NULL!"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|bf
 operator|->
 name|bf_node
@@ -7499,6 +7516,16 @@ decl_stmt|;
 name|int
 name|queue_to_head
 decl_stmt|;
+name|struct
+name|ath_node
+modifier|*
+name|an
+init|=
+name|ATH_NODE
+argument_list|(
+name|ni
+argument_list|)
+decl_stmt|;
 name|ATH_TX_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -7760,6 +7787,21 @@ name|ieee80211_frame
 operator|*
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|ni
+operator|!=
+name|NULL
+operator|)
+argument_list|,
+operator|(
+literal|"%s: ni=NULL!"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|bf
 operator|->
 name|bf_node
@@ -7852,6 +7894,7 @@ name|sc_curmode
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Fetch first rate information */
 name|rix
 operator|=
 name|ath_tx_findrix
@@ -7863,6 +7906,35 @@ operator|->
 name|ibp_rate0
 argument_list|)
 expr_stmt|;
+name|try0
+operator|=
+name|params
+operator|->
+name|ibp_try0
+expr_stmt|;
+comment|/* 	 * Override EAPOL rate as appropriate. 	 */
+if|if
+condition|(
+name|m0
+operator|->
+name|m_flags
+operator|&
+name|M_EAPOL
+condition|)
+block|{
+comment|/* XXX? maybe always use long preamble? */
+name|rix
+operator|=
+name|an
+operator|->
+name|an_mgmtrix
+expr_stmt|;
+name|try0
+operator|=
+name|ATH_TXMAXTRY
+expr_stmt|;
+comment|/* XXX?too many? */
+block|}
 name|txrate
 operator|=
 name|rt
@@ -7898,12 +7970,6 @@ operator|->
 name|sc_txrix
 operator|=
 name|rix
-expr_stmt|;
-name|try0
-operator|=
-name|params
-operator|->
-name|ibp_try0
 expr_stmt|;
 name|ismrr
 operator|=
@@ -8050,7 +8116,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 name|sc
 operator|->
@@ -8325,14 +8391,7 @@ index|]
 operator|.
 name|rix
 operator|=
-name|ath_tx_findrix
-argument_list|(
-name|sc
-argument_list|,
-name|params
-operator|->
-name|ibp_rate0
-argument_list|)
+name|rix
 expr_stmt|;
 name|bf
 operator|->
@@ -8760,7 +8819,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 goto|goto
-name|bad0
+name|badbad
 goto|;
 block|}
 name|sc
@@ -8769,6 +8828,24 @@ name|sc_txstart_cnt
 operator|++
 expr_stmt|;
 name|ATH_PCU_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Wake the hardware up already */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_set_power_state
+argument_list|(
+name|sc
+argument_list|,
+name|HAL_PM_AWAKE
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -9057,6 +9134,22 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Put the hardware back to sleep if required */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_restore_power_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -9119,7 +9212,23 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|bad0
+comment|/* Put the hardware back to sleep if required */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_power_restore_power_state
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|badbad
 label|:
 name|ATH_KTR
 argument_list|(
@@ -10303,9 +10412,13 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
-literal|"%s: baw is now %d:%d, baw head=%d\n"
+literal|"%s: tid=%d: baw is now %d:%d, baw head=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|,
 name|tap
 operator|->
@@ -12031,9 +12144,23 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
-literal|"%s: paused = %d\n"
+literal|"%s: [%6D]: tid=%d, paused = %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|,
 name|tid
 operator|->
@@ -12078,13 +12205,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DPRINTF
+name|device_printf
 argument_list|(
 name|sc
+operator|->
+name|sc_dev
 argument_list|,
-name|ATH_DEBUG_SW_TX_CTRL
-argument_list|,
-literal|"%s: %6D: paused=0?\n"
+literal|"%s: [%6D]: tid=%d, paused=0?\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -12097,6 +12224,10 @@ operator|.
 name|ni_macaddr
 argument_list|,
 literal|":"
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
 block|}
@@ -12114,9 +12245,23 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_CTRL
 argument_list|,
-literal|"%s: unpaused = %d\n"
+literal|"%s: [%6D]: tid=%d, unpaused = %d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_macaddr
+argument_list|,
+literal|":"
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|,
 name|tid
 operator|->
@@ -12320,9 +12465,13 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: filter transition\n"
+literal|"%s: tid=%d; filter transition\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
 name|tid
@@ -12377,6 +12526,11 @@ name|ath_buf
 modifier|*
 name|bf
 decl_stmt|;
+name|int
+name|do_resume
+init|=
+literal|0
+decl_stmt|;
 name|ATH_TX_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -12397,17 +12551,35 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: hwq=0, transition back\n"
+literal|"%s: tid=%d, hwq=0, transition back\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tid
+operator|->
+name|isfiltered
+operator|==
+literal|1
+condition|)
+block|{
 name|tid
 operator|->
 name|isfiltered
 operator|=
 literal|0
 expr_stmt|;
+name|do_resume
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* XXX ath_tx_tid_resume() also calls ath_tx_set_clrdmask()! */
 name|ath_tx_set_clrdmask
 argument_list|(
@@ -12454,6 +12626,11 @@ name|bf_list
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* And only resume if we had paused before */
+if|if
+condition|(
+name|do_resume
+condition|)
 name|ath_tx_tid_resume
 argument_list|(
 name|sc
@@ -12465,7 +12642,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called when a single (aggregate or otherwise) frame is completed.  *  * Returns 1 if the buffer could be added to the filtered list  * (cloned or otherwise), 0 if the buffer couldn't be added to the  * filtered list (failed clone; expired retry) and the caller should  * free it and handle it like a failure (eg by sending a BAR.)  */
+comment|/*  * Called when a single (aggregate or otherwise) frame is completed.  *  * Returns 0 if the buffer could be added to the filtered list  * (cloned or otherwise), 1 if the buffer couldn't be added to the  * filtered list (failed clone; expired retry) and the caller should  * free it and handle it like a failure (eg by sending a BAR.)  *  * since the buffer may be cloned, bf must be not touched after this  * if the return value is 0.  */
 end_comment
 
 begin_function
@@ -12533,18 +12710,24 @@ name|__func__
 argument_list|,
 name|bf
 argument_list|,
+name|SEQNO
+argument_list|(
 name|bf
 operator|->
 name|bf_state
 operator|.
 name|bfs_seqno
 argument_list|)
+argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+comment|/* error */
+goto|goto
+name|finish
+goto|;
 block|}
 comment|/* 	 * A busy buffer can't be added to the retry list. 	 * It needs to be cloned. 	 */
 if|if
@@ -12618,6 +12801,7 @@ name|retval
 operator|=
 literal|1
 expr_stmt|;
+comment|/* error */
 block|}
 else|else
 block|{
@@ -12634,7 +12818,10 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
+comment|/* ok */
 block|}
+name|finish
+label|:
 name|ath_tx_tid_filt_comp_complete
 argument_list|(
 name|sc
@@ -12738,17 +12925,24 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: bf=%p, seqno=%d, exceeded retries\n"
+literal|"%s: tid=%d, bf=%p, seqno=%d, exceeded retries\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|tid
+operator|->
+name|tid
+argument_list|,
 name|bf
 argument_list|,
+name|SEQNO
+argument_list|(
 name|bf
 operator|->
 name|bf_state
 operator|.
 name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -12794,13 +12988,26 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: busy buffer cloned: %p -> %p"
+literal|"%s: tid=%d, busy buffer cloned: %p -> %p, seqno=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tid
+operator|->
+name|tid
 argument_list|,
 name|bf
 argument_list|,
 name|nbf
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12825,11 +13032,24 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_FILT
 argument_list|,
-literal|"%s: buffer couldn't be cloned! (%p)\n"
+literal|"%s: tid=%d, buffer couldn't be cloned! (%p) seqno=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
+name|tid
+operator|->
+name|tid
+argument_list|,
 name|bf
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -13639,6 +13859,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
+operator||
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: %s: %6D: bf=%p: addbaw=%d, dobaw=%d, "
 literal|"seqno=%d, retry=%d\n"
@@ -13688,6 +13910,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
+operator||
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: %s: %6D: bf=%p: txq[%d] axq_depth=%d, axq_aggr_depth=%d\n"
 argument_list|,
@@ -13721,6 +13945,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
+operator||
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: %s: %6D: bf=%p: tid txq_depth=%d hwq_depth=%d, bar_wait=%d, "
 literal|"isfiltered=%d\n"
@@ -13759,6 +13985,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
+operator||
+name|ATH_DEBUG_RESET
 argument_list|,
 literal|"%s: %s: %6D: tid %d: "
 literal|"sched=%d, paused=%d, "
@@ -13821,6 +14049,15 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* XXX Dump the frame, see what it is? */
+if|if
+condition|(
+name|IFF_DUMPPKTS
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_XMIT
+argument_list|)
+condition|)
 name|ieee80211_dump_pkt
 argument_list|(
 name|ni
@@ -13968,10 +14205,7 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-name|t
-operator|=
-literal|1
-expr_stmt|;
+comment|//			t = 1;
 block|}
 name|ATH_TID_REMOVE
 argument_list|(
@@ -14041,10 +14275,7 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
-name|t
-operator|=
-literal|1
-expr_stmt|;
+comment|//			t = 1;
 block|}
 name|ATH_TID_FILT_REMOVE
 argument_list|(
@@ -14746,6 +14977,57 @@ operator|->
 name|hwq_depth
 argument_list|)
 expr_stmt|;
+comment|/* If the TID is being cleaned up, track things */
+comment|/* XXX refactor! */
+if|if
+condition|(
+name|atid
+operator|->
+name|cleanup_inprogress
+condition|)
+block|{
+name|atid
+operator|->
+name|incomp
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|atid
+operator|->
+name|incomp
+operator|==
+literal|0
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX_CTRL
+argument_list|,
+literal|"%s: TID %d: cleaned up! resume!\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|tid
+argument_list|)
+expr_stmt|;
+name|atid
+operator|->
+name|cleanup_inprogress
+operator|=
+literal|0
+expr_stmt|;
+name|ath_tx_tid_resume
+argument_list|(
+name|sc
+argument_list|,
+name|atid
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * If the queue is filtered, potentially mark it as complete 	 * and reschedule it as needed. 	 * 	 * This is required as there may be a subsequent TX descriptor 	 * for this end-node that has CLRDMASK set, so it's quite possible 	 * that a filtered frame will be followed by a non-filtered 	 * (complete or otherwise) frame. 	 * 	 * XXX should we do this before we complete the frame? 	 */
 if|if
 condition|(
@@ -14921,6 +15203,57 @@ operator|->
 name|incomp
 operator|--
 expr_stmt|;
+comment|/* XXX refactor! */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_dobaw
+condition|)
+block|{
+name|ath_tx_update_baw
+argument_list|(
+name|sc
+argument_list|,
+name|an
+argument_list|,
+name|atid
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_addedbaw
+condition|)
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: wasn't added: seqno %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|atid
@@ -14975,7 +15308,156 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Performs transmit side cleanup when TID changes from aggregated to  * unaggregated.  *  * - Discard all retry frames from the s/w queue.  * - Fix the tx completion function for all buffers in s/w queue.  * - Count the number of unacked frames, and let transmit completion  *   handle it later.  *  * The caller is responsible for pausing the TID and unpausing the  * TID if no cleanup was required. Otherwise the cleanup path will  * unpause the TID once the last hardware queued frame is completed.  */
+comment|/*  * This as it currently stands is a bit dumb.  Ideally we'd just  * fail the frame the normal way and have it permanently fail  * via the normal aggregate completion path.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ath_tx_tid_cleanup_frame
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_node
+modifier|*
+name|an
+parameter_list|,
+name|int
+name|tid
+parameter_list|,
+name|struct
+name|ath_buf
+modifier|*
+name|bf_head
+parameter_list|,
+name|ath_bufhead
+modifier|*
+name|bf_cq
+parameter_list|)
+block|{
+name|struct
+name|ath_tid
+modifier|*
+name|atid
+init|=
+operator|&
+name|an
+operator|->
+name|an_tid
+index|[
+name|tid
+index|]
+decl_stmt|;
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+decl_stmt|,
+modifier|*
+name|bf_next
+decl_stmt|;
+name|ATH_TX_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Remove this frame from the queue. 	 */
+name|ATH_TID_REMOVE
+argument_list|(
+name|atid
+argument_list|,
+name|bf_head
+argument_list|,
+name|bf_list
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Loop over all the frames in the aggregate. 	 */
+name|bf
+operator|=
+name|bf_head
+expr_stmt|;
+while|while
+condition|(
+name|bf
+operator|!=
+name|NULL
+condition|)
+block|{
+name|bf_next
+operator|=
+name|bf
+operator|->
+name|bf_next
+expr_stmt|;
+comment|/* next aggregate frame, or NULL */
+comment|/* 		 * If it's been added to the BAW we need to kick 		 * it out of the BAW before we continue. 		 * 		 * XXX if it's an aggregate, assert that it's in the 		 * BAW - we shouldn't have it be in an aggregate 		 * otherwise! 		 */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_addedbaw
+condition|)
+block|{
+name|ath_tx_update_baw
+argument_list|(
+name|sc
+argument_list|,
+name|an
+argument_list|,
+name|atid
+argument_list|,
+name|bf
+argument_list|)
+expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_dobaw
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* 		 * Give it the default completion handler. 		 */
+name|bf
+operator|->
+name|bf_comp
+operator|=
+name|ath_tx_normal_comp
+expr_stmt|;
+name|bf
+operator|->
+name|bf_next
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 		 * Add it to the list to free. 		 */
+name|TAILQ_INSERT_TAIL
+argument_list|(
+name|bf_cq
+argument_list|,
+name|bf
+argument_list|,
+name|bf_list
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Now advance to the next frame in the aggregate. 		 */
+name|bf
+operator|=
+name|bf_next
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Performs transmit side cleanup when TID changes from aggregated to  * unaggregated and during reassociation.  *  * For now, this just tosses everything from the TID software queue  * whether or not it has been retried and marks the TID as  * pending completion if there's anything for this TID queued to  * the hardware.  *  * The caller is responsible for pausing the TID and unpausing the  * TID if no cleanup was required. Otherwise the cleanup path will  * unpause the TID once the last hardware queued frame is completed.  */
 end_comment
 
 begin_function
@@ -15015,11 +15497,6 @@ name|tid
 index|]
 decl_stmt|;
 name|struct
-name|ieee80211_tx_ampdu
-modifier|*
-name|tap
-decl_stmt|;
-name|struct
 name|ath_buf
 modifier|*
 name|bf
@@ -15038,11 +15515,15 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
-literal|"%s: TID %d: called\n"
+literal|"%s: TID %d: called; inprogress=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|tid
+argument_list|,
+name|atid
+operator|->
+name|cleanup_inprogress
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Move the filtered frames to the TX queue, before 	 * we run off and discard/process things. 	 */
@@ -15095,15 +15576,7 @@ condition|(
 name|bf
 condition|)
 block|{
-if|if
-condition|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_isretried
-condition|)
-block|{
+comment|/* 		 * Grab the next frame in the list, we may 		 * be fiddling with the list. 		 */
 name|bf_next
 operator|=
 name|TAILQ_NEXT
@@ -15113,180 +15586,50 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|ATH_TID_REMOVE
-argument_list|(
-name|atid
-argument_list|,
-name|bf
-argument_list|,
-name|bf_list
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_dobaw
-condition|)
-block|{
-name|ath_tx_update_baw
+comment|/* 		 * Free the frame and all subframes. 		 */
+name|ath_tx_tid_cleanup_frame
 argument_list|(
 name|sc
 argument_list|,
-name|an
-argument_list|,
-name|atid
-argument_list|,
-name|bf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_addedbaw
-condition|)
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|ATH_DEBUG_SW_TX_BAW
-argument_list|,
-literal|"%s: wasn't added: seqno %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|SEQNO
-argument_list|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_seqno
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_dobaw
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 			 * Call the default completion handler with "fail" just 			 * so upper levels are suitably notified about this. 			 */
-name|TAILQ_INSERT_TAIL
-argument_list|(
-name|bf_cq
-argument_list|,
-name|bf
-argument_list|,
-name|bf_list
-argument_list|)
-expr_stmt|;
-name|bf
-operator|=
-name|bf_next
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* Give these the default completion handler */
-name|bf
-operator|->
-name|bf_comp
-operator|=
-name|ath_tx_normal_comp
-expr_stmt|;
-name|bf
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|bf
-argument_list|,
-name|bf_list
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * Calculate what hardware-queued frames exist based 	 * on the current BAW size. Ie, what frames have been 	 * added to the TX hardware queue for this TID but 	 * not yet ACKed. 	 */
-name|tap
-operator|=
-name|ath_tx_get_tx_tid
-argument_list|(
 name|an
 argument_list|,
 name|tid
+argument_list|,
+name|bf
+argument_list|,
+name|bf_cq
 argument_list|)
 expr_stmt|;
-comment|/* Need the lock - fiddling with BAW */
-while|while
-condition|(
-name|atid
-operator|->
-name|baw_head
-operator|!=
-name|atid
-operator|->
-name|baw_tail
-condition|)
-block|{
+comment|/* 		 * Next frame! 		 */
+name|bf
+operator|=
+name|bf_next
+expr_stmt|;
+block|}
+comment|/* 	 * If there's anything in the hardware queue we wait 	 * for the TID HWQ to empty. 	 */
 if|if
 condition|(
 name|atid
 operator|->
-name|tx_buf
-index|[
-name|atid
-operator|->
-name|baw_head
-index|]
+name|hwq_depth
+operator|>
+literal|0
 condition|)
 block|{
+comment|/* 		 * XXX how about we kill atid->incomp, and instead 		 * replace it with a macro that checks that atid->hwq_depth 		 * is 0? 		 */
 name|atid
 operator|->
 name|incomp
-operator|++
+operator|=
+name|atid
+operator|->
+name|hwq_depth
 expr_stmt|;
 name|atid
 operator|->
 name|cleanup_inprogress
 operator|=
 literal|1
-expr_stmt|;
-name|atid
-operator|->
-name|tx_buf
-index|[
-name|atid
-operator|->
-name|baw_head
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-name|INCR
-argument_list|(
-name|atid
-operator|->
-name|baw_head
-argument_list|,
-name|ATH_TID_MAX_BUFS
-argument_list|)
-expr_stmt|;
-name|INCR
-argument_list|(
-name|tap
-operator|->
-name|txa_start
-argument_list|,
-name|IEEE80211_SEQ_RANGE
-argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -16534,6 +16877,12 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* update incomp */
+name|atid
+operator|->
+name|incomp
+operator|--
+expr_stmt|;
+comment|/* Update the BAW */
 name|bf
 operator|=
 name|bf_first
@@ -16543,11 +16892,57 @@ condition|(
 name|bf
 condition|)
 block|{
-name|atid
+comment|/* XXX refactor! */
+if|if
+condition|(
+name|bf
 operator|->
-name|incomp
-operator|--
+name|bf_state
+operator|.
+name|bfs_dobaw
+condition|)
+block|{
+name|ath_tx_update_baw
+argument_list|(
+name|sc
+argument_list|,
+name|an
+argument_list|,
+name|atid
+argument_list|,
+name|bf
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_addedbaw
+condition|)
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: wasn't added: seqno %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|bf
 operator|=
 name|bf
@@ -16615,7 +17010,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Handle frame completion */
+comment|/* Handle frame completion as individual frames */
 name|bf
 operator|=
 name|bf_first
@@ -16630,6 +17025,12 @@ operator|=
 name|bf
 operator|->
 name|bf_next
+expr_stmt|;
+name|bf
+operator|->
+name|bf_next
+operator|=
+name|NULL
 expr_stmt|;
 name|ath_tx_default_comp
 argument_list|(
@@ -18090,6 +18491,7 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If freeframe=0 then bf is no longer ours; don't 		 * touch it. 		 */
 if|if
 condition|(
 name|freeframe
@@ -19584,7 +19986,9 @@ name|tid
 argument_list|)
 condition|)
 block|{
-continue|continue;
+goto|goto
+name|loop_done
+goto|;
 block|}
 if|if
 condition|(
@@ -19674,6 +20078,8 @@ condition|)
 block|{
 break|break;
 block|}
+name|loop_done
+label|:
 comment|/* 		 * If this was the last entry on the original list, stop. 		 * Otherwise nodes that have been rescheduled onto the end 		 * of the TID FIFO list will just keep being rescheduled. 		 * 		 * XXX What should we do about nodes that were paused 		 * but are pending a leaking frame in response to a ps-poll? 		 * They'll be put at the front of the list; so they'll 		 * prematurely trigger this condition! Ew. 		 */
 if|if
 condition|(
@@ -20390,6 +20796,24 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In case there's a followup call to this, only call it 	 * if we don't have a cleanup in progress. 	 * 	 * Since we've paused the queue above, we need to make 	 * sure we unpause if there's already a cleanup in 	 * progress - it means something else is also doing 	 * this stuff, so we don't need to also keep it paused. 	 */
+if|if
+condition|(
+name|atid
+operator|->
+name|cleanup_inprogress
+condition|)
+block|{
+name|ath_tx_tid_resume
+argument_list|(
+name|sc
+argument_list|,
+name|atid
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ath_tx_tid_cleanup
 argument_list|(
 name|sc
@@ -20402,7 +20826,7 @@ operator|&
 name|bf_cq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unpause the TID if no cleanup is required. 	 */
+comment|/* 		 * Unpause the TID if no cleanup is required. 		 */
 if|if
 condition|(
 operator|!
@@ -20417,6 +20841,7 @@ argument_list|,
 name|atid
 argument_list|)
 expr_stmt|;
+block|}
 name|ATH_TX_UNLOCK
 argument_list|(
 name|sc
@@ -20545,13 +20970,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|ath_tx_tid_pause
-argument_list|(
-name|sc
-argument_list|,
-name|tid
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -20573,6 +20991,22 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* 		 * In case there's a followup call to this, only call it 		 * if we don't have a cleanup in progress. 		 */
+if|if
+condition|(
+operator|!
+name|tid
+operator|->
+name|cleanup_inprogress
+condition|)
+block|{
+name|ath_tx_tid_pause
+argument_list|(
+name|sc
+argument_list|,
+name|tid
+argument_list|)
+expr_stmt|;
 name|ath_tx_tid_cleanup
 argument_list|(
 name|sc
@@ -20585,7 +21019,7 @@ operator|&
 name|bf_cq
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Unpause the TID if no cleanup is required. 		 */
+comment|/* 			 * Unpause the TID if no cleanup is required. 			 */
 if|if
 condition|(
 operator|!
@@ -20600,6 +21034,7 @@ argument_list|,
 name|tid
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ATH_TX_UNLOCK
 argument_list|(
@@ -20717,13 +21152,16 @@ name|tap
 operator|->
 name|txa_attempts
 decl_stmt|;
+name|int
+name|old_txa_start
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAR
 argument_list|,
-literal|"%s: %6D: called; txa_tid=%d, atid->tid=%d, status=%d, attempts=%d\n"
+literal|"%s: %6D: called; txa_tid=%d, atid->tid=%d, status=%d, attempts=%d, txa_start=%d, txa_seqpending=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -20744,9 +21182,29 @@ argument_list|,
 name|status
 argument_list|,
 name|attempts
+argument_list|,
+name|tap
+operator|->
+name|txa_start
+argument_list|,
+name|tap
+operator|->
+name|txa_seqpending
 argument_list|)
 expr_stmt|;
 comment|/* Note: This may update the BAW details */
+comment|/* 	 * XXX What if this does slide the BAW along? We need to somehow 	 * XXX either fix things when it does happen, or prevent the 	 * XXX seqpending value to be anything other than exactly what 	 * XXX the hell we want! 	 * 	 * XXX So for now, how I do this inside the TX lock for now 	 * XXX and just correct it afterwards? The below condition should 	 * XXX never happen and if it does I need to fix all kinds of things. 	 */
+name|ATH_TX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|old_txa_start
+operator|=
+name|tap
+operator|->
+name|txa_start
+expr_stmt|;
 name|sc
 operator|->
 name|sc_bar_response
@@ -20756,6 +21214,46 @@ argument_list|,
 name|tap
 argument_list|,
 name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tap
+operator|->
+name|txa_start
+operator|!=
+name|old_txa_start
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: tid=%d; txa_start=%d, old=%d, adjusting\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|tid
+argument_list|,
+name|tap
+operator|->
+name|txa_start
+argument_list|,
+name|old_txa_start
+argument_list|)
+expr_stmt|;
+block|}
+name|tap
+operator|->
+name|txa_start
+operator|=
+name|old_txa_start
+expr_stmt|;
+name|ATH_TX_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Unpause the TID */

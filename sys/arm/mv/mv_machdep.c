@@ -80,7 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/fdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/platform.h>
 end_include
 
 begin_include
@@ -802,7 +814,7 @@ end_function
 
 begin_function
 name|vm_offset_t
-name|initarm_lastaddr
+name|platform_lastaddr
 parameter_list|(
 name|void
 parameter_list|)
@@ -817,7 +829,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_early_init
+name|platform_probe_and_attach
 parameter_list|(
 name|void
 parameter_list|)
@@ -841,7 +853,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_gpio_init
+name|platform_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -864,7 +876,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_late_init
+name|platform_late_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1130,7 +1142,7 @@ name|map
 operator|->
 name|pd_cache
 operator|=
-name|PTE_NOCACHE
+name|PTE_DEVICE
 expr_stmt|;
 return|return
 operator|(
@@ -1150,7 +1162,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Supply a default do-nothing implementation of fdt_pci_devmap() via a weak  * alias.  Many Marvell platforms don't support a PCI interface, but to support  * those that do, we end up with a reference to this function below, in  * initarm_devmap_init().  If "device pci" appears in the kernel config, the  * real implementation of this function in dev/fdt/fdt_pci.c overrides the weak  * alias defined here.  */
+comment|/*  * Supply a default do-nothing implementation of mv_pci_devmap() via a weak  * alias.  Many Marvell platforms don't support a PCI interface, but to support  * those that do, we end up with a reference to this function below, in  * platform_devmap_init().  If "device pci" appears in the kernel config, the  * real implementation of this function in arm/mv/mv_pci.c overrides the weak  * alias defined here.  */
 end_comment
 
 begin_function_decl
@@ -1206,7 +1218,7 @@ name|__weak_reference
 argument_list|(
 name|mv_default_fdt_pci_devmap
 argument_list|,
-name|fdt_pci_devmap
+name|mv_pci_devmap
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1221,7 +1233,7 @@ end_comment
 
 begin_function
 name|int
-name|initarm_devmap_init
+name|platform_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1328,7 +1340,7 @@ index|]
 operator|.
 name|pd_cache
 operator|=
-name|PTE_NOCACHE
+name|PTE_DEVICE
 expr_stmt|;
 name|i
 operator|++
@@ -1431,7 +1443,7 @@ return|;
 comment|/* 			 * XXX this should account for PCI and multiple ranges 			 * of a given kind. 			 */
 if|if
 condition|(
-name|fdt_pci_devmap
+name|mv_pci_devmap
 argument_list|(
 name|child
 argument_list|,

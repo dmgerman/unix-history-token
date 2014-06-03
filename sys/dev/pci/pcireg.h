@@ -84,6 +84,119 @@ name|PCI_MAXHDRTYPE
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCIE_ARI_SLOTMAX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_ARI_FUNCMAX
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_RID_BUS_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_RID_SLOT_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_RID_FUNC_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_RID
+parameter_list|(
+name|bus
+parameter_list|,
+name|slot
+parameter_list|,
+name|func
+parameter_list|)
+define|\
+value|((((bus)& PCI_BUSMAX)<< PCI_RID_BUS_SHIFT) | \     (((slot)& PCI_SLOTMAX)<< PCI_RID_SLOT_SHIFT) | \     (((func)& PCI_FUNCMAX)<< PCI_RID_FUNC_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_ARI_RID
+parameter_list|(
+name|bus
+parameter_list|,
+name|func
+parameter_list|)
+define|\
+value|((((bus)& PCI_BUSMAX)<< PCI_RID_BUS_SHIFT) | \     (((func)& PCIE_ARI_FUNCMAX)<< PCI_RID_FUNC_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_RID2BUS
+parameter_list|(
+name|rid
+parameter_list|)
+value|(((rid)>> PCI_RID_BUS_SHIFT)& PCI_BUSMAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_RID2SLOT
+parameter_list|(
+name|rid
+parameter_list|)
+value|(((rid)>> PCI_RID_SLOT_SHIFT)& PCI_SLOTMAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_RID2FUNC
+parameter_list|(
+name|rid
+parameter_list|)
+value|(((rid)>> PCI_RID_FUNC_SHIFT)& PCI_FUNCMAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_ARI_SLOT
+parameter_list|(
+name|func
+parameter_list|)
+value|(((func)>> PCI_RID_SLOT_SHIFT)& PCI_SLOTMAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIE_ARI_FUNC
+parameter_list|(
+name|func
+parameter_list|)
+value|(((func)>> PCI_RID_FUNC_SHIFT)& PCI_FUNCMAX)
+end_define
+
 begin_comment
 comment|/* PCI config header registers for all devices */
 end_comment
@@ -2222,6 +2335,13 @@ define|#
 directive|define
 name|PCIS_BASEPERIPH_SDHC
 value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIS_BASEPERIPH_IOMMU
+value|0x06
 end_define
 
 begin_define
@@ -4988,6 +5108,13 @@ define|#
 directive|define
 name|PCIER_DEVICE_CAP2
 value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIEM_CAP2_ARI
+value|0x20
 end_define
 
 begin_define

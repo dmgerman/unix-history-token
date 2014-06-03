@@ -29,6 +29,26 @@ directive|include
 file|"libuserboot.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USERBOOT_ZFS_SUPPORT
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"../zfs/libzfs.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * We could use linker sets for some or all of these, but  * then we would have to control what ended up linked into  * the bootstrap.  So it's easier to conditionalise things  * here.  *  * XXX rename these arrays to be consistent and less namespace-hostile  */
 end_comment
@@ -51,6 +71,17 @@ block|,
 operator|&
 name|userboot_disk
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USERBOOT_ZFS_SUPPORT
+argument_list|)
+operator|&
+name|zfs_dev
+block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;
@@ -76,6 +107,17 @@ block|,
 operator|&
 name|gzipfs_fsops
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USERBOOT_ZFS_SUPPORT
+argument_list|)
+operator|&
+name|zfs_fsops
+block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;
@@ -159,6 +201,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|console
+name|userboot_comconsole
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|console
 modifier|*
@@ -168,6 +218,9 @@ init|=
 block|{
 operator|&
 name|userboot_console
+block|,
+operator|&
+name|userboot_comconsole
 block|,
 name|NULL
 block|}

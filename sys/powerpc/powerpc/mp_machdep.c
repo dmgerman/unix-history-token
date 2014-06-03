@@ -266,40 +266,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|jmp_buf
-modifier|*
-name|restore
-decl_stmt|;
-comment|/* The following is needed for restoring from sleep. */
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-comment|/* Writing to the time base register is hypervisor-privileged */
-if|if
-condition|(
-name|mfmsr
-argument_list|()
-operator|&
-name|PSL_HV
-condition|)
-name|mttb
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|mttb
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Set up important bits on the CPU (HID registers, etc.) */
-name|cpudep_ap_setup
-argument_list|()
-expr_stmt|;
 comment|/* Set PIR */
 name|PCPU_SET
 argument_list|(
@@ -319,29 +285,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("msync; isync");
-name|restore
-operator|=
-name|PCPU_GET
-argument_list|(
-name|restore
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|restore
-operator|!=
-name|NULL
-condition|)
-block|{
-name|longjmp
-argument_list|(
-operator|*
-name|restore
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 name|ap_letgo
@@ -1084,10 +1027,7 @@ argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
-name|smp_active
-operator|=
-literal|1
-expr_stmt|;
+comment|/* XXX Atomic set operation? */
 name|smp_started
 operator|=
 literal|1
@@ -1403,6 +1343,9 @@ operator|<<
 name|ipi
 operator|)
 argument_list|)
+expr_stmt|;
+name|powerpc_sync
+argument_list|()
 expr_stmt|;
 name|PIC_IPI
 argument_list|(

@@ -16155,6 +16155,10 @@ case|:
 case|case
 name|REFERENCE_TYPE
 case|:
+comment|/* APPLE LOCAL radar 5822844 */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
 case|case
 name|OFFSET_TYPE
 case|:

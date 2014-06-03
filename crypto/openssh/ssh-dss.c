@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-dss.c,v 1.28 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: ssh-dss.c,v 1.31 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -73,6 +73,12 @@ directive|include
 file|"key.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"digest.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -118,21 +124,10 @@ name|DSA_SIG
 modifier|*
 name|sig
 decl_stmt|;
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
-init|=
-name|EVP_sha1
-argument_list|()
-decl_stmt|;
-name|EVP_MD_CTX
-name|md
-decl_stmt|;
 name|u_char
 name|digest
 index|[
-name|EVP_MAX_MD_SIZE
+name|SSH_DIGEST_MAX_LENGTH
 index|]
 decl_stmt|,
 name|sigblob
@@ -148,6 +143,11 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|dlen
+init|=
+name|ssh_digest_bytes
+argument_list|(
+name|SSH_DIGEST_SHA1
+argument_list|)
 decl_stmt|;
 name|Buffer
 name|b
@@ -158,36 +158,27 @@ name|key
 operator|==
 name|NULL
 operator|||
+name|key_type_plain
+argument_list|(
+name|key
+operator|->
+name|type
+argument_list|)
+operator|!=
+name|KEY_DSA
+operator|||
 name|key
 operator|->
 name|dsa
 operator|==
 name|NULL
-operator|||
-operator|(
-name|key
-operator|->
-name|type
-operator|!=
-name|KEY_DSA
-operator|&&
-name|key
-operator|->
-name|type
-operator|!=
-name|KEY_DSA_CERT
-operator|&&
-name|key
-operator|->
-name|type
-operator|!=
-name|KEY_DSA_CERT_V00
-operator|)
 condition|)
 block|{
 name|error
 argument_list|(
-literal|"ssh_dss_sign: no DSA key"
+literal|"%s: no DSA key"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -195,35 +186,39 @@ operator|-
 literal|1
 return|;
 block|}
-name|EVP_DigestInit
+if|if
+condition|(
+name|ssh_digest_memory
 argument_list|(
-operator|&
-name|md
-argument_list|,
-name|evp_md
-argument_list|)
-expr_stmt|;
-name|EVP_DigestUpdate
-argument_list|(
-operator|&
-name|md
+name|SSH_DIGEST_SHA1
 argument_list|,
 name|data
 argument_list|,
 name|datalen
-argument_list|)
-expr_stmt|;
-name|EVP_DigestFinal
-argument_list|(
-operator|&
-name|md
 argument_list|,
 name|digest
 argument_list|,
-operator|&
-name|dlen
+sizeof|sizeof
+argument_list|(
+name|digest
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s: ssh_digest_memory failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|sig
 operator|=
 name|DSA_do_sign
@@ -237,11 +232,9 @@ operator|->
 name|dsa
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|digest
-argument_list|,
-literal|'d'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -314,11 +307,9 @@ operator|-
 literal|1
 return|;
 block|}
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sigblob
-argument_list|,
-literal|0
 argument_list|,
 name|SIGBLOB_LEN
 argument_list|)
@@ -520,21 +511,10 @@ name|DSA_SIG
 modifier|*
 name|sig
 decl_stmt|;
-specifier|const
-name|EVP_MD
-modifier|*
-name|evp_md
-init|=
-name|EVP_sha1
-argument_list|()
-decl_stmt|;
-name|EVP_MD_CTX
-name|md
-decl_stmt|;
 name|u_char
 name|digest
 index|[
-name|EVP_MAX_MD_SIZE
+name|SSH_DIGEST_MAX_LENGTH
 index|]
 decl_stmt|,
 modifier|*
@@ -544,6 +524,11 @@ name|u_int
 name|len
 decl_stmt|,
 name|dlen
+init|=
+name|ssh_digest_bytes
+argument_list|(
+name|SSH_DIGEST_SHA1
+argument_list|)
 decl_stmt|;
 name|int
 name|rlen
@@ -559,36 +544,27 @@ name|key
 operator|==
 name|NULL
 operator|||
+name|key_type_plain
+argument_list|(
+name|key
+operator|->
+name|type
+argument_list|)
+operator|!=
+name|KEY_DSA
+operator|||
 name|key
 operator|->
 name|dsa
 operator|==
 name|NULL
-operator|||
-operator|(
-name|key
-operator|->
-name|type
-operator|!=
-name|KEY_DSA
-operator|&&
-name|key
-operator|->
-name|type
-operator|!=
-name|KEY_DSA_CERT
-operator|&&
-name|key
-operator|->
-name|type
-operator|!=
-name|KEY_DSA_CERT_V00
-operator|)
 condition|)
 block|{
 name|error
 argument_list|(
-literal|"ssh_dss_verify: no DSA key"
+literal|"%s: no DSA key"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -672,7 +648,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"ssh_dss_verify: cannot handle type %s"
+literal|"%s: cannot handle type %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|ktype
 argument_list|)
@@ -732,8 +710,9 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"ssh_dss_verify: "
-literal|"remaining bytes in signature %d"
+literal|"%s: remaining bytes in signature %d"
+argument_list|,
+name|__func__
 argument_list|,
 name|rlen
 argument_list|)
@@ -778,7 +757,9 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"ssh_dss_verify: DSA_SIG_new failed"
+literal|"%s: DSA_SIG_new failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -796,7 +777,9 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"ssh_dss_verify: BN_new failed"
+literal|"%s: BN_new failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -853,15 +836,15 @@ operator|)
 condition|)
 name|fatal
 argument_list|(
-literal|"ssh_dss_verify: BN_bin2bn failed"
+literal|"%s: BN_bin2bn failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* clean up */
-name|memset
+name|explicit_bzero
 argument_list|(
 name|sigblob
-argument_list|,
-literal|0
 argument_list|,
 name|len
 argument_list|)
@@ -872,35 +855,39 @@ name|sigblob
 argument_list|)
 expr_stmt|;
 comment|/* sha1 the data */
-name|EVP_DigestInit
+if|if
+condition|(
+name|ssh_digest_memory
 argument_list|(
-operator|&
-name|md
-argument_list|,
-name|evp_md
-argument_list|)
-expr_stmt|;
-name|EVP_DigestUpdate
-argument_list|(
-operator|&
-name|md
+name|SSH_DIGEST_SHA1
 argument_list|,
 name|data
 argument_list|,
 name|datalen
-argument_list|)
-expr_stmt|;
-name|EVP_DigestFinal
-argument_list|(
-operator|&
-name|md
 argument_list|,
 name|digest
 argument_list|,
-operator|&
-name|dlen
+sizeof|sizeof
+argument_list|(
+name|digest
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"%s: digest_memory failed"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|ret
 operator|=
 name|DSA_do_verify
@@ -916,11 +903,9 @@ operator|->
 name|dsa
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|digest
-argument_list|,
-literal|'d'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -935,7 +920,9 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"ssh_dss_verify: signature %s"
+literal|"%s: signature %s"
+argument_list|,
+name|__func__
 argument_list|,
 name|ret
 operator|==

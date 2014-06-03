@@ -396,6 +396,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printInstSyncBOption
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printShiftImmOperand
 argument_list|(
 argument|const MCInst *MI
@@ -425,6 +435,11 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|template
+operator|<
+name|unsigned
+name|scale
+operator|>
 name|void
 name|printAdrLabelOperand
 argument_list|(
@@ -552,6 +567,11 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|template
+operator|<
+name|bool
+name|AlwaysPrintImm0
+operator|>
 name|void
 name|printT2AddrModeImm8Operand
 argument_list|(
@@ -562,6 +582,11 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|template
+operator|<
+name|bool
+name|AlwaysPrintImm0
+operator|>
 name|void
 name|printT2AddrModeImm8s4Operand
 argument_list|(

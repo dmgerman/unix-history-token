@@ -8906,7 +8906,7 @@ name|fire_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int
+name|int
 name|i
 decl_stmt|,
 name|msiq

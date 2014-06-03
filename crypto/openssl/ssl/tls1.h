@@ -259,6 +259,11 @@ define|#
 directive|define
 name|TLSEXT_TYPE_heartbeat
 value|15
+comment|/* ExtensionType value for TLS padding extension.  * http://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml  * http://tools.ietf.org/html/draft-agl-tls-padding-03  */
+define|#
+directive|define
+name|TLSEXT_TYPE_padding
+value|21
 comment|/* ExtensionType value from RFC4507 */
 define|#
 directive|define

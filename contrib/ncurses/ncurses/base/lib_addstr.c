@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_addstr.c,v 1.48 2007/10/13 19:56:57 tom Exp $"
+literal|"$Id: lib_addstr.c,v 1.52 2011/05/28 23:02:09 tom Exp $"
 argument_list|)
 end_macro
 
@@ -64,6 +64,10 @@ argument_list|(
 literal|"waddnstr(%p,%s,%d)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|win
 operator|,
 name|_nc_visbufn
@@ -277,8 +281,17 @@ argument_list|(
 literal|"waddchnstr(%p,%p,%d)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|win
 operator|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
 name|astr
 operator|,
 name|n
@@ -439,11 +452,16 @@ name|line
 argument_list|,
 name|x
 argument_list|,
+call|(
+name|NCURSES_SIZE_T
+call|)
+argument_list|(
 name|x
 operator|+
 name|n
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_nc_synchook
@@ -486,6 +504,13 @@ name|result
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|!=
+literal|0
+condition|)
+block|{
 while|while
 condition|(
 name|CharOf
@@ -503,6 +528,7 @@ block|{
 name|result
 operator|++
 expr_stmt|;
+block|}
 block|}
 return|return
 name|result
@@ -575,6 +601,10 @@ argument_list|(
 literal|"wadd_wchnstr(%p,%s,%d)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|win
 operator|,
 name|_nc_viscbuf
@@ -912,8 +942,15 @@ expr_stmt|;
 block|}
 block|}
 name|x
-operator|+=
+operator|=
+call|(
+name|NCURSES_SIZE_T
+call|)
+argument_list|(
+name|x
+operator|+
 name|len
+argument_list|)
 expr_stmt|;
 name|end
 operator|+=
@@ -1023,6 +1060,10 @@ argument_list|(
 literal|"waddnwstr(%p,%s,%d)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|win
 operator|,
 name|_nc_viswbufn

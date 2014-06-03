@@ -272,7 +272,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
 end_include
 
 begin_endif
@@ -978,16 +978,6 @@ end_decl_stmt
 begin_decl_stmt
 name|pt_entry_t
 modifier|*
-name|CMAP1
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|pt_entry_t
-modifier|*
 name|CMAP3
 decl_stmt|;
 end_decl_stmt
@@ -1002,10 +992,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|CADDR1
-init|=
-literal|0
-decl_stmt|,
 name|ptvmmap
 init|=
 literal|0
@@ -1013,7 +999,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|caddr_t
 name|CADDR3
 decl_stmt|;
@@ -2178,16 +2163,6 @@ name|SYSMAP
 argument_list|(
 argument|caddr_t
 argument_list|,
-argument|CMAP1
-argument_list|,
-argument|CADDR1
-argument_list|,
-literal|1
-argument_list|)
-name|SYSMAP
-argument_list|(
-argument|caddr_t
-argument_list|,
 argument|CMAP3
 argument_list|,
 argument|CADDR3
@@ -3276,7 +3251,7 @@ name|shpgperproc
 operator|*
 name|maxproc
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 expr_stmt|;
@@ -3307,23 +3282,50 @@ operator|/
 literal|10
 operator|)
 expr_stmt|;
-comment|/* 	 * If the kernel is running in a virtual machine on an AMD Family 10h 	 * processor, then it must assume that MCA is enabled by the virtual 	 * machine monitor. 	 */
+comment|/* 	 * If the kernel is running on a virtual machine, then it must assume 	 * that MCA is enabled by the hypervisor.  Moreover, the kernel must 	 * be prepared for the hypervisor changing the vendor and family that 	 * are reported by CPUID.  Consequently, the workaround for AMD Family 	 * 10h Erratum 383 is enabled if the processor's feature set does not 	 * include at least one feature that is only supported by older Intel 	 * or newer AMD processors. 	 */
 if|if
 condition|(
 name|vm_guest
 operator|==
 name|VM_GUEST_VM
 operator|&&
-name|cpu_vendor_id
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_SS
+operator|)
 operator|==
-name|CPU_VENDOR_AMD
+literal|0
 operator|&&
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
+operator|(
+name|cpu_feature2
+operator|&
+operator|(
+name|CPUID2_SSSE3
+operator||
+name|CPUID2_SSE41
+operator||
+name|CPUID2_AESNI
+operator||
+name|CPUID2_AVX
+operator||
+name|CPUID2_XSAVE
+operator|)
+operator|)
 operator|==
-literal|0x10
+literal|0
+operator|&&
+operator|(
+name|amd_feature2
+operator|&
+operator|(
+name|AMDID2_XOP
+operator||
+name|AMDID2_FMA4
+operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 name|workaround_erratum383
 operator|=
@@ -6979,7 +6981,7 @@ comment|/* 	 * This is a release store so that the ordinary store unmapping 	 * 
 name|atomic_subtract_rel_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -8600,7 +8602,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -10116,7 +10118,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -12851,7 +12853,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -20066,7 +20068,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,

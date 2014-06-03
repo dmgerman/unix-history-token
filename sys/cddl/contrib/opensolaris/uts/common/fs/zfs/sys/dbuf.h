@@ -612,30 +612,6 @@ name|flags
 parameter_list|)
 function_decl|;
 name|void
-name|dbuf_will_dirty
-parameter_list|(
-name|dmu_buf_impl_t
-modifier|*
-name|db
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
-parameter_list|)
-function_decl|;
-name|void
-name|dbuf_fill_done
-parameter_list|(
-name|dmu_buf_impl_t
-modifier|*
-name|db
-parameter_list|,
-name|dmu_tx_t
-modifier|*
-name|tx
-parameter_list|)
-function_decl|;
-name|void
 name|dmu_buf_will_not_fill
 parameter_list|(
 name|dmu_buf_t
@@ -834,24 +810,6 @@ parameter_list|(
 name|_db
 parameter_list|)
 value|(!zrl_is_zero(&DB_DNODE_LOCK(_db)))
-define|#
-directive|define
-name|DB_GET_SPA
-parameter_list|(
-name|_spa_p
-parameter_list|,
-name|_db
-parameter_list|)
-value|{		\ 	dnode_t *__dn;				\ 	DB_DNODE_ENTER(_db);			\ 	__dn = DB_DNODE(_db);			\ 	*(_spa_p) = __dn->dn_objset->os_spa;	\ 	DB_DNODE_EXIT(_db);			\ }
-define|#
-directive|define
-name|DB_GET_OBJSET
-parameter_list|(
-name|_os_p
-parameter_list|,
-name|_db
-parameter_list|)
-value|{		\ 	dnode_t *__dn;				\ 	DB_DNODE_ENTER(_db);			\ 	__dn = DB_DNODE(_db);			\ 	*(_os_p) = __dn->dn_objset;		\ 	DB_DNODE_EXIT(_db);			\ }
 name|void
 name|dbuf_init
 parameter_list|(
@@ -931,7 +889,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {			\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) {			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	sprintf_blkptr(__blkbuf, bp);				\ 	dprintf_dbuf(db, fmt " %s\n", __VA_ARGS__, __blkbuf);	\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	}							\ _NOTE(CONSTCOND) } while (0)
+value|do {			\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) {			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	snprintf_blkptr(__blkbuf, BP_SPRINTF_LEN, bp);		\ 	dprintf_dbuf(db, fmt " %s\n", __VA_ARGS__, __blkbuf);	\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	}							\ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
 name|DBUF_VERIFY

@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/TemplateDeduction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -660,7 +666,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
-name|DebugPrint
+name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -723,7 +729,7 @@ name|DeclAccessPair
 name|FoundConversionFunction
 decl_stmt|;
 name|void
-name|DebugPrint
+name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1185,12 +1191,6 @@ name|ConversionKind
 range|:
 literal|30
 decl_stmt|;
-comment|/// \brief Whether the argument is an initializer list.
-name|bool
-name|ListInitializationSequence
-range|:
-literal|1
-decl_stmt|;
 comment|/// \brief Whether the target is really a std::initializer_list, and the
 comment|/// sequence only represents the worst element conversion.
 name|bool
@@ -1263,11 +1263,6 @@ argument_list|(
 name|Uninitialized
 argument_list|)
 operator|,
-name|ListInitializationSequence
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|StdInitializerListElement
 argument_list|(
 argument|false
@@ -1293,13 +1288,6 @@ argument_list|(
 name|Other
 operator|.
 name|ConversionKind
-argument_list|)
-operator|,
-name|ListInitializationSequence
-argument_list|(
-name|Other
-operator|.
-name|ListInitializationSequence
 argument_list|)
 operator|,
 name|StdInitializerListElement
@@ -1670,26 +1658,6 @@ name|construct
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// \brief Whether this sequence was created by the rules of
-comment|/// list-initialization sequences.
-name|bool
-name|isListInitializationSequence
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ListInitializationSequence
-return|;
-block|}
-name|void
-name|setListInitializationSequence
-parameter_list|()
-block|{
-name|ListInitializationSequence
-operator|=
-name|true
-expr_stmt|;
-block|}
 comment|/// \brief Whether the target is really a std::initializer_list, and the
 comment|/// sequence only represents the worst element conversion.
 name|bool
@@ -1753,7 +1721,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
-name|DebugPrint
+name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1876,97 +1844,6 @@ comment|/// to be used while performing partial ordering of function templates.
 name|unsigned
 name|ExplicitCallArguments
 decl_stmt|;
-comment|/// A structure used to record information about a failed
-comment|/// template argument deduction.
-struct|struct
-name|DeductionFailureInfo
-block|{
-comment|/// A Sema::TemplateDeductionResult.
-name|unsigned
-name|Result
-range|:
-literal|8
-decl_stmt|;
-comment|/// \brief Indicates whether a diagnostic is stored in Diagnostic.
-name|unsigned
-name|HasDiagnostic
-range|:
-literal|1
-decl_stmt|;
-comment|/// \brief Opaque pointer containing additional data about
-comment|/// this deduction failure.
-name|void
-modifier|*
-name|Data
-decl_stmt|;
-comment|/// \brief A diagnostic indicating why deduction failed.
-union|union
-block|{
-name|void
-modifier|*
-name|Align
-decl_stmt|;
-name|char
-name|Diagnostic
-index|[
-sizeof|sizeof
-argument_list|(
-name|PartialDiagnosticAt
-argument_list|)
-index|]
-decl_stmt|;
-block|}
-union|;
-comment|/// \brief Retrieve the diagnostic which caused this deduction failure,
-comment|/// if any.
-name|PartialDiagnosticAt
-modifier|*
-name|getSFINAEDiagnostic
-parameter_list|()
-function_decl|;
-comment|/// \brief Retrieve the template parameter this deduction failure
-comment|/// refers to, if any.
-name|TemplateParameter
-name|getTemplateParameter
-parameter_list|()
-function_decl|;
-comment|/// \brief Retrieve the template argument list associated with this
-comment|/// deduction failure, if any.
-name|TemplateArgumentList
-modifier|*
-name|getTemplateArgumentList
-parameter_list|()
-function_decl|;
-comment|/// \brief Return the first template argument this deduction failure
-comment|/// refers to, if any.
-specifier|const
-name|TemplateArgument
-modifier|*
-name|getFirstArg
-parameter_list|()
-function_decl|;
-comment|/// \brief Return the second template argument this deduction failure
-comment|/// refers to, if any.
-specifier|const
-name|TemplateArgument
-modifier|*
-name|getSecondArg
-parameter_list|()
-function_decl|;
-comment|/// \brief Return the expression this deduction failure refers to,
-comment|/// if any.
-name|Expr
-modifier|*
-name|getExpr
-parameter_list|()
-function_decl|;
-comment|/// \brief Free any memory associated with this deduction failure.
-name|void
-name|Destroy
-parameter_list|()
-function_decl|;
-block|}
-struct|;
 union|union
 block|{
 name|DeductionFailureInfo
@@ -2235,11 +2112,9 @@ name|clear
 parameter_list|()
 function_decl|;
 typedef|typedef
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|OverloadCandidate
-operator|,
-literal|16
 operator|>
 operator|::
 name|iterator

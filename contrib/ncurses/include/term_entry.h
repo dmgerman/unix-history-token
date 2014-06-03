@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $Id: term_entry.h,v 1.35 2008/08/16 16:16:03 tom Exp $ */
+comment|/* $Id: term_entry.h,v 1.44 2013/05/25 20:13:38 tom Exp $ */
 end_comment
 
 begin_comment
@@ -43,6 +43,53 @@ directive|endif
 include|#
 directive|include
 file|<term.h>
+comment|/*      * see db_iterator.c - this enumeration lists the places searched for a      * terminal description and defines the order in which they are searched.      */
+typedef|typedef
+enum|enum
+block|{
+name|dbdTIC
+init|=
+literal|0
+block|,
+comment|/* special, used by tic when writing entry */
+if|#
+directive|if
+name|NCURSES_USE_DATABASE
+name|dbdEnvOnce
+block|,
+comment|/* the $TERMINFO environment variable */
+name|dbdHome
+block|,
+comment|/* $HOME/.terminfo */
+name|dbdEnvList
+block|,
+comment|/* the $TERMINFO_DIRS environment variable */
+name|dbdCfgList
+block|,
+comment|/* the compiled-in TERMINFO_DIRS value */
+name|dbdCfgOnce
+block|,
+comment|/* the compiled-in TERMINFO value */
+endif|#
+directive|endif
+if|#
+directive|if
+name|NCURSES_USE_TERMCAP
+name|dbdEnvOnce2
+block|,
+comment|/* the $TERMCAP environment variable */
+name|dbdEnvList2
+block|,
+comment|/* the $TERMPATH environment variable */
+name|dbdCfgList2
+block|,
+comment|/* the compiled-in TERMPATH */
+endif|#
+directive|endif
+name|dbdLAST
+block|}
+name|DBDIRS
+typedef|;
 define|#
 directive|define
 name|MAX_USES
@@ -113,6 +160,7 @@ decl_stmt|;
 block|}
 name|ENTRY
 typedef|;
+comment|/* *INDENT-OFF* */
 if|#
 directive|if
 name|NCURSES_XNAMES
@@ -198,7 +246,7 @@ name|NUM_EXT_NAMES
 parameter_list|(
 name|tp
 parameter_list|)
-value|((tp)->ext_Booleans + (tp)->ext_Numbers + (tp)->ext_Strings)
+value|(unsigned) ((tp)->ext_Booleans + (tp)->ext_Numbers + (tp)->ext_Strings)
 define|#
 directive|define
 name|for_each_boolean
@@ -226,6 +274,38 @@ parameter_list|,
 name|tp
 parameter_list|)
 value|for(n = 0; n< NUM_STRINGS(tp);  n++)
+if|#
+directive|if
+name|NCURSES_XNAMES
+define|#
+directive|define
+name|for_each_ext_boolean
+parameter_list|(
+name|n
+parameter_list|,
+name|tp
+parameter_list|)
+value|for(n = BOOLCOUNT; n< NUM_BOOLEANS(tp); n++)
+define|#
+directive|define
+name|for_each_ext_number
+parameter_list|(
+name|n
+parameter_list|,
+name|tp
+parameter_list|)
+value|for(n = NUMCOUNT; n< NUM_NUMBERS(tp);  n++)
+define|#
+directive|define
+name|for_each_ext_string
+parameter_list|(
+name|n
+parameter_list|,
+name|tp
+parameter_list|)
+value|for(n = STRCOUNT; n< NUM_STRINGS(tp);  n++)
+endif|#
+directive|endif
 define|#
 directive|define
 name|ExtBoolname
@@ -467,6 +547,7 @@ argument_list|(
 name|TERMTYPE
 operator|*
 argument_list|,
+specifier|const
 name|TERMTYPE
 operator|*
 argument_list|)
@@ -787,6 +868,10 @@ operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* *INDENT-ON* */
+end_comment
 
 begin_ifdef
 ifdef|#

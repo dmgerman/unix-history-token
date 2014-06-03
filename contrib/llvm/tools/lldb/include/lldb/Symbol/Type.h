@@ -1160,7 +1160,40 @@ return|;
 end_return
 
 begin_macro
-unit|}          ClangASTType
+unit|}      ClangASTType
+name|GetTypedefedType
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+if|if
+condition|(
+name|type_sp
+condition|)
+return|return
+name|type_sp
+operator|->
+name|GetClangFullType
+argument_list|()
+operator|.
+name|GetTypedefedType
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|clang_type
+operator|.
+name|GetTypedefedType
+argument_list|()
+return|;
+end_return
+
+begin_macro
+unit|}      ClangASTType
 name|GetDereferencedType
 argument_list|()
 end_macro
@@ -1442,6 +1475,11 @@ specifier|const
 expr_stmt|;
 name|TypeImpl
 name|GetReferenceType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|TypeImpl
+name|GetTypedefedType
 argument_list|()
 specifier|const
 expr_stmt|;

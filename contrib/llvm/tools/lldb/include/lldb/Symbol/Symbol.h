@@ -599,6 +599,30 @@ operator|*
 name|s
 argument_list|)
 block|;
+name|lldb
+operator|::
+name|DisassemblerSP
+name|GetInstructions
+argument_list|(
+argument|const ExecutionContext&exe_ctx
+argument_list|,
+argument|const char *flavor
+argument_list|,
+argument|bool prefer_file_cache
+argument_list|)
+block|;
+name|bool
+name|GetDisassembly
+argument_list|(
+argument|const ExecutionContext&exe_ctx
+argument_list|,
+argument|const char *flavor
+argument_list|,
+argument|bool prefer_file_cache
+argument_list|,
+argument|Stream&strm
+argument_list|)
+block|;
 name|protected
 operator|:
 name|uint32_t

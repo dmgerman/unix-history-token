@@ -428,9 +428,6 @@ decl_stmt|;
 name|uint32_t
 name|ah_txUrnInterruptMask
 decl_stmt|;
-name|HAL_POWER_MODE
-name|ah_powerMode
-decl_stmt|;
 name|uint8_t
 name|ah_bssid
 index|[
@@ -469,6 +466,10 @@ name|u_int
 name|ah_ctstimeout
 decl_stmt|;
 comment|/* user-specified cts timeout */
+name|uint16_t
+name|ah_associd
+decl_stmt|;
+comment|/* association id */
 block|}
 struct|;
 end_struct

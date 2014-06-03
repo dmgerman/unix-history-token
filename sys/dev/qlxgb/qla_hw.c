@@ -4886,7 +4886,6 @@ name|max_frame_size
 operator|)
 condition|)
 block|{
-comment|/* TBD: copy into private buffer and send it */
 name|device_printf
 argument_list|(
 name|dev

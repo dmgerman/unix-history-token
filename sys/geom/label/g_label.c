@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_geom.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -317,6 +323,15 @@ index|[]
 init|=
 block|{
 operator|&
+name|g_label_gpt
+block|,
+operator|&
+name|g_label_gpt_uuid
+block|,
+ifdef|#
+directive|ifdef
+name|GEOM_LABEL
+operator|&
 name|g_label_ufs_id
 block|,
 operator|&
@@ -338,14 +353,10 @@ operator|&
 name|g_label_ntfs
 block|,
 operator|&
-name|g_label_gpt
-block|,
-operator|&
-name|g_label_gpt_uuid
-block|,
-operator|&
 name|g_label_disk_ident
 block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;

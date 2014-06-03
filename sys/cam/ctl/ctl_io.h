@@ -348,6 +348,41 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ctl_lba_len_flags
+block|{
+name|uint64_t
+name|lba
+decl_stmt|;
+name|uint32_t
+name|len
+decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ctl_ptr_len_flags
+block|{
+name|uint8_t
+modifier|*
+name|ptr
+decl_stmt|;
+name|uint32_t
+name|len
+decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|ctl_priv
@@ -826,6 +861,7 @@ name|ctl_io_hdr
 name|io_hdr
 decl_stmt|;
 comment|/* common to all I/O types */
+comment|/* 	 * The ext_* fields are generally intended for frontend use; CTL itself 	 * doesn't modify or use them. 	 */
 name|uint32_t
 name|ext_sg_entries
 decl_stmt|;
@@ -843,35 +879,35 @@ name|uint32_t
 name|ext_data_filled
 decl_stmt|;
 comment|/* Amount of data filled so far */
+comment|/* 	 * The number of scatter/gather entries in the list pointed to 	 * by kern_data_ptr.  0 means there is no list, just a data pointer. 	 */
 name|uint32_t
 name|kern_sg_entries
 decl_stmt|;
-comment|/* 0 = no S/G list,> 0 = num entries */
 name|uint32_t
 name|rem_sg_entries
 decl_stmt|;
-comment|/* 0 = no S/G list,> 0 = num entries */
+comment|/* Unused. */
+comment|/* 	 * The data pointer or a pointer to the scatter/gather list. 	 */
 name|uint8_t
 modifier|*
 name|kern_data_ptr
 decl_stmt|;
-comment|/* data buffer or S/G list */
+comment|/* 	 * Length of the data buffer or scatter/gather list.  It's also 	 * the length of this particular piece of the data transfer, 	 * ie. number of bytes expected to be transferred by the current 	 * invocation of frontend's datamove() callback.  It's always 	 * less than or equal to kern_total_len. 	 */
 name|uint32_t
 name|kern_data_len
 decl_stmt|;
-comment|/* Length of this S/G list/buffer */
+comment|/* 	 * Total length of data to be transferred during this particular 	 * SCSI command, as decoded from SCSI CDB. 	 */
 name|uint32_t
 name|kern_total_len
 decl_stmt|;
-comment|/* Total length of this transaction */
+comment|/* 	 * Amount of data left after the current data transfer. 	 */
 name|uint32_t
 name|kern_data_resid
 decl_stmt|;
-comment|/* Length left to transfer after this*/
+comment|/* 	 * Byte offset of this transfer, equal to the amount of data 	 * already transferred for this SCSI command during previous 	 * datamove() invocations. 	 */
 name|uint32_t
 name|kern_rel_offset
 decl_stmt|;
-comment|/* Byte Offset of this transfer */
 name|struct
 name|scsi_sense_data
 name|sense_data
@@ -888,7 +924,7 @@ comment|/* SCSI status byte */
 name|uint8_t
 name|sense_residual
 decl_stmt|;
-comment|/* sense residual length */
+comment|/* Unused. */
 name|uint32_t
 name|residual
 decl_stmt|;

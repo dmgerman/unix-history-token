@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014 by Saso Kiselkov. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3538,7 +3538,7 @@ parameter_list|(
 name|buf
 parameter_list|)
 define|\
-value|((buf)->b_dva.dva_word[0] == 0&&			\ 	(buf)->b_dva.dva_word[1] == 0&&			\ 	(buf)->b_birth == 0)
+value|((buf)->b_dva.dva_word[0] == 0&&			\ 	(buf)->b_dva.dva_word[1] == 0&&			\ 	(buf)->b_cksum0 == 0)
 end_define
 
 begin_define
@@ -17215,6 +17215,24 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|BP_IS_HOLE
+argument_list|(
+name|zio
+operator|->
+name|io_bp
+argument_list|)
+condition|)
+block|{
+name|buf_discard_identity
+argument_list|(
+name|hdr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|hdr
 operator|->
 name|b_dva
@@ -17253,6 +17271,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -17836,11 +17855,11 @@ argument_list|(
 operator|(
 name|uintmax_t
 operator|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 argument_list|)
@@ -17887,11 +17906,11 @@ directive|endif
 comment|/* sun */
 if|if
 condition|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|>
@@ -20271,6 +20290,26 @@ argument_list|,
 name|ab
 argument_list|)
 expr_stmt|;
+name|abl2
+operator|=
+name|ab
+operator|->
+name|b_l2hdr
+expr_stmt|;
+comment|/* 		 * Release the temporary compressed buffer as soon as possible. 		 */
+if|if
+condition|(
+name|abl2
+operator|->
+name|b_compress
+operator|!=
+name|ZIO_COMPRESS_OFF
+condition|)
+name|l2arc_release_cdata_buf
+argument_list|(
+name|ab
+argument_list|)
+expr_stmt|;
 name|hash_lock
 operator|=
 name|HDR_LOCK
@@ -20295,26 +20334,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|abl2
-operator|=
-name|ab
-operator|->
-name|b_l2hdr
-expr_stmt|;
-comment|/* 		 * Release the temporary compressed buffer as soon as possible. 		 */
-if|if
-condition|(
-name|abl2
-operator|->
-name|b_compress
-operator|!=
-name|ZIO_COMPRESS_OFF
-condition|)
-name|l2arc_release_cdata_buf
-argument_list|(
-name|ab
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|zio

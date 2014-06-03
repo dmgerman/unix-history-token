@@ -144,7 +144,7 @@ argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
 block|;
-comment|// getReturn|Unwind|UnreachableBlock - Return the new single (or nonexistant)
+comment|// getReturn|Unwind|UnreachableBlock - Return the new single (or nonexistent)
 comment|// return, unwind, or unreachable  basic blocks in the CFG.
 comment|//
 name|BasicBlock

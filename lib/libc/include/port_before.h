@@ -32,7 +32,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|USE_KQUEUE
+name|USE_POLL
 value|1
 end_define
 

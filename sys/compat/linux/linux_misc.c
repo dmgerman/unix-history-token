@@ -680,7 +680,7 @@ name|sysinfo
 operator|.
 name|totalram
 operator|-
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 operator|*

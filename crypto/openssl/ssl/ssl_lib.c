@@ -8242,7 +8242,19 @@ name|NULL
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
+comment|/* No compression for DTLS */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|meth
+operator|->
+name|version
+operator|!=
+name|DTLS1_VERSION
+condition|)
 name|ret
 operator|->
 name|comp_methods
@@ -8250,7 +8262,7 @@ operator|=
 name|SSL_COMP_get_compression_methods
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_expr_stmt
 name|ret
@@ -13084,21 +13096,6 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-if|if
-condition|(
-name|s
-operator|->
-name|server
-condition|)
-return|return
-operator|(
-name|ssl_get_server_send_cert
-argument_list|(
-name|s
-argument_list|)
-operator|)
-return|;
-elseif|else
 if|if
 condition|(
 name|s

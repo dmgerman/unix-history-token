@@ -785,6 +785,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PF
+end_ifdef
+
 begin_comment
 comment|/* altq.c */
 end_comment
@@ -822,6 +828,22 @@ name|altqptr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NO_ALTQ
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* dummynet.c */

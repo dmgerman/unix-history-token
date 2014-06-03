@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//=- HexagonMachineFuctionInfo.h - Hexagon machine function info --*- C++ -*-=//
+comment|//=- HexagonMachineFunctionInfo.h - Hexagon machine function info -*- C++ -*-=//
 end_comment
 
 begin_comment
@@ -42,6 +42,12 @@ define|#
 directive|define
 name|HexagonMACHINEFUNCTIONINFO_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
 
 begin_include
 include|#
@@ -113,6 +119,11 @@ block|,
 name|unsigned
 operator|>
 name|PacketInfo
+block|;
+name|virtual
+name|void
+name|anchor
+argument_list|()
 block|;
 name|public
 operator|:

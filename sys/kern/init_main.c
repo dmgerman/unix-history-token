@@ -2469,7 +2469,7 @@ argument_list|(
 operator|(
 name|vm_paddr_t
 operator|)
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)

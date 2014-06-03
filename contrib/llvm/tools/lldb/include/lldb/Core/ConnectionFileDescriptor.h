@@ -47,24 +47,11 @@ begin_comment
 comment|// C Includes
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_WIN32
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|in_port_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_include
 include|#
@@ -218,17 +205,23 @@ argument_list|)
 block|;
 comment|// If the read file descriptor is a socket, then return
 comment|// the port number that is being used by the socket.
-name|in_port_t
+name|uint16_t
 name|GetReadPort
 argument_list|()
 specifier|const
 block|;
 comment|// If the write file descriptor is a socket, then return
 comment|// the port number that is being used by the socket.
-name|in_port_t
+name|uint16_t
 name|GetWritePort
 argument_list|()
 specifier|const
+block|;
+name|uint16_t
+name|GetBoundPort
+argument_list|(
+argument|uint32_t timeout_sec
+argument_list|)
 block|;
 name|protected
 operator|:
@@ -272,8 +265,10 @@ decl|::
 name|ConnectionStatus
 name|SocketListen
 argument_list|(
-name|uint16_t
-name|listen_port_num
+specifier|const
+name|char
+operator|*
+name|host_and_port
 argument_list|,
 name|Error
 operator|*
@@ -377,10 +372,6 @@ name|SocketAddress
 decl|>
 name|m_udp_send_sockaddr
 empty_stmt|;
-name|bool
-name|m_should_close_fd
-block|;
-comment|// True if this class should close the file descriptor when it goes away.
 name|uint32_t
 name|m_socket_timeout_usec
 block|;
@@ -395,13 +386,24 @@ comment|// m_fd_recv so we can force ourselves out of the select.
 name|Mutex
 name|m_mutex
 block|;
+name|Predicate
+decl|<
+name|uint16_t
+decl|>
+name|m_port_predicate
+empty_stmt|;
+comment|// Used when binding to port zero to wait for the thread that creates the socket, binds and listens to resolve the port number
+name|bool
+name|m_should_close_fd
+block|;
+comment|// True if this class should close the file descriptor when it goes away.
 name|bool
 name|m_shutting_down
 block|;
 comment|// This marks that we are shutting down so if we get woken up from BytesAvailable
 comment|// to disconnect, we won't try to read again.
 specifier|static
-name|in_port_t
+name|uint16_t
 name|GetSocketPort
 parameter_list|(
 name|int

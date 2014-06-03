@@ -147,6 +147,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+value|(MASK_INTERWORK | TARGET_ENDIAN_DEFAULT)
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|ARM_DEFAULT_ABI
 end_undef
 

@@ -288,13 +288,6 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|var
-name|vppid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|var
 name|vps1
 decl_stmt|;
 end_decl_stmt
@@ -310,13 +303,6 @@ begin_decl_stmt
 name|struct
 name|var
 name|vps4
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|var
-name|vvers
 decl_stmt|;
 end_decl_stmt
 
@@ -409,17 +395,6 @@ literal|"PATH="
 name|_PATH_DEFPATH
 block|,
 name|changepath
-block|}
-block|,
-block|{
-operator|&
-name|vppid
-block|,
-name|VUNSET
-block|,
-literal|"PPID="
-block|,
-name|NULL
 block|}
 block|,
 comment|/* 	 * vps1 depends on uid 	 */
@@ -808,19 +783,6 @@ operator||
 name|VTEXTFIXED
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|vppid
-operator|.
-name|flags
-operator|&
-name|VEXPORT
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 name|fmtstr
 argument_list|(
 name|ppid
@@ -848,7 +810,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|envp
@@ -885,6 +846,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|setvareq
+argument_list|(
+literal|"OPTIND=1"
+argument_list|,
+name|VTEXTFIXED
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1144,6 +1112,8 @@ operator|+=
 name|vallen
 expr_stmt|;
 block|}
+name|INTOFF
+expr_stmt|;
 name|nameeq
 operator|=
 name|ckmalloc
@@ -1202,6 +1172,8 @@ name|nameeq
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 block|}
 end_function
@@ -1341,6 +1313,8 @@ name|char
 modifier|*
 name|ss
 decl_stmt|;
+name|INTOFF
+expr_stmt|;
 name|ss
 operator|=
 name|savestr
@@ -1403,6 +1377,8 @@ name|ckfree
 argument_list|(
 name|ss
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 return|return;
 block|}
@@ -1492,6 +1468,26 @@ name|flags
 operator|&
 name|VREADONLY
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|VTEXTFIXED
+operator||
+name|VSTACK
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|ckfree
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"%.*s: is read only"
@@ -1503,13 +1499,35 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|flags
 operator|&
 name|VNOSET
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|VTEXTFIXED
+operator||
+name|VSTACK
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|ckfree
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|INTOFF
 expr_stmt|;
 if|if
@@ -1668,7 +1686,30 @@ name|flags
 operator|&
 name|VNOSET
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|(
+name|VTEXTFIXED
+operator||
+name|VSTACK
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|ckfree
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
+name|INTOFF
+expr_stmt|;
 name|vp
 operator|=
 name|ckmalloc
@@ -1710,8 +1751,6 @@ operator|->
 name|func
 operator|=
 name|NULL
-expr_stmt|;
-name|INTOFF
 expr_stmt|;
 operator|*
 name|vpp
@@ -3491,6 +3530,8 @@ name|var
 modifier|*
 name|vp
 decl_stmt|;
+name|INTOFF
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3618,6 +3659,8 @@ name|lvp
 argument_list|)
 expr_stmt|;
 block|}
+name|INTON
+expr_stmt|;
 block|}
 end_function
 
@@ -3768,6 +3811,8 @@ name|flg_var
 operator|=
 literal|1
 expr_stmt|;
+name|INTOFF
+expr_stmt|;
 for|for
 control|(
 name|ap
@@ -3806,6 +3851,8 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
+name|INTON
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -3813,7 +3860,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unset the specified variable.  */
+comment|/*  * Unset the specified variable.  * Called with interrupts off.  */
 end_comment
 
 begin_function
@@ -3873,8 +3920,6 @@ operator|(
 literal|1
 operator|)
 return|;
-name|INTOFF
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -3993,8 +4038,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-name|INTON
-expr_stmt|;
 return|return
 operator|(
 literal|0

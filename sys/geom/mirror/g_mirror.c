@@ -3290,6 +3290,16 @@ condition|(
 name|md
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_MIRROR_DEVICE_FLAG_WIPE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * Handle the case, when the size of parent provider reduced. 		 */
@@ -3875,6 +3885,18 @@ argument_list|,
 name|SX_LOCKED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_MIRROR_DEVICE_FLAG_WIPE
+operator|)
+operator|==
+literal|0
+condition|)
 name|g_mirror_fill_metadata
 argument_list|(
 name|sc
@@ -13957,11 +13979,13 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Cannot destroy %s."
+literal|"Cannot destroy %s (error=%d)."
 argument_list|,
 name|sc
 operator|->
 name|sc_name
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|sx_xunlock

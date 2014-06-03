@@ -2499,6 +2499,11 @@ name|readascii
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|local_mac
+init|=
+literal|0
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -2545,6 +2550,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|local_mac
+operator|=
+literal|1
+expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -3328,8 +3337,13 @@ operator|&
 literal|0xff
 expr_stmt|;
 block|}
+comment|/* 	 * This is a little hairy and stupid. 	 * 	 * For some older boards, the arge1 mac isn't pulled from anywhere. 	 * It's just assumed the MAC is the base MAC + 1. 	 * 	 * For other boards, there's multiple MAC addresses stored in EEPROM. 	 * 	 * So, if we did read the eeprommac for this particular interface, 	 * let's use the address as given.  Otherwise, just add the MAC unit 	 * counter to it. 	 * 	 * XXX TODO: we really should handle MAC byte wraparound! 	 */
 if|if
 condition|(
+name|local_mac
+operator|==
+literal|0
+operator|&&
 name|sc
 operator|->
 name|arge_mac_unit

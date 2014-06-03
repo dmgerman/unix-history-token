@@ -3,6 +3,24 @@ begin_comment
 comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  *  * $FreeBSD$  *  */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dtrace
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"DTrace debug parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|int
 name|dtrace_debug
@@ -264,7 +282,25 @@ name|sysctl_dtrace_providers
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"available DTrace providers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dtrace
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"DTrace parameters"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -272,7 +308,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_debug_dtrace
+name|_kern_dtrace
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -286,6 +322,48 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"largest allowed argument to memstr(), 0 indicates no limit"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_kern_dtrace
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dof_maxsize
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dtrace_dof_maxsize
+argument_list|,
+literal|0
+argument_list|,
+literal|"largest allowed DOF table"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_LONG
+argument_list|(
+name|_kern_dtrace
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|helper_actions_max
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dtrace_helper_actions_max
+argument_list|,
+literal|0
+argument_list|,
+literal|"maximum number of allowed helper actions"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

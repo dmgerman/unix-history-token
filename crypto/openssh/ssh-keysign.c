@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keysign.c,v 1.37 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: ssh-keysign.c,v 1.39 2013/12/06 13:39:49 markus Exp $ */
 end_comment
 
 begin_comment
@@ -633,7 +633,7 @@ decl_stmt|;
 define|#
 directive|define
 name|NUM_KEYTYPES
-value|3
+value|4
 name|Key
 modifier|*
 name|keys
@@ -760,6 +760,19 @@ index|]
 operator|=
 name|open
 argument_list|(
+name|_PATH_HOST_ED25519_KEY_FILE
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+name|key_fd
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|open
+argument_list|(
 name|_PATH_HOST_RSA_KEY_FILE
 argument_list|,
 name|O_RDONLY
@@ -804,9 +817,6 @@ expr_stmt|;
 name|seed_rng
 argument_list|()
 expr_stmt|;
-name|arc4random_stir
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_SSH_KEYSIGN
@@ -836,6 +846,8 @@ operator|)
 name|read_config_file
 argument_list|(
 name|_PATH_HOST_CONFIG_FILE
+argument_list|,
+name|pw
 argument_list|,
 literal|""
 argument_list|,

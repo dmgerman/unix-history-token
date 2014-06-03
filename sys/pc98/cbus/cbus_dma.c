@@ -1374,13 +1374,13 @@ name|EPSON_BOUNCEDMA
 define|#
 directive|define
 name|ISARAM_END
-value|0xf00000
+value|0x0f00000
 else|#
 directive|else
 define|#
 directive|define
 name|ISARAM_END
-value|RAM_END
+value|0x1000000
 endif|#
 directive|endif
 if|if

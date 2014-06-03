@@ -62,13 +62,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ZYNQ7_PSIO_VBASE
-value|0xE0000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|ZYNQ7_PSIO_HWBASE
 value|0xE0000000
 end_define
@@ -87,13 +80,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ZYNQ7_UART0_VBASE
-value|(ZYNQ7_PSIO_VBASE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ZYNQ7_UART0_HWBASE
 value|(ZYNQ7_PSIO_HWBASE)
 end_define
@@ -103,13 +89,6 @@ define|#
 directive|define
 name|ZYNQ7_UART0_SIZE
 value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ZYNQ7_UART1_VBASE
-value|(ZYNQ7_PSIO_VBASE+0x1000)
 end_define
 
 begin_define
@@ -151,13 +130,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ZYNQ7_PSCTL_VBASE
-value|0xF8000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|ZYNQ7_PSCTL_HWBASE
 value|0xF8000000
 end_define
@@ -172,13 +144,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ZYNQ7_SLCR_VBASE
-value|(ZYNQ7_PSCTL_VBASE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ZYNQ7_SLCR_HWBASE
 value|(ZYNQ7_PSCTL_HWBASE)
 end_define
@@ -188,13 +153,6 @@ define|#
 directive|define
 name|ZYNQ7_SLCR_SIZE
 value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ZYNQ7_DEVCFG_VBASE
-value|(ZYNQ7_PSCTL_VBASE+0x7000)
 end_define
 
 begin_define

@@ -32,10 +32,6 @@ comment|///             conditionally to keep the code working on older boxes.
 end_comment
 
 begin_comment
-comment|///             We could also support using some external libary for SHA-256.
-end_comment
-
-begin_comment
 comment|//
 end_comment
 

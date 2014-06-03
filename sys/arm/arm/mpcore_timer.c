@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.
 end_comment
 
 begin_comment
-comment|/**  *	The ARM Cortex-A9 core can support a global timer plus a private and  *	watchdog timer per core.  This driver reserves memory and interrupt  *	resources for accessing both timer register sets, these resources are  *	stored globally and used to setup the timecount and eventtimer.  *  *	The timecount timer uses the global 64-bit counter, whereas the  *	per-CPU eventtimer uses the private 32-bit counters.  *  *  *	REF: ARM Cortex-A9 MPCore, Technical Reference Manual (rev. r2p2)  */
+comment|/**  * The ARM Cortex-A9 core can support a global timer plus a private and  * watchdog timer per core.  This driver reserves memory and interrupt  * resources for accessing both timer register sets, these resources are  * stored globally and used to setup the timecount and eventtimer.  *  * The timecount timer uses the global 64-bit counter, whereas the  * per-CPU eventtimer uses the private 32-bit counters.  *  *  * REF: ARM Cortex-A9 MPCore, Technical Reference Manual (rev. r2p2)  */
 end_comment
 
 begin_include
@@ -133,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<machine/fdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/arm/mpcore_timervar.h>
 end_include
 
 begin_comment
@@ -300,7 +306,7 @@ decl_stmt|;
 name|bus_space_handle_t
 name|gbl_bsh
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|clkfreq
 decl_stmt|;
 name|struct
@@ -377,7 +383,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|uint32_t
+specifier|static
+name|uint64_t
 name|platform_arm_tmr_freq
 init|=
 literal|0
@@ -449,7 +456,7 @@ block|{
 operator|.
 name|tc_name
 operator|=
-literal|"ARM MPCore Timecounter"
+literal|"MPCore"
 block|,
 operator|.
 name|tc_get_timecount
@@ -475,7 +482,7 @@ block|,
 operator|.
 name|tc_quality
 operator|=
-literal|1000
+literal|800
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -535,6 +542,20 @@ decl_stmt|;
 name|uint32_t
 name|ctrl
 decl_stmt|;
+name|tmr_prv_write_4
+argument_list|(
+name|PRV_TIMER_CTRL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|tmr_prv_write_4
+argument_list|(
+name|PRV_TIMER_INTR
+argument_list|,
+name|PRV_TIMER_INTR_EVENT
+argument_list|)
+expr_stmt|;
 name|ctrl
 operator|=
 name|PRV_TIMER_CTRL_IRQ_ENABLE
@@ -581,10 +602,11 @@ literal|0
 condition|)
 name|count
 operator|=
-operator|(
-operator|(
+call|(
 name|uint32_t
-operator|)
+call|)
+argument_list|(
+operator|(
 name|et
 operator|->
 name|et_frequency
@@ -593,6 +615,7 @@ name|first
 operator|)
 operator|>>
 literal|32
+argument_list|)
 expr_stmt|;
 else|else
 name|count
@@ -648,6 +671,13 @@ argument_list|(
 name|PRV_TIMER_CTRL
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|tmr_prv_write_4
+argument_list|(
+name|PRV_TIMER_INTR
+argument_list|,
+name|PRV_TIMER_INTR_EVENT
 argument_list|)
 expr_stmt|;
 return|return
@@ -741,6 +771,19 @@ block|{
 if|if
 condition|(
 operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+operator|!
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -757,7 +800,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"ARM Generic MPCore Timers"
+literal|"ARM MPCore Timers"
 argument_list|)
 expr_stmt|;
 return|return
@@ -801,6 +844,9 @@ name|void
 modifier|*
 name|ihl
 decl_stmt|;
+name|boolean_t
+name|fixed_freq
+decl_stmt|;
 if|if
 condition|(
 name|arm_tmr_sc
@@ -813,15 +859,35 @@ return|;
 if|if
 condition|(
 name|platform_arm_tmr_freq
+operator|==
+name|ARM_TMR_FREQUENCY_VARIES
+condition|)
+block|{
+name|fixed_freq
+operator|=
+name|false
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fixed_freq
+operator|=
+name|true
+expr_stmt|;
+if|if
+condition|(
+name|platform_arm_tmr_freq
 operator|!=
 literal|0
 condition|)
+block|{
 name|sc
 operator|->
 name|clkfreq
 operator|=
 name|platform_arm_tmr_freq
 expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* Get the base clock frequency */
@@ -835,7 +901,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -858,7 +924,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"missing clock-frequency attribute in FDT\n"
+literal|"missing clock-frequency "
+literal|"attribute in FDT\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -871,11 +938,9 @@ name|sc
 operator|->
 name|clkfreq
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|clock
-argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -981,35 +1046,6 @@ argument_list|,
 literal|0x00000000
 argument_list|)
 expr_stmt|;
-comment|/* Setup and enable the global timer to use as the timecounter */
-name|tmr_gbl_write_4
-argument_list|(
-name|GBL_TIMER_CTRL
-argument_list|,
-operator|(
-literal|0x00
-operator|<<
-name|GBL_TIMER_CTR_PRESCALER_SHIFT
-operator|)
-operator||
-name|GBL_TIMER_CTRL_TIMER_ENABLE
-argument_list|)
-expr_stmt|;
-name|arm_tmr_timecount
-operator|.
-name|tc_frequency
-operator|=
-name|sc
-operator|->
-name|clkfreq
-expr_stmt|;
-name|tc_init
-argument_list|(
-operator|&
-name|arm_tmr_timecount
-argument_list|)
-expr_stmt|;
-comment|/* Setup and enable the timer */
 if|if
 condition|(
 name|bus_setup_intr
@@ -1062,13 +1098,42 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* 	 * If the clock is fixed-frequency, setup and enable the global timer to 	 * use as the timecounter.  If it's variable frequency it won't work as 	 * a timecounter.  We also can't use it for DELAY(), so hopefully the 	 * platform provides its own implementation.  If it doesn't, ours will 	 * get used, but since the frequency isn't set, it will only use the 	 * bogus loop counter. 	 */
+if|if
+condition|(
+name|fixed_freq
+condition|)
+block|{
+name|tmr_gbl_write_4
+argument_list|(
+name|GBL_TIMER_CTRL
+argument_list|,
+name|GBL_TIMER_CTRL_TIMER_ENABLE
+argument_list|)
+expr_stmt|;
+name|arm_tmr_timecount
+operator|.
+name|tc_frequency
+operator|=
+name|sc
+operator|->
+name|clkfreq
+expr_stmt|;
+name|tc_init
+argument_list|(
+operator|&
+name|arm_tmr_timecount
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Setup and register the eventtimer.  Most event timers set their min 	 * and max period values to some value calculated from the clock 	 * frequency.  We might not know yet what our runtime clock frequency 	 * will be, so we just use some safe values.  A max of 2 seconds ensures 	 * that even if our base clock frequency is 2GHz (meaning a 4GHz CPU), 	 * we won't overflow our 32-bit timer count register.  A min of 20 	 * nanoseconds is pretty much completely arbitrary. 	 */
 name|sc
 operator|->
 name|et
 operator|.
 name|et_name
 operator|=
-literal|"ARM MPCore Eventtimer"
+literal|"MPCore"
 expr_stmt|;
 name|sc
 operator|->
@@ -1106,17 +1171,9 @@ name|et
 operator|.
 name|et_min_period
 operator|=
-operator|(
-literal|0x00000002LLU
-operator|<<
-literal|32
-operator|)
-operator|/
-name|sc
-operator|->
-name|et
-operator|.
-name|et_frequency
+literal|20
+operator|*
+name|SBT_1NS
 expr_stmt|;
 name|sc
 operator|->
@@ -1124,17 +1181,9 @@ name|et
 operator|.
 name|et_max_period
 operator|=
-operator|(
-literal|0xfffffffeLLU
-operator|<<
-literal|32
-operator|)
-operator|/
-name|sc
-operator|->
-name|et
-operator|.
-name|et_frequency
+literal|2
+operator|*
+name|SBT_1S
 expr_stmt|;
 name|sc
 operator|->
@@ -1251,31 +1300,37 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  *	cpu_initclocks - called by system to initialise the cpu clocks  *  *	This is a boilerplat function, most of the setup has already been done  *	when the driver was attached.  Therefore this function must only be called  *	after the driver is attached.  *  *	RETURNS  *	nothing  */
+comment|/*  * Handle a change in clock frequency.  The mpcore timer runs at half the CPU  * frequency.  When the CPU frequency changes due to power-saving or thermal  * managment, the platform-specific code that causes the frequency change calls  * this routine to inform the clock driver, and we in turn inform the event  * timer system, which actually updates the value in et->frequency for us and  * reschedules the current event(s) in a way that's atomic with respect to  * start/stop/intr code that may be running on various CPUs at the time of the  * call.  *  * This routine can also be called by a platform's early init code.  If the  * value passed is ARM_TMR_FREQUENCY_VARIES, that will cause the attach() code  * to register as an eventtimer, but not a timecounter.  If the value passed in  * is any other non-zero value it is used as the fixed frequency for the timer.  */
 end_comment
 
 begin_function
 name|void
-name|cpu_initclocks
+name|arm_tmr_change_frequency
 parameter_list|(
-name|void
+name|uint64_t
+name|newfreq
 parameter_list|)
 block|{
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|arm_tmr_sc
 operator|==
-literal|0
+name|NULL
 condition|)
-name|cpu_initclocks_bsp
-argument_list|()
+name|platform_arm_tmr_freq
+operator|=
+name|newfreq
 expr_stmt|;
 else|else
-name|cpu_initclocks_ap
-argument_list|()
+name|et_change_frequency
+argument_list|(
+operator|&
+name|arm_tmr_sc
+operator|->
+name|et
+argument_list|,
+name|newfreq
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1285,8 +1340,11 @@ comment|/**  *	DELAY - Delay for at least usec microseconds.  *	@usec: number of
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|DELAY
+name|__used
+comment|/* Must emit function code for the weak ref below. */
+name|arm_tmr_DELAY
 parameter_list|(
 name|int
 name|usec
@@ -1309,6 +1367,12 @@ condition|(
 name|arm_tmr_sc
 operator|==
 name|NULL
+operator|||
+name|arm_tmr_timecount
+operator|.
+name|tc_frequency
+operator|==
+literal|0
 condition|)
 block|{
 for|for
@@ -1422,6 +1486,20 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Supply a DELAY() implementation via weak linkage.  A platform may want to use  * the mpcore per-cpu eventtimers but provide its own DELAY() routine,  * especially when the core frequency can change on the fly.  */
+end_comment
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|arm_tmr_DELAY
+argument_list|,
+name|DELAY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

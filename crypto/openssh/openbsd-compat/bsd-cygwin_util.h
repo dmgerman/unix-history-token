@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-cygwin_util.h,v 1.16 2013/04/01 01:40:49 dtucker Exp $ */
+comment|/* $Id: bsd-cygwin_util.h,v 1.17 2014/01/18 10:04:00 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -49,6 +49,38 @@ directive|define
 name|INVALID_HANDLE_VALUE
 value|((HANDLE) -1)
 end_define
+
+begin_comment
+comment|/* Cygwin functions for which declarations are only available when including    windows headers, so we have to define them here explicitely. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|HANDLE
+name|cygwin_logon_user
+parameter_list|(
+specifier|const
+name|struct
+name|passwd
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|cygwin_set_impersonation_token
+parameter_list|(
+specifier|const
+name|HANDLE
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_include
 include|#

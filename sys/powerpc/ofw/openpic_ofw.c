@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/openpicreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/openpicvar.h>
 end_include
 
@@ -201,6 +207,20 @@ argument_list|(
 name|device_attach
 argument_list|,
 name|openpic_ofw_attach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_suspend
+argument_list|,
+name|openpic_suspend
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|openpic_resume
 argument_list|)
 block|,
 comment|/* PIC interface */
@@ -296,7 +316,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|openpic
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|openpic_ofw_driver
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2009, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -670,14 +670,16 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-name|error
-operator|=
+name|VERIFY0
+argument_list|(
 name|zap_lookup
 argument_list|(
 name|ddt
@@ -717,6 +719,7 @@ index|]
 index|[
 name|class
 index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Seed the cached statistics. 	 */
@@ -786,16 +789,9 @@ name|doi
 operator|.
 name|doi_data_block_size
 expr_stmt|;
-name|ASSERT
-argument_list|(
-name|error
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -2438,7 +2434,7 @@ argument_list|)
 expr_stmt|;
 name|bucket
 operator|=
-name|highbit
+name|highbit64
 argument_list|(
 name|dds
 operator|.
@@ -3425,13 +3421,17 @@ block|}
 operator|*
 name|version
 operator|=
-operator|(
-name|ZFS_HOST_BYTEORDER
-operator|&
-name|DDT_COMPRESS_BYTEORDER_MASK
-operator|)
-operator||
 name|cpfunc
+expr_stmt|;
+comment|/* CONSTCOND */
+if|if
+condition|(
+name|ZFS_HOST_BYTEORDER
+condition|)
+operator|*
+name|version
+operator||=
+name|DDT_COMPRESS_BYTEORDER_MASK
 expr_stmt|;
 return|return
 operator|(
@@ -3527,12 +3527,20 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|version
-operator|^
-name|ZFS_HOST_BYTEORDER
-operator|)
 operator|&
 name|DDT_COMPRESS_BYTEORDER_MASK
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|!=
+operator|(
+name|ZFS_HOST_BYTEORDER
+operator|!=
+literal|0
+operator|)
 condition|)
 name|byteswap_uint64_array
 argument_list|(

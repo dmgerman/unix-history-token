@@ -74,24 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Core/InputReader.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Interpreter/CommandObject.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Interpreter/CommandReturnObject.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Interpreter/CommandObjectMultiword.h"
 end_include
 

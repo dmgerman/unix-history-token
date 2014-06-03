@@ -41,7 +41,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 for|for
@@ -65,9 +65,6 @@ control|)
 block|{
 name|c
 operator|=
-operator|(
-name|char
-operator|)
 name|getc
 argument_list|(
 name|input

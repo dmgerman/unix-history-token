@@ -88,9 +88,6 @@ block|{
 name|class
 name|ARMSubtarget
 decl_stmt|;
-name|class
-name|ARMBaseInstrInfo
-decl_stmt|;
 name|struct
 name|Thumb2RegisterInfo
 range|:
@@ -101,11 +98,6 @@ name|public
 operator|:
 name|Thumb2RegisterInfo
 argument_list|(
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|tii
-argument_list|,
 specifier|const
 name|ARMSubtarget
 operator|&

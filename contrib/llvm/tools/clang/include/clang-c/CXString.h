@@ -60,7 +60,7 @@ name|CXString
 name|string
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Free the given string,  */
+comment|/**  * \brief Free the given string.  */
 name|CINDEX_LINKAGE
 name|void
 name|clang_disposeString

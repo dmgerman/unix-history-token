@@ -525,6 +525,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Netvsc initializing... "
@@ -551,20 +555,26 @@ expr_stmt|;
 name|netvsc_drv_init
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"done!\n"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Already initialized!\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -670,6 +680,10 @@ argument_list|,
 literal|"Synthetic Network Interface"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Netvsc probe... DONE \n"
@@ -1017,6 +1031,10 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"netvsc_detach\n"
@@ -1098,6 +1116,9 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|packet
 operator|->
@@ -1570,7 +1591,7 @@ name|m_copypacket
 argument_list|(
 name|m_head
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1607,6 +1628,9 @@ name|send_completion_tid
 operator|=
 operator|(
 name|uint64_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|m_head
 expr_stmt|;
@@ -1908,7 +1932,7 @@ name|n
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|m
 operator|->
@@ -2145,7 +2169,7 @@ name|m_new
 operator|=
 name|m_getjcl
 argument_list|(
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|,
 name|MT_DATA
 argument_list|,
@@ -2205,7 +2229,10 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|packet
 operator|->
 name|page_buffers
@@ -2216,7 +2243,7 @@ operator|.
 name|pfn
 operator|<<
 name|PAGE_SHIFT
-operator|)
+argument_list|)
 decl_stmt|;
 name|hv_m_append
 argument_list|(
@@ -2976,6 +3003,10 @@ name|sc
 operator|->
 name|hn_ifp
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|" Closing Device ...\n"

@@ -83,6 +83,10 @@ name|int
 name|pd_flags
 decl_stmt|;
 comment|/* (p) PD_ flags. */
+name|u_short
+name|pd_xstat
+decl_stmt|;
+comment|/* (p) Exit status. */
 name|struct
 name|selinfo
 name|pd_selinfo
@@ -306,9 +310,35 @@ begin_comment
 comment|/* !_KERNEL */
 end_comment
 
-begin_comment
-comment|/*  * Process descriptor system calls.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__pid_t
+name|pid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_PID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -316,8 +346,13 @@ name|rusage
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * Process descriptor system calls.  */
+end_comment
+
 begin_function_decl
-name|int
+name|__BEGIN_DECLS
+name|pid_t
 name|pdfork
 parameter_list|(
 name|int
@@ -350,6 +385,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

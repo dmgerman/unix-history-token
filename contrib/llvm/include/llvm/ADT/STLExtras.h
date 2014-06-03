@@ -1163,6 +1163,100 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Function object to check whether the first component of a std::pair
+end_comment
+
+begin_comment
+comment|/// compares less than the first component of another std::pair.
+end_comment
+
+begin_struct
+struct|struct
+name|less_first
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|T
+operator|&
+name|lhs
+operator|,
+specifier|const
+name|T
+operator|&
+name|rhs
+operator|)
+specifier|const
+block|{
+return|return
+name|lhs
+operator|.
+name|first
+operator|<
+name|rhs
+operator|.
+name|first
+return|;
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// \brief Function object to check whether the second component of a std::pair
+end_comment
+
+begin_comment
+comment|/// compares less than the second component of another std::pair.
+end_comment
+
+begin_struct
+struct|struct
+name|less_second
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|T
+operator|&
+name|lhs
+operator|,
+specifier|const
+name|T
+operator|&
+name|rhs
+operator|)
+specifier|const
+block|{
+return|return
+name|lhs
+operator|.
+name|second
+operator|<
+name|rhs
+operator|.
+name|second
+return|;
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -1487,7 +1581,7 @@ argument|IteratorTy Start
 argument_list|,
 argument|IteratorTy End
 argument_list|,
-argument|int (*Compare)(const void*, const void*)
+argument|int (*Compare)(         const typename std::iterator_traits<IteratorTy>::value_type *,         const typename std::iterator_traits<IteratorTy>::value_type *)
 argument_list|)
 block|{
 comment|// Don't dereference start iterator of empty sequence.
@@ -1514,7 +1608,25 @@ operator|*
 name|Start
 argument_list|)
 argument_list|,
+name|reinterpret_cast
+operator|<
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+specifier|const
+name|void
+operator|*
+argument_list|,
+specifier|const
+name|void
+operator|*
+argument_list|)
+operator|>
+operator|(
 name|Compare
+operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt

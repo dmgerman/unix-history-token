@@ -1653,9 +1653,6 @@ expr_stmt|;
 name|tcp_hc_init
 argument_list|()
 expr_stmt|;
-name|tcp_reass_init
-argument_list|()
-expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"net.inet.tcp.sack.enable"
@@ -1874,9 +1871,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|tcp_reass_destroy
-argument_list|()
-expr_stmt|;
 name|tcp_hc_destroy
 argument_list|()
 expr_stmt|;
@@ -8498,9 +8492,7 @@ name|sro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|==
 literal|0
 condition|)
@@ -8519,9 +8511,7 @@ name|sro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 argument_list|,
 name|ifp
 operator|->
@@ -8550,6 +8540,7 @@ name|if_hwassist
 operator|&
 name|CSUM_TSO
 condition|)
+block|{
 name|cap
 operator|->
 name|ifcap
@@ -8564,6 +8555,7 @@ name|ifp
 operator|->
 name|if_hw_tsomax
 expr_stmt|;
+block|}
 block|}
 name|RTFREE
 argument_list|(
@@ -8725,9 +8717,7 @@ name|sro6
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|==
 literal|0
 condition|)
@@ -8751,9 +8741,7 @@ name|sro6
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 argument_list|,
 name|IN6_LINKMTU
 argument_list|(
@@ -8787,6 +8775,7 @@ name|if_hwassist
 operator|&
 name|CSUM_TSO
 condition|)
+block|{
 name|cap
 operator|->
 name|ifcap
@@ -8801,6 +8790,7 @@ name|ifp
 operator|->
 name|if_hw_tsomax
 expr_stmt|;
+block|}
 block|}
 name|RTFREE
 argument_list|(

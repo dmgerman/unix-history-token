@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.h,v 1.99 2012/02/16 20:51:31 joerg Exp $ */
+comment|/*	$Id: mandoc.h,v 1.112 2013/12/30 18:30:32 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -98,6 +98,9 @@ comment|/* document title should be all caps */
 name|MANDOCERR_BADMSEC
 block|,
 comment|/* unknown manual section */
+name|MANDOCERR_BADVOLARCH
+block|,
+comment|/* unknown manual volume or arch */
 name|MANDOCERR_NODATE
 block|,
 comment|/* date missing, using today's date */
@@ -126,9 +129,6 @@ comment|/* NAME section must come first */
 name|MANDOCERR_BADNAMESEC
 block|,
 comment|/* bad NAME section contents */
-name|MANDOCERR_NONAME
-block|,
-comment|/* manual name not yet set */
 name|MANDOCERR_SECOOO
 block|,
 comment|/* sections out of conventional order */
@@ -137,7 +137,7 @@ block|,
 comment|/* duplicate section name */
 name|MANDOCERR_SECMSEC
 block|,
-comment|/* section not in conventional manual section */
+comment|/* section header suited to sections ... */
 comment|/* related to macros and nesting */
 name|MANDOCERR_MACROOBS
 block|,
@@ -145,6 +145,9 @@ comment|/* skipping obsolete macro */
 name|MANDOCERR_IGNPAR
 block|,
 comment|/* skipping paragraph macro */
+name|MANDOCERR_MOVEPAR
+block|,
+comment|/* moving paragraph macro out of list */
 name|MANDOCERR_IGNNS
 block|,
 comment|/* skipping no-space macro */
@@ -289,6 +292,9 @@ comment|/* skipping bad character */
 name|MANDOCERR_NAMESC
 block|,
 comment|/* escaped character not allowed in a name */
+name|MANDOCERR_NONAME
+block|,
+comment|/* manual name not yet set */
 name|MANDOCERR_NOTEXT
 block|,
 comment|/* skipping text before the first section header */
@@ -301,6 +307,9 @@ comment|/* NOT IMPLEMENTED: skipping request */
 name|MANDOCERR_ARGCOUNT
 block|,
 comment|/* argument count wrong */
+name|MANDOCERR_STRAYTA
+block|,
+comment|/* skipping column outside column list */
 name|MANDOCERR_NOSCOPE
 block|,
 comment|/* skipping end of block that is not open */
@@ -323,6 +332,9 @@ comment|/* macro requires body argument(s) */
 name|MANDOCERR_NOARGV
 block|,
 comment|/* macro requires argument(s) */
+name|MANDOCERR_NUMERIC
+block|,
+comment|/* request requires a numeric argument */
 name|MANDOCERR_LISTTYPE
 block|,
 comment|/* missing list type */
@@ -372,7 +384,7 @@ end_enum
 
 begin_struct
 struct|struct
-name|tbl
+name|tbl_opts
 block|{
 name|char
 name|tab
@@ -424,22 +436,6 @@ block|}
 struct|;
 end_struct
 
-begin_enum
-enum|enum
-name|tbl_headt
-block|{
-name|TBL_HEAD_DATA
-block|,
-comment|/* plug in data from tbl_dat */
-name|TBL_HEAD_VERT
-block|,
-comment|/* vertical spacer */
-name|TBL_HEAD_DVERT
-comment|/* double-vertical spacer */
-block|}
-enum|;
-end_enum
-
 begin_comment
 comment|/*  * The head of a table specifies all of its columns.  When formatting a  * tbl_span, iterate over these and plug in data from the tbl_span when  * appropriate, using tbl_cell as a guide to placement.  */
 end_comment
@@ -448,14 +444,14 @@ begin_struct
 struct|struct
 name|tbl_head
 block|{
-name|enum
-name|tbl_headt
-name|pos
-decl_stmt|;
 name|int
 name|ident
 decl_stmt|;
 comment|/* 0<= unique id< cols */
+name|int
+name|vert
+decl_stmt|;
+comment|/* width of preceding vertical line */
 name|struct
 name|tbl_head
 modifier|*
@@ -501,12 +497,6 @@ comment|/* _, - */
 name|TBL_CELL_DHORIZ
 block|,
 comment|/* = */
-name|TBL_CELL_VERT
-block|,
-comment|/* | */
-name|TBL_CELL_DVERT
-block|,
-comment|/* || */
 name|TBL_CELL_MAX
 block|}
 enum|;
@@ -525,6 +515,10 @@ name|tbl_cell
 modifier|*
 name|next
 decl_stmt|;
+name|int
+name|vert
+decl_stmt|;
+comment|/* width of preceding vertical line */
 name|enum
 name|tbl_cellt
 name|pos
@@ -692,9 +686,9 @@ struct|struct
 name|tbl_span
 block|{
 name|struct
-name|tbl
+name|tbl_opts
 modifier|*
-name|tbl
+name|opts
 decl_stmt|;
 name|struct
 name|tbl_head
@@ -1026,6 +1020,9 @@ comment|/* bold font mode */
 name|ESCAPE_FONTITALIC
 block|,
 comment|/* italic font mode */
+name|ESCAPE_FONTBI
+block|,
+comment|/* bold italic font mode */
 name|ESCAPE_FONTROMAN
 block|,
 comment|/* roman font mode */
@@ -1039,7 +1036,10 @@ name|ESCAPE_UNICODE
 block|,
 comment|/* a unicode codepoint */
 name|ESCAPE_NOSPACE
+block|,
 comment|/* suppress space if the last on a line */
+name|ESCAPE_SKIPCHAR
+comment|/* skip the next character */
 block|}
 enum|;
 end_enum
@@ -1284,6 +1284,9 @@ parameter_list|,
 name|mandocmsg
 parameter_list|,
 name|void
+modifier|*
+parameter_list|,
+name|char
 modifier|*
 parameter_list|)
 function_decl|;

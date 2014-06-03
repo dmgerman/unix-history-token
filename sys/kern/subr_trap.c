@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -459,6 +459,23 @@ literal|0
 argument_list|,
 operator|(
 literal|"userret: Returning with pagefaults disabled"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_DEVMEMIO
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with /dev/mem i/o leaked"
 operator|)
 argument_list|)
 expr_stmt|;

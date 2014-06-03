@@ -1258,6 +1258,8 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
+comment|/* Now we split the currently allocated buffer in two parts:       - a const char * HEAD       - the remaining stringbuf_t. */
+comment|/* Create HEAD as '\0' terminated const char * */
 name|key
 operator|=
 name|buffer
@@ -1278,10 +1280,19 @@ name|end
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* And update the TAIL to be a smaller, but still valid stringbuf */
+name|buffer
+operator|->
+name|data
+operator|=
+name|end
+operator|+
+literal|1
+expr_stmt|;
 name|buffer
 operator|->
 name|len
-operator|=
+operator|-=
 literal|1
 operator|+
 name|end
@@ -1290,11 +1301,13 @@ name|key
 expr_stmt|;
 name|buffer
 operator|->
-name|data
-operator|=
-name|end
-operator|+
+name|blocksize
+operator|-=
 literal|1
+operator|+
+name|end
+operator|-
+name|key
 expr_stmt|;
 name|svn_stringbuf_strip_whitespace
 argument_list|(

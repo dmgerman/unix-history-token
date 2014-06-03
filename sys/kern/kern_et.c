@@ -53,6 +53,12 @@ directive|include
 file|<sys/timeet.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_timer.h"
+end_include
+
 begin_expr_stmt
 name|SLIST_HEAD
 argument_list|(
@@ -519,6 +525,38 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Change the frequency of the given timer.  If it is the active timer,  * reconfigure it on all CPUs (reschedules all current events based on the new  * timer frequency).  */
+end_comment
+
+begin_function
+name|void
+name|et_change_frequency
+parameter_list|(
+name|struct
+name|eventtimer
+modifier|*
+name|et
+parameter_list|,
+name|uint64_t
+name|newfreq
+parameter_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|NO_EVENTTIMERS
+name|cpu_et_frequency
+argument_list|(
+name|et
+argument_list|,
+name|newfreq
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

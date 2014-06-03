@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002, 2004 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1992 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2001 Proofpoint, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1992 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 expr_stmt|;
 end_expr_stmt
 
@@ -52,7 +52,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: editmap.c,v 1.25 2007/05/11 18:50:35 ca Exp $"
+literal|"@(#)$Id: editmap.c,v 1.26 2013-11-22 20:51:26 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 

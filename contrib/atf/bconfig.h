@@ -104,14 +104,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if putenv is in std */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_PUTENV_IN_STD */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the `setenv' function. */
 end_comment
 
@@ -121,22 +113,6 @@ directive|define
 name|HAVE_SETENV
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if setenv is in std */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_SETENV_IN_STD */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if snprintf is in std */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_SNPRINTF_IN_STD */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
@@ -216,17 +192,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `unmount' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_UNMOUNT
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `unsetenv' function. */
 end_comment
 
@@ -238,31 +203,12 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if unsetenv is in std */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_UNSETENV_IN_STD */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if vsnprintf is in std */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_VSNPRINTF_IN_STD */
 end_comment
-
-begin_comment
-comment|/* Define to the last valid signal number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LAST_SIGNO
-value|128
-end_define
 
 begin_comment
 comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
@@ -327,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"Automated Testing Framework 0.18"
+value|"Automated Testing Framework 0.20"
 end_define
 
 begin_comment
@@ -349,7 +295,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_URL
-value|"http://code.google.com/p/kyua/wiki/ATF"
+value|"https://github.com/jmmv/atf/"
 end_define
 
 begin_comment
@@ -360,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.18"
+value|"0.20"
 end_define
 
 begin_comment
@@ -382,7 +328,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.18"
+value|"0.20"
 end_define
 
 end_unit

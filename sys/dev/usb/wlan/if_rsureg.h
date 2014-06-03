@@ -4,17 +4,6 @@ comment|/*-  * Copyright (c) 2010 Damien Bergamini<damien.bergamini@free.fr>  * 
 end_comment
 
 begin_comment
-comment|/* Maximum number of pipes is 11. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R92S_MAX_EP
-value|11
-end_define
-
-begin_comment
 comment|/* USB Requests. */
 end_comment
 
@@ -2246,14 +2235,9 @@ name|rxdw5
 decl_stmt|;
 block|}
 name|__packed
-name|__attribute__
-argument_list|(
-operator|(
-name|aligned
+name|__aligned
 argument_list|(
 literal|4
-argument_list|)
-operator|)
 argument_list|)
 struct|;
 end_struct
@@ -2292,14 +2276,9 @@ name|phydw7
 decl_stmt|;
 block|}
 name|__packed
-name|__attribute__
-argument_list|(
-operator|(
-name|aligned
+name|__aligned
 argument_list|(
 literal|4
-argument_list|)
-operator|)
 argument_list|)
 struct|;
 end_struct
@@ -2513,14 +2492,9 @@ name|reserved1
 decl_stmt|;
 block|}
 name|__packed
-name|__attribute__
-argument_list|(
-operator|(
-name|aligned
+name|__aligned
 argument_list|(
 literal|4
-argument_list|)
-operator|)
 argument_list|)
 struct|;
 end_struct
@@ -2536,39 +2510,12 @@ name|RSU_RX_LIST_COUNT
 value|1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__OpenBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RSU_TX_LIST_COUNT
-value|(8 + 1)
-end_define
-
-begin_comment
-comment|/* NB: +1 for FW commands. */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|RSU_TX_LIST_COUNT
 value|32
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -3144,6 +3091,13 @@ parameter_list|)
 value|mtx_assert(&(sc)->sc_mtx, MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RSU_MAX_TX_EP
+value|4
+end_define
+
 begin_struct
 struct|struct
 name|rsu_softc
@@ -3186,21 +3140,6 @@ name|struct
 name|timeout_task
 name|calib_task
 decl_stmt|;
-name|struct
-name|callout
-name|sc_watchdog_ch
-decl_stmt|;
-name|struct
-name|usbd_pipe
-modifier|*
-name|pipe
-index|[
-name|R92S_MAX_EP
-index|]
-decl_stmt|;
-name|int
-name|npipes
-decl_stmt|;
 specifier|const
 name|uint8_t
 modifier|*
@@ -3215,9 +3154,6 @@ name|cut
 decl_stmt|;
 name|int
 name|scan_pass
-decl_stmt|;
-name|int
-name|sc_tx_timer
 decl_stmt|;
 name|struct
 name|rsu_host_cmd_ring
@@ -3288,6 +3224,9 @@ argument_list|,
 argument|rsu_data
 argument_list|)
 name|sc_tx_active
+index|[
+name|RSU_MAX_TX_EP
+index|]
 expr_stmt|;
 name|STAILQ_HEAD
 argument_list|(
@@ -3302,6 +3241,9 @@ argument_list|,
 argument|rsu_data
 argument_list|)
 name|sc_tx_pending
+index|[
+name|RSU_MAX_TX_EP
+index|]
 expr_stmt|;
 union|union
 block|{

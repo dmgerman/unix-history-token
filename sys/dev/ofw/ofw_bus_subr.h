@@ -240,6 +240,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Helper to get device status property */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ofw_bus_get_status
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ofw_bus_status_okay
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Helper to get node's interrupt parent */
 end_comment
 

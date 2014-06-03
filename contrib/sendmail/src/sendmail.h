@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2013 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1101 2013/03/15 17:54:12 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1104 2013-11-22 20:51:56 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -791,6 +791,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SASL_VERSION_FULL< 0x020119 */
+end_comment
 
 begin_else
 else|#
@@ -3220,6 +3224,17 @@ end_define
 
 begin_comment
 comment|/* Reserved: Used in mc for removing flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NOMHHACK
+value|'!'
+end_define
+
+begin_comment
+comment|/* Don't perform HM hack dropping explicit from */
 end_comment
 
 begin_comment
@@ -11435,7 +11450,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* Sendmail, Inc. specific config syntax */
+comment|/* Proofpoint, Inc. specific config syntax */
 end_comment
 
 begin_define

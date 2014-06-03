@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/devicestat.h>
 end_include
 
@@ -762,7 +756,7 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_disk_kernedump(%s, %jd, %jd)"
+literal|"g_disk_kerneldump(%s, %jd, %jd)"
 argument_list|,
 name|gp
 operator|->
@@ -1111,6 +1105,8 @@ operator||
 name|BIO_WRITE
 operator||
 name|BIO_DELETE
+operator||
+name|BIO_FLUSH
 operator|)
 operator|)
 operator|!=
@@ -1266,6 +1262,8 @@ operator||
 name|BIO_WRITE
 operator||
 name|BIO_DELETE
+operator||
+name|BIO_FLUSH
 operator|)
 operator|)
 operator|!=
@@ -2209,6 +2207,31 @@ operator|->
 name|bio_done
 operator|=
 name|g_disk_done_single
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|start_mtx
+argument_list|)
+expr_stmt|;
+name|devstat_start_transaction_bio
+argument_list|(
+name|dp
+operator|->
+name|d_devstat
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|start_mtx
+argument_list|)
 expr_stmt|;
 name|dp
 operator|->

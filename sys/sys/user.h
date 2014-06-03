@@ -1120,7 +1120,7 @@ value|-4
 end_define
 
 begin_comment
-comment|/* ptrace vnode */
+comment|/* Ktrace vnode */
 end_comment
 
 begin_define
@@ -1376,11 +1376,15 @@ name|__i386__
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * This size should never be changed. If you really need to, you must provide  * backward ABI compatibility by allocating a new sysctl MIB that will return  * the new structure. The current structure has to be returned by the current  * sysctl MIB. See how it is done for the kinfo_ofile structure.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KINFO_FILE_SIZE
-value|1424
+value|1392
 end_define
 
 begin_endif
@@ -1585,18 +1589,8 @@ decl_stmt|;
 comment|/* Capability rights. */
 name|uint64_t
 name|_kf_cap_spare
-index|[
-literal|3
-index|]
 decl_stmt|;
 comment|/* Space for future cap_rights_t. */
-name|int
-name|_kf_ispare
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* Space for more stuff. */
 comment|/* Truncated before copyout in sysctl */
 name|char
 name|kf_path
@@ -1667,6 +1661,13 @@ define|#
 directive|define
 name|KVME_TYPE_SG
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|KVME_TYPE_MGTDEVICE
+value|8
 end_define
 
 begin_define

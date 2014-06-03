@@ -745,6 +745,13 @@ name|unsigned
 name|char
 name|pragma_allow_expansion
 decl_stmt|;
+comment|/* APPLE LOCAL begin #error with unmatched quotes 5607574 */
+comment|/* Nonzero when handling #error and #warning to allow unmatched quotes.  */
+name|unsigned
+name|char
+name|in_diagnostic
+decl_stmt|;
+comment|/* APPLE LOCAL end #error with unmatched quotes 5607574 */
 block|}
 struct|;
 end_struct

@@ -9075,11 +9075,16 @@ literal|"Enable 64-bit array\n"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|AACRAID_DEBUG
 name|aacraid_get_fw_debug_buffer
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

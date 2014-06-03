@@ -1229,7 +1229,7 @@ name|vdev
 operator|->
 name|ndev
 argument_list|,
-literal|"invalid mtu size %ld specified\n"
+literal|"invalid mtu size %u specified\n"
 argument_list|,
 name|ifp
 operator|->
@@ -12679,7 +12679,7 @@ name|vdev
 operator|->
 name|ndev
 argument_list|,
-literal|"MTU changed to %ld\n"
+literal|"MTU changed to %u\n"
 argument_list|,
 operator|(
 name|vdev
@@ -14259,7 +14259,7 @@ name|VXGE_PRINT_MTU_SIZE
 index|]
 argument_list|)
 argument_list|,
-literal|"%lu"
+literal|"%u"
 argument_list|,
 name|vdev
 operator|->

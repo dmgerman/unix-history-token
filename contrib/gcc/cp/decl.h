@@ -32,6 +32,10 @@ comment|/* Likewise but with specified width */
 name|TYPENAME
 block|,
 comment|/* Typename (inside cast or sizeof)  */
+comment|/* APPLE LOCAL blocks 6339747 */
+name|BLOCKDEF
+block|,
+comment|/* Declaratin of block literal */
 name|MEMFUNCDEF
 comment|/* Member function definition */
 block|}
@@ -62,6 +66,41 @@ name|int
 parameter_list|,
 name|tree
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL radar 4721858 */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|emit_instantiate_pending_templates
+parameter_list|(
+name|location_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL blocks 6040305 (ce) */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|grokparms
+parameter_list|(
+name|cp_parameter_declarator
+modifier|*
+name|first_parm
+parameter_list|,
+name|tree
+modifier|*
+name|parms
 parameter_list|)
 function_decl|;
 end_function_decl

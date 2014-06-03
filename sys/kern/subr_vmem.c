@@ -2024,6 +2024,16 @@ name|qc
 operator|=
 name|arg
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|VMEM_FITMASK
+operator|)
+operator|==
+literal|0
+condition|)
 name|flags
 operator||=
 name|M_BESTFIT

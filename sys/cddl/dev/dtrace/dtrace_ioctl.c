@@ -26,7 +26,7 @@ name|dtrace_verbose_ioctl
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"log DTrace ioctls"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

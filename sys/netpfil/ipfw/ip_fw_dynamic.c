@@ -1106,6 +1106,9 @@ name|SYSEND
 endif|#
 directive|endif
 comment|/* SYSCTL_NODE */
+ifdef|#
+directive|ifdef
+name|INET6
 specifier|static
 name|__inline
 name|int
@@ -1191,6 +1194,11 @@ name|i
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * IMPORTANT: the hash function for dynamic rules must be commutative  * in source and destination (ip,port), because rules are bidirectional  * and we want to find both in the same bucket.  */

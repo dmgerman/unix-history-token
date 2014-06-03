@@ -913,7 +913,7 @@ comment|/* FS_DEBUG */
 comment|/* 	 * Now build the cylinders group blocks and 	 * then print out indices of cylinder groups. 	 */
 name|printf
 argument_list|(
-literal|"super-block backups (for fsck -b #) at:\n"
+literal|"super-block backups (for fsck_ffs -b #) at:\n"
 argument_list|)
 expr_stmt|;
 name|i

@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -5242,7 +5242,7 @@ if|if
 condition|(
 name|asbt
 operator|<=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|rsbt
 condition|)
@@ -7533,7 +7533,7 @@ if|if
 condition|(
 name|asbt
 operator|<=
-name|INT64_MAX
+name|SBT_MAX
 operator|-
 name|rsbt
 condition|)

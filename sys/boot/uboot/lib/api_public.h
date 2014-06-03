@@ -357,7 +357,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DT_STOR_NAND
+name|DT_STOR_SATA
 value|0x0100
 end_define
 

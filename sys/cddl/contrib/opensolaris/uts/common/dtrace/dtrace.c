@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_pragma
@@ -449,7 +449,9 @@ name|dtrace_optval_t
 name|dtrace_dof_maxsize
 init|=
 operator|(
-literal|256
+literal|8
+operator|*
+literal|1024
 operator|*
 literal|1024
 operator|)
@@ -1463,19 +1465,17 @@ value|~0
 end_define
 
 begin_expr_stmt
-name|SYSCTL_NODE
+name|SYSCTL_DECL
 argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|dtrace
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"DTrace Information"
+name|_debug_dtrace
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_dtrace
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -45664,6 +45664,10 @@ name|flags
 parameter_list|,
 name|processorid_t
 name|cpu
+parameter_list|,
+name|int
+modifier|*
+name|factor
 parameter_list|)
 block|{
 if|#
@@ -45681,6 +45685,15 @@ directive|endif
 name|dtrace_buffer_t
 modifier|*
 name|buf
+decl_stmt|;
+name|int
+name|allocated
+init|=
+literal|0
+decl_stmt|,
+name|desired
+init|=
+literal|0
 decl_stmt|;
 if|#
 directive|if
@@ -45705,6 +45718,11 @@ operator|&
 name|dtrace_lock
 argument_list|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|factor
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -45799,6 +45817,8 @@ argument_list|(
 name|size
 argument_list|,
 name|KM_NOSLEEP
+operator||
+name|KM_NORMALPRI
 argument_list|)
 operator|)
 operator|==
@@ -45850,6 +45870,8 @@ argument_list|(
 name|size
 argument_list|,
 name|KM_NOSLEEP
+operator||
+name|KM_NORMALPRI
 argument_list|)
 operator|)
 operator|==
@@ -45908,6 +45930,10 @@ operator|->
 name|cpu_id
 index|]
 expr_stmt|;
+name|desired
+operator|+=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|buf
@@ -45943,6 +45969,9 @@ name|dtb_xamot
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+name|allocated
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -45971,6 +46000,9 @@ name|dtb_tomax
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+name|allocated
+operator|++
 expr_stmt|;
 block|}
 name|buf
@@ -46005,16 +46037,16 @@ operator|!=
 name|cpu_list
 condition|)
 do|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 else|#
 directive|else
 name|int
 name|i
 decl_stmt|;
+operator|*
+name|factor
+operator|=
+literal|1
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -46132,6 +46164,8 @@ argument_list|(
 name|size
 argument_list|,
 name|KM_NOSLEEP
+operator||
+name|KM_NORMALPRI
 argument_list|)
 operator|)
 operator|==
@@ -46183,6 +46217,8 @@ argument_list|(
 name|size
 argument_list|,
 name|KM_NOSLEEP
+operator||
+name|KM_NORMALPRI
 argument_list|)
 operator|)
 operator|==
@@ -46224,6 +46260,10 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|desired
+operator|+=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|buf
@@ -46259,6 +46299,9 @@ name|dtb_xamot
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+name|allocated
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -46287,6 +46330,9 @@ name|dtb_tomax
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+name|allocated
+operator|++
 expr_stmt|;
 block|}
 name|buf
@@ -46308,13 +46354,28 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+operator|*
+name|factor
+operator|=
+name|desired
+operator|/
+operator|(
+name|allocated
+operator|>
+literal|0
+condition|?
+name|allocated
+else|:
+literal|1
+operator|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 comment|/*  * Note:  called from probe context.  This function just increments the drop  * count on a buffer.  It has been made a function to allow for the  * possibility of understanding the source of mysterious drop counts.  (A  * problem for which one may be particularly disappointed that DTrace cannot  * be used to understand DTrace.)  */
 specifier|static
@@ -54780,6 +54841,8 @@ argument_list|(
 name|size
 argument_list|,
 name|KM_NOSLEEP
+operator||
+name|KM_NORMALPRI
 argument_list|)
 operator|)
 operator|==
@@ -56512,6 +56575,12 @@ init|=
 literal|0
 decl_stmt|,
 name|rval
+decl_stmt|,
+name|factor
+decl_stmt|,
+name|divisor
+init|=
+literal|1
 decl_stmt|;
 name|ASSERT
 argument_list|(
@@ -56677,8 +56746,8 @@ name|uint64_t
 argument_list|)
 condition|;
 name|size
-operator|>>=
-literal|1
+operator|/=
+name|divisor
 control|)
 block|{
 comment|/* 		 * The size must be 8-byte aligned.  If the size is not 8-byte 		 * aligned, drop it down by the difference. 		 */
@@ -56735,6 +56804,9 @@ argument_list|,
 name|flags
 argument_list|,
 name|cpu
+argument_list|,
+operator|&
+name|factor
 argument_list|)
 expr_stmt|;
 if|if
@@ -56771,6 +56843,21 @@ operator|(
 name|rval
 operator|)
 return|;
+for|for
+control|(
+name|divisor
+operator|=
+literal|2
+init|;
+name|divisor
+operator|<
+name|factor
+condition|;
+name|divisor
+operator|<<=
+literal|1
+control|)
+continue|continue;
 block|}
 return|return
 operator|(
@@ -57162,6 +57249,8 @@ name|dtrace_speculation_t
 argument_list|)
 argument_list|,
 name|KM_NOSLEEP
+operator||
+name|KM_NORMALPRI
 argument_list|)
 expr_stmt|;
 if|if
@@ -57218,6 +57307,8 @@ argument_list|(
 name|bufsize
 argument_list|,
 name|KM_NOSLEEP
+operator||
+name|KM_NORMALPRI
 argument_list|)
 operator|)
 operator|==
@@ -61212,7 +61303,7 @@ if|if
 condition|(
 name|dofhp
 operator|->
-name|dofhp_addr
+name|dofhp_dof
 operator|==
 name|help
 operator|->
@@ -61223,7 +61314,7 @@ index|]
 operator|->
 name|dthp_prov
 operator|.
-name|dofhp_addr
+name|dofhp_dof
 condition|)
 return|return
 operator|(

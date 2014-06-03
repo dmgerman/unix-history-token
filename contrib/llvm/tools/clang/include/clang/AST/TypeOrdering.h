@@ -32,23 +32,35 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file provides a function objects and specializations that
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//  allow QualType values to be sorted, used in std::maps, std::sets,
+comment|/// \brief Allows QualTypes to be sorted and hence used in maps and sets.
 end_comment
 
 begin_comment
-comment|//  llvm::DenseMaps, and llvm::DenseSets.
+comment|///
 end_comment
 
 begin_comment
-comment|//
+comment|/// Defines clang::QualTypeOrdering, a total ordering on clang::QualType,
+end_comment
+
+begin_comment
+comment|/// and hence enables QualType values to be sorted and to be used in
+end_comment
+
+begin_comment
+comment|/// std::maps, std::sets, llvm::DenseMaps, and llvm::DenseSets.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -89,8 +101,7 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// QualTypeOrdering - Function object that provides a total ordering
-comment|/// on QualType values.
+comment|/// \brief Function object that provides a total ordering on QualType values.
 name|struct
 name|QualTypeOrdering
 range|:

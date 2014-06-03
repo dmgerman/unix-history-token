@@ -886,17 +886,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tbaudrate power factor: %u\n"
-argument_list|,
-name|ifmd
-operator|->
-name|ifmd_data
-operator|.
-name|ifi_baudrate_pf
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"\tdatalen: %u\n"
 argument_list|,
 name|ifmd

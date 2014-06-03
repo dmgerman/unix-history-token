@@ -423,6 +423,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SDHCI_RETUNE_REQUEST
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
 name|SDHCI_DOING_WRITE
 value|0x00000100
 end_define
@@ -479,15 +486,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SDHCI_STATE_DAT
-value|0x00700000
+name|SDHCI_STATE_DAT_MASK
+value|0x00f00000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SDHCI_STATE_CMD
-value|0x00800000
+value|0x01000000
 end_define
 
 begin_define
@@ -1177,6 +1184,11 @@ name|callout
 name|card_callout
 decl_stmt|;
 comment|/* Card insert delay callout */
+name|struct
+name|callout
+name|timeout_callout
+decl_stmt|;
+comment|/* Card command/data response timeout */
 name|struct
 name|mmc_host
 name|host

@@ -299,6 +299,13 @@ begin_comment
 comment|/* interrupt vector/priority reg */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OPENPIC_SRC_VECTOR_COUNT
+value|64
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -665,6 +665,11 @@ name|unsigned
 name|Flags
 parameter_list|)
 function_decl|;
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 name|public
 label|:
 name|explicit
@@ -823,6 +828,50 @@ specifier|const
 name|TargetRegisterInfo
 operator|&
 name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Given an operand within a MachineInstr, insert preceding code to put it
+comment|/// into the right format for a particular kind of LEA instruction. This may
+comment|/// involve using an appropriate super-register instead (with an implicit use
+comment|/// of the original) or creating a new virtual register and inserting COPY
+comment|/// instructions to get the data into the right class.
+comment|///
+comment|/// Reference parameters are set to indicate how caller should add this
+comment|/// operand to the LEA instruction.
+name|bool
+name|classifyLEAReg
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|&
+name|Src
+argument_list|,
+name|unsigned
+name|LEAOpcode
+argument_list|,
+name|bool
+name|AllowSP
+argument_list|,
+name|unsigned
+operator|&
+name|NewSrc
+argument_list|,
+name|bool
+operator|&
+name|isKill
+argument_list|,
+name|bool
+operator|&
+name|isUndef
+argument_list|,
+name|MachineOperand
+operator|&
+name|ImplicitOp
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1215,31 +1264,6 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
-name|MachineInstr
-modifier|*
-name|emitFrameIndexDebugValue
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|int
-name|FrameIx
-argument_list|,
-name|uint64_t
-name|Offset
-argument_list|,
-specifier|const
-name|MDNode
-operator|*
-name|MDPtr
-argument_list|,
-name|DebugLoc
-name|DL
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// foldMemoryOperand - If this target supports it, fold a load or store of
 comment|/// the specified stack slot into the specified machine instruction for the
 comment|/// specified operand(s).  If this is possible, the target should perform the
@@ -1463,6 +1487,21 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|virtual
+name|bool
+name|shouldScheduleAdjacent
+argument_list|(
+name|MachineInstr
+operator|*
+name|First
+argument_list|,
+name|MachineInstr
+operator|*
+name|Second
+argument_list|)
+decl|const
+name|LLVM_OVERRIDE
+decl_stmt|;
+name|virtual
 name|void
 name|getNoopForMachoTarget
 argument_list|(
@@ -1578,6 +1617,25 @@ operator|*
 name|MI
 argument_list|,
 name|unsigned
+name|OpNum
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|getUndefRegClearance
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+operator|&
 name|OpNum
 argument_list|,
 specifier|const

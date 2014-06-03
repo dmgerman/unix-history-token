@@ -773,6 +773,40 @@ expr_stmt|;
 block|}
 else|else
 block|{
+switch|switch
+condition|(
+name|errno
+condition|)
+block|{
+case|case
+name|EEXIST
+case|:
+name|warnx
+argument_list|(
+literal|"can't load %s: module "
+literal|"already loaded or "
+literal|"in kernel"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ENOEXEC
+case|:
+name|warnx
+argument_list|(
+literal|"an error occurred while "
+literal|"loading the module. "
+literal|"Please check dmesg(8) for "
+literal|"more details."
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 name|warn
 argument_list|(
 literal|"can't load %s"
@@ -783,6 +817,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|errors
 operator|++
 expr_stmt|;

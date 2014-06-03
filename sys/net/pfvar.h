@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/refcount.h>
 end_include
 
@@ -1824,16 +1830,7 @@ name|PFTM_MAX
 index|]
 decl_stmt|;
 name|u_int32_t
-name|states_cur
-decl_stmt|;
-name|u_int32_t
-name|states_tot
-decl_stmt|;
-name|u_int32_t
 name|max_states
-decl_stmt|;
-name|u_int32_t
-name|src_nodes
 decl_stmt|;
 name|u_int32_t
 name|max_src_nodes
@@ -1841,10 +1838,6 @@ decl_stmt|;
 name|u_int32_t
 name|max_src_states
 decl_stmt|;
-name|u_int32_t
-name|spare1
-decl_stmt|;
-comment|/* netgraph */
 name|u_int32_t
 name|max_src_conn
 decl_stmt|;
@@ -1879,6 +1872,15 @@ name|cuid
 decl_stmt|;
 name|pid_t
 name|cpid
+decl_stmt|;
+name|counter_u64_t
+name|states_cur
+decl_stmt|;
+name|counter_u64_t
+name|states_tot
+decl_stmt|;
+name|counter_u64_t
+name|src_nodes
 decl_stmt|;
 name|u_int16_t
 name|return_icmp
@@ -2014,6 +2016,15 @@ decl_stmt|;
 block|}
 name|divert
 struct|;
+name|uint64_t
+name|u_states_cur
+decl_stmt|;
+name|uint64_t
+name|u_states_tot
+decl_stmt|;
+name|uint64_t
+name|u_src_nodes
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -5893,6 +5904,20 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|pf_hashmask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|pf_srchashmask
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -5924,16 +5949,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|u_long
-argument_list|,
-name|pf_hashmask
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -5948,13 +5963,6 @@ name|V_pf_idhash
 value|VNET(pf_idhash)
 end_define
 
-begin_define
-define|#
-directive|define
-name|V_pf_hashmask
-value|VNET(pf_hashmask)
-end_define
-
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
@@ -5963,16 +5971,6 @@ name|pf_srchash
 operator|*
 argument_list|,
 name|pf_srchash
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|u_long
-argument_list|,
-name|pf_srchashmask
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5987,18 +5985,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_pf_srchashmask
-value|VNET(pf_srchashmask)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PF_IDHASH
 parameter_list|(
 name|s
 parameter_list|)
-value|(be64toh((s)->id) % (V_pf_hashmask + 1))
+value|(be64toh((s)->id) % (pf_hashmask + 1))
 end_define
 
 begin_expr_stmt
@@ -6215,6 +6206,24 @@ end_define
 begin_function_decl
 name|void
 name|pf_initialize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pf_mtag_initialize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pf_mtag_cleanup
 parameter_list|(
 name|void
 parameter_list|)

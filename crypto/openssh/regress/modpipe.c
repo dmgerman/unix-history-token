@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2012 Damien Miller<djm@mindrot.org>  *  * Permission
 end_comment
 
 begin_comment
-comment|/* $OpenBSD: modpipe.c,v 1.5 2013/05/10 03:46:14 djm Exp $ */
+comment|/* $OpenBSD: modpipe.c,v 1.6 2013/11/21 03:16:47 djm Exp $ */
 end_comment
 
 begin_include
@@ -304,7 +304,9 @@ name|MOD_AND_OR
 block|}
 name|what
 enum|;
-name|u_int64_t
+name|unsigned
+name|long
+name|long
 name|offset
 decl_stmt|;
 name|u_int8_t
@@ -367,7 +369,7 @@ name|sscanf
 argument_list|(
 name|s
 argument_list|,
-literal|"%16[^:]%*[:]%lli%*[:]%i%*[:]%i"
+literal|"%16[^:]%*[:]%llu%*[:]%i%*[:]%i"
 argument_list|,
 name|what
 argument_list|,

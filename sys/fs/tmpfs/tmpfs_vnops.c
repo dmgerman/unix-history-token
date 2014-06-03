@@ -5362,9 +5362,7 @@ name|ssize_t
 name|startresid
 decl_stmt|;
 name|int
-name|cnt
-init|=
-literal|0
+name|maxcookies
 decl_stmt|;
 name|struct
 name|tmpfs_node
@@ -5383,6 +5381,10 @@ condition|)
 return|return
 name|ENOTDIR
 return|;
+name|maxcookies
+operator|=
+literal|0
+expr_stmt|;
 name|node
 operator|=
 name|VP_TO_TMPFS_DIR
@@ -5396,6 +5398,7 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
+comment|/* Allocate cookies for NFS and compat modules. */
 if|if
 condition|(
 name|cookies
@@ -5407,7 +5410,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|cnt
+name|maxcookies
 operator|=
 name|howmany
 argument_list|(
@@ -5429,7 +5432,7 @@ name|cookies
 operator|=
 name|malloc
 argument_list|(
-name|cnt
+name|maxcookies
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -5451,9 +5454,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|==
-literal|0
+name|NULL
 condition|)
 name|error
 operator|=
@@ -5479,7 +5482,7 @@ name|node
 argument_list|,
 name|uio
 argument_list|,
-name|cnt
+name|maxcookies
 argument_list|,
 operator|*
 name|cookies
@@ -5487,6 +5490,7 @@ argument_list|,
 name|ncookies
 argument_list|)
 expr_stmt|;
+comment|/* Buffer was filled without hitting EOF. */
 if|if
 condition|(
 name|error
@@ -5513,9 +5517,9 @@ name|error
 operator|!=
 literal|0
 operator|&&
-name|cnt
+name|cookies
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|free
 argument_list|(

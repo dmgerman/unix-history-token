@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: citrus_iconv_none.c,v 1.2 2003/07/01 09:42:16 tshiozak Exp $	*/
+comment|/*	$NetBSD: citrus_iconv_none.c,v 1.3 2011/05/23 14:45:44 joerg Exp $	*/
 end_comment
 
 begin_comment

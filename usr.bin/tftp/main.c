@@ -212,7 +212,7 @@ begin_define
 define|#
 directive|define
 name|MAXLINE
-value|200
+value|(2 * MAXPATHLEN)
 end_define
 
 begin_define

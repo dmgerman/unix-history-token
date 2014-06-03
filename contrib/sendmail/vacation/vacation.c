@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2002, 2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2002, 2009 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|copyright
 argument_list|,
-literal|"@(#) Copyright (c) 1999-2002, 2009 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1987, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n\      Copyright (c) 1983 Eric P. Allman.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1999-2002, 2009 Proofpoint, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983, 1987, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n\      Copyright (c) 1983 Eric P. Allman.  All rights reserved.\n"
 argument_list|)
 end_macro
 
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 8.147 2013/03/12 15:24:56 ca Exp $"
+literal|"@(#)$Id: vacation.c,v 8.148 2013-11-22 20:52:02 ca Exp $"
 argument_list|)
 end_macro
 

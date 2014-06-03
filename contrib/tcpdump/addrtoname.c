@@ -49,6 +49,12 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBCAPSICUM
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -60,6 +66,15 @@ include|#
 directive|include
 file|<libcapsicum_dns.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LIBCAPSICUM */
+end_comment
 
 begin_endif
 endif|#

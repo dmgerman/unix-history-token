@@ -226,7 +226,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
 end_include
 
 begin_include
@@ -910,7 +910,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|vm_paddr_t
 name|dmaplimit
 decl_stmt|;
@@ -1216,7 +1215,7 @@ begin_decl_stmt
 name|int
 name|pmap_pcid_enabled
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2795,6 +2794,31 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|resident_count
+operator|>=
+name|count
+argument_list|,
+operator|(
+literal|"pmap %p resident count underflow %ld %d"
+operator|,
+name|pmap
+operator|,
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|resident_count
+operator|,
+name|count
+operator|)
+argument_list|)
+expr_stmt|;
 name|pmap
 operator|->
 name|pm_stats
@@ -3744,9 +3768,6 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|pte
-decl_stmt|,
-modifier|*
-name|unused
 decl_stmt|;
 comment|/* 	 * Create an initial set of page tables to run the kernel in. 	 */
 name|create_pagetables
@@ -3839,7 +3860,7 @@ name|pm_active
 argument_list|)
 expr_stmt|;
 comment|/* don't allow deactivation */
-name|CPU_ZERO
+name|CPU_FILL
 argument_list|(
 operator|&
 name|kernel_pmap
@@ -3847,6 +3868,7 @@ operator|->
 name|pm_save
 argument_list|)
 expr_stmt|;
+comment|/* always superset of pm_active */
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -3896,28 +3918,21 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* 	 * CMAP1 is only used for the memory test. 	 */
+comment|/* 	 * Crashdump maps.  The first page is reused as CMAP1 for the 	 * memory test. 	 */
 name|SYSMAP
 argument_list|(
 argument|caddr_t
 argument_list|,
 argument|CMAP1
 argument_list|,
-argument|CADDR1
-argument_list|,
-literal|1
-argument_list|)
-comment|/* 	 * Crashdump maps. 	 */
-name|SYSMAP
-argument_list|(
-argument|caddr_t
-argument_list|,
-argument|unused
-argument_list|,
 argument|crashdumpmap
 argument_list|,
 argument|MAXDUMPPGS
 argument_list|)
+name|CADDR1
+operator|=
+name|crashdumpmap
+expr_stmt|;
 name|virtual_avail
 operator|=
 name|va
@@ -4493,23 +4508,50 @@ name|PAGE_SHIFT
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the kernel is running in a virtual machine on an AMD Family 10h 	 * processor, then it must assume that MCA is enabled by the virtual 	 * machine monitor. 	 */
+comment|/* 	 * If the kernel is running on a virtual machine, then it must assume 	 * that MCA is enabled by the hypervisor.  Moreover, the kernel must 	 * be prepared for the hypervisor changing the vendor and family that 	 * are reported by CPUID.  Consequently, the workaround for AMD Family 	 * 10h Erratum 383 is enabled if the processor's feature set does not 	 * include at least one feature that is only supported by older Intel 	 * or newer AMD processors. 	 */
 if|if
 condition|(
 name|vm_guest
 operator|==
 name|VM_GUEST_VM
 operator|&&
-name|cpu_vendor_id
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_SS
+operator|)
 operator|==
-name|CPU_VENDOR_AMD
+literal|0
 operator|&&
-name|CPUID_TO_FAMILY
-argument_list|(
-name|cpu_id
-argument_list|)
+operator|(
+name|cpu_feature2
+operator|&
+operator|(
+name|CPUID2_SSSE3
+operator||
+name|CPUID2_SSE41
+operator||
+name|CPUID2_AESNI
+operator||
+name|CPUID2_AVX
+operator||
+name|CPUID2_XSAVE
+operator|)
+operator|)
 operator|==
-literal|0x10
+literal|0
+operator|&&
+operator|(
+name|amd_feature2
+operator|&
+operator|(
+name|AMDID2_XOP
+operator||
+name|AMDID2_FMA4
+operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 name|workaround_erratum383
 operator|=
@@ -5503,6 +5545,9 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
+name|int
+name|ipinum
+decl_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
@@ -5535,14 +5580,22 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Force the vcpu to exit and trap back into the hypervisor. 	 * 	 * XXX this is not optimal because IPI_AST builds a trapframe 	 * whereas all we need is an 'eoi' followed by 'iret'. 	 */
+comment|/* 	 * Force the vcpu to exit and trap back into the hypervisor. 	 */
+name|ipinum
+operator|=
+name|pmap
+operator|->
+name|pm_flags
+operator|&
+name|PMAP_NESTED_IPIMASK
+expr_stmt|;
 name|ipi_selected
 argument_list|(
 name|pmap
 operator|->
 name|pm_active
 argument_list|,
-name|IPI_AST
+name|ipinum
 argument_list|)
 expr_stmt|;
 name|sched_unpin
@@ -6391,6 +6444,19 @@ name|invltlb_globpcid
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|CPU_ISSET
+argument_list|(
+name|cpuid
+argument_list|,
+operator|&
+name|pmap
+operator|->
+name|pm_active
+argument_list|)
+condition|)
 name|CPU_CLR_ATOMIC
 argument_list|(
 name|cpuid
@@ -6530,6 +6596,19 @@ condition|)
 name|invltlb
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|CPU_ISSET
+argument_list|(
+name|cpuid
+argument_list|,
+operator|&
+name|pmap
+operator|->
+name|pm_active
+argument_list|)
+condition|)
 name|CPU_CLR_ATOMIC
 argument_list|(
 name|cpuid
@@ -7480,50 +7559,6 @@ name|mfence
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * Are we current address space or kernel?  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|pmap_is_current
-parameter_list|(
-name|pmap_t
-name|pmap
-parameter_list|)
-block|{
-return|return
-operator|(
-name|pmap
-operator|==
-name|kernel_pmap
-operator|||
-operator|(
-name|pmap
-operator|->
-name|pm_pml4
-index|[
-name|PML4PML4I
-index|]
-operator|&
-name|PG_FRAME
-operator|)
-operator|==
-operator|(
-name|PML4pml4e
-index|[
-literal|0
-index|]
-operator|&
-name|PG_FRAME
-operator|)
-operator|)
-return|;
 block|}
 end_function
 
@@ -8977,7 +9012,7 @@ comment|/* 	 * This is a release store so that the ordinary store unmapping 	 * 
 name|atomic_subtract_rel_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -9826,7 +9861,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -9997,7 +10032,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -10119,7 +10154,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -10685,7 +10720,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -12411,7 +12446,7 @@ expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -15849,7 +15884,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -23358,7 +23393,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove all pages from specified address space  * this aids process exit speeds.  Also, this code  * is special cased for current process only, but  * can have the more generic (and slightly slower)  * mode enabled.  This is much faster than pmap_remove  * in the case of running down an entire address space.  */
+comment|/*  * Destroy all managed, non-wired mappings in the given user-space  * pmap.  This pmap cannot be active on any processor besides the  * caller.  *                                                                                  * This function cannot be applied to the kernel pmap.  Moreover, it  * is not intended for general use.  It is only to be used during  * process termination.  Consequently, it can be implemented in ways  * that make it faster than pmap_remove().  First, it can more quickly  * destroy mappings by iterating over the pmap's collection of PV  * entries, rather than searching the page table.  Second, it doesn't  * have to test and clear the page table entries atomically, because  * no processor is currently accessing the user address space.  In  * particular, a page table entry's dirty bit won't change state once  * this function starts.  */
 end_comment
 
 begin_function
@@ -23440,23 +23475,80 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-if|if
-condition|(
+comment|/* 	 * Assert that the given pmap is only active on the current 	 * CPU.  Unfortunately, we cannot block another CPU from 	 * activating the pmap while this function is executing. 	 */
+name|KASSERT
+argument_list|(
 name|pmap
-operator|!=
+operator|==
 name|PCPU_GET
 argument_list|(
 name|curpmap
 argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"warning: pmap_remove_pages called with non-current pmap\n"
+argument_list|,
+operator|(
+literal|"non-current pmap %p"
+operator|,
+name|pmap
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+block|{
+name|cpuset_t
+name|other_cpus
+decl_stmt|;
+name|other_cpus
+operator|=
+name|all_cpus
+expr_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
+name|CPU_CLR
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|,
+operator|&
+name|other_cpus
+argument_list|)
+expr_stmt|;
+name|CPU_AND
+argument_list|(
+operator|&
+name|other_cpus
+argument_list|,
+operator|&
+name|pmap
+operator|->
+name|pm_active
+argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|CPU_EMPTY
+argument_list|(
+operator|&
+name|other_cpus
+argument_list|)
+argument_list|,
+operator|(
+literal|"pmap active %p"
+operator|,
+name|pmap
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|lock
 operator|=
 name|NULL
@@ -24047,7 +24139,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -25510,7 +25602,7 @@ name|pm_type
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * RWX = 010 or 110 will cause an unconditional EPT misconfiguration 	 * so we don't let the referenced (aka EPT_PG_READ) bit to be cleared 	 * if the EPT_PG_WRITE bit is set. 	 */
+comment|/* 	 * XWR = 010 or 110 will cause an unconditional EPT misconfiguration 	 * so we don't let the referenced (aka EPT_PG_READ) bit to be cleared 	 * if the EPT_PG_WRITE bit is set. 	 */
 if|if
 condition|(
 operator|(
@@ -25526,7 +25618,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* 	 * RWX = 100 is allowed only if the PMAP_SUPPORTS_EXEC_ONLY is set. 	 */
+comment|/* 	 * XWR = 100 is allowed only if the PMAP_SUPPORTS_EXEC_ONLY is set. 	 */
 if|if
 condition|(
 operator|(

@@ -158,6 +158,25 @@ name|Args
 argument_list|)
 block|; }
 decl_stmt|;
+comment|/// \brief An argument adjuster which removes output-related command line
+comment|/// arguments.
+name|class
+name|ClangStripOutputAdjuster
+range|:
+name|public
+name|ArgumentsAdjuster
+block|{
+name|virtual
+name|CommandLineArguments
+name|Adjust
+argument_list|(
+specifier|const
+name|CommandLineArguments
+operator|&
+name|Args
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 comment|// end namespace tooling
 block|}

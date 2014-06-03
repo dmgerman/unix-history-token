@@ -26522,6 +26522,14 @@ name|complain
 argument_list|)
 return|;
 block|}
+comment|/* APPLE LOCAL begin blocks 6204446 */
+case|case
+name|BLOCK_POINTER_TYPE
+case|:
+return|return
+name|t
+return|;
+comment|/* APPLE LOCAL end blocks 6204446 */
 default|default:
 name|sorry
 argument_list|(
@@ -29765,10 +29773,24 @@ block|}
 case|case
 name|FOR_STMT
 case|:
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|tmp
+operator|=
+name|RECUR
+argument_list|(
+name|FOR_ATTRIBUTES
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|stmt
 operator|=
 name|begin_for_stmt
-argument_list|()
+argument_list|(
+name|tmp
+argument_list|)
 expr_stmt|;
 name|RECUR
 argument_list|(
@@ -29778,6 +29800,8 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|finish_for_init_stmt
 argument_list|(
 name|stmt
@@ -29834,11 +29858,27 @@ break|break;
 case|case
 name|WHILE_STMT
 case|:
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|tmp
+operator|=
+name|RECUR
+argument_list|(
+name|WHILE_ATTRIBUTES
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|stmt
 operator|=
 name|begin_while_stmt
-argument_list|()
+argument_list|(
+name|tmp
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|tmp
 operator|=
 name|RECUR
@@ -29873,11 +29913,27 @@ break|break;
 case|case
 name|DO_STMT
 case|:
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|tmp
+operator|=
+name|RECUR
+argument_list|(
+name|DO_ATTRIBUTES
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|stmt
 operator|=
 name|begin_do_stmt
-argument_list|()
+argument_list|(
+name|tmp
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|RECUR
 argument_list|(
 name|DO_BODY
@@ -31186,6 +31242,8 @@ name|error_msg
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|error_msg
 argument_list|)
 expr_stmt|;

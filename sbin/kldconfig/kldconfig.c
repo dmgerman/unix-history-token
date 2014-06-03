@@ -83,66 +83,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_define
-define|#
-directive|define
-name|NEED_SLASHTERM
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*< 500000 */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* defined(__FreeBSD_version) */
-end_comment
-
-begin_comment
-comment|/* just in case.. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEED_SLASHTERM
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(__FreeBSD_version) */
-end_comment
-
 begin_comment
 comment|/* the default sysctl name */
 end_comment
@@ -775,61 +715,6 @@ argument_list|(
 name|pathbuf
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NEED_SLASHTERM
-comment|/* slash-terminate, because the kernel linker said so. */
-if|if
-condition|(
-operator|(
-name|len
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-name|pathbuf
-index|[
-name|len
-operator|-
-literal|1
-index|]
-operator|!=
-literal|'/'
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|len
-operator|==
-sizeof|sizeof
-argument_list|(
-name|pathbuf
-argument_list|)
-operator|-
-literal|1
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"path too long: %s"
-argument_list|,
-name|pathbuf
-argument_list|)
-expr_stmt|;
-name|pathbuf
-index|[
-name|len
-index|]
-operator|=
-literal|'/'
-expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* NEED_SLASHTERM */
 comment|/* remove a terminating slash if present */
 if|if
 condition|(
@@ -858,9 +743,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NEED_SLASHTERM */
 comment|/* is it already in there? */
 name|TAILQ_FOREACH
 argument_list|(
@@ -1109,61 +991,6 @@ argument_list|(
 name|pathbuf
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NEED_SLASHTERM
-comment|/* slash-terminate, because the kernel linker said so. */
-if|if
-condition|(
-operator|(
-name|len
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-name|pathbuf
-index|[
-name|len
-operator|-
-literal|1
-index|]
-operator|!=
-literal|'/'
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|len
-operator|==
-sizeof|sizeof
-argument_list|(
-name|pathbuf
-argument_list|)
-operator|-
-literal|1
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"path too long: %s"
-argument_list|,
-name|pathbuf
-argument_list|)
-expr_stmt|;
-name|pathbuf
-index|[
-name|len
-index|]
-operator|=
-literal|'/'
-expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* NEED_SLASHTERM */
 comment|/* remove a terminating slash if present */
 if|if
 condition|(
@@ -1192,9 +1019,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NEED_SLASHTERM */
 comment|/* Is it in there? */
 name|TAILQ_FOREACH
 argument_list|(

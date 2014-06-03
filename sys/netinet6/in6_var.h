@@ -1128,6 +1128,18 @@ parameter_list|)
 value|(	\ 	(((d)->s6_addr32[0] ^ (a)->s6_addr32[0])& (m)->s6_addr32[0]) == 0&& \ 	(((d)->s6_addr32[1] ^ (a)->s6_addr32[1])& (m)->s6_addr32[1]) == 0&& \ 	(((d)->s6_addr32[2] ^ (a)->s6_addr32[2])& (m)->s6_addr32[2]) == 0&& \ 	(((d)->s6_addr32[3] ^ (a)->s6_addr32[3])& (m)->s6_addr32[3]) == 0 )
 end_define
 
+begin_define
+define|#
+directive|define
+name|IN6_MASK_ADDR
+parameter_list|(
+name|a
+parameter_list|,
+name|m
+parameter_list|)
+value|do { \ 	(a)->s6_addr32[0]&= (m)->s6_addr32[0]; \ 	(a)->s6_addr32[1]&= (m)->s6_addr32[1]; \ 	(a)->s6_addr32[2]&= (m)->s6_addr32[2]; \ 	(a)->s6_addr32[3]&= (m)->s6_addr32[3]; \ } while (0)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2942,6 +2954,27 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|in6_prepare_ifra
+parameter_list|(
+name|struct
+name|in6_aliasreq
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|in6_purgeaddr
 parameter_list|(
 name|struct
@@ -3211,28 +3244,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|in6_ifremloop
-parameter_list|(
-name|struct
-name|ifaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|in6_ifaddloop
-parameter_list|(
-name|struct
-name|ifaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|in6_is_addr_deprecated
 parameter_list|(
@@ -3250,6 +3261,19 @@ parameter_list|(
 name|u_long
 parameter_list|,
 name|caddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|in6_newaddrmsg
+parameter_list|(
+name|struct
+name|in6_ifaddr
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

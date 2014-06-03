@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2004,2005 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_global.c,v 1.23 2005/12/31 21:51:52 tom Exp $"
+literal|"$Id: m_global.c,v 1.27 2012/06/10 00:09:15 tom Exp $"
 argument_list|)
 end_macro
 
@@ -370,6 +370,9 @@ control|)
 block|{
 name|check
 operator|=
+operator|(
+name|unsigned
+operator|)
 name|_nc_Calculate_Text_Width
 argument_list|(
 operator|&
@@ -395,6 +398,9 @@ name|check
 expr_stmt|;
 name|check
 operator|=
+operator|(
+name|unsigned
+operator|)
 name|_nc_Calculate_Text_Width
 argument_list|(
 operator|&
@@ -423,12 +429,18 @@ name|menu
 operator|->
 name|namelen
 operator|=
+operator|(
+name|short
+operator|)
 name|MaximumNameLength
 expr_stmt|;
 name|menu
 operator|->
 name|desclen
 operator|=
+operator|(
+name|short
+operator|)
 name|MaximumDescriptionLength
 expr_stmt|;
 name|T
@@ -682,6 +694,9 @@ operator|)
 operator|->
 name|index
 operator|=
+operator|(
+name|short
+operator|)
 name|ItemCount
 operator|++
 expr_stmt|;
@@ -720,6 +735,9 @@ name|menu
 operator|->
 name|nitems
 operator|=
+operator|(
+name|short
+operator|)
 name|ItemCount
 expr_stmt|;
 name|ComputeMaximum_NameDesc_Lengths
@@ -885,6 +903,11 @@ argument_list|(
 literal|"_nc_menu_text_width(%p)"
 argument_list|)
 operator|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
 name|item
 operator|)
 argument_list|)
@@ -905,6 +928,9 @@ block|{
 name|int
 name|count
 init|=
+operator|(
+name|int
+operator|)
 name|mbstowcs
 argument_list|(
 literal|0
@@ -1253,6 +1279,10 @@ name|menu
 operator|->
 name|height
 operator|=
+call|(
+name|short
+call|)
+argument_list|(
 literal|1
 operator|+
 name|menu
@@ -1266,6 +1296,7 @@ name|arows
 operator|-
 literal|1
 operator|)
+argument_list|)
 expr_stmt|;
 name|l
 operator|=
@@ -1321,6 +1352,9 @@ name|menu
 operator|->
 name|itemlen
 operator|=
+operator|(
+name|short
+operator|)
 name|l
 expr_stmt|;
 name|l
@@ -1348,6 +1382,9 @@ name|menu
 operator|->
 name|width
 operator|=
+operator|(
+name|short
+operator|)
 name|l
 expr_stmt|;
 name|T
@@ -1454,12 +1491,12 @@ name|FALSE
 else|:
 name|TRUE
 decl_stmt|;
+name|ClrStatus
+argument_list|(
 name|menu
-operator|->
-name|status
-operator|&=
-operator|~
+argument_list|,
 name|_LINK_NEEDED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1727,12 +1764,18 @@ name|item
 operator|->
 name|x
 operator|=
+operator|(
+name|short
+operator|)
 name|col
 expr_stmt|;
 name|item
 operator|->
 name|y
 operator|=
+operator|(
+name|short
+operator|)
 name|row
 expr_stmt|;
 if|if
@@ -2022,12 +2065,18 @@ name|item
 operator|->
 name|x
 operator|=
+operator|(
+name|short
+operator|)
 name|col
 expr_stmt|;
 name|item
 operator|->
 name|y
 operator|=
+operator|(
+name|short
+operator|)
 name|row
 expr_stmt|;
 if|if
@@ -2055,7 +2104,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  void _nc_Show_Menu(const MENU *menu) |    |   Description   :  Update the window that is associated with the menu | |   Return Values :  - +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnmenu   |   Function      :  void _nc_Show_Menu(const MENU* menu) |    |   Description   :  Update the window that is associated with the menu | |   Return Values :  - +--------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -2327,6 +2376,9 @@ name|menu
 operator|->
 name|toprow
 operator|=
+operator|(
+name|short
+operator|)
 name|new_toprow
 expr_stmt|;
 name|menu
@@ -2396,6 +2448,9 @@ name|menu
 operator|->
 name|toprow
 operator|=
+operator|(
+name|short
+operator|)
 name|new_toprow
 expr_stmt|;
 name|menu

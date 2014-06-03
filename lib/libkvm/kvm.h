@@ -285,6 +285,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|kvm_getncpus
+parameter_list|(
+name|kvm_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|kvm_getpcpu
@@ -436,10 +446,11 @@ parameter_list|(
 name|kvm_t
 modifier|*
 parameter_list|,
+name|unsigned
+name|long
+parameter_list|,
 name|void
 modifier|*
-parameter_list|,
-name|u_long
 parameter_list|,
 name|size_t
 parameter_list|,

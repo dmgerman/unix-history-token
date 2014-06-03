@@ -4265,7 +4265,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -4907,7 +4907,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -5211,7 +5211,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,

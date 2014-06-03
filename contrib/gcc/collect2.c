@@ -7256,6 +7256,8 @@ name|err
 expr_stmt|;
 name|fatal_perror
 argument_list|(
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
@@ -7263,6 +7265,8 @@ block|}
 else|else
 name|fatal
 argument_list|(
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
@@ -9455,6 +9459,8 @@ name|err
 expr_stmt|;
 name|fatal_perror
 argument_list|(
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
@@ -9462,6 +9468,8 @@ block|}
 else|else
 name|fatal
 argument_list|(
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;

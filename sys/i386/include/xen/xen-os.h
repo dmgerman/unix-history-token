@@ -75,20 +75,6 @@ directive|ifndef
 name|XENHVM
 end_ifndef
 
-begin_function_decl
-name|void
-name|xc_printf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -161,6 +161,7 @@ define|#
 directive|define
 name|isb
 parameter_list|()
+value|__asm __volatile("mcr p15, 0, %0, c7, c5, 4" : : "r" (0) : "memory")
 end_define
 
 begin_define
@@ -168,6 +169,7 @@ define|#
 directive|define
 name|dsb
 parameter_list|()
+value|__asm __volatile("mcr p15, 0, %0, c7, c10, 4" : : "r" (0) : "memory")
 end_define
 
 begin_define
@@ -175,6 +177,7 @@ define|#
 directive|define
 name|dmb
 parameter_list|()
+value|dsb()
 end_define
 
 begin_endif
@@ -1591,7 +1594,7 @@ parameter_list|(
 name|expr
 parameter_list|)
 define|\
-value|do {						\ 		u_int cpsr_save, tmp;			\ 							\ 		__asm __volatile(			\ 			"mrs  %0, cpsr;"		\ 			"orr  %1, %0, %2;"		\ 			"msr  cpsr_all, %1;"		\ 			: "=r" (cpsr_save), "=r" (tmp)	\ 			: "I" (I32_bit | F32_bit)		\ 		        : "cc" );		\ 		(expr);				\ 		 __asm __volatile(		\ 			"msr  cpsr_all, %0"	\ 			:
+value|do {						\ 		u_int cpsr_save, tmp;			\ 							\ 		__asm __volatile(			\ 			"mrs  %0, cpsr;"		\ 			"orr  %1, %0, %2;"		\ 			"msr  cpsr_fsxc, %1;"		\ 			: "=r" (cpsr_save), "=r" (tmp)	\ 			: "I" (I32_bit | F32_bit)		\ 		        : "cc" );		\ 		(expr);				\ 		 __asm __volatile(		\ 			"msr  cpsr_fsxc, %0"	\ 			:
 comment|/* no output */
 value|\ 			: "r" (cpsr_save)	\ 			: "cc" );		\ 	} while(0)
 end_define

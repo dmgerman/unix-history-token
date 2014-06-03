@@ -2704,7 +2704,7 @@ name|cpu_vendor
 condition|)
 name|printf
 argument_list|(
-literal|"  Origin = \"%s\""
+literal|"  Origin=\"%s\""
 argument_list|,
 name|cpu_vendor
 argument_list|)
@@ -2715,7 +2715,7 @@ name|cpu_id
 condition|)
 name|printf
 argument_list|(
-literal|"  Id = 0x%x"
+literal|"  Id=0x%x"
 argument_list|,
 name|cpu_id
 argument_list|)
@@ -2765,7 +2765,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Family = 0x%x"
+literal|"  Family=0x%x"
 argument_list|,
 name|CPUID_TO_FAMILY
 argument_list|(
@@ -2775,7 +2775,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Model = 0x%x"
+literal|"  Model=0x%x"
 argument_list|,
 name|CPUID_TO_MODEL
 argument_list|(
@@ -2785,7 +2785,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Stepping = %u"
+literal|"  Stepping=%u"
 argument_list|,
 name|cpu_id
 operator|&

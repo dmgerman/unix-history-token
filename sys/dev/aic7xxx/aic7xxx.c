@@ -127,19 +127,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_int
-name|num_chip_names
-init|=
-name|NUM_ELEMENTS
-argument_list|(
-name|ahc_chip_names
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Hardware error codes.  */
 end_comment

@@ -382,6 +382,18 @@ argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 block|;
+comment|/// Return the MCSymbol for the specified global value.  This symbol is the
+comment|/// main label that is the address of the global
+name|MCSymbol
+operator|*
+name|getSymbol
+argument_list|(
+argument|Mangler&M
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|)
+specifier|const
+block|;
 comment|// getCFIPersonalitySymbol - The symbol that gets passed to .cfi_personality.
 name|virtual
 name|MCSymbol
@@ -450,6 +462,18 @@ return|return
 name|StaticDtorSection
 return|;
 block|}
+comment|/// \brief Create a symbol reference to describe the given TLS variable when
+comment|/// emitting the address in debug info.
+name|virtual
+specifier|const
+name|MCExpr
+operator|*
+name|getDebugThreadLocalSymbol
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 name|virtual

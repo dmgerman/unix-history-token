@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -238,6 +238,14 @@ specifier|static
 name|void
 name|fatal
 parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -249,6 +257,35 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+if|if
+condition|(
+name|spa
+operator|!=
+name|NULL
+condition|)
+block|{
+name|spa_close
+argument_list|(
+name|spa
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spa_export
+argument_list|(
+name|g_pool
+argument_list|,
+name|NULL
+argument_list|,
+name|B_TRUE
+argument_list|,
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
 name|va_start
 argument_list|(
 name|ap
@@ -578,8 +615,14 @@ condition|)
 block|{
 name|fatal
 argument_list|(
-literal|"cannot import '%s': pool is active; run "
-literal|"\"zpool export %s\" first\n"
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
+literal|"cannot import '%s': pool is "
+literal|"active; run "
+literal|"\"zpool export %s\" "
+literal|"first\n"
 argument_list|,
 name|g_pool
 argument_list|,
@@ -590,7 +633,12 @@ block|}
 block|}
 name|fatal
 argument_list|(
-literal|"cannot import '%s': no such pool available\n"
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
+literal|"cannot import '%s': no such pool "
+literal|"available\n"
 argument_list|,
 name|g_pool
 argument_list|)
@@ -704,6 +752,10 @@ name|error
 condition|)
 name|fatal
 argument_list|(
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"can't import '%s': %s"
 argument_list|,
 name|name
@@ -777,6 +829,11 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+operator|*
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"cannot open '%s': %s"
 argument_list|,
 name|target
@@ -800,6 +857,11 @@ condition|)
 block|{
 name|fatal
 argument_list|(
+operator|*
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"'%s' has version %d, features not enabled"
 argument_list|,
 name|target
@@ -1168,6 +1230,28 @@ argument_list|,
 literal|"descriptions"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|spa_feature_is_active
+argument_list|(
+name|spa
+argument_list|,
+name|SPA_FEATURE_ENABLED_TXG
+argument_list|)
+condition|)
+block|{
+name|dump_obj
+argument_list|(
+name|os
+argument_list|,
+name|spa
+operator|->
+name|spa_feat_enabled_txg_obj
+argument_list|,
+literal|"enabled_txg"
+argument_list|)
+expr_stmt|;
+block|}
 name|dump_mos
 argument_list|(
 name|spa
@@ -1186,7 +1270,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|feature_enable_sync
+name|zhack_feature_enable_sync
 parameter_list|(
 name|void
 modifier|*
@@ -1214,7 +1298,7 @@ name|feature
 init|=
 name|arg
 decl_stmt|;
-name|spa_feature_enable
+name|feature_enable_sync
 argument_list|(
 name|spa
 argument_list|,
@@ -1280,13 +1364,12 @@ decl_stmt|;
 name|zfeature_info_t
 name|feature
 decl_stmt|;
-name|zfeature_info_t
-modifier|*
+name|spa_feature_t
 name|nodeps
 index|[]
 init|=
 block|{
-name|NULL
+name|SPA_FEATURE_NONE
 block|}
 decl_stmt|;
 comment|/* 	 * Features are not added to the pool's label until their refcounts 	 * are incremented, so fi_mos can just be left as false for now. 	 */
@@ -1314,9 +1397,21 @@ name|B_FALSE
 expr_stmt|;
 name|feature
 operator|.
+name|fi_activate_on_enable
+operator|=
+name|B_FALSE
+expr_stmt|;
+name|feature
+operator|.
 name|fi_depends
 operator|=
 name|nodeps
+expr_stmt|;
+name|feature
+operator|.
+name|fi_feature
+operator|=
+name|SPA_FEATURE_NONE
 expr_stmt|;
 name|optind
 operator|=
@@ -1450,6 +1545,10 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"invalid feature guid: %s"
 argument_list|,
 name|feature
@@ -1477,19 +1576,19 @@ name|spa_meta_objset
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
-name|zfeature_lookup_guid
+name|zfeature_is_supported
 argument_list|(
 name|feature
 operator|.
 name|fi_guid
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"'%s' is a real feature, will not enable"
 argument_list|)
 expr_stmt|;
@@ -1512,6 +1611,10 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"feature already enabled: %s"
 argument_list|,
 name|feature
@@ -1530,7 +1633,7 @@ argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
-name|feature_enable_sync
+name|zhack_feature_enable_sync
 argument_list|,
 operator|&
 name|feature
@@ -1585,11 +1688,31 @@ name|feature
 init|=
 name|arg
 decl_stmt|;
-name|spa_feature_incr
+name|uint64_t
+name|refcount
+decl_stmt|;
+name|VERIFY0
+argument_list|(
+name|feature_get_refcount_from_disk
 argument_list|(
 name|spa
 argument_list|,
 name|feature
+argument_list|,
+operator|&
+name|refcount
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|feature_sync
+argument_list|(
+name|spa
+argument_list|,
+name|feature
+argument_list|,
+name|refcount
+operator|+
+literal|1
 argument_list|,
 name|tx
 argument_list|)
@@ -1643,11 +1766,31 @@ name|feature
 init|=
 name|arg
 decl_stmt|;
-name|spa_feature_decr
+name|uint64_t
+name|refcount
+decl_stmt|;
+name|VERIFY0
+argument_list|(
+name|feature_get_refcount_from_disk
 argument_list|(
 name|spa
 argument_list|,
 name|feature
+argument_list|,
+operator|&
+name|refcount
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|feature_sync
+argument_list|(
+name|spa
+argument_list|,
+name|feature
+argument_list|,
+name|refcount
+operator|-
+literal|1
 argument_list|,
 name|tx
 argument_list|)
@@ -1707,13 +1850,12 @@ decl_stmt|;
 name|zfeature_info_t
 name|feature
 decl_stmt|;
-name|zfeature_info_t
-modifier|*
+name|spa_feature_t
 name|nodeps
 index|[]
 init|=
 block|{
-name|NULL
+name|SPA_FEATURE_NONE
 block|}
 decl_stmt|;
 comment|/* 	 * fi_desc does not matter here because it was written to disk 	 * when the feature was enabled, but we need to properly set the 	 * feature for read or write based on the information we read off 	 * disk later. 	 */
@@ -1740,6 +1882,12 @@ operator|.
 name|fi_depends
 operator|=
 name|nodeps
+expr_stmt|;
+name|feature
+operator|.
+name|fi_feature
+operator|=
+name|SPA_FEATURE_NONE
 expr_stmt|;
 name|optind
 operator|=
@@ -1851,6 +1999,10 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"invalid feature guid: %s"
 argument_list|,
 name|feature
@@ -1878,22 +2030,24 @@ name|spa_meta_objset
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
-name|zfeature_lookup_guid
+name|zfeature_is_supported
 argument_list|(
 name|feature
 operator|.
 name|fi_guid
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
+block|{
 name|fatal
 argument_list|(
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"'%s' is a real feature, will not change refcount"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 literal|0
@@ -1949,6 +2103,10 @@ else|else
 block|{
 name|fatal
 argument_list|(
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"feature is not enabled: %s"
 argument_list|,
 name|feature
@@ -1960,18 +2118,37 @@ block|}
 if|if
 condition|(
 name|decr
-operator|&&
-operator|!
-name|spa_feature_is_active
+condition|)
+block|{
+name|uint64_t
+name|count
+decl_stmt|;
+if|if
+condition|(
+name|feature_get_refcount_from_disk
 argument_list|(
 name|spa
 argument_list|,
 operator|&
 name|feature
+argument_list|,
+operator|&
+name|count
 argument_list|)
+operator|==
+literal|0
+operator|&&
+name|count
+operator|!=
+literal|0
 condition|)
+block|{
 name|fatal
 argument_list|(
+name|spa
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"feature refcount already 0: %s"
 argument_list|,
 name|feature
@@ -1979,6 +2156,8 @@ operator|.
 name|fi_guid
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|VERIFY0
 argument_list|(
 name|dsl_sync_task
@@ -2376,7 +2555,7 @@ name|NULL
 argument_list|,
 name|B_TRUE
 argument_list|,
-name|B_TRUE
+name|B_FALSE
 argument_list|)
 operator|!=
 literal|0
@@ -2384,6 +2563,10 @@ condition|)
 block|{
 name|fatal
 argument_list|(
+name|NULL
+argument_list|,
+name|FTAG
+argument_list|,
 literal|"pool export failed; "
 literal|"changes may not be committed to disk\n"
 argument_list|)

@@ -226,17 +226,6 @@ literal|"Chan %d PortID 0x%06x Departed from Target %u because of %s"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rqo
-index|[]
-init|=
-literal|"%s: Request Queue Overflow\n"
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -13153,7 +13142,7 @@ name|ccb_h
 operator|.
 name|path
 argument_list|,
-name|rqo
+literal|"%s: Request Queue Overflow\n"
 argument_list|,
 name|__func__
 argument_list|)

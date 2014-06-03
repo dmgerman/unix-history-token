@@ -371,11 +371,11 @@ name|avail
 operator|=
 name|swap_pager_avail
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|-
@@ -1343,6 +1343,17 @@ modifier|*
 name|de
 parameter_list|)
 block|{
+if|if
+condition|(
+name|de
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|TMPFS_DIRCOOKIE_EOF
+operator|)
+return|;
 name|MPASS
 argument_list|(
 name|de
@@ -5080,7 +5091,7 @@ modifier|*
 name|uio
 parameter_list|,
 name|int
-name|cnt
+name|maxcookies
 parameter_list|,
 name|u_long
 modifier|*
@@ -5115,6 +5126,7 @@ name|off
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Lookup the node from the current offset.  The starting offset of 	 * 0 will lookup both '.' and '..', and then the first real entry, 	 * or EOF if there are none.  Then find all entries for the dir that 	 * fit into the buffer.  Once no more entries are found (de == NULL), 	 * the offset is set to TMPFS_DIRCOOKIE_EOF, which will cause the next 	 * call to return 0. 	 */
 switch|switch
 condition|(
 name|uio
@@ -5153,9 +5165,9 @@ name|TMPFS_DIRCOOKIE_DOTDOT
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cookies
 index|[
@@ -5172,6 +5184,7 @@ name|uio
 operator|->
 name|uio_offset
 expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 name|TMPFS_DIRCOOKIE_DOTDOT
 case|:
@@ -5205,19 +5218,6 @@ operator|&
 name|dc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|de
-operator|==
-name|NULL
-condition|)
-name|uio
-operator|->
-name|uio_offset
-operator|=
-name|TMPFS_DIRCOOKIE_EOF
-expr_stmt|;
-else|else
 name|uio
 operator|->
 name|uio_offset
@@ -5229,9 +5229,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|cookies
 index|[
@@ -5248,6 +5248,7 @@ name|uio
 operator|->
 name|uio_offset
 expr_stmt|;
+comment|/* EOF. */
 if|if
 condition|(
 name|de
@@ -5296,9 +5297,9 @@ operator|)
 return|;
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|off
 operator|=
@@ -5565,22 +5566,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cnt
+name|cookies
 operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|de
-operator|==
 name|NULL
 condition|)
-name|off
-operator|=
-name|TMPFS_DIRCOOKIE_EOF
-expr_stmt|;
-else|else
+block|{
 name|off
 operator|=
 name|tmpfs_dirent_cookie
@@ -5593,7 +5583,7 @@ argument_list|(
 operator|*
 name|ncookies
 operator|<
-name|cnt
+name|maxcookies
 argument_list|)
 expr_stmt|;
 name|cookies
@@ -5627,25 +5617,13 @@ operator|!=
 name|NULL
 condition|)
 do|;
-comment|/* Update the offset and cache. */
+comment|/* Skip setting off when using cookies as it is already done above. */
 if|if
 condition|(
-name|cnt
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|de
+name|cookies
 operator|==
 name|NULL
 condition|)
-name|off
-operator|=
-name|TMPFS_DIRCOOKIE_EOF
-expr_stmt|;
-else|else
 name|off
 operator|=
 name|tmpfs_dirent_cookie
@@ -5653,7 +5631,7 @@ argument_list|(
 name|de
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* Update the offset and cache. */
 name|uio
 operator|->
 name|uio_offset

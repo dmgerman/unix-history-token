@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $Id: capdefaults.c,v 1.13 2008/08/04 12:33:42 tom Exp $ */
+comment|/* $Id: capdefaults.c,v 1.14 2008/11/16 00:19:59 juergen Exp $ */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ begin_block
 block|{
 name|char
 modifier|*
-name|sp
+name|strp
 decl_stmt|;
 name|short
 name|capval
@@ -31,7 +31,7 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|(short) (sp = strchr(str, '*'), sp ? atoi(sp+1) : 0)
+value|(short) (strp = strchr(str, '*'), strp ? atoi(strp+1) : 0)
 comment|/* current (4.4BSD) capabilities marked obsolete */
 if|if
 condition|(

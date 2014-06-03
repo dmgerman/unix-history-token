@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/OwningPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -125,6 +131,32 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
+name|opt
+block|{
+name|class
+name|Arg
+decl_stmt|;
+name|class
+name|ArgList
+decl_stmt|;
+name|class
+name|DerivedArgList
+decl_stmt|;
+name|class
+name|InputArgList
+decl_stmt|;
+name|class
+name|OptTable
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|namespace
@@ -134,22 +166,10 @@ name|class
 name|Action
 decl_stmt|;
 name|class
-name|Arg
-decl_stmt|;
-name|class
-name|ArgList
-decl_stmt|;
-name|class
 name|Command
 decl_stmt|;
 name|class
 name|Compilation
-decl_stmt|;
-name|class
-name|DerivedArgList
-decl_stmt|;
-name|class
-name|InputArgList
 decl_stmt|;
 name|class
 name|InputInfo
@@ -158,7 +178,7 @@ name|class
 name|JobAction
 decl_stmt|;
 name|class
-name|OptTable
+name|SanitizerArgs
 decl_stmt|;
 name|class
 name|ToolChain
@@ -168,14 +188,31 @@ comment|/// from a set of gcc-driver-like command line arguments.
 name|class
 name|Driver
 block|{
+name|llvm
+operator|::
+name|opt
+operator|::
 name|OptTable
-modifier|*
+operator|*
 name|Opts
-decl_stmt|;
+expr_stmt|;
 name|DiagnosticsEngine
 modifier|&
 name|Diags
 decl_stmt|;
+enum|enum
+name|DriverMode
+block|{
+name|GCCMode
+block|,
+name|GXXMode
+block|,
+name|CPPMode
+block|,
+name|CLMode
+block|}
+name|Mode
+enum|;
 name|public
 label|:
 comment|// Diag - Forwarding function for diagnostics.
@@ -254,6 +291,12 @@ operator|::
 name|string
 name|SysRoot
 expr_stmt|;
+comment|/// Dynamic loader prefix, if present
+name|std
+operator|::
+name|string
+name|DyldPrefix
+expr_stmt|;
 comment|/// If the standard library is used
 name|bool
 name|UseStdLib
@@ -319,6 +362,10 @@ operator|::
 name|ID
 operator|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|Arg
 operator|*
 operator|>
@@ -328,23 +375,41 @@ operator|>
 name|InputList
 expr_stmt|;
 comment|/// Whether the driver should follow g++ like behavior.
-name|unsigned
+name|bool
 name|CCCIsCXX
-range|:
-literal|1
-decl_stmt|;
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Mode
+operator|==
+name|GXXMode
+return|;
+block|}
 comment|/// Whether the driver is just the preprocessor.
-name|unsigned
+name|bool
 name|CCCIsCPP
-range|:
-literal|1
-decl_stmt|;
-comment|/// Echo commands while executing (in -v style).
-name|unsigned
-name|CCCEcho
-range|:
-literal|1
-decl_stmt|;
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Mode
+operator|==
+name|CPPMode
+return|;
+block|}
+comment|/// Whether the driver should follow cl.exe like behavior.
+name|bool
+name|IsCLMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Mode
+operator|==
+name|CLMode
+return|;
+block|}
 comment|/// Only print tool bindings, don't build any jobs.
 name|unsigned
 name|CCCPrintBindings
@@ -449,17 +514,18 @@ name|private
 label|:
 comment|/// TranslateInputArgs - Create a new derived argument list from the input
 comment|/// arguments, after applying the standard argument translations.
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
-modifier|*
+operator|*
 name|TranslateInputArgs
 argument_list|(
-specifier|const
-name|InputArgList
-operator|&
-name|Args
+argument|const llvm::opt::InputArgList&Args
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|// getFinalPhase - Determine which compilation mode we are in and record
 comment|// which option we used to determine the final phase.
 name|phases
@@ -467,9 +533,9 @@ operator|::
 name|ID
 name|getFinalPhase
 argument_list|(
-argument|const DerivedArgList&DAL
+argument|const llvm::opt::DerivedArgList&DAL
 argument_list|,
-argument|Arg **FinalPhaseArg =
+argument|llvm::opt::Arg **FinalPhaseArg =
 literal|0
 argument_list|)
 specifier|const
@@ -508,6 +574,10 @@ name|CCCGenericGCCName
 return|;
 block|}
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|OptTable
 operator|&
 name|getOpts
@@ -658,11 +728,9 @@ argument_list|)
 decl_stmt|;
 comment|/// @name Driver Steps
 comment|/// @{
-comment|/// ParseArgStrings - Parse the given list of strings into an
-comment|/// ArgList.
-name|InputArgList
-modifier|*
-name|ParseArgStrings
+comment|/// ParseDriverMode - Look for and handle the driver mode option in Args.
+name|void
+name|ParseDriverMode
 argument_list|(
 name|ArrayRef
 operator|<
@@ -673,6 +741,25 @@ operator|>
 name|Args
 argument_list|)
 decl_stmt|;
+comment|/// ParseArgStrings - Parse the given list of strings into an
+comment|/// ArgList.
+name|llvm
+operator|::
+name|opt
+operator|::
+name|InputArgList
+operator|*
+name|ParseArgStrings
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+name|Args
+argument_list|)
+expr_stmt|;
 comment|/// BuildInputs - Construct the list of inputs and their types from
 comment|/// the given arguments.
 comment|///
@@ -689,6 +776,10 @@ operator|&
 name|TC
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
 operator|&
 name|Args
@@ -713,7 +804,10 @@ name|ToolChain
 operator|&
 name|TC
 argument_list|,
-specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
 operator|&
 name|Args
@@ -743,7 +837,10 @@ name|ToolChain
 operator|&
 name|TC
 argument_list|,
-specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
 operator|&
 name|Args
@@ -845,17 +942,6 @@ name|ShowHidden
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// PrintOptions - Print the list of arguments.
-name|void
-name|PrintOptions
-argument_list|(
-specifier|const
-name|ArgList
-operator|&
-name|Args
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// PrintVersion - Print the driver version.
 name|void
 name|PrintVersion
@@ -927,6 +1013,10 @@ modifier|*
 name|ConstructPhaseAction
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1057,6 +1147,10 @@ name|bool
 name|IsUsingLTO
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1075,6 +1169,10 @@ modifier|&
 name|getToolChain
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1087,6 +1185,20 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
+comment|/// \brief Get bitmasks for which option flags to include and exclude based on
+comment|/// the driver mode.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|getIncludeExcludeOptionFlagMasks
+argument_list|()
+specifier|const
+expr_stmt|;
 name|public
 label|:
 comment|/// GetReleaseVersion - Parse (([0-9]+)(.([0-9]+)(.([0-9]+)?))?)? and
@@ -1124,6 +1236,21 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
+comment|/// \return True if the last defined optimization level is -Ofast.
+comment|/// And False otherwise.
+name|bool
+name|isOptimizationLevelFast
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

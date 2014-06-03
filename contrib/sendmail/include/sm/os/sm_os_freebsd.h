@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sm_os_freebsd.h,v 1.11 2002/04/15 17:17:05 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2000-2001 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: sm_os_freebsd.h,v 1.12 2013-11-22 20:51:34 ca Exp $  */
 end_comment
 
 begin_comment
@@ -175,28 +175,6 @@ end_endif
 
 begin_comment
 comment|/* SM_CONF_MSG */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SM_IPNODEBYNAME_FLAGS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SM_IPNODEBYNAME_FLAGS
-value|AI_DEFAULT|AI_ALL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SM_IPNODEBYNAME_FLAGS */
 end_comment
 
 end_unit

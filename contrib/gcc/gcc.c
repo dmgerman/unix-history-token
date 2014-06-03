@@ -12635,6 +12635,8 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
@@ -28726,6 +28728,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|_
 argument_list|(
 literal|"\nFor bug reporting instructions, please see:\n"

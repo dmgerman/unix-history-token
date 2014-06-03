@@ -99,31 +99,21 @@ name|PathDiagnosticConsumers
 expr_stmt|;
 define|#
 directive|define
-name|CREATE_CONSUMER
+name|ANALYSIS_DIAGNOSTICS
 parameter_list|(
 name|NAME
+parameter_list|,
+name|CMDFLAG
+parameter_list|,
+name|DESC
+parameter_list|,
+name|CREATEFN
 parameter_list|)
 define|\
-value|void create ## NAME ## DiagnosticConsumer(AnalyzerOptions&AnalyzerOpts,\                                           PathDiagnosticConsumers&C,\                                           const std::string& prefix,\                                           const Preprocessor&PP);
-name|CREATE_CONSUMER
-argument_list|(
-argument|HTML
-argument_list|)
-name|CREATE_CONSUMER
-argument_list|(
-argument|Plist
-argument_list|)
-name|CREATE_CONSUMER
-argument_list|(
-argument|PlistMultiFile
-argument_list|)
-name|CREATE_CONSUMER
-argument_list|(
-argument|TextPath
-argument_list|)
-undef|#
-directive|undef
-name|CREATE_CONSUMER
+value|void CREATEFN(AnalyzerOptions&AnalyzerOpts,\               PathDiagnosticConsumers&C,\               const std::string&Prefix,\               const Preprocessor&PP);
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/Analyses.def"
 block|}
 comment|// end 'ento' namespace
 block|}

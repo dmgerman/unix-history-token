@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readpass.c,v 1.49 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: readpass.c,v 1.50 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -490,11 +490,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -525,11 +523,9 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -812,14 +808,14 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buf
 argument_list|,
-literal|'x'
-argument_list|,
 sizeof|sizeof
+argument_list|(
 name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

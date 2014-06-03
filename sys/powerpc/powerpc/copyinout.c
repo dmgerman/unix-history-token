@@ -2103,7 +2103,7 @@ operator|*
 name|p
 operator|)
 operator|:
-literal|"cc"
+literal|"cr0"
 operator|,
 literal|"memory"
 block|)
@@ -2344,7 +2344,7 @@ operator|*
 name|p
 operator|)
 operator|:
-literal|"cc"
+literal|"cr0"
 operator|,
 literal|"memory"
 block|)

@@ -78,12 +78,6 @@ directive|define
 name|__must_check
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -94,27 +88,6 @@ parameter_list|)
 define|\
 value|"call hypercall_page + ("STR(__HYPERVISOR_##name)" * 32)"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|HYPERCALL_STR
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|"mov $("STR(__HYPERVISOR_##name)" * 32),%%eax; "\ 	"add hypercall_stubs(%%rip),%%rax; "			\ 	"call *%%rax"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -719,7 +719,7 @@ name|s_addr
 operator|=
 name|addr
 expr_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -746,7 +746,7 @@ operator|&
 name|addr4
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1640,7 +1640,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"arpresolve: can't allocate llinfo for %s\n"
+literal|"arpresolve: can't allocate llinfo for %s on %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1651,6 +1651,10 @@ argument_list|)
 operator|->
 name|sin_addr
 argument_list|)
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -4058,7 +4062,7 @@ name|sin_addr
 operator|=
 name|itaddr
 expr_stmt|;
-name|IF_AFDATA_LOCK
+name|IF_AFDATA_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4083,7 +4087,7 @@ operator|&
 name|sin
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_UNLOCK
+name|IF_AFDATA_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

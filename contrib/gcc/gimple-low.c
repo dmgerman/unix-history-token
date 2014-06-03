@@ -1029,9 +1029,6 @@ case|case
 name|SWITCH_EXPR
 case|:
 case|case
-name|CHANGE_DYNAMIC_TYPE_EXPR
-case|:
-case|case
 name|OMP_FOR
 case|:
 case|case

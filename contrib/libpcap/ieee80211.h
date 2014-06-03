@@ -372,7 +372,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 value|0x40
 end_define
 

@@ -1285,6 +1285,16 @@ name|k_ipad
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|k_ipad
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|k_ipad
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

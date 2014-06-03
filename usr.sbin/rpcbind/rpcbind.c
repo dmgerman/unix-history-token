@@ -293,6 +293,25 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LIBWRAP
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|libwrap
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|verboselog
@@ -3790,6 +3809,21 @@ name|WSOP
 value|""
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|LIBWRAP
+define|#
+directive|define
+name|WRAPOP
+value|"W"
+else|#
+directive|else
+define|#
+directive|define
+name|WRAPOP
+value|""
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -3797,12 +3831,12 @@ name|c
 operator|=
 name|getopt
 argument_list|(
-name|argc
+argument|argc
 argument_list|,
-name|argv
+argument|argv
 argument_list|,
 literal|"6adh:iLls"
-name|WSOP
+argument|WRAPOP WSOP
 argument_list|)
 operator|)
 operator|!=
@@ -3941,6 +3975,19 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
+name|LIBWRAP
+case|case
+literal|'W'
+case|:
+name|libwrap
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|WARMSTART
 case|case
 literal|'w'
@@ -3958,7 +4005,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rpcbind [-6adiLls%s] [-h bindip]\n"
+literal|"usage: rpcbind [-6adiLls%s%s] [-h bindip]\n"
+argument_list|,
+name|WRAPOP
 argument_list|,
 name|WSOP
 argument_list|)

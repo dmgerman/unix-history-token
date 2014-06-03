@@ -1764,6 +1764,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
+name|crypto_devallowsoft
+condition|)
+block|{
+if|if
+condition|(
 name|crid
 operator|&
 name|CRYPTOCAP_F_SOFTWARE
@@ -1797,6 +1803,7 @@ return|return
 name|EINVAL
 return|;
 comment|/* XXX */
+block|}
 return|return
 literal|0
 return|;
@@ -5273,10 +5280,6 @@ name|csession
 modifier|*
 name|cse
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-comment|/* NB: required when mtx_init is built with INVARIANTS */
 name|cse
 operator|=
 name|malloc
@@ -5294,25 +5297,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|cse
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|csession
-argument_list|)
-argument_list|,
-name|M_XDATA
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|cse

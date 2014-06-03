@@ -584,103 +584,107 @@ return|;
 block|}
 comment|// These are helper methods for dealing with flags in the INLINEASM SDNode
 comment|// in the backend.
-enum|enum
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|uint32_t
+function|)
 block|{
 comment|// Fixed operands on an INLINEASM SDNode.
 name|Op_InputChain
-init|=
+operator|=
 literal|0
-block|,
+operator|,
 name|Op_AsmString
-init|=
+operator|=
 literal|1
-block|,
+operator|,
 name|Op_MDNode
-init|=
+operator|=
 literal|2
-block|,
+operator|,
 name|Op_ExtraInfo
-init|=
+operator|=
 literal|3
-block|,
+operator|,
 comment|// HasSideEffects, IsAlignStack, AsmDialect.
 name|Op_FirstOperand
-init|=
+operator|=
 literal|4
-block|,
+operator|,
 comment|// Fixed operands on an INLINEASM MachineInstr.
 name|MIOp_AsmString
-init|=
+operator|=
 literal|0
-block|,
+operator|,
 name|MIOp_ExtraInfo
-init|=
+operator|=
 literal|1
-block|,
+operator|,
 comment|// HasSideEffects, IsAlignStack, AsmDialect.
 name|MIOp_FirstOperand
-init|=
+operator|=
 literal|2
-block|,
+operator|,
 comment|// Interpretation of the MIOp_ExtraInfo bit field.
 name|Extra_HasSideEffects
-init|=
+operator|=
 literal|1
-block|,
+operator|,
 name|Extra_IsAlignStack
-init|=
+operator|=
 literal|2
-block|,
+operator|,
 name|Extra_AsmDialect
-init|=
+operator|=
 literal|4
-block|,
+operator|,
 name|Extra_MayLoad
-init|=
+operator|=
 literal|8
-block|,
+operator|,
 name|Extra_MayStore
-init|=
+operator|=
 literal|16
-block|,
+operator|,
 comment|// Inline asm operands map to multiple SDNode / MachineInstr operands.
 comment|// The first operand is an immediate describing the asm operand, the low
 comment|// bits is the kind:
 name|Kind_RegUse
-init|=
+operator|=
 literal|1
-block|,
+operator|,
 comment|// Input register, "r".
 name|Kind_RegDef
-init|=
+operator|=
 literal|2
-block|,
+operator|,
 comment|// Output register, "=r".
 name|Kind_RegDefEarlyClobber
-init|=
+operator|=
 literal|3
-block|,
+operator|,
 comment|// Early-clobber output register, "=&r".
 name|Kind_Clobber
-init|=
+operator|=
 literal|4
-block|,
+operator|,
 comment|// Clobbered register, "~r".
 name|Kind_Imm
-init|=
+operator|=
 literal|5
-block|,
+operator|,
 comment|// Immediate.
 name|Kind_Mem
-init|=
+operator|=
 literal|6
-block|,
+operator|,
 comment|// Memory operand, "m".
 name|Flag_MatchingOperand
-init|=
+operator|=
 literal|0x80000000
 block|}
-enum|;
+empty_stmt|;
 specifier|static
 name|unsigned
 name|getFlagWord

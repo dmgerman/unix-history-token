@@ -161,6 +161,9 @@ condition|(
 name|ctx
 operator|->
 name|progress_func
+operator|&&
+operator|*
+name|len
 condition|)
 name|ctx
 operator|->

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_csmapper.c,v 1.10 2009/01/11 02:46:24 christos Exp $ */
+comment|/*	$NetBSD: citrus_csmapper.c,v 1.11 2011/11/20 07:43:52 tnozaki Exp $	*/
 end_comment
 
 begin_comment
@@ -639,6 +639,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+comment|/* don't break the loop, test all src/dst pairs. */
 goto|goto
 name|quit4
 goto|;

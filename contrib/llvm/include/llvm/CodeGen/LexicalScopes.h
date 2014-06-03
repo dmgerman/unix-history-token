@@ -657,12 +657,10 @@ return|return
 name|AbstractScope
 return|;
 block|}
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|LexicalScope
 operator|*
-operator|,
-literal|4
 operator|>
 operator|&
 name|getChildren
@@ -672,11 +670,9 @@ return|return
 name|Children
 return|;
 block|}
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|InsnRange
-operator|,
-literal|4
 operator|>
 operator|&
 name|getRanges

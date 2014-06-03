@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -60,19 +60,43 @@ enum|enum
 block|{
 name|ZFS_TYPE_FILESYSTEM
 init|=
-literal|0x1
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
 block|,
 name|ZFS_TYPE_SNAPSHOT
 init|=
-literal|0x2
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
 block|,
 name|ZFS_TYPE_VOLUME
 init|=
-literal|0x4
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
 block|,
 name|ZFS_TYPE_POOL
 init|=
-literal|0x8
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
+name|ZFS_TYPE_BOOKMARK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
 block|}
 name|zfs_type_t
 typedef|;
@@ -258,6 +282,16 @@ block|,
 name|ZFS_PROP_INCONSISTENT
 block|,
 comment|/* not exposed to the user */
+name|ZFS_PROP_VOLMODE
+block|,
+name|ZFS_PROP_FILESYSTEM_LIMIT
+block|,
+name|ZFS_PROP_SNAPSHOT_LIMIT
+block|,
+name|ZFS_PROP_FILESYSTEM_COUNT
+block|,
+name|ZFS_PROP_SNAPSHOT_COUNT
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t
@@ -834,6 +868,27 @@ init|=
 literal|2
 block|}
 name|zfs_sync_type_t
+typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|ZFS_VOLMODE_DEFAULT
+init|=
+literal|0
+block|,
+name|ZFS_VOLMODE_GEOM
+init|=
+literal|1
+block|,
+name|ZFS_VOLMODE_DEV
+init|=
+literal|2
+block|,
+name|ZFS_VOLMODE_NONE
+init|=
+literal|3
+block|}
+name|zfs_volmode_t
 typedef|;
 comment|/*  * On-disk version number.  */
 define|#
@@ -2204,6 +2259,12 @@ block|,
 name|ZFS_IOC_SEND_SPACE
 block|,
 name|ZFS_IOC_CLONE
+block|,
+name|ZFS_IOC_BOOKMARK
+block|,
+name|ZFS_IOC_GET_BOOKMARKS
+block|,
+name|ZFS_IOC_DESTROY_BOOKMARKS
 block|,
 name|ZFS_IOC_LAST
 block|}

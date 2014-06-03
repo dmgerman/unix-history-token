@@ -299,7 +299,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<x86/isa/isa.h>
+file|<isa/isareg.h>
 end_include
 
 begin_endif
@@ -1778,6 +1778,8 @@ operator|(
 name|PCB_NPXINITDONE
 operator||
 name|PCB_NPXUSERINITDONE
+operator||
+name|PCB_KERNNPX
 operator|)
 expr_stmt|;
 name|pcb2
@@ -2333,7 +2335,7 @@ name|cnt
 decl_stmt|;
 if|if
 condition|(
-name|smp_active
+name|smp_started
 condition|)
 block|{
 name|map

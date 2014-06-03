@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2010,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                         2008                    *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -13,20 +13,28 @@ directive|include
 file|<curses.priv.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<term.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CUR
+end_ifndef
 
-begin_comment
-comment|/* ena_acs, acs_chars */
-end_comment
+begin_define
+define|#
+directive|define
+name|CUR
+value|SP_TERMTYPE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_acs.c,v 1.36 2008/08/16 19:22:55 tom Exp $"
+literal|"$Id: lib_acs.c,v 1.44 2013/01/12 17:24:42 tom Exp $"
 argument_list|)
 end_macro
 
@@ -45,21 +53,19 @@ name|MyBuffer
 value|_nc_prescreen.real_acs_map
 end_define
 
-begin_macro
-name|NCURSES_EXPORT_VAR
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|chtype
+modifier|*
+function|)
+name|NCURSES_PUBLIC_VAR
 argument_list|(
-argument|chtype *
+argument|acs_map
 argument_list|)
-end_macro
-
-begin_macro
-name|_nc_acs_map
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -80,7 +86,7 @@ return|return
 name|MyBuffer
 return|;
 block|}
-end_block
+end_function
 
 begin_undef
 undef|#
@@ -117,21 +123,103 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_TERM_DRIVER
+end_ifdef
+
+begin_function
 name|NCURSES_EXPORT
+function|(
+name|chtype
+function|)
+name|NCURSES_SP_NAME
 argument_list|(
-argument|void
+argument|_nc_acs_char
 argument_list|)
-end_macro
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|int
+name|c
+parameter_list|)
+block|{
+name|chtype
+modifier|*
+name|map
+decl_stmt|;
+if|if
+condition|(
+name|c
+operator|<
+literal|0
+operator|||
+name|c
+operator|>=
+name|ACS_LEN
+condition|)
+return|return
+operator|(
+name|chtype
+operator|)
+literal|0
+return|;
+name|map
+operator|=
+operator|(
+name|SP_PARM
+operator|!=
+literal|0
+operator|)
+condition|?
+name|SP_PARM
+operator|->
+name|_acs_map
+else|:
+if|#
+directive|if
+name|BROKEN_LINKER
+operator|||
+name|USE_REENTRANT
+name|_nc_prescreen
+operator|.
+name|real_acs_map
+else|#
+directive|else
+name|acs_map
+endif|#
+directive|endif
+expr_stmt|;
+return|return
+name|map
+index|[
+name|c
+index|]
+return|;
+block|}
+end_function
 
-begin_macro
-name|_nc_init_acs
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_TERM_DRIVER */
+end_comment
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|void
+function|)
+name|NCURSES_SP_NAME
 argument_list|(
-argument|void
+argument|_nc_init_acs
 argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|NCURSES_SP_DCL0
+parameter_list|)
 block|{
 name|chtype
 modifier|*
@@ -143,11 +231,11 @@ name|chtype
 modifier|*
 name|real_map
 init|=
-name|SP
+name|SP_PARM
 operator|!=
 literal|0
 condition|?
-name|SP
+name|SP_PARM
 operator|->
 name|_acs_map
 else|:
@@ -199,13 +287,16 @@ index|]
 operator|=
 name|A_ALTCHARSET
 operator||
+operator|(
+name|chtype
+operator|)
 name|j
 expr_stmt|;
 if|if
 condition|(
-name|SP
+name|SP_PARM
 condition|)
-name|SP
+name|SP_PARM
 operator|->
 name|_screen_acs_map
 index|[
@@ -499,6 +590,200 @@ operator|=
 literal|'f'
 expr_stmt|;
 comment|/* should be pound-sterling symbol */
+comment|/* thick-line-drawing */
+name|real_map
+index|[
+literal|'L'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* upper left corner */
+name|real_map
+index|[
+literal|'M'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* lower left corner */
+name|real_map
+index|[
+literal|'K'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* upper right corner */
+name|real_map
+index|[
+literal|'J'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* lower right corner */
+name|real_map
+index|[
+literal|'T'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* tee pointing left */
+name|real_map
+index|[
+literal|'U'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* tee pointing right */
+name|real_map
+index|[
+literal|'V'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* tee pointing up */
+name|real_map
+index|[
+literal|'W'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* tee pointing down */
+name|real_map
+index|[
+literal|'Q'
+index|]
+operator|=
+literal|'-'
+expr_stmt|;
+comment|/* horizontal line */
+name|real_map
+index|[
+literal|'X'
+index|]
+operator|=
+literal|'|'
+expr_stmt|;
+comment|/* vertical line */
+name|real_map
+index|[
+literal|'N'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* large plus or crossover */
+comment|/* double-line-drawing */
+name|real_map
+index|[
+literal|'C'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* upper left corner */
+name|real_map
+index|[
+literal|'D'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* lower left corner */
+name|real_map
+index|[
+literal|'B'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* upper right corner */
+name|real_map
+index|[
+literal|'A'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* lower right corner */
+name|real_map
+index|[
+literal|'G'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* tee pointing left */
+name|real_map
+index|[
+literal|'F'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* tee pointing right */
+name|real_map
+index|[
+literal|'H'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* tee pointing up */
+name|real_map
+index|[
+literal|'I'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* tee pointing down */
+name|real_map
+index|[
+literal|'R'
+index|]
+operator|=
+literal|'-'
+expr_stmt|;
+comment|/* horizontal line */
+name|real_map
+index|[
+literal|'Y'
+index|]
+operator|=
+literal|'|'
+expr_stmt|;
+comment|/* vertical line */
+name|real_map
+index|[
+literal|'E'
+index|]
+operator|=
+literal|'+'
+expr_stmt|;
+comment|/* large plus or crossover */
+ifdef|#
+directive|ifdef
+name|USE_TERM_DRIVER
+name|CallDriver_2
+argument_list|(
+name|SP_PARM
+argument_list|,
+name|initacs
+argument_list|,
+name|real_map
+argument_list|,
+name|fake_map
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|ena_acs
@@ -506,13 +791,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|TPUTS_TRACE
+name|NCURSES_PUTP2
 argument_list|(
 literal|"ena_acs"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
+argument_list|,
 name|ena_acs
 argument_list|)
 expr_stmt|;
@@ -579,6 +861,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|chtype
+operator|)
 name|i
 expr_stmt|;
 if|if
@@ -874,8 +1159,48 @@ block|}
 endif|#
 directive|endif
 comment|/* TRACE */
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_init_acs
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|NCURSES_SP_NAME
+function_decl|(
+name|_nc_init_acs
+function_decl|)
+parameter_list|(
+name|CURRENT_SCREEN
+parameter_list|)
+function_decl|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

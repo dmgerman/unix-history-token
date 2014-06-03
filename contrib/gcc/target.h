@@ -2163,6 +2163,16 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/* Returns true (the default) if the RTTI for the basic types,        which is always defined in the C++ runtime, should be COMDAT;        false if it should not be COMDAT.  */
+name|bool
+function_decl|(
+modifier|*
+name|library_rtti_comdat
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/* Returns true if __aeabi_atexit should be used to register static        destructors.  */
 name|bool
 function_decl|(

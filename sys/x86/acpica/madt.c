@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 John Baldwin<jhb@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2003 John Baldwin<jhb@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
 end_include
 
 begin_include
@@ -1269,6 +1269,13 @@ operator|&
 name|ACPI_MADT_POLARITY_MASK
 condition|)
 block|{
+default|default:
+name|printf
+argument_list|(
+literal|"WARNING: Bogus Interrupt Polarity. Assume CONFORMS"
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH*/
 case|case
 name|ACPI_MADT_POLARITY_CONFORMS
 case|:
@@ -1307,12 +1314,6 @@ operator|(
 name|INTR_POLARITY_LOW
 operator|)
 return|;
-default|default:
-name|panic
-argument_list|(
-literal|"Bogus Interrupt Polarity"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -1337,6 +1338,13 @@ operator|&
 name|ACPI_MADT_TRIGGER_MASK
 condition|)
 block|{
+default|default:
+name|printf
+argument_list|(
+literal|"WARNING: Bogus Interrupt Trigger Mode. Assume CONFORMS."
+argument_list|)
+expr_stmt|;
+comment|/*FALLTHROUGH*/
 case|case
 name|ACPI_MADT_TRIGGER_CONFORMS
 case|:
@@ -1375,12 +1383,6 @@ operator|(
 name|INTR_TRIGGER_LEVEL
 operator|)
 return|;
-default|default:
-name|panic
-argument_list|(
-literal|"Bogus Interrupt Trigger Mode"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -2140,7 +2142,7 @@ name|nmi
 operator|->
 name|IntiFlags
 operator|&
-name|ACPI_MADT_TRIGGER_CONFORMS
+name|ACPI_MADT_POLARITY_CONFORMS
 operator|)
 condition|)
 name|ioapic_set_polarity

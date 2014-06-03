@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.6 2013/05/17 00:13:14 djm Exp $ */
+comment|/* $OpenBSD: ssh-pkcs11-helper.c,v 1.7 2013/12/02 02:56:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -573,6 +573,8 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
 name|key_to_blob
 argument_list|(
 name|keys
@@ -586,7 +588,10 @@ argument_list|,
 operator|&
 name|blen
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|buffer_put_string
 argument_list|(
 operator|&

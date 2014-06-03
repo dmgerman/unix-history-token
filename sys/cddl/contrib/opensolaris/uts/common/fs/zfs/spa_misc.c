@@ -325,7 +325,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * zfs_recover can be set to nonzero to attempt to recover from  * otherwise-fatal errors, typically caused by on-disk corruption.  When  * set, calls to zfs_panic_recover() will turn into warning messages.  */
+comment|/*  * zfs_recover can be set to nonzero to attempt to recover from  * otherwise-fatal errors, typically caused by on-disk corruption.  When  * set, calls to zfs_panic_recover() will turn into warning messages.  * This should only be used as a last resort, as it typically results  * in leaked space, or worse.  */
 end_comment
 
 begin_decl_stmt
@@ -1550,7 +1550,7 @@ name|search
 operator|.
 name|spa_name
 argument_list|,
-literal|"/@"
+literal|"/@#"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2310,6 +2310,32 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
+comment|/* 	 * As a pool is being created, treat all features as disabled by 	 * setting SPA_FEATURE_DISABLED for all entries in the feature 	 * refcount cache. 	 */
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|SPA_FEATURES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|spa
+operator|->
+name|spa_feat_refcount_cache
+index|[
+name|i
+index|]
+operator|=
+name|SPA_FEATURE_DISABLED
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|spa
@@ -4446,12 +4472,26 @@ specifier|const
 name|char
 modifier|*
 name|feature
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|nvlist_add_boolean
+if|if
+condition|(
+operator|!
+name|nvlist_exists
+argument_list|(
+name|spa
+operator|->
+name|spa_label_features
+argument_list|,
+name|feature
+argument_list|)
+condition|)
+block|{
+name|fnvlist_add_boolean
 argument_list|(
 name|spa
 operator|->
@@ -4460,6 +4500,15 @@ argument_list|,
 name|feature
 argument_list|)
 expr_stmt|;
+comment|/* 		 * When we are creating the pool (tx_txg==TXG_INITIAL), we can't 		 * dirty the vdev config because lock SCL_CONFIG is not held. 		 * Thankfully, in this case we don't need to dirty the config 		 * because it will be written out anyway when we finish 		 * creating the pool. 		 */
+if|if
+condition|(
+name|tx
+operator|->
+name|tx_txg
+operator|!=
+name|TXG_INITIAL
+condition|)
 name|vdev_config_dirty
 argument_list|(
 name|spa
@@ -4467,6 +4516,7 @@ operator|->
 name|spa_root_vdev
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4484,9 +4534,8 @@ modifier|*
 name|feature
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|nvlist_remove_all
 argument_list|(
 name|spa
@@ -4495,7 +4544,9 @@ name|spa_label_features
 argument_list|,
 name|feature
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|vdev_config_dirty
 argument_list|(
 name|spa
@@ -5058,11 +5109,14 @@ end_function
 
 begin_function
 name|void
-name|sprintf_blkptr
+name|snprintf_blkptr
 parameter_list|(
 name|char
 modifier|*
 name|buf
+parameter_list|,
+name|size_t
+name|buflen
 parameter_list|,
 specifier|const
 name|blkptr_t
@@ -5202,13 +5256,15 @@ operator|.
 name|ci_name
 expr_stmt|;
 block|}
-name|SPRINTF_BLKPTR
+name|SNPRINTF_BLKPTR
 argument_list|(
 name|snprintf
 argument_list|,
 literal|' '
 argument_list|,
 name|buf
+argument_list|,
+name|buflen
 argument_list|,
 name|bp
 argument_list|,

@@ -34,6 +34,9 @@ directive|endif
 comment|// __cplusplus
 include|#
 directive|include
+file|<sys/param.h>
+include|#
+directive|include
 file|<dev/isci/scil/scic_io_request.h>
 include|#
 directive|include
@@ -338,10 +341,6 @@ name|request
 parameter_list|)
 define|\
 value|((request)->task_context_buffer)
-define|#
-directive|define
-name|CACHE_LINE_SIZE
-value|(64)
 define|#
 directive|define
 name|scic_sds_request_align_task_context_buffer

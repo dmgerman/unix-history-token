@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: pathnames.h,v 1.23 2013/04/05 00:31:49 djm Exp $ */
+comment|/* $OpenBSD: pathnames.h,v 1.24 2013/12/06 13:39:49 markus Exp $ */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -109,6 +113,13 @@ define|#
 directive|define
 name|_PATH_HOST_ECDSA_KEY_FILE
 value|SSHDIR "/ssh_host_ecdsa_key"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_HOST_ED25519_KEY_FILE
+value|SSHDIR "/ssh_host_ed25519_key"
 end_define
 
 begin_define
@@ -228,6 +239,13 @@ define|#
 directive|define
 name|_PATH_SSH_CLIENT_ID_RSA
 value|_PATH_SSH_USER_DIR "/id_rsa"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_SSH_CLIENT_ID_ED25519
+value|_PATH_SSH_USER_DIR "/id_ed25519"
 end_define
 
 begin_comment

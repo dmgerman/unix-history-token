@@ -2371,14 +2371,18 @@ operator|->
 name|tp_row
 argument_list|)
 expr_stmt|;
+comment|/* If new screen/history size bigger or buffer is VBF_STATIC. */
 if|if
 condition|(
+operator|(
 name|history_size
 operator|>
 name|vb
 operator|->
 name|vb_history_size
+operator|)
 operator|||
+operator|(
 name|p
 operator|->
 name|tp_col
@@ -2388,6 +2392,15 @@ operator|->
 name|vb_scr_size
 operator|.
 name|tp_col
+operator|)
+operator|||
+operator|(
+name|vb
+operator|->
+name|vb_flags
+operator|&
+name|VBF_STATIC
+operator|)
 condition|)
 block|{
 comment|/* Allocate new buffer. */

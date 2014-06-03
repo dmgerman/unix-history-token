@@ -152,14 +152,6 @@ comment|/* #undef LLVM_INFODIR */
 end_comment
 
 begin_comment
-comment|/* Installation directory for libraries */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_LIBDIR */
-end_comment
-
-begin_comment
 comment|/* Installation directory for man pages */
 end_comment
 
@@ -343,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_PREFIX
-value|""
+value|"/usr"
 end_define
 
 begin_comment
@@ -387,7 +379,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|3
+value|4
 end_define
 
 begin_endif

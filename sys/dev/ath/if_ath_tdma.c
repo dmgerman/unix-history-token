@@ -1713,12 +1713,27 @@ name|rs
 operator|->
 name|rs_tstamp
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rstamp
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|tsf
 argument_list|,
 name|txtime
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|nextslot
 argument_list|,
 name|nextslottu
@@ -1741,6 +1756,11 @@ name|ATH_DEBUG_TDMA
 argument_list|,
 literal|"  beacon tstamp: %llu (0x%016llx)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|le64toh
 argument_list|(
 name|ni
@@ -1750,6 +1770,11 @@ operator|.
 name|tsf
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|le64toh
 argument_list|(
 name|ni
@@ -1768,6 +1793,11 @@ name|ATH_DEBUG_TDMA_TIMER
 argument_list|,
 literal|"nexttbtt %llu (0x%08llx) tsfdelta %d avg +%d/-%d\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|nexttbtt
 argument_list|,
 operator|(
@@ -2235,6 +2265,11 @@ literal|"%s: calling ath_hal_adjusttsf: TSF=%llu, tsfdelta=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|tsf
 argument_list|,
 name|tsfdelta

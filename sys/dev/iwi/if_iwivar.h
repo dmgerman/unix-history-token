@@ -429,12 +429,6 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
-name|int
-name|mem_rid
-decl_stmt|;
-name|int
-name|irq_rid
-decl_stmt|;
 comment|/* 	 * The card needs external firmware images to work, which is made of a 	 * bootloader, microcode and firmware proper. In version 3.00 and 	 * above, all pieces are contained in a single image, preceded by a 	 * struct iwi_firmware_hdr indicating the size of the 3 pieces. 	 * Old firmware< 3.0 has separate boot and ucode, so we need to 	 * load all of them explicitly. 	 * To avoid issues related to fragmentation, we keep the block of 	 * dma-ble memory around until detach time, and reallocate it when 	 * it becomes too small. fw_dma_size is the size currently allocated. 	 */
 name|int
 name|fw_dma_size
@@ -624,6 +618,13 @@ decl_stmt|;
 name|struct
 name|iwi_tx_radiotap_header
 name|sc_txtap
+decl_stmt|;
+name|struct
+name|iwi_notif_link_quality
+name|sc_linkqual
+decl_stmt|;
+name|int
+name|sc_linkqual_valid
 decl_stmt|;
 block|}
 struct|;

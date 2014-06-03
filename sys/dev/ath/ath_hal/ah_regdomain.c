@@ -505,6 +505,17 @@ return|return
 name|AH_TRUE
 return|;
 block|}
+if|if
+condition|(
+name|rd
+operator|==
+name|FCC_UBNT
+condition|)
+block|{
+return|return
+name|AH_TRUE
+return|;
+block|}
 name|HALDEBUG
 argument_list|(
 name|ah

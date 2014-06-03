@@ -90,19 +90,15 @@ end_expr_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|fiqvector
-index|[]
+modifier|*
+name|fiq_nullhandler_code
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|fiq_nullhandler
-index|[]
-decl_stmt|,
-name|fiq_nullhandler_end
-index|[]
+name|uint32_t
+name|fiq_nullhandler_size
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +117,7 @@ value|F32_bit
 end_define
 
 begin_comment
-comment|/*  * fiq_installhandler:  *  *	Actually install the FIQ handler down at the FIQ vector.  *  *	Note: If the FIQ is invoked via an extra layer of  *	indirection, the actual FIQ code store lives in the  *	data segment, so there is no need to manipulate  *	the vector page's protection.  */
+comment|/*  * fiq_installhandler:  *  *	Actually install the FIQ handler down at the FIQ vector.  *	  *	The FIQ vector is fixed by the hardware definition as the  *	seventh 32-bit word in the vector page.  *  *	Note: If the FIQ is invoked via an extra layer of  *	indirection, the actual FIQ code store lives in the  *	data segment, so there is no need to manipulate  *	the vector page's protection.  */
 end_comment
 
 begin_function
@@ -137,6 +133,17 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+specifier|const
+name|uint32_t
+name|fiqvector
+init|=
+literal|7
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+decl_stmt|;
 if|#
 directive|if
 operator|!
@@ -155,9 +162,15 @@ endif|#
 directive|endif
 name|memcpy
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
 name|vector_page
 operator|+
 name|fiqvector
+operator|)
 argument_list|,
 name|func
 argument_list|,
@@ -484,16 +497,9 @@ block|{
 comment|/* Copy the NULL handler back down into the vector. */
 name|fiq_installhandler
 argument_list|(
-name|fiq_nullhandler
+name|fiq_nullhandler_code
 argument_list|,
-call|(
-name|size_t
-call|)
-argument_list|(
-name|fiq_nullhandler_end
-operator|-
-name|fiq_nullhandler
-argument_list|)
+name|fiq_nullhandler_size
 argument_list|)
 expr_stmt|;
 comment|/* Make sure FIQs are disabled when we return. */

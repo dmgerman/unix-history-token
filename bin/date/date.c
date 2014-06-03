@@ -219,6 +219,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|rfc2822_format
+init|=
+literal|"%a, %d %b %Y %T %z"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -245,6 +256,8 @@ name|int
 name|jflag
 decl_stmt|,
 name|nflag
+decl_stmt|,
+name|Rflag
 decl_stmt|;
 specifier|const
 name|char
@@ -322,6 +335,8 @@ name|jflag
 operator|=
 name|nflag
 operator|=
+name|Rflag
+operator|=
 literal|0
 expr_stmt|;
 name|set_timezone
@@ -339,7 +354,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:f:jnr:t:uv:"
+literal|"d:f:jnRr:t:uv:"
 argument_list|)
 operator|)
 operator|!=
@@ -417,6 +432,15 @@ literal|'n'
 case|:
 comment|/* don't set network */
 name|nflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+comment|/* RFC 2822 datetime format */
+name|Rflag
 operator|=
 literal|1
 expr_stmt|;
@@ -580,6 +604,14 @@ name|format
 operator|=
 literal|"%+"
 expr_stmt|;
+if|if
+condition|(
+name|Rflag
+condition|)
+name|format
+operator|=
+name|rfc2822_format
+expr_stmt|;
 comment|/* allow the operands in any order */
 if|if
 condition|(
@@ -701,6 +733,20 @@ block|}
 name|vary_destroy
 argument_list|(
 name|v
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|format
+operator|==
+name|rfc2822_format
+condition|)
+comment|/* 		 * When using RFC 2822 datetime format, don't honor the 		 * locale. 		 */
+name|setlocale
+argument_list|(
+name|LC_TIME
+argument_list|,
+literal|"C"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1397,7 +1443,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: date [-jnu] [-d dst] [-r seconds] [-t west] "
+literal|"usage: date [-jnRu] [-d dst] [-r seconds] [-t west] "
 literal|"[-v[+|-]val[ymwdHMS]] ... "
 argument_list|,
 literal|"            "

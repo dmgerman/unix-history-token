@@ -1197,8 +1197,40 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
+begin_expr_stmt
 unit|};
+name|template
+operator|<
+name|class
+name|X
+operator|>
+expr|struct
+name|is_simple_type
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|is_same
+operator|<
+name|X
+block|,
+name|typename
+name|simplify_type
+operator|<
+name|X
+operator|>
+operator|::
+name|SimpleType
+operator|>
+operator|::
+name|value
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// cast<X> - Return the argument parameter cast to the specified type.  This
 end_comment
 
@@ -1237,6 +1269,17 @@ name|Y
 operator|>
 specifier|inline
 name|typename
+name|enable_if_c
+operator|<
+operator|!
+name|is_simple_type
+operator|<
+name|Y
+operator|>
+operator|::
+name|value
+operator|,
+name|typename
 name|cast_retty
 operator|<
 name|X
@@ -1246,6 +1289,9 @@ name|Y
 operator|>
 operator|::
 name|ret_type
+operator|>
+operator|::
+name|type
 name|cast
 argument_list|(
 argument|const Y&Val
@@ -1362,22 +1408,6 @@ name|Y
 operator|>
 specifier|inline
 name|typename
-name|enable_if
-operator|<
-name|is_same
-operator|<
-name|Y
-operator|,
-name|typename
-name|simplify_type
-operator|<
-name|Y
-operator|>
-operator|::
-name|SimpleType
-operator|>
-operator|,
-name|typename
 name|cast_retty
 operator|<
 name|X
@@ -1387,9 +1417,6 @@ operator|*
 operator|>
 operator|::
 name|ret_type
-operator|>
-operator|::
-name|type
 name|cast
 argument_list|(
 argument|Y *Val
@@ -1547,6 +1574,17 @@ name|Y
 operator|>
 specifier|inline
 name|typename
+name|enable_if_c
+operator|<
+operator|!
+name|is_simple_type
+operator|<
+name|Y
+operator|>
+operator|::
+name|value
+operator|,
+name|typename
 name|cast_retty
 operator|<
 name|X
@@ -1556,6 +1594,9 @@ name|Y
 operator|>
 operator|::
 name|ret_type
+operator|>
+operator|::
+name|type
 name|dyn_cast
 argument_list|(
 argument|const Y&Val
@@ -1640,22 +1681,6 @@ name|Y
 operator|>
 specifier|inline
 name|typename
-name|enable_if
-operator|<
-name|is_same
-operator|<
-name|Y
-operator|,
-name|typename
-name|simplify_type
-operator|<
-name|Y
-operator|>
-operator|::
-name|SimpleType
-operator|>
-operator|,
-name|typename
 name|cast_retty
 operator|<
 name|X
@@ -1665,9 +1690,6 @@ operator|*
 operator|>
 operator|::
 name|ret_type
-operator|>
-operator|::
-name|type
 name|dyn_cast
 argument_list|(
 argument|Y *Val

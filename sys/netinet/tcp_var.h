@@ -63,50 +63,6 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_comment
-comment|/* TCP segment queue entry */
-end_comment
-
-begin_struct
-struct|struct
-name|tseg_qent
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|tseg_qent
-argument_list|)
-name|tqe_q
-expr_stmt|;
-name|int
-name|tqe_len
-decl_stmt|;
-comment|/* TCP segment data length */
-name|struct
-name|tcphdr
-modifier|*
-name|tqe_th
-decl_stmt|;
-comment|/* a pointer to tcp header */
-name|struct
-name|mbuf
-modifier|*
-name|tqe_m
-decl_stmt|;
-comment|/* mbuf contains packet */
-block|}
-struct|;
-end_struct
-
-begin_expr_stmt
-name|LIST_HEAD
-argument_list|(
-name|tsegqe_head
-argument_list|,
-name|tseg_qent
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|sackblk
@@ -260,7 +216,8 @@ struct|struct
 name|tcpcb
 block|{
 name|struct
-name|tsegqe_head
+name|mbuf
+modifier|*
 name|t_segq
 decl_stmt|;
 comment|/* segment reassembly queue */
@@ -1385,16 +1342,10 @@ argument|tcptw
 argument_list|)
 name|tw_2msl
 expr_stmt|;
-name|void
-modifier|*
-name|tw_pspare
-decl_stmt|;
-comment|/* TCP_SIGNATURE */
 name|u_int
-modifier|*
-name|tw_spare
+name|tw_refcount
 decl_stmt|;
-comment|/* TCP_SIGNATURE */
+comment|/* refcount */
 block|}
 struct|;
 end_struct
@@ -1640,9 +1591,9 @@ name|tcps_rcvbadoff
 decl_stmt|;
 comment|/* packets received with bad offset */
 name|uint64_t
-name|tcps_rcvmemdrop
+name|tcps_rcvreassfull
 decl_stmt|;
-comment|/* packets dropped for lack of memory */
+comment|/* packets dropped for no reass space */
 name|uint64_t
 name|tcps_rcvshort
 decl_stmt|;
@@ -1916,6 +1867,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|tcps_rcvmemdrop
+value|tcps_rcvreassfull
+end_define
+
+begin_comment
+comment|/* compat */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2143,7 +2105,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Names for TCP sysctl objects  */
+comment|/*  * Identifiers for TCP sysctl nodes  */
 end_comment
 
 begin_define
@@ -2299,20 +2261,6 @@ end_define
 begin_comment
 comment|/* drop tcp connection */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPCTL_MAXID
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPCTL_FINWAIT2_TIMEOUT
-value|17
-end_define
 
 begin_ifdef
 ifdef|#
@@ -2741,18 +2689,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|int	 tcp_twrecycleable(struct tcptw *tw);
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|tcp_twclose
@@ -2932,15 +2868,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|tcp_reass_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|tcp_reass_flush
 parameter_list|(
 name|struct
@@ -2949,26 +2876,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VIMAGE
-end_ifdef
-
-begin_function_decl
-name|void
-name|tcp_reass_destroy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -3211,19 +3118,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|mbuf
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|tcp_twrespond
-parameter_list|(
-name|struct
-name|tcptw
 modifier|*
 parameter_list|,
 name|int
@@ -3648,6 +3542,135 @@ name|type
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|tcp_fields_to_host
+parameter_list|(
+name|struct
+name|tcphdr
+modifier|*
+name|th
+parameter_list|)
+block|{
+name|th
+operator|->
+name|th_seq
+operator|=
+name|ntohl
+argument_list|(
+name|th
+operator|->
+name|th_seq
+argument_list|)
+expr_stmt|;
+name|th
+operator|->
+name|th_ack
+operator|=
+name|ntohl
+argument_list|(
+name|th
+operator|->
+name|th_ack
+argument_list|)
+expr_stmt|;
+name|th
+operator|->
+name|th_win
+operator|=
+name|ntohs
+argument_list|(
+name|th
+operator|->
+name|th_win
+argument_list|)
+expr_stmt|;
+name|th
+operator|->
+name|th_urp
+operator|=
+name|ntohs
+argument_list|(
+name|th
+operator|->
+name|th_urp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCP_SIGNATURE
+end_ifdef
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|tcp_fields_to_net
+parameter_list|(
+name|struct
+name|tcphdr
+modifier|*
+name|th
+parameter_list|)
+block|{
+name|th
+operator|->
+name|th_seq
+operator|=
+name|htonl
+argument_list|(
+name|th
+operator|->
+name|th_seq
+argument_list|)
+expr_stmt|;
+name|th
+operator|->
+name|th_ack
+operator|=
+name|htonl
+argument_list|(
+name|th
+operator|->
+name|th_ack
+argument_list|)
+expr_stmt|;
+name|th
+operator|->
+name|th_win
+operator|=
+name|htons
+argument_list|(
+name|th
+operator|->
+name|th_win
+argument_list|)
+expr_stmt|;
+name|th
+operator|->
+name|th_urp
+operator|=
+name|htons
+argument_list|(
+name|th
+operator|->
+name|th_urp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

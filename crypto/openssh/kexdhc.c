@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: kexdhc.c,v 1.13 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: kexdhc.c,v 1.15 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -519,11 +519,9 @@ argument_list|(
 literal|"kexdh_client: BN_bin2bn failed"
 argument_list|)
 expr_stmt|;
-name|memset
+name|explicit_bzero
 argument_list|(
 name|kbuf
-argument_list|,
-literal|0
 argument_list|,
 name|klen
 argument_list|)
@@ -683,7 +681,7 @@ name|session_id_len
 argument_list|)
 expr_stmt|;
 block|}
-name|kex_derive_keys
+name|kex_derive_keys_bn
 argument_list|(
 name|kex
 argument_list|,

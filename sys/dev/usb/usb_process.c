@@ -1665,5 +1665,31 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usb_proc_is_called_from  *  * This function will return non-zero if called from inside the USB  * process passed as first argument. Else this function returns zero.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|int
+name|usb_proc_is_called_from
+parameter_list|(
+name|struct
+name|usb_process
+modifier|*
+name|up
+parameter_list|)
+block|{
+return|return
+operator|(
+name|up
+operator|->
+name|up_curtd
+operator|==
+name|curthread
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

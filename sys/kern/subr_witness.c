@@ -274,7 +274,7 @@ begin_define
 define|#
 directive|define
 name|WITNESS_COUNT
-value|1024
+value|1536
 end_define
 
 begin_define
@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|WITNESS_PENDLIST
-value|1024
+value|(1024 + MAXCPU)
 end_define
 
 begin_comment
@@ -892,37 +892,6 @@ operator||
 name|LC_SPINLOCK
 operator|)
 operator|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|witness_lock_order_key_empty
-parameter_list|(
-specifier|const
-name|struct
-name|witness_lock_order_key
-modifier|*
-name|key
-parameter_list|)
-block|{
-return|return
-operator|(
-name|key
-operator|->
-name|from
-operator|==
-literal|0
-operator|&&
-name|key
-operator|->
-name|to
-operator|==
-literal|0
 operator|)
 return|;
 block|}
@@ -2550,27 +2519,6 @@ block|}
 block|,
 block|{
 literal|"so_snd"
-block|,
-operator|&
-name|lock_class_mtx_sleep
-block|}
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|,
-comment|/* 	 * netatalk 	 */
-block|{
-literal|"ddp_list_mtx"
-block|,
-operator|&
-name|lock_class_mtx_sleep
-block|}
-block|,
-block|{
-literal|"ddp_mtx"
 block|,
 operator|&
 name|lock_class_mtx_sleep

@@ -807,85 +807,106 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_HARDEN_BELOW_NXDOMAIN
+name|VAR_SO_REUSEPORT
 value|372
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_IGNORE_CD_FLAG
+name|VAR_HARDEN_BELOW_NXDOMAIN
 value|373
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_LOG_QUERIES
+name|VAR_IGNORE_CD_FLAG
 value|374
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_TCP_UPSTREAM
+name|VAR_LOG_QUERIES
 value|375
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_SSL_UPSTREAM
+name|VAR_TCP_UPSTREAM
 value|376
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_SSL_SERVICE_KEY
+name|VAR_SSL_UPSTREAM
 value|377
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_SSL_SERVICE_PEM
+name|VAR_SSL_SERVICE_KEY
 value|378
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_SSL_PORT
+name|VAR_SSL_SERVICE_PEM
 value|379
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_FORWARD_FIRST
+name|VAR_SSL_PORT
 value|380
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_STUB_FIRST
+name|VAR_FORWARD_FIRST
 value|381
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_MINIMAL_RESPONSES
+name|VAR_STUB_FIRST
 value|382
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR_RRSET_ROUNDROBIN
+name|VAR_MINIMAL_RESPONSES
 value|383
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_RRSET_ROUNDROBIN
+value|384
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_MAX_UDP_SIZE
+value|385
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_DELAY_CLOSE
+value|386
 end_define
 
 begin_ifdef

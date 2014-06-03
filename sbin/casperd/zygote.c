@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -167,6 +167,21 @@ argument_list|,
 literal|"Unable to open %s"
 argument_list|,
 name|_PATH_DEVNULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Unable to detach from session"
 argument_list|)
 expr_stmt|;
 if|if
@@ -517,7 +532,23 @@ name|nvlin
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOTCONN
+condition|)
+block|{
+comment|/* Casperd exited. */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 continue|continue;
+block|}
 name|func
 operator|=
 operator|(

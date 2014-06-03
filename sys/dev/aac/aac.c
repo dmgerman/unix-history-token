@@ -3416,6 +3416,7 @@ name|aac_irq
 operator|!=
 name|NULL
 condition|)
+block|{
 name|bus_release_resource
 argument_list|(
 name|sc
@@ -3436,6 +3437,14 @@ operator|->
 name|aac_irq
 argument_list|)
 expr_stmt|;
+name|pci_release_msi
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* destroy data-transfer DMA tag */
 if|if
 condition|(
@@ -6675,6 +6684,12 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* (re)initialize the command/FIB */
+name|cm
+operator|->
+name|cm_datalen
+operator|=
+literal|0
+expr_stmt|;
 name|cm
 operator|->
 name|cm_sgtable

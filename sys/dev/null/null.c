@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Mark R. V. Murray& Jeroen C. van Gelderen  * Copyright (c) 2001-2004 Mark R. V. Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2000 Mark R. V. Murray& Jeroen C. van Gelderen  * Copyright (c) 2001-2004 Mark R. V. Murray  * Copyright (c) 2014 Eitan Adler  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -104,6 +104,15 @@ specifier|static
 name|struct
 name|cdev
 modifier|*
+name|full_dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdev
+modifier|*
 name|null_dev
 decl_stmt|;
 end_decl_stmt
@@ -114,6 +123,13 @@ name|struct
 name|cdev
 modifier|*
 name|zero_dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_write_t
+name|full_write
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +158,41 @@ begin_decl_stmt
 specifier|static
 name|d_read_t
 name|zero_read
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|full_cdevsw
+init|=
+block|{
+operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
+name|d_read
+operator|=
+name|zero_read
+block|,
+operator|.
+name|d_write
+operator|=
+name|full_write
+block|,
+operator|.
+name|d_ioctl
+operator|=
+name|zero_ioctl
+block|,
+operator|.
+name|d_name
+operator|=
+literal|"full"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -223,6 +274,40 @@ name|D_MMAP_ANON
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|full_write
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|dev
+name|__unused
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+name|__unused
+parameter_list|,
+name|int
+name|flags
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
@@ -600,7 +685,29 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"null:<null device, zero device>\n"
+literal|"null:<full device, null device, zero device>\n"
+argument_list|)
+expr_stmt|;
+name|full_dev
+operator|=
+name|make_dev_credf
+argument_list|(
+name|MAKEDEV_ETERNAL_KLD
+argument_list|,
+operator|&
+name|full_cdevsw
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0666
+argument_list|,
+literal|"full"
 argument_list|)
 expr_stmt|;
 name|null_dev
@@ -651,6 +758,11 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+name|destroy_dev
+argument_list|(
+name|full_dev
+argument_list|)
+expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|null_dev

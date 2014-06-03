@@ -48,26 +48,6 @@ comment|// explicitly passing an offset to the constructor.
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// The MachineMove class is used to represent abstract move operations in the
-end_comment
-
-begin_comment
-comment|// prolog/epilog of a compiled function.  A collection of these objects can be
-end_comment
-
-begin_comment
-comment|// used by a debug consumer to track the location of values when unwinding stack
-end_comment
-
-begin_comment
-comment|// frames.
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -82,6 +62,18 @@ define|#
 directive|define
 name|LLVM_MC_MACHINELOCATION_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -109,16 +101,20 @@ decl_stmt|;
 comment|// Displacement if not register.
 name|public
 label|:
-enum|enum
+name|enum
+name|LLVM_ENUM_INT_TYPE
+function|(
+name|uint32_t
+function|)
 block|{
 comment|// The target register number for an abstract frame pointer. The value is
 comment|// an arbitrary value that doesn't collide with any real target register.
 name|VirtualFP
-init|=
+operator|=
 operator|~
 literal|0U
 block|}
-enum|;
+empty_stmt|;
 name|MachineLocation
 argument_list|()
 operator|:
@@ -213,7 +209,8 @@ operator|.
 name|Offset
 return|;
 block|}
-comment|// Accessors
+comment|// Accessors.
+comment|/// \return true iff this is a register-indirect location.
 name|bool
 name|isIndirect
 argument_list|()
@@ -341,102 +338,6 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-block|}
-empty_stmt|;
-comment|/// MachineMove - This class represents the save or restore of a callee saved
-comment|/// register that exception or debug info needs to know about.
-name|class
-name|MachineMove
-block|{
-name|private
-label|:
-comment|/// Label - Symbol for post-instruction address when result of move takes
-comment|/// effect.
-name|MCSymbol
-modifier|*
-name|Label
-decl_stmt|;
-comment|// Move to& from location.
-name|MachineLocation
-name|Destination
-decl_stmt|,
-name|Source
-decl_stmt|;
-name|public
-label|:
-name|MachineMove
-argument_list|()
-operator|:
-name|Label
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|MachineMove
-argument_list|(
-name|MCSymbol
-operator|*
-name|label
-argument_list|,
-specifier|const
-name|MachineLocation
-operator|&
-name|D
-argument_list|,
-specifier|const
-name|MachineLocation
-operator|&
-name|S
-argument_list|)
-operator|:
-name|Label
-argument_list|(
-name|label
-argument_list|)
-operator|,
-name|Destination
-argument_list|(
-name|D
-argument_list|)
-operator|,
-name|Source
-argument_list|(
-argument|S
-argument_list|)
-block|{}
-comment|// Accessors
-name|MCSymbol
-operator|*
-name|getLabel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Label
-return|;
-block|}
-specifier|const
-name|MachineLocation
-operator|&
-name|getDestination
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Destination
-return|;
-block|}
-specifier|const
-name|MachineLocation
-operator|&
-name|getSource
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Source
-return|;
-block|}
 block|}
 empty_stmt|;
 block|}

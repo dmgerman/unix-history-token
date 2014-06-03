@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -2544,6 +2544,9 @@ name|maxfd
 decl_stmt|,
 name|ret
 decl_stmt|;
+name|mode_t
+name|oldumask
+decl_stmt|;
 name|lsock
 operator|=
 name|socket
@@ -2630,6 +2633,17 @@ operator|&
 name|sun
 argument_list|)
 expr_stmt|;
+name|oldumask
+operator|=
+name|umask
+argument_list|(
+name|S_IXUSR
+operator||
+name|S_IXGRP
+operator||
+name|S_IXOTH
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bind
@@ -2660,6 +2674,14 @@ argument_list|,
 literal|"Unable to bind to %s"
 argument_list|,
 name|sockpath
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+name|oldumask
 argument_list|)
 expr_stmt|;
 if|if

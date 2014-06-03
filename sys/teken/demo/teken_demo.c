@@ -303,15 +303,6 @@ operator|<
 name|NCOLS
 argument_list|)
 expr_stmt|;
-name|getyx
-argument_list|(
-name|stdscr
-argument_list|,
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
 name|px
 operator|=
 operator|&
@@ -327,6 +318,18 @@ operator|->
 name|tp_row
 index|]
 expr_stmt|;
+comment|/* No need to print right hand side of CJK character manually. */
+if|if
+condition|(
+name|px
+operator|->
+name|a
+operator|.
+name|ta_format
+operator|&
+name|TF_CJK_RIGHT
+condition|)
+return|return;
 comment|/* Convert Unicode to UTF-8. */
 if|if
 condition|(
@@ -601,6 +604,15 @@ operator|.
 name|ta_bgcolor
 argument_list|)
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|getyx
+argument_list|(
+name|stdscr
+argument_list|,
+name|y
+argument_list|,
+name|x
 argument_list|)
 expr_stmt|;
 name|mvaddstr

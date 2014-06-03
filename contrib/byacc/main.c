@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.40 2012/09/29 13:11:00 Adrian.Bunk Exp $ */
+comment|/* $Id: main.c,v 1.50 2014/04/22 23:34:47 tom Exp $ */
 end_comment
 
 begin_include
@@ -8,6 +8,12 @@ include|#
 directive|include
 file|<signal.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
 
 begin_include
 include|#
@@ -18,6 +24,26 @@ end_include
 begin_comment
 comment|/* for _exit() */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_comment
+comment|/* for _exit() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -431,31 +457,31 @@ comment|/*  y.dot                                           */
 end_comment
 
 begin_decl_stmt
-name|int
+name|Value_t
 name|nitems
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|Value_t
 name|nrules
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|Value_t
 name|nsyms
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|Value_t
 name|ntokens
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|Value_t
 name|nvars
 decl_stmt|;
 end_decl_stmt
@@ -490,7 +516,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
+name|Value_t
 modifier|*
 name|symbol_prec
 decl_stmt|;
@@ -508,6 +534,73 @@ name|int
 name|pure_parser
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|token_table
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBTYACC
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|Value_t
+modifier|*
+name|symbol_pval
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|symbol_destructor
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|symbol_type_tag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|locations
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default to no position processing */
+end_comment
+
+begin_decl_stmt
+name|int
+name|backtrack
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default is no backtracking */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -605,6 +698,24 @@ expr_stmt|;
 name|DO_CLOSE
 argument_list|(
 name|output_file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|iflag
+condition|)
+name|DO_CLOSE
+argument_list|(
+name|externs_file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rflag
+condition|)
+name|DO_CLOSE
+argument_list|(
+name|code_file
 argument_list|)
 expr_stmt|;
 name|DO_CLOSE
@@ -712,6 +823,9 @@ expr_stmt|;
 name|mkpar_leaks
 argument_list|()
 expr_stmt|;
+name|mstring_leaks
+argument_list|()
+expr_stmt|;
 name|output_leaks
 argument_list|()
 expr_stmt|;
@@ -720,15 +834,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|rflag
-condition|)
-name|DO_CLOSE
-argument_list|(
-name|code_file
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 name|k
@@ -861,7 +966,13 @@ literal|"Options:"
 block|,
 literal|"  -b file_prefix        set filename prefix (default \"y.\")"
 block|,
-literal|"  -d                    write definitions (y.tab.h)"
+literal|"  -B                    create a backtracking parser"
+block|,
+literal|"  -d                    write definitions ("
+name|DEFINES_SUFFIX
+literal|")"
+block|,
+literal|"  -D                    enable value stack memory reclamation"
 block|,
 literal|"  -i                    write interface (y.tab.i)"
 block|,
@@ -869,7 +980,11 @@ literal|"  -g                    write a graphical description"
 block|,
 literal|"  -l                    suppress #line directives"
 block|,
-literal|"  -o output_file        (default \"y.tab.c\")"
+literal|"  -L                    enable position processing, e.g., \"%locations\""
+block|,
+literal|"  -o output_file        (default \""
+name|OUTPUT_SUFFIX
+literal|"\")"
 block|,
 literal|"  -p symbol_prefix      set symbol prefix (default \"yy\")"
 block|,
@@ -962,6 +1077,31 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'B'
+case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBTYACC
+argument_list|)
+name|backtrack
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+name|unsupported_flag_warning
+argument_list|(
+literal|"-B"
+argument_list|,
+literal|"reconfigure with --enable-btyacc"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
 literal|'d'
 case|:
 name|dflag
@@ -992,6 +1132,31 @@ name|lflag
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBTYACC
+argument_list|)
+name|locations
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+name|unsupported_flag_warning
+argument_list|(
+literal|"-B"
+argument_list|,
+literal|"reconfigure with --enable-btyacc"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'P'
@@ -1386,8 +1551,72 @@ parameter_list|,
 name|suffix
 parameter_list|)
 define|\
-value|dest = TMALLOC(char, len + strlen(suffix) + 1); \ 	NO_SPACE(dest); \ 	strcpy(dest, file_prefix); \ 	strcpy(dest + len, suffix)
+value|dest = alloc_file_name(len, suffix)
 end_define
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|alloc_file_name
+parameter_list|(
+name|size_t
+name|len
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|suffix
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|result
+init|=
+name|TMALLOC
+argument_list|(
+name|char
+argument_list|,
+name|len
+operator|+
+name|strlen
+argument_list|(
+name|suffix
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+literal|0
+condition|)
+name|no_space
+argument_list|()
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|result
+argument_list|,
+name|file_prefix
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|result
+operator|+
+name|len
+argument_list|,
+name|suffix
+argument_list|)
+expr_stmt|;
+return|return
+name|result
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -1444,7 +1673,7 @@ name|strstr
 argument_list|(
 name|output_file_name
 argument_list|,
-literal|".tab.c"
+name|OUTPUT_SUFFIX
 argument_list|)
 operator|)
 operator|&&

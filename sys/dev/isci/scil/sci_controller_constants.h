@@ -15,6 +15,12 @@ directive|define
 name|_SCI_CONTROLLER_CONSTANTS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_comment
 comment|/**  * @file  *  * @brief This file contains constant values that change based on the type  *        of core or framework being managed.  These constants are exported  *        in order to provide the user with information as to the bounds  *        (i.e. how many) of specific objects.  */
 end_comment
@@ -118,11 +124,15 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|SCI_MAX_SCATTER_GATHER_ELEMENTS
-comment|/**  * This constant defines the maximum number of Scatter-Gather Elements  * to be used by any SCI component.  */
+comment|/**  * This constant defines the maximum number of Scatter-Gather Elements  * to be used by any SCI component.  *  * Note: number of elements must be an even number, since descriptors  * posted to hardware always contain pairs of elements (with second  * element set to zeroes if not needed).  */
+define|#
+directive|define
+name|__MAXPHYS_ELEMENTS
+value|((MAXPHYS / PAGE_SIZE) + 1)
 define|#
 directive|define
 name|SCI_MAX_SCATTER_GATHER_ELEMENTS
-value|130
+value|((__MAXPHYS_ELEMENTS + 1)& ~0x1)
 endif|#
 directive|endif
 ifndef|#

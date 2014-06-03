@@ -21,12 +21,32 @@ directive|include
 file|<x86/bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|uint32_t
 name|cell_t
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|mem_region
+block|{
+name|vm_offset_t
+name|mr_start
+decl_stmt|;
+name|vm_size_t
+name|mr_size
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

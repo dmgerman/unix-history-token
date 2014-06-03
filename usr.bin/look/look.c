@@ -407,7 +407,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dft:"
+literal|"adft:"
 argument_list|)
 operator|)
 operator|!=
@@ -419,6 +419,11 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+comment|/* COMPATIBILITY */
+break|break;
 case|case
 literal|'d'
 case|:

@@ -264,11 +264,14 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-name|pid_t
-name|getjobpgrp
+name|int
+name|killjob
 parameter_list|(
+specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -5780,12 +5780,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|sc
-operator|=
-name|gp
-operator|->
-name|softc
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&

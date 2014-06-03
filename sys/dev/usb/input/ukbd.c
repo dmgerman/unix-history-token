@@ -2445,6 +2445,16 @@ operator|->
 name|sc_inputs
 operator|==
 literal|0
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|UKBD_FLAG_GONE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* start transfer, if not already started */
@@ -6721,6 +6731,52 @@ operator|->
 name|sc_callout
 argument_list|)
 expr_stmt|;
+comment|/* kill any stuck keys */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|UKBD_FLAG_ATTACHED
+condition|)
+block|{
+comment|/* stop receiving events from the USB keyboard */
+name|usbd_transfer_stop
+argument_list|(
+name|sc
+operator|->
+name|sc_xfer
+index|[
+name|UKBD_INTR_DT
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* release all leftover keys, if any */
+name|memset
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_ndata
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|sc_ndata
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* process releasing of all keys */
+name|ukbd_interrupt
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 name|ukbd_disable
 argument_list|(
 operator|&
@@ -9178,6 +9234,20 @@ block|{
 name|int
 name|result
 decl_stmt|;
+comment|/* 	 * XXX Check if someone is calling us from a critical section: 	 */
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_critnest
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EDEADLK
+operator|)
+return|;
 comment|/* 	 * XXX KDGKBSTATE, KDSKBSTATE and KDSETLED can be called from any 	 * context where printf(9) can be called, which among other things 	 * includes interrupt filters and threads with any kinds of locks 	 * already held.  For this reason it would be dangerous to acquire 	 * the Giant here unconditionally.  On the other hand we have to 	 * have it to handle the ioctl. 	 * So we make our best effort to auto-detect whether we can grab 	 * the Giant or not.  Blame syscons(4) for this. 	 */
 switch|switch
 condition|(

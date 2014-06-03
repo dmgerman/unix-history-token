@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.h,v 1.17 2012/12/02 20:34:10 djm Exp $ */
+comment|/* $OpenBSD: monitor.h,v 1.18 2014/01/29 06:18:35 djm Exp $ */
 end_comment
 
 begin_comment
@@ -210,46 +210,6 @@ block|,
 name|MONITOR_REQ_TERM
 init|=
 literal|50
-block|,
-name|MONITOR_REQ_JPAKE_STEP1
-init|=
-literal|52
-block|,
-name|MONITOR_ANS_JPAKE_STEP1
-init|=
-literal|53
-block|,
-name|MONITOR_REQ_JPAKE_GET_PWDATA
-init|=
-literal|54
-block|,
-name|MONITOR_ANS_JPAKE_GET_PWDATA
-init|=
-literal|55
-block|,
-name|MONITOR_REQ_JPAKE_STEP2
-init|=
-literal|56
-block|,
-name|MONITOR_ANS_JPAKE_STEP2
-init|=
-literal|57
-block|,
-name|MONITOR_REQ_JPAKE_KEY_CONFIRM
-init|=
-literal|58
-block|,
-name|MONITOR_ANS_JPAKE_KEY_CONFIRM
-init|=
-literal|59
-block|,
-name|MONITOR_REQ_JPAKE_CHECK_CONFIRM
-init|=
-literal|60
-block|,
-name|MONITOR_ANS_JPAKE_CHECK_CONFIRM
-init|=
-literal|61
 block|,
 name|MONITOR_REQ_PAM_START
 init|=

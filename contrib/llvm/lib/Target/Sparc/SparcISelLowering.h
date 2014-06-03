@@ -128,6 +128,12 @@ comment|// FP to Int within a FP register.
 name|ITOF
 block|,
 comment|// Int to FP within a FP register.
+name|FTOX
+block|,
+comment|// FP to Int64 within a FP register.
+name|XTOF
+block|,
+comment|// Int64 to FP within a FP register.
 name|CALL
 block|,
 comment|// A call instruction.
@@ -136,9 +142,16 @@ block|,
 comment|// Return with a flag operand.
 name|GLOBAL_BASE_REG
 block|,
-comment|// Global base reg for PIC
+comment|// Global base reg for PIC.
 name|FLUSHW
-comment|// FLUSH register windows to stack
+block|,
+comment|// FLUSH register windows to stack.
+name|TLS_ADD
+block|,
+comment|// For Thread Local Storage (TLS).
+name|TLS_LD
+block|,
+name|TLS_CALL
 block|}
 enum|;
 block|}
@@ -220,6 +233,28 @@ argument|const std::string&Constraint
 argument_list|)
 specifier|const
 block|;
+name|ConstraintWeight
+name|getSingleConstraintMatchWeight
+argument_list|(
+argument|AsmOperandInfo&info
+argument_list|,
+argument|const char *constraint
+argument_list|)
+specifier|const
+block|;
+name|void
+name|LowerAsmOperandForConstraint
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|std::string&Constraint
+argument_list|,
+argument|std::vector<SDValue>&Ops
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|std
 operator|::
 name|pair
@@ -234,7 +269,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
@@ -260,6 +295,17 @@ operator|::
 name|i32
 return|;
 block|}
+comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
+name|virtual
+name|EVT
+name|getSetCCResultType
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|SDValue
 name|LowerFormalArguments
@@ -272,7 +318,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -291,7 +337,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -310,7 +356,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -360,7 +406,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -379,7 +425,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -398,7 +444,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -414,7 +460,25 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerGlobalTLSAddress
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerConstantPool
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerBlockAddress
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -461,6 +525,105 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerF128_LibCallArg
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|ArgListTy&Args
+argument_list|,
+argument|SDValue Arg
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerF128Op
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|const char *LibFuncName
+argument_list|,
+argument|unsigned numArgs
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerF128Compare
+argument_list|(
+argument|SDValue LHS
+argument_list|,
+argument|SDValue RHS
+argument_list|,
+argument|unsigned&SPCC
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|ShouldShrinkFPConstant
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|{
+comment|// Do not shrink FP constpool if VT == MVT::f128.
+comment|// (ldd, call _Q_fdtoq) is more expensive than two ldds.
+return|return
+name|VT
+operator|!=
+name|MVT
+operator|::
+name|f128
+return|;
+block|}
+name|virtual
+name|void
+name|ReplaceNodeResults
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|SmallVectorImpl<SDValue>& Results
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|expandSelectCC
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned BROpcode
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|expandAtomicRMW
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned CondCode =
+literal|0
 argument_list|)
 specifier|const
 block|;   }

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * unbound.h - unbound validating resolver public API  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * unbound.h - unbound validating resolver public API  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/**  * \file  *  * This file contains functions to resolve DNS queries and   * validate the answers. Synchonously and asynchronously.  *  * Several ways to use this interface from an application wishing  * to perform (validated) DNS lookups.  *  * All start with  *	ctx = ub_ctx_create();  *	err = ub_ctx_add_ta(ctx, "...");  *	err = ub_ctx_add_ta(ctx, "...");  *	... some lookups  *	... call ub_ctx_delete(ctx); when you want to stop.  *  * Application not threaded. Blocking.  *	int err = ub_resolve(ctx, "www.example.com", ...  *	if(err) fprintf(stderr, "lookup error: %s\n", ub_strerror(err));  *	... use the answer  *  * Application not threaded. Non-blocking ('asynchronous').  *      err = ub_resolve_async(ctx, "www.example.com", ... my_callback);  *	... application resumes processing ...  *	... and when either ub_poll(ctx) is true  *	... or when the file descriptor ub_fd(ctx) is readable,  *	... or whenever, the app calls ...  *	ub_process(ctx);  *	... if no result is ready, the app resumes processing above,  *	... or process() calls my_callback() with results.  *  *      ... if the application has nothing more to do, wait for answer  *      ub_wait(ctx);   *  * Application threaded. Blocking.  *	Blocking, same as above. The current thread does the work.  *	Multiple threads can use the *same context*, each does work and uses  *	shared cache data from the context.  *  * Application threaded. Non-blocking ('asynchronous').  *	... setup threaded-asynchronous config option  *	err = ub_ctx_async(ctx, 1);  *	... same as async for non-threaded  *	... the callbacks are called in the thread that calls process(ctx)  *  * If no threading is compiled in, the above async example uses fork(2) to  * create a process to perform the work. The forked process exits when the   * calling process exits, or ctx_delete() is called.  * Otherwise, for asynchronous with threading, a worker thread is created.  *  * The blocking calls use shared ctx-cache when threaded. Thus  * ub_resolve() and ub_resolve_async()&& ub_wait() are  * not the same. The first makes the current thread do the work, setting  * up buffers, etc, to perform the work (but using shared cache data).  * The second calls another worker thread (or process) to perform the work.  * And no buffers need to be set up, but a context-switch happens.  */
+comment|/**  * \file  *  * This file contains functions to resolve DNS queries and   * validate the answers. Synchonously and asynchronously.  *  * Several ways to use this interface from an application wishing  * to perform (validated) DNS lookups.  *  * All start with  *	ctx = ub_ctx_create();  *	err = ub_ctx_add_ta(ctx, "...");  *	err = ub_ctx_add_ta(ctx, "...");  *	... some lookups  *	... call ub_ctx_delete(ctx); when you want to stop.  *  * Application not threaded. Blocking.  *	int err = ub_resolve(ctx, "www.example.com", ...  *	if(err) fprintf(stderr, "lookup error: %s\n", ub_strerror(err));  *	... use the answer  *  * Application not threaded. Non-blocking ('asynchronous').  *      err = ub_resolve_async(ctx, "www.example.com", ... my_callback);  *	... application resumes processing ...  *	... and when either ub_poll(ctx) is true  *	... or when the file descriptor ub_fd(ctx) is readable,  *	... or whenever, the app calls ...  *	ub_process(ctx);  *	... if no result is ready, the app resumes processing above,  *	... or process() calls my_callback() with results.  *  *      ... if the application has nothing more to do, wait for answer  *      ub_wait(ctx);   *  * Application threaded. Blocking.  *	Blocking, same as above. The current thread does the work.  *	Multiple threads can use the *same context*, each does work and uses  *	shared cache data from the context.  *  * Application threaded. Non-blocking ('asynchronous').  *	... setup threaded-asynchronous config option  *	err = ub_ctx_async(ctx, 1);  *	... same as async for non-threaded  *	... the callbacks are called in the thread that calls process(ctx)  *  * Openssl needs to have locking in place, and the application must set  * it up, because a mere library cannot do this, use the calls  * CRYPTO_set_id_callback and CRYPTO_set_locking_callback.  *  * If no threading is compiled in, the above async example uses fork(2) to  * create a process to perform the work. The forked process exits when the   * calling process exits, or ctx_delete() is called.  * Otherwise, for asynchronous with threading, a worker thread is created.  *  * The blocking calls use shared ctx-cache when threaded. Thus  * ub_resolve() and ub_resolve_async()&& ub_wait() are  * not the same. The first makes the current thread do the work, setting  * up buffers, etc, to perform the work (but using shared cache data).  * The second calls another worker thread (or process) to perform the work.  * And no buffers need to be set up, but a context-switch happens.  */
 end_comment
 
 begin_ifndef
@@ -31,6 +31,19 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/** the version of this header file */
+define|#
+directive|define
+name|UNBOUND_VERSION_MAJOR
+value|@UNBOUND_VERSION_MAJOR@
+define|#
+directive|define
+name|UNBOUND_VERSION_MINOR
+value|@UNBOUND_VERSION_MINOR@
+define|#
+directive|define
+name|UNBOUND_VERSION_MICRO
+value|@UNBOUND_VERSION_MICRO@
 comment|/**  * The validation context is created to hold the resolver status,  * validation keys and a small cache (containing messages, rrsets,  * roundtrip times, trusted keys, lameness information).  *  * Its contents are internally defined.  */
 struct_decl|struct
 name|ub_ctx
@@ -481,10 +494,12 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|zone_name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|zone_type
@@ -499,6 +514,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|zone_name
@@ -513,6 +529,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|data
@@ -527,6 +544,7 @@ name|ub_ctx
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|data

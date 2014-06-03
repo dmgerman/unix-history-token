@@ -73,9 +73,14 @@ modifier|*
 name|rda_php
 decl_stmt|;
 name|uintptr_t
-name|rda_addr
+name|rda_dlactivity_addr
 decl_stmt|;
-comment|/* address of r_debug_state */
+name|uintptr_t
+name|rda_preinit_addr
+decl_stmt|;
+name|uintptr_t
+name|rda_postinit_addr
+decl_stmt|;
 block|}
 name|rd_agent_t
 typedef|;

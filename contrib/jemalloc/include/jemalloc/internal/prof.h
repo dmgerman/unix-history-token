@@ -53,12 +53,35 @@ begin_comment
 comment|/* Option defaults. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JEMALLOC_PROF
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|PROF_PREFIX_DEFAULT
 value|"jeprof"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PROF_PREFIX_DEFAULT
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -305,7 +328,7 @@ name|malloc_mutex_t
 modifier|*
 name|lock
 decl_stmt|;
-comment|/* 	 * Number of threads that currently cause this ctx to be in a state of 	 * limbo due to one of: 	 *   - Initializing per thread counters associated with this ctx. 	 *   - Preparing to destroy this ctx. 	 * nlimbo must be 1 (single destroyer) in order to safely destroy the 	 * ctx. 	 */
+comment|/* 	 * Number of threads that currently cause this ctx to be in a state of 	 * limbo due to one of: 	 *   - Initializing per thread counters associated with this ctx. 	 *   - Preparing to destroy this ctx. 	 *   - Dumping a heap profile that includes this ctx. 	 * nlimbo must be 1 (single destroyer) in order to safely destroy the 	 * ctx. 	 */
 name|unsigned
 name|nlimbo
 decl_stmt|;
@@ -324,9 +347,26 @@ argument|prof_thr_cnt_t
 argument_list|)
 name|cnts_ql
 expr_stmt|;
+comment|/* Linkage for list of contexts to be dumped. */
+name|ql_elm
+argument_list|(
+argument|prof_ctx_t
+argument_list|)
+name|dump_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|ql_head
+argument_list|(
+argument|prof_ctx_t
+argument_list|)
+name|prof_ctx_list_t
+expr_stmt|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -481,8 +521,14 @@ specifier|extern
 name|char
 name|opt_prof_prefix
 index|[
+comment|/* Minimize memory bloat for non-prof builds. */
+ifdef|#
+directive|ifdef
+name|JEMALLOC_PROF
 name|PATH_MAX
 operator|+
+endif|#
+directive|endif
 literal|1
 index|]
 decl_stmt|;
@@ -551,6 +597,50 @@ name|bt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JEMALLOC_JET
+end_ifdef
+
+begin_function_decl
+name|size_t
+name|prof_bt_count
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|prof_dump_open_t
+function_decl|)
+parameter_list|(
+name|bool
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|prof_dump_open_t
+modifier|*
+name|prof_dump_open
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -779,6 +869,9 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
+name|size_t
+name|usize
+parameter_list|,
 name|prof_ctx_t
 modifier|*
 name|ctx
@@ -806,7 +899,7 @@ modifier|*
 name|ptr
 parameter_list|,
 name|size_t
-name|size
+name|usize
 parameter_list|,
 name|prof_thr_cnt_t
 modifier|*
@@ -825,14 +918,14 @@ modifier|*
 name|ptr
 parameter_list|,
 name|size_t
-name|size
+name|usize
 parameter_list|,
 name|prof_thr_cnt_t
 modifier|*
 name|cnt
 parameter_list|,
 name|size_t
-name|old_size
+name|old_usize
 parameter_list|,
 name|prof_ctx_t
 modifier|*
@@ -961,6 +1054,10 @@ modifier|*
 name|prof_tdata
 parameter_list|)
 block|{
+comment|/* 	 * The body of this function is compiled out unless heap profiling is 	 * enabled, so that it is possible to compile jemalloc with floating 	 * point support completely disabled.  Avoiding floating point code is 	 * important on memory-constrained systems, but it also enables a 	 * workaround for versions of glibc that don't properly save/restore 	 * floating point registers during dynamic lazy symbol loading (which 	 * internally calls into whatever malloc implementation happens to be 	 * integrated into the application).  Note that some compilers (e.g. 	 * gcc 4.8) may use floating point registers for fast memory moves, so 	 * jemalloc must be compiled with such optimizations disabled (e.g. 	 * -mno-sse) in order for the workaround to be complete. 	 */
+ifdef|#
+directive|ifdef
+name|JEMALLOC_PROF
 name|uint64_t
 name|r
 decl_stmt|;
@@ -972,7 +1069,7 @@ argument_list|(
 name|config_prof
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Compute sample threshold as a geometrically distributed random 	 * variable with mean (2^opt_lg_prof_sample). 	 * 	 *                         __        __ 	 *                         |  log(u)  |                     1 	 * prof_tdata->threshold = | -------- |, where p = ------------------- 	 *                         | log(1-p) |             opt_lg_prof_sample 	 *                                                 2 	 * 	 * For more information on the math, see: 	 * 	 *   Non-Uniform Random Variate Generation 	 *   Luc Devroye 	 *   Springer-Verlag, New York, 1986 	 *   pp 500 	 *   (http://cg.scs.carleton.ca/~luc/rnbookindex.html) 	 */
+comment|/* 	 * Compute sample threshold as a geometrically distributed random 	 * variable with mean (2^opt_lg_prof_sample). 	 * 	 *                         __        __ 	 *                         |  log(u)  |                     1 	 * prof_tdata->threshold = | -------- |, where p = ------------------- 	 *                         | log(1-p) |             opt_lg_prof_sample 	 *                                                 2 	 * 	 * For more information on the math, see: 	 * 	 *   Non-Uniform Random Variate Generation 	 *   Luc Devroye 	 *   Springer-Verlag, New York, 1986 	 *   pp 500 	 *   (http://luc.devroye.org/rnbookindex.html) 	 */
 name|prng64
 argument_list|(
 name|r
@@ -1047,6 +1144,8 @@ name|uint64_t
 operator|)
 literal|1U
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1135,6 +1234,9 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
+name|size_t
+name|usize
+parameter_list|,
 name|prof_ctx_t
 modifier|*
 name|ctx
@@ -1178,6 +1280,8 @@ comment|/* Region. */
 name|arena_prof_ctx_set
 argument_list|(
 name|ptr
+argument_list|,
+name|usize
 argument_list|,
 name|ctx
 argument_list|)
@@ -1335,7 +1439,7 @@ modifier|*
 name|ptr
 parameter_list|,
 name|size_t
-name|size
+name|usize
 parameter_list|,
 name|prof_thr_cnt_t
 modifier|*
@@ -1356,7 +1460,7 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|size
+name|usize
 operator|==
 name|isalloc
 argument_list|(
@@ -1377,11 +1481,11 @@ if|if
 condition|(
 name|prof_sample_accum_update
 argument_list|(
-name|size
+name|usize
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Don't sample.  For malloc()-like allocation, it is 			 * always possible to tell in advance how large an 			 * object's usable size will be, so there should never 			 * be a difference between the size passed to 			 * PROF_ALLOC_PREP() and prof_malloc(). 			 */
+comment|/* 			 * Don't sample.  For malloc()-like allocation, it is 			 * always possible to tell in advance how large an 			 * object's usable size will be, so there should never 			 * be a difference between the usize passed to 			 * PROF_ALLOC_PREP() and prof_malloc(). 			 */
 name|assert
 argument_list|(
 operator|(
@@ -1414,6 +1518,8 @@ name|prof_ctx_set
 argument_list|(
 name|ptr
 argument_list|,
+name|usize
+argument_list|,
 name|cnt
 operator|->
 name|ctx
@@ -1442,7 +1548,7 @@ name|cnts
 operator|.
 name|curbytes
 operator|+=
-name|size
+name|usize
 expr_stmt|;
 if|if
 condition|(
@@ -1462,7 +1568,7 @@ name|cnts
 operator|.
 name|accumbytes
 operator|+=
-name|size
+name|usize
 expr_stmt|;
 block|}
 comment|/*********/
@@ -1485,6 +1591,8 @@ else|else
 name|prof_ctx_set
 argument_list|(
 name|ptr
+argument_list|,
+name|usize
 argument_list|,
 operator|(
 name|prof_ctx_t
@@ -1510,14 +1618,14 @@ modifier|*
 name|ptr
 parameter_list|,
 name|size_t
-name|size
+name|usize
 parameter_list|,
 name|prof_thr_cnt_t
 modifier|*
 name|cnt
 parameter_list|,
 name|size_t
-name|old_size
+name|old_usize
 parameter_list|,
 name|prof_ctx_t
 modifier|*
@@ -1559,7 +1667,7 @@ condition|)
 block|{
 name|assert
 argument_list|(
-name|size
+name|usize
 operator|==
 name|isalloc
 argument_list|(
@@ -1580,11 +1688,11 @@ if|if
 condition|(
 name|prof_sample_accum_update
 argument_list|(
-name|size
+name|usize
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * Don't sample.  The size passed to 				 * PROF_ALLOC_PREP() was larger than what 				 * actually got allocated, so a backtrace was 				 * captured for this allocation, even though 				 * its actual size was insufficient to cross 				 * the sample threshold. 				 */
+comment|/* 				 * Don't sample.  The usize passed to 				 * PROF_ALLOC_PREP() was larger than what 				 * actually got allocated, so a backtrace was 				 * captured for this allocation, even though 				 * its actual usize was insufficient to cross 				 * the sample threshold. 				 */
 name|cnt
 operator|=
 operator|(
@@ -1649,7 +1757,7 @@ name|cnt_merged
 operator|.
 name|curbytes
 operator|-=
-name|old_size
+name|old_usize
 expr_stmt|;
 name|malloc_mutex_unlock
 argument_list|(
@@ -1717,6 +1825,8 @@ name|prof_ctx_set
 argument_list|(
 name|ptr
 argument_list|,
+name|usize
+argument_list|,
 name|cnt
 operator|->
 name|ctx
@@ -1738,6 +1848,8 @@ condition|)
 name|prof_ctx_set
 argument_list|(
 name|ptr
+argument_list|,
+name|usize
 argument_list|,
 operator|(
 name|prof_ctx_t
@@ -1780,7 +1892,7 @@ name|cnts
 operator|.
 name|curbytes
 operator|-=
-name|old_size
+name|old_usize
 expr_stmt|;
 block|}
 if|if
@@ -1809,7 +1921,7 @@ name|cnts
 operator|.
 name|curbytes
 operator|+=
-name|size
+name|usize
 expr_stmt|;
 if|if
 condition|(
@@ -1829,7 +1941,7 @@ name|cnts
 operator|.
 name|accumbytes
 operator|+=
-name|size
+name|usize
 expr_stmt|;
 block|}
 block|}

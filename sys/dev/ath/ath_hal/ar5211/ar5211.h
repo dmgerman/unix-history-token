@@ -367,9 +367,6 @@ index|[
 name|HAL_NUM_TX_QUEUES
 index|]
 decl_stmt|;
-name|HAL_POWER_MODE
-name|ah_powerMode
-decl_stmt|;
 name|HAL_ANT_SETTING
 name|ah_diversityControl
 decl_stmt|;

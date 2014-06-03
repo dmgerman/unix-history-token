@@ -1753,6 +1753,11 @@ name|mbuf
 modifier|*
 name|m_rxpending
 decl_stmt|;
+name|struct
+name|ath_buf
+modifier|*
+name|m_holdbf
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2269,8 +2274,13 @@ comment|/* RX dec TSF is 32 bits */
 name|sc_isedma
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* supports EDMA */
+name|sc_do_mybeacon
+range|:
+literal|1
+decl_stmt|;
+comment|/* supports mybeacon */
 comment|/* 	 * Second set of flags. 	 */
 name|u_int32_t
 name|sc_use_ent
@@ -3007,6 +3017,19 @@ name|int
 name|status
 parameter_list|)
 function_decl|;
+comment|/* 	 * Powersave state tracking. 	 * 	 * target/cur powerstate is the chip power state. 	 * target selfgen state is the self-generated frames 	 *   state.  The chip can be awake but transmitted frames 	 *   can have the PWRMGT bit set to 1 so the destination 	 *   thinks the node is asleep. 	 */
+name|HAL_POWER_MODE
+name|sc_target_powerstate
+decl_stmt|;
+name|HAL_POWER_MODE
+name|sc_target_selfgen_state
+decl_stmt|;
+name|HAL_POWER_MODE
+name|sc_cur_powerstate
+decl_stmt|;
+name|int
+name|sc_powersave_refcnt
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3712,6 +3735,19 @@ name|_mode
 parameter_list|)
 define|\
 value|((*(_ah)->ah_setPowerMode)((_ah), (_mode), AH_TRUE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setselfgenpower
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_mode
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setPowerMode)((_ah), (_mode), AH_FALSE))
 end_define
 
 begin_define
@@ -5138,6 +5174,17 @@ name|_v
 parameter_list|)
 define|\
 value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, _v, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasmybeacon
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_DO_MYBEACON, 1, NULL) == HAL_OK)
 end_define
 
 begin_define

@@ -3325,6 +3325,17 @@ begin_comment
 comment|/* CAPABILITY: MBSS available */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_SWSLEEP
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* CAPABILITY: do sleep here */
+end_comment
+
 begin_comment
 comment|/* 0x7c0000 available */
 end_comment

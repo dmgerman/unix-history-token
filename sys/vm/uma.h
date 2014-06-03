@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|VM_UMA_H
+name|_VM_UMA_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|VM_UMA_H
+name|_VM_UMA_H_
 end_define
 
 begin_include
@@ -1236,6 +1236,24 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Common UMA_ZONE_PCPU zones.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|pcpu_zone_64
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|pcpu_zone_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Exported statistics structures to be used by user space monitoring tools.  * Statistics stream consists of a uma_stream_header, followed by a series of  * alternative uma_type_header and uma_type_stat structures.  */
 end_comment
 
@@ -1394,6 +1412,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _VM_UMA_H_ */
+end_comment
 
 end_unit
 

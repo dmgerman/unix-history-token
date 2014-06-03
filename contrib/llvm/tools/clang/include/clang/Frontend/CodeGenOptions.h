@@ -180,17 +180,22 @@ name|DebugInfoKind
 block|{
 name|NoDebugInfo
 block|,
-comment|// Don't generate debug info.
+comment|/// Don't generate debug info.
 name|DebugLineTablesOnly
 block|,
-comment|// Emit only debug info necessary for generating
-comment|// line number tables (-gline-tables-only).
+comment|/// Emit only debug info necessary for generating
+comment|/// line number tables (-gline-tables-only).
 name|LimitedDebugInfo
 block|,
-comment|// Limit generated debug info to reduce size
-comment|// (-flimit-debug-info).
+comment|/// Limit generated debug info to reduce size
+comment|/// (-fno-standalone-debug). This emits
+comment|/// forward decls for types that could be
+comment|/// replaced with forward decls in the source
+comment|/// code. For dynamic C++ classes type info
+comment|/// is only emitted int the module that
+comment|/// contains the classe's vtable.
 name|FullDebugInfo
-comment|// Generate complete debug info.
+comment|/// Generate complete debug info.
 block|}
 block|;    enum
 name|TLSModel
@@ -214,6 +219,18 @@ block|,
 comment|// Form fused FP ops according to FP_CONTRACT rules.
 name|FPC_Fast
 comment|// Aggressively fuse FP ops (E.g. FMA).
+block|}
+block|;    enum
+name|StructReturnConventionKind
+block|{
+name|SRCK_Default
+block|,
+comment|// No special option was passed.
+name|SRCK_OnStack
+block|,
+comment|// Small structs on the stack (-fpcc-struct-return).
+name|SRCK_InRegs
+comment|// Small structs in registers (-freg-struct-return).
 block|}
 block|;
 comment|/// The code model to use (-mcmodel).
@@ -317,6 +334,23 @@ operator|::
 name|string
 operator|>
 name|BackendOptions
+block|;
+comment|/// A list of dependent libraries.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|DependentLibraries
+block|;
+comment|/// Name of the profile file to use with -fprofile-sample-use.
+name|std
+operator|::
+name|string
+name|SampleProfileFile
 block|;
 name|public
 operator|:

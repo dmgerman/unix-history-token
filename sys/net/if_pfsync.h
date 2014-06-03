@@ -456,28 +456,6 @@ name|PFSYNC_HDRLEN
 value|sizeof(struct pfsync_header)
 end_define
 
-begin_comment
-comment|/*  * Names for PFSYNC sysctl objects  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PFSYNCCTL_STATS
-value|1
-end_define
-
-begin_comment
-comment|/* PFSYNC stats */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PFSYNCCTL_MAXID
-value|2
-end_define
-
 begin_struct
 struct|struct
 name|pfsyncstats

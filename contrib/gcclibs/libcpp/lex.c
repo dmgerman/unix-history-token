@@ -3037,6 +3037,7 @@ argument_list|,
 literal|"null character(s) preserved in literal"
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin #error with unmatched quotes 5607574 */
 if|if
 condition|(
 name|type
@@ -3051,7 +3052,22 @@ name|lang
 argument_list|)
 operator|!=
 name|CLK_ASM
+operator|&&
+operator|!
+name|pfile
+operator|->
+name|state
+operator|.
+name|in_diagnostic
+operator|&&
+operator|!
+name|pfile
+operator|->
+name|state
+operator|.
+name|skipping
 condition|)
+comment|/* APPLE LOCAL end #error with unmatched quotes 5607574 */
 name|cpp_error
 argument_list|(
 name|pfile

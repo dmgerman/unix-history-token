@@ -11941,6 +11941,16 @@ operator|=
 name|KVME_TYPE_SG
 expr_stmt|;
 break|break;
+case|case
+name|OBJT_MGTDEVICE
+case|:
+name|kve
+operator|->
+name|kve_type
+operator|=
+name|KVME_TYPE_MGTDEVICE
+expr_stmt|;
+break|break;
 default|default:
 name|kve
 operator|->

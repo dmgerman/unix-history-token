@@ -243,7 +243,7 @@ argument_list|(
 argument|GetNewMethodIDImpl
 argument_list|)
 block|{   }
-comment|// Sends an event anncouncing that a function has been emitted
+comment|// Sends an event announcing that a function has been emitted
 comment|//   return values are event-specific.  See Intel documentation for details.
 name|int
 name|iJIT_NotifyEvent

@@ -5398,7 +5398,6 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|uint16_t
-specifier|const
 name|fire_freq_nak_tmr_thrs
 index|[
 literal|6
@@ -5474,7 +5473,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|uint16_t
-specifier|const
 name|fire_rply_tmr_thrs
 index|[
 literal|6

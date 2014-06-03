@@ -435,6 +435,17 @@ begin_comment
 comment|/* pages of i/o permission bitmap */
 end_comment
 
+begin_comment
+comment|/*  * I/O permission bitmap has a bit for each I/O port plus an additional  * byte at the end with all bits set. See section "I/O Permission Bit Map"  * in the Intel SDM for more details.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOPERM_BITMAP_SIZE
+value|(IOPAGES * PAGE_SIZE + 1)
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

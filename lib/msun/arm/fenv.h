@@ -133,6 +133,34 @@ begin_comment
 comment|/* Rounding modes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VFP_FE_TONEAREST
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFP_FE_UPWARD
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFP_FE_DOWNWARD
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFP_FE_TOWARDZERO
+value|0x00c00000
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -143,28 +171,28 @@ begin_define
 define|#
 directive|define
 name|FE_TONEAREST
-value|0x00000000
+value|VFP_FE_TONEAREST
 end_define
 
 begin_define
 define|#
 directive|define
 name|FE_UPWARD
-value|0x00400000
+value|VFP_FE_UPWARD
 end_define
 
 begin_define
 define|#
 directive|define
 name|FE_DOWNWARD
-value|0x00800000
+value|VFP_FE_DOWNWARD
 end_define
 
 begin_define
 define|#
 directive|define
 name|FE_TOWARDZERO
-value|0x00c00000
+value|VFP_FE_TOWARDZERO
 end_define
 
 begin_else
@@ -388,6 +416,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_function_decl
+name|int
+name|feenableexcept
+parameter_list|(
+name|int
+name|__mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fedisableexcept
+parameter_list|(
+name|int
+name|__mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fegetexcept
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -415,6 +483,13 @@ parameter_list|(
 name|__r
 parameter_list|)
 value|__asm __volatile("vmsr fpscr, %0" : : "r"(__r))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_FPU_MASK_SHIFT
+value|8
 end_define
 
 begin_function
@@ -814,7 +889,7 @@ comment|/* We currently provide no external definitions of the functions below. 
 end_comment
 
 begin_function
-specifier|static
+name|__fenv_static
 specifier|inline
 name|int
 name|feenableexcept
@@ -838,9 +913,13 @@ operator|=
 name|__old_fpsr
 operator||
 operator|(
+operator|(
 name|__mask
 operator|&
 name|FE_ALL_EXCEPT
+operator|)
+operator|<<
+name|_FPU_MASK_SHIFT
 operator|)
 expr_stmt|;
 name|vmsr_fpscr
@@ -850,7 +929,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|__old_fpsr
+operator|>>
+name|_FPU_MASK_SHIFT
+operator|)
 operator|&
 name|FE_ALL_EXCEPT
 operator|)
@@ -859,7 +942,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|__fenv_static
 specifier|inline
 name|int
 name|fedisableexcept
@@ -884,9 +967,13 @@ name|__old_fpsr
 operator|&
 operator|~
 operator|(
+operator|(
 name|__mask
 operator|&
 name|FE_ALL_EXCEPT
+operator|)
+operator|<<
+name|_FPU_MASK_SHIFT
 operator|)
 expr_stmt|;
 name|vmsr_fpscr
@@ -896,7 +983,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|__old_fpsr
+operator|>>
+name|_FPU_MASK_SHIFT
+operator|)
 operator|&
 name|FE_ALL_EXCEPT
 operator|)
@@ -905,7 +996,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|__fenv_static
 specifier|inline
 name|int
 name|fegetexcept

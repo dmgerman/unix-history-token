@@ -1957,6 +1957,20 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|dump_child
+argument_list|(
+literal|"attrs"
+argument_list|,
+name|DO_ATTRIBUTES
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 break|break;
 case|case
 name|FOR_STMT
@@ -2008,6 +2022,20 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|dump_child
+argument_list|(
+literal|"attrs"
+argument_list|,
+name|FOR_ATTRIBUTES
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 break|break;
 case|case
 name|SWITCH_STMT
@@ -2070,6 +2098,20 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|dump_child
+argument_list|(
+literal|"attrs"
+argument_list|,
+name|WHILE_ATTRIBUTES
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 break|break;
 case|case
 name|STMT_EXPR

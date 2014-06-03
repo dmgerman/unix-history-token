@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_rss.h>
 end_include
 
 begin_ifdef
@@ -69,7 +81,7 @@ comment|/* INET6 */
 end_comment
 
 begin_comment
-comment|/*  * Given a hash of whatever the covered tuple might be, return a pcbgroup  * index.  */
+comment|/*  * Given a hash of whatever the covered tuple might be, return a pcbgroup  * index.  Where RSS is supported, try to align bucket selection with RSS CPU  * affinity strategy.  */
 end_comment
 
 begin_function
@@ -87,6 +99,19 @@ name|uint32_t
 name|hash
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|RSS
+return|return
+operator|(
+name|rss_getbucket
+argument_list|(
+name|hash
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|hash
@@ -96,11 +121,13 @@ operator|->
 name|ipi_npcbgroups
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*  * Map a (hashtype, hash) tuple into a connection group, or NULL if the hash   * information is insufficient to identify the pcbgroup.  */
+comment|/*  * Map a (hashtype, hash) tuple into a connection group, or NULL if the hash   * information is insufficient to identify the pcbgroup.  This might occur if  * a TCP packet turnsup with a 2-tuple hash, or if an RSS hash is present but  * RSS is not compiled into the kernel.  */
 end_comment
 
 begin_function
@@ -121,6 +148,53 @@ name|uint32_t
 name|hash
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|RSS
+if|if
+condition|(
+operator|(
+name|pcbinfo
+operator|->
+name|ipi_hashfields
+operator|==
+name|IPI_HASHFIELDS_4TUPLE
+operator|&&
+name|hashtype
+operator|==
+name|M_HASHTYPE_RSS_TCP_IPV4
+operator|)
+operator|||
+operator|(
+name|pcbinfo
+operator|->
+name|ipi_hashfields
+operator|==
+name|IPI_HASHFIELDS_2TUPLE
+operator|&&
+name|hashtype
+operator|==
+name|M_HASHTYPE_RSS_IPV4
+operator|)
+condition|)
+return|return
+operator|(
+operator|&
+name|pcbinfo
+operator|->
+name|ipi_pcbgroups
+index|[
+name|in6_pcbgroup_getbucket
+argument_list|(
+name|pcbinfo
+argument_list|,
+name|hash
+argument_list|)
+index|]
+operator|)
+return|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
@@ -201,6 +275,7 @@ block|{
 name|uint32_t
 name|hash
 decl_stmt|;
+comment|/* 	 * RSS note: we pass foreign addr/port as source, and local addr/port 	 * as destination, as we want to align with what the hardware is 	 * doing. 	 */
 switch|switch
 condition|(
 name|pcbinfo
@@ -211,6 +286,26 @@ block|{
 case|case
 name|IPI_HASHFIELDS_4TUPLE
 case|:
+ifdef|#
+directive|ifdef
+name|RSS
+name|hash
+operator|=
+name|rss_hash_ip6_4tuple
+argument_list|(
+operator|*
+name|faddrp
+argument_list|,
+name|fport
+argument_list|,
+operator|*
+name|laddrp
+argument_list|,
+name|lport
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|hash
 operator|=
 name|faddrp
@@ -222,10 +317,28 @@ index|]
 operator|^
 name|fport
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|IPI_HASHFIELDS_2TUPLE
 case|:
+ifdef|#
+directive|ifdef
+name|RSS
+name|hash
+operator|=
+name|rss_hash_ip6_2tuple
+argument_list|(
+operator|*
+name|faddrp
+argument_list|,
+operator|*
+name|laddrp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|hash
 operator|=
 name|faddrp
@@ -242,6 +355,8 @@ index|[
 literal|3
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|hash

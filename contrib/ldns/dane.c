@@ -9,6 +9,12 @@ directive|include
 file|<ldns/config.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_DANE
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -39,17 +45,39 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SOCKET_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETDB_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<netdb.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -486,7 +514,7 @@ name|LDNS_XMALLOC
 argument_list|(
 argument|unsigned char
 argument_list|,
-argument|SHA256_DIGEST_LENGTH
+argument|LDNS_SHA256_DIGEST_LENGTH
 argument_list|)
 expr_stmt|;
 if|if
@@ -528,7 +556,7 @@ name|ldns_rdf_new
 argument_list|(
 name|LDNS_RDF_TYPE_HEX
 argument_list|,
-name|SHA256_DIGEST_LENGTH
+name|LDNS_SHA256_DIGEST_LENGTH
 argument_list|,
 name|digest
 argument_list|)
@@ -556,7 +584,7 @@ name|LDNS_XMALLOC
 argument_list|(
 argument|unsigned char
 argument_list|,
-argument|SHA512_DIGEST_LENGTH
+argument|LDNS_SHA512_DIGEST_LENGTH
 argument_list|)
 expr_stmt|;
 if|if
@@ -598,7 +626,7 @@ name|ldns_rdf_new
 argument_list|(
 name|LDNS_RDF_TYPE_HEX
 argument_list|,
-name|SHA512_DIGEST_LENGTH
+name|LDNS_SHA512_DIGEST_LENGTH
 argument_list|,
 name|digest
 argument_list|)
@@ -2760,6 +2788,15 @@ end_endif
 
 begin_comment
 comment|/* HAVE_SSL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_DANE */
 end_comment
 
 end_unit

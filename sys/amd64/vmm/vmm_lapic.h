@@ -138,47 +138,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns a vector between 32 and 255 if an interrupt is pending in the  * IRR that can be delivered based on the current state of ISR and TPR.  *  * Note that the vector does not automatically transition to the ISR as a  * result of calling this function.  *  * Returns -1 if there is no eligible vector that can be delivered to the  * guest at this time.  */
-end_comment
-
-begin_function_decl
-name|int
-name|lapic_pending_intr
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|cpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Transition 'vector' from IRR to ISR. This function is called with the  * vector returned by 'lapic_pending_intr()' when the guest is able to  * accept this interrupt (i.e. RFLAGS.IF = 1 and no conditions exist that  * block interrupt delivery).  */
-end_comment
-
-begin_function_decl
-name|void
-name|lapic_intr_accepted
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|cpu
-parameter_list|,
-name|int
-name|vector
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Signals to the LAPIC that an interrupt at 'vector' needs to be generated  * to the 'cpu', the state is recorded in IRR.  */
 end_comment
 
@@ -286,6 +245,28 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Triggers the LAPIC local interrupt (LVT) 'vector' on 'cpu'.  'cpu' can  * be set to -1 to trigger the interrupt on all CPUs.  */
+end_comment
+
+begin_function_decl
+name|int
+name|lapic_set_local_intr
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|cpu
+parameter_list|,
+name|int
+name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

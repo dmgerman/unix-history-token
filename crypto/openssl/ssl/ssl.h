@@ -1551,9 +1551,8 @@ name|SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER
 value|0x00000020L
 define|#
 directive|define
-name|SSL_OP_MSIE_SSLV2_RSA_PADDING
+name|SSL_OP_SAFARI_ECDHE_ECDSA_BUG
 value|0x00000040L
-comment|/* no effect since 0.9.7h and 0.9.8b */
 define|#
 directive|define
 name|SSL_OP_SSLEAY_080_CLIENT_DH_BUG
@@ -1566,6 +1565,11 @@ define|#
 directive|define
 name|SSL_OP_TLS_BLOCK_PADDING_BUG
 value|0x00000200L
+comment|/* Hasn't done anything since OpenSSL 0.9.7h, retained for compatibility */
+define|#
+directive|define
+name|SSL_OP_MSIE_SSLV2_RSA_PADDING
+value|0x0
 comment|/* Disable SSL 3.0/TLS 1.0 CBC vulnerability workaround that was added  * in OpenSSL 0.9.6d.  Usually (depending on the application protocol)  * the workaround is not needed.  Unfortunately some broken SSL/TLS  * implementations cannot handle it at all, which is why we include  * it in SSL_OP_ALL. */
 define|#
 directive|define
@@ -1705,6 +1709,15 @@ define|#
 directive|define
 name|SSL_MODE_RELEASE_BUFFERS
 value|0x00000010L
+comment|/* Send the current time in the Random fields of the ClientHello and  * ServerHello records for compatibility with hypothetical implementations  * that require it.  */
+define|#
+directive|define
+name|SSL_MODE_SEND_CLIENTHELLO_TIME
+value|0x00000020L
+define|#
+directive|define
+name|SSL_MODE_SEND_SERVERHELLO_TIME
+value|0x00000040L
 comment|/* Note: SSL[_CTX]_set_{options,mode} use |= op on the previous value,  * they cannot be used to clear bits. */
 define|#
 directive|define
@@ -2675,7 +2688,7 @@ name|max_send_fragment
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|OPENSSL_ENGINE
+name|OPENSSL_NO_ENGINE
 comment|/* Engine to pass requests for client certs to 	 */
 name|ENGINE
 modifier|*

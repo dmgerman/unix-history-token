@@ -174,7 +174,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Names for ICMP sysctl objects  */
+comment|/*  * Identifiers for ICMP sysctl nodes  */
 end_comment
 
 begin_define
@@ -204,13 +204,6 @@ define|#
 directive|define
 name|ICMPCTL_ICMPLIM
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|ICMPCTL_MAXID
-value|4
 end_define
 
 begin_ifdef

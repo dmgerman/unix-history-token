@@ -305,6 +305,19 @@ parameter_list|)
 function_decl|;
 comment|// libc++ std::wstring
 name|bool
+name|LibcxxSmartPointerSummaryProvider
+parameter_list|(
+name|ValueObject
+modifier|&
+name|valobj
+parameter_list|,
+name|Stream
+modifier|&
+name|stream
+parameter_list|)
+function_decl|;
+comment|// libc++ std::shared_ptr<> and std::weak_ptr<>
+name|bool
 name|ObjCClassSummaryProvider
 parameter_list|(
 name|ValueObject
@@ -1804,6 +1817,9 @@ argument_list|()
 block|;
 name|private
 operator|:
+name|ClangASTType
+name|m_bool_type
+block|;
 name|ExecutionContextRef
 name|m_exe_ctx_ref
 block|;
@@ -1815,8 +1831,17 @@ operator|::
 name|addr_t
 name|m_base_data_address
 block|;
-name|EvaluateExpressionOptions
-name|m_options
+name|std
+operator|::
+name|map
+operator|<
+name|size_t
+block|,
+name|lldb
+operator|::
+name|ValueObjectSP
+operator|>
+name|m_children
 block|;         }
 decl_stmt|;
 end_decl_stmt

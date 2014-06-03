@@ -263,28 +263,6 @@ directive|include
 file|<dev/my/if_myreg.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: if_my.c,v 1.16 2003/04/15 06:37:25 mdodd Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Various supported device vendors/types and their names.  */
 end_comment
@@ -3064,21 +3042,10 @@ block|{
 name|u_int16_t
 name|bmcr
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 name|MY_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|=
-name|sc
-operator|->
-name|my_ifp
 expr_stmt|;
 comment|/* 	 * If an autoneg session is in progress, stop it. 	 */
 if|if

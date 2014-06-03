@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -9328,10 +9328,6 @@ operator|=
 operator|*
 name|sizep
 expr_stmt|;
-name|buf
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|size
@@ -9354,6 +9350,11 @@ name|M_ZERO
 operator||
 name|M_WAITOK
 argument_list|)
+expr_stmt|;
+else|else
+name|buf
+operator|=
+name|NULL
 expr_stmt|;
 name|size
 operator|=
@@ -9401,6 +9402,13 @@ argument_list|,
 name|buf
 argument_list|,
 name|size
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 operator|*

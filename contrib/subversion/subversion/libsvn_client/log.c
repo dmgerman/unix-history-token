@@ -2824,7 +2824,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Save us an RA layer round trip if we are on the repository root and      know the result in advance.  All the revision data has already been      validated.    */
+comment|/* Save us an RA layer round trip if we are on the repository root and      know the result in advance, or if we don't need multiple ranges.      All the revision data has already been validated.    */
 if|if
 condition|(
 name|strcmp
@@ -2839,6 +2839,12 @@ name|repos_root_url
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|opt_rev_ranges
+operator|->
+name|nelts
+operator|<=
+literal|1
 condition|)
 block|{
 name|svn_location_segment_t
@@ -2888,7 +2894,18 @@ name|segment
 operator|->
 name|path
 operator|=
-literal|""
+name|svn_uri_skip_ancestor
+argument_list|(
+name|actual_loc
+operator|->
+name|repos_root_url
+argument_list|,
+name|actual_loc
+operator|->
+name|url
+argument_list|,
+name|pool
+argument_list|)
 expr_stmt|;
 name|APR_ARRAY_PUSH
 argument_list|(

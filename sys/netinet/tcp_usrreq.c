@@ -2791,7 +2791,7 @@ name|INET
 end_ifdef
 
 begin_comment
-comment|/*  * Accept a connection.  Essentially all the work is done at higher levels;  * just return the address of the peer, storing through addr.  *  * The rationale for acquiring the tcbinfo lock here is somewhat complicated,  * and is described in detail in the commit log entry for r175612.  Acquiring  * it delays an accept(2) racing with sonewconn(), which inserts the socket  * before the inpcb address/port fields are initialized.  A better fix would  * prevent the socket from being placed in the listen queue until all fields  * are fully initialized.  */
+comment|/*  * Accept a connection.  Essentially all the work is done at higher levels;  * just return the address of the peer, storing through addr.  */
 end_comment
 
 begin_function
@@ -2872,12 +2872,6 @@ literal|"tcp_usr_accept: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-name|INP_INFO_RLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|INP_WLOCK
 argument_list|(
 name|inp
@@ -2937,12 +2931,6 @@ expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_RUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -8597,13 +8585,9 @@ name|db_printf
 argument_list|(
 literal|"t_segq first: %p   t_segqlen: %d   t_dupacks: %d\n"
 argument_list|,
-name|LIST_FIRST
-argument_list|(
-operator|&
 name|tp
 operator|->
 name|t_segq
-argument_list|)
 argument_list|,
 name|tp
 operator|->

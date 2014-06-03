@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2006, 2008-2010, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2006, 2008-2010, 2013 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.690 2013/03/15 17:54:12 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.692 2013-11-22 20:51:56 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9774,7 +9774,7 @@ name|SSL_Option
 index|[]
 init|=
 block|{
-comment|/* these are turned on by default */
+comment|/* Workaround for bugs are turned on by default (as well as some others) */
 ifdef|#
 directive|ifdef
 name|SSL_OP_MICROSOFT_SESS_ID_BUG
@@ -9793,6 +9793,17 @@ block|{
 literal|"SSL_OP_NETSCAPE_CHALLENGE_BUG"
 block|,
 name|SSL_OP_NETSCAPE_CHALLENGE_BUG
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_LEGACY_SERVER_CONNECT
+block|{
+literal|"SSL_OP_LEGACY_SERVER_CONNECT"
+block|,
+name|SSL_OP_LEGACY_SERVER_CONNECT
 block|}
 block|,
 endif|#
@@ -9931,11 +9942,44 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|SSL_OP_CISCO_ANYCONNECT
+block|{
+literal|"SSL_OP_CISCO_ANYCONNECT"
+block|,
+name|SSL_OP_CISCO_ANYCONNECT
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION
 block|{
 literal|"SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION"
 block|,
 name|SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_NO_COMPRESSION
+block|{
+literal|"SSL_OP_NO_COMPRESSION"
+block|,
+name|SSL_OP_NO_COMPRESSION
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION
+block|{
+literal|"SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION"
+block|,
+name|SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION
 block|}
 block|,
 endif|#
@@ -10030,6 +10074,28 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|SSL_OP_NO_TLSv1_2
+block|{
+literal|"SSL_OP_NO_TLSv1_2"
+block|,
+name|SSL_OP_NO_TLSv1_2
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_NO_TLSv1_1
+block|{
+literal|"SSL_OP_NO_TLSv1_1"
+block|,
+name|SSL_OP_NO_TLSv1_1
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|SSL_OP_PKCS1_CHECK_1
 block|{
 literal|"SSL_OP_PKCS1_CHECK_1"
@@ -10068,6 +10134,17 @@ block|{
 literal|"SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG"
 block|,
 name|SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_CRYPTOPRO_TLSEXT_BUG
+block|{
+literal|"SSL_OP_CRYPTOPRO_TLSEXT_BUG"
+block|,
+name|SSL_OP_CRYPTOPRO_TLSEXT_BUG
 block|}
 block|,
 endif|#

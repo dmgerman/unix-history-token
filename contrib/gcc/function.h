@@ -480,6 +480,12 @@ comment|/* Location at which to save the argument pointer if it will need to be 
 name|rtx
 name|x_arg_pointer_save_area
 decl_stmt|;
+comment|/* APPLE LOCAL begin radar 6411649 */
+comment|/* Holds a unique number for this function. It is used to      generate block number for block names. */
+name|int
+name|unqiue_block_number
+decl_stmt|;
+comment|/* APPLE LOCAL end radar 6411649 */
 comment|/* Offset to end of allocated area of stack frame.      If stack grows down, this is the address of the last stack slot allocated.      If stack grows up, this is the address for the next slot.  */
 name|HOST_WIDE_INT
 name|x_frame_offset
@@ -1485,6 +1491,19 @@ name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL radar 5732232 - blocks */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|block_sema_info
+modifier|*
+name|cur_block
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

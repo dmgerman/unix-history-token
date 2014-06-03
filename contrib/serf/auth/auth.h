@@ -288,6 +288,11 @@ function_decl|;
 name|apr_status_t
 name|serf__validate_response_digest_auth
 parameter_list|(
+specifier|const
+name|serf__authn_scheme_t
+modifier|*
+name|scheme
+parameter_list|,
 name|peer_t
 name|peer
 parameter_list|,
@@ -418,6 +423,11 @@ function_decl|;
 name|apr_status_t
 name|serf__validate_response_spnego_auth
 parameter_list|(
+specifier|const
+name|serf__authn_scheme_t
+modifier|*
+name|scheme
+parameter_list|,
 name|peer_t
 name|peer
 parameter_list|,

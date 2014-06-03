@@ -971,17 +971,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_FREE
-value|0x0002
-end_define
-
-begin_comment
-comment|/* page is free */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PG_FICTITIOUS
 value|0x0004
 end_define
@@ -1138,16 +1127,6 @@ end_decl_stmt
 begin_comment
 comment|/* first physical page number */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PAGE_IS_FREE
-parameter_list|(
-name|m
-parameter_list|)
-value|(((m)->flags& PG_FREE) != 0)
-end_define
 
 begin_define
 define|#

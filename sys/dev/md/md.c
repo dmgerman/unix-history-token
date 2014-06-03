@@ -4533,13 +4533,11 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-name|vm_object_pip_subtract
+name|vm_object_pip_wakeup
 argument_list|(
 name|sc
 operator|->
 name|object
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_WUNLOCK

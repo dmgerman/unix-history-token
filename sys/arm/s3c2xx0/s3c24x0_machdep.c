@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/physmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -331,27 +337,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|u_int
-name|data_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|prefetch_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|undefined_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pv_addr
 name|kernel_pt_table
@@ -364,24 +349,6 @@ end_decl_stmt
 begin_comment
 comment|/* Physical and virtual addresses for some global pages */
 end_comment
-
-begin_decl_stmt
-name|vm_paddr_t
-name|phys_avail
-index|[
-literal|10
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_paddr_t
-name|dump_avail
-index|[
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -479,7 +446,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -502,7 +469,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -525,7 +492,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -548,7 +515,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -576,7 +543,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -599,7 +566,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	}
 block|,
 block|{
@@ -798,6 +765,12 @@ argument_list|(
 name|abp
 argument_list|)
 expr_stmt|;
+name|arm_physmem_kernaddr
+operator|=
+name|abp
+operator|->
+name|abp_physaddr
+expr_stmt|;
 name|i
 operator|=
 literal|0
@@ -843,7 +816,7 @@ parameter_list|,
 name|np
 parameter_list|)
 define|\
-value|alloc_pages((var).pv_va, (np));		\ 	(var).pv_pa = (var).pv_va + (KERNPHYSADDR - KERNVIRTADDR);
+value|alloc_pages((var).pv_va, (np));		\ 	(var).pv_pa = (var).pv_va + (abp->abp_physaddr - KERNVIRTADDR);
 define|#
 directive|define
 name|alloc_pages
@@ -965,7 +938,9 @@ name|pv_va
 operator|-
 name|KERNVIRTADDR
 operator|+
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 block|}
 block|}
@@ -1485,28 +1460,6 @@ block|}
 name|cninit
 argument_list|()
 expr_stmt|;
-comment|/* Set stack for exception handlers */
-name|data_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|data_abort_handler
-expr_stmt|;
-name|prefetch_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|prefetch_abort_handler
-expr_stmt|;
-name|undefined_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|undefinedinstruction_bounce
-expr_stmt|;
 name|undefined_init
 argument_list|()
 expr_stmt|;
@@ -1535,24 +1488,6 @@ name|KERNEL_PT_KERN_NUM
 operator|-
 literal|1
 operator|)
-expr_stmt|;
-name|arm_dump_avail_init
-argument_list|(
-name|memsize
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dump_avail
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|dump_avail
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|vm_max_kernel_address
 operator|=
@@ -1590,45 +1525,29 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
-name|physmem
-operator|=
+comment|/* 	 * Add the physical ram we have available. 	 * 	 * Exclude the kernel, and all the things we allocated which immediately 	 * follow the kernel, from the VM allocation pool but not from crash 	 * dumps.  virtual_avail is a global variable which tracks the kva we've 	 * "allocated" while setting up pmaps. 	 * 	 * Prepare the list of physical memory available to the vm subsystem. 	 */
+name|arm_physmem_hardware_region
+argument_list|(
+name|PHYSADDR
+argument_list|,
 name|memsize
-operator|/
-name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
-name|phys_avail
-index|[
-literal|0
-index|]
-operator|=
+name|arm_physmem_exclude_region
+argument_list|(
+name|abp
+operator|->
+name|abp_physaddr
+argument_list|,
 name|virtual_avail
 operator|-
 name|KERNVIRTADDR
-operator|+
-name|KERNPHYSADDR
+argument_list|,
+name|EXFLAG_NOALLOC
+argument_list|)
 expr_stmt|;
-name|phys_avail
-index|[
-literal|1
-index|]
-operator|=
-name|PHYSADDR
-operator|+
-name|memsize
-expr_stmt|;
-name|phys_avail
-index|[
-literal|2
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|phys_avail
-index|[
-literal|3
-index|]
-operator|=
-literal|0
+name|arm_physmem_init_kernel_globals
+argument_list|()
 expr_stmt|;
 name|init_param2
 argument_list|(

@@ -89,54 +89,57 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Protocol handlers struct& function. */
-end_comment
-
-begin_comment
-comment|/* Packet flow direction. */
+comment|/* Packet flow direction flags. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IN
-value|1
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|OUT
-value|2
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|NODIR
+value|0x4000
 end_define
 
 begin_comment
-comment|/* Working protocol. */
+comment|/* Working protocol flags. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|TCP
-value|2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|UDP
-value|4
+value|0x04
 end_define
 
 begin_comment
-comment|/*   * Data passed to protocol handler module, it must be filled  * right before calling find_handler() to determine which  * module is elegible to be called.  */
+comment|/*  * Data passed to protocol handler module, it must be filled  * right before calling find_handler() to determine which  * module is elegible to be called.  */
 end_comment
 
 begin_struct
@@ -182,7 +185,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * This structure contains all the information necessary to make  * a protocol handler correctly work.  */
+comment|/*  * This structure contains all the information necessary to make  * a protocol handler correctly work.  */
 end_comment
 
 begin_struct
@@ -201,6 +204,7 @@ name|uint8_t
 name|proto
 decl_stmt|;
 comment|/* Working protocol. */
+comment|/* Fingerprint * function. */
 name|int
 function_decl|(
 modifier|*
@@ -211,12 +215,12 @@ name|struct
 name|libalias
 modifier|*
 parameter_list|,
-comment|/* Fingerprint * function. */
 name|struct
 name|alias_data
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Aliasing * function. */
 name|int
 function_decl|(
 modifier|*
@@ -227,7 +231,6 @@ name|struct
 name|libalias
 modifier|*
 parameter_list|,
-comment|/* Aliasing * function. */
 name|struct
 name|ip
 modifier|*
@@ -237,74 +240,30 @@ name|alias_data
 modifier|*
 parameter_list|)
 function_decl|;
-name|LIST_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|proto_handler
 argument_list|)
-name|entries
+name|link
 expr_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*   * Used only in userland when libalias needs to keep track of all  * module loaded. In kernel land (kld mode) we don't need to care  * care about libalias modules cause it's kld to do it for us.  */
+comment|/* End of handlers. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DLL_LEN
-value|32
+name|EOH
+value|.dir = NODIR
 end_define
-
-begin_struct
-struct|struct
-name|dll
-block|{
-name|char
-name|name
-index|[
-name|DLL_LEN
-index|]
-decl_stmt|;
-comment|/* Name of module. */
-name|void
-modifier|*
-name|handle
-decl_stmt|;
-comment|/*  					 * Ptr to shared obj obtained through 					 * dlopen() - use this ptr to get access 					 * to any symbols from a loaded module 					  					 * via dlsym().  					 */
-name|SLIST_ENTRY
-argument_list|(
-argument|dll
-argument_list|)
-name|next
-expr_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* Functions used with protocol handlers. */
 end_comment
-
-begin_function_decl
-name|void
-name|handler_chain_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|handler_chain_destroy
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -320,17 +279,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|LibAliasDetachHandlers
-parameter_list|(
-name|struct
-name|proto_handler
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|detach_handler
 parameter_list|(
 name|struct
 name|proto_handler
@@ -372,6 +320,49 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_comment
+comment|/*  * Used only in userland when libalias needs to keep track of all  * module loaded. In kernel land (kld mode) we don't need to care  * care about libalias modules cause it's kld to do it for us.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLL_LEN
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|dll
+block|{
+name|char
+name|name
+index|[
+name|DLL_LEN
+index|]
+decl_stmt|;
+comment|/* Name of module. */
+name|void
+modifier|*
+name|handle
+decl_stmt|;
+comment|/* 				 * Ptr to shared obj obtained through 				 * dlopen() - use this ptr to get access 				 * to any symbols from a loaded module 				 * via dlsym(). 				 */
+name|SLIST_ENTRY
+argument_list|(
+argument|dll
+argument_list|)
+name|next
+expr_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Functions used with dll module. */
@@ -429,25 +420,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* End of handlers. */
+comment|/*  * Some defines borrowed from sys/module.h used to compile a kld  * in userland as a shared lib.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|EOH
-value|-1
-end_define
-
-begin_comment
-comment|/*   * Some defines borrowed from sys/module.h used to compile a kld  * in userland as a shared lib.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -527,6 +501,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
 
 begin_endif
 endif|#

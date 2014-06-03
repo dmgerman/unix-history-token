@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|FD_SETSIZE
-value|1024U
+value|1024
 end_define
 
 begin_endif

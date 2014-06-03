@@ -128,7 +128,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ppt_num_devices
+name|ppt_assigned_devices
 parameter_list|(
 name|struct
 name|vm
@@ -149,6 +149,19 @@ name|vm
 parameter_list|,
 name|vm_paddr_t
 name|gpa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Returns the number of devices sequestered by the ppt driver for assignment  * to virtual machines.  */
+end_comment
+
+begin_function_decl
+name|int
+name|ppt_avail_devices
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

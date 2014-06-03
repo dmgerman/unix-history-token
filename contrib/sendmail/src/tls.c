@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2006, 2008, 2009, 2011, 2013 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2000-2006, 2008, 2009, 2011, 2013 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.121 2013/01/02 23:54:17 ca Exp $"
+literal|"@(#)$Id: tls.c,v 8.127 2013-11-27 02:51:11 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1367,6 +1367,9 @@ expr_stmt|;
 name|SSL_load_error_strings
 argument_list|()
 expr_stmt|;
+name|OpenSSL_add_all_algorithms
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -2521,7 +2524,7 @@ block|}
 endif|#
 directive|endif
 comment|/* _FFR_TLS_1 */
-comment|/* 	**  valid values for dhparam are (only the first char is checked) 	**  none	no parameters: don't use DH 	**  512		generate 512 bit parameters (fixed) 	**  1024	generate 1024 bit parameters 	**  /file/name	read parameters from /file/name 	**  default is: 1024 for server, 512 for client (OK? XXX) 	*/
+comment|/* 	**  valid values for dhparam are (only the first char is checked) 	**  none	no parameters: don't use DH 	**  512		use precomputed 512 bit parameters 	**  1024	generate 1024 bit parameters 	**  2048	generate 2048 bit parameters 	**  /file/name	read parameters from /file/name 	**  default is: 1024 for server, 512 for client (OK? XXX) 	*/
 if|if
 condition|(
 name|bitset
@@ -2554,6 +2557,17 @@ condition|)
 name|req
 operator||=
 name|TLS_I_DH1024
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'2'
+condition|)
+name|req
+operator||=
+name|TLS_I_DH2048
 expr_stmt|;
 elseif|else
 if|if
@@ -3819,6 +3833,16 @@ name|req
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|_FFR_TLS_EC
+name|EC_KEY
+modifier|*
+name|ecdh
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_TLS_EC */
 if|if
 condition|(
 name|bitset
@@ -3969,21 +3993,55 @@ operator|&&
 name|bitset
 argument_list|(
 name|TLS_I_DH1024
+operator||
+name|TLS_I_DH2048
 argument_list|,
 name|req
 argument_list|)
 condition|)
 block|{
+name|int
+name|bits
+decl_stmt|;
 name|DSA
 modifier|*
 name|dsa
 decl_stmt|;
-comment|/* this takes a while! (7-130s on a 450MHz AMD K6-2) */
+name|bits
+operator|=
+name|bitset
+argument_list|(
+name|TLS_I_DH2048
+argument_list|,
+name|req
+argument_list|)
+condition|?
+literal|2048
+else|:
+literal|1024
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|96
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"inittls: Generating %d bit DH parameters\n"
+argument_list|,
+name|bits
+argument_list|)
+expr_stmt|;
+comment|/* this takes a while! */
 name|dsa
 operator|=
 name|DSA_generate_parameters
 argument_list|(
-literal|1024
+name|bits
 argument_list|,
 name|NULL
 argument_list|,
@@ -4025,11 +4083,27 @@ argument_list|,
 name|req
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|96
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"inittls: Using precomputed 512 bit DH parameters\n"
+argument_list|)
+expr_stmt|;
 name|dh
 operator|=
 name|get_dh512
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dh
@@ -4089,14 +4163,6 @@ return|;
 block|}
 else|else
 block|{
-name|SSL_CTX_set_tmp_dh
-argument_list|(
-operator|*
-name|ctx
-argument_list|,
-name|dh
-argument_list|)
-expr_stmt|;
 comment|/* important to avoid small subgroup attacks */
 name|SSL_CTX_set_options
 argument_list|(
@@ -4104,6 +4170,14 @@ operator|*
 name|ctx
 argument_list|,
 name|SSL_OP_SINGLE_DH_USE
+argument_list|)
+expr_stmt|;
+name|SSL_CTX_set_tmp_dh
+argument_list|(
+operator|*
+name|ctx
+argument_list|,
+name|dh
 argument_list|)
 expr_stmt|;
 if|if
@@ -4139,6 +4213,48 @@ name|dh
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_TLS_EC
+name|ecdh
+operator|=
+name|EC_KEY_new_by_curve_name
+argument_list|(
+name|NID_X9_62_prime256v1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ecdh
+operator|!=
+name|NULL
+condition|)
+block|{
+name|SSL_CTX_set_options
+argument_list|(
+operator|*
+name|ctx
+argument_list|,
+name|SSL_OP_SINGLE_ECDH_USE
+argument_list|)
+expr_stmt|;
+name|SSL_CTX_set_tmp_ecdh
+argument_list|(
+operator|*
+name|ctx
+argument_list|,
+name|ecdh
+argument_list|)
+expr_stmt|;
+name|EC_KEY_free
+argument_list|(
+name|ecdh
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_TLS_EC */
 block|}
 endif|#
 directive|endif

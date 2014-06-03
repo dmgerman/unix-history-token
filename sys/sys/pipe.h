@@ -515,7 +515,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|pipe_named_ctor
 parameter_list|(
 name|struct

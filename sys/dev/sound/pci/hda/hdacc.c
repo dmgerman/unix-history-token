@@ -185,6 +185,7 @@ decl_stmt|;
 name|uint16_t
 name|revid
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2326,13 +2327,6 @@ block|, }
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|HDACC_CODECS_LEN
-value|(sizeof(hdacc_codecs) / sizeof(hdacc_codecs[0]))
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -2474,7 +2468,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|HDACC_CODECS_LEN
+name|nitems
+argument_list|(
+name|hdacc_codecs
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -2523,7 +2520,10 @@ if|if
 condition|(
 name|i
 operator|<
-name|HDACC_CODECS_LEN
+name|nitems
+argument_list|(
+name|hdacc_codecs
+argument_list|)
 condition|)
 block|{
 if|if
@@ -4272,11 +4272,7 @@ argument_list|,
 name|hdacc_pindump
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4318,9 +4314,9 @@ name|hdacc_driver
 argument_list|,
 name|hdacc_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

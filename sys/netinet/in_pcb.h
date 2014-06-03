@@ -438,10 +438,14 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* (x) route caching / general use */
+name|uint32_t
+name|inp_flowtype
+decl_stmt|;
+comment|/* (x) M_HASHTYPE value */
 name|u_int
 name|inp_ispare
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
 comment|/* (x) route caching / user cookie / 					 *     general use */
@@ -2854,6 +2858,29 @@ name|in_pcbinshash_nopcbgroup
 parameter_list|(
 name|struct
 name|inpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_pcbladdr
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+parameter_list|,
+name|struct
+name|ucred
 modifier|*
 parameter_list|)
 function_decl|;

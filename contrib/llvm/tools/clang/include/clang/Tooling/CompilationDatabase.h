@@ -208,6 +208,33 @@ name|string
 operator|>
 name|CommandLine
 expr_stmt|;
+comment|/// \brief An optional mapping from each file's path to its content for all
+comment|/// files needed for the compilation that are not available via the file
+comment|/// system.
+comment|///
+comment|/// Note that a tool implementation is required to fall back to the file
+comment|/// system if a source file is not provided in the mapped sources, as
+comment|/// compilation databases will usually not provide all files in mapped sources
+comment|/// for performance reasons.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|std
+operator|::
+name|string
+operator|>
+expr|>
+name|MappedSources
+expr_stmt|;
 block|}
 struct|;
 comment|/// \brief Interface for compilation databases.
@@ -333,6 +360,10 @@ literal|0
 expr_stmt|;
 comment|/// \brief Returns all compile commands for all the files in the compilation
 comment|/// database.
+comment|///
+comment|/// FIXME: Add a layer in Tooling that provides an interface to run a tool
+comment|/// over all files in a compilation database. Not all build systems have the
+comment|/// ability to provide a feasible implementation for \c getAllCompileCommands.
 name|virtual
 name|std
 operator|::

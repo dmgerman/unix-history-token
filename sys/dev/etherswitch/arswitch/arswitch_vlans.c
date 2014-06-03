@@ -667,7 +667,7 @@ end_comment
 
 begin_function
 name|void
-name|arswitch_reset_vlans
+name|ar8xxx_reset_vlans
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -852,7 +852,11 @@ condition|;
 name|i
 operator|++
 control|)
-name|arswitch_set_pvid
+name|sc
+operator|->
+name|hal
+operator|.
+name|arswitch_vlan_set_pvid
 argument_list|(
 name|sc
 argument_list|,
@@ -1065,31 +1069,21 @@ end_function
 
 begin_function
 name|int
-name|arswitch_getvgroup
+name|ar8xxx_getvgroup
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|arswitch_softc
+modifier|*
+name|sc
 parameter_list|,
 name|etherswitch_vlangroup_t
 modifier|*
 name|vg
 parameter_list|)
 block|{
-name|struct
-name|arswitch_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|ARSWITCH_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -1261,33 +1255,23 @@ end_function
 
 begin_function
 name|int
-name|arswitch_setvgroup
+name|ar8xxx_setvgroup
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|arswitch_softc
+modifier|*
+name|sc
 parameter_list|,
 name|etherswitch_vlangroup_t
 modifier|*
 name|vg
 parameter_list|)
 block|{
-name|struct
-name|arswitch_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|int
 name|err
 decl_stmt|,
 name|vid
 decl_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|ARSWITCH_LOCK_ASSERT
 argument_list|(
 name|sc
@@ -1521,7 +1505,7 @@ end_function
 
 begin_function
 name|int
-name|arswitch_get_pvid
+name|ar8xxx_get_pvid
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -1577,7 +1561,7 @@ end_function
 
 begin_function
 name|int
-name|arswitch_set_pvid
+name|ar8xxx_set_pvid
 parameter_list|(
 name|struct
 name|arswitch_softc

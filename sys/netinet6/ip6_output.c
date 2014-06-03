@@ -745,7 +745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * IP6 output. The packet in mbuf chain m contains a skeletal IP6  * header (with pri, len, nxt, hlim, src, dst).  * This function may modify ver and hlim only.  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  * If route_in6 ro is present and has ro_rt initialized, route lookup would be  * skipped and ro->ro_rt would be used. If ro is present but ro->ro_rt is NULL,  * then result of route lookup is stored in ro->ro_rt.  *  * type of "mtu": rt_rmx.rmx_mtu is u_long, ifnet.ifr_mtu is int, and  * nd_ifinfo.linkmtu is u_int32_t.  so we use u_long to hold largest one,  * which is rt_rmx.rmx_mtu.  *  * ifpp - XXX: just for statistics  */
+comment|/*  * IP6 output. The packet in mbuf chain m contains a skeletal IP6  * header (with pri, len, nxt, hlim, src, dst).  * This function may modify ver and hlim only.  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  * If route_in6 ro is present and has ro_rt initialized, route lookup would be  * skipped and ro->ro_rt would be used. If ro is present but ro->ro_rt is NULL,  * then result of route lookup is stored in ro->ro_rt.  *  * type of "mtu": rt_mtu is u_long, ifnet.ifr_mtu is int, and  * nd_ifinfo.linkmtu is u_int32_t.  so we use u_long to hold largest one,  * which is rt_mtu.  *  * ifpp - XXX: just for statistics  */
 end_comment
 
 begin_function
@@ -1939,38 +1939,23 @@ name|ro_rt
 operator|==
 name|NULL
 condition|)
-block|{
-name|struct
-name|flentry
-modifier|*
-name|fle
-decl_stmt|;
-comment|/* 		 * The flow table returns route entries valid for up to 30 		 * seconds; we rely on the remainder of ip_output() taking no 		 * longer than that long for the stability of ro_rt.  The 		 * flow ID assignment must have happened before this point. 		 */
-name|fle
-operator|=
-name|flowtable_lookup_mbuf
+operator|(
+name|void
+operator|)
+name|flowtable_lookup
 argument_list|(
-name|V_ip6_ft
+name|AF_INET6
 argument_list|,
 name|m
 argument_list|,
-name|AF_INET6
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fle
-operator|!=
-name|NULL
-condition|)
-name|flow_to_route_in6
-argument_list|(
-name|fle
-argument_list|,
+operator|(
+expr|struct
+name|route
+operator|*
+operator|)
 name|ro
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|again
@@ -2518,10 +2503,14 @@ operator|->
 name|rt_ifa
 operator|)
 expr_stmt|;
+name|counter_u64_add
+argument_list|(
 name|rt
 operator|->
-name|rt_use
-operator|++
+name|rt_pksent
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * The outgoing interface must be in the zone of source and 	 * destination addresses. 	 */
@@ -5861,9 +5850,7 @@ name|ro_pmtu
 operator|->
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 argument_list|)
 expr_stmt|;
 else|else
@@ -5873,9 +5860,7 @@ name|ro_pmtu
 operator|->
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 expr_stmt|;
 if|if
 condition|(
@@ -5922,9 +5907,7 @@ name|ro_pmtu
 operator|->
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 operator|=
 name|mtu
 expr_stmt|;

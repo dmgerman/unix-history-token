@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -2300,10 +2300,9 @@ name|KERN_INVALID_ADDRESS
 case|:
 return|return
 operator|(
-name|EINVAL
+name|ENOMEM
 operator|)
 return|;
-comment|/* Sun returns ENOMEM? */
 case|case
 name|KERN_INVALID_ARGUMENT
 case|:
@@ -4443,7 +4442,7 @@ if|if
 condition|(
 name|npages
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 operator|>

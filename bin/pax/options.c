@@ -4609,6 +4609,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|lstr
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* parts of string going onto the OPLIST */
 operator|*
 name|pt
 operator|++
@@ -4676,6 +4681,11 @@ operator|=
 name|opt
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|lstr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

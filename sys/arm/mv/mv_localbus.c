@@ -618,7 +618,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|localbus
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|localbus_driver
 argument_list|,
@@ -2111,7 +2111,7 @@ index|]
 operator|.
 name|pd_cache
 operator|=
-name|PTE_NOCACHE
+name|PTE_DEVICE
 expr_stmt|;
 comment|/* Copy data to structure used by localbus driver */
 name|localbus_banks

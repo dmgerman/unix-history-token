@@ -1435,9 +1435,9 @@ name|sc_mutex
 argument_list|,
 name|KBD_DRIVER_NAME
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|cv_init

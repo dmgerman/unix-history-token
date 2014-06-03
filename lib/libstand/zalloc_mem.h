@@ -56,13 +56,6 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|MEMNODE_SIZE_MASK
-value|((sizeof(MemNode)<= 8) ? 7 : 15)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ZNOTE_FREE
 value|0
 end_define

@@ -33,7 +33,7 @@ comment|/* last read byte count */
 name|size_t
 name|dbsz
 decl_stmt|;
-comment|/* buffer size */
+comment|/* block size */
 define|#
 directive|define
 name|ISCHR
@@ -118,7 +118,8 @@ name|uintmax_t
 name|bytes
 decl_stmt|;
 comment|/* # of bytes written */
-name|double
+name|struct
+name|timespec
 name|start
 decl_stmt|;
 comment|/* start time of dd */
@@ -135,189 +136,210 @@ begin_define
 define|#
 directive|define
 name|C_ASCII
-value|0x00001
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_BLOCK
-value|0x00002
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_BS
-value|0x00004
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_CBS
-value|0x00008
+value|0x00000008
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_COUNT
-value|0x00010
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_EBCDIC
-value|0x00020
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_FILES
-value|0x00040
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_IBS
-value|0x00080
+value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_IF
-value|0x00100
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_LCASE
-value|0x00200
+value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_NOERROR
-value|0x00400
+value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_NOTRUNC
-value|0x00800
+value|0x00000800
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_OBS
-value|0x01000
+value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_OF
-value|0x02000
+value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_OSYNC
-value|0x04000
+value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_PAREVEN
-value|0x08000
+value|0x00008000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_PARNONE
-value|0x100000
+value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_PARODD
-value|0x200000
+value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_PARSET
-value|0x400000
+value|0x00040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SEEK
-value|0x800000
+value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SKIP
-value|0x1000000
+value|0x00100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SPARSE
-value|0x2000000
+value|0x00200000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SWAB
-value|0x4000000
+value|0x00400000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_SYNC
-value|0x8000000
+value|0x00800000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_UCASE
-value|0x10000000
+value|0x01000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_UNBLOCK
-value|0x20000000
+value|0x02000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|C_FILL
-value|0x40000000
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_STATUS
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_NOXFER
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_NOINFO
+value|0x20000000
 end_define
 
 begin_define

@@ -401,15 +401,15 @@ name|MachineModuleInfoImpl
 operator|*
 name|ObjFileMMI
 block|;
-comment|/// FrameMoves - List of moves done by a function's prolog.  Used to construct
-comment|/// frame maps by debug and exception handling consumers.
+comment|/// List of moves done by a function's prolog.  Used to construct frame maps
+comment|/// by debug and exception handling consumers.
 name|std
 operator|::
 name|vector
 operator|<
-name|MachineMove
+name|MCCFIInstruction
 operator|>
-name|FrameMoves
+name|FrameInstructions
 block|;
 comment|/// CompactUnwindEncoding - If the target supports it, this is the compact
 comment|/// unwind encoding. It replaces a function's CIE and FDE.
@@ -883,7 +883,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// getFrameMoves - Returns a reference to a list of moves done in the current
+comment|/// \brief Returns a reference to a list of cfi instructions in the current
 end_comment
 
 begin_comment
@@ -895,21 +895,43 @@ comment|/// handling comsumers.
 end_comment
 
 begin_expr_stmt
+specifier|const
 name|std
 operator|::
 name|vector
 operator|<
-name|MachineMove
+name|MCCFIInstruction
 operator|>
 operator|&
-name|getFrameMoves
+name|getFrameInstructions
 argument_list|()
+specifier|const
 block|{
 return|return
-name|FrameMoves
+name|FrameInstructions
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+name|void
+name|addFrameInst
+parameter_list|(
+specifier|const
+name|MCCFIInstruction
+modifier|&
+name|Inst
+parameter_list|)
+block|{
+name|FrameInstructions
+operator|.
+name|push_back
+argument_list|(
+name|Inst
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/// getCompactUnwindEncoding - Returns the compact unwind encoding for a

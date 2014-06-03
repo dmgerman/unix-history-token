@@ -101,6 +101,15 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+comment|//----------------------------------------------------------------------
+comment|/// @class HistoryThread HistoryThread.h "HistoryThread.h"
+comment|/// @brief A thread object representing a backtrace from a previous point in the process execution
+comment|///
+comment|/// This subclass of Thread is used to provide a backtrace from earlier in
+comment|/// process execution.  It is given a backtrace list of pc addresses and
+comment|/// optionally a stop_id of when those pc addresses were collected, and it will
+comment|/// create stack frames for them.
+comment|//----------------------------------------------------------------------
 name|class
 name|HistoryThread
 range|:

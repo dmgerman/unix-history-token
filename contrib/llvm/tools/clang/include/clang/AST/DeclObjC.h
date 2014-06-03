@@ -2227,6 +2227,9 @@ specifier|const
 block|{
 return|return
 name|Body
+operator|.
+name|isValid
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -2304,7 +2307,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Body
+name|hasBody
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -2763,6 +2767,20 @@ name|ObjCPropertyDecl
 operator|*
 operator|>
 name|PropertyMap
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|ObjCProtocolDecl
+operator|*
+operator|,
+name|ObjCPropertyDecl
+operator|*
+operator|>
+name|ProtocolPropertyMap
 expr_stmt|;
 typedef|typedef
 name|llvm
@@ -5267,6 +5285,18 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|ObjCProtocolDecl
+modifier|*
+name|lookupNestedProtocol
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|Name
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// Lookup a method. First, we search locally. If a method isn't
 end_comment
@@ -5651,6 +5681,14 @@ name|getMostRecentDecl
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|using
+name|redeclarable_base
+operator|::
+name|isFirstDecl
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// Retrieves the canonical declaration of this Objective-C class.
 end_comment
@@ -5662,7 +5700,7 @@ name|getCanonicalDecl
 parameter_list|()
 block|{
 return|return
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 return|;
 block|}
@@ -5677,7 +5715,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 return|;
 block|}
@@ -5890,6 +5928,8 @@ argument_list|,
 argument|Expr *BW
 argument_list|,
 argument|bool synthesized
+argument_list|,
+argument|bool backingIvarReferencedInAccessor
 argument_list|)
 operator|:
 name|FieldDecl
@@ -5929,7 +5969,12 @@ argument_list|)
 block|,
 name|Synthesized
 argument_list|(
-argument|synthesized
+name|synthesized
+argument_list|)
+block|,
+name|BackingIvarReferencedInAccessor
+argument_list|(
+argument|backingIvarReferencedInAccessor
 argument_list|)
 block|{}
 name|public
@@ -5958,6 +6003,8 @@ argument_list|,
 argument|Expr *BW = NULL
 argument_list|,
 argument|bool synthesized=false
+argument_list|,
+argument|bool backingIvarReferencedInAccessor=false
 argument_list|)
 block|;
 specifier|static
@@ -6052,6 +6099,25 @@ argument_list|)
 return|;
 block|}
 name|void
+name|setBackingIvarReferencedInAccessor
+argument_list|(
+argument|bool val
+argument_list|)
+block|{
+name|BackingIvarReferencedInAccessor
+operator|=
+name|val
+block|;   }
+name|bool
+name|getBackingIvarReferencedInAccessor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BackingIvarReferencedInAccessor
+return|;
+block|}
+name|void
 name|setSynthesize
 argument_list|(
 argument|bool synth
@@ -6117,6 +6183,11 @@ literal|3
 block|;
 name|unsigned
 name|Synthesized
+operator|:
+literal|1
+block|;
+name|unsigned
+name|BackingIvarReferencedInAccessor
 operator|:
 literal|1
 block|; }
@@ -6985,6 +7056,14 @@ name|getMostRecentDecl
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|using
+name|redeclarable_base
+operator|::
+name|isFirstDecl
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// Retrieves the canonical declaration of this Objective-C protocol.
 end_comment
@@ -6996,7 +7075,7 @@ name|getCanonicalDecl
 parameter_list|()
 block|{
 return|return
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 return|;
 block|}
@@ -7011,7 +7090,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 return|;
 block|}
@@ -7029,6 +7108,23 @@ argument_list|,
 name|PropertyDeclOrder
 operator|&
 name|PO
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|collectInheritedProtocolProperties
+argument_list|(
+specifier|const
+name|ObjCPropertyDecl
+operator|*
+name|Property
+argument_list|,
+name|ProtocolPropertyMap
+operator|&
+name|PM
 argument_list|)
 decl|const
 decl_stmt|;

@@ -214,6 +214,12 @@ comment|/// represents a confused dependence (see also FullDependence). In most
 comment|/// cases (for output, flow, and anti dependences), the dependence implies
 comment|/// an ordering, where the source must precede the destination; in contrast,
 comment|/// input dependences are unordered.
+comment|///
+comment|/// When a dependence graph is built, each Dependence will be a member of
+comment|/// the set of predecessor edges for its destination instruction and a set
+comment|/// if successor edges for its source instruction. These sets are represented
+comment|/// as singly-linked lists, with the "next" fields stored in the dependence
+comment|/// itelf.
 name|class
 name|Dependence
 block|{
@@ -237,7 +243,17 @@ argument_list|)
 operator|,
 name|Dst
 argument_list|(
-argument|Destination
+name|Destination
+argument_list|)
+operator|,
+name|NextPredecessor
+argument_list|(
+name|NULL
+argument_list|)
+operator|,
+name|NextSuccessor
+argument_list|(
+argument|NULL
 argument_list|)
 block|{}
 name|virtual
@@ -579,6 +595,64 @@ name|Level
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getNextPredecessor - Returns the value of the NextPredecessor
+comment|/// field.
+specifier|const
+name|Dependence
+operator|*
+name|getNextPredecessor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextPredecessor
+return|;
+block|}
+comment|/// getNextSuccessor - Returns the value of the NextSuccessor
+comment|/// field.
+specifier|const
+name|Dependence
+operator|*
+name|getNextSuccessor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextSuccessor
+return|;
+block|}
+comment|/// setNextPredecessor - Sets the value of the NextPredecessor
+comment|/// field.
+name|void
+name|setNextPredecessor
+parameter_list|(
+specifier|const
+name|Dependence
+modifier|*
+name|pred
+parameter_list|)
+block|{
+name|NextPredecessor
+operator|=
+name|pred
+expr_stmt|;
+block|}
+comment|/// setNextSuccessor - Sets the value of the NextSuccessor
+comment|/// field.
+name|void
+name|setNextSuccessor
+parameter_list|(
+specifier|const
+name|Dependence
+modifier|*
+name|succ
+parameter_list|)
+block|{
+name|NextSuccessor
+operator|=
+name|succ
+expr_stmt|;
+block|}
 comment|/// dump - For debugging purposes, dumps a dependence to OS.
 comment|///
 name|void
@@ -598,6 +672,14 @@ name|Src
 decl_stmt|,
 modifier|*
 name|Dst
+decl_stmt|;
+specifier|const
+name|Dependence
+modifier|*
+name|NextPredecessor
+decl_stmt|,
+modifier|*
+name|NextSuccessor
 decl_stmt|;
 name|friend
 name|class
@@ -1997,11 +2079,9 @@ name|SmallBitVector
 operator|&
 name|Loops
 argument_list|,
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|Constraint
-argument_list|,
-literal|4
 operator|>
 operator|&
 name|Constraints
@@ -2150,6 +2230,17 @@ argument_list|(
 argument|Dependence::DVEntry&Level
 argument_list|,
 argument|const Constraint&CurConstraint
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|tryDelinearize
+argument_list|(
+argument|const SCEV *SrcSCEV
+argument_list|,
+argument|const SCEV *DstSCEV
+argument_list|,
+argument|SmallVectorImpl<Subscript>&Pair
 argument_list|)
 specifier|const
 block|;

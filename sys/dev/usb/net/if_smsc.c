@@ -156,6 +156,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_platform.h"
 end_include
 
@@ -3755,6 +3767,7 @@ expr_stmt|;
 comment|/* The checksum appears to be simplistically calculated 					 * over the udp/tcp header and data up to the end of the 					 * eth frame.  Which means if the eth frame is padded 					 * the csum calculation is incorrectly performed over 					 * the padding bytes as well. Therefore to be safe we 					 * ignore the H/W csum on frames less than or equal to 					 * 64 bytes. 					 * 					 * Ignore H/W csum for non-IPv4 packets. 					 */
 if|if
 condition|(
+operator|(
 name|be16toh
 argument_list|(
 name|eh
@@ -3763,10 +3776,60 @@ name|ether_type
 argument_list|)
 operator|==
 name|ETHERTYPE_IP
+operator|)
 operator|&&
+operator|(
 name|pktlen
 operator|>
 name|ETHER_MIN_LEN
+operator|)
+condition|)
+block|{
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
+name|ip
+operator|=
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+operator|(
+name|eh
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|ip_v
+operator|==
+name|IPVERSION
+operator|)
+operator|&&
+operator|(
+operator|(
+name|ip
+operator|->
+name|ip_p
+operator|==
+name|IPPROTO_TCP
+operator|)
+operator|||
+operator|(
+name|ip
+operator|->
+name|ip_p
+operator|==
+name|IPPROTO_UDP
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* Indicate the UDP/TCP csum has been calculated */
@@ -3778,7 +3841,7 @@ name|csum_flags
 operator||=
 name|CSUM_DATA_VALID
 expr_stmt|;
-comment|/* Copy the TCP/UDP checksum from the last 2 bytes 						 * of the transfer and put in the csum_data field. 						 */
+comment|/* Copy the TCP/UDP checksum from the last 2 bytes 							 * of the transfer and put in the csum_data field. 							 */
 name|usbd_copy_out
 argument_list|(
 name|pc
@@ -3799,7 +3862,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* The data is copied in network order, but the 						 * csum algorithm in the kernel expects it to be 						 * in host network order. 						 */
+comment|/* The data is copied in network order, but the 							 * csum algorithm in the kernel expects it to be 							 * in host network order. 							 */
 name|m
 operator|->
 name|m_pkthdr
@@ -3828,6 +3891,7 @@ operator|.
 name|csum_data
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Need to adjust the offset as well or we'll be off 					 * by 2 because the csum is removed from the packet 					 * length. 					 */
 name|off

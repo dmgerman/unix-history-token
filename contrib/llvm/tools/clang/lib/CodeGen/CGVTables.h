@@ -121,24 +121,16 @@ name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
-name|VTableContext
-name|VTContext
+comment|// FIXME: Consider moving ItaniumVTContext and MicrosoftVTContext into
+comment|// respective CXXABI classes?
+name|ItaniumVTableContext
+name|ItaniumVTContext
 decl_stmt|;
-comment|/// VTables - All the vtables which have been defined.
-name|llvm
-operator|::
-name|DenseMap
+name|OwningPtr
 operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
+name|MicrosoftVTableContext
 operator|>
-name|VTables
+name|MicrosoftVTContext
 expr_stmt|;
 comment|/// VTableAddressPointsMapTy - Address points for a single vtable.
 typedef|typedef
@@ -196,9 +188,9 @@ comment|/// indices.
 name|SecondaryVirtualPointerIndicesMapTy
 name|SecondaryVirtualPointerIndices
 decl_stmt|;
-comment|/// EmitThunk - Emit a single thunk.
+comment|/// emitThunk - Emit a single thunk.
 name|void
-name|EmitThunk
+name|emitThunk
 parameter_list|(
 name|GlobalDecl
 name|GD
@@ -209,15 +201,13 @@ modifier|&
 name|Thunk
 parameter_list|,
 name|bool
-name|UseAvailableExternallyLinkage
+name|ForVTable
 parameter_list|)
 function_decl|;
-comment|/// MaybeEmitThunkAvailableExternally - Try to emit the given thunk with
-comment|/// available_externally linkage to allow for inlining of thunks.
-comment|/// This will be done iff optimizations are enabled and the member function
-comment|/// doesn't contain any incomplete types.
+comment|/// maybeEmitThunkForVTable - Emit the given thunk for the vtable if needed by
+comment|/// the ABI.
 name|void
-name|MaybeEmitThunkAvailableExternally
+name|maybeEmitThunkForVTable
 parameter_list|(
 name|GlobalDecl
 name|GD
@@ -228,6 +218,8 @@ modifier|&
 name|Thunk
 parameter_list|)
 function_decl|;
+name|public
+label|:
 comment|/// CreateVTableInitializer - Create a vtable initializer for the given record
 comment|/// decl.
 comment|/// \param Components - The vtable components; this is really an array of
@@ -249,8 +241,6 @@ argument_list|,
 argument|unsigned NumVTableThunks
 argument_list|)
 expr_stmt|;
-name|public
-label|:
 name|CodeGenVTables
 argument_list|(
 name|CodeGenModule
@@ -258,26 +248,28 @@ operator|&
 name|CGM
 argument_list|)
 expr_stmt|;
-name|VTableContext
+name|ItaniumVTableContext
 modifier|&
-name|getVTableContext
+name|getItaniumVTableContext
 parameter_list|()
 block|{
 return|return
-name|VTContext
+name|ItaniumVTContext
 return|;
 block|}
-comment|/// needsVTTParameter - Return whether the given global decl needs a VTT
-comment|/// parameter, which it does if it's a base constructor or destructor with
-comment|/// virtual bases.
-specifier|static
-name|bool
-name|needsVTTParameter
-parameter_list|(
-name|GlobalDecl
-name|GD
-parameter_list|)
-function_decl|;
+name|MicrosoftVTableContext
+modifier|&
+name|getMicrosoftVTableContext
+parameter_list|()
+block|{
+return|return
+operator|*
+name|MicrosoftVTContext
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
 comment|/// getSubVTTIndex - Return the index of the sub-VTT for the base class of the
 comment|/// given record decl.
 name|uint64_t
@@ -320,42 +312,6 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
-comment|/// GetAddrOfVTable - Get the address of the vtable for the given record decl.
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|GetAddrOfVTable
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|)
-expr_stmt|;
-comment|/// EmitVTableDefinition - Emit the definition of the given vtable.
-name|void
-name|EmitVTableDefinition
-argument_list|(
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|VTable
-argument_list|,
-name|llvm
-operator|::
-name|GlobalVariable
-operator|::
-name|LinkageTypes
-name|Linkage
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|)
-decl_stmt|;
 comment|/// GenerateConstructionVTable - Generate a construction vtable for the given
 comment|/// base subobject.
 name|llvm

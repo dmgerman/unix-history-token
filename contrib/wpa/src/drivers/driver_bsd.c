@@ -7468,6 +7468,26 @@ name|WPA_DRIVER_CAPA_KEY_MGMT_WPA2
 operator||
 name|WPA_DRIVER_CAPA_KEY_MGMT_WPA2_PSK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|drv
+operator|->
+name|capa
+operator|.
+name|enc
+operator||=
+name|WPA_DRIVER_CAPA_ENC_WEP40
+operator||
+name|WPA_DRIVER_CAPA_ENC_WEP104
+operator||
+name|WPA_DRIVER_CAPA_ENC_TKIP
+operator||
+name|WPA_DRIVER_CAPA_ENC_CCMP
+expr_stmt|;
+else|#
+directive|else
+comment|/* 	 * XXX 	 * FreeBSD exports hardware cryptocaps.  These have no meaning for wpa 	 * since net80211 performs software crypto. 	 */
 if|if
 condition|(
 name|devcaps
@@ -7518,6 +7538,8 @@ name|enc
 operator||=
 name|WPA_DRIVER_CAPA_ENC_CCMP
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|devcaps

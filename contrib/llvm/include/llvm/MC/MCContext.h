@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -156,6 +162,9 @@ decl_stmt|;
 name|class
 name|MCSectionELF
 decl_stmt|;
+name|class
+name|MCSectionCOFF
+decl_stmt|;
 comment|/// MCContext - Context object for machine code objects.  This class owns all
 comment|/// of the sections that it creates.
 comment|///
@@ -203,13 +212,13 @@ decl_stmt|;
 comment|/// The MCAsmInfo for this target.
 specifier|const
 name|MCAsmInfo
-modifier|&
+modifier|*
 name|MAI
 decl_stmt|;
 comment|/// The MCRegisterInfo for this target.
 specifier|const
 name|MCRegisterInfo
-modifier|&
+modifier|*
 name|MRI
 decl_stmt|;
 comment|/// The MCObjectFileInfo for this target.
@@ -292,9 +301,10 @@ name|bool
 name|SecureLogUsed
 decl_stmt|;
 comment|/// The compilation directory to use for DW_AT_comp_dir.
-name|std
-operator|::
-name|string
+name|SmallString
+operator|<
+literal|128
+operator|>
 name|CompilationDir
 expr_stmt|;
 comment|/// The main file name if passed in explicitly.
@@ -469,12 +479,12 @@ name|MCContext
 parameter_list|(
 specifier|const
 name|MCAsmInfo
-modifier|&
+modifier|*
 name|MAI
 parameter_list|,
 specifier|const
 name|MCRegisterInfo
-modifier|&
+modifier|*
 name|MRI
 parameter_list|,
 specifier|const
@@ -512,7 +522,7 @@ return|;
 block|}
 specifier|const
 name|MCAsmInfo
-operator|&
+operator|*
 name|getAsmInfo
 argument_list|()
 specifier|const
@@ -523,7 +533,7 @@ return|;
 block|}
 specifier|const
 name|MCRegisterInfo
-operator|&
+operator|*
 name|getRegisterInfo
 argument_list|()
 specifier|const
@@ -774,7 +784,7 @@ name|CreateELFGroupSection
 parameter_list|()
 function_decl|;
 specifier|const
-name|MCSection
+name|MCSectionCOFF
 modifier|*
 name|getCOFFSection
 parameter_list|(
@@ -784,41 +794,47 @@ parameter_list|,
 name|unsigned
 name|Characteristics
 parameter_list|,
+name|SectionKind
+name|Kind
+parameter_list|,
+name|StringRef
+name|COMDATSymName
+parameter_list|,
 name|int
 name|Selection
+parameter_list|,
+specifier|const
+name|MCSectionCOFF
+modifier|*
+name|Assoc
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+specifier|const
+name|MCSectionCOFF
+modifier|*
+name|getCOFFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Characteristics
 parameter_list|,
 name|SectionKind
 name|Kind
 parameter_list|)
 function_decl|;
 specifier|const
-name|MCSection
+name|MCSectionCOFF
 modifier|*
 name|getCOFFSection
 parameter_list|(
 name|StringRef
 name|Section
-parameter_list|,
-name|unsigned
-name|Characteristics
-parameter_list|,
-name|SectionKind
-name|Kind
 parameter_list|)
-block|{
-return|return
-name|getCOFFSection
-argument_list|(
-name|Section
-argument_list|,
-name|Characteristics
-argument_list|,
-literal|0
-argument_list|,
-name|Kind
-argument_list|)
-return|;
-block|}
+function_decl|;
 comment|/// @}
 comment|/// @name Dwarf Management
 comment|/// @{
@@ -826,11 +842,8 @@ comment|/// \brief Get the compilation directory for DW_AT_comp_dir
 comment|/// This can be overridden by clients which want to control the reported
 comment|/// compilation directory and have it be something other than the current
 comment|/// working directory.
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+comment|/// Returns an empty string if the current directory cannot be determined.
+name|StringRef
 name|getCompilationDir
 argument_list|()
 specifier|const
@@ -1539,7 +1552,7 @@ modifier|*
 name|Ptr
 parameter_list|)
 block|{     }
-comment|// Unrecoverable error has occured. Display the best diagnostic we can
+comment|// Unrecoverable error has occurred. Display the best diagnostic we can
 comment|// and bail via exit(1). For now, most MC backend errors are unrecoverable.
 comment|// FIXME: We should really do something about that.
 name|LLVM_ATTRIBUTE_NORETURN

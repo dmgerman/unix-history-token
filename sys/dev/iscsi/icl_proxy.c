@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -628,6 +628,12 @@ parameter_list|(
 name|struct
 name|socket
 modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 parameter_list|)
 block|{
@@ -1186,6 +1192,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 call|(
 name|ils
@@ -1196,6 +1203,12 @@ name|il_accept
 call|)
 argument_list|(
 name|so
+argument_list|,
+name|sa
+argument_list|,
+name|ils
+operator|->
+name|ils_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -1225,6 +1238,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
+parameter_list|,
+name|int
+name|portal_id
 parameter_list|)
 block|{
 name|struct
@@ -1465,6 +1481,12 @@ name|ils_socket
 operator|=
 name|so
 expr_stmt|;
+name|ils
+operator|->
+name|ils_id
+operator|=
+name|portal_id
+expr_stmt|;
 name|error
 operator|=
 name|kthread_add
@@ -1577,6 +1599,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
+parameter_list|,
+name|int
+name|portal_id
 parameter_list|)
 block|{
 if|if
@@ -1612,6 +1637,8 @@ argument_list|,
 name|protocol
 argument_list|,
 name|sa
+argument_list|,
+name|portal_id
 argument_list|)
 operator|)
 return|;
@@ -1631,6 +1658,8 @@ argument_list|,
 name|protocol
 argument_list|,
 name|sa
+argument_list|,
+name|portal_id
 argument_list|)
 operator|)
 return|;

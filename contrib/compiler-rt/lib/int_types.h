@@ -129,8 +129,25 @@ end_typedef
 begin_if
 if|#
 directive|if
-name|__x86_64
+name|__LP64__
 end_if
+
+begin_define
+define|#
+directive|define
+name|CRT_HAS_128BIT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRT_HAS_128BIT
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -316,7 +333,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __x86_64 */
+comment|/* CRT_HAS_128BIT */
 end_comment
 
 begin_typedef

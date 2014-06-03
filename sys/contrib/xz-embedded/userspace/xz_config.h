@@ -16,6 +16,14 @@ name|XZ_CONFIG_H
 end_define
 
 begin_comment
+comment|/* Uncomment to enable CRC64 support. */
+end_comment
+
+begin_comment
+comment|/* #define XZ_USE_CRC64 */
+end_comment
+
+begin_comment
 comment|/* Uncomment as needed to enable BCJ filter decoders. */
 end_comment
 
@@ -43,11 +51,60 @@ begin_comment
 comment|/* #define XZ_DEC_SPARC */
 end_comment
 
+begin_comment
+comment|/*  * MSVC doesn't support modern C but XZ Embedded is mostly C89  * so these are enough.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|bool
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|true
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|false
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|inline
+value|__inline
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<stdbool.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

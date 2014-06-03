@@ -4102,9 +4102,6 @@ name|uint8_t
 name|tc_en
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
 name|union
 name|ccb
 modifier|*
@@ -4210,8 +4207,6 @@ literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ignore illegal request errors, as they are quite common and we 	 * will print something out in that case anyway. 	 */
-name|err
-operator|=
 name|cam_periph_runccb
 argument_list|(
 name|ccb
@@ -4340,8 +4335,6 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
 name|cam_periph_runccb
 argument_list|(
 name|ccb
@@ -7256,10 +7249,6 @@ name|enc_cache_t
 modifier|*
 name|enc_cache
 decl_stmt|;
-name|ses_cache_t
-modifier|*
-name|ses_cache
-decl_stmt|;
 name|enc_element_t
 modifier|*
 name|element
@@ -7270,12 +7259,6 @@ operator|&
 name|enc
 operator|->
 name|enc_daemon_cache
-expr_stmt|;
-name|ses_cache
-operator|=
-name|enc_cache
-operator|->
-name|private
 expr_stmt|;
 name|ses_iter_init
 argument_list|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.c,v 1.165 2011/10/06 22:29:12 kristaps Exp $ */
+comment|/*	$Id: main.c,v 1.167 2012/11/19 17:22:26 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2011 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2011, 2012 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -439,6 +439,10 @@ name|enum
 name|mandoclevel
 name|rc
 decl_stmt|;
+name|char
+modifier|*
+name|defos
+decl_stmt|;
 name|progname
 operator|=
 name|strrchr
@@ -498,6 +502,10 @@ name|wlevel
 operator|=
 name|MANDOCLEVEL_FATAL
 expr_stmt|;
+name|defos
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* LINTED */
 while|while
 condition|(
@@ -513,7 +521,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"m:O:T:VW:"
+literal|"I:m:O:T:VW:"
 argument_list|)
 operator|)
 condition|)
@@ -522,6 +530,74 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+operator|(
+literal|'I'
+operator|)
+case|:
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"os="
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-I%s: Bad argument\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_BADARG
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|defos
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-I%s: Duplicate argument\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+name|MANDOCLEVEL_BADARG
+operator|)
+return|;
+block|}
+name|defos
+operator|=
+name|mandoc_strdup
+argument_list|(
+name|optarg
+operator|+
+literal|3
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 operator|(
 literal|'m'
@@ -662,6 +738,8 @@ name|mmsg
 argument_list|,
 operator|&
 name|curp
+argument_list|,
+name|defos
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Conditionally start up the lookaside buffer before parsing. 	 */
@@ -779,6 +857,11 @@ operator|.
 name|mp
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|defos
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -832,12 +915,12 @@ name|stderr
 argument_list|,
 literal|"usage: %s "
 literal|"[-V] "
-literal|"[-foption] "
+literal|"[-Ios=name] "
 literal|"[-mformat] "
 literal|"[-Ooption] "
 literal|"[-Toutput] "
-literal|"[-Wlevel] "
-literal|"[file...]\n"
+literal|"[-Wlevel]\n"
+literal|"\t      [file ...]\n"
 argument_list|,
 name|progname
 argument_list|)

@@ -43,7 +43,7 @@ value|__attribute__((packed))
 end_define
 
 begin_comment
-comment|/*  * SCTP protocol - RFC2960.  */
+comment|/*  * SCTP protocol - RFC4960.  */
 end_comment
 
 begin_struct
@@ -65,7 +65,7 @@ comment|/* verification tag of packet */
 name|uint32_t
 name|checksum
 decl_stmt|;
-comment|/* Adler32 C-Sum */
+comment|/* CRC32C checksum */
 comment|/* chunks follow... */
 block|}
 name|SCTP_PACKED
@@ -1357,6 +1357,25 @@ end_comment
 
 begin_struct
 struct|struct
+name|sctp_gen_error_cause
+block|{
+name|uint16_t
+name|code
+decl_stmt|;
+name|uint16_t
+name|length
+decl_stmt|;
+name|uint8_t
+name|info
+index|[]
+decl_stmt|;
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_error_cause
 block|{
 name|uint16_t
@@ -1471,6 +1490,24 @@ name|sctp_chunkhdr
 name|ch
 decl_stmt|;
 comment|/* header from chunk in error */
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_error_no_user_data
+block|{
+name|struct
+name|sctp_error_cause
+name|cause
+decl_stmt|;
+comment|/* code=SCTP_CAUSE_NO_USER_DATA */
+name|uint32_t
+name|tsn
+decl_stmt|;
+comment|/* TSN of the empty data chunk */
 block|}
 name|SCTP_PACKED
 struct|;

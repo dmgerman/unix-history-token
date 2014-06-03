@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: buffer.c,v 1.33 2013/05/17 00:13:13 djm Exp $ */
+comment|/* $OpenBSD: buffer.c,v 1.35 2014/02/02 03:44:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -16,6 +16,14 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -39,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -161,13 +175,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|memset
+name|explicit_bzero
 argument_list|(
 name|buffer
 operator|->
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|buffer
 operator|->

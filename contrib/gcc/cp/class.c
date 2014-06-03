@@ -5333,6 +5333,27 @@ argument_list|(
 name|basetype
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+if|if
+condition|(
+name|CLASSTYPE_HAS_NONTRIVIAL_DESTRUCTOR_BODY
+argument_list|(
+name|basetype
+argument_list|)
+operator|||
+name|CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE
+argument_list|(
+name|basetype
+argument_list|)
+condition|)
+name|CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE
+argument_list|(
+name|t
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 name|TYPE_HAS_COMPLEX_ASSIGN_REF
 argument_list|(
 name|t
@@ -5908,6 +5929,28 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+name|CLASSTYPE_HAS_NONTRIVIAL_DESTRUCTOR_BODY
+argument_list|(
+name|variants
+argument_list|)
+operator|=
+name|CLASSTYPE_HAS_NONTRIVIAL_DESTRUCTOR_BODY
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+name|CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE
+argument_list|(
+name|variants
+argument_list|)
+operator|=
+name|CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 name|TYPE_POLYMORPHIC_P
 argument_list|(
 name|variants
@@ -9710,6 +9753,16 @@ name|lazy_p
 init|=
 name|true
 decl_stmt|;
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+comment|/* Since this is an empty destructor, it can only be nontrivial 	     because one of its base classes has a destructor that must be 	     called. */
+name|CLASSTYPE_DESTRUCTOR_NONTRIVIAL_BECAUSE_OF_BASE
+argument_list|(
+name|t
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 if|if
 condition|(
 name|TYPE_FOR_JAVA
@@ -13680,6 +13733,8 @@ argument_list|(
 name|x
 argument_list|)
 condition|)
+comment|/* APPLE LOCAL begin omit calls to empty destructors 5559195 */
+block|{
 name|TYPE_HAS_NONTRIVIAL_DESTRUCTOR
 argument_list|(
 name|t
@@ -13687,6 +13742,16 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Conservatively assume that destructor body is nontrivial.  Will 	     be unmarked during parsing of function body if it happens to be 	     trivial. */
+name|CLASSTYPE_HAS_NONTRIVIAL_DESTRUCTOR_BODY
+argument_list|(
+name|t
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* APPLE LOCAL end omit calls to empty destructors 5559195 */
 block|}
 block|}
 end_function

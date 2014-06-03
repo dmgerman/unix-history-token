@@ -1984,13 +1984,13 @@ comment|/* Administer 802.11. */
 end_comment
 
 begin_comment
-comment|/*  * AppleTalk privileges.  */
+comment|/*  * Placeholder for AppleTalk privileges, not supported anymore.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRIV_NETATALK_RESERVEDPORT
+name|_PRIV_NETATALK_RESERVEDPORT
 value|450
 end_define
 
@@ -2262,14 +2262,25 @@ begin_comment
 comment|/* Allow bind to any address. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_NETINET_HASHKEY
+value|507
+end_define
+
 begin_comment
-comment|/*  * IPX/SPX privileges.  */
+comment|/* Get and set hash keys for IPv4/6. */
+end_comment
+
+begin_comment
+comment|/*  * Placeholders for IPX/SPX privileges, not supported any more.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PRIV_NETIPX_RESERVEDPORT
+name|_PRIV_NETIPX_RESERVEDPORT
 value|520
 end_define
 
@@ -2280,7 +2291,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_NETIPX_RAW
+name|_PRIV_NETIPX_RAW
 value|521
 end_define
 

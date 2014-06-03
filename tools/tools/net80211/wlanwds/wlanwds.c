@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netatalk/at.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"net80211/ieee80211_ioctl.h"
 end_include
 

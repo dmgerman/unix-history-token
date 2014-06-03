@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,33 +23,10 @@ directive|include
 file|<SigAction.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|SVR4_ACTION
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|_POSIX_SOURCE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tstp.c,v 1.37 2008/05/03 16:24:56 tom Exp $"
+literal|"$Id: lib_tstp.c,v 1.47 2013/04/27 19:50:17 tom Exp $"
 argument_list|)
 end_macro
 
@@ -114,12 +91,17 @@ condition|(
 name|sig
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SIGALRM
 case|case
 name|SIGALRM
 case|:
 return|return
 literal|"SIGALRM"
 return|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SIGCONT
@@ -137,12 +119,17 @@ case|:
 return|return
 literal|"SIGINT"
 return|;
+ifdef|#
+directive|ifdef
+name|SIGQUIT
 case|case
 name|SIGQUIT
 case|:
 return|return
 literal|"SIGQUIT"
 return|;
+endif|#
+directive|endif
 case|case
 name|SIGTERM
 case|:
@@ -208,13 +195,19 @@ end_if
 begin_function
 specifier|static
 name|void
-name|tstp
+name|handle_SIGTSTP
 parameter_list|(
 name|int
 name|dummy
 name|GCC_UNUSED
 parameter_list|)
 block|{
+name|SCREEN
+modifier|*
+name|sp
+init|=
+name|CURRENT_SCREEN
+decl_stmt|;
 name|sigset_t
 name|mask
 decl_stmt|,
@@ -233,22 +226,28 @@ name|sigttou_blocked
 decl_stmt|;
 endif|#
 directive|endif
+name|_nc_globals
+operator|.
+name|have_sigtstp
+operator|=
+literal|1
+expr_stmt|;
 name|T
 argument_list|(
 operator|(
-literal|"tstp() called"
+literal|"handle_SIGTSTP() called"
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * The user may have changed the prog_mode tty bits, so save them.      *      * But first try to detect whether we still are in the foreground      * process group - if not, an interactive shell may already have      * taken ownership of the tty and modified the settings when our      * parent was stopped before us, and we would likely pick up the      * settings already modified by the shell.      */
 if|if
 condition|(
-name|SP
+name|sp
 operator|!=
 literal|0
 operator|&&
 operator|!
-name|SP
+name|sp
 operator|->
 name|_endwin
 condition|)
@@ -268,9 +267,14 @@ argument_list|()
 condition|)
 endif|#
 directive|endif
+name|NCURSES_SP_NAME
+function_decl|(
 name|def_prog_mode
-argument_list|()
-expr_stmt|;
+function_decl|)
+parameter_list|(
+name|NCURSES_SP_ARG
+parameter_list|)
+function_decl|;
 comment|/*      * Block window change and timer signals.  The latter      * is because applications use timers to decide when      * to repaint the screen.      */
 operator|(
 name|void
@@ -281,6 +285,9 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGALRM
 operator|(
 name|void
 operator|)
@@ -292,6 +299,8 @@ argument_list|,
 name|SIGALRM
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|USE_SIGWINCH
@@ -378,9 +387,14 @@ block|}
 endif|#
 directive|endif
 comment|/*      * End window mode, which also resets the terminal state to the      * original (pre-curses) modes.      */
+name|NCURSES_SP_NAME
+function_decl|(
 name|endwin
-argument_list|()
-expr_stmt|;
+function_decl|)
+parameter_list|(
+name|NCURSES_SP_ARG
+parameter_list|)
+function_decl|;
 comment|/* Unblock SIGTSTP. */
 operator|(
 name|void
@@ -509,17 +523,32 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|NCURSES_SP_NAME
+function_decl|(
 name|flushinp
-argument_list|()
-expr_stmt|;
+function_decl|)
+parameter_list|(
+name|NCURSES_SP_ARG
+parameter_list|)
+function_decl|;
 comment|/*      * If the user modified the tty state while suspended, he wants      * those changes to stick.  So save the new "default" terminal state.      */
+name|NCURSES_SP_NAME
+function_decl|(
 name|def_shell_mode
-argument_list|()
-expr_stmt|;
+function_decl|)
+parameter_list|(
+name|NCURSES_SP_ARG
+parameter_list|)
+function_decl|;
 comment|/*      * This relies on the fact that doupdate() will restore the      * program-mode tty state, and issue enter_ca_mode if need be.      */
+name|NCURSES_SP_NAME
+function_decl|(
 name|doupdate
-argument_list|()
-expr_stmt|;
+function_decl|)
+parameter_list|(
+name|NCURSES_SP_ARG
+parameter_list|)
+function_decl|;
 comment|/* Reset the signals. */
 operator|(
 name|void
@@ -549,13 +578,19 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|cleanup
+name|handle_SIGINT
 parameter_list|(
 name|int
 name|sig
 parameter_list|)
 block|{
-comment|/*      * Actually, doing any sort of I/O from within an signal handler is      * "unsafe".  But we'll _try_ to clean up the screen and terminal      * settings on the way out.      */
+name|SCREEN
+modifier|*
+name|sp
+init|=
+name|CURRENT_SCREEN
+decl_stmt|;
+comment|/*      * Much of this is unsafe from a signal handler.  But we'll _try_ to clean      * up the screen and terminal settings on the way out.      *      * There are at least the following problems:      * 1) Walking the SCREEN list is unsafe, since all list management      *    is done without any signal blocking.      * 2) On systems which have REENTRANT turned on, set_term() uses      *    _nc_lock_global() which could deadlock or misbehave in other ways.      * 3) endwin() calls all sorts of stuff, many of which use stdio or      *    other library functions which are clearly unsafe.      */
 if|if
 condition|(
 operator|!
@@ -571,7 +606,7 @@ name|SIGINT
 operator|||
 name|sig
 operator|==
-name|SIGQUIT
+name|SIGTERM
 operator|)
 condition|)
 block|{
@@ -666,15 +701,12 @@ condition|)
 block|{
 name|scan
 operator|->
-name|_cleanup
-operator|=
-name|TRUE
-expr_stmt|;
-name|scan
-operator|->
 name|_outch
 operator|=
+name|NCURSES_SP_NAME
+argument_list|(
 name|_nc_outch
+argument_list|)
 expr_stmt|;
 block|}
 name|set_term
@@ -682,24 +714,29 @@ argument_list|(
 name|scan
 argument_list|)
 expr_stmt|;
+name|NCURSES_SP_NAME
+function_decl|(
 name|endwin
-argument_list|()
-expr_stmt|;
+function_decl|)
+parameter_list|(
+name|NCURSES_SP_ARG
+parameter_list|)
+function_decl|;
 if|if
 condition|(
-name|SP
+name|sp
 condition|)
-name|SP
+name|sp
 operator|->
 name|_endwin
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* in case we have an atexit! */
+comment|/* in case of reuse */
 block|}
 block|}
 block|}
-name|exit
+name|_exit
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -716,7 +753,7 @@ end_if
 begin_function
 specifier|static
 name|void
-name|sigwinch
+name|handle_SIGWINCH
 parameter_list|(
 name|int
 name|sig
@@ -729,6 +766,47 @@ name|have_sigwinch
 operator|=
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|USE_PTHREADS_EINTR
+if|if
+condition|(
+name|_nc_globals
+operator|.
+name|read_thread
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|pthread_equal
+argument_list|(
+name|pthread_self
+argument_list|()
+argument_list|,
+name|_nc_globals
+operator|.
+name|read_thread
+argument_list|)
+condition|)
+name|pthread_kill
+argument_list|(
+name|_nc_globals
+operator|.
+name|read_thread
+argument_list|,
+name|SIGWINCH
+argument_list|)
+expr_stmt|;
+name|_nc_globals
+operator|.
+name|read_thread
+operator|=
+literal|0
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -753,7 +831,7 @@ parameter_list|(
 name|int
 name|sig
 parameter_list|,
-name|RETSIGTYPE
+name|void
 function_decl|(
 modifier|*
 name|handler
@@ -901,7 +979,7 @@ block|}
 else|#
 directive|else
 comment|/* !HAVE_SIGACTION */
-name|RETSIGTYPE
+name|void
 function_decl|(
 modifier|*
 name|ohandler
@@ -1011,7 +1089,7 @@ end_macro
 begin_macro
 name|_nc_signal_handler
 argument_list|(
-argument|bool enable
+argument|int enable
 argument_list|)
 end_macro
 
@@ -1145,7 +1223,7 @@ name|new_sigaction
 operator|.
 name|sa_handler
 operator|=
-name|tstp
+name|handle_SIGTSTP
 expr_stmt|;
 operator|(
 name|void
@@ -1190,14 +1268,14 @@ name|CatchIfDefault
 argument_list|(
 name|SIGINT
 argument_list|,
-name|cleanup
+name|handle_SIGINT
 argument_list|)
 expr_stmt|;
 name|CatchIfDefault
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|cleanup
+name|handle_SIGINT
 argument_list|)
 expr_stmt|;
 if|#
@@ -1207,7 +1285,7 @@ name|CatchIfDefault
 argument_list|(
 name|SIGWINCH
 argument_list|,
-name|sigwinch
+name|handle_SIGWINCH
 argument_list|)
 expr_stmt|;
 endif|#

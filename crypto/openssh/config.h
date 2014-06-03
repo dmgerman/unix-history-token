@@ -131,6 +131,14 @@ comment|/* #undef BROKEN_READV_COMPARISON */
 end_comment
 
 begin_comment
+comment|/* NetBSD read function is sometimes redirected, breaking atomicio comparisons    against it */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_READ_COMPARISON */
+end_comment
+
+begin_comment
 comment|/* Define if you have a broken realpath. */
 end_comment
 
@@ -203,7 +211,7 @@ comment|/* #undef BROKEN_SNPRINTF */
 end_comment
 
 begin_comment
-comment|/* FreeBSD strnvis does not do what we need */
+comment|/* FreeBSD strnvis argument order is swapped compared to OpenBSD */
 end_comment
 
 begin_define
@@ -527,6 +535,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `arc4random_stir' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ARC4RANDOM_STIR
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `arc4random_uniform' function. */
 end_comment
 
@@ -622,6 +641,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `bcrypt_pbkdf' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BCRYPT_PBKDF */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `bindresvport_sa' function. */
 end_comment
 
@@ -631,6 +658,54 @@ directive|define
 name|HAVE_BINDRESVPORT_SA
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `blf_enc' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLF_ENC */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<blf.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLF_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `Blowfish_expand0state' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLOWFISH_EXPAND0STATE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `Blowfish_expandstate' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLOWFISH_EXPANDSTATE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `Blowfish_initstate' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLOWFISH_INITSTATE */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `Blowfish_stream2word' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BLOWFISH_STREAM2WORD */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `BN_is_prime_ex' function. */
@@ -666,6 +741,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_BSTRING_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `cap_rights_limit' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CAP_RIGHTS_LIMIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `clock' function. */
@@ -1096,6 +1182,61 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `EVP_DigestFinal_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_DIGESTFINAL_EX
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_DigestInit_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_DIGESTINIT_EX
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_MD_CTX_cleanup' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_MD_CTX_CLEANUP
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_MD_CTX_copy_ex' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_MD_CTX_COPY_EX
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `EVP_MD_CTX_init' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EVP_MD_CTX_INIT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `EVP_sha256' function. */
 end_comment
 
@@ -1112,6 +1253,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_EXIT_IN_UTMP */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `explicit_bzero' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EXPLICIT_BZERO */
 end_comment
 
 begin_comment
@@ -1223,6 +1372,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_FSFILCNT_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `fstatfs' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSTATFS
 value|1
 end_define
 
@@ -1778,6 +1938,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_INT64_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if the system has the type `intmax_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INTMAX_T
 value|1
 end_define
 
@@ -3431,6 +3602,17 @@ comment|/* #undef HAVE_SYS_BSDTTY_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/capability.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_CAPABILITY_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/cdefs.h> header file. */
 end_comment
 
@@ -3799,6 +3981,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_UCRED_H */
 end_comment
+
+begin_comment
+comment|/* Define to 1 if the system has the type `uintmax_t'. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UINTMAX_T
+value|1
+end_define
 
 begin_comment
 comment|/* define if you have uintxx_t data type */
@@ -4387,13 +4580,46 @@ comment|/* #undef OPENSSL_EVP_DIGESTUPDATE_VOID */
 end_comment
 
 begin_comment
-comment|/* libcrypto includes complete ECC support */
+comment|/* OpenSSL has ECC */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPENSSL_HAS_ECC
+value|1
+end_define
+
+begin_comment
+comment|/* libcrypto has NID_X9_62_prime256v1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAS_NISTP256
+value|1
+end_define
+
+begin_comment
+comment|/* libcrypto has NID_secp384r1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAS_NISTP384
+value|1
+end_define
+
+begin_comment
+comment|/* libcrypto has NID_secp521r1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_HAS_NISTP521
 value|1
 end_define
 
@@ -4561,6 +4787,17 @@ comment|/* #undef PTY_ZEROREAD */
 end_comment
 
 begin_comment
+comment|/* Sandbox using capsicum */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SANDBOX_CAPSICUM
+value|1
+end_define
+
+begin_comment
 comment|/* Sandbox using Darwin sandbox_init(3) */
 end_comment
 
@@ -4580,12 +4817,9 @@ begin_comment
 comment|/* Sandbox using setrlimit(2) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SANDBOX_RLIMIT
-value|1
-end_define
+begin_comment
+comment|/* #undef SANDBOX_RLIMIT */
+end_comment
 
 begin_comment
 comment|/* Sandbox using seccomp filter */
@@ -4602,6 +4836,17 @@ end_comment
 begin_comment
 comment|/* #undef SANDBOX_SKIP_RLIMIT_FSIZE */
 end_comment
+
+begin_comment
+comment|/* define if setrlimit RLIMIT_NOFILE breaks things */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SANDBOX_SKIP_RLIMIT_NOFILE
+value|1
+end_define
 
 begin_comment
 comment|/* Sandbox using systrace(4) */

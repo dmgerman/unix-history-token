@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Sema/TypoCorrection.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Sema/Weak.h"
 end_include
 
@@ -117,6 +129,9 @@ decl_stmt|;
 name|class
 name|VarDecl
 decl_stmt|;
+struct_decl|struct
+name|LateParsedTemplate
+struct_decl|;
 comment|/// \brief A simple structure that captures a vtable use for the purposes of
 comment|/// the \c ExternalSemaSource.
 struct|struct
@@ -381,6 +396,76 @@ argument_list|,
 argument|SourceLocation>>&Pending
 argument_list|)
 block|{}
+comment|/// \brief Read the set of late parsed template functions for this source.
+comment|///
+comment|/// The external source should insert its own late parsed template functions
+comment|/// into the map. Note that this routine may be invoked multiple times; the
+comment|/// external source should take care not to introduce the same map entries
+comment|/// repeatedly.
+name|virtual
+name|void
+name|ReadLateParsedTemplates
+argument_list|(
+argument|llvm::DenseMap<const FunctionDecl *
+argument_list|,
+argument|LateParsedTemplate *>&LPTMap
+argument_list|)
+block|{}
+comment|/// \copydoc Sema::CorrectTypo
+comment|/// \note LookupKind must correspond to a valid Sema::LookupNameKind
+comment|///
+comment|/// ExternalSemaSource::CorrectTypo is always given the first chance to
+comment|/// correct a typo (really, to offer suggestions to repair a failed lookup).
+comment|/// It will even be called when SpellChecking is turned off or after a
+comment|/// fatal error has already been detected.
+name|virtual
+name|TypoCorrection
+name|CorrectTypo
+argument_list|(
+argument|const DeclarationNameInfo&Typo
+argument_list|,
+argument|int LookupKind
+argument_list|,
+argument|Scope *S
+argument_list|,
+argument|CXXScopeSpec *SS
+argument_list|,
+argument|CorrectionCandidateCallback&CCC
+argument_list|,
+argument|DeclContext *MemberContext
+argument_list|,
+argument|bool EnteringContext
+argument_list|,
+argument|const ObjCObjectPointerType *OPT
+argument_list|)
+block|{
+return|return
+name|TypoCorrection
+argument_list|()
+return|;
+block|}
+comment|/// \brief Produces a diagnostic note if the external source contains a
+comment|/// complete definition for \p T.
+comment|///
+comment|/// \param Loc the location at which a complete type was required but not
+comment|/// provided
+comment|///
+comment|/// \param T the \c QualType that should have been complete at \p Loc
+comment|///
+comment|/// \return true if a diagnostic was produced, false otherwise.
+name|virtual
+name|bool
+name|MaybeDiagnoseMissingCompleteType
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|QualType T
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|// isa/cast/dyn_cast support
 specifier|static
 name|bool

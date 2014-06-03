@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/arm/mpcore_timervar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/ti/tivar.h>
 end_include
 
@@ -144,7 +150,7 @@ file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_comment
-comment|/*  *	This file defines the clock configuration for the OMAP4xxx series of  *	devices.  *  *	How This is Suppose to Work  *	===========================  *	- There is a top level omap_prcm module that defines all OMAP SoC drivers  *	should use to enable/disable the system clocks regardless of the version  *	of OMAP device they are running on.  This top level PRCM module is just  *	a thin shim to chip specific functions that perform the donkey work of  *	configuring the clock - this file is the 'donkey' for OMAP44xx devices.  *  *	- The key bit in this file is the omap_clk_devmap array, it's  *	used by the omap_prcm driver to determine what clocks are valid and which  *	functions to call to manipulate them.  *  *	- In essence you just need to define some callbacks for each of the  *	clocks and then you're done.  *  *	- The other thing that is worth noting is that when the omap_prcm device  *	is registered you typically pass in some memory ranges which are the  *	SYS_MEMORY resources.  These resources are in turn allocated using   *	bus_allocate_resources(...) and the resource handles are passed to all  *	individual clock callback handlers.   *  *  *  *	OMAP4 devices are different from the previous OMAP3 devices in that there  *	is no longer a separate functional and interface clock for each module,  *	instead there is typically an interface clock that spans many modules.  *  */
+comment|/*  *	This file defines the clock configuration for the OMAP4xxx series of  *	devices.  *  *	How This is Suppose to Work  *	===========================  *	- There is a top level omap_prcm module that defines all OMAP SoC drivers  *	should use to enable/disable the system clocks regardless of the version  *	of OMAP device they are running on.  This top level PRCM module is just  *	a thin shim to chip specific functions that perform the donkey work of  *	configuring the clock - this file is the 'donkey' for OMAP44xx devices.  *  *	- The key bit in this file is the omap_clk_devmap array, it's  *	used by the omap_prcm driver to determine what clocks are valid and which  *	functions to call to manipulate them.  *  *	- In essence you just need to define some callbacks for each of the  *	clocks and then you're done.  *  *	- The other thing that is worth noting is that when the omap_prcm device  *	is registered you typically pass in some memory ranges which are the  *	SYS_MEMORY resources.  These resources are in turn allocated using   *	bus_allocate_resources(...) and the resource handles are passed to all  *	individual clock callback handlers.   *  *  *  *	OMAP4 devices are different from the previous OMAP3 devices in that there  *	is no longer a separate functional and interface clock for each module,  *	instead there is typically an interface clock that spans many modules.  */
 end_comment
 
 begin_define
@@ -915,7 +921,7 @@ end_define
 begin_decl_stmt
 name|struct
 name|ti_clock_dev
-name|ti_clk_devmap
+name|ti_omap4_clk_devmap
 index|[]
 init|=
 block|{
@@ -3329,6 +3335,9 @@ comment|/* Calculate the MPU freq */
 name|mpuclk
 operator|=
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|sysclk
 operator|*
 name|pll_mult
@@ -4560,6 +4569,19 @@ block|{
 if|if
 condition|(
 operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+operator|!
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -4664,11 +4686,12 @@ operator|&
 name|freq
 argument_list|)
 expr_stmt|;
-name|platform_arm_tmr_freq
-operator|=
+name|arm_tmr_change_frequency
+argument_list|(
 name|freq
 operator|/
 literal|2
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

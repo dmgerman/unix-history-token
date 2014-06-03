@@ -79,6 +79,18 @@ directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<set>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -133,6 +145,14 @@ name|Minor
 block|,
 name|Patch
 block|;
+comment|/// \brief The text of the parsed major, and major+minor versions.
+name|std
+operator|::
+name|string
+name|MajorStr
+block|,
+name|MinorStr
+block|;
 comment|/// \brief Any textual suffix on the patch number.
 name|std
 operator|::
@@ -147,6 +167,19 @@ argument|StringRef VersionText
 argument_list|)
 block|;
 name|bool
+name|isOlderThan
+argument_list|(
+argument|int RHSMajor
+argument_list|,
+argument|int RHSMinor
+argument_list|,
+argument|int RHSPatch
+argument_list|,
+argument|StringRef RHSPatchSuffix = StringRef()
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|operator
 operator|<
 operator|(
@@ -156,7 +189,28 @@ operator|&
 name|RHS
 operator|)
 specifier|const
-block|;
+block|{
+return|return
+name|isOlderThan
+argument_list|(
+name|RHS
+operator|.
+name|Major
+argument_list|,
+name|RHS
+operator|.
+name|Minor
+argument_list|,
+name|RHS
+operator|.
+name|Patch
+argument_list|,
+name|RHS
+operator|.
+name|PatchSuffix
+argument_list|)
+return|;
+block|}
 name|bool
 name|operator
 operator|>
@@ -231,6 +285,11 @@ block|{
 name|bool
 name|IsValid
 block|;
+specifier|const
+name|Driver
+operator|&
+name|D
+block|;
 name|llvm
 operator|::
 name|Triple
@@ -245,34 +304,56 @@ block|;
 name|std
 operator|::
 name|string
-name|GCCMultiarchSuffix
+name|GCCBiarchSuffix
 block|;
 name|std
 operator|::
 name|string
 name|GCCParentLibPath
 block|;
+name|std
+operator|::
+name|string
+name|GCCMIPSABIDirSuffix
+block|;
 name|GCCVersion
 name|Version
+block|;
+comment|// We retain the list of install paths that were considered and rejected in
+comment|// order to print out detailed information in verbose mode.
+name|std
+operator|::
+name|set
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|CandidateGCCInstallPaths
 block|;
 name|public
 operator|:
 name|GCCInstallationDetector
-argument_list|()
-operator|:
-name|IsValid
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-name|void
-name|init
 argument_list|(
 specifier|const
 name|Driver
 operator|&
 name|D
-argument_list|,
+argument_list|)
+operator|:
+name|IsValid
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|D
+argument_list|(
+argument|D
+argument_list|)
+block|{}
+name|void
+name|init
+argument_list|(
 specifier|const
 name|llvm
 operator|::
@@ -281,6 +362,10 @@ operator|&
 name|TargetTriple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -320,14 +405,15 @@ return|return
 name|GCCInstallPath
 return|;
 block|}
-comment|/// \brief Get the detected GCC installation path suffix for multiarch GCCs.
+comment|/// \brief Get the detected GCC installation path suffix for the bi-arch
+comment|/// target variant.
 name|StringRef
-name|getMultiarchSuffix
+name|getBiarchSuffix
 argument_list|()
 specifier|const
 block|{
 return|return
-name|GCCMultiarchSuffix
+name|GCCBiarchSuffix
 return|;
 block|}
 comment|/// \brief Get the detected GCC parent lib path.
@@ -338,6 +424,27 @@ specifier|const
 block|{
 return|return
 name|GCCParentLibPath
+return|;
+block|}
+comment|/// \brief Get the detected GCC MIPS ABI directory suffix.
+comment|///
+comment|/// This is used as a suffix both to the install directory of GCC and as
+comment|/// a suffix to its parent lib path in order to select a MIPS ABI-specific
+comment|/// subdirectory.
+comment|///
+comment|/// This will always be empty for any non-MIPS target.
+comment|///
+comment|// FIXME: This probably shouldn't exist at all, and should be factored
+comment|// into the multiarch and/or biarch support. Please don't add more uses of
+comment|// this interface, it is meant as a legacy crutch for the MIPS driver
+comment|// logic.
+name|StringRef
+name|getMIPSABIDirSuffix
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GCCMIPSABIDirSuffix
 return|;
 block|}
 comment|/// \brief Get the detected GCC version string.
@@ -352,6 +459,14 @@ return|return
 name|Version
 return|;
 block|}
+comment|/// \brief Print information about the detected GCC installation.
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 specifier|static
@@ -370,7 +485,7 @@ name|llvm
 operator|::
 name|Triple
 operator|&
-name|MultiarchTriple
+name|BiarchTriple
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -391,14 +506,14 @@ operator|<
 name|StringRef
 operator|>
 operator|&
-name|MultiarchLibDirs
+name|BiarchLibDirs
 argument_list|,
 name|SmallVectorImpl
 operator|<
 name|StringRef
 operator|>
 operator|&
-name|MultiarchTripleAliases
+name|BiarchTripleAliases
 argument_list|)
 block|;
 name|void
@@ -406,13 +521,25 @@ name|ScanLibDirForGCCTriple
 argument_list|(
 argument|llvm::Triple::ArchType TargetArch
 argument_list|,
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|const std::string&LibDir
 argument_list|,
 argument|StringRef CandidateTriple
 argument_list|,
-argument|bool NeedsMultiarchSuffix = false
+argument|bool NeedsBiarchSuffix = false
+argument_list|)
+block|;
+name|void
+name|findMIPSABIDirSuffix
+argument_list|(
+argument|std::string&Suffix
+argument_list|,
+argument|llvm::Triple::ArchType TargetArch
+argument_list|,
+argument|StringRef Path
+argument_list|,
+argument|const llvm::opt::ArgList&Args
 argument_list|)
 block|;   }
 block|;
@@ -436,6 +563,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -444,6 +575,14 @@ block|;
 operator|~
 name|Generic_GCC
 argument_list|()
+block|;
+name|virtual
+name|void
+name|printVerboseInfo
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
 block|;
 name|virtual
 name|bool
@@ -467,6 +606,16 @@ name|virtual
 name|bool
 name|isPICDefaultForced
 argument_list|()
+specifier|const
+block|;
+name|virtual
+name|void
+name|addClangTargetOptions
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
 specifier|const
 block|;
 name|protected
@@ -683,7 +832,7 @@ operator|:
 name|void
 name|AddDeploymentTarget
 argument_list|(
-argument|DerivedArgList&Args
+argument|llvm::opt::DerivedArgList&Args
 argument_list|)
 specifier|const
 block|;
@@ -704,6 +853,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -718,7 +871,7 @@ operator|::
 name|string
 name|ComputeEffectiveClangTriple
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|types::ID InputType
 argument_list|)
@@ -890,7 +1043,7 @@ comment|/// distinct architectures.
 name|StringRef
 name|getDarwinArchName
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|)
 specifier|const
 block|;
@@ -968,9 +1121,9 @@ name|virtual
 name|void
 name|AddLinkARCArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 operator|=
@@ -982,9 +1135,9 @@ name|virtual
 name|void
 name|AddLinkRuntimeLibArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 operator|=
@@ -1024,11 +1177,15 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
+name|llvm
+operator|::
+name|opt
+operator|::
 name|DerivedArgList
 operator|*
 name|TranslateArgs
 argument_list|(
-argument|const DerivedArgList&Args
+argument|const llvm::opt::DerivedArgList&Args
 argument_list|,
 argument|const char *BoundArch
 argument_list|)
@@ -1052,43 +1209,10 @@ name|IsIntegratedAssemblerDefault
 argument_list|()
 specifier|const
 block|{
-ifdef|#
-directive|ifdef
-name|DISABLE_DEFAULT_INTEGRATED_ASSEMBLER
-return|return
-name|false
-return|;
-else|#
-directive|else
 comment|// Default integrated assembler to on for Darwin.
 return|return
 name|true
 return|;
-endif|#
-directive|endif
-block|}
-name|virtual
-name|bool
-name|IsStrictAliasingDefault
-argument_list|()
-specifier|const
-block|{
-ifdef|#
-directive|ifdef
-name|DISABLE_DEFAULT_STRICT_ALIASING
-return|return
-name|false
-return|;
-else|#
-directive|else
-return|return
-name|ToolChain
-operator|::
-name|IsStrictAliasingDefault
-argument_list|()
-return|;
-endif|#
-directive|endif
 block|}
 name|virtual
 name|bool
@@ -1160,15 +1284,14 @@ name|bool
 name|IsUnwindTablesDefault
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|unsigned
 name|GetDefaultStackProtectorLevel
 argument_list|(
-name|bool
-name|KernelOrKext
+argument|bool KernelOrKext
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// Stack protectors default to on for user code on 10.5,
 comment|// and for everything in 10.6 and beyond
@@ -1217,52 +1340,52 @@ name|bool
 name|isPICDefault
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|bool
 name|isPIEDefault
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|bool
 name|isPICDefaultForced
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|bool
 name|SupportsProfiling
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|bool
 name|SupportsObjCGC
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|void
 name|CheckObjCARC
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|bool
 name|UseDwarfDebugFlags
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|bool
 name|UseSjLjExceptions
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// }
 block|}
-empty_stmt|;
+decl_stmt|;
 comment|/// DarwinClang - The Darwin toolchain used by Clang.
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -1288,6 +1411,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1299,18 +1426,18 @@ name|virtual
 name|void
 name|AddLinkRuntimeLibArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
 name|void
 name|AddLinkRuntimeLib
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|,
 argument|const char *DarwinStaticLib
 argument_list|,
@@ -1322,9 +1449,9 @@ name|virtual
 name|void
 name|AddCXXStdlibLibArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
@@ -1332,9 +1459,9 @@ name|virtual
 name|void
 name|AddCCKextLibArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
@@ -1342,9 +1469,9 @@ name|virtual
 name|void
 name|AddLinkARCArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
@@ -1376,6 +1503,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1395,7 +1526,7 @@ operator|::
 name|string
 name|ComputeEffectiveClangTriple
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|types::ID InputType
 argument_list|)
@@ -1442,6 +1573,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1529,6 +1664,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1575,6 +1714,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1631,6 +1774,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1654,6 +1801,28 @@ specifier|const
 block|{
 return|return
 name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|unsigned
+name|GetDefaultStackProtectorLevel
+argument_list|(
+argument|bool KernelOrKext
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|1
 return|;
 block|}
 name|protected
@@ -1697,6 +1866,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1736,9 +1909,9 @@ name|virtual
 name|void
 name|AddClangCXXStdlibIncludeArgs
 argument_list|(
-argument|const ArgList&DriverArgs
+argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
-argument|ArgStringList&CC1Args
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
@@ -1746,9 +1919,9 @@ name|virtual
 name|void
 name|AddCXXStdlibLibArgs
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|,
-argument|ArgStringList&CmdArgs
+argument|llvm::opt::ArgStringList&CmdArgs
 argument_list|)
 specifier|const
 block|;
@@ -1805,17 +1978,19 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
 argument_list|)
 block|;
 name|virtual
-name|CXXStdlibType
-name|GetCXXStdlibType
-argument_list|(
-argument|const ArgList&Args
-argument_list|)
+name|bool
+name|HasNativeLLVMSupport
+argument_list|()
 specifier|const
 block|;
 name|virtual
@@ -1839,15 +2014,65 @@ name|true
 return|;
 block|}
 name|virtual
-name|void
-name|AddClangCXXStdlibIncludeArgs
+name|CXXStdlibType
+name|GetCXXStdlibType
 argument_list|(
-argument|const ArgList&DriverArgs
-argument_list|,
-argument|ArgStringList&CC1Args
+argument|const llvm::opt::ArgList&Args
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|ppc
+operator|||
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|ppc64
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|Generic_ELF
+operator|::
+name|IsIntegratedAssemblerDefault
+argument_list|()
+return|;
+block|}
 name|virtual
 name|bool
 name|UseSjLjExceptions
@@ -1895,6 +2120,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -1924,7 +2153,7 @@ name|virtual
 name|CXXStdlibType
 name|GetCXXStdlibType
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|)
 specifier|const
 block|;
@@ -1932,12 +2161,52 @@ name|virtual
 name|void
 name|AddClangCXXStdlibIncludeArgs
 argument_list|(
-argument|const ArgList&DriverArgs
+argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
-argument|ArgStringList&CC1Args
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|IsUnwindTablesDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getTriple
+argument_list|()
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|Triple
+operator|::
+name|ppc
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|Generic_ELF
+operator|::
+name|IsIntegratedAssemblerDefault
+argument_list|()
+return|;
+block|}
 name|protected
 operator|:
 name|virtual
@@ -1954,11 +2223,11 @@ name|buildLinker
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Minix
-operator|:
+range|:
 name|public
 name|Generic_ELF
 block|{
@@ -1979,6 +2248,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -2000,11 +2273,11 @@ name|buildLinker
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|DragonFly
-operator|:
+range|:
 name|public
 name|Generic_ELF
 block|{
@@ -2025,6 +2298,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -2056,11 +2333,11 @@ name|buildLinker
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Linux
-operator|:
+range|:
 name|public
 name|Generic_ELF
 block|{
@@ -2081,6 +2358,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -2096,19 +2377,9 @@ name|virtual
 name|void
 name|AddClangSystemIncludeArgs
 argument_list|(
-argument|const ArgList&DriverArgs
+argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
-argument|ArgStringList&CC1Args
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|addClangTargetOptions
-argument_list|(
-argument|const ArgList&DriverArgs
-argument_list|,
-argument|ArgStringList&CC1Args
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
@@ -2116,9 +2387,9 @@ name|virtual
 name|void
 name|AddClangCXXStdlibIncludeArgs
 argument_list|(
-argument|const ArgList&DriverArgs
+argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
-argument|ArgStringList&CC1Args
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
@@ -2142,9 +2413,6 @@ operator|::
 name|string
 operator|>
 name|ExtraOpts
-block|;
-name|bool
-name|IsPIEDefault
 block|;
 name|protected
 operator|:
@@ -2174,11 +2442,13 @@ argument|Twine Suffix
 argument_list|,
 argument|Twine TargetArchDir
 argument_list|,
-argument|Twine MultiLibSuffix
+argument|Twine BiarchSuffix
 argument_list|,
-argument|const ArgList&DriverArgs
+argument|Twine MIPSABIDirSuffix
 argument_list|,
-argument|ArgStringList&CC1Args
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 block|;
 specifier|static
@@ -2189,25 +2459,23 @@ argument|Twine Base
 argument_list|,
 argument|Twine TargetArchDir
 argument_list|,
-argument|const ArgList&DriverArgs
+argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
-argument|ArgStringList&CC1Args
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 block|;
 name|std
 operator|::
 name|string
 name|computeSysRoot
-argument_list|(
-argument|const ArgList&Args
-argument_list|)
+argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Hexagon_TC
-operator|:
+range|:
 name|public
 name|Linux
 block|{
@@ -2247,6 +2515,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -2260,9 +2532,9 @@ name|virtual
 name|void
 name|AddClangSystemIncludeArgs
 argument_list|(
-argument|const ArgList&DriverArgs
+argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
-argument|ArgStringList&CC1Args
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
@@ -2270,9 +2542,9 @@ name|virtual
 name|void
 name|AddClangCXXStdlibIncludeArgs
 argument_list|(
-argument|const ArgList&DriverArgs
+argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
-argument|ArgStringList&CC1Args
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
@@ -2280,7 +2552,7 @@ name|virtual
 name|CXXStdlibType
 name|GetCXXStdlibType
 argument_list|(
-argument|const ArgList&Args
+argument|const llvm::opt::ArgList&Args
 argument_list|)
 specifier|const
 block|;
@@ -2314,18 +2586,22 @@ name|StringRef
 name|GetTargetCPU
 argument_list|(
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
 comment|/// TCEToolChain - A tool chain using the llvm bitcode tools to perform
 comment|/// all subcommands. See http://tce.cs.tut.fi for our peculiar target.
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|TCEToolChain
-operator|:
+range|:
 name|public
 name|ToolChain
 block|{
@@ -2346,6 +2622,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -2375,11 +2655,11 @@ name|isPICDefaultForced
 argument_list|()
 specifier|const
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Windows
-operator|:
+range|:
 name|public
 name|ToolChain
 block|{
@@ -2400,6 +2680,10 @@ operator|&
 name|Triple
 argument_list|,
 specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
 name|ArgList
 operator|&
 name|Args
@@ -2439,9 +2723,9 @@ name|virtual
 name|void
 name|AddClangSystemIncludeArgs
 argument_list|(
-argument|const ArgList&DriverArgs
+argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
-argument|ArgStringList&CC1Args
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
@@ -2449,9 +2733,9 @@ name|virtual
 name|void
 name|AddClangCXXStdlibIncludeArgs
 argument_list|(
-argument|const ArgList&DriverArgs
+argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
-argument|ArgStringList&CC1Args
+argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
@@ -2471,7 +2755,130 @@ name|buildAssembler
 argument_list|()
 specifier|const
 block|; }
-block|;  }
+decl_stmt|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|XCore
+range|:
+name|public
+name|ToolChain
+block|{
+name|public
+operator|:
+name|XCore
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+name|protected
+operator|:
+name|virtual
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+block|;
+name|public
+operator|:
+name|virtual
+name|bool
+name|isPICDefault
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isPICDefaultForced
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|SupportsProfiling
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|hasBlocksRuntime
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddClangSystemIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|addClangTargetOptions
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddCXXStdlibLibArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|; }
+decl_stmt|;
+block|}
 comment|// end namespace toolchains
 block|}
 comment|// end namespace driver

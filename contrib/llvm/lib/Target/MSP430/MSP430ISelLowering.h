@@ -303,6 +303,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerJumpTable
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|getReturnAddressFrameIndex
 argument_list|(
 argument|SelectionDAG&DAG
@@ -332,7 +341,7 @@ name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
-argument|EVT VT
+argument|MVT VT
 argument_list|)
 specifier|const
 block|;
@@ -438,7 +447,7 @@ argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -457,7 +466,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -478,7 +487,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -498,7 +507,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -530,7 +539,7 @@ argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
-argument|DebugLoc dl
+argument|SDLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)

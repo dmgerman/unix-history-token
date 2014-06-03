@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -1231,16 +1231,11 @@ operator|=
 name|EINVAL
 expr_stmt|;
 else|else
-operator|*
-operator|(
-name|off_t
-operator|*
-operator|)
-operator|(
 name|td
 operator|->
-name|td_retval
-operator|)
+name|td_uretoff
+operator|.
+name|tdu_off
 operator|=
 name|offset
 expr_stmt|;
@@ -3453,6 +3448,8 @@ operator||
 name|O_EXCL
 operator||
 name|O_TRUNC
+operator||
+name|O_CLOEXEC
 operator|)
 operator|)
 operator|!=

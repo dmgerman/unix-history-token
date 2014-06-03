@@ -200,6 +200,14 @@ name|c
 decl_stmt|,
 name|rebuildcg
 decl_stmt|;
+name|badblk
+operator|=
+name|dupblk
+operator|=
+name|lastino
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Set file system reserved blocks in used block map. 	 */
 for|for
 control|(
@@ -2710,6 +2718,10 @@ name|EEXIT
 argument_list|)
 expr_stmt|;
 block|}
+name|rerun
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|STOP
@@ -2836,6 +2848,10 @@ name|EEXIT
 argument_list|)
 expr_stmt|;
 block|}
+name|rerun
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|STOP
@@ -2891,6 +2907,10 @@ name|EEXIT
 argument_list|)
 expr_stmt|;
 block|}
+name|rerun
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|STOP

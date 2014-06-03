@@ -176,7 +176,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_define
@@ -11391,6 +11391,10 @@ operator|&&
 name|errno
 operator|!=
 name|ESRCH
+operator|&&
+name|errno
+operator|!=
+name|EPERM
 condition|)
 name|warn
 argument_list|(

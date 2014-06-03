@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2013 Gleb Smirnoff<glebius@FreeBSD.org>  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -120,18 +120,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipx/ipx.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipx/ipx_if.h>
 end_include
 
 begin_include
@@ -1011,6 +999,9 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|)
+parameter_list|,
+name|int
+name|af
 parameter_list|)
 block|{
 name|struct
@@ -1161,7 +1152,7 @@ name|dflag
 condition|)
 name|printf
 argument_list|(
-literal|" %s"
+literal|"  %s"
 argument_list|,
 literal|"Drop"
 argument_list|)
@@ -1532,125 +1523,6 @@ endif|#
 directive|endif
 comment|/* INET6 */
 case|case
-name|AF_IPX
-case|:
-block|{
-name|struct
-name|sockaddr_ipx
-modifier|*
-name|sipx
-decl_stmt|;
-name|u_long
-name|net
-decl_stmt|;
-name|char
-name|netnum
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|sipx
-operator|=
-operator|(
-expr|struct
-name|sockaddr_ipx
-operator|*
-operator|)
-name|ifa
-operator|->
-name|ifa_addr
-expr_stmt|;
-operator|*
-operator|(
-expr|union
-name|ipx_net
-operator|*
-operator|)
-operator|&
-name|net
-operator|=
-name|sipx
-operator|->
-name|sipx_addr
-operator|.
-name|x_net
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|netnum
-argument_list|,
-literal|"%lx"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|ntohl
-argument_list|(
-name|net
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ipx:%-8s  "
-argument_list|,
-name|netnum
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%-17s "
-argument_list|,
-name|ipx_phost
-argument_list|(
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-name|sipx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|network
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|AF_APPLETALK
-case|:
-name|printf
-argument_list|(
-literal|"atalk:%-12.12s "
-argument_list|,
-name|atalk_print
-argument_list|(
-name|ifa
-operator|->
-name|ifa_addr
-argument_list|,
-literal|0x10
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%-11.11s  "
-argument_list|,
-name|atalk_print
-argument_list|(
-name|ifa
-operator|->
-name|ifa_addr
-argument_list|,
-literal|0x0b
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|AF_LINK
 case|:
 block|{
@@ -1917,7 +1789,24 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-comment|/* XXXGL: output queue drops */
+if|if
+condition|(
+name|dflag
+condition|)
+name|show_stat
+argument_list|(
+literal|"LSlu"
+argument_list|,
+literal|5
+argument_list|,
+name|IFA_STAT
+argument_list|(
+name|oqdrops
+argument_list|)
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
@@ -2158,8 +2047,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %8lu"
+literal|" %8ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|IFA_STAT
 argument_list|(
 name|imcasts
@@ -2181,8 +2073,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %8lu"
+literal|" %8ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|IFA_STAT
 argument_list|(
 name|omcasts
@@ -2245,6 +2140,10 @@ name|u_long
 name|ift_oe
 decl_stmt|;
 comment|/* output errors */
+name|u_long
+name|ift_od
+decl_stmt|;
+comment|/* output drops */
 name|u_long
 name|ift_co
 decl_stmt|;
@@ -2420,6 +2319,15 @@ operator|+=
 name|IFA_STAT
 argument_list|(
 name|oerrors
+argument_list|)
+expr_stmt|;
+name|st
+operator|->
+name|ift_od
+operator|+=
+name|IFA_STAT
+argument_list|(
+name|oqdrops
 argument_list|)
 expr_stmt|;
 name|st
@@ -2863,7 +2771,27 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* XXXGL: output queue drops */
+if|if
+condition|(
+name|dflag
+condition|)
+name|show_stat
+argument_list|(
+literal|"LSlu"
+argument_list|,
+literal|5
+argument_list|,
+name|new
+operator|->
+name|ift_od
+operator|-
+name|old
+operator|->
+name|ift_od
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'

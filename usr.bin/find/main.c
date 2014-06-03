@@ -268,6 +268,12 @@ begin_comment
 comment|/* use the "basic" regexp by default*/
 end_comment
 
+begin_decl_stmt
+name|int
+name|exitstatus
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011 Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2014 Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -196,8 +196,6 @@ decl_stmt|;
 comment|/* index into the NIC ring */
 name|u_int
 name|n
-decl_stmt|,
-name|new_slots
 decl_stmt|;
 name|u_int
 specifier|const
@@ -211,15 +209,11 @@ literal|1
 decl_stmt|;
 name|u_int
 specifier|const
-name|cur
+name|head
 init|=
-name|nm_txsync_prologue
-argument_list|(
 name|kring
-argument_list|,
-operator|&
-name|new_slots
-argument_list|)
+operator|->
+name|rhead
 decl_stmt|;
 comment|/* device-specific */
 name|struct
@@ -242,19 +236,6 @@ name|rl_ldata
 operator|.
 name|rl_tx_desc
 decl_stmt|;
-if|if
-condition|(
-name|cur
-operator|>
-name|lim
-condition|)
-comment|/* error checking in nm_txsync_prologue() */
-return|return
-name|netmap_ring_reinit
-argument_list|(
-name|kring
-argument_list|)
-return|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -286,7 +267,7 @@ if|if
 condition|(
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|)
 block|{
 comment|/* we have new packets to send */
@@ -307,7 +288,7 @@ literal|0
 init|;
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|;
 name|n
 operator|++
@@ -515,19 +496,11 @@ name|rl_tx_prodidx
 operator|=
 name|nic_i
 expr_stmt|;
-comment|/* decrease avail by # of packets sent minus previous ones */
 name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|cur
-expr_stmt|;
-comment|/* the saved ring->cur */
-name|kring
-operator|->
-name|nr_hwavail
-operator|-=
-name|new_slots
+name|head
 expr_stmt|;
 comment|/* synchronize the NIC ring */
 name|bus_dmamap_sync
@@ -569,11 +542,10 @@ name|flags
 operator|&
 name|NAF_FORCE_RECLAIM
 operator|||
+name|nm_kr_txempty
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
-operator|<
-literal|1
+argument_list|)
 condition|)
 block|{
 name|nic_i
@@ -661,17 +633,25 @@ name|n
 expr_stmt|;
 name|kring
 operator|->
-name|nr_hwavail
-operator|+=
-name|n
+name|nr_hwtail
+operator|=
+name|nm_prev
+argument_list|(
+name|netmap_idx_n2k
+argument_list|(
+name|kring
+argument_list|,
+name|nic_i
+argument_list|)
+argument_list|,
+name|lim
+argument_list|)
 expr_stmt|;
 block|}
 block|}
 name|nm_txsync_finalize
 argument_list|(
 name|kring
-argument_list|,
-name|cur
 argument_list|)
 expr_stmt|;
 return|return
@@ -742,8 +722,6 @@ decl_stmt|;
 comment|/* index into the NIC ring */
 name|u_int
 name|n
-decl_stmt|,
-name|resvd
 decl_stmt|;
 name|u_int
 specifier|const
@@ -757,17 +735,13 @@ literal|1
 decl_stmt|;
 name|u_int
 specifier|const
-name|cur
+name|head
 init|=
 name|nm_rxsync_prologue
 argument_list|(
 name|kring
-argument_list|,
-operator|&
-name|resvd
 argument_list|)
 decl_stmt|;
-comment|/* cur + res */
 name|int
 name|force_update
 init|=
@@ -806,7 +780,7 @@ name|rl_rx_desc
 decl_stmt|;
 if|if
 condition|(
-name|cur
+name|head
 operator|>
 name|lim
 condition|)
@@ -835,7 +809,7 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First part: import newly received packets. 	 * 	 * This device uses all the buffers in the ring, so we need 	 * another termination condition in addition to RL_RDESC_STAT_OWN 	 * cleared (all buffers could have it cleared. The easiest one 	 * is to limit the amount of data reported up to 'lim' 	 */
+comment|/* 	 * First part: import newly received packets. 	 * 	 * This device uses all the buffers in the ring, so we need 	 * another termination condition in addition to RL_RDESC_STAT_OWN 	 * cleared (all buffers could have it cleared). The easiest one 	 * is to stop right before nm_hwcur. 	 */
 if|if
 condition|(
 name|netmap_no_pendintr
@@ -849,6 +823,18 @@ init|=
 name|kring
 operator|->
 name|nkr_slot_flags
+decl_stmt|;
+name|uint32_t
+name|stop_i
+init|=
+name|nm_prev
+argument_list|(
+name|kring
+operator|->
+name|nr_hwcur
+argument_list|,
+name|lim
+argument_list|)
 decl_stmt|;
 name|nic_i
 operator|=
@@ -868,21 +854,12 @@ argument_list|,
 name|nic_i
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|n
-operator|=
-name|kring
-operator|->
-name|nr_hwavail
-init|;
-name|n
-operator|<
-name|lim
-condition|;
-name|n
-operator|++
-control|)
+while|while
+condition|(
+name|nm_i
+operator|!=
+name|stop_i
+condition|)
 block|{
 name|struct
 name|rl_desc
@@ -987,6 +964,7 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
+comment|// sc->rl_ifp->if_ipackets++;
 name|nm_i
 operator|=
 name|nm_next
@@ -1006,15 +984,6 @@ name|lim
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|n
-operator|!=
-name|kring
-operator|->
-name|nr_hwavail
-condition|)
-block|{
 name|sc
 operator|->
 name|rl_ldata
@@ -1023,25 +992,12 @@ name|rl_rx_prodidx
 operator|=
 name|nic_i
 expr_stmt|;
-name|sc
-operator|->
-name|rl_ifp
-operator|->
-name|if_ipackets
-operator|+=
-name|n
-operator|-
 name|kring
 operator|->
-name|nr_hwavail
-expr_stmt|;
-name|kring
-operator|->
-name|nr_hwavail
+name|nr_hwtail
 operator|=
-name|n
+name|nm_i
 expr_stmt|;
-block|}
 name|kring
 operator|->
 name|nr_kflags
@@ -1061,7 +1017,7 @@ if|if
 condition|(
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|)
 block|{
 name|nic_i
@@ -1081,7 +1037,7 @@ literal|0
 init|;
 name|nm_i
 operator|!=
-name|cur
+name|head
 condition|;
 name|n
 operator|++
@@ -1266,15 +1222,9 @@ expr_stmt|;
 block|}
 name|kring
 operator|->
-name|nr_hwavail
-operator|-=
-name|n
-expr_stmt|;
-name|kring
-operator|->
 name|nr_hwcur
 operator|=
-name|cur
+name|head
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -1297,15 +1247,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* tell userspace that there might be new packets */
-name|ring
-operator|->
-name|avail
-operator|=
+name|nm_rxsync_finalize
+argument_list|(
 name|kring
-operator|->
-name|nr_hwavail
-operator|-
-name|resvd
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -1584,12 +1529,20 @@ decl_stmt|;
 name|uint32_t
 name|cmdstat
 decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|n
+name|uint32_t
+name|nic_i
 decl_stmt|,
 name|max_avail
+decl_stmt|;
+name|uint32_t
+specifier|const
+name|n
+init|=
+name|sc
+operator|->
+name|rl_ldata
+operator|.
+name|rl_rx_desc_cnt
 decl_stmt|;
 if|if
 condition|(
@@ -1597,41 +1550,35 @@ operator|!
 name|slot
 condition|)
 return|return;
-name|n
-operator|=
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_rx_desc_cnt
-expr_stmt|;
-comment|/* 	 * Userspace owned hwavail packets before the reset, 	 * so the NIC that last hwavail descriptors of the ring 	 * are still owned by the driver (and keep one empty). 	 */
+comment|/* 	 * Do not release the slots owned by userspace, 	 * and also keep one empty. 	 */
 name|max_avail
 operator|=
 name|n
 operator|-
 literal|1
 operator|-
+name|nm_kr_rxspace
+argument_list|(
+operator|&
 name|na
 operator|->
 name|rx_rings
 index|[
 literal|0
 index|]
-operator|.
-name|nr_hwavail
+argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|nic_i
 operator|=
 literal|0
 init|;
-name|i
+name|nic_i
 operator|<
 name|n
 condition|;
-name|i
+name|nic_i
 operator|++
 control|)
 block|{
@@ -1642,8 +1589,8 @@ decl_stmt|;
 name|uint64_t
 name|paddr
 decl_stmt|;
-name|int
-name|l
+name|uint32_t
+name|nm_i
 init|=
 name|netmap_idx_n2k
 argument_list|(
@@ -1655,7 +1602,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|i
+name|nic_i
 argument_list|)
 decl_stmt|;
 name|addr
@@ -1664,7 +1611,7 @@ name|PNMB
 argument_list|(
 name|slot
 operator|+
-name|l
+name|nm_i
 argument_list|,
 operator|&
 name|paddr
@@ -1684,7 +1631,7 @@ name|rl_ldata
 operator|.
 name|rl_rx_desc
 index|[
-name|i
+name|nic_i
 index|]
 operator|.
 name|rx_dmamap
@@ -1706,7 +1653,7 @@ name|rl_ldata
 operator|.
 name|rl_rx_desc
 index|[
-name|i
+name|nic_i
 index|]
 operator|.
 name|rx_dmamap
@@ -1716,7 +1663,7 @@ argument_list|)
 expr_stmt|;
 name|desc
 index|[
-name|i
+name|nic_i
 index|]
 operator|.
 name|rl_bufaddr_lo
@@ -1731,7 +1678,7 @@ argument_list|)
 expr_stmt|;
 name|desc
 index|[
-name|i
+name|nic_i
 index|]
 operator|.
 name|rl_bufaddr_hi
@@ -1750,7 +1697,7 @@ name|NETMAP_BUF_SIZE
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|nic_i
 operator|==
 name|n
 operator|-
@@ -1763,7 +1710,7 @@ name|RL_RDESC_CMD_EOR
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|nic_i
 operator|<
 name|max_avail
 condition|)
@@ -1773,7 +1720,7 @@ name|RL_RDESC_CMD_OWN
 expr_stmt|;
 name|desc
 index|[
-name|i
+name|nic_i
 index|]
 operator|.
 name|rl_cmdstat

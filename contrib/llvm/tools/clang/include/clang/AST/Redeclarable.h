@@ -290,7 +290,7 @@ comment|/// \brief Return the first declaration of this declaration or itself if
 comment|/// is the only declaration.
 name|decl_type
 operator|*
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 block|{
 name|decl_type
@@ -329,7 +329,7 @@ comment|/// is the only declaration.
 specifier|const
 name|decl_type
 operator|*
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 specifier|const
 block|{
@@ -369,12 +369,12 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Returns true if this is the first declaration.
+comment|/// \brief True if this is the first declaration in its redeclaration chain.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|isFirstDeclaration
+name|isFirstDecl
 argument_list|()
 specifier|const
 block|{
@@ -398,7 +398,7 @@ name|getMostRecentDecl
 parameter_list|()
 block|{
 return|return
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 operator|->
 name|RedeclLink
@@ -422,7 +422,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getFirstDeclaration
+name|getFirstDecl
 argument_list|()
 operator|->
 name|RedeclLink
@@ -443,7 +443,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|setPreviousDeclaration
+name|setPreviousDecl
 parameter_list|(
 name|decl_type
 modifier|*
@@ -576,7 +576,7 @@ if|if
 condition|(
 name|Current
 operator|->
-name|isFirstDeclaration
+name|isFirstDecl
 argument_list|()
 condition|)
 block|{
@@ -790,6 +790,195 @@ name|class
 name|ASTDeclWriter
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+unit|};
+comment|/// \brief Get the primary declaration for a declaration from an AST file. That
+end_comment
+
+begin_comment
+comment|/// will be the first-loaded declaration.
+end_comment
+
+begin_function_decl
+name|Decl
+modifier|*
+name|getPrimaryMergedDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Provides common interface for the Decls that cannot be redeclared,
+end_comment
+
+begin_comment
+comment|/// but can be merged if the same declaration is brought in from multiple
+end_comment
+
+begin_comment
+comment|/// modules.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|decl_type
+operator|>
+name|class
+name|Mergeable
+block|{
+name|public
+operator|:
+name|Mergeable
+argument_list|()
+block|{}
+comment|/// \brief Return the first declaration of this declaration or itself if this
+comment|/// is the only declaration.
+name|decl_type
+operator|*
+name|getFirstDecl
+argument_list|()
+block|{
+name|decl_type
+operator|*
+name|D
+operator|=
+name|static_cast
+operator|<
+name|decl_type
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+block|;
+if|if
+condition|(
+operator|!
+name|D
+operator|->
+name|isFromASTFile
+argument_list|()
+condition|)
+return|return
+name|D
+return|;
+return|return
+name|cast
+operator|<
+name|decl_type
+operator|>
+operator|(
+name|getPrimaryMergedDecl
+argument_list|(
+name|const_cast
+operator|<
+name|decl_type
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Return the first declaration of this declaration or itself if this
+end_comment
+
+begin_comment
+comment|/// is the only declaration.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|decl_type
+operator|*
+name|getFirstDecl
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|decl_type
+operator|*
+name|D
+operator|=
+name|static_cast
+operator|<
+specifier|const
+name|decl_type
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+block|;
+if|if
+condition|(
+operator|!
+name|D
+operator|->
+name|isFromASTFile
+argument_list|()
+condition|)
+return|return
+name|D
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|cast
+operator|<
+name|decl_type
+operator|>
+operator|(
+name|getPrimaryMergedDecl
+argument_list|(
+name|const_cast
+operator|<
+name|decl_type
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
+argument_list|)
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// \brief Returns true if this is the first declaration.
+end_comment
+
+begin_macro
+unit|bool
+name|isFirstDecl
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|getFirstDecl
+argument_list|()
+operator|==
+name|this
+return|;
+block|}
+end_expr_stmt
 
 begin_endif
 unit|};  }

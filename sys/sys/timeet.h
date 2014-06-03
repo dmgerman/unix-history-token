@@ -275,6 +275,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|et_change_frequency
+parameter_list|(
+name|struct
+name|eventtimer
+modifier|*
+name|et
+parameter_list|,
+name|uint64_t
+name|newfreq
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Consumer API  */
 end_comment

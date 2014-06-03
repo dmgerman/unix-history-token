@@ -987,9 +987,6 @@ name|struct
 name|iwn_rx_ring
 name|rxq
 decl_stmt|;
-name|int
-name|mem_rid
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -1000,9 +997,6 @@ name|sc_st
 decl_stmt|;
 name|bus_space_handle_t
 name|sc_sh
-decl_stmt|;
-name|int
-name|irq_rid
 decl_stmt|;
 name|struct
 name|resource
@@ -1032,6 +1026,16 @@ decl_stmt|;
 name|struct
 name|task
 name|sc_radiooff_task
+decl_stmt|;
+name|struct
+name|task
+name|sc_panic_task
+decl_stmt|;
+comment|/* Taskqueue */
+name|struct
+name|taskqueue
+modifier|*
+name|sc_tq
 decl_stmt|;
 comment|/* Calibration information */
 name|struct
@@ -1103,6 +1107,15 @@ name|ivap
 index|[
 name|IWN_NUM_RXON_CTX
 index|]
+decl_stmt|;
+comment|/* General statistics */
+comment|/* 	 * The statistics are reset after each channel 	 * change.  So it may be zeroed after things like 	 * a background scan. 	 * 	 * So for now, this is just a cheap hack to 	 * expose the last received statistics dump 	 * via an ioctl().  Later versions of this 	 * could expose the last 'n' messages, or just 	 * provide a pipeline for the firmware responses 	 * via something like BPF. 	 */
+name|struct
+name|iwn_stats
+name|last_stat
+decl_stmt|;
+name|int
+name|last_stat_valid
 decl_stmt|;
 name|uint8_t
 name|uc_scan_progress

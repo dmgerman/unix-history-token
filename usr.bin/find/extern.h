@@ -603,6 +603,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|exitstatus
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|time_t
 name|now
 decl_stmt|;

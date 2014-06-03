@@ -11141,10 +11141,6 @@ name|O_DENY
 expr_stmt|;
 name|chain
 operator|->
-name|rules
-operator|=
-name|chain
-operator|->
 name|default_rule
 operator|=
 name|chain

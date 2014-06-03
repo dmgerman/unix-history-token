@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -2884,7 +2884,7 @@ if|if
 condition|(
 name|rights
 operator|&
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 condition|)
 name|CHECK
 argument_list|(
@@ -3642,7 +3642,7 @@ argument_list|)
 expr_stmt|;
 name|TRY
 argument_list|(
-name|CAP_POLL_EVENT
+name|CAP_EVENT
 argument_list|)
 expr_stmt|;
 name|TRY

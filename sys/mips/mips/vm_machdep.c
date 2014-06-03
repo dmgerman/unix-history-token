@@ -1881,7 +1881,7 @@ name|MIPS_SR_INT_MASK
 operator|)
 expr_stmt|;
 comment|/* 	 * FREEBSD_DEVELOPERS_FIXME: 	 * Setup any other CPU-Specific registers (Not MIPS Standard) 	 * that are needed. 	 */
-comment|/* SMP Setup to release sched_lock in fork_exit(). */
+comment|/* Setup to release spin count in in fork_exit(). */
 name|td
 operator|->
 name|td_md

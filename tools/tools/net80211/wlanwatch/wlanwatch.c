@@ -73,12 +73,6 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netatalk/at.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -113,6 +113,11 @@ argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|IsSmallDataEnabled
+argument_list|()
+specifier|const
+block|;
 specifier|const
 name|MCSection
 operator|*

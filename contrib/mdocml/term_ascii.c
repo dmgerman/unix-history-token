@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ascii.c,v 1.20 2011/12/04 23:10:52 schwarze Exp $ */
+comment|/*	$Id: term_ascii.c,v 1.21 2013/06/01 14:27:20 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -381,12 +381,6 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|enc
-operator|=
-name|enc
-expr_stmt|;
-name|p
-operator|->
 name|tabwidth
 operator|=
 literal|5
@@ -478,7 +472,7 @@ name|setlocale
 argument_list|(
 name|LC_CTYPE
 argument_list|,
-literal|"UTF-8"
+literal|"en_US.UTF-8"
 argument_list|)
 expr_stmt|;
 if|if

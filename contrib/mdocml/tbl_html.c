@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_html.c,v 1.9 2011/09/18 14:14:15 schwarze Exp $ */
+comment|/*	$Id: tbl_html.c,v 1.10 2012/05/27 17:54:54 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -565,30 +565,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|hp
-operator|->
-name|pos
-condition|)
-block|{
-case|case
-operator|(
-name|TBL_HEAD_VERT
-operator|)
-case|:
-comment|/* FALLTHROUGH */
-case|case
-operator|(
-name|TBL_HEAD_DVERT
-operator|)
-case|:
-continue|continue;
-case|case
-operator|(
-name|TBL_HEAD_DATA
-operator|)
-case|:
 if|if
 condition|(
 name|NULL
@@ -627,8 +603,6 @@ name|dp
 operator|->
 name|next
 expr_stmt|;
-break|break;
-block|}
 block|}
 break|break;
 block|}

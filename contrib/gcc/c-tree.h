@@ -607,6 +607,14 @@ name|deprecated_p
 range|:
 literal|1
 decl_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+comment|/* Whether the specifiers include a unavailable typedef.  */
+name|BOOL_BITFIELD
+name|unavailable_p
+range|:
+literal|1
+decl_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 comment|/* Whether the type defaulted to "int" because there were no type      specifiers.  */
 name|BOOL_BITFIELD
 name|default_int_p
@@ -700,6 +708,9 @@ name|cdk_array
 block|,
 comment|/* A pointer.  */
 name|cdk_pointer
+block|,
+comment|/* APPLE LOCAL blocks (C++ ch) */
+name|cdk_block_pointer
 block|,
 comment|/* Parenthesized declarator with nested attributes.  */
 name|cdk_attrs
@@ -1388,6 +1399,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL blocks 6339747 */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|grokblockdecl
+parameter_list|(
+name|struct
+name|c_declspecs
+modifier|*
+parameter_list|,
+name|struct
+name|c_declarator
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 specifier|extern
 name|tree
@@ -1744,6 +1775,32 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 5814025 - blocks (C++ cg) */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|c_declarator
+modifier|*
+name|make_block_pointer_declarator
+parameter_list|(
+name|struct
+name|c_declspecs
+modifier|*
+parameter_list|,
+name|struct
+name|c_declarator
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL end radar 5814025 - blocks (C++ cg) */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -2519,7 +2576,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|void
 name|c_finish_loop
@@ -2536,12 +2598,19 @@ name|tree
 parameter_list|,
 name|tree
 parameter_list|,
+name|tree
+parameter_list|,
 name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|tree
 name|c_begin_stmt_expr
@@ -2783,6 +2852,20 @@ name|void
 name|c_write_global_declarations
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL radar 5741070  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|tree
+name|c_return_interface_record_type
+parameter_list|(
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl

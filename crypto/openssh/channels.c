@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.c,v 1.327 2013/11/08 00:39:15 djm Exp $ */
+comment|/* $OpenBSD: channels.c,v 1.331 2014/02/26 20:29:29 djm Exp $ */
 end_comment
 
 begin_comment
@@ -16,6 +16,14 @@ include|#
 directive|include
 file|"includes.h"
 end_include
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -1894,7 +1902,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|cc
 argument_list|,
@@ -5175,6 +5183,28 @@ operator|->
 name|input
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|memchr
+argument_list|(
+name|p
+argument_list|,
+literal|'\0'
+argument_list|,
+name|have
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"channel %d: decode socks4: user not nul terminated"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|strlen
@@ -6971,6 +7001,38 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
+name|local_ipaddr
+init|=
+name|get_local_ipaddr
+argument_list|(
+name|c
+operator|->
+name|sock
+argument_list|)
+decl_stmt|;
+name|int
+name|local_port
+init|=
+name|c
+operator|->
+name|sock
+operator|==
+operator|-
+literal|1
+condition|?
+literal|65536
+else|:
+name|get_sock_port
+argument_list|(
+name|c
+operator|->
+name|sock
+argument_list|,
+literal|1
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
 name|remote_ipaddr
 init|=
 name|get_peer_ipaddr
@@ -7037,7 +7099,7 @@ sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%s: listening port %d for %.100s port %d, "
-literal|"connect from %.200s port %d"
+literal|"connect from %.200s port %d to %.100s port %d"
 argument_list|,
 name|rtype
 argument_list|,
@@ -7056,6 +7118,10 @@ argument_list|,
 name|remote_ipaddr
 argument_list|,
 name|remote_port
+argument_list|,
+name|local_ipaddr
+argument_list|,
+name|local_port
 argument_list|)
 expr_stmt|;
 name|free
@@ -7143,9 +7209,7 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
-name|c
-operator|->
-name|listening_port
+name|local_port
 argument_list|)
 expr_stmt|;
 block|}
@@ -7216,6 +7280,11 @@ block|}
 name|free
 argument_list|(
 name|remote_ipaddr
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|local_ipaddr
 argument_list|)
 expr_stmt|;
 block|}
@@ -13448,7 +13517,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|bzero
+name|explicit_bzero
 argument_list|(
 name|cc
 argument_list|,
@@ -13612,10 +13681,49 @@ operator|==
 literal|1
 operator|)
 condition|)
+block|{
 name|wildcard
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 			 * Notify client if they requested a specific listen 			 * address and it was overridden. 			 */
+if|if
+condition|(
+operator|*
+name|listen_addr
+operator|!=
+literal|'\0'
+operator|&&
+name|strcmp
+argument_list|(
+name|listen_addr
+argument_list|,
+literal|"0.0.0.0"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|listen_addr
+argument_list|,
+literal|"*"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|packet_send_debug
+argument_list|(
+literal|"Forwarding listen address "
+literal|"\"%s\" overridden by server "
+literal|"GatewayPorts"
+argument_list|,
+name|listen_addr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 elseif|else
 if|if
 condition|(
@@ -16208,9 +16316,11 @@ operator|->
 name|aitop
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|cctx
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -16218,22 +16328,6 @@ operator|*
 name|cctx
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|cctx
-operator|->
-name|host
-operator|=
-name|NULL
-expr_stmt|;
-name|cctx
-operator|->
-name|ai
-operator|=
-name|cctx
-operator|->
-name|aitop
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 comment|/* Return CONNECTING channel to remote host, port */

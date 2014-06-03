@@ -523,6 +523,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CM_WKUP_ADC_TSC_CLKCTRL
+value|(CM_WKUP + 0x0BC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CM_DPLL
 value|0x500
 end_define
@@ -941,7 +948,7 @@ end_define
 begin_decl_stmt
 name|struct
 name|ti_clock_dev
-name|ti_clk_devmap
+name|ti_am335x_clk_devmap
 index|[]
 init|=
 block|{
@@ -1207,6 +1214,12 @@ block|,
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
 name|I2C2_CLK
+argument_list|)
+block|,
+comment|/* TSC_ADC */
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|TSC_ADC_CLK
 argument_list|)
 block|,
 comment|/* EDMA */
@@ -1537,6 +1550,16 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* TSC_ADC module */
+name|_CLK_DETAIL
+argument_list|(
+name|TSC_ADC_CLK
+argument_list|,
+name|CM_WKUP_ADC_TSC_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* EDMA modules */
 name|_CLK_DETAIL
 argument_list|(
@@ -1703,6 +1726,19 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 name|ofw_bus_is_compatible

@@ -1440,6 +1440,10 @@ break|break;
 case|case
 name|OPT_Wall
 case|:
+comment|/* APPLE LOCAL -Wmost */
+case|case
+name|OPT_Wmost
+case|:
 name|set_Wunused
 argument_list|(
 name|value
@@ -1463,10 +1467,18 @@ name|warn_missing_braces
 operator|=
 name|value
 expr_stmt|;
+comment|/* APPLE LOCAL begin -Wmost --dpatel */
+if|if
+condition|(
+name|code
+operator|!=
+name|OPT_Wmost
+condition|)
 name|warn_parentheses
 operator|=
 name|value
 expr_stmt|;
+comment|/* APPLE LOCAL end -Wmost --dpatel */
 name|warn_return_type
 operator|=
 name|value
@@ -3199,6 +3211,26 @@ name|flag_inline_trees
 operator|=
 literal|2
 expr_stmt|;
+comment|/* APPLE LOCAL begin radar 5811887  - radar 6084601 */
+comment|/* In all flavors of c99, except for ObjC/ObjC++, blocks are off by default       unless requested via -fblocks. */
+if|if
+condition|(
+name|flag_blocks
+operator|==
+operator|-
+literal|1
+operator|&&
+name|flag_iso
+operator|&&
+operator|!
+name|c_dialect_objc
+argument_list|()
+condition|)
+name|flag_blocks
+operator|=
+literal|0
+expr_stmt|;
+comment|/* APPLE LOCAL end radar 5811887 - radar 6084601 */
 comment|/* By default we use C99 inline semantics in GNU99 or C99 mode.  C99      inline semantics are not supported in GNU89 or C89 mode.  */
 if|if
 condition|(

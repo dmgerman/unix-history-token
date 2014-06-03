@@ -74,7 +74,6 @@ name|namespace
 name|llvm
 block|{
 comment|/// Utility function to encode a SLEB128 value to an output stream.
-specifier|static
 specifier|inline
 name|void
 name|encodeSLEB128
@@ -156,7 +155,7 @@ name|Byte
 operator||=
 literal|0x80
 expr_stmt|;
-comment|// Mark this byte that that more bytes will follow.
+comment|// Mark this byte to show that more bytes will follow.
 name|OS
 operator|<<
 name|char
@@ -172,7 +171,6 @@ condition|)
 do|;
 block|}
 comment|/// Utility function to encode a ULEB128 value to an output stream.
-specifier|static
 specifier|inline
 name|void
 name|encodeULEB128
@@ -217,7 +215,7 @@ name|Byte
 operator||=
 literal|0x80
 expr_stmt|;
-comment|// Mark this byte that that more bytes will follow.
+comment|// Mark this byte to show that more bytes will follow.
 name|OS
 operator|<<
 name|char
@@ -263,7 +261,6 @@ block|}
 block|}
 comment|/// Utility function to encode a ULEB128 value to a buffer. Returns
 comment|/// the length in bytes of the encoded value.
-specifier|static
 specifier|inline
 name|unsigned
 name|encodeULEB128
@@ -314,7 +311,7 @@ name|Byte
 operator||=
 literal|0x80
 expr_stmt|;
-comment|// Mark this byte that that more bytes will follow.
+comment|// Mark this byte to show that more bytes will follow.
 operator|*
 name|p
 operator|++
@@ -372,7 +369,6 @@ argument_list|)
 return|;
 block|}
 comment|/// Utility function to decode a ULEB128 value.
-specifier|static
 specifier|inline
 name|uint64_t
 name|decodeULEB128

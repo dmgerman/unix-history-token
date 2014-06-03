@@ -787,7 +787,8 @@ return|;
 block|}
 comment|/// Converts the TimeValue into the corresponding number of "ticks" for
 comment|/// Win32 platforms, correcting for the difference in Win32 zero time.
-comment|/// @brief Convert to windows time (seconds since 12:00:00a Jan 1, 1601)
+comment|/// @brief Convert to Win32's FILETIME
+comment|/// (100ns intervals since 00:00:00 Jan 1, 1601 UTC)
 name|uint64_t
 name|toWin32Time
 argument_list|()
@@ -796,9 +797,16 @@ block|{
 name|uint64_t
 name|result
 operator|=
+operator|(
+name|uint64_t
+operator|)
+literal|10000000
+operator|*
+operator|(
 name|seconds_
 operator|-
 name|Win32ZeroTimeSeconds
+operator|)
 block|;
 name|result
 operator|+=

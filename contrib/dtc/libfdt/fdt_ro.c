@@ -1386,7 +1386,7 @@ name|nodeoffset
 parameter_list|)
 block|{
 specifier|const
-name|uint32_t
+name|fdt32_t
 modifier|*
 name|php
 decl_stmt|;
@@ -2306,9 +2306,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|_fdt_stringlist_contains
+name|fdt_stringlist_contains
 parameter_list|(
 specifier|const
 name|char
@@ -2455,7 +2454,7 @@ name|len
 return|;
 if|if
 condition|(
-name|_fdt_stringlist_contains
+name|fdt_stringlist_contains
 argument_list|(
 name|prop
 argument_list|,

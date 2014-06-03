@@ -8867,7 +8867,7 @@ index|[
 literal|1
 index|]
 operator|&
-name|IEEE80211_FC1_WEP
+name|IEEE80211_FC1_PROTECTED
 condition|)
 block|{
 name|IEEE80211_DISCARD
@@ -12737,7 +12737,7 @@ expr|struct
 name|ieee80211_frame
 argument_list|)
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

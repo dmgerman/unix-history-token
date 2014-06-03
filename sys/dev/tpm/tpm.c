@@ -5610,53 +5610,21 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/* Write single byte using legacy interface. */
 end_comment
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|tpm_legacy_out
-parameter_list|(
-name|bus_space_tag_t
-name|iot
-parameter_list|,
-name|bus_space_handle_t
-name|ioh
-parameter_list|,
-name|int
-name|reg
-parameter_list|,
-name|u_int8_t
-name|v
-parameter_list|)
-block|{
-name|bus_space_write_1
-argument_list|(
-name|iot
-argument_list|,
-name|ioh
-argument_list|,
-literal|0
-argument_list|,
-name|reg
-argument_list|)
-expr_stmt|;
-name|bus_space_write_1
-argument_list|(
-name|iot
-argument_list|,
-name|ioh
-argument_list|,
-literal|1
-argument_list|,
-name|v
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_endif
+unit|static inline void tpm_legacy_out(bus_space_tag_t iot, bus_space_handle_t ioh, int reg, u_int8_t v) { 	bus_space_write_1(iot, ioh, 0, reg); 	bus_space_write_1(iot, ioh, 1, v); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Probe for TPM using legacy interface. */

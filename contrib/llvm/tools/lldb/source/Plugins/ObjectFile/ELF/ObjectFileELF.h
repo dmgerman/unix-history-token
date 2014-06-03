@@ -315,6 +315,17 @@ name|ParseHeader
 argument_list|()
 block|;
 name|virtual
+name|bool
+name|SetLoadAddress
+argument_list|(
+argument|lldb_private::Target&target
+argument_list|,
+argument|lldb::addr_t value
+argument_list|,
+argument|bool value_is_offset
+argument_list|)
+block|;
+name|virtual
 name|lldb
 operator|::
 name|ByteOrder

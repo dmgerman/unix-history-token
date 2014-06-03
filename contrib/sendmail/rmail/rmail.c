@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 1998-2001 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|copyright
 argument_list|,
-literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2001 Proofpoint, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 argument_list|)
 end_macro
 
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: rmail.c,v 8.62 2013/03/12 15:24:52 ca Exp $"
+literal|"@(#)$Id: rmail.c,v 8.63 2013-11-22 20:51:53 ca Exp $"
 argument_list|)
 end_macro
 

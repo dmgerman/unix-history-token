@@ -818,7 +818,7 @@ name|cpu_vendor
 condition|)
 name|printf
 argument_list|(
-literal|"  Origin = \"%s\""
+literal|"  Origin=\"%s\""
 argument_list|,
 name|cpu_vendor
 argument_list|)
@@ -829,7 +829,7 @@ name|cpu_id
 condition|)
 name|printf
 argument_list|(
-literal|"  Id = 0x%x"
+literal|"  Id=0x%x"
 argument_list|,
 name|cpu_id
 argument_list|)
@@ -851,7 +851,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Family = 0x%x"
+literal|"  Family=0x%x"
 argument_list|,
 name|CPUID_TO_FAMILY
 argument_list|(
@@ -861,7 +861,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Model = 0x%x"
+literal|"  Model=0x%x"
 argument_list|,
 name|CPUID_TO_MODEL
 argument_list|(
@@ -871,7 +871,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Stepping = %u"
+literal|"  Stepping=%u"
 argument_list|,
 name|cpu_id
 operator|&
@@ -1203,13 +1203,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n  Standard Extended Features=0x%b"
+literal|"\n  Structured Extended Features=0x%b"
 argument_list|,
 name|cpu_stdext_feature
 argument_list|,
 literal|"\020"
 comment|/* RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE */
-literal|"\001GSFSBASE"
+literal|"\001FSGSBASE"
 literal|"\002TSCADJ"
 comment|/* Bit Manipulation Instructions */
 literal|"\004BMI1"
@@ -1221,17 +1221,27 @@ comment|/* Supervisor Mode Execution Prot. */
 literal|"\010SMEP"
 comment|/* Bit Manipulation Instructions */
 literal|"\011BMI2"
-literal|"\012ENHMOVSB"
+literal|"\012ERMS"
 comment|/* Invalidate Processor Context ID */
 literal|"\013INVPCID"
 comment|/* Restricted Transactional Memory */
 literal|"\014RTM"
+comment|/* Intel Memory Protection Extensions */
+literal|"\017MPX"
+comment|/* AVX512 Foundation */
+literal|"\021AVX512F"
 comment|/* Enhanced NRBG */
 literal|"\023RDSEED"
 comment|/* ADCX + ADOX */
 literal|"\024ADX"
 comment|/* Supervisor Mode Access Prevention */
 literal|"\025SMAP"
+literal|"\030CLFLUSHOPT"
+literal|"\032PROCTRACE"
+literal|"\033AVX512PF"
+literal|"\034AVX512ER"
+literal|"\035AVX512CD"
+literal|"\036SHA"
 argument_list|)
 expr_stmt|;
 block|}

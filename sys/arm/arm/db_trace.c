@@ -1027,11 +1027,9 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|insn
 operator|==
 name|INSN_POP_REGS
-operator|)
 condition|)
 block|{
 name|unsigned

@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/fdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/resource.h>
 end_include
 
@@ -1360,7 +1366,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|bcm2835fb
 argument_list|,
-name|nexus
+name|ofwbus
 argument_list|,
 name|bcm_fb_driver
 argument_list|,

@@ -588,9 +588,6 @@ decl_stmt|;
 name|int
 name|nd_cleaner_exit
 decl_stmt|;
-name|int
-name|nd_is_nand
-decl_stmt|;
 name|struct
 name|nandfs_fsarea
 name|nd_fsarea
@@ -709,6 +706,9 @@ name|nd_erasesize
 decl_stmt|;
 name|uint32_t
 name|nd_devblocksize
+decl_stmt|;
+name|uint32_t
+name|nd_segs_reserved
 decl_stmt|;
 comment|/* Segment usage */
 name|uint64_t

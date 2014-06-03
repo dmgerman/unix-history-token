@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCAsmInfo.h"
+file|"llvm/MC/MCAsmInfoELF.h"
 end_include
 
 begin_decl_stmt
@@ -73,12 +73,19 @@ name|struct
 name|AArch64ELFMCAsmInfo
 range|:
 name|public
-name|MCAsmInfo
+name|MCAsmInfoELF
 block|{
 name|explicit
 name|AArch64ELFMCAsmInfo
 argument_list|()
-block|;   }
+block|;
+name|private
+operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

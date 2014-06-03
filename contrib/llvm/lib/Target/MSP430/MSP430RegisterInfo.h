@@ -99,11 +99,6 @@ name|MSP430TargetMachine
 operator|&
 name|TM
 block|;
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|TII
-block|;
 comment|/// StackAlign - Default stack alignment.
 comment|///
 name|unsigned
@@ -116,11 +111,6 @@ argument_list|(
 name|MSP430TargetMachine
 operator|&
 name|tm
-argument_list|,
-specifier|const
-name|TargetInstrInfo
-operator|&
-name|tii
 argument_list|)
 block|;
 comment|/// Code Generation virtual methods...

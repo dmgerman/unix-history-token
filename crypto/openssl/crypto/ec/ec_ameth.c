@@ -189,7 +189,7 @@ condition|(
 name|pstr
 operator|->
 name|length
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{

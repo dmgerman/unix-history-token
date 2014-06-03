@@ -102,26 +102,12 @@ begin_comment
 comment|/* get process group */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCADDRT
-value|_IOW('r', 10, struct ortentry)
-end_define
-
 begin_comment
-comment|/* add route */
+comment|/*	SIOCADDRT	 _IOW('r', 10, struct ortentry)	4.3BSD */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIOCDELRT
-value|_IOW('r', 11, struct ortentry)
-end_define
-
 begin_comment
-comment|/* delete route */
+comment|/*	SIOCDELRT	 _IOW('r', 11, struct ortentry)	4.3BSD */
 end_comment
 
 begin_define

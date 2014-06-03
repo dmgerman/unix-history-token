@@ -65,6 +65,58 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* This '#if' asks the question 'Does CP15/SCC include performance counters?' */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM1136
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|CPU_CORTEXA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
+argument_list|)
+name|uint32_t
+name|ccnt
+decl_stmt|;
+name|uint64_t
+name|ccnt64
+decl_stmt|;
+comment|/* 	 * Read PMCCNTR. Curses! Its only 32 bits. 	 * TODO: Fix this by catching overflow with interrupt? 	 */
+asm|__asm __volatile("mrc p15, 0, %0, c9, c13, 0": "=r" (ccnt));
+name|ccnt64
+operator|=
+operator|(
+name|uint64_t
+operator|)
+name|ccnt
+expr_stmt|;
+return|return
+operator|(
+name|ccnt64
+operator|)
+return|;
+else|#
+directive|else
+comment|/* No performance counters, so use binuptime(9). This is slooooow */
 name|struct
 name|bintime
 name|bt
@@ -93,6 +145,8 @@ operator|>>
 literal|8
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -175,6 +229,10 @@ name|vector_page
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Params passed into initarm. If you change the size of this you will  * need to update locore.S to allocate more memory on the stack before  * it calls initarm.  */
+end_comment
+
 begin_struct
 struct|struct
 name|arm_boot_params
@@ -199,6 +257,14 @@ name|register_t
 name|abp_r3
 decl_stmt|;
 comment|/* r3 from the boot loader */
+name|vm_offset_t
+name|abp_physaddr
+decl_stmt|;
+comment|/* The kernel physical address */
+name|vm_offset_t
+name|abp_pagetable
+decl_stmt|;
+comment|/* The early page table */
 block|}
 struct|;
 end_struct

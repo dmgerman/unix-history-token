@@ -15,6 +15,12 @@ directive|define
 name|_NET_ROUTE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/counter.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel resident routing tables.  *  * The routing tables are initialized when interface addresses  * are set by making entries for all directly connected interfaces.  */
 end_comment
@@ -74,34 +80,6 @@ end_define
 begin_comment
 comment|/* doesn't hold reference on ro_rt */
 end_comment
-
-begin_comment
-comment|/*  * These numbers are used by reliable protocols for determining  * retransmission behavior and are included in the routing structure.  */
-end_comment
-
-begin_struct
-struct|struct
-name|rt_metrics_lite
-block|{
-name|u_long
-name|rmx_mtu
-decl_stmt|;
-comment|/* MTU for this path */
-name|u_long
-name|rmx_expire
-decl_stmt|;
-comment|/* lifetime for route, e.g. redirect */
-name|u_long
-name|rmx_pksent
-decl_stmt|;
-comment|/* packets sent using this route */
-name|u_long
-name|rmx_weight
-decl_stmt|;
-comment|/* absolute weight */
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -198,6 +176,17 @@ begin_comment
 comment|/* Explicitly mark fib=0 restricted cases */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RT_ALL_FIBS
+value|-1
+end_define
+
+begin_comment
+comment|/* Announce event for every fib */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -206,18 +195,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number fo usable routing tables */
+comment|/* number of usable routing tables */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|rt_add_addr_allfibs
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/*  * XXX kernel function pointer `rt_output' is visible to applications.  */
+comment|/* Announce interfaces to all fibs */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
 
 begin_comment
 comment|/*  * We distinguish between routes to hosts and routes to networks,  * preferring the former if available.  For each route we infer  * the interface to use from the gateway address supplied when  * the route was entered.  Routes that forward packets through  * gateways are marked so that the output routines know to address the  * gateway rather than the ultimate destination.  */
@@ -257,6 +247,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_RTENTRY
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
 name|rtentry
@@ -290,14 +294,6 @@ modifier|*
 name|rt_gateway
 decl_stmt|;
 comment|/* value */
-name|int
-name|rt_flags
-decl_stmt|;
-comment|/* up/down?, host/net */
-name|int
-name|rt_refcnt
-decl_stmt|;
-comment|/* # held references */
 name|struct
 name|ifnet
 modifier|*
@@ -310,80 +306,55 @@ modifier|*
 name|rt_ifa
 decl_stmt|;
 comment|/* the answer: interface address to use */
-name|struct
-name|rt_metrics_lite
-name|rt_rmx
+name|int
+name|rt_flags
 decl_stmt|;
-comment|/* metrics used by rx'ing protocols */
+comment|/* up/down?, host/net */
+name|int
+name|rt_refcnt
+decl_stmt|;
+comment|/* # held references */
 name|u_int
 name|rt_fibnum
 decl_stmt|;
 comment|/* which FIB */
-ifdef|#
-directive|ifdef
-name|_KERNEL
-comment|/* XXX ugly, user apps use this definition but don't have a mtx def */
+name|u_long
+name|rt_mtu
+decl_stmt|;
+comment|/* MTU for this path */
+name|u_long
+name|rt_weight
+decl_stmt|;
+comment|/* absolute weight */
+name|u_long
+name|rt_expire
+decl_stmt|;
+comment|/* lifetime for route, e.g. redirect */
+define|#
+directive|define
+name|rt_endzero
+value|rt_pksent
+name|counter_u64_t
+name|rt_pksent
+decl_stmt|;
+comment|/* packets sent using this route */
 name|struct
 name|mtx
 name|rt_mtx
 decl_stmt|;
 comment|/* mutex for routing entry */
+block|}
+struct|;
+end_struct
+
+begin_endif
 endif|#
 directive|endif
-block|}
-struct|;
-end_struct
+end_endif
 
 begin_comment
-comment|/*  * Following structure necessary for 4.3 compatibility;  * We should eventually move it to a compat file.  */
+comment|/* _KERNEL || _WANT_RTENTRY */
 end_comment
-
-begin_struct
-struct|struct
-name|ortentry
-block|{
-name|u_long
-name|rt_hash
-decl_stmt|;
-comment|/* to speed lookups */
-name|struct
-name|sockaddr
-name|rt_dst
-decl_stmt|;
-comment|/* key */
-name|struct
-name|sockaddr
-name|rt_gateway
-decl_stmt|;
-comment|/* value */
-name|short
-name|rt_flags
-decl_stmt|;
-comment|/* up/down?, host/net */
-name|short
-name|rt_refcnt
-decl_stmt|;
-comment|/* # held references */
-name|u_long
-name|rt_use
-decl_stmt|;
-comment|/* raw # packets forwarded */
-name|struct
-name|ifnet
-modifier|*
-name|rt_ifp
-decl_stmt|;
-comment|/* the answer: interface to use */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|rt_use
-value|rt_rmx.rmx_pksent
-end_define
 
 begin_define
 define|#
@@ -548,30 +519,8 @@ comment|/* protocol specific routing flag */
 end_comment
 
 begin_comment
-comment|/* XXX: temporary to stay API/ABI compatible with userland */
+comment|/*			0x10000		   unused, was RTF_PRCLONING */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RTF_PRCLONING
-value|0x10000
-end_define
-
-begin_comment
-comment|/* unused, for compatibility */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*			0x20000		   unused, was RTF_WASCLONED */
@@ -881,26 +830,12 @@ begin_comment
 comment|/* fix specified metrics */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RTM_OLDADD
-value|0x9
-end_define
-
 begin_comment
-comment|/* caused by SIOCADDRT */
+comment|/*	0x9  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RTM_OLDDEL
-value|0xa
-end_define
-
 begin_comment
-comment|/* caused by SIOCDELRT */
+comment|/*	0xa  */
 end_comment
 
 begin_define
@@ -1317,6 +1252,14 @@ name|ifnet
 modifier|*
 name|rti_ifp
 decl_stmt|;
+name|u_long
+name|rti_mflags
+decl_stmt|;
+name|struct
+name|rt_metrics
+modifier|*
+name|rti_rmx
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1334,6 +1277,18 @@ name|sa
 parameter_list|)
 define|\
 value|(  (!(sa) || ((struct sockaddr *)(sa))->sa_len == 0) ?	\ 	sizeof(long)		:				\ 	1 + ( (((struct sockaddr *)(sa))->sa_len - 1) | (sizeof(long) - 1) ) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|sa_equal
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(	\     (((struct sockaddr *)(a))->sa_len == ((struct sockaddr *)(b))->sa_len)&& \     (bcmp((a), (b), ((struct sockaddr *)(b))->sa_len) == 0))
 end_define
 
 begin_ifdef
@@ -1401,6 +1356,16 @@ parameter_list|(
 name|_rt
 parameter_list|)
 value|mtx_assert(&(_rt)->rt_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_UNLOCK_COND
+parameter_list|(
+name|_rt
+parameter_list|)
+value|do {				\ 	if (mtx_owned(&(_rt)->rt_mtx))				\ 		mtx_unlock(&(_rt)->rt_mtx);			\ } while (0)
 end_define
 
 begin_define
@@ -1593,6 +1558,43 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|rt_addrmsg
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|ifaddr
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|rt_routemsg
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|rt_newmaddrmsg
 parameter_list|(
@@ -1643,14 +1645,55 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|rtsock_addrmsg
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|ifaddr
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|rtsock_routemsg
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Note the following locking behavior:  *  *    rtalloc_ign() and rtalloc() return ro->ro_rt unlocked  *  *    rtalloc1() returns a locked rtentry  *  *    rtfree() and RTFREE_LOCKED() require a locked rtentry  *  *    RTFREE() uses an unlocked entry.  */
 end_comment
 
 begin_function_decl
 name|int
-name|rtexpunge
+name|rt_expunge
 parameter_list|(
+name|struct
+name|radix_node_head
+modifier|*
+parameter_list|,
 name|struct
 name|rtentry
 modifier|*
@@ -1836,36 +1879,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
-
-begin_comment
-comment|/* defaults to "all" FIBs */
-end_comment
-
-begin_function_decl
-name|int
-name|rtinit_fib
-parameter_list|(
-name|struct
-name|ifaddr
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* XXX MRT NEW VERSIONS THAT USE FIBs  * For now the protocol indepedent versions are the same as the AF_INET ones  * but this will change..   */
 end_comment
@@ -2037,31 +2050,6 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|rtevent_arp_update_fn
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-parameter_list|,
-name|uint8_t
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
 name|rtevent_redirect_fn
 function_decl|)
 parameter_list|(
@@ -2082,20 +2070,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/* route_arp_update_event is no longer generated; see arp_update_event */
-end_comment
-
-begin_expr_stmt
-name|EVENTHANDLER_DECLARE
-argument_list|(
-name|route_arp_update_event
-argument_list|,
-name|rtevent_arp_update_fn
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|EVENTHANDLER_DECLARE

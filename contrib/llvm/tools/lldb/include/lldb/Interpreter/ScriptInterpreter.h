@@ -862,7 +862,7 @@ name|true
 return|;
 block|}
 name|virtual
-name|bool
+name|Error
 name|ExecuteMultipleLines
 parameter_list|(
 specifier|const
@@ -879,8 +879,18 @@ name|ExecuteScriptOptions
 argument_list|()
 parameter_list|)
 block|{
+name|Error
+name|error
+decl_stmt|;
+name|error
+operator|.
+name|SetErrorString
+argument_list|(
+literal|"not implemented"
+argument_list|)
+expr_stmt|;
 return|return
-name|true
+name|error
 return|;
 block|}
 name|virtual

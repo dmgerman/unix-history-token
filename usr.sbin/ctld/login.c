@@ -456,32 +456,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|request
-operator|->
-name|pdu_data_len
-operator|==
-literal|0
-condition|)
-block|{
-name|login_send_error
-argument_list|(
-name|request
-argument_list|,
-literal|0x02
-argument_list|,
-literal|0x00
-argument_list|)
-expr_stmt|;
-name|log_errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"received Login PDU with empty data segment"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|ntohl
 argument_list|(
 name|bhslr
@@ -3969,7 +3943,7 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"beginning parameter negotiation; "
+literal|"beginning operational parameter negotiation; "
 literal|"waiting for Login PDU"
 argument_list|)
 expr_stmt|;
@@ -4108,7 +4082,7 @@ expr_stmt|;
 block|}
 name|log_debugx
 argument_list|(
-literal|"parameter negotiation done; "
+literal|"operational parameter negotiation done; "
 literal|"transitioning to Full Feature Phase"
 argument_list|)
 expr_stmt|;
@@ -4627,7 +4601,7 @@ name|conn
 operator|->
 name|conn_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|,
 name|conn
 operator|->
@@ -4650,7 +4624,7 @@ name|conn
 operator|->
 name|conn_target
 operator|->
-name|t_iqn
+name|t_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -4704,6 +4678,115 @@ literal|"initiator requests discovery session"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* 	 * Enforce initiator-name and initiator-portal. 	 */
+if|if
+condition|(
+name|auth_name_defined
+argument_list|(
+name|ag
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|auth_name_find
+argument_list|(
+name|ag
+argument_list|,
+name|initiator_name
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|login_send_error
+argument_list|(
+name|request
+argument_list|,
+literal|0x02
+argument_list|,
+literal|0x02
+argument_list|)
+expr_stmt|;
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"initiator does not match allowed "
+literal|"initiator names"
+argument_list|)
+expr_stmt|;
+block|}
+name|log_debugx
+argument_list|(
+literal|"initiator matches allowed initiator names"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|log_debugx
+argument_list|(
+literal|"auth-group does not define initiator name "
+literal|"restrictions"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|auth_portal_defined
+argument_list|(
+name|ag
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|auth_portal_find
+argument_list|(
+name|ag
+argument_list|,
+name|conn
+operator|->
+name|conn_initiator_addr
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|login_send_error
+argument_list|(
+name|request
+argument_list|,
+literal|0x02
+argument_list|,
+literal|0x02
+argument_list|)
+expr_stmt|;
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"initiator does not match allowed "
+literal|"initiator portals"
+argument_list|)
+expr_stmt|;
+block|}
+name|log_debugx
+argument_list|(
+literal|"initiator matches allowed initiator portals"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|log_debugx
+argument_list|(
+literal|"auth-group does not define initiator portal "
+literal|"restrictions"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Let's see if the initiator intends to do any kind of authentication 	 * at all. 	 */
 if|if
@@ -4776,7 +4859,7 @@ comment|/* 		 * Initiator might want to to authenticate, 		 * but we don't need 
 name|log_debugx
 argument_list|(
 literal|"authentication not required; "
-literal|"transitioning to parameter negotiation"
+literal|"transitioning to operational parameter negotiation"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4990,6 +5073,32 @@ name|ag
 operator|->
 name|ag_type
 operator|==
+name|AG_TYPE_DENY
+condition|)
+block|{
+name|login_send_error
+argument_list|(
+name|request
+argument_list|,
+literal|0x02
+argument_list|,
+literal|0x01
+argument_list|)
+expr_stmt|;
+name|log_errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"auth-type is \"deny\""
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ag
+operator|->
+name|ag_type
+operator|==
 name|AG_TYPE_UNKNOWN
 condition|)
 block|{
@@ -5007,7 +5116,7 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"auth-group type not set, denying access"
+literal|"auth-type not set, denying access"
 argument_list|)
 expr_stmt|;
 block|}

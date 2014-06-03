@@ -389,6 +389,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|sched_lock
@@ -3988,9 +3989,9 @@ name|sched
 argument_list|, , ,
 name|off__cpu
 argument_list|,
-name|td
+name|newtd
 argument_list|,
-name|td
+name|newtd
 operator|->
 name|td_proc
 argument_list|)

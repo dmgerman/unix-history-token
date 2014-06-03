@@ -230,6 +230,7 @@ name|Stored
 return|;
 block|}
 comment|/// \brief Implicit conversion to bool.
+name|LLVM_EXPLICIT
 name|operator
 name|bool
 argument_list|()

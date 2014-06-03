@@ -208,6 +208,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printMemOffset
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printopaquemem
 argument_list|(
 argument|const MCInst *MI
@@ -219,7 +229,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"OPAQUE PTR "
+literal|"opaque ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -242,7 +252,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"BYTE PTR "
+literal|"byte ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -265,7 +275,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"WORD PTR "
+literal|"word ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -288,7 +298,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"DWORD PTR "
+literal|"dword ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -311,7 +321,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"QWORD PTR "
+literal|"qword ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -334,7 +344,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"XMMWORD PTR "
+literal|"xmmword ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -357,7 +367,30 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"YMMWORD PTR "
+literal|"ymmword ptr "
+block|;
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printi512mem
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|O
+operator|<<
+literal|"zmmword ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -380,7 +413,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"DWORD PTR "
+literal|"dword ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -403,7 +436,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"QWORD PTR "
+literal|"qword ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -426,7 +459,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"XWORD PTR "
+literal|"xword ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -449,7 +482,7 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"XMMWORD PTR "
+literal|"xmmword ptr "
 block|;
 name|printMemReference
 argument_list|(
@@ -472,9 +505,124 @@ argument_list|)
 block|{
 name|O
 operator|<<
-literal|"YMMWORD PTR "
+literal|"ymmword ptr "
 block|;
 name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printf512mem
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|O
+operator|<<
+literal|"zmmword ptr "
+block|;
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printMemOffs8
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|O
+operator|<<
+literal|"byte ptr "
+block|;
+name|printMemOffset
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printMemOffs16
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|O
+operator|<<
+literal|"word ptr "
+block|;
+name|printMemOffset
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printMemOffs32
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|O
+operator|<<
+literal|"dword ptr "
+block|;
+name|printMemOffset
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
+name|printMemOffs64
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|O
+operator|<<
+literal|"qword ptr "
+block|;
+name|printMemOffset
 argument_list|(
 name|MI
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * services/outside_network.h - listen to answers from the network  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * services/outside_network.h - listen to answers from the network  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -85,6 +85,12 @@ name|port_if
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|sldns_buffer
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/**  * Send queries to outside servers and wait for answers from servers.  * Contains answer-listen sockets.  */
 end_comment
@@ -100,7 +106,7 @@ modifier|*
 name|base
 decl_stmt|;
 comment|/** pointer to time in seconds */
-name|uint32_t
+name|time_t
 modifier|*
 name|now_secs
 decl_stmt|;
@@ -111,7 +117,8 @@ modifier|*
 name|now_tv
 decl_stmt|;
 comment|/** buffer shared by UDP connections, since there is only one 	    datagram at any time. */
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|udp_buff
 decl_stmt|;
@@ -164,6 +171,15 @@ decl_stmt|;
 comment|/** if udp is done */
 name|int
 name|do_udp
+decl_stmt|;
+comment|/** if udp is delay-closed (delayed answers do not meet closed port)*/
+name|int
+name|delayclose
+decl_stmt|;
+comment|/** timeout for delayclose */
+name|struct
+name|timeval
+name|delay_tv
 decl_stmt|;
 comment|/** array of outgoing IP4 interfaces */
 name|struct
@@ -702,7 +718,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * Create outside_network structure with N udp ports.  * @param base: the communication base to use for event handling.  * @param bufsize: size for network buffers.  * @param num_ports: number of udp ports to open per interface.  * @param ifs: interface names (or NULL for default interface).  *    These interfaces must be able to access all authoritative servers.  * @param num_ifs: number of names in array ifs.  * @param do_ip4: service IP4.  * @param do_ip6: service IP6.  * @param num_tcp: number of outgoing tcp buffers to preallocate.  * @param infra: pointer to infra cached used for serviced queries.  * @param rnd: stored to create random numbers for serviced queries.  * @param use_caps_for_id: enable to use 0x20 bits to encode id randomness.  * @param availports: array of available ports.   * @param numavailports: number of available ports in array.  * @param unwanted_threshold: when to take defensive action.  * @param unwanted_action: the action to take.  * @param unwanted_param: user parameter to action.  * @param do_udp: if udp is done.  * @param sslctx: context to create outgoing connections with (if enabled).  * @return: the new structure (with no pending answers) or NULL on error.  */
+comment|/**  * Create outside_network structure with N udp ports.  * @param base: the communication base to use for event handling.  * @param bufsize: size for network buffers.  * @param num_ports: number of udp ports to open per interface.  * @param ifs: interface names (or NULL for default interface).  *    These interfaces must be able to access all authoritative servers.  * @param num_ifs: number of names in array ifs.  * @param do_ip4: service IP4.  * @param do_ip6: service IP6.  * @param num_tcp: number of outgoing tcp buffers to preallocate.  * @param infra: pointer to infra cached used for serviced queries.  * @param rnd: stored to create random numbers for serviced queries.  * @param use_caps_for_id: enable to use 0x20 bits to encode id randomness.  * @param availports: array of available ports.   * @param numavailports: number of available ports in array.  * @param unwanted_threshold: when to take defensive action.  * @param unwanted_action: the action to take.  * @param unwanted_param: user parameter to action.  * @param do_udp: if udp is done.  * @param sslctx: context to create outgoing connections with (if enabled).  * @param delayclose: if not 0, udp sockets are delayed before timeout closure.  * 	msec to wait on timeouted udp sockets.  * @return: the new structure (with no pending answers) or NULL on error.  */
 end_comment
 
 begin_function_decl
@@ -782,6 +798,9 @@ parameter_list|,
 name|void
 modifier|*
 name|sslctx
+parameter_list|,
+name|int
+name|delayclose
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -833,7 +852,8 @@ name|outside_network
 modifier|*
 name|outnet
 parameter_list|,
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|packet
 parameter_list|,
@@ -874,7 +894,8 @@ name|outside_network
 modifier|*
 name|outnet
 parameter_list|,
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|packet
 parameter_list|,
@@ -990,7 +1011,8 @@ name|void
 modifier|*
 name|callback_arg
 parameter_list|,
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|)
@@ -1112,6 +1134,21 @@ end_comment
 begin_function_decl
 name|void
 name|pending_udp_timer_cb
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/** callback for udp delay for timeout */
+end_comment
+
+begin_function_decl
+name|void
+name|pending_udp_timer_delay_cb
 parameter_list|(
 name|void
 modifier|*

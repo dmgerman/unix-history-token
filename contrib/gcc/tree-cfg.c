@@ -3638,7 +3638,11 @@ argument_list|(
 name|update_eh_label
 argument_list|)
 expr_stmt|;
-comment|/* Finally, purge dead labels.  All user-defined labels and labels that      can be the target of non-local gotos and labels which have their      address taken are preserved.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* Finally, purge dead labels.  All user-defined labels, labels that      can be the target of non-local gotos, labels which have their      address taken and labels which have attributes or alignment are      preserved.  */
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|FOR_EACH_BB
 argument_list|(
 argument|bb
@@ -3718,6 +3722,20 @@ name|DECL_ARTIFICIAL
 argument_list|(
 name|label
 argument_list|)
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+expr|\
+operator|||
+name|DECL_ATTRIBUTES
+argument_list|(
+name|label
+argument_list|)
+operator|||
+name|DECL_USER_ALIGN
+argument_list|(
+name|label
+argument_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+expr|\
 operator|||
 name|DECL_NONLOCAL
 argument_list|(

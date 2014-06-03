@@ -16,36 +16,11 @@ name|_PC98_PC98_PC98_H_
 end_define
 
 begin_comment
-comment|/* BEWARE:  Included in both assembler and C code */
-end_comment
-
-begin_comment
 comment|/*  * PC98 Bus conventions  * modified for PC9801 by A.Kojima F.Ukai M.Ishii   *			Kyoto University Microcomputer Club (KMC)  */
 end_comment
 
 begin_comment
-comment|/*  * Input / Output Port Assignments  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IO_ISABEGIN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IO_ISABEGIN
-value|0x000
-end_define
-
-begin_comment
-comment|/* 0x000 - Beginning of I/O Registers */
-end_comment
-
-begin_comment
-comment|/* PC98 IO address ... very dirty (^_^; */
+comment|/*  * Input / Output Port Assignments -- PC98 IO address ... very dirty (^_^;  */
 end_comment
 
 begin_define
@@ -136,52 +111,9 @@ begin_comment
 comment|/* FD I/F port (1M<->640K,EMTON) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IO_WD1_EPSON
-value|0x80
-end_define
-
 begin_comment
-comment|/* 386note Hard disk controller */
+comment|/*  * Input / Output Port Sizes  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_ISAEND
-value|0xFFFF
-end_define
-
-begin_comment
-comment|/* - 0x3FF End of I/O Registers */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !IO_ISABEGIN */
-end_comment
-
-begin_comment
-comment|/*  * Input / Output Port Sizes - these are from several sources, and tend  * to be the larger of what was found, ie COM ports can be 4, but some  * boards do not fully decode the address, thus 8 ports are used.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IO_ISASIZES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IO_ISASIZES
-end_define
 
 begin_define
 define|#
@@ -192,171 +124,6 @@ end_define
 
 begin_comment
 comment|/* 8042 Keyboard controllers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_LPTSIZE
-value|8
-end_define
-
-begin_comment
-comment|/* LPT controllers, some use only 4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_LPTSIZE_EXTENDED
-value|8
-end_define
-
-begin_comment
-comment|/* "Extended" LPT controllers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_LPTSIZE_NORMAL
-value|4
-end_define
-
-begin_comment
-comment|/* "Normal" LPT controllers */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !IO_ISASIZES */
-end_comment
-
-begin_comment
-comment|/*  * Input / Output Memory Physical Addresses  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IOM_BEGIN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IOM_BEGIN
-value|0x0A0000
-end_define
-
-begin_comment
-comment|/* Start of I/O Memory "hole" */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IOM_END
-value|0x100000
-end_define
-
-begin_comment
-comment|/* End of I/O Memory "hole" */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IOM_SIZE
-value|(IOM_END - IOM_BEGIN)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !IOM_BEGIN */
-end_comment
-
-begin_comment
-comment|/*  * RAM Physical Address Space (ignoring the above mentioned "hole")  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RAM_BEGIN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RAM_BEGIN
-value|0x0000000
-end_define
-
-begin_comment
-comment|/* Start of RAM Memory */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EPSON_BOUNCEDMA
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RAM_END
-value|0x0f00000
-end_define
-
-begin_comment
-comment|/* End of EPSON GR?? RAM Memory */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RAM_END
-value|0x1000000
-end_define
-
-begin_comment
-comment|/* End of RAM Memory */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|RAM_SIZE
-value|(RAM_END - RAM_BEGIN)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !RAM_BEGIN */
 end_comment
 
 begin_endif

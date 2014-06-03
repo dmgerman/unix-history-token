@@ -235,6 +235,16 @@ name|local_res
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ldns_resolver_set_source
+argument_list|(
+name|res
+argument_list|,
+name|ldns_resolver_source
+argument_list|(
+name|local_res
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ldns_resolver_set_recursive
 argument_list|(
 name|res

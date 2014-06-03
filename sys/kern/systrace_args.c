@@ -13083,70 +13083,6 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* _umtx_lock */
-case|case
-literal|434
-case|:
-block|{
-name|struct
-name|_umtx_lock_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|uarg
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|umtx
-expr_stmt|;
-comment|/* struct umtx * */
-operator|*
-name|n_args
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
-comment|/* _umtx_unlock */
-case|case
-literal|435
-case|:
-block|{
-name|struct
-name|_umtx_unlock_args
-modifier|*
-name|p
-init|=
-name|params
-decl_stmt|;
-name|uarg
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|intptr_t
-operator|)
-name|p
-operator|->
-name|umtx
-expr_stmt|;
-comment|/* struct umtx * */
-operator|*
-name|n_args
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
 comment|/* jail_attach */
 case|case
 literal|436
@@ -27806,50 +27742,6 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* _umtx_lock */
-case|case
-literal|434
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"struct umtx *"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
-comment|/* _umtx_unlock */
-case|case
-literal|435
-case|:
-switch|switch
-condition|(
-name|ndx
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-literal|"struct umtx *"
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-empty_stmt|;
-break|break;
 comment|/* jail_attach */
 case|case
 literal|436
@@ -37050,44 +36942,6 @@ break|break;
 comment|/* thr_kill */
 case|case
 literal|433
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-comment|/* _umtx_lock */
-case|case
-literal|434
-case|:
-if|if
-condition|(
-name|ndx
-operator|==
-literal|0
-operator|||
-name|ndx
-operator|==
-literal|1
-condition|)
-name|p
-operator|=
-literal|"int"
-expr_stmt|;
-break|break;
-comment|/* _umtx_unlock */
-case|case
-literal|435
 case|:
 if|if
 condition|(

@@ -388,17 +388,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|mem_err_clnt_dg
-index|[]
-init|=
-literal|"clnt_dg_create: out of memory"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * A pending RPC request which awaits a reply. Requests which have  * received their reply will have cr_xid set to zero and cr_mrep to  * the mbuf chain of the reply.  */
 end_comment

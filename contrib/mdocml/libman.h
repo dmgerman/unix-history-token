@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libman.h,v 1.55 2011/11/07 01:24:40 schwarze Exp $ */
+comment|/*	$Id: libman.h,v 1.56 2012/11/17 00:26:33 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -115,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|MACRO_PROT_ARGS
-value|struct man *m, \ 			  enum mant tok, \ 			  int line, \ 			  int ppos, \ 			  int *pos, \ 			  char *buf
+value|struct man *man, \ 			  enum mant tok, \ 			  int line, \ 			  int ppos, \ 			  int *pos, \ 			  char *buf
 end_define
 
 begin_struct
@@ -184,7 +184,7 @@ define|#
 directive|define
 name|man_pmsg
 parameter_list|(
-name|m
+name|man
 parameter_list|,
 name|l
 parameter_list|,
@@ -193,19 +193,19 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|mandoc_msg((t), (m)->parse, (l), (p), NULL)
+value|mandoc_msg((t), (man)->parse, (l), (p), NULL)
 define|#
 directive|define
 name|man_nmsg
 parameter_list|(
-name|m
+name|man
 parameter_list|,
 name|n
 parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|mandoc_msg((t), (m)->parse, (n)->line, (n)->pos, NULL)
+value|mandoc_msg((t), (man)->parse, (n)->line, (n)->pos, NULL)
 name|int
 name|man_word_alloc
 parameter_list|(

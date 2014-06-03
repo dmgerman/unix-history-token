@@ -817,7 +817,7 @@ begin_define
 define|#
 directive|define
 name|E1000_RXDEXT_STATERR_TST
-value|0x00000100
+value|0x00010000
 end_define
 
 begin_comment

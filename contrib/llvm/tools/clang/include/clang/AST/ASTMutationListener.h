@@ -103,10 +103,19 @@ name|class
 name|ObjCPropertyDecl
 decl_stmt|;
 name|class
+name|QualType
+decl_stmt|;
+name|class
 name|TagDecl
 decl_stmt|;
 name|class
 name|VarDecl
+decl_stmt|;
+name|class
+name|VarTemplateDecl
+decl_stmt|;
+name|class
+name|VarTemplateSpecializationDecl
 decl_stmt|;
 comment|/// \brief An abstract interface that should be implemented by listeners
 comment|/// that want to be notified when an AST entity gets modified after its
@@ -188,6 +197,23 @@ name|void
 name|AddedCXXTemplateSpecialization
 parameter_list|(
 specifier|const
+name|VarTemplateDecl
+modifier|*
+name|TD
+parameter_list|,
+specifier|const
+name|VarTemplateSpecializationDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// \brief A template specialization (or partial one) was added to the
+comment|/// template declaration.
+name|virtual
+name|void
+name|AddedCXXTemplateSpecialization
+parameter_list|(
+specifier|const
 name|FunctionTemplateDecl
 modifier|*
 name|TD
@@ -198,6 +224,20 @@ modifier|*
 name|D
 parameter_list|)
 block|{}
+comment|/// \brief A function's return type has been deduced.
+name|virtual
+name|void
+name|DeducedReturnType
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|,
+name|QualType
+name|ReturnType
+parameter_list|)
+function_decl|;
 comment|/// \brief An implicit member got a definition.
 name|virtual
 name|void
@@ -262,6 +302,19 @@ specifier|const
 name|ObjCCategoryDecl
 modifier|*
 name|ClassExt
+parameter_list|)
+block|{}
+comment|/// \brief A declaration is marked used which was not previously marked used.
+comment|///
+comment|/// \param D the declaration marked used
+name|virtual
+name|void
+name|DeclarationMarkedUsed
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
 parameter_list|)
 block|{}
 comment|// NOTE: If new methods are added they should also be added to

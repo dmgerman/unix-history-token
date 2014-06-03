@@ -46,7 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCDirectives.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCDwarf.h"
 end_include
 
 begin_include
@@ -152,7 +164,7 @@ name|virtual
 name|void
 name|reset
 parameter_list|()
-block|{ }
+block|{}
 comment|/// createObjectWriter - Create a new MCObjectWriter instance for use by the
 comment|/// assembler backend to emit the final object file.
 name|virtual
@@ -456,6 +468,22 @@ name|MCAssemblerFlag
 name|Flag
 parameter_list|)
 block|{}
+comment|/// \brief Generate the compact unwind encoding for the CFI instructions.
+name|virtual
+name|uint32_t
+name|generateCompactUnwindEncoding
+argument_list|(
+name|ArrayRef
+operator|<
+name|MCCFIInstruction
+operator|>
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

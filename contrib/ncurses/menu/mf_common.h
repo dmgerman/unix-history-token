@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2004,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $Id: mf_common.h,v 0.22 2005/11/26 15:26:52 tom Exp $ */
+comment|/* $Id: mf_common.h,v 0.24 2012/06/10 00:06:54 tom Exp $ */
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/*nothing*/
+comment|/*nothing */
 end_comment
 
 begin_endif
@@ -262,6 +262,30 @@ begin_comment
 comment|/* menu or form is processing hook routine */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SetStatus
+parameter_list|(
+name|target
+parameter_list|,
+name|mask
+parameter_list|)
+value|(target)->status |= (unsigned short) (mask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ClrStatus
+parameter_list|(
+name|target
+parameter_list|,
+name|mask
+parameter_list|)
+value|(target)->status = (unsigned short) (target->status& (~mask))
+end_define
+
 begin_comment
 comment|/* Call object hook */
 end_comment
@@ -276,7 +300,7 @@ parameter_list|,
 name|handler
 parameter_list|)
 define|\
-value|if ( (object) != 0&& ((object)->handler) != (void *) 0 )\    {\ 	(object)->status |= _IN_DRIVER;\ 	(object)->handler(object);\ 	(object)->status&= ~_IN_DRIVER;\    }
+value|if ( (object) != 0&& ((object)->handler) != (void *) 0 )\    {\ 	SetStatus(object, _IN_DRIVER);\ 	(object)->handler(object);\ 	ClrStatus(object, _IN_DRIVER);\    }
 end_define
 
 begin_endif

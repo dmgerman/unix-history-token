@@ -1926,11 +1926,6 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|vdrop
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
@@ -1963,6 +1958,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|vdrop
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -1987,6 +1987,11 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vdrop
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2494,7 +2499,9 @@ operator|==
 name|OBJT_SWAP
 argument_list|,
 operator|(
-literal|"vm_object_terminate: non-swap obj %p has cred"
+literal|"%s: non-swap obj %p has cred"
+operator|,
+name|__func__
 operator|,
 name|object
 operator|)
@@ -5742,6 +5749,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Use the old pindex to free the right page. */
 if|if
 condition|(
 name|backing_object
@@ -5754,9 +5762,9 @@ name|swap_pager_freespace
 argument_list|(
 name|backing_object
 argument_list|,
-name|p
-operator|->
-name|pindex
+name|new_pindex
+operator|+
+name|backing_offset_index
 argument_list|,
 literal|1
 argument_list|)
@@ -6715,7 +6723,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,

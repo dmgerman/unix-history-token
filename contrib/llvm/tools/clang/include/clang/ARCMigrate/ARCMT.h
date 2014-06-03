@@ -292,6 +292,9 @@ name|Remapper
 decl_stmt|;
 name|public
 label|:
+name|bool
+name|HadARCErrors
+decl_stmt|;
 name|MigrationProcess
 argument_list|(
 argument|const CompilerInvocation&CI

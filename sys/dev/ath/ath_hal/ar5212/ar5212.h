@@ -1036,9 +1036,6 @@ index|[
 name|HAL_DECOMP_MASK_SIZE
 index|]
 decl_stmt|;
-name|HAL_POWER_MODE
-name|ah_powerMode
-decl_stmt|;
 name|HAL_ANT_SETTING
 name|ah_antControl
 decl_stmt|;

@@ -1356,12 +1356,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL begin retune gc params 6124839 */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int
 name|ggc_min_heapsize_heuristic
 parameter_list|(
-name|void
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1371,10 +1375,14 @@ specifier|extern
 name|void
 name|init_ggc_heuristics
 parameter_list|(
-name|void
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* APPLE LOCAL end retune gc params 6124839 */
+end_comment
 
 begin_comment
 comment|/* Zone collection.  */

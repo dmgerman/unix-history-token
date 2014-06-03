@@ -111,7 +111,7 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|__wchar_t
+name|___wchar_t
 name|wchar_t
 typedef|;
 end_typedef
@@ -1359,8 +1359,6 @@ directive|if
 name|__POSIX_VISIBLE
 operator|>=
 literal|200809
-operator|||
-name|__BSD_VISIBLE
 end_if
 
 begin_function_decl

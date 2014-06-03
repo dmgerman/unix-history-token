@@ -18302,10 +18302,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 		 * AppleTalk privileges. 		 */
-case|case
-name|PRIV_NETATALK_RESERVEDPORT
-case|:
 comment|/* 		 * ATM privileges. 		 */
 case|case
 name|PRIV_NETATM_CFG
@@ -18380,13 +18376,6 @@ case|:
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 		 * IPX/SPX privileges. 		 */
-case|case
-name|PRIV_NETIPX_RESERVEDPORT
-case|:
-case|case
-name|PRIV_NETIPX_RAW
-case|:
 comment|/* 		 * NCP privileges. 		 */
 case|case
 name|PRIV_NETNCP

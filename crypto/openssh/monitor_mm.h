@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor_mm.h,v 1.5 2008/04/29 11:20:31 otto Exp $ */
+comment|/* $OpenBSD: monitor_mm.h,v 1.6 2014/01/04 17:50:55 tedu Exp $ */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ name|MM_ADDRESS_END
 parameter_list|(
 name|x
 parameter_list|)
-value|(void *)((u_char *)(x)->address + (x)->size)
+value|(void *)((char *)(x)->address + (x)->size)
 end_define
 
 begin_function_decl

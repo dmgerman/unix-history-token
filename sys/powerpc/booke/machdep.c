@@ -796,14 +796,14 @@ literal|"avail memory = %lu (%ld MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)

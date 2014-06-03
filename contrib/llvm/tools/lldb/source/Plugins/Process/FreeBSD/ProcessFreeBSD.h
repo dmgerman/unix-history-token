@@ -338,7 +338,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// liblldb_MacOSXProcess_H_
+comment|// liblldb_ProcessFreeBSD_H_
 end_comment
 
 end_unit

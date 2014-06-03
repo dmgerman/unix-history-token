@@ -207,6 +207,12 @@ name|bool
 name|HasQPX
 block|;
 name|bool
+name|HasVSX
+block|;
+name|bool
+name|HasFCPSGN
+block|;
+name|bool
 name|HasFSQRT
 block|;
 name|bool
@@ -246,10 +252,19 @@ name|bool
 name|IsBookE
 block|;
 name|bool
+name|DeprecatedMFTB
+block|;
+name|bool
+name|DeprecatedDST
+block|;
+name|bool
 name|HasLazyResolverStubs
 block|;
 name|bool
 name|IsJITCodeModel
+block|;
+name|bool
+name|IsLittleEndian
 block|;
 comment|/// TargetTriple - What processor and OS we're targeting.
 name|Triple
@@ -323,56 +338,33 @@ return|return
 name|InstrItins
 return|;
 block|}
-comment|/// getDataLayoutString - Return the pointer size and type alignment
-comment|/// properties of this subtarget.
+comment|/// \brief Reset the features for the PowerPC target.
+name|virtual
+name|void
+name|resetSubtargetFeatures
+argument_list|(
 specifier|const
-name|char
+name|MachineFunction
 operator|*
-name|getDataLayoutString
+name|MF
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|initializeEnvironment
 argument_list|()
-specifier|const
-block|{
-comment|// Note, the alignment values for f64 and i64 on ppc64 in Darwin
-comment|// documentation are wrong; these are correct (i.e. "what gcc does").
-if|if
-condition|(
-name|isPPC64
-argument_list|()
-operator|&&
-name|isSVR4ABI
-argument_list|()
-condition|)
-block|{
-if|if
-condition|(
-name|TargetTriple
-operator|.
-name|getOS
-argument_list|()
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|FreeBSD
-condition|)
-return|return
-literal|"E-p:64:64-f64:64:64-i64:64:64-f128:64:64-v128:128:128-n32:64"
-return|;
-else|else
-return|return
-literal|"E-p:64:64-f64:64:64-i64:64:64-f128:128:128-v128:128:128-n32:64"
-return|;
-block|}
-return|return
-name|isPPC64
-argument_list|()
-condition|?
-literal|"E-p:64:64-f64:64:64-i64:64:64-f128:64:128-n32:64"
-else|:
-literal|"E-p:32:32-f64:64:64-i64:64:64-f128:64:128-n32"
-return|;
-block|}
+block|;
+name|void
+name|resetSubtargetFeatures
+argument_list|(
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|;
+name|public
+operator|:
 comment|/// isPPC64 - Return true if we are generating code for 64-bit pointer mode.
 comment|///
 name|bool
@@ -429,7 +421,26 @@ return|return
 name|IsJITCodeModel
 return|;
 block|}
+comment|// isLittleEndian - True if generating little-endian code
+name|bool
+name|isLittleEndian
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsLittleEndian
+return|;
+block|}
 comment|// Specific obvious features.
+name|bool
+name|hasFCPSGN
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasFCPSGN
+return|;
+block|}
 name|bool
 name|hasFSQRT
 argument_list|()
@@ -583,6 +594,24 @@ return|return
 name|IsBookE
 return|;
 block|}
+name|bool
+name|isDeprecatedMFTB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeprecatedMFTB
+return|;
+block|}
+name|bool
+name|isDeprecatedDST
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeprecatedDST
+return|;
+block|}
 specifier|const
 name|Triple
 operator|&
@@ -672,6 +701,30 @@ argument|TargetSubtargetInfo::AntiDepBreakMode& Mode
 argument_list|,
 argument|RegClassVector& CriticalPathRCs
 argument_list|)
+specifier|const
+block|;
+comment|// Scheduling customization.
+name|bool
+name|enableMachineScheduler
+argument_list|()
+specifier|const
+block|;
+name|void
+name|overrideSchedPolicy
+argument_list|(
+argument|MachineSchedPolicy&Policy
+argument_list|,
+argument|MachineInstr *begin
+argument_list|,
+argument|MachineInstr *end
+argument_list|,
+argument|unsigned NumRegionInstrs
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|useAA
+argument_list|()
 specifier|const
 block|; }
 decl_stmt|;

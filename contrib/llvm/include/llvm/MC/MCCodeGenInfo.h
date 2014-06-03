@@ -163,6 +163,21 @@ return|return
 name|OptLevel
 return|;
 block|}
+comment|// Allow overriding OptLevel on a per-function basis.
+name|void
+name|setOptLevel
+argument_list|(
+name|CodeGenOpt
+operator|::
+name|Level
+name|Level
+argument_list|)
+block|{
+name|OptLevel
+operator|=
+name|Level
+expr_stmt|;
+block|}
 block|}
 empty_stmt|;
 block|}

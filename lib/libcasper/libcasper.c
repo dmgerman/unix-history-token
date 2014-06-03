@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/capability.h>
+file|<sys/capsicum.h>
 end_include
 
 begin_include
@@ -1330,7 +1330,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|nvlist_add_descriptor
+name|nvlist_move_descriptor
 argument_list|(
 name|nvlout
 argument_list|,
@@ -1347,13 +1347,6 @@ block|}
 block|}
 else|else
 block|{
-name|nvlout
-operator|=
-name|nvlist_create
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|service
@@ -1443,8 +1436,12 @@ argument_list|,
 name|sconn
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+name|nvlist_destroy
+argument_list|(
+name|nvlout
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

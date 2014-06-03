@@ -418,6 +418,10 @@ define|#
 directive|define
 name|ATA_SUPPORT_NCQ_QMANAGEMENT
 value|0x0020
+define|#
+directive|define
+name|ATA_SUPPORT_RCVSND_FPDMA_QUEUED
+value|0x0040
 comment|/*78*/
 name|u_int16_t
 name|satasupport
@@ -732,6 +736,14 @@ define|#
 directive|define
 name|ATA_PSS_MULTLS
 value|0x2000
+define|#
+directive|define
+name|ATA_PSS_VALID_MASK
+value|0xC000
+define|#
+directive|define
+name|ATA_PSS_VALID_VALUE
+value|0x4000
 comment|/*107*/
 name|u_int16_t
 name|isd
@@ -1424,6 +1436,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_READ_LOG_EXT
+value|0x2f
+end_define
+
+begin_comment
+comment|/* read log ext - PIO Data-In */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_READ_STREAM48
 value|0x2b
 end_define
@@ -1550,6 +1573,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_READ_LOG_DMA_EXT
+value|0x47
+end_define
+
+begin_comment
+comment|/* read log DMA ext - PIO Data-In */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_READ_FPDMA_QUEUED
 value|0x60
 end_define
@@ -1567,6 +1601,28 @@ end_define
 
 begin_comment
 comment|/* write DMA NCQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SEND_FPDMA_QUEUED
+value|0x64
+end_define
+
+begin_comment
+comment|/* send DMA NCQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_RECV_FPDMA_QUEUED
+value|0x65
+end_define
+
+begin_comment
+comment|/* recieve DMA NCQ */
 end_comment
 
 begin_define

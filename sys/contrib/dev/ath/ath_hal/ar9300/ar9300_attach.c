@@ -11843,6 +11843,13 @@ operator|=
 name|AH_TRUE
 expr_stmt|;
 block|}
+comment|/*      * AR5416 and later NICs support MYBEACON filtering.      */
+name|p_cap
+operator|->
+name|halRxDoMyBeacon
+operator|=
+name|AH_TRUE
+expr_stmt|;
 if|#
 directive|if
 name|ATH_WOW_OFFLOAD
@@ -17429,6 +17436,12 @@ case|:
 comment|/* Aphrodite */
 return|return
 literal|"Qualcomm Atheros AR9565"
+return|;
+case|case
+name|AR9300_DEVID_AR1111_PCIE
+case|:
+return|return
+literal|"Atheros AR1111"
 return|;
 default|default:
 return|return

@@ -3096,6 +3096,12 @@ operator|->
 name|flags_int
 operator|.
 name|short_frames_ok
+operator|||
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|isochronous_xfr
 expr_stmt|;
 name|temp
 operator|.
@@ -3927,6 +3933,12 @@ operator|->
 name|flags_int
 operator|.
 name|short_frames_ok
+operator|||
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|isochronous_xfr
 condition|)
 block|{
 comment|/* follow alt next */
@@ -5205,7 +5217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  * at91dci bulk support  * at91dci control support  * at91dci interrupt support  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  * avr32dci bulk support  * avr32dci control support  * avr32dci interrupt support  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5316,7 +5328,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  * at91dci full speed isochronous support  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  * avr32dci full speed isochronous support  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -5615,7 +5627,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  * at91dci root control support  *------------------------------------------------------------------------*  * Simulate a hardware HUB by handling all the necessary requests.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  * avr32dci root control support  *------------------------------------------------------------------------*  * Simulate a hardware HUB by handling all the necessary requests.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_decl_stmt

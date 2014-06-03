@@ -342,6 +342,43 @@ operator|-
 literal|4U
 return|;
 block|}
+comment|/// getBasePointerSaveOffset - Return the previous frame offset to save the
+comment|/// base pointer.
+specifier|static
+name|unsigned
+name|getBasePointerSaveOffset
+parameter_list|(
+name|bool
+name|isPPC64
+parameter_list|,
+name|bool
+name|isDarwinABI
+parameter_list|)
+block|{
+if|if
+condition|(
+name|isDarwinABI
+condition|)
+return|return
+name|isPPC64
+condition|?
+operator|-
+literal|16U
+else|:
+operator|-
+literal|8U
+return|;
+comment|// SVR4 ABI: First slot in the general register save area.
+return|return
+name|isPPC64
+condition|?
+operator|-
+literal|16U
+else|:
+operator|-
+literal|8U
+return|;
+block|}
 comment|/// getLinkageSize - Return the size of the PowerPC ABI linkage area.
 comment|///
 specifier|static

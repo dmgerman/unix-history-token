@@ -5,7 +5,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|HASHINFO
 name|hinfo
 decl_stmt|;

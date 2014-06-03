@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -121,6 +127,123 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Print the contents of the static mapping table using the provided printf-like  * output function (which will be either printf or db_printf).  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|devmap_dump_table
+parameter_list|(
+name|int
+function_decl|(
+modifier|*
+name|prfunc
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+parameter_list|)
+block|{
+specifier|const
+name|struct
+name|arm_devmap_entry
+modifier|*
+name|pd
+decl_stmt|;
+if|if
+condition|(
+name|devmap_table
+operator|==
+name|NULL
+operator|||
+name|devmap_table
+index|[
+literal|0
+index|]
+operator|.
+name|pd_size
+operator|==
+literal|0
+condition|)
+block|{
+name|prfunc
+argument_list|(
+literal|"No static device mappings.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|prfunc
+argument_list|(
+literal|"Static device mappings:\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|pd
+operator|=
+name|devmap_table
+init|;
+name|pd
+operator|->
+name|pd_size
+operator|!=
+literal|0
+condition|;
+operator|++
+name|pd
+control|)
+block|{
+name|prfunc
+argument_list|(
+literal|"  0x%08x - 0x%08x mapped at VA 0x%08x\n"
+argument_list|,
+name|pd
+operator|->
+name|pd_pa
+argument_list|,
+name|pd
+operator|->
+name|pd_pa
+operator|+
+name|pd
+operator|->
+name|pd_size
+operator|-
+literal|1
+argument_list|,
+name|pd
+operator|->
+name|pd_va
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Print the contents of the static mapping table.  Used for bootverbose.  */
+end_comment
+
+begin_function
+name|void
+name|arm_devmap_print_table
+parameter_list|()
+block|{
+name|devmap_dump_table
+argument_list|(
+name|printf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return the "last" kva address used by the registered devmap table.  It's  * actually the lowest address used by the static mappings, i.e., the address of  * the first unusable byte of KVA.  */
 end_comment
 
@@ -149,17 +272,6 @@ operator|(
 name|akva_devmap_vaddr
 operator|)
 return|;
-if|if
-condition|(
-name|devmap_table
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"arm_devmap_lastaddr(): No devmap table registered."
-argument_list|)
-expr_stmt|;
 name|lowaddr
 operator|=
 name|ARM_VECTORS_HIGH
@@ -170,6 +282,10 @@ name|pd
 operator|=
 name|devmap_table
 init|;
+name|pd
+operator|!=
+name|NULL
+operator|&&
 name|pd
 operator|->
 name|pd_size
@@ -390,7 +506,11 @@ name|arm_devmap_entry
 modifier|*
 name|pd
 decl_stmt|;
-comment|/* 	 * If given a table pointer, use it, else ensure a table was previously 	 * registered.  This happens early in boot, and there's a good chance 	 * the panic message won't be seen, but there's not much we can do. 	 */
+name|devmap_bootstrap_done
+operator|=
+name|true
+expr_stmt|;
+comment|/* 	 * If given a table pointer, use it.  Otherwise, if a table was 	 * previously registered, use it.  Otherwise, no work to do. 	 */
 if|if
 condition|(
 name|table
@@ -408,11 +528,7 @@ name|devmap_table
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"arm_devmap_bootstrap(): No devmap table registered"
-argument_list|)
-expr_stmt|;
+return|return;
 for|for
 control|(
 name|pd
@@ -455,10 +571,6 @@ name|pd_cache
 argument_list|)
 expr_stmt|;
 block|}
-name|devmap_bootstrap_done
-operator|=
-name|true
-expr_stmt|;
 block|}
 end_function
 
@@ -670,7 +782,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map a set of physical memory pages into the kernel virtual address space.  * Return a pointer to where it is mapped. This routine is intended to be used  * for mapping device memory, NOT real memory.  */
+comment|/*  * Map a set of physical memory pages into the kernel virtual address space.  * Return a pointer to where it is mapped.  *  * This uses a pre-established static mapping if one exists for the requested  * range, otherwise it allocates kva space and maps the physical pages into it.  *  * This routine is intended to be used for mapping device memory, NOT real  * memory; the mapping type is inherently PTE_DEVICE in pmap_kenter_device().  */
 end_comment
 
 begin_function
@@ -692,6 +804,31 @@ name|tmpva
 decl_stmt|,
 name|offset
 decl_stmt|;
+name|void
+modifier|*
+name|rva
+decl_stmt|;
+comment|/* First look in the static mapping table. */
+if|if
+condition|(
+operator|(
+name|rva
+operator|=
+name|arm_devmap_ptov
+argument_list|(
+name|pa
+argument_list|,
+name|size
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|rva
+operator|)
+return|;
 name|offset
 operator|=
 name|pa
@@ -801,9 +938,28 @@ name|offset
 decl_stmt|;
 name|vm_size_t
 name|origsize
-init|=
-name|size
 decl_stmt|;
+comment|/* Nothing to do if we find the mapping in the static table. */
+if|if
+condition|(
+name|arm_devmap_vtop
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|va
+argument_list|,
+name|size
+argument_list|)
+operator|!=
+name|DEVMAP_PADDR_NOTFOUND
+condition|)
+return|return;
+name|origsize
+operator|=
+name|size
+expr_stmt|;
 name|offset
 operator|=
 name|va
@@ -861,6 +1017,46 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|devmap
+argument_list|,
+argument|db_show_devmap
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|devmap_dump_table
+argument_list|(
+name|db_printf
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
 
 end_unit
 

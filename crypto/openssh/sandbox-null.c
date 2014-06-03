@@ -100,7 +100,10 @@ name|ssh_sandbox
 modifier|*
 name|ssh_sandbox_init
 parameter_list|(
-name|void
+name|struct
+name|monitor
+modifier|*
+name|monitor
 parameter_list|)
 block|{
 name|struct

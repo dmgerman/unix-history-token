@@ -1057,6 +1057,41 @@ name|NumContainedTys
 index|]
 return|;
 block|}
+typedef|typedef
+name|std
+operator|::
+name|reverse_iterator
+operator|<
+name|subtype_iterator
+operator|>
+name|subtype_reverse_iterator
+expr_stmt|;
+name|subtype_reverse_iterator
+name|subtype_rbegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|subtype_reverse_iterator
+argument_list|(
+name|subtype_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|subtype_reverse_iterator
+name|subtype_rend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|subtype_reverse_iterator
+argument_list|(
+name|subtype_begin
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// getContainedType - This method is used to implement the type iterator
 comment|/// (defined a the end of the file).  For derived types, this returns the
 comment|/// types 'contained' in the derived type.

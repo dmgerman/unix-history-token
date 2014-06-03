@@ -59,18 +59,22 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_comment
+comment|/* NB: Make sure FNBUFF is as large as LNBUFF, otherwise it could overflow */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|FNBUFF
-value|161
+value|512
 end_define
 
 begin_define
 define|#
 directive|define
 name|LNBUFF
-value|161
+value|512
 end_define
 
 begin_define

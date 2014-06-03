@@ -77,8 +77,14 @@ block|,
 comment|/// void operator delete[](void*);
 name|ZdaPv
 block|,
+comment|/// void operator delete[](void*, nothrow);
+name|ZdaPvRKSt9nothrow_t
+block|,
 comment|/// void operator delete(void*);
 name|ZdlPv
+block|,
+comment|/// void operator delete(void*, nothrow);
+name|ZdlPvRKSt9nothrow_t
 block|,
 comment|/// void *new[](unsigned int);
 name|Znaj
@@ -104,6 +110,12 @@ block|,
 comment|/// void *new(unsigned long, nothrow);
 name|ZnwmRKSt9nothrow_t
 block|,
+comment|/// double __cospi(double x);
+name|cospi
+block|,
+comment|/// float __cospif(float x);
+name|cospif
+block|,
 comment|/// int __cxa_atexit(void (*f)(void *), void *p, void *d);
 name|cxa_atexit
 block|,
@@ -125,6 +137,27 @@ name|dunder_isoc99_sscanf
 block|,
 comment|/// void *__memcpy_chk(void *s1, const void *s2, size_t n, size_t s1size);
 name|memcpy_chk
+block|,
+comment|/// double __sincospi_stret(double x);
+name|sincospi_stret
+block|,
+comment|/// float __sincospi_stretf(float x);
+name|sincospi_stretf
+block|,
+comment|/// double __sinpi(double x);
+name|sinpi
+block|,
+comment|/// float __sinpif(float x);
+name|sinpif
+block|,
+comment|/// double __sqrt_finite(double x);
+name|sqrt_finite
+block|,
+comment|/// float __sqrt_finite(float x);
+name|sqrtf_finite
+block|,
+comment|/// long double __sqrt_finite(long double x);
+name|sqrtl_finite
 block|,
 comment|/// char * __strdup(const char *s);
 name|dunder_strdup
@@ -492,6 +525,9 @@ name|getpwnam
 block|,
 comment|/// char *gets(char *s);
 name|gets
+block|,
+comment|/// int gettimeofday(struct timeval *tp, void *tzp);
+name|gettimeofday
 block|,
 comment|/// uint32_t htonl(uint32_t hostlong);
 name|htonl
@@ -1284,6 +1320,21 @@ case|:
 case|case
 name|LibFunc
 operator|::
+name|sqrt_finite
+case|:
+case|case
+name|LibFunc
+operator|::
+name|sqrtf_finite
+case|:
+case|case
+name|LibFunc
+operator|::
+name|sqrtl_finite
+case|:
+case|case
+name|LibFunc
+operator|::
 name|floor
 case|:
 case|case
@@ -1344,6 +1395,21 @@ case|:
 case|case
 name|LibFunc
 operator|::
+name|round
+case|:
+case|case
+name|LibFunc
+operator|::
+name|roundf
+case|:
+case|case
+name|LibFunc
+operator|::
+name|roundl
+case|:
+case|case
+name|LibFunc
+operator|::
 name|trunc
 case|:
 case|case
@@ -1390,6 +1456,36 @@ case|case
 name|LibFunc
 operator|::
 name|memcmp
+case|:
+case|case
+name|LibFunc
+operator|::
+name|strcmp
+case|:
+case|case
+name|LibFunc
+operator|::
+name|strcpy
+case|:
+case|case
+name|LibFunc
+operator|::
+name|stpcpy
+case|:
+case|case
+name|LibFunc
+operator|::
+name|strlen
+case|:
+case|case
+name|LibFunc
+operator|::
+name|strnlen
+case|:
+case|case
+name|LibFunc
+operator|::
+name|memchr
 case|:
 return|return
 name|true

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003,2009 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001-2003,2009 Proofpoint, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mbdb.c,v 1.41 2009/06/19 22:02:26 guenther Exp $"
+literal|"@(#)$Id: mbdb.c,v 1.43 2014-01-08 17:03:15 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1417,12 +1417,20 @@ condition|)
 block|{
 if|#
 directive|if
+name|_FFR_USE_GETPWNAM_ERRNO
+comment|/* 		**  Only enable this code iff 		**  user unknown<-> getpwnam() == NULL&& errno == 0 		**  (i.e., errno unchanged); see the POSIX spec. 		*/
+if|if
+condition|(
+name|errno
+operator|!=
 literal|0
-comment|/* 		**  getpwnam() isn't advertised as setting errno. 		**  In fact, under FreeBSD, non-root getpwnam() on 		**  non-existant users returns NULL with errno = EPERM. 		**  This test won't work. 		*/
-block|switch (errno) 		{ 		  case 0: 			return EX_NOUSER; 		  case EIO: 			return EX_OSERR; 		  default: 			return EX_TEMPFAIL; 		}
+condition|)
+return|return
+name|EX_TEMPFAIL
+return|;
 endif|#
 directive|endif
-comment|/* 0 */
+comment|/* _FFR_USE_GETPWNAM_ERRNO */
 return|return
 name|EX_NOUSER
 return|;

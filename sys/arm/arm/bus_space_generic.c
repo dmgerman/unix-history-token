@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/devmap.h>
 end_include
 
@@ -125,22 +131,7 @@ name|void
 modifier|*
 name|va
 decl_stmt|;
-comment|/* 	 * Look up the address in the static device mappings.  If it's not 	 * there, establish a new dynamic mapping. 	 * 	 * We don't even examine the passed-in flags.  For ARM, the CACHEABLE 	 * flag doesn't make sense (we create PTE_DEVICE mappings), and the 	 * LINEAR flag is just implied because we use kva_alloc(size). 	 */
-if|if
-condition|(
-operator|(
-name|va
-operator|=
-name|arm_devmap_ptov
-argument_list|(
-name|bpa
-argument_list|,
-name|size
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
+comment|/* 	 * We don't even examine the passed-in flags.  For ARM, the CACHEABLE 	 * flag doesn't make sense (we create PTE_DEVICE mappings), and the 	 * LINEAR flag is just implied because we use kva_alloc(size). 	 */
 if|if
 condition|(
 operator|(
@@ -235,22 +226,6 @@ name|bus_size_t
 name|size
 parameter_list|)
 block|{
-comment|/* 	 * If the region is static-mapped do nothing, otherwise remove the 	 * dynamic mapping. 	 */
-if|if
-condition|(
-name|arm_devmap_vtop
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|h
-argument_list|,
-name|size
-argument_list|)
-operator|==
-name|DEVMAP_PADDR_NOTFOUND
-condition|)
 name|pmap_unmapdev
 argument_list|(
 operator|(
@@ -345,7 +320,21 @@ name|int
 name|flags
 parameter_list|)
 block|{
-comment|/* Nothing to do. */
+comment|/* 	 * dsb() will drain the L1 write buffer and establish a memory access 	 * barrier point on platforms where that has meaning.  On a write we 	 * also need to drain the L2 write buffer, because most on-chip memory 	 * mapped devices are downstream of the L2 cache.  Note that this needs 	 * to be done even for memory mapped as Device type, because while 	 * Device memory is not cached, writes to it are still buffered. 	 */
+name|dsb
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|BUS_SPACE_BARRIER_WRITE
+condition|)
+block|{
+name|cpu_l2cache_drain_writebuf
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 

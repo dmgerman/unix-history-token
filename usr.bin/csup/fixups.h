@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"queue.h"
+file|<sys/queue.h>
 end_include
 
 begin_struct_decl

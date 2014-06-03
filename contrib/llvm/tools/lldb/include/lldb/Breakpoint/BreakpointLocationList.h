@@ -398,10 +398,9 @@ operator|::
 name|BreakpointLocationSP
 name|Create
 argument_list|(
-specifier|const
-name|Address
-operator|&
-name|addr
+argument|const Address&addr
+argument_list|,
+argument|bool resolve_indirect_symbols
 argument_list|)
 expr_stmt|;
 name|void
@@ -421,16 +420,11 @@ operator|::
 name|BreakpointLocationSP
 name|AddLocation
 argument_list|(
-specifier|const
-name|Address
-operator|&
-name|addr
+argument|const Address&addr
 argument_list|,
-name|bool
-operator|*
-name|new_location
-operator|=
-name|NULL
+argument|bool resolve_indirect_symbols
+argument_list|,
+argument|bool *new_location = NULL
 argument_list|)
 expr_stmt|;
 name|bool

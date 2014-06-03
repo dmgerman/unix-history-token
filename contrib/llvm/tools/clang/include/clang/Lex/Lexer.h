@@ -193,6 +193,15 @@ comment|// line" flag set on it.
 name|bool
 name|IsAtStartOfLine
 block|;
+name|bool
+name|IsAtPhysicalStartOfLine
+block|;
+name|bool
+name|HasLeadingSpace
+block|;
+name|bool
+name|HasLeadingEmptyMacro
+block|;
 comment|// CurrentConflictMarkerState - The kind of conflict marker we are handling.
 name|ConflictMarkerKind
 name|CurrentConflictMarkerState
@@ -326,49 +335,20 @@ return|return
 name|FileLoc
 return|;
 block|}
+name|private
+operator|:
 comment|/// Lex - Return the next token in the file.  If this is the end of file, it
 comment|/// return the tok::eof token.  This implicitly involves the preprocessor.
-name|void
+name|bool
 name|Lex
 argument_list|(
-argument|Token&Result
-argument_list|)
-block|{
-comment|// Start a new token.
-name|Result
-operator|.
-name|startToken
-argument_list|()
-block|;
-comment|// NOTE, any changes here should also change code after calls to
-comment|// Preprocessor::HandleDirective
-if|if
-condition|(
-name|IsAtStartOfLine
-condition|)
-block|{
-name|Result
-operator|.
-name|setFlag
-argument_list|(
 name|Token
-operator|::
-name|StartOfLine
-argument_list|)
-expr_stmt|;
-name|IsAtStartOfLine
-operator|=
-name|false
-expr_stmt|;
-block|}
-comment|// Get a token.  Note that this may delete the current lexer if the end of
-comment|// file is reached.
-name|LexTokenInternal
-argument_list|(
+operator|&
 name|Result
 argument_list|)
-expr_stmt|;
-block|}
+block|;
+name|public
+operator|:
 comment|/// isPragmaLexer - Returns true if this Lexer is being used to lex a pragma.
 name|bool
 name|isPragmaLexer
@@ -379,6 +359,8 @@ return|return
 name|Is_PragmaLexer
 return|;
 block|}
+name|private
+operator|:
 comment|/// IndirectLex - An indirect call to 'Lex' that can be invoked via
 comment|///  the PreprocessorLexer interface.
 name|void
@@ -392,6 +374,8 @@ argument_list|(
 name|Result
 argument_list|)
 block|; }
+name|public
+operator|:
 comment|/// LexFromRawLexer - Lex a token from a designated raw lexer (one with no
 comment|/// associated preprocessor object.  Return true if the 'next character to
 comment|/// read' pointer points at the end of the lexer buffer, false otherwise.
@@ -517,15 +501,21 @@ name|void
 name|resetExtendedTokenMode
 argument_list|()
 block|;
-specifier|const
-name|char
-operator|*
-name|getBufferStart
+comment|/// Gets source code buffer.
+name|StringRef
+name|getBuffer
 argument_list|()
 specifier|const
 block|{
 return|return
+name|StringRef
+argument_list|(
 name|BufferStart
+argument_list|,
+name|BufferEnd
+operator|-
+name|BufferStart
+argument_list|)
 return|;
 block|}
 comment|/// ReadToEndOfLine - Read the rest of the current preprocessor line as an
@@ -746,6 +736,8 @@ argument_list|,
 argument|const SourceManager&SM
 argument_list|,
 argument|const LangOptions&LangOpts
+argument_list|,
+argument|bool IgnoreWhiteSpace = false
 argument_list|)
 block|;
 comment|/// \brief Given a location any where in a source buffer, find the location
@@ -1036,18 +1028,37 @@ label|:
 comment|/// LexTokenInternal - Internal interface to lex a preprocessing token. Called
 comment|/// by Lex.
 comment|///
-name|void
+name|bool
 name|LexTokenInternal
 parameter_list|(
 name|Token
 modifier|&
 name|Result
+parameter_list|,
+name|bool
+name|TokAtPhysicalStartOfLine
+parameter_list|)
+function_decl|;
+name|bool
+name|CheckUnicodeWhitespace
+parameter_list|(
+name|Token
+modifier|&
+name|Result
+parameter_list|,
+name|uint32_t
+name|C
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|CurPtr
 parameter_list|)
 function_decl|;
 comment|/// Given that a token begins with the Unicode character \p C, figure out
 comment|/// what kind of token it is and dispatch to the appropriate lexing helper
 comment|/// function.
-name|void
+name|bool
 name|LexUnicode
 parameter_list|(
 name|Token
@@ -1422,6 +1433,14 @@ name|bool
 name|StartOfLine
 parameter_list|)
 function_decl|;
+name|void
+name|PropagateLineStartLeadingSpaceInfo
+parameter_list|(
+name|Token
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
 specifier|const
 name|char
 modifier|*
@@ -1435,10 +1454,13 @@ specifier|const
 name|char
 modifier|*
 name|CurPtr
+parameter_list|,
+name|bool
+name|IsStringLiteral
 parameter_list|)
 function_decl|;
 comment|// Helper functions to lex the remainder of a token of the specific type.
-name|void
+name|bool
 name|LexIdentifier
 parameter_list|(
 name|Token
@@ -1451,7 +1473,7 @@ modifier|*
 name|CurPtr
 parameter_list|)
 function_decl|;
-name|void
+name|bool
 name|LexNumericConstant
 parameter_list|(
 name|Token
@@ -1464,7 +1486,7 @@ modifier|*
 name|CurPtr
 parameter_list|)
 function_decl|;
-name|void
+name|bool
 name|LexStringLiteral
 argument_list|(
 name|Token
@@ -1482,7 +1504,7 @@ name|TokenKind
 name|Kind
 argument_list|)
 decl_stmt|;
-name|void
+name|bool
 name|LexRawStringLiteral
 argument_list|(
 name|Token
@@ -1500,7 +1522,7 @@ name|TokenKind
 name|Kind
 argument_list|)
 decl_stmt|;
-name|void
+name|bool
 name|LexAngledStringLiteral
 parameter_list|(
 name|Token
@@ -1513,7 +1535,7 @@ modifier|*
 name|CurPtr
 parameter_list|)
 function_decl|;
-name|void
+name|bool
 name|LexCharConstant
 argument_list|(
 name|Token
@@ -1555,6 +1577,10 @@ specifier|const
 name|char
 modifier|*
 name|CurPtr
+parameter_list|,
+name|bool
+modifier|&
+name|TokAtPhysicalStartOfLine
 parameter_list|)
 function_decl|;
 name|bool
@@ -1568,6 +1594,10 @@ specifier|const
 name|char
 modifier|*
 name|CurPtr
+parameter_list|,
+name|bool
+modifier|&
+name|TokAtPhysicalStartOfLine
 parameter_list|)
 function_decl|;
 name|bool
@@ -1581,6 +1611,10 @@ specifier|const
 name|char
 modifier|*
 name|CurPtr
+parameter_list|,
+name|bool
+modifier|&
+name|TokAtPhysicalStartOfLine
 parameter_list|)
 function_decl|;
 name|bool

@@ -17,7 +17,7 @@ end_define
 
 begin_function_decl
 name|void
-name|arswitch_reset_vlans
+name|ar8xxx_reset_vlans
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -28,9 +28,11 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arswitch_getvgroup
+name|ar8xxx_getvgroup
 parameter_list|(
-name|device_t
+name|struct
+name|arswitch_softc
+modifier|*
 parameter_list|,
 name|etherswitch_vlangroup_t
 modifier|*
@@ -40,9 +42,11 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arswitch_setvgroup
+name|ar8xxx_setvgroup
 parameter_list|(
-name|device_t
+name|struct
+name|arswitch_softc
+modifier|*
 parameter_list|,
 name|etherswitch_vlangroup_t
 modifier|*
@@ -52,7 +56,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arswitch_get_pvid
+name|ar8xxx_get_pvid
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -68,7 +72,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|arswitch_set_pvid
+name|ar8xxx_set_pvid
 parameter_list|(
 name|struct
 name|arswitch_softc

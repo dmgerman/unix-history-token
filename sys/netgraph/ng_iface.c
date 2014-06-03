@@ -8,14 +8,8 @@ comment|/*-  * Copyright (c) 1996-1999 Whistle Communications, Inc.  * All right
 end_comment
 
 begin_comment
-comment|/*  * This node is also a system networking interface. It has  * a hook for each protocol (IP, AppleTalk, IPX, etc). Packets  * are simply relayed between the interface and the hooks.  *  * Interfaces are named ng0, ng1, etc.  New nodes take the  * first available interface name.  *  * This node also includes Berkeley packet filter support.  */
+comment|/*  * This node is also a system networking interface. It has  * a hook for each protocol (IP, AppleTalk, etc). Packets  * are simply relayed between the interface and the hooks.  *  * Interfaces are named ng0, ng1, etc.  New nodes take the  * first available interface name.  *  * This node also includes Berkeley packet filter support.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_atalk.h"
-end_include
 
 begin_include
 include|#
@@ -27,12 +21,6 @@ begin_include
 include|#
 directive|include
 file|"opt_inet6.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipx.h"
 end_include
 
 begin_include
@@ -282,18 +270,6 @@ block|{
 name|AF_INET6
 block|,
 name|NG_IFACE_HOOK_INET6
-block|}
-block|,
-block|{
-name|AF_APPLETALK
-block|,
-name|NG_IFACE_HOOK_ATALK
-block|}
-block|,
-block|{
-name|AF_IPX
-block|,
-name|NG_IFACE_HOOK_IPX
 block|}
 block|,
 block|{
@@ -3067,32 +3043,6 @@ case|:
 name|isr
 operator|=
 name|NETISR_IPV6
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|IPX
-case|case
-name|AF_IPX
-case|:
-name|isr
-operator|=
-name|NETISR_IPX
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|NETATALK
-case|case
-name|AF_APPLETALK
-case|:
-name|isr
-operator|=
-name|NETISR_ATALK2
 expr_stmt|;
 break|break;
 endif|#

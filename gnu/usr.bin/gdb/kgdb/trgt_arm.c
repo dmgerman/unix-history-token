@@ -126,6 +126,9 @@ name|u_int
 name|cpuid
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|CROSS_DEBUGGER
 return|return
 operator|(
 name|kgdb_trgt_stop_pcb
@@ -140,6 +143,14 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|-
+literal|1
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

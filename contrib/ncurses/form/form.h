@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2003,2004 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2009,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $Id: form.h,v 0.20 2004/12/04 22:22:10 tom Exp $ */
+comment|/* $Id: form.h,v 0.23 2013/12/07 17:57:32 tom Exp $ */
 end_comment
 
 begin_ifndef
@@ -221,130 +221,6 @@ name|NCURSES_FIELD_INTERNALS
 block|}
 name|FIELD
 typedef|;
-comment|/************** 	*  FIELDTYPE  * 	**************/
-typedef|typedef
-struct|struct
-name|typenode
-block|{
-name|unsigned
-name|short
-name|status
-decl_stmt|;
-comment|/* flags		*/
-name|long
-name|ref
-decl_stmt|;
-comment|/* reference count	*/
-name|struct
-name|typenode
-modifier|*
-name|left
-decl_stmt|;
-comment|/* ptr to operand for | */
-name|struct
-name|typenode
-modifier|*
-name|right
-decl_stmt|;
-comment|/* ptr to operand for | */
-name|void
-modifier|*
-function_decl|(
-modifier|*
-name|makearg
-function_decl|)
-parameter_list|(
-name|va_list
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* make fieldtype arg	*/
-name|void
-modifier|*
-function_decl|(
-modifier|*
-name|copyarg
-function_decl|)
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* copy fieldtype arg	*/
-name|void
-function_decl|(
-modifier|*
-name|freearg
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* free fieldtype arg	*/
-name|bool
-function_decl|(
-modifier|*
-name|fcheck
-function_decl|)
-parameter_list|(
-name|FIELD
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* field validation	*/
-name|bool
-function_decl|(
-modifier|*
-name|ccheck
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* character validation */
-name|bool
-function_decl|(
-modifier|*
-name|next
-function_decl|)
-parameter_list|(
-name|FIELD
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* enumerate next value */
-name|bool
-function_decl|(
-modifier|*
-name|prev
-function_decl|)
-parameter_list|(
-name|FIELD
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* enumerate prev value */
-block|}
-name|FIELDTYPE
-typedef|;
 comment|/********* 	*  FORM  * 	*********/
 typedef|typedef
 struct|struct
@@ -477,6 +353,302 @@ parameter_list|)
 function_decl|;
 block|}
 name|FORM
+typedef|;
+comment|/************** 	*  FIELDTYPE  * 	**************/
+typedef|typedef
+struct|struct
+name|typenode
+block|{
+name|unsigned
+name|short
+name|status
+decl_stmt|;
+comment|/* flags		    */
+name|long
+name|ref
+decl_stmt|;
+comment|/* reference count	    */
+name|struct
+name|typenode
+modifier|*
+name|left
+decl_stmt|;
+comment|/* ptr to operand for |     */
+name|struct
+name|typenode
+modifier|*
+name|right
+decl_stmt|;
+comment|/* ptr to operand for |     */
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|makearg
+function_decl|)
+parameter_list|(
+name|va_list
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* make fieldtype arg	    */
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|copyarg
+function_decl|)
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* copy fieldtype arg 	    */
+name|void
+function_decl|(
+modifier|*
+name|freearg
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* free fieldtype arg	    */
+if|#
+directive|if
+name|NCURSES_INTEROP_FUNCS
+union|union
+block|{
+name|bool
+function_decl|(
+modifier|*
+name|ofcheck
+function_decl|)
+parameter_list|(
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* field validation	    */
+name|bool
+function_decl|(
+modifier|*
+name|gfcheck
+function_decl|)
+parameter_list|(
+name|FORM
+modifier|*
+parameter_list|,
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* generic field validation */
+block|}
+name|fieldcheck
+union|;
+union|union
+block|{
+name|bool
+function_decl|(
+modifier|*
+name|occheck
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* character validation     */
+name|bool
+function_decl|(
+modifier|*
+name|gccheck
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|FORM
+modifier|*
+parameter_list|,
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* generic char validation  */
+block|}
+name|charcheck
+union|;
+union|union
+block|{
+name|bool
+function_decl|(
+modifier|*
+name|onext
+function_decl|)
+parameter_list|(
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* enumerate next value     */
+name|bool
+function_decl|(
+modifier|*
+name|gnext
+function_decl|)
+parameter_list|(
+name|FORM
+modifier|*
+parameter_list|,
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* generic enumerate next   */
+block|}
+name|enum_next
+union|;
+union|union
+block|{
+name|bool
+function_decl|(
+modifier|*
+name|oprev
+function_decl|)
+parameter_list|(
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* enumerate prev value     */
+name|bool
+function_decl|(
+modifier|*
+name|gprev
+function_decl|)
+parameter_list|(
+name|FORM
+modifier|*
+parameter_list|,
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* generic enumerate prev   */
+block|}
+name|enum_prev
+union|;
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|genericarg
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Alternate Arg method     */
+else|#
+directive|else
+name|bool
+function_decl|(
+modifier|*
+name|fcheck
+function_decl|)
+parameter_list|(
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* field validation	*/
+name|bool
+function_decl|(
+modifier|*
+name|ccheck
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* character validation */
+name|bool
+function_decl|(
+modifier|*
+name|next
+function_decl|)
+parameter_list|(
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* enumerate next value */
+name|bool
+function_decl|(
+modifier|*
+name|prev
+function_decl|)
+parameter_list|(
+name|FIELD
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* enumerate prev value */
+endif|#
+directive|endif
+block|}
+name|FIELDTYPE
 typedef|;
 typedef|typedef
 name|void
@@ -967,30 +1139,6 @@ end_expr_stmt
 begin_comment
 comment|/* Internet IP Version 4 address */
 end_comment
-
-begin_comment
-comment|/*********************** 	*   Default objects    * 	***********************/
-end_comment
-
-begin_extern
-extern|extern NCURSES_EXPORT_VAR(FORM *
-end_extern
-
-begin_expr_stmt
-unit|)
-name|_nc_Default_Form
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern NCURSES_EXPORT_VAR(FIELD *
-end_extern
-
-begin_expr_stmt
-unit|)
-name|_nc_Default_Field
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*********************** 	*  FIELDTYPE routines  * 	***********************/
@@ -2122,6 +2270,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|NCURSES_WIDECHAR
+end_if
+
+begin_extern
+extern|extern NCURSES_EXPORT(int
+end_extern
+
+begin_expr_stmt
+unit|)
+name|form_driver_w
+argument_list|(
+name|FORM
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|wchar_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_extern
 extern|extern NCURSES_EXPORT(int
 end_extern
@@ -2274,6 +2451,39 @@ operator|*
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_function_decl
+specifier|extern
+name|NCURSES_EXPORT
+function_decl|(
+name|FORM
+modifier|*
+function_decl|)
+name|NCURSES_SP_NAME
+argument_list|(
+argument|new_form
+argument_list|)
+parameter_list|(
+name|SCREEN
+modifier|*
+parameter_list|,
+name|FIELD
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

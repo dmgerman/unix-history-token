@@ -109,7 +109,14 @@ end_struct
 begin_define
 define|#
 directive|define
-name|SFXGE_TX_MAX_DEFERRED
+name|SFXGE_TX_DPL_GET_PKT_LIMIT_DEFAULT
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TX_DPL_PUT_PKT_LIMIT_DEFAULT
 value|64
 end_define
 
@@ -402,6 +409,10 @@ decl_stmt|;
 name|unsigned
 name|long
 name|drops
+decl_stmt|;
+name|unsigned
+name|long
+name|early_drops
 decl_stmt|;
 comment|/* The following fields change more often, and are used mostly 	 * on the completion path 	 */
 name|unsigned

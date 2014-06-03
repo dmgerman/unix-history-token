@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -75,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
 end_include
 
 begin_include
@@ -856,7 +868,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__amd64__
-name|ctx_fpusave
+name|fpususpend
 argument_list|(
 name|susppcbs
 index|[
@@ -1177,6 +1189,20 @@ directive|endif
 name|mca_resume
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__amd64__
+if|if
+condition|(
+name|vmm_resume_p
+operator|!=
+name|NULL
+condition|)
+name|vmm_resume_p
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|intr_resume
 argument_list|(
 comment|/*suspend_cancelled*/

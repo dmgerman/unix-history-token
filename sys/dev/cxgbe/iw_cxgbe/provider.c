@@ -465,6 +465,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DOT5
+end_ifdef
+
 begin_function
 specifier|static
 specifier|inline
@@ -483,6 +489,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

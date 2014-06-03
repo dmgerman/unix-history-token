@@ -662,6 +662,11 @@ init|=
 literal|247
 block|,
 comment|/* RX hardware uses LNA mixing */
+name|HAL_CAP_DO_MYBEACON
+init|=
+literal|248
+block|,
+comment|/* Supports HAL_RX_FILTER_MYBEACON */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -1140,6 +1145,11 @@ init|=
 literal|0x00000100
 block|,
 comment|/* Allow phy errors */
+name|HAL_RX_FILTER_MYBEACON
+init|=
+literal|0x00000200
+block|,
+comment|/* Filter beacons other than mine */
 name|HAL_RX_FILTER_COMPBAR
 init|=
 literal|0x00000400
@@ -3851,6 +3861,10 @@ name|uint32_t
 name|ah_syncstate
 decl_stmt|;
 comment|/* last sync intr state */
+comment|/* Current powerstate from HAL calls */
+name|HAL_POWER_MODE
+name|ah_powerMode
+decl_stmt|;
 name|HAL_OPS_CONFIG
 name|ah_config
 decl_stmt|;

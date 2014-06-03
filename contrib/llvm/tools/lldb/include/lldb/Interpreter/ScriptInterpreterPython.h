@@ -73,13 +73,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/IOHandler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/ScriptInterpreter.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lldb/Core/InputReader.h"
+file|"lldb/Interpreter/PythonDataObjects.h"
 end_include
 
 begin_include
@@ -97,31 +103,68 @@ name|ScriptInterpreterPython
 range|:
 name|public
 name|ScriptInterpreter
+decl_stmt|,
+name|public
+name|IOHandlerDelegateMultiline
 block|{
 name|public
-operator|:
+label|:
+name|friend
+name|class
+name|IOHandlerPythonInterpreter
+decl_stmt|;
 name|ScriptInterpreterPython
 argument_list|(
 name|CommandInterpreter
 operator|&
 name|interpreter
 argument_list|)
-block|;
+expr_stmt|;
 operator|~
 name|ScriptInterpreterPython
 argument_list|()
-block|;
+expr_stmt|;
 name|bool
 name|ExecuteOneLine
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|command
+parameter_list|,
+name|CommandReturnObject
+modifier|*
+name|result
+parameter_list|,
+specifier|const
+name|ExecuteScriptOptions
+modifier|&
+name|options
+init|=
+name|ExecuteScriptOptions
+argument_list|()
+parameter_list|)
+function_decl|;
+name|void
+name|ExecuteInterpreterLoop
+parameter_list|()
+function_decl|;
+name|bool
+name|ExecuteOneLineWithReturn
 argument_list|(
 specifier|const
 name|char
 operator|*
-name|command
+name|in_string
 argument_list|,
-name|CommandReturnObject
+name|ScriptInterpreter
+operator|::
+name|ScriptReturnType
+name|return_type
+argument_list|,
+name|void
 operator|*
-name|result
+name|ret_value
 argument_list|,
 specifier|const
 name|ExecuteScriptOptions
@@ -131,24 +174,10 @@ operator|=
 name|ExecuteScriptOptions
 argument_list|()
 argument_list|)
-block|;
-name|void
-name|ExecuteInterpreterLoop
-argument_list|()
-block|;
-name|bool
-name|ExecuteOneLineWithReturn
-argument_list|(
-argument|const char *in_string
-argument_list|,
-argument|ScriptInterpreter::ScriptReturnType return_type
-argument_list|,
-argument|void *ret_value
-argument_list|,
-argument|const ExecuteScriptOptions&options = ExecuteScriptOptions()
-argument_list|)
-block|;
-name|bool
+decl_stmt|;
+name|lldb_private
+operator|::
+name|Error
 name|ExecuteMultipleLines
 argument_list|(
 specifier|const
@@ -164,15 +193,15 @@ operator|=
 name|ExecuteScriptOptions
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 name|bool
 name|ExportFunctionDefinitionToInterpreter
-argument_list|(
+parameter_list|(
 name|StringList
-operator|&
+modifier|&
 name|function_def
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|bool
 name|GenerateTypeScriptFunction
 argument_list|(
@@ -192,7 +221,7 @@ name|name_token
 operator|=
 name|NULL
 argument_list|)
-block|;
+decl_stmt|;
 name|bool
 name|GenerateTypeSynthClass
 argument_list|(
@@ -212,7 +241,7 @@ name|name_token
 operator|=
 name|NULL
 argument_list|)
-block|;
+decl_stmt|;
 name|bool
 name|GenerateTypeSynthClass
 argument_list|(
@@ -233,7 +262,7 @@ name|name_token
 operator|=
 name|NULL
 argument_list|)
-block|;
+decl_stmt|;
 comment|// use this if the function code is just a one-liner script
 name|bool
 name|GenerateTypeScriptFunction
@@ -255,7 +284,7 @@ name|name_token
 operator|=
 name|NULL
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|GenerateScriptAliasFunction
@@ -270,7 +299,7 @@ name|string
 operator|&
 name|output
 argument_list|)
-block|;
+decl_stmt|;
 name|lldb
 operator|::
 name|ScriptInterpreterObjectSP
@@ -280,7 +309,7 @@ argument|const char *class_name
 argument_list|,
 argument|lldb::ValueObjectSP valobj
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|lldb
 operator|::
@@ -291,7 +320,7 @@ argument|const char *class_name
 argument_list|,
 argument|lldb::ProcessSP process_sp
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|lldb
 operator|::
@@ -300,7 +329,7 @@ name|OSPlugin_RegisterInfo
 argument_list|(
 argument|lldb::ScriptInterpreterObjectSP os_plugin_object_sp
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|lldb
 operator|::
@@ -309,7 +338,7 @@ name|OSPlugin_ThreadsInfo
 argument_list|(
 argument|lldb::ScriptInterpreterObjectSP os_plugin_object_sp
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|lldb
 operator|::
@@ -320,7 +349,7 @@ argument|lldb::ScriptInterpreterObjectSP os_plugin_object_sp
 argument_list|,
 argument|lldb::tid_t thread_id
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|lldb
 operator|::
@@ -333,7 +362,7 @@ argument|lldb::tid_t tid
 argument_list|,
 argument|lldb::addr_t context
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|lldb
 operator|::
@@ -351,7 +380,7 @@ name|Error
 operator|&
 name|error
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|lldb
 operator|::
@@ -366,7 +395,7 @@ argument|const char* setting_name
 argument_list|,
 argument|lldb_private::Error& error
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|size_t
 name|CalculateNumChildren
@@ -378,7 +407,7 @@ name|ScriptInterpreterObjectSP
 operator|&
 name|implementor
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|lldb
 operator|::
@@ -389,7 +418,7 @@ argument|const lldb::ScriptInterpreterObjectSP& implementor
 argument_list|,
 argument|uint32_t idx
 argument_list|)
-block|;
+expr_stmt|;
 name|virtual
 name|int
 name|GetIndexOfChildWithName
@@ -406,7 +435,7 @@ name|char
 operator|*
 name|child_name
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|UpdateSynthProviderInstance
@@ -418,7 +447,7 @@ name|ScriptInterpreterObjectSP
 operator|&
 name|implementor
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|MightHaveChildrenSynthProviderInstance
@@ -430,36 +459,49 @@ name|ScriptInterpreterObjectSP
 operator|&
 name|implementor
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|RunScriptBasedCommand
 argument_list|(
-argument|const char* impl_function
-argument_list|,
-argument|const char* args
-argument_list|,
-argument|ScriptedCommandSynchronicity synchronicity
-argument_list|,
-argument|lldb_private::CommandReturnObject& cmd_retobj
-argument_list|,
-argument|Error& error
-argument_list|)
-block|;
-name|bool
-name|GenerateFunction
-argument_list|(
 specifier|const
 name|char
 operator|*
-name|signature
+name|impl_function
 argument_list|,
 specifier|const
-name|StringList
+name|char
+operator|*
+name|args
+argument_list|,
+name|ScriptedCommandSynchronicity
+name|synchronicity
+argument_list|,
+name|lldb_private
+operator|::
+name|CommandReturnObject
 operator|&
-name|input
+name|cmd_retobj
+argument_list|,
+name|Error
+operator|&
+name|error
 argument_list|)
-block|;
+decl_stmt|;
+name|bool
+name|GenerateFunction
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|signature
+parameter_list|,
+specifier|const
+name|StringList
+modifier|&
+name|input
+parameter_list|)
+function_decl|;
 name|bool
 name|GenerateBreakpointCommandCallbackData
 argument_list|(
@@ -473,7 +515,7 @@ name|string
 operator|&
 name|output
 argument_list|)
-block|;
+decl_stmt|;
 name|bool
 name|GenerateWatchpointCommandCallbackData
 argument_list|(
@@ -487,74 +529,88 @@ name|string
 operator|&
 name|output
 argument_list|)
-block|;
-specifier|static
-name|size_t
-name|GenerateBreakpointOptionsCommandCallback
-argument_list|(
-argument|void *baton
-argument_list|,
-argument|InputReader&reader
-argument_list|,
-argument|lldb::InputReaderAction notification
-argument_list|,
-argument|const char *bytes
-argument_list|,
-argument|size_t bytes_len
-argument_list|)
-block|;
-specifier|static
-name|size_t
-name|GenerateWatchpointOptionsCommandCallback
-argument_list|(
-argument|void *baton
-argument_list|,
-argument|InputReader&reader
-argument_list|,
-argument|lldb::InputReaderAction notification
-argument_list|,
-argument|const char *bytes
-argument_list|,
-argument|size_t bytes_len
-argument_list|)
-block|;
+decl_stmt|;
+comment|//    static size_t
+comment|//    GenerateBreakpointOptionsCommandCallback (void *baton,
+comment|//                                              InputReader&reader,
+comment|//                                              lldb::InputReaderAction notification,
+comment|//                                              const char *bytes,
+comment|//                                              size_t bytes_len);
+comment|//
+comment|//    static size_t
+comment|//    GenerateWatchpointOptionsCommandCallback (void *baton,
+comment|//                                              InputReader&reader,
+comment|//                                              lldb::InputReaderAction notification,
+comment|//                                              const char *bytes,
+comment|//                                              size_t bytes_len);
 specifier|static
 name|bool
 name|BreakpointCallbackFunction
 argument_list|(
-argument|void *baton
+name|void
+operator|*
+name|baton
 argument_list|,
-argument|StoppointCallbackContext *context
+name|StoppointCallbackContext
+operator|*
+name|context
 argument_list|,
-argument|lldb::user_id_t break_id
+name|lldb
+operator|::
+name|user_id_t
+name|break_id
 argument_list|,
-argument|lldb::user_id_t break_loc_id
+name|lldb
+operator|::
+name|user_id_t
+name|break_loc_id
 argument_list|)
-block|;
+decl_stmt|;
 specifier|static
 name|bool
 name|WatchpointCallbackFunction
 argument_list|(
-argument|void *baton
+name|void
+operator|*
+name|baton
 argument_list|,
-argument|StoppointCallbackContext *context
+name|StoppointCallbackContext
+operator|*
+name|context
 argument_list|,
-argument|lldb::user_id_t watch_id
+name|lldb
+operator|::
+name|user_id_t
+name|watch_id
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|GetScriptedSummary
 argument_list|(
-argument|const char *function_name
+specifier|const
+name|char
+operator|*
+name|function_name
 argument_list|,
-argument|lldb::ValueObjectSP valobj
+name|lldb
+operator|::
+name|ValueObjectSP
+name|valobj
 argument_list|,
-argument|lldb::ScriptInterpreterObjectSP& callee_wrapper_sp
+name|lldb
+operator|::
+name|ScriptInterpreterObjectSP
+operator|&
+name|callee_wrapper_sp
 argument_list|,
-argument|std::string& retval
+name|std
+operator|::
+name|string
+operator|&
+name|retval
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|GetDocumentationForItem
@@ -570,13 +626,16 @@ name|string
 operator|&
 name|dest
 argument_list|)
-block|;
+decl_stmt|;
 name|virtual
 name|bool
 name|CheckObjectExists
-argument_list|(
-argument|const char* name
-argument_list|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -596,7 +655,7 @@ name|std
 operator|::
 name|string
 name|temp
-block|;
+expr_stmt|;
 return|return
 name|GetDocumentationForItem
 argument_list|(
@@ -823,15 +882,6 @@ name|new_fh
 parameter_list|)
 function_decl|;
 specifier|static
-name|lldb
-operator|::
-name|thread_result_t
-name|RunEmbeddedPythonInterpreter
-argument_list|(
-argument|lldb::thread_arg_t baton
-argument_list|)
-expr_stmt|;
-specifier|static
 name|void
 name|InitializePrivate
 parameter_list|()
@@ -901,13 +951,65 @@ name|SWIGPython_GetDynamicSetting
 name|swig_plugin_get
 parameter_list|)
 function_decl|;
+specifier|const
+name|char
+modifier|*
+name|GetDictionaryName
+parameter_list|()
+block|{
+return|return
+name|m_dictionary_name
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
+comment|//----------------------------------------------------------------------
+comment|// IOHandlerDelegate
+comment|//----------------------------------------------------------------------
+name|virtual
+name|void
+name|IOHandlerActivated
+parameter_list|(
+name|IOHandler
+modifier|&
+name|io_handler
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|IOHandlerInputComplete
+argument_list|(
+name|IOHandler
+operator|&
+name|io_handler
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|data
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 name|bool
 name|EnterSession
 parameter_list|(
-name|bool
-name|init_lldb_globals
+name|uint16_t
+name|on_entry_flags
+parameter_list|,
+name|FILE
+modifier|*
+name|in
+parameter_list|,
+name|FILE
+modifier|*
+name|out
+parameter_list|,
+name|FILE
+modifier|*
+name|err
 parameter_list|)
 function_decl|;
 name|void
@@ -925,8 +1027,6 @@ name|void
 name|RestoreTerminalState
 parameter_list|()
 function_decl|;
-name|private
-label|:
 name|class
 name|SynchronicityHandler
 block|{
@@ -1026,6 +1126,8 @@ name|ScriptInterpreterPythonObject
 argument_list|)
 block|;     }
 decl_stmt|;
+name|public
+label|:
 name|class
 name|Locker
 range|:
@@ -1048,6 +1150,10 @@ block|,
 name|InitGlobals
 operator|=
 literal|0x0004
+block|,
+name|NoSTDIN
+operator|=
+literal|0x0008
 block|}
 block|;                  enum
 name|OnLeave
@@ -1074,7 +1180,11 @@ argument|uint16_t on_entry = AcquireLock | InitSession
 argument_list|,
 argument|uint16_t on_leave = FreeLock | TearDownSession
 argument_list|,
-argument|FILE* wait_msg_handle = NULL
+argument|FILE *in = NULL
+argument_list|,
+argument|FILE *out = NULL
+argument_list|,
+argument|FILE *err = NULL
 argument_list|)
 block|;
 operator|~
@@ -1090,7 +1200,13 @@ block|;
 name|bool
 name|DoInitSession
 argument_list|(
-argument|bool init_lldb_globals
+argument|uint16_t on_entry_flags
+argument_list|,
+argument|FILE *in
+argument_list|,
+argument|FILE *out
+argument_list|,
+argument|FILE *err
 argument_list|)
 block|;
 name|bool
@@ -1113,160 +1229,68 @@ name|ScriptInterpreterPython
 operator|*
 name|m_python_interpreter
 block|;
-name|FILE
-operator|*
-name|m_tmp_fh
-block|;
+comment|//    	FILE*                    m_tmp_fh;
 name|PyGILState_STATE
 name|m_GILState
 block|; 	}
 decl_stmt|;
-name|class
-name|PythonInputReaderManager
-block|{
-name|public
-label|:
-name|PythonInputReaderManager
-argument_list|(
-name|ScriptInterpreterPython
-operator|*
-name|interpreter
-argument_list|)
-expr_stmt|;
-name|explicit
-name|operator
-name|bool
-parameter_list|()
-block|{
-return|return
-name|m_error
-return|;
-block|}
-operator|~
-name|PythonInputReaderManager
-argument_list|()
-expr_stmt|;
 name|private
 label|:
-specifier|static
-name|size_t
-name|InputReaderCallback
-argument_list|(
-name|void
-operator|*
-name|baton
-argument_list|,
-name|InputReader
-operator|&
-name|reader
-argument_list|,
-name|lldb
-operator|::
-name|InputReaderAction
-name|notification
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|bytes
-argument_list|,
-name|size_t
-name|bytes_len
-argument_list|)
-decl_stmt|;
-specifier|static
-name|lldb
-operator|::
-name|thread_result_t
-name|RunPythonInputReader
-argument_list|(
-argument|lldb::thread_arg_t baton
-argument_list|)
-expr_stmt|;
-name|ScriptInterpreterPython
-modifier|*
-name|m_interpreter
-decl_stmt|;
-name|lldb
-operator|::
-name|DebuggerSP
-name|m_debugger_sp
-expr_stmt|;
-name|lldb
-operator|::
-name|InputReaderSP
-name|m_reader_sp
-expr_stmt|;
-name|bool
-name|m_error
-decl_stmt|;
+enum|enum
+name|ActiveIOHandler
+block|{
+name|eIOHandlerNone
+block|,
+name|eIOHandlerBreakpoint
+block|,
+name|eIOHandlerWatchpoint
 block|}
-empty_stmt|;
-specifier|static
-name|size_t
-name|InputReaderCallback
-argument_list|(
-name|void
-operator|*
-name|baton
-argument_list|,
-name|InputReader
-operator|&
-name|reader
-argument_list|,
-name|lldb
-operator|::
-name|InputReaderAction
-name|notification
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|bytes
-argument_list|,
-name|size_t
-name|bytes_len
-argument_list|)
+enum|;
+name|PythonObject
+modifier|&
+name|GetMainModule
+parameter_list|()
+function_decl|;
+name|PythonDictionary
+modifier|&
+name|GetSessionDictionary
+parameter_list|()
+function_decl|;
+name|PythonDictionary
+modifier|&
+name|GetSysModuleDictionary
+parameter_list|()
+function_decl|;
+name|bool
+name|GetEmbeddedInterpreterModuleObjects
+parameter_list|()
+function_decl|;
+name|PythonObject
+name|m_saved_stdin
 decl_stmt|;
-name|lldb_utility
-operator|::
-name|PseudoTerminal
-name|m_embedded_thread_pty
-expr_stmt|;
-name|lldb_utility
-operator|::
-name|PseudoTerminal
-name|m_embedded_python_pty
-expr_stmt|;
-name|lldb
-operator|::
-name|InputReaderSP
-name|m_embedded_thread_input_reader_sp
-expr_stmt|;
-name|lldb
-operator|::
-name|InputReaderSP
-name|m_embedded_python_input_reader_sp
-expr_stmt|;
-name|FILE
-modifier|*
-name|m_dbg_stdout
+name|PythonObject
+name|m_saved_stdout
 decl_stmt|;
-name|PyObject
-modifier|*
-name|m_new_sysout
+name|PythonObject
+name|m_saved_stderr
 decl_stmt|;
-name|PyObject
-modifier|*
-name|m_old_sysout
+name|PythonObject
+name|m_main_module
 decl_stmt|;
-name|PyObject
-modifier|*
-name|m_old_syserr
+name|PythonObject
+name|m_lldb_module
 decl_stmt|;
-name|PyObject
-modifier|*
-name|m_run_one_line
+name|PythonDictionary
+name|m_session_dict
+decl_stmt|;
+name|PythonDictionary
+name|m_sys_module_dict
+decl_stmt|;
+name|PythonObject
+name|m_run_one_line_function
+decl_stmt|;
+name|PythonObject
+name|m_run_one_line_str_global
 decl_stmt|;
 name|std
 operator|::
@@ -1275,6 +1299,9 @@ name|m_dictionary_name
 expr_stmt|;
 name|TerminalState
 name|m_terminal_state
+decl_stmt|;
+name|ActiveIOHandler
+name|m_active_io_handler
 decl_stmt|;
 name|bool
 name|m_session_is_active
@@ -1290,14 +1317,11 @@ modifier|*
 name|m_command_thread_state
 decl_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// namespace lldb_private
 end_comment
 

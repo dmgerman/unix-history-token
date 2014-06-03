@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|NFE_MAX_SCATTER
-value|32
+value|35
 end_define
 
 begin_define

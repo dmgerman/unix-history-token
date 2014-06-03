@@ -323,5 +323,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|bios_addsmapdata
+parameter_list|(
+name|struct
+name|preloaded_file
+modifier|*
+name|kfp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

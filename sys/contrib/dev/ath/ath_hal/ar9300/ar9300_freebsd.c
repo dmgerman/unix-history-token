@@ -246,6 +246,30 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|uint64_t
+name|ar9300_get_next_tbtt
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+operator|(
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_NEXT_TBTT_TIMER
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|ar9300_attach_freebsd_ops
 parameter_list|(
@@ -830,6 +854,12 @@ name|ar9300_set_sta_beacon_timers
 expr_stmt|;
 comment|/* ah_resetStationBeaconTimers */
 comment|/* ah_getNextTBTT */
+name|ah
+operator|->
+name|ah_getNextTBTT
+operator|=
+name|ar9300_get_next_tbtt
+expr_stmt|;
 comment|/* Interrupt functions */
 name|ah
 operator|->

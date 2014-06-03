@@ -103,42 +103,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vmcs_set_defaults
+name|vmcs_init
 parameter_list|(
 name|struct
 name|vmcs
 modifier|*
 name|vmcs
-parameter_list|,
-name|u_long
-name|host_rip
-parameter_list|,
-name|u_long
-name|host_rsp
-parameter_list|,
-name|uint64_t
-name|eptp
-parameter_list|,
-name|uint32_t
-name|pinbased_ctls
-parameter_list|,
-name|uint32_t
-name|procbased_ctls
-parameter_list|,
-name|uint32_t
-name|procbased_ctls2
-parameter_list|,
-name|uint32_t
-name|exit_ctls
-parameter_list|,
-name|uint32_t
-name|entry_ctls
-parameter_list|,
-name|u_long
-name|msr_bitmap
-parameter_list|,
-name|uint16_t
-name|vpid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -196,6 +166,9 @@ modifier|*
 name|vmcs
 parameter_list|,
 name|int
+name|running
+parameter_list|,
+name|int
 name|ident
 parameter_list|,
 name|struct
@@ -214,6 +187,9 @@ name|struct
 name|vmcs
 modifier|*
 name|vmcs
+parameter_list|,
+name|int
+name|running
 parameter_list|,
 name|int
 name|ident
@@ -446,6 +422,13 @@ name|VMCS_VPID
 value|0x00000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMCS_PIR_VECTOR
+value|0x00000002
+end_define
+
 begin_comment
 comment|/* 16-bit guest-state fields */
 end_comment
@@ -504,6 +487,13 @@ define|#
 directive|define
 name|VMCS_GUEST_TR_SELECTOR
 value|0x0000080E
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_GUEST_INTR_STATUS
+value|0x00000810
 end_define
 
 begin_comment
@@ -636,8 +626,53 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMCS_PIR_DESC
+value|0x00002016
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMCS_EPTP
 value|0x0000201A
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT0
+value|0x0000201C
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT1
+value|0x0000201E
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT2
+value|0x00002020
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT3
+value|0x00002022
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_EOI_EXIT
+parameter_list|(
+name|vector
+parameter_list|)
+value|(VMCS_EOI_EXIT0 + ((vector) / 64) * 2)
 end_define
 
 begin_comment
@@ -894,14 +929,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|VMCS_EXIT_INTERRUPTION_INFO
+name|VMCS_EXIT_INTR_INFO
 value|0x00004404
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_EXIT_INTERRUPTION_ERROR
+name|VMCS_EXIT_INTR_ERRCODE
 value|0x00004406
 end_define
 
@@ -1752,8 +1787,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXIT_REASON_APIC
+name|EXIT_REASON_APIC_ACCESS
 value|44
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_REASON_VIRTUALIZED_EOI
+value|45
 end_define
 
 begin_define
@@ -1826,6 +1868,24 @@ name|EXIT_REASON_XSETBV
 value|55
 end_define
 
+begin_define
+define|#
+directive|define
+name|EXIT_REASON_APIC_WRITE
+value|56
+end_define
+
+begin_comment
+comment|/*  * NMI unblocking due to IRET.  *  * Applies to VM-exits due to hardware exception or EPT fault.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXIT_QUAL_NMIUDTI
+value|(1<< 12)
+end_define
+
 begin_comment
 comment|/*  * VMCS interrupt information fields  */
 end_comment
@@ -1833,22 +1893,47 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMCS_INTERRUPTION_INFO_VALID
+name|VMCS_INTR_VALID
 value|(1U<< 31)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTERRUPTION_INFO_HW_INTR
+name|VMCS_INTR_T_MASK
+value|0x700
+end_define
+
+begin_comment
+comment|/* Interruption-info type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_T_HWINTR
 value|(0<< 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|VMCS_INTERRUPTION_INFO_NMI
+name|VMCS_INTR_T_NMI
 value|(2<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_T_HWEXCEPTION
+value|(3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_DEL_ERRCODE
+value|(1<< 11)
 end_define
 
 begin_comment
@@ -1970,6 +2055,44 @@ define|#
 directive|define
 name|EPT_VIOLATION_XLAT_VALID
 value|(1UL<< 8)
+end_define
+
+begin_comment
+comment|/*  * Exit qualification for APIC-access VM exit  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_ACCESS_OFFSET
+parameter_list|(
+name|qual
+parameter_list|)
+value|((qual)& 0xFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_ACCESS_TYPE
+parameter_list|(
+name|qual
+parameter_list|)
+value|(((qual)>> 12)& 0xF)
+end_define
+
+begin_comment
+comment|/*  * Exit qualification for APIC-write VM exit  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_WRITE_OFFSET
+parameter_list|(
+name|qual
+parameter_list|)
+value|((qual)& 0xFFF)
 end_define
 
 begin_endif

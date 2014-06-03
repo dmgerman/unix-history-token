@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/physmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -261,31 +267,6 @@ directive|include
 file|<arm/xscale/ixp425/ixp425var.h>
 end_include
 
-begin_comment
-comment|/* kernel text starts where we were loaded at boot */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERNEL_TEXT_OFF
-value|(KERNPHYSADDR  - PHYSADDR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNEL_TEXT_BASE
-value|(KERNBASE + KERNEL_TEXT_OFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNEL_TEXT_PHYS
-value|(PHYSADDR + KERNEL_TEXT_OFF)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -348,27 +329,6 @@ value|(KERNEL_PT_AFKERNEL + KERNEL_PT_AFKERNEL_NUM)
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|u_int
-name|data_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|prefetch_abort_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|undefined_handler_address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|pv_addr
 name|kernel_pt_table
@@ -381,24 +341,6 @@ end_decl_stmt
 begin_comment
 comment|/* Physical and virtual addresses for some global pages */
 end_comment
-
-begin_decl_stmt
-name|vm_paddr_t
-name|phys_avail
-index|[
-literal|10
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_paddr_t
-name|dump_avail
-index|[
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -474,7 +416,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* Expansion Bus */
@@ -489,7 +431,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* CFI Flash on the Expansion Bus */
@@ -504,7 +446,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* IXP425 PCI Configuration */
@@ -519,7 +461,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* SDRAM Controller */
@@ -534,7 +476,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* PCI Memory Space */
@@ -549,7 +491,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* Q-Mgr Memory Space */
@@ -564,7 +506,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 block|{
@@ -599,7 +541,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 block|{
@@ -613,7 +555,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* IXP425 PCI Configuration */
@@ -628,7 +570,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* DDRII Controller NB: mapped same place as IXP425 */
@@ -643,7 +585,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* PCI Memory Space */
@@ -658,7 +600,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* Q-Mgr Memory Space */
@@ -673,7 +615,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* CFI Flash on the Expansion Bus */
@@ -688,7 +630,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* USB1 Memory Space */
@@ -703,7 +645,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* USB2 Memory Space */
@@ -718,7 +660,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* GPS Memory Space */
@@ -733,7 +675,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 comment|/* RS485 Memory Space */
@@ -748,7 +690,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, }
 block|,
 block|{
@@ -826,12 +768,31 @@ decl_stmt|;
 name|uint32_t
 name|memsize
 decl_stmt|;
+comment|/* kernel text starts where we were loaded at boot */
+define|#
+directive|define
+name|KERNEL_TEXT_OFF
+value|(abp->abp_physaddr  - PHYSADDR)
+define|#
+directive|define
+name|KERNEL_TEXT_BASE
+value|(KERNBASE + KERNEL_TEXT_OFF)
+define|#
+directive|define
+name|KERNEL_TEXT_PHYS
+value|(PHYSADDR + KERNEL_TEXT_OFF)
 name|lastaddr
 operator|=
 name|parse_boot_param
 argument_list|(
 name|abp
 argument_list|)
+expr_stmt|;
+name|arm_physmem_kernaddr
+operator|=
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 name|set_cpufuncs
 argument_list|()
@@ -858,6 +819,16 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|envmode
+operator|==
+literal|1
+condition|)
+name|kern_envp
+operator|=
+name|static_env
+expr_stmt|;
 comment|/* Do basic tuning, hz etc */
 name|init_param1
 argument_list|()
@@ -865,7 +836,9 @@ expr_stmt|;
 comment|/* 	 * We allocate memory downwards from where we were loaded 	 * by RedBoot; first the L1 page table, then NUM_KERNEL_PTS 	 * entries in the L2 page table.  Past that we re-align the 	 * allocation boundary so later data structures (stacks, etc) 	 * can be mapped with different attributes (write-back vs 	 * write-through).  Note this leaves a gap for expansion 	 * (or might be repurposed). 	 */
 name|freemempos
 operator|=
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 expr_stmt|;
 comment|/* macros to simplify initial memory allocation */
 define|#
@@ -887,7 +860,7 @@ name|var
 parameter_list|,
 name|np
 parameter_list|)
-value|do {					\ 	alloc_pages((var).pv_pa, (np));					\ 	(var).pv_va = (var).pv_pa + (KERNVIRTADDR - KERNPHYSADDR);	\ } while (0)
+value|do {					\ 	alloc_pages((var).pv_pa, (np));					\ 	(var).pv_va = (var).pv_pa + (KERNVIRTADDR - abp->abp_physaddr);	\ } while (0)
 comment|/* force L1 page table alignment */
 while|while
 condition|(
@@ -1003,7 +976,9 @@ operator|+
 operator|(
 name|KERNVIRTADDR
 operator|-
-name|KERNPHYSADDR
+name|abp
+operator|->
+name|abp_physaddr
 operator|)
 expr_stmt|;
 block|}
@@ -1101,148 +1076,6 @@ operator|/
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ARM_USE_SMALL_ALLOC
-name|freemempos
-operator|-=
-name|PAGE_SIZE
-expr_stmt|;
-name|freemem_pt
-operator|=
-name|trunc_page
-argument_list|(
-name|freemem_pt
-argument_list|)
-expr_stmt|;
-name|freemem_after
-operator|=
-name|freemempos
-operator|-
-operator|(
-operator|(
-name|freemem_pt
-operator|-
-operator|(
-name|PHYSADDR
-operator|+
-literal|0x100000
-operator|)
-operator|)
-operator|/
-name|PAGE_SIZE
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|arm_small_page
-argument_list|)
-expr_stmt|;
-name|arm_add_smallalloc_pages
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|freemem_after
-operator|+
-operator|(
-name|KERNVIRTADDR
-operator|-
-name|KERNPHYSADDR
-operator|)
-operator|)
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|0xc0100000
-argument_list|,
-name|freemem_pt
-operator|-
-operator|(
-name|PHYSADDR
-operator|+
-literal|0x100000
-operator|)
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|freemem_after
-operator|-=
-operator|(
-operator|(
-name|freemem_after
-operator|-
-operator|(
-name|PHYSADDR
-operator|+
-literal|0x1000
-operator|)
-operator|)
-operator|/
-name|PAGE_SIZE
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|arm_small_page
-argument_list|)
-expr_stmt|;
-name|arm_add_smallalloc_pages
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|freemem_after
-operator|+
-operator|(
-name|KERNVIRTADDR
-operator|-
-name|KERNPHYSADDR
-operator|)
-operator|)
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|0xc0001000
-argument_list|,
-name|trunc_page
-argument_list|(
-name|freemem_after
-argument_list|)
-operator|-
-operator|(
-name|PHYSADDR
-operator|+
-literal|0x1000
-operator|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|freemempos
-operator|=
-name|trunc_page
-argument_list|(
-name|freemem_after
-argument_list|)
-expr_stmt|;
-name|freemempos
-operator|-=
-name|PAGE_SIZE
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Now construct the L1 page table.  First map the L2 	 * page tables into the L1 so we can replace L1 mappings 	 * later on if necessary 	 */
 name|l1pagetable
 operator|=
@@ -1470,56 +1303,6 @@ argument_list|,
 name|PTE_CACHE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ARM_USE_SMALL_ALLOC
-if|if
-condition|(
-operator|(
-name|freemem_after
-operator|+
-literal|2
-operator|*
-name|PAGE_SIZE
-operator|)
-operator|<=
-name|afterkern
-condition|)
-block|{
-name|arm_add_smallalloc_pages
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|freemem_after
-operator|)
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|freemem_after
-operator|+
-name|PAGE_SIZE
-operator|)
-argument_list|,
-name|afterkern
-operator|-
-operator|(
-name|freemem_after
-operator|+
-name|PAGE_SIZE
-operator|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* Map the Mini-Data cache clean area. */
 name|xscale_setup_minidata
 argument_list|(
@@ -1647,34 +1430,6 @@ operator|=
 name|ixp425_sdram_size
 argument_list|()
 expr_stmt|;
-name|physmem
-operator|=
-name|memsize
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
-comment|/* Set stack for exception handlers */
-name|data_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|data_abort_handler
-expr_stmt|;
-name|prefetch_abort_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|prefetch_abort_handler
-expr_stmt|;
-name|undefined_handler_address
-operator|=
-operator|(
-name|u_int
-operator|)
-name|undefinedinstruction_bounce
-expr_stmt|;
 name|undefined_init
 argument_list|()
 expr_stmt|;
@@ -1697,24 +1452,6 @@ operator|=
 name|afterkern
 operator|+
 name|PAGE_SIZE
-expr_stmt|;
-name|arm_dump_avail_init
-argument_list|(
-name|memsize
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dump_avail
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|dump_avail
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|vm_max_kernel_address
 operator|=
@@ -1748,78 +1485,29 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ARM_USE_SMALL_ALLOC
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|PHYSADDR
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|PHYSADDR
-operator|+
-name|PAGE_SIZE
-expr_stmt|;
-comment|/* 					 *XXX: Gross hack to get our 					 * pages in the vm_page_array. 					 */
-endif|#
-directive|endif
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|round_page
+comment|/* 	 * Add the physical ram we have available. 	 * 	 * Exclude the kernel, and all the things we allocated which immediately 	 * follow the kernel, from the VM allocation pool but not from crash 	 * dumps.  virtual_avail is a global variable which tracks the kva we've 	 * "allocated" while setting up pmaps. 	 * 	 * Prepare the list of physical memory available to the vm subsystem. 	 */
+name|arm_physmem_hardware_region
 argument_list|(
+name|PHYSADDR
+argument_list|,
+name|memsize
+argument_list|)
+expr_stmt|;
+name|arm_physmem_exclude_region
+argument_list|(
+name|abp
+operator|->
+name|abp_physaddr
+argument_list|,
 name|virtual_avail
 operator|-
-name|KERNBASE
-operator|+
-name|PHYSADDR
+name|KERNVIRTADDR
+argument_list|,
+name|EXFLAG_NOALLOC
 argument_list|)
 expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-name|trunc_page
-argument_list|(
-name|PHYSADDR
-operator|+
-name|memsize
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-operator|++
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|phys_avail
-index|[
-name|i
-index|]
-operator|=
-literal|0
+name|arm_physmem_init_kernel_globals
+argument_list|()
 expr_stmt|;
 name|init_param2
 argument_list|(

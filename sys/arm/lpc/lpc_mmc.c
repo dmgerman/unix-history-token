@@ -757,6 +757,19 @@ block|{
 if|if
 condition|(
 operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+operator|!
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -2634,7 +2647,7 @@ name|lm_dev
 argument_list|,
 name|LPC_MMC_DMACH_READ
 argument_list|,
-name|LPC_SD_BASE
+name|LPC_SD_PHYS_BASE
 operator|+
 name|LPC_SD_FIFO
 argument_list|,
@@ -2675,7 +2688,7 @@ name|sc
 operator|->
 name|lm_buffer_phys
 argument_list|,
-name|LPC_SD_BASE
+name|LPC_SD_PHYS_BASE
 operator|+
 name|LPC_SD_FIFO
 argument_list|,

@@ -48,30 +48,6 @@ directive|define
 name|__PCI_REROUTE_INTERRUPT
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MACHINE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MACHINE
-value|"arm"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MACHINE_ARCH
-end_ifndef
-
 begin_if
 if|#
 directive|if
@@ -92,17 +68,11 @@ literal|6
 operator|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ARMEB__
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|MACHINE_ARCH
-value|"armv6eb"
+name|_V6_SUFFIX
+value|"v6"
 end_define
 
 begin_else
@@ -113,8 +83,8 @@ end_else
 begin_define
 define|#
 directive|define
-name|MACHINE_ARCH
-value|"armv6"
+name|_V6_SUFFIX
+value|""
 end_define
 
 begin_endif
@@ -122,22 +92,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__ARMEB__
+name|__ARM_PCS_VFP
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|MACHINE_ARCH
-value|"armeb"
+name|_HF_SUFFIX
+value|"hf"
 end_define
 
 begin_else
@@ -148,7 +113,55 @@ end_else
 begin_define
 define|#
 directive|define
-name|MACHINE_ARCH
+name|_HF_SUFFIX
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ARMEB__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_EB_SUFFIX
+value|"eb"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_EB_SUFFIX
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MACHINE
 value|"arm"
 end_define
 
@@ -157,22 +170,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE_ARCH
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MID_MACHINE
-value|MID_ARM6
+name|MACHINE_ARCH
+value|"arm" _V6_SUFFIX _HF_SUFFIX _EB_SUFFIX
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -437,28 +451,7 @@ begin_define
 define|#
 directive|define
 name|USPACE_SVC_STACK_TOP
-value|KSTACK_PAGES * PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|USPACE_SVC_STACK_BOTTOM
-value|(USPACE_SVC_STACK_TOP - 0x1000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USPACE_UNDEF_STACK_TOP
-value|(USPACE_SVC_STACK_BOTTOM - 0x10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USPACE_UNDEF_STACK_BOTTOM
-value|(FPCONTEXTSIZE + 10)
+value|(KSTACK_PAGES * PAGE_SIZE)
 end_define
 
 begin_comment

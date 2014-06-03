@@ -1479,7 +1479,7 @@ name|sa
 parameter_list|,
 name|rt
 parameter_list|)
-value|((rt != NULL) ? rt->rt_rmx.rmx_mtu : 0)
+value|((rt != NULL) ? rt->rt_mtu : 0)
 end_define
 
 begin_define
@@ -1503,7 +1503,7 @@ name|rt
 parameter_list|,
 name|mtu
 parameter_list|)
-value|do { \                                               if (rt != NULL) \                                                  rt->rt_rmx.rmx_mtu = mtu; \                                            } while(0)
+value|do { \                                               if (rt != NULL) \                                                  rt->rt_mtu = mtu; \                                            } while(0)
 end_define
 
 begin_comment

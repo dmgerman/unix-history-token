@@ -105,29 +105,23 @@ parameter_list|,
 name|failmsg
 parameter_list|)
 define|\
-value|ATF_TC(name); \     ATF_TC_HEAD(name, tc) \     { \         atf_tc_set_md_var(tc, "descr", descr); \     } \     ATF_TC_BODY(name, tc) \     { \         build_check_c_o(tc, sfile, failmsg, true);   \     }
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUILD_TC_FAIL
-parameter_list|(
-name|name
-parameter_list|,
-name|sfile
-parameter_list|,
-name|descr
-parameter_list|,
-name|failmsg
-parameter_list|)
-define|\
-value|ATF_TC(name); \     ATF_TC_HEAD(name, tc) \     { \         atf_tc_set_md_var(tc, "descr", descr); \     } \     ATF_TC_BODY(name, tc) \     { \         build_check_c_o(tc, sfile, failmsg, false);   \     }
+value|ATF_TC(name); \     ATF_TC_HEAD(name, tc) \     { \         atf_tc_set_md_var(tc, "descr", descr); \     } \     ATF_TC_BODY(name, tc) \     { \         if (!build_check_c_o_srcdir(tc, sfile)) \             atf_tc_fail("%s", failmsg); \     }
 end_define
 
 begin_function_decl
-name|void
+name|bool
 name|build_check_c_o
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|build_check_c_o_srcdir
 parameter_list|(
 specifier|const
 name|atf_tc_t
@@ -136,13 +130,6 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|bool
 parameter_list|)
 function_decl|;
 end_function_decl

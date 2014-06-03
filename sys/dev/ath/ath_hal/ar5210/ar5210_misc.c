@@ -1126,6 +1126,12 @@ argument_list|,
 name|IEEE80211_ADDR_LEN
 argument_list|)
 expr_stmt|;
+name|ahp
+operator|->
+name|ah_associd
+operator|=
+name|assocId
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah

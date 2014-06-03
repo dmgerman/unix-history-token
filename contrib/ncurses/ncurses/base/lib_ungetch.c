@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                         2009                    *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_ungetch.c,v 1.11 2008/05/31 16:44:54 tom Exp $"
+literal|"$Id: lib_ungetch.c,v 1.16 2012/08/04 17:38:53 tom Exp $"
 argument_list|)
 end_macro
 
@@ -122,7 +122,7 @@ argument_list|)
 end_macro
 
 begin_macro
-name|_nc_ungetch
+name|safe_ungetch
 argument_list|(
 argument|SCREEN *sp
 argument_list|,
@@ -137,20 +137,45 @@ name|rc
 init|=
 name|ERR
 decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"ungetch(%p,%s)"
+argument_list|)
+operator|,
+operator|(
+name|void
+operator|*
+operator|)
+name|sp
+operator|,
+name|_nc_tracechar
+argument_list|(
+name|sp
+argument_list|,
+name|ch
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|tail
+name|sp
 operator|!=
-operator|-
-literal|1
+literal|0
+operator|&&
+name|tail
+operator|>=
+literal|0
 condition|)
 block|{
 if|if
 condition|(
 name|head
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|head
@@ -167,9 +192,11 @@ expr_stmt|;
 comment|/* no raw keys */
 block|}
 else|else
+block|{
 name|h_dec
 argument_list|()
 expr_stmt|;
+block|}
 name|sp
 operator|->
 name|_fifo
@@ -222,9 +249,11 @@ operator|=
 name|OK
 expr_stmt|;
 block|}
-return|return
+name|returnCode
+argument_list|(
 name|rc
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -244,33 +273,14 @@ end_macro
 
 begin_block
 block|{
-name|T
+return|return
+name|safe_ungetch
 argument_list|(
-operator|(
-name|T_CALLED
-argument_list|(
-literal|"ungetch(%s)"
-argument_list|)
-operator|,
-name|_nc_tracechar
-argument_list|(
-name|SP
+name|CURRENT_SCREEN
 argument_list|,
 name|ch
 argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|returnCode
-argument_list|(
-name|_nc_ungetch
-argument_list|(
-name|SP
-argument_list|,
-name|ch
-argument_list|)
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_block
 

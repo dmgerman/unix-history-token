@@ -1523,14 +1523,14 @@ name|major
 operator|=
 name|hash
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
 name|minor
 operator|=
 name|hash
 index|[
-literal|1
+literal|2
 index|]
 expr_stmt|;
 break|break;

@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -158,6 +152,9 @@ name|class
 name|Constant
 decl_stmt|;
 name|class
+name|DataLayout
+decl_stmt|;
+name|class
 name|ExecutionEngine
 decl_stmt|;
 name|class
@@ -188,7 +185,7 @@ name|class
 name|ObjectCache
 decl_stmt|;
 name|class
-name|DataLayout
+name|RTDyldMemoryManager
 decl_stmt|;
 name|class
 name|Triple
@@ -514,9 +511,9 @@ name|string
 operator|*
 name|ErrorStr
 operator|,
-name|JITMemoryManager
+name|RTDyldMemoryManager
 operator|*
-name|JMM
+name|MCJMM
 operator|,
 name|bool
 name|GVsWithCode
@@ -562,40 +559,9 @@ name|string
 operator|&
 argument_list|)
 argument_list|;
-comment|/// ExceptionTableRegister - If Exception Handling is set, the JIT will
-comment|/// register dwarf tables with this function.
-argument_list|typedef
-name|void
-argument_list|(
-operator|*
-name|EERegisterFn
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-argument_list|;
-name|EERegisterFn
-name|ExceptionTableRegister
-argument_list|;
-name|EERegisterFn
-name|ExceptionTableDeregister
-argument_list|;
-comment|/// This maps functions to their exception tables frames.
-name|DenseMap
-operator|<
-specifier|const
-name|Function
-operator|*
-argument_list|,
-name|void
-operator|*
-operator|>
-name|AllExceptionTables
-argument_list|;
 name|public
 operator|:
-comment|/// lock - This lock protects the ExecutionEngine, JIT, JITResolver and
+comment|/// lock - This lock protects the ExecutionEngine, MCJIT, JIT, JITResolver and
 comment|/// JITEmitter classes.  It must be held while changing the internal state of
 comment|/// any of those classes.
 name|sys
@@ -709,6 +675,7 @@ function_decl|;
 comment|/// FindFunctionNamed - Search all of the active modules to find the one that
 comment|/// defines FnName.  This is very slow operation and shouldn't be used for
 comment|/// general code.
+name|virtual
 name|Function
 modifier|*
 name|FindFunctionNamed
@@ -749,6 +716,11 @@ comment|///
 comment|/// If AbortOnFailure is false and no function with the given name is
 comment|/// found, this function silently returns a null pointer. Otherwise,
 comment|/// it prints a message to stderr and aborts.
+comment|///
+comment|/// This function is deprecated for the MCJIT execution engine.
+comment|///
+comment|/// FIXME: the JIT and MCJIT interfaces should be disentangled or united
+comment|/// again, if possible.
 comment|///
 name|virtual
 name|void
@@ -794,11 +766,38 @@ literal|"EE!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|// finalizeObject - This method should be called after sections within an
-comment|// object have been relocated using mapSectionAddress.  When this method is
-comment|// called the MCJIT execution engine will reapply relocations for a loaded
-comment|// object.  This method has no effect for the legacy JIT engine or the
-comment|// interpeter.
+comment|/// generateCodeForModule - Run code generationen for the specified module and
+comment|/// load it into memory.
+comment|///
+comment|/// When this function has completed, all code and data for the specified
+comment|/// module, and any module on which this module depends, will be generated
+comment|/// and loaded into memory, but relocations will not yet have been applied
+comment|/// and all memory will be readable and writable but not executable.
+comment|///
+comment|/// This function is primarily useful when generating code for an external
+comment|/// target, allowing the client an opportunity to remap section addresses
+comment|/// before relocations are applied.  Clients that intend to execute code
+comment|/// locally can use the getFunctionAddress call, which will generate code
+comment|/// and apply final preparations all in one step.
+comment|///
+comment|/// This method has no effect for the legacy JIT engine or the interpeter.
+name|virtual
+name|void
+name|generateCodeForModule
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|)
+block|{}
+comment|/// finalizeObject - ensure the module is fully processed and is usable.
+comment|///
+comment|/// It is the user-level function for completing the process of making the
+comment|/// object usable for execution.  It should be called after sections within an
+comment|/// object have been relocated using mapSectionAddress.  When this method is
+comment|/// called the MCJIT execution engine will reapply relocations for a loaded
+comment|/// object.  This method has no effect for the legacy JIT engine or the
+comment|/// interpeter.
 name|virtual
 name|void
 name|finalizeObject
@@ -808,6 +807,7 @@ comment|/// runStaticConstructorsDestructors - This method is used to execute al
 comment|/// the static constructors or destructors for a program.
 comment|///
 comment|/// \param isDtors - Run the destructors instead of constructors.
+name|virtual
 name|void
 name|runStaticConstructorsDestructors
 parameter_list|(
@@ -916,6 +916,9 @@ function_decl|;
 comment|/// getPointerToGlobalIfAvailable - This returns the address of the specified
 comment|/// global value if it is has already been codegen'd, otherwise it returns
 comment|/// null.
+comment|///
+comment|/// This function is deprecated for the MCJIT execution engine.  It doesn't
+comment|/// seem to be needed in that case, but an equivalent can be added if it is.
 name|void
 modifier|*
 name|getPointerToGlobalIfAvailable
@@ -928,6 +931,9 @@ parameter_list|)
 function_decl|;
 comment|/// getPointerToGlobal - This returns the address of the specified global
 comment|/// value. This may involve code generation if it's a function.
+comment|///
+comment|/// This function is deprecated for the MCJIT execution engine.  Use
+comment|/// getGlobalValueAddress instead.
 name|void
 modifier|*
 name|getPointerToGlobal
@@ -943,6 +949,9 @@ comment|/// different ways.  They should each implement this to say what a funct
 comment|/// pointer should look like.  When F is destroyed, the ExecutionEngine will
 comment|/// remove its global mapping and free any machine code.  Be sure no threads
 comment|/// are running inside F when that happens.
+comment|///
+comment|/// This function is deprecated for the MCJIT execution engine.  Use
+comment|/// getFunctionAddress instead.
 name|virtual
 name|void
 modifier|*
@@ -958,6 +967,8 @@ function_decl|;
 comment|/// getPointerToBasicBlock - The different EE's represent basic blocks in
 comment|/// different ways.  Return the representation for a blockaddress of the
 comment|/// specified block.
+comment|///
+comment|/// This function will not be implemented for the MCJIT execution engine.
 name|virtual
 name|void
 modifier|*
@@ -974,6 +985,9 @@ comment|/// getPointerToFunctionOrStub - If the specified function has been
 comment|/// code-gen'd, return a pointer to the function.  If not, compile it, or use
 comment|/// a stub to implement lazy compilation if available.  See
 comment|/// getPointerToFunction for the requirements on destroying F.
+comment|///
+comment|/// This function is deprecated for the MCJIT execution engine.  Use
+comment|/// getFunctionAddress instead.
 name|virtual
 name|void
 modifier|*
@@ -990,6 +1004,48 @@ name|getPointerToFunction
 argument_list|(
 name|F
 argument_list|)
+return|;
+block|}
+comment|/// getGlobalValueAddress - Return the address of the specified global
+comment|/// value. This may involve code generation.
+comment|///
+comment|/// This function should not be called with the JIT or interpreter engines.
+name|virtual
+name|uint64_t
+name|getGlobalValueAddress
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+block|{
+comment|// Default implementation for JIT and interpreter.  MCJIT will override this.
+comment|// JIT and interpreter clients should use getPointerToGlobal instead.
+return|return
+literal|0
+return|;
+block|}
+comment|/// getFunctionAddress - Return the address of the specified function.
+comment|/// This may involve code generation.
+name|virtual
+name|uint64_t
+name|getFunctionAddress
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+block|{
+comment|// Default implementation for JIT and interpreter.  MCJIT will override this.
+comment|// JIT and interpreter clients should use getPointerToFunction instead.
+return|return
+literal|0
 return|;
 block|}
 comment|// The JIT overrides a version that actually does this.
@@ -1087,6 +1143,9 @@ function_decl|;
 comment|/// getOrEmitGlobalVariable - Return the address of the specified global
 comment|/// variable, possibly emitting it to memory if needed.  This is used by the
 comment|/// Emitter.
+comment|///
+comment|/// This function is deprecated for the MCJIT execution engine.  Use
+comment|/// getGlobalValueAddress instead.
 name|virtual
 name|void
 modifier|*
@@ -1273,135 +1332,6 @@ operator|=
 name|P
 expr_stmt|;
 block|}
-comment|/// InstallExceptionTableRegister - The JIT will use the given function
-comment|/// to register the exception tables it generates.
-name|void
-name|InstallExceptionTableRegister
-parameter_list|(
-name|EERegisterFn
-name|F
-parameter_list|)
-block|{
-name|ExceptionTableRegister
-operator|=
-name|F
-expr_stmt|;
-block|}
-name|void
-name|InstallExceptionTableDeregister
-parameter_list|(
-name|EERegisterFn
-name|F
-parameter_list|)
-block|{
-name|ExceptionTableDeregister
-operator|=
-name|F
-expr_stmt|;
-block|}
-comment|/// RegisterTable - Registers the given pointer as an exception table.  It
-comment|/// uses the ExceptionTableRegister function.
-name|void
-name|RegisterTable
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|fn
-parameter_list|,
-name|void
-modifier|*
-name|res
-parameter_list|)
-block|{
-if|if
-condition|(
-name|ExceptionTableRegister
-condition|)
-block|{
-name|ExceptionTableRegister
-argument_list|(
-name|res
-argument_list|)
-expr_stmt|;
-name|AllExceptionTables
-index|[
-name|fn
-index|]
-operator|=
-name|res
-expr_stmt|;
-block|}
-block|}
-comment|/// DeregisterTable - Deregisters the exception frame previously registered
-comment|/// for the given function.
-name|void
-name|DeregisterTable
-parameter_list|(
-specifier|const
-name|Function
-modifier|*
-name|Fn
-parameter_list|)
-block|{
-if|if
-condition|(
-name|ExceptionTableDeregister
-condition|)
-block|{
-name|DenseMap
-operator|<
-specifier|const
-name|Function
-operator|*
-operator|,
-name|void
-operator|*
-operator|>
-operator|::
-name|iterator
-name|frame
-operator|=
-name|AllExceptionTables
-operator|.
-name|find
-argument_list|(
-name|Fn
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|frame
-operator|!=
-name|AllExceptionTables
-operator|.
-name|end
-argument_list|()
-condition|)
-block|{
-name|ExceptionTableDeregister
-argument_list|(
-name|frame
-operator|->
-name|second
-argument_list|)
-expr_stmt|;
-name|AllExceptionTables
-operator|.
-name|erase
-argument_list|(
-name|frame
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-comment|/// DeregisterAllTables - Deregisters all previously registered pointers to an
-comment|/// exception tables.  It uses the ExceptionTableoDeregister function.
-name|void
-name|DeregisterAllTables
-parameter_list|()
-function_decl|;
 name|protected
 label|:
 name|explicit
@@ -1529,6 +1459,10 @@ operator|::
 name|Level
 name|OptLevel
 expr_stmt|;
+name|RTDyldMemoryManager
+modifier|*
+name|MCJMM
+decl_stmt|;
 name|JITMemoryManager
 modifier|*
 name|JMM
@@ -1592,6 +1526,10 @@ operator|=
 name|CodeGenOpt
 operator|::
 name|Default
+expr_stmt|;
+name|MCJMM
+operator|=
+name|NULL
 expr_stmt|;
 name|JMM
 operator|=
@@ -1660,10 +1598,42 @@ operator|*
 name|this
 return|;
 block|}
-comment|/// setJITMemoryManager - Sets the memory manager to use.  This allows
-comment|/// clients to customize their memory allocation policies.  If create() is
-comment|/// called and is successful, the created engine takes ownership of the
-comment|/// memory manager.  This option defaults to NULL.
+comment|/// setMCJITMemoryManager - Sets the MCJIT memory manager to use. This allows
+comment|/// clients to customize their memory allocation policies for the MCJIT. This
+comment|/// is only appropriate for the MCJIT; setting this and configuring the builder
+comment|/// to create anything other than MCJIT will cause a runtime error. If create()
+comment|/// is called and is successful, the created engine takes ownership of the
+comment|/// memory manager. This option defaults to NULL. Using this option nullifies
+comment|/// the setJITMemoryManager() option.
+name|EngineBuilder
+modifier|&
+name|setMCJITMemoryManager
+parameter_list|(
+name|RTDyldMemoryManager
+modifier|*
+name|mcjmm
+parameter_list|)
+block|{
+name|MCJMM
+operator|=
+name|mcjmm
+expr_stmt|;
+name|JMM
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setJITMemoryManager - Sets the JIT memory manager to use.  This allows
+comment|/// clients to customize their memory allocation policies.  This is only
+comment|/// appropriate for either JIT or MCJIT; setting this and configuring the
+comment|/// builder to create an interpreter will cause a runtime error. If create()
+comment|/// is called and is successful, the created engine takes ownership of the
+comment|/// memory manager.  This option defaults to NULL. This option overrides
+comment|/// setMCJITMemoryManager() as well.
 name|EngineBuilder
 modifier|&
 name|setJITMemoryManager
@@ -1673,6 +1643,10 @@ modifier|*
 name|jmm
 parameter_list|)
 block|{
+name|MCJMM
+operator|=
+name|NULL
+expr_stmt|;
 name|JMM
 operator|=
 name|jmm

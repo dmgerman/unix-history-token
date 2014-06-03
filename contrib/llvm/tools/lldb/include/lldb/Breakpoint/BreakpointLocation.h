@@ -562,6 +562,76 @@ modifier|*
 name|context
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Returns whether we should resolve Indirect functions in setting the breakpoint site
+comment|/// for this location.
+comment|///
+comment|/// @return
+comment|///     \b true if the breakpoint SITE for this location should be set on the
+comment|///     resolved location for Indirect functions.
+comment|//------------------------------------------------------------------
+name|bool
+name|ShouldResolveIndirectFunctions
+parameter_list|()
+block|{
+return|return
+name|m_should_resolve_indirect_functions
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Returns whether the address set in the breakpoint site for this location was found by resolving
+comment|/// an indirect symbol.
+comment|///
+comment|/// @return
+comment|///     \b true or \b false as given in the description above.
+comment|//------------------------------------------------------------------
+name|bool
+name|IsIndirect
+parameter_list|()
+block|{
+return|return
+name|m_is_indirect
+return|;
+block|}
+name|void
+name|SetIsIndirect
+parameter_list|(
+name|bool
+name|is_indirect
+parameter_list|)
+block|{
+name|m_is_indirect
+operator|=
+name|is_indirect
+expr_stmt|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Returns whether the address set in the breakpoint location was re-routed to the target of a
+comment|/// re-exported symbol.
+comment|///
+comment|/// @return
+comment|///     \b true or \b false as given in the description above.
+comment|//------------------------------------------------------------------
+name|bool
+name|IsReExported
+parameter_list|()
+block|{
+return|return
+name|m_is_reexported
+return|;
+block|}
+name|void
+name|SetIsReExported
+parameter_list|(
+name|bool
+name|is_reexported
+parameter_list|)
+block|{
+name|m_is_reexported
+operator|=
+name|is_reexported
+expr_stmt|;
+block|}
 name|protected
 label|:
 name|friend
@@ -635,6 +705,8 @@ argument_list|,
 argument|lldb::tid_t tid
 argument_list|,
 argument|bool hardware
+argument_list|,
+argument|bool check_for_resolver = true
 argument_list|)
 empty_stmt|;
 comment|//------------------------------------------------------------------
@@ -642,6 +714,15 @@ comment|// Data members:
 comment|//------------------------------------------------------------------
 name|bool
 name|m_being_created
+decl_stmt|;
+name|bool
+name|m_should_resolve_indirect_functions
+decl_stmt|;
+name|bool
+name|m_is_reexported
+decl_stmt|;
+name|bool
+name|m_is_indirect
 decl_stmt|;
 name|Address
 name|m_address
@@ -681,6 +762,18 @@ name|size_t
 name|m_condition_hash
 decl_stmt|;
 comment|///< For testing whether the condition source code changed.
+name|void
+name|SetShouldResolveIndirectFunctions
+parameter_list|(
+name|bool
+name|do_resolve
+parameter_list|)
+block|{
+name|m_should_resolve_indirect_functions
+operator|=
+name|do_resolve
+expr_stmt|;
+block|}
 name|void
 name|SendBreakpointLocationChangedEvent
 argument_list|(

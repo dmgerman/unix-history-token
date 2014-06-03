@@ -401,7 +401,7 @@ name|ICL_KERNEL_PROXY
 end_ifdef
 
 begin_comment
-comment|/*  * When ICL_KERNEL_PROXY is not defined, the iscsid(8) is responsible  * for creating the socket, connecting, performing Login Phase using  * socked in the usual userspace way, and then passing the socket file  * descriptor to the kernel part using ISCSIDHANDOFF.  *  * When ICL_KERNEL_PROXY is defined, the iscsid(8) creates the session  * using ISCSICONNECT, performs Login Phase using ISCSISEND/ISCSIRECEIVE  * instead of read(2)/write(2), and then calls ISCSIDHANDOFF with  * idh_socket set to 0.  *  * The purpose of ICL_KERNEL_PROXY is to workaround the fact that,  * at this time, it's not possible to do iWARP (RDMA) in userspace.  */
+comment|/*  * When ICL_KERNEL_PROXY is not defined, the iscsid(8) is responsible  * for creating the socket, connecting, and performing Login Phase using  * the socket in the usual userspace way, and then passing the socket  * file descriptor to the kernel part using ISCSIDHANDOFF.  *  * When ICL_KERNEL_PROXY is defined, the iscsid(8) creates the session  * using ISCSICONNECT, performs Login Phase using ISCSISEND/ISCSIRECEIVE  * instead of read(2)/write(2), and then calls ISCSIDHANDOFF with  * idh_socket set to 0.  *  * The purpose of ICL_KERNEL_PROXY is to workaround the fact that,  * at this time, it's not possible to do iWARP (RDMA) in userspace.  */
 end_comment
 
 begin_struct
@@ -475,7 +475,7 @@ modifier|*
 name|ids_data_segment
 decl_stmt|;
 name|int
-name|ids_spare
+name|ids_spare3
 index|[
 literal|4
 index|]
@@ -510,24 +510,7 @@ modifier|*
 name|idr_data_segment
 decl_stmt|;
 name|int
-name|idr_spare
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|iscsi_daemon_close
-block|{
-name|int
-name|idc_session_id
-decl_stmt|;
-name|int
-name|idc_spare
+name|idr_spare3
 index|[
 literal|4
 index|]
@@ -555,13 +538,6 @@ define|#
 directive|define
 name|ISCSIDRECEIVE
 value|_IOWR('I', 0x06, struct iscsi_daemon_receive)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISCSIDCLOSE
-value|_IOWR('I', 0x07, struct iscsi_daemon_close)
 end_define
 
 begin_endif

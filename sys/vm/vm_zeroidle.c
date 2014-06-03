@@ -234,7 +234,7 @@ name|vm_page_zero_count
 operator|>=
 name|ZIDLE_LO
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
@@ -250,7 +250,7 @@ name|vm_page_zero_count
 operator|>=
 name|ZIDLE_HI
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)
@@ -300,7 +300,7 @@ name|vm_page_zero_count
 operator|>=
 name|ZIDLE_HI
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 argument_list|)

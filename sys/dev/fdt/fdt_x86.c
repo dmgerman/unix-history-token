@@ -99,16 +99,5 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|fdt_pic_decode_t
-name|fdt_pic_table
-index|[]
-init|=
-block|{
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 

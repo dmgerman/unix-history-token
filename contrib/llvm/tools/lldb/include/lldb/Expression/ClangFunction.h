@@ -511,7 +511,7 @@ comment|///
 comment|/// @param[in] args_addr
 comment|///     The address of the argument struct.
 comment|///
-comment|/// @param[in] ret_value
+comment|/// @param[out] ret_value
 comment|///     The value returned by the function.
 comment|///
 comment|/// @return

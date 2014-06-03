@@ -1112,6 +1112,14 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'f'
+case|:
+name|f_nosort
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 literal|'a'
 case|:
 name|fts_options
@@ -1328,14 +1336,6 @@ expr_stmt|;
 name|f_recursive
 operator|=
 literal|0
-expr_stmt|;
-break|break;
-case|case
-literal|'f'
-case|:
-name|f_nosort
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case

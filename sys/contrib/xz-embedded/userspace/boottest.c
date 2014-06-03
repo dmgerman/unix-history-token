@@ -57,6 +57,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Disable the CRC64 support even if it was enabled in the Makefile. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|XZ_USE_CRC64
+end_undef
+
 begin_include
 include|#
 directive|include

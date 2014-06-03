@@ -250,6 +250,19 @@ return|return
 name|LocalAreaOffset
 return|;
 block|}
+comment|/// isFPCloseToIncomingSP - Return true if the frame pointer is close to
+comment|/// the incoming stack pointer, false if it is close to the post-prologue
+comment|/// stack pointer.
+name|virtual
+name|bool
+name|isFPCloseToIncomingSP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// getCalleeSavedSpillSlots - This method returns a pointer to an array of
 comment|/// pairs, that contains an entry for each callee saved register that must be
 comment|/// spilled to a particular stack location if it is spilled.

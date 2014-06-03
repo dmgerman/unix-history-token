@@ -90,8 +90,15 @@ begin_comment
 comment|/* timers */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EVFILT_PROCDESC
+value|(-8)
+end_define
+
 begin_comment
-comment|/*	EVFILT_NETDEV		(-8)	   no longer supported */
+comment|/* attached to process descriptors */
 end_comment
 
 begin_define
@@ -130,8 +137,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVFILT_SENDFILE
+value|(-12)
+end_define
+
+begin_comment
+comment|/* attached to sendfile requests */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVFILT_SYSCOUNT
-value|11
+value|12
 end_define
 
 begin_define
@@ -515,7 +533,7 @@ comment|/* vnode access was revoked */
 end_comment
 
 begin_comment
-comment|/*  * data/hint flags for EVFILT_PROC, shared with userspace  */
+comment|/*  * data/hint flags for EVFILT_PROC and EVFILT_PROCDESC, shared with userspace  */
 end_comment
 
 begin_define
@@ -968,6 +986,11 @@ directive|define
 name|KN_HASKQLOCK
 value|0x80
 comment|/* for _inevent */
+define|#
+directive|define
+name|KN_SCAN
+value|0x100
+comment|/* flux set in kqueue_scan() */
 name|int
 name|kn_sfflags
 decl_stmt|;
@@ -1002,6 +1025,11 @@ modifier|*
 name|p_lio
 decl_stmt|;
 comment|/* LIO job pointer */
+name|void
+modifier|*
+name|p_v
+decl_stmt|;
+comment|/* generic other pointer */
 block|}
 name|kn_ptr
 union|;

@@ -170,6 +170,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* APPLE LOCAL begin 6353006  */
+end_comment
+
+begin_decl_stmt
+name|tree
+name|generic_block_literal_struct_type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* APPLE LOCAL end 6353006  */
+end_comment
+
+begin_comment
 comment|/* obstack.[ch] explicitly declined to prototype this.  */
 end_comment
 
@@ -20265,6 +20279,72 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* APPLE LOCAL begin radar 5732232 - blocks */
+end_comment
+
+begin_function
+name|tree
+name|build_block_pointer_type
+parameter_list|(
+name|tree
+name|to_type
+parameter_list|)
+block|{
+name|tree
+name|t
+decl_stmt|;
+comment|/* APPLE LOCAL begin radar 6300081& 6353006 */
+if|if
+condition|(
+operator|!
+name|generic_block_literal_struct_type
+condition|)
+name|generic_block_literal_struct_type
+operator|=
+name|lang_hooks
+operator|.
+name|build_generic_block_struct_type
+argument_list|()
+expr_stmt|;
+comment|/* APPLE LOCAL end radar 6300081& 6353006 */
+name|t
+operator|=
+name|make_node
+argument_list|(
+name|BLOCK_POINTER_TYPE
+argument_list|)
+expr_stmt|;
+name|TREE_TYPE
+argument_list|(
+name|t
+argument_list|)
+operator|=
+name|to_type
+expr_stmt|;
+name|TYPE_MODE
+argument_list|(
+name|t
+argument_list|)
+operator|=
+name|ptr_mode
+expr_stmt|;
+comment|/* Lay out the type.  This function has many callers that are concerned      with expression-construction, and this simplifies them all.  */
+name|layout_type
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+return|return
+name|t
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* APPLE LOCAL end radar 5732232 - blocks */
+end_comment
 
 begin_comment
 comment|/* Same as build_pointer_type_for_mode, but for REFERENCE_TYPE.  */

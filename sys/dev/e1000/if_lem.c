@@ -12580,7 +12580,7 @@ name|adapter
 operator|->
 name|tx_desc_base
 index|[
-name|si
+name|i
 index|]
 operator|.
 name|buffer_addr
@@ -15618,6 +15618,9 @@ name|IFCAP_NETMAP
 condition|)
 name|rctl
 operator|-=
+name|nm_kr_rxspace
+argument_list|(
+operator|&
 name|NA
 argument_list|(
 name|adapter
@@ -15629,8 +15632,7 @@ name|rx_rings
 index|[
 literal|0
 index|]
-operator|.
-name|nr_hwavail
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

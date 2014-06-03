@@ -39,9 +39,12 @@ begin_comment
 comment|/* Define if the inbuf parm to iconv() is const char ** */
 end_comment
 
-begin_comment
-comment|/* #undef APU_ICONV_INBUF_CONST */
-end_comment
+begin_define
+define|#
+directive|define
+name|APU_ICONV_INBUF_CONST
+value|1
+end_define
 
 begin_comment
 comment|/* Define that OpenSSL uses const buffers */

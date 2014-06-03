@@ -640,6 +640,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Program the sleep registers to correlate with the beacon setup. 	 */
 comment|/* 	 * Oahu beacons timers on the station were used for power 	 * save operation (waking up in anticipation of a beacon) 	 * and any CFP function; Venice does sleep/power-save timers 	 * differently - so this is the right place to set them up; 	 * don't think the beacon timers are used by venice sta hw 	 * for any useful purpose anymore 	 * Setup venice's sleep related timers 	 * Current implementation assumes sw processing of beacons - 	 *   assuming an interrupt is generated every beacon which 	 *   causes the hardware to become awake until the sw tells 	 *   it to go to sleep again; beacon timeout is to allow for 	 *   beacon jitter; cab timeout is max time to wait for cab 	 *   after seeing the last DTIM or MORE CAB bit 	 */
+comment|/*  * I've bumped these to 30TU for now.  *  * Some APs (AR933x/AR934x?) in 2GHz especially seem to not always  * transmit beacon frames at exactly the right times and with it set  * to 10TU, the NIC starts not waking up at the right times to hear  * these slightly-larger-jitering beacons.  It also never recovers  * from that (it doesn't resync? I'm not sure.)  *  * So for now bump this to 30TU.  Ideally we'd cap this based on  * the beacon interval so the sum of CAB+BEACON timeouts never  * exceeded the beacon interval.  *  * Now, since we're doing all the math in the ath(4) driver in TU  * rather than TSF, we may be seeing the result of dumb rounding  * errors causing the jitter to actually be a much bigger problem.  * I'll have to investigate that with a fine tooth comb.  */
 define|#
 directive|define
 name|CAB_TIMEOUT_VAL
@@ -884,6 +885,22 @@ operator||
 name|AR_TIMER_MODE_TIM
 operator||
 name|AR_TIMER_MODE_DTIM
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|HAL_TSFOOR_THRESHOLD
+value|0x00004240
+comment|/* TSF OOR threshold (16k us) */
+comment|/* TSF out of range threshold */
+comment|//	OS_REG_WRITE(ah, AR_TSFOOR_THRESHOLD, bs->bs_tsfoor_threshold);
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_TSFOOR_THRESHOLD
+argument_list|,
+name|HAL_TSFOOR_THRESHOLD
 argument_list|)
 expr_stmt|;
 name|HALDEBUG

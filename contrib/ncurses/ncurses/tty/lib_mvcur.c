@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  ****************************************************************************/
+comment|/****************************************************************************  *  Author: Zeyd M. Ben-Halim<zmbenhal@netcom.com> 1992,1995               *  *     and: Eric S. Raymond<esr@snark.thyrsus.com>                         *  *     and: Thomas E. Dickey                        1996-on                 *  *     and: Juergen Pfeifer                         2009                    *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -50,6 +50,8 @@ define|#
 directive|define
 name|NOT_LOCAL
 parameter_list|(
+name|sp
+parameter_list|,
 name|fy
 parameter_list|,
 name|fx
@@ -58,7 +60,7 @@ name|ty
 parameter_list|,
 name|tx
 parameter_list|)
-value|((tx> LONG_DIST) \&& (tx< screen_columns - 1 - LONG_DIST) \&& (abs(ty-fy) + abs(tx-fx)> LONG_DIST))
+value|((tx> LONG_DIST) \&& (tx< screen_columns(sp) - 1 - LONG_DIST) \&& (abs(ty-fy) + abs(tx-fx)> LONG_DIST))
 end_define
 
 begin_comment
@@ -78,19 +80,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<term.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CUR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CUR
+value|SP_TERMTYPE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mvcur.c,v 1.113 2008/08/16 19:30:58 tom Exp $"
+literal|"$Id: lib_mvcur.c,v 1.133 2013/05/25 23:59:41 tom Exp $"
 argument_list|)
 end_macro
 
@@ -99,27 +113,62 @@ define|#
 directive|define
 name|WANT_CHAR
 parameter_list|(
+name|sp
+parameter_list|,
 name|y
 parameter_list|,
 name|x
 parameter_list|)
-value|SP->_newscr->_line[y].text[x]
+value|NewScreen(sp)->_line[y].text[x]
 end_define
 
 begin_comment
 comment|/* desired state */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
 begin_define
 define|#
 directive|define
 name|BAUDRATE
+parameter_list|(
+name|sp
+parameter_list|)
+value|sp->_term->_baudrate
+end_define
+
+begin_comment
+comment|/* bits per second */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BAUDRATE
+parameter_list|(
+name|sp
+parameter_list|)
 value|cur_term->_baudrate
 end_define
 
 begin_comment
 comment|/* bits per second */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -166,6 +215,19 @@ begin_comment
 comment|/* MAIN */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|NCURSES_OUTC_FUNC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NCURSES_OUTC_FUNC
+value|myOutCh
+end_define
+
 begin_define
 define|#
 directive|define
@@ -178,6 +240,7 @@ specifier|static
 name|int
 name|normalized_cost
 parameter_list|(
+name|NCURSES_SP_DCLx
 specifier|const
 name|char
 modifier|*
@@ -205,6 +268,7 @@ specifier|static
 name|int
 name|trace_cost_of
 parameter_list|(
+name|NCURSES_SP_DCLx
 specifier|const
 name|char
 modifier|*
@@ -222,12 +286,16 @@ block|{
 name|int
 name|result
 init|=
-name|_nc_msec_cost
+name|NCURSES_SP_NAME
 argument_list|(
-name|cap
-argument_list|,
-name|affcnt
+argument|_nc_msec_cost
 argument_list|)
+operator|(
+name|NCURSES_SP_ARGx
+name|cap
+expr|,
+name|affcnt
+operator|)
 decl_stmt|;
 name|TR
 argument_list|(
@@ -264,7 +332,7 @@ name|cap
 parameter_list|,
 name|affcnt
 parameter_list|)
-value|trace_cost_of(#cap,cap,affcnt);
+value|trace_cost_of(NCURSES_SP_ARGx #cap, cap, affcnt)
 end_define
 
 begin_function
@@ -272,6 +340,7 @@ specifier|static
 name|int
 name|trace_normalized_cost
 parameter_list|(
+name|NCURSES_SP_DCLx
 specifier|const
 name|char
 modifier|*
@@ -291,9 +360,9 @@ name|result
 init|=
 name|normalized_cost
 argument_list|(
-name|cap
+argument|NCURSES_SP_ARGx cap
 argument_list|,
-name|affcnt
+argument|affcnt
 argument_list|)
 decl_stmt|;
 name|TR
@@ -331,7 +400,7 @@ name|cap
 parameter_list|,
 name|affcnt
 parameter_list|)
-value|trace_normalized_cost(#cap,cap,affcnt);
+value|trace_normalized_cost(NCURSES_SP_ARGx #cap, cap, affcnt)
 end_define
 
 begin_else
@@ -348,7 +417,7 @@ name|cap
 parameter_list|,
 name|affcnt
 parameter_list|)
-value|_nc_msec_cost(cap,affcnt);
+value|NCURSES_SP_NAME(_nc_msec_cost)(NCURSES_SP_ARGx cap, affcnt)
 end_define
 
 begin_define
@@ -360,7 +429,7 @@ name|cap
 parameter_list|,
 name|affcnt
 parameter_list|)
-value|normalized_cost(cap,affcnt);
+value|normalized_cost(NCURSES_SP_ARGx cap, affcnt)
 end_define
 
 begin_endif
@@ -368,27 +437,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
 name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_SP_NAME
 argument_list|(
-argument|int
+argument|_nc_msec_cost
 argument_list|)
-end_macro
-
-begin_macro
-name|_nc_msec_cost
-argument_list|(
-argument|const char *const cap
-argument_list|,
-argument|int affcnt
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|NCURSES_SP_DCLx
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|cap
+parameter_list|,
+name|int
+name|affcnt
+parameter_list|)
 comment|/* compute the cost of a given operation */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -488,12 +557,15 @@ name|number
 operator|*
 literal|10
 operator|+
-operator|(
+call|(
+name|float
+call|)
+argument_list|(
 operator|*
 name|cp
 operator|-
 literal|'0'
-operator|)
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -505,6 +577,9 @@ literal|'*'
 condition|)
 name|number
 operator|*=
+operator|(
+name|float
+operator|)
 name|affcnt
 expr_stmt|;
 elseif|else
@@ -534,6 +609,10 @@ argument_list|)
 condition|)
 name|number
 operator|+=
+call|(
+name|float
+call|)
+argument_list|(
 operator|(
 operator|*
 name|cp
@@ -542,6 +621,7 @@ literal|'0'
 operator|)
 operator|/
 literal|10.0
+argument_list|)
 expr_stmt|;
 block|}
 if|#
@@ -552,7 +632,7 @@ condition|(
 operator|!
 name|GetNoPadding
 argument_list|(
-name|SP
+name|SP_PARM
 argument_list|)
 condition|)
 endif|#
@@ -564,13 +644,22 @@ operator|*
 literal|10
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|SP_PARM
+condition|)
+block|{
 name|cum_cost
 operator|+=
-name|SP
+operator|(
+name|float
+operator|)
+name|SP_PARM
 operator|->
 name|_char_padding
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -582,13 +671,59 @@ operator|)
 return|;
 block|}
 block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_msec_cost
+argument_list|(
+argument|const char *const cap
+argument_list|,
+argument|int affcnt
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|NCURSES_SP_NAME
+argument_list|(
+name|_nc_msec_cost
+argument_list|)
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|,
+name|cap
+argument_list|,
+name|affcnt
+argument_list|)
+return|;
+block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
 name|int
 name|normalized_cost
 parameter_list|(
+name|NCURSES_SP_DCLx
 specifier|const
 name|char
 modifier|*
@@ -603,12 +738,16 @@ block|{
 name|int
 name|cost
 init|=
-name|_nc_msec_cost
+name|NCURSES_SP_NAME
 argument_list|(
-name|cap
-argument_list|,
-name|affcnt
+argument|_nc_msec_cost
 argument_list|)
+operator|(
+name|NCURSES_SP_ARGx
+name|cap
+expr|,
+name|affcnt
+operator|)
 decl_stmt|;
 if|if
 condition|(
@@ -621,14 +760,14 @@ operator|=
 operator|(
 name|cost
 operator|+
-name|SP
+name|SP_PARM
 operator|->
 name|_char_padding
 operator|-
 literal|1
 operator|)
 operator|/
-name|SP
+name|SP_PARM
 operator|->
 name|_char_padding
 expr_stmt|;
@@ -643,7 +782,7 @@ specifier|static
 name|void
 name|reset_scroll_region
 parameter_list|(
-name|void
+name|NCURSES_SP_DCL0
 parameter_list|)
 comment|/* Set the scroll-region to a known state (the default) */
 block|{
@@ -652,13 +791,10 @@ condition|(
 name|change_scroll_region
 condition|)
 block|{
-name|TPUTS_TRACE
+name|NCURSES_PUTP2
 argument_list|(
 literal|"change_scroll_region"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
+argument_list|,
 name|TPARM_2
 argument_list|(
 name|change_scroll_region
@@ -666,6 +802,9 @@ argument_list|,
 literal|0
 argument_list|,
 name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|-
 literal|1
 argument_list|)
@@ -674,6 +813,107 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|void
+function|)
+name|NCURSES_SP_NAME
+argument_list|(
+argument|_nc_mvcur_resume
+argument_list|)
+parameter_list|(
+name|NCURSES_SP_DCL0
+parameter_list|)
+comment|/* what to do at initialization time and after each shellout */
+block|{
+if|if
+condition|(
+operator|!
+name|SP_PARM
+operator|||
+operator|!
+name|IsTermInfo
+argument_list|(
+name|SP_PARM
+argument_list|)
+condition|)
+return|return;
+comment|/* initialize screen for cursor access */
+if|if
+condition|(
+name|enter_ca_mode
+condition|)
+block|{
+name|NCURSES_PUTP2
+argument_list|(
+literal|"enter_ca_mode"
+argument_list|,
+name|enter_ca_mode
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Doing this here rather than in _nc_mvcur_wrap() ensures that      * ncurses programs will see a reset scroll region even if a      * program that messed with it died ungracefully.      *      * This also undoes the effects of terminal init strings that assume      * they know the screen size.  This is useful when you're running      * a vt100 emulation through xterm.      */
+name|reset_scroll_region
+argument_list|(
+name|NCURSES_SP_ARG
+argument_list|)
+expr_stmt|;
+name|SP_PARM
+operator|->
+name|_cursrow
+operator|=
+name|SP_PARM
+operator|->
+name|_curscol
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* restore cursor shape */
+if|if
+condition|(
+name|SP_PARM
+operator|->
+name|_cursor
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|int
+name|cursor
+init|=
+name|SP_PARM
+operator|->
+name|_cursor
+decl_stmt|;
+name|SP_PARM
+operator|->
+name|_cursor
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|NCURSES_SP_NAME
+function_decl|(
+name|curs_set
+function_decl|)
+parameter_list|(
+name|NCURSES_SP_ARGx
+name|cursor
+parameter_list|)
+function_decl|;
+block|}
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
 
 begin_macro
 name|NCURSES_EXPORT
@@ -689,111 +929,56 @@ argument|void
 argument_list|)
 end_macro
 
-begin_comment
-comment|/* what to do at initialization time and after each shellout */
-end_comment
-
 begin_block
 block|{
-comment|/* initialize screen for cursor access */
-if|if
-condition|(
-name|enter_ca_mode
-condition|)
-block|{
-name|TPUTS_TRACE
-argument_list|(
-literal|"enter_ca_mode"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
-name|enter_ca_mode
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Doing this here rather than in _nc_mvcur_wrap() ensures that      * ncurses programs will see a reset scroll region even if a      * program that messed with it died ungracefully.      *      * This also undoes the effects of terminal init strings that assume      * they know the screen size.  This is useful when you're running      * a vt100 emulation through xterm.      */
-name|reset_scroll_region
-argument_list|()
-expr_stmt|;
-name|SP
-operator|->
-name|_cursrow
-operator|=
-name|SP
-operator|->
-name|_curscol
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* restore cursor shape */
-if|if
-condition|(
-name|SP
-operator|->
-name|_cursor
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-name|int
-name|cursor
-init|=
-name|SP
-operator|->
-name|_cursor
-decl_stmt|;
-name|SP
-operator|->
-name|_cursor
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|curs_set
-argument_list|(
-name|cursor
-argument_list|)
-expr_stmt|;
-block|}
+name|NCURSES_SP_NAME
+function_decl|(
+name|_nc_mvcur_resume
+function_decl|)
+parameter_list|(
+name|CURRENT_SCREEN
+parameter_list|)
+function_decl|;
 block|}
 end_block
 
-begin_macro
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
 name|NCURSES_EXPORT
+function|(
+name|void
+function|)
+name|NCURSES_SP_NAME
 argument_list|(
-argument|void
+argument|_nc_mvcur_init
 argument_list|)
-end_macro
-
-begin_macro
-name|_nc_mvcur_init
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|NCURSES_SP_DCL0
+parameter_list|)
 comment|/* initialize the cost structure */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
+name|SP_PARM
+operator|->
+name|_ofp
+operator|&&
 name|isatty
 argument_list|(
 name|fileno
 argument_list|(
-name|SP
+name|SP_PARM
 operator|->
 name|_ofp
 argument_list|)
 argument_list|)
 condition|)
-name|SP
+block|{
+name|SP_PARM
 operator|->
 name|_char_padding
 operator|=
@@ -808,32 +993,41 @@ operator|)
 operator|/
 operator|(
 name|BAUDRATE
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|>
 literal|0
 condition|?
 name|BAUDRATE
+argument_list|(
+name|SP_PARM
+argument_list|)
 else|:
 literal|9600
 operator|)
 operator|)
 expr_stmt|;
+block|}
 else|else
-name|SP
+block|{
+name|SP_PARM
 operator|->
 name|_char_padding
 operator|=
 literal|1
 expr_stmt|;
 comment|/* must be nonzero */
+block|}
 if|if
 condition|(
-name|SP
+name|SP_PARM
 operator|->
 name|_char_padding
 operator|<=
 literal|0
 condition|)
-name|SP
+name|SP_PARM
 operator|->
 name|_char_padding
 operator|=
@@ -849,14 +1043,14 @@ argument_list|,
 operator|(
 literal|"char_padding %d msecs"
 operator|,
-name|SP
+name|SP_PARM
 operator|->
 name|_char_padding
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/* non-parameterized local-motion strings */
-name|SP
+name|SP_PARM
 operator|->
 name|_cr_cost
 operator|=
@@ -867,7 +1061,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_home_cost
 operator|=
@@ -878,7 +1072,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_ll_cost
 operator|=
@@ -902,7 +1096,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SP
+name|SP_PARM
 operator|->
 name|_ht_cost
 operator|=
@@ -913,7 +1107,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cbt_cost
 operator|=
@@ -927,13 +1121,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SP
+name|SP_PARM
 operator|->
 name|_ht_cost
 operator|=
 name|INFINITY
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cbt_cost
 operator|=
@@ -943,7 +1137,7 @@ block|}
 endif|#
 directive|endif
 comment|/* USE_HARD_TABS */
-name|SP
+name|SP_PARM
 operator|->
 name|_cub1_cost
 operator|=
@@ -954,7 +1148,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cuf1_cost
 operator|=
@@ -965,7 +1159,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cud1_cost
 operator|=
@@ -976,7 +1170,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cuu1_cost
 operator|=
@@ -987,7 +1181,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_smir_cost
 operator|=
@@ -998,7 +1192,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_rmir_cost
 operator|=
@@ -1009,7 +1203,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_ip_cost
 operator|=
@@ -1020,7 +1214,7 @@ condition|(
 name|insert_padding
 condition|)
 block|{
-name|SP
+name|SP_PARM
 operator|->
 name|_ip_cost
 operator|=
@@ -1033,7 +1227,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Assumption: if the terminal has memory_relative addressing, the      * initialization strings or smcup will set single-page mode so we      * can treat it like absolute screen addressing.  This seems to be true      * for all cursor_mem_address terminal types in the terminfo database.      */
-name|SP
+name|SP_PARM
 operator|->
 name|_address_cursor
 operator|=
@@ -1044,7 +1238,7 @@ else|:
 name|cursor_mem_address
 expr_stmt|;
 comment|/*      * Parametrized local-motion strings.  This static cost computation      * depends on the following assumptions:      *      * (1) They never have * padding.  In the entire master terminfo database      *     as of March 1995, only the obsolete Zenith Z-100 pc violates this.      *     (Proportional padding is found mainly in insert, delete and scroll      *     capabilities).      *      * (2) The average case of cup has two two-digit parameters.  Strictly,      *     the average case for a 24 * 80 screen has ((10*10*(1 + 1)) +      *     (14*10*(1 + 2)) + (10*70*(2 + 1)) + (14*70*4)) / (24*80) = 3.458      *     digits of parameters.  On a 25x80 screen the average is 3.6197.      *     On larger screens the value gets much closer to 4.      *      * (3) The average case of cub/cuf/hpa/ech/rep has 2 digits of parameters      *     (strictly, (((10 * 1) + (70 * 2)) / 80) = 1.8750).      *      * (4) The average case of cud/cuu/vpa has 2 digits of parameters      *     (strictly, (((10 * 1) + (14 * 2)) / 24) = 1.5833).      *      * All these averages depend on the assumption that all parameter values      * are equally probable.      */
-name|SP
+name|SP_PARM
 operator|->
 name|_cup_cost
 operator|=
@@ -1052,7 +1246,7 @@ name|CostOf
 argument_list|(
 name|TPARM_2
 argument_list|(
-name|SP
+name|SP_PARM
 operator|->
 name|_address_cursor
 argument_list|,
@@ -1064,7 +1258,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cub_cost
 operator|=
@@ -1080,7 +1274,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cuf_cost
 operator|=
@@ -1096,7 +1290,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cud_cost
 operator|=
@@ -1112,7 +1306,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cuu_cost
 operator|=
@@ -1128,7 +1322,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_hpa_cost
 operator|=
@@ -1144,7 +1338,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_vpa_cost
 operator|=
@@ -1161,7 +1355,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* non-parameterized screen-update strings */
-name|SP
+name|SP_PARM
 operator|->
 name|_ed_cost
 operator|=
@@ -1172,7 +1366,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_el_cost
 operator|=
@@ -1183,7 +1377,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_el1_cost
 operator|=
@@ -1194,7 +1388,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_dch1_cost
 operator|=
@@ -1205,7 +1399,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_ich1_cost
 operator|=
@@ -1221,14 +1415,14 @@ if|if
 condition|(
 name|back_color_erase
 condition|)
-name|SP
+name|SP_PARM
 operator|->
 name|_el_cost
 operator|=
 literal|0
 expr_stmt|;
 comment|/* parameterized screen-update strings */
-name|SP
+name|SP_PARM
 operator|->
 name|_dch_cost
 operator|=
@@ -1244,7 +1438,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_ich_cost
 operator|=
@@ -1260,7 +1454,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_ech_cost
 operator|=
@@ -1276,7 +1470,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_rep_cost
 operator|=
@@ -1294,7 +1488,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cup_ch_cost
 operator|=
@@ -1302,7 +1496,7 @@ name|NormalizedCost
 argument_list|(
 name|TPARM_2
 argument_list|(
-name|SP
+name|SP_PARM
 operator|->
 name|_address_cursor
 argument_list|,
@@ -1314,7 +1508,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_hpa_ch_cost
 operator|=
@@ -1330,7 +1524,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cuf_ch_cost
 operator|=
@@ -1346,23 +1540,23 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_inline_cost
 operator|=
 name|min
 argument_list|(
-name|SP
+name|SP_PARM
 operator|->
 name|_cup_ch_cost
 argument_list|,
 name|min
 argument_list|(
-name|SP
+name|SP_PARM
 operator|->
 name|_hpa_ch_cost
 argument_list|,
-name|SP
+name|SP_PARM
 operator|->
 name|_cuf_ch_cost
 argument_list|)
@@ -1405,12 +1599,167 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * A different, possibly better way to arrange this would be to set      * SP->_endwin = TRUE at window initialization time and let this be      * called by doupdate's return-from-shellout code.      */
+comment|/*      * A different, possibly better way to arrange this would be to set the      * SCREEN's _endwin to TRUE at window initialization time and let this be      * called by doupdate's return-from-shellout code.      */
+name|NCURSES_SP_NAME
+function_decl|(
 name|_nc_mvcur_resume
-argument_list|()
-expr_stmt|;
+function_decl|)
+parameter_list|(
+name|NCURSES_SP_ARG
+parameter_list|)
+function_decl|;
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_mvcur_init
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|NCURSES_SP_NAME
+function_decl|(
+name|_nc_mvcur_init
+function_decl|)
+parameter_list|(
+name|CURRENT_SCREEN
+parameter_list|)
+function_decl|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|void
+function|)
+name|NCURSES_SP_NAME
+argument_list|(
+argument|_nc_mvcur_wrap
+argument_list|)
+parameter_list|(
+name|NCURSES_SP_DCL0
+parameter_list|)
+comment|/* wrap up cursor-addressing mode */
+block|{
+comment|/* leave cursor at screen bottom */
+name|TINFO_MVCUR
+argument_list|(
+name|NCURSES_SP_ARGx
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SP_PARM
+operator|||
+operator|!
+name|IsTermInfo
+argument_list|(
+name|SP_PARM
+argument_list|)
+condition|)
+return|return;
+comment|/* set cursor to normal mode */
+if|if
+condition|(
+name|SP_PARM
+operator|->
+name|_cursor
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|int
+name|cursor
+init|=
+name|SP_PARM
+operator|->
+name|_cursor
+decl_stmt|;
+name|NCURSES_SP_NAME
+argument_list|(
+name|curs_set
+argument_list|)
+argument_list|(
+name|NCURSES_SP_ARGx
+literal|1
+argument_list|)
+expr_stmt|;
+name|SP_PARM
+operator|->
+name|_cursor
+operator|=
+name|cursor
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|exit_ca_mode
+condition|)
+block|{
+name|NCURSES_PUTP2
+argument_list|(
+literal|"exit_ca_mode"
+argument_list|,
+name|exit_ca_mode
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Reset terminal's tab counter.  There's a long-time bug that      * if you exit a "curses" program such as vi or more, tab      * forward, and then backspace, the cursor doesn't go to the      * right place.  The problem is that the kernel counts the      * escape sequences that reset things as column positions.      * Utter a \r to reset this invisibly.      */
+name|NCURSES_SP_NAME
+argument_list|(
+name|_nc_outch
+argument_list|)
+argument_list|(
+name|NCURSES_SP_ARGx
+literal|'\r'
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
 
 begin_macro
 name|NCURSES_EXPORT
@@ -1426,82 +1775,23 @@ argument|void
 argument_list|)
 end_macro
 
-begin_comment
-comment|/* wrap up cursor-addressing mode */
-end_comment
-
 begin_block
 block|{
-comment|/* leave cursor at screen bottom */
-name|mvcur
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-name|screen_lines
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* set cursor to normal mode */
-if|if
-condition|(
-name|SP
-operator|->
-name|_cursor
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-name|int
-name|cursor
-init|=
-name|SP
-operator|->
-name|_cursor
-decl_stmt|;
-name|curs_set
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|SP
-operator|->
-name|_cursor
-operator|=
-name|cursor
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|exit_ca_mode
-condition|)
-block|{
-name|TPUTS_TRACE
-argument_list|(
-literal|"exit_ca_mode"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
-name|exit_ca_mode
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Reset terminal's tab counter.  There's a long-time bug that      * if you exit a "curses" program such as vi or more, tab      * forward, and then backspace, the cursor doesn't go to the      * right place.  The problem is that the kernel counts the      * escape sequences that reset things as column positions.      * Utter a \r to reset this invisibly.      */
-name|_nc_outch
-argument_list|(
-literal|'\r'
-argument_list|)
-expr_stmt|;
+name|NCURSES_SP_NAME
+function_decl|(
+name|_nc_mvcur_wrap
+function_decl|)
+parameter_list|(
+name|CURRENT_SCREEN
+parameter_list|)
+function_decl|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/****************************************************************************  *  * Optimized cursor movement  *  ****************************************************************************/
@@ -1539,6 +1829,9 @@ block|{
 name|size_t
 name|need
 init|=
+operator|(
+name|size_t
+operator|)
 name|repeat
 operator|*
 name|strlen
@@ -1636,6 +1929,7 @@ specifier|static
 name|int
 name|relative_move
 parameter_list|(
+name|NCURSES_SP_DCLx
 name|string_desc
 modifier|*
 name|target
@@ -1652,7 +1946,7 @@ parameter_list|,
 name|int
 name|to_x
 parameter_list|,
-name|bool
+name|int
 name|ovw
 parameter_list|)
 comment|/* move via local motions (cuu/cuu1/cud/cud1/cub1/cub/cuf1/cuf/vpa/hpa) */
@@ -1714,7 +2008,7 @@ condition|)
 block|{
 name|vcost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_vpa_cost
 expr_stmt|;
@@ -1738,7 +2032,7 @@ if|if
 condition|(
 name|parm_down_cursor
 operator|&&
-name|SP
+name|SP_PARM
 operator|->
 name|_cud_cost
 operator|<
@@ -1765,7 +2059,7 @@ condition|)
 block|{
 name|vcost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_cud_cost
 expr_stmt|;
@@ -1780,7 +2074,7 @@ name|cursor_down
 operator|!=
 literal|'\n'
 operator|||
-name|SP
+name|SP_PARM
 operator|->
 name|_nl
 operator|)
@@ -1788,7 +2082,7 @@ operator|&&
 operator|(
 name|n
 operator|*
-name|SP
+name|SP_PARM
 operator|->
 name|_cud1_cost
 operator|<
@@ -1810,7 +2104,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|SP
+name|SP_PARM
 operator|->
 name|_cud1_cost
 argument_list|,
@@ -1836,7 +2130,7 @@ if|if
 condition|(
 name|parm_up_cursor
 operator|&&
-name|SP
+name|SP_PARM
 operator|->
 name|_cuu_cost
 operator|<
@@ -1863,7 +2157,7 @@ condition|)
 block|{
 name|vcost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_cuu_cost
 expr_stmt|;
@@ -1875,7 +2169,7 @@ operator|&&
 operator|(
 name|n
 operator|*
-name|SP
+name|SP_PARM
 operator|->
 name|_cuu1_cost
 operator|<
@@ -1897,7 +2191,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|SP
+name|SP_PARM
 operator|->
 name|_cuu1_cost
 argument_list|,
@@ -1970,7 +2264,7 @@ condition|)
 block|{
 name|hcost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_hpa_cost
 expr_stmt|;
@@ -1992,7 +2286,7 @@ if|if
 condition|(
 name|parm_right_cursor
 operator|&&
-name|SP
+name|SP_PARM
 operator|->
 name|_cuf_cost
 operator|<
@@ -2019,7 +2313,7 @@ condition|)
 block|{
 name|hcost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_cuf_cost
 expr_stmt|;
@@ -2099,7 +2393,7 @@ name|check
 argument_list|,
 name|lhcost
 argument_list|,
-name|SP
+name|SP_PARM
 operator|->
 name|_ht_cost
 argument_list|,
@@ -2189,6 +2483,8 @@ name|CharOf
 argument_list|(
 name|WANT_CHAR
 argument_list|(
+name|SP_PARM
+argument_list|,
 name|to_y
 argument_list|,
 name|from_x
@@ -2242,6 +2538,8 @@ name|ch
 init|=
 name|WANT_CHAR
 argument_list|(
+name|SP_PARM
+argument_list|,
 name|to_y
 argument_list|,
 name|from_x
@@ -2258,7 +2556,7 @@ name|ch
 argument_list|,
 name|SCREEN_ATTRS
 argument_list|(
-name|SP
+name|SP_PARM
 argument_list|)
 argument_list|)
 if|#
@@ -2316,6 +2614,8 @@ name|CharOf
 argument_list|(
 name|WANT_CHAR
 argument_list|(
+name|SP_PARM
+argument_list|,
 name|to_y
 argument_list|,
 name|from_x
@@ -2335,13 +2635,16 @@ name|check
 operator|.
 name|s_size
 operator|-=
+operator|(
+name|size_t
+operator|)
 name|n
 expr_stmt|;
 name|lhcost
 operator|+=
 name|n
 operator|*
-name|SP
+name|SP_PARM
 operator|->
 name|_char_padding
 expr_stmt|;
@@ -2357,7 +2660,7 @@ name|check
 argument_list|,
 name|lhcost
 argument_list|,
-name|SP
+name|SP_PARM
 operator|->
 name|_cuf1_cost
 argument_list|,
@@ -2407,7 +2710,7 @@ if|if
 condition|(
 name|parm_left_cursor
 operator|&&
-name|SP
+name|SP_PARM
 operator|->
 name|_cub_cost
 operator|<
@@ -2434,7 +2737,7 @@ condition|)
 block|{
 name|hcost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_cub_cost
 expr_stmt|;
@@ -2513,7 +2816,7 @@ name|check
 argument_list|,
 name|lhcost
 argument_list|,
-name|SP
+name|SP_PARM
 operator|->
 name|_cbt_cost
 argument_list|,
@@ -2549,7 +2852,7 @@ name|check
 argument_list|,
 name|lhcost
 argument_list|,
-name|SP
+name|SP_PARM
 operator|->
 name|_cub1_cost
 argument_list|,
@@ -2626,6 +2929,7 @@ name|NCURSES_INLINE
 name|int
 name|onscreen_mvcur
 parameter_list|(
+name|NCURSES_SP_DCLx
 name|int
 name|yold
 parameter_list|,
@@ -2638,8 +2942,11 @@ parameter_list|,
 name|int
 name|xnew
 parameter_list|,
-name|bool
+name|int
 name|ovw
+parameter_list|,
+name|NCURSES_SP_OUTC
+name|myOutCh
 parameter_list|)
 comment|/* onscreen move from (yold, xold) to (ynew, xnew) */
 block|{
@@ -2711,7 +3018,7 @@ name|InitResult
 argument_list|,
 name|TPARM_2
 argument_list|(
-name|SP
+name|SP_PARM
 operator|->
 name|_address_cursor
 argument_list|,
@@ -2728,7 +3035,7 @@ literal|0
 expr_stmt|;
 name|usecost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_cup_cost
 expr_stmt|;
@@ -2773,6 +3080,8 @@ literal|1
 operator|||
 name|NOT_LOCAL
 argument_list|(
+name|SP_PARM
+argument_list|,
 name|yold
 argument_list|,
 name|xold
@@ -2847,17 +3156,17 @@ name|newcost
 operator|=
 name|relative_move
 argument_list|(
-name|NullResult
+argument|NCURSES_SP_ARGx 				     NullResult
 argument_list|,
-name|yold
+argument|yold
 argument_list|,
-name|xold
+argument|xold
 argument_list|,
-name|ynew
+argument|ynew
 argument_list|,
-name|xnew
+argument|xnew
 argument_list|,
-name|ovw
+argument|ovw
 argument_list|)
 operator|)
 operator|!=
@@ -2894,24 +3203,24 @@ name|newcost
 operator|=
 name|relative_move
 argument_list|(
-name|NullResult
+argument|NCURSES_SP_ARGx 				     NullResult
 argument_list|,
-name|yold
+argument|yold
 argument_list|,
 literal|0
 argument_list|,
-name|ynew
+argument|ynew
 argument_list|,
-name|xnew
+argument|xnew
 argument_list|,
-name|ovw
+argument|ovw
 argument_list|)
 operator|)
 operator|!=
 name|INFINITY
 operator|)
 operator|&&
-name|SP
+name|SP_PARM
 operator|->
 name|_cr_cost
 operator|+
@@ -2926,7 +3235,7 @@ literal|2
 expr_stmt|;
 name|usecost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_cr_cost
 operator|+
@@ -2944,24 +3253,24 @@ name|newcost
 operator|=
 name|relative_move
 argument_list|(
-name|NullResult
+argument|NCURSES_SP_ARGx 				     NullResult
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ynew
+argument|ynew
 argument_list|,
-name|xnew
+argument|xnew
 argument_list|,
-name|ovw
+argument|ovw
 argument_list|)
 operator|)
 operator|!=
 name|INFINITY
 operator|)
 operator|&&
-name|SP
+name|SP_PARM
 operator|->
 name|_home_cost
 operator|+
@@ -2976,7 +3285,7 @@ literal|3
 expr_stmt|;
 name|usecost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_home_cost
 operator|+
@@ -2994,26 +3303,25 @@ name|newcost
 operator|=
 name|relative_move
 argument_list|(
-name|NullResult
+argument|NCURSES_SP_ARGx 				     NullResult
 argument_list|,
-name|screen_lines
-operator|-
+argument|screen_lines(SP_PARM) -
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|ynew
+argument|ynew
 argument_list|,
-name|xnew
+argument|xnew
 argument_list|,
-name|ovw
+argument|ovw
 argument_list|)
 operator|)
 operator|!=
 name|INFINITY
 operator|)
 operator|&&
-name|SP
+name|SP_PARM
 operator|->
 name|_ll_cost
 operator|+
@@ -3028,7 +3336,7 @@ literal|4
 expr_stmt|;
 name|usecost
 operator|=
-name|SP
+name|SP_PARM
 operator|->
 name|_ll_cost
 operator|+
@@ -3043,7 +3351,7 @@ name|xold
 operator|>
 literal|0
 condition|?
-name|SP
+name|SP_PARM
 operator|->
 name|_cr_cost
 else|:
@@ -3069,21 +3377,19 @@ name|newcost
 operator|=
 name|relative_move
 argument_list|(
-name|NullResult
+argument|NCURSES_SP_ARGx 				     NullResult
 argument_list|,
-name|yold
-operator|-
+argument|yold -
 literal|1
 argument_list|,
-name|screen_columns
-operator|-
+argument|screen_columns(SP_PARM) -
 literal|1
 argument_list|,
-name|ynew
+argument|ynew
 argument_list|,
-name|xnew
+argument|xnew
 argument_list|,
-name|ovw
+argument|ovw
 argument_list|)
 operator|)
 operator|!=
@@ -3092,7 +3398,7 @@ operator|)
 operator|&&
 name|t5_cr_cost
 operator|+
-name|SP
+name|SP_PARM
 operator|->
 name|_cub1_cost
 operator|+
@@ -3109,7 +3415,7 @@ name|usecost
 operator|=
 name|t5_cr_cost
 operator|+
-name|SP
+name|SP_PARM
 operator|->
 name|_cub1_cost
 operator|+
@@ -3136,6 +3442,7 @@ name|void
 operator|)
 name|relative_move
 argument_list|(
+name|NCURSES_SP_ARGx
 operator|&
 name|result
 argument_list|,
@@ -3170,6 +3477,7 @@ name|void
 operator|)
 name|relative_move
 argument_list|(
+name|NCURSES_SP_ARGx
 operator|&
 name|result
 argument_list|,
@@ -3204,6 +3512,7 @@ name|void
 operator|)
 name|relative_move
 argument_list|(
+name|NCURSES_SP_ARGx
 operator|&
 name|result
 argument_list|,
@@ -3238,10 +3547,14 @@ name|void
 operator|)
 name|relative_move
 argument_list|(
+name|NCURSES_SP_ARGx
 operator|&
 name|result
 argument_list|,
 name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|-
 literal|1
 argument_list|,
@@ -3291,6 +3604,7 @@ name|void
 operator|)
 name|relative_move
 argument_list|(
+name|NCURSES_SP_ARGx
 operator|&
 name|result
 argument_list|,
@@ -3299,6 +3613,9 @@ operator|-
 literal|1
 argument_list|,
 name|screen_columns
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|-
 literal|1
 argument_list|,
@@ -3396,22 +3713,26 @@ argument_list|(
 literal|"mvcur"
 argument_list|)
 expr_stmt|;
-name|tputs
+name|NCURSES_SP_NAME
 argument_list|(
-name|buffer
-argument_list|,
-literal|1
-argument_list|,
-name|_nc_outch
+argument|tputs
 argument_list|)
+operator|(
+name|NCURSES_SP_ARGx
+name|buffer
+operator|,
+literal|1
+operator|,
+name|myOutCh
+operator|)
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_cursrow
 operator|=
 name|ynew
 expr_stmt|;
-name|SP
+name|SP_PARM
 operator|->
 name|_curscol
 operator|=
@@ -3432,31 +3753,34 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|NCURSES_EXPORT
-argument_list|(
-argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|mvcur
-argument_list|(
-argument|int yold
-argument_list|,
-argument|int xold
-argument_list|,
-argument|int ynew
-argument_list|,
-argument|int xnew
-argument_list|)
-end_macro
-
 begin_comment
-comment|/* optimized cursor move from (yold, xold) to (ynew, xnew) */
+comment|/*  * optimized cursor move from (yold, xold) to (ynew, xnew)  */
 end_comment
 
-begin_block
+begin_function
+specifier|static
+name|int
+name|_nc_real_mvcur
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|int
+name|yold
+parameter_list|,
+name|int
+name|xold
+parameter_list|,
+name|int
+name|ynew
+parameter_list|,
+name|int
+name|xnew
+parameter_list|,
+name|NCURSES_SP_OUTC
+name|myOutCh
+parameter_list|,
+name|int
+name|ovw
+parameter_list|)
 block|{
 name|NCURSES_CH_T
 name|oldattr
@@ -3473,8 +3797,14 @@ argument_list|,
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"mvcur(%d,%d,%d,%d)"
+literal|"_nc_tinfo_mvcur(%p,%d,%d,%d,%d)"
 argument_list|)
+operator|,
+operator|(
+name|void
+operator|*
+operator|)
+name|SP_PARM
 operator|,
 name|yold
 operator|,
@@ -3488,7 +3818,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SP
+name|SP_PARM
 operator|==
 literal|0
 condition|)
@@ -3523,6 +3853,9 @@ condition|(
 name|xnew
 operator|>=
 name|screen_columns
+argument_list|(
+name|SP_PARM
+argument_list|)
 condition|)
 block|{
 name|ynew
@@ -3530,10 +3863,16 @@ operator|+=
 name|xnew
 operator|/
 name|screen_columns
+argument_list|(
+name|SP_PARM
+argument_list|)
 expr_stmt|;
 name|xnew
 operator|%=
 name|screen_columns
+argument_list|(
+name|SP_PARM
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Force restore even if msgr is on when we're in an alternate 	 * character set -- these have a strong tendency to screw up the CR& 	 * LF used for local character motions! 	 */
@@ -3541,7 +3880,7 @@ name|oldattr
 operator|=
 name|SCREEN_ATTRS
 argument_list|(
-name|SP
+name|SP_PARM
 argument_list|)
 expr_stmt|;
 if|if
@@ -3597,6 +3936,8 @@ name|void
 operator|)
 name|VIDATTR
 argument_list|(
+name|SP_PARM
+argument_list|,
 name|A_NORMAL
 argument_list|,
 literal|0
@@ -3608,6 +3949,9 @@ condition|(
 name|xold
 operator|>=
 name|screen_columns
+argument_list|(
+name|SP_PARM
+argument_list|)
 condition|)
 block|{
 name|int
@@ -3615,7 +3959,7 @@ name|l
 decl_stmt|;
 if|if
 condition|(
-name|SP
+name|SP_PARM
 operator|->
 name|_nl
 condition|)
@@ -3629,6 +3973,9 @@ literal|1
 operator|)
 operator|/
 name|screen_columns
+argument_list|(
+name|SP_PARM
+argument_list|)
 expr_stmt|;
 name|yold
 operator|+=
@@ -3639,6 +3986,9 @@ condition|(
 name|yold
 operator|>=
 name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
 condition|)
 name|l
 operator|-=
@@ -3646,6 +3996,9 @@ operator|(
 name|yold
 operator|-
 name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|-
 literal|1
 operator|)
@@ -3662,23 +4015,23 @@ condition|(
 name|carriage_return
 condition|)
 block|{
-name|TPUTS_TRACE
+name|NCURSES_PUTP2
 argument_list|(
 literal|"carriage_return"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
+argument_list|,
 name|carriage_return
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|_nc_outch
+block|{
+name|myOutCh
 argument_list|(
+name|NCURSES_SP_ARGx
 literal|'\r'
 argument_list|)
 expr_stmt|;
+block|}
 name|xold
 operator|=
 literal|0
@@ -3695,23 +4048,23 @@ condition|(
 name|newline
 condition|)
 block|{
-name|TPUTS_TRACE
+name|NCURSES_PUTP2
 argument_list|(
 literal|"newline"
-argument_list|)
-expr_stmt|;
-name|putp
-argument_list|(
+argument_list|,
 name|newline
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|_nc_outch
+block|{
+name|myOutCh
 argument_list|(
+name|NCURSES_SP_ARGx
 literal|'\n'
 argument_list|)
 expr_stmt|;
+block|}
 name|l
 operator|--
 expr_stmt|;
@@ -3738,12 +4091,18 @@ condition|(
 name|yold
 operator|>
 name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|-
 literal|1
 condition|)
 name|yold
 operator|=
 name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -3752,12 +4111,18 @@ condition|(
 name|ynew
 operator|>
 name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|-
 literal|1
 condition|)
 name|ynew
 operator|=
 name|screen_lines
+argument_list|(
+name|SP_PARM
+argument_list|)
 operator|-
 literal|1
 expr_stmt|;
@@ -3766,15 +4131,17 @@ name|code
 operator|=
 name|onscreen_mvcur
 argument_list|(
-name|yold
+argument|NCURSES_SP_ARGx yold
 argument_list|,
-name|xold
+argument|xold
 argument_list|,
-name|ynew
+argument|ynew
 argument_list|,
-name|xnew
+argument|xnew
 argument_list|,
-name|TRUE
+argument|ovw
+argument_list|,
+argument|myOutCh
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Restore attributes if we disabled them before moving. 	 */
@@ -3787,7 +4154,7 @@ name|oldattr
 argument_list|,
 name|SCREEN_ATTRS
 argument_list|(
-name|SP
+name|SP_PARM
 argument_list|)
 argument_list|)
 condition|)
@@ -3823,6 +4190,8 @@ name|void
 operator|)
 name|VIDATTR
 argument_list|(
+name|SP_PARM
+argument_list|,
 name|AttrOf
 argument_list|(
 name|oldattr
@@ -3842,7 +4211,279 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
+comment|/*  * These entrypoints are used within the library.  */
+end_comment
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_SP_NAME
+argument_list|(
+argument|_nc_mvcur
+argument_list|)
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|int
+name|yold
+parameter_list|,
+name|int
+name|xold
+parameter_list|,
+name|int
+name|ynew
+parameter_list|,
+name|int
+name|xnew
+parameter_list|)
+block|{
+return|return
+name|_nc_real_mvcur
+argument_list|(
+argument|NCURSES_SP_ARGx yold
+argument_list|,
+argument|xold
+argument_list|,
+argument|ynew
+argument_list|,
+argument|xnew
+argument_list|,
+argument|NCURSES_SP_NAME(_nc_outch)
+argument_list|,
+argument|TRUE
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_mvcur
+argument_list|(
+argument|int yold
+argument_list|,
+argument|int xold
+argument_list|,
+argument|int ynew
+argument_list|,
+argument|int xnew
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|NCURSES_SP_NAME
+argument_list|(
+name|_nc_mvcur
+argument_list|)
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|,
+name|yold
+argument_list|,
+name|xold
+argument_list|,
+name|ynew
+argument_list|,
+name|xnew
+argument_list|)
+return|;
+block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_TERM_DRIVER
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * The terminal driver does not support the external "mvcur()".  */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|TINFO_MVCUR
+argument_list|(
+argument|NCURSES_SP_DCLx int yold
+argument_list|,
+argument|int xold
+argument_list|,
+argument|int ynew
+argument_list|,
+argument|int xnew
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|_nc_real_mvcur
+argument_list|(
+argument|NCURSES_SP_ARGx 			  yold
+argument_list|,
+argument|xold
+argument_list|,
+argument|ynew
+argument_list|,
+argument|xnew
+argument_list|,
+argument|NCURSES_SP_NAME(_nc_outch)
+argument_list|,
+argument|TRUE
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !USE_TERM_DRIVER */
+end_comment
+
+begin_comment
+comment|/*  * These entrypoints support users of the library.  */
+end_comment
+
+begin_function
+name|NCURSES_EXPORT
+function|(
+name|int
+function|)
+name|NCURSES_SP_NAME
+argument_list|(
+argument|mvcur
+argument_list|)
+parameter_list|(
+name|NCURSES_SP_DCLx
+name|int
+name|yold
+parameter_list|,
+name|int
+name|xold
+parameter_list|,
+name|int
+name|ynew
+parameter_list|,
+name|int
+name|xnew
+parameter_list|)
+block|{
+return|return
+name|_nc_real_mvcur
+argument_list|(
+argument|NCURSES_SP_ARGx 			  yold
+argument_list|,
+argument|xold
+argument_list|,
+argument|ynew
+argument_list|,
+argument|xnew
+argument_list|,
+argument|NCURSES_SP_NAME(_nc_putchar)
+argument_list|,
+argument|FALSE
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|NCURSES_SP_FUNCS
+end_if
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|mvcur
+argument_list|(
+argument|int yold
+argument_list|,
+argument|int xold
+argument_list|,
+argument|int ynew
+argument_list|,
+argument|int xnew
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|NCURSES_SP_NAME
+argument_list|(
+name|mvcur
+argument_list|)
+argument_list|(
+name|CURRENT_SCREEN
+argument_list|,
+name|yold
+argument_list|,
+name|xold
+argument_list|,
+name|ynew
+argument_list|,
+name|xnew
+argument_list|)
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_TERM_DRIVER */
+end_comment
 
 begin_if
 if|#
@@ -5172,7 +5813,7 @@ name|printf
 argument_list|(
 literal|"char padding: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_char_padding
 argument_list|)
@@ -5184,7 +5825,7 @@ name|printf
 argument_list|(
 literal|"cr cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cr_cost
 argument_list|)
@@ -5196,7 +5837,7 @@ name|printf
 argument_list|(
 literal|"cup cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cup_cost
 argument_list|)
@@ -5208,7 +5849,7 @@ name|printf
 argument_list|(
 literal|"home cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_home_cost
 argument_list|)
@@ -5220,7 +5861,7 @@ name|printf
 argument_list|(
 literal|"ll cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_ll_cost
 argument_list|)
@@ -5235,7 +5876,7 @@ name|printf
 argument_list|(
 literal|"ht cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_ht_cost
 argument_list|)
@@ -5247,7 +5888,7 @@ name|printf
 argument_list|(
 literal|"cbt cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cbt_cost
 argument_list|)
@@ -5262,7 +5903,7 @@ name|printf
 argument_list|(
 literal|"cub1 cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cub1_cost
 argument_list|)
@@ -5274,7 +5915,7 @@ name|printf
 argument_list|(
 literal|"cuf1 cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cuf1_cost
 argument_list|)
@@ -5286,7 +5927,7 @@ name|printf
 argument_list|(
 literal|"cud1 cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cud1_cost
 argument_list|)
@@ -5298,7 +5939,7 @@ name|printf
 argument_list|(
 literal|"cuu1 cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cuu1_cost
 argument_list|)
@@ -5310,7 +5951,7 @@ name|printf
 argument_list|(
 literal|"cub cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cub_cost
 argument_list|)
@@ -5322,7 +5963,7 @@ name|printf
 argument_list|(
 literal|"cuf cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cuf_cost
 argument_list|)
@@ -5334,7 +5975,7 @@ name|printf
 argument_list|(
 literal|"cud cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cud_cost
 argument_list|)
@@ -5346,7 +5987,7 @@ name|printf
 argument_list|(
 literal|"cuu cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_cuu_cost
 argument_list|)
@@ -5358,7 +5999,7 @@ name|printf
 argument_list|(
 literal|"hpa cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_hpa_cost
 argument_list|)
@@ -5370,7 +6011,7 @@ name|printf
 argument_list|(
 literal|"vpa cost: %d\n"
 argument_list|,
-name|SP
+name|CURRENT_SCREEN
 operator|->
 name|_vpa_cost
 argument_list|)

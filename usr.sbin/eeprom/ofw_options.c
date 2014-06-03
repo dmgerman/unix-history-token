@@ -231,7 +231,6 @@ specifier|static
 specifier|const
 name|struct
 name|ofwo_extabent
-specifier|const
 name|ofwo_extab
 index|[]
 init|=

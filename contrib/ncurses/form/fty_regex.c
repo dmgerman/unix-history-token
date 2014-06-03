@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2006,2007 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fty_regex.c,v 1.21 2007/10/13 19:33:50 tom Exp $"
+literal|"$Id: fty_regex.c,v 1.25 2012/10/27 20:12:53 tom Exp $"
 argument_list|)
 end_macro
 
@@ -238,19 +238,53 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|HAVE_REGEX_H_FUNCS
+operator||
+name|HAVE_REGEXP_H_FUNCS
+operator||
+name|HAVE_REGEXPR_H_FUNCS
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAYBE_UNUSED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAYBE_UNUSED
+value|GCC_UNUSED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void *Make_RegularExpression_Type(va_list * ap) | |   Description   :  Allocate structure for regex type argument. | |   Return Values :  Pointer to argument structure or NULL on error +--------------------------------------------------------------------------*/
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void *Generic_RegularExpression_Type(void * arg) | |   Description   :  Allocate structure for regex type argument. | |   Return Values :  Pointer to argument structure or NULL on error +--------------------------------------------------------------------------*/
 end_comment
 
 begin_function
 specifier|static
 name|void
 modifier|*
-name|Make_RegularExpression_Type
+name|Generic_RegularExpression_Type
 parameter_list|(
-name|va_list
+name|void
 modifier|*
-name|ap
+name|arg
+name|MAYBE_UNUSED
 parameter_list|)
 block|{
 if|#
@@ -260,19 +294,27 @@ name|char
 modifier|*
 name|rx
 init|=
-name|va_arg
-argument_list|(
-operator|*
-name|ap
-argument_list|,
+operator|(
 name|char
 operator|*
-argument_list|)
+operator|)
+name|arg
 decl_stmt|;
 name|RegExp_Arg
 modifier|*
 name|preg
+init|=
+operator|(
+name|RegExp_Arg
+operator|*
+operator|)
+literal|0
 decl_stmt|;
+if|if
+condition|(
+name|rx
+condition|)
+block|{
 name|preg
 operator|=
 name|typeMalloc
@@ -295,6 +337,10 @@ argument_list|(
 literal|"RegExp_Arg %p"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|preg
 operator|)
 argument_list|)
@@ -345,12 +391,19 @@ argument_list|(
 literal|"regex_t %p"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|preg
 operator|->
 name|pRegExp
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|preg
 operator|->
 name|refCount
@@ -361,7 +414,10 @@ argument|unsigned long
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+condition|)
 operator|*
 operator|(
 name|preg
@@ -402,6 +458,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+block|}
 return|return
 operator|(
 operator|(
@@ -420,19 +477,27 @@ name|char
 modifier|*
 name|rx
 init|=
-name|va_arg
-argument_list|(
-operator|*
-name|ap
-argument_list|,
+operator|(
 name|char
 operator|*
-argument_list|)
+operator|)
+name|arg
 decl_stmt|;
 name|RegExp_Arg
 modifier|*
 name|pArg
+init|=
+operator|(
+name|RegExp_Arg
+operator|*
+operator|)
+literal|0
 decl_stmt|;
+if|if
+condition|(
+name|rx
+condition|)
+block|{
 name|pArg
 operator|=
 name|typeMalloc
@@ -470,6 +535,9 @@ name|compiled_expression
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|pArg
 operator|->
 name|refCount
@@ -480,7 +548,10 @@ argument|unsigned long
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+condition|)
 operator|*
 operator|(
 name|pArg
@@ -626,6 +697,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
 return|return
 operator|(
 name|void
@@ -644,6 +716,47 @@ block|}
 end_function
 
 begin_comment
+comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void *Make_RegularExpression_Type(va_list * ap) | |   Description   :  Allocate structure for regex type argument. | |   Return Values :  Pointer to argument structure or NULL on error +--------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+name|void
+modifier|*
+name|Make_RegularExpression_Type
+parameter_list|(
+name|va_list
+modifier|*
+name|ap
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|rx
+init|=
+name|va_arg
+argument_list|(
+operator|*
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+decl_stmt|;
+return|return
+name|Generic_RegularExpression_Type
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|rx
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*--------------------------------------------------------------------------- |   Facility      :  libnform |   Function      :  static void *Copy_RegularExpression_Type( |                                      const void * argp) | |   Description   :  Copy structure for regex type argument. | |   Return Values :  Pointer to argument structure or NULL on error. +--------------------------------------------------------------------------*/
 end_comment
 
@@ -657,6 +770,7 @@ specifier|const
 name|void
 modifier|*
 name|argp
+name|MAYBE_UNUSED
 parameter_list|)
 block|{
 if|#
@@ -740,6 +854,7 @@ parameter_list|(
 name|void
 modifier|*
 name|argp
+name|MAYBE_UNUSED
 parameter_list|)
 block|{
 if|#
@@ -857,11 +972,13 @@ parameter_list|(
 name|FIELD
 modifier|*
 name|field
+name|MAYBE_UNUSED
 parameter_list|,
 specifier|const
 name|void
 modifier|*
 name|argp
+name|MAYBE_UNUSED
 parameter_list|)
 block|{
 name|bool
@@ -1004,13 +1121,32 @@ name|Copy_RegularExpression_Type
 block|,
 name|Free_RegularExpression_Type
 block|,
+name|INIT_FT_FUNC
+argument_list|(
 name|Check_RegularExpression_Field
+argument_list|)
 block|,
+name|INIT_FT_FUNC
+argument_list|(
 name|NULL
+argument_list|)
 block|,
+name|INIT_FT_FUNC
+argument_list|(
 name|NULL
+argument_list|)
 block|,
+name|INIT_FT_FUNC
+argument_list|(
 name|NULL
+argument_list|)
+block|,
+if|#
+directive|if
+name|NCURSES_INTEROP_FUNCS
+name|Generic_RegularExpression_Type
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1029,6 +1165,43 @@ operator|&
 name|typeREGEXP
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|NCURSES_INTEROP_FUNCS
+end_if
+
+begin_comment
+comment|/* The next routines are to simplify the use of ncurses from    programming languages with restictions on interop with C level    constructs (e.g. variable access or va_list + ellipsis constructs) */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|FIELDTYPE *
+argument_list|)
+end_macro
+
+begin_macro
+name|_nc_TYPE_REGEXP
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+name|TYPE_REGEXP
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* fty_regex.c ends here */

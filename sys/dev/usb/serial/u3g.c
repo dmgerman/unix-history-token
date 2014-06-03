@@ -2720,15 +2720,6 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
-name|OPTION
-argument_list|,
-name|GTM661W
-argument_list|,
-literal|0
-argument_list|)
-block|,
-name|U3G_DEV
-argument_list|(
 name|QISDA
 argument_list|,
 name|H20_1

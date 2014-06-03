@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2010,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_item_new.c,v 1.27 2006/12/17 19:47:09 tom Exp $"
+literal|"$Id: m_item_new.c,v 1.33 2012/06/09 23:55:15 tom Exp $"
 argument_list|)
 end_macro
 
@@ -78,6 +78,9 @@ name|USE_WIDEC_SUPPORT
 name|int
 name|count
 init|=
+operator|(
+name|int
+operator|)
 name|mbstowcs
 argument_list|(
 literal|0
@@ -309,18 +312,11 @@ else|else
 block|{
 name|item
 operator|=
-operator|(
-name|ITEM
-operator|*
-operator|)
-name|calloc
+name|typeCalloc
 argument_list|(
-literal|1
+name|ITEM
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ITEM
-argument_list|)
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -340,6 +336,10 @@ name|name
 operator|.
 name|length
 operator|=
+operator|(
+name|unsigned
+name|short
+operator|)
 name|strlen
 argument_list|(
 name|name
@@ -376,6 +376,10 @@ name|description
 operator|.
 name|length
 operator|=
+operator|(
+name|unsigned
+name|short
+operator|)
 name|strlen
 argument_list|(
 name|description
@@ -457,6 +461,10 @@ argument_list|(
 literal|"free_item(%p)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|item
 operator|)
 argument_list|)
@@ -517,7 +525,7 @@ end_macro
 
 begin_block
 block|{
-name|unsigned
+name|short
 name|l
 decl_stmt|;
 name|T
@@ -528,6 +536,10 @@ argument_list|(
 literal|"set_menu_mark(%p,%s)"
 argument_list|)
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|menu
 operator|,
 name|_nc_visbuf
@@ -555,6 +567,9 @@ argument_list|)
 condition|)
 name|l
 operator|=
+operator|(
+name|short
+operator|)
 name|strlen
 argument_list|(
 name|mark
@@ -602,9 +617,6 @@ name|menu
 operator|->
 name|marklen
 operator|!=
-operator|(
-name|int
-operator|)
 name|l
 condition|)
 name|RETURN
@@ -628,15 +640,9 @@ name|menu
 operator|->
 name|mark
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
+name|strdup
 argument_list|(
-name|l
-operator|+
-literal|1
+name|mark
 argument_list|)
 expr_stmt|;
 if|if
@@ -646,15 +652,6 @@ operator|->
 name|mark
 condition|)
 block|{
-name|strcpy
-argument_list|(
-name|menu
-operator|->
-name|mark
-argument_list|,
-name|mark
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|menu
@@ -662,11 +659,12 @@ operator|!=
 operator|&
 name|_nc_Default_Menu
 condition|)
+name|SetStatus
+argument_list|(
 name|menu
-operator|->
-name|status
-operator||=
+argument_list|,
 name|_MARK_ALLOCATED
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -676,6 +674,28 @@ operator|->
 name|mark
 operator|=
 name|old_mark
+expr_stmt|;
+name|menu
+operator|->
+name|marklen
+operator|=
+call|(
+name|short
+call|)
+argument_list|(
+operator|(
+name|old_mark
+operator|!=
+literal|0
+operator|)
+condition|?
+name|strlen
+argument_list|(
+name|old_mark
+argument_list|)
+else|:
+literal|0
+argument_list|)
 expr_stmt|;
 name|RETURN
 argument_list|(
@@ -790,6 +810,11 @@ argument_list|(
 literal|"menu_mark(%p)"
 argument_list|)
 operator|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
 name|menu
 operator|)
 argument_list|)

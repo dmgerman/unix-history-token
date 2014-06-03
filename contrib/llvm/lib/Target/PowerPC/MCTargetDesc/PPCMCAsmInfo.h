@@ -65,10 +65,19 @@ directive|include
 file|"llvm/MC/MCAsmInfoDarwin.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCAsmInfoELF.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|Triple
+decl_stmt|;
 name|class
 name|PPCMCAsmInfoDarwin
 range|:
@@ -82,10 +91,20 @@ argument_list|()
 block|;
 name|public
 operator|:
+comment|/// This version of the constructor is here to maintain ABI compatibility
+comment|/// with LLVM 3.4.0.
 name|explicit
 name|PPCMCAsmInfoDarwin
 argument_list|(
 argument|bool is64Bit
+argument_list|)
+block|;
+name|explicit
+name|PPCMCAsmInfoDarwin
+argument_list|(
+argument|bool is64Bit
+argument_list|,
+argument|const Triple&
 argument_list|)
 block|;   }
 decl_stmt|;
@@ -93,7 +112,7 @@ name|class
 name|PPCLinuxMCAsmInfo
 range|:
 name|public
-name|MCAsmInfo
+name|MCAsmInfoELF
 block|{
 name|virtual
 name|void

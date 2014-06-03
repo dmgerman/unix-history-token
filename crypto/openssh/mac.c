@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: mac.c,v 1.24 2013/06/03 00:03:18 dtucker Exp $ */
+comment|/* $OpenBSD: mac.c,v 1.28 2014/02/07 06:55:54 djm Exp $ */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/hmac.h>
 end_include
 
 begin_include
@@ -94,6 +88,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"digest.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hmac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"umac.h"
 end_include
 
@@ -106,12 +112,12 @@ end_include
 begin_define
 define|#
 directive|define
-name|SSH_EVP
+name|SSH_DIGEST
 value|1
 end_define
 
 begin_comment
-comment|/* OpenSSL EVP-based MAC */
+comment|/* SSH_DIGEST_XXX */
 end_comment
 
 begin_define
@@ -143,17 +149,9 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-specifier|const
-name|EVP_MD
-modifier|*
-function_decl|(
-modifier|*
-name|mdfunc
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+name|int
+name|alg
+decl_stmt|;
 name|int
 name|truncatebits
 decl_stmt|;
@@ -187,9 +185,9 @@ comment|/* Encrypt-and-MAC (encrypt-and-authenticate) variants */
 block|{
 literal|"hmac-sha1"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_sha1
+name|SSH_DIGEST_SHA1
 block|,
 literal|0
 block|,
@@ -203,9 +201,9 @@ block|,
 block|{
 literal|"hmac-sha1-96"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_sha1
+name|SSH_DIGEST_SHA1
 block|,
 literal|96
 block|,
@@ -222,9 +220,9 @@ name|HAVE_EVP_SHA256
 block|{
 literal|"hmac-sha2-256"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_sha256
+name|SSH_DIGEST_SHA256
 block|,
 literal|0
 block|,
@@ -238,9 +236,9 @@ block|,
 block|{
 literal|"hmac-sha2-512"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_sha512
+name|SSH_DIGEST_SHA512
 block|,
 literal|0
 block|,
@@ -256,9 +254,9 @@ directive|endif
 block|{
 literal|"hmac-md5"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_md5
+name|SSH_DIGEST_MD5
 block|,
 literal|0
 block|,
@@ -272,9 +270,9 @@ block|,
 block|{
 literal|"hmac-md5-96"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_md5
+name|SSH_DIGEST_MD5
 block|,
 literal|96
 block|,
@@ -288,9 +286,9 @@ block|,
 block|{
 literal|"hmac-ripemd160"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_ripemd160
+name|SSH_DIGEST_RIPEMD160
 block|,
 literal|0
 block|,
@@ -304,9 +302,9 @@ block|,
 block|{
 literal|"hmac-ripemd160@openssh.com"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_ripemd160
+name|SSH_DIGEST_RIPEMD160
 block|,
 literal|0
 block|,
@@ -322,7 +320,7 @@ literal|"umac-64@openssh.com"
 block|,
 name|SSH_UMAC
 block|,
-name|NULL
+literal|0
 block|,
 literal|0
 block|,
@@ -338,7 +336,7 @@ literal|"umac-128@openssh.com"
 block|,
 name|SSH_UMAC128
 block|,
-name|NULL
+literal|0
 block|,
 literal|0
 block|,
@@ -353,9 +351,9 @@ comment|/* Encrypt-then-MAC variants */
 block|{
 literal|"hmac-sha1-etm@openssh.com"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_sha1
+name|SSH_DIGEST_SHA1
 block|,
 literal|0
 block|,
@@ -369,9 +367,9 @@ block|,
 block|{
 literal|"hmac-sha1-96-etm@openssh.com"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_sha1
+name|SSH_DIGEST_SHA1
 block|,
 literal|96
 block|,
@@ -388,9 +386,9 @@ name|HAVE_EVP_SHA256
 block|{
 literal|"hmac-sha2-256-etm@openssh.com"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_sha256
+name|SSH_DIGEST_SHA256
 block|,
 literal|0
 block|,
@@ -404,9 +402,9 @@ block|,
 block|{
 literal|"hmac-sha2-512-etm@openssh.com"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_sha512
+name|SSH_DIGEST_SHA512
 block|,
 literal|0
 block|,
@@ -422,9 +420,9 @@ directive|endif
 block|{
 literal|"hmac-md5-etm@openssh.com"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_md5
+name|SSH_DIGEST_MD5
 block|,
 literal|0
 block|,
@@ -438,9 +436,9 @@ block|,
 block|{
 literal|"hmac-md5-96-etm@openssh.com"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_md5
+name|SSH_DIGEST_MD5
 block|,
 literal|96
 block|,
@@ -454,9 +452,9 @@ block|,
 block|{
 literal|"hmac-ripemd160-etm@openssh.com"
 block|,
-name|SSH_EVP
+name|SSH_DIGEST
 block|,
-name|EVP_ripemd160
+name|SSH_DIGEST_RIPEMD160
 block|,
 literal|0
 block|,
@@ -472,7 +470,7 @@ literal|"umac-64-etm@openssh.com"
 block|,
 name|SSH_UMAC
 block|,
-name|NULL
+literal|0
 block|,
 literal|0
 block|,
@@ -488,7 +486,7 @@ literal|"umac-128-etm@openssh.com"
 block|,
 name|SSH_UMAC128
 block|,
-name|NULL
+literal|0
 block|,
 literal|0
 block|,
@@ -504,7 +502,7 @@ name|NULL
 block|,
 literal|0
 block|,
-name|NULL
+literal|0
 block|,
 literal|0
 block|,
@@ -519,7 +517,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Returns a comma-separated list of supported MACs. */
+comment|/* Returns a list of supported MACs separated by the specified char. */
 end_comment
 
 begin_function
@@ -527,7 +525,8 @@ name|char
 modifier|*
 name|mac_alg_list
 parameter_list|(
-name|void
+name|char
+name|sep
 parameter_list|)
 block|{
 name|char
@@ -577,7 +576,7 @@ name|rlen
 operator|++
 index|]
 operator|=
-literal|'\n'
+name|sep
 expr_stmt|;
 name|nlen
 operator|=
@@ -645,9 +644,6 @@ modifier|*
 name|macalg
 parameter_list|)
 block|{
-name|int
-name|evp_len
-decl_stmt|;
 name|mac
 operator|->
 name|type
@@ -662,42 +658,33 @@ name|mac
 operator|->
 name|type
 operator|==
-name|SSH_EVP
+name|SSH_DIGEST
 condition|)
 block|{
-name|mac
-operator|->
-name|evp_md
-operator|=
-name|macalg
-operator|->
-name|mdfunc
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
-name|evp_len
-operator|=
-name|EVP_MD_size
-argument_list|(
 name|mac
 operator|->
-name|evp_md
+name|hmac_ctx
+operator|=
+name|ssh_hmac_start
+argument_list|(
+name|macalg
+operator|->
+name|alg
 argument_list|)
 operator|)
-operator|<=
-literal|0
+operator|==
+name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"mac %s len %d"
+literal|"ssh_hmac_start(alg=%d) failed"
 argument_list|,
-name|mac
+name|macalg
 operator|->
-name|name
-argument_list|,
-name|evp_len
+name|alg
 argument_list|)
 expr_stmt|;
 name|mac
@@ -708,10 +695,12 @@ name|mac
 operator|->
 name|mac_len
 operator|=
-operator|(
-name|u_int
-operator|)
-name|evp_len
+name|ssh_hmac_bytes
+argument_list|(
+name|macalg
+operator|->
+name|alg
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -827,6 +816,7 @@ name|mac
 operator|!=
 name|NULL
 condition|)
+block|{
 name|mac_setup_by_alg
 argument_list|(
 name|mac
@@ -836,11 +826,12 @@ argument_list|)
 expr_stmt|;
 name|debug2
 argument_list|(
-literal|"mac_setup: found %s"
+literal|"mac_setup: setup %s"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -882,7 +873,9 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"mac_init: no key"
+literal|"%s: no key"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -893,34 +886,21 @@ name|type
 condition|)
 block|{
 case|case
-name|SSH_EVP
+name|SSH_DIGEST
 case|:
 if|if
 condition|(
 name|mac
 operator|->
-name|evp_md
+name|hmac_ctx
 operator|==
 name|NULL
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-name|HMAC_CTX_init
+operator|||
+name|ssh_hmac_init
 argument_list|(
-operator|&
 name|mac
 operator|->
-name|evp_ctx
-argument_list|)
-expr_stmt|;
-name|HMAC_Init
-argument_list|(
-operator|&
-name|mac
-operator|->
-name|evp_ctx
+name|hmac_ctx
 argument_list|,
 name|mac
 operator|->
@@ -929,12 +909,14 @@ argument_list|,
 name|mac
 operator|->
 name|key_len
-argument_list|,
-name|mac
-operator|->
-name|evp_md
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 literal|0
 return|;
@@ -1040,15 +1022,12 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"mac_compute: mac too long %u %lu"
+literal|"mac_compute: mac too long %u %zu"
 argument_list|,
 name|mac
 operator|->
 name|mac_len
 argument_list|,
-operator|(
-name|u_long
-operator|)
 sizeof|sizeof
 argument_list|(
 name|u
@@ -1063,7 +1042,7 @@ name|type
 condition|)
 block|{
 case|case
-name|SSH_EVP
+name|SSH_DIGEST
 case|:
 name|put_u32
 argument_list|(
@@ -1073,26 +1052,26 @@ name|seqno
 argument_list|)
 expr_stmt|;
 comment|/* reset HMAC context */
-name|HMAC_Init
+if|if
+condition|(
+name|ssh_hmac_init
 argument_list|(
-operator|&
 name|mac
 operator|->
-name|evp_ctx
+name|hmac_ctx
 argument_list|,
 name|NULL
 argument_list|,
 literal|0
-argument_list|,
-name|NULL
 argument_list|)
-expr_stmt|;
-name|HMAC_Update
+operator|<
+literal|0
+operator|||
+name|ssh_hmac_update
 argument_list|(
-operator|&
 name|mac
 operator|->
-name|evp_ctx
+name|hmac_ctx
 argument_list|,
 name|b
 argument_list|,
@@ -1101,31 +1080,45 @@ argument_list|(
 name|b
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|HMAC_Update
+operator|<
+literal|0
+operator|||
+name|ssh_hmac_update
 argument_list|(
-operator|&
 name|mac
 operator|->
-name|evp_ctx
+name|hmac_ctx
 argument_list|,
 name|data
 argument_list|,
 name|datalen
 argument_list|)
-expr_stmt|;
-name|HMAC_Final
+operator|<
+literal|0
+operator|||
+name|ssh_hmac_final
 argument_list|(
-operator|&
 name|mac
 operator|->
-name|evp_ctx
+name|hmac_ctx
 argument_list|,
 name|u
 operator|.
 name|m
 argument_list|,
-name|NULL
+sizeof|sizeof
+argument_list|(
+name|u
+operator|.
+name|m
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"ssh_hmac failed"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1281,21 +1274,20 @@ if|if
 condition|(
 name|mac
 operator|->
-name|evp_md
+name|hmac_ctx
 operator|!=
 name|NULL
 condition|)
-name|HMAC_cleanup
+name|ssh_hmac_free
 argument_list|(
-operator|&
 name|mac
 operator|->
-name|evp_ctx
+name|hmac_ctx
 argument_list|)
 expr_stmt|;
 name|mac
 operator|->
-name|evp_md
+name|hmac_ctx
 operator|=
 name|NULL
 expr_stmt|;
@@ -1433,18 +1425,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-else|else
-block|{
-name|debug3
-argument_list|(
-literal|"mac ok: %s [%s]"
-argument_list|,
-name|p
-argument_list|,
-name|names
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 name|debug3

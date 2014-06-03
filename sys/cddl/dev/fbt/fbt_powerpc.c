@@ -1302,7 +1302,7 @@ name|instr
 operator|==
 name|FBT_BLR
 operator|)
-operator||
+operator|||
 name|FBT_IS_JUMP
 argument_list|(
 operator|*

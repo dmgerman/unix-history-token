@@ -4458,6 +4458,15 @@ decl_stmt|;
 name|apr_pool_t
 modifier|*
 name|subpool
+init|=
+name|svn_pool_create
+argument_list|(
+name|pool
+argument_list|)
+decl_stmt|;
+name|apr_pool_t
+modifier|*
+name|iterpool
 decl_stmt|;
 specifier|const
 name|char
@@ -4500,8 +4509,13 @@ name|change_dir_prop
 argument_list|,
 name|dir_baton
 argument_list|,
-name|pool
+name|subpool
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|svn_pool_clear
+argument_list|(
+name|subpool
 argument_list|)
 expr_stmt|;
 if|if
@@ -4548,7 +4562,7 @@ name|s_root
 argument_list|,
 name|s_path
 argument_list|,
-name|pool
+name|subpool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4566,12 +4580,12 @@ name|t_root
 argument_list|,
 name|t_path
 argument_list|,
-name|pool
+name|subpool
 argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Iterate over the report information for this directory. */
-name|subpool
+name|iterpool
 operator|=
 name|svn_pool_create
 argument_list|(
@@ -4593,7 +4607,7 @@ name|t_entry
 decl_stmt|;
 name|svn_pool_clear
 argument_list|(
-name|subpool
+name|iterpool
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -4610,7 +4624,7 @@ name|info
 argument_list|,
 name|e_path
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4664,7 +4678,7 @@ name|e_path
 argument_list|,
 name|name
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 expr_stmt|;
 name|t_fullpath
@@ -4675,7 +4689,7 @@ name|t_path
 argument_list|,
 name|name
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 expr_stmt|;
 name|t_entry
@@ -4697,7 +4711,7 @@ name|s_path
 argument_list|,
 name|name
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 else|:
 name|NULL
@@ -4797,7 +4811,7 @@ argument_list|(
 name|requested_depth
 argument_list|)
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4863,7 +4877,7 @@ name|hi
 operator|=
 name|apr_hash_first
 argument_list|(
-name|pool
+name|subpool
 argument_list|,
 name|s_entries
 argument_list|)
@@ -4885,7 +4899,7 @@ name|s_entry
 decl_stmt|;
 name|svn_pool_clear
 argument_list|(
-name|subpool
+name|iterpool
 argument_list|)
 expr_stmt|;
 name|s_entry
@@ -4955,7 +4969,7 @@ name|s_entry
 operator|->
 name|name
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -4977,7 +4991,7 @@ name|s_entry
 operator|->
 name|name
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 argument_list|,
 name|s_rev
@@ -4989,7 +5003,7 @@ argument_list|,
 operator|&
 name|deleted_rev
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5007,7 +5021,7 @@ name|deleted_rev
 argument_list|,
 name|dir_baton
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5021,7 +5035,7 @@ name|hi
 operator|=
 name|apr_hash_first
 argument_list|(
-name|pool
+name|subpool
 argument_list|,
 name|t_entries
 argument_list|)
@@ -5046,7 +5060,7 @@ name|t_entry
 decl_stmt|;
 name|svn_pool_clear
 argument_list|(
-name|subpool
+name|iterpool
 argument_list|)
 expr_stmt|;
 name|t_entry
@@ -5146,7 +5160,7 @@ name|t_entry
 operator|->
 name|name
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 else|:
 name|NULL
@@ -5163,7 +5177,7 @@ name|t_entry
 operator|->
 name|name
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 expr_stmt|;
 name|t_fullpath
@@ -5176,7 +5190,7 @@ name|t_entry
 operator|->
 name|name
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 expr_stmt|;
 name|SVN_ERR
@@ -5211,7 +5225,7 @@ argument_list|(
 name|requested_depth
 argument_list|)
 argument_list|,
-name|subpool
+name|iterpool
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5219,10 +5233,15 @@ block|}
 comment|/* Destroy iteration subpool. */
 name|svn_pool_destroy
 argument_list|(
-name|subpool
+name|iterpool
 argument_list|)
 expr_stmt|;
 block|}
+name|svn_pool_destroy
+argument_list|(
+name|subpool
+argument_list|)
+expr_stmt|;
 return|return
 name|SVN_NO_ERROR
 return|;

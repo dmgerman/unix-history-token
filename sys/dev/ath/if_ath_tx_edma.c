@@ -2814,6 +2814,11 @@ operator|->
 name|sc_tx_nmaps
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -2853,6 +2858,7 @@ operator|->
 name|sc_tx_nmaps
 argument_list|)
 expr_stmt|;
+block|}
 name|sc
 operator|->
 name|sc_tx

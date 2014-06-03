@@ -554,6 +554,17 @@ operator|&
 name|uu_apool_list_lock
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|pthread_mutex_destroy
+argument_list|(
+operator|&
+name|pp
+operator|->
+name|uap_lock
+argument_list|)
+expr_stmt|;
 name|pp
 operator|->
 name|uap_prev

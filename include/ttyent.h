@@ -39,6 +39,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_TTYS_ONIFCONSOLE
+value|"onifconsole"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_TTYS_SECURE
 value|"secure"
 end_define

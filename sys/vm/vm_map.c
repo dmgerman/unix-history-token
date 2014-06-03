@@ -4693,6 +4693,18 @@ name|protoeflags
 operator|)
 operator|&&
 operator|(
+name|cow
+operator|&
+operator|(
+name|MAP_ENTRY_GROWS_DOWN
+operator||
+name|MAP_ENTRY_GROWS_UP
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
 name|prev_entry
 operator|->
 name|end
@@ -4999,6 +5011,12 @@ operator|->
 name|wired_count
 operator|=
 literal|0
+expr_stmt|;
+name|new_entry
+operator|->
+name|wiring_thread
+operator|=
+name|NULL
 expr_stmt|;
 name|new_entry
 operator|->
@@ -7352,11 +7370,11 @@ operator|&
 name|MAP_PREFAULT_MADVISE
 operator|)
 operator|&&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|<
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_reserved
 condition|)
@@ -7813,9 +7831,11 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"vm_map_protect: object %p overcharged\n"
+literal|"vm_map_protect: object %p overcharged (entry %p)"
 operator|,
 name|obj
+operator|,
+name|current
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7933,6 +7953,7 @@ name|protection
 operator|=
 name|new_prot
 expr_stmt|;
+comment|/* 		 * For user wired map entries, the normal lazy evaluation of 		 * write access upgrades through soft page faults is 		 * undesirable.  Instead, immediately copy any pages that are 		 * copy-on-write and enable write access in the physical map. 		 */
 if|if
 condition|(
 operator|(
@@ -7940,18 +7961,10 @@ name|current
 operator|->
 name|eflags
 operator|&
-operator|(
-name|MAP_ENTRY_COW
-operator||
 name|MAP_ENTRY_USER_WIRED
 operator|)
-operator|)
-operator|==
-operator|(
-name|MAP_ENTRY_COW
-operator||
-name|MAP_ENTRY_USER_WIRED
-operator|)
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|current
@@ -7972,6 +7985,17 @@ operator|==
 literal|0
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|old_prot
+operator|!=
+name|VM_PROT_NONE
+argument_list|,
+operator|(
+literal|"vm_map_protect: inaccessible wired map entry"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vm_fault_copy_entry
 argument_list|(
 name|map
@@ -12097,6 +12121,16 @@ operator|->
 name|wired_count
 operator|==
 literal|0
+operator|||
+operator|(
+name|src_entry
+operator|->
+name|protection
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * If the source entry is marked needs_copy, it is already 		 * write-protected. 		 */
@@ -12110,6 +12144,16 @@ operator|&
 name|MAP_ENTRY_NEEDS_COPY
 operator|)
 operator|==
+literal|0
+operator|&&
+operator|(
+name|src_entry
+operator|->
+name|protection
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|!=
 literal|0
 condition|)
 block|{
@@ -12546,7 +12590,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Of course, wired down pages can't be set copy-on-write. 		 * Cause wired pages to be copied into the new map by 		 * simulating faults (the new pages are pageable) 		 */
+comment|/* 		 * We don't want to make writeable wired pages copy-on-write. 		 * Immediately copy these pages into the new map by simulating 		 * page faults.  The new pages are pageable. 		 */
 name|vm_fault_copy_entry
 argument_list|(
 name|dst_map
@@ -13544,11 +13588,6 @@ name|MAP_STACK_GROWS_DOWN
 operator||
 name|MAP_STACK_GROWS_UP
 operator|)
-expr_stmt|;
-name|cow
-operator|&=
-operator|~
-name|orient
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -15456,6 +15495,23 @@ name|vmspace
 modifier|*
 name|newvmspace
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|curthread
+operator|->
+name|td_pflags
+operator|&
+name|TDP_EXECVMSPC
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vmspace_exec recursed"
+operator|)
+argument_list|)
+expr_stmt|;
 name|newvmspace
 operator|=
 name|vmspace_alloc
@@ -15516,10 +15572,11 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|vmspace_free
-argument_list|(
-name|oldvmspace
-argument_list|)
+name|curthread
+operator|->
+name|td_pflags
+operator||=
+name|TDP_EXECVMSPC
 expr_stmt|;
 return|return
 operator|(
@@ -17053,7 +17110,7 @@ name|object
 operator|.
 name|vm_object
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|0
 argument_list|,

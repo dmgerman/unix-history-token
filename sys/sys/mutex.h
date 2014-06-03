@@ -1185,17 +1185,8 @@ value|mtx_unlock_spin(mtx_pool_find((pool), (ptr)))
 end_define
 
 begin_comment
-comment|/*  * mtxpool_lockbuilder is a pool of sleep locks that is not witness  * checked and should only be used for building higher level locks.  *  * mtxpool_sleep is a general purpose pool of sleep mutexes.  */
+comment|/*  * mtxpool_sleep is a general purpose pool of sleep mutexes.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx_pool
-modifier|*
-name|mtxpool_lockbuilder
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1564,7 +1555,7 @@ name|mtx_initialized
 parameter_list|(
 name|m
 parameter_list|)
-value|lock_initalized(&(m)->lock_object)
+value|lock_initialized(&(m)->lock_object)
 end_define
 
 begin_define

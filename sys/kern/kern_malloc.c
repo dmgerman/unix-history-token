@@ -2867,6 +2867,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__sparc64__
+end_ifndef
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -2876,6 +2882,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize the kernel memory (kmem) arena.  */
@@ -2896,7 +2907,7 @@ decl_stmt|;
 comment|/* 	 * Calculate the amount of kernel virtual address (KVA) space that is 	 * preallocated to the kmem arena.  In order to support a wide range 	 * of machines, it is a function of the physical memory size, 	 * specifically, 	 * 	 *	min(max(physical memory size / VM_KMEM_SIZE_SCALE, 	 *	    VM_KMEM_SIZE_MIN), VM_KMEM_SIZE_MAX) 	 * 	 * Every architecture must define an integral value for 	 * VM_KMEM_SIZE_SCALE.  However, the definitions of VM_KMEM_SIZE_MIN 	 * and VM_KMEM_SIZE_MAX, which represent respectively the floor and 	 * ceiling on this preallocation, are optional.  Typically, 	 * VM_KMEM_SIZE_MAX is itself a function of the available KVA space on 	 * a given architecture. 	 */
 name|mem_size
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 expr_stmt|;
@@ -3356,7 +3367,7 @@ name|mtp
 decl_stmt|;
 name|KASSERT
 argument_list|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|!=

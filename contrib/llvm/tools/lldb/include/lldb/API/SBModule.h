@@ -487,6 +487,30 @@ operator|*
 name|type
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Get a type using its type ID.
+comment|///
+comment|/// Each symbol file reader will assign different user IDs to their
+comment|/// types, but it is sometimes useful when debugging type issues to
+comment|/// be able to grab a type using its type ID.
+comment|///
+comment|/// For DWARF debug info, the type ID is the DIE offset.
+comment|///
+comment|/// @param[in] uid
+comment|///     The type user ID.
+comment|///
+comment|/// @return
+comment|///     An SBType for the given type ID, or an empty SBType if the
+comment|///     type was not found.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBType
+name|GetTypeByID
+argument_list|(
+argument|lldb::user_id_t uid
+argument_list|)
+expr_stmt|;
 name|lldb
 operator|::
 name|SBType

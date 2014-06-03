@@ -524,6 +524,64 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|long
+name|swzone
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|swzone
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|swzone
+argument_list|,
+literal|0
+argument_list|,
+literal|"Actual size of swap metadata zone"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|long
+name|swap_maxpages
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|swap_maxpages
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|swap_maxpages
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum amount of swap supported"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* bits from overcommit */
 end_comment
@@ -688,15 +746,15 @@ condition|)
 block|{
 name|s
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|-
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_reserved
 operator|-
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 expr_stmt|;
@@ -2090,7 +2148,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|unsigned
+name|long
 name|n
 decl_stmt|,
 name|n2
@@ -2149,10 +2208,10 @@ operator|&
 name|pbuf_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 16 pages, so this is probably overkill.  This reservation 	 * is typically limited to around 32MB by default. 	 */
+comment|/* 	 * Initialize our zone.  Right now I'm just guessing on the number 	 * we need based on the number of pages in the system.  Each swblock 	 * can hold 32 pages, so this is probably overkill.  This reservation 	 * is typically limited to around 32MB by default. 	 */
 name|n
 operator|=
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 operator|/
@@ -2265,11 +2324,27 @@ name|n
 condition|)
 name|printf
 argument_list|(
-literal|"Swap zone entries reduced from %d to %d.\n"
+literal|"Swap zone entries reduced from %lu to %lu.\n"
 argument_list|,
 name|n2
 argument_list|,
 name|n
+argument_list|)
+expr_stmt|;
+name|swap_maxpages
+operator|=
+name|n
+operator|*
+name|SWAP_META_PAGES
+expr_stmt|;
+name|swzone
+operator|=
+name|n
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|swblock
 argument_list|)
 expr_stmt|;
 name|n2
@@ -5721,11 +5796,9 @@ operator|==
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-name|vm_object_pip_subtract
+name|vm_object_pip_wakeup
 argument_list|(
 name|object
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|vm_page_dirty
@@ -5782,11 +5855,9 @@ literal|"swap_pager_force_pagein: read from swap failed"
 argument_list|)
 expr_stmt|;
 comment|/*XXX*/
-name|vm_object_pip_subtract
+name|vm_object_pip_wakeup
 argument_list|(
 name|object
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|vm_page_dirty
@@ -7998,11 +8069,11 @@ expr_stmt|;
 comment|/* 	 * We can turn off this swap device safely only if the 	 * available virtual memory in the system will fit the amount 	 * of data we will have to page back in, plus an epsilon so 	 * the system doesn't become critically low on swap space. 	 */
 if|if
 condition|(
-name|cnt
+name|vm_cnt
 operator|.
 name|v_free_count
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_cache_count
 operator|+

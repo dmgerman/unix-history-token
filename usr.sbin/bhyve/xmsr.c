@@ -89,6 +89,15 @@ operator|(
 literal|0
 operator|)
 return|;
+case|case
+literal|0x79
+case|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* IA32_BIOS_UPDT_TRIG MSR */
 default|default:
 break|break;
 block|}

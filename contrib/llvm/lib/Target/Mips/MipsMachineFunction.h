@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ValueMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFrameInfo.h"
 end_include
 
@@ -75,6 +87,24 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineMemOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/PseudoSourceValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/GlobalValue.h"
 end_include
 
 begin_include
@@ -99,6 +129,85 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|/// \brief A class derived from PseudoSourceValue that represents a GOT entry
+comment|/// resolved by lazy-binding.
+name|class
+name|MipsCallEntry
+range|:
+name|public
+name|PseudoSourceValue
+block|{
+name|public
+operator|:
+name|explicit
+name|MipsCallEntry
+argument_list|(
+specifier|const
+name|StringRef
+operator|&
+name|N
+argument_list|)
+block|;
+name|explicit
+name|MipsCallEntry
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|V
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|isConstant
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isAliased
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|mayAlias
+argument_list|(
+argument|const MachineFrameInfo *
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+name|virtual
+name|void
+name|printCustom
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+block|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|std
+operator|::
+name|string
+name|Name
+block|;
+specifier|const
+name|GlobalValue
+operator|*
+name|Val
+block|;
+endif|#
+directive|endif
+block|}
+decl_stmt|;
 comment|/// MipsFunctionInfo - This class is derived from MachineFunction private
 comment|/// Mips target-specific information for each MachineFunction.
 name|class
@@ -107,56 +216,6 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
-name|MachineFunction
-operator|&
-name|MF
-block|;
-comment|/// SRetReturnReg - Some subtargets require that sret lowering includes
-comment|/// returning the value of the returned struct in a register. This field
-comment|/// holds the virtual register into which the sret argument is passed.
-name|unsigned
-name|SRetReturnReg
-block|;
-comment|/// GlobalBaseReg - keeps track of the virtual register initialized for
-comment|/// use as the global base register. This is used for PIC in some PIC
-comment|/// relocation models.
-name|unsigned
-name|GlobalBaseReg
-block|;
-comment|/// Mips16SPAliasReg - keeps track of the virtual register initialized for
-comment|/// use as an alias for SP for use in load/store of halfword/byte from/to
-comment|/// the stack
-name|unsigned
-name|Mips16SPAliasReg
-block|;
-comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
-name|int
-name|VarArgsFrameIndex
-block|;
-comment|/// True if function has a byval argument.
-name|bool
-name|HasByvalArg
-block|;
-comment|/// Size of incoming argument area.
-name|unsigned
-name|IncomingArgSize
-block|;
-comment|/// CallsEhReturn - Whether the function calls llvm.eh.return.
-name|bool
-name|CallsEhReturn
-block|;
-comment|/// Frame objects for spilling eh data registers.
-name|int
-name|EhDataRegFI
-index|[
-literal|4
-index|]
-block|;
 name|public
 operator|:
 name|MipsFunctionInfo
@@ -196,6 +255,10 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
+operator|~
+name|MipsFunctionInfo
+argument_list|()
+block|;
 name|unsigned
 name|getSRetReturnReg
 argument_list|()
@@ -327,7 +390,102 @@ argument_list|(
 argument|int FI
 argument_list|)
 specifier|const
-block|;  }
+block|;
+comment|/// \brief Create a MachinePointerInfo that has a MipsCallEntr object
+comment|/// representing a GOT entry for an external function.
+name|MachinePointerInfo
+name|callPtrInfo
+argument_list|(
+specifier|const
+name|StringRef
+operator|&
+name|Name
+argument_list|)
+block|;
+comment|/// \brief Create a MachinePointerInfo that has a MipsCallEntr object
+comment|/// representing a GOT entry for a global function.
+name|MachinePointerInfo
+name|callPtrInfo
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|Val
+argument_list|)
+block|;
+name|private
+operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
+name|MachineFunction
+operator|&
+name|MF
+block|;
+comment|/// SRetReturnReg - Some subtargets require that sret lowering includes
+comment|/// returning the value of the returned struct in a register. This field
+comment|/// holds the virtual register into which the sret argument is passed.
+name|unsigned
+name|SRetReturnReg
+block|;
+comment|/// GlobalBaseReg - keeps track of the virtual register initialized for
+comment|/// use as the global base register. This is used for PIC in some PIC
+comment|/// relocation models.
+name|unsigned
+name|GlobalBaseReg
+block|;
+comment|/// Mips16SPAliasReg - keeps track of the virtual register initialized for
+comment|/// use as an alias for SP for use in load/store of halfword/byte from/to
+comment|/// the stack
+name|unsigned
+name|Mips16SPAliasReg
+block|;
+comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
+name|int
+name|VarArgsFrameIndex
+block|;
+comment|/// True if function has a byval argument.
+name|bool
+name|HasByvalArg
+block|;
+comment|/// Size of incoming argument area.
+name|unsigned
+name|IncomingArgSize
+block|;
+comment|/// CallsEhReturn - Whether the function calls llvm.eh.return.
+name|bool
+name|CallsEhReturn
+block|;
+comment|/// Frame objects for spilling eh data registers.
+name|int
+name|EhDataRegFI
+index|[
+literal|4
+index|]
+block|;
+comment|/// MipsCallEntry maps.
+name|StringMap
+operator|<
+specifier|const
+name|MipsCallEntry
+operator|*
+operator|>
+name|ExternalCallEntries
+block|;
+name|ValueMap
+operator|<
+specifier|const
+name|GlobalValue
+operator|*
+block|,
+specifier|const
+name|MipsCallEntry
+operator|*
+operator|>
+name|GlobalCallEntries
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

@@ -656,6 +656,8 @@ end_comment
 begin_function
 specifier|static
 name|tree
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+function|\
 name|gimplify_cp_loop
 parameter_list|(
 name|tree
@@ -667,9 +669,17 @@ parameter_list|,
 name|tree
 name|incr
 parameter_list|,
+name|tree
+name|attrs
+parameter_list|,
 name|bool
 name|cond_is_first
+parameter_list|,
+name|tree
+name|inner_foreach
 parameter_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+function|\
 block|{
 name|tree
 name|top
@@ -701,6 +711,33 @@ name|entry
 operator|=
 name|NULL_TREE
 expr_stmt|;
+comment|/* APPLE LOCAL begin C* language */
+comment|/* Order of label addition to stack is important for objc's foreach-stmt. */
+comment|/* APPLE LOCAL radar 4667060 */
+if|if
+condition|(
+name|inner_foreach
+operator|==
+name|integer_zero_node
+condition|)
+block|{
+name|cont_block
+operator|=
+name|begin_bc_block
+argument_list|(
+name|bc_continue
+argument_list|)
+expr_stmt|;
+name|break_block
+operator|=
+name|begin_bc_block
+argument_list|(
+name|bc_break
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|break_block
 operator|=
 name|begin_bc_block
@@ -715,6 +752,8 @@ argument_list|(
 name|bc_continue
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* APPLE LOCAL end C* language */
 comment|/* If condition is zero don't generate a loop construct.  */
 if|if
 condition|(
@@ -782,6 +821,24 @@ name|top
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* Add the attributes to the 'top' label.  */
+name|decl_attributes
+argument_list|(
+operator|&
+name|LABEL_EXPR_LABEL
+argument_list|(
+name|top
+argument_list|)
+argument_list|,
+name|attrs
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 if|if
 condition|(
 name|cond
@@ -873,6 +930,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* APPLE LOCAL begin radar 4547045 */
+comment|/* Pop foreach's inner loop break label so outer loop's      break label becomes target of inner loop body's break statements.   */
+name|t
+operator|=
+name|NULL_TREE
+expr_stmt|;
 name|gimplify_stmt
 argument_list|(
 operator|&
@@ -896,6 +959,9 @@ argument_list|,
 name|body
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin radar 4547045 */
+comment|/* Push back inner loop's own 'break' label so rest      of code works seemlessly. */
+comment|/* APPLE LOCAL radar 4667060 */
 name|append_to_statement_list
 argument_list|(
 name|top
@@ -998,6 +1064,8 @@ argument_list|,
 name|pre_p
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 operator|*
 name|stmt_p
 operator|=
@@ -1018,10 +1086,18 @@ argument_list|(
 name|stmt
 argument_list|)
 argument_list|,
+name|FOR_ATTRIBUTES
+argument_list|(
+name|stmt
+argument_list|)
+argument_list|,
 literal|1
+argument_list|,
+name|NULL_TREE
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ }
 end_function
 
 begin_comment
@@ -1044,6 +1120,8 @@ init|=
 operator|*
 name|stmt_p
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 operator|*
 name|stmt_p
 operator|=
@@ -1061,10 +1139,18 @@ argument_list|)
 argument_list|,
 name|NULL_TREE
 argument_list|,
+name|WHILE_ATTRIBUTES
+argument_list|(
+name|stmt
+argument_list|)
+argument_list|,
 literal|1
+argument_list|,
+name|NULL_TREE
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ }
 end_function
 
 begin_comment
@@ -1087,6 +1173,8 @@ init|=
 operator|*
 name|stmt_p
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 operator|*
 name|stmt_p
 operator|=
@@ -1104,10 +1192,21 @@ argument_list|)
 argument_list|,
 name|NULL_TREE
 argument_list|,
+name|DO_ATTRIBUTES
+argument_list|(
+name|stmt
+argument_list|)
+argument_list|,
 literal|0
+argument_list|,
+name|DO_FOREACH
+argument_list|(
+name|stmt
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ }
 end_function
 
 begin_comment

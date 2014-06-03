@@ -218,38 +218,25 @@ return|return
 name|true
 return|;
 block|}
+comment|// The Darwin i386 ABI requires that stack frames be 16 byte aligned.
+comment|// When there is a trap handler on the stack, e.g. _sigtramp in userland
+comment|// code, we've seen that the stack pointer is often not aligned properly
+comment|// before the handler is invoked.  This means that lldb will stop the unwind
+comment|// early -- before the function which caused the trap.
+comment|//
+comment|// To work around this, we relax that alignment to be just word-size (4-bytes).
+comment|// Whitelisting the trap handlers for user space would be easy (_sigtramp) but
+comment|// in other environments there can be a large number of different functions
+comment|// involved in async traps.
+comment|//
+comment|// If we were to enforce 16-byte alignment, we also need to relax to 4-byte
+comment|// alignment for non-darwin i386 targets.
 name|virtual
 name|bool
 name|CallFrameAddressIsValid
 argument_list|(
 argument|lldb::addr_t cfa
 argument_list|)
-block|{
-comment|// Darwin call frame addresses must be 16-byte aligned, but other OS's
-comment|// only need 4-byte alignment.  Otherwise the ABI matches, so we have
-comment|// this one minor override here.
-if|if
-condition|(
-name|target_is_darwin
-condition|)
-block|{
-comment|// Make sure the stack call frame addresses are are 16 byte aligned
-if|if
-condition|(
-name|cfa
-operator|&
-operator|(
-literal|16ull
-operator|-
-literal|1ull
-operator|)
-condition|)
-return|return
-name|false
-return|;
-comment|// Not 16 byte aligned
-block|}
-else|else
 block|{
 comment|// Make sure the stack call frame addresses are are 4 byte aligned
 if|if
@@ -266,7 +253,6 @@ return|return
 name|false
 return|;
 comment|// Not 4 byte aligned
-block|}
 if|if
 condition|(
 name|cfa
@@ -276,15 +262,20 @@ condition|)
 return|return
 name|false
 return|;
+end_decl_stmt
+
+begin_comment
 comment|// Zero is not a valid stack address
+end_comment
+
+begin_return
 return|return
 name|true
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_decl_stmt
-name|virtual
+unit|}      virtual
 name|bool
 name|CodeAddressIsValid
 argument_list|(
@@ -440,30 +431,20 @@ name|private
 label|:
 end_label
 
-begin_macro
-name|ABIMacOSX_i386
-argument_list|(
-argument|bool is_darwin
-argument_list|)
-end_macro
-
 begin_expr_stmt
-unit|:
+name|ABIMacOSX_i386
+argument_list|()
+operator|:
 name|lldb_private
 operator|::
 name|ABI
 argument_list|()
-operator|,
-name|target_is_darwin
-argument_list|(
-argument|is_darwin
-argument_list|)
 block|{ }
-comment|// Call CreateInstance instead.
-name|bool
-name|target_is_darwin
-expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// Call CreateInstance instead.
+end_comment
 
 begin_endif
 unit|};

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004, 2006, 2007 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004, 2006, 2007 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.318 2012/06/14 23:54:02 ca Exp $"
+literal|"@(#)$Id: headers.c,v 8.320 2013-11-22 20:51:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1632,36 +1632,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|tTd
-argument_list|(
-literal|31
-argument_list|,
-literal|2
-argument_list|)
-condition|)
-block|{
-name|sm_dprintf
-argument_list|(
-literal|"comparing header from (%s) against default (%s or %s)\n"
-argument_list|,
-name|fvalue
-argument_list|,
-name|e
-operator|->
-name|e_from
-operator|.
-name|q_paddr
-argument_list|,
-name|e
-operator|->
-name|e_from
-operator|.
-name|q_user
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|e
 operator|->
 name|e_from
@@ -1723,6 +1693,38 @@ name|dropfrom
 operator|=
 name|true
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|31
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|sm_dprintf
+argument_list|(
+literal|"comparing header from (%s) against default (%s or %s), drop=%d\n"
+argument_list|,
+name|fvalue
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_user
+argument_list|,
+name|dropfrom
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* delete default value for this header */
 for|for
@@ -1804,6 +1806,31 @@ name|h_flags
 operator||=
 name|H_USER
 expr_stmt|;
+comment|/* 				**  If the MH hack is selected, allow to turn 				**  it off via a mailer flag to avoid problems 				**  with setups that remove the F flag from 				**  the RCPT mailer. 				*/
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_NOMHHACK
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_mailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+block|{
+name|h
+operator|->
+name|h_flags
+operator|&=
+operator|~
+name|H_CHECK
+expr_stmt|;
+block|}
 return|return
 name|hi
 operator|->

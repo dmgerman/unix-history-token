@@ -4464,7 +4464,8 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"Geom provider %s::%s failed closing ->access()"
+literal|"Geom provider %s::%s dcr=%d dcw=%d dce=%d error=%d failed "
+literal|"closing ->access()"
 operator|,
 name|pp
 operator|->
@@ -4477,6 +4478,14 @@ operator|,
 name|pp
 operator|->
 name|name
+operator|,
+name|dcr
+operator|,
+name|dcw
+operator|,
+name|dce
+operator|,
+name|error
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5281,6 +5290,35 @@ expr_stmt|;
 name|G_VALID_PROVIDER
 argument_list|(
 name|pp
+argument_list|)
+expr_stmt|;
+name|g_trace
+argument_list|(
+name|G_T_TOPOLOGY
+argument_list|,
+literal|"%s %p(%s:%s:%s)"
+argument_list|,
+name|__func__
+argument_list|,
+name|pp
+argument_list|,
+name|pp
+operator|->
+name|geom
+operator|->
+name|class
+operator|->
+name|name
+argument_list|,
+name|pp
+operator|->
+name|geom
+operator|->
+name|name
+argument_list|,
+name|pp
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 for|for

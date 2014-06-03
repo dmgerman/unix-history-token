@@ -204,7 +204,7 @@ name|virtual
 name|lldb_private
 operator|::
 name|Error
-name|GetFile
+name|GetFileWithUUID
 argument_list|(
 specifier|const
 name|lldb_private
@@ -663,6 +663,11 @@ argument|uint32_t timeout_sec
 argument_list|)
 block|;
 comment|// Timeout in seconds to wait for shell program to finish
+name|virtual
+name|void
+name|CalculateTrapHandlerSymbolNames
+argument_list|()
+block|;
 name|protected
 operator|:
 name|GDBRemoteCommunicationClient

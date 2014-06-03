@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007, 2009, 2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2007, 2009, 2010 Proofpoint, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.694 2012/03/03 00:10:42 ca Exp $"
+literal|"@(#)$Id: daemon.c,v 8.698 2013-11-22 20:51:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9288,12 +9288,18 @@ name|family
 operator|==
 name|AF_INET6
 operator|&&
+operator|(
+name|h_errno
+operator|==
+name|TRY_AGAIN
+operator|||
 name|errno
 operator|==
 name|ETIMEDOUT
+operator|)
 condition|)
 block|{
-comment|/* 				**  An attempt with family AF_INET may 				**  succeed By skipping the next section 				**  of code, we will try AF_INET before 				**  failing. 				*/
+comment|/* 				**  An attempt with family AF_INET may 				**  succeed. By skipping the next section 				**  of code, we will try AF_INET before 				**  failing. 				*/
 if|if
 condition|(
 name|tTd
@@ -16938,6 +16944,23 @@ name|dst_len
 operator|-=
 name|sz
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_IPV6_FULL
+name|ap
+operator|=
+name|sm_inet6_ntop
+argument_list|(
+name|s6a
+argument_list|,
+name|dst
+argument_list|,
+name|dst_len
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* _FFR_IPV6_FULL */
 name|ap
 operator|=
 operator|(
@@ -16955,6 +16978,9 @@ argument_list|,
 name|dst_len
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_IPV6_FULL */
 comment|/* Restore pointer to beginning of string */
 if|if
 condition|(

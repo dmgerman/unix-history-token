@@ -85,18 +85,36 @@ range|:
 name|public
 name|AMDGPUTargetLowering
 block|{
+name|SDValue
+name|LowerParameter
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|unsigned Offset
+argument_list|)
 specifier|const
-name|SIInstrInfo
-operator|*
-name|TII
-block|;
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
 block|;
 name|SDValue
-name|LowerSTORE
+name|LowerSampleIntrinsic
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|const SDValue&Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerLOAD
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -114,7 +132,52 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerSIGN_EXTEND
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSTORE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerZERO_EXTEND
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerADD
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerBRCOND
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|ResourceDescriptorToi128
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -133,12 +196,23 @@ argument|bool&ScalarSlotUsed
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getRegClassForNode
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|const SDValue&Op
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|fitsRegClass
 argument_list|(
 argument|SelectionDAG&DAG
 argument_list|,
-argument|SDValue&Op
+argument|const SDValue&Op
 argument_list|,
 argument|unsigned RegClass
 argument_list|)
@@ -176,6 +250,16 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|MachineSDNode
+operator|*
+name|AdjustRegClass
+argument_list|(
+argument|MachineSDNode *N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|SITargetLowering
@@ -184,6 +268,23 @@ name|TargetMachine
 operator|&
 name|tm
 argument_list|)
+block|;
+name|bool
+name|allowsUnalignedMemoryAccesses
+argument_list|(
+argument|EVT  VT
+argument_list|,
+argument|bool *IsFast
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|shouldSplitVectorElementType
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
 block|;
 name|SDValue
 name|LowerFormalArguments
@@ -196,7 +297,7 @@ argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
-argument|DebugLoc DL
+argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
@@ -219,6 +320,8 @@ name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
+argument|LLVMContext&Context
+argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
@@ -226,6 +329,14 @@ block|;
 name|virtual
 name|MVT
 name|getScalarShiftAmountTy
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isFMAFasterThanFMulAndFAdd
 argument_list|(
 argument|EVT VT
 argument_list|)
@@ -276,6 +387,19 @@ name|int32_t
 name|analyzeImmediate
 argument_list|(
 argument|const SDNode *N
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|CreateLiveInRegister
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|EVT VT
 argument_list|)
 specifier|const
 block|; }

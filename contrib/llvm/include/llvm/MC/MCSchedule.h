@@ -104,12 +104,15 @@ name|unsigned
 name|SuperIdx
 decl_stmt|;
 comment|// Index of the resources kind that contains this kind.
-comment|// Buffered resources may be consumed at some indeterminate cycle after
-comment|// dispatch (e.g. for instructions that may issue out-of-order). Unbuffered
-comment|// resources always consume their resource some fixed number of cycles after
-comment|// dispatch (e.g. for instruction interlocking that may stall the pipeline).
-name|bool
-name|IsBuffered
+comment|// Number of resources that may be buffered.
+comment|//
+comment|// Buffered resources (BufferSize> 0 || BufferSize == -1) may be consumed at
+comment|// some indeterminate cycle after dispatch (e.g. for instructions that may
+comment|// issue out-of-order). Unbuffered resources (BufferSize == 0) always consume
+comment|// their resource some fixed number of cycles after dispatch (e.g. for
+comment|// instruction interlocking that may stall the pipeline).
+name|int
+name|BufferSize
 decl_stmt|;
 name|bool
 name|operator
@@ -135,11 +138,11 @@ name|Other
 operator|.
 name|SuperIdx
 operator|&&
-name|IsBuffered
+name|BufferSize
 operator|==
 name|Other
 operator|.
-name|IsBuffered
+name|BufferSize
 return|;
 block|}
 block|}
@@ -372,7 +375,7 @@ comment|/// The machine model directly provides basic information about the
 comment|/// microarchitecture to the scheduler in the form of properties. It also
 comment|/// optionally refers to scheduler resource tables and itinerary
 comment|/// tables. Scheduler resource tables model the latency and cost for each
-comment|/// instruction type. Itinerary tables are an independant mechanism that
+comment|/// instruction type. Itinerary tables are an independent mechanism that
 comment|/// provides a detailed reservation table describing each cycle of instruction
 comment|/// execution. Subtargets may define any or all of the above categories of data
 comment|/// depending on the type of CPU and selected scheduler.
@@ -398,36 +401,29 @@ name|DefaultIssueWidth
 init|=
 literal|1
 decl_stmt|;
-comment|// MinLatency is the minimum latency between a register write
-comment|// followed by a data dependent read. This determines which
-comment|// instructions may be scheduled in the same per-cycle group. This
-comment|// is distinct from *expected* latency, which determines the likely
-comment|// critical path but does not guarantee a pipeline
-comment|// hazard. MinLatency can always be overridden by the number of
-comment|// InstrStage cycles.
+comment|// MicroOpBufferSize is the number of micro-ops that the processor may buffer
+comment|// for out-of-order execution.
 comment|//
-comment|// (-1) Standard in-order processor.
-comment|//      Use InstrItinerary OperandCycles as MinLatency.
-comment|//      If no OperandCycles exist, then use the cycle of the last InstrStage.
+comment|// "0" means operations that are not ready in this cycle are not considered
+comment|// for scheduling (they go in the pending queue). Latency is paramount. This
+comment|// may be more efficient if many instructions are pending in a schedule.
 comment|//
-comment|//  (0) Out-of-order processor, or in-order with bundled dependencies.
-comment|//      RAW dependencies may be dispatched in the same cycle.
-comment|//      Optional InstrItinerary OperandCycles provides expected latency.
+comment|// "1" means all instructions are considered for scheduling regardless of
+comment|// whether they are ready in this cycle. Latency still causes issue stalls,
+comment|// but we balance those stalls against other heuristics.
 comment|//
-comment|// (>0) In-order processor with variable latencies.
-comment|//      Use the greater of this value or the cycle of the last InstrStage.
-comment|//      Optional InstrItinerary OperandCycles provides expected latency.
-comment|//      TODO: can't yet specify both min and expected latency per operand.
-name|int
-name|MinLatency
+comment|// "> 1" means the processor is out-of-order. This is a machine independent
+comment|// estimate of highly machine specific characteristics such are the register
+comment|// renaming pool and reorder buffer.
+name|unsigned
+name|MicroOpBufferSize
 decl_stmt|;
 specifier|static
 specifier|const
-name|int
-name|DefaultMinLatency
+name|unsigned
+name|DefaultMicroOpBufferSize
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 comment|// LoadLatency is the expected latency of load instructions.
 comment|//
@@ -458,23 +454,6 @@ name|DefaultHighLatency
 init|=
 literal|10
 decl_stmt|;
-comment|// ILPWindow is the number of cycles that the scheduler effectively ignores
-comment|// before attempting to hide latency. This should be zero for in-order cpus to
-comment|// always hide expected latency. For out-of-order cpus, it may be tweaked as
-comment|// desired to roughly approximate instruction buffers. The actual threshold is
-comment|// not very important for an OOO processor, as long as it isn't too high. A
-comment|// nonzero value helps avoid rescheduling to hide latency when its is fairly
-comment|// obviously useless and makes register pressure heuristics more effective.
-name|unsigned
-name|ILPWindow
-decl_stmt|;
-specifier|static
-specifier|const
-name|unsigned
-name|DefaultILPWindow
-init|=
-literal|0
-decl_stmt|;
 comment|// MispredictPenalty is the typical number of extra cycles the processor
 comment|// takes to recover from a branch misprediction.
 name|unsigned
@@ -486,6 +465,9 @@ name|unsigned
 name|DefaultMispredictPenalty
 init|=
 literal|10
+decl_stmt|;
+name|bool
+name|CompleteModel
 decl_stmt|;
 name|private
 label|:
@@ -532,9 +514,9 @@ argument_list|(
 name|DefaultIssueWidth
 argument_list|)
 operator|,
-name|MinLatency
+name|MicroOpBufferSize
 argument_list|(
-name|DefaultMinLatency
+name|DefaultMicroOpBufferSize
 argument_list|)
 operator|,
 name|LoadLatency
@@ -547,14 +529,14 @@ argument_list|(
 name|DefaultHighLatency
 argument_list|)
 operator|,
-name|ILPWindow
-argument_list|(
-name|DefaultILPWindow
-argument_list|)
-operator|,
 name|MispredictPenalty
 argument_list|(
 name|DefaultMispredictPenalty
+argument_list|)
+operator|,
+name|CompleteModel
+argument_list|(
+name|true
 argument_list|)
 operator|,
 name|ProcID
@@ -602,15 +584,15 @@ name|MCSchedModel
 argument_list|(
 argument|unsigned iw
 argument_list|,
-argument|int ml
+argument|int mbs
 argument_list|,
 argument|unsigned ll
 argument_list|,
 argument|unsigned hl
 argument_list|,
-argument|unsigned ilp
-argument_list|,
 argument|unsigned mp
+argument_list|,
+argument|bool cm
 argument_list|,
 argument|unsigned pi
 argument_list|,
@@ -630,9 +612,9 @@ argument_list|(
 name|iw
 argument_list|)
 operator|,
-name|MinLatency
+name|MicroOpBufferSize
 argument_list|(
-name|ml
+name|mbs
 argument_list|)
 operator|,
 name|LoadLatency
@@ -645,14 +627,14 @@ argument_list|(
 name|hl
 argument_list|)
 operator|,
-name|ILPWindow
-argument_list|(
-name|ilp
-argument_list|)
-operator|,
 name|MispredictPenalty
 argument_list|(
 name|mp
+argument_list|)
+operator|,
+name|CompleteModel
+argument_list|(
+name|cm
 argument_list|)
 operator|,
 name|ProcID
@@ -702,6 +684,17 @@ specifier|const
 block|{
 return|return
 name|SchedClassTable
+return|;
+block|}
+comment|/// Return true if this machine model data for all instructions with a
+comment|/// scheduling class (itinerary class or SchedRW list).
+name|bool
+name|isComplete
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CompleteModel
 return|;
 block|}
 name|unsigned

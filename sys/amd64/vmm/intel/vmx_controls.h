@@ -47,6 +47,13 @@ name|PINBASED_PREMPTION_TIMER
 value|(1<< 6)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PINBASED_POSTED_INTERRUPT
+value|(1<< 7)
+end_define
+
 begin_comment
 comment|/* Primary Processor-Based VM-Execution Controls */
 end_comment
@@ -205,7 +212,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PROCBASED2_VIRTUALIZE_APIC
+name|PROCBASED2_VIRTUALIZE_APIC_ACCESSES
 value|(1<< 0)
 end_define
 
@@ -233,7 +240,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PROCBASED2_VIRTUALIZE_X2APIC
+name|PROCBASED2_VIRTUALIZE_X2APIC_MODE
 value|(1<< 4)
 end_define
 
@@ -256,6 +263,20 @@ define|#
 directive|define
 name|PROCBASED2_UNRESTRICTED_GUEST
 value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROCBASED2_APIC_REGISTER_VIRTUALIZATION
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROCBASED2_VIRTUAL_INTERRUPT_DELIVERY
+value|(1<< 9)
 end_define
 
 begin_define

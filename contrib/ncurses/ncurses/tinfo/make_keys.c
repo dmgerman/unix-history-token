@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2010,2011 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -21,13 +21,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<curses.priv.h>
+file|<build.priv.h>
 end_include
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: make_keys.c,v 1.14 2008/08/03 21:57:22 tom Exp $"
+literal|"$Id: make_keys.c,v 1.20 2011/10/22 16:34:50 tom Exp $"
 argument_list|)
 end_macro
 
@@ -41,12 +41,12 @@ begin_define
 define|#
 directive|define
 name|UNKNOWN
-value|(SIZEOF(strnames) + SIZEOF(strfnames))
+value|(unsigned) (SIZEOF(strnames) + SIZEOF(strfnames))
 end_define
 
 begin_function
 specifier|static
-name|size_t
+name|unsigned
 name|lookup
 parameter_list|(
 specifier|const
@@ -55,7 +55,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|size_t
+name|unsigned
 name|n
 decl_stmt|;
 name|bool
@@ -188,7 +188,7 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|int
+name|unsigned
 name|maxlen
 init|=
 literal|16
@@ -202,6 +202,9 @@ name|fgets
 argument_list|(
 name|buffer
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buffer
@@ -265,7 +268,7 @@ operator|==
 literal|2
 condition|)
 block|{
-name|int
+name|unsigned
 name|code
 init|=
 name|lookup
@@ -282,9 +285,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|strlen
 argument_list|(
 name|from
@@ -294,6 +294,9 @@ name|maxlen
 condition|)
 name|maxlen
 operator|=
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|from
@@ -303,12 +306,18 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"\t{ %4d, %-*.*s },\t/* %s */\n"
+literal|"\t{ %4u, %-*.*s },\t/* %s */\n"
 argument_list|,
 name|code
 argument_list|,
+operator|(
+name|int
+operator|)
 name|maxlen
 argument_list|,
+operator|(
+name|int
+operator|)
 name|maxlen
 argument_list|,
 name|to

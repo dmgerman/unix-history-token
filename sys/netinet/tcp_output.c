@@ -4706,9 +4706,7 @@ name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 expr_stmt|;
 name|RO_RTFREE
 argument_list|(
@@ -4907,9 +4905,7 @@ name|ro
 operator|.
 name|ro_rt
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_mtu
+name|rt_mtu
 expr_stmt|;
 name|RO_RTFREE
 argument_list|(

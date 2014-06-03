@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: compat.h,v 1.43 2011/09/23 07:45:05 markus Exp $ */
+comment|/* $OpenBSD: compat.h,v 1.44 2013/12/30 23:52:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -243,8 +243,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSH_BUG_LARGEWINDOW
+name|SSH_BUG_CURVE25519PAD
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_BUG_LARGEWINDOW
+value|0x80000000
 end_define
 
 begin_function_decl
@@ -291,6 +298,28 @@ begin_function_decl
 name|char
 modifier|*
 name|compat_cipher_proposal
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|compat_pkalg_proposal
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|compat_kex_proposal
 parameter_list|(
 name|char
 modifier|*

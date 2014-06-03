@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2005,2006 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -32,25 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<tic.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<term_entry.h>
 end_include
 
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: read_termcap.c,v 1.71 2006/07/29 12:06:51 tom Exp $"
+literal|"$Id: read_termcap.c,v 1.89 2013/12/15 00:32:43 tom Exp $"
 argument_list|)
 end_macro
 
@@ -136,8 +124,10 @@ name|result
 operator|=
 name|TERMPATH
 expr_stmt|;
-name|T
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"TERMPATH is %s"
 operator|,
@@ -150,6 +140,10 @@ name|result
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Note:  * getcap(), cgetent(), etc., are BSD functions.  A copy of those was added to  * this file in November 1995, derived from the BSD4.4 Lite sources.  *  * The initial adaptation uses 518 lines from that source.  * The current source (in 2009) uses 183 lines of BSD4.4 Lite (441 ignoring  * whitespace).  */
+end_comment
 
 begin_if
 if|#
@@ -271,7 +265,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Casey Leedom of Lawrence Livermore National Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Casey Leedom of Lawrence Livermore National Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -418,14 +412,13 @@ name|gottoprec
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|toprec
 argument_list|,
 name|ent
+argument_list|,
+name|topreclen
 argument_list|)
 expr_stmt|;
 return|return
@@ -818,14 +811,15 @@ name|TC_SYS_ERR
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|record
 argument_list|,
 name|toprec
+argument_list|,
+name|topreclen
+operator|+
+name|BFRAG
 argument_list|)
 expr_stmt|;
 name|rp
@@ -1152,11 +1146,17 @@ block|{
 name|lineno
 operator|++
 expr_stmt|;
+comment|/* 			     * Unlike BSD 4.3, this ignores a backslash at the 			     * end of a comment-line.  That makes it consistent 			     * with the rest of ncurses -TD 			     */
 if|if
 condition|(
 name|rp
 operator|==
 name|record
+operator|||
+operator|*
+name|record
+operator|==
+literal|'#'
 operator|||
 operator|*
 operator|(
@@ -1332,11 +1332,18 @@ condition|(
 operator|!
 name|foundit
 condition|)
+block|{
+name|free
+argument_list|(
+name|record
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TC_NOT_FOUND
 operator|)
 return|;
+block|}
 block|}
 comment|/*      * Got the capability record, but now we have to expand all tc=name      * references in it ...      */
 block|{
@@ -1367,6 +1374,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|icap
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|scan
@@ -1412,7 +1421,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 break|break;
+block|}
 comment|/* 	     * Find end of tc=name and stomp on the trailing `:' 	     * (if present) so we can use it to call ourselves. 	     */
 name|s
 operator|=
@@ -1462,6 +1473,10 @@ expr_stmt|;
 name|tcend
 operator|=
 name|s
+expr_stmt|;
+name|icap
+operator|=
+literal|0
 expr_stmt|;
 name|iret
 operator|=
@@ -1532,6 +1547,11 @@ argument_list|(
 name|record
 argument_list|)
 expr_stmt|;
+name|FreeIfNeeded
+argument_list|(
+name|icap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|iret
@@ -1544,11 +1564,14 @@ name|iret
 operator|==
 name|TC_UNRESOLVED
 condition|)
+block|{
 name|tc_not_resolved
 operator|=
 name|TRUE
 expr_stmt|;
 comment|/* couldn't resolve tc */
+block|}
+elseif|else
 if|if
 condition|(
 name|iret
@@ -1878,11 +1901,13 @@ if|if
 condition|(
 name|tc_not_resolved
 condition|)
+block|{
 return|return
 operator|(
 name|TC_UNRESOLVED
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|current
@@ -2187,14 +2212,6 @@ name|TBUFSIZ
 value|(2048*2)
 end_define
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|tbuf
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * On entry, srcp points to a non ':' character which is the beginning of the  * token, if any.  We'll try to return a string that doesn't end with a ':'.  */
 end_comment
@@ -2475,6 +2492,9 @@ operator|*
 name|dst
 operator|++
 operator|=
+operator|(
+name|char
+operator|)
 name|ch
 expr_stmt|;
 block|}
@@ -2533,6 +2553,7 @@ name|dummy
 init|=
 name|NULL
 decl_stmt|;
+name|CGETENT_CONST
 name|char
 modifier|*
 modifier|*
@@ -2552,6 +2573,7 @@ name|PBUFSIZ
 index|]
 decl_stmt|;
 comment|/* holds raw path of filenames */
+name|CGETENT_CONST
 name|char
 modifier|*
 name|pathvec
@@ -2559,13 +2581,7 @@ index|[
 name|PVECSIZ
 index|]
 decl_stmt|;
-comment|/* to point to names in pathbuf */
-name|char
-modifier|*
-modifier|*
-name|pvec
-decl_stmt|;
-comment|/* holds usable tail of path vector */
+comment|/* point to names in pathbuf */
 name|NCURSES_CONST
 name|char
 modifier|*
@@ -2574,17 +2590,14 @@ decl_stmt|;
 name|string_desc
 name|desc
 decl_stmt|;
+operator|*
+name|lineno
+operator|=
+literal|1
+expr_stmt|;
 name|fname
 operator|=
 name|pathvec
-expr_stmt|;
-name|pvec
-operator|=
-name|pathvec
-expr_stmt|;
-name|tbuf
-operator|=
-name|bp
 expr_stmt|;
 name|p
 operator|=
@@ -2721,10 +2734,17 @@ literal|10
 condition|)
 block|{
 comment|/* setup path */
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|temp
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|)
 literal|"%s/"
 argument_list|,
 name|home
@@ -2733,11 +2753,16 @@ expr_stmt|;
 comment|/* $HOME first */
 block|}
 comment|/* if no $HOME look in current directory */
-name|strcat
+name|_nc_STRCAT
 argument_list|(
 name|temp
 argument_list|,
 literal|".termcap"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_nc_safe_strcat
@@ -2867,6 +2892,20 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* mark end of vector */
+if|#
+directive|if
+operator|!
+name|HAVE_BSD_CGETENT
+operator|(
+name|void
+operator|)
+name|_nc_cgetset
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|_nc_is_abs_path
@@ -2907,6 +2946,11 @@ name|name
 argument_list|)
 expr_stmt|;
 comment|/* ncurses' termcap-parsing routines cannot handle multiple adjacent      * empty fields, and mistakenly use the last valid cap entry instead of      * the first (breaks tc= includes)      */
+operator|*
+name|bp
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -3053,6 +3097,10 @@ name|pd
 argument_list|,
 name|tok
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|TBUFSIZ
 operator|-
 operator|(
@@ -3062,6 +3110,7 @@ name|pd
 operator|-
 name|bp
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3331,8 +3380,10 @@ index|]
 operator|=
 name|path
 expr_stmt|;
-name|T
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"Adding termpath %s"
 operator|,
@@ -3448,8 +3499,10 @@ specifier|static
 name|int
 name|lineno
 decl_stmt|;
-name|T
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"read termcap entry for %s"
 operator|,
@@ -3492,8 +3545,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|T
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"illegal or missing entry name '%s'"
 operator|,
@@ -3627,7 +3682,7 @@ name|tc
 argument_list|,
 name|FALSE
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|,
 name|NULLHOOK
 argument_list|)
@@ -3761,13 +3816,17 @@ name|use_buffer
 operator|=
 name|TRUE
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|tc_buf
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|tc_buf
+argument_list|)
+argument_list|)
 literal|"%.*s\n"
 argument_list|,
 operator|(
@@ -3903,23 +3962,26 @@ name|PATH_MAX
 condition|)
 block|{
 comment|/* user's .termcap, if any, should override it */
-operator|(
-name|void
-operator|)
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|envhome
 argument_list|,
 name|h
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|envhome
+argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
+name|_nc_SPRINTF
 argument_list|(
 name|pathbuf
 argument_list|,
+name|_nc_SLIMIT
+argument_list|(
+argument|sizeof(pathbuf)
+argument_list|)
 name|PRIVATE_CAP
 argument_list|,
 name|envhome
@@ -3975,18 +4037,16 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-operator|(
+operator|!
+name|S_ISREG
+argument_list|(
 name|test_stat
 index|[
 name|j
 index|]
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
-name|S_IFREG
+argument_list|)
 condition|)
 block|{
 name|omit
@@ -4054,8 +4114,10 @@ condition|(
 name|omit
 condition|)
 block|{
-name|T
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"Path %s is a duplicate"
 operator|,
@@ -4166,8 +4228,10 @@ name|i
 operator|++
 control|)
 block|{
-name|T
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"Looking for %s in %s"
 operator|,
@@ -4345,7 +4409,7 @@ name|ep
 operator|->
 name|tterm
 expr_stmt|;
-name|_nc_delink_entry
+name|_nc_free_entry
 argument_list|(
 name|_nc_head
 argument_list|,
@@ -4355,11 +4419,6 @@ name|ep
 operator|->
 name|tterm
 operator|)
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ep
 argument_list|)
 expr_stmt|;
 comment|/* 		 * OK, now try to write the type to user's terminfo directory.  		 * Next time he loads this, it will come through terminfo. 		 * 		 * Advantage:  Second and subsequent fetches of this entry will 		 * be very fast. 		 * 		 * Disadvantage:  After the first time a termcap type is loaded 		 * by its user, editing it in the /etc/termcap file, or in 		 * TERMCAP, or in a local ~/.termcap, will be ineffective 		 * unless the terminfo entry is explicitly removed. 		 */

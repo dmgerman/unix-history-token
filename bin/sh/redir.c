@@ -246,7 +246,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Process a list of redirection commands.  If the REDIR_PUSH flag is set,  * old file descriptors are stashed away so that the redirection can be  * undone by calling popredir.  If the REDIR_BACKQ flag is set, then the  * standard output, and the standard error if it becomes a duplicate of  * stdout, is saved in memory.  */
+comment|/*  * Process a list of redirection commands.  If the REDIR_PUSH flag is set,  * old file descriptors are stashed away so that the redirection can be  * undone by calling popredir.  If the REDIR_BACKQ flag is set, then the  * standard output, and the standard error if it becomes a duplicate of  * stdout, is saved in memory. *  * We suppress interrupts so that we won't leave open file  * descriptors around.  Because the signal handler remains  * installed and we do not use system call restart, interrupts  * will still abort blocking opens such as fifos (they will fail  * with EINTR). There is, however, a race condition if an interrupt  * arrives after INTOFF and before open blocks.  */
 end_comment
 
 begin_function
@@ -287,6 +287,8 @@ literal|10
 index|]
 decl_stmt|;
 comment|/* file descriptors to write to memory */
+name|INTOFF
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -526,6 +528,10 @@ argument_list|,
 name|memory
 argument_list|)
 expr_stmt|;
+name|INTON
+expr_stmt|;
+name|INTOFF
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -550,6 +556,8 @@ name|out2
 operator|=
 operator|&
 name|memout
+expr_stmt|;
+name|INTON
 expr_stmt|;
 block|}
 end_function
@@ -584,6 +592,7 @@ name|nfile
 operator|.
 name|fd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -594,9 +603,6 @@ decl_stmt|;
 name|int
 name|e
 decl_stmt|;
-comment|/* 	 * We suppress interrupts so that we won't leave open file 	 * descriptors around.  Because the signal handler remains 	 * installed and we do not use system call restart, interrupts 	 * will still abort blocking opens such as fifos (they will fail 	 * with EINTR). There is, however, a race condition if an interrupt 	 * arrives after INTOFF and before open blocks. 	 */
-name|INTOFF
-expr_stmt|;
 name|memory
 index|[
 name|fd
@@ -1105,8 +1111,6 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-name|INTON
-expr_stmt|;
 block|}
 end_function
 
@@ -1125,6 +1129,7 @@ modifier|*
 name|redir
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p

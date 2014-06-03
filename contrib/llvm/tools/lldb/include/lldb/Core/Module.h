@@ -232,10 +232,18 @@ comment|///
 comment|/// @param[in] target
 comment|///     The target in which to apply the section load addresses.
 comment|///
-comment|/// @param[in] offset
-comment|///     The offset to apply to all file addresses for all top
-comment|///     level sections in the object file as each section load
-comment|///     address is being set.
+comment|/// @param[in] value
+comment|///     if \a value_is_offset is true, then value is the offset to
+comment|///     apply to all file addresses for all top level sections in
+comment|///     the object file as each section load address is being set.
+comment|///     If \a value_is_offset is false, then "value" is the new
+comment|///     absolute base address for the image.
+comment|///
+comment|/// @param[in] value_is_offset
+comment|///     If \b true, then \a value is an offset to apply to each
+comment|///     file address of each top level section.
+comment|///     If \b false, then \a value is the image base address that
+comment|///     will be used to rigidly slide all loadable sections.
 comment|///
 comment|/// @param[out] changed
 comment|///     If any section load addresses were changed in \a target,
@@ -260,7 +268,10 @@ argument_list|,
 name|lldb
 operator|::
 name|addr_t
-name|offset
+name|value
+argument_list|,
+name|bool
+name|value_is_offset
 argument_list|,
 name|bool
 operator|&

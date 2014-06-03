@@ -46,7 +46,7 @@ directive|endif
 define|#
 directive|define
 name|LDNS_MAX_RDFLEN
-value|8192
+value|65535
 define|#
 directive|define
 name|LDNS_RDF_SIZE_BYTE
@@ -63,6 +63,10 @@ define|#
 directive|define
 name|LDNS_RDF_SIZE_6BYTES
 value|6
+define|#
+directive|define
+name|LDNS_RDF_SIZE_8BYTES
+value|8
 define|#
 directive|define
 name|LDNS_RDF_SIZE_16BYTES
@@ -138,7 +142,8 @@ block|,
 comment|/** tsig time 48 bits */
 name|LDNS_RDF_TYPE_TSIGTIME
 block|,
-name|LDNS_RDF_TYPE_TSIG
+comment|/** Represents the Public Key Algorithm, HIT and Public Key fields 	    for the HIP RR types.  A HIP specific rdf type is used because of 	    the unusual layout in wireformat (see RFC 5205 Section 5) */
+name|LDNS_RDF_TYPE_HIP
 block|,
 comment|/** variable length any type rdata where the length 	    is specified by the first 2 bytes */
 name|LDNS_RDF_TYPE_INT16_DATA
@@ -166,6 +171,26 @@ name|LDNS_RDF_TYPE_NSEC3_SALT
 block|,
 comment|/** nsec3 base32 string (with length byte on wire */
 name|LDNS_RDF_TYPE_NSEC3_NEXT_OWNER
+block|,
+comment|/** 4 shorts represented as 4 * 16 bit hex numbers 	 *  separated by colons. For NID and L64. 	 */
+name|LDNS_RDF_TYPE_ILNP64
+block|,
+comment|/** 6 * 8 bit hex numbers separated by dashes. For EUI48. */
+name|LDNS_RDF_TYPE_EUI48
+block|,
+comment|/** 8 * 8 bit hex numbers separated by dashes. For EUI64. */
+name|LDNS_RDF_TYPE_EUI64
+block|,
+comment|/** A non-zero sequence of US-ASCII letters and numbers in lower case. 	 *  For CAA. 	 */
+name|LDNS_RDF_TYPE_TAG
+block|,
+comment|/** A<character-string> encoding of the value field as specified  	 * [RFC1035], Section 5.1., encoded as remaining rdata. 	 * For CAA. 	 */
+name|LDNS_RDF_TYPE_LONG_STR
+block|,
+comment|/* Aliases */
+name|LDNS_RDF_TYPE_BITMAP
+init|=
+name|LDNS_RDF_TYPE_NSEC
 block|}
 enum|;
 typedef|typedef
@@ -576,6 +601,64 @@ specifier|const
 name|ldns_rdf
 modifier|*
 name|rd2
+parameter_list|)
+function_decl|;
+comment|/**  * Gets the algorithm value, the HIT and Public Key data from the rdf with  * type LDNS_RDF_TYPE_HIP.  * \param[in] rdf the rdf with type LDNS_RDF_TYPE_HIP  * \param[out] alg      the algorithm  * \param[out] hit_size the size of the HIT data  * \param[out] hit      the hit data  * \param[out] pk_size  the size of the Public Key data  * \param[out] pk       the  Public Key data  * \return LDNS_STATUS_OK on success, and the error otherwise  */
+name|ldns_status
+name|ldns_rdf_hip_get_alg_hit_pk
+parameter_list|(
+name|ldns_rdf
+modifier|*
+name|rdf
+parameter_list|,
+name|uint8_t
+modifier|*
+name|alg
+parameter_list|,
+name|uint8_t
+modifier|*
+name|hit_size
+parameter_list|,
+name|uint8_t
+modifier|*
+modifier|*
+name|hit
+parameter_list|,
+name|uint16_t
+modifier|*
+name|pk_size
+parameter_list|,
+name|uint8_t
+modifier|*
+modifier|*
+name|pk
+parameter_list|)
+function_decl|;
+comment|/**  * Creates a new LDNS_RDF_TYPE_HIP rdf from given data.  * \param[out] rdf      the newly created LDNS_RDF_TYPE_HIP rdf  * \param[in]  alg      the algorithm  * \param[in]  hit_size the size of the HIT data  * \param[in]  hit      the hit data  * \param[in]  pk_size  the size of the Public Key data  * \param[in]  pk       the  Public Key data  * \return LDNS_STATUS_OK on success, and the error otherwise  */
+name|ldns_status
+name|ldns_rdf_hip_new_frm_alg_hit_pk
+parameter_list|(
+name|ldns_rdf
+modifier|*
+modifier|*
+name|rdf
+parameter_list|,
+name|uint8_t
+name|alg
+parameter_list|,
+name|uint8_t
+name|hit_size
+parameter_list|,
+name|uint8_t
+modifier|*
+name|hit
+parameter_list|,
+name|uint16_t
+name|pk_size
+parameter_list|,
+name|uint8_t
+modifier|*
+name|pk
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -19712,26 +19712,6 @@ argument_list|,
 name|SC_STAT_CLR_IRQ
 argument_list|)
 expr_stmt|;
-comment|/* Clear TWSI IRQ. */
-if|if
-condition|(
-operator|(
-name|status
-operator|&
-name|Y2_IS_TWSI_RDY
-operator|)
-operator|!=
-literal|0
-condition|)
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|B2_I2C_IRQ
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* Reenable interrupts. */
 name|CSR_WRITE_4
 argument_list|(

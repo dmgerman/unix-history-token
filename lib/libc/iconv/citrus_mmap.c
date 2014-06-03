@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: citrus_mmap.c,v 1.3 2005/01/19 00:52:37 mycroft Exp $ */
+comment|/*	$NetBSD: citrus_mmap.c,v 1.4 2011/10/15 23:00:01 christos Exp $	*/
 end_comment
 
 begin_comment

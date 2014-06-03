@@ -63,6 +63,12 @@ end_struct
 
 begin_struct_decl
 struct_decl|struct
+name|bio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|mbuf
 struct_decl|;
 end_struct_decl
@@ -202,6 +208,23 @@ name|buf
 parameter_list|,
 name|size_t
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sglist_append_bio
+parameter_list|(
+name|struct
+name|sglist
+modifier|*
+name|sg
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bp
 parameter_list|)
 function_decl|;
 end_function_decl

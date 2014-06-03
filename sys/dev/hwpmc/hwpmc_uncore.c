@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicvar.h>
+file|<x86/apicvar.h>
 end_include
 
 begin_include
@@ -7768,10 +7768,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|uncore_cpu
 operator|*
-operator|*
+name|uncore_pcpu
 argument_list|)
 operator|*
 name|maxcpu

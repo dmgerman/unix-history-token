@@ -1775,7 +1775,9 @@ endif|#
 directive|endif
 while|while
 condition|(
-literal|1
+name|pc
+operator|->
+name|ismultiseg
 condition|)
 block|{
 name|off

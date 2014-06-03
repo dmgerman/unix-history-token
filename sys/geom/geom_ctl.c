@@ -228,7 +228,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Report an error back to the user in ascii format.  Return whatever copyout  * returned, or EINVAL if it succeeded.  */
+comment|/*  * Report an error back to the user in ascii format.  Return nerror  * or EINVAL if nerror isn't specified.  */
 end_comment
 
 begin_function
@@ -286,13 +286,6 @@ name|nerror
 operator|=
 name|EEXIST
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|req
-operator|->
-name|nerror
-condition|)
 return|return
 operator|(
 name|req
@@ -300,6 +293,20 @@ operator|->
 name|nerror
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|req
+operator|->
+name|nerror
+condition|)
+name|req
+operator|->
+name|nerror
+operator|=
+name|EINVAL
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -352,7 +359,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|req
+operator|->
+name|nerror
 operator|)
 return|;
 block|}
@@ -394,19 +403,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ptr
-operator|==
-name|NULL
-condition|)
-name|req
-operator|->
-name|nerror
-operator|=
-name|ENOMEM
-expr_stmt|;
-else|else
 name|req
 operator|->
 name|nerror
@@ -432,12 +428,6 @@ operator|(
 name|ptr
 operator|)
 return|;
-if|if
-condition|(
-name|ptr
-operator|!=
-name|NULL
-condition|)
 name|g_free
 argument_list|(
 name|ptr
@@ -462,11 +452,6 @@ modifier|*
 name|req
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|,
-name|i
-decl_stmt|;
 name|struct
 name|gctl_req_arg
 modifier|*
@@ -475,6 +460,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|ap
 operator|=
@@ -504,11 +492,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|gctl_error
+argument_list|(
 name|req
-operator|->
-name|nerror
-operator|=
-name|ENOMEM
+argument_list|,
+literal|"bad control request"
+argument_list|)
 expr_stmt|;
 name|req
 operator|->
@@ -569,10 +558,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -610,8 +595,6 @@ operator|>
 name|SPECNAMELEN
 condition|)
 block|{
-name|error
-operator|=
 name|gctl_error
 argument_list|(
 name|req
@@ -675,8 +658,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|error
-operator|=
 name|gctl_error
 argument_list|(
 name|req
@@ -721,8 +702,6 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|error
-operator|=
 name|gctl_error
 argument_list|(
 name|req
@@ -788,8 +767,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|error
-operator|=
 name|gctl_error
 argument_list|(
 name|req
@@ -951,6 +928,13 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|sbuf_delete
+argument_list|(
+name|req
+operator|->
+name|serror
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|req
@@ -1047,13 +1031,6 @@ operator|->
 name|arg
 argument_list|)
 expr_stmt|;
-name|sbuf_delete
-argument_list|(
-name|req
-operator|->
-name|serror
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1068,16 +1045,16 @@ modifier|*
 name|req
 parameter_list|)
 block|{
+name|struct
+name|gctl_req_arg
+modifier|*
+name|ap
+decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
 name|int
 name|j
-decl_stmt|;
-name|struct
-name|gctl_req_arg
-modifier|*
-name|ap
 decl_stmt|;
 name|printf
 argument_list|(
@@ -1128,6 +1105,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|req
+operator|->
+name|arg
+operator|==
+name|NULL
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -2363,13 +2349,6 @@ name|nerror
 operator|=
 literal|0
 expr_stmt|;
-name|req
-operator|->
-name|serror
-operator|=
-name|sbuf_new_auto
-argument_list|()
-expr_stmt|;
 comment|/* It is an error if we cannot return an error text */
 if|if
 condition|(
@@ -2405,6 +2384,13 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|req
+operator|->
+name|serror
+operator|=
+name|sbuf_new_auto
+argument_list|()
+expr_stmt|;
 comment|/* Check the version */
 if|if
 condition|(
@@ -2414,16 +2400,23 @@ name|version
 operator|!=
 name|GCTL_VERSION
 condition|)
-return|return
-operator|(
+block|{
 name|gctl_error
 argument_list|(
 name|req
 argument_list|,
 literal|"kernel and libgeom version mismatch."
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+name|req
+operator|->
+name|arg
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Get things on board */
 name|gctl_copyin
 argument_list|(
@@ -2466,6 +2459,7 @@ name|req
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|sbuf_done
@@ -2476,10 +2470,6 @@ name|serror
 argument_list|)
 condition|)
 block|{
-name|req
-operator|->
-name|nerror
-operator|=
 name|copyout
 argument_list|(
 name|sbuf_data

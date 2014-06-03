@@ -121,11 +121,9 @@ comment|///                   way than going back and forth with individual byte
 comment|///
 comment|/// @param address  - The address of the first byte, in the same space as
 comment|///                   getBase().
-comment|/// @param size     - The maximum number of bytes to copy.
+comment|/// @param size     - The number of bytes to copy.
 comment|/// @param buf      - A pointer to a buffer to be filled in.  Must be non-NULL
 comment|///                   and large enough to hold size bytes.
-comment|/// @param copied   - A pointer to a nunber that is filled in with the number
-comment|///                   of bytes actually read.  May be NULL.
 comment|/// @result         - 0 if successful; -1 if not.  Failure may be due to a
 comment|///                   bounds violation or an implementation-specific error.
 name|virtual
@@ -141,10 +139,6 @@ argument_list|,
 name|uint8_t
 operator|*
 name|buf
-argument_list|,
-name|uint64_t
-operator|*
-name|copied
 argument_list|)
 decl|const
 decl_stmt|;

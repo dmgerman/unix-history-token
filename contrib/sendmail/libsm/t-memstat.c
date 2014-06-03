@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005-2007 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2005-2007 Proofpoint, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: t-memstat.c,v 1.9 2007/03/14 21:41:09 ca Exp $"
+literal|"@(#)$Id: t-memstat.c,v 1.11 2013-11-22 20:51:43 ca Exp $"
 argument_list|)
 end_macro
 
@@ -249,6 +249,28 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|resource
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"strdup(%s) failed\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'s'

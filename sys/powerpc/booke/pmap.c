@@ -3429,7 +3429,7 @@ expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
 operator|&
-name|cnt
+name|vm_cnt
 operator|.
 name|v_wire_count
 argument_list|,
@@ -6514,7 +6514,7 @@ name|shpgperproc
 operator|*
 name|maxproc
 operator|+
-name|cnt
+name|vm_cnt
 operator|.
 name|v_page_count
 expr_stmt|;
@@ -9117,6 +9117,8 @@ name|addr
 decl_stmt|;
 name|vm_paddr_t
 name|pa
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|active

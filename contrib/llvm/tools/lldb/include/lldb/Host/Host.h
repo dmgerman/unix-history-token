@@ -546,6 +546,72 @@ comment|//------------------------------------------------------------------
 end_comment
 
 begin_comment
+comment|/// Gets the name of the distribution (i.e. distributor id).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// On Linux, this will return the equivalent of lsb_release -i.
+end_comment
+
+begin_comment
+comment|/// Android will return 'android'.  Other systems may return
+end_comment
+
+begin_comment
+comment|/// nothing.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @return
+end_comment
+
+begin_comment
+comment|///     A ConstString reference containing the OS distribution id.
+end_comment
+
+begin_comment
+comment|///     The return string will be all lower case, with whitespace
+end_comment
+
+begin_comment
+comment|///     replaced with underscores.  The return string will be
+end_comment
+
+begin_comment
+comment|///     empty (result.AsCString() will return NULL) if the distribution
+end_comment
+
+begin_comment
+comment|///     cannot be obtained.
+end_comment
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_function_decl
+specifier|static
+specifier|const
+name|ConstString
+modifier|&
+name|GetDistributionId
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|//------------------------------------------------------------------
+end_comment
+
+begin_comment
 comment|/// Get the process ID for the calling process.
 end_comment
 
@@ -1666,6 +1732,69 @@ name|proc_info
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|static
+name|short
+name|GetPosixspawnFlags
+parameter_list|(
+name|ProcessLaunchInfo
+modifier|&
+name|launch_info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|Error
+name|LaunchProcessPosixSpawn
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|exe_path
+argument_list|,
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
+argument_list|,
+operator|::
+name|pid_t
+operator|&
+name|pid
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 specifier|static

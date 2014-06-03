@@ -1690,20 +1690,6 @@ name|AliasedFlag
 range|:
 literal|1
 decl_stmt|;
-comment|/// ValueOfAtomicFlag - This is set to true if the slot is the value
-comment|/// subobject of an object the size of an _Atomic(T).  The specific
-comment|/// guarantees this makes are:
-comment|///   - the address is guaranteed to be a getelementptr into the
-comment|///     padding struct and
-comment|///   - it is okay to store something the width of an _Atomic(T)
-comment|///     into the address.
-comment|/// Tracking this allows us to avoid some obviously unnecessary
-comment|/// memcpys.
-name|bool
-name|ValueOfAtomicFlag
-range|:
-literal|1
-decl_stmt|;
 name|public
 label|:
 enum|enum
@@ -1736,14 +1722,6 @@ block|{
 name|DoesNotNeedGCBarriers
 block|,
 name|NeedsGCBarriers
-block|}
-enum|;
-enum|enum
-name|IsValueOfAtomic_t
-block|{
-name|IsNotValueOfAtomic
-block|,
-name|IsValueOfAtomic
 block|}
 enum|;
 comment|/// ignored - Returns an aggregate value slot indicating that the
@@ -1811,11 +1789,6 @@ name|IsZeroed_t
 name|isZeroed
 operator|=
 name|IsNotZeroed
-argument_list|,
-name|IsValueOfAtomic_t
-name|isValueOfAtomic
-operator|=
-name|IsNotValueOfAtomic
 argument_list|)
 block|{
 name|AggValueSlot
@@ -1866,12 +1839,6 @@ name|AliasedFlag
 operator|=
 name|isAliased
 expr_stmt|;
-name|AV
-operator|.
-name|ValueOfAtomicFlag
-operator|=
-name|isValueOfAtomic
-expr_stmt|;
 return|return
 name|AV
 return|;
@@ -1898,11 +1865,6 @@ name|IsZeroed_t
 name|isZeroed
 init|=
 name|IsNotZeroed
-parameter_list|,
-name|IsValueOfAtomic_t
-name|isValueOfAtomic
-init|=
-name|IsNotValueOfAtomic
 parameter_list|)
 block|{
 return|return
@@ -1930,8 +1892,6 @@ argument_list|,
 name|isAliased
 argument_list|,
 name|isZeroed
-argument_list|,
-name|isValueOfAtomic
 argument_list|)
 return|;
 block|}
@@ -2035,26 +1995,6 @@ return|return
 name|Addr
 return|;
 block|}
-name|IsValueOfAtomic_t
-name|isValueOfAtomic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsValueOfAtomic_t
-argument_list|(
-name|ValueOfAtomicFlag
-argument_list|)
-return|;
-block|}
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getPaddedAtomicAddr
-argument_list|()
-specifier|const
-expr_stmt|;
 name|bool
 name|isIgnored
 argument_list|()

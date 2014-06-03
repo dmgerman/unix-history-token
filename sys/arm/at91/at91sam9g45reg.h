@@ -927,14 +927,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AT91SAM9G45_OHCI_BASE
+name|AT91SAM9G45_OHCI_VA_BASE
 value|0xdfb00000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9G45_OHCI_PA_BASE
+name|AT91SAM9G45_OHCI_BASE
 value|0x00700000
 end_define
 
@@ -948,14 +948,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9G45_NAND_BASE
+name|AT91SAM9G45_NAND_VA_BASE
 value|0xe0000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9G45_NAND_PA_BASE
+name|AT91SAM9G45_NAND_BASE
 value|0x40000000
 end_define
 

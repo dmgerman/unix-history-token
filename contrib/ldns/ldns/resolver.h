@@ -280,6 +280,11 @@ name|char
 modifier|*
 name|_tsig_algorithm
 decl_stmt|;
+comment|/** Source address to query from */
+name|ldns_rdf
+modifier|*
+name|_source
+decl_stmt|;
 block|}
 struct|;
 typedef|typedef
@@ -292,6 +297,17 @@ comment|/* read access functions */
 comment|/**  * Get the port the resolver should use  * \param[in] r the resolver  * \return the port number  */
 name|uint16_t
 name|ldns_resolver_port
+parameter_list|(
+specifier|const
+name|ldns_resolver
+modifier|*
+name|r
+parameter_list|)
+function_decl|;
+comment|/**  * Get the source address the resolver should use  * \param[in] r the resolver  * \return the source rdf  */
+name|ldns_rdf
+modifier|*
+name|ldns_resolver_source
 parameter_list|(
 specifier|const
 name|ldns_resolver
@@ -606,6 +622,19 @@ name|uint16_t
 name|p
 parameter_list|)
 function_decl|;
+comment|/**  * Set the source rdf (address) the resolver should use  * \param[in] r the resolver  * \param[in] s the source address  */
+name|void
+name|ldns_resolver_set_source
+parameter_list|(
+name|ldns_resolver
+modifier|*
+name|r
+parameter_list|,
+name|ldns_rdf
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
 comment|/**  * Set the resolver recursion  * \param[in] r the resolver  * \param[in] b true: set to recurse, false: unset  */
 name|void
 name|ldns_resolver_set_recursive
@@ -823,7 +852,7 @@ name|bool
 name|fallback
 parameter_list|)
 function_decl|;
-comment|/**  * Set the resolver retry interval (in seconds)  * \param[in] r the resolver  * \param[in] re the retry interval  */
+comment|/**  * Set the number of times a resolver should retry a nameserver before the  * next one is tried.  * \param[in] r the resolver  * \param[in] re the number of retries  */
 name|void
 name|ldns_resolver_set_retry
 parameter_list|(
@@ -1026,6 +1055,34 @@ name|uint16_t
 name|flags
 parameter_list|)
 function_decl|;
+comment|/**  * Send the query for using the resolver and take the search list into account  * The search algorithm is as follows:  * If the name is absolute, try it as-is, otherwise apply the search list  * \param[out] pkt a packet with the reply from the nameserver  * \param[in] *r operate using this resolver  * \param[in] *rdf query for this name  * \param[in] t query for this type (may be 0, defaults to A)  * \param[in] c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  *  * \return ldns_status LDNS_STATUS_OK on success  */
+name|ldns_status
+name|ldns_resolver_search_status
+parameter_list|(
+name|ldns_pkt
+modifier|*
+modifier|*
+name|pkt
+parameter_list|,
+name|ldns_resolver
+modifier|*
+name|r
+parameter_list|,
+specifier|const
+name|ldns_rdf
+modifier|*
+name|rdf
+parameter_list|,
+name|ldns_rr_type
+name|t
+parameter_list|,
+name|ldns_rr_class
+name|c
+parameter_list|,
+name|uint16_t
+name|flags
+parameter_list|)
+function_decl|;
 comment|/**  * Form a query packet from a resolver and name/type/class combo  * \param[out] **q a pointer to a ldns_pkt pointer (initialized by this function)  * \param[in] *r operate using this resolver  * \param[in] *name query for this name  * \param[in] t query for this type (may be 0, defaults to A)  * \param[in] c query for this class (may be 0, default to IN)  * \param[in] f the query flags  *  * \return ldns_pkt* a packet with the reply from the nameserver  */
 name|ldns_status
 name|ldns_resolver_prepare_query_pkt
@@ -1100,7 +1157,35 @@ modifier|*
 name|query_pkt
 parameter_list|)
 function_decl|;
-comment|/**  * Send a query to a nameserver  * \param[in] *r operate using this resolver  * \param[in] *name query for this name  * \param[in] *t query for this type (may be 0, defaults to A)  * \param[in] *c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  *  * \return ldns_pkt* a packet with the reply from the nameserver  * if _defnames is true the default domain will be added  */
+comment|/**  * Send a query to a nameserver  * \param[out] pkt a packet with the reply from the nameserver  * \param[in] *r operate using this resolver  * \param[in] *name query for this name  * \param[in] *t query for this type (may be 0, defaults to A)  * \param[in] *c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  *  * \return ldns_status LDNS_STATUS_OK on success  * if _defnames is true the default domain will be added  */
+name|ldns_status
+name|ldns_resolver_query_status
+parameter_list|(
+name|ldns_pkt
+modifier|*
+modifier|*
+name|pkt
+parameter_list|,
+name|ldns_resolver
+modifier|*
+name|r
+parameter_list|,
+specifier|const
+name|ldns_rdf
+modifier|*
+name|name
+parameter_list|,
+name|ldns_rr_type
+name|t
+parameter_list|,
+name|ldns_rr_class
+name|c
+parameter_list|,
+name|uint16_t
+name|flags
+parameter_list|)
+function_decl|;
+comment|/**  * Send a query to a nameserver  * \param[in] *r operate using this resolver   *               (despite the const in the declaration,  *                the struct is altered as a side-effect)  * \param[in] *name query for this name  * \param[in] *t query for this type (may be 0, defaults to A)  * \param[in] *c query for this class (may be 0, default to IN)  * \param[in] flags the query flags  *  * \return ldns_pkt* a packet with the reply from the nameserver  * if _defnames is true the default domain will be added  */
 name|ldns_pkt
 modifier|*
 name|ldns_resolver_query
@@ -1202,6 +1287,15 @@ comment|/**  * Get the next stream of RRs in a AXFR  * \param[in] resolver the r
 name|ldns_rr
 modifier|*
 name|ldns_axfr_next
+parameter_list|(
+name|ldns_resolver
+modifier|*
+name|resolver
+parameter_list|)
+function_decl|;
+comment|/**  * Abort a transfer that is in progress  * \param[in] resolver the resolver that is used  */
+name|void
+name|ldns_axfr_abort
 parameter_list|(
 name|ldns_resolver
 modifier|*

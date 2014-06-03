@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998-2007,2008 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,9 +20,15 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: trace_buf.c,v 1.14 2008/08/03 15:13:56 tom Exp $"
+literal|"$Id: trace_buf.c,v 1.20 2012/02/22 22:34:31 tom Exp $"
 argument_list|)
 end_macro
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TRACE
+end_ifdef
 
 begin_define
 define|#
@@ -81,11 +87,14 @@ block|{
 name|size_t
 name|need
 init|=
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|bufnum
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 literal|2
 decl_stmt|;
@@ -355,6 +364,9 @@ name|_nc_trace_alloc
 argument_list|(
 name|bufnum
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|0
 argument_list|)
 decl_stmt|;
@@ -373,6 +385,16 @@ argument_list|(
 name|buffer
 argument_list|)
 decl_stmt|;
+name|size_t
+name|need
+init|=
+name|strlen
+argument_list|(
+name|value
+argument_list|)
+operator|+
+name|have
+decl_stmt|;
 name|buffer
 operator|=
 name|_nc_trace_alloc
@@ -381,12 +403,7 @@ name|bufnum
 argument_list|,
 literal|1
 operator|+
-name|have
-operator|+
-name|strlen
-argument_list|(
-name|value
-argument_list|)
+name|need
 argument_list|)
 expr_stmt|;
 if|if
@@ -395,16 +412,15 @@ name|buffer
 operator|!=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|strcpy
+name|_nc_STRCPY
 argument_list|(
 name|buffer
 operator|+
 name|have
 argument_list|,
 name|value
+argument_list|,
+name|need
 argument_list|)
 expr_stmt|;
 block|}
@@ -413,6 +429,27 @@ name|buffer
 return|;
 block|}
 end_block
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|EMPTY_MODULE
+argument_list|(
+argument|_nc_empty_trace_buf
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TRACE */
+end_comment
 
 end_unit
 
