@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -26232,8 +26232,18 @@ return|return;
 block|}
 name|now
 operator|=
+name|mstate
+operator|.
+name|dtms_timestamp
+operator|=
 name|dtrace_gethrtime
 argument_list|()
+expr_stmt|;
+name|mstate
+operator|.
+name|dtms_present
+operator||=
+name|DTRACE_MSTATE_TIMESTAMP
 expr_stmt|;
 name|vtime
 operator|=
