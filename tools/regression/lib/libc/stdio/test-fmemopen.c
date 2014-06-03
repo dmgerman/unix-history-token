@@ -1024,7 +1024,10 @@ argument_list|(
 name|fp
 argument_list|)
 operator|==
-literal|5
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1040,7 +1043,7 @@ name|void
 name|test_size_0
 parameter_list|()
 block|{
-comment|/* 	 * POSIX mandates that we return EINVAL if size is 0 	 */
+comment|/* 	 * POSIX mandates that we return EINVAL if size is 0. 	 */
 name|FILE
 modifier|*
 name|fp
