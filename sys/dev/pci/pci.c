@@ -19262,6 +19262,16 @@ literal|"SD host controller"
 block|}
 block|,
 block|{
+name|PCIC_BASEPERIPH
+block|,
+name|PCIS_BASEPERIPH_IOMMU
+block|,
+literal|1
+block|,
+literal|"IOMMU"
+block|}
+block|,
+block|{
 name|PCIC_INPUTDEV
 block|,
 operator|-
