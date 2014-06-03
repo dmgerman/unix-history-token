@@ -4298,7 +4298,7 @@ name|tqs
 operator|->
 name|stqs_taskq
 index|[
-name|gethrtime
+name|cpu_ticks
 argument_list|()
 operator|%
 name|tqs
