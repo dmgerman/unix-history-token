@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2004, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2004, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -467,8 +467,6 @@ literal|"__vtrace_"
 block|,
 operator|&
 name|vtrace_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -479,7 +477,7 @@ block|,
 operator|&
 name|info_attr
 block|,
-literal|0
+name|DTRACE_PRIV_USER
 block|}
 block|,
 block|{
@@ -490,7 +488,7 @@ block|,
 operator|&
 name|info_attr
 block|,
-literal|0
+name|DTRACE_PRIV_USER
 block|}
 block|,
 block|{
@@ -500,8 +498,6 @@ literal|"__fpuinfo_"
 block|,
 operator|&
 name|fpu_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -512,7 +508,7 @@ block|,
 operator|&
 name|stab_attr
 block|,
-literal|0
+name|DTRACE_PRIV_USER
 block|}
 block|,
 block|{
@@ -523,7 +519,7 @@ block|,
 operator|&
 name|stab_attr
 block|,
-literal|0
+name|DTRACE_PRIV_USER
 block|}
 block|,
 block|{
@@ -533,8 +529,6 @@ literal|"__io_"
 block|,
 operator|&
 name|stab_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -544,8 +538,6 @@ literal|"__ip_"
 block|,
 operator|&
 name|stab_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -555,8 +547,6 @@ literal|"__tcp_"
 block|,
 operator|&
 name|stab_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -566,8 +556,6 @@ literal|"__udp_"
 block|,
 operator|&
 name|stab_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -577,8 +565,6 @@ literal|"__mib_"
 block|,
 operator|&
 name|stab_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -588,8 +574,6 @@ literal|"__fsinfo_"
 block|,
 operator|&
 name|fsinfo_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -599,8 +583,6 @@ literal|"__iscsi_"
 block|,
 operator|&
 name|iscsi_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -610,8 +592,6 @@ literal|"__nfsv3_"
 block|,
 operator|&
 name|stab_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -621,8 +601,6 @@ literal|"__nfsv4_"
 block|,
 operator|&
 name|stab_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -632,8 +610,6 @@ literal|"__xpv_"
 block|,
 operator|&
 name|xpv_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -643,8 +619,6 @@ literal|"__fc_"
 block|,
 operator|&
 name|fc_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -654,8 +628,6 @@ literal|"__srp_"
 block|,
 operator|&
 name|fc_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -665,8 +637,6 @@ literal|"__sysevent_"
 block|,
 operator|&
 name|stab_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -676,8 +646,6 @@ name|NULL
 block|,
 operator|&
 name|sdt_attr
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -10009,6 +9977,39 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_function
+name|int
+name|sdt_mode
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|dtrace_id_t
+name|id
+parameter_list|,
+name|void
+modifier|*
+name|parg
+parameter_list|)
+block|{
+comment|/* 	 * We tell DTrace that we're in kernel mode, that the firing needs to 	 * be dropped for anything that doesn't have necessary privileges, and 	 * that it needs to be restricted for anything that has restricted 	 * (i.e., not all-zone) privileges. 	 */
+return|return
+operator|(
+name|DTRACE_MODE_KERNEL
+operator||
+name|DTRACE_MODE_NOPRIV_DROP
+operator||
+name|DTRACE_MODE_LIMITEDPRIV_RESTRICT
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*ARGSUSED*/
