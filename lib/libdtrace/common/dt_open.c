@@ -310,15 +310,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_11
+value|DT_VERSION_NUMBER(1, 11, 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_10
+value|DT_VERS_1_11
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.10"
+value|"Sun D 1.11"
 end_define
 
 begin_decl_stmt
@@ -388,6 +395,9 @@ comment|/* D API 1.9.1 */
 name|DT_VERS_1_10
 block|,
 comment|/* D API 1.10 */
+name|DT_VERS_1_11
+block|,
+comment|/* D API 1.11 */
 literal|0
 block|}
 decl_stmt|;
@@ -1400,6 +1410,25 @@ literal|"uint_t"
 block|}
 block|,
 block|{
+literal|"json"
+block|,
+name|DT_IDENT_FUNC
+block|,
+literal|0
+block|,
+name|DIF_SUBR_JSON
+block|,
+name|DT_ATTR_STABCMN
+block|,
+name|DT_VERS_1_11
+block|,
+operator|&
+name|dt_idops_func
+block|,
+literal|"string(const char *, const char *)"
+block|}
+block|,
+block|{
 literal|"jstack"
 block|,
 name|DT_IDENT_ACTFUNC
@@ -2328,6 +2357,25 @@ operator|&
 name|dt_idops_func
 block|,
 literal|"string(const char *, const char *)"
+block|}
+block|,
+block|{
+literal|"strtoll"
+block|,
+name|DT_IDENT_FUNC
+block|,
+literal|0
+block|,
+name|DIF_SUBR_STRTOLL
+block|,
+name|DT_ATTR_STABCMN
+block|,
+name|DT_VERS_1_11
+block|,
+operator|&
+name|dt_idops_func
+block|,
+literal|"int64_t(const char *, [int])"
 block|}
 block|,
 block|{
