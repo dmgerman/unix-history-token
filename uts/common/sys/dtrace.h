@@ -1037,8 +1037,16 @@ name|DIF_SUBR_GETF
 value|46
 define|#
 directive|define
+name|DIF_SUBR_JSON
+value|47
+define|#
+directive|define
+name|DIF_SUBR_STRTOLL
+value|48
+define|#
+directive|define
 name|DIF_SUBR_MAX
-value|46
+value|48
 comment|/* max subroutine value */
 typedef|typedef
 name|uint32_t
