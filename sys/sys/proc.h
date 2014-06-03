@@ -5740,6 +5740,17 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_EXECVMSPC
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Execve destroyed old vmspace */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
