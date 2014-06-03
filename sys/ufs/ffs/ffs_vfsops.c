@@ -9494,7 +9494,7 @@ operator|&&
 operator|(
 name|fs
 operator|->
-name|fs_flags
+name|fs_old_flags
 operator|&
 name|FS_FLAGS_UPDATED
 operator|)
@@ -9541,7 +9541,7 @@ operator|&&
 operator|(
 name|fs
 operator|->
-name|fs_flags
+name|fs_old_flags
 operator|&
 name|FS_FLAGS_UPDATED
 operator|)
