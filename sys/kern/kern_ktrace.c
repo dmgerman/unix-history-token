@@ -340,6 +340,9 @@ comment|/* KTR_PROCCTOR */
 literal|0
 block|,
 comment|/* KTR_PROCDTOR */
+literal|0
+block|,
+comment|/* unused */
 sizeof|sizeof
 argument_list|(
 expr|struct
