@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -303,15 +303,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_10
+value|DT_VERSION_NUMBER(1, 10, 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_9_1
+value|DT_VERS_1_10
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.9.1"
+value|"Sun D 1.10"
 end_define
 
 begin_decl_stmt
@@ -378,6 +385,9 @@ comment|/* D API 1.9 */
 name|DT_VERS_1_9_1
 block|,
 comment|/* D API 1.9.1 */
+name|DT_VERS_1_10
+block|,
+comment|/* D API 1.10 */
 literal|0
 block|}
 decl_stmt|;
@@ -1235,6 +1245,25 @@ operator|&
 name|dt_idops_func
 block|,
 literal|"uint16_t(uint16_t)"
+block|}
+block|,
+block|{
+literal|"getf"
+block|,
+name|DT_IDENT_FUNC
+block|,
+literal|0
+block|,
+name|DIF_SUBR_GETF
+block|,
+name|DT_ATTR_STABCMN
+block|,
+name|DT_VERS_1_10
+block|,
+operator|&
+name|dt_idops_func
+block|,
+literal|"file_t *(int)"
 block|}
 block|,
 block|{
