@@ -89,6 +89,15 @@ index|[
 name|SVM_MSR_BITMAP_SIZE
 index|]
 decl_stmt|;
+name|uint8_t
+name|apic_page
+index|[
+name|VM_MAXCPU
+index|]
+index|[
+name|PAGE_SIZE
+index|]
+decl_stmt|;
 comment|/* Nested Paging */
 name|vm_offset_t
 name|nptp

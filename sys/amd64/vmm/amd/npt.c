@@ -161,6 +161,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|NPT_IPIMASK
+value|0xFF
+end_define
+
 begin_comment
 comment|/*  * AMD nested page table init.  */
 end_comment
@@ -169,7 +176,8 @@ begin_function
 name|int
 name|svm_npt_init
 parameter_list|(
-name|void
+name|int
+name|ipinum
 parameter_list|)
 block|{
 name|int
@@ -177,6 +185,12 @@ name|enable_superpage
 init|=
 literal|1
 decl_stmt|;
+name|npt_flags
+operator|=
+name|ipinum
+operator|&
+name|NPT_IPIMASK
+expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"hw.vmm.npt.enable_superpage"

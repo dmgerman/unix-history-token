@@ -954,7 +954,7 @@ modifier|*
 name|ctrl
 parameter_list|,
 name|int
-name|type
+name|intr_type
 parameter_list|,
 name|int
 name|vector
@@ -966,48 +966,6 @@ name|bool
 name|ec_valid
 parameter_list|)
 block|{
-name|int
-name|intr_type
-decl_stmt|;
-specifier|static
-name|uint8_t
-name|svm_intr_type_map
-index|[
-name|VM_EVENT_MAX
-index|]
-init|=
-block|{
-operator|-
-literal|1
-block|,
-comment|/* VM_EVENT_NONE */
-name|VMCB_EVENTINJ_TYPE_INTR
-block|,
-comment|/* VM_HW_INTR */
-name|VMCB_EVENTINJ_TYPE_NMI
-block|,
-comment|/* VM_NMI */
-name|VMCB_EVENTINJ_TYPE_EXCEPTION
-block|,
-comment|/* VM_HW_EXCEPTION */
-name|VMCB_EVENTINJ_TYPE_INTn
-block|,
-comment|/* VM_SW_INTR, INT */
-name|VMCB_EVENTINJ_TYPE_INTn
-block|,
-comment|/* VM_PRIV_SW_EXCEPTION */
-name|VMCB_EVENTINJ_TYPE_INTn
-block|,
-comment|/* VM_SW_EXCEPTION */
-block|}
-decl_stmt|;
-name|intr_type
-operator|=
-name|svm_intr_type_map
-index|[
-name|type
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|intr_type
@@ -1023,7 +981,7 @@ name|ERR
 argument_list|(
 literal|"Event:%d is not supported by SVM.\n"
 argument_list|,
-name|type
+name|intr_type
 argument_list|)
 expr_stmt|;
 return|return
