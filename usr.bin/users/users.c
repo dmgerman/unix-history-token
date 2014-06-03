@@ -132,9 +132,13 @@ name|ut_user
 typedef|) + 1];
 end_typedef
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|int
+function_decl|(
+modifier|*
 name|scmp
+function_decl|)
 parameter_list|(
 specifier|const
 name|void
@@ -145,7 +149,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
 
 begin_function_decl
 specifier|static
@@ -342,10 +346,14 @@ name|ncnt
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|namebuf
+operator|*
+name|names
 argument_list|)
 argument_list|,
+operator|(
 name|scmp
+operator|)
+name|strcmp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -434,34 +442,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|int
-name|scmp
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|p
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|q
-parameter_list|)
-block|{
-return|return
-operator|(
-name|strcmp
-argument_list|(
-name|p
-argument_list|,
-name|q
-argument_list|)
-operator|)
-return|;
 block|}
 end_function
 
