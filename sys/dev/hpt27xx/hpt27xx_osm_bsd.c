@@ -7271,6 +7271,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -7308,6 +7314,12 @@ block|{
 name|xpt_free_ccb
 argument_list|(
 name|ccb
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
