@@ -2217,7 +2217,7 @@ operator|)
 operator|&
 name|DT_NF_SIGNED
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 return|return;
