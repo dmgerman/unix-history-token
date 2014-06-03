@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -3587,6 +3587,8 @@ argument_list|,
 name|dsp
 operator|->
 name|ds_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3736,6 +3738,12 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
+name|tip
+operator|->
+name|dtt_flags
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Based on our current #include depth and decl stack depth, determine 	 * which dynamic CTF module and scope to use when adding any new types. 	 */
 name|dmp
 operator|=
@@ -3762,6 +3770,20 @@ condition|?
 name|CTF_ADD_NONROOT
 else|:
 name|CTF_ADD_ROOT
+expr_stmt|;
+if|if
+condition|(
+name|ddp
+operator|->
+name|dd_attr
+operator|&
+name|DT_DA_USER
+condition|)
+name|tip
+operator|->
+name|dtt_flags
+operator|=
+name|DTT_FL_USER
 expr_stmt|;
 comment|/* 	 * If we have already cached a CTF type for this decl, then we just 	 * return the type information for the cached type. 	 */
 if|if

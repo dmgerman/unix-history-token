@@ -452,6 +452,26 @@ modifier|*
 name|dm_extern
 decl_stmt|;
 comment|/* external symbol definitions */
+name|pid_t
+name|dm_pid
+decl_stmt|;
+comment|/* pid for this module */
+name|uint_t
+name|dm_nctflibs
+decl_stmt|;
+comment|/* number of ctf children libraries */
+name|ctf_file_t
+modifier|*
+modifier|*
+name|dm_libctfp
+decl_stmt|;
+comment|/* process library ctf pointers */
+name|char
+modifier|*
+modifier|*
+name|dm_libctfn
+decl_stmt|;
+comment|/* names of process ctf containers */
 block|}
 name|dt_module_t
 typedef|;
@@ -1826,7 +1846,10 @@ name|EDT_ENABLING_ERR
 block|,
 comment|/* failed to enable probe */
 name|EDT_NOPROBES
+block|,
 comment|/* no probes sites for declared provider */
+name|EDT_CANTLOAD
+comment|/* failed to load a module */
 block|}
 enum|;
 comment|/*  * Interfaces for parsing and comparing DTrace attribute tuples, which describe  * stability and architectural binding information.  The dtrace_attribute_t  * structure and associated constant definitions are found in<sys/dtrace.h>.  */

@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2004 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_DT_MODULE_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -116,6 +113,17 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
+name|int
+name|dt_module_hasctf
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|,
+name|dt_module_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
 name|ctf_file_t
 modifier|*
 name|dt_module_getctf
@@ -154,6 +162,37 @@ modifier|*
 name|dt_module_modelname
 parameter_list|(
 name|dt_module_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|dt_module_getlibid
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|,
+name|dt_module_t
+modifier|*
+parameter_list|,
+specifier|const
+name|ctf_file_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|ctf_file_t
+modifier|*
+name|dt_module_getctflib
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|,
+name|dt_module_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
