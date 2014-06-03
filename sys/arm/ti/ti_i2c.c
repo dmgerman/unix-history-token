@@ -2340,6 +2340,8 @@ name|i
 index|]
 operator|.
 name|slave
+operator|>>
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* perform the read or write */

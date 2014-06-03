@@ -1904,6 +1904,8 @@ name|i
 index|]
 operator|.
 name|slave
+operator|>>
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Write the data length. */
