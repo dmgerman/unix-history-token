@@ -1425,6 +1425,27 @@ name|DTRACE_A_ANONYMOUS
 value|0x0004
 define|#
 directive|define
+name|DTRACE_A_TOTAL
+value|0x0008
+define|#
+directive|define
+name|DTRACE_A_MINMAXBIN
+value|0x0010
+define|#
+directive|define
+name|DTRACE_A_HASNEGATIVES
+value|0x0020
+define|#
+directive|define
+name|DTRACE_A_HASPOSITIVES
+value|0x0040
+define|#
+directive|define
+name|DTRACE_AGGZOOM_MAX
+value|0.95
+comment|/* height of max bar */
+define|#
+directive|define
 name|DTRACE_AGGWALK_ERROR
 value|-1
 comment|/* error while processing */
@@ -1507,6 +1528,22 @@ modifier|*
 name|dtada_percpu_delta
 decl_stmt|;
 comment|/* per CPU delta, if avail */
+name|int64_t
+name|dtada_total
+decl_stmt|;
+comment|/* per agg total, if avail */
+name|uint16_t
+name|dtada_minbin
+decl_stmt|;
+comment|/* minimum bin, if avail */
+name|uint16_t
+name|dtada_maxbin
+decl_stmt|;
+comment|/* maximum bin, if avail */
+name|uint32_t
+name|dtada_flags
+decl_stmt|;
+comment|/* flags */
 block|}
 struct|;
 typedef|typedef
