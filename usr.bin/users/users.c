@@ -302,9 +302,6 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
-operator|(
-name|void
-operator|)
 name|strlcpy
 argument_list|(
 name|names
@@ -351,9 +348,6 @@ argument_list|,
 name|scmp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%s"
@@ -396,9 +390,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %s"
@@ -409,9 +400,6 @@ name|cnt
 index|]
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -434,9 +422,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
