@@ -1252,6 +1252,11 @@ value|0x20
 comment|/* Disable mouse events processing. */
 define|#
 directive|define
+name|VWF_READY
+value|0x40
+comment|/* Window fully initialized. */
+define|#
+directive|define
 name|VWF_SWWAIT_REL
 value|0x10000
 comment|/* Program wait for VT acquire is done. */
