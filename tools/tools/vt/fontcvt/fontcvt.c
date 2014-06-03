@@ -318,7 +318,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: fontcvt [-w width] [-h height] normal.bdf bold.bdf out.fnt\n"
+literal|"usage: fontcvt [-w width] [-h height] normal.bdf [bold.bdf] out.fnt\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2017,7 +2017,11 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|!=
+operator|<
+literal|2
+operator|||
+name|argc
+operator|>
 literal|3
 condition|)
 name|usage
@@ -2051,13 +2055,26 @@ operator|(
 literal|1
 operator|)
 return|;
+name|argc
+operator|--
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+condition|)
+block|{
 if|if
 condition|(
 name|parse_bdf
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|VFNT_MAP_BOLD
@@ -2070,6 +2087,13 @@ operator|(
 literal|1
 operator|)
 return|;
+name|argc
+operator|--
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+block|}
 name|number_glyphs
 argument_list|()
 expr_stmt|;
@@ -2099,7 +2123,7 @@ name|write_fnt
 argument_list|(
 name|argv
 index|[
-literal|2
+literal|0
 index|]
 argument_list|)
 operator|!=
