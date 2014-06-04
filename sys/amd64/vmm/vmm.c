@@ -1200,6 +1200,13 @@ case|:
 name|vmmdev_init
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ppt_avail_devices
+argument_list|()
+operator|>
+literal|0
+condition|)
 name|iommu_init
 argument_list|()
 expr_stmt|;
@@ -2697,7 +2704,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|ppt_num_devices
+name|ppt_assigned_devices
 argument_list|(
 name|vm
 argument_list|)
@@ -2752,7 +2759,7 @@ decl_stmt|;
 comment|/* 	 * Virtual machines with pci passthru devices get special treatment: 	 * - the guest physical memory is wired 	 * - the iommu is programmed to do the 'gpa' to 'hpa' translation 	 * 	 * We need to do this before the first pci passthru device is attached. 	 */
 if|if
 condition|(
-name|ppt_num_devices
+name|ppt_assigned_devices
 argument_list|(
 name|vm
 argument_list|)
