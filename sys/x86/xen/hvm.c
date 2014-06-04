@@ -240,11 +240,6 @@ name|xen_cpustophard_handler
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -268,6 +263,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -398,6 +398,12 @@ name|XEN_NATIVE
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|cpu_ops
@@ -421,6 +427,11 @@ name|xen_hvm_cpu_resume
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 specifier|static
@@ -2083,10 +2094,15 @@ return|return;
 name|setup_xen_features
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 name|cpu_ops
 operator|=
 name|xen_hvm_cpu_ops
 expr_stmt|;
+endif|#
+directive|endif
 name|vm_guest
 operator|=
 name|VM_GUEST_XEN
