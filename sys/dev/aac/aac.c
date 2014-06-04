@@ -6686,6 +6686,12 @@ expr_stmt|;
 comment|/* (re)initialize the command/FIB */
 name|cm
 operator|->
+name|cm_datalen
+operator|=
+literal|0
+expr_stmt|;
+name|cm
+operator|->
 name|cm_sgtable
 operator|=
 name|NULL
