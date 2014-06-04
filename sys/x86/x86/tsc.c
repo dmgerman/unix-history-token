@@ -1717,7 +1717,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|static void								\ tsc_read_##x(void *arg)							\ {									\ 	uint32_t *tsc = arg;						\ 	u_int cpu = PCPU_GET(cpuid);					\ 									\ 	__asm __volatile("cpuid" : : : "eax", "ebx", "ecx", "edx");	\ 	tsc[cpu * 3 + x] = rdtsc32();					\ }
+value|static void								\ tsc_read_##x(void *arg)							\ {									\ 	uint64_t *tsc = arg;						\ 	u_int cpu = PCPU_GET(cpuid);					\ 									\ 	__asm __volatile("cpuid" : : : "eax", "ebx", "ecx", "edx");	\ 	tsc[cpu * 3 + x] = rdtsc();					\ }
 end_define
 
 begin_macro
@@ -1764,11 +1764,11 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|uint32_t
+name|uint64_t
 modifier|*
 name|tsc
 decl_stmt|;
-name|int32_t
+name|int64_t
 name|d1
 decl_stmt|,
 name|d2
@@ -2160,7 +2160,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|uint32_t
+name|uint64_t
 modifier|*
 name|data
 decl_stmt|,
