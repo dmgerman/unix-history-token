@@ -2964,21 +2964,13 @@ enum|enum
 block|{
 name|RSU_BULK_RX
 block|,
-name|RSU_BULK_TX_BE
+name|RSU_BULK_TX_BE_BK
 block|,
-comment|/* = WME_AC_BE */
-name|RSU_BULK_TX_BK
+comment|/* = WME_AC_BE/BK */
+name|RSU_BULK_TX_VI_VO
 block|,
-comment|/* = WME_AC_BK */
-name|RSU_BULK_TX_VI
-block|,
-comment|/* = WME_AC_VI */
-name|RSU_BULK_TX_VO
-block|,
-comment|/* = WME_AC_VI */
+comment|/* = WME_AC_VI/VO */
 name|RSU_N_TRANSFER
-init|=
-literal|5
 block|, }
 enum|;
 end_enum
@@ -3089,13 +3081,6 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|mtx_assert(&(sc)->sc_mtx, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RSU_MAX_TX_EP
-value|4
 end_define
 
 begin_struct
@@ -3225,7 +3210,7 @@ argument|rsu_data
 argument_list|)
 name|sc_tx_active
 index|[
-name|RSU_MAX_TX_EP
+name|RSU_N_TRANSFER
 index|]
 expr_stmt|;
 name|STAILQ_HEAD
@@ -3242,7 +3227,7 @@ argument|rsu_data
 argument_list|)
 name|sc_tx_pending
 index|[
-name|RSU_MAX_TX_EP
+name|RSU_N_TRANSFER
 index|]
 expr_stmt|;
 union|union
