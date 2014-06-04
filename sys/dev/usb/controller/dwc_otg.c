@@ -13332,7 +13332,7 @@ operator|)
 operator||
 name|HCCHAR_CHENA
 expr_stmt|;
-comment|/* XXX stability hack - possible HW issue */
+comment|/* 		 * XXX stability hack - possible HW issue 		 * 		 * Disable workaround when using a transaction 		 * translator, hence some TTs reject control endpoint 		 * traffic using BULK endpoint type: 		 */
 if|if
 condition|(
 name|td
@@ -13340,7 +13340,30 @@ operator|->
 name|ep_type
 operator|==
 name|UE_CONTROL
+operator|&&
+operator|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|udev
+operator|->
+name|speed
+operator|==
+name|USB_SPEED_HIGH
+operator|||
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|udev
+operator|->
+name|parent_hs_hub
+operator|==
+name|NULL
+operator|)
 condition|)
+block|{
 name|hcchar
 operator||=
 operator|(
@@ -13349,7 +13372,9 @@ operator|<<
 name|HCCHAR_EPTYPE_SHIFT
 operator|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|hcchar
 operator||=
 operator|(
@@ -13360,6 +13385,7 @@ operator|<<
 name|HCCHAR_EPTYPE_SHIFT
 operator|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|usbd_get_speed
