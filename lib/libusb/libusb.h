@@ -31,6 +31,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|LIBUSB_CALL
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
