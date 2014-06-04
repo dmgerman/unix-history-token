@@ -16117,6 +16117,9 @@ block|{
 case|case
 name|PMC_CPU_INTEL_COREI7
 case|:
+case|case
+name|PMC_CPU_INTEL_NEHALEM_EX
+case|:
 if|if
 condition|(
 name|iap_event_corei7_ok_on_counter
@@ -16168,6 +16171,9 @@ return|;
 break|break;
 case|case
 name|PMC_CPU_INTEL_WESTMERE
+case|:
+case|case
+name|PMC_CPU_INTEL_WESTMERE_EX
 case|:
 if|if
 condition|(
@@ -16663,6 +16669,14 @@ operator|||
 name|core_cputype
 operator|==
 name|PMC_CPU_INTEL_WESTMERE
+operator|||
+name|core_cputype
+operator|==
+name|PMC_CPU_INTEL_NEHALEM_EX
+operator|||
+name|core_cputype
+operator|==
+name|PMC_CPU_INTEL_WESTMERE_EX
 operator|)
 operator|&&
 name|a
