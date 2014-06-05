@@ -1067,6 +1067,8 @@ operator|=
 name|PIM_NOBUSRESET
 operator||
 name|PIM_SEQSCAN
+operator||
+name|PIM_UNMAPPED
 expr_stmt|;
 name|cpi
 operator|->
