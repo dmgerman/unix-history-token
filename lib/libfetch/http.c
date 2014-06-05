@@ -8290,7 +8290,11 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+comment|/* no User-Agent if defined but empty */
+if|if
+condition|(
 operator|*
 name|p
 operator|!=
@@ -8305,7 +8309,10 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+comment|/* default User-Agent */
 name|http_cmd
 argument_list|(
 name|conn
@@ -8317,6 +8324,7 @@ name|getprogname
 argument_list|()
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|url
