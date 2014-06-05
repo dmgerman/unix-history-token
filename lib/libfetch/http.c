@@ -5206,7 +5206,6 @@ name|j
 index|]
 expr_stmt|;
 block|}
-empty_stmt|;
 name|Hex
 index|[
 name|HASHHEXLEN
@@ -5427,7 +5426,6 @@ name|Md5Ctx
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|CvtHex
 argument_list|(
 name|HA1
@@ -5588,7 +5586,6 @@ name|HASHHEXLEN
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|MD5Final
 argument_list|(
 name|HA2
@@ -5730,7 +5727,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|MD5Update
 argument_list|(
 operator|&
