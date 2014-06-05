@@ -286,6 +286,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|mptramp_end
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|platform_mp_start_ap
@@ -359,7 +368,7 @@ operator|(
 name|uint32_t
 operator|*
 operator|)
-name|mpentry
+name|mptramp_end
 condition|;
 name|src
 operator|++
