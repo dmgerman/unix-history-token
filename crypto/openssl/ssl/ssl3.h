@@ -828,6 +828,10 @@ define|#
 directive|define
 name|SSL3_FLAGS_SGC_RESTART_DONE
 value|0x0040
+define|#
+directive|define
+name|SSL3_FLAGS_CCS_OK
+value|0x0080
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SSL_INTERN
