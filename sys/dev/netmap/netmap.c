@@ -8537,7 +8537,7 @@ name|do_retry_rx
 goto|;
 block|}
 block|}
-comment|/* 	 * Transparent mode: marked bufs on rx rings between 	 * kring->nr_hwcur and ring->head 	 * are passed to the other endpoint. 	 *  	 * In this mode we also scan the sw rxring, which in 	 * turn passes packets up. 	 * 	 * XXX Transparent mode at the moment requires to bind all  	 * rings to a single file descriptor. 	 */
+comment|/* 	 * Transparent mode: marked bufs on rx rings between 	 * kring->nr_hwcur and ring->head 	 * are passed to the other endpoint. 	 * 	 * In this mode we also scan the sw rxring, which in 	 * turn passes packets up. 	 * 	 * XXX Transparent mode at the moment requires to bind all  	 * rings to a single file descriptor. 	 */
 if|if
 condition|(
 name|q
