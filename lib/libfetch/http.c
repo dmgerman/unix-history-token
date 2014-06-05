@@ -4710,7 +4710,7 @@ name|s
 operator|->
 name|password
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -5810,7 +5810,7 @@ name|char
 modifier|*
 name|options
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
