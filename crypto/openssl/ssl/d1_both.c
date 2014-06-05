@@ -2359,6 +2359,7 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
 name|frag
 operator|=
 operator|(
@@ -2369,6 +2370,32 @@ name|item
 operator|->
 name|data
 expr_stmt|;
+if|if
+condition|(
+name|frag
+operator|->
+name|msg_header
+operator|.
+name|msg_len
+operator|!=
+name|msg_hdr
+operator|->
+name|msg_len
+condition|)
+block|{
+name|item
+operator|=
+name|NULL
+expr_stmt|;
+name|frag
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+block|}
 comment|/* If message is already reassembled, this must be a 	 * retransmit and can be dropped. 	 */
 if|if
 condition|(
@@ -3109,6 +3136,8 @@ name|struct
 name|hm_header_st
 name|msg_hdr
 decl_stmt|;
+name|redo
+label|:
 comment|/* see if we have the required fragment already */
 if|if
 condition|(
@@ -3380,20 +3409,9 @@ name|init_num
 operator|=
 literal|0
 expr_stmt|;
-return|return
-name|dtls1_get_message_fragment
-argument_list|(
-name|s
-argument_list|,
-name|st1
-argument_list|,
-name|stn
-argument_list|,
-name|max
-argument_list|,
-name|ok
-argument_list|)
-return|;
+goto|goto
+name|redo
+goto|;
 block|}
 else|else
 comment|/* Incorrectly formated Hello request */
