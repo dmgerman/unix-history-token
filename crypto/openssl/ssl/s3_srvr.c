@@ -2112,6 +2112,14 @@ case|:
 case|case
 name|SSL3_ST_SR_CERT_VRFY_B
 case|:
+name|s
+operator|->
+name|s3
+operator|->
+name|flags
+operator||=
+name|SSL3_FLAGS_CCS_OK
+expr_stmt|;
 comment|/* we should decide if we expected this one */
 name|ret
 operator|=
@@ -2234,6 +2242,14 @@ case|:
 case|case
 name|SSL3_ST_SR_FINISHED_B
 case|:
+name|s
+operator|->
+name|s3
+operator|->
+name|flags
+operator||=
+name|SSL3_FLAGS_CCS_OK
+expr_stmt|;
 name|ret
 operator|=
 name|ssl3_get_finished
@@ -2562,6 +2578,15 @@ name|s3
 operator|->
 name|next_proto_neg_seen
 condition|)
+block|{
+name|s
+operator|->
+name|s3
+operator|->
+name|flags
+operator||=
+name|SSL3_FLAGS_CCS_OK
+expr_stmt|;
 name|s
 operator|->
 name|s3
@@ -2572,6 +2597,7 @@ name|next_state
 operator|=
 name|SSL3_ST_SR_NEXT_PROTO_A
 expr_stmt|;
+block|}
 else|else
 name|s
 operator|->
