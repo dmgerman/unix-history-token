@@ -429,16 +429,6 @@ name|XENHVM
 argument_list|)
 end_elif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|PAE
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -448,11 +438,6 @@ name|va
 parameter_list|)
 value|pmap_kextract((vm_offset_t) (va))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
