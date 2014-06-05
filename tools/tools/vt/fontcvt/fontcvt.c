@@ -2040,7 +2040,7 @@ break|break;
 case|case
 literal|'w'
 case|:
-name|height
+name|width
 operator|=
 name|atoi
 argument_list|(
