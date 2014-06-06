@@ -89,6 +89,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|rebooting
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|M_USB
 value|0
 end_define
@@ -953,13 +960,11 @@ name|caddr_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|__uintptr_t
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|_UINTPTR_T_DECLARED
+end_define
 
 begin_typedef
 typedef|typedef
@@ -968,6 +973,12 @@ name|long
 name|uintptr_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
 
 begin_typedef
 typedef|typedef
