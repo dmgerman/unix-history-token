@@ -1170,7 +1170,6 @@ return|return
 operator|-
 literal|1
 return|;
-empty_stmt|;
 comment|/* Check for the boot section signature. */
 name|status
 operator|=
@@ -1210,7 +1209,6 @@ return|return
 operator|-
 literal|1
 return|;
-empty_stmt|;
 block|}
 name|dev_offset
 operator|+=
@@ -1240,7 +1238,6 @@ return|return
 operator|-
 literal|1
 return|;
-empty_stmt|;
 comment|/* Transcribe the EUI-64 to a MAC-48. 	 * 	 * Given an EUI-64 of aa:bb:cc:dd:ee:ff:gg:hh 	 * 	 *   if (ff is zero and ee is non-zero) 	 *      mac is aa:bb:cc:ee:gg:hh 	 *   else 	 *      mac is aa:bb:cc:ff:gg:hh 	 * 	 * This logic fixes a glitch in our mfg process in which the ff byte was 	 * always zero and the ee byte contained a non-zero value.  This 	 * resulted in duplicate MAC addresses because we discarded the ee byte. 	 * Now they've fixed the process so that the ff byte is non-zero and 	 * unique addresses are formed from the ff:gg:hh bytes.  If the ff byte 	 * is zero, then we have a unit manufactured during the glitch era, and 	 * we fix the problem by grabbing the ee byte rather than the ff byte. 	 */
 name|eaddr
 index|[

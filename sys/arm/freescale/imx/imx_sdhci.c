@@ -718,10 +718,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function_decl
 specifier|static
 name|void

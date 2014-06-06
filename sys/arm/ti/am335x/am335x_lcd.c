@@ -1133,7 +1133,6 @@ name|sc
 operator|->
 name|sc_backlight
 expr_stmt|;
-empty_stmt|;
 name|error
 operator|=
 name|sysctl_handle_int
