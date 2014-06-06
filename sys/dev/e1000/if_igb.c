@@ -4988,8 +4988,6 @@ name|txr
 argument_list|)
 condition|)
 block|{
-name|err
-operator|=
 name|igb_mq_start_locked
 argument_list|(
 name|ifp
@@ -5018,7 +5016,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|err
+literal|0
 operator|)
 return|;
 block|}
