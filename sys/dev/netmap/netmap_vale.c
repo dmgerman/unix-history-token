@@ -4497,8 +4497,10 @@ operator|<
 literal|14
 condition|)
 block|{
-name|D
+name|RD
 argument_list|(
+literal|5
+argument_list|,
 literal|"invalid buf length %d"
 argument_list|,
 name|buf_len
