@@ -4086,12 +4086,9 @@ name|void
 operator|)
 name|td
 expr_stmt|;
-name|mtx_lock_spin
+name|mbq_lock
 argument_list|(
-operator|&
 name|q
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 comment|/* First part: import newly received packets */
@@ -4321,12 +4318,9 @@ operator|->
 name|si
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mbq_unlock
 argument_list|(
-operator|&
 name|q
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -9651,12 +9645,9 @@ name|done
 goto|;
 block|}
 comment|/* protect against rxsync_from_host(), netmap_sw_to_nic() 	 * and maybe other instances of netmap_transmit (the latter 	 * not possible on Linux). 	 * Also avoid overflowing the queue. 	 */
-name|mtx_lock_spin
+name|mbq_lock
 argument_list|(
-operator|&
 name|q
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|space
@@ -9768,12 +9759,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|mbq_unlock
 argument_list|(
-operator|&
 name|q
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|done
