@@ -4571,14 +4571,14 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t$(CC) -o $(SERVER) $(OBJECTS_SVC) $(LDLIBS)\n\n "
+literal|"\t$(CC) -o $(SERVER) $(OBJECTS_SVC) $(LDLIBS)\n\n"
 argument_list|)
 expr_stmt|;
 name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"clean:\n\t $(RM) -f core $(TARGETS) $(OBJECTS_CLNT) \ $(OBJECTS_SVC) $(CLIENT) $(SERVER)\n\n"
+literal|"clean:\n\t rm -f core $(TARGETS) $(OBJECTS_CLNT) \ $(OBJECTS_SVC) $(CLIENT) $(SERVER)\n\n"
 argument_list|)
 expr_stmt|;
 block|}
