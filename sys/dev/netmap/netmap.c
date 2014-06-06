@@ -9134,6 +9134,10 @@ argument_list|,
 name|hwna
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
 name|netmap_detach
 argument_list|(
 name|ifp
