@@ -4638,6 +4638,9 @@ name|freeit
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|fib
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -4668,6 +4671,16 @@ name|target
 operator|->
 name|ia_addr
 expr_stmt|;
+name|fib
+operator|=
+name|target
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_ifp
+operator|->
+name|if_fib
+expr_stmt|;
 name|rtalloc_ign_fib
 argument_list|(
 operator|&
@@ -4675,7 +4688,7 @@ name|ia_ro
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|fib
 argument_list|)
 expr_stmt|;
 if|if
