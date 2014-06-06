@@ -235,7 +235,7 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|q
@@ -250,7 +250,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|q
@@ -379,7 +379,7 @@ name|mbuf
 modifier|*
 name|ret
 decl_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|q
@@ -394,7 +394,7 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|q

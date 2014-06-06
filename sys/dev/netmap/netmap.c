@@ -4004,7 +4004,7 @@ name|void
 operator|)
 name|td
 expr_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|q
@@ -4239,7 +4239,7 @@ operator|->
 name|si
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|q
@@ -9518,7 +9518,7 @@ name|done
 goto|;
 block|}
 comment|/* protect against rxsync_from_host(), netmap_sw_to_nic() 	 * and maybe other instances of netmap_transmit (the latter 	 * not possible on Linux). 	 * Also avoid overflowing the queue. 	 */
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|q
@@ -9635,7 +9635,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|q
