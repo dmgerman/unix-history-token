@@ -130,7 +130,7 @@ define|#
 directive|define
 name|rtnl_lock
 parameter_list|()
-value|D("rtnl_lock called");
+value|ND("rtnl_lock called");
 end_define
 
 begin_define
@@ -138,7 +138,7 @@ define|#
 directive|define
 name|rtnl_unlock
 parameter_list|()
-value|D("rtnl_unlock called");
+value|ND("rtnl_unlock called");
 end_define
 
 begin_define
@@ -169,11 +169,11 @@ parameter_list|()
 end_define
 
 begin_comment
-comment|/*  * mbuf wrappers  */
+comment|/*  * FreeBSD mbuf allocator/deallocator in emulation mode:  *  * We allocate EXT_PACKET mbuf+clusters, but need to set M_NOFREE  * so that the destructor, if invoked, will not free the packet.  *    In principle we should set the destructor only on demand,  * but since there might be a race we better do it on allocation.  * As a consequence, we also need to set the destructor or we  * would leak buffers.  */
 end_comment
 
 begin_comment
-comment|/*  * we allocate an EXT_PACKET  */
+comment|/*  * mbuf wrappers  */
 end_comment
 
 begin_define
