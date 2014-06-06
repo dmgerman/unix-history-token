@@ -6477,7 +6477,6 @@ name|error
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX modify svm.c to update bit 16 of seg_desc.access (unusable) */
 block|}
 end_function
 
