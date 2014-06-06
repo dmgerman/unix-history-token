@@ -1925,7 +1925,7 @@ return|;
 block|}
 name|ERR_add_error_data
 argument_list|(
-literal|4
+literal|2
 argument_list|,
 literal|"dlfcn_pathbyaddr(): "
 argument_list|,

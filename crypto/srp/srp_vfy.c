@@ -199,6 +199,16 @@ operator|++
 name|i
 expr_stmt|;
 block|}
+comment|/* if nothing valid to process we have a zero length response */
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|size
 operator|=
 name|i

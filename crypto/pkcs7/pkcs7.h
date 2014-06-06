@@ -1882,6 +1882,10 @@ name|PKCS7_R_INVALID_NULL_POINTER
 value|143
 define|#
 directive|define
+name|PKCS7_R_INVALID_SIGNED_DATA_TYPE
+value|155
+define|#
+directive|define
 name|PKCS7_R_MIME_NO_CONTENT_TYPE
 value|132
 define|#
