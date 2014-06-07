@@ -83,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|DWC_OTG_SLOT_IDLE_MAX
-value|4
+value|3
 end_define
 
 begin_define
@@ -332,14 +332,8 @@ begin_struct
 struct|struct
 name|dwc_otg_tt_info
 block|{
-name|uint16_t
-name|bytes_used
-decl_stmt|;
 name|uint8_t
 name|slot_index
-decl_stmt|;
-name|uint8_t
-name|dummy
 decl_stmt|;
 block|}
 struct|;
