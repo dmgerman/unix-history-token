@@ -1746,6 +1746,15 @@ argument_list|,
 name|MSR_PAT
 argument_list|)
 expr_stmt|;
+name|svm_msr_rd_ok
+argument_list|(
+name|svm_sc
+operator|->
+name|msr_bitmap
+argument_list|,
+name|MSR_TSC
+argument_list|)
+expr_stmt|;
 comment|/* Intercept access to all I/O ports. */
 name|memset
 argument_list|(
