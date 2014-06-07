@@ -570,6 +570,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vm_reinit
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|const
 name|char
 modifier|*

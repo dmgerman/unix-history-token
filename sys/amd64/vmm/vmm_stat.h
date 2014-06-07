@@ -76,7 +76,7 @@ end_struct
 
 begin_function_decl
 name|void
-name|vmm_stat_init
+name|vmm_stat_register
 parameter_list|(
 name|void
 modifier|*
@@ -99,7 +99,7 @@ parameter_list|,
 name|scope
 parameter_list|)
 define|\
-value|struct vmm_stat_type type[1] = {				\ 		{ -1, nelems, desc, scope }				\ 	};								\ 	SYSINIT(type##_stat, SI_SUB_KLD, SI_ORDER_ANY, vmm_stat_init, type)
+value|struct vmm_stat_type type[1] = {				\ 		{ -1, nelems, desc, scope }				\ 	};								\ 	SYSINIT(type##_stat, SI_SUB_KLD, SI_ORDER_ANY, vmm_stat_register, type)
 end_define
 
 begin_define
@@ -173,6 +173,17 @@ modifier|*
 name|vmm_stat_alloc
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vmm_stat_init
+parameter_list|(
+name|void
+modifier|*
+name|vp
 parameter_list|)
 function_decl|;
 end_function_decl

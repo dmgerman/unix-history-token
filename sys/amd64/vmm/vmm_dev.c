@@ -847,6 +847,9 @@ case|:
 case|case
 name|VM_MAP_MEMORY
 case|:
+case|case
+name|VM_REINIT
+case|:
 comment|/* 		 * ioctls that operate on the entire virtual machine must 		 * prevent all vcpus from running. 		 */
 name|error
 operator|=
@@ -976,6 +979,19 @@ argument_list|,
 name|vmsuspend
 operator|->
 name|how
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|VM_REINIT
+case|:
+name|error
+operator|=
+name|vm_reinit
+argument_list|(
+name|sc
+operator|->
+name|vm
 argument_list|)
 expr_stmt|;
 break|break;
