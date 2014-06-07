@@ -3795,7 +3795,7 @@ operator|->
 name|parent
 argument_list|)
 argument_list|,
-name|NULL
+literal|"usb_def_mtx"
 argument_list|,
 name|MTX_DEF
 operator||
@@ -3816,7 +3816,7 @@ operator|->
 name|parent
 argument_list|)
 argument_list|,
-name|NULL
+literal|"usb_spin_mtx"
 argument_list|,
 name|MTX_SPIN
 operator||
