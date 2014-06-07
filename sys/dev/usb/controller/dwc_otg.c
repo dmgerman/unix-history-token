@@ -5169,6 +5169,40 @@ name|HCINT_ERRORS
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|td
+operator|->
+name|ep_type
+operator|==
+name|UE_INTERRUPT
+condition|)
+block|{
+comment|/* 				 * The USB specification does not 				 * mandate a particular data toggle 				 * value for USB INTERRUPT 				 * transfers. Switch the data toggle 				 * value to receive the packet 				 * correctly: 				 */
+if|if
+condition|(
+name|hcint
+operator|&
+name|HCINT_DATATGLERR
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"Retrying packet due to "
+literal|"data toggle error\n"
+argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|toggle
+operator|^=
+literal|1
+expr_stmt|;
+goto|goto
+name|receive_pkt
+goto|;
+block|}
+block|}
 name|td
 operator|->
 name|did_nak
