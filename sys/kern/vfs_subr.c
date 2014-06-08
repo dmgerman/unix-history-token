@@ -4028,9 +4028,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|long
-name|num
-decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -4038,15 +4035,6 @@ expr_stmt|;
 comment|/* First try to be quick and racy. */
 if|if
 condition|(
-name|numvnodes
-operator|+
-name|count
-operator|<=
-name|desiredvnodes
-condition|)
-block|{
-name|num
-operator|=
 name|atomic_fetchadd_long
 argument_list|(
 operator|&
@@ -4054,10 +4042,6 @@ name|numvnodes
 argument_list|,
 name|count
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|num
 operator|+
 name|count
 operator|<=
@@ -4081,7 +4065,6 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_lock
 argument_list|(
 operator|&
