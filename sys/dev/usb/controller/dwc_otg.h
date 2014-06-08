@@ -83,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|DWC_OTG_SLOT_IDLE_MAX
-value|4
+value|3
 end_define
 
 begin_define
@@ -231,10 +231,11 @@ name|ep_type
 decl_stmt|;
 name|uint8_t
 name|channel
-index|[
-literal|2
-index|]
 decl_stmt|;
+name|uint8_t
+name|tt_index
+decl_stmt|;
+comment|/* TT data */
 name|uint8_t
 name|tt_start_slot
 decl_stmt|;
@@ -278,11 +279,6 @@ define|#
 directive|define
 name|DWC_CHAN_ST_TX_WAIT_ISOC
 value|6
-name|uint8_t
-name|error
-range|:
-literal|1
-decl_stmt|;
 name|uint8_t
 name|error_any
 range|:
@@ -328,10 +324,16 @@ name|tt_scheduled
 range|:
 literal|1
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|dwc_otg_tt_info
+block|{
 name|uint8_t
-name|tt_channel_tog
-range|:
-literal|1
+name|slot_index
 decl_stmt|;
 block|}
 struct|;
@@ -578,6 +580,13 @@ name|dwc_otg_profile
 name|sc_hw_ep_profile
 index|[
 name|DWC_OTG_MAX_ENDPOINTS
+index|]
+decl_stmt|;
+name|struct
+name|dwc_otg_tt_info
+name|sc_tt_info
+index|[
+name|DWC_OTG_MAX_DEVICES
 index|]
 decl_stmt|;
 name|struct
