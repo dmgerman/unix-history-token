@@ -11640,11 +11640,6 @@ name|td
 parameter_list|)
 block|{
 name|struct
-name|td_sched
-modifier|*
-name|ts
-decl_stmt|;
-name|struct
 name|tdq
 modifier|*
 name|tdq
@@ -11666,12 +11661,6 @@ name|TDQ_CPU
 argument_list|(
 name|cpuid
 argument_list|)
-expr_stmt|;
-name|ts
-operator|=
-name|td
-operator|->
-name|td_sched
 expr_stmt|;
 if|if
 condition|(
