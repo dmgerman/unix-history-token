@@ -759,6 +759,10 @@ name|controller_slot_id
 decl_stmt|;
 comment|/* controller specific value */
 name|uint8_t
+name|next_config_index
+decl_stmt|;
+comment|/* used by USB_RE_ENUM_SET_CONFIG */
+name|uint8_t
 name|curr_config_index
 decl_stmt|;
 comment|/* current configuration index */
@@ -810,6 +814,10 @@ define|#
 directive|define
 name|USB_RE_ENUM_PWR_OFF
 value|2
+define|#
+directive|define
+name|USB_RE_ENUM_SET_CONFIG
+value|3
 name|uint8_t
 name|ifaces_max
 decl_stmt|;
