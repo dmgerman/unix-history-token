@@ -1011,6 +1011,11 @@ struct|struct
 name|__rpc_svcthread
 block|{
 name|struct
+name|mtx_padalign
+name|st_lock
+decl_stmt|;
+comment|/* protects st_reqs field */
+name|struct
 name|__rpc_svcpool
 modifier|*
 name|st_pool
