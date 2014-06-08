@@ -350,11 +350,6 @@ name|sp
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|ipsecrt
-init|=
-literal|0
-decl_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -1188,14 +1183,6 @@ condition|(
 name|inzone
 operator|!=
 name|outzone
-ifdef|#
-directive|ifdef
-name|IPSEC
-operator|&&
-operator|!
-name|ipsecrt
-endif|#
-directive|endif
 condition|)
 block|{
 name|IP6STAT_INC
@@ -1529,15 +1516,6 @@ operator|&&
 operator|!
 name|srcrt
 operator|&&
-ifdef|#
-directive|ifdef
-name|IPSEC
-operator|!
-name|ipsecrt
-operator|&&
-endif|#
-directive|endif
-comment|/* IPSEC */
 operator|(
 name|rt
 operator|->
@@ -2272,14 +2250,6 @@ condition|(
 name|rt
 operator|!=
 name|NULL
-ifdef|#
-directive|ifdef
-name|IPSEC
-operator|&&
-operator|!
-name|ipsecrt
-endif|#
-directive|endif
 condition|)
 name|RTFREE
 argument_list|(
