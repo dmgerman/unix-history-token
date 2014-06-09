@@ -5750,6 +5750,12 @@ argument_list|,
 name|rqstp
 argument_list|)
 expr_stmt|;
+name|rqstp
+operator|->
+name|rq_thread
+operator|=
+name|stpref
+expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5770,12 +5776,6 @@ operator|->
 name|st_lock
 argument_list|)
 expr_stmt|;
-name|rqstp
-operator|->
-name|rq_thread
-operator|=
-name|stpref
-expr_stmt|;
 if|if
 condition|(
 name|stpref
@@ -5788,6 +5788,13 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
+block|{
+name|rqstp
+operator|->
+name|rq_thread
+operator|=
+name|st
+expr_stmt|;
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5800,6 +5807,7 @@ argument_list|,
 name|rq_link
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 do|while
