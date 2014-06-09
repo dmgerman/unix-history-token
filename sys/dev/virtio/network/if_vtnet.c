@@ -10851,10 +10851,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|ENOBUFS
-expr_stmt|;
 break|break;
 block|}
 name|error
@@ -10936,7 +10932,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
