@@ -14141,9 +14141,6 @@ operator|.
 name|vtxb_m
 operator|=
 name|m
-operator|=
-operator|*
-name|m0
 expr_stmt|;
 name|sop
 operator|=
