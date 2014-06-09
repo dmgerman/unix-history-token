@@ -2698,14 +2698,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-goto|goto
-name|err
-goto|;
 name|i
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+goto|goto
+name|err
+goto|;
 block|}
 name|pqueue_insert
 argument_list|(

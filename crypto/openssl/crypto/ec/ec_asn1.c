@@ -6230,6 +6230,11 @@ argument_list|,
 name|ERR_R_EC_LIB
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|new_buffer
+condition|)
+block|{
 name|OPENSSL_free
 argument_list|(
 operator|*
@@ -6241,6 +6246,7 @@ name|out
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;

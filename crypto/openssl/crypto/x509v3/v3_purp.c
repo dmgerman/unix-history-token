@@ -1991,7 +1991,8 @@ name|x
 argument_list|,
 name|NID_subject_alt_name
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 operator|>=
 literal|0
@@ -2002,7 +2003,8 @@ name|x
 argument_list|,
 name|NID_issuer_alt_name
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 operator|>=
 literal|0
@@ -3467,7 +3469,8 @@ name|x
 argument_list|,
 name|NID_ext_key_usage
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

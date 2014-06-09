@@ -1394,6 +1394,9 @@ argument_list|,
 name|ERR_R_EC_LIB
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 comment|/* restore old encoding flags */
 name|EC_KEY_set_enc_flags

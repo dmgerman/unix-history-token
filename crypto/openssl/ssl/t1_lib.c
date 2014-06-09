@@ -2243,6 +2243,23 @@ ifndef|#
 directive|ifndef
 name|OPENSSL_NO_HEARTBEATS
 comment|/* Add Heartbeat extension */
+if|if
+condition|(
+operator|(
+name|limit
+operator|-
+name|ret
+operator|-
+literal|4
+operator|-
+literal|1
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
 name|s2n
 argument_list|(
 name|TLSEXT_TYPE_heartbeat
@@ -2427,10 +2444,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|TLSEXT_TYPE_padding
 comment|/* Add padding to workaround bugs in F5 terminators. 	 * See https://tools.ietf.org/html/draft-agl-tls-padding-03 	 * 	 * NB: because this code works out the length of all existing 	 * extensions it MUST always appear last. 	 */
+if|if
+condition|(
+name|s
+operator|->
+name|options
+operator|&
+name|SSL_OP_TLSEXT_PADDING
+condition|)
 block|{
 name|int
 name|hlen
@@ -2448,7 +2470,7 @@ name|init_buf
 operator|->
 name|data
 decl_stmt|;
-comment|/* The code in s23_clnt.c to build ClientHello messages includes the 	 * 5-byte record header in the buffer, while the code in s3_clnt.c does 	 * not. */
+comment|/* The code in s23_clnt.c to build ClientHello messages 		 * includes the 5-byte record header in the buffer, while 		 * the code in s3_clnt.c does not. 		 */
 if|if
 condition|(
 name|s
@@ -2522,8 +2544,6 @@ name|hlen
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -3364,6 +3384,23 @@ operator|&
 name|SSL_TLSEXT_HB_ENABLED
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|limit
+operator|-
+name|ret
+operator|-
+literal|4
+operator|-
+literal|1
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
 name|s2n
 argument_list|(
 name|TLSEXT_TYPE_heartbeat
