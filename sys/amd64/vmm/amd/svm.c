@@ -170,6 +170,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vatpic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vlapic.h"
 end_include
 
@@ -4202,6 +4208,9 @@ name|vm_exception
 name|exc
 decl_stmt|;
 name|int
+name|extint_pending
+decl_stmt|;
+name|int
 name|vector
 decl_stmt|;
 name|KASSERT
@@ -4377,6 +4386,23 @@ condition|)
 block|{
 return|return;
 block|}
+name|extint_pending
+operator|=
+name|vm_extint_pending
+argument_list|(
+name|svm_sc
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|extint_pending
+condition|)
+block|{
 comment|/* Ask the local apic for a vector to inject */
 if|if
 condition|(
@@ -4390,6 +4416,21 @@ name|vector
 argument_list|)
 condition|)
 return|return;
+block|}
+else|else
+block|{
+comment|/* Ask the legacy pic for a vector to inject */
+name|vatpic_pending_intr
+argument_list|(
+name|svm_sc
+operator|->
+name|vm
+argument_list|,
+operator|&
+name|vector
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|vector
@@ -4482,7 +4523,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Acknowledge that event is accepted.*/
+if|if
+condition|(
+operator|!
+name|extint_pending
+condition|)
+block|{
+comment|/* Update the Local APIC ISR */
 name|vlapic_intr_accepted
 argument_list|(
 name|vlapic
@@ -4490,6 +4537,29 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|vm_extint_clear
+argument_list|(
+name|svm_sc
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|)
+expr_stmt|;
+name|vatpic_intr_accepted
+argument_list|(
+name|svm_sc
+operator|->
+name|vm
+argument_list|,
+name|vector
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX need to recheck exting_pending ala VT-x 		 */
+block|}
 name|VCPU_CTR1
 argument_list|(
 name|svm_sc
