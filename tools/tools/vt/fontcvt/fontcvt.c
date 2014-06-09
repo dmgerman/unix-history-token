@@ -353,11 +353,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"usage: fontcvt [-w width] [-h height] normal.bdf [bold.bdf] out.fnt\n"
+literal|"usage: fontcvt [-w width] [-h height] [-v] normal.bdf [bold.bdf] out.fnt\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -551,9 +551,9 @@ operator|>=
 name|c
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
 literal|"Bad ordering at character %u\n"
 argument_list|,
@@ -952,11 +952,11 @@ operator|*
 literal|2
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Unsupported width %u!\n"
+literal|"Bitmap with unsupported width %u!\n"
 argument_list|,
 name|dwidth
 argument_list|)
@@ -1077,9 +1077,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
 literal|"Unsupported wbytes %u!\n"
 argument_list|,
@@ -1290,9 +1290,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
 literal|"Unexpected EOF!\n"
 argument_list|)
@@ -2389,6 +2389,112 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|print_font_info
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"Statistics:\n"
+literal|"- glyph_total:                 %5u\n"
+literal|"- glyph_normal:                %5u\n"
+literal|"- glyph_normal_right:          %5u\n"
+literal|"- glyph_bold:                  %5u\n"
+literal|"- glyph_bold_right:            %5u\n"
+literal|"- glyph_unique:                %5u\n"
+literal|"- glyph_dupe:                  %5u\n"
+literal|"- mapping_total:               %5u\n"
+literal|"- mapping_normal:              %5u\n"
+literal|"- mapping_normal_folded:       %5u\n"
+literal|"- mapping_normal_right:        %5u\n"
+literal|"- mapping_normal_right_folded: %5u\n"
+literal|"- mapping_bold:                %5u\n"
+literal|"- mapping_bold_folded:         %5u\n"
+literal|"- mapping_bold_right:          %5u\n"
+literal|"- mapping_bold_right_folded:   %5u\n"
+literal|"- mapping_unique:              %5u\n"
+literal|"- mapping_dupe:                %5u\n"
+argument_list|,
+name|glyph_total
+argument_list|,
+name|glyph_count
+index|[
+literal|0
+index|]
+argument_list|,
+name|glyph_count
+index|[
+literal|1
+index|]
+argument_list|,
+name|glyph_count
+index|[
+literal|2
+index|]
+argument_list|,
+name|glyph_count
+index|[
+literal|3
+index|]
+argument_list|,
+name|glyph_unique
+argument_list|,
+name|glyph_dupe
+argument_list|,
+name|mapping_total
+argument_list|,
+name|map_count
+index|[
+literal|0
+index|]
+argument_list|,
+name|map_folded_count
+index|[
+literal|0
+index|]
+argument_list|,
+name|map_count
+index|[
+literal|1
+index|]
+argument_list|,
+name|map_folded_count
+index|[
+literal|1
+index|]
+argument_list|,
+name|map_count
+index|[
+literal|2
+index|]
+argument_list|,
+name|map_folded_count
+index|[
+literal|2
+index|]
+argument_list|,
+name|map_count
+index|[
+literal|3
+index|]
+argument_list|,
+name|map_folded_count
+index|[
+literal|3
+index|]
+argument_list|,
+name|mapping_unique
+argument_list|,
+name|mapping_dupe
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -2403,6 +2509,12 @@ parameter_list|)
 block|{
 name|int
 name|ch
+decl_stmt|,
+name|val
+decl_stmt|,
+name|verbose
+init|=
+literal|0
 decl_stmt|;
 name|assert
 argument_list|(
@@ -2453,23 +2565,91 @@ block|{
 case|case
 literal|'h'
 case|:
-name|height
+name|val
 operator|=
 name|atoi
 argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|val
+operator|<=
+literal|0
+operator|||
+name|val
+operator|>
+literal|128
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Invalid height %d"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|height
+operator|=
+name|val
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|verbose
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'w'
 case|:
-name|width
+name|val
 operator|=
 name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|<=
+literal|0
+operator|||
+name|val
+operator|>
+literal|128
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Invalid width %d"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+name|width
+operator|=
+name|val
 expr_stmt|;
 break|break;
 case|case
@@ -2609,100 +2789,12 @@ operator|(
 literal|1
 operator|)
 return|;
-name|printf
-argument_list|(
-literal|"Statistics:\n"
-literal|"- glyph_total:                 %5u\n"
-literal|"- glyph_normal:                %5u\n"
-literal|"- glyph_normal_right:          %5u\n"
-literal|"- glyph_bold:                  %5u\n"
-literal|"- glyph_bold_right:            %5u\n"
-literal|"- glyph_unique:                %5u\n"
-literal|"- glyph_dupe:                  %5u\n"
-literal|"- mapping_total:               %5u\n"
-literal|"- mapping_normal:              %5u\n"
-literal|"- mapping_normal_folded:       %5u\n"
-literal|"- mapping_normal_right:        %5u\n"
-literal|"- mapping_normal_right_folded: %5u\n"
-literal|"- mapping_bold:                %5u\n"
-literal|"- mapping_bold_folded:         %5u\n"
-literal|"- mapping_bold_right:          %5u\n"
-literal|"- mapping_bold_right_folded:   %5u\n"
-literal|"- mapping_unique:              %5u\n"
-literal|"- mapping_dupe:                %5u\n"
-argument_list|,
-name|glyph_total
-argument_list|,
-name|glyph_count
-index|[
-literal|0
-index|]
-argument_list|,
-name|glyph_count
-index|[
-literal|1
-index|]
-argument_list|,
-name|glyph_count
-index|[
-literal|2
-index|]
-argument_list|,
-name|glyph_count
-index|[
-literal|3
-index|]
-argument_list|,
-name|glyph_unique
-argument_list|,
-name|glyph_dupe
-argument_list|,
-name|mapping_total
-argument_list|,
-name|map_count
-index|[
-literal|0
-index|]
-argument_list|,
-name|map_folded_count
-index|[
-literal|0
-index|]
-argument_list|,
-name|map_count
-index|[
-literal|1
-index|]
-argument_list|,
-name|map_folded_count
-index|[
-literal|1
-index|]
-argument_list|,
-name|map_count
-index|[
-literal|2
-index|]
-argument_list|,
-name|map_folded_count
-index|[
-literal|2
-index|]
-argument_list|,
-name|map_count
-index|[
-literal|3
-index|]
-argument_list|,
-name|map_folded_count
-index|[
-literal|3
-index|]
-argument_list|,
-name|mapping_unique
-argument_list|,
-name|mapping_dupe
-argument_list|)
+if|if
+condition|(
+name|verbose
+condition|)
+name|print_font_info
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
