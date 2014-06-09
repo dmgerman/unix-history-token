@@ -4068,6 +4068,9 @@ name|cipher
 expr_stmt|;
 block|}
 comment|/* we now have the following setup.  	 * client_random 	 * cipher_list 		- our prefered list of ciphers 	 * ciphers 		- the clients prefered list of ciphers 	 * compression		- basically ignored right now 	 * ssl version is set	- sslv3 	 * s->session		- The ssl session has been setup. 	 * s->hit		- session reuse flag 	 * s->tmp.new_cipher	- the new cipher to use. 	 */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_TLSEXT
 comment|/* Handles TLS extensions that we couldn't check earlier */
 if|if
 condition|(
@@ -4100,6 +4103,8 @@ name|err
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ret
@@ -7088,6 +7093,32 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NETSCAPE_HANG_BUG
+if|if
+condition|(
+operator|!
+name|BUF_MEM_grow_clean
+argument_list|(
+name|buf
+argument_list|,
+name|s
+operator|->
+name|init_num
+operator|+
+literal|4
+argument_list|)
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_SEND_CERTIFICATE_REQUEST
+argument_list|,
+name|ERR_R_BUF_LIB
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|p
 operator|=
 operator|(

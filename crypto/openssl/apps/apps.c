@@ -2693,7 +2693,7 @@ name|buf
 argument_list|,
 name|PW_MIN_LENGTH
 argument_list|,
-name|BUFSIZ
+name|bufsiz
 operator|-
 literal|1
 argument_list|)
@@ -2732,7 +2732,7 @@ name|buff
 argument_list|,
 name|PW_MIN_LENGTH
 argument_list|,
-name|BUFSIZ
+name|bufsiz
 operator|-
 literal|1
 argument_list|,

@@ -1257,9 +1257,8 @@ name|SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER
 value|0x00000020L
 define|#
 directive|define
-name|SSL_OP_MSIE_SSLV2_RSA_PADDING
+name|SSL_OP_SAFARI_ECDHE_ECDSA_BUG
 value|0x00000040L
-comment|/* no effect since 0.9.7h and 0.9.8b */
 define|#
 directive|define
 name|SSL_OP_SSLEAY_080_CLIENT_DH_BUG
@@ -1272,6 +1271,11 @@ define|#
 directive|define
 name|SSL_OP_TLS_BLOCK_PADDING_BUG
 value|0x00000200L
+comment|/* Hasn't done anything since OpenSSL 0.9.7h, retained for compatibility */
+define|#
+directive|define
+name|SSL_OP_MSIE_SSLV2_RSA_PADDING
+value|0x0
 comment|/* Disable SSL 3.0/TLS 1.0 CBC vulnerability workaround that was added  * in OpenSSL 0.9.6d.  Usually (depending on the application protocol)  * the workaround is not needed.  Unfortunately some broken SSL/TLS  * implementations cannot handle it at all, which is why we include  * it in SSL_OP_ALL. */
 define|#
 directive|define
@@ -3892,6 +3896,15 @@ define|#
 directive|define
 name|SSL_AD_BAD_CERTIFICATE_STATUS_RESPONSE
 value|TLS1_AD_BAD_CERTIFICATE_STATUS_RESPONSE
+define|#
+directive|define
+name|SSL_AD_BAD_CERTIFICATE_HASH_VALUE
+value|TLS1_AD_BAD_CERTIFICATE_HASH_VALUE
+define|#
+directive|define
+name|SSL_AD_UNKNOWN_PSK_IDENTITY
+value|TLS1_AD_UNKNOWN_PSK_IDENTITY
+comment|/* fatal */
 define|#
 directive|define
 name|SSL_ERROR_NONE
@@ -8639,6 +8652,26 @@ define|#
 directive|define
 name|SSL_R_TLSV1_ALERT_USER_CANCELLED
 value|1090
+define|#
+directive|define
+name|SSL_R_TLSV1_BAD_CERTIFICATE_HASH_VALUE
+value|1114
+define|#
+directive|define
+name|SSL_R_TLSV1_BAD_CERTIFICATE_STATUS_RESPONSE
+value|1113
+define|#
+directive|define
+name|SSL_R_TLSV1_CERTIFICATE_UNOBTAINABLE
+value|1111
+define|#
+directive|define
+name|SSL_R_TLSV1_UNRECOGNIZED_NAME
+value|1112
+define|#
+directive|define
+name|SSL_R_TLSV1_UNSUPPORTED_EXTENSION
+value|1110
 define|#
 directive|define
 name|SSL_R_TLS_CLIENT_CERT_REQ_WITH_ANON_CIPHER

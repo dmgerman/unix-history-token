@@ -3685,6 +3685,51 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_TLSV1_BAD_CERTIFICATE_HASH_VALUE
+argument_list|)
+block|,
+literal|"tlsv1 bad certificate hash value"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLSV1_BAD_CERTIFICATE_STATUS_RESPONSE
+argument_list|)
+block|,
+literal|"tlsv1 bad certificate status response"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLSV1_CERTIFICATE_UNOBTAINABLE
+argument_list|)
+block|,
+literal|"tlsv1 certificate unobtainable"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLSV1_UNRECOGNIZED_NAME
+argument_list|)
+block|,
+literal|"tlsv1 unrecognized name"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLSV1_UNSUPPORTED_EXTENSION
+argument_list|)
+block|,
+literal|"tlsv1 unsupported extension"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_TLS_CLIENT_CERT_REQ_WITH_ANON_CIPHER
 argument_list|)
 block|,

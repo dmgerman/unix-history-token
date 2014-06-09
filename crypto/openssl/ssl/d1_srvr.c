@@ -594,6 +594,11 @@ name|shutdown
 operator|=
 literal|0
 expr_stmt|;
+name|dtls1_clear_record_buffer
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|dtls1_start_timer
 argument_list|(
 name|s
@@ -623,7 +628,7 @@ name|tmp
 operator|.
 name|next_state
 operator|=
-name|SSL3_ST_SW_HELLO_REQ_C
+name|SSL3_ST_SR_CLNT_HELLO_A
 expr_stmt|;
 name|s
 operator|->

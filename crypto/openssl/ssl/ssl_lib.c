@@ -5632,6 +5632,18 @@ name|session
 operator|->
 name|ciphers
 expr_stmt|;
+if|if
+condition|(
+name|sk_SSL_CIPHER_num
+argument_list|(
+name|sk
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
 for|for
 control|(
 name|i
@@ -7351,7 +7363,19 @@ name|NULL
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
+comment|/* No compression for DTLS */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|meth
+operator|->
+name|version
+operator|!=
+name|DTLS1_VERSION
+condition|)
 name|ret
 operator|->
 name|comp_methods
@@ -7359,7 +7383,7 @@ operator|=
 name|SSL_COMP_get_compression_methods
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_ifndef
 ifndef|#
@@ -11463,21 +11487,6 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-if|if
-condition|(
-name|s
-operator|->
-name|server
-condition|)
-return|return
-operator|(
-name|ssl_get_server_send_cert
-argument_list|(
-name|s
-argument_list|)
-operator|)
-return|;
-elseif|else
 if|if
 condition|(
 name|s
