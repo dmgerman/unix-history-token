@@ -1738,7 +1738,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* netmap_pipe_reg.  *  * There are two cases on registration (onoff==1)  *   * 1.a) state is  *  *        usr1 --> e1 --> e2  *  *      and we are e1. Nothing special to do.  *  * 1.b) state is  *  *        usr1 --> e1 --> e2<-- usr2  *  *      and we are e2. Drop the ref e1 is holding.  *    *  There are two additional cases on unregister (onoff==0)  *  *  2.a) state is  *  *         usr1 --> e1 --> e2  *  *       and we are e1. Nothing special to do, e2 will  *       be cleaned up by the destructor of e1.  *  *  2.b) state is  *  *         usr1 --> e1     e2<-- usr2  *  *       and we are either e1 or e2. Add a ref from the  *       other end and hide our rings.  */
+comment|/* netmap_pipe_reg.  *  * There are two cases on registration (onoff==1)  *  * 1.a) state is  *  *        usr1 --> e1 --> e2  *  *      and we are e1. Nothing special to do.  *  * 1.b) state is  *  *        usr1 --> e1 --> e2<-- usr2  *  *      and we are e2. Drop the ref e1 is holding.  *  *  There are two additional cases on unregister (onoff==0)  *  *  2.a) state is  *  *         usr1 --> e1 --> e2  *  *       and we are e1. Nothing special to do, e2 will  *       be cleaned up by the destructor of e1.  *  *  2.b) state is  *  *         usr1 --> e1     e2<-- usr2  *  *       and we are either e1 or e2. Add a ref from the  *       other end and hide our rings.  */
 end_comment
 
 begin_function
@@ -1945,7 +1945,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* netmap_pipe_krings_delete.  *  * There are two cases:  *  * 1) state is  *  *                usr1 --> e1 --> e2 	     *  *    and we are e1 (e2 is not registered, so krings_delete cannot be   *    called on it);  *  * 2) state is  *  *                usr1 --> e1     e2<-- usr2   *  *    and we are either e1 or e2.  *  * In the former case we have to also delete the krings of e2;  * in the latter case we do nothing (note that our krings  * have already been hidden in the unregister callback).  */
+comment|/* netmap_pipe_krings_delete.  *  * There are two cases:  *  * 1) state is  *  *                usr1 --> e1 --> e2  *  *    and we are e1 (e2 is not registered, so krings_delete cannot be  *    called on it);  *  * 2) state is  *  *                usr1 --> e1     e2<-- usr2  *  *    and we are either e1 or e2.  *  * In the former case we have to also delete the krings of e2;  * in the latter case we do nothing (note that our krings  * have already been hidden in the unregister callback).  */
 end_comment
 
 begin_function
@@ -2527,7 +2527,7 @@ goto|goto
 name|put_out
 goto|;
 block|}
-comment|/* we create both master and slave.           * The endpoint we were asked for holds a reference to          * the other one.          */
+comment|/* we create both master and slave.          * The endpoint we were asked for holds a reference to          * the other one.          */
 name|ifp
 operator|=
 name|malloc
