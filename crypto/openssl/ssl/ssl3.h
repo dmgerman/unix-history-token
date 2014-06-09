@@ -759,15 +759,15 @@ define|#
 directive|define
 name|TLS1_FLAGS_TLS_PADDING_BUG
 value|0x0008
+define|#
+directive|define
+name|SSL3_FLAGS_CCS_OK
+value|0x0080
 comment|/* SSL3_FLAGS_SGC_RESTART_DONE is set when we  * restart a handshake because of MS SGC and so prevents us  * from restarting the handshake in a loop. It's reset on a  * renegotiation, so effectively limits the client to one restart  * per negotiation. This limits the possibility of a DDoS  * attack where the client handshakes in a loop using SGC to  * restart. Servers which permit renegotiation can still be  * effected, but we can't prevent that.  */
 define|#
 directive|define
 name|SSL3_FLAGS_SGC_RESTART_DONE
 value|0x0040
-define|#
-directive|define
-name|SSL3_FLAGS_CCS_OK
-value|0x0080
 typedef|typedef
 struct|struct
 name|ssl3_state_st
@@ -1095,6 +1095,22 @@ name|int
 name|send_connection_binding
 decl_stmt|;
 comment|/* TODOEKR */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_TLSEXT
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_EC
+comment|/* This is set to true if we believe that this is a version of Safari 	 * running on OS X 10.6 or newer. We wish to know this because Safari 	 * on 10.8 .. 10.8.3 has broken ECDHE-ECDSA support. */
+name|char
+name|is_probably_safari
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* !OPENSSL_NO_EC */
+endif|#
+directive|endif
+comment|/* !OPENSSL_NO_TLSEXT */
 block|}
 name|SSL3_STATE
 typedef|;

@@ -3450,8 +3450,13 @@ argument_list|,
 name|al
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_TLSEXT
 name|err
 label|:
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-

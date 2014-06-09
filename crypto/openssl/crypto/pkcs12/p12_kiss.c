@@ -1211,7 +1211,7 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{

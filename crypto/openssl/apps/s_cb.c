@@ -1558,6 +1558,54 @@ operator|=
 literal|" no_renegotiation"
 expr_stmt|;
 break|break;
+case|case
+literal|110
+case|:
+name|str_details2
+operator|=
+literal|" unsupported_extension"
+expr_stmt|;
+break|break;
+case|case
+literal|111
+case|:
+name|str_details2
+operator|=
+literal|" certificate_unobtainable"
+expr_stmt|;
+break|break;
+case|case
+literal|112
+case|:
+name|str_details2
+operator|=
+literal|" unrecognized_name"
+expr_stmt|;
+break|break;
+case|case
+literal|113
+case|:
+name|str_details2
+operator|=
+literal|" bad_certificate_status_response"
+expr_stmt|;
+break|break;
+case|case
+literal|114
+case|:
+name|str_details2
+operator|=
+literal|" bad_certificate_hash_value"
+expr_stmt|;
+break|break;
+case|case
+literal|115
+case|:
+name|str_details2
+operator|=
+literal|" unknown_psk_identity"
+expr_stmt|;
+break|break;
 block|}
 block|}
 block|}
