@@ -334,22 +334,22 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vlapic_set_tpr
+name|vlapic_set_cr8
 parameter_list|(
 name|struct
 name|vlapic
 modifier|*
 name|vlapic
 parameter_list|,
-name|uint8_t
+name|uint64_t
 name|val
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint8_t
-name|vlapic_get_tpr
+name|uint64_t
+name|vlapic_get_cr8
 parameter_list|(
 name|struct
 name|vlapic
