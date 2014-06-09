@@ -17637,7 +17637,6 @@ index|]
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Multi-vdev root pool configuration discovery is not supported yet. 	 */
 name|nchildren
 operator|=
 literal|1
