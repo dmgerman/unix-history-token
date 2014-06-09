@@ -5425,6 +5425,10 @@ argument_list|(
 name|encodedPoint
 argument_list|)
 expr_stmt|;
+name|encodedPoint
+operator|=
+name|NULL
+expr_stmt|;
 name|p
 operator|+=
 name|encodedlen
