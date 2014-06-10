@@ -2529,7 +2529,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
