@@ -5309,18 +5309,7 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
-comment|/* 		 * After we accepted the current ExtINT the PIC may 		 * have posted another one.  If that is the case, set 		 * the Interrupt Window Exiting execution control so 		 * we can inject that one too. 		 */
-if|if
-condition|(
-name|vm_extint_pending
-argument_list|(
-name|vmx
-operator|->
-name|vm
-argument_list|,
-name|vcpu
-argument_list|)
-condition|)
+comment|/* 		 * After we accepted the current ExtINT the PIC may 		 * have posted another one.  If that is the case, set 		 * the Interrupt Window Exiting execution control so 		 * we can inject that one too. 		 * 		 * Also, interrupt window exiting allows us to inject any 		 * pending APIC vector that was preempted by the ExtINT 		 * as soon as possible. This applies both for the software 		 * emulated vlapic and the hardware assisted virtual APIC. 		 */
 name|vmx_set_int_window_exiting
 argument_list|(
 name|vmx
