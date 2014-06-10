@@ -509,7 +509,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-aehwAHIPW] [-g<gdb port>] [-s<pci>] [-S<pci>]\n"
+literal|"Usage: %s [-aehwAHIPW] [-g<gdb port>] [-s<pci>]\n"
 literal|"       %*s [-c vcpus] [-p pincpu] [-m mem] [-l<lpc>]<vm>\n"
 literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
 literal|"       -A: create an ACPI table\n"
@@ -522,7 +522,6 @@ literal|"       -W: force virtio to use single-vector MSI\n"
 literal|"       -e: exit on unhandled I/O access\n"
 literal|"       -h: help\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
-literal|"       -S:<slot,driver,configinfo> legacy PCI slot config\n"
 literal|"       -l: LPC device configuration\n"
 literal|"       -m: memory size in MB\n"
 literal|"       -w: ignore unimplemented MSRs\n"
@@ -2663,7 +2662,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehwAHIPWp:g:c:s:S:m:l:"
+literal|"abehwAHIPWp:g:c:s:m:l:"
 argument_list|)
 operator|)
 operator|!=
@@ -2766,29 +2765,6 @@ condition|(
 name|pci_parse_slot
 argument_list|(
 name|optarg
-argument_list|,
-literal|0
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-else|else
-break|break;
-case|case
-literal|'S'
-case|:
-if|if
-condition|(
-name|pci_parse_slot
-argument_list|(
-name|optarg
-argument_list|,
-literal|1
 argument_list|)
 operator|!=
 literal|0
