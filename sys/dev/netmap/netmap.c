@@ -3829,6 +3829,10 @@ name|NS_BUF_CHANGED
 expr_stmt|;
 name|rdst
 operator|->
+name|head
+operator|=
+name|rdst
+operator|->
 name|cur
 operator|=
 name|nm_next
@@ -3991,7 +3995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rxsync backend for packets coming from the host stack.  * They have been put in kring->rx_queue by netmap_transmit().  * We protect access to the kring using kring->rx_queue.lock  *  * This routine also does the selrecord if called from the poll handler  * (we know because td != NULL).  *  * NOTE: on linux, selrecord() is defined as a macro and uses pwait  *     as an additional hidden argument.  * returns the number of packets delivered to tx queues in  * transparent mode, or a negative value if error  */
+comment|/*  * rxsync backend for packets coming from the host stack.  * They have been put in kring->rx_queue by netmap_transmit().  * We protect access to the kring using kring->rx_queue.lock  *  * returns the number of packets delivered to tx queues in  * transparent mode, or a negative value if error  */
 end_comment
 
 begin_function
@@ -4292,30 +4296,6 @@ block|}
 name|nm_rxsync_finalize
 argument_list|(
 name|kring
-argument_list|)
-expr_stmt|;
-comment|/* access copies of cur,tail in the kring */
-if|if
-condition|(
-name|kring
-operator|->
-name|rcur
-operator|==
-name|kring
-operator|->
-name|rtail
-operator|&&
-name|td
-condition|)
-comment|/* no bufs available */
-name|selrecord
-argument_list|(
-name|td
-argument_list|,
-operator|&
-name|kring
-operator|->
-name|si
 argument_list|)
 expr_stmt|;
 name|mbq_unlock
@@ -8358,7 +8338,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * transparent mode support: collect packets 			 * from the rxring(s). 			 * XXX NR_FORWARD should only be read on 			 * physical or NIC ports 			 */
+comment|/* 			 * transparent mode support: collect packets 			 * from the rxring(s). 			 */
 if|if
 condition|(
 name|netmap_fwd
@@ -8509,9 +8489,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|check_all_rx
-operator|&&
-operator|(
 name|netmap_fwd
 operator|||
 name|kring
@@ -8521,19 +8498,8 @@ operator|->
 name|flags
 operator|&
 name|NR_FORWARD
-operator|)
 condition|)
 block|{
-comment|/* XXX fix to use kring fields */
-if|if
-condition|(
-name|nm_ring_empty
-argument_list|(
-name|kring
-operator|->
-name|ring
-argument_list|)
-condition|)
 name|send_down
 operator|=
 name|netmap_rxsync_from_host
@@ -8547,18 +8513,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|nm_ring_empty
-argument_list|(
+name|send_down
+operator|&&
+operator|(
+name|netmap_no_timestamp
+operator|==
+literal|0
+operator|||
 name|kring
 operator|->
 name|ring
-argument_list|)
+operator|->
+name|flags
+operator|&
+name|NR_TIMESTAMP
+operator|)
 condition|)
-name|revents
-operator||=
-name|want_rx
+block|{
+name|microtime
+argument_list|(
+operator|&
+name|kring
+operator|->
+name|ring
+operator|->
+name|ts
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
