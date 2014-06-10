@@ -177,7 +177,7 @@ comment|/*  * mbuf wrappers  */
 end_comment
 
 begin_comment
-comment|/* mbuf destructor, also need to change the type to EXT_EXTREF,  * add an M_NOFREE flag, and then clear the flag and  * chain into uma_zfree(zone_pack, mf)  * (or reinstall the buffer ?)  */
+comment|/*  * mbuf destructor, also need to change the type to EXT_EXTREF,  * add an M_NOFREE flag, and then clear the flag and  * chain into uma_zfree(zone_pack, mf)  * (or reinstall the buffer ?)  *  * On FreeBSD 9 the destructor is called as ext_free(ext_arg1, ext_arg2)  * whereas newer version have ext_free(m, ext_arg1, ext_arg2)  * For compatibility we set ext_arg1 = m on allocation so we have  * the same code on both.  */
 end_comment
 
 begin_define
@@ -189,7 +189,7 @@ name|m
 parameter_list|,
 name|fn
 parameter_list|)
-value|do {		\ 	(m)->m_ext.ext_free = (void *)fn;	\ 	(m)->m_ext.ext_type = EXT_EXTREF;	\ } while (0)
+value|do {		\ 		(m)->m_ext.ext_free = (void *)fn;	\ 		(m)->m_ext.ext_type = EXT_EXTREF;	\ 	} while (0)
 end_define
 
 begin_function
@@ -203,7 +203,7 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-comment|/* restore original mbuf */
+comment|/* restore original data pointer and type */
 name|m
 operator|->
 name|m_ext
@@ -218,15 +218,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_arg1
-expr_stmt|;
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_arg1
-operator|=
-name|NULL
+name|ext_arg2
 expr_stmt|;
 name|m
 operator|->
@@ -241,6 +233,20 @@ operator|->
 name|m_ext
 operator|.
 name|ext_free
+operator|=
+name|NULL
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg1
+operator|=
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
 operator|=
 name|NULL
 expr_stmt|;
@@ -320,12 +326,21 @@ operator|.
 name|ext_arg1
 operator|=
 name|m
+expr_stmt|;
+comment|/* FreeBSD 9 compat */
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
+operator|=
+name|m
 operator|->
 name|m_ext
 operator|.
 name|ext_buf
 expr_stmt|;
-comment|// XXX save
+comment|/* save original */
 name|m
 operator|->
 name|m_ext
