@@ -2619,7 +2619,15 @@ literal|0x266a
 block|,
 literal|0x0d
 block|,
-literal|0x01
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x266c
+block|,
+literal|0x0e
+block|,
+literal|0x00
 block|}
 block|, }
 decl_stmt|;
