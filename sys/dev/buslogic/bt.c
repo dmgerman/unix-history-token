@@ -1122,17 +1122,6 @@ operator|->
 name|ccb_dmamap
 argument_list|)
 expr_stmt|;
-name|bus_dmamap_destroy
-argument_list|(
-name|bt
-operator|->
-name|ccb_dmat
-argument_list|,
-name|bt
-operator|->
-name|ccb_dmamap
-argument_list|)
-expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 literal|5
@@ -1172,17 +1161,6 @@ argument_list|,
 name|bt
 operator|->
 name|in_boxes
-argument_list|,
-name|bt
-operator|->
-name|mailbox_dmamap
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_destroy
-argument_list|(
-name|bt
-operator|->
-name|mailbox_dmat
 argument_list|,
 name|bt
 operator|->

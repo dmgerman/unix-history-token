@@ -5341,17 +5341,6 @@ operator|->
 name|dccb_dmamap
 argument_list|)
 expr_stmt|;
-name|bus_dmamap_destroy
-argument_list|(
-name|dpt
-operator|->
-name|dccb_dmat
-argument_list|,
-name|dpt
-operator|->
-name|dccb_dmamap
-argument_list|)
-expr_stmt|;
 case|case
 literal|3
 case|:
