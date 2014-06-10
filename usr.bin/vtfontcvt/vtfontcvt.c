@@ -377,7 +377,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: fontcvt [-w width] [-h height] [-v] normal.bdf [bold.bdf] out.fnt\n"
+literal|"usage: vtfontcvt [-w width] [-h height] [-v] normal.bdf [bold.bdf] out.fnt\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2694,7 +2694,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"h:w:"
+literal|"h:vw:"
 argument_list|)
 operator|)
 operator|!=
