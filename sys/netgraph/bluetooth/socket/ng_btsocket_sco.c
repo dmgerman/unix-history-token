@@ -4826,6 +4826,16 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/* Skip initialization of globals for non-default instances. */
+if|if
+condition|(
+operator|!
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+return|return;
 name|ng_btsocket_sco_node
 operator|=
 name|NULL
