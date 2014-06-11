@@ -1920,17 +1920,6 @@ operator|->
 name|ecb_dmamap
 argument_list|)
 expr_stmt|;
-name|bus_dmamap_destroy
-argument_list|(
-name|ahb
-operator|->
-name|ecb_dmat
-argument_list|,
-name|ahb
-operator|->
-name|ecb_dmamap
-argument_list|)
-expr_stmt|;
 case|case
 literal|2
 case|:

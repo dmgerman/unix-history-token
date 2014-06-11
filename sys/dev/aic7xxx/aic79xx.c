@@ -23128,21 +23128,6 @@ operator|.
 name|dmamap
 argument_list|)
 expr_stmt|;
-name|aic_dmamap_destroy
-argument_list|(
-name|ahd
-argument_list|,
-name|ahd
-operator|->
-name|shared_data_dmat
-argument_list|,
-name|ahd
-operator|->
-name|shared_data_map
-operator|.
-name|dmamap
-argument_list|)
-expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 literal|2
