@@ -24821,6 +24821,11 @@ name|uint32_t
 modifier|*
 name|destreg
 decl_stmt|;
+name|fetch_decode_modrm
+argument_list|(
+name|emu
+argument_list|)
+expr_stmt|;
 name|destreg
 operator|=
 name|decode_rh_long_register
