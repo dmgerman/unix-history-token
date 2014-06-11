@@ -5009,60 +5009,10 @@ name|inst_length
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We are asked to give the cpu by scheduler. */
-if|if
-condition|(
-name|curthread
-operator|->
-name|td_flags
-operator|&
-operator|(
-name|TDF_ASTPENDING
-operator||
-name|TDF_NEEDRESCHED
-operator|)
-condition|)
-block|{
-name|vmexit
-operator|->
-name|exitcode
-operator|=
-name|VM_EXITCODE_BOGUS
+comment|/* 		 * Disable global interrupts to guarantee atomicity during 		 * loading of guest state. This includes not only the state 		 * loaded by the "vmrun" instruction but also software state 		 * maintained by the hypervisor: suspended and rendezvous 		 * state, NPT generation number, vlapic interrupts etc. 		 */
+name|disable_gintr
+argument_list|()
 expr_stmt|;
-name|vmm_stat_incr
-argument_list|(
-name|vm
-argument_list|,
-name|vcpu
-argument_list|,
-name|VMEXIT_ASTPENDING
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|VCPU_CTR1
-argument_list|(
-name|vm
-argument_list|,
-name|vcpu
-argument_list|,
-literal|"SVM: ASTPENDING, RIP:0x%lx\n"
-argument_list|,
-name|state
-operator|->
-name|rip
-argument_list|)
-expr_stmt|;
-name|vmexit
-operator|->
-name|rip
-operator|=
-name|state
-operator|->
-name|rip
-expr_stmt|;
-break|break;
-block|}
 if|if
 condition|(
 name|vcpu_suspended
@@ -5071,6 +5021,9 @@ name|suspended_cookie
 argument_list|)
 condition|)
 block|{
+name|enable_gintr
+argument_list|()
+expr_stmt|;
 name|vm_exit_suspended
 argument_list|(
 name|vm
@@ -5092,6 +5045,9 @@ name|rend_cookie
 argument_list|)
 condition|)
 block|{
+name|enable_gintr
+argument_list|()
+expr_stmt|;
 name|vmexit
 operator|->
 name|exitcode
@@ -5116,6 +5072,63 @@ argument_list|,
 name|vcpu
 argument_list|,
 literal|"SVM: VCPU rendezvous, RIP:0x%lx\n"
+argument_list|,
+name|state
+operator|->
+name|rip
+argument_list|)
+expr_stmt|;
+name|vmexit
+operator|->
+name|rip
+operator|=
+name|state
+operator|->
+name|rip
+expr_stmt|;
+break|break;
+block|}
+comment|/* We are asked to give the cpu by scheduler. */
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_flags
+operator|&
+operator|(
+name|TDF_ASTPENDING
+operator||
+name|TDF_NEEDRESCHED
+operator|)
+condition|)
+block|{
+name|enable_gintr
+argument_list|()
+expr_stmt|;
+name|vmexit
+operator|->
+name|exitcode
+operator|=
+name|VM_EXITCODE_BOGUS
+expr_stmt|;
+name|vmm_stat_incr
+argument_list|(
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+name|VMEXIT_ASTPENDING
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|VCPU_CTR1
+argument_list|(
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"SVM: ASTPENDING, RIP:0x%lx\n"
 argument_list|,
 name|state
 operator|->
@@ -5172,10 +5185,6 @@ comment|/* Change TSS type to available.*/
 name|setup_tss_type
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Disable global interrupt to guarantee atomicity 		 * during loading of guest state. 		 * See 15.5.1 "Loading guest state" APM2. 		 */
-name|disable_gintr
-argument_list|()
-expr_stmt|;
 comment|/* Launch Virtual Machine. */
 name|svm_launch
 argument_list|(
@@ -5230,7 +5239,7 @@ name|lastcpu
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* vcpu exit with glbal interrupt disabled. */
+comment|/* #VMEXIT disables interrupts so re-enable them here. */
 name|enable_gintr
 argument_list|()
 expr_stmt|;
