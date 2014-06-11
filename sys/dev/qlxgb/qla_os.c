@@ -2945,6 +2945,17 @@ modifier|*
 name|dma_buf
 parameter_list|)
 block|{
+name|bus_dmamap_unload
+argument_list|(
+name|dma_buf
+operator|->
+name|dma_tag
+argument_list|,
+name|dma_buf
+operator|->
+name|dma_map
+argument_list|)
+expr_stmt|;
 name|bus_dmamem_free
 argument_list|(
 name|dma_buf
