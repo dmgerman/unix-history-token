@@ -6248,7 +6248,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sis_rx_list_map
+name|sis_rx_paddr
 condition|)
 name|bus_dmamap_unload
 argument_list|(
@@ -6263,10 +6263,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|sis_rx_list_map
-operator|&&
 name|sc
 operator|->
 name|sis_rx_list
@@ -6304,7 +6300,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sis_tx_list_map
+name|sis_tx_paddr
 condition|)
 name|bus_dmamap_unload
 argument_list|(
@@ -6319,10 +6315,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|sis_tx_list_map
-operator|&&
 name|sc
 operator|->
 name|sis_tx_list
