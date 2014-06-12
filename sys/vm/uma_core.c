@@ -632,7 +632,7 @@ begin_define
 define|#
 directive|define
 name|BUCKET_MAX
-value|BUCKET_SIZE(128)
+value|BUCKET_SIZE(256)
 end_define
 
 begin_decl_stmt
@@ -744,6 +744,19 @@ literal|128
 argument_list|)
 block|,
 literal|128
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|"256 Bucket"
+block|,
+name|BUCKET_SIZE
+argument_list|(
+literal|256
+argument_list|)
+block|,
+literal|64
 block|}
 block|,
 block|{
