@@ -1298,7 +1298,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_set_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< (i) % NBLONG)
+value|atomic_set_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
 end_define
 
 begin_define
@@ -1311,7 +1311,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|atomic_clear_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< (i) % NBLONG)
+value|atomic_clear_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
 end_define
 
 begin_define
@@ -1324,7 +1324,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|!!(atomic_load_acq_long(&((volatile long *)(a))[(i)/NBLONG])&	\     1UL<< ((i) % NBLONG))
+value|!!(atomic_load_acq_long(&((volatile long *)(a))[(i)/NBLONG])&	\     (1UL<< ((i) % NBLONG)))
 end_define
 
 begin_function
@@ -1368,9 +1368,11 @@ name|NBBY
 expr_stmt|;
 name|bit
 operator|=
-literal|1
+operator|(
+literal|1UL
 operator|<<
 name|bit
+operator|)
 expr_stmt|;
 do|do
 block|{
@@ -1455,9 +1457,11 @@ name|NBBY
 expr_stmt|;
 name|bit
 operator|=
-literal|1
+operator|(
+literal|1UL
 operator|<<
 name|bit
+operator|)
 expr_stmt|;
 do|do
 block|{
