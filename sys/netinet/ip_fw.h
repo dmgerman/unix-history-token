@@ -27,6 +27,17 @@ value|65535
 end_define
 
 begin_comment
+comment|/*  * Number of sets supported by ipfw  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_MAX_SETS
+value|32
+end_define
+
+begin_comment
 comment|/*  * Default number of ipfw tables.  */
 end_comment
 
@@ -155,6 +166,17 @@ end_define
 
 begin_comment
 comment|/* list table contents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_OBJ_DEL
+value|90
+end_define
+
+begin_comment
+comment|/* del table/pipe/etc */
 end_comment
 
 begin_comment
@@ -1667,7 +1689,7 @@ block|{
 name|ip_fw3_opheader
 name|opheader
 decl_stmt|;
-comment|/* eXtended tables are controlled via IP_FW3 */
+comment|/* IP_FW3 opcode */
 name|uint32_t
 name|size
 decl_stmt|;
@@ -1695,6 +1717,97 @@ block|}
 name|ipfw_xtable
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_xtable_tlv
+block|{
+name|uint16_t
+name|type
+decl_stmt|;
+comment|/* TLV type */
+name|uint16_t
+name|length
+decl_stmt|;
+comment|/* Total length, aligned to u32	*/
+block|}
+name|ipfw_xtable_tlv
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_NAME
+value|1
+end_define
+
+begin_comment
+comment|/* Object name TLV */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_xtable_ntlv
+block|{
+name|ipfw_xtable_tlv
+name|head
+decl_stmt|;
+comment|/* TLV header */
+name|uint16_t
+name|idx
+decl_stmt|;
+comment|/* Name index */
+name|uint16_t
+name|spare
+decl_stmt|;
+comment|/* unused */
+name|char
+name|name
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Null-terminated name */
+block|}
+name|ipfw_xtable_ntlv
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_obj_header
+block|{
+name|ip_fw3_opheader
+name|opheader
+decl_stmt|;
+comment|/* IP_FW3 opcode		*/
+name|uint32_t
+name|set
+decl_stmt|;
+comment|/* Set we're operating		*/
+name|uint16_t
+name|idx
+decl_stmt|;
+comment|/* object name index		*/
+name|uint16_t
+name|objtype
+decl_stmt|;
+comment|/* object type			*/
+block|}
+name|ipfw_obj_header
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_OBJTYPE_TABLE
+value|1
+end_define
 
 begin_endif
 endif|#

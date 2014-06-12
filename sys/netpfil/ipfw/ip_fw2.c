@@ -511,6 +511,25 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_macro
+name|VNET_DEFINE
+argument_list|(
+argument|unsigned int
+argument_list|,
+argument|fw_tables_sets
+argument_list|)
+end_macro
+
+begin_expr_stmt
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Don't use set-aware tables */
+end_comment
+
 begin_comment
 comment|/* Use 128 tables by default */
 end_comment
@@ -11282,11 +11301,6 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-name|ipfw_destroy_tables
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 name|reap
 operator|=
 name|NULL
@@ -11353,6 +11367,11 @@ name|chain
 argument_list|)
 expr_stmt|;
 name|IPFW_UH_WUNLOCK
+argument_list|(
+name|chain
+argument_list|)
+expr_stmt|;
+name|ipfw_destroy_tables
 argument_list|(
 name|chain
 argument_list|)
