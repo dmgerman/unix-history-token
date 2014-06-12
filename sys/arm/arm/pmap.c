@@ -11430,9 +11430,12 @@ operator|&
 name|pvh_global_lock
 argument_list|)
 expr_stmt|;
-name|pmap_remove_write
+comment|/* 	 * XXX This call shouldn't exist.  Iterating over the PV list twice, 	 * once in pmap_clearbit() and again below, is both unnecessary and 	 * inefficient.  The below code should itself write back the cache 	 * entry before it destroys the mapping. 	 */
+name|pmap_clearbit
 argument_list|(
 name|m
+argument_list|,
+name|PVF_WRITE
 argument_list|)
 expr_stmt|;
 name|curpm
@@ -11495,7 +11498,7 @@ operator|->
 name|pv_pmap
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Cached contents were written-back in pmap_remove_write(), 		 * but we still have to invalidate the cache entry to make 		 * sure stale data are not retrieved when another page will be 		 * mapped under this virtual address. 		 */
+comment|/* 		 * Cached contents were written-back in pmap_clearbit(), 		 * but we still have to invalidate the cache entry to make 		 * sure stale data are not retrieved when another page will be 		 * mapped under this virtual address. 		 */
 if|if
 condition|(
 name|pmap_is_current
