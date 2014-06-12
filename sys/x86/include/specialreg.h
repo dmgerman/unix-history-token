@@ -400,8 +400,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|XFEATURE_ENABLED_AVX
+name|XFEATURE_ENABLED_YMM_HI128
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_ENABLED_AVX
+value|XFEATURE_ENABLED_YMM_HI128
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_ENABLED_BNDREGS
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_ENABLED_BNDCSR
+value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_ENABLED_OPMASK
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_ENABLED_ZMM_HI256
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_ENABLED_HI16_ZMM
+value|0x00000080
 end_define
 
 begin_define
@@ -410,6 +452,22 @@ directive|define
 name|XFEATURE_AVX
 define|\
 value|(XFEATURE_ENABLED_X87 | XFEATURE_ENABLED_SSE | XFEATURE_ENABLED_AVX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_AVX512
+define|\
+value|(XFEATURE_ENABLED_OPMASK | XFEATURE_ENABLED_ZMM_HI256 |	\     XFEATURE_ENABLED_HI16_ZMM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_MPX
+define|\
+value|(XFEATURE_ENABLED_BNDREGS | XFEATURE_ENABLED_BNDCSR)
 end_define
 
 begin_comment
@@ -1525,7 +1583,7 @@ value|12
 end_define
 
 begin_comment
-comment|/*  * Structured Extended Features  */
+comment|/*  * CPUID instruction 7 Structured Extended Features, leaf 0 ebx info  */
 end_comment
 
 begin_define
@@ -1580,8 +1638,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPUID_STDEXT_ENH_MOVSB
+name|CPUID_STDEXT_ERMS
 value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_INVPCID
+value|0x00000400
 end_define
 
 begin_define
@@ -1594,8 +1659,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPUID_STDEXT_INVPCID
-value|0x00000400
+name|CPUID_STDEXT_MPX
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_AVX512F
+value|0x00010000
 end_define
 
 begin_define
@@ -1617,6 +1689,48 @@ define|#
 directive|define
 name|CPUID_STDEXT_SMAP
 value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_CLFLUSHOPT
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_PROCTRACE
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_AVX512PF
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_AVX512ER
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_AVX512CD
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_STDEXT_SHA
+value|0x20000000
 end_define
 
 begin_comment
