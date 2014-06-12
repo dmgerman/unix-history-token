@@ -405,12 +405,6 @@ name|fail_0
 label|:
 name|dma
 operator|->
-name|map
-operator|=
-name|NULL
-expr_stmt|;
-name|dma
-operator|->
 name|tag
 operator|=
 name|NULL

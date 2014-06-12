@@ -8693,12 +8693,6 @@ name|fail_0
 label|:
 name|dma
 operator|->
-name|dma_map
-operator|=
-name|NULL
-expr_stmt|;
-name|dma
-operator|->
 name|dma_tag
 operator|=
 name|NULL
