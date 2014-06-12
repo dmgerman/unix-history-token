@@ -6951,6 +6951,21 @@ argument_list|(
 name|VMCS_EXIT_INTR_INFO
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX: Ignore this exit if VMCS_INTR_VALID is not set. 		 * This appears to be a bug in VMware Fusion? 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|intr_info
+operator|&
+name|VMCS_INTR_VALID
+operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|KASSERT
 argument_list|(
 operator|(
