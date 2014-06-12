@@ -145,6 +145,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* CHIP ID */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0x10000000
+argument_list|,
+literal|0x100000
+argument_list|)
+expr_stmt|;
 comment|/* UART */
 name|arm_devmap_add_entry
 argument_list|(
