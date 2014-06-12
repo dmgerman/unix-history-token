@@ -503,6 +503,10 @@ name|IOCNUM_LAPIC_LOCAL_IRQ
 init|=
 literal|37
 block|,
+name|IOCNUM_IOAPIC_PINCOUNT
+init|=
+literal|38
+block|,
 comment|/* PCI pass-thru */
 name|IOCNUM_BIND_PPTDEV
 init|=
@@ -659,6 +663,14 @@ directive|define
 name|VM_IOAPIC_PULSE_IRQ
 define|\
 value|_IOW('v', IOCNUM_IOAPIC_PULSE_IRQ, struct vm_ioapic_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_IOAPIC_PINCOUNT
+define|\
+value|_IOR('v', IOCNUM_IOAPIC_PINCOUNT, int)
 end_define
 
 begin_define

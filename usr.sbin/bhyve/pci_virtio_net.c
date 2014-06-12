@@ -2026,6 +2026,17 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|vsc_vs
+operator|.
+name|vs_mtx
+operator|=
+operator|&
+name|sc
+operator|->
+name|vsc_mtx
+expr_stmt|;
+name|sc
+operator|->
 name|vsc_queues
 index|[
 name|VTNET_RXQ
@@ -2505,6 +2516,11 @@ argument_list|,
 name|PCIR_SUBDEV_0
 argument_list|,
 name|VIRTIO_TYPE_NET
+argument_list|)
+expr_stmt|;
+name|pci_lintr_request
+argument_list|(
+name|pi
 argument_list|)
 expr_stmt|;
 comment|/* link always up */

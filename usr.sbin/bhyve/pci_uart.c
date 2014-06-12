@@ -276,9 +276,6 @@ expr_stmt|;
 name|pci_lintr_request
 argument_list|(
 name|pi
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* initialize config space */

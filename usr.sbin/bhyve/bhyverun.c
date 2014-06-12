@@ -152,7 +152,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"legacy_irq.h"
+file|"ioapic.h"
 end_include
 
 begin_include
@@ -2990,8 +2990,10 @@ expr_stmt|;
 name|init_inout
 argument_list|()
 expr_stmt|;
-name|legacy_irq_init
-argument_list|()
+name|ioapic_init
+argument_list|(
+name|ctx
+argument_list|)
 expr_stmt|;
 name|rtc_init
 argument_list|(
