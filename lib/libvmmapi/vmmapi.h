@@ -352,7 +352,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vm_inject_event
+name|vm_inject_exception
 parameter_list|(
 name|struct
 name|vmctx
@@ -362,19 +362,15 @@ parameter_list|,
 name|int
 name|vcpu
 parameter_list|,
-name|enum
-name|vm_event_type
-name|type
-parameter_list|,
 name|int
-name|vector
+name|vec
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|vm_inject_event2
+name|vm_inject_exception2
 parameter_list|(
 name|struct
 name|vmctx
@@ -384,15 +380,11 @@ parameter_list|,
 name|int
 name|vcpu
 parameter_list|,
-name|enum
-name|vm_event_type
-name|type
+name|int
+name|vec
 parameter_list|,
 name|int
-name|vector
-parameter_list|,
-name|int
-name|error_code
+name|errcode
 parameter_list|)
 function_decl|;
 end_function_decl

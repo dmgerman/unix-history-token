@@ -1916,6 +1916,20 @@ name|VMCS_INTR_T_NMI
 value|(2<< 8)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_T_HWEXCEPTION
+value|(3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_DEL_ERRCODE
+value|(1<< 11)
+end_define
+
 begin_comment
 comment|/*  * VMCS IDT-Vectoring information fields  */
 end_comment
