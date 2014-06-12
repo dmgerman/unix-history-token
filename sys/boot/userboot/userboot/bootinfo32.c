@@ -98,7 +98,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|{			\     COPY32(t, a, c);				\     COPY32(strlen(s) + 1, a, c);		\     if (c)					\         CALLBACK(copyin, s, a, strlen(s) + 1);  \     a += roundup(strlen(s) + 1, sizeof(u_long));\ }
+value|{			\     COPY32(t, a, c);				\     COPY32(strlen(s) + 1, a, c);		\     if (c)					\         CALLBACK(copyin, s, a, strlen(s) + 1);  \     a += roundup(strlen(s) + 1, sizeof(uint32_t));\ }
 end_define
 
 begin_define
@@ -156,7 +156,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|{			\     COPY32(t, a, c);				\     COPY32(sizeof(s), a, c);			\     if (c)					\         CALLBACK(copyin,&s, a, sizeof(s));	\     a += roundup(sizeof(s), sizeof(u_long));	\ }
+value|{			\     COPY32(t, a, c);				\     COPY32(sizeof(s), a, c);			\     if (c)					\         CALLBACK(copyin,&s, a, sizeof(s));	\     a += roundup(sizeof(s), sizeof(uint32_t));	\ }
 end_define
 
 begin_define
@@ -198,7 +198,7 @@ name|mm
 parameter_list|,
 name|c
 parameter_list|)
-value|{		\     COPY32(MODINFO_METADATA | mm->md_type, a, c); \     COPY32(mm->md_size, a, c);			\     if (c)					\         CALLBACK(copyin, mm->md_data, a, mm->md_size);    \     a += roundup(mm->md_size, sizeof(u_long));\ }
+value|{		\     COPY32(MODINFO_METADATA | mm->md_type, a, c); \     COPY32(mm->md_size, a, c);			\     if (c)					\         CALLBACK(copyin, mm->md_data, a, mm->md_size);    \     a += roundup(mm->md_size, sizeof(uint32_t));\ }
 end_define
 
 begin_define
@@ -466,6 +466,11 @@ name|char
 modifier|*
 name|kernelpath
 decl_stmt|;
+name|uint64_t
+name|lowmem
+decl_stmt|,
+name|highmem
+decl_stmt|;
 name|howto
 operator|=
 name|bi_getboothowto
@@ -708,12 +713,11 @@ operator|&
 name|kernend
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|bios_addsmapdata(kfp);
-endif|#
-directive|endif
+name|bios_addsmapdata
+argument_list|(
+name|kfp
+argument_list|)
+expr_stmt|;
 comment|/* Figure out the size and location of the metadata */
 operator|*
 name|modulep
@@ -920,18 +924,41 @@ argument_list|(
 name|bi
 argument_list|)
 expr_stmt|;
+name|CALLBACK
+argument_list|(
+name|getmem
+argument_list|,
+operator|&
+name|lowmem
+argument_list|,
+operator|&
+name|highmem
+argument_list|)
+expr_stmt|;
 name|bi
 operator|.
 name|bi_memsizes_valid
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|bi.bi_basemem = bios_basemem / 1024;     bi.bi_extmem = bios_extmem / 1024;
-endif|#
-directive|endif
+name|bi
+operator|.
+name|bi_basemem
+operator|=
+literal|640
+expr_stmt|;
+name|bi
+operator|.
+name|bi_extmem
+operator|=
+operator|(
+name|lowmem
+operator|-
+literal|0x100000
+operator|)
+operator|/
+literal|1024
+expr_stmt|;
 name|bi
 operator|.
 name|bi_envp
@@ -969,18 +996,12 @@ name|bi
 operator|.
 name|bi_kernelname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 literal|0x2000
 operator|+
 sizeof|sizeof
 argument_list|(
 name|bi
 argument_list|)
-operator|)
 expr_stmt|;
 name|CALLBACK
 argument_list|(

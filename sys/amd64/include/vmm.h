@@ -1715,6 +1715,14 @@ decl_stmt|;
 name|uint64_t
 name|cr3
 decl_stmt|;
+name|enum
+name|vie_cpu_mode
+name|cpu_mode
+decl_stmt|;
+name|enum
+name|vie_paging_mode
+name|paging_mode
+decl_stmt|;
 name|struct
 name|vie
 name|vie

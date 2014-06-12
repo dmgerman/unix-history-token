@@ -20,6 +20,12 @@ name|__ELF_WORD_SIZE
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|_MACHINE_ELF_WANT_32BIT
+end_define
+
 begin_include
 include|#
 directive|include
