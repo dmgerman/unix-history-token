@@ -807,7 +807,7 @@ argument_list|,
 literal|0x01
 argument_list|)
 expr_stmt|;
-comment|/* Activate IRQ 29, ie private timer IRQ*/
+comment|/* Activate IRQ 29-30, ie private timer (secure& non-secure) IRQs */
 name|gic_d_write_4
 argument_list|(
 name|GICD_ISENABLER
@@ -822,6 +822,26 @@ literal|1UL
 operator|<<
 operator|(
 literal|29
+operator|&
+literal|0x1F
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|gic_d_write_4
+argument_list|(
+name|GICD_ISENABLER
+argument_list|(
+literal|30
+operator|>>
+literal|5
+argument_list|)
+argument_list|,
+operator|(
+literal|1UL
+operator|<<
+operator|(
+literal|30
 operator|&
 literal|0x1F
 operator|)
