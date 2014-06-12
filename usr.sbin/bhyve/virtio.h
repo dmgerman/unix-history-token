@@ -16,7 +16,7 @@ name|_VIRTIO_H_
 end_define
 
 begin_comment
-comment|/*  * These are derived from several virtio specifications.  *  * Some useful links:  *    https://github.com/rustyrussel/virtio-spec  *    http://people.redhat.com/pbonzini/virtio-spec.pdf  */
+comment|/*  * These are derived from several virtio specifications.  *  * Some useful links:  *    https://github.com/rustyrussell/virtio-spec  *    http://people.redhat.com/pbonzini/virtio-spec.pdf  */
 end_comment
 
 begin_comment
