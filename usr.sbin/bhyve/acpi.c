@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2012 NetApp, Inc.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * bhyve ACPI table generator.  *  * Create the minimal set of ACPI tables required to boot FreeBSD (and  * hopefully other o/s's) by writing out ASL template files for each of  * the tables and the compiling them to AML with the Intel iasl compiler.  * The AML files are then read into guest memory.  *  *  The tables are placed in the guest's ROM area just below 1MB physical,  * above the MPTable.  *  *  Layout  *  ------  *   RSDP  ->   0xf0400    (36 bytes fixed)  *     RSDT  ->   0xf0440    (36 bytes + 4*N table addrs, 2 used)  *     XSDT  ->   0xf0480    (36 bytes + 8*N table addrs, 2 used)  *       MADT  ->   0xf0500  (depends on #CPUs)  *       FADT  ->   0xf0600  (268 bytes)  *       HPET  ->   0xf0740  (56 bytes)  *         FACS  ->   0xf0780 (64 bytes)  *         DSDT  ->   0xf0800 (variable - can go up to 0x100000)  */
+comment|/*  * bhyve ACPI table generator.  *  * Create the minimal set of ACPI tables required to boot FreeBSD (and  * hopefully other o/s's) by writing out ASL template files for each of  * the tables and the compiling them to AML with the Intel iasl compiler.  * The AML files are then read into guest memory.  *  *  The tables are placed in the guest's ROM area just below 1MB physical,  * above the MPTable.  *  *  Layout  *  ------  *   RSDP  ->   0xf2400    (36 bytes fixed)  *     RSDT  ->   0xf2440    (36 bytes + 4*N table addrs, 2 used)  *     XSDT  ->   0xf2480    (36 bytes + 8*N table addrs, 2 used)  *       MADT  ->   0xf2500  (depends on #CPUs)  *       FADT  ->   0xf2600  (268 bytes)  *       HPET  ->   0xf2740  (56 bytes)  *         FACS  ->   0xf2780 (64 bytes)  *         DSDT  ->   0xf2800 (variable - can go up to 0x100000)  */
 end_comment
 
 begin_include
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|BHYVE_ACPI_BASE
-value|0xf0400
+value|0xf2400
 end_define
 
 begin_define

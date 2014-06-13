@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"smbiostbl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xmsr.h"
 end_include
 
@@ -327,6 +333,13 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|guest_ncpus
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|guest_uuid_str
 decl_stmt|;
 end_decl_stmt
 
@@ -537,6 +550,7 @@ literal|"       -l: LPC device configuration\n"
 literal|"       -m: memory size in MB\n"
 literal|"       -w: ignore unimplemented MSRs\n"
 literal|"       -x: local apic is in x2APIC mode\n"
+literal|"       -U: uuid\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -2704,7 +2718,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehwxAHIPWp:g:c:s:m:l:"
+literal|"abehwxAHIPWp:g:c:s:m:l:U:"
 argument_list|)
 operator|)
 operator|!=
@@ -2872,6 +2886,14 @@ case|:
 name|strictio
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'U'
+case|:
+name|guest_uuid_str
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -3110,6 +3132,20 @@ argument_list|(
 name|ctx
 argument_list|,
 name|guest_ncpus
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|smbios_build
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
