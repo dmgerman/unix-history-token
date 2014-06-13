@@ -364,7 +364,7 @@ argument_list|(
 literal|"hw.mfi.mrsas_enable"
 argument_list|,
 operator|&
-name|mfi_msi
+name|mfi_mrsas_enable
 argument_list|)
 expr_stmt|;
 end_expr_stmt
