@@ -83,18 +83,9 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|long
-name|invalids
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|do_conv
 parameter_list|(
 name|FILE
@@ -135,18 +126,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|option
 name|long_options
@@ -254,7 +247,7 @@ end_define
 
 begin_function
 specifier|static
-name|void
+name|int
 name|do_conv
 parameter_list|(
 name|FILE
@@ -294,6 +287,11 @@ index|]
 decl_stmt|,
 modifier|*
 name|out
+decl_stmt|;
+name|unsigned
+name|long
+name|long
+name|invalids
 decl_stmt|;
 specifier|const
 name|char
@@ -368,12 +366,16 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EXIT_FAILURE
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+name|invalids
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -662,6 +664,13 @@ argument_list|(
 name|cd
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|invalids
+operator|>
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -770,6 +779,8 @@ name|int
 name|ch
 decl_stmt|,
 name|i
+decl_stmt|,
+name|res
 decl_stmt|;
 name|bool
 name|opt_c
@@ -981,6 +992,8 @@ name|argc
 operator|==
 literal|0
 condition|)
+name|res
+operator|=
 name|do_conv
 argument_list|(
 name|stdin
@@ -996,6 +1009,10 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|res
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1056,6 +1073,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+name|res
+operator||=
 name|do_conv
 argument_list|(
 name|fp
@@ -1081,7 +1100,13 @@ block|}
 block|}
 return|return
 operator|(
+name|res
+operator|==
+literal|0
+condition|?
 name|EXIT_SUCCESS
+else|:
+name|EXIT_FAILURE
 operator|)
 return|;
 block|}
