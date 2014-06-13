@@ -972,7 +972,7 @@ name|vm
 argument_list|,
 name|vcpu_id
 argument_list|,
-name|X2APIC_ENABLED
+name|X2APIC_DISABLED
 argument_list|)
 expr_stmt|;
 name|vcpu

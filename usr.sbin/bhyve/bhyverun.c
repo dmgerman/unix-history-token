@@ -346,8 +346,6 @@ name|int
 name|guest_vmexit_on_hlt
 decl_stmt|,
 name|guest_vmexit_on_pause
-decl_stmt|,
-name|disable_x2apic
 decl_stmt|;
 end_decl_stmt
 
@@ -359,6 +357,19 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|x2apic_mode
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default is xAPIC */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -511,7 +522,7 @@ name|stderr
 argument_list|,
 literal|"Usage: %s [-aehwAHIPW] [-g<gdb port>] [-s<pci>]\n"
 literal|"       %*s [-c vcpus] [-p pincpu] [-m mem] [-l<lpc>]<vm>\n"
-literal|"       -a: local apic is in XAPIC mode (default is X2APIC)\n"
+literal|"       -a: local apic is in xAPIC mode (deprecated)\n"
 literal|"       -A: create an ACPI table\n"
 literal|"       -g: gdb port\n"
 literal|"       -c: # cpus (default 1)\n"
@@ -525,6 +536,7 @@ literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
 literal|"       -l: LPC device configuration\n"
 literal|"       -m: memory size in MB\n"
 literal|"       -w: ignore unimplemented MSRs\n"
+literal|"       -x: local apic is in x2APIC mode\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -574,21 +586,6 @@ name|gaddr
 argument_list|,
 name|len
 argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|fbsdrun_disable_x2apic
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|disable_x2apic
 operator|)
 return|;
 block|}
@@ -2571,8 +2568,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|fbsdrun_disable_x2apic
-argument_list|()
+name|x2apic_mode
 condition|)
 name|err
 operator|=
@@ -2582,7 +2578,7 @@ name|ctx
 argument_list|,
 name|cpu
 argument_list|,
-name|X2APIC_DISABLED
+name|X2APIC_ENABLED
 argument_list|)
 expr_stmt|;
 else|else
@@ -2594,7 +2590,7 @@ name|ctx
 argument_list|,
 name|cpu
 argument_list|,
-name|X2APIC_ENABLED
+name|X2APIC_DISABLED
 argument_list|)
 expr_stmt|;
 if|if
@@ -2708,7 +2704,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehwAHIPWp:g:c:s:m:l:"
+literal|"abehwxAHIPWp:g:c:s:m:l:"
 argument_list|)
 operator|)
 operator|!=
@@ -2724,9 +2720,9 @@ block|{
 case|case
 literal|'a'
 case|:
-name|disable_x2apic
+name|x2apic_mode
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2892,6 +2888,14 @@ case|:
 name|virtio_msix
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|x2apic_mode
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case

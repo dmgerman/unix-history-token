@@ -1578,11 +1578,9 @@ begin_enum
 enum|enum
 name|x2apic_state
 block|{
-name|X2APIC_ENABLED
-block|,
-name|X2APIC_AVAILABLE
-block|,
 name|X2APIC_DISABLED
+block|,
+name|X2APIC_ENABLED
 block|,
 name|X2APIC_STATE_LAST
 block|}

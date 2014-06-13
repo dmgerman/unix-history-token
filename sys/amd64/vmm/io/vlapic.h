@@ -36,6 +36,9 @@ name|vlapic
 modifier|*
 name|vlapic
 parameter_list|,
+name|int
+name|mmio_access
+parameter_list|,
 name|uint64_t
 name|offset
 parameter_list|,
@@ -57,6 +60,9 @@ name|struct
 name|vlapic
 modifier|*
 name|vlapic
+parameter_list|,
+name|int
+name|mmio_access
 parameter_list|,
 name|uint64_t
 name|offset
@@ -210,7 +216,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vlapic_set_apicbase
 parameter_list|(
 name|struct
@@ -441,6 +447,21 @@ name|vlapic
 parameter_list|,
 name|uint32_t
 name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vlapic_self_ipi_handler
+parameter_list|(
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|,
+name|uint64_t
+name|val
 parameter_list|)
 function_decl|;
 end_function_decl

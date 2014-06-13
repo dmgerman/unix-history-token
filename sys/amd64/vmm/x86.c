@@ -432,6 +432,15 @@ index|]
 operator||=
 name|CPUID2_X2APIC
 expr_stmt|;
+else|else
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|CPUID2_X2APIC
+expr_stmt|;
 comment|/* 			 * Only advertise CPUID2_XSAVE in the guest if 			 * the host is using XSAVE. 			 */
 if|if
 condition|(
