@@ -1679,13 +1679,13 @@ name|p
 operator|.
 name|glob
 argument_list|,
+literal|0
+argument_list|,
 name|ifp
 operator|->
 name|if_xname
 argument_list|,
 name|tablearg
-argument_list|,
-name|IPFW_TABLE_INTERFACE
 argument_list|)
 return|;
 comment|/* Check name */
@@ -6404,12 +6404,16 @@ name|cmd
 operator|->
 name|arg1
 argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_addr
+argument_list|)
+argument_list|,
 name|pkey
 argument_list|,
 operator|&
 name|v
-argument_list|,
-name|IPFW_TABLE_CIDR
 argument_list|)
 expr_stmt|;
 if|if

@@ -179,6 +179,39 @@ begin_comment
 comment|/* del table/pipe/etc */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_OBJ_LISTSIZE
+value|91
+end_define
+
+begin_comment
+comment|/* get size for table/etc list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_OBJ_LIST
+value|92
+end_define
+
+begin_comment
+comment|/* list all objects of given type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_OBJ_INFO
+value|93
+end_define
+
+begin_comment
+comment|/* request info for one object */
+end_comment
+
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
 end_comment
@@ -1721,7 +1754,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|_ipfw_xtable_tlv
+name|_ipfw_obj_tlv
 block|{
 name|uint16_t
 name|type
@@ -1732,7 +1765,7 @@ name|length
 decl_stmt|;
 comment|/* Total length, aligned to u32	*/
 block|}
-name|ipfw_xtable_tlv
+name|ipfw_obj_tlv
 typedef|;
 end_typedef
 
@@ -1750,9 +1783,9 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|_ipfw_xtable_ntlv
+name|_ipfw_obj_ntlv
 block|{
-name|ipfw_xtable_tlv
+name|ipfw_obj_tlv
 name|head
 decl_stmt|;
 comment|/* TLV header */
@@ -1772,9 +1805,72 @@ index|]
 decl_stmt|;
 comment|/* Null-terminated name */
 block|}
-name|ipfw_xtable_ntlv
+name|ipfw_obj_ntlv
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_xtable_info
+block|{
+name|uint8_t
+name|type
+decl_stmt|;
+comment|/* table type (cidr,iface,..)	*/
+name|uint8_t
+name|ftype
+decl_stmt|;
+comment|/* format table type		*/
+name|uint8_t
+name|atype
+decl_stmt|;
+comment|/* algorithm type		*/
+name|uint8_t
+name|spare0
+decl_stmt|;
+name|uint32_t
+name|set
+decl_stmt|;
+comment|/* set table is in		*/
+name|uint32_t
+name|kidx
+decl_stmt|;
+comment|/* kernel index			*/
+name|uint32_t
+name|refcnt
+decl_stmt|;
+comment|/* number of references		*/
+name|uint32_t
+name|count
+decl_stmt|;
+comment|/* Number of records		*/
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* Total size of records	*/
+name|char
+name|tablename
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* table name */
+block|}
+name|ipfw_xtable_info
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_OBJTYPE_TABLE
+value|1
+end_define
+
+begin_comment
+comment|/* IP_FW_OBJ_DEL, IP_FW_OBJ_INFO (followed by ipfw_xtable_info)  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -1793,21 +1889,62 @@ name|uint16_t
 name|idx
 decl_stmt|;
 comment|/* object name index		*/
-name|uint16_t
+name|uint8_t
 name|objtype
 decl_stmt|;
 comment|/* object type			*/
+name|uint8_t
+name|objsubtype
+decl_stmt|;
+comment|/* object subtype		*/
+name|ipfw_obj_ntlv
+name|ntlv
+decl_stmt|;
+comment|/* object name tlv		*/
 block|}
 name|ipfw_obj_header
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|IPFW_OBJTYPE_TABLE
-value|1
-end_define
+begin_comment
+comment|/* IP_FW_OBJ_LISTSIZE, IP_FW_OBJ_LIST (followd by ipfw_xtable_info) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_obj_lheader
+block|{
+name|ip_fw3_opheader
+name|opheader
+decl_stmt|;
+comment|/* IP_FW3 opcode		*/
+name|uint8_t
+name|objtype
+decl_stmt|;
+comment|/* object type			*/
+name|uint8_t
+name|spare0
+decl_stmt|;
+name|uint16_t
+name|spare1
+decl_stmt|;
+name|uint32_t
+name|count
+decl_stmt|;
+comment|/* Total objects count		*/
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* Total objects size		*/
+name|uint32_t
+name|objsize
+decl_stmt|;
+comment|/* Size of one object		*/
+block|}
+name|ipfw_obj_lheader
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
