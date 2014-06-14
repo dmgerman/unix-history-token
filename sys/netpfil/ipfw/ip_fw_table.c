@@ -30,39 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|IPFIREWALL requires INET.
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_inet6.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -121,12 +88,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<net/radix.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -162,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<netpfil/ipfw/ip_fw_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netpfil/ipfw/ip_fw_table.h>
 end_include
 
 begin_comment

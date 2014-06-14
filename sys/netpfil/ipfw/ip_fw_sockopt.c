@@ -194,6 +194,12 @@ directive|include
 file|<netpfil/ipfw/ip_fw_private.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netpfil/ipfw/ip_fw_table.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
