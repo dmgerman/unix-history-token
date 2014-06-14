@@ -212,6 +212,28 @@ begin_comment
 comment|/* request info for one object */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_OBJ_FLUSH
+value|94
+end_define
+
+begin_comment
+comment|/* flush data for given object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_OBJ_DUMP
+value|95
+end_define
+
+begin_comment
+comment|/* dump all data for given object */
+end_comment
+
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
 end_comment
@@ -1869,7 +1891,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* IP_FW_OBJ_DEL, IP_FW_OBJ_INFO (followed by ipfw_xtable_info)  */
+comment|/*  * IP_FW_OBJ_DEL, IP_FW_OBJ_INFO (followed by ipfw_xtable_info),  * IP_FW_OBJ_DUMP (followed by ipfw_xtable_info and ipfw_table_xentry'xN )  */
 end_comment
 
 begin_typedef
