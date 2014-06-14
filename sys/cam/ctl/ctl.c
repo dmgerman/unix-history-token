@@ -4969,11 +4969,6 @@ name|ctl_frontend
 modifier|*
 name|fe
 decl_stmt|;
-name|struct
-name|ctl_lun
-modifier|*
-name|lun
-decl_stmt|;
 name|uint8_t
 name|sc_id
 init|=
@@ -5359,13 +5354,6 @@ operator|->
 name|io_pools
 argument_list|)
 expr_stmt|;
-name|lun
-operator|=
-operator|&
-name|softc
-operator|->
-name|lun
-expr_stmt|;
 comment|/* 	 * We don't bother calling these with ctl_lock held here, because, 	 * in theory, no one else can try to do anything while we're in our 	 * module init routine. 	 */
 if|if
 condition|(
@@ -5493,17 +5481,6 @@ name|othersc_pool
 operator|=
 name|other_pool
 expr_stmt|;
-comment|/* 	 * We used to allocate a processor LUN here.  The new scheme is to 	 * just let the user allocate LUNs as he sees fit. 	 */
-if|#
-directive|if
-literal|0
-block|mtx_lock(&softc->ctl_lock); 	ctl_alloc_lun(softc, lun,
-comment|/*be_lun*/
-block|NULL,
-comment|/*target*/
-block|softc->target); 	mtx_unlock(&softc->ctl_lock);
-endif|#
-directive|endif
 if|if
 condition|(
 name|worker_threads
@@ -5605,27 +5582,6 @@ block|{
 name|printf
 argument_list|(
 literal|"error creating CTL work thread!\n"
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|softc
-operator|->
-name|ctl_lock
-argument_list|)
-expr_stmt|;
-name|ctl_free_lun
-argument_list|(
-name|lun
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|softc
-operator|->
-name|ctl_lock
 argument_list|)
 expr_stmt|;
 name|ctl_pool_free
