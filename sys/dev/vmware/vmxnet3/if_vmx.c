@@ -20175,9 +20175,9 @@ if|if
 condition|(
 name|dma
 operator|->
-name|dma_map
+name|dma_paddr
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|bus_dmamap_sync
