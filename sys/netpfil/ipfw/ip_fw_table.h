@@ -772,27 +772,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|ipfw_dump_xtable
-parameter_list|(
-name|struct
-name|ip_fw_chain
-modifier|*
-name|ch
-parameter_list|,
-name|struct
-name|tid_info
-modifier|*
-name|ti
-parameter_list|,
-name|ipfw_xtable
-modifier|*
-name|tbl
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
