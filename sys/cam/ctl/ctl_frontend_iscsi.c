@@ -9559,7 +9559,7 @@ name|wwpn_len
 operator|+=
 name|strlen
 argument_list|(
-literal|",t,0x01"
+literal|",t,0x0001"
 argument_list|)
 expr_stmt|;
 name|wwpn_len
@@ -10093,7 +10093,7 @@ name|identifier
 argument_list|,
 name|wwpn_len
 argument_list|,
-literal|"%s,t,0x%x"
+literal|"%s,t,0x%4.4x"
 argument_list|,
 name|cs
 operator|->
