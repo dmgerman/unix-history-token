@@ -272,15 +272,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|ffs_rawread_setup
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -380,10 +371,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|void
 name|ffs_rawread_setup
 parameter_list|(
 name|void
+modifier|*
+name|arg
+name|__unused
 parameter_list|)
 block|{
 name|ffsrawbufcnt
@@ -410,6 +405,22 @@ literal|8
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|ffs_raw
+argument_list|,
+name|SI_SUB_VM_CONF
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|ffs_rawread_setup
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
