@@ -109,9 +109,13 @@ name|opcode
 decl_stmt|;
 comment|/* Operation opcode */
 name|uint16_t
+name|version
+decl_stmt|;
+comment|/* Opcode version */
+name|uint16_t
 name|reserved
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 comment|/* Align to 64-bit boundary */
@@ -154,7 +158,7 @@ value|88
 end_define
 
 begin_comment
-comment|/* get table size */
+comment|/* get table size (deprecated) */
 end_comment
 
 begin_define
@@ -171,18 +175,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_OBJ_DEL
+name|IP_FW_TABLE_XDESTROY
 value|90
 end_define
 
 begin_comment
-comment|/* del table/pipe/etc */
+comment|/* destroy table */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IP_FW_OBJ_LISTSIZE
+name|IP_FW_TABLES_XGETSIZE
 value|91
 end_define
 
@@ -193,7 +197,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_OBJ_LIST
+name|IP_FW_TABLES_XLIST
 value|92
 end_define
 
@@ -204,7 +208,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_OBJ_INFO
+name|IP_FW_TABLE_XINFO
 value|93
 end_define
 
@@ -215,7 +219,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_OBJ_FLUSH
+name|IP_FW_TABLE_XFLUSH
 value|94
 end_define
 
@@ -223,15 +227,8 @@ begin_comment
 comment|/* flush data for given object */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_FW_OBJ_DUMP
-value|95
-end_define
-
 begin_comment
-comment|/* dump all data for given object */
+comment|/*  * Usage guidelines:  *  * IP_FW_TABLE_XLIST(ver 1): Dumps all table data  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_xtable_info.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info ipfw_table_xentry x N ]  *  * IP_FW_TABLE_XDESTROY: Destroys given table  *   Request(setsockopt): [ ipfw_obj_header ]  *  * IP_FW_TABLES_XGETSIZE: Get buffer size needed to list info for all tables.  *   Request(getsockopt): [ empty ], size = sizeof(ipfw_obj_lheader)  *   Reply: [ ipfw_obj_lheader ]  *  * IP_FW_TABLES_XLIST: Lists all tables currently available in kernel.  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_obj_lheader.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info x N ]  *  * IP_FW_TABLE_XINFO: Store table info to buffer.  *   Request(getsockopt): [ ipfw_obj_header ipfw_xtable_info(empty)]  *   Reply: [ ipfw_obj_header ipfw_xtable_info ]  *  * IP_FW_TABLE_XFLUSH: Removes all data from given table leaving type etc..  *   Request(setsockopt): [ ipfw_obj_header ]  */
 end_comment
 
 begin_comment
@@ -1890,10 +1887,6 @@ name|IPFW_OBJTYPE_TABLE
 value|1
 end_define
 
-begin_comment
-comment|/*  * IP_FW_OBJ_DEL, IP_FW_OBJ_INFO (followed by ipfw_xtable_info),  * IP_FW_OBJ_DUMP (followed by ipfw_xtable_info and ipfw_table_xentry'xN )  */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1928,10 +1921,6 @@ name|ipfw_obj_header
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* IP_FW_OBJ_LISTSIZE, IP_FW_OBJ_LIST (followd by ipfw_xtable_info) */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1941,15 +1930,8 @@ name|ip_fw3_opheader
 name|opheader
 decl_stmt|;
 comment|/* IP_FW3 opcode		*/
-name|uint8_t
-name|objtype
-decl_stmt|;
-comment|/* object type			*/
-name|uint8_t
-name|spare0
-decl_stmt|;
-name|uint16_t
-name|spare1
+name|uint32_t
+name|spare
 decl_stmt|;
 name|uint32_t
 name|count

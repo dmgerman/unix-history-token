@@ -1255,37 +1255,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|tentry_info
-block|{
-name|void
-modifier|*
-name|paddr
-decl_stmt|;
-name|int
-name|plen
-decl_stmt|;
-comment|/* Total entry length		*/
-name|uint8_t
-name|masklen
-decl_stmt|;
-comment|/* mask length			*/
-name|uint8_t
-name|spare
-decl_stmt|;
-name|uint16_t
-name|flags
-decl_stmt|;
-comment|/* record flags			*/
-name|uint32_t
-name|value
-decl_stmt|;
-comment|/* value			*/
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* In ip_fw_sockopt.c */
 end_comment

@@ -1791,12 +1791,6 @@ name|idx
 operator|=
 literal|1
 expr_stmt|;
-name|oh
-operator|->
-name|objtype
-operator|=
-name|IPFW_OBJTYPE_TABLE
-expr_stmt|;
 name|table_fill_ntlv
 argument_list|(
 operator|&
@@ -1853,12 +1847,6 @@ name|idx
 operator|=
 literal|1
 expr_stmt|;
-name|oh
-operator|.
-name|objtype
-operator|=
-name|IPFW_OBJTYPE_TABLE
-expr_stmt|;
 name|table_fill_ntlv
 argument_list|(
 operator|&
@@ -1875,7 +1863,7 @@ if|if
 condition|(
 name|do_set3
 argument_list|(
-name|IP_FW_OBJ_DEL
+name|IP_FW_TABLE_XDESTROY
 argument_list|,
 operator|&
 name|oh
@@ -1943,12 +1931,6 @@ name|idx
 operator|=
 literal|1
 expr_stmt|;
-name|oh
-operator|.
-name|objtype
-operator|=
-name|IPFW_OBJTYPE_TABLE
-expr_stmt|;
 name|table_fill_ntlv
 argument_list|(
 operator|&
@@ -1965,7 +1947,7 @@ if|if
 condition|(
 name|do_set3
 argument_list|(
-name|IP_FW_OBJ_FLUSH
+name|IP_FW_TABLE_XFLUSH
 argument_list|,
 operator|&
 name|oh
@@ -2096,7 +2078,7 @@ if|if
 condition|(
 name|do_get3
 argument_list|(
-name|IP_FW_OBJ_INFO
+name|IP_FW_TABLE_XINFO
 argument_list|,
 operator|&
 name|oh
@@ -2540,12 +2522,6 @@ argument_list|(
 name|req
 argument_list|)
 expr_stmt|;
-name|req
-operator|.
-name|objtype
-operator|=
-name|IPFW_OBJTYPE_TABLE
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2553,7 +2529,7 @@ name|error
 operator|=
 name|do_get3
 argument_list|(
-name|IP_FW_OBJ_LISTSIZE
+name|IP_FW_TABLES_XGETSIZE
 argument_list|,
 operator|&
 name|req
@@ -2600,12 +2576,6 @@ operator|)
 return|;
 name|olh
 operator|->
-name|objtype
-operator|=
-name|IPFW_OBJTYPE_TABLE
-expr_stmt|;
-name|olh
-operator|->
 name|size
 operator|=
 name|sz
@@ -2617,7 +2587,7 @@ name|error
 operator|=
 name|do_get3
 argument_list|(
-name|IP_FW_OBJ_LIST
+name|IP_FW_TABLES_XLIST
 argument_list|,
 operator|&
 name|olh
@@ -2736,7 +2706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retrieves all entries for given table @i in  * eXtended format, returning  pointer vi @ooh.  *  * Returns 0 on success.  */
+comment|/*  * Retrieves all entries for given table @i in  * eXtended format. Assumes buffer of size  * @i->size has already been allocated by caller.  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -2772,6 +2742,15 @@ name|i
 operator|->
 name|size
 expr_stmt|;
+name|oh
+operator|->
+name|opheader
+operator|.
+name|version
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Current version */
 if|if
 condition|(
 operator|(
@@ -2779,7 +2758,7 @@ name|error
 operator|=
 name|do_get3
 argument_list|(
-name|IP_FW_OBJ_DUMP
+name|IP_FW_TABLE_XLIST
 argument_list|,
 operator|&
 name|oh
