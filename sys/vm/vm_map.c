@@ -13901,7 +13901,7 @@ name|addrbos
 argument_list|,
 name|max_ssize
 argument_list|,
-name|sgrowsiz
+name|growsize
 argument_list|,
 name|prot
 argument_list|,
