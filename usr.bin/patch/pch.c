@@ -208,6 +208,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|short
 modifier|*
 name|p_len
@@ -744,10 +745,11 @@ name|malloc
 argument_list|(
 name|hunkmax
 operator|*
-sizeof|sizeof
-argument_list|(
+expr|sizeof
+operator|(
+name|unsigned
 name|short
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -832,10 +834,11 @@ name|p_len
 argument_list|,
 name|new_hunkmax
 operator|*
-sizeof|sizeof
-argument_list|(
+expr|sizeof
+operator|(
+name|unsigned
 name|short
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|p_char
@@ -6313,6 +6316,7 @@ modifier|*
 name|tp_line
 decl_stmt|;
 comment|/* the text of the hunk */
+name|unsigned
 name|short
 modifier|*
 name|tp_len
@@ -6935,6 +6939,7 @@ comment|/*  * Return the length of a particular patch line.  */
 end_comment
 
 begin_function
+name|unsigned
 name|short
 name|pch_line_len
 parameter_list|(
