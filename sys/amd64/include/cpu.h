@@ -146,17 +146,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|ipi_vectored
-function_decl|)
-parameter_list|(
-name|u_int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 end_struct

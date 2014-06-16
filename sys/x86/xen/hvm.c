@@ -411,11 +411,6 @@ name|xen_hvm_cpu_ops
 init|=
 block|{
 operator|.
-name|ipi_vectored
-operator|=
-name|lapic_ipi_vectored
-block|,
-operator|.
 name|cpu_init
 operator|=
 name|xen_hvm_cpu_init
@@ -1444,7 +1439,7 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* Set the xen pv ipi ops to replace the native ones */
-name|cpu_ops
+name|apic_ops
 operator|.
 name|ipi_vectored
 operator|=

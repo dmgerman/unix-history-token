@@ -577,13 +577,6 @@ begin_decl_stmt
 name|struct
 name|cpu_ops
 name|cpu_ops
-init|=
-block|{
-operator|.
-name|ipi_vectored
-operator|=
-name|lapic_ipi_vectored
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -4830,9 +4823,7 @@ name|old_pending
 condition|)
 return|return;
 block|}
-name|cpu_ops
-operator|.
-name|ipi_vectored
+name|lapic_ipi_vectored
 argument_list|(
 name|ipi
 argument_list|,
@@ -5903,9 +5894,7 @@ argument_list|,
 name|ipi
 argument_list|)
 expr_stmt|;
-name|cpu_ops
-operator|.
-name|ipi_vectored
+name|lapic_ipi_vectored
 argument_list|(
 name|ipi
 argument_list|,
