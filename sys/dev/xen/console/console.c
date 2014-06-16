@@ -2161,7 +2161,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|xc
 argument_list|,
-name|nexus
+name|xenpv
 argument_list|,
 name|xc_driver
 argument_list|,

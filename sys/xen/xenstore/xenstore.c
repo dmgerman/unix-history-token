@@ -3978,18 +3978,12 @@ name|xenstore_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XENHVM
-end_ifdef
-
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|xenstore
 argument_list|,
-name|xenpci
+name|xenpv
 argument_list|,
 name|xenstore_driver
 argument_list|,
@@ -4001,34 +3995,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|xenstore
-argument_list|,
-name|nexus
-argument_list|,
-name|xenstore_driver
-argument_list|,
-name|xenstore_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*------------------------------- Sysctl Data --------------------------------*/
