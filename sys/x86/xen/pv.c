@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<xen/xen_pv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/interface/vcpu.h>
 end_include
 
@@ -720,6 +726,10 @@ comment|/* Set the hooks for early functions that diverge from bare metal */
 name|init_ops
 operator|=
 name|xen_init_ops
+expr_stmt|;
+name|apic_ops
+operator|=
+name|xen_apic_ops
 expr_stmt|;
 comment|/* Now we can jump into the native init function */
 return|return
