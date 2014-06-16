@@ -3117,6 +3117,9 @@ name|mask
 operator||=
 name|VTNET_LRO_FEATURES
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VTNET_LEGACY_TX
 if|if
 condition|(
 name|vtnet_tunable_int
@@ -3132,9 +3135,8 @@ name|mask
 operator||=
 name|VIRTIO_NET_F_MQ
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VTNET_LEGACY_TX
+else|#
+directive|else
 name|mask
 operator||=
 name|VIRTIO_NET_F_MQ
@@ -3167,39 +3169,35 @@ name|dev
 argument_list|,
 name|VTNET_LRO_FEATURES
 argument_list|)
-operator|==
-literal|0
-condition|)
-return|return;
-if|if
-condition|(
+operator|&&
 name|virtio_with_feature
 argument_list|(
 name|dev
 argument_list|,
 name|VIRTIO_NET_F_MRG_RXBUF
 argument_list|)
+operator|==
+literal|0
 condition|)
-return|return;
-comment|/* 	 * LRO without mergeable buffers requires special care. This is not 	 * ideal because every receive buffer must be large enough to hold 	 * the maximum TCP packet, the Ethernet header, and the header. This 	 * requires up to 34 descriptors with MCLBYTES clusters. If we do 	 * not have indirect descriptors, LRO is disabled since the virtqueue 	 * will not contain very many receive buffers. 	 */
+block|{
+comment|/* 		 * LRO without mergeable buffers requires special care. This 		 * is not ideal because every receive buffer must be large 		 * enough to hold the maximum TCP packet, the Ethernet header, 		 * and the header. This requires up to 34 descriptors with 		 * MCLBYTES clusters. If we do not have indirect descriptors, 		 * LRO is disabled since the virtqueue will not contain very 		 * many receive buffers. 		 */
 if|if
 condition|(
+operator|!
 name|virtio_with_feature
 argument_list|(
 name|dev
 argument_list|,
 name|VIRTIO_RING_F_INDIRECT_DESC
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"LRO disabled due to both mergeable buffers and indirect "
-literal|"descriptors not negotiated\n"
+literal|"LRO disabled due to both mergeable buffers and "
+literal|"indirect descriptors not negotiated\n"
 argument_list|)
 expr_stmt|;
 name|features
@@ -3226,6 +3224,7 @@ name|vtnet_flags
 operator||=
 name|VTNET_FLAG_LRO_NOMRG
 expr_stmt|;
+block|}
 block|}
 end_function
 
