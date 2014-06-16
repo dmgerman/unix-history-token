@@ -866,7 +866,9 @@ operator|=
 name|max_pfn
 expr_stmt|;
 name|gnttab_resume
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 name|intr_resume
 argument_list|(
@@ -1159,7 +1161,9 @@ argument_list|()
 expr_stmt|;
 comment|/* 	 * Reset grant table info. 	 */
 name|gnttab_resume
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
