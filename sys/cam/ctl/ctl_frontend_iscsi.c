@@ -10150,7 +10150,7 @@ name|CTL_DEVID_LEN
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * desc1 is for the unique LUN name. 	 */
+comment|/* 	 * desc1 is for the unique LUN name. 	 * 	 * XXX: According to SPC-3, LUN must report the same ID through 	 *      all the ports.  The code below, however, reports the 	 *      ID only via iSCSI. 	 */
 name|desc1
 operator|->
 name|proto_codeset
