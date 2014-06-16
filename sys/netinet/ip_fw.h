@@ -191,7 +191,7 @@ value|91
 end_define
 
 begin_comment
-comment|/* get size for table/etc list */
+comment|/* get size for tables list */
 end_comment
 
 begin_define
@@ -202,7 +202,7 @@ value|92
 end_define
 
 begin_comment
-comment|/* list all objects of given type */
+comment|/* list all tables  */
 end_comment
 
 begin_define
@@ -213,7 +213,7 @@ value|93
 end_define
 
 begin_comment
-comment|/* request info for one object */
+comment|/* request info for one table */
 end_comment
 
 begin_define
@@ -224,7 +224,29 @@ value|94
 end_define
 
 begin_comment
-comment|/* flush data for given object */
+comment|/* flush table data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_XCREATE
+value|95
+end_define
+
+begin_comment
+comment|/* create new table  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_XMODIFY
+value|96
+end_define
+
+begin_comment
+comment|/* modify existing table */
 end_comment
 
 begin_comment
@@ -1840,7 +1862,7 @@ comment|/* table type (cidr,iface,..)	*/
 name|uint8_t
 name|ftype
 decl_stmt|;
-comment|/* format table type		*/
+comment|/* table value format type	*/
 name|uint8_t
 name|atype
 decl_stmt|;
@@ -1875,6 +1897,13 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* table name */
+name|char
+name|algoname
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* algorithm name		*/
 block|}
 name|ipfw_xtable_info
 typedef|;

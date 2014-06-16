@@ -588,6 +588,10 @@ name|struct
 name|table_info
 modifier|*
 name|ti
+parameter_list|,
+name|char
+modifier|*
+name|data
 parameter_list|)
 block|{
 if|if
@@ -2776,6 +2780,10 @@ name|struct
 name|table_info
 modifier|*
 name|ti
+parameter_list|,
+name|char
+modifier|*
+name|data
 parameter_list|)
 block|{
 if|if
