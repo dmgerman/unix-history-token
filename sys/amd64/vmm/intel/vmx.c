@@ -5116,6 +5116,24 @@ name|vector
 argument_list|)
 condition|)
 return|return;
+comment|/* 		 * From the Intel SDM, Volume 3, Section "Maskable 		 * Hardware Interrupts": 		 * - maskable interrupt vectors [16,255] can be delivered 		 *   through the local APIC. 		*/
+name|KASSERT
+argument_list|(
+name|vector
+operator|>=
+literal|16
+operator|&&
+name|vector
+operator|<=
+literal|255
+argument_list|,
+operator|(
+literal|"invalid vector %d from local APIC"
+operator|,
+name|vector
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -5130,24 +5148,25 @@ operator|&
 name|vector
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* 		 * From the Intel SDM, Volume 3, Section "Maskable 		 * Hardware Interrupts": 		 * - maskable interrupt vectors [0,255] can be delivered 		 *   through the INTR pin. 		 */
 name|KASSERT
 argument_list|(
 name|vector
 operator|>=
-literal|32
+literal|0
 operator|&&
 name|vector
 operator|<=
 literal|255
 argument_list|,
 operator|(
-literal|"invalid vector %d"
+literal|"invalid vector %d from INTR"
 operator|,
 name|vector
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Check RFLAGS.IF and the interruptibility state of the guest */
 name|rflags
 operator|=
