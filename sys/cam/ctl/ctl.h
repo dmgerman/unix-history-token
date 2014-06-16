@@ -705,6 +705,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ctl_data_submit_done
+parameter_list|(
+name|union
+name|ctl_io
+modifier|*
+name|io
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ctl_config_write_done
 parameter_list|(
 name|union
