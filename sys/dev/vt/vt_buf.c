@@ -1829,7 +1829,7 @@ operator|.
 name|tp_row
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked begin.tp_row %d must be< screen width %d"
+literal|"vtbuf_fill_locked begin.tp_row %d must be< screen height %d"
 operator|,
 name|r
 operator|->
@@ -1860,7 +1860,7 @@ operator|.
 name|tp_col
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked begin.tp_col %d must be< screen height %d"
+literal|"vtbuf_fill_locked begin.tp_col %d must be< screen width %d"
 operator|,
 name|r
 operator|->
@@ -1891,7 +1891,7 @@ operator|.
 name|tp_row
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked end.tp_row %d must be<= screen width %d"
+literal|"vtbuf_fill_locked end.tp_row %d must be<= screen height %d"
 operator|,
 name|r
 operator|->
@@ -1922,7 +1922,7 @@ operator|.
 name|tp_col
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked end.tp_col %d must be<= screen height %d"
+literal|"vtbuf_fill_locked end.tp_col %d must be<= screen width %d"
 operator|,
 name|r
 operator|->
@@ -2371,14 +2371,18 @@ operator|->
 name|tp_row
 argument_list|)
 expr_stmt|;
+comment|/* If new screen/history size bigger or buffer is VBF_STATIC. */
 if|if
 condition|(
+operator|(
 name|history_size
 operator|>
 name|vb
 operator|->
 name|vb_history_size
+operator|)
 operator|||
+operator|(
 name|p
 operator|->
 name|tp_col
@@ -2388,6 +2392,15 @@ operator|->
 name|vb_scr_size
 operator|.
 name|tp_col
+operator|)
+operator|||
+operator|(
+name|vb
+operator|->
+name|vb_flags
+operator|&
+name|VBF_STATIC
+operator|)
 condition|)
 block|{
 comment|/* Allocate new buffer. */
@@ -2696,6 +2709,17 @@ name|oldrows
 argument_list|,
 name|M_VTBUF
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Just update the size. */
+name|vb
+operator|->
+name|vb_scr_size
+operator|=
+operator|*
+name|p
 expr_stmt|;
 block|}
 block|}
