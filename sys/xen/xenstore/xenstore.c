@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<xen/gnttab.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<xen/hypervisor.h>
 end_include
 
@@ -3413,34 +3407,6 @@ operator|&
 name|xs
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This seems to be a layering violation.  The XenStore is just 	 * one of many clients of the Grant Table facility.  It happens 	 * to be the first and a gating consumer to all other devices, 	 * so this does work.  A better place would be in the PV support 	 * code for fully PV kernels and the xenpci driver for HVM kernels. 	 */
-name|error
-operator|=
-name|gnttab_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"XENSTORE: Error initializing grant tables: %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* Initialize the interface to xenstore. */
 name|struct
 name|proc
