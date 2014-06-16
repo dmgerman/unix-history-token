@@ -2686,7 +2686,7 @@ name|fs
 operator|.
 name|m
 argument_list|,
-name|FALSE
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock
@@ -3210,7 +3210,7 @@ name|fs
 operator|.
 name|m
 argument_list|,
-literal|1
+name|PQ_ACTIVE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4490,7 +4490,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-name|TRUE
+name|PQ_ACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock
@@ -5132,7 +5132,7 @@ name|vm_page_unwire
 argument_list|(
 name|src_m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock

@@ -383,7 +383,7 @@ specifier|static
 name|void
 name|vm_page_enqueue
 parameter_list|(
-name|int
+name|uint8_t
 name|queue
 parameter_list|,
 name|vm_page_t
@@ -7502,14 +7502,8 @@ argument_list|(
 name|m
 operator|->
 name|queue
-operator|==
-name|PQ_ACTIVE
-operator|||
-name|m
-operator|->
-name|queue
-operator|==
-name|PQ_INACTIVE
+operator|<
+name|PQ_COUNT
 argument_list|,
 operator|(
 literal|"vm_page_dequeue: page %p is not queued"
@@ -7636,7 +7630,7 @@ specifier|static
 name|void
 name|vm_page_enqueue
 parameter_list|(
-name|int
+name|uint8_t
 name|queue
 parameter_list|,
 name|vm_page_t
@@ -7653,6 +7647,21 @@ argument_list|(
 name|m
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|queue
+operator|<
+name|PQ_COUNT
+argument_list|,
+operator|(
+literal|"vm_page_enqueue: invalid queue %u request for page %p"
+operator|,
+name|queue
+operator|,
+name|m
+operator|)
 argument_list|)
 expr_stmt|;
 name|pq
@@ -8537,7 +8546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_unwire:  *  * Release one wiring of the specified page, potentially enabling it to be  * paged again.  If paging is enabled, then the value of the parameter  * "activate" determines to which queue the page is added.  If "activate" is  * non-zero, then the page is added to the active queue.  Otherwise, it is  * added to the inactive queue.  *  * However, unless the page belongs to an object, it is not enqueued because  * it cannot be paged out.  *  * If a page is fictitious, then its wire count must always be one.  *  * A managed page must be locked.  */
+comment|/*  * vm_page_unwire:  *  * Release one wiring of the specified page, potentially enabling it to be  * paged again.  If paging is enabled, then the value of the parameter  * "queue" determines the queue to which the page is added.  *  * However, unless the page belongs to an object, it is not enqueued because  * it cannot be paged out.  *  * If a page is fictitious, then its wire count must always be one.  *  * A managed page must be locked.  */
 end_comment
 
 begin_function
@@ -8547,10 +8556,25 @@ parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|,
-name|int
-name|activate
+name|uint8_t
+name|queue
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|queue
+operator|<
+name|PQ_COUNT
+argument_list|,
+operator|(
+literal|"vm_page_unwire: invalid queue %u request for page %p"
+operator|,
+name|queue
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8654,8 +8678,9 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
-name|activate
+name|queue
+operator|==
+name|PQ_INACTIVE
 condition|)
 name|m
 operator|->
@@ -8666,11 +8691,7 @@ name|PG_WINATCFLS
 expr_stmt|;
 name|vm_page_enqueue
 argument_list|(
-name|activate
-condition|?
-name|PQ_ACTIVE
-else|:
-name|PQ_INACTIVE
+name|queue
 argument_list|,
 name|m
 argument_list|)

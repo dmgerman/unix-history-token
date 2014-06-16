@@ -1608,7 +1608,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -1998,7 +1998,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock

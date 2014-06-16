@@ -10051,7 +10051,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check for the object going away on us. This can 	 * happen since we don't hold a reference to it. 	 * If so, we're responsible for freeing the page. 	 */
@@ -12407,7 +12407,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 comment|/* 		 * See if anyone else might know about this page.  If 		 * not and it is not valid, then free it. 		 */
@@ -13860,7 +13860,7 @@ name|vm_page_unwire
 argument_list|(
 name|pg
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|KASSERT

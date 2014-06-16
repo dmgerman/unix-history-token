@@ -1962,8 +1962,10 @@ name|void
 name|vm_page_unwire
 parameter_list|(
 name|vm_page_t
+name|m
 parameter_list|,
-name|int
+name|uint8_t
+name|queue
 parameter_list|)
 function_decl|;
 end_function_decl
