@@ -21,6 +21,12 @@ directive|include
 file|<dev/virtio/virtio_ids.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/virtio/virtio_config.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|vq_alloc_info

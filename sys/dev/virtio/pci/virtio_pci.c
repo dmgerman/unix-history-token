@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/virtio/virtio_config.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/virtio/virtqueue.h>
 end_include
 
