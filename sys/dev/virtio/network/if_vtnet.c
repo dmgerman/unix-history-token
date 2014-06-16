@@ -14135,6 +14135,10 @@ block|{
 name|struct
 name|virtio_net_ctrl_hdr
 name|hdr
+name|__aligned
+argument_list|(
+literal|2
+argument_list|)
 decl_stmt|;
 name|struct
 name|sglist_seg
@@ -14328,6 +14332,10 @@ name|ack
 decl_stmt|;
 block|}
 name|s
+name|__aligned
+argument_list|(
+literal|2
+argument_list|)
 struct|;
 name|int
 name|error
@@ -14538,6 +14546,10 @@ name|ack
 decl_stmt|;
 block|}
 name|s
+name|__aligned
+argument_list|(
+literal|2
+argument_list|)
 struct|;
 name|int
 name|error
@@ -14977,6 +14989,10 @@ block|{
 name|struct
 name|virtio_net_ctrl_hdr
 name|hdr
+name|__aligned
+argument_list|(
+literal|2
+argument_list|)
 decl_stmt|;
 name|struct
 name|vtnet_mac_filter
@@ -15598,6 +15614,10 @@ name|ack
 decl_stmt|;
 block|}
 name|s
+name|__aligned
+argument_list|(
+literal|2
+argument_list|)
 struct|;
 name|int
 name|error
