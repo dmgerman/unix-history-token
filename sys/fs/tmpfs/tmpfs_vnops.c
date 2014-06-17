@@ -1621,14 +1621,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
-comment|/* XXX Should this operation be atomic?  I think it should, but code in  * XXX other places (e.g., ufs) doesn't seem to be... */
-end_comment
-
 begin_function
 name|int
 name|tmpfs_setattr
@@ -1940,24 +1932,7 @@ name|tmpfs_chtimes
 argument_list|(
 name|vp
 argument_list|,
-operator|&
 name|vap
-operator|->
-name|va_atime
-argument_list|,
-operator|&
-name|vap
-operator|->
-name|va_mtime
-argument_list|,
-operator|&
-name|vap
-operator|->
-name|va_birthtime
-argument_list|,
-name|vap
-operator|->
-name|va_vaflags
 argument_list|,
 name|cred
 argument_list|,
