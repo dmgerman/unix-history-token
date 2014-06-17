@@ -3490,15 +3490,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|sc
-operator|->
-name|rx_map
-index|[
-name|i
-index|]
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 name|bus_dma_tag_destroy
 argument_list|(
