@@ -4819,7 +4819,7 @@ if|if
 condition|(
 name|dma
 operator|->
-name|map
+name|vaddr_start
 operator|!=
 name|NULL
 condition|)
@@ -4866,7 +4866,6 @@ name|dma
 operator|->
 name|tag
 argument_list|,
-operator|&
 name|dma
 operator|->
 name|vaddr_start
