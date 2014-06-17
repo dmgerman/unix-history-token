@@ -1277,9 +1277,9 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tsend [-DnPpRv] [-[iI] snapshot] "
+literal|"\tsend [-DnPpRve] [-[iI] snapshot] "
 literal|"<snapshot>\n"
-literal|"\tsend [-i snapshot|bookmark] "
+literal|"\tsend [-e] [-i snapshot|bookmark] "
 literal|"<filesystem|volume|snapshot>\n"
 argument_list|)
 operator|)
@@ -16892,7 +16892,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":i:I:RDpvnP"
+literal|":i:I:RDpvnPe"
 argument_list|)
 operator|)
 operator|!=
@@ -17023,6 +17023,16 @@ case|:
 name|flags
 operator|.
 name|dryrun
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|flags
+operator|.
+name|embed_data
 operator|=
 name|B_TRUE
 expr_stmt|;
@@ -17206,6 +17216,12 @@ index|[
 name|ZFS_MAXNAMELEN
 index|]
 decl_stmt|;
+name|enum
+name|lzc_send_flags
+name|lzc_flags
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|flags
@@ -17282,6 +17298,16 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|flags
+operator|.
+name|embed_data
+condition|)
+name|lzc_flags
+operator||=
+name|LZC_SEND_FLAG_EMBED_DATA
+expr_stmt|;
 if|if
 condition|(
 name|fromname
@@ -17373,6 +17399,8 @@ argument_list|,
 name|fromname
 argument_list|,
 name|STDOUT_FILENO
+argument_list|,
+name|lzc_flags
 argument_list|)
 expr_stmt|;
 name|zfs_close
