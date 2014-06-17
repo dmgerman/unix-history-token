@@ -101,7 +101,26 @@ name|uint64_t
 name|ccnt64
 decl_stmt|;
 comment|/* 	 * Read PMCCNTR. Curses! Its only 32 bits. 	 * TODO: Fix this by catching overflow with interrupt? 	 */
+comment|/* The ARMv6 vs ARMv7 divide is going to need a better way of  * distinguishing between them.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM1136
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
+comment|/* ARMv6 - Earlier model SCCs */
+asm|__asm __volatile("mrc p15, 0, %0, c15, c12, 1": "=r" (ccnt));
+else|#
+directive|else
+comment|/* ARMv7 - Later model SCCs */
 asm|__asm __volatile("mrc p15, 0, %0, c9, c13, 0": "=r" (ccnt));
+endif|#
+directive|endif
 name|ccnt64
 operator|=
 operator|(
