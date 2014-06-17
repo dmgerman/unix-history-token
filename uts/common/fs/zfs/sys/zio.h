@@ -152,6 +152,11 @@ block|,
 name|ZIO_CHECKSUM_FUNCTIONS
 block|}
 enum|;
+comment|/*  * The number of "legacy" compression functions which can be set on individual  * objects.  */
+define|#
+directive|define
+name|ZIO_CHECKSUM_LEGACY_FUNCTIONS
+value|ZIO_CHECKSUM_ZILOG2
 define|#
 directive|define
 name|ZIO_CHECKSUM_ON_VALUE
@@ -216,6 +221,11 @@ block|,
 name|ZIO_COMPRESS_FUNCTIONS
 block|}
 enum|;
+comment|/*  * The number of "legacy" compression functions which can be set on individual  * objects.  */
+define|#
+directive|define
+name|ZIO_COMPRESS_LEGACY_FUNCTIONS
+value|ZIO_COMPRESS_LZ4
 comment|/* N.B. when altering this value, also change BOOTFS_COMPRESS_VALID below */
 define|#
 directive|define

@@ -69,6 +69,9 @@ name|char
 modifier|*
 name|fromsnap
 parameter_list|,
+name|boolean_t
+name|embedok
+parameter_list|,
 name|int
 name|outfd
 parameter_list|,
@@ -120,11 +123,13 @@ parameter_list|,
 name|uint64_t
 name|fromsnap
 parameter_list|,
+name|boolean_t
+name|embedok
+parameter_list|,
 name|int
 name|outfd
 parameter_list|,
-name|struct
-name|vnode
+name|vnode_t
 modifier|*
 name|vp
 parameter_list|,

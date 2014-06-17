@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/zfeature.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<zfeature_common.h>
 end_include
 
