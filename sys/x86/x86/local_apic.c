@@ -1318,6 +1318,9 @@ name|enable_cmc
 operator|=
 name|native_lapic_enable_cmc
 block|,
+ifdef|#
+directive|ifdef
+name|SMP
 operator|.
 name|ipi_raw
 operator|=
@@ -1333,6 +1336,8 @@ name|ipi_wait
 operator|=
 name|native_lapic_ipi_wait
 block|,
+endif|#
+directive|endif
 operator|.
 name|set_lvt_mask
 operator|=
