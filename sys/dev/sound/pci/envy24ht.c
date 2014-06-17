@@ -552,6 +552,11 @@ name|pmap
 decl_stmt|,
 name|rmap
 decl_stmt|;
+name|bus_addr_t
+name|paddr
+decl_stmt|,
+name|raddr
+decl_stmt|;
 comment|/* current status */
 name|u_int32_t
 name|speed
@@ -10126,6 +10131,14 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
+name|sc
+operator|->
+name|paddr
+operator|=
+name|segs
+operator|->
+name|ds_addr
+expr_stmt|;
 if|#
 directive|if
 operator|(
@@ -10234,6 +10247,14 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
+name|sc
+operator|->
+name|raddr
+operator|=
+name|segs
+operator|->
+name|ds_addr
+expr_stmt|;
 if|#
 directive|if
 operator|(
@@ -10340,52 +10361,28 @@ argument_list|,
 literal|"envy24ht_dmafree():"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|rmap
-condition|)
 name|printf
 argument_list|(
-literal|" sc->rmap(0x%08x)"
+literal|" sc->raddr(0x%08x)"
 argument_list|,
 operator|(
 name|u_int32_t
 operator|)
 name|sc
 operator|->
-name|rmap
+name|raddr
 argument_list|)
 expr_stmt|;
-else|else
 name|printf
 argument_list|(
-literal|" sc->rmap(null)"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|pmap
-condition|)
-name|printf
-argument_list|(
-literal|" sc->pmap(0x%08x)"
+literal|" sc->paddr(0x%08x)"
 argument_list|,
 operator|(
 name|u_int32_t
 operator|)
 name|sc
 operator|->
-name|pmap
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|" sc->pmap(null)"
+name|paddr
 argument_list|)
 expr_stmt|;
 if|if
@@ -10447,7 +10444,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|rmap
+name|raddr
 condition|)
 name|bus_dmamap_unload
 argument_list|(
@@ -10464,7 +10461,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|pmap
+name|paddr
 condition|)
 name|bus_dmamap_unload
 argument_list|(
@@ -10577,13 +10574,13 @@ endif|#
 directive|endif
 name|sc
 operator|->
-name|rmap
+name|raddr
 operator|=
 name|sc
 operator|->
-name|pmap
+name|paddr
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|sc
 operator|->
@@ -10656,13 +10653,13 @@ name|NULL
 expr_stmt|;
 name|sc
 operator|->
-name|pmap
+name|paddr
 operator|=
 name|sc
 operator|->
-name|rmap
+name|raddr
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|sc
 operator|->

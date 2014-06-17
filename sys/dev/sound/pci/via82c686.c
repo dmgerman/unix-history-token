@@ -3065,7 +3065,7 @@ if|if
 condition|(
 name|via
 operator|->
-name|sgd_dmamap
+name|sgd_addr
 condition|)
 name|bus_dmamap_unload
 argument_list|(

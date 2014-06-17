@@ -1672,16 +1672,6 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|rmap
-operator|=
-name|sc
-operator|->
-name|pmap
-operator|=
-name|NULL
-expr_stmt|;
-name|sc
-operator|->
 name|rbuf
 operator|=
 name|sc

@@ -3307,9 +3307,9 @@ if|if
 condition|(
 name|dma
 operator|->
-name|dma_map
+name|dma_paddr
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|#
@@ -3329,6 +3329,12 @@ name|dma
 operator|->
 name|dma_map
 argument_list|)
+expr_stmt|;
+name|dma
+operator|->
+name|dma_paddr
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -3362,12 +3368,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|dma
-operator|->
-name|dma_map
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|dma

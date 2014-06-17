@@ -5191,8 +5191,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sgd_dmamap
+name|sgd_addr
 condition|)
+block|{
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -5204,6 +5205,13 @@ operator|->
 name|sgd_dmamap
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sgd_addr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -5233,12 +5241,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|sgd_dmamap
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|sc
