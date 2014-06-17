@@ -283,7 +283,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|boolean_t
 name|zfs_recover
 decl_stmt|;
 end_decl_stmt
@@ -294,7 +294,7 @@ directive|else
 end_else
 
 begin_decl_stmt
-name|int
+name|boolean_t
 name|zfs_recover
 decl_stmt|;
 end_decl_stmt
