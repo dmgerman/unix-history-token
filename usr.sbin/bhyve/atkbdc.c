@@ -64,7 +64,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|KDB_SYS_FLAG
+name|KBD_SYS_FLAG
 value|0x4
 end_define
 
@@ -187,7 +187,7 @@ block|{
 operator|*
 name|eax
 operator|=
-name|KDB_SYS_FLAG
+name|KBD_SYS_FLAG
 expr_stmt|;
 comment|/* system passed POST */
 block|}
