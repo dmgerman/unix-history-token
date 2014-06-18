@@ -192,6 +192,14 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"kern.vt.disable"
+argument_list|)
+condition|)
+return|return;
 name|make_dev
 argument_list|(
 operator|&
