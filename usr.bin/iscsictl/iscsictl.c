@@ -2934,7 +2934,7 @@ init|=
 name|NULL
 decl_stmt|,
 modifier|*
-name|host
+name|portal
 init|=
 name|NULL
 decl_stmt|,
@@ -3148,7 +3148,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|host
+name|portal
 operator|=
 name|optarg
 expr_stmt|;
@@ -3259,7 +3259,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 condition|)
@@ -3346,7 +3346,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 condition|)
@@ -3420,7 +3420,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 condition|)
@@ -3453,7 +3453,7 @@ name|target
 operator|==
 name|NULL
 operator|&&
-name|host
+name|portal
 operator|==
 name|NULL
 condition|)
@@ -3470,7 +3470,7 @@ name|target
 operator|!=
 name|NULL
 operator|&&
-name|host
+name|portal
 operator|==
 name|NULL
 condition|)
@@ -3483,7 +3483,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 operator|&&
@@ -3618,7 +3618,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 condition|)
@@ -3739,7 +3739,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 condition|)
@@ -3787,7 +3787,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 condition|)
@@ -3815,7 +3815,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 condition|)
@@ -3844,7 +3844,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 condition|)
@@ -3903,7 +3903,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|host
+name|portal
 operator|!=
 name|NULL
 condition|)
@@ -4217,7 +4217,7 @@ name|session_id
 argument_list|,
 name|target
 argument_list|,
-name|host
+name|portal
 argument_list|,
 name|user
 argument_list|,
@@ -4326,7 +4326,7 @@ name|targ
 operator|->
 name|t_address
 operator|=
-name|host
+name|portal
 expr_stmt|;
 block|}
 name|targ
