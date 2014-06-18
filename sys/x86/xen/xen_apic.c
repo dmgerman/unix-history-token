@@ -923,7 +923,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ipi_idx
-operator|>
+operator|>=
 name|nitems
 argument_list|(
 name|xen_ipis
