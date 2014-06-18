@@ -6363,6 +6363,17 @@ name|buflen
 argument_list|,
 literal|"bus=%u hubaddr=%u port=%u devaddr=%u interface=%u"
 argument_list|,
+name|device_get_unit
+argument_list|(
+name|res
+operator|.
+name|udev
+operator|->
+name|bus
+operator|->
+name|bdev
+argument_list|)
+argument_list|,
 operator|(
 name|res
 operator|.
@@ -6386,17 +6397,6 @@ argument_list|,
 name|res
 operator|.
 name|portno
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|res
-operator|.
-name|udev
-operator|->
-name|bus
-operator|->
-name|bdev
-argument_list|)
 argument_list|,
 name|res
 operator|.
