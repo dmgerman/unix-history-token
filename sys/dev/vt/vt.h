@@ -93,23 +93,6 @@ directive|include
 file|"opt_splash.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_SC
-end_ifdef
-
-begin_error
-error|#
-directive|error
-literal|"Build with both syscons and vt is not supported. Please enable only \ one 'device sc' or 'device vt'"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
