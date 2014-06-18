@@ -458,9 +458,6 @@ case|case
 literal|0x1F
 case|:
 comment|/* 				 * Per Intel document 253669-032 9/2009, 				 * pages A-2 and A-57 				 */
-case|case
-literal|0x2E
-case|:
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_COREI7
@@ -468,6 +465,18 @@ expr_stmt|;
 name|nclasses
 operator|=
 literal|5
+expr_stmt|;
+break|break;
+case|case
+literal|0x2E
+case|:
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_NEHALEM_EX
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
 expr_stmt|;
 break|break;
 case|case
@@ -485,6 +494,19 @@ expr_stmt|;
 name|nclasses
 operator|=
 literal|5
+expr_stmt|;
+break|break;
+case|case
+literal|0x2F
+case|:
+comment|/* Westmere-EX, seen in wild */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_WESTMERE_EX
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
 expr_stmt|;
 break|break;
 case|case
@@ -706,6 +728,9 @@ case|case
 name|PMC_CPU_INTEL_COREI7
 case|:
 case|case
+name|PMC_CPU_INTEL_NEHALEM_EX
+case|:
+case|case
 name|PMC_CPU_INTEL_IVYBRIDGE
 case|:
 case|case
@@ -713,6 +738,9 @@ name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
 case|case
 name|PMC_CPU_INTEL_WESTMERE
+case|:
+case|case
+name|PMC_CPU_INTEL_WESTMERE_EX
 case|:
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE_XEON
@@ -946,6 +974,9 @@ case|case
 name|PMC_CPU_INTEL_COREI7
 case|:
 case|case
+name|PMC_CPU_INTEL_NEHALEM_EX
+case|:
+case|case
 name|PMC_CPU_INTEL_HASWELL
 case|:
 case|case
@@ -956,6 +987,9 @@ name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
 case|case
 name|PMC_CPU_INTEL_WESTMERE
+case|:
+case|case
+name|PMC_CPU_INTEL_WESTMERE_EX
 case|:
 case|case
 name|PMC_CPU_INTEL_SANDYBRIDGE_XEON
