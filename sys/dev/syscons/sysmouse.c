@@ -636,6 +636,14 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"hw.syscons.disable"
+argument_list|)
+condition|)
+return|return;
 name|sysmouse_tty
 operator|=
 name|tty_alloc
