@@ -27,7 +27,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ** Based on the UCB version with the ID appearing below. ** This is ANSIish only when "multibyte character == plain character". */
+comment|/*  * Based on the UCB version with the ID appearing below.  * This is ANSIish only when "multibyte character == plain character".  */
 end_comment
 
 begin_endif
@@ -651,7 +651,9 @@ operator|+
 name|maxsize
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 operator|*
 name|p
@@ -987,7 +989,7 @@ continue|continue;
 case|case
 literal|'C'
 case|:
-comment|/* 				** %C used to do a... 				**	_fmt("%a %b %e %X %Y", t); 				** ...whereas now POSIX 1003.2 calls for 				** something completely different. 				** (ado, 1993-05-24) 				*/
+comment|/* 				 * %C used to do a... 				 *	_fmt("%a %b %e %X %Y", t); 				 * ...whereas now POSIX 1003.2 calls for 				 * something completely different. 				 * (ado, 1993-05-24) 				 */
 name|pt
 operator|=
 name|_yconv
@@ -1126,7 +1128,7 @@ goto|;
 case|case
 literal|'O'
 case|:
-comment|/* 				** C99 locale modifiers. 				** The sequences 				**	%Ec %EC %Ex %EX %Ey %EY 				**	%Od %oe %OH %OI %Om %OM 				**	%OS %Ou %OU %OV %Ow %OW %Oy 				** are supposed to provide alternate 				** representations. 				** 				** FreeBSD extension 				**      %OB 				*/
+comment|/* 				 * C99 locale modifiers. 				 * The sequences 				 *	%Ec %EC %Ex %EX %Ey %EY 				 *	%Od %oe %OH %OI %Om %OM 				 *	%OS %Ou %OU %OV %Ow %OW %Oy 				 * are supposed to provide alternate 				 * representations. 				 * 				 * FreeBSD extension 				 *      %OB 				 */
 if|if
 condition|(
 name|Ealternative
@@ -1280,7 +1282,7 @@ continue|continue;
 case|case
 literal|'k'
 case|:
-comment|/* 				** This used to be... 				**	_conv(t->tm_hour % 12 ? 				**		t->tm_hour % 12 : 12, 2, ' '); 				** ...and has been changed to the below to 				** match SunOS 4.1.1 and Arnold Robbins' 				** strftime version 3.0. That is, "%k" and 				** "%l" have been swapped. 				** (ado, 1993-05-24) 				*/
+comment|/* 				 * This used to be... 				 *	_conv(t->tm_hour % 12 ? 				 *		t->tm_hour % 12 : 12, 2, ' '); 				 * ...and has been changed to the below to 				 * match SunOS 4.1.1 and Arnold Robbins' 				 * strftime version 3.0. That is, "%k" and 				 * "%l" have been swapped. 				 * (ado, 1993-05-24) 				 */
 name|pt
 operator|=
 name|_conv
@@ -1328,7 +1330,7 @@ comment|/* defined KITCHEN_SINK */
 case|case
 literal|'l'
 case|:
-comment|/* 				** This used to be... 				**	_conv(t->tm_hour, 2, ' '); 				** ...and has been changed to the below to 				** match SunOS 4.1.1 and Arnold Robbin's 				** strftime version 3.0. That is, "%k" and 				** "%l" have been swapped. 				** (ado, 1993-05-24) 				*/
+comment|/* 				 * This used to be... 				 *	_conv(t->tm_hour, 2, ' '); 				 * ...and has been changed to the below to 				 * match SunOS 4.1.1 and Arnold Robbin's 				 * strftime version 3.0. That is, "%k" and 				 * "%l" have been swapped. 				 * (ado, 1993-05-24) 				 */
 name|pt
 operator|=
 name|_conv
@@ -1695,7 +1697,7 @@ continue|continue;
 case|case
 literal|'u'
 case|:
-comment|/* 				** From Arnold Robbins' strftime version 3.0: 				** "ISO 8601: Weekday as a decimal number 				** [1 (Monday) - 7]" 				** (ado, 1993-05-24) 				*/
+comment|/* 				 * From Arnold Robbins' strftime version 3.0: 				 * "ISO 8601: Weekday as a decimal number 				 * [1 (Monday) - 7]" 				 * (ado, 1993-05-24) 				 */
 name|pt
 operator|=
 name|_conv
@@ -1734,7 +1736,7 @@ case|case
 literal|'g'
 case|:
 comment|/* ISO 8601 year (two digits) */
-comment|/* ** From Arnold Robbins' strftime version 3.0: "the week number of the ** year (the first Monday as the first day of week 1) as a decimal number ** (01-53)." ** (ado, 1993-05-24) ** ** From "http://www.ft.uni-erlangen.de/~mskuhn/iso-time.html" by Markus Kuhn: ** "Week 01 of a year is per definition the first week which has the ** Thursday in this year, which is equivalent to the week which contains ** the fourth day of January. In other words, the first week of a new year ** is the week which has the majority of its days in the new year. Week 01 ** might also contain days from the previous year and the week before week ** 01 of a year is the last week (52 or 53) of the previous year even if ** it contains days from the new year. A week starts with Monday (day 1) ** and ends with Sunday (day 7). For example, the first week of the year ** 1997 lasts from 1996-12-30 to 1997-01-05..." ** (ado, 1996-01-02) */
+comment|/*  * From Arnold Robbins' strftime version 3.0: "the week number of the  * year (the first Monday as the first day of week 1) as a decimal number  * (01-53)."  * (ado, 1993-05-24)  *  * From "http://www.ft.uni-erlangen.de/~mskuhn/iso-time.html" by Markus Kuhn:  * "Week 01 of a year is per definition the first week which has the  * Thursday in this year, which is equivalent to the week which contains  * the fourth day of January. In other words, the first week of a new year  * is the week which has the majority of its days in the new year. Week 01  * might also contain days from the previous year and the week before week  * 01 of a year is the last week (52 or 53) of the previous year even if  * it contains days from the new year. A week starts with Monday (day 1)  * and ends with Sunday (day 7). For example, the first week of the year  * 1997 lasts from 1996-12-30 to 1997-01-05..."  * (ado, 1996-01-02)  */
 block|{
 name|int
 name|year
@@ -1801,7 +1803,7 @@ name|DAYSPERLYEAR
 else|:
 name|DAYSPERNYEAR
 expr_stmt|;
-comment|/* 						** What yday (-3 ... 3) does 						** the ISO year begin on? 						*/
+comment|/* 						 * What yday (-3 ... 3) does 						 * the ISO year begin on? 						 */
 name|bot
 operator|=
 operator|(
@@ -1818,7 +1820,7 @@ operator|)
 operator|-
 literal|3
 expr_stmt|;
-comment|/* 						** What yday does the NEXT 						** ISO year begin on? 						*/
+comment|/* 						 * What yday does the NEXT 						 * ISO year begin on? 						 */
 name|top
 operator|=
 name|bot
@@ -2017,7 +2019,7 @@ continue|continue;
 case|case
 literal|'v'
 case|:
-comment|/* 				** From Arnold Robbins' strftime version 3.0: 				** "date as dd-bbb-YYYY" 				** (ado, 1993-05-24) 				*/
+comment|/* 				 * From Arnold Robbins' strftime version 3.0: 				 * "date as dd-bbb-YYYY" 				 * (ado, 1993-05-24) 				 */
 name|pt
 operator|=
 name|_fmt
@@ -2290,7 +2292,7 @@ argument_list|,
 name|ptlim
 argument_list|)
 expr_stmt|;
-comment|/* 				** C99 says that %Z must be replaced by the 				** empty string if the time zone is not 				** determinable. 				*/
+comment|/* 				 * C99 says that %Z must be replaced by the 				 * empty string if the time zone is not 				 * determinable. 				 */
 continue|continue;
 case|case
 literal|'z'
@@ -2325,7 +2327,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* !defined TM_GMTOFF */
-comment|/* 				** C99 says that the UTC offset must 				** be computed by looking only at 				** tm_isdst. This requirement is 				** incorrect, since it means the code 				** must rely on magic (in this case 				** altzone and timezone), and the 				** magic might not have the correct 				** offset. Doing things correctly is 				** tricky and requires disobeying C99; 				** see GNU C strftime for details. 				** For now, punt and conform to the 				** standard, even though it's incorrect. 				** 				** C99 says that %z must be replaced by the 				** empty string if the time zone is not 				** determinable, so output nothing if the 				** appropriate variables are not available. 				*/
+comment|/* 				 * C99 says that the UTC offset must 				 * be computed by looking only at 				 * tm_isdst. This requirement is 				 * incorrect, since it means the code 				 * must rely on magic (in this case 				 * altzone and timezone), and the 				 * magic might not have the correct 				 * offset. Doing things correctly is 				 * tricky and requires disobeying C99; 				 * see GNU C strftime for details. 				 * For now, punt and conform to the 				 * standard, even though it's incorrect. 				 * 				 * C99 says that %z must be replaced by the 				 * empty string if the time zone is not 				 * determinable, so output nothing if the 				 * appropriate variables are not available. 				 */
 if|if
 condition|(
 name|t
@@ -2519,7 +2521,7 @@ goto|;
 case|case
 literal|'%'
 case|:
-comment|/* 			** X311J/88-090 (4.12.3.5): if conversion char is 			** undefined, behavior is undefined. Print out the 			** character itself as printf(3) also does. 			*/
+comment|/* 			 * X311J/88-090 (4.12.3.5): if conversion char is 			 * undefined, behavior is undefined. Print out the 			 * character itself as printf(3) also does. 			 */
 default|default:
 break|break;
 block|}
@@ -2540,7 +2542,9 @@ name|format
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|pt
+operator|)
 return|;
 block|}
 end_function
@@ -2666,13 +2670,15 @@ operator|++
 name|pt
 expr_stmt|;
 return|return
+operator|(
 name|pt
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* ** POSIX and the C Standard are unclear or inconsistent about ** what %C and %y do if the year is negative or exceeds 9999. ** Use the convention that %C concatenated with %y yields the ** same output as %Y, and that %Y contains at least 4 bytes, ** with more only if necessary. */
+comment|/*  * POSIX and the C Standard are unclear or inconsistent about  * what %C and %y do if the year is negative or exceeds 9999.  * Use the convention that %C concatenated with %y yields the  * same output as %Y, and that %Y contains at least 4 bytes,  * with more only if necessary.  */
 end_comment
 
 begin_function
@@ -2869,7 +2875,9 @@ name|ptlim
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|pt
+operator|)
 return|;
 block|}
 end_function
