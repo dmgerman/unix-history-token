@@ -534,9 +534,6 @@ name|struct
 name|connection
 modifier|*
 name|conn
-parameter_list|,
-name|bool
-name|initial
 parameter_list|)
 block|{
 name|struct
@@ -553,6 +550,12 @@ specifier|const
 name|char
 modifier|*
 name|errorstr
+decl_stmt|;
+specifier|static
+name|bool
+name|initial
+init|=
+name|true
 decl_stmt|;
 name|response
 operator|=
@@ -752,6 +755,10 @@ name|bhslr
 operator|->
 name|bhslr_statsn
 argument_list|)
+expr_stmt|;
+name|initial
+operator|=
+name|false
 expr_stmt|;
 return|return
 operator|(
@@ -2547,8 +2554,6 @@ operator|=
 name|login_receive
 argument_list|(
 name|conn
-argument_list|,
-name|false
 argument_list|)
 expr_stmt|;
 name|response_keys
@@ -3517,8 +3522,6 @@ operator|=
 name|login_receive
 argument_list|(
 name|conn
-argument_list|,
-name|false
 argument_list|)
 expr_stmt|;
 name|log_debugx
@@ -3547,8 +3550,6 @@ operator|=
 name|login_receive
 argument_list|(
 name|conn
-argument_list|,
-name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -3886,8 +3887,6 @@ operator|=
 name|login_receive
 argument_list|(
 name|conn
-argument_list|,
-name|true
 argument_list|)
 expr_stmt|;
 name|response_keys
