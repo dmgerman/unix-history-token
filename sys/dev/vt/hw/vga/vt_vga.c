@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/vt/hw/vga/vga_reg.h>
+file|<dev/vt/hw/vga/vt_vga_reg.h>
 end_include
 
 begin_include
