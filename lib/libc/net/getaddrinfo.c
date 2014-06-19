@@ -7758,6 +7758,8 @@ argument_list|(
 name|AF_INET6
 argument_list|,
 name|SOCK_DGRAM
+operator||
+name|SOCK_CLOEXEC
 argument_list|,
 literal|0
 argument_list|)
