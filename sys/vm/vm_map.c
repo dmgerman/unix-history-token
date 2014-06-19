@@ -5516,9 +5516,16 @@ argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 operator|(
-name|void
+name|cow
+operator|&
+name|MAP_CHECK_EXCL
 operator|)
+operator|==
+literal|0
+condition|)
 name|vm_map_delete
 argument_list|(
 name|map
