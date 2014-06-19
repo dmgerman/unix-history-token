@@ -292,13 +292,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|xen_vector_callback_enabled
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*---------------------------------- Macros ----------------------------------*/
 end_comment
