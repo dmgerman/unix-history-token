@@ -2065,7 +2065,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strlcpy
+name|strncpy
 argument_list|(
 name|req
 operator|.
@@ -2111,7 +2111,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strlcpy
+name|strncpy
 argument_list|(
 name|req
 operator|.
