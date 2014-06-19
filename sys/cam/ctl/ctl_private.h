@@ -1255,10 +1255,6 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|CTL_FLAG_TASK_PENDING
-init|=
-literal|0x01
-block|,
 name|CTL_FLAG_REAL_SYNC
 init|=
 literal|0x02
@@ -1407,13 +1403,6 @@ argument_list|,
 argument|ctl_be_lun
 argument_list|)
 name|pending_lun_queue
-expr_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ctl_io_hdr
-argument_list|)
-name|task_queue
 expr_stmt|;
 name|STAILQ_HEAD
 argument_list|(
