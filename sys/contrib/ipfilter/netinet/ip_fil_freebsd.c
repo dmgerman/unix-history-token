@@ -4186,7 +4186,10 @@ name|in_rtalloc
 argument_list|(
 name|ro
 argument_list|,
-literal|0
+name|M_GETFIB
+argument_list|(
+name|m0
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
