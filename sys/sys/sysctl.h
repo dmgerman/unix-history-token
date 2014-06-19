@@ -1209,7 +1209,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		\&sysctl_##parent##_children,				\ 		{ NULL },						\ 		nbr,							\ 		kind,							\ 		a1,							\ 		a2,							\ 		#name,							\ 		handler,						\ 		fmt,							\ 		0,							\ 		0,							\ 		__DESCR(descr)						\ 		};							\ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
+value|static struct sysctl_oid sysctl__##parent##_##name = {		\ 		.oid_parent =&sysctl_##parent##_children,		\ 		.oid_number = (nbr),					\ 		.oid_kind = (kind),					\ 		.oid_arg1 = (a1),					\ 		.oid_arg2 = (a2),					\ 		.oid_name = #name,					\ 		.oid_handler = (handler),				\ 		.oid_fmt = (fmt),					\ 		.oid_descr = __DESCR(descr)				\ 	};								\ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
 end_define
 
 begin_define
