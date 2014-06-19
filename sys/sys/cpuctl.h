@@ -39,6 +39,10 @@ name|int
 name|level
 decl_stmt|;
 comment|/* CPUID level */
+name|int
+name|level_type
+decl_stmt|;
+comment|/* CPUID level type */
 name|uint32_t
 name|data
 index|[
@@ -106,6 +110,13 @@ define|#
 directive|define
 name|CPUCTL_MSRCBIT
 value|_IOWR('c', 6, cpuctl_msr_args_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUCTL_CPUID_COUNT
+value|_IOWR('c', 7, cpuctl_cpuid_args_t)
 end_define
 
 begin_endif
