@@ -601,7 +601,9 @@ name|pw
 operator|!=
 name|NULL
 condition|?
-name|user
+name|pw
+operator|->
+name|pw_name
 else|:
 name|NULL
 argument_list|)
