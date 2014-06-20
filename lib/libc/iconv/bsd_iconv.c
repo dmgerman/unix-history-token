@@ -280,6 +280,14 @@ name|handle
 operator|->
 name|cv_shared
 operator|->
+name|ci_ilseq_invalid
+operator|=
+name|false
+expr_stmt|;
+name|handle
+operator|->
+name|cv_shared
+operator|->
 name|ci_hooks
 operator|=
 name|NULL
@@ -1022,10 +1030,7 @@ name|j
 operator|++
 index|]
 operator|=
-name|strdup
-argument_list|(
 name|curkey
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1141,10 +1146,7 @@ name|j
 operator|++
 index|]
 operator|=
-name|strdup
-argument_list|(
 name|curitem
-argument_list|)
 expr_stmt|;
 block|}
 name|np
