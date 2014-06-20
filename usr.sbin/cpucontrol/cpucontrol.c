@@ -781,7 +781,7 @@ name|level
 decl_stmt|,
 name|level_type
 decl_stmt|;
-name|cpuctl_cpuid_args_t
+name|cpuctl_cpuid_count_args_t
 name|args
 decl_stmt|;
 name|int
