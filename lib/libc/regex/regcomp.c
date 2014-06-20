@@ -5806,7 +5806,7 @@ name|ncs
 decl_stmt|;
 name|ncs
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|p
 operator|->
@@ -6157,7 +6157,7 @@ else|else
 block|{
 name|newwides
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|cs
 operator|->
@@ -6345,7 +6345,7 @@ condition|)
 return|return;
 name|newranges
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|cs
 operator|->
@@ -6484,7 +6484,7 @@ argument_list|)
 expr_stmt|;
 name|newtypes
 operator|=
-name|realloc
+name|reallocf
 argument_list|(
 name|cs
 operator|->
@@ -7064,7 +7064,7 @@ operator|(
 name|sop
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 name|p
 operator|->
@@ -7148,7 +7148,7 @@ operator|(
 name|sop
 operator|*
 operator|)
-name|realloc
+name|reallocf
 argument_list|(
 operator|(
 name|char
