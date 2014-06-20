@@ -490,7 +490,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EI:ae:f:i:lnr"
+literal|"EI:ae:f:i:lnru"
 argument_list|)
 operator|)
 operator|!=
@@ -643,6 +643,48 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'u'
+case|:
+ifdef|#
+directive|ifdef
+name|_IONBF
+name|c
+operator|=
+name|setvbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IONBF
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|c
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|errno
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|c
+condition|)
+name|warnx
+argument_list|(
+literal|"setting unbuffered output failed"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 case|case
 literal|'?'
@@ -761,11 +803,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"usage: %s script [-Ealnru] [-i[<extension>]] [file ...]\n"
+literal|"\t%s [-Ealnu] [-i[<extension>]] [-e script] ... [-f script_file]"
+literal|" ... [file ...]\n"
 argument_list|,
-literal|"usage: sed script [-Ealn] [-i extension] [file ...]"
+name|getprogname
+argument_list|()
 argument_list|,
-literal|"       sed [-Ealn] [-i extension] [-e script] ... [-f script_file] ... [file ...]"
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
