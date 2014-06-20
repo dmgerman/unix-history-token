@@ -9689,6 +9689,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|eq
+operator|->
+name|avail
+operator|+
 name|can_reclaim
 operator|<
 name|tx_resume_threshold
@@ -10315,6 +10319,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|eq
+operator|->
+name|avail
+operator|+
 name|can_reclaim
 operator|<
 name|tx_resume_threshold
@@ -11018,6 +11026,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|eq
+operator|->
+name|avail
+operator|+
 name|reclaimable
 argument_list|(
 name|eq
