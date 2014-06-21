@@ -999,8 +999,13 @@ name|caddr_t
 name|cl
 decl_stmt|;
 name|uint8_t
-name|nmbuf
+name|nimbuf
 decl_stmt|;
+comment|/* # of inline mbufs with ref on the cluster */
+name|uint8_t
+name|nembuf
+decl_stmt|;
+comment|/* # of allocated mbufs with ref */
 name|struct
 name|cluster_layout
 name|cll
