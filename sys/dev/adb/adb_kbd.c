@@ -2056,9 +2056,6 @@ literal|0
 index|]
 operator|==
 literal|0x7f
-operator|&&
-name|devctl_process_running
-argument_list|()
 condition|)
 block|{
 name|devctl_notify
