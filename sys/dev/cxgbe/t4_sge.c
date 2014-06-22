@@ -15974,7 +15974,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|.
-name|viid_pkd
+name|autoequiqe_to_viid
 operator|=
 name|htobe32
 argument_list|(
