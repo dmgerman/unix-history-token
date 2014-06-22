@@ -2136,10 +2136,6 @@ literal|0
 expr_stmt|;
 name|op_err
 operator|=
-name|NULL
-expr_stmt|;
-name|op_err
-operator|=
 name|sctp_arethere_unrecognized_parameters
 argument_list|(
 name|m
@@ -7566,9 +7562,12 @@ name|NULL
 operator|)
 return|;
 block|}
-switch|switch SCTP_GET_STATE
+switch|switch
 condition|(
+name|SCTP_GET_STATE
+argument_list|(
 name|asoc
+argument_list|)
 condition|)
 block|{
 case|case
