@@ -3356,12 +3356,8 @@ name|localifa_flags
 operator|&=
 name|SCTP_ADDR_VALID
 expr_stmt|;
-name|sctp_ifap
-operator|->
-name|localifa_flags
-operator||=
-name|SCTP_BEING_DELETED
-expr_stmt|;
+comment|/* 		 * We don't set the flag. This means that the structure will 		 * hang around in EP's that have bound specific to it until 		 * they close. This gives us TCP like behavior if someone 		 * removes an address (or for that matter adds it right 		 * back). 		 */
+comment|/* sctp_ifap->localifa_flags |= SCTP_BEING_DELETED; */
 name|vrf
 operator|->
 name|total_ifa_count
