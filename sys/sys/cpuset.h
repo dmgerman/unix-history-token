@@ -552,6 +552,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|cpuset_setithread
+parameter_list|(
+name|lwpid_t
+name|id
+parameter_list|,
+name|u_char
+name|cpu
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|cpuset_create_root
 parameter_list|(
 name|struct
