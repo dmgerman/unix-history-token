@@ -1495,6 +1495,24 @@ name|SCTP_PACKED
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|sctp_error_no_user_data
+block|{
+name|struct
+name|sctp_error_cause
+name|cause
+decl_stmt|;
+comment|/* code=SCTP_CAUSE_NO_USER_DATA */
+name|uint32_t
+name|tsn
+decl_stmt|;
+comment|/* TSN of the empty data chunk */
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Main SCTP chunk types we place these here so natd and f/w's in user land  * can find them.  */
 end_comment
