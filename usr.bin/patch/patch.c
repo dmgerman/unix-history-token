@@ -2295,6 +2295,16 @@ literal|'d'
 block|}
 block|,
 block|{
+literal|"dry-run"
+block|,
+name|no_argument
+block|,
+literal|0
+block|,
+literal|'C'
+block|}
+block|,
+block|{
 literal|"ed"
 block|,
 name|no_argument
