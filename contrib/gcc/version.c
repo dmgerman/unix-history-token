@@ -30,7 +30,7 @@ name|char
 name|bug_report_url
 index|[]
 init|=
-literal|"<URL:http://www.freebsd.org/send-pr.html>"
+literal|"<URL:http://www.freebsd.org/support.html>"
 decl_stmt|;
 end_decl_stmt
 
