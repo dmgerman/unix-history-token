@@ -1017,7 +1017,7 @@ struct|struct
 name|__rpc_svcthread
 block|{
 name|struct
-name|mtx_padalign
+name|mtx
 name|st_lock
 decl_stmt|;
 comment|/* protects st_reqs field */
@@ -1120,7 +1120,7 @@ struct|struct
 name|__rpc_svcgroup
 block|{
 name|struct
-name|mtx_padalign
+name|mtx
 name|sg_lock
 decl_stmt|;
 comment|/* protect the thread/req lists */
