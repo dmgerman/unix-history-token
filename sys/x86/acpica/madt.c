@@ -1302,18 +1302,19 @@ return|;
 case|case
 name|ACPI_MADT_POLARITY_ACTIVE_LOW
 case|:
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"WARNING: Bogus Interrupt Polarity. Assume POLALITY LOW"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|INTR_POLARITY_LOW
 operator|)
 return|;
-default|default:
-name|panic
-argument_list|(
-literal|"Bogus Interrupt Polarity"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1370,18 +1371,20 @@ return|;
 case|case
 name|ACPI_MADT_TRIGGER_LEVEL
 case|:
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"WARNING: Bogus Interrupt Trigger Mode. Assume Level trigger."
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 return|return
 operator|(
 name|INTR_TRIGGER_LEVEL
 operator|)
 return|;
-default|default:
-name|panic
-argument_list|(
-literal|"Bogus Interrupt Trigger Mode"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
