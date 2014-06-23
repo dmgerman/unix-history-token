@@ -9759,7 +9759,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Certain daemons might not have file descriptors. */
 name|fdp
 operator|=
 name|td
@@ -9768,14 +9767,19 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|fdp
+operator|->
+name|fd_refcnt
 operator|==
-name|NULL
-condition|)
-return|return;
-comment|/* 	 * Note: fdp->fd_ofiles may be reallocated out from under us while 	 * we are blocked in a close.  Be careful! 	 */
+literal|1
+argument_list|,
+operator|(
+literal|"the fdtable should not be shared"
+operator|)
+argument_list|)
+expr_stmt|;
 name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
@@ -9979,7 +9983,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Certain daemons might not have file descriptors. */
 name|fdp
 operator|=
 name|td
@@ -9988,14 +9991,19 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|fdp
+operator|->
+name|fd_refcnt
 operator|==
-name|NULL
-condition|)
-return|return;
-comment|/* 	 * We cannot cache fd_ofiles since operations 	 * may block and rip them out from under us. 	 */
+literal|1
+argument_list|,
+operator|(
+literal|"the fdtable should not be shared"
+operator|)
+argument_list|)
+expr_stmt|;
 name|FILEDESC_XLOCK
 argument_list|(
 name|fdp
@@ -10134,17 +10142,6 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-if|if
-condition|(
-name|fdp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|KASSERT
 argument_list|(
 name|fdp
