@@ -4816,9 +4816,9 @@ operator|(
 name|cow
 operator|&
 operator|(
-name|MAP_ENTRY_GROWS_DOWN
+name|MAP_STACK_GROWS_DOWN
 operator||
-name|MAP_ENTRY_GROWS_UP
+name|MAP_STACK_GROWS_UP
 operator|)
 operator|)
 operator|==
