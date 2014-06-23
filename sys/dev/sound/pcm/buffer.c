@@ -625,6 +625,12 @@ operator|->
 name|dmamap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|b
+operator|->
+name|dmatag
+condition|)
 name|bus_dmamem_free
 argument_list|(
 name|b
