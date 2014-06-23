@@ -1746,9 +1746,14 @@ name|f_frame
 expr_stmt|;
 if|if
 condition|(
+name|P2ROUNDUP
+argument_list|(
 name|fp
 operator|->
 name|f_retaddr
+argument_list|,
+literal|4
+argument_list|)
 operator|==
 operator|(
 name|long
@@ -1772,7 +1777,7 @@ literal|1
 index|]
 operator|)
 index|[
-literal|1
+literal|0
 index|]
 operator|+
 literal|1
@@ -1792,11 +1797,9 @@ operator|(
 name|uintptr_t
 operator|*
 operator|)
-operator|&
 name|fp
-index|[
-literal|1
-index|]
+operator|+
+literal|2
 expr_stmt|;
 name|load
 label|:
