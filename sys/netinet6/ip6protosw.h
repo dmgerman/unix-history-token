@@ -282,7 +282,7 @@ name|pr_usrreqs
 modifier|*
 name|pr_usrreqs
 decl_stmt|;
-comment|/* supersedes pr_usrreq() */
+comment|/* user-protocol hook */
 block|}
 struct|;
 end_struct
