@@ -400,7 +400,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"%s (%s) and %s are not lldistinct paths"
+literal|"%s (%s) and %s are not distinct paths"
 argument_list|,
 name|argv
 index|[
@@ -413,11 +413,6 @@ name|argv
 index|[
 literal|1
 index|]
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Debug: 1\n"
 argument_list|)
 expr_stmt|;
 name|build_iovec
@@ -495,21 +490,6 @@ name|errmsg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Debug: 2, source: %zd target: %zdd\n"
-argument_list|,
-name|strlen
-argument_list|(
-name|source
-argument_list|)
-argument_list|,
-name|strlen
-argument_list|(
-name|target
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nmount
@@ -524,11 +504,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Debug: 3\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|errmsg
@@ -538,12 +513,6 @@ index|]
 operator|!=
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Debug 4\n"
-argument_list|)
-expr_stmt|;
 name|err
 argument_list|(
 literal|1
@@ -555,14 +524,7 @@ argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-name|printf
-argument_list|(
-literal|"Debug 5\n"
-argument_list|)
-expr_stmt|;
 name|err
 argument_list|(
 literal|1
@@ -572,7 +534,6 @@ argument_list|,
 name|source
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|exit
 argument_list|(
