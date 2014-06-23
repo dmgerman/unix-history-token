@@ -235,6 +235,28 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|root_holds_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|root_holds
+argument_list|,
+operator|&
+name|root_holds_mtx
+argument_list|,
+literal|"root_holds"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|root_hold_token
@@ -384,7 +406,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -400,7 +422,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -431,7 +453,7 @@ return|return;
 name|mtx_lock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -450,7 +472,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 name|free
@@ -505,7 +527,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 while|while
@@ -520,7 +542,7 @@ operator|&
 name|root_mount_complete
 argument_list|,
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|,
 name|PZERO
 argument_list|,
@@ -533,7 +555,7 @@ block|}
 name|mtx_unlock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -4277,7 +4299,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 if|if
@@ -4292,7 +4314,7 @@ block|{
 name|mtx_unlock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4345,7 +4367,7 @@ operator|&
 name|root_holds
 argument_list|,
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|,
 name|PZERO
 operator||
@@ -4577,7 +4599,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 name|atomic_store_rel_int
@@ -4597,7 +4619,7 @@ expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
-name|mountlist_mtx
+name|root_holds_mtx
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_INVOKE
