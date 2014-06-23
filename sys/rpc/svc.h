@@ -1030,10 +1030,6 @@ name|svc_reqlist
 name|st_reqs
 decl_stmt|;
 comment|/* RPC requests to execute */
-name|int
-name|st_idle
-decl_stmt|;
-comment|/* thread is on idle list */
 name|struct
 name|cv
 name|st_cond

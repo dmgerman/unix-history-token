@@ -1554,12 +1554,6 @@ argument_list|,
 name|st_ilink
 argument_list|)
 expr_stmt|;
-name|st
-operator|->
-name|st_idle
-operator|=
-name|FALSE
-expr_stmt|;
 name|SVC_ACQUIRE
 argument_list|(
 name|xprt
@@ -5272,12 +5266,6 @@ argument_list|,
 name|st_ilink
 argument_list|)
 expr_stmt|;
-name|st
-operator|->
-name|st_idle
-operator|=
-name|TRUE
-expr_stmt|;
 if|if
 condition|(
 name|ismaster
@@ -5334,9 +5322,10 @@ if|if
 condition|(
 name|st
 operator|->
-name|st_idle
+name|st_xprt
+operator|==
+name|NULL
 condition|)
-block|{
 name|LIST_REMOVE
 argument_list|(
 name|st
@@ -5344,13 +5333,6 @@ argument_list|,
 name|st_ilink
 argument_list|)
 expr_stmt|;
-name|st
-operator|->
-name|st_idle
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
 comment|/* 			 * Reduce worker thread count when idle. 			 */
 if|if
 condition|(
