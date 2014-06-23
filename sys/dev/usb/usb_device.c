@@ -3998,6 +3998,12 @@ name|ppdev
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rebooting
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -4021,6 +4027,7 @@ operator|->
 name|address
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|device_is_attached
@@ -7900,6 +7907,12 @@ directive|endif
 if|#
 directive|if
 name|USB_HAVE_UGEN
+if|if
+condition|(
+operator|!
+name|rebooting
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s:<%s> at %s (disconnected)\n"
@@ -7921,6 +7934,7 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Destroy UGEN symlink, if any */
 if|if
 condition|(

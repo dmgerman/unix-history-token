@@ -1354,13 +1354,16 @@ literal|0
 operator|)
 return|;
 block|}
-name|device_printf
+name|DPRINTF
+argument_list|(
+literal|"%s: Controller shutdown\n"
+argument_list|,
+name|device_get_nameunit
 argument_list|(
 name|bus
 operator|->
 name|bdev
-argument_list|,
-literal|"Controller shutdown\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|USB_BUS_LOCK
@@ -1430,13 +1433,16 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-name|device_printf
+name|DPRINTF
+argument_list|(
+literal|"%s: Controller shutdown complete\n"
+argument_list|,
+name|device_get_nameunit
 argument_list|(
 name|bus
 operator|->
 name|bdev
-argument_list|,
-literal|"Controller shutdown complete\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
