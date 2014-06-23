@@ -258,6 +258,13 @@ name|FPU_KERN_NOWAIT
 value|0x0001
 end_define
 
+begin_define
+define|#
+directive|define
+name|FPU_KERN_KTHR
+value|0x0002
+end_define
+
 begin_endif
 endif|#
 directive|endif
