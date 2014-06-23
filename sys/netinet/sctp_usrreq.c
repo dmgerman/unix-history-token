@@ -28741,7 +28741,7 @@ operator|)
 operator|&
 name|thlds
 operator|->
-name|spt_assoc_id
+name|spt_address
 argument_list|)
 expr_stmt|;
 block|}
@@ -28768,7 +28768,7 @@ operator|)
 operator|&
 name|thlds
 operator|->
-name|spt_assoc_id
+name|spt_address
 argument_list|,
 operator|&
 name|net
@@ -28818,7 +28818,7 @@ operator|)
 operator|&
 name|thlds
 operator|->
-name|spt_assoc_id
+name|spt_address
 expr_stmt|;
 ifdef|#
 directive|ifdef
