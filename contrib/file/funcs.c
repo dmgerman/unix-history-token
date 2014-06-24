@@ -1124,6 +1124,8 @@ name|ubuf
 argument_list|,
 name|nb
 argument_list|,
+literal|0
+argument_list|,
 name|BINTEST
 argument_list|)
 operator|)

@@ -605,6 +605,8 @@ operator|-
 name|utf8_buf
 argument_list|)
 argument_list|,
+literal|0
+argument_list|,
 name|TEXTTEST
 argument_list|)
 operator|)

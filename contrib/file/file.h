@@ -217,6 +217,27 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__arraycount
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__arraycount
+parameter_list|(
+name|a
+parameter_list|)
+value|(sizeof(a) / sizeof(a[0]))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__GNUC_PREREQ__
 end_ifndef
 
@@ -1633,6 +1654,8 @@ specifier|const
 name|unsigned
 name|char
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|,
 name|size_t
 parameter_list|,
