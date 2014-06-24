@@ -386,7 +386,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|_gsskrb5_encode_om_uint32
+name|_gsskrb5_encode_be_om_uint32
 argument_list|(
 name|num
 argument_list|,
