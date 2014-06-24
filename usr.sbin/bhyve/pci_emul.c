@@ -5096,25 +5096,11 @@ name|lpc_pirq_routed
 argument_list|()
 expr_stmt|;
 comment|/* 	 * The guest physical memory map looks like the following: 	 * [0,		    lowmem)		guest system memory 	 * [lowmem,	    lowmem_limit)	memory hole (may be absent) 	 * [lowmem_limit,   4GB)		PCI hole (32-bit BAR allocation) 	 * [4GB,	    4GB + highmem) 	 * 	 * Accesses to memory addresses that are not allocated to system 	 * memory or PCI devices return 0xff's. 	 */
-name|error
+name|lowmem
 operator|=
-name|vm_get_memory_seg
+name|vm_get_lowmem_size
 argument_list|(
 name|ctx
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|lowmem
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|error
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 name|memset
