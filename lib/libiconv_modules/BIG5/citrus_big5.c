@@ -540,7 +540,6 @@ name|_citrus_BIG5_fill_rowcol
 parameter_list|(
 name|void
 modifier|*
-modifier|*
 name|__restrict
 name|ctx
 parameter_list|,
@@ -648,7 +647,6 @@ comment|/*ARGSUSED*/
 name|_citrus_BIG5_fill_excludes
 parameter_list|(
 name|void
-modifier|*
 modifier|*
 name|__restrict
 name|ctx
@@ -905,16 +903,6 @@ name|size_t
 name|lenvar
 parameter_list|)
 block|{
-name|void
-modifier|*
-name|ctx
-init|=
-operator|(
-name|void
-operator|*
-operator|)
-name|ei
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1049,13 +1037,7 @@ block|}
 comment|/* fallback Big5-1984, for backward compatibility. */
 name|_citrus_BIG5_fill_rowcol
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|ctx
+name|ei
 argument_list|,
 literal|"row"
 argument_list|,
@@ -1066,13 +1048,7 @@ argument_list|)
 expr_stmt|;
 name|_citrus_BIG5_fill_rowcol
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|ctx
+name|ei
 argument_list|,
 literal|"col"
 argument_list|,
@@ -1083,13 +1059,7 @@ argument_list|)
 expr_stmt|;
 name|_citrus_BIG5_fill_rowcol
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
-name|ctx
+name|ei
 argument_list|,
 literal|"col"
 argument_list|,
