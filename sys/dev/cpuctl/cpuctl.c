@@ -239,7 +239,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|cpuctl_do_cpuid
 parameter_list|(
 name|int
@@ -259,7 +259,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|cpuctl_do_cpuid_count
 parameter_list|(
 name|int
@@ -796,8 +796,6 @@ break|break;
 case|case
 name|CPUCTL_CPUID
 case|:
-name|ret
-operator|=
 name|cpuctl_do_cpuid
 argument_list|(
 name|cpu
@@ -810,6 +808,10 @@ name|data
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -852,8 +854,6 @@ break|break;
 case|case
 name|CPUCTL_CPUID_COUNT
 case|:
-name|ret
-operator|=
 name|cpuctl_do_cpuid_count
 argument_list|(
 name|cpu
@@ -866,6 +866,10 @@ name|data
 argument_list|,
 name|td
 argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -891,7 +895,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|cpuctl_do_cpuid_count
 parameter_list|(
 name|int
@@ -1010,17 +1014,12 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|cpuctl_do_cpuid
 parameter_list|(
 name|int
@@ -1039,9 +1038,6 @@ block|{
 name|cpuctl_cpuid_count_args_t
 name|cdata
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|cdata
 operator|.
 name|level
@@ -1057,8 +1053,6 @@ name|level_type
 operator|=
 literal|0
 expr_stmt|;
-name|error
-operator|=
 name|cpuctl_do_cpuid_count
 argument_list|(
 name|cpu
@@ -1088,11 +1082,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Ignore error */
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 end_function
 
@@ -1431,8 +1420,6 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
 name|cpuctl_do_cpuid
 argument_list|(
 name|cpu
@@ -1443,28 +1430,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-literal|"[cpuctl,%d]: cannot retrive cpuid info for cpu %d"
-argument_list|,
-name|__LINE__
-argument_list|,
-name|cpu
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 operator|(
 operator|(
 name|uint32_t
