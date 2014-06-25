@@ -5199,21 +5199,7 @@ name|new_entry
 operator|->
 name|start
 expr_stmt|;
-comment|/* 	 * It may be possible to merge the new entry with the next and/or 	 * previous entries.  However, due to MAP_STACK_* being a hack, a 	 * panic can result from merging such entries. 	 */
-if|if
-condition|(
-operator|(
-name|cow
-operator|&
-operator|(
-name|MAP_STACK_GROWS_DOWN
-operator||
-name|MAP_STACK_GROWS_UP
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
+comment|/* 	 * Try to coalesce the new entry with both the previous and next 	 * entries in the list.  Previously, we only attempted to coalesce 	 * with the previous entry when object is NULL.  Here, we handle the 	 * other cases, which are less common. 	 */
 name|vm_map_simplify_entry
 argument_list|(
 name|map
@@ -6111,15 +6097,23 @@ name|esize
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|entry
 operator|->
 name|eflags
 operator|&
 operator|(
+name|MAP_ENTRY_GROWS_DOWN
+operator||
+name|MAP_ENTRY_GROWS_UP
+operator||
 name|MAP_ENTRY_IN_TRANSITION
 operator||
 name|MAP_ENTRY_IS_SUB_MAP
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return;
 name|prev
