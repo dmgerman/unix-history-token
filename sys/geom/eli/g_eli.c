@@ -4921,13 +4921,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-name|data
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -5662,6 +5655,13 @@ name|NULL
 operator|)
 return|;
 block|}
+name|g_eli_keyfiles_clear
+argument_list|(
+name|pp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|G_ELI_DEBUG
 argument_list|(
 literal|1
