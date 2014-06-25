@@ -230,8 +230,8 @@ argument_list|)
 name|cont_queue
 expr_stmt|;
 name|struct
-name|mtx
-name|lock
+name|mtx_padalign
+name|queue_lock
 decl_stmt|;
 block|}
 struct|;
@@ -615,7 +615,7 @@ name|softc
 operator|->
 name|lock
 argument_list|,
-literal|"ramdisk"
+literal|"ctlramdisk"
 argument_list|,
 name|NULL
 argument_list|,
@@ -1131,7 +1131,7 @@ argument_list|(
 operator|&
 name|be_lun
 operator|->
-name|lock
+name|queue_lock
 argument_list|)
 expr_stmt|;
 name|STAILQ_INSERT_TAIL
@@ -1154,7 +1154,7 @@ argument_list|(
 operator|&
 name|be_lun
 operator|->
-name|lock
+name|queue_lock
 argument_list|)
 expr_stmt|;
 name|taskqueue_enqueue
@@ -1732,7 +1732,7 @@ argument_list|(
 operator|&
 name|be_lun
 operator|->
-name|lock
+name|queue_lock
 argument_list|)
 expr_stmt|;
 for|for
@@ -1785,7 +1785,7 @@ argument_list|(
 operator|&
 name|be_lun
 operator|->
-name|lock
+name|queue_lock
 argument_list|)
 expr_stmt|;
 name|ctl_backend_ramdisk_continue
@@ -1798,7 +1798,7 @@ argument_list|(
 operator|&
 name|be_lun
 operator|->
-name|lock
+name|queue_lock
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1811,7 +1811,7 @@ argument_list|(
 operator|&
 name|be_lun
 operator|->
-name|lock
+name|queue_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2364,7 +2364,7 @@ argument_list|(
 operator|&
 name|be_lun
 operator|->
-name|lock
+name|queue_lock
 argument_list|)
 expr_stmt|;
 name|free
@@ -3131,9 +3131,9 @@ argument_list|(
 operator|&
 name|be_lun
 operator|->
-name|lock
+name|queue_lock
 argument_list|,
-literal|"CTL ramdisk"
+literal|"cram queue lock"
 argument_list|,
 name|NULL
 argument_list|,
@@ -3556,7 +3556,7 @@ argument_list|(
 operator|&
 name|be_lun
 operator|->
-name|lock
+name|queue_lock
 argument_list|)
 expr_stmt|;
 name|free
