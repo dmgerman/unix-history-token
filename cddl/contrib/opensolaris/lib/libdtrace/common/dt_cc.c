@@ -10892,6 +10892,14 @@ operator|->
 name|dtld_library
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|dtp
@@ -10916,6 +10924,15 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -10923,6 +10940,7 @@ literal|1
 operator|)
 return|;
 comment|/* preserve dt_errno */
+block|}
 name|rv
 operator|=
 name|dt_compile
@@ -10975,6 +10993,15 @@ name|D_PRAGMA_DEPEND
 argument_list|)
 operator|)
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -10982,6 +11009,7 @@ literal|1
 operator|)
 return|;
 comment|/* preserve dt_errno */
+block|}
 if|if
 condition|(
 name|dtp
