@@ -4257,6 +4257,14 @@ name|p_nice
 expr_stmt|;
 name|kp
 operator|->
+name|ki_fibnum
+operator|=
+name|p
+operator|->
+name|p_fibnum
+expr_stmt|;
+name|kp
+operator|->
 name|ki_start
 operator|=
 name|p
