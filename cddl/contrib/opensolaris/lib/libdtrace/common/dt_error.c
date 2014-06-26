@@ -496,7 +496,13 @@ name|EDT_NOPROBES
 block|,
 literal|"No probe sites found for declared provider"
 block|}
+block|,
+block|{
+name|EDT_CANTLOAD
+block|,
+literal|"Failed to load module"
 block|}
+block|, }
 struct|;
 end_struct
 

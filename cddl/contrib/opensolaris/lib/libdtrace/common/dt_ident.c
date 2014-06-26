@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_pragma
@@ -487,6 +487,8 @@ argument_list|,
 name|idp
 operator|->
 name|di_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -808,6 +810,8 @@ argument_list|,
 name|idp
 operator|->
 name|di_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1551,6 +1555,8 @@ argument_list|,
 name|dtt
 operator|.
 name|dtt_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2010,6 +2016,23 @@ name|dn_value
 index|]
 operator|.
 name|dtt_type
+argument_list|,
+name|prp
+operator|->
+name|pr_argv
+index|[
+name|ap
+operator|->
+name|dn_value
+index|]
+operator|.
+name|dtt_flags
+operator|&
+name|DTT_FL_USER
+condition|?
+name|B_TRUE
+else|:
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2202,6 +2225,8 @@ name|DT_DYN_TYPE
 argument_list|(
 name|dtp
 argument_list|)
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2490,6 +2515,8 @@ argument_list|,
 name|idp
 operator|->
 name|di_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2615,6 +2642,8 @@ argument_list|,
 name|idp
 operator|->
 name|di_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2670,6 +2699,8 @@ argument_list|,
 name|idp
 operator|->
 name|di_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}

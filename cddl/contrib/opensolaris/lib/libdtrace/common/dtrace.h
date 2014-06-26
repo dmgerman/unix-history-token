@@ -8,7 +8,7 @@ comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -2060,9 +2060,18 @@ name|ctf_id_t
 name|dtt_type
 decl_stmt|;
 comment|/* CTF type identifier */
+name|uint_t
+name|dtt_flags
+decl_stmt|;
+comment|/* Misc. flags */
 block|}
 name|dtrace_typeinfo_t
 typedef|;
+define|#
+directive|define
+name|DTT_FL_USER
+value|0x1
+comment|/* user type */
 specifier|extern
 name|int
 name|dtrace_lookup_by_type

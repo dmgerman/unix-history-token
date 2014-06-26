@@ -7,12 +7,9 @@ begin_comment
 comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
+end_comment
 
 begin_include
 include|#
@@ -516,6 +513,8 @@ argument_list|,
 name|idp
 operator|->
 name|di_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 name|dt_node_diftype

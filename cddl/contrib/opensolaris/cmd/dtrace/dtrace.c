@@ -8,7 +8,7 @@ comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2408,6 +2408,10 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|user
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2528,6 +2532,28 @@ control|)
 block|{
 if|if
 condition|(
+name|p
+operator|->
+name|dtp_argv
+index|[
+name|i
+index|]
+operator|.
+name|dtt_flags
+operator|&
+name|DTT_FL_USER
+condition|)
+name|user
+operator|=
+literal|"userland "
+expr_stmt|;
+else|else
+name|user
+operator|=
+literal|""
+expr_stmt|;
+if|if
+condition|(
 name|ctf_type_name
 argument_list|(
 name|p
@@ -2575,9 +2601,11 @@ argument_list|)
 expr_stmt|;
 name|oprintf
 argument_list|(
-literal|"\t\targs[%d]: %s\n"
+literal|"\t\targs[%d]: %s%s\n"
 argument_list|,
 name|i
+argument_list|,
+name|user
 argument_list|,
 name|buf
 argument_list|)

@@ -8,7 +8,7 @@ comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1473,6 +1473,11 @@ directive|define
 name|DIF_TF_BYREF
 value|0x1
 comment|/* type is passed by reference */
+define|#
+directive|define
+name|DIF_TF_BYUREF
+value|0x2
+comment|/* user type is passed by reference */
 comment|/*  * A DTrace Intermediate Format variable record is used to describe each of the  * variables referenced by a given DIF object.  It contains an integer variable  * identifier along with variable scope and properties, as shown below.  The  * size of this structure must be sizeof (int) aligned.  */
 typedef|typedef
 struct|struct
