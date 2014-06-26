@@ -341,6 +341,28 @@ name|VIE_OP_TYPE_MOV
 block|, 	}
 block|,
 index|[
+literal|0xC6
+index|]
+operator|=
+block|{
+comment|/* XXX Group 11 extended opcode - not just MOV */
+operator|.
+name|op_byte
+operator|=
+literal|0xC6
+block|,
+operator|.
+name|op_type
+operator|=
+name|VIE_OP_TYPE_MOV
+block|,
+operator|.
+name|op_flags
+operator|=
+name|VIE_OP_F_IMM8
+block|, 	}
+block|,
+index|[
 literal|0xC7
 index|]
 operator|=
@@ -1102,6 +1124,34 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|0xC6
+case|:
+comment|/* 		 * MOV from imm8 to mem (ModRM:r/m) 		 * C6/0		mov r/m8, imm8 		 * REX + C6/0	mov r/m8, imm8 		 */
+name|size
+operator|=
+literal|1
+expr_stmt|;
+name|error
+operator|=
+name|memwrite
+argument_list|(
+name|vm
+argument_list|,
+name|vcpuid
+argument_list|,
+name|gpa
+argument_list|,
+name|vie
+operator|->
+name|immediate
+argument_list|,
+name|size
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|0xC7
