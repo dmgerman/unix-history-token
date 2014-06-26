@@ -507,10 +507,7 @@ name|buf
 argument_list|,
 literal|1
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|BUFSIZE
 argument_list|,
 name|in
 argument_list|)
