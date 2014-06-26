@@ -21,12 +21,6 @@ begin_comment
 comment|/*  * Note that this file is compiled into the kernel and into libc.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -38,6 +32,12 @@ include|#
 directive|include
 file|<sys/capsicum.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_include
 include|#
@@ -59,18 +59,6 @@ end_else
 begin_comment
 comment|/* !_KERNEL */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/capsicum.h>
-end_include
 
 begin_include
 include|#
