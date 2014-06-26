@@ -81,6 +81,17 @@ begin_comment
 comment|/*  * Notes:  * o   File is in network byte order.  * o   File layout:  *	copy of disk footer  *	dynamic disk header  *	block allocation table (BAT)  *	data blocks  *	disk footer  * o   The timestamp is seconds since 1/1/2000 12:00:00 AM UTC  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VHD_BLOCK_SIZE
+value|4096
+end_define
+
+begin_comment
+comment|/* 2MB blocks */
+end_comment
+
 begin_struct
 struct|struct
 name|vhd_footer
@@ -339,12 +350,32 @@ name|vhd_resize
 parameter_list|(
 name|lba_t
 name|imgsz
-name|__unused
 parameter_list|)
 block|{
+comment|/* Round to a multiple of the block size. */
+name|imgsz
+operator|=
+operator|(
+name|imgsz
+operator|+
+name|VHD_BLOCK_SIZE
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+operator|(
+name|VHD_BLOCK_SIZE
+operator|-
+literal|1
+operator|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|image_set_size
+argument_list|(
+name|imgsz
+argument_list|)
 operator|)
 return|;
 block|}
