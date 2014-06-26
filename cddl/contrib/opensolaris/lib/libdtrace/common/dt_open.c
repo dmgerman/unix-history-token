@@ -378,15 +378,54 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_9_2
+value|DT_VERSION_NUMBER(1, 9, 2)
+end_define
+
+begin_comment
+comment|/* FreeBSD specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_10
+value|DT_VERSION_NUMBER(1, 10, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_11
+value|DT_VERSION_NUMBER(1, 11, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_12
+value|DT_VERSION_NUMBER(1, 12, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_12_1
+value|DT_VERSION_NUMBER(1, 12, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_9_1
+value|DT_VERS_1_9_2
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.9.1"
+value|"Sun D 1.9.2"
 end_define
 
 begin_decl_stmt
@@ -453,6 +492,21 @@ comment|/* D API 1.9 */
 name|DT_VERS_1_9_1
 block|,
 comment|/* D API 1.9.1 */
+name|DT_VERS_1_9_2
+block|,
+comment|/* D API 1.9.1 */
+name|DT_VERS_1_10
+block|,
+comment|/* D API 1.10 */
+name|DT_VERS_1_11
+block|,
+comment|/* D API 1.11 */
+name|DT_VERS_1_12
+block|,
+comment|/* D API 1.12 */
+name|DT_VERS_1_12_1
+block|,
+comment|/* D API 1.12.1 */
 literal|0
 block|}
 decl_stmt|;
@@ -7680,6 +7734,12 @@ operator|->
 name|dt_stdcmode
 operator|=
 name|DT_STDC_XA
+expr_stmt|;
+name|dtp
+operator|->
+name|dt_encoding
+operator|=
+name|DT_ENCODING_UNSET
 expr_stmt|;
 name|dtp
 operator|->
