@@ -311,7 +311,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * TX and TX metadata FIFO memory region.          * 0x00: 32/64bit FIFO data, 	 * 0x08: 32/64bit FIFO metadata,          * 0x10: 32/64bit packet length.          */
+comment|/* 	 * TX and TX metadata FIFO memory region. 	 * 0x00: 32/64bit FIFO data, 	 * 0x08: 32/64bit FIFO metadata, 	 * 0x10: 32/64bit packet length. 	 */
 name|sc
 operator|->
 name|nf10bmac_tx_mem_rid
@@ -404,7 +404,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * RX and RXC metadata FIFO memory region.          * 0x00: 32/64bit FIFO data, 	 * 0x08: 32/64bit FIFO metadata,          * 0x10: 32/64bit packet length.          */
+comment|/* 	 * RX and RXC metadata FIFO memory region. 	 * 0x00: 32/64bit FIFO data, 	 * 0x08: 32/64bit FIFO metadata, 	 * 0x10: 32/64bit packet length. 	 */
 name|sc
 operator|->
 name|nf10bmac_rx_mem_rid
