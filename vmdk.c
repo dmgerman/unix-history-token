@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/apm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/endian.h>
 end_include
 
