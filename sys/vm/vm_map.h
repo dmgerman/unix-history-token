@@ -1156,6 +1156,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAP_CHECK_EXCL
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAP_DISABLE_COREDUMP
 value|0x0100
 end_define
