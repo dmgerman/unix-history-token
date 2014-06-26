@@ -148,6 +148,16 @@ end_function_decl
 
 begin_function_decl
 name|u_int
+name|rss_get_indirection_to_bucket
+parameter_list|(
+name|u_int
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
 name|rss_getcpu
 parameter_list|(
 name|u_int
