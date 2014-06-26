@@ -969,7 +969,10 @@ operator|)
 condition|)
 name|len
 operator|=
-literal|4
+sizeof|sizeof
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 name|cl
 operator|=
