@@ -1157,6 +1157,11 @@ modifier|*
 name|dtms_difo
 decl_stmt|;
 comment|/* current dif object */
+name|file_t
+modifier|*
+name|dtms_getf
+decl_stmt|;
+comment|/* cached rval of getf() */
 block|}
 name|dtrace_mstate_t
 typedef|;
@@ -1648,6 +1653,10 @@ name|size_t
 name|dts_nretained
 decl_stmt|;
 comment|/* number of retained enabs */
+name|int
+name|dts_getf
+decl_stmt|;
+comment|/* number of getf() calls */
 block|}
 struct|;
 struct|struct

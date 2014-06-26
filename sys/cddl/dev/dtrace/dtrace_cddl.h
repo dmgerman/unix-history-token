@@ -438,6 +438,13 @@ name|t_did
 value|td_tid
 end_define
 
+begin_define
+define|#
+directive|define
+name|t_cred
+value|td_ucred
+end_define
+
 begin_function_decl
 name|int
 name|priv_policy
