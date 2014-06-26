@@ -476,7 +476,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|"hint.%32[^.].%d.%32[^=]=%128s"
+literal|"hint.%32[^.].%d.%32[^=]=%127s"
 argument_list|,
 name|r_name
 argument_list|,
