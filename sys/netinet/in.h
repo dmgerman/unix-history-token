@@ -2840,7 +2840,7 @@ value|69
 end_define
 
 begin_comment
-comment|/* flow id for the given socket/inp */
+comment|/* get flow id for the given socket/inp */
 end_comment
 
 begin_define
@@ -2851,18 +2851,22 @@ value|70
 end_define
 
 begin_comment
-comment|/* flow type (M_HASHTYPE) */
+comment|/* get flow type (M_HASHTYPE) */
+end_comment
+
+begin_comment
+comment|/* 71 - XXX was IP_RSSCPUID - can recycle whenever */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IP_RSSCPUID
-value|71
+name|IP_RSSBUCKETID
+value|72
 end_define
 
 begin_comment
-comment|/* RSS flowid -> CPU id mapping */
+comment|/* get RSS flowid -> bucket mapping */
 end_comment
 
 begin_comment
