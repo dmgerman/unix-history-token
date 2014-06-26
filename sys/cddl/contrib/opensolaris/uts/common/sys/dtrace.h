@@ -3284,34 +3284,9 @@ value|27
 comment|/* temporally ordered output */
 define|#
 directive|define
-name|DTRACEOPT_AGGHIST
-value|28
-comment|/* histogram aggregation output */
-define|#
-directive|define
-name|DTRACEOPT_AGGPACK
-value|29
-comment|/* packed aggregation output */
-define|#
-directive|define
-name|DTRACEOPT_AGGZOOM
-value|30
-comment|/* zoomed aggregation scaling */
-define|#
-directive|define
-name|DTRACEOPT_ZONE
-value|31
-comment|/* zone in which to enable probes */
-define|#
-directive|define
 name|DTRACEOPT_MAX
-value|32
+value|28
 comment|/* number of options */
-define|#
-directive|define
-name|DTRACEOPT_UNSET
-value|(dtrace_optval_t)-2
-comment|/* unset option */
 define|#
 directive|define
 name|DTRACEOPT_UNSET
