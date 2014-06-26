@@ -229,6 +229,11 @@ argument_list|,
 argument|acpi_powerresource
 argument_list|)
 name|acpi_powerresources
+operator|=
+name|TAILQ_HEAD_INITIALIZER
+argument_list|(
+name|acpi_powerresources
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -241,6 +246,11 @@ argument_list|,
 argument|acpi_powerconsumer
 argument_list|)
 name|acpi_powerconsumers
+operator|=
+name|TAILQ_HEAD_INITIALIZER
+argument_list|(
+name|acpi_powerconsumers
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -392,51 +402,6 @@ name|consumer
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Initialise our lists. */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|acpi_pwr_init
-parameter_list|(
-name|void
-modifier|*
-name|junk
-parameter_list|)
-block|{
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|acpi_powerresources
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|acpi_powerconsumers
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|acpi_powerresource
-argument_list|,
-name|SI_SUB_TUNABLES
-argument_list|,
-name|SI_ORDER_ANY
-argument_list|,
-name|acpi_pwr_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Register a power resource.  *  * It's OK to call this if we already know about the resource.  */
