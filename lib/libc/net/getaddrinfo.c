@@ -7568,11 +7568,16 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in6
 modifier|*
 name|sin6
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|seen_inet
 init|=
