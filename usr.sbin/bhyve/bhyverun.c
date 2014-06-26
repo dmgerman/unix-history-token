@@ -536,10 +536,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-aehwAHIPW] [-g<gdb port>] [-s<pci>] [-c vcpus]\n"
-literal|"       %*s [-p vcpu:hostcpu] [-m mem] [-l<lpc>]<vm>\n"
+literal|"Usage: %s [-abehwxACHPWY] [-g<gdb port>] [-s<pci>] [-c vcpus]\n"
+literal|"       %*s [-p vcpu:hostcpu] [-m mem] [-l<lpc>] [-U uuid]<vm>\n"
 literal|"       -a: local apic is in xAPIC mode (deprecated)\n"
-literal|"       -A: create an ACPI table\n"
+literal|"       -A: create ACPI tables\n"
 literal|"       -g: gdb port\n"
 literal|"       -c: # cpus (default 1)\n"
 literal|"       -C: include guest memory in core file\n"
