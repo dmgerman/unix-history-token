@@ -654,6 +654,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.apic.enable_extint"
+argument_list|,
+operator|&
+name|enable_extint
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|__inline

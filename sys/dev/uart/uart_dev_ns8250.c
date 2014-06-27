@@ -155,7 +155,9 @@ name|OID_AUTO
 argument_list|,
 name|broken_txfifo
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|broken_txfifo
@@ -163,6 +165,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"UART FIFO has QEMU emulation bug"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.broken_txfifo"
+argument_list|,
+operator|&
+name|broken_txfifo
 argument_list|)
 expr_stmt|;
 end_expr_stmt

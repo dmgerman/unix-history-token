@@ -605,8 +605,6 @@ argument_list|,
 name|maxpipekva
 argument_list|,
 name|CTLFLAG_RDTUN
-operator||
-name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|maxpipekva

@@ -1336,6 +1336,17 @@ comment|/* Default value for using M_FLOWID */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.lagg.default_use_flowid"
+argument_list|,
+operator|&
+name|def_use_flowid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_lagg
@@ -1344,7 +1355,7 @@ name|OID_AUTO
 argument_list|,
 name|default_use_flowid
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|def_use_flowid
@@ -1370,6 +1381,17 @@ comment|/* Default value for using M_FLOWID */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.lagg.default_flowid_shift"
+argument_list|,
+operator|&
+name|def_flowid_shift
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_lagg
@@ -1378,7 +1400,7 @@ name|OID_AUTO
 argument_list|,
 name|default_flowid_shift
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|def_flowid_shift

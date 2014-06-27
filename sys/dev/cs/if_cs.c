@@ -544,6 +544,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.cs.ignore_checksum_failure"
+argument_list|,
+operator|&
+name|cs_ignore_cksum_failure
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cs
@@ -552,7 +563,7 @@ name|OID_AUTO
 argument_list|,
 name|ignore_checksum_failure
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|cs_ignore_cksum_failure
@@ -574,6 +585,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.cs.recv_delay"
+argument_list|,
+operator|&
+name|cs_recv_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cs
@@ -582,7 +604,7 @@ name|OID_AUTO
 argument_list|,
 name|recv_delay
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|cs_recv_delay

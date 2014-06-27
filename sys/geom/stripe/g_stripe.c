@@ -280,6 +280,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.stripe.debug"
+argument_list|,
+operator|&
+name|g_stripe_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_stripe
@@ -288,7 +299,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_stripe_debug
@@ -308,6 +319,17 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.stripe.fast"
+argument_list|,
+operator|&
+name|g_stripe_fast
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -375,7 +397,7 @@ name|fast
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 name|NULL
 argument_list|,
@@ -402,6 +424,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.stripe.maxmem"
+argument_list|,
+operator|&
+name|g_stripe_maxmem
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_stripe
@@ -410,7 +443,7 @@ name|OID_AUTO
 argument_list|,
 name|maxmem
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|g_stripe_maxmem

@@ -1240,6 +1240,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|PMC_SYSCTL_NAME_PREFIX
+literal|"callchaindepth"
+argument_list|,
+operator|&
+name|pmc_callchaindepth
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_hwpmc
@@ -1248,7 +1260,9 @@ name|OID_AUTO
 argument_list|,
 name|callchaindepth
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_TUN
+operator||
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|pmc_callchaindepth
@@ -1311,9 +1325,9 @@ name|debugflags
 argument_list|,
 name|CTLTYPE_STRING
 operator||
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 operator||
-name|CTLFLAG_NOFETCH
+name|CTLFLAG_TUN
 argument_list|,
 literal|0
 argument_list|,
@@ -1347,6 +1361,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|PMC_SYSCTL_NAME_PREFIX
+literal|"hashsize"
+argument_list|,
+operator|&
+name|pmc_hashsize
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_hwpmc
@@ -1355,7 +1381,9 @@ name|OID_AUTO
 argument_list|,
 name|hashsize
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_TUN
+operator||
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|pmc_hashsize
@@ -1381,6 +1409,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|PMC_SYSCTL_NAME_PREFIX
+literal|"nsamples"
+argument_list|,
+operator|&
+name|pmc_nsamples
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_hwpmc
@@ -1389,7 +1429,9 @@ name|OID_AUTO
 argument_list|,
 name|nsamples
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_TUN
+operator||
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|pmc_nsamples
@@ -1415,6 +1457,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|PMC_SYSCTL_NAME_PREFIX
+literal|"mtxpoolsize"
+argument_list|,
+operator|&
+name|pmc_mtxpool_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_hwpmc
@@ -1423,7 +1477,9 @@ name|OID_AUTO
 argument_list|,
 name|mtxpoolsize
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_TUN
+operator||
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|pmc_mtxpool_size
@@ -1449,6 +1505,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.bsd.unprivileged_syspmcs"
+argument_list|,
+operator|&
+name|pmc_unprivileged_syspmcs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_security_bsd
@@ -1457,7 +1524,7 @@ name|OID_AUTO
 argument_list|,
 name|unprivileged_syspmcs
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pmc_unprivileged_syspmcs

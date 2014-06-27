@@ -234,6 +234,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.max_active"
+argument_list|,
+operator|&
+name|zfs_vdev_max_active
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_vfs_zfs_vdev
@@ -242,7 +253,7 @@ name|OID_AUTO
 argument_list|,
 name|max_active
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_vdev_max_active
@@ -262,7 +273,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|SYSCTL_UINT(_vfs_zfs_vdev, OID_AUTO, name ## _min_active, CTLFLAG_RWTUN,\&zfs_vdev_ ## name ## _min_active, 0,				\     "Initial number of I/O requests of type " #name			\     " active for each device");
+value|TUNABLE_INT("vfs.zfs.vdev." #name "_min_active",			\&zfs_vdev_ ## name ## _min_active);					\ SYSCTL_UINT(_vfs_zfs_vdev, OID_AUTO, name ## _min_active, CTLFLAG_RW,	\&zfs_vdev_ ## name ## _min_active, 0,				\     "Initial number of I/O requests of type " #name			\     " active for each device");
 end_define
 
 begin_define
@@ -273,7 +284,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|SYSCTL_UINT(_vfs_zfs_vdev, OID_AUTO, name ## _max_active, CTLFLAG_RWTUN,\&zfs_vdev_ ## name ## _max_active, 0,				\     "Maximum number of I/O requests of type " #name			\     " active for each device");
+value|TUNABLE_INT("vfs.zfs.vdev." #name "_max_active",			\&zfs_vdev_ ## name ## _max_active);					\ SYSCTL_UINT(_vfs_zfs_vdev, OID_AUTO, name ## _max_active, CTLFLAG_RW,	\&zfs_vdev_ ## name ## _max_active, 0,				\     "Maximum number of I/O requests of type " #name			\     " active for each device");
 end_define
 
 begin_expr_stmt
@@ -379,6 +390,17 @@ name|ZFS_VDEV_QUEUE_KNOB
 end_undef
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.aggregation_limit"
+argument_list|,
+operator|&
+name|zfs_vdev_aggregation_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vdev
@@ -387,7 +409,7 @@ name|OID_AUTO
 argument_list|,
 name|aggregation_limit
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_vdev_aggregation_limit
@@ -395,6 +417,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"I/O requests are aggregated up to this size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.read_gap_limit"
+argument_list|,
+operator|&
+name|zfs_vdev_read_gap_limit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -408,7 +441,7 @@ name|OID_AUTO
 argument_list|,
 name|read_gap_limit
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_vdev_read_gap_limit
@@ -416,6 +449,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Acceptable gap between two reads being aggregated"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.write_gap_limit"
+argument_list|,
+operator|&
+name|zfs_vdev_write_gap_limit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -429,7 +473,7 @@ name|OID_AUTO
 argument_list|,
 name|write_gap_limit
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_vdev_write_gap_limit

@@ -295,6 +295,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|PMC_SYSCTL_NAME_PREFIX
+literal|"softevents"
+argument_list|,
+operator|&
+name|pmc_softevents
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_hwpmc
@@ -303,7 +315,9 @@ name|OID_AUTO
 argument_list|,
 name|softevents
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_TUN
+operator||
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|pmc_softevents

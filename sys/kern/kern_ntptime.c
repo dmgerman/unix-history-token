@@ -3994,13 +3994,6 @@ operator|)
 return|;
 if|if
 condition|(
-name|cold
-condition|)
-goto|goto
-name|done
-goto|;
-if|if
-condition|(
 name|resettodr_period
 operator|==
 literal|0
@@ -4026,8 +4019,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|done
-label|:
 return|return
 operator|(
 literal|0
@@ -4047,7 +4038,7 @@ name|rtc_save_period
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|resettodr_period
@@ -4059,6 +4050,17 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Save system time to RTC with this period (in seconds)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.rtc_save_period"
+argument_list|,
+operator|&
+name|resettodr_period
 argument_list|)
 expr_stmt|;
 end_expr_stmt

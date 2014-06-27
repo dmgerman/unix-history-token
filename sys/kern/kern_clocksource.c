@@ -388,6 +388,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|profiling
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -428,12 +430,25 @@ begin_decl_stmt
 specifier|static
 name|int
 name|singlemul
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Multiplier for periodic mode. */
 end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.eventtimer.singlemul"
+argument_list|,
+operator|&
+name|singlemul
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -444,7 +459,7 @@ name|OID_AUTO
 argument_list|,
 name|singlemul
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|singlemul
@@ -460,12 +475,25 @@ begin_decl_stmt
 specifier|static
 name|u_int
 name|idletick
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Run periodic events when idle. */
 end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.eventtimer.idletick"
+argument_list|,
+operator|&
+name|idletick
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -476,7 +504,7 @@ name|OID_AUTO
 argument_list|,
 name|idletick
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|idletick
@@ -492,6 +520,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|periodic
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -503,6 +533,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|want_periodic
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 

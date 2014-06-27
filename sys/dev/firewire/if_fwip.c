@@ -448,7 +448,7 @@ name|OID_AUTO
 argument_list|,
 name|rx_queue_len
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|rx_queue_len
@@ -456,6 +456,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Length of the receive queue"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.fwip.rx_queue_len"
+argument_list|,
+operator|&
+name|rx_queue_len
 argument_list|)
 expr_stmt|;
 end_expr_stmt

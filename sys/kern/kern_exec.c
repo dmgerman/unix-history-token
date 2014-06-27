@@ -640,6 +640,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.bsd.map_at_zero"
+argument_list|,
+operator|&
+name|map_at_zero
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_security_bsd
@@ -648,7 +659,7 @@ name|OID_AUTO
 argument_list|,
 name|map_at_zero
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|map_at_zero

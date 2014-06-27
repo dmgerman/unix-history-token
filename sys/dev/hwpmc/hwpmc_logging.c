@@ -155,6 +155,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|PMC_SYSCTL_NAME_PREFIX
+literal|"logbuffersize"
+argument_list|,
+operator|&
+name|pmclog_buffer_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_hwpmc
@@ -163,7 +175,9 @@ name|OID_AUTO
 argument_list|,
 name|logbuffersize
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_TUN
+operator||
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|pmclog_buffer_size
@@ -189,6 +203,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|PMC_SYSCTL_NAME_PREFIX
+literal|"nbuffers"
+argument_list|,
+operator|&
+name|pmc_nlogbuffers
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_hwpmc
@@ -197,7 +223,9 @@ name|OID_AUTO
 argument_list|,
 name|nbuffers
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_TUN
+operator||
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|pmc_nlogbuffers

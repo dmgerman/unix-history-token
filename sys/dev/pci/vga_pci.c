@@ -248,6 +248,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pci.default_vgapci_unit"
+argument_list|,
+operator|&
+name|vga_pci_default_unit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci

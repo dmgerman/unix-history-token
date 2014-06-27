@@ -143,6 +143,17 @@ comment|/* force gang blocks */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.metaslab.gang_bang"
+argument_list|,
+operator|&
+name|metaslab_gang_bang
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_QUAD
 argument_list|(
 name|_vfs_zfs_metaslab
@@ -174,6 +185,17 @@ init|=
 literal|200
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.condense_pct"
+argument_list|,
+operator|&
+name|zfs_condense_pct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -210,6 +232,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.mg_noalloc_threshold"
+argument_list|,
+operator|&
+name|zfs_mg_noalloc_threshold
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -242,6 +275,17 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.debug_load"
+argument_list|,
+operator|&
+name|metaslab_debug_load
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -277,6 +321,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.debug_unload"
+argument_list|,
+operator|&
+name|metaslab_debug_unload
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_metaslab
@@ -308,6 +363,17 @@ init|=
 name|SPA_MAXBLOCKSIZE
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.metaslab.df_alloc_threshold"
+argument_list|,
+operator|&
+name|metaslab_df_alloc_threshold
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_QUAD
@@ -343,6 +409,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.df_free_pct"
+argument_list|,
+operator|&
+name|metaslab_df_free_pct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_metaslab
@@ -358,8 +435,7 @@ name|metaslab_df_free_pct
 argument_list|,
 literal|0
 argument_list|,
-literal|"The minimum free space, in percent, which must be available in a "
-literal|"space map to continue allocations in a first-fit fashion"
+literal|"The minimum free space, in percent, which must be available in a space map to continue allocations in a first-fit fashion"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -377,6 +453,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.metaslab.min_alloc_size"
+argument_list|,
+operator|&
+name|metaslab_min_alloc_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_QUAD
 argument_list|(
 name|_vfs_zfs_metaslab
@@ -392,8 +479,7 @@ name|metaslab_min_alloc_size
 argument_list|,
 literal|0
 argument_list|,
-literal|"A metaslab is considered \"free\" if it contains a contiguous "
-literal|"segment which is greater than vfs.zfs.metaslab.min_alloc_size"
+literal|"A metaslab is considered \"free\" if it contains a contiguous segment which is greater than vfs.zfs.metaslab.min_alloc_size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -409,6 +495,17 @@ init|=
 literal|50
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.load_pct"
+argument_list|,
+operator|&
+name|metaslab_load_pct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -444,6 +541,17 @@ operator|*
 literal|2
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.unload_delay"
+argument_list|,
+operator|&
+name|metaslab_unload_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -499,6 +607,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.write_to_degraded"
+argument_list|,
+operator|&
+name|zfs_write_to_degraded
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Max number of metaslabs per group to preload.  */
 end_comment
@@ -510,6 +629,17 @@ init|=
 name|SPA_DVAS_PER_BP
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.preload_limit"
+argument_list|,
+operator|&
+name|metaslab_preload_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -545,6 +675,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.preload_enabled"
+argument_list|,
+operator|&
+name|metaslab_preload_enabled
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_metaslab
@@ -576,6 +717,17 @@ init|=
 name|B_FALSE
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.metaslab.weight_factor_enable"
+argument_list|,
+operator|&
+name|metaslab_weight_factor_enable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

@@ -609,7 +609,7 @@ name|OID_AUTO
 argument_list|,
 name|kdb_on_nmi
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|kdb_on_nmi
@@ -617,6 +617,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Go to KDB on NMI"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.kdb_on_nmi"
+argument_list|,
+operator|&
+name|kdb_on_nmi
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -644,7 +655,7 @@ name|OID_AUTO
 argument_list|,
 name|panic_on_nmi
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|panic_on_nmi
@@ -652,6 +663,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Panic on NMI"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.panic_on_nmi"
+argument_list|,
+operator|&
+name|panic_on_nmi
 argument_list|)
 expr_stmt|;
 end_expr_stmt

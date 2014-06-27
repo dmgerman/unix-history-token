@@ -346,6 +346,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.smp.disabled"
+argument_list|,
+operator|&
+name|smp_disabled
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|int
 name|smp_cpus
@@ -402,7 +413,7 @@ name|OID_AUTO
 argument_list|,
 name|topology
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|smp_topology
@@ -410,6 +421,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Topology override setting; 0 is default provided by hardware."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.smp.topology"
+argument_list|,
+operator|&
+name|smp_topology
 argument_list|)
 expr_stmt|;
 end_expr_stmt

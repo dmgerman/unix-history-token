@@ -299,6 +299,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.ctl.iscsi.debug"
+argument_list|,
+operator|&
+name|debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_cam_ctl_iscsi
@@ -327,6 +338,17 @@ init|=
 literal|5
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.ctl.iscsi.ping_timeout"
+argument_list|,
+operator|&
+name|ping_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -359,6 +381,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.ctl.iscsi.login_timeout"
+argument_list|,
+operator|&
+name|login_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_cam_ctl_iscsi
@@ -387,6 +420,17 @@ init|=
 literal|256
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.ctl.iscsi.maxcmdsn_delta"
+argument_list|,
+operator|&
+name|maxcmdsn_delta
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

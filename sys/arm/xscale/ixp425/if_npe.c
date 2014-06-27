@@ -1152,7 +1152,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|npe_debug
@@ -1160,6 +1160,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"IXP4XX NPE network interface debug msgs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.npe.debug"
+argument_list|,
+operator|&
+name|npe_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1216,7 +1227,7 @@ name|OID_AUTO
 argument_list|,
 name|tickinterval
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|npe_tickinterval
@@ -1224,6 +1235,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"periodic work interval (secs)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.npe.tickinterval"
+argument_list|,
+operator|&
+name|npe_tickinterval
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1250,7 +1272,7 @@ name|OID_AUTO
 argument_list|,
 name|rxbuf
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|npe_rxbuf
@@ -1258,6 +1280,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"rx buffers allocated"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.npe.rxbuf"
+argument_list|,
+operator|&
+name|npe_rxbuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1284,7 +1317,7 @@ name|OID_AUTO
 argument_list|,
 name|txbuf
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|npe_txbuf
@@ -1292,6 +1325,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"tx buffers allocated"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.npe.txbuf"
+argument_list|,
+operator|&
+name|npe_txbuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt

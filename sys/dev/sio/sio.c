@@ -1683,9 +1683,7 @@ name|conspeed
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RWTUN
-operator||
-name|CTLFLAG_NOFETCH
+name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,

@@ -2194,6 +2194,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.rxd"
+argument_list|,
+operator|&
+name|igb_rxd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.txd"
+argument_list|,
+operator|&
+name|igb_txd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_igb
@@ -2249,6 +2271,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.enable_aim"
+argument_list|,
+operator|&
+name|igb_enable_aim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_igb
@@ -2257,7 +2290,7 @@ name|OID_AUTO
 argument_list|,
 name|enable_aim
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|igb_enable_aim
@@ -2281,6 +2314,17 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.enable_msix"
+argument_list|,
+operator|&
+name|igb_enable_msix
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2315,6 +2359,17 @@ init|=
 literal|8000
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.max_interrupt_rate"
+argument_list|,
+operator|&
+name|igb_max_interrupt_rate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2357,6 +2412,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.buf_ring_size"
+argument_list|,
+operator|&
+name|igb_buf_ring_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_igb
@@ -2396,6 +2462,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.hdr_split"
+argument_list|,
+operator|&
+name|igb_header_split
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_igb
@@ -2428,6 +2505,17 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.num_queues"
+argument_list|,
+operator|&
+name|igb_num_queues
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -2476,6 +2564,17 @@ init|=
 literal|100
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.igb.rx_process_limit"
+argument_list|,
+operator|&
+name|igb_rx_process_limit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

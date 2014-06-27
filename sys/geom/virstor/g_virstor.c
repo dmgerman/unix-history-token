@@ -295,6 +295,17 @@ comment|/* XXX: lower to 2 when released to public */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.virstor.debug"
+argument_list|,
+operator|&
+name|g_virstor_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_virstor
@@ -303,7 +314,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_virstor_debug
@@ -325,6 +336,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.virstor.chunk_watermark"
+argument_list|,
+operator|&
+name|g_virstor_chunk_watermark
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_virstor
@@ -333,7 +355,7 @@ name|OID_AUTO
 argument_list|,
 name|chunk_watermark
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_virstor_chunk_watermark
@@ -355,6 +377,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.virstor.component_watermark"
+argument_list|,
+operator|&
+name|g_virstor_component_watermark
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_virstor
@@ -363,7 +396,7 @@ name|OID_AUTO
 argument_list|,
 name|component_watermark
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_virstor_component_watermark

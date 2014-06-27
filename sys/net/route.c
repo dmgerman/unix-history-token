@@ -350,7 +350,7 @@ name|OID_AUTO
 argument_list|,
 name|fibs
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|rt_numfibs
@@ -358,6 +358,21 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* and this can be set too big but will be fixed before it is used */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.fibs"
+argument_list|,
+operator|&
+name|rt_numfibs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -383,7 +398,7 @@ name|OID_AUTO
 argument_list|,
 name|add_addr_allfibs
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|rt_add_addr_allfibs
@@ -391,6 +406,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.add_addr_allfibs"
+argument_list|,
+operator|&
+name|rt_add_addr_allfibs
 argument_list|)
 expr_stmt|;
 end_expr_stmt

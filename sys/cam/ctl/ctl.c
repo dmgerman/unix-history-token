@@ -1538,6 +1538,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.ctl.worker_threads"
+argument_list|,
+operator|&
+name|worker_threads
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_cam_ctl
@@ -1566,6 +1577,17 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.cam.ctl.verbose"
+argument_list|,
+operator|&
+name|verbose
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

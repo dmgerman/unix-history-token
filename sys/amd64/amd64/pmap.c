@@ -950,8 +950,6 @@ argument_list|,
 name|pg_ps_enabled
 argument_list|,
 name|CTLFLAG_RDTUN
-operator||
-name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|pg_ps_enabled
@@ -1184,8 +1182,6 @@ argument_list|,
 name|pcid_enabled
 argument_list|,
 name|CTLFLAG_RDTUN
-operator||
-name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|pmap_pcid_enabled

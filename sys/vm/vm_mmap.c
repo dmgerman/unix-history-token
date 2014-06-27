@@ -295,7 +295,9 @@ name|OID_AUTO
 argument_list|,
 name|old_mlock
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|old_mlock
@@ -303,6 +305,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Do not apply RLIMIT_MEMLOCK on mlockall"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vm.old_mlock"
+argument_list|,
+operator|&
+name|old_mlock
 argument_list|)
 expr_stmt|;
 end_expr_stmt

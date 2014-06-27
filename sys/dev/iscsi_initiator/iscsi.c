@@ -309,7 +309,7 @@ argument_list|,
 operator|&
 name|max_sessions
 argument_list|,
-literal|0
+name|MAX_SESSIONS
 argument_list|,
 literal|"Max sessions allowed"
 argument_list|)
@@ -339,9 +339,9 @@ argument_list|,
 operator|&
 name|max_pdus
 argument_list|,
-literal|0
+name|MAX_PDUS
 argument_list|,
-literal|"Max PDU pool"
+literal|"Max pdu pool"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3669,6 +3669,22 @@ block|{
 name|debug_called
 argument_list|(
 literal|8
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"net.iscsi_initiator.max_sessions"
+argument_list|,
+operator|&
+name|max_sessions
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"net.iscsi_initiator.max_pdus"
+argument_list|,
+operator|&
+name|max_pdus
 argument_list|)
 expr_stmt|;
 name|isc

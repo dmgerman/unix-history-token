@@ -2049,6 +2049,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_ULONG
+argument_list|(
+literal|"hw.pci.host_mem_start"
+argument_list|,
+operator|&
+name|host_mem_start
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
 name|_hw_pci

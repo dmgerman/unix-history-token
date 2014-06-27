@@ -216,8 +216,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_ROOT_NODE
-argument_list|(
+name|SYSCTL_NODE
+argument_list|(,
 name|OID_AUTO
 argument_list|,
 name|dev
@@ -547,6 +547,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"bus.debug"
+argument_list|,
+operator|&
+name|bus_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug
@@ -555,14 +566,14 @@ name|OID_AUTO
 argument_list|,
 name|bus_debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|bus_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|"Bus debug level"
+literal|"Debug bus code"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1710,6 +1721,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* XXX Need to support old-style tunable hw.bus.devctl_disable" */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
@@ -1721,7 +1736,7 @@ name|devctl_disable
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
@@ -1765,6 +1780,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bus.devctl_queue"
+argument_list|,
+operator|&
+name|devctl_queue_length
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
 name|_hw_bus
@@ -1775,7 +1801,7 @@ name|devctl_queue
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
@@ -3685,11 +3711,9 @@ name|error
 decl_stmt|;
 name|dis
 operator|=
-operator|(
 name|devctl_queue_length
 operator|==
 literal|0
-operator|)
 expr_stmt|;
 name|error
 operator|=
@@ -3719,16 +3743,6 @@ operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
-name|mtx_initialized
-argument_list|(
-operator|&
-name|devsoftc
-operator|.
-name|mtx
-argument_list|)
-condition|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3811,16 +3825,6 @@ operator|=
 name|DEVCTL_DEFAULT_QUEUE_LEN
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|mtx_initialized
-argument_list|(
-operator|&
-name|devsoftc
-operator|.
-name|mtx
-argument_list|)
-condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -3898,16 +3902,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-if|if
-condition|(
-name|mtx_initialized
-argument_list|(
-operator|&
-name|devsoftc
-operator|.
-name|mtx
-argument_list|)
-condition|)
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3973,16 +3967,6 @@ name|queued
 operator|--
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|mtx_initialized
-argument_list|(
-operator|&
-name|devsoftc
-operator|.
-name|mtx
-argument_list|)
-condition|)
 name|mtx_unlock
 argument_list|(
 operator|&

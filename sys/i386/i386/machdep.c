@@ -6547,6 +6547,17 @@ comment|/* Use MONITOR/MWAIT for short idle. */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.idle_mwait"
+argument_list|,
+operator|&
+name|idle_mwait
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_machdep
@@ -6555,7 +6566,7 @@ name|OID_AUTO
 argument_list|,
 name|idle_mwait
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|idle_mwait

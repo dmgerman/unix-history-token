@@ -397,7 +397,9 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|umass_debug
@@ -405,6 +407,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"umass debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.umass.debug"
+argument_list|,
+operator|&
+name|umass_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -418,7 +431,9 @@ name|OID_AUTO
 argument_list|,
 name|throttle
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|umass_throttle
@@ -426,6 +441,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Forced delay between commands in milliseconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.umass.throttle"
+argument_list|,
+operator|&
+name|umass_throttle
 argument_list|)
 expr_stmt|;
 end_expr_stmt

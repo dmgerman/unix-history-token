@@ -122,6 +122,17 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vm.idlezero_enable"
+argument_list|,
+operator|&
+name|idlezero_enable_default
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Defer setting the enable flag until the kthread is running. */
 end_comment
@@ -144,7 +155,7 @@ name|OID_AUTO
 argument_list|,
 name|idlezero_enable
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|idlezero_enable

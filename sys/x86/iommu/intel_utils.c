@@ -2600,6 +2600,8 @@ argument_list|,
 name|tbl_pagecnt
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|dmar_tbl_pagecnt
@@ -2620,7 +2622,9 @@ name|OID_AUTO
 argument_list|,
 name|match_verbose
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|dmar_match_verbose
@@ -2653,7 +2657,9 @@ name|OID_AUTO
 argument_list|,
 name|check_free
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|dmar_check_free

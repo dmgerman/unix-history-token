@@ -817,6 +817,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_ULONG
+argument_list|(
+literal|"hw.bxe.debug"
+argument_list|,
+operator|&
+name|bxe_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
 name|_hw_bxe
@@ -825,7 +836,9 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
+operator|(
 name|CTLFLAG_RDTUN
+operator|)
 argument_list|,
 operator|&
 name|bxe_debug
@@ -849,6 +862,17 @@ init|=
 name|INTR_MODE_MSIX
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.interrupt_mode"
+argument_list|,
+operator|&
+name|bxe_interrupt_mode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -885,6 +909,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.queue_count"
+argument_list|,
+operator|&
+name|bxe_queue_count
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
@@ -917,6 +952,17 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.max_rx_bufs"
+argument_list|,
+operator|&
+name|bxe_max_rx_bufs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -953,6 +999,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.hc_rx_ticks"
+argument_list|,
+operator|&
+name|bxe_hc_rx_ticks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
@@ -985,6 +1042,17 @@ init|=
 literal|50
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.hc_tx_ticks"
+argument_list|,
+operator|&
+name|bxe_hc_tx_ticks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1021,6 +1089,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.rx_budget"
+argument_list|,
+operator|&
+name|bxe_rx_budget
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
@@ -1053,6 +1132,17 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.max_aggregation_size"
+argument_list|,
+operator|&
+name|bxe_max_aggregation_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1090,6 +1180,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.mrrs"
+argument_list|,
+operator|&
+name|bxe_mrrs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
@@ -1124,6 +1225,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.autogreeen"
+argument_list|,
+operator|&
+name|bxe_autogreeen
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_bxe
@@ -1156,6 +1268,17 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.bxe.udp_rss"
+argument_list|,
+operator|&
+name|bxe_udp_rss
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

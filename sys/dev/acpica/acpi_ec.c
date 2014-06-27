@@ -501,6 +501,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.ec.burst"
+argument_list|,
+operator|&
+name|ec_burst_mode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_acpi_ec
@@ -509,7 +520,7 @@ name|OID_AUTO
 argument_list|,
 name|burst
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ec_burst_mode
@@ -529,6 +540,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.ec.polled"
+argument_list|,
+operator|&
+name|ec_polled_mode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_acpi_ec
@@ -537,7 +559,7 @@ name|OID_AUTO
 argument_list|,
 name|polled
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ec_polled_mode
@@ -559,6 +581,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.ec.timeout"
+argument_list|,
+operator|&
+name|ec_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_acpi_ec
@@ -567,7 +600,7 @@ name|OID_AUTO
 argument_list|,
 name|timeout
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ec_timeout

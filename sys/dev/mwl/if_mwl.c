@@ -1440,7 +1440,7 @@ name|OID_AUTO
 argument_list|,
 name|rxbuf
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|mwl_rxbuf
@@ -1448,6 +1448,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"rx buffers allocated"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mwl.rxbuf"
+argument_list|,
+operator|&
+name|mwl_rxbuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1474,7 +1485,7 @@ name|OID_AUTO
 argument_list|,
 name|txbuf
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|mwl_txbuf
@@ -1482,6 +1493,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"tx buffers allocated"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mwl.txbuf"
+argument_list|,
+operator|&
+name|mwl_txbuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1508,7 +1530,7 @@ name|OID_AUTO
 argument_list|,
 name|txcoalesce
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|mwl_txcoalesce
@@ -1516,6 +1538,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"tx buffers to send at once"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mwl.txcoalesce"
+argument_list|,
+operator|&
+name|mwl_txcoalesce
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1542,7 +1575,7 @@ name|OID_AUTO
 argument_list|,
 name|rxquota
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|mwl_rxquota
@@ -1550,6 +1583,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"max rx buffers to process per interrupt"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mwl.rxquota"
+argument_list|,
+operator|&
+name|mwl_rxquota
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1576,7 +1620,7 @@ name|OID_AUTO
 argument_list|,
 name|rxdmalow
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|mwl_rxdmalow
@@ -1584,6 +1628,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"min free rx buffers before restarting traffic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mwl.rxdmalow"
+argument_list|,
+operator|&
+name|mwl_rxdmalow
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1612,7 +1667,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|mwl_debug
@@ -1620,6 +1675,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"control debugging printfs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mwl.debug"
+argument_list|,
+operator|&
+name|mwl_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt

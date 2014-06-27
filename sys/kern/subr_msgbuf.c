@@ -109,7 +109,9 @@ name|OID_AUTO
 argument_list|,
 name|msgbuf_show_timestamp
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|msgbuf_show_timestamp
@@ -117,6 +119,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Show timestamp in msgbuf"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.msgbuf_show_timestamp"
+argument_list|,
+operator|&
+name|msgbuf_show_timestamp
 argument_list|)
 expr_stmt|;
 end_expr_stmt

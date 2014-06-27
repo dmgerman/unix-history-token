@@ -166,7 +166,7 @@ name|OID_AUTO
 argument_list|,
 name|enabled
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|portacl_enabled
@@ -174,6 +174,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enforce portacl policy"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.portacl.enabled"
+argument_list|,
+operator|&
+name|portacl_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -196,7 +207,7 @@ name|OID_AUTO
 argument_list|,
 name|suser_exempt
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|portacl_suser_exempt
@@ -204,6 +215,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Privilege permits binding of any port"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.portacl.suser_exempt"
+argument_list|,
+operator|&
+name|portacl_suser_exempt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -226,7 +248,7 @@ name|OID_AUTO
 argument_list|,
 name|autoport_exempt
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|portacl_autoport_exempt
@@ -235,6 +257,17 @@ literal|0
 argument_list|,
 literal|"Allow automatic allocation through "
 literal|"binding port 0 if not IP_PORTRANGELOW"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.portacl.autoport_exempt"
+argument_list|,
+operator|&
+name|portacl_autoport_exempt
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -257,7 +290,7 @@ name|OID_AUTO
 argument_list|,
 name|port_high
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|portacl_port_high
@@ -265,6 +298,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Highest port to enforce for"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.portacl.port_high"
+argument_list|,
+operator|&
+name|portacl_port_high
 argument_list|)
 expr_stmt|;
 end_expr_stmt

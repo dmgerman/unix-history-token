@@ -357,6 +357,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.top_maxinflight"
+argument_list|,
+operator|&
+name|zfs_top_maxinflight
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_vfs_zfs
@@ -365,7 +376,7 @@ name|OID_AUTO
 argument_list|,
 name|top_maxinflight
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_top_maxinflight
@@ -373,6 +384,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum I/Os per top-level vdev"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.resilver_delay"
+argument_list|,
+operator|&
+name|zfs_resilver_delay
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -386,7 +408,7 @@ name|OID_AUTO
 argument_list|,
 name|resilver_delay
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_resilver_delay
@@ -394,6 +416,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of ticks to delay resilver"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.scrub_delay"
+argument_list|,
+operator|&
+name|zfs_scrub_delay
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -407,7 +440,7 @@ name|OID_AUTO
 argument_list|,
 name|scrub_delay
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_scrub_delay
@@ -415,6 +448,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Number of ticks to delay scrub"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.scan_idle"
+argument_list|,
+operator|&
+name|zfs_scan_idle
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -428,7 +472,7 @@ name|OID_AUTO
 argument_list|,
 name|scan_idle
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_scan_idle
@@ -436,6 +480,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Idle scan window in clock ticks"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.scan_min_time_ms"
+argument_list|,
+operator|&
+name|zfs_scan_min_time_ms
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -449,7 +504,7 @@ name|OID_AUTO
 argument_list|,
 name|scan_min_time_ms
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_scan_min_time_ms
@@ -457,6 +512,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Min millisecs to scrub per txg"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.free_min_time_ms"
+argument_list|,
+operator|&
+name|zfs_free_min_time_ms
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -470,7 +536,7 @@ name|OID_AUTO
 argument_list|,
 name|free_min_time_ms
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_free_min_time_ms
@@ -478,6 +544,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Min millisecs to free per txg"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.resilver_min_time_ms"
+argument_list|,
+operator|&
+name|zfs_resilver_min_time_ms
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -491,7 +568,7 @@ name|OID_AUTO
 argument_list|,
 name|resilver_min_time_ms
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_resilver_min_time_ms
@@ -499,6 +576,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Min millisecs to resilver per txg"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.no_scrub_io"
+argument_list|,
+operator|&
+name|zfs_no_scrub_io
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -512,7 +600,7 @@ name|OID_AUTO
 argument_list|,
 name|no_scrub_io
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_no_scrub_io
@@ -520,6 +608,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Disable scrub I/O"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.no_scrub_prefetch"
+argument_list|,
+operator|&
+name|zfs_no_scrub_prefetch
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -533,7 +632,7 @@ name|OID_AUTO
 argument_list|,
 name|no_scrub_prefetch
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_no_scrub_prefetch

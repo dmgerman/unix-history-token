@@ -243,6 +243,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|nocyclemaster
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -271,7 +273,7 @@ name|OID_AUTO
 argument_list|,
 name|nocyclemaster
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|nocyclemaster
@@ -292,14 +294,25 @@ name|OID_AUTO
 argument_list|,
 name|phydma_enable
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|firewire_phydma_enable
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|"Allow physical request DMA from firewire"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.firewire.phydma_enable"
+argument_list|,
+operator|&
+name|firewire_phydma_enable
 argument_list|)
 expr_stmt|;
 end_expr_stmt

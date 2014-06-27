@@ -309,7 +309,9 @@ name|OID_AUTO
 argument_list|,
 name|panic_reboot_wait_time
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|panic_reboot_wait_time
@@ -317,6 +319,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Seconds to wait before rebooting after a panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.panic_reboot_wait_time"
+argument_list|,
+operator|&
+name|panic_reboot_wait_time
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -378,9 +391,11 @@ name|OID_AUTO
 argument_list|,
 name|debugger_on_panic
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|debugger_on_panic
@@ -388,6 +403,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Run debugger on kernel panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.debugger_on_panic"
+argument_list|,
+operator|&
+name|debugger_on_panic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -435,9 +461,11 @@ name|OID_AUTO
 argument_list|,
 name|trace_on_panic
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|trace_on_panic
@@ -445,6 +473,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Print stack trace on kernel panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.trace_on_panic"
+argument_list|,
+operator|&
+name|trace_on_panic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -476,7 +515,9 @@ name|OID_AUTO
 argument_list|,
 name|sync_on_panic
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|sync_on_panic
@@ -484,6 +525,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Do a sync before rebooting from a panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.sync_on_panic"
+argument_list|,
+operator|&
+name|sync_on_panic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2192,7 +2244,9 @@ name|OID_AUTO
 argument_list|,
 name|warn_only
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kassert_warn_only
@@ -2200,6 +2254,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"KASSERT triggers a panic (1) or just a warning (0)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kassert.warn_only"
+argument_list|,
+operator|&
+name|kassert_warn_only
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2219,7 +2284,9 @@ name|OID_AUTO
 argument_list|,
 name|do_kdb
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kassert_do_kdb
@@ -2227,6 +2294,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"KASSERT will enter the debugger"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kassert.do_kdb"
+argument_list|,
+operator|&
+name|kassert_do_kdb
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2251,7 +2329,9 @@ name|OID_AUTO
 argument_list|,
 name|do_ktr
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kassert_do_ktr
@@ -2259,6 +2339,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"KASSERT does a KTR, set this to the KTRMASK you want"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kassert.do_ktr"
+argument_list|,
+operator|&
+name|kassert_do_ktr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2277,7 +2368,9 @@ name|OID_AUTO
 argument_list|,
 name|do_log
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kassert_do_log
@@ -2285,6 +2378,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"KASSERT triggers a panic (1) or just a warning (0)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kassert.do_log"
+argument_list|,
+operator|&
+name|kassert_do_log
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2298,7 +2402,9 @@ name|OID_AUTO
 argument_list|,
 name|warnings
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kassert_warnings
@@ -2306,6 +2412,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"number of KASSERTs that have been triggered"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kassert.warnings"
+argument_list|,
+operator|&
+name|kassert_warnings
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2319,7 +2436,9 @@ name|OID_AUTO
 argument_list|,
 name|log_panic_at
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kassert_log_panic_at
@@ -2327,6 +2446,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"max number of KASSERTS before we will panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kassert.log_panic_at"
+argument_list|,
+operator|&
+name|kassert_log_panic_at
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2340,7 +2470,9 @@ name|OID_AUTO
 argument_list|,
 name|log_pps_limit
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kassert_log_pps_limit
@@ -2348,6 +2480,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"limit number of log messages per second"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kassert.log_pps_limit"
+argument_list|,
+operator|&
+name|kassert_log_pps_limit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2361,7 +2504,9 @@ name|OID_AUTO
 argument_list|,
 name|log_mute_at
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kassert_log_mute_at
@@ -2369,6 +2514,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"max number of KASSERTS to log"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kassert.log_mute_at"
+argument_list|,
+operator|&
+name|kassert_log_mute_at
 argument_list|)
 expr_stmt|;
 end_expr_stmt

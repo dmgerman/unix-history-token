@@ -173,6 +173,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.nopwrite_enabled"
+argument_list|,
+operator|&
+name|zfs_nopwrite_enabled
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -8039,6 +8050,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.mdcomp_disable"
+argument_list|,
+operator|&
+name|zfs_mdcomp_disable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -8047,7 +8069,7 @@ name|OID_AUTO
 argument_list|,
 name|mdcomp_disable
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_mdcomp_disable

@@ -576,6 +576,17 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.usb_template"
+argument_list|,
+operator|&
+name|usb_template
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb
@@ -584,7 +595,9 @@ name|OID_AUTO
 argument_list|,
 name|template
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_template
@@ -619,6 +632,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.usb_lang_id"
+argument_list|,
+operator|&
+name|usb_lang_id
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb
@@ -627,7 +651,9 @@ name|OID_AUTO
 argument_list|,
 name|usb_lang_id
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_lang_id
@@ -635,6 +661,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Preferred USB language ID"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.usb_lang_mask"
+argument_list|,
+operator|&
+name|usb_lang_mask
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -648,7 +685,9 @@ name|OID_AUTO
 argument_list|,
 name|usb_lang_mask
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_lang_mask

@@ -367,6 +367,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vol.mode"
+argument_list|,
+operator|&
+name|volmode
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vol

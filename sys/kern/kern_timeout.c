@@ -440,8 +440,6 @@ argument_list|,
 name|ncallout
 argument_list|,
 name|CTLFLAG_RDTUN
-operator||
-name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|ncallout
@@ -481,8 +479,6 @@ argument_list|,
 name|pin_default_swi
 argument_list|,
 name|CTLFLAG_RDTUN
-operator||
-name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|pin_default_swi
@@ -504,8 +500,6 @@ argument_list|,
 name|pin_pcpu_swi
 argument_list|,
 name|CTLFLAG_RDTUN
-operator||
-name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|pin_pcpu_swi

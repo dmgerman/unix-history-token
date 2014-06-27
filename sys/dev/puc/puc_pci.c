@@ -123,6 +123,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.puc.msi_disable"
+argument_list|,
+operator|&
+name|puc_msi_disable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_puc
@@ -131,7 +142,9 @@ name|OID_AUTO
 argument_list|,
 name|msi_disable
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|puc_msi_disable

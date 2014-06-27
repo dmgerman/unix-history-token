@@ -305,7 +305,9 @@ name|OID_AUTO
 argument_list|,
 name|countrycode
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|uath_countrycode
@@ -313,6 +315,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"country code"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.uath.countrycode"
+argument_list|,
+operator|&
+name|uath_countrycode
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -374,7 +387,9 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|uath_debug
@@ -382,6 +397,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"uath debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.usb.uath.debug"
+argument_list|,
+operator|&
+name|uath_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -155,6 +155,17 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.zio.use_uma"
+argument_list|,
+operator|&
+name|zio_use_uma
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_zio
@@ -183,6 +194,17 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.zio.exclude_metadata"
+argument_list|,
+operator|&
+name|zio_exclude_metadata
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -360,6 +382,17 @@ comment|/* defer frees starting in this pass */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.sync_pass_deferred_free"
+argument_list|,
+operator|&
+name|zfs_sync_pass_deferred_free
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -393,6 +426,17 @@ comment|/* don't compress starting in this pass */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.sync_pass_dont_compress"
+argument_list|,
+operator|&
+name|zfs_sync_pass_dont_compress
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -424,6 +468,17 @@ end_decl_stmt
 begin_comment
 comment|/* rewrite new bps starting in this pass */
 end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.sync_pass_rewrite"
+argument_list|,
+operator|&
+name|zfs_sync_pass_rewrite
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

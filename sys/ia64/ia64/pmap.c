@@ -820,8 +820,21 @@ end_expr_stmt
 begin_decl_stmt
 name|int
 name|pmap_vhpt_log2size
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.vhpt.log2size"
+argument_list|,
+operator|&
+name|pmap_vhpt_log2size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -832,9 +845,7 @@ name|OID_AUTO
 argument_list|,
 name|log2size
 argument_list|,
-name|CTLFLAG_RDTUN
-operator||
-name|CTLFLAG_NOFETCH
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|pmap_vhpt_log2size

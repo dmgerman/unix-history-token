@@ -96,6 +96,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.resume_beep"
+argument_list|,
+operator|&
+name|acpi_resume_beep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_debug_acpi
@@ -104,7 +115,7 @@ name|OID_AUTO
 argument_list|,
 name|resume_beep
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|acpi_resume_beep

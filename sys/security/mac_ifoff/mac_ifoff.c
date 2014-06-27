@@ -118,7 +118,7 @@ name|OID_AUTO
 argument_list|,
 name|enabled
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ifoff_enabled
@@ -126,6 +126,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enforce ifoff policy"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.ifoff.enabled"
+argument_list|,
+operator|&
+name|ifoff_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -148,7 +159,7 @@ name|OID_AUTO
 argument_list|,
 name|lo_enabled
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ifoff_lo_enabled
@@ -156,6 +167,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable loopback interfaces"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.ifoff.lo_enabled"
+argument_list|,
+operator|&
+name|ifoff_lo_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -178,7 +200,7 @@ name|OID_AUTO
 argument_list|,
 name|other_enabled
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ifoff_other_enabled
@@ -186,6 +208,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable other interfaces"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.ifoff.other_enabled"
+argument_list|,
+operator|&
+name|ifoff_other_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -208,7 +241,7 @@ name|OID_AUTO
 argument_list|,
 name|bpfrecv_enabled
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|ifoff_bpfrecv_enabled
@@ -217,6 +250,17 @@ literal|0
 argument_list|,
 literal|"Enable BPF reception even when interface "
 literal|"is disabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.ifoff.bpfrecv.enabled"
+argument_list|,
+operator|&
+name|ifoff_bpfrecv_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt

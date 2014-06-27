@@ -366,6 +366,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.log_console_output"
+argument_list|,
+operator|&
+name|log_console_output
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern
@@ -374,14 +385,14 @@ name|OID_AUTO
 argument_list|,
 name|log_console_output
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|log_console_output
 argument_list|,
 literal|0
 argument_list|,
-literal|"Duplicate console output to the syslog"
+literal|"Duplicate console output to the syslog."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -394,8 +405,21 @@ begin_decl_stmt
 specifier|static
 name|int
 name|log_console_add_linefeed
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.log_console_add_linefeed"
+argument_list|,
+operator|&
+name|log_console_add_linefeed
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -406,14 +430,14 @@ name|OID_AUTO
 argument_list|,
 name|log_console_add_linefeed
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|log_console_add_linefeed
 argument_list|,
 literal|0
 argument_list|,
-literal|"log_console() adds extra newlines"
+literal|"log_console() adds extra newlines."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -422,8 +446,21 @@ begin_decl_stmt
 specifier|static
 name|int
 name|always_console_output
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.always_console_output"
+argument_list|,
+operator|&
+name|always_console_output
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -434,14 +471,14 @@ name|OID_AUTO
 argument_list|,
 name|always_console_output
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|always_console_output
 argument_list|,
 literal|0
 argument_list|,
-literal|"Always output to console despite TIOCCONS"
+literal|"Always output to console despite TIOCCONS."
 argument_list|)
 expr_stmt|;
 end_expr_stmt

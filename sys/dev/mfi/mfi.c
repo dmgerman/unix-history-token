@@ -816,6 +816,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mfi.event_locale"
+argument_list|,
+operator|&
+name|mfi_event_locale
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_mfi
@@ -844,6 +855,17 @@ init|=
 name|MFI_EVT_CLASS_INFO
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mfi.event_class"
+argument_list|,
+operator|&
+name|mfi_event_class
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -876,6 +898,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mfi.max_cmds"
+argument_list|,
+operator|&
+name|mfi_max_cmds
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_mfi
@@ -904,6 +937,17 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mfi.detect_jbod_change"
+argument_list|,
+operator|&
+name|mfi_detect_jbod_change
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -935,6 +979,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mfi.polled_cmd_timeout"
+argument_list|,
+operator|&
+name|mfi_polled_cmd_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_mfi
@@ -963,6 +1018,17 @@ init|=
 name|MFI_CMD_TIMEOUT
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mfi.cmd_timeout"
+argument_list|,
+operator|&
+name|mfi_cmd_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

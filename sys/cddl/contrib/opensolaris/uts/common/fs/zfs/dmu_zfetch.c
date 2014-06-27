@@ -163,6 +163,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.zfetch.max_streams"
+argument_list|,
+operator|&
+name|zfetch_max_streams
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_vfs_zfs_zfetch
@@ -171,7 +182,7 @@ name|OID_AUTO
 argument_list|,
 name|max_streams
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfetch_max_streams
@@ -179,6 +190,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Max # of streams per zfetch"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.zfetch.min_sec_reap"
+argument_list|,
+operator|&
+name|zfetch_min_sec_reap
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -205,6 +227,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.zfetch.block_cap"
+argument_list|,
+operator|&
+name|zfetch_block_cap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_vfs_zfs_zfetch
@@ -221,6 +254,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Max number of blocks to fetch at a time"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.zfetch.array_rd_sz"
+argument_list|,
+operator|&
+name|zfetch_array_rd_sz
 argument_list|)
 expr_stmt|;
 end_expr_stmt

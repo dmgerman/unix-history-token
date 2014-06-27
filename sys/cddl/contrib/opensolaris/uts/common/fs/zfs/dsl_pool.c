@@ -264,6 +264,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.dirty_data_max"
+argument_list|,
+operator|&
+name|zfs_dirty_data_max
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
@@ -281,6 +292,17 @@ literal|0
 argument_list|,
 literal|"The maximum amount of dirty data in bytes after which new writes are "
 literal|"halted until space becomes available"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.dirty_data_max_max"
+argument_list|,
+operator|&
+name|zfs_dirty_data_max_max
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -307,6 +329,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.dirty_data_max_percent"
+argument_list|,
+operator|&
+name|zfs_dirty_data_max_percent
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -323,6 +356,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"The percent of physical memory used to auto calculate dirty_data_max"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.dirty_data_sync"
+argument_list|,
+operator|&
+name|zfs_dirty_data_sync
 argument_list|)
 expr_stmt|;
 end_expr_stmt

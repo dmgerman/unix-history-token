@@ -114,6 +114,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.zil_replay_disable"
+argument_list|,
+operator|&
+name|zil_replay_disable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -122,7 +133,7 @@ name|OID_AUTO
 argument_list|,
 name|zil_replay_disable
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zil_replay_disable
@@ -145,6 +156,17 @@ init|=
 name|B_FALSE
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.cache_flush_disable"
+argument_list|,
+operator|&
+name|zfs_nocacheflush
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -179,6 +201,17 @@ begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_vfs_zfs_trim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.trim.enabled"
+argument_list|,
+operator|&
+name|zfs_trim_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt

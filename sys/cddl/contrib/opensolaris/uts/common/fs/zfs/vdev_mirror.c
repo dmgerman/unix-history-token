@@ -161,6 +161,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.mirror.rotating_inc"
+argument_list|,
+operator|&
+name|rotating_inc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vdev_mirror
@@ -169,7 +180,7 @@ name|OID_AUTO
 argument_list|,
 name|rotating_inc
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|rotating_inc
@@ -191,6 +202,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.mirror.rotating_seek_inc"
+argument_list|,
+operator|&
+name|rotating_seek_inc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vdev_mirror
@@ -199,7 +221,7 @@ name|OID_AUTO
 argument_list|,
 name|rotating_seek_inc
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|rotating_seek_inc
@@ -225,6 +247,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.mirror.rotating_seek_offset"
+argument_list|,
+operator|&
+name|rotating_seek_offset
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vdev_mirror
@@ -233,7 +266,7 @@ name|OID_AUTO
 argument_list|,
 name|rotating_seek_offset
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|rotating_seek_offset
@@ -260,6 +293,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.mirror.non_rotating_inc"
+argument_list|,
+operator|&
+name|non_rotating_inc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vdev_mirror
@@ -268,7 +312,7 @@ name|OID_AUTO
 argument_list|,
 name|non_rotating_inc
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|non_rotating_inc
@@ -290,6 +334,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.mirror.non_rotating_seek_inc"
+argument_list|,
+operator|&
+name|non_rotating_seek_inc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vdev_mirror
@@ -298,7 +353,7 @@ name|OID_AUTO
 argument_list|,
 name|non_rotating_seek_inc
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|non_rotating_seek_inc

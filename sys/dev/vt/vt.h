@@ -312,7 +312,7 @@ parameter_list|,
 name|_descr
 parameter_list|)
 define|\
-value|static int vt_##_name = _default;					\ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RWTUN,&vt_##_name, _default,\ 		_descr);
+value|static int vt_##_name = _default;					\ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RW,&vt_##_name, _default,\ 		_descr);						\ TUNABLE_INT("kern.vt." #_name,&vt_##_name);
 end_define
 
 begin_struct_decl

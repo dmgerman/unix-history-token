@@ -280,6 +280,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.shsec.debug"
+argument_list|,
+operator|&
+name|g_shsec_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_shsec
@@ -288,7 +299,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_shsec_debug
@@ -312,6 +323,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.shsec.maxmem"
+argument_list|,
+operator|&
+name|g_shsec_maxmem
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_shsec
@@ -320,7 +342,7 @@ name|OID_AUTO
 argument_list|,
 name|maxmem
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|g_shsec_maxmem

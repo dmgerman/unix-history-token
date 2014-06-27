@@ -186,7 +186,7 @@ name|OID_AUTO
 argument_list|,
 name|hashalgo
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|rss_hashalgo
@@ -194,6 +194,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"RSS hash algorithm"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.inet.rss.hashalgo"
+argument_list|,
+operator|&
+name|rss_hashalgo
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -218,7 +229,7 @@ name|OID_AUTO
 argument_list|,
 name|bits
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|rss_bits
@@ -226,6 +237,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"RSS bits"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.inet.rss.bits"
+argument_list|,
+operator|&
+name|rss_bits
 argument_list|)
 expr_stmt|;
 end_expr_stmt

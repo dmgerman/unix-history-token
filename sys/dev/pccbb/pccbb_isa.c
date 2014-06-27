@@ -220,6 +220,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.cbb.intr_mask"
+argument_list|,
+operator|&
+name|isa_intr_mask
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pcic
@@ -228,7 +239,7 @@ name|OID_AUTO
 argument_list|,
 name|intr_mask
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|isa_intr_mask
@@ -251,6 +262,17 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pcic.pd6722_vsense"
+argument_list|,
+operator|&
+name|pcic_pd6722_vsense
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

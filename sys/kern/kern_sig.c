@@ -692,6 +692,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.sigqueue.preallocate"
+argument_list|,
+operator|&
+name|preallocate_siginfo
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_sigqueue
@@ -700,7 +711,7 @@ name|OID_AUTO
 argument_list|,
 name|preallocate
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|preallocate_siginfo
@@ -815,6 +826,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.sugid_coredump"
+argument_list|,
+operator|&
+name|sugid_coredump
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern
@@ -823,7 +845,7 @@ name|OID_AUTO
 argument_list|,
 name|sugid_coredump
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|sugid_coredump
@@ -843,6 +865,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.capmode_coredump"
+argument_list|,
+operator|&
+name|capmode_coredump
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern
@@ -851,7 +884,7 @@ name|OID_AUTO
 argument_list|,
 name|capmode_coredump
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|capmode_coredump
@@ -14655,6 +14688,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_STR
+argument_list|(
+literal|"kern.corefile"
+argument_list|,
+name|corefilename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|corefilename
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_STRING
 argument_list|(
 name|_kern
@@ -14663,7 +14711,7 @@ name|OID_AUTO
 argument_list|,
 name|corefile
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 name|corefilename
 argument_list|,

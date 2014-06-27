@@ -254,6 +254,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.trim.txg_delay"
+argument_list|,
+operator|&
+name|trim_txg_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_vfs_zfs_trim
@@ -275,6 +286,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.trim.timeout"
+argument_list|,
+operator|&
+name|trim_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_vfs_zfs_trim
@@ -291,6 +313,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Delay TRIMs by up to this many seconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.trim.max_interval"
+argument_list|,
+operator|&
+name|trim_max_interval
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -325,6 +358,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_QUAD
+argument_list|(
+literal|"vfs.zfs.vdev.trim_max_bytes"
+argument_list|,
+operator|&
+name|trim_vdev_max_bytes
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_QUAD
 argument_list|(
 name|_vfs_zfs_vdev
@@ -341,6 +385,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum pending TRIM bytes for a vdev"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.vdev.trim_max_pending"
+argument_list|,
+operator|&
+name|trim_vdev_max_pending
 argument_list|)
 expr_stmt|;
 end_expr_stmt

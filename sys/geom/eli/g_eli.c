@@ -242,6 +242,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.eli.debug"
+argument_list|,
+operator|&
+name|g_eli_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_geom_eli
@@ -250,7 +261,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_eli_debug
@@ -272,6 +283,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.eli.tries"
+argument_list|,
+operator|&
+name|g_eli_tries
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_eli
@@ -280,7 +302,7 @@ name|OID_AUTO
 argument_list|,
 name|tries
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_eli_tries
@@ -302,6 +324,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.eli.visible_passphrase"
+argument_list|,
+operator|&
+name|g_eli_visible_passphrase
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_eli
@@ -310,7 +343,7 @@ name|OID_AUTO
 argument_list|,
 name|visible_passphrase
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_eli_visible_passphrase
@@ -331,6 +364,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.eli.overwrites"
+argument_list|,
+operator|&
+name|g_eli_overwrites
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_eli
@@ -339,7 +383,7 @@ name|OID_AUTO
 argument_list|,
 name|overwrites
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_eli_overwrites
@@ -361,6 +405,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.eli.threads"
+argument_list|,
+operator|&
+name|g_eli_threads
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_eli
@@ -369,7 +424,7 @@ name|OID_AUTO
 argument_list|,
 name|threads
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_eli_threads
@@ -390,6 +445,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.eli.batch"
+argument_list|,
+operator|&
+name|g_eli_batch
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_eli
@@ -398,7 +464,7 @@ name|OID_AUTO
 argument_list|,
 name|batch
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_eli_batch

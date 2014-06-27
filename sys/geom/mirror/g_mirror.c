@@ -184,6 +184,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.mirror.debug"
+argument_list|,
+operator|&
+name|g_mirror_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_mirror
@@ -192,7 +203,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_mirror_debug
@@ -214,6 +225,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.mirror.timeout"
+argument_list|,
+operator|&
+name|g_mirror_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_mirror
@@ -222,7 +244,7 @@ name|OID_AUTO
 argument_list|,
 name|timeout
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_mirror_timeout
@@ -244,6 +266,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.mirror.idletime"
+argument_list|,
+operator|&
+name|g_mirror_idletime
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_mirror
@@ -252,7 +285,7 @@ name|OID_AUTO
 argument_list|,
 name|idletime
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_mirror_idletime
@@ -274,6 +307,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.mirror.disconnect_on_failure"
+argument_list|,
+operator|&
+name|g_mirror_disconnect_on_failure
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_mirror
@@ -282,7 +326,7 @@ name|OID_AUTO
 argument_list|,
 name|disconnect_on_failure
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_mirror_disconnect_on_failure
@@ -302,6 +346,17 @@ init|=
 literal|2
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.mirror.sync_requests"
+argument_list|,
+operator|&
+name|g_mirror_syncreqs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT

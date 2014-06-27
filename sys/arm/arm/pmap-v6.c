@@ -1542,8 +1542,6 @@ argument_list|,
 name|sp_enabled
 argument_list|,
 name|CTLFLAG_RDTUN
-operator||
-name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|sp_enabled

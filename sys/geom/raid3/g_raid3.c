@@ -184,6 +184,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.raid3.debug"
+argument_list|,
+operator|&
+name|g_raid3_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid3
@@ -192,7 +203,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_raid3_debug
@@ -214,6 +225,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.raid3.timeout"
+argument_list|,
+operator|&
+name|g_raid3_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid3
@@ -222,7 +244,7 @@ name|OID_AUTO
 argument_list|,
 name|timeout
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_raid3_timeout
@@ -244,6 +266,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.raid3.idletime"
+argument_list|,
+operator|&
+name|g_raid3_idletime
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid3
@@ -252,7 +285,7 @@ name|OID_AUTO
 argument_list|,
 name|idletime
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_raid3_idletime
@@ -274,6 +307,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.raid3.disconnect_on_failure"
+argument_list|,
+operator|&
+name|g_raid3_disconnect_on_failure
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid3
@@ -282,7 +326,7 @@ name|OID_AUTO
 argument_list|,
 name|disconnect_on_failure
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|g_raid3_disconnect_on_failure
@@ -302,6 +346,17 @@ init|=
 literal|2
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.raid3.sync_requests"
+argument_list|,
+operator|&
+name|g_raid3_syncreqs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -334,6 +389,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.raid3.use_malloc"
+argument_list|,
+operator|&
+name|g_raid3_use_malloc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid3
@@ -364,6 +430,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.raid3.n64k"
+argument_list|,
+operator|&
+name|g_raid3_n64k
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid3
@@ -372,7 +449,7 @@ name|OID_AUTO
 argument_list|,
 name|n64k
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|g_raid3_n64k
@@ -394,6 +471,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.raid3.n16k"
+argument_list|,
+operator|&
+name|g_raid3_n16k
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid3
@@ -402,7 +490,7 @@ name|OID_AUTO
 argument_list|,
 name|n16k
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|g_raid3_n16k
@@ -424,6 +512,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.geom.raid3.n4k"
+argument_list|,
+operator|&
+name|g_raid3_n4k
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid3
@@ -432,7 +531,7 @@ name|OID_AUTO
 argument_list|,
 name|n4k
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|g_raid3_n4k

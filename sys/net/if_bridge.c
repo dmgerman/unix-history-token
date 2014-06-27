@@ -2101,6 +2101,17 @@ comment|/* share MAC with first bridge member */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_onlyip"
+argument_list|,
+operator|&
+name|pfil_onlyip
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2109,7 +2120,7 @@ name|OID_AUTO
 argument_list|,
 name|pfil_onlyip
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pfil_onlyip
@@ -2117,6 +2128,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Only pass IP packets when pfil is enabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.ipfw_arp"
+argument_list|,
+operator|&
+name|pfil_ipfw_arp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2130,7 +2152,7 @@ name|OID_AUTO
 argument_list|,
 name|ipfw_arp
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pfil_ipfw_arp
@@ -2143,6 +2165,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_bridge"
+argument_list|,
+operator|&
+name|pfil_bridge
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2151,7 +2184,7 @@ name|OID_AUTO
 argument_list|,
 name|pfil_bridge
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pfil_bridge
@@ -2164,6 +2197,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_member"
+argument_list|,
+operator|&
+name|pfil_member
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2172,7 +2216,7 @@ name|OID_AUTO
 argument_list|,
 name|pfil_member
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pfil_member
@@ -2185,6 +2229,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_local_phys"
+argument_list|,
+operator|&
+name|pfil_local_phys
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2193,7 +2248,7 @@ name|OID_AUTO
 argument_list|,
 name|pfil_local_phys
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pfil_local_phys
@@ -2201,6 +2256,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Packet filter on the physical interface for locally destined packets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.log_stp"
+argument_list|,
+operator|&
+name|log_stp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2214,7 +2280,7 @@ name|OID_AUTO
 argument_list|,
 name|log_stp
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|log_stp
@@ -2222,6 +2288,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Log STP state changes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.inherit_mac"
+argument_list|,
+operator|&
+name|bridge_inherit_mac
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2235,7 +2312,7 @@ name|OID_AUTO
 argument_list|,
 name|inherit_mac
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|bridge_inherit_mac

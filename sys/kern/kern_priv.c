@@ -93,7 +93,7 @@ name|OID_AUTO
 argument_list|,
 name|suser_enabled
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|suser_enabled
@@ -101,6 +101,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"processes with uid 0 have privilege"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.bsd.suser_enabled"
+argument_list|,
+operator|&
+name|suser_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -123,7 +134,9 @@ name|OID_AUTO
 argument_list|,
 name|unprivileged_mlock
 argument_list|,
-name|CTLFLAG_RWTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|unprivileged_mlock
@@ -131,6 +144,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Allow non-root users to call mlock(2)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.bsd.unprivileged_mlock"
+argument_list|,
+operator|&
+name|unprivileged_mlock
 argument_list|)
 expr_stmt|;
 end_expr_stmt
