@@ -2667,8 +2667,6 @@ name|vty_name
 index|[
 literal|16
 index|]
-init|=
-literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -2682,6 +2680,8 @@ argument_list|,
 name|vty
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 name|vty_name
 argument_list|,
