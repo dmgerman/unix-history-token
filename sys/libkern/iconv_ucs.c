@@ -442,7 +442,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|from
 argument_list|,
@@ -469,7 +469,7 @@ name|from_flag
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|to
 argument_list|,
