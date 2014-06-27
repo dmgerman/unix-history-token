@@ -194,9 +194,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|getenv
+operator|!
+name|vty_enabled
 argument_list|(
-literal|"kern.vt.disable"
+name|VTY_VT
 argument_list|)
 condition|)
 return|return;

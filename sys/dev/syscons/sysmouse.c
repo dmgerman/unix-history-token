@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/consio.h>
 end_include
 
@@ -638,9 +644,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|getenv
+operator|!
+name|vty_enabled
 argument_list|(
-literal|"hw.syscons.disable"
+name|VTY_SC
 argument_list|)
 condition|)
 return|return;
