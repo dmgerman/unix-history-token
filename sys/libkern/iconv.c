@@ -647,7 +647,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|csp
 operator|->
@@ -658,7 +658,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|csp
 operator|->
