@@ -72,7 +72,7 @@ argument_list|,
 literal|"Display version information"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\nAML (ACPI Machine Language) Names and Encodings:\n"
 argument_list|)
@@ -91,7 +91,7 @@ argument_list|,
 literal|"Find/Display AML opcode name(s)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\nASL (ACPI Source Language) Names and Symbols:\n"
 argument_list|)
@@ -117,7 +117,7 @@ argument_list|,
 literal|"Find/Display ASL operator name(s)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\nOther ACPI Names:\n"
 argument_list|)
@@ -129,7 +129,7 @@ argument_list|,
 literal|"Find/Display ACPI/PNP Hardware ID(s)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\nACPI Values:\n"
 argument_list|)
@@ -148,22 +148,22 @@ argument_list|,
 literal|"Decode hex AML opcode"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\nName/Prefix or HexValue not specified means \"Display All\"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\nDefault search with valid Name/Prefix and no options:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"    Find ASL/AML operator names - if NamePrefix does not start with underscore\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"    Find ASL predefined method names - if NamePrefix starts with underscore\n"
 argument_list|)
@@ -199,6 +199,9 @@ decl_stmt|;
 name|int
 name|j
 decl_stmt|;
+name|AcpiOsInitialize
+argument_list|()
+expr_stmt|;
 name|ACPI_DEBUG_INITIALIZE
 argument_list|()
 expr_stmt|;
@@ -247,7 +250,7 @@ name|AH_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|ACPI_OPT_END
 condition|)
 switch|switch
 condition|(

@@ -2458,6 +2458,15 @@ name|AE_OK
 operator|)
 return|;
 block|}
+comment|/*          * The parent Op is guaranteed to be valid because of the flag          * ACPI_PARSEOP_PARAMLIST -- which means that this op is part of          * a parameter list and thus has a valid parent.          */
+name|ParentOp
+operator|=
+name|Op
+operator|->
+name|Common
+operator|.
+name|Parent
+expr_stmt|;
 comment|/*          * Just completed a parameter node for something like "Buffer (param)".          * Close the paren and open up the term list block with a brace          */
 if|if
 condition|(
@@ -2473,20 +2482,7 @@ argument_list|(
 literal|")"
 argument_list|)
 expr_stmt|;
-comment|/* Emit description comment for Name() with a predefined ACPI name */
-name|ParentOp
-operator|=
-name|Op
-operator|->
-name|Common
-operator|.
-name|Parent
-expr_stmt|;
-if|if
-condition|(
-name|ParentOp
-condition|)
-block|{
+comment|/*              * Emit a description comment for a Name() operator that is a              * predefined ACPI name. Must check the grandparent.              */
 name|ParentOp
 operator|=
 name|ParentOp
@@ -2499,6 +2495,7 @@ if|if
 condition|(
 name|ParentOp
 operator|&&
+operator|(
 name|ParentOp
 operator|->
 name|Asl
@@ -2506,6 +2503,7 @@ operator|.
 name|AmlOpcode
 operator|==
 name|AML_NAME_OP
+operator|)
 condition|)
 block|{
 name|AcpiDmPredefinedDescription
@@ -2513,7 +2511,6 @@ argument_list|(
 name|ParentOp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|AcpiOsPrintf
 argument_list|(
@@ -2535,11 +2532,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|Op
-operator|->
-name|Common
-operator|.
-name|Parent
+name|ParentOp
 operator|->
 name|Common
 operator|.

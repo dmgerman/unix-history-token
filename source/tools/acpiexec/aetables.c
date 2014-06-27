@@ -72,15 +72,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* User table (DSDT) */
 end_comment
@@ -1749,12 +1740,12 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeLocalGetRootPointer  *  * PARAMETERS:  Flags       - not used  *              Address     - Where the root pointer is returned  *  * RETURN:      Status  *  * DESCRIPTION: Return a local RSDP, used to dynamically load tables via the  *              standard ACPI mechanism.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetRootPointer  *  * PARAMETERS:  Flags       - not used  *              Address     - Where the root pointer is returned  *  * RETURN:      Status  *  * DESCRIPTION: Return a local RSDP, used to dynamically load tables via the  *              standard ACPI mechanism.  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
+name|AcpiOsGetRootPointer
 parameter_list|(
 name|void
 parameter_list|)

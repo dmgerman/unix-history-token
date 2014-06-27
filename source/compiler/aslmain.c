@@ -879,6 +879,9 @@ literal|1
 operator|)
 return|;
 block|}
+name|AcpiOsInitialize
+argument_list|()
+expr_stmt|;
 name|ACPI_DEBUG_INITIALIZE
 argument_list|()
 expr_stmt|;

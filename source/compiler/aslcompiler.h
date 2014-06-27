@@ -655,21 +655,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|BOOLEAN
-name|ApFindNameInScope
-parameter_list|(
-name|char
-modifier|*
-name|Name
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * aslerror - error handling/reporting  */
 end_comment
@@ -856,15 +841,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|AeClearErrorLog
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
 parameter_list|(
 name|void
 parameter_list|)

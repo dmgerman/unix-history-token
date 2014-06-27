@@ -189,12 +189,12 @@ argument_list|,
 literal|"Display version information"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\nExtract binary ACPI tables from text acpidump output\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"Default invocation extracts the DSDT and all SSDTs\n"
 argument_list|)
@@ -233,6 +233,9 @@ name|ACPI_DEBUG_INITIALIZE
 argument_list|()
 expr_stmt|;
 comment|/* For debug version only */
+name|AcpiOsInitialize
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON
@@ -273,7 +276,7 @@ name|AX_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|ACPI_OPT_END
 condition|)
 switch|switch
 condition|(

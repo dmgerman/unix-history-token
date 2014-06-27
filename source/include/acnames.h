@@ -89,13 +89,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__PRP
-value|"_PRP"
-end_define
-
-begin_define
-define|#
-directive|define
 name|METHOD_NAME__PRS
 value|"_PRS"
 end_define

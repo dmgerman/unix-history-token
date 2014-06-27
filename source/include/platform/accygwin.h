@@ -220,7 +220,7 @@ file|"acgcc.h"
 end_include
 
 begin_comment
-comment|/*  * The vsnprintf function is defined by c99, but cygwin/gcc does not  * enable this prototype when the -ansi flag is set. Also related to  * __STRICT_ANSI__. So, we just declare the prototype here.  */
+comment|/*  * The vsnprintf/snprintf functions are defined by c99, but cygwin/gcc  * does not enable this prototype when the -ansi flag is set. Also related  * to __STRICT_ANSI__. So, we just declare the prototype here.  */
 end_comment
 
 begin_function_decl
@@ -241,6 +241,27 @@ name|format
 parameter_list|,
 name|va_list
 name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|snprintf
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|size_t
+name|n
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -654,6 +654,13 @@ argument_list|,
 name|ACPI_BITMASK_ALL_FIXED_STATUS
 argument_list|)
 expr_stmt|;
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_HardwareLock
+argument_list|,
+name|LockFlags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -663,7 +670,7 @@ argument_list|)
 condition|)
 block|{
 goto|goto
-name|UnlockAndExit
+name|Exit
 goto|;
 block|}
 comment|/* Clear the GPE Bits in all GPE registers in all GPE blocks */
@@ -676,15 +683,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|UnlockAndExit
+name|Exit
 label|:
-name|AcpiOsReleaseLock
-argument_list|(
-name|AcpiGbl_HardwareLock
-argument_list|,
-name|LockFlags
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

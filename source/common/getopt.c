@@ -14,18 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acpi.h"
 end_include
 
@@ -51,7 +39,7 @@ parameter_list|,
 name|badchar
 parameter_list|)
 define|\
-value|if (AcpiGbl_Opterr) {fprintf (stderr, "%s%c\n", msg, badchar);}
+value|if (AcpiGbl_Opterr) {AcpiLogError ("%s%c\n", msg, badchar);}
 end_define
 
 begin_decl_stmt
@@ -208,7 +196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetopt  *  * PARAMETERS:  argc, argv          - from main  *              opts                - options info list  *  * RETURN:      Option character or EOF  *  * DESCRIPTION: Get the next option  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetopt  *  * PARAMETERS:  argc, argv          - from main  *              opts                - options info list  *  * RETURN:      Option character or ACPI_OPT_END  *  * DESCRIPTION: Get the next option  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -271,14 +259,14 @@ condition|)
 block|{
 return|return
 operator|(
-name|EOF
+name|ACPI_OPT_END
 operator|)
 return|;
 block|}
 elseif|else
 if|if
 condition|(
-name|strcmp
+name|ACPI_STRCMP
 argument_list|(
 name|argv
 index|[
@@ -296,7 +284,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-name|EOF
+name|ACPI_OPT_END
 operator|)
 return|;
 block|}
@@ -322,7 +310,7 @@ operator|||
 operator|(
 name|OptsPtr
 operator|=
-name|strchr
+name|ACPI_STRCHR
 argument_list|(
 name|opts
 argument_list|,

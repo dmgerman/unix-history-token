@@ -114,13 +114,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|FILE
-modifier|*
-name|AcpiGbl_OutputFile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|UINT64
 name|TimerFrequency
 decl_stmt|;
@@ -151,15 +144,6 @@ end_comment
 begin_comment
 comment|/* Upcalls to AcpiExec application */
 end_comment
-
-begin_function_decl
-name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -278,6 +262,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|LARGE_INTEGER
 name|LocalTimerFrequency
 decl_stmt|;
@@ -325,6 +312,28 @@ operator|.
 name|QuadPart
 expr_stmt|;
 block|}
+name|Status
+operator|=
+name|AcpiOsCreateLock
+argument_list|(
+operator|&
+name|AcpiGbl_PrintLock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|AE_OK
@@ -332,6 +341,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_NATIVE_RSDP_POINTER
+end_ifndef
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetRootPointer  *  * PARAMETERS:  None  *  * RETURN:      RSDP physical address  *  * DESCRIPTION: Gets the root pointer (RSDP)  *  *****************************************************************************/
@@ -346,12 +361,16 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|AeLocalGetRootPointer
-argument_list|()
+literal|0
 operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPredefinedOverride  *  * PARAMETERS:  InitVal             - Initial value of the predefined object  *              NewVal              - The new value for the object  *  * RETURN:      Status, pointer to value. Null pointer returned if not  *              overriding.  *  * DESCRIPTION: Allow the OS to override predefined names  *  *****************************************************************************/
@@ -952,6 +971,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_NATIVE_MEMORY_MAPPING
+end_ifndef
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsMapMemory  *  * PARAMETERS:  Where               - Physical address of memory to be mapped  *              Length              - How much memory to map  *  * RETURN:      Pointer to mapped memory. Null on error.  *  * DESCRIPTION: Map physical memory into caller's address space  *  *****************************************************************************/
 end_comment
@@ -1002,6 +1027,11 @@ return|return;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsAllocate  *  * PARAMETERS:  Size                - Amount to allocate, in bytes  *  * RETURN:      Pointer to the new allocation. Null on error.  *  * DESCRIPTION: Allocate memory. Algorithm is dependent on the OS.  *  *****************************************************************************/
 end_comment
@@ -1040,6 +1070,58 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_NATIVE_ALLOCATE_ZEROED
+end_ifdef
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsAllocateZeroed  *  * PARAMETERS:  Size                - Amount to allocate, in bytes  *  * RETURN:      Pointer to the new allocation. Null on error.  *  * DESCRIPTION: Allocate and zero memory. Algorithm is dependent on the OS.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|AcpiOsAllocateZeroed
+parameter_list|(
+name|ACPI_SIZE
+name|Size
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|Mem
+decl_stmt|;
+name|Mem
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|Size
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Mem
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsFree  *  * PARAMETERS:  Mem                 - Pointer to previously allocated memory  *  * RETURN:      None.  *  * DESCRIPTION: Free memory allocated via AcpiOsAllocate  *  *****************************************************************************/
@@ -2802,6 +2884,58 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ACPI_SINGLE_THREADED */
+end_comment
+
+begin_function
+name|ACPI_THREAD_ID
+name|AcpiOsGetThreadId
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_STATUS
+name|AcpiOsExecute
+parameter_list|(
+name|ACPI_EXECUTE_TYPE
+name|Type
+parameter_list|,
+name|ACPI_OSD_EXEC_CALLBACK
+name|Function
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+name|Function
+argument_list|(
+name|Context
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
 operator|)
 return|;
 block|}

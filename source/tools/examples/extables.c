@@ -39,15 +39,6 @@ literal|"extables"
 argument_list|)
 end_macro
 
-begin_function_decl
-name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/******************************************************************************  *  * ACPICA Example tables and table setup  *  * This module contains the ACPI tables used for the example program. The  * original source code for the tables appears at the end of the module.  *  *****************************************************************************/
 end_comment
@@ -1089,7 +1080,7 @@ literal|0x44
 block|,
 literal|0x54
 block|,
-literal|0x67
+literal|0x8C
 block|,
 literal|0x00
 block|,
@@ -1097,10 +1088,10 @@ literal|0x00
 block|,
 literal|0x00
 block|,
-comment|/* 00000000    "DSDTg..." */
+comment|/* 00000000    "DSDT...." */
 literal|0x02
 block|,
-literal|0x97
+literal|0x76
 block|,
 literal|0x49
 block|,
@@ -1114,7 +1105,7 @@ literal|0x6C
 block|,
 literal|0x00
 block|,
-comment|/* 00000008    "..Intel." */
+comment|/* 00000008    ".vIntel." */
 literal|0x54
 block|,
 literal|0x65
@@ -1149,23 +1140,80 @@ block|,
 literal|0x4C
 block|,
 comment|/* 00000018    "....INTL" */
-literal|0x15
+literal|0x24
 block|,
-literal|0x11
-block|,
-literal|0x13
-block|,
-literal|0x20
+literal|0x04
 block|,
 literal|0x14
 block|,
-literal|0x42
+literal|0x20
+block|,
+literal|0x5B
+block|,
+literal|0x80
+block|,
+literal|0x47
+block|,
+literal|0x4E
+block|,
+comment|/* 00000020    "$.. [.GN" */
+literal|0x56
+block|,
+literal|0x53
+block|,
+literal|0x00
+block|,
+literal|0x0C
+block|,
+literal|0x98
+block|,
+literal|0xEE
+block|,
+literal|0xBB
+block|,
+literal|0xDF
+block|,
+comment|/* 00000028    "VS......" */
+literal|0x0A
+block|,
+literal|0x13
+block|,
+literal|0x5B
+block|,
+literal|0x81
+block|,
+literal|0x0B
+block|,
+literal|0x47
+block|,
+literal|0x4E
+block|,
+literal|0x56
+block|,
+comment|/* 00000030    "..[..GNV" */
+literal|0x53
+block|,
+literal|0x00
+block|,
+literal|0x46
+block|,
+literal|0x4C
+block|,
+literal|0x44
+block|,
+literal|0x31
+block|,
+literal|0x08
+block|,
+literal|0x14
+block|,
+comment|/* 00000038    "S.FLD1.." */
+literal|0x4C
 block|,
 literal|0x04
 block|,
 literal|0x4D
 block|,
-comment|/* 00000020    "... .B.M" */
 literal|0x41
 block|,
 literal|0x49
@@ -1176,13 +1224,13 @@ literal|0x01
 block|,
 literal|0x70
 block|,
+comment|/* 00000040    "L.MAIN.p" */
 literal|0x73
 block|,
 literal|0x0D
 block|,
 literal|0x4D
 block|,
-comment|/* 00000028    "AIN.ps.M" */
 literal|0x61
 block|,
 literal|0x69
@@ -1193,13 +1241,13 @@ literal|0x2F
 block|,
 literal|0x41
 block|,
+comment|/* 00000048    "s.Main/A" */
 literal|0x72
 block|,
 literal|0x67
 block|,
 literal|0x30
 block|,
-comment|/* 00000030    "ain/Arg0" */
 literal|0x3A
 block|,
 literal|0x20
@@ -1210,19 +1258,41 @@ literal|0x68
 block|,
 literal|0x00
 block|,
+comment|/* 00000050    "rg0: .h." */
 literal|0x5B
 block|,
 literal|0x31
 block|,
+literal|0x70
+block|,
+literal|0x00
+block|,
+literal|0x46
+block|,
+literal|0x4C
+block|,
+literal|0x44
+block|,
+literal|0x31
+block|,
+comment|/* 00000058    "[1p.FLD1" */
+literal|0x86
+block|,
+literal|0x5C
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
 literal|0xA4
 block|,
-comment|/* 00000038    ": .h.[1." */
 literal|0x0D
 block|,
 literal|0x4D
 block|,
 literal|0x61
 block|,
+comment|/* 00000060    ".\....Ma" */
 literal|0x69
 block|,
 literal|0x6E
@@ -1233,13 +1303,13 @@ literal|0x73
 block|,
 literal|0x75
 block|,
-comment|/* 00000040    ".Main su" */
 literal|0x63
 block|,
 literal|0x63
 block|,
 literal|0x65
 block|,
+comment|/* 00000068    "in succe" */
 literal|0x73
 block|,
 literal|0x73
@@ -1250,13 +1320,13 @@ literal|0x75
 block|,
 literal|0x6C
 block|,
-comment|/* 00000048    "ccessful" */
 literal|0x6C
 block|,
 literal|0x79
 block|,
 literal|0x20
 block|,
+comment|/* 00000070    "ssfully " */
 literal|0x63
 block|,
 literal|0x6F
@@ -1267,13 +1337,13 @@ literal|0x70
 block|,
 literal|0x6C
 block|,
-comment|/* 00000050    "ly compl" */
 literal|0x65
 block|,
 literal|0x74
 block|,
 literal|0x65
 block|,
+comment|/* 00000078    "complete" */
 literal|0x64
 block|,
 literal|0x20
@@ -1284,13 +1354,13 @@ literal|0x78
 block|,
 literal|0x65
 block|,
-comment|/* 00000058    "eted exe" */
 literal|0x63
 block|,
 literal|0x75
 block|,
 literal|0x74
 block|,
+comment|/* 00000080    "d execut" */
 literal|0x69
 block|,
 literal|0x6F
@@ -1298,7 +1368,7 @@ block|,
 literal|0x6E
 block|,
 literal|0x00
-comment|/* 00000060    "cution."  */
+comment|/* 00000088    "ion."     */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1601,7 +1671,7 @@ end_comment
 
 begin_function
 name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
+name|AcpiOsGetRootPointer
 parameter_list|(
 name|void
 parameter_list|)
@@ -3241,6 +3311,31 @@ argument_list|,
 literal|0x00000001
 argument_list|)
 block|{
+name|OperationRegion
+argument_list|(
+argument|GNVS
+argument_list|,
+argument|SystemMemory
+argument_list|,
+literal|0xDFBBEE98
+argument_list|,
+literal|0x00000013
+argument_list|)
+name|Field
+argument_list|(
+argument|GNVS
+argument_list|,
+argument|AnyAcc
+argument_list|,
+argument|NoLock
+argument_list|,
+argument|Preserve
+argument_list|)
+block|{
+name|FLD1
+block|,
+literal|8
+block|,     }
 name|Method
 argument_list|(
 argument|MAIN
@@ -3257,6 +3352,18 @@ literal|"Main/Arg0: "
 argument|, Arg0)
 argument_list|,
 argument|Debug
+argument_list|)
+name|Store
+argument_list|(
+argument|Zero
+argument_list|,
+argument|FLD1
+argument_list|)
+name|Notify
+argument_list|(
+argument|\
+argument_list|,
+argument|Zero
 argument_list|)
 name|Return
 argument_list|(

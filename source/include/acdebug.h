@@ -886,22 +886,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDbReadTableFromFile
-parameter_list|(
-name|char
-modifier|*
-name|Filename
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-modifier|*
-name|Table
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * dbhistry - debugger HISTORY command  */
 end_comment

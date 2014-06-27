@@ -2504,6 +2504,44 @@ argument_list|,
 name|Status
 argument_list|)
 expr_stmt|;
+comment|/* Test attach data at the root object */
+name|Status
+operator|=
+name|AcpiAttachData
+argument_list|(
+name|ACPI_ROOT_OBJECT
+argument_list|,
+name|AeAttachedDataHandler
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|)
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiAttachData
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiAttachData
+argument_list|(
+name|ACPI_ROOT_OBJECT
+argument_list|,
+name|AeAttachedDataHandler2
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|)
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiAttachData
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
+comment|/* Test support for multiple attaches */
 name|Status
 operator|=
 name|AcpiAttachData
@@ -2522,7 +2560,6 @@ argument_list|,
 name|Status
 argument_list|)
 expr_stmt|;
-comment|/* Test support for multiple attaches */
 name|Status
 operator|=
 name|AcpiAttachData
@@ -3338,6 +3375,11 @@ block|{
 case|case
 name|AML_FIELD_ATTRIB_QUICK
 case|:
+name|Length
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 name|AML_FIELD_ATTRIB_SEND_RCV
 case|:

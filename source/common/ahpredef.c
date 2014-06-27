@@ -1480,15 +1480,6 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
-literal|"_PRP"
-argument_list|,
-literal|"Device Properties"
-argument_list|,
-literal|"Returns a list of device property information"
-argument_list|)
-block|,
-name|AH_PREDEF
-argument_list|(
 literal|"_PRS"
 argument_list|,
 literal|"Possible Resource Settings"

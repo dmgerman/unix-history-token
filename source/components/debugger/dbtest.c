@@ -3002,6 +3002,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_FREE
+argument_list|(
+name|Pathname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status

@@ -429,7 +429,7 @@ name|AE_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|ACPI_OPT_END
 condition|)
 switch|switch
 condition|(
@@ -892,30 +892,6 @@ name|ACPI_DEBUG_INITIALIZE
 argument_list|()
 expr_stmt|;
 comment|/* For debug version only */
-name|printf
-argument_list|(
-name|ACPI_COMMON_SIGNON
-argument_list|(
-name|ACPIEXEC_NAME
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|<
-literal|2
-condition|)
-block|{
-name|usage
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|signal
 argument_list|(
 name|SIGINT
@@ -923,7 +899,7 @@ argument_list|,
 name|AeCtrlCHandler
 argument_list|)
 expr_stmt|;
-comment|/* Init globals */
+comment|/* Init debug globals */
 name|AcpiDbgLevel
 operator|=
 name|ACPI_NORMAL_DEFAULT
@@ -932,7 +908,7 @@ name|AcpiDbgLayer
 operator|=
 literal|0xFFFFFFFF
 expr_stmt|;
-comment|/* Init ACPI and start debugger thread */
+comment|/* Init ACPICA and start debugger thread */
 name|Status
 operator|=
 name|AcpiInitializeSubsystem
@@ -956,6 +932,30 @@ block|{
 goto|goto
 name|ErrorExit
 goto|;
+block|}
+name|printf
+argument_list|(
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ACPIEXEC_NAME
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|usage
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* Get the command line options */
 if|if
@@ -1006,7 +1006,7 @@ block|{
 comment|/* Get one entire table */
 name|Status
 operator|=
-name|AcpiDbReadTableFromFile
+name|AcpiUtReadTableFromFile
 argument_list|(
 name|argv
 index|[

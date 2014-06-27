@@ -380,7 +380,7 @@ block|}
 comment|/* Validate and verify a table before installation */
 name|Status
 operator|=
-name|AcpiTbVerifyTable
+name|AcpiTbVerifyTempTable
 argument_list|(
 operator|&
 name|NewTableDesc
@@ -559,7 +559,7 @@ block|}
 comment|/* Validate and verify a table before installation */
 name|Status
 operator|=
-name|AcpiTbVerifyTable
+name|AcpiTbVerifyTempTable
 argument_list|(
 operator|&
 name|NewTableDesc
@@ -939,7 +939,7 @@ label|:
 comment|/* Validate and verify a table before overriding */
 name|Status
 operator|=
-name|AcpiTbVerifyTable
+name|AcpiTbVerifyTempTable
 argument_list|(
 operator|&
 name|NewTableDesc
@@ -1015,7 +1015,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-name|AcpiTbValidateTable
+name|AcpiTbValidateTempTable
 argument_list|(
 name|OldTableDesc
 argument_list|)

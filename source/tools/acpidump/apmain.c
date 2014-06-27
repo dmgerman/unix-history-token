@@ -61,7 +61,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ApInsertAction
 parameter_list|(
 name|char
@@ -182,7 +182,7 @@ argument_list|,
 literal|"Verbose mode"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\nTable Options:\n"
 argument_list|)
@@ -222,7 +222,7 @@ argument_list|,
 literal|"Do not use or dump XSDT"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ACPI_USAGE_TEXT
 argument_list|(
 literal|"\n"
 literal|"Invocation without parameters dumps all available tables\n"
@@ -233,12 +233,12 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    ApInsertAction  *  * PARAMETERS:  Argument            - Pointer to the argument for this action  *              ToBeDone            - What to do to process this action  *  * RETURN:      None. Exits program if action table becomes full.  *  * DESCRIPTION: Add an action item to the action table  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    ApInsertAction  *  * PARAMETERS:  Argument            - Pointer to the argument for this action  *              ToBeDone            - What to do to process this action  *  * RETURN:      Status  *  * DESCRIPTION: Add an action item to the action table  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ApInsertAction
 parameter_list|(
 name|char
@@ -278,22 +278,25 @@ operator|>
 name|AP_MAX_ACTIONS
 condition|)
 block|{
-name|fprintf
+name|AcpiLogError
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Too many table options (max %u)\n"
 argument_list|,
 name|AP_MAX_ACTIONS
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -337,7 +340,7 @@ name|AP_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|ACPI_OPT_END
 condition|)
 switch|switch
 condition|(
@@ -372,11 +375,11 @@ case|:
 name|ApDisplayUsage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 case|case
 literal|'o'
 case|:
@@ -389,12 +392,12 @@ name|AcpiGbl_Optarg
 argument_list|)
 condition|)
 block|{
-name|exit
-argument_list|(
+return|return
+operator|(
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 continue|continue;
 case|case
@@ -421,21 +424,19 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|AcpiLogError
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: Could not convert to a physical address\n"
 argument_list|,
 name|AcpiGbl_Optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 continue|continue;
 case|case
@@ -474,7 +475,7 @@ case|case
 literal|'v'
 case|:
 comment|/* Revision/version */
-name|printf
+name|AcpiOsPrintf
 argument_list|(
 name|ACPI_COMMON_SIGNON
 argument_list|(
@@ -482,11 +483,11 @@ name|AP_UTILITY_NAME
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 case|case
 literal|'z'
 case|:
@@ -495,10 +496,8 @@ name|Gbl_VerboseMode
 operator|=
 name|TRUE
 expr_stmt|;
-name|fprintf
+name|AcpiLogError
 argument_list|(
-name|stderr
-argument_list|,
 name|ACPI_COMMON_SIGNON
 argument_list|(
 name|AP_UTILITY_NAME
@@ -511,48 +510,78 @@ case|case
 literal|'a'
 case|:
 comment|/* Get table by physical address */
+if|if
+condition|(
 name|ApInsertAction
 argument_list|(
 name|AcpiGbl_Optarg
 argument_list|,
 name|AP_DUMP_TABLE_BY_ADDRESS
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'f'
 case|:
 comment|/* Get table from a file */
+if|if
+condition|(
 name|ApInsertAction
 argument_list|(
 name|AcpiGbl_Optarg
 argument_list|,
 name|AP_DUMP_TABLE_BY_FILE
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'n'
 case|:
 comment|/* Get table by input name (signature) */
+if|if
+condition|(
 name|ApInsertAction
 argument_list|(
 name|AcpiGbl_Optarg
 argument_list|,
 name|AP_DUMP_TABLE_BY_NAME
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 default|default:
 name|ApDisplayUsage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* If there are no actions, this means "get/dump all tables" */
 if|if
@@ -562,13 +591,23 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|ApInsertAction
 argument_list|(
 name|NULL
 argument_list|,
 name|AP_DUMP_ALL_TABLES
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 block|}
 return|return
 operator|(
@@ -582,19 +621,41 @@ begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    main  *  * PARAMETERS:  argc/argv           - Standard argc/argv  *  * RETURN:      Status  *  * DESCRIPTION: C main function for acpidump utility  *  ******************************************************************************/
 end_comment
 
-begin_function
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GNU_EFI
+end_ifndef
+
+begin_decl_stmt
 name|int
 name|ACPI_SYSTEM_XFACE
-name|main
-parameter_list|(
+decl|main
+argument_list|(
 name|int
 name|argc
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|argv
 index|[]
-parameter_list|)
+argument_list|)
+else|#
+directive|else
+name|int
+name|ACPI_SYSTEM_XFACE
+name|acpi_main
+argument_list|(
+name|int
+name|argc
+argument_list|,
+name|char
+operator|*
+name|argv
+index|[]
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|int
 name|Status
@@ -615,21 +676,46 @@ name|ACPI_DEBUG_INITIALIZE
 argument_list|()
 expr_stmt|;
 comment|/* For debug version only */
+name|AcpiOsInitialize
+argument_list|()
+expr_stmt|;
+name|Gbl_OutputFile
+operator|=
+name|ACPI_FILE_OUT
+expr_stmt|;
 comment|/* Process command line options */
-if|if
-condition|(
+name|Status
+operator|=
 name|ApDoOptions
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Status
+operator|>
+literal|0
 condition|)
 block|{
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|Status
+operator|<
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|Status
 operator|)
 return|;
 block|}
@@ -712,10 +798,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|AcpiLogError
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Internal error, invalid action: 0x%X\n"
 argument_list|,
 name|Action
@@ -744,7 +828,7 @@ block|}
 block|}
 if|if
 condition|(
-name|Gbl_OutputFile
+name|Gbl_OutputFilename
 condition|)
 block|{
 if|if
@@ -760,10 +844,8 @@ argument_list|(
 name|Gbl_OutputFile
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|AcpiLogError
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Output file %s contains 0x%X (%u) bytes\n\n"
 argument_list|,
 name|Gbl_OutputFilename
@@ -774,7 +856,7 @@ name|FileSize
 argument_list|)
 expr_stmt|;
 block|}
-name|fclose
+name|AcpiOsCloseFile
 argument_list|(
 name|Gbl_OutputFile
 argument_list|)
@@ -786,7 +868,7 @@ name|Status
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 end_unit
 

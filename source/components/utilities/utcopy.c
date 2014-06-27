@@ -2606,6 +2606,22 @@ name|DestDesc
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Delete the allocated object if copy failed */
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiUtRemoveReference
+argument_list|(
+operator|*
+name|DestDesc
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

@@ -131,7 +131,7 @@ decl_stmt|;
 comment|/* Open the binary AML file and read the entire table */
 name|Status
 operator|=
-name|AcpiDbReadTableFromFile
+name|AcpiUtReadTableFromFile
 argument_list|(
 name|AmlFilename
 argument_list|,
@@ -500,6 +500,42 @@ name|ACPI_DEBUG_INITIALIZE
 argument_list|()
 expr_stmt|;
 comment|/* For debug version only */
+comment|/* Init debug globals and ACPICA */
+name|AcpiDbgLevel
+operator|=
+name|ACPI_LV_TABLES
+expr_stmt|;
+name|AcpiDbgLayer
+operator|=
+literal|0xFFFFFFFF
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiInitializeSubsystem
+argument_list|()
+expr_stmt|;
+name|AE_CHECK_OK
+argument_list|(
+name|AcpiInitializeSubsystem
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|printf
 argument_list|(
 name|ACPI_COMMON_SIGNON
@@ -524,29 +560,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Init globals and ACPICA */
-name|AcpiDbgLevel
-operator|=
-name|ACPI_NORMAL_DEFAULT
-operator||
-name|ACPI_LV_TABLES
-expr_stmt|;
-name|AcpiDbgLayer
-operator|=
-literal|0xFFFFFFFF
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiInitializeSubsystem
-argument_list|()
-expr_stmt|;
-name|AE_CHECK_OK
-argument_list|(
-name|AcpiInitializeSubsystem
-argument_list|,
-name|Status
-argument_list|)
-expr_stmt|;
 comment|/* Get the command line options */
 while|while
 condition|(
@@ -563,7 +576,7 @@ name|AN_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|ACPI_OPT_END
 condition|)
 switch|switch
 condition|(

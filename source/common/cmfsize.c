@@ -46,15 +46,14 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    CmGetFileSize  *  * PARAMETERS:  File                    - Open file descriptor  *  * RETURN:      File Size. On error, -1 (ACPI_UINT32_MAX)  *  * DESCRIPTION: Get the size of a file. Uses seek-to-EOF. File must be open.  *              Does not disturb the current file pointer. Uses perror for  *              error messages.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    CmGetFileSize  *  * PARAMETERS:  File                    - Open file descriptor  *  * RETURN:      File Size. On error, -1 (ACPI_UINT32_MAX)  *  * DESCRIPTION: Get the size of a file. Uses seek-to-EOF. File must be open.  *              Does not disturb the current file pointer.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT32
 name|CmGetFileSize
 parameter_list|(
-name|FILE
-modifier|*
+name|ACPI_FILE
 name|File
 parameter_list|)
 block|{
@@ -64,10 +63,13 @@ decl_stmt|;
 name|long
 name|CurrentOffset
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Save the current file pointer, seek to EOF to obtain file size */
 name|CurrentOffset
 operator|=
-name|ftell
+name|AcpiOsGetFileOffset
 argument_list|(
 name|File
 argument_list|)
@@ -83,15 +85,22 @@ goto|goto
 name|OffsetError
 goto|;
 block|}
-if|if
-condition|(
-name|fseek
+name|Status
+operator|=
+name|AcpiOsSetFileOffset
 argument_list|(
 name|File
 argument_list|,
 literal|0
 argument_list|,
-name|SEEK_END
+name|ACPI_FILE_END
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -101,7 +110,7 @@ goto|;
 block|}
 name|FileSize
 operator|=
-name|ftell
+name|AcpiOsGetFileOffset
 argument_list|(
 name|File
 argument_list|)
@@ -118,15 +127,22 @@ name|OffsetError
 goto|;
 block|}
 comment|/* Restore original file pointer */
-if|if
-condition|(
-name|fseek
+name|Status
+operator|=
+name|AcpiOsSetFileOffset
 argument_list|(
 name|File
 argument_list|,
 name|CurrentOffset
 argument_list|,
-name|SEEK_SET
+name|ACPI_FILE_BEGIN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -144,7 +160,7 @@ operator|)
 return|;
 name|OffsetError
 label|:
-name|perror
+name|AcpiLogError
 argument_list|(
 literal|"Could not get file offset"
 argument_list|)
@@ -156,9 +172,9 @@ operator|)
 return|;
 name|SeekError
 label|:
-name|perror
+name|AcpiLogError
 argument_list|(
-literal|"Could not seek file"
+literal|"Could not set file offset"
 argument_list|)
 expr_stmt|;
 return|return

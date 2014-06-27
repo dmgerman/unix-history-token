@@ -160,7 +160,18 @@ parameter_list|(
 name|Usage
 parameter_list|)
 define|\
-value|printf ("Usage: %s\nOptions:\n", Usage);
+value|AcpiOsPrintf ("Usage: %s\nOptions:\n", Usage);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USAGE_TEXT
+parameter_list|(
+name|Description
+parameter_list|)
+define|\
+value|AcpiOsPrintf (Description);
 end_define
 
 begin_define
@@ -173,7 +184,7 @@ parameter_list|,
 name|Description
 parameter_list|)
 define|\
-value|printf ("  %-18s%s\n", Name, Description);
+value|AcpiOsPrintf ("  %-18s%s\n", Name, Description);
 end_define
 
 begin_define
@@ -265,8 +276,7 @@ begin_function_decl
 name|UINT32
 name|CmGetFileSize
 parameter_list|(
-name|FILE
-modifier|*
+name|ACPI_FILE
 name|File
 parameter_list|)
 function_decl|;

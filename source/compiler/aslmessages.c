@@ -523,10 +523,7 @@ literal|"Constant out of range"
 block|,
 comment|/*    ASL_MSG_BUFFER_ALLOCATION */
 literal|"Could not allocate line buffer"
-block|,
-comment|/*    ASL_MSG_MISSING_DEPENDENCY */
-literal|"Missing dependency"
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

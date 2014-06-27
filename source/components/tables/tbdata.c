@@ -586,12 +586,58 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiTbVerifyTable  *  * PARAMETERS:  TableDesc           - Table descriptor  *              Signature           - Table signature to verify  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to validate and verify the table, the  *              returned table descriptor is in "VALIDATED" state.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiTbValidateTempTable  *  * PARAMETERS:  TableDesc           - Table descriptor  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to validate the table, the returned  *              table descriptor is in "VALIDATED" state.  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiTbVerifyTable
+name|AcpiTbValidateTempTable
+parameter_list|(
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableDesc
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|TableDesc
+operator|->
+name|Pointer
+operator|&&
+operator|!
+name|AcpiGbl_VerifyTableChecksum
+condition|)
+block|{
+comment|/*          * Only validates the header of the table.          * Note that Length contains the size of the mapping after invoking          * this work around, this value is required by          * AcpiTbReleaseTempTable().          * We can do this because in AcpiInitTableDescriptor(), the Length          * field of the installed descriptor is filled with the actual          * table length obtaining from the table header.          */
+name|TableDesc
+operator|->
+name|Length
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|AcpiTbValidateTable
+argument_list|(
+name|TableDesc
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiTbVerifyTempTable  *  * PARAMETERS:  TableDesc           - Table descriptor  *              Signature           - Table signature to verify  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to validate and verify the table, the  *              returned table descriptor is in "VALIDATED" state.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiTbVerifyTempTable
 parameter_list|(
 name|ACPI_TABLE_DESC
 modifier|*
@@ -609,13 +655,13 @@ name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-name|TbVerifyTable
+name|TbVerifyTempTable
 argument_list|)
 expr_stmt|;
 comment|/* Validate the table */
 name|Status
 operator|=
-name|AcpiTbValidateTable
+name|AcpiTbValidateTempTable
 argument_list|(
 name|TableDesc
 argument_list|)
@@ -677,6 +723,11 @@ name|InvalidateAndExit
 goto|;
 block|}
 comment|/* Verify the checksum */
+if|if
+condition|(
+name|AcpiGbl_VerifyTableChecksum
+condition|)
+block|{
 name|Status
 operator|=
 name|AcpiTbVerifyChecksum
@@ -738,6 +789,7 @@ expr_stmt|;
 goto|goto
 name|InvalidateAndExit
 goto|;
+block|}
 block|}
 name|return_ACPI_STATUS
 argument_list|(

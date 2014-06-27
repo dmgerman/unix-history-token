@@ -515,16 +515,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_FUTURE_IMPLEMENTATION
-end_ifdef
-
-begin_comment
-comment|/* Not used at this time */
-end_comment
-
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrchr (strchr)  *  * PARAMETERS:  String          - Search string  *              ch              - character to search for  *  * RETURN:      Ptr to char or NULL if not found  *  * DESCRIPTION: Search a string for a character  *  ******************************************************************************/
 end_comment
@@ -586,11 +576,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtStrncmp (strncmp)  *  * PARAMETERS:  String1         - First string  *              String2         - Second string  *              Count           - Maximum # of bytes to compare  *  * RETURN:      Index where strings mismatched, or 0 if strings matched  *  * DESCRIPTION: Compare two null terminated strings, with a maximum length  *  ******************************************************************************/

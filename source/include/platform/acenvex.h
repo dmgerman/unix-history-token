@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acpi.h - Master public include file used to interface to ACPICA  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenvex.h - Extra host and compiler configuration  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,117 +10,50 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ACPI_H__
+name|__ACENVEX_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ACPI_H__
+name|__ACENVEX_H__
 end_define
 
 begin_comment
-comment|/*  * Public include files for use by code that will interface to ACPICA.  *  * Information includes the ACPICA data types, names, exceptions, and  * external interface prototypes. Also included are the definitions for  * all ACPI tables (FADT, MADT, etc.)  *  * Note: The order of these include files is important.  */
+comment|/*! [Begin] no source code translation */
 end_comment
+
+begin_comment
+comment|/******************************************************************************  *  * Extra host configuration files. All ACPICA headers are included before  * including these files.  *  *****************************************************************************/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LINUX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
-file|"platform/acenv.h"
+file|"aclinuxex.h"
 end_include
 
-begin_comment
-comment|/* Environment-specific items */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acnames.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Common ACPI names and strings */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"actypes.h"
-end_include
-
-begin_comment
-comment|/* ACPICA data types and structures */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acexcep.h"
-end_include
-
-begin_comment
-comment|/* ACPICA exceptions */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"actbl.h"
-end_include
-
-begin_comment
-comment|/* ACPI table definitions */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acoutput.h"
-end_include
-
-begin_comment
-comment|/* Error output and Debug macros */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acrestyp.h"
-end_include
-
-begin_comment
-comment|/* Resource Descriptor structs */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acpiosxf.h"
-end_include
-
-begin_comment
-comment|/* OSL interfaces (ACPICA-to-OS) */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"acpixf.h"
-end_include
-
-begin_comment
-comment|/* ACPI core subsystem external interfaces */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"platform/acenvex.h"
-end_include
-
-begin_comment
-comment|/* Extra environment-specific items */
+comment|/*! [End] no source code translation !*/
 end_comment
 
 begin_endif
@@ -129,7 +62,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ACPI_H__ */
+comment|/* __ACENVEX_H__ */
 end_comment
 
 end_unit

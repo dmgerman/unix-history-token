@@ -35,13 +35,6 @@ parameter_list|)
 value|a=b
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEFINE_ACPI_GLOBALS
-value|1
-end_define
-
 begin_else
 else|#
 directive|else
@@ -177,18 +170,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|EXTERN
-name|FILE
+name|ACPI_FILE
 name|INIT_GLOBAL
-argument_list|(
-operator|*
+parameter_list|(
 name|Gbl_OutputFile
-argument_list|,
+parameter_list|,
 name|NULL
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|EXTERN

@@ -31,15 +31,6 @@ begin_comment
 comment|/* Local prototypes */
 end_comment
 
-begin_function_decl
-name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Non-AML tables that are constructed locally and installed */
 end_comment
@@ -879,12 +870,12 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AeLocalGetRootPointer  *  * PARAMETERS:  None  *  * RETURN:      Address of the RSDP  *  * DESCRIPTION: Return a local RSDP, used to dynamically load tables via the  *              standard ACPI mechanism.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetRootPointer  *  * PARAMETERS:  None  *  * RETURN:      Address of the RSDP  *  * DESCRIPTION: Return a local RSDP, used to dynamically load tables via the  *              standard ACPI mechanism.  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
+name|AcpiOsGetRootPointer
 parameter_list|(
 name|void
 parameter_list|)

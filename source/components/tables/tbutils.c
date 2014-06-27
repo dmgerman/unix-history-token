@@ -883,7 +883,6 @@ operator|+=
 name|TableEntrySize
 expr_stmt|;
 block|}
-comment|/*      * It is not possible to map more than one entry in some environments,      * so unmap the root table here before mapping other tables      */
 name|AcpiOsUnmapMemory
 argument_list|(
 name|Table

@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20140424
+value|0x20140627
 end_define
 
 begin_include
@@ -332,6 +332,22 @@ argument_list|(
 name|UINT8
 argument_list|,
 name|AcpiGbl_UseDefaultRegisterWidths
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Whether or not to verify the table checksum before installation. Set  * this to TRUE to verify the table checksum before install it to the table  * manager. Note that enabling this option causes errors to happen in some  * OSPMs during early initialization stages. Default behavior is to do such  * verification.  */
+end_comment
+
+begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|UINT8
+argument_list|,
+name|AcpiGbl_VerifyTableChecksum
 argument_list|,
 name|TRUE
 argument_list|)
@@ -787,6 +803,52 @@ end_endif
 
 begin_comment
 comment|/* ACPI_DEBUG_OUTPUT */
+end_comment
+
+begin_comment
+comment|/*  * Application prototypes  *  * All interfaces used by application will be configured  * out of the ACPICA build unless the ACPI_APPLICATION  * flag is defined.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_APP_DEPENDENT_RETURN_VOID
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|Prototype;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_APP_DEPENDENT_RETURN_VOID
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return;}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_APPLICATION */
 end_comment
 
 begin_comment
@@ -1697,6 +1759,15 @@ argument_list|(
 argument|ACPI_PRINTF_LIKE(
 literal|6
 argument|) void ACPI_INTERNAL_VAR_XFACE AcpiDebugPrintRaw (     UINT32                  RequestedDebugLevel,     UINT32                  LineNumber,     const char              *FunctionName,     const char              *ModuleName,     UINT32                  ComponentId,     const char              *Format,     ...)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_APP_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|ACPI_PRINTF_LIKE(
+literal|1
+argument|) void ACPI_INTERNAL_VAR_XFACE AcpiLogError (     const char              *Format,     ...)
 argument_list|)
 end_macro
 
