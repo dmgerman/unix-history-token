@@ -576,19 +576,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.boot_delay"
-argument_list|,
-operator|&
-name|xsoftc
-operator|.
-name|boot_delay
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_cam
@@ -659,17 +646,6 @@ modifier|*
 name|cam_proc
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.num_doneqs"
-argument_list|,
-operator|&
-name|cam_num_doneqs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -832,17 +808,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.dflags"
-argument_list|,
-operator|&
-name|cam_dflags
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_cam
@@ -851,7 +816,7 @@ name|OID_AUTO
 argument_list|,
 name|dflags
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cam_dflags
@@ -872,17 +837,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.debug_delay"
-argument_list|,
-operator|&
-name|cam_debug_delay
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_cam
@@ -891,7 +845,7 @@ name|OID_AUTO
 argument_list|,
 name|debug_delay
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cam_debug_delay

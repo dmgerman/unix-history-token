@@ -261,17 +261,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.cam_srch_hi"
-argument_list|,
-operator|&
-name|cam_srch_hi
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -293,7 +282,7 @@ name|cam_srch_hi
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 literal|0
 argument_list|,

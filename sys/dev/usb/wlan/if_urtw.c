@@ -292,9 +292,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|urtw_debug
@@ -302,17 +300,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"control debugging printfs"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.urtw.debug"
-argument_list|,
-operator|&
-name|urtw_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -432,9 +419,7 @@ name|OID_AUTO
 argument_list|,
 name|preamble_mode
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|urtw_preamble_mode
@@ -442,17 +427,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"set the preable mode (long or short)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.urtw.preamble_mode"
-argument_list|,
-operator|&
-name|urtw_preamble_mode
 argument_list|)
 expr_stmt|;
 end_expr_stmt

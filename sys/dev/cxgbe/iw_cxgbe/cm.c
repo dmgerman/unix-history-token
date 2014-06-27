@@ -3937,17 +3937,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.db_delay_usecs"
-argument_list|,
-operator|&
-name|db_delay_usecs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -3956,7 +3945,7 @@ name|OID_AUTO
 argument_list|,
 name|db_delay_usecs
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|db_delay_usecs
@@ -3978,17 +3967,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.dack_mode"
-argument_list|,
-operator|&
-name|dack_mode
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -3997,7 +3975,7 @@ name|OID_AUTO
 argument_list|,
 name|dack_mode
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|dack_mode
@@ -4018,17 +3996,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.c4iw_max_read_depth"
-argument_list|,
-operator|&
-name|c4iw_max_read_depth
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4037,7 +4004,7 @@ name|OID_AUTO
 argument_list|,
 name|c4iw_max_read_depth
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|c4iw_max_read_depth
@@ -4057,17 +4024,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.enable_tcp_timestamps"
-argument_list|,
-operator|&
-name|enable_tcp_timestamps
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4076,7 +4032,7 @@ name|OID_AUTO
 argument_list|,
 name|enable_tcp_timestamps
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|enable_tcp_timestamps
@@ -4096,17 +4052,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.enable_tcp_sack"
-argument_list|,
-operator|&
-name|enable_tcp_sack
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4115,7 +4060,7 @@ name|OID_AUTO
 argument_list|,
 name|enable_tcp_sack
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|enable_tcp_sack
@@ -4137,17 +4082,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.enable_tcp_window_scaling"
-argument_list|,
-operator|&
-name|enable_tcp_window_scaling
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4156,7 +4090,7 @@ name|OID_AUTO
 argument_list|,
 name|enable_tcp_window_scaling
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|enable_tcp_window_scaling
@@ -4177,17 +4111,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.c4iw_debug"
-argument_list|,
-operator|&
-name|c4iw_debug
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4196,7 +4119,7 @@ name|OID_AUTO
 argument_list|,
 name|c4iw_debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|c4iw_debug
@@ -4216,17 +4139,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.peer2peer"
-argument_list|,
-operator|&
-name|peer2peer
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4235,7 +4147,7 @@ name|OID_AUTO
 argument_list|,
 name|peer2peer
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|peer2peer
@@ -4257,17 +4169,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.p2p_type"
-argument_list|,
-operator|&
-name|p2p_type
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4276,7 +4177,7 @@ name|OID_AUTO
 argument_list|,
 name|p2p_type
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|p2p_type
@@ -4298,17 +4199,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.ep_timeout_secs"
-argument_list|,
-operator|&
-name|ep_timeout_secs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4317,7 +4207,7 @@ name|OID_AUTO
 argument_list|,
 name|ep_timeout_secs
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ep_timeout_secs
@@ -4338,17 +4228,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.mpa_rev"
-argument_list|,
-operator|&
-name|mpa_rev
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4364,7 +4243,7 @@ name|OID_AUTO
 argument_list|,
 name|mpa_rev
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|mpa_rev
@@ -4390,7 +4269,7 @@ name|OID_AUTO
 argument_list|,
 name|mpa_rev
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|mpa_rev
@@ -4415,17 +4294,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.markers_enabled"
-argument_list|,
-operator|&
-name|markers_enabled
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4434,7 +4302,7 @@ name|OID_AUTO
 argument_list|,
 name|markers_enabled
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|markers_enabled
@@ -4456,17 +4324,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.crc_enabled"
-argument_list|,
-operator|&
-name|crc_enabled
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4475,7 +4332,7 @@ name|OID_AUTO
 argument_list|,
 name|crc_enabled
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|crc_enabled
@@ -4499,17 +4356,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.rcv_win"
-argument_list|,
-operator|&
-name|rcv_win
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4518,7 +4364,7 @@ name|OID_AUTO
 argument_list|,
 name|rcv_win
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|rcv_win
@@ -4542,17 +4388,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.snd_win"
-argument_list|,
-operator|&
-name|snd_win
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4561,7 +4396,7 @@ name|OID_AUTO
 argument_list|,
 name|snd_win
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|snd_win
@@ -4582,17 +4417,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgbe.db_fc_threshold"
-argument_list|,
-operator|&
-name|db_fc_threshold
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgbe
@@ -4601,7 +4425,7 @@ name|OID_AUTO
 argument_list|,
 name|db_fc_threshold
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|db_fc_threshold

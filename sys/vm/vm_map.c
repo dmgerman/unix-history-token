@@ -14326,17 +14326,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"security.bsd.stack_guard_page"
-argument_list|,
-operator|&
-name|stack_guard_page
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_security_bsd
@@ -14345,7 +14334,7 @@ name|OID_AUTO
 argument_list|,
 name|stack_guard_page
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|stack_guard_page

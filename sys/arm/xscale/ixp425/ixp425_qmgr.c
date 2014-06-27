@@ -302,8 +302,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|qmgr_debug
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -316,7 +314,7 @@ name|OID_AUTO
 argument_list|,
 name|qmgr
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|qmgr_debug
@@ -324,17 +322,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"IXP4XX Q-Manager debug msgs"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.qmgr"
-argument_list|,
-operator|&
-name|qmgr_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt

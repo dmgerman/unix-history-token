@@ -541,17 +541,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.irq_override_mask"
-argument_list|,
-operator|&
-name|pci_irq_override_mask
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci

@@ -185,17 +185,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.enable"
-argument_list|,
-operator|&
-name|g_raid_enable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_geom_raid
@@ -204,7 +193,7 @@ name|OID_AUTO
 argument_list|,
 name|enable
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid_enable
@@ -225,17 +214,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.aggressive_spare"
-argument_list|,
-operator|&
-name|g_raid_aggressive_spare
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid
@@ -244,7 +222,7 @@ name|OID_AUTO
 argument_list|,
 name|aggressive_spare
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid_aggressive_spare
@@ -265,17 +243,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.debug"
-argument_list|,
-operator|&
-name|g_raid_debug
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid
@@ -284,7 +251,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid_debug
@@ -305,17 +272,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.read_err_thresh"
-argument_list|,
-operator|&
-name|g_raid_read_err_thresh
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid
@@ -324,7 +280,7 @@ name|OID_AUTO
 argument_list|,
 name|read_err_thresh
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid_read_err_thresh
@@ -345,17 +301,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.start_timeout"
-argument_list|,
-operator|&
-name|g_raid_start_timeout
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid
@@ -364,7 +309,7 @@ name|OID_AUTO
 argument_list|,
 name|start_timeout
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid_start_timeout
@@ -386,17 +331,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.clean_time"
-argument_list|,
-operator|&
-name|g_raid_clean_time
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid
@@ -405,7 +339,7 @@ name|OID_AUTO
 argument_list|,
 name|clean_time
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid_clean_time
@@ -427,17 +361,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.disconnect_on_failure"
-argument_list|,
-operator|&
-name|g_raid_disconnect_on_failure
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid
@@ -446,7 +369,7 @@ name|OID_AUTO
 argument_list|,
 name|disconnect_on_failure
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid_disconnect_on_failure
@@ -468,17 +391,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.name_format"
-argument_list|,
-operator|&
-name|g_raid_name_format
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid
@@ -487,7 +399,7 @@ name|OID_AUTO
 argument_list|,
 name|name_format
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid_name_format
@@ -509,17 +421,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.idle_threshold"
-argument_list|,
-operator|&
-name|g_raid_idle_threshold
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid
@@ -528,7 +429,7 @@ name|OID_AUTO
 argument_list|,
 name|idle_threshold
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid_idle_threshold
@@ -558,7 +459,7 @@ name|OID_AUTO
 argument_list|,
 name|legacy_aliases
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ar_legacy_aliases
@@ -566,17 +467,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Create aliases named as the legacy ataraid style."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom_raid.legacy_aliases"
-argument_list|,
-operator|&
-name|ar_legacy_aliases
 argument_list|)
 expr_stmt|;
 end_expr_stmt

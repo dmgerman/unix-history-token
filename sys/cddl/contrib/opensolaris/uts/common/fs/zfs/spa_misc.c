@@ -293,17 +293,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.zfs_flags"
-argument_list|,
-operator|&
-name|zfs_flags
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug
@@ -345,17 +334,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.recover"
-argument_list|,
-operator|&
-name|zfs_recover
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -389,17 +367,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_QUAD
-argument_list|(
-literal|"vfs.zfs.deadman_synctime_ms"
-argument_list|,
-operator|&
-name|zfs_deadman_synctime_ms
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
@@ -431,17 +398,6 @@ init|=
 literal|5000ULL
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_QUAD
-argument_list|(
-literal|"vfs.zfs.deadman_checktime_ms"
-argument_list|,
-operator|&
-name|zfs_deadman_checktime_ms
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UQUAD
@@ -478,17 +434,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.deadman_enabled"
-argument_list|,
-operator|&
-name|zfs_deadman_enabled
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -520,17 +465,6 @@ init|=
 literal|24
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.spa_asize_inflation"
-argument_list|,
-operator|&
-name|spa_asize_inflation
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

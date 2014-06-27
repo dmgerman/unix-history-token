@@ -3262,17 +3262,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.verbose"
-argument_list|,
-operator|&
-name|bce_verbose
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_bce
@@ -3305,17 +3294,6 @@ init|=
 name|TRUE
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.tso_enable"
-argument_list|,
-operator|&
-name|bce_tso_enable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -3356,17 +3334,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.msi_enable"
-argument_list|,
-operator|&
-name|bce_msi_enable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_bce
@@ -3399,17 +3366,6 @@ init|=
 name|DEFAULT_RX_PAGES
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.rx_pages"
-argument_list|,
-operator|&
-name|bce_rx_pages
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -3446,17 +3402,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.tx_pages"
-argument_list|,
-operator|&
-name|bce_tx_pages
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_bce
@@ -3491,17 +3436,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.hdr_split"
-argument_list|,
-operator|&
-name|bce_hdr_split
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_bce
@@ -3534,17 +3468,6 @@ init|=
 name|FALSE
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.strict_rx_mtu"
-argument_list|,
-operator|&
-name|bce_strict_rx_mtu
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -3614,17 +3537,6 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.tx_quick_cons_trip_int"
-argument_list|,
-operator|&
-name|bce_tx_quick_cons_trip_int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_bce
@@ -3690,17 +3602,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.tx_quick_cons_trip"
-argument_list|,
-operator|&
-name|bce_tx_quick_cons_trip
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -3770,17 +3671,6 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.tx_ticks_int"
-argument_list|,
-operator|&
-name|bce_tx_ticks_int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_bce
@@ -3846,17 +3736,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.tx_ticks"
-argument_list|,
-operator|&
-name|bce_tx_ticks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -3926,17 +3805,6 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.rx_quick_cons_trip_int"
-argument_list|,
-operator|&
-name|bce_rx_quick_cons_trip_int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_bce
@@ -4002,17 +3870,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.rx_quick_cons_trip"
-argument_list|,
-operator|&
-name|bce_rx_quick_cons_trip
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -4082,17 +3939,6 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.rx_ticks_int"
-argument_list|,
-operator|&
-name|bce_rx_ticks_int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_bce
@@ -4158,17 +4004,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.bce.rx_ticks"
-argument_list|,
-operator|&
-name|bce_rx_ticks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT

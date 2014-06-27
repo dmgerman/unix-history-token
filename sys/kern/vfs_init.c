@@ -163,17 +163,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.typenumhash"
-argument_list|,
-operator|&
-name|vfs_typenumhash
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs
@@ -655,7 +644,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|oidp
 argument_list|,
-argument|&sysctl__vfs_children
+argument|SYSCTL_CHILDREN(&sysctl___vfs)
 argument_list|,
 argument|oid_link
 argument_list|)

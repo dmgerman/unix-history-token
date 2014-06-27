@@ -191,8 +191,6 @@ name|plat_name
 index|[
 literal|64
 index|]
-init|=
-literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +204,8 @@ argument_list|,
 name|platform
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 name|plat_name
 argument_list|,

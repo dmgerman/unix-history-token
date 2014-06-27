@@ -187,17 +187,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.timecounter.invariant_tsc"
-argument_list|,
-operator|&
-name|tsc_is_invariant
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -231,17 +220,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.timecounter.smp_tsc"
-argument_list|,
-operator|&
-name|smp_tsc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|int
 name|smp_tsc_adjust
@@ -267,17 +245,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Try to adjust TSC on APs to match BSP"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.timecounter.smp_tsc_adjust"
-argument_list|,
-operator|&
-name|smp_tsc_adjust
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -317,17 +284,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.timecounter.tsc_shift"
-argument_list|,
-operator|&
-name|tsc_shift
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -356,17 +312,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"machdep.disable_tsc"
-argument_list|,
-operator|&
-name|tsc_disabled
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -391,17 +336,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Disable TSC frequency calibration"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"machdep.disable_tsc_calibration"
-argument_list|,
-operator|&
-name|tsc_skip_calibration
 argument_list|)
 expr_stmt|;
 end_expr_stmt

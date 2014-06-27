@@ -1867,7 +1867,7 @@ name|OID_AUTO
 argument_list|,
 name|legacy_aliases
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ada_legacy_aliases
@@ -1875,17 +1875,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Create legacy-like device aliases"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.ada.legacy_aliases"
-argument_list|,
-operator|&
-name|ada_legacy_aliases
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1899,7 +1888,7 @@ name|OID_AUTO
 argument_list|,
 name|retry_count
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ada_retry_count
@@ -1907,17 +1896,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Normal I/O retry count"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.ada.retry_count"
-argument_list|,
-operator|&
-name|ada_retry_count
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1931,7 +1909,7 @@ name|OID_AUTO
 argument_list|,
 name|default_timeout
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ada_default_timeout
@@ -1939,17 +1917,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Normal I/O timeout (in seconds)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.ada.default_timeout"
-argument_list|,
-operator|&
-name|ada_default_timeout
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1963,7 +1930,7 @@ name|OID_AUTO
 argument_list|,
 name|send_ordered
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ada_send_ordered
@@ -1971,17 +1938,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Send Ordered Tags"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.ada.send_ordered"
-argument_list|,
-operator|&
-name|ada_send_ordered
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1995,7 +1951,7 @@ name|OID_AUTO
 argument_list|,
 name|spindown_shutdown
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ada_spindown_shutdown
@@ -2003,17 +1959,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Spin down upon shutdown"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.ada.spindown_shutdown"
-argument_list|,
-operator|&
-name|ada_spindown_shutdown
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2027,7 +1972,7 @@ name|OID_AUTO
 argument_list|,
 name|spindown_suspend
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ada_spindown_suspend
@@ -2035,17 +1980,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Spin down upon suspend"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.ada.spindown_suspend"
-argument_list|,
-operator|&
-name|ada_spindown_suspend
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2059,7 +1993,7 @@ name|OID_AUTO
 argument_list|,
 name|read_ahead
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ada_read_ahead
@@ -2067,17 +2001,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable disk read-ahead"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.ada.read_ahead"
-argument_list|,
-operator|&
-name|ada_read_ahead
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2091,7 +2014,7 @@ name|OID_AUTO
 argument_list|,
 name|write_cache
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ada_write_cache
@@ -2099,17 +2022,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable disk write cache"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.ada.write_cache"
-argument_list|,
-operator|&
-name|ada_write_cache
 argument_list|)
 expr_stmt|;
 end_expr_stmt

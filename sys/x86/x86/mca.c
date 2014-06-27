@@ -301,17 +301,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.mca.enabled"
-argument_list|,
-operator|&
-name|mca_enabled
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_mca
@@ -340,17 +329,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.mca.amd10h_L1TP"
-argument_list|,
-operator|&
-name|amd10h_L1TP
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
