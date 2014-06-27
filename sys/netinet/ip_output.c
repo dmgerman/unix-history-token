@@ -3885,6 +3885,17 @@ name|error
 decl_stmt|,
 name|optval
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+name|uint32_t
+name|rss_bucket
+decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|optval
