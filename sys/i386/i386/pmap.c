@@ -1004,16 +1004,6 @@ end_decl_stmt
 begin_decl_stmt
 name|pt_entry_t
 modifier|*
-name|CMAP1
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|pt_entry_t
-modifier|*
 name|CMAP3
 decl_stmt|;
 end_decl_stmt
@@ -1028,10 +1018,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|CADDR1
-init|=
-literal|0
-decl_stmt|,
 name|ptvmmap
 init|=
 literal|0
@@ -1039,7 +1025,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|caddr_t
 name|CADDR3
 decl_stmt|;
@@ -2201,16 +2186,6 @@ argument_list|,
 literal|1
 argument_list|)
 block|}
-name|SYSMAP
-argument_list|(
-argument|caddr_t
-argument_list|,
-argument|CMAP1
-argument_list|,
-argument|CADDR1
-argument_list|,
-literal|1
-argument_list|)
 name|SYSMAP
 argument_list|(
 argument|caddr_t

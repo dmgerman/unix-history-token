@@ -848,7 +848,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|pt_entry_t
 modifier|*
 name|CMAP3
@@ -864,7 +863,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|caddr_t
 name|CADDR3
 decl_stmt|;
