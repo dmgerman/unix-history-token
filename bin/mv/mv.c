@@ -1662,6 +1662,8 @@ argument_list|,
 name|sbp
 operator|->
 name|st_flags
+operator||
+name|UF_ARCHIVE
 argument_list|)
 condition|)
 if|if
@@ -1670,11 +1672,18 @@ name|errno
 operator|!=
 name|EOPNOTSUPP
 operator|||
+operator|(
+operator|(
 name|sbp
 operator|->
 name|st_flags
+operator|&
+operator|~
+name|UF_ARCHIVE
+operator|)
 operator|!=
 literal|0
+operator|)
 condition|)
 name|warn
 argument_list|(
