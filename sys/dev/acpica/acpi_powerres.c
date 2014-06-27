@@ -118,13 +118,6 @@ name|ACPI_PWR_ON
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_PWR_UNK
-value|(-1)
-end_define
-
 begin_comment
 comment|/* A relationship between a power resource and a consumer. */
 end_comment
@@ -222,9 +215,6 @@ name|ap_systemlevel
 decl_stmt|;
 name|UINT64
 name|ap_order
-decl_stmt|;
-name|int
-name|ap_state
 decl_stmt|;
 block|}
 struct|;
@@ -665,12 +655,6 @@ operator|->
 name|PowerResource
 operator|.
 name|ResourceOrder
-expr_stmt|;
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|ACPI_PWR_UNK
 expr_stmt|;
 comment|/* Sort the resource into the list */
 name|status
@@ -2591,7 +2575,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* We could cache this if we trusted it not to change under us */
 name|status
 operator|=
 name|acpi_GetInteger
@@ -2635,27 +2618,10 @@ expr_stmt|;
 comment|/* XXX is this correct?  Always switch if in doubt? */
 continue|continue;
 block|}
-elseif|else
-if|if
-condition|(
-name|rp
-operator|->
-name|ap_state
-operator|==
-name|ACPI_PWR_UNK
-condition|)
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|cur
-expr_stmt|;
 comment|/* 	 * Switch if required.  Note that we ignore the result of the switch 	 * effort; we don't know what to do if it fails, so checking wouldn't 	 * help much. 	 */
 if|if
 condition|(
-name|rp
-operator|->
-name|ap_state
+name|cur
 operator|!=
 name|ACPI_PWR_ON
 condition|)
@@ -2707,12 +2673,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|ACPI_PWR_ON
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -2794,7 +2754,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* We could cache this if we trusted it not to change under us */
 name|status
 operator|=
 name|acpi_GetInteger
@@ -2838,27 +2797,10 @@ expr_stmt|;
 comment|/* XXX is this correct?  Always switch if in doubt? */
 continue|continue;
 block|}
-elseif|else
-if|if
-condition|(
-name|rp
-operator|->
-name|ap_state
-operator|==
-name|ACPI_PWR_UNK
-condition|)
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|cur
-expr_stmt|;
 comment|/* 	 * Switch if required.  Note that we ignore the result of the switch 	 * effort; we don't know what to do if it fails, so checking wouldn't 	 * help much. 	 */
 if|if
 condition|(
-name|rp
-operator|->
-name|ap_state
+name|cur
 operator|!=
 name|ACPI_PWR_OFF
 condition|)
@@ -2910,12 +2852,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|ACPI_PWR_OFF
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
