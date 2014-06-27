@@ -345,18 +345,27 @@ block|{
 operator|.
 name|ta_fgcolor
 operator|=
-name|TC_WHITE
+name|TCHAR_FGCOLOR
+argument_list|(
+name|TERMINAL_KERN_ATTR
+argument_list|)
 block|,
 operator|.
 name|ta_bgcolor
 operator|=
-name|TC_BLACK
+name|TCHAR_BGCOLOR
+argument_list|(
+name|TERMINAL_KERN_ATTR
+argument_list|)
 block|,
 operator|.
 name|ta_format
 operator|=
-name|TF_BOLD
-block|, }
+name|TCHAR_FORMAT
+argument_list|(
+argument|TERMINAL_KERN_ATTR
+argument_list|)
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -370,13 +379,27 @@ block|{
 operator|.
 name|ta_fgcolor
 operator|=
-name|TC_WHITE
+name|TCHAR_FGCOLOR
+argument_list|(
+name|TERMINAL_NORM_ATTR
+argument_list|)
 block|,
 operator|.
 name|ta_bgcolor
 operator|=
-name|TC_BLACK
-block|, }
+name|TCHAR_BGCOLOR
+argument_list|(
+name|TERMINAL_NORM_ATTR
+argument_list|)
+block|,
+operator|.
+name|ta_format
+operator|=
+name|TCHAR_FORMAT
+argument_list|(
+argument|TERMINAL_NORM_ATTR
+argument_list|)
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -389,7 +412,7 @@ name|c
 parameter_list|,
 name|a
 parameter_list|)
-value|((c) | \ 	(a)->ta_format<< 21 | \ 	teken_256to8((a)->ta_fgcolor)<< 26 | \ 	teken_256to8((a)->ta_bgcolor)<< 29)
+value|((c) | TFORMAT((a)->ta_format) |	\ 	TCOLOR_FG(teken_256to8((a)->ta_fgcolor)) |			\ 	TCOLOR_BG(teken_256to8((a)->ta_bgcolor)))
 end_define
 
 begin_function
@@ -677,6 +700,11 @@ name|size
 parameter_list|,
 name|int
 name|blank
+parameter_list|,
+specifier|const
+name|term_attr_t
+modifier|*
+name|attr
 parameter_list|)
 block|{
 name|term_rect_t
@@ -801,8 +829,7 @@ name|teken_char_t
 operator|)
 literal|' '
 argument_list|,
-operator|&
-name|default_message
+name|attr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -837,6 +864,14 @@ argument_list|,
 name|size
 argument_list|,
 literal|1
+argument_list|,
+operator|(
+specifier|const
+name|term_attr_t
+operator|*
+operator|)
+operator|&
+name|default_message
 argument_list|)
 expr_stmt|;
 block|}
