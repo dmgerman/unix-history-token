@@ -926,6 +926,44 @@ begin_comment
 comment|/* used by tcp_var.h */
 end_comment
 
+begin_struct
+struct|struct
+name|sockopt_data
+block|{
+name|caddr_t
+name|kbuf
+decl_stmt|;
+comment|/* allocated buffer */
+name|size_t
+name|ksize
+decl_stmt|;
+comment|/* given buffer size */
+name|size_t
+name|koff
+decl_stmt|;
+comment|/* data already used */
+name|size_t
+name|kavail
+decl_stmt|;
+comment|/* number of bytes available */
+name|size_t
+name|ktotal
+decl_stmt|;
+comment|/* total bytes pushed */
+name|struct
+name|sockopt
+modifier|*
+name|sopt
+decl_stmt|;
+comment|/* socket data */
+name|size_t
+name|valsize
+decl_stmt|;
+comment|/* original data size */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Macro for working with various counters */
 end_comment
@@ -1309,6 +1347,36 @@ name|struct
 name|ip_fw
 modifier|*
 name|head
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|caddr_t
+name|ipfw_get_sopt_space
+parameter_list|(
+name|struct
+name|sockopt_data
+modifier|*
+name|sd
+parameter_list|,
+name|size_t
+name|needed
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|caddr_t
+name|ipfw_get_sopt_header
+parameter_list|(
+name|struct
+name|sockopt_data
+modifier|*
+name|sd
+parameter_list|,
+name|size_t
+name|needed
 parameter_list|)
 function_decl|;
 end_function_decl
