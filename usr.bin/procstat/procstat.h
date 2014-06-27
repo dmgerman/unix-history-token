@@ -23,6 +23,8 @@ decl_stmt|,
 name|nflag
 decl_stmt|,
 name|Cflag
+decl_stmt|,
+name|Hflag
 decl_stmt|;
 end_decl_stmt
 
@@ -184,6 +186,23 @@ end_function_decl
 begin_function_decl
 name|void
 name|procstat_rlimit
+parameter_list|(
+name|struct
+name|procstat
+modifier|*
+name|prstat
+parameter_list|,
+name|struct
+name|kinfo_proc
+modifier|*
+name|kipp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|procstat_rusage
 parameter_list|(
 name|struct
 name|procstat
