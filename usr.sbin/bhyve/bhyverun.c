@@ -536,26 +536,26 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-abehwxACHPWY] [-g<gdb port>] [-s<pci>] [-c vcpus]\n"
-literal|"       %*s [-p vcpu:hostcpu] [-m mem] [-l<lpc>] [-U uuid]<vm>\n"
+literal|"Usage: %s [-abehwxACHPWY] [-c vcpus] [-g<gdb port>] [-l<lpc>]\n"
+literal|"       %*s [-m mem] [-p vcpu:hostcpu] [-s<pci>] [-U uuid]<vm>\n"
 literal|"       -a: local apic is in xAPIC mode (deprecated)\n"
 literal|"       -A: create ACPI tables\n"
-literal|"       -g: gdb port\n"
 literal|"       -c: # cpus (default 1)\n"
 literal|"       -C: include guest memory in core file\n"
-literal|"       -p: pin 'vcpu' to 'hostcpu'\n"
-literal|"       -H: vmexit from the guest on hlt\n"
-literal|"       -P: vmexit from the guest on pause\n"
-literal|"       -W: force virtio to use single-vector MSI\n"
 literal|"       -e: exit on unhandled I/O access\n"
+literal|"       -g: gdb port\n"
 literal|"       -h: help\n"
-literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
+literal|"       -H: vmexit from the guest on hlt\n"
 literal|"       -l: LPC device configuration\n"
 literal|"       -m: memory size in MB\n"
+literal|"       -p: pin 'vcpu' to 'hostcpu'\n"
+literal|"       -P: vmexit from the guest on pause\n"
+literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
+literal|"       -U: uuid\n"
 literal|"       -w: ignore unimplemented MSRs\n"
+literal|"       -W: force virtio to use single-vector MSI\n"
 literal|"       -x: local apic is in x2APIC mode\n"
 literal|"       -Y: disable MPtable generation\n"
-literal|"       -U: uuid\n"
 argument_list|,
 name|progname
 argument_list|,
