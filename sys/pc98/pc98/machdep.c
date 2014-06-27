@@ -9694,7 +9694,7 @@ index|]
 expr_stmt|;
 name|pte
 operator|=
-name|CMAP1
+name|CMAP3
 expr_stmt|;
 comment|/* 	 * Get dcons buffer address 	 */
 if|if
@@ -9811,7 +9811,7 @@ operator|(
 name|int
 operator|*
 operator|)
-name|CADDR1
+name|CADDR3
 decl_stmt|;
 name|full
 operator|=

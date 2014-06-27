@@ -3721,9 +3721,6 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|pte
-decl_stmt|,
-modifier|*
-name|unused
 decl_stmt|;
 comment|/* 	 * Create an initial set of page tables to run the kernel in. 	 */
 name|create_pagetables
@@ -3874,28 +3871,21 @@ argument_list|(
 name|va
 argument_list|)
 expr_stmt|;
-comment|/* 	 * CMAP1 is only used for the memory test. 	 */
+comment|/* 	 * Crashdump maps.  The first page is reused as CMAP1 for the 	 * memory test. 	 */
 name|SYSMAP
 argument_list|(
 argument|caddr_t
 argument_list|,
 argument|CMAP1
 argument_list|,
-argument|CADDR1
-argument_list|,
-literal|1
-argument_list|)
-comment|/* 	 * Crashdump maps. 	 */
-name|SYSMAP
-argument_list|(
-argument|caddr_t
-argument_list|,
-argument|unused
-argument_list|,
 argument|crashdumpmap
 argument_list|,
 argument|MAXDUMPPGS
 argument_list|)
+name|CADDR1
+operator|=
+name|crashdumpmap
+expr_stmt|;
 name|virtual_avail
 operator|=
 name|va
