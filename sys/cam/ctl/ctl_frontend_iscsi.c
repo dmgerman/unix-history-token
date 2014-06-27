@@ -11443,7 +11443,7 @@ index|]
 operator|->
 name|be_lun
 argument_list|,
-literal|"cfiscsi_target)alias"
+literal|"cfiscsi_target_alias"
 argument_list|)
 expr_stmt|;
 name|lun
