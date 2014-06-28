@@ -2601,6 +2601,12 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* close files on exec */
+name|fdcloseexec
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Malloc things before we need locks. 	 */
 name|newcred
 operator|=
@@ -2667,12 +2673,6 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* close files on exec */
-name|fdcloseexec
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|imgp
