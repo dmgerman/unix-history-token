@@ -395,16 +395,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-name|ktr_cpumask_str
-index|[
-name|CPUSETBUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -420,27 +410,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"KTR options"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_ktr
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|mask
-argument_list|,
-name|CTLFLAG_RDTUN
-argument_list|,
-operator|&
-name|ktr_mask
-argument_list|,
-literal|0
-argument_list|,
-literal|"KTR mask"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -785,7 +754,7 @@ name|mask
 argument_list|,
 name|CTLTYPE_UINT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 literal|0
 argument_list|,

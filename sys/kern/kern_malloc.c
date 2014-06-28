@@ -698,8 +698,6 @@ begin_decl_stmt
 specifier|static
 name|u_int
 name|vm_kmem_size_scale
-init|=
-name|VM_KMEM_SIZE_SCALE
 decl_stmt|;
 end_decl_stmt
 

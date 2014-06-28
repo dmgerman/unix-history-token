@@ -3358,12 +3358,9 @@ name|i
 decl_stmt|;
 name|rootoid
 operator|=
-name|SYSCTL_ADD_NODE
+name|SYSCTL_ADD_ROOT_NODE
 argument_list|(
 name|NULL
-argument_list|,
-name|SYSCTL_STATIC_CHILDREN
-argument_list|()
 argument_list|,
 name|OID_AUTO
 argument_list|,

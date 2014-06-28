@@ -1389,6 +1389,27 @@ define|\
 value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|(access),	    \ 	NULL, 0, handler, "N", __DESCR(descr))
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_ROOT_NODE
+parameter_list|(
+name|ctx
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|handler
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|sysctl_add_oid(ctx,&sysctl__children, nbr, name,		\         CTLTYPE_NODE|(access), NULL, 0, handler, "N", __DESCR(descr))
+end_define
+
 begin_comment
 comment|/* Oid for a string.  len can be 0 to indicate '\0' termination. */
 end_comment
