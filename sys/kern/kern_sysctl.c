@@ -5086,18 +5086,26 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* check for zero-length buffer */
+comment|/* 	 * A zero-length buffer indicates a fixed size read-only 	 * string: 	 */
 if|if
 condition|(
 name|arg2
 operator|==
 literal|0
 condition|)
-return|return
+name|arg2
+operator|=
+name|strlen
+argument_list|(
 operator|(
-name|ENOMEM
+name|char
+operator|*
 operator|)
-return|;
+name|arg1
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|req
