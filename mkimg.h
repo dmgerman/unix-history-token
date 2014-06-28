@@ -108,6 +108,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|unit_testing
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -234,6 +241,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_struct_decl
+struct_decl|struct
+name|uuid
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|mkimg_uuid
+parameter_list|(
+name|struct
+name|uuid
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
