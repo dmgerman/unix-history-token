@@ -499,6 +499,12 @@ name|ip_fw_chain
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|sockopt_data
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|ipfw_expire_dyn_rules
@@ -632,6 +638,23 @@ specifier|const
 name|char
 modifier|*
 name|ep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ipfw_dump_states
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
+name|struct
+name|sockopt_data
+modifier|*
+name|sd
 parameter_list|)
 function_decl|;
 end_function_decl

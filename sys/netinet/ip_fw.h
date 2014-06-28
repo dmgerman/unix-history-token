@@ -249,6 +249,17 @@ begin_comment
 comment|/* modify existing table */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_XGET
+value|97
+end_define
+
+begin_comment
+comment|/* Retrieve configuration */
+end_comment
+
 begin_comment
 comment|/*  * Usage guidelines:  *  * IP_FW_TABLE_XLIST(ver 1): Dumps all table data  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_xtable_info.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info ipfw_table_xentry x N ]  *  * IP_FW_TABLE_XDESTROY: Destroys given table  *   Request(setsockopt): [ ipfw_obj_header ]  *  * IP_FW_TABLES_XGETSIZE: Get buffer size needed to list info for all tables.  *   Request(getsockopt): [ empty ], size = sizeof(ipfw_obj_lheader)  *   Reply: [ ipfw_obj_lheader ]  *  * IP_FW_TABLES_XLIST: Lists all tables currently available in kernel.  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_obj_lheader.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info x N ]  *  * IP_FW_TABLE_XINFO: Store table info to buffer.  *   Request(getsockopt): [ ipfw_obj_header ipfw_xtable_info(empty)]  *   Reply: [ ipfw_obj_header ipfw_xtable_info ]  *  * IP_FW_TABLE_XFLUSH: Removes all data from given table leaving type etc..  *   Request(setsockopt): [ ipfw_obj_header ]  */
 end_comment
@@ -1802,9 +1813,13 @@ name|type
 decl_stmt|;
 comment|/* TLV type */
 name|uint16_t
+name|flags
+decl_stmt|;
+comment|/* unused */
+name|uint32_t
 name|length
 decl_stmt|;
-comment|/* Total length, aligned to u32	*/
+comment|/* Total length, aligned to u64	*/
 block|}
 name|ipfw_obj_tlv
 typedef|;
@@ -1813,8 +1828,29 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|IPFW_TLV_NAME
+name|IPFW_TLV_TBL_NAME
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_TBLNAME_LIST
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_RULE_LIST
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_STATE_LIST
+value|4
 end_define
 
 begin_comment
@@ -1829,24 +1865,54 @@ block|{
 name|ipfw_obj_tlv
 name|head
 decl_stmt|;
-comment|/* TLV header */
+comment|/* TLV header			*/
 name|uint16_t
 name|idx
 decl_stmt|;
-comment|/* Name index */
+comment|/* Name index			*/
 name|uint16_t
-name|spare
+name|spare0
 decl_stmt|;
-comment|/* unused */
+comment|/* unused			*/
+name|uint32_t
+name|spare1
+decl_stmt|;
+comment|/* unused			*/
 name|char
 name|name
 index|[
 literal|64
 index|]
 decl_stmt|;
-comment|/* Null-terminated name */
+comment|/* Null-terminated name		*/
 block|}
 name|ipfw_obj_ntlv
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Containter TLVs */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_obj_ctlv
+block|{
+name|ipfw_obj_tlv
+name|head
+decl_stmt|;
+comment|/* TLV header			*/
+name|uint32_t
+name|count
+decl_stmt|;
+comment|/* Number of sub-TLVs		*/
+name|uint32_t
+name|objsize
+decl_stmt|;
+comment|/* Single object size		*/
+block|}
+name|ipfw_obj_ctlv
 typedef|;
 end_typedef
 
@@ -1976,6 +2042,52 @@ decl_stmt|;
 comment|/* Size of one object		*/
 block|}
 name|ipfw_obj_lheader
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_CFG_GET_STATIC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_CFG_GET_STATES
+value|2
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_cfg_lheader
+block|{
+name|ip_fw3_opheader
+name|opheader
+decl_stmt|;
+comment|/* IP_FW3 opcode		*/
+name|uint32_t
+name|set_mask
+decl_stmt|;
+comment|/* disabled set mask		*/
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* Request flags		*/
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* neded buffer size		*/
+name|uint32_t
+name|start_rule
+decl_stmt|;
+name|uint32_t
+name|end_rule
+decl_stmt|;
+block|}
+name|ipfw_cfg_lheader
 typedef|;
 end_typedef
 
