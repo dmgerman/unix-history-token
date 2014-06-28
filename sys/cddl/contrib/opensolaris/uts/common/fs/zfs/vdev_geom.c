@@ -140,21 +140,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vdev_geom_bio_flush_disable
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vdev.bio_flush_disable"
-argument_list|,
-operator|&
-name|vdev_geom_bio_flush_disable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -165,7 +152,7 @@ name|OID_AUTO
 argument_list|,
 name|bio_flush_disable
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|vdev_geom_bio_flush_disable
@@ -185,21 +172,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|vdev_geom_bio_delete_disable
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vdev.bio_delete_disable"
-argument_list|,
-operator|&
-name|vdev_geom_bio_delete_disable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -210,7 +184,7 @@ name|OID_AUTO
 argument_list|,
 name|bio_delete_disable
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|vdev_geom_bio_delete_disable

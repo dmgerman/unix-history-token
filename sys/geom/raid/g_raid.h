@@ -1506,7 +1506,7 @@ parameter_list|,
 name|label
 parameter_list|)
 define|\
-value|static moduledata_t g_raid_md_##name##_mod = {		\ 	"g_raid_md_" __XSTRING(name),				\ 	g_raid_md_modevent,					\&g_raid_md_##name##_class				\     };								\     DECLARE_MODULE(g_raid_md_##name, g_raid_md_##name##_mod,	\ 	SI_SUB_DRIVERS, SI_ORDER_SECOND);			\     MODULE_DEPEND(g_raid_md_##name, geom_raid, 0, 0, 0);	\     SYSCTL_NODE(_kern_geom_raid, OID_AUTO, name, CTLFLAG_RD,	\ 	NULL, label " metadata module");			\     SYSCTL_INT(_kern_geom_raid_##name, OID_AUTO, enable,	\ 	CTLFLAG_RW,&g_raid_md_##name##_class.mdc_enable, 0,	\ 	"Enable " label " metadata format taste");		\     TUNABLE_INT("kern.geom.raid." __XSTRING(name) ".enable",	\&g_raid_md_##name##_class.mdc_enable)
+value|static moduledata_t g_raid_md_##name##_mod = {		\ 	"g_raid_md_" __XSTRING(name),				\ 	g_raid_md_modevent,					\&g_raid_md_##name##_class				\     };								\     DECLARE_MODULE(g_raid_md_##name, g_raid_md_##name##_mod,	\ 	SI_SUB_DRIVERS, SI_ORDER_SECOND);			\     MODULE_DEPEND(g_raid_md_##name, geom_raid, 0, 0, 0);	\     SYSCTL_NODE(_kern_geom_raid, OID_AUTO, name, CTLFLAG_RD,	\ 	NULL, label " metadata module");			\     SYSCTL_INT(_kern_geom_raid_##name, OID_AUTO, enable,	\ 	CTLFLAG_RWTUN,&g_raid_md_##name##_class.mdc_enable, 0,	\ 	"Enable " label " metadata format taste")
 end_define
 
 begin_comment
@@ -1587,7 +1587,7 @@ parameter_list|,
 name|label
 parameter_list|)
 define|\
-value|static moduledata_t g_raid_tr_##name##_mod = {		\ 	"g_raid_tr_" __XSTRING(name),				\ 	g_raid_tr_modevent,					\&g_raid_tr_##name##_class				\     };								\     DECLARE_MODULE(g_raid_tr_##name, g_raid_tr_##name##_mod,	\ 	SI_SUB_DRIVERS, SI_ORDER_FIRST);			\     MODULE_DEPEND(g_raid_tr_##name, geom_raid, 0, 0, 0);	\     SYSCTL_NODE(_kern_geom_raid, OID_AUTO, name, CTLFLAG_RD,	\ 	NULL, label " transformation module");			\     SYSCTL_INT(_kern_geom_raid_##name, OID_AUTO, enable,	\ 	CTLFLAG_RW,&g_raid_tr_##name##_class.trc_enable, 0,	\ 	"Enable " label " transformation module taste");	\     TUNABLE_INT("kern.geom.raid." __XSTRING(name) ".enable",	\&g_raid_tr_##name##_class.trc_enable)
+value|static moduledata_t g_raid_tr_##name##_mod = {		\ 	"g_raid_tr_" __XSTRING(name),				\ 	g_raid_tr_modevent,					\&g_raid_tr_##name##_class				\     };								\     DECLARE_MODULE(g_raid_tr_##name, g_raid_tr_##name##_mod,	\ 	SI_SUB_DRIVERS, SI_ORDER_FIRST);			\     MODULE_DEPEND(g_raid_tr_##name, geom_raid, 0, 0, 0);	\     SYSCTL_NODE(_kern_geom_raid, OID_AUTO, name, CTLFLAG_RD,	\ 	NULL, label " transformation module");			\     SYSCTL_INT(_kern_geom_raid_##name, OID_AUTO, enable,	\ 	CTLFLAG_RWTUN,&g_raid_tr_##name##_class.trc_enable, 0,	\ 	"Enable " label " transformation module taste")
 end_define
 
 begin_function_decl

@@ -1908,17 +1908,6 @@ comment|/*  * Tunable to allow the user to set a global allow_io_split value.  N
 end_comment
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.sa.allow_io_split"
-argument_list|,
-operator|&
-name|sa_allow_io_split
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
 argument_list|(
@@ -1933,6 +1922,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"CAM Sequential Access Tape Driver"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_cam_sa
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|allow_io_split
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|sa_allow_io_split
+argument_list|,
+literal|0
+argument_list|,
+literal|"Default I/O split value"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6150,6 +6160,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|softc

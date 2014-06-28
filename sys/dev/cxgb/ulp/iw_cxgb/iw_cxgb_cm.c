@@ -393,17 +393,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgb.ep_timeout_secs"
-argument_list|,
-operator|&
-name|ep_timeout_secs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgb
@@ -412,7 +401,7 @@ name|OID_AUTO
 argument_list|,
 name|ep_timeout_secs
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ep_timeout_secs
@@ -434,17 +423,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgb.mpa_rev"
-argument_list|,
-operator|&
-name|mpa_rev
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgb
@@ -453,7 +431,7 @@ name|OID_AUTO
 argument_list|,
 name|mpa_rev
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|mpa_rev
@@ -475,17 +453,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgb.markers_enabled"
-argument_list|,
-operator|&
-name|markers_enabled
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgb
@@ -494,7 +461,7 @@ name|OID_AUTO
 argument_list|,
 name|markers_enabled
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|markers_enabled
@@ -516,17 +483,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgb.crc_enabled"
-argument_list|,
-operator|&
-name|crc_enabled
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgb
@@ -535,7 +491,7 @@ name|OID_AUTO
 argument_list|,
 name|crc_enabled
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|crc_enabled
@@ -559,17 +515,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgb.rcv_win"
-argument_list|,
-operator|&
-name|rcv_win
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgb
@@ -578,7 +523,7 @@ name|OID_AUTO
 argument_list|,
 name|rcv_win
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|rcv_win
@@ -602,17 +547,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgb.snd_win"
-argument_list|,
-operator|&
-name|snd_win
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_iw_cxgb
@@ -621,7 +555,7 @@ name|OID_AUTO
 argument_list|,
 name|snd_win
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|snd_win
@@ -644,17 +578,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgb.nocong"
-argument_list|,
-operator|&
-name|nocong
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_iw_cxgb
@@ -663,7 +586,7 @@ name|OID_AUTO
 argument_list|,
 name|nocong
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|nocong
@@ -686,17 +609,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.iw_cxgb.cong_flavor"
-argument_list|,
-operator|&
-name|cong_flavor
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_hw_iw_cxgb
@@ -705,7 +617,7 @@ name|OID_AUTO
 argument_list|,
 name|cong_flavor
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cong_flavor

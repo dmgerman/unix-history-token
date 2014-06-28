@@ -3292,7 +3292,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|SYSCTL_NODE(, OID_AUTO,	name, CTLFLAG_RW, 0, "Get/Set " #name " state root node"); \ 	SYSCTL_OID(_ ## name, OID_AUTO, status, CTLTYPE_STRING|CTLFLAG_RW, \ 	NULL, 0, hpt_status, "A", "Get/Set " #name " state");
+value|SYSCTL_ROOT_NODE(OID_AUTO, name, CTLFLAG_RW, 0, "Get/Set " #name " state root node"); \ 	SYSCTL_OID(_ ## name, OID_AUTO, status, CTLTYPE_STRING|CTLFLAG_RW, \ 	NULL, 0, hpt_status, "A", "Get/Set " #name " state");
 end_define
 
 begin_endif

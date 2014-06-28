@@ -842,9 +842,7 @@ name|OID_AUTO
 argument_list|,
 name|maxgrpsrc
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|in_mcast_maxgrpsrc
@@ -852,17 +850,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Max source filters per group"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_ULONG
-argument_list|(
-literal|"net.inet.ip.mcast.maxgrpsrc"
-argument_list|,
-operator|&
-name|in_mcast_maxgrpsrc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -885,9 +872,7 @@ name|OID_AUTO
 argument_list|,
 name|maxsocksrc
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|in_mcast_maxsocksrc
@@ -895,17 +880,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Max source filters per socket"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_ULONG
-argument_list|(
-literal|"net.inet.ip.mcast.maxsocksrc"
-argument_list|,
-operator|&
-name|in_mcast_maxsocksrc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -927,9 +901,7 @@ name|OID_AUTO
 argument_list|,
 name|loop
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|in_mcast_loop
@@ -937,17 +909,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Loopback multicast datagrams by default"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.inet.ip.mcast.loop"
-argument_list|,
-operator|&
-name|in_mcast_loop
 argument_list|)
 expr_stmt|;
 end_expr_stmt

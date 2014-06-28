@@ -150,25 +150,14 @@ name|OID_AUTO
 argument_list|,
 name|gdbcons
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|gdbcons_enable
 argument_list|,
 literal|0
 argument_list|,
-literal|"copy console messages to gdb"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.gdbcons"
-argument_list|,
-operator|&
-name|gdbcons_enable
+literal|"copy console messages to GDB"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

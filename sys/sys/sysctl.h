@@ -287,7 +287,7 @@ value|0x00080000
 end_define
 
 begin_comment
-comment|/* Tunable variable */
+comment|/* Default value is loaded from getenv() */
 end_comment
 
 begin_define
@@ -368,6 +368,17 @@ end_define
 
 begin_comment
 comment|/* Statistics, not a tuneable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLFLAG_NOFETCH
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Don't fetch tunable from getenv() */
 end_comment
 
 begin_define
@@ -621,6 +632,10 @@ name|sysctl_oid
 block|{
 name|struct
 name|sysctl_oid_list
+name|oid_children
+decl_stmt|;
+name|struct
+name|sysctl_oid_list
 modifier|*
 name|oid_parent
 decl_stmt|;
@@ -853,7 +868,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|extern struct sysctl_oid_list sysctl_##name##_children
+value|extern struct sysctl_oid sysctl__##name
 end_define
 
 begin_comment
@@ -867,20 +882,18 @@ name|SYSCTL_CHILDREN
 parameter_list|(
 name|oid_ptr
 parameter_list|)
-define|\
-value|(struct sysctl_oid_list *)(oid_ptr)->oid_arg1
+value|(&(oid_ptr)->oid_children)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SYSCTL_CHILDREN_SET
+name|SYSCTL_PARENT
 parameter_list|(
 name|oid_ptr
-parameter_list|,
-name|val
 parameter_list|)
-value|(oid_ptr)->oid_arg1 = (val)
+define|\
+value|(((oid_ptr)->oid_parent !=&sysctl__children) ?		\ 	__containerof((oid_ptr)->oid_parent, struct sysctl_oid,	\ 	oid_children) : (struct sysctl_oid *)NULL)
 end_define
 
 begin_define
@@ -890,7 +903,7 @@ name|SYSCTL_STATIC_CHILDREN
 parameter_list|(
 name|oid_name
 parameter_list|)
-value|(&sysctl_##oid_name##_children)
+value|(&sysctl__##oid_name.oid_children)
 end_define
 
 begin_comment
@@ -940,7 +953,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|sysctl_##parent##_##name##_children
+value|sysctl__##parent##_##name.oid_children
 end_define
 
 begin_comment
@@ -1182,7 +1195,40 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This constructs a "raw" MIB oid. */
+comment|/* This macro is only for internal use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_OID_RAW
+parameter_list|(
+name|id
+parameter_list|,
+name|parent_child_head
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|kind
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,
+name|handler
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|struct sysctl_oid id = {					\ 		.oid_parent = (parent_child_head),			\ 		.oid_children = SLIST_HEAD_INITIALIZER(&id.oid_children), \ 		.oid_number = (nbr),					\ 		.oid_kind = (kind),					\ 		.oid_arg1 = (a1),					\ 		.oid_arg2 = (a2),					\ 		.oid_name = (name),					\ 		.oid_handler = (handler),				\ 		.oid_fmt = (fmt),					\ 		.oid_descr = __DESCR(descr)				\ 	};								\ 	DATA_SET(sysctl_set, id)
+end_define
+
+begin_comment
+comment|/* This constructs a static "raw" MIB oid. */
 end_comment
 
 begin_define
@@ -1209,7 +1255,38 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = {		\ 		.oid_parent =&sysctl_##parent##_children,		\ 		.oid_number = (nbr),					\ 		.oid_kind = (kind),					\ 		.oid_arg1 = (a1),					\ 		.oid_arg2 = (a2),					\ 		.oid_name = #name,					\ 		.oid_handler = (handler),				\ 		.oid_fmt = (fmt),					\ 		.oid_descr = __DESCR(descr)				\ 	};								\ 	DATA_SET(sysctl_set, sysctl__##parent##_##name)
+value|static SYSCTL_OID_RAW(sysctl__##parent##_##name, \ 	SYSCTL_CHILDREN(&sysctl__##parent), \ 	nbr, #name, kind, a1, a2, handler, fmt, descr)
+end_define
+
+begin_comment
+comment|/* This constructs a global "raw" MIB oid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_OID_GLOBAL
+parameter_list|(
+name|parent
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|kind
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,
+name|handler
+parameter_list|,
+name|fmt
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID_RAW(sysctl__##parent##_##name, \ 	SYSCTL_CHILDREN(&sysctl__##parent),	\ 	nbr, #name, kind, a1, a2, handler, fmt, descr)
 end_define
 
 begin_define
@@ -1242,6 +1319,29 @@ value|sysctl_add_oid(ctx, parent, nbr, name, kind, a1, a2, handler, fmt, __DESCR
 end_define
 
 begin_comment
+comment|/* This constructs a root node from which other nodes can hang. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ROOT_NODE
+parameter_list|(
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|handler
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_OID_RAW(sysctl___##name,&sysctl__children,	\ 		nbr, #name, CTLTYPE_NODE|(access), NULL, 0,	\ 		handler, "N", descr)
+end_define
+
+begin_comment
 comment|/* This constructs a node from which other oids can hang. */
 end_comment
 
@@ -1263,7 +1363,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|struct sysctl_oid_list SYSCTL_NODE_CHILDREN(parent, name);	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|(access),		    \ 	    (void*)&SYSCTL_NODE_CHILDREN(parent, name), 0, handler, "N", descr)
+value|SYSCTL_OID_GLOBAL(parent, nbr, name, CTLTYPE_NODE|(access),	    \ 		NULL, 0, handler, "N", descr)
 end_define
 
 begin_define

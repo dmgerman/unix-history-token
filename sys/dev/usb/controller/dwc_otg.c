@@ -317,9 +317,7 @@ name|OID_AUTO
 argument_list|,
 name|use_hsic
 argument_list|,
-name|CTLFLAG_RD
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|dwc_otg_use_hsic
@@ -327,17 +325,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"DWC OTG uses HSIC interface"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.dwc_otg.use_hsic"
-argument_list|,
-operator|&
-name|dwc_otg_use_hsic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -364,7 +351,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|dwc_otg_debug

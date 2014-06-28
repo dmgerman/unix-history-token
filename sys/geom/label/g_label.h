@@ -115,7 +115,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_NODE(_kern_geom_label, OID_AUTO, kind, CTLFLAG_RD,	\ 	    NULL, "");							\ 	SYSCTL_INT(_kern_geom_label_##kind, OID_AUTO, enable, 		\ 	    CTLFLAG_RW,&label.ld_enabled, 1, descr);			\ 	TUNABLE_INT("kern.geom.label." __XSTRING(kind) ".enable",	\&label.ld_enabled)
+value|SYSCTL_NODE(_kern_geom_label, OID_AUTO, kind, CTLFLAG_RD,	\ 	    NULL, "");							\ 	SYSCTL_INT(_kern_geom_label_##kind, OID_AUTO, enable, 		\ 	    CTLFLAG_RWTUN,&label.ld_enabled, 1, descr)
 end_define
 
 begin_typedef

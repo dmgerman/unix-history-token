@@ -279,17 +279,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.amr.force_sg32"
-argument_list|,
-operator|&
-name|amr_force_sg32
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_hw_amr

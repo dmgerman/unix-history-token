@@ -1338,6 +1338,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RWTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 name|sc
 argument_list|,
@@ -1366,6 +1368,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RWTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 name|sc
 argument_list|,
@@ -1465,16 +1469,6 @@ operator|=
 name|sc
 operator|->
 name|cpu_maxmhz_hw
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"hw.imx6.cpu_overclock_enable"
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|cpu_overclock_enable
-argument_list|)
 expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
