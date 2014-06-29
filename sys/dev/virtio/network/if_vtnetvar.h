@@ -146,9 +146,6 @@ decl_stmt|;
 name|int
 name|vtnrx_id
 decl_stmt|;
-name|int
-name|vtnrx_process_limit
-decl_stmt|;
 name|struct
 name|vtnet_rxq_stats
 name|vtnrx_stats

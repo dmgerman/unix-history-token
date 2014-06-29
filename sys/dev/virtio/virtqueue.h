@@ -28,28 +28,6 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* Support for indirect buffer descriptors. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VIRTIO_RING_F_INDIRECT_DESC
-value|(1<< 28)
-end_define
-
-begin_comment
-comment|/* Support to suppress interrupt until specific index is reached. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VIRTIO_RING_F_EVENT_IDX
-value|(1<< 29)
-end_define
-
-begin_comment
 comment|/* Device callback for a virtqueue interrupt. */
 end_comment
 
