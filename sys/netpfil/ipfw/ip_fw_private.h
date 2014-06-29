@@ -1285,25 +1285,23 @@ name|uint32_t
 name|tableset
 decl_stmt|;
 comment|/* ipfw set id for table */
-name|void
+name|ipfw_obj_ctlv
 modifier|*
-name|tlvs
+name|ctlv
 decl_stmt|;
-comment|/* Pointer to first TLV if any */
-name|int
-name|tlen
-decl_stmt|;
-comment|/* *Total TLV size block */
-name|uint8_t
-name|fw3
-decl_stmt|;
-comment|/* opcode is new */
+comment|/* name TLV containter */
 name|struct
 name|ip_fw
 modifier|*
 name|krule
 decl_stmt|;
 comment|/* resulting rule pointer */
+name|struct
+name|ip_fw
+modifier|*
+name|urule
+decl_stmt|;
+comment|/* original rule pointer */
 name|struct
 name|obj_idx
 name|obuf

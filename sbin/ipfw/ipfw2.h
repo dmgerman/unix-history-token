@@ -1214,5 +1214,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|table_sort_ctlv
+parameter_list|(
+name|struct
+name|_ipfw_obj_ctlv
+modifier|*
+name|ctlv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|table_check_name
+parameter_list|(
+name|char
+modifier|*
+name|tablename
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
