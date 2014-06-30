@@ -10390,6 +10390,8 @@ literal|0
 decl_stmt|;
 name|int
 name|cpu_id
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef

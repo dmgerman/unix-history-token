@@ -11366,6 +11366,8 @@ literal|0
 decl_stmt|;
 name|int
 name|cpu_id
+init|=
+literal|0
 decl_stmt|;
 comment|/* Be sure to start with all interrupts disabled */
 name|E1000_WRITE_REG
