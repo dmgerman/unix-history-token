@@ -1093,7 +1093,10 @@ begin_define
 define|#
 directive|define
 name|VTBUF_SPACE_CHAR
-value|(' ' | TC_WHITE<< 26 | TC_BLACK<< 29)
+parameter_list|(
+name|attr
+parameter_list|)
+value|(' ' | (attr))
 end_define
 
 begin_define
