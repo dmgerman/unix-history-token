@@ -5196,6 +5196,16 @@ operator|->
 name|ai_addr
 operator|->
 name|sa_family
+operator|&&
+name|dst1
+operator|->
+name|aio_ai
+operator|->
+name|ai_addr
+operator|->
+name|sa_family
+operator|!=
+name|AF_INET
 condition|)
 block|{
 if|if
