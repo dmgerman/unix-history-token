@@ -3234,6 +3234,10 @@ name|data_offset
 operator|+=
 name|copy_length
 expr_stmt|;
+name|source_address
+operator|+=
+name|copy_length
+expr_stmt|;
 endif|#
 directive|endif
 block|}
