@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -5493,7 +5493,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -5893,7 +5893,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -6079,7 +6079,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -6223,7 +6223,7 @@ name|cbp
 operator|++
 control|)
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 name|SET_BOOKMARK
@@ -6343,7 +6343,7 @@ decl_stmt|;
 name|int
 name|j
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 operator|(
@@ -12604,7 +12604,7 @@ name|zio
 operator|->
 name|io_private
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 init|=
@@ -12781,7 +12781,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -15308,7 +15308,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
