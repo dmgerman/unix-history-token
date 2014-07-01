@@ -727,6 +727,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RTL8366RB_CPU_PORT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|RTL8366RB_NUM_PORTS
 value|6
 end_define

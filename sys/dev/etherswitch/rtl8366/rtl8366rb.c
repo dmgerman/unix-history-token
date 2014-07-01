@@ -3249,6 +3249,12 @@ block|}
 else|else
 block|{
 comment|/* fill in fixed values for CPU port */
+name|p
+operator|->
+name|es_flags
+operator||=
+name|ETHERSWITCH_PORT_CPU
+expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_count
@@ -3489,6 +3495,19 @@ condition|)
 return|return
 operator|(
 name|err
+operator|)
+return|;
+if|if
+condition|(
+name|p
+operator|->
+name|es_port
+operator|==
+name|RTL8366RB_CPU_PORT
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 name|mii
