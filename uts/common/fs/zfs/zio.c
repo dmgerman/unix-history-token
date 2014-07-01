@@ -2138,7 +2138,7 @@ name|uint64_t
 name|offset
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -2849,7 +2849,7 @@ name|zio_flag
 name|flags
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -2970,7 +2970,7 @@ name|zio_flag
 name|flags
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -3177,7 +3177,7 @@ name|enum
 name|zio_flag
 name|flags
 parameter_list|,
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -15314,12 +15314,12 @@ modifier|*
 name|dnp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb1
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb2
 parameter_list|)

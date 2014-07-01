@@ -2874,7 +2874,7 @@ name|dnode_t
 modifier|*
 name|dn
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|uint32_t
@@ -10016,7 +10016,7 @@ name|ARC_NOWAIT
 operator||
 name|ARC_PREFETCH
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|SET_BOOKMARK
@@ -14440,7 +14440,7 @@ name|tx
 operator|->
 name|tx_txg
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|zio_prop_t
