@@ -894,6 +894,12 @@ name|unsigned
 name|long
 name|tunable
 decl_stmt|;
+name|uint32_t
+name|io_shortage
+decl_stmt|;
+name|uint32_t
+name|fail_on_timeout
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1152,11 +1158,10 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Although we save one TC to do internal device resets, it is possible 	 *  we could end up using several TCs for simultaneous device resets 	 *  while at the same time having CAM fill our controller queue.  To 	 *  simulate this condition, and how our driver handles it, we can set 	 *  this io_shortage parameter, which will tell CAM that we have a 	 *  large queue depth than we really do. 	 */
-name|uint32_t
 name|io_shortage
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"hw.isci.io_shortage"
@@ -1170,6 +1175,18 @@ operator|->
 name|sim_queue_depth
 operator|+=
 name|io_shortage
+expr_stmt|;
+name|fail_on_timeout
+operator|=
+literal|1
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.isci.fail_on_task_timeout"
+argument_list|,
+operator|&
+name|fail_on_timeout
+argument_list|)
 expr_stmt|;
 comment|/* Attach to CAM using xpt_bus_register now, then immediately freeze 	 *  the simq.  It will get released later when initial domain discovery 	 *  is complete. 	 */
 name|controller

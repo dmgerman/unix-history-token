@@ -424,6 +424,9 @@ decl_stmt|;
 name|BOOL
 name|release_queued_ccbs
 decl_stmt|;
+name|BOOL
+name|fail_on_task_timeout
+decl_stmt|;
 name|uint8_t
 modifier|*
 name|remote_device_memory
