@@ -5165,6 +5165,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|BP_IS_EMBEDDED
+argument_list|(
+name|bp
+argument_list|)
+condition|)
+block|{
 name|checksum
 operator|=
 name|zio_checksum_table
@@ -5177,6 +5186,7 @@ index|]
 operator|.
 name|ci_name
 expr_stmt|;
+block|}
 name|compress
 operator|=
 name|zio_compress_table
@@ -6249,7 +6259,10 @@ literal|0
 init|;
 name|d
 operator|<
-name|SPA_DVAS_PER_BP
+name|BP_GET_NDVAS
+argument_list|(
+name|bp
+argument_list|)
 condition|;
 name|d
 operator|++
@@ -6316,7 +6329,10 @@ literal|0
 init|;
 name|d
 operator|<
-name|SPA_DVAS_PER_BP
+name|BP_GET_NDVAS
+argument_list|(
+name|bp
+argument_list|)
 condition|;
 name|d
 operator|++

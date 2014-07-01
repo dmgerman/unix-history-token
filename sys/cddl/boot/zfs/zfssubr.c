@@ -41,11 +41,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASSERT
+name|ASSERT3S
 parameter_list|(
-modifier|...
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
 parameter_list|)
-value|do { } while (0)
+value|((void)0)
 end_define
 
 begin_define
@@ -53,19 +57,47 @@ define|#
 directive|define
 name|ASSERT3U
 parameter_list|(
-modifier|...
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
 parameter_list|)
-value|do { } while (0)
+value|((void)0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASSERT3S
+name|ASSERT3P
 parameter_list|(
-modifier|...
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
 parameter_list|)
-value|do { } while (0)
+value|((void)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT0
+parameter_list|(
+name|x
+parameter_list|)
+value|((void)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT
+parameter_list|(
+name|x
+parameter_list|)
+value|((void)0)
 end_define
 
 begin_define
@@ -302,6 +334,12 @@ block|}
 name|zio_checksum_info_t
 typedef|;
 end_typedef
+
+begin_include
+include|#
+directive|include
+file|"blkptr.c"
+end_include
 
 begin_include
 include|#

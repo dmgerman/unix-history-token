@@ -2656,6 +2656,11 @@ name|BP_IS_HOLE
 argument_list|(
 name|bp
 argument_list|)
+operator|||
+name|BP_IS_EMBEDDED
+argument_list|(
+name|bp
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2857,6 +2862,15 @@ name|objset_t
 modifier|*
 name|mos
 decl_stmt|;
+name|ASSERT
+argument_list|(
+operator|!
+name|dsl_dataset_is_snapshot
+argument_list|(
+name|ds
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dsl_dataset_is_snapshot
@@ -3531,7 +3545,7 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-comment|/* Remove our reservation */
+comment|/* Remove our reservation. */
 if|if
 condition|(
 name|ds

@@ -835,6 +835,25 @@ argument_list|,
 name|filesystem_limits_deps
 argument_list|)
 expr_stmt|;
+name|zfeature_register
+argument_list|(
+name|SPA_FEATURE_EMBEDDED_DATA
+argument_list|,
+literal|"com.delphix:embedded_data"
+argument_list|,
+literal|"embedded_data"
+argument_list|,
+literal|"Blocks which compress very well use even less space."
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|B_TRUE
+argument_list|,
+name|B_TRUE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

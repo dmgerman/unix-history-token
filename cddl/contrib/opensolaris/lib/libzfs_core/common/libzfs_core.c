@@ -1643,7 +1643,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*  *  * "snapname" is the full name of the snapshot to send (e.g. "pool/fs@snap")  *  * If "from" is NULL, a full (non-incremental) stream will be sent.  * If "from" is non-NULL, it must be the full name of a snapshot or  * bookmark to send an incremental from (e.g. "pool/fs@earlier_snap" or  * "pool/fs#earlier_bmark").  If non-NULL, the specified snapshot or  * bookmark must represent an earlier point in the history of "snapname").  * It can be an earlier snapshot in the same filesystem or zvol as "snapname",  * or it can be the origin of "snapname"'s filesystem, or an earlier  * snapshot in the origin, etc.  *  * "fd" is the file descriptor to write the send stream to.  */
+comment|/*  * Generate a zfs send stream for the specified snapshot and write it to  * the specified file descriptor.  *  * "snapname" is the full name of the snapshot to send (e.g. "pool/fs@snap")  *  * If "from" is NULL, a full (non-incremental) stream will be sent.  * If "from" is non-NULL, it must be the full name of a snapshot or  * bookmark to send an incremental from (e.g. "pool/fs@earlier_snap" or  * "pool/fs#earlier_bmark").  If non-NULL, the specified snapshot or  * bookmark must represent an earlier point in the history of "snapname").  * It can be an earlier snapshot in the same filesystem or zvol as "snapname",  * or it can be the origin of "snapname"'s filesystem, or an earlier  * snapshot in the origin, etc.  *  * "fd" is the file descriptor to write the send stream to.  *  * If "flags" contains LZC_SEND_FLAG_EMBED_DATA, the stream is permitted  * to contain DRR_WRITE_EMBEDDED records with drr_etype==BP_EMBEDDED_TYPE_DATA,  * which the receiving system must support (as indicated by support  * for the "embedded_data" feature).  */
 name|int
 name|lzc_send
 parameter_list|(
@@ -1659,6 +1659,10 @@ name|from
 parameter_list|,
 name|int
 name|fd
+parameter_list|,
+name|enum
+name|lzc_send_flags
+name|flags
 parameter_list|)
 block|{
 name|nvlist_t
@@ -1695,6 +1699,19 @@ argument_list|,
 literal|"fromsnap"
 argument_list|,
 name|from
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|LZC_SEND_FLAG_EMBED_DATA
+condition|)
+name|fnvlist_add_boolean
+argument_list|(
+name|args
+argument_list|,
+literal|"embedok"
 argument_list|)
 expr_stmt|;
 name|err

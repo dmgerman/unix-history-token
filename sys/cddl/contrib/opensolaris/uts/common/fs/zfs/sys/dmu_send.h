@@ -63,12 +63,15 @@ name|char
 modifier|*
 name|fromsnap
 parameter_list|,
-name|int
-name|outfd
+name|boolean_t
+name|embedok
 parameter_list|,
 ifdef|#
 directive|ifdef
 name|illumos
+name|int
+name|outfd
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -87,7 +90,9 @@ directive|else
 end_else
 
 begin_decl_stmt
-name|struct
+name|int
+name|outfd
+decl_stmt|, struct
 name|file
 modifier|*
 name|fp
@@ -142,11 +147,13 @@ parameter_list|,
 ifdef|#
 directive|ifdef
 name|illumos
+name|boolean_t
+name|embedok
+parameter_list|,
 name|int
 name|outfd
 parameter_list|,
-name|struct
-name|vnode
+name|vnode_t
 modifier|*
 name|vp
 parameter_list|,
@@ -163,6 +170,9 @@ directive|else
 end_else
 
 begin_decl_stmt
+name|boolean_t
+name|embedok
+decl_stmt|,
 name|int
 name|outfd
 decl_stmt|, struct

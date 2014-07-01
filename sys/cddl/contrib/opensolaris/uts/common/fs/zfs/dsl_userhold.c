@@ -2696,10 +2696,7 @@ argument_list|,
 operator|&
 name|ddura
 argument_list|,
-name|fnvlist_num_pairs
-argument_list|(
-name|holds
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|fnvlist_free

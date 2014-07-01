@@ -18456,7 +18456,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*  * inputs:  * zc_name	name of snapshot to send  * zc_cookie	file descriptor to send stream to  * zc_obj	fromorigin flag (mutually exclusive with zc_fromobj)  * zc_sendobj	objsetid of snapshot to send  * zc_fromobj	objsetid of incremental fromsnap (may be zero)  * zc_guid	if set, estimate size of stream only.  zc_cookie is ignored.  *		output size in zc_objset_type.  *  * outputs:  * zc_objset_type	estimated size, if zc_guid is set  */
+comment|/*  * inputs:  * zc_name	name of snapshot to send  * zc_cookie	file descriptor to send stream to  * zc_obj	fromorigin flag (mutually exclusive with zc_fromobj)  * zc_sendobj	objsetid of snapshot to send  * zc_fromobj	objsetid of incremental fromsnap (may be zero)  * zc_guid	if set, estimate size of stream only.  zc_cookie is ignored.  *		output size in zc_objset_type.  * zc_flags	if =1, WRITE_EMBEDDED records are permitted  *  * outputs:  * zc_objset_type	estimated size, if zc_guid is set  */
 specifier|static
 name|int
 name|zfs_ioc_send
@@ -18481,6 +18481,17 @@ operator|->
 name|zc_guid
 operator|!=
 literal|0
+operator|)
+decl_stmt|;
+name|boolean_t
+name|embedok
+init|=
+operator|(
+name|zc
+operator|->
+name|zc_flags
+operator|&
+literal|0x1
 operator|)
 decl_stmt|;
 if|if
@@ -18837,6 +18848,8 @@ name|zc
 operator|->
 name|zc_fromobj
 argument_list|,
+name|embedok
+argument_list|,
 name|zc
 operator|->
 name|zc_cookie
@@ -18854,6 +18867,8 @@ directive|else
 name|zc
 operator|->
 name|zc_fromobj
+operator|,
+name|embedok
 operator|,
 name|zc
 operator|->
@@ -22937,7 +22952,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * innvl: {  *     "fd" -> file descriptor to write stream to (int32)  *     (optional) "fromsnap" -> full snap name to send an incremental from  * }  *  * outnvl is unused  */
+comment|/*  * innvl: {  *     "fd" -> file descriptor to write stream to (int32)  *     (optional) "fromsnap" -> full snap name to send an incremental from  *     (optional) "embedok" -> (value ignored)  *         presence indicates DRR_WRITE_EMBEDDED records are permitted  * }  *  * outnvl is unused  */
 end_comment
 
 begin_comment
@@ -22981,6 +22996,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|boolean_t
+name|embedok
+decl_stmt|;
 name|error
 operator|=
 name|nvlist_lookup_int32
@@ -23018,6 +23036,15 @@ literal|"fromsnap"
 argument_list|,
 operator|&
 name|fromname
+argument_list|)
+expr_stmt|;
+name|embedok
+operator|=
+name|nvlist_exists
+argument_list|(
+name|innvl
+argument_list|,
+literal|"embedok"
 argument_list|)
 expr_stmt|;
 name|file_t
@@ -23068,6 +23095,8 @@ name|snapname
 argument_list|,
 name|fromname
 argument_list|,
+name|embedok
+argument_list|,
 name|fd
 argument_list|,
 name|fp
@@ -23087,6 +23116,8 @@ argument_list|(
 name|snapname
 argument_list|,
 name|fromname
+argument_list|,
+name|embedok
 argument_list|,
 name|fd
 argument_list|,
@@ -25845,6 +25876,47 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+if|if
+condition|(
+name|zc_iocparm
+operator|->
+name|zfs_ioctl_version
+operator|!=
+name|ZFS_IOCVER_CURRENT
+condition|)
+block|{
+name|compat
+operator|=
+name|B_TRUE
+expr_stmt|;
+switch|switch
+condition|(
+name|zc_iocparm
+operator|->
+name|zfs_ioctl_version
+condition|)
+block|{
+case|case
+name|ZFS_IOCVER_ZCMD
+case|:
+name|cflag
+operator|=
+name|ZFS_CMD_COMPAT_ZCMD
+expr_stmt|;
+break|break;
+default|default:
+name|error
+operator|=
+name|SET_ERROR
+argument_list|(
+name|EINVAL
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 block|}
 block|}
 if|if

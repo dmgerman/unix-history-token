@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2014 Xin Li<delphij@FreeBSD.org>.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -106,8 +106,12 @@ name|ZFS_IOCVER_ZCMD
 value|3
 define|#
 directive|define
+name|ZFS_IOCVER_EDBP
+value|4
+define|#
+directive|define
 name|ZFS_IOCVER_CURRENT
-value|ZFS_IOCVER_ZCMD
+value|ZFS_IOCVER_EDBP
 comment|/* compatibility conversion flag */
 define|#
 directive|define
@@ -129,6 +133,10 @@ define|#
 directive|define
 name|ZFS_CMD_COMPAT_LZC
 value|4
+define|#
+directive|define
+name|ZFS_CMD_COMPAT_ZCMD
+value|5
 define|#
 directive|define
 name|ZFS_IOC_COMPAT_PASS
@@ -602,6 +610,142 @@ name|zc_stat
 decl_stmt|;
 block|}
 name|zfs_cmd_deadman_t
+typedef|;
+typedef|typedef
+struct|struct
+name|zfs_cmd_zcmd
+block|{
+name|char
+name|zc_name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+comment|/* name of pool or dataset */
+name|uint64_t
+name|zc_nvlist_src
+decl_stmt|;
+comment|/* really (char *) */
+name|uint64_t
+name|zc_nvlist_src_size
+decl_stmt|;
+name|uint64_t
+name|zc_nvlist_dst
+decl_stmt|;
+comment|/* really (char *) */
+name|uint64_t
+name|zc_nvlist_dst_size
+decl_stmt|;
+name|boolean_t
+name|zc_nvlist_dst_filled
+decl_stmt|;
+comment|/* put an nvlist in dst? */
+name|int
+name|zc_pad2
+decl_stmt|;
+comment|/* 	 * The following members are for legacy ioctls which haven't been 	 * converted to the new method. 	 */
+name|uint64_t
+name|zc_history
+decl_stmt|;
+comment|/* really (char *) */
+name|char
+name|zc_value
+index|[
+name|MAXPATHLEN
+operator|*
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|zc_string
+index|[
+name|MAXNAMELEN
+index|]
+decl_stmt|;
+name|uint64_t
+name|zc_guid
+decl_stmt|;
+name|uint64_t
+name|zc_nvlist_conf
+decl_stmt|;
+comment|/* really (char *) */
+name|uint64_t
+name|zc_nvlist_conf_size
+decl_stmt|;
+name|uint64_t
+name|zc_cookie
+decl_stmt|;
+name|uint64_t
+name|zc_objset_type
+decl_stmt|;
+name|uint64_t
+name|zc_perm_action
+decl_stmt|;
+name|uint64_t
+name|zc_history_len
+decl_stmt|;
+name|uint64_t
+name|zc_history_offset
+decl_stmt|;
+name|uint64_t
+name|zc_obj
+decl_stmt|;
+name|uint64_t
+name|zc_iflags
+decl_stmt|;
+comment|/* internal to zfs(7fs) */
+name|zfs_share_t
+name|zc_share
+decl_stmt|;
+name|uint64_t
+name|zc_jailid
+decl_stmt|;
+name|dmu_objset_stats_t
+name|zc_objset_stats
+decl_stmt|;
+name|struct
+name|drr_begin
+name|zc_begin_record
+decl_stmt|;
+name|zinject_record_t
+name|zc_inject_record
+decl_stmt|;
+name|boolean_t
+name|zc_defer_destroy
+decl_stmt|;
+name|boolean_t
+name|zc_temphold
+decl_stmt|;
+name|uint64_t
+name|zc_action_handle
+decl_stmt|;
+name|int
+name|zc_cleanup_fd
+decl_stmt|;
+name|uint8_t
+name|zc_simple
+decl_stmt|;
+name|uint8_t
+name|zc_pad
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* alignment */
+name|uint64_t
+name|zc_sendobj
+decl_stmt|;
+name|uint64_t
+name|zc_fromobj
+decl_stmt|;
+name|uint64_t
+name|zc_createtxg
+decl_stmt|;
+name|zfs_stat_t
+name|zc_stat
+decl_stmt|;
+block|}
+name|zfs_cmd_zcmd_t
 typedef|;
 ifdef|#
 directive|ifdef

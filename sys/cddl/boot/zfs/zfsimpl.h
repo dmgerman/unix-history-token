@@ -15,11 +15,24 @@ begin_comment
 comment|/*  * Copyright 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAXNAMELEN
 value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|_NOTE
+parameter_list|(
+name|s
+parameter_list|)
 end_define
 
 begin_comment
@@ -492,8 +505,126 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Each block is described by its DVAs, time of birth, checksum, etc.  * The word-by-word, bit-by-bit layout of the blkptr is as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|		vdev1		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 1	|G|			 offset1				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 2	|		vdev2		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 3	|G|			 offset2				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 4	|		vdev3		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 5	|G|			 offset3				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| cksum | comp	|     PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 8	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 9	|			physical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|			fill count				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * c	|			checksum[0]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * d	|			checksum[1]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * e	|			checksum[2]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * f	|			checksum[3]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * vdev		virtual device ID  * offset	offset into virtual device  * LSIZE	logical size  * PSIZE	physical size (after compression)  * ASIZE	allocated size (including RAID-Z parity and gang block headers)  * GRID		RAID-Z layout information (reserved for future use)  * cksum	checksum function  * comp		compression function  * G		gang block indicator  * B		byteorder (endianness)  * D		dedup  * X		unused  * lvl		level of indirection  * type		DMU object type  * phys birth	txg of block allocation; zero if same as logical birth txg  * log. birth	transaction group in which the block was logically born  * fill count	number of non-zero blocks under this bp  * checksum[4]	256-bit checksum of the data this bp describes  */
+comment|/*  * Each block is described by its DVAs, time of birth, checksum, etc.  * The word-by-word, bit-by-bit layout of the blkptr is as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|		vdev1		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 1	|G|			 offset1				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 2	|		vdev2		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 3	|G|			 offset2				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 4	|		vdev3		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 5	|G|			 offset3				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| cksum |E| comp|    PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 8	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 9	|			physical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|			fill count				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * c	|			checksum[0]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * d	|			checksum[1]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * e	|			checksum[2]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * f	|			checksum[3]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * vdev		virtual device ID  * offset	offset into virtual device  * LSIZE	logical size  * PSIZE	physical size (after compression)  * ASIZE	allocated size (including RAID-Z parity and gang block headers)  * GRID		RAID-Z layout information (reserved for future use)  * cksum	checksum function  * comp		compression function  * G		gang block indicator  * B		byteorder (endianness)  * D		dedup  * X		encryption (on version 30, which is not supported)  * E		blkptr_t contains embedded data (see below)  * lvl		level of indirection  * type		DMU object type  * phys birth	txg of block allocation; zero if same as logical birth txg  * log. birth	transaction group in which the block was logically born  * fill count	number of non-zero blocks under this bp  * checksum[4]	256-bit checksum of the data this bp describes  */
 end_comment
+
+begin_comment
+comment|/*  * "Embedded" blkptr_t's don't actually point to a block, instead they  * have a data payload embedded in the blkptr_t itself.  See the comment  * in blkptr.c for more details.  *  * The blkptr_t is laid out as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|      payload                                                  |  * 1	|      payload                                                  |  * 2	|      payload                                                  |  * 3	|      payload                                                  |  * 4	|      payload                                                  |  * 5	|      payload                                                  |  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| etype |E| comp| PSIZE|              LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|      payload                                                  |  * 8	|      payload                                                  |  * 9	|      payload                                                  |  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|      payload                                                  |  * c	|      payload                                                  |  * d	|      payload                                                  |  * e	|      payload                                                  |  * f	|      payload                                                  |  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * payload		contains the embedded data  * B (byteorder)	byteorder (endianness)  * D (dedup)		padding (set to zero)  * X			encryption (set to zero; see above)  * E (embedded)		set to one  * lvl			indirection level  * type			DMU object type  * etype		how to interpret embedded data (BP_EMBEDDED_TYPE_*)  * comp			compression function of payload  * PSIZE		size of payload after compression, in bytes  * LSIZE		logical size of payload, in bytes  *			note that 25 bits is enough to store the largest  *			"normal" BP's LSIZE (2^16 * 2^9) in bytes  * log. birth		transaction group in which the block was logically born  *  * Note that LSIZE and PSIZE are stored in bytes, whereas for non-embedded  * bp's they are stored in units of SPA_MINBLOCKSHIFT.  * Generally, the generic BP_GET_*() macros can be used on embedded BP's.  * The B, D, X, lvl, type, and comp fields are stored the same as with normal  * BP's so the BP_SET_* macros can be used with them.  etype, PSIZE, LSIZE must  * be set with the BPE_SET_* macros.  BP_SET_EMBEDDED() should be called before  * other macros, as they assert that they are only used on BP's of the correct  * "embedded-ness".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BPE_GET_ETYPE
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|(ASSERT(BP_IS_EMBEDDED(bp)), \ 	BF64_GET((bp)->blk_prop, 40, 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_SET_ETYPE
+parameter_list|(
+name|bp
+parameter_list|,
+name|t
+parameter_list|)
+value|do { \ 	ASSERT(BP_IS_EMBEDDED(bp)); \ 	BF64_SET((bp)->blk_prop, 40, 8, t); \ _NOTE(CONSTCOND) } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_GET_LSIZE
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|(ASSERT(BP_IS_EMBEDDED(bp)), \ 	BF64_GET_SB((bp)->blk_prop, 0, 25, 0, 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_SET_LSIZE
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+value|do { \ 	ASSERT(BP_IS_EMBEDDED(bp)); \ 	BF64_SET_SB((bp)->blk_prop, 0, 25, 0, 1, x); \ _NOTE(CONSTCOND) } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_GET_PSIZE
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|(ASSERT(BP_IS_EMBEDDED(bp)), \ 	BF64_GET_SB((bp)->blk_prop, 25, 7, 0, 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_SET_PSIZE
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+value|do { \ 	ASSERT(BP_IS_EMBEDDED(bp)); \ 	BF64_SET_SB((bp)->blk_prop, 25, 7, 0, 1, x); \ _NOTE(CONSTCOND) } while (0)
+end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|bp_embedded_type
+block|{
+name|BP_EMBEDDED_TYPE_DATA
+block|,
+name|BP_EMBEDDED_TYPE_RESERVED
+block|,
+comment|/* Reserved for an unintegrated feature. */
+name|NUM_BP_EMBEDDED_TYPES
+init|=
+name|BP_EMBEDDED_TYPE_RESERVED
+block|}
+name|bp_embedded_type_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|BPE_NUM_WORDS
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_PAYLOAD_SIZE
+value|(BPE_NUM_WORDS * sizeof (uint64_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_IS_PAYLOADWORD
+parameter_list|(
+name|bp
+parameter_list|,
+name|wp
+parameter_list|)
+define|\
+value|((wp) !=&(bp)->blk_prop&& (wp) !=&(bp)->blk_birth)
+end_define
 
 begin_define
 define|#
@@ -687,7 +818,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(BP_IS_HOLE(bp) ? 0 : \ 	BF64_GET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1))
+value|(BP_IS_EMBEDDED(bp) ?	\ 	(BPE_GET_ETYPE(bp) == BP_EMBEDDED_TYPE_DATA ? BPE_GET_LSIZE(bp) : 0): \ 	BF64_GET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1))
 end_define
 
 begin_define
@@ -699,8 +830,7 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-define|\
-value|BF64_SET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1, x)
+value|do { \ 	ASSERT(!BP_IS_EMBEDDED(bp)); \ 	BF64_SET_SB((bp)->blk_prop, \ 	    0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1, x); \ _NOTE(CONSTCOND) } while (0)
 end_define
 
 begin_define
@@ -734,7 +864,7 @@ name|BP_GET_COMPRESS
 parameter_list|(
 name|bp
 parameter_list|)
-value|BF64_GET((bp)->blk_prop, 32, 8)
+value|BF64_GET((bp)->blk_prop, 32, 7)
 end_define
 
 begin_define
@@ -746,7 +876,7 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|BF64_SET((bp)->blk_prop, 32, 8, x)
+value|BF64_SET((bp)->blk_prop, 32, 7, x)
 end_define
 
 begin_define
@@ -813,6 +943,16 @@ parameter_list|,
 name|x
 parameter_list|)
 value|BF64_SET((bp)->blk_prop, 56, 5, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BP_IS_EMBEDDED
+parameter_list|(
+name|bp
+parameter_list|)
+value|BF64_GET((bp)->blk_prop, 39, 1)
 end_define
 
 begin_define
@@ -1019,6 +1159,33 @@ name|bp
 parameter_list|)
 define|\
 value|{						\ 	(bp)->blk_dva[0].dva_word[0] = 0;	\ 	(bp)->blk_dva[0].dva_word[1] = 0;	\ 	(bp)->blk_dva[1].dva_word[0] = 0;	\ 	(bp)->blk_dva[1].dva_word[1] = 0;	\ 	(bp)->blk_dva[2].dva_word[0] = 0;	\ 	(bp)->blk_dva[2].dva_word[1] = 0;	\ 	(bp)->blk_prop = 0;			\ 	(bp)->blk_pad[0] = 0;			\ 	(bp)->blk_pad[1] = 0;			\ 	(bp)->blk_phys_birth = 0;		\ 	(bp)->blk_birth = 0;			\ 	(bp)->blk_fill = 0;			\ 	ZIO_SET_CHECKSUM(&(bp)->blk_cksum, 0, 0, 0, 0);	\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_NUM_WORDS
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_PAYLOAD_SIZE
+value|(BPE_NUM_WORDS * sizeof (uint64_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPE_IS_PAYLOADWORD
+parameter_list|(
+name|bp
+parameter_list|,
+name|wp
+parameter_list|)
+define|\
+value|((wp) !=&(bp)->blk_prop&& (wp) !=&(bp)->blk_birth)
 end_define
 
 begin_comment
@@ -4604,6 +4771,21 @@ block|}
 name|spa_t
 typedef|;
 end_typedef
+
+begin_function_decl
+specifier|static
+name|void
+name|decode_embedded_bp_compressed
+parameter_list|(
+specifier|const
+name|blkptr_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 
