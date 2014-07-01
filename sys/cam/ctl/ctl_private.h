@@ -307,7 +307,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * WARNING:  Keep the bottom nibble here free, we OR in the data direction  * flags for each command.  *  * Note:  "OK_ON_ALL_LUNS" == we don't have to have a lun configured  *        "OK_ON_BOTH"     == we have to have a lun configured  */
+comment|/*  * WARNING:  Keep the bottom nibble here free, we OR in the data direction  * flags for each command.  *  * Note:  "OK_ON_ALL_LUNS" == we don't have to have a lun configured  *        "OK_ON_BOTH"     == we have to have a lun configured  *        "SA5"            == command has 5-bit service action at byte 1  */
 end_comment
 
 begin_typedef
@@ -361,6 +361,10 @@ block|,
 name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 init|=
 literal|0x4000
+block|,
+name|CTL_CMD_FLAG_SA5
+init|=
+literal|0x8000
 block|}
 name|ctl_cmd_flags
 typedef|;
@@ -448,6 +452,17 @@ decl_stmt|;
 name|ctl_lun_error_pattern
 name|pattern
 decl_stmt|;
+name|uint8_t
+name|length
+decl_stmt|;
+comment|/* CDB length */
+name|uint8_t
+name|usage
+index|[
+literal|15
+index|]
+decl_stmt|;
+comment|/* Mask of allowed CDB bits 						 * after the opcode byte. */
 block|}
 struct|;
 end_struct
@@ -1531,10 +1546,13 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|ctl_cmd_entry
 name|ctl_cmd_table
-index|[]
+index|[
+literal|256
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1732,7 +1750,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctl_service_action_in
+name|ctl_read_capacity_16
 parameter_list|(
 name|struct
 name|ctl_scsiio
@@ -1852,7 +1870,31 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ctl_maintenance_in
+name|ctl_report_tagret_port_groups
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ctl_report_supported_opcodes
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ctl_report_supported_tmf
 parameter_list|(
 name|struct
 name|ctl_scsiio
