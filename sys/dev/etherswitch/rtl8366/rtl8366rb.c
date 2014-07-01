@@ -1496,7 +1496,7 @@ name|portstatus
 operator|&
 name|RTL8366RB_PLSR_FULLDUPLEX
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 operator|*
