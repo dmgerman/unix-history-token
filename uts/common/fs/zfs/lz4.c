@@ -4630,6 +4630,17 @@ name|op
 operator|+
 name|length
 expr_stmt|;
+comment|/* CORNER-CASE: cpy might overflow. */
+if|if
+condition|(
+name|cpy
+operator|<
+name|op
+condition|)
+goto|goto
+name|_output_error
+goto|;
+comment|/* cpy was overflowed, bail! */
 if|if unlikely
 condition|(
 name|cpy
@@ -5211,6 +5222,17 @@ name|op
 operator|+
 name|length
 expr_stmt|;
+comment|/* CORNER-CASE: cpy might overflow. */
+if|if
+condition|(
+name|cpy
+operator|<
+name|op
+condition|)
+goto|goto
+name|_output_error
+goto|;
+comment|/* cpy was overflowed, bail! */
 if|if
 condition|(
 operator|(
