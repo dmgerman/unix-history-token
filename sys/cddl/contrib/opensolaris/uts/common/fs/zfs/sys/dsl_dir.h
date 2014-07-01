@@ -697,6 +697,10 @@ define|#
 directive|define
 name|FREE_DIR_NAME
 value|"$FREE"
+define|#
+directive|define
+name|LEAK_DIR_NAME
+value|"$LEAK"
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG
