@@ -52023,6 +52023,10 @@ argument_list|(
 name|curproc
 argument_list|)
 operator|||
+name|cr
+operator|!=
+name|NULL
+operator|&&
 name|getzoneid
 argument_list|()
 operator|==
@@ -69431,8 +69435,8 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * If this wasn't an open with the "helper" minor, then it must be 	 * the "dtrace" minor. 	 */
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|getminor
 argument_list|(
 operator|*
@@ -69440,8 +69444,12 @@ name|devp
 argument_list|)
 operator|==
 name|DTRACEMNRN_DTRACE
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 else|#
 directive|else
 name|cred_t
