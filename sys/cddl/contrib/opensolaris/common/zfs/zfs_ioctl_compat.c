@@ -3500,7 +3500,9 @@ directive|ifndef
 name|_KERNEL
 argument|int zcmd_ioctl_compat(int fd, int request, zfs_cmd_t *zc, const int cflag) { 	int nc, ret; 	void *zc_c; 	unsigned long ncmd; 	zfs_iocparm_t zp;  	switch (cflag) { 	case ZFS_CMD_COMPAT_NONE: 		ncmd = _IOWR(
 literal|'Z'
-argument|, request, struct zfs_iocparm); 		zp.zfs_cmd = (uint64_t)zc; 		zp.zfs_cmd_size = sizeof(zfs_cmd_t); 		zp.zfs_ioctl_version = ZFS_IOCVER_CURRENT; 		return (ioctl(fd, ncmd,&zp)); 	case ZFS_CMD_COMPAT_LZC: 		ncmd = _IOWR(
+argument|, request, struct zfs_iocparm); 		zp.zfs_cmd = (uint64_t)zc; 		zp.zfs_cmd_size = sizeof(zfs_cmd_t); 		zp.zfs_ioctl_version = ZFS_IOCVER_CURRENT; 		return (ioctl(fd, ncmd,&zp)); 	case ZFS_CMD_COMPAT_ZCMD: 		ncmd = _IOWR(
+literal|'Z'
+argument|, request, struct zfs_iocparm); 		zp.zfs_cmd = (uint64_t)zc; 		zp.zfs_cmd_size = sizeof(zfs_cmd_zcmd_t); 		zp.zfs_ioctl_version = ZFS_IOCVER_ZCMD; 		return (ioctl(fd, ncmd,&zp)); 	case ZFS_CMD_COMPAT_LZC: 		ncmd = _IOWR(
 literal|'Z'
 argument|, request, struct zfs_cmd); 		return (ioctl(fd, ncmd, zc)); 	case ZFS_CMD_COMPAT_DEADMAN: 		zc_c = malloc(sizeof(zfs_cmd_deadman_t)); 		ncmd = _IOWR(
 literal|'Z'
@@ -3534,7 +3536,7 @@ argument|zc->zc_cookie = POOL_SCAN_SCRUB; 			break; 		} 	}  	return (error); }  
 literal|41
 argument|:
 comment|/* ZFS_IOC_POOL_GET_PROPS (v15) */
-argument|zfs_ioctl_compat_pool_get_props(zc); 			break; 		} 	} }  nvlist_t * zfs_ioctl_compat_innvl(zfs_cmd_t *zc, nvlist_t * innvl, const int vec,     const int cflag) { 	nvlist_t *nvl, *tmpnvl, *hnvl; 	nvpair_t *elem; 	char *poolname, *snapname; 	int err;  	if (cflag == ZFS_CMD_COMPAT_NONE || cflag == ZFS_CMD_COMPAT_LZC) 		goto out;  	switch (vec) { 	case ZFS_IOC_CREATE: 		nvl = fnvlist_alloc(); 		fnvlist_add_int32(nvl,
+argument|zfs_ioctl_compat_pool_get_props(zc); 			break; 		} 	} }  nvlist_t * zfs_ioctl_compat_innvl(zfs_cmd_t *zc, nvlist_t * innvl, const int vec,     const int cflag) { 	nvlist_t *nvl, *tmpnvl, *hnvl; 	nvpair_t *elem; 	char *poolname, *snapname; 	int err;  	if (cflag == ZFS_CMD_COMPAT_NONE || cflag == ZFS_CMD_COMPAT_LZC || 	    cflag == ZFS_CMD_COMPAT_ZCMD) 		goto out;  	switch (vec) { 	case ZFS_IOC_CREATE: 		nvl = fnvlist_alloc(); 		fnvlist_add_int32(nvl,
 literal|"type"
 argument|, zc->zc_objset_type); 		if (innvl != NULL) { 			fnvlist_add_nvlist(nvl,
 literal|"props"
@@ -3606,7 +3608,7 @@ argument|zc->zc_name[strcspn(zc->zc_name,
 literal|"/@"
 argument|)] =
 literal|'\0'
-argument|; 		return (nvl); 	break; 	} out: 	return (innvl); }  nvlist_t * zfs_ioctl_compat_outnvl(zfs_cmd_t *zc, nvlist_t * outnvl, const int vec,     const int cflag) { 	nvlist_t *tmpnvl;  	if (cflag == ZFS_CMD_COMPAT_NONE || cflag == ZFS_CMD_COMPAT_LZC) 		return (outnvl);  	switch (vec) { 	case ZFS_IOC_SPACE_SNAPS: 		(void) nvlist_lookup_uint64(outnvl,
+argument|; 		return (nvl); 	break; 	} out: 	return (innvl); }  nvlist_t * zfs_ioctl_compat_outnvl(zfs_cmd_t *zc, nvlist_t * outnvl, const int vec,     const int cflag) { 	nvlist_t *tmpnvl;  	if (cflag == ZFS_CMD_COMPAT_NONE || cflag == ZFS_CMD_COMPAT_LZC || 	    cflag == ZFS_CMD_COMPAT_ZCMD) 		return (outnvl);  	switch (vec) { 	case ZFS_IOC_SPACE_SNAPS: 		(void) nvlist_lookup_uint64(outnvl,
 literal|"used"
 argument|,&zc->zc_cookie); 		(void) nvlist_lookup_uint64(outnvl,
 literal|"compressed"
