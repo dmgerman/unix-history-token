@@ -4833,14 +4833,6 @@ case|:
 case|case
 name|IP_FLOWTYPE
 case|:
-ifdef|#
-directive|ifdef
-name|RSS
-case|case
-name|IP_RSSCPUID
-case|:
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|sopt
