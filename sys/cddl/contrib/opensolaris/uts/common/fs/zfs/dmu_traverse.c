@@ -149,7 +149,7 @@ decl_stmt|;
 name|uint64_t
 name|td_min_txg
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|td_resume
 decl_stmt|;
@@ -248,7 +248,7 @@ name|td
 init|=
 name|arg
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 if|if
@@ -396,7 +396,7 @@ name|lr
 operator|->
 name|lr_blkptr
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 if|if
@@ -601,7 +601,7 @@ modifier|*
 name|dnp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -714,7 +714,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -895,12 +895,12 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 name|int
@@ -1997,7 +1997,7 @@ block|{
 name|int
 name|j
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 for|for
@@ -2119,7 +2119,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 for|for
@@ -2256,7 +2256,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -2435,7 +2435,7 @@ init|=
 operator|*
 name|td_main
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 name|td
@@ -2560,7 +2560,7 @@ parameter_list|,
 name|uint64_t
 name|txg_start
 parameter_list|,
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|resume
 parameter_list|,
@@ -2585,7 +2585,7 @@ block|{
 literal|0
 block|}
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 name|int
@@ -3052,7 +3052,7 @@ parameter_list|,
 name|uint64_t
 name|txg_start
 parameter_list|,
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|resume
 parameter_list|,

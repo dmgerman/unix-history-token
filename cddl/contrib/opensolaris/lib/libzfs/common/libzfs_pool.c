@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -16729,7 +16729,7 @@ name|b
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|)
 operator|)
@@ -16765,7 +16765,7 @@ decl_stmt|;
 name|uint64_t
 name|count
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 init|=
@@ -16823,7 +16823,7 @@ name|count
 operator|*
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|)
 operator|)
@@ -16905,22 +16905,18 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
+name|void
+modifier|*
+name|dst
+decl_stmt|;
 name|count
 operator|=
 name|zc
 operator|.
 name|zc_nvlist_dst_size
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|zc
-operator|.
-name|zc_nvlist_dst
+name|dst
 operator|=
-operator|(
-name|uintptr_t
-operator|)
 name|zfs_alloc
 argument_list|(
 name|zhp
@@ -16931,14 +16927,14 @@ name|count
 operator|*
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|dst
 operator|==
-operator|(
-name|uintptr_t
-operator|)
 name|NULL
 condition|)
 return|return
@@ -16947,6 +16943,15 @@ operator|-
 literal|1
 operator|)
 return|;
+name|zc
+operator|.
+name|zc_nvlist_dst
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|dst
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -16968,7 +16973,7 @@ name|zb
 operator|=
 operator|(
 operator|(
-name|zbookmark_t
+name|zbookmark_phys_t
 operator|*
 operator|)
 operator|(
@@ -16997,7 +17002,7 @@ name|count
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|,
 name|zbookmark_compare

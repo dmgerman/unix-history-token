@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -618,7 +618,7 @@ name|lr
 operator|->
 name|lr_blkptr
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|char

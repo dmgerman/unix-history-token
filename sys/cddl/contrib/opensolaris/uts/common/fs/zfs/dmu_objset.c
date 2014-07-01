@@ -1048,7 +1048,7 @@ name|aflags
 init|=
 name|ARC_WAIT
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|SET_BOOKMARK
@@ -4901,7 +4901,7 @@ block|{
 name|int
 name|txgoff
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|zio_prop_t
