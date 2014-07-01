@@ -7479,6 +7479,17 @@ begin_comment
 comment|/* Number of cleanup requests that failed */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|stat_emptyjblocks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of potentially empty journal blocks */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -8080,6 +8091,27 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|softdep_flushcache
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_softdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|emptyjblocks
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|stat_emptyjblocks
 argument_list|,
 literal|0
 argument_list|,
@@ -17113,6 +17145,42 @@ name|off
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * Always put a header on the first block. 		 * XXX As with below, there might not be a chance to get 		 * into the loop.  Ensure that something valid is written. 		 */
+name|jseg_write
+argument_list|(
+name|ump
+argument_list|,
+name|jseg
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+name|off
+operator|+=
+name|JREC_SIZE
+expr_stmt|;
+name|data
+operator|=
+name|bp
+operator|->
+name|b_data
+operator|+
+name|off
+expr_stmt|;
+comment|/* 		 * XXX Something is wrong here.  There's no work to do, 		 * but we need to perform and I/O and allow it to complete 		 * anyways. 		 */
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|ump
+operator|->
+name|softdep_journal_pending
+argument_list|)
+condition|)
+name|stat_emptyjblocks
+operator|++
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -17368,6 +17436,22 @@ name|cnt
 operator|--
 expr_stmt|;
 block|}
+comment|/* Clear any remaining space so we don't leak kernel data */
+if|if
+condition|(
+name|size
+operator|>
+name|off
+condition|)
+name|bzero
+argument_list|(
+name|data
+argument_list|,
+name|size
+operator|-
+name|off
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Write this one buffer and continue. 		 */
 name|segwritten
 operator|=
