@@ -259,7 +259,8 @@ begin_define
 define|#
 directive|define
 name|GPT_ENT_TYPE_LINUX_DATA
-value|GPT_ENT_TYPE_MS_BASIC_DATA
+define|\
+value|{0x0fc63daf,0x8483,0x4772,0x8e,0x79,{0x3d,0x69,0xd8,0x47,0x7d,0xe4}}
 end_define
 
 begin_define
