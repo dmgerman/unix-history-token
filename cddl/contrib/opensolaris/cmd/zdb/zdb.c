@@ -440,7 +440,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: %s [-CumdibcsDvhLXFPA] [-t txg] [-e [-p path...]] "
-literal|"[-U config] [-M inflight I/Os] poolname [object...]\n"
+literal|"[-U config] [-M inflight I/Os] [-x dumpdir] poolname [object...]\n"
 literal|"       %s [-divPA] [-e -p path...] [-U config] dataset "
 literal|"[object...]\n"
 literal|"       %s -m [-LXFPA] [-t txg] [-e [-p path...]] [-U config] "
@@ -670,7 +670,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"    Below options are intended for use "
-literal|"with other options (except -l):\n"
+literal|"with other options:\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -746,7 +746,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"	-P print numbers in parseable form\n"
+literal|"        -x<dumpdir> -- "
+literal|"dump all read blocks into specified directory\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"        -P print numbers in parseable form\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -768,7 +779,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"        -M<number of inflight I/Os> -- "
-literal|"specify the maximum number of checksumming I/Os [default is 200]"
+literal|"specify the maximum number of "
+literal|"checksumming I/Os [default is 200]\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -18776,7 +18788,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bcdhilmM:suCDRSAFLXevp:t:U:P"
+literal|"bcdhilmM:suCDRSAFLXx:evp:t:U:P"
 argument_list|)
 operator|)
 operator|!=
@@ -18995,6 +19007,14 @@ index|[
 name|nsearch
 operator|++
 index|]
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|vn_dumpdir
 operator|=
 name|optarg
 expr_stmt|;
