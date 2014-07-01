@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>.  All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -547,6 +547,13 @@ begin_decl_stmt
 specifier|extern
 name|uint64_t
 name|zfs_deadman_synctime_ms
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|metaslab_preload_limit
 decl_stmt|;
 end_decl_stmt
 
@@ -27691,6 +27698,15 @@ operator|->
 name|spa_debug
 operator|=
 name|B_TRUE
+expr_stmt|;
+name|metaslab_preload_limit
+operator|=
+name|ztest_random
+argument_list|(
+literal|20
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 name|ztest_spa
 operator|=
