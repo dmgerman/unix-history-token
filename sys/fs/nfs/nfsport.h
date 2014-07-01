@@ -2722,6 +2722,36 @@ parameter_list|)
 value|mtx_unlock(&((d)->nfsclds_mtx))
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSSESSIONMUTEXPTR
+parameter_list|(
+name|s
+parameter_list|)
+value|(&((s)->mtx))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSLOCKSESSION
+parameter_list|(
+name|s
+parameter_list|)
+value|mtx_lock(&((s)->mtx))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSUNLOCKSESSION
+parameter_list|(
+name|s
+parameter_list|)
+value|mtx_unlock(&((s)->mtx))
+end_define
+
 begin_comment
 comment|/*  * Use these macros to initialize/free a mutex.  */
 end_comment
@@ -3196,6 +3226,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_NEWNFSDSESSION
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -3369,6 +3407,13 @@ define|#
 directive|define
 name|M_NFSLAYRECALL
 value|M_NEWNFSLAYRECALL
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_NFSDSESSION
+value|M_NEWNFSDSESSION
 end_define
 
 begin_define

@@ -414,5 +414,21 @@ name|NFSRV_MAXFH
 value|(sizeof (fhandle_t))
 end_define
 
+begin_comment
+comment|/* Use this macro for debug printfs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSD_DEBUG
+parameter_list|(
+name|level
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {					\ 		if (nfsd_debuglevel>= (level))				\ 			printf(__VA_ARGS__);				\ 	} while (0)
+end_define
+
 end_unit
 

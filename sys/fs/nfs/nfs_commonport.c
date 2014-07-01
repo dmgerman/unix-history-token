@@ -641,6 +641,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NEWNFSDSESSION
+argument_list|,
+literal|"NFSD session"
+argument_list|,
+literal|"NFSD Session for a client"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Definition of mutex locks.  * newnfsd_mtx is used in nfsrvd_nfsd() to protect the nfs socket list  * and assorted other nfsd structures.  */
 end_comment

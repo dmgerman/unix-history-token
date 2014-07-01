@@ -150,12 +150,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NFSV4_SLOTS
+value|64
+end_define
+
+begin_comment
+comment|/* Number of slots, fore channel */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NFSV4_CBSLOTS
 value|8
 end_define
 
 begin_comment
-comment|/* Number of slots for session */
+comment|/* Number of slots, back channel */
 end_comment
 
 begin_define
@@ -492,6 +503,28 @@ end_define
 
 begin_comment
 comment|/* Size of server nfslock hash table */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFSSESSIONHASHSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFSSESSIONHASHSIZE
+value|20
+end_define
+
+begin_comment
+comment|/* Size of server session hash table */
 end_comment
 
 begin_endif
@@ -1339,6 +1372,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|LCL_RECLAIMCOMPLETE
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCL_NFSV41
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
 name|LCL_GSS
 value|LCL_KERBV
 end_define
@@ -1583,6 +1630,35 @@ name|NFSLCK_DELEGRETURN
 value|0x08000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSLCK_WANTWDELEG
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSLCK_WANTRDELEG
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSLCK_WANTNODELEG
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSLCK_WANTBITS
+define|\
+value|(NFSLCK_WANTWDELEG | NFSLCK_WANTRDELEG | NFSLCK_WANTNODELEG)
+end_define
+
 begin_comment
 comment|/* And bits for nid_flag */
 end_comment
@@ -1673,7 +1749,7 @@ begin_define
 define|#
 directive|define
 name|NFSATTRBIT_MAXWORDS
-value|2
+value|3
 end_define
 
 begin_typedef
@@ -1698,7 +1774,7 @@ name|NFSZERO_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { (b)->bits[0] = 0; (b)->bits[1] = 0; } while (0)
+value|do {						\ 	(b)->bits[0] = 0;						\ 	(b)->bits[1] = 0;						\ 	(b)->bits[2] = 0;						\ } while (0)
 end_define
 
 begin_define
@@ -1710,7 +1786,7 @@ name|t
 parameter_list|,
 name|f
 parameter_list|)
-value|do { (t)->bits[0] = (f)->bits[0]; 		\ 				  (t)->bits[1] = (f)->bits[1]; } while (0)
+value|do {					\ 	(t)->bits[0] = (f)->bits[0];			 		\ 	(t)->bits[1] = (f)->bits[1];					\ 	(t)->bits[2] = (f)->bits[2];					\ } while (0)
 end_define
 
 begin_define
@@ -1720,7 +1796,7 @@ name|NFSSETSUPP_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 					\ 	(b)->bits[0] = NFSATTRBIT_SUPP0; 				\ 	(b)->bits[1] = (NFSATTRBIT_SUPP1 | NFSATTRBIT_SUPPSETONLY); } while (0)
+value|do { 					\ 	(b)->bits[0] = NFSATTRBIT_SUPP0; 				\ 	(b)->bits[1] = (NFSATTRBIT_SUPP1 | NFSATTRBIT_SUPPSETONLY);	\ 	(b)->bits[2] = NFSATTRBIT_SUPP2;				\ } while (0)
 end_define
 
 begin_define
@@ -1768,7 +1844,7 @@ name|b
 parameter_list|,
 name|a
 parameter_list|)
-value|do { 					\ 		(b)->bits[0]&= ~((a)->bits[0]); 			\ 		(b)->bits[1]&= ~((a)->bits[1]); 			\ 		} while (0)
+value|do { 					\ 	(b)->bits[0]&= ~((a)->bits[0]);	 			\ 	(b)->bits[1]&= ~((a)->bits[1]);	 			\ 	(b)->bits[2]&= ~((a)->bits[2]);				\ } while (0)
 end_define
 
 begin_define
@@ -1780,7 +1856,7 @@ name|b
 parameter_list|,
 name|a
 parameter_list|)
-value|do { 					\ 		(b)->bits[0]&= ((a)->bits[0]); 			\ 		(b)->bits[1]&= ((a)->bits[1]); 			\ 		} while (0)
+value|do { 					\ 	(b)->bits[0]&= ((a)->bits[0]);		 			\ 	(b)->bits[1]&= ((a)->bits[1]);		 			\ 	(b)->bits[2]&= ((a)->bits[2]);		 			\ } while (0)
 end_define
 
 begin_define
@@ -1790,7 +1866,7 @@ name|NFSCLRNOTFILLABLE_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 				\ 		(b)->bits[0]&= NFSATTRBIT_SUPP0; 			\ 		(b)->bits[1]&= NFSATTRBIT_SUPP1; } while (0)
+value|do { 				\ 	(b)->bits[0]&= NFSATTRBIT_SUPP0;	 			\ 	(b)->bits[1]&= NFSATTRBIT_SUPP1;				\ 	(b)->bits[2]&= NFSATTRBIT_SUPP2;				\ } while (0)
 end_define
 
 begin_define
@@ -1800,7 +1876,7 @@ name|NFSCLRNOTSETABLE_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 				\ 		(b)->bits[0]&= NFSATTRBIT_SETABLE0; 			\ 		(b)->bits[1]&= NFSATTRBIT_SETABLE1; } while (0)
+value|do { 				\ 	(b)->bits[0]&= NFSATTRBIT_SETABLE0;	 			\ 	(b)->bits[1]&= NFSATTRBIT_SETABLE1;				\ 	(b)->bits[2]&= NFSATTRBIT_SETABLE2;				\ } while (0)
 end_define
 
 begin_define
@@ -1810,7 +1886,7 @@ name|NFSNONZERO_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|((b)->bits[0] || (b)->bits[1])
+value|((b)->bits[0] || (b)->bits[1] || (b)->bits[2])
 end_define
 
 begin_define
@@ -1822,8 +1898,7 @@ name|b
 parameter_list|,
 name|p
 parameter_list|)
-define|\
-value|((b)->bits[0] == (p)->bits[0]&& (b)->bits[1] == (p)->bits[1])
+value|((b)->bits[0] == (p)->bits[0]&&	\ 	(b)->bits[1] == (p)->bits[1]&& (b)->bits[2] == (p)->bits[2])
 end_define
 
 begin_define
@@ -1833,7 +1908,7 @@ name|NFSGETATTR_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 					\ 		(b)->bits[0] = NFSATTRBIT_GETATTR0; 			\ 		(b)->bits[1] = NFSATTRBIT_GETATTR1; } while (0)
+value|do { 					\ 	(b)->bits[0] = NFSATTRBIT_GETATTR0;	 			\ 	(b)->bits[1] = NFSATTRBIT_GETATTR1;				\ 	(b)->bits[2] = NFSATTRBIT_GETATTR2;				\ } while (0)
 end_define
 
 begin_define
@@ -1843,7 +1918,7 @@ name|NFSWCCATTR_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 					\ 		(b)->bits[0] = NFSATTRBIT_WCCATTR0; 			\ 		(b)->bits[1] = NFSATTRBIT_WCCATTR1; } while (0)
+value|do { 					\ 	(b)->bits[0] = NFSATTRBIT_WCCATTR0;	 			\ 	(b)->bits[1] = NFSATTRBIT_WCCATTR1;				\ 	(b)->bits[2] = NFSATTRBIT_WCCATTR2;				\ } while (0)
 end_define
 
 begin_define
@@ -1853,7 +1928,7 @@ name|NFSWRITEGETATTR_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 				\ 		(b)->bits[0] = NFSATTRBIT_WRITEGETATTR0;		\ 		(b)->bits[1] = NFSATTRBIT_WRITEGETATTR1; } while (0)
+value|do { 				\ 	(b)->bits[0] = NFSATTRBIT_WRITEGETATTR0;			\ 	(b)->bits[1] = NFSATTRBIT_WRITEGETATTR1;			\ 	(b)->bits[2] = NFSATTRBIT_WRITEGETATTR2;			\ } while (0)
 end_define
 
 begin_define
@@ -1865,7 +1940,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|do { 				\ 	(c)->bits[0] = ((b)->bits[0]& NFSATTRBIT_CBGETATTR0); 		\ 	(c)->bits[1] = ((b)->bits[1]& NFSATTRBIT_CBGETATTR1); } while (0)
+value|do { 				\ 	(c)->bits[0] = ((b)->bits[0]& NFSATTRBIT_CBGETATTR0);		\ 	(c)->bits[1] = ((b)->bits[1]& NFSATTRBIT_CBGETATTR1);		\ 	(c)->bits[2] = ((b)->bits[2]& NFSATTRBIT_CBGETATTR2);		\ } while (0)
 end_define
 
 begin_define
@@ -1875,7 +1950,7 @@ name|NFSPATHCONF_GETATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 					\ 		(b)->bits[0] = NFSGETATTRBIT_PATHCONF0; 		\ 		(b)->bits[1] = NFSGETATTRBIT_PATHCONF1; } while (0)
+value|do { 					\ 	(b)->bits[0] = NFSGETATTRBIT_PATHCONF0;		 		\ 	(b)->bits[1] = NFSGETATTRBIT_PATHCONF1;				\ 	(b)->bits[2] = NFSGETATTRBIT_PATHCONF2;				\ } while (0)
 end_define
 
 begin_define
@@ -1885,7 +1960,7 @@ name|NFSSTATFS_GETATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 					\ 		(b)->bits[0] = NFSGETATTRBIT_STATFS0; 			\ 		(b)->bits[1] = NFSGETATTRBIT_STATFS1; } while (0)
+value|do { 					\ 	(b)->bits[0] = NFSGETATTRBIT_STATFS0;	 			\ 	(b)->bits[1] = NFSGETATTRBIT_STATFS1;				\ 	(b)->bits[2] = NFSGETATTRBIT_STATFS2;				\ } while (0)
 end_define
 
 begin_define
@@ -1896,7 +1971,7 @@ parameter_list|(
 name|b
 parameter_list|)
 define|\
-value|(((b)->bits[0]& NFSATTRBIT_STATFS0) || 		\ 		 ((b)->bits[1]& NFSATTRBIT_STATFS1))
+value|(((b)->bits[0]& NFSATTRBIT_STATFS0) || 		\ 		 ((b)->bits[1]& NFSATTRBIT_STATFS1) ||			\ 		 ((b)->bits[2]& NFSATTRBIT_STATFS2))
 end_define
 
 begin_define
@@ -1906,7 +1981,7 @@ name|NFSCLRSTATFS_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 					\ 		(b)->bits[0]&= ~NFSATTRBIT_STATFS0; 			\ 		(b)->bits[1]&= ~NFSATTRBIT_STATFS1; } while (0)
+value|do { 					\ 	(b)->bits[0]&= ~NFSATTRBIT_STATFS0;	 			\ 	(b)->bits[1]&= ~NFSATTRBIT_STATFS1;				\ 	(b)->bits[2]&= ~NFSATTRBIT_STATFS2;				\ } while (0)
 end_define
 
 begin_define
@@ -1916,7 +1991,7 @@ name|NFSREADDIRPLUS_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 					\ 		(b)->bits[0] = NFSATTRBIT_READDIRPLUS0; 		\ 		(b)->bits[1] = NFSATTRBIT_READDIRPLUS1; } while (0)
+value|do { 					\ 	(b)->bits[0] = NFSATTRBIT_READDIRPLUS0;		 		\ 	(b)->bits[1] = NFSATTRBIT_READDIRPLUS1;				\ 	(b)->bits[2] = NFSATTRBIT_READDIRPLUS2;				\ } while (0)
 end_define
 
 begin_define
@@ -1926,7 +2001,7 @@ name|NFSREFERRAL_ATTRBIT
 parameter_list|(
 name|b
 parameter_list|)
-value|do { 					\ 		(b)->bits[0] = NFSATTRBIT_REFERRAL0;	 		\ 		(b)->bits[1] = NFSATTRBIT_REFERRAL1; } while (0)
+value|do { 					\ 	(b)->bits[0] = NFSATTRBIT_REFERRAL0;		 		\ 	(b)->bits[1] = NFSATTRBIT_REFERRAL1;				\ 	(b)->bits[2] = NFSATTRBIT_REFERRAL2;				\ } while (0)
 end_define
 
 begin_comment
@@ -2351,6 +2426,22 @@ modifier|*
 name|nd_slotseq
 decl_stmt|;
 comment|/* ptr to slot seq# in req */
+name|uint8_t
+name|nd_sessionid
+index|[
+name|NFSX_V4SESSIONID
+index|]
+decl_stmt|;
+comment|/* Session id */
+name|uint32_t
+name|nd_slotid
+decl_stmt|;
+comment|/* Slotid for this RPC */
+name|SVCXPRT
+modifier|*
+name|nd_xprt
+decl_stmt|;
+comment|/* Server RPC handle */
 block|}
 struct|;
 end_struct
@@ -2560,6 +2651,20 @@ define|#
 directive|define
 name|ND_HASSEQUENCE
 value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_CACHETHIS
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ND_LASTOP
+value|0x10000000
 end_define
 
 begin_comment

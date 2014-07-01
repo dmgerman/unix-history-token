@@ -443,7 +443,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Server side transport handle. In the kernel, transports have a  * reference count which tracks the number of currently assigned  * worker threads plus one for the service pool's reference.  */
+comment|/*  * Server side transport handle. In the kernel, transports have a  * reference count which tracks the number of currently assigned  * worker threads plus one for the service pool's reference.  * For NFSv4.1 sessions, a reference is also held for a backchannel.  */
 end_comment
 
 begin_typedef
@@ -2760,6 +2760,29 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|clnt_bck_create
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+specifier|const
+name|rpcprog_t
+parameter_list|,
+specifier|const
+name|rpcvers_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* 	 * struct socket *;			-- server transport socket 	 * const rpcprog_t prog;		-- RPC program number 	 * const rpcvers_t vers;		-- RPC program version 	 */
+end_comment
 
 begin_comment
 comment|/*  * Generic TLI create routine  */

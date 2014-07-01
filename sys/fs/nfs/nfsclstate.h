@@ -215,6 +215,11 @@ decl_stmt|;
 name|nfsquad_t
 name|nfsess_clientid
 decl_stmt|;
+name|SVCXPRT
+modifier|*
+name|nfsess_xprt
+decl_stmt|;
+comment|/* For backchannel callback */
 name|uint32_t
 name|nfsess_slotseq
 index|[
