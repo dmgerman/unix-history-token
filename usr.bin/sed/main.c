@@ -792,7 +792,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s script [-Ealnru] [-i[<extension>]] [file ...]\n"
-literal|"\t%s [-Ealnu] [-i[<extension>]] [-e script] ... [-f script_file]"
+literal|"\t%s [-Ealnu] [-i extension] [-e script] ... [-f script_file]"
 literal|" ... [file ...]\n"
 argument_list|,
 name|getprogname
