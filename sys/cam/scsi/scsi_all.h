@@ -3610,6 +3610,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|COMPARE_AND_WRITE
+value|0x89
+end_define
+
+begin_define
+define|#
+directive|define
 name|WRITE_16
 value|0x8A
 end_define
@@ -3619,6 +3626,13 @@ define|#
 directive|define
 name|WRITE_VERIFY_16
 value|0x8E
+end_define
+
+begin_define
+define|#
+directive|define
+name|VERIFY_16
+value|0x8F
 end_define
 
 begin_define
@@ -3696,6 +3710,13 @@ define|#
 directive|define
 name|WRITE_VERIFY_12
 value|0xAE
+end_define
+
+begin_define
+define|#
+directive|define
+name|VERIFY_12
+value|0xAF
 end_define
 
 begin_define

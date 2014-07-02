@@ -1719,6 +1719,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ctl_cnw
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ctl_report_luns
 parameter_list|(
 name|struct
@@ -1744,6 +1756,18 @@ end_function_decl
 begin_function_decl
 name|int
 name|ctl_tur
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ctl_verify
 parameter_list|(
 name|struct
 name|ctl_scsiio

@@ -771,13 +771,19 @@ block|}
 block|,
 comment|/* 2F VERIFY(10) */
 block|{
-name|NULL
+name|ctl_verify
 block|,
-name|CTL_SERIDX_INVLD
+name|CTL_SERIDX_READ
 block|,
-name|CTL_CMD_FLAG_NONE
+name|CTL_CMD_FLAG_OK_ON_SLUN
+operator||
+name|CTL_FLAG_DATA_OUT
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
-name|CTL_LUN_PAT_NONE
+name|CTL_LUN_PAT_READ
+operator||
+name|CTL_LUN_PAT_RANGE
 block|}
 block|,
 comment|/* 30 SEARCH DATA HIGH(10) */
@@ -1837,15 +1843,19 @@ operator||
 name|CTL_LUN_PAT_RANGE
 block|}
 block|,
-comment|/* 89 */
+comment|/* 89 COMPARE AND WRITE */
 block|{
-name|NULL
+name|ctl_cnw
 block|,
-name|CTL_SERIDX_INVLD
+name|CTL_SERIDX_WRITE
 block|,
-name|CTL_CMD_FLAG_NONE
+name|CTL_CMD_FLAG_OK_ON_SLUN
+operator||
+name|CTL_FLAG_DATA_OUT
 block|,
-name|CTL_LUN_PAT_NONE
+name|CTL_LUN_PAT_WRITE
+operator||
+name|CTL_LUN_PAT_RANGE
 block|}
 block|,
 comment|/* 8A WRITE(16) */
@@ -1913,13 +1923,19 @@ block|}
 block|,
 comment|/* 8F VERIFY(16) */
 block|{
-name|NULL
+name|ctl_verify
 block|,
-name|CTL_SERIDX_INVLD
+name|CTL_SERIDX_READ
 block|,
-name|CTL_CMD_FLAG_NONE
+name|CTL_CMD_FLAG_OK_ON_SLUN
+operator||
+name|CTL_FLAG_DATA_OUT
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
-name|CTL_LUN_PAT_NONE
+name|CTL_LUN_PAT_READ
+operator||
+name|CTL_LUN_PAT_RANGE
 block|}
 block|,
 comment|/* 90 PRE-FETCH(16) */
@@ -2320,13 +2336,19 @@ block|}
 block|,
 comment|/* AF VERIFY(12) */
 block|{
-name|NULL
+name|ctl_verify
 block|,
-name|CTL_SERIDX_INVLD
+name|CTL_SERIDX_READ
 block|,
-name|CTL_CMD_FLAG_NONE
+name|CTL_CMD_FLAG_OK_ON_SLUN
+operator||
+name|CTL_FLAG_DATA_OUT
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
-name|CTL_LUN_PAT_NONE
+name|CTL_LUN_PAT_READ
+operator||
+name|CTL_LUN_PAT_RANGE
 block|}
 block|,
 comment|/* B0 SEARCH DATA HIGH(12) */

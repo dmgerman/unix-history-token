@@ -2316,7 +2316,15 @@ block|,
 literal|"READ(16)"
 block|}
 block|,
-comment|/* 89 */
+comment|/* 89  O               COMPARE AND WRITE*/
+block|{
+literal|0x89
+block|,
+name|D
+block|,
+literal|"COMPARE AND WRITE"
+block|}
+block|,
 comment|/* 8A  OM  O O   O     WRITE(16) */
 block|{
 literal|0x8A
