@@ -211,6 +211,13 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|smp_disabled
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -1113,6 +1120,11 @@ name|cpuid
 decl_stmt|,
 name|sapic_id
 decl_stmt|;
+if|if
+condition|(
+name|smp_disabled
+condition|)
+return|return;
 name|sapic_id
 operator|=
 name|SAPIC_ID_SET
