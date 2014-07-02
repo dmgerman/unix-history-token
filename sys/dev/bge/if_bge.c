@@ -17930,6 +17930,8 @@ argument_list|(
 name|ifp
 argument_list|,
 name|BGE_TX_RING_CNT
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|if_setsendqready
