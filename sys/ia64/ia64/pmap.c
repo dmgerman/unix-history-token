@@ -600,7 +600,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Values for ptc.e. XXX values for SKI. */
+comment|/* Defaults for ptc.e. */
 end_comment
 
 begin_decl_stmt
@@ -608,43 +608,43 @@ specifier|static
 name|uint64_t
 name|pmap_ptc_e_base
 init|=
-literal|0x100000000
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|uint32_t
 name|pmap_ptc_e_count1
 init|=
-literal|3
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|uint32_t
 name|pmap_ptc_e_count2
 init|=
-literal|2
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|uint32_t
 name|pmap_ptc_e_stride1
 init|=
-literal|0x2000
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|uint32_t
 name|pmap_ptc_e_stride2
 init|=
-literal|0x100000000
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1338,16 +1338,6 @@ name|pal_result
 index|[
 literal|1
 index|]
-operator|&
-operator|(
-operator|(
-literal|1L
-operator|<<
-literal|32
-operator|)
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 name|pmap_ptc_e_stride1
 operator|=
@@ -1368,16 +1358,6 @@ name|pal_result
 index|[
 literal|2
 index|]
-operator|&
-operator|(
-operator|(
-literal|1L
-operator|<<
-literal|32
-operator|)
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1385,8 +1365,8 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ptc.e base=0x%lx, count1=%ld, count2=%ld, "
-literal|"stride1=0x%lx, stride2=0x%lx\n"
+literal|"ptc.e base=0x%lx, count1=%u, count2=%u, "
+literal|"stride1=0x%x, stride2=0x%x\n"
 argument_list|,
 name|pmap_ptc_e_base
 argument_list|,
