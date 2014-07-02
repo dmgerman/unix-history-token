@@ -9210,6 +9210,25 @@ comment|/* 	 * Initialize the clock before the console so that console 	 * initi
 name|clock_init
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Use vt(4) by default for UEFI boot (during the sc(4)/vt(4) 	 * transition). 	 */
+if|if
+condition|(
+name|preload_search_info
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFO_METADATA
+operator||
+name|MODINFOMD_EFI_MAP
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|vty_set_preferred
+argument_list|(
+name|VTY_VT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
 name|cninit
 argument_list|()
