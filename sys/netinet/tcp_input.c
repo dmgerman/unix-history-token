@@ -14006,7 +14006,7 @@ name|hc_metrics_lite
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there's a discovered mtu int tcp hostcache, use it 	 * else, use the link mtu. 	 */
+comment|/* 	 * If there's a discovered mtu in tcp hostcache, use it. 	 * Else, use the link mtu. 	 */
 if|if
 condition|(
 name|metrics
