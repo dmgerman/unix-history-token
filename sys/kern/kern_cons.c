@@ -2891,7 +2891,7 @@ argument_list|)
 name|vty_prefer
 operator|&=
 operator|~
-name|DEV_SC
+name|VTY_SC
 expr_stmt|;
 endif|#
 directive|endif
@@ -2905,7 +2905,7 @@ argument_list|)
 name|vty_prefer
 operator|&=
 operator|~
-name|DEV_VT
+name|VTY_VT
 expr_stmt|;
 endif|#
 directive|endif
