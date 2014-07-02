@@ -22934,11 +22934,11 @@ if|if
 condition|(
 operator|!
 operator|(
+name|if_getcapenable
+argument_list|(
 name|sc
 operator|->
-name|bge_if_getcapenable
-argument_list|(
-name|ifp
+name|bge_ifp
 argument_list|)
 operator|&
 name|IFCAP_POLLING
@@ -27724,7 +27724,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|ether_poll_register
+name|ether_poll_register_drv
 argument_list|(
 name|bge_poll
 argument_list|,
