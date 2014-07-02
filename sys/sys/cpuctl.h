@@ -54,6 +54,29 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|int
+name|level
+decl_stmt|;
+comment|/* CPUID level */
+name|int
+name|level_type
+decl_stmt|;
+comment|/* CPUID level type */
+name|uint32_t
+name|data
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|cpuctl_cpuid_count_args_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
 name|void
 modifier|*
 name|data
@@ -106,6 +129,13 @@ define|#
 directive|define
 name|CPUCTL_MSRCBIT
 value|_IOWR('c', 6, cpuctl_msr_args_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUCTL_CPUID_COUNT
+value|_IOWR('c', 7, cpuctl_cpuid_count_args_t)
 end_define
 
 begin_endif
