@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: str.c,v 1.34 2012/03/03 23:16:47 dholland Exp $	*/
+comment|/*	$NetBSD: str.c,v 1.35 2014/02/12 01:35:56 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: str.c,v 1.34 2012/03/03 23:16:47 dholland Exp $"
+literal|"$NetBSD: str.c,v 1.35 2014/02/12 01:35:56 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: str.c,v 1.34 2012/03/03 23:16:47 dholland Exp $"
+literal|"$NetBSD: str.c,v 1.35 2014/02/12 01:35:56 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -286,21 +286,6 @@ name|char
 modifier|*
 modifier|*
 name|argv
-init|=
-name|bmake_malloc
-argument_list|(
-operator|(
-name|argmax
-operator|+
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-argument_list|)
 decl_stmt|;
 comment|/* skip leading space chars. */
 for|for
@@ -344,6 +329,37 @@ argument_list|(
 name|curlen
 operator|=
 name|len
+argument_list|)
+expr_stmt|;
+comment|/* 	 * initial argmax based on len 	 */
+name|argmax
+operator|=
+name|MAX
+argument_list|(
+operator|(
+name|len
+operator|/
+literal|5
+operator|)
+argument_list|,
+literal|50
+argument_list|)
+expr_stmt|;
+name|argv
+operator|=
+name|bmake_malloc
+argument_list|(
+operator|(
+name|argmax
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * copy the string; at the same time, parse backslashes, 	 * quotes and build the argument list. 	 */

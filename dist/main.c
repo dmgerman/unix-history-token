@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.225 2013/09/14 15:09:34 matt Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.226 2014/02/07 17:23:35 pooka Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: main.c,v 1.225 2013/09/14 15:09:34 matt Exp $"
+literal|"$NetBSD: main.c,v 1.226 2014/02/07 17:23:35 pooka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.225 2013/09/14 15:09:34 matt Exp $"
+literal|"$NetBSD: main.c,v 1.226 2014/02/07 17:23:35 pooka Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4610,6 +4610,16 @@ block|{
 name|char
 modifier|*
 name|pwd
+decl_stmt|,
+modifier|*
+name|ptmp1
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|ptmp2
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -4624,9 +4634,14 @@ operator|)
 operator|!=
 name|NULL
 operator|&&
-name|getenv
+name|Var_Value
 argument_list|(
 literal|"MAKEOBJDIRPREFIX"
+argument_list|,
+name|VAR_CMD
+argument_list|,
+operator|&
+name|ptmp1
 argument_list|)
 operator|==
 name|NULL
@@ -4637,9 +4652,14 @@ name|char
 modifier|*
 name|makeobjdir
 init|=
-name|getenv
+name|Var_Value
 argument_list|(
 literal|"MAKEOBJDIR"
+argument_list|,
+name|VAR_CMD
+argument_list|,
+operator|&
+name|ptmp2
 argument_list|)
 decl_stmt|;
 if|if
@@ -4699,6 +4719,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|free
+argument_list|(
+name|ptmp1
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ptmp2
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -4732,9 +4762,14 @@ condition|(
 operator|(
 name|path
 operator|=
-name|getenv
+name|Var_Value
 argument_list|(
 literal|"MAKEOBJDIRPREFIX"
+argument_list|,
+name|VAR_CMD
+argument_list|,
+operator|&
+name|p1
 argument_list|)
 operator|)
 operator|!=
@@ -4765,6 +4800,11 @@ argument_list|(
 name|mdpath
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -4772,9 +4812,14 @@ condition|(
 operator|(
 name|path
 operator|=
-name|getenv
+name|Var_Value
 argument_list|(
 literal|"MAKEOBJDIR"
+argument_list|,
+name|VAR_CMD
+argument_list|,
+operator|&
+name|p1
 argument_list|)
 operator|)
 operator|!=
@@ -4787,6 +4832,11 @@ operator|)
 name|Main_SetObjdir
 argument_list|(
 name|path
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p1
 argument_list|)
 expr_stmt|;
 block|}
