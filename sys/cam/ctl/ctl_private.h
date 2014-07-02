@@ -1340,10 +1340,6 @@ name|ctl_ioctl_info
 name|ioctl_info
 decl_stmt|;
 name|struct
-name|ctl_lun
-name|lun
-decl_stmt|;
-name|struct
 name|ctl_io_pool
 modifier|*
 name|internal_pool
