@@ -1952,7 +1952,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2473,7 +2473,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(pm=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2509,7 +2509,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(pm=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2552,7 +2552,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(pm=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2624,7 +2624,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x)"
+literal|"%s(va=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5263,7 +5263,7 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x)"
+literal|"%s(pm=%p, va=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -5367,7 +5367,7 @@ name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %#x)"
+literal|"%s(pm=%p, va=%#lx, prot=%#x)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6138,7 +6138,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x)"
+literal|"%s(va=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6398,7 +6398,7 @@ name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x, %p, %d)"
+literal|"%s(va=%#lx, m_p=%p, cnt=%d)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6527,7 +6527,7 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x, %d)"
+literal|"%s(va=%#lx, cnt=%d)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6613,7 +6613,7 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x, %#x)"
+literal|"%s(va=%#lx, pa=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6702,7 +6702,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x)"
+literal|"%s(va=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6769,7 +6769,7 @@ name|CTR5
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %#x, %#x)"
+literal|"%s(va_p=%p, sva=%#lx, eva=%#lx, prot=%#x)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6824,7 +6824,7 @@ name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %#x)"
+literal|"%s(pm=%p, sva=%#lx, eva=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6948,7 +6948,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7144,7 +7144,7 @@ name|CTR5
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %#x, %#x)"
+literal|"%s(pm=%p, sva=%#lx, eva=%#lx, prot=%#x)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7410,7 +7410,8 @@ name|CTR6
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_enter(%p, %#x, %#x, %p, %#x, %u)"
+literal|"pmap_enter(pm=%p, va=%#lx, acc=%#x, m=%p, prot=%#x, "
+literal|"wired=%u)"
 argument_list|,
 name|pmap
 argument_list|,
@@ -7912,7 +7913,7 @@ name|CTR6
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %#x, %p, %#x)"
+literal|"%s(pm=%p, sva=%#lx, eva=%#lx, m=%p, prot=%#x)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8059,7 +8060,7 @@ name|CTR5
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %p, %#x)"
+literal|"%s(pm=%p, va=%#lx, m=%p, prot=%#x)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8362,7 +8363,7 @@ name|CTR6
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %p, %u, %#x)"
+literal|"%s(pm=%p, va=%#lx, obj=%p, idx=%lu, sz=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8434,7 +8435,7 @@ name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %u)"
+literal|"%s(pm=%p, va=%#lx, wired=%u)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8565,7 +8566,7 @@ name|CTR6
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %p, %#x, %#x, %#x)"
+literal|"%s(dpm=%p, spm=%p, dva=%#lx, sz=%#lx, sva=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8603,7 +8604,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8657,7 +8658,7 @@ name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %d, %d)"
+literal|"%s(m=%p, ofs=%d, len=%d)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8711,7 +8712,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8765,7 +8766,7 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %p)"
+literal|"%s(sm=%p, dm=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8849,7 +8850,7 @@ name|CTR6
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %p, %#x, %#x)"
+literal|"%s(m0=%p, va0=%#lx, m1=%p, va1=%#lx, sz=%#x)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8996,7 +8997,7 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %p)"
+literal|"%s(pm=%p, m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9116,7 +9117,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9288,7 +9289,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(pm=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9628,7 +9629,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9789,7 +9790,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9969,7 +9970,7 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x)"
+literal|"%s(pm=%p, va=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10041,7 +10042,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10202,7 +10203,7 @@ name|CTR5
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %#x, %d)"
+literal|"%s(pm=%p, sva=%#lx, eva=%#lx, adv=%d)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10366,7 +10367,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10555,7 +10556,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(m=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10942,7 +10943,7 @@ name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x, %#x, %#x)"
+literal|"%s(pa=%#lx, sz=%#lx, attr=%#x)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10998,7 +10999,7 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x, %#x)"
+literal|"%s(va=%#lx, sz=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11097,7 +11098,7 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x)"
+literal|"%s(m=%p, attr=%#x)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11335,7 +11336,7 @@ name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %p)"
+literal|"%s(pm=%p, va=%#lx, pa_p=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11528,7 +11529,7 @@ name|CTR2
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p)"
+literal|"%s(td=%p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11736,7 +11737,7 @@ name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %#x)"
+literal|"%s(pm=%p, va=%#lx, sz=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11879,7 +11880,7 @@ name|CTR5
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%p, %#x, %p, %#x)"
+literal|"%s(obj=%p, ofs=%#lx, va_p=%p, sz=%#lx)"
 argument_list|,
 name|__func__
 argument_list|,
