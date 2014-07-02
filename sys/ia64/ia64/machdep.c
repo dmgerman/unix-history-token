@@ -569,6 +569,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|unmapped_buf_allowed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|bootinfo
 modifier|*
@@ -3239,16 +3247,15 @@ name|EFI_MD_TYPE_IOPORT
 case|:
 name|ia64_port_base
 operator|=
-operator|(
-name|uintptr_t
-operator|)
-name|pmap_mapdev
+name|pmap_mapdev_priv
 argument_list|(
 name|md
 operator|->
 name|md_phys
 argument_list|,
 name|mdlen
+argument_list|,
+name|VM_MEMATTR_UNCACHEABLE
 argument_list|)
 expr_stmt|;
 break|break;
