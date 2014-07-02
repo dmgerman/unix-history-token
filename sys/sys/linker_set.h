@@ -224,7 +224,7 @@ parameter_list|,
 name|ptype
 parameter_list|)
 define|\
-value|extern ptype *__CONCAT(__start_set_,set);			\ 	extern ptype *__CONCAT(__stop_set_,set)
+value|extern ptype __weak *__CONCAT(__start_set_,set);	\ 	extern ptype __weak *__CONCAT(__stop_set_,set)
 end_define
 
 begin_define
