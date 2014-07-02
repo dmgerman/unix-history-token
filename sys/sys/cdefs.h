@@ -902,10 +902,23 @@ name|x
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|__weak
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|__weak
+value|__attribute__((__weak__))
+end_define
 
 begin_if
 if|#
