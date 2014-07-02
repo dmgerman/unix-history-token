@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1602,6 +1608,8 @@ decl_stmt|;
 if|if
 condition|(
 name|panicstr
+operator|||
+name|kdb_active
 condition|)
 return|return;
 if|if
