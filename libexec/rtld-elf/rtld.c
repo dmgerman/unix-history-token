@@ -9656,6 +9656,17 @@ name|Elf_Dyn
 modifier|*
 name|dyn_runpath
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RTLD_INIT_PAGESIZES_EARLY
+comment|/* The page size is required by the dynamic memory allocator. */
+name|init_pagesizes
+argument_list|(
+name|aux_info
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*      * Conjure up an Obj_Entry structure for the dynamic linker.      *      * The "path" member can't be initialized yet because string constants      * cannot yet be accessed. Below we will set it correctly.      */
 name|memset
 argument_list|(
@@ -9797,12 +9808,17 @@ name|obj_rtld
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|RTLD_INIT_PAGESIZES_EARLY
 comment|/* The page size is required by the dynamic memory allocator. */
 name|init_pagesizes
 argument_list|(
 name|aux_info
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|aux_info

@@ -250,6 +250,13 @@ name|RTLD_DEFAULT_STACK_EXEC
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|RTLD_INIT_PAGESIZES_EARLY
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
