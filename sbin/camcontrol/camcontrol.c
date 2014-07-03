@@ -333,7 +333,11 @@ block|,
 name|CAM_CMD_SANITIZE
 init|=
 literal|0x0000001f
-block|, }
+block|,
+name|CAM_CMD_PERSIST
+init|=
+literal|0x00000020
+block|}
 name|cam_cmdmask
 typedef|;
 end_typedef
@@ -1064,6 +1068,16 @@ block|,
 literal|"Pflp:qs:U:y"
 block|}
 block|,
+block|{
+literal|"persist"
+block|,
+name|CAM_CMD_PERSIST
+block|,
+name|CAM_ARG_NONE
+block|,
+literal|"ai:I:k:K:o:ps:ST:U"
+block|}
+block|,
 endif|#
 directive|endif
 comment|/* MINIMALISTIC */
@@ -1109,20 +1123,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CC_OR_NOT_FOUND
-block|,
-name|CC_OR_AMBIGUOUS
-block|,
-name|CC_OR_FOUND
-block|}
-name|camcontrol_optret
-typedef|;
-end_typedef
 
 begin_struct
 struct|struct
@@ -36648,6 +36648,9 @@ literal|"                              [-l<high|maximum>] [-q] [-s pwd] [-T time
 literal|"                              [-U<user|master>] [-y]\n"
 literal|"        camcontrol hpa        [dev_id][generic args] [-f] [-l] [-P] [-p pwd]\n"
 literal|"                              [-q] [-s max_sectors] [-U pwd] [-y]\n"
+literal|"        camcontrol persist    [dev_id][generic args]<-i action|-o action>\n"
+literal|"                              [-a][-I tid][-k key][-K sa_key][-p][-R rtp]\n"
+literal|"                              [-s scope][-S][-T type][-U]\n"
 endif|#
 directive|endif
 comment|/* MINIMALISTIC */
@@ -36697,8 +36700,9 @@ literal|"sanitize    send the SCSI SANITIZE command to the named device\n"
 literal|"idle        send the ATA IDLE command to the named device\n"
 literal|"standby     send the ATA STANDBY command to the named device\n"
 literal|"sleep       send the ATA SLEEP command to the named device\n"
-literal|"fwdownload  program firmware of the named device with the given image"
+literal|"fwdownload  program firmware of the named device with the given image\n"
 literal|"security    report or send ATA security commands to the named device\n"
+literal|"persist     send the SCSI PERSISTENT RESERVE IN or OUT commands\n"
 literal|"help        this message\n"
 literal|"Device Identifiers:\n"
 literal|"bus:target        specify the bus and target, lun defaults to 0\n"
@@ -36833,6 +36837,22 @@ literal|"-s sectors        configures the maximum user accessible sectors of the
 literal|"                  device\n"
 literal|"-U pwd            unlock the HPA configuration of the device\n"
 literal|"-y                don't ask any questions\n"
+literal|"persist arguments:\n"
+literal|"-i action         specify read_keys, read_reservation, report_cap, or\n"
+literal|"                  read_full_status\n"
+literal|"-o action         specify register, register_ignore, reserve, release,\n"
+literal|"                  clear, preempt, preempt_abort, register_move, replace_lost\n"
+literal|"-a                set the All Target Ports (ALL_TG_PT) bit\n"
+literal|"-I tid            specify a Transport ID, e.g.: sas,0x1234567812345678\n"
+literal|"-k key            specify the Reservation Key\n"
+literal|"-K sa_key         specify the Service Action Reservation Key\n"
+literal|"-p                set the Activate Persist Through Power Loss bit\n"
+literal|"-R rtp            specify the Relative Target Port\n"
+literal|"-s scope          specify the scope: lun, extent, element or a number\n"
+literal|"-S                specify Transport ID for register, requires -I\n"
+literal|"-T res_type       specify the reservation type: read_shared, wr_ex, rd_ex,\n"
+literal|"                  ex_ac, wr_ex_ro, ex_ac_ro, wr_ex_ar, ex_ac_ar\n"
+literal|"-U                unregister the current initiator for register_move\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -38141,6 +38161,35 @@ argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CAM_CMD_PERSIST
+case|:
+name|error
+operator|=
+name|scsipersist
+argument_list|(
+name|cam_dev
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|combinedopt
+argument_list|,
+name|retry_count
+argument_list|,
+name|timeout
+argument_list|,
+name|arglist
+operator|&
+name|CAM_ARG_VERBOSE
+argument_list|,
+name|arglist
+operator|&
+name|CAM_ARG_ERR_RECOVER
 argument_list|)
 expr_stmt|;
 break|break;
