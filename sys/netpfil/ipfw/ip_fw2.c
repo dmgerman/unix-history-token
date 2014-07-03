@@ -872,7 +872,31 @@ name|sysctl_ipfw_table_num
 argument_list|,
 literal|"IU"
 argument_list|,
-literal|"Maximum number of tables"
+literal|"Maximum number of concurrently used tables"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
+argument_list|(
+name|_net_inet_ip_fw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tables_sets
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|VNET_NAME
+argument_list|(
+name|fw_tables_sets
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|"Use per-set namespace for tables"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

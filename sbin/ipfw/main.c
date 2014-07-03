@@ -1854,6 +1854,26 @@ literal|1
 comment|/* show counters */
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|_substrcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"table"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ipfw_table_handler
+argument_list|(
+name|ac
+argument_list|,
+name|av
+argument_list|)
+expr_stmt|;
 else|else
 name|errx
 argument_list|(

@@ -238,15 +238,8 @@ begin_comment
 comment|/* create new table  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_FW_TABLE_XMODIFY
-value|96
-end_define
-
 begin_comment
-comment|/* modify existing table */
+comment|//#define	IP_FW_TABLE_XMODIFY	96	/* modify existing table */
 end_comment
 
 begin_define
@@ -1651,12 +1644,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPFW_TABLE_U32
+value|3
+end_define
+
+begin_comment
+comment|/* Table for holidng ports/uid/gid/etc */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPFW_TABLE_MAXTYPE
-value|2
+value|3
 end_define
 
 begin_comment
 comment|/* Maximum valid number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_U32
+value|1
+end_define
+
+begin_comment
+comment|/* Skipto/tablearg integer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_IP
+value|2
+end_define
+
+begin_comment
+comment|/* Nexthop IP address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_DSCP
+value|3
+end_define
+
+begin_comment
+comment|/* DiffServ codepoints */
 end_comment
 
 begin_typedef
@@ -1826,7 +1863,7 @@ comment|/* TLV type */
 name|uint16_t
 name|flags
 decl_stmt|;
-comment|/* unused */
+comment|/* TLV-specific flags		*/
 name|uint32_t
 name|length
 decl_stmt|;
@@ -1864,6 +1901,13 @@ name|IPFW_TLV_STATE_LIST
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_TBL_ENT
+value|5
+end_define
+
 begin_comment
 comment|/* Object name TLV */
 end_comment
@@ -1881,10 +1925,14 @@ name|uint16_t
 name|idx
 decl_stmt|;
 comment|/* Name index			*/
-name|uint16_t
-name|spare0
+name|uint8_t
+name|spare
 decl_stmt|;
 comment|/* unused			*/
+name|uint8_t
+name|type
+decl_stmt|;
+comment|/* object type, if applicable	*/
 name|uint32_t
 name|set
 decl_stmt|;
@@ -1900,6 +1948,88 @@ block|}
 name|ipfw_obj_ntlv
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Table entry TLV */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_obj_tentry
+block|{
+name|ipfw_obj_tlv
+name|head
+decl_stmt|;
+comment|/* TLV header			*/
+name|uint8_t
+name|subtype
+decl_stmt|;
+comment|/* subtype (IPv4,IPv6)		*/
+name|uint8_t
+name|masklen
+decl_stmt|;
+comment|/* mask length			*/
+name|uint16_t
+name|idx
+decl_stmt|;
+comment|/* Table name index		*/
+name|uint16_t
+name|flags
+decl_stmt|;
+comment|/* Entry flags			*/
+name|uint16_t
+name|spare0
+decl_stmt|;
+name|uint32_t
+name|spare1
+decl_stmt|;
+name|uint32_t
+name|value
+decl_stmt|;
+comment|/* value			*/
+union|union
+block|{
+comment|/* Longest field needs to be aligned by 8-byte boundary	*/
+name|struct
+name|in_addr
+name|addr
+decl_stmt|;
+comment|/* IPv4 address			*/
+name|uint32_t
+name|key
+decl_stmt|;
+comment|/* uid/gid/port			*/
+name|struct
+name|in6_addr
+name|addr6
+decl_stmt|;
+comment|/* IPv6 address 		*/
+name|char
+name|iface
+index|[
+name|IF_NAMESIZE
+index|]
+decl_stmt|;
+comment|/* interface name	*/
+block|}
+name|k
+union|;
+block|}
+name|ipfw_obj_tentry
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_TF_UPDATE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Update record if exists	*/
+end_comment
 
 begin_comment
 comment|/* Containter TLVs */
@@ -1941,10 +2071,10 @@ name|ftype
 decl_stmt|;
 comment|/* table value format type	*/
 name|uint8_t
-name|atype
+name|vtype
 decl_stmt|;
-comment|/* algorithm type		*/
-name|uint8_t
+comment|/* value type			*/
+name|uint16_t
 name|spare0
 decl_stmt|;
 name|uint32_t
@@ -2037,8 +2167,9 @@ name|opheader
 decl_stmt|;
 comment|/* IP_FW3 opcode		*/
 name|uint32_t
-name|spare
+name|set_mask
 decl_stmt|;
+comment|/* disabled set mask		*/
 name|uint32_t
 name|count
 decl_stmt|;
@@ -2082,7 +2213,7 @@ comment|/* IP_FW3 opcode		*/
 name|uint32_t
 name|set_mask
 decl_stmt|;
-comment|/* disabled set mask		*/
+comment|/* enabled set mask		*/
 name|uint32_t
 name|flags
 decl_stmt|;

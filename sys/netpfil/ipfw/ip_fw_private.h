@@ -1211,38 +1211,6 @@ end_define
 
 begin_struct
 struct|struct
-name|tid_info
-block|{
-name|uint32_t
-name|set
-decl_stmt|;
-comment|/* table set */
-name|uint16_t
-name|uidx
-decl_stmt|;
-comment|/* table index */
-name|uint8_t
-name|type
-decl_stmt|;
-comment|/* table type */
-name|uint8_t
-name|atype
-decl_stmt|;
-name|void
-modifier|*
-name|tlvs
-decl_stmt|;
-comment|/* Pointer to first TLV */
-name|int
-name|tlen
-decl_stmt|;
-comment|/* Total TLV size block */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|obj_idx
 block|{
 name|uint16_t
@@ -1281,10 +1249,6 @@ name|uint16_t
 name|new_tables
 decl_stmt|;
 comment|/* count of opcodes referencing table */
-name|uint32_t
-name|tableset
-decl_stmt|;
-comment|/* ipfw set id for table */
 name|ipfw_obj_ctlv
 modifier|*
 name|ctlv
@@ -1615,15 +1579,12 @@ begin_function_decl
 name|struct
 name|named_object
 modifier|*
-name|ipfw_objhash_lookup_idx
+name|ipfw_objhash_lookup_kidx
 parameter_list|(
 name|struct
 name|namedobj_instance
 modifier|*
 name|ni
-parameter_list|,
-name|uint32_t
-name|set
 parameter_list|,
 name|uint16_t
 name|idx
@@ -1728,9 +1689,6 @@ name|namedobj_instance
 modifier|*
 name|ni
 parameter_list|,
-name|uint32_t
-name|set
-parameter_list|,
 name|uint16_t
 name|idx
 parameter_list|)
@@ -1744,9 +1702,6 @@ parameter_list|(
 name|void
 modifier|*
 name|n
-parameter_list|,
-name|uint32_t
-name|set
 parameter_list|,
 name|uint16_t
 modifier|*
