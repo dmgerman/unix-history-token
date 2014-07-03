@@ -53144,6 +53144,14 @@ name|dofh_loadsz
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|dof
+operator|->
+name|dofh_loadsz
+operator|!=
+name|hdr
+operator|.
+name|dofh_loadsz
 condition|)
 block|{
 name|kmem_free

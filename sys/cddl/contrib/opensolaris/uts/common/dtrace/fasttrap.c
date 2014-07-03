@@ -8885,6 +8885,12 @@ name|size
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|probe
+operator|->
+name|ftps_noffs
+operator|!=
+name|noffs
 condition|)
 block|{
 name|kmem_free
