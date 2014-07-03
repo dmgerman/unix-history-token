@@ -14419,9 +14419,6 @@ name|order
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
 name|SBP_DEBUG
 argument_list|(
 literal|1
@@ -14513,12 +14510,6 @@ name|ocb
 argument_list|,
 name|ocb
 argument_list|)
-expr_stmt|;
-name|flags
-operator|=
-name|ocb
-operator|->
-name|flags
 expr_stmt|;
 if|if
 condition|(
