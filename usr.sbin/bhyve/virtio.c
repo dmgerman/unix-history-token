@@ -1458,9 +1458,9 @@ if|if
 condition|(
 name|vs
 operator|->
-name|vs_flags
+name|vs_negotiated_caps
 operator|&
-name|VIRTIO_EVENT_IDX
+name|VIRTIO_RING_F_EVENT_IDX
 condition|)
 block|{
 name|event_idx
