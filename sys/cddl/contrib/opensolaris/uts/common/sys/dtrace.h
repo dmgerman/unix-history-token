@@ -2369,6 +2369,14 @@ directive|define
 name|DOF_SECF_LOAD
 value|1
 comment|/* section should be loaded */
+define|#
+directive|define
+name|DOF_SEC_ISLOADABLE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((x) == DOF_SECT_ECBDESC) || ((x) == DOF_SECT_PROBEDESC) ||	\ 	((x) == DOF_SECT_ACTDESC) || ((x) == DOF_SECT_DIFOHDR) ||	\ 	((x) == DOF_SECT_DIF) || ((x) == DOF_SECT_STRTAB) ||		\ 	((x) == DOF_SECT_VARTAB) || ((x) == DOF_SECT_RELTAB) ||		\ 	((x) == DOF_SECT_TYPTAB) || ((x) == DOF_SECT_URELHDR) ||	\ 	((x) == DOF_SECT_KRELHDR) || ((x) == DOF_SECT_OPTDESC) ||	\ 	((x) == DOF_SECT_PROVIDER) || ((x) == DOF_SECT_PROBES) ||	\ 	((x) == DOF_SECT_PRARGS) || ((x) == DOF_SECT_PROFFS) ||		\ 	((x) == DOF_SECT_INTTAB) || ((x) == DOF_SECT_XLTAB) ||		\ 	((x) == DOF_SECT_XLMEMBERS) || ((x) == DOF_SECT_XLIMPORT) ||	\ 	((x) == DOF_SECT_XLIMPORT) || ((x) == DOF_SECT_XLEXPORT) ||	\ 	((x) == DOF_SECT_PREXPORT) || ((x) == DOF_SECT_PRENOFFS))
 typedef|typedef
 struct|struct
 name|dof_ecbdesc

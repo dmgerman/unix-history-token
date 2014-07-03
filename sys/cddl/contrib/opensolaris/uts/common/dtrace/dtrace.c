@@ -40210,7 +40210,7 @@ name|dtdo_len
 operator|-
 literal|1
 argument_list|,
-literal|"bad return size"
+literal|"bad return size\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -57186,6 +57186,40 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+if|if
+condition|(
+name|DOF_SEC_ISLOADABLE
+argument_list|(
+name|sec
+operator|->
+name|dofs_type
+argument_list|)
+operator|&&
+operator|!
+operator|(
+name|sec
+operator|->
+name|dofs_flags
+operator|&
+name|DOF_SECF_LOAD
+operator|)
+condition|)
+block|{
+name|dtrace_dof_error
+argument_list|(
+name|dof
+argument_list|,
+literal|"loadable section with load "
+literal|"flag unset"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
