@@ -69694,6 +69694,12 @@ operator|--
 name|dtrace_opens
 operator|==
 literal|0
+operator|&&
+name|dtrace_anon
+operator|.
+name|dta_enabling
+operator|==
+name|NULL
 condition|)
 operator|(
 name|void
@@ -69898,12 +69904,19 @@ name|defined
 argument_list|(
 name|sun
 argument_list|)
+comment|/* 	 * Only relinquish control of the kernel debugger interface when there 	 * are no consumers and no anonymous enablings. 	 */
 if|if
 condition|(
 operator|--
 name|dtrace_opens
 operator|==
 literal|0
+operator|&&
+name|dtrace_anon
+operator|.
+name|dta_enabling
+operator|==
+name|NULL
 condition|)
 operator|(
 name|void
