@@ -247,7 +247,12 @@ operator|.
 name|es_name
 operator|=
 literal|"Realtek RTL8366RB"
-block|}
+block|,
+operator|.
+name|es_vlan_caps
+operator|=
+name|ETHERSWITCH_VLAN_DOT1Q
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -759,6 +764,14 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
+name|struct
+name|rtl8366rb_softc
+modifier|*
+name|sc
+decl_stmt|;
 comment|/* Initialisation for TL-WR1043ND */
 name|smi_rmw
 argument_list|(
@@ -794,7 +807,43 @@ argument_list|,
 name|RTL_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* remove port 0 form VLAN 0 */
+comment|/* Initialize our vlan table. */
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+name|sc
+operator|->
+name|vid
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|i
+operator|+
+literal|1
+operator|)
+operator||
+name|ETHERSWITCH_VID_VALID
+expr_stmt|;
+comment|/* Remove port 0 from VLAN 1. */
 name|smi_rmw
 argument_list|(
 name|dev
@@ -817,7 +866,7 @@ argument_list|,
 name|RTL_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* add port 0 untagged and port 5 tagged to VLAN 1 */
+comment|/* Add port 0 untagged and port 5 tagged to VLAN 2. */
 name|smi_rmw
 argument_list|(
 name|dev
@@ -884,7 +933,7 @@ argument_list|,
 name|RTL_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* set PVLAN 1 for port 0 */
+comment|/* Set PVID 2 for port 0. */
 name|smi_rmw
 argument_list|(
 name|dev
@@ -3182,6 +3231,8 @@ name|vid
 index|[
 name|vlangroup
 index|]
+operator|&
+name|ETHERSWITCH_VID_MASK
 expr_stmt|;
 if|if
 condition|(
@@ -3423,12 +3474,16 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|vid
 index|[
 name|i
 index|]
+operator|&
+name|ETHERSWITCH_VID_MASK
+operator|)
 operator|==
 name|p
 operator|->
@@ -3575,6 +3630,11 @@ modifier|*
 name|vg
 parameter_list|)
 block|{
+name|struct
+name|rtl8366rb_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|uint16_t
 name|vmcr
 index|[
@@ -3616,16 +3676,25 @@ name|es_vlangroup
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|vg
 operator|->
 name|es_vid
 operator|=
-name|RTL8366RB_VMCR_VID
-argument_list|(
-name|vmcr
-argument_list|)
-operator||
-name|ETHERSWITCH_VID_VALID
+name|sc
+operator|->
+name|vid
+index|[
+name|vg
+operator|->
+name|es_vlangroup
+index|]
 expr_stmt|;
 name|vg
 operator|->
@@ -3705,6 +3774,41 @@ name|vg
 operator|->
 name|es_vid
 expr_stmt|;
+comment|/* VLAN group disabled ? */
+if|if
+condition|(
+name|vg
+operator|->
+name|es_member_ports
+operator|==
+literal|0
+operator|&&
+name|vg
+operator|->
+name|es_untagged_ports
+operator|==
+literal|0
+operator|&&
+name|vg
+operator|->
+name|es_vid
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|sc
+operator|->
+name|vid
+index|[
+name|g
+index|]
+operator||=
+name|ETHERSWITCH_VID_VALID
+expr_stmt|;
 name|rtl_writereg
 argument_list|(
 name|dev
@@ -3778,6 +3882,40 @@ name|vg
 operator|->
 name|es_fid
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|rtl_getconf
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|etherswitch_conf_t
+modifier|*
+name|conf
+parameter_list|)
+block|{
+comment|/* Return the VLAN mode. */
+name|conf
+operator|->
+name|cmd
+operator|=
+name|ETHERSWITCH_CONF_VLAN_MODE
+expr_stmt|;
+name|conf
+operator|->
+name|vlan_mode
+operator|=
+name|ETHERSWITCH_VLAN_DOT1Q
 expr_stmt|;
 return|return
 operator|(
@@ -4381,6 +4519,13 @@ name|rtl_writephy
 argument_list|)
 block|,
 comment|/* etherswitch interface */
+name|DEVMETHOD
+argument_list|(
+name|etherswitch_getconf
+argument_list|,
+name|rtl_getconf
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|etherswitch_getinfo
