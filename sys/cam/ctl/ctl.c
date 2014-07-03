@@ -2910,6 +2910,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CTLIO
+argument_list|,
+literal|"ctlio"
+argument_list|,
+literal|"Memory used for CTL requests"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -15342,7 +15354,7 @@ operator|*
 name|cur_io
 argument_list|)
 argument_list|,
-name|M_CTL
+name|M_CTLIO
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -15465,7 +15477,7 @@ name|free
 argument_list|(
 name|cur_io
 argument_list|,
-name|M_CTL
+name|M_CTLIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -15672,7 +15684,7 @@ name|free
 argument_list|(
 name|io
 argument_list|,
-name|M_CTL
+name|M_CTLIO
 argument_list|)
 expr_stmt|;
 block|}
@@ -16050,7 +16062,7 @@ operator|*
 name|io
 argument_list|)
 argument_list|,
-name|M_CTL
+name|M_CTLIO
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -16248,7 +16260,7 @@ name|free
 argument_list|(
 name|io
 argument_list|,
-name|M_CTL
+name|M_CTLIO
 argument_list|)
 expr_stmt|;
 block|}
