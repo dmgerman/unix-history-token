@@ -870,6 +870,68 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"EFI framebuffer information:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"addr, size     0x%lx, 0x%lx\n"
+argument_list|,
+name|efifb
+operator|.
+name|fb_addr
+argument_list|,
+name|efifb
+operator|.
+name|fb_size
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"dimensions     %d x %d\n"
+argument_list|,
+name|efifb
+operator|.
+name|fb_width
+argument_list|,
+name|efifb
+operator|.
+name|fb_height
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"stride         %d\n"
+argument_list|,
+name|efifb
+operator|.
+name|fb_stride
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"masks          0x%08x, 0x%08x, 0x%08x, 0x%08x\n"
+argument_list|,
+name|efifb
+operator|.
+name|fb_mask_red
+argument_list|,
+name|efifb
+operator|.
+name|fb_mask_green
+argument_list|,
+name|efifb
+operator|.
+name|fb_mask_blue
+argument_list|,
+name|efifb
+operator|.
+name|fb_mask_reserved
+argument_list|)
+expr_stmt|;
 name|file_addmetadata
 argument_list|(
 name|kfp
@@ -885,6 +947,7 @@ operator|&
 name|efifb
 argument_list|)
 expr_stmt|;
+block|}
 name|efisz
 operator|=
 operator|(
