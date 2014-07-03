@@ -4378,11 +4378,6 @@ name|actlen
 parameter_list|)
 block|{
 name|struct
-name|axge_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
 name|axge_csum_hdr
 name|csum_hdr
 decl_stmt|;
@@ -4405,13 +4400,6 @@ decl_stmt|;
 name|uint16_t
 name|pktlen
 decl_stmt|;
-name|sc
-operator|=
-name|uether_getsc
-argument_list|(
-name|ue
-argument_list|)
-expr_stmt|;
 name|pos
 operator|=
 literal|0

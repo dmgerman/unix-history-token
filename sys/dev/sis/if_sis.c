@@ -7711,11 +7711,6 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 name|sc
 operator|=
 name|xsc
@@ -7724,12 +7719,6 @@ name|SIS_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|=
-name|sc
-operator|->
-name|sis_ifp
 expr_stmt|;
 name|mii
 operator|=

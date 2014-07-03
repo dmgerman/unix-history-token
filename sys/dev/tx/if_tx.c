@@ -5471,11 +5471,6 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
-name|struct
-name|ifmedia
-modifier|*
-name|ifm
-decl_stmt|;
 name|sc
 operator|=
 name|ifp
@@ -5495,13 +5490,6 @@ name|EPIC_LOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|ifm
-operator|=
-operator|&
-name|mii
-operator|->
-name|mii_media
 expr_stmt|;
 comment|/* Nothing should be selected if interface is down. */
 if|if
