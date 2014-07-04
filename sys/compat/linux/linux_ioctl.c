@@ -14717,6 +14717,16 @@ operator|=
 name|SG_GET_SCSI_ID
 expr_stmt|;
 break|break;
+case|case
+name|LINUX_SG_GET_SG_TABLESIZE
+case|:
+name|args
+operator|->
+name|cmd
+operator|=
+name|SG_GET_SG_TABLESIZE
+expr_stmt|;
+break|break;
 default|default:
 return|return
 operator|(
