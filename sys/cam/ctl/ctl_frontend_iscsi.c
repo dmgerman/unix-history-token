@@ -4639,6 +4639,8 @@ name|io
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|last
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4984,6 +4986,19 @@ literal|0
 block|CFISCSI_SESSION_DEBUG(cs, "removing csw for initiator task tag " 		    "0x%x", cdw->cdw_initiator_task_tag);
 endif|#
 directive|endif
+comment|/* 		 * Set nonzero port status; this prevents backends from 		 * assuming that the data transfer actually succeeded 		 * and writing uninitialized data to disk. 		 */
+name|cdw
+operator|->
+name|cdw_ctl_io
+operator|->
+name|scsiio
+operator|.
+name|io_hdr
+operator|.
+name|port_status
+operator|=
+literal|42
+expr_stmt|;
 name|cdw
 operator|->
 name|cdw_ctl_io
@@ -5024,6 +5039,58 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Wait for CTL to terminate all the tasks. 	 */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|refcount_acquire
+argument_list|(
+operator|&
+name|cs
+operator|->
+name|cs_outstanding_ctl_pdus
+argument_list|)
+expr_stmt|;
+name|last
+operator|=
+name|refcount_release
+argument_list|(
+operator|&
+name|cs
+operator|->
+name|cs_outstanding_ctl_pdus
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|last
+operator|!=
+literal|0
+condition|)
+break|break;
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"waiting for CTL to terminate tasks, "
+literal|"%d remaining"
+argument_list|,
+name|cs
+operator|->
+name|cs_outstanding_ctl_pdus
+argument_list|)
+expr_stmt|;
+name|pause
+argument_list|(
+literal|"cfiscsi_terminate"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5090,11 +5157,7 @@ operator|->
 name|cs_terminating
 condition|)
 block|{
-name|cfiscsi_session_terminate_tasks
-argument_list|(
-name|cs
-argument_list|)
-expr_stmt|;
+comment|/* 			 * We used to wait up to 30 seconds to deliver queued 			 * PDUs to the initiator.  We also tried hard to deliver 			 * SCSI Responses for the aborted PDUs.  We don't do 			 * that anymore.  We might need to revisit that. 			 */
 name|callout_drain
 argument_list|(
 operator|&
@@ -5117,7 +5180,12 @@ operator|->
 name|cs_conn
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX: We used to wait up to 30 seconds to deliver queued PDUs 			 * 	to the initiator.  We also tried hard to deliver SCSI Responses 			 * 	for the aborted PDUs.  We don't do that anymore.  We might need 			 * 	to revisit that. 			 */
+comment|/* 			 * At this point ICL receive thread is no longer 			 * running; no new tasks can be queued. 			 */
+name|cfiscsi_session_terminate_tasks
+argument_list|(
+name|cs
+argument_list|)
+expr_stmt|;
 name|cfiscsi_session_delete
 argument_list|(
 name|cs
