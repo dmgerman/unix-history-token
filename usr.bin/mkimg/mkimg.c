@@ -295,6 +295,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-v\t\t-  increase verbosity\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-y\t\t-  [developers] enable unit test\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t-H<num>\t-  number of heads to simulate\n"
 argument_list|)
 expr_stmt|;
