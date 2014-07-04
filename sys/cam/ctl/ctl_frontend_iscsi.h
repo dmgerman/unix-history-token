@@ -191,7 +191,7 @@ name|struct
 name|cv
 name|cs_maintenance_cv
 decl_stmt|;
-name|int
+name|bool
 name|cs_terminating
 decl_stmt|;
 name|size_t

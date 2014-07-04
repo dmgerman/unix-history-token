@@ -5117,11 +5117,6 @@ operator|->
 name|cs_conn
 argument_list|)
 expr_stmt|;
-name|cs
-operator|->
-name|cs_terminating
-operator|++
-expr_stmt|;
 comment|/* 			 * XXX: We used to wait up to 30 seconds to deliver queued PDUs 			 * 	to the initiator.  We also tried hard to deliver SCSI Responses 			 * 	for the aborted PDUs.  We don't do that anymore.  We might need 			 * 	to revisit that. 			 */
 name|cfiscsi_session_delete
 argument_list|(
@@ -5160,15 +5155,13 @@ condition|(
 name|cs
 operator|->
 name|cs_terminating
-operator|!=
-literal|0
 condition|)
 return|return;
 name|cs
 operator|->
 name|cs_terminating
 operator|=
-literal|1
+name|true
 expr_stmt|;
 name|cv_signal
 argument_list|(
