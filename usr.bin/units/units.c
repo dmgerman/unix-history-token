@@ -3544,6 +3544,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -3573,6 +3574,16 @@ name|longopts
 index|[]
 init|=
 block|{
+block|{
+literal|"help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'h'
+block|}
+block|,
 block|{
 literal|"file"
 block|,
@@ -3697,7 +3708,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+f:qvUV"
+literal|"+hf:qvUV"
 argument_list|,
 name|longopts
 argument_list|,
@@ -3802,6 +3813,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'h'
+case|:
+comment|/* FALLTHROUGH */
 default|default:
 name|usage
 argument_list|()
