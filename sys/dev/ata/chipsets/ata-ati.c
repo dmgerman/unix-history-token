@@ -623,6 +623,13 @@ argument_list|(
 name|dev
 argument_list|)
 operator|!=
+name|ATA_AMD_ID
+operator|&&
+name|pci_get_vendor
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
 name|ATA_ATI_ID
 condition|)
 return|return
