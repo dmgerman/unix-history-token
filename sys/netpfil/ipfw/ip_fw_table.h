@@ -644,9 +644,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Exported to support legacy opcodes */
+end_comment
+
 begin_function_decl
 name|int
-name|ipfw_add_table_entry
+name|add_table_entry
 parameter_list|(
 name|struct
 name|ip_fw_chain
@@ -668,7 +672,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ipfw_del_table_entry
+name|del_table_entry
 parameter_list|(
 name|struct
 name|ip_fw_chain
@@ -690,7 +694,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ipfw_destroy_table
+name|flush_table
 parameter_list|(
 name|struct
 name|ip_fw_chain
@@ -714,10 +718,14 @@ name|ip_fw_chain
 modifier|*
 name|ch
 parameter_list|,
-name|struct
-name|tid_info
+name|ip_fw3_opheader
 modifier|*
-name|ti
+name|op3
+parameter_list|,
+name|struct
+name|sockopt_data
+modifier|*
+name|sd
 parameter_list|)
 function_decl|;
 end_function_decl

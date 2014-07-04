@@ -3900,10 +3900,16 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|l
+decl_stmt|,
+name|warnflag
 decl_stmt|;
 name|time_t
 name|boot_seconds
 decl_stmt|;
+name|warnflag
+operator|=
+literal|0
+expr_stmt|;
 name|boot_seconds
 operator|=
 name|boottime
@@ -4173,6 +4179,20 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|error
+operator|==
+literal|2
+condition|)
+block|{
+comment|/* Non-fatal table rewrite error. */
+name|warnflag
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
 name|printf
 argument_list|(
 literal|"Stop on rule %d. Fail to convert table\n"
@@ -4185,6 +4205,20 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|warnflag
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"ipfw: process %s is using legacy interfaces,"
+literal|" consider rebuilding\n"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|ipfw_get_dynamic
 argument_list|(
 name|chain
@@ -7351,7 +7385,7 @@ operator|==
 name|IP_FW_TABLE_ADD
 operator|)
 condition|?
-name|ipfw_add_table_entry
+name|add_table_entry
 argument_list|(
 name|chain
 argument_list|,
@@ -7362,7 +7396,7 @@ operator|&
 name|tei
 argument_list|)
 else|:
-name|ipfw_del_table_entry
+name|del_table_entry
 argument_list|(
 name|chain
 argument_list|,
@@ -7432,7 +7466,7 @@ name|tbl
 expr_stmt|;
 name|error
 operator|=
-name|ipfw_flush_table
+name|flush_table
 argument_list|(
 name|chain
 argument_list|,
