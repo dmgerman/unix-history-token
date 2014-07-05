@@ -13921,7 +13921,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<backend_type>%s"
+literal|"\t<backend_type>%s"
 literal|"</backend_type>\n"
 argument_list|,
 operator|(
@@ -13954,7 +13954,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<lun_type>%d</lun_type>\n"
+literal|"\t<lun_type>%d</lun_type>\n"
 argument_list|,
 name|lun
 operator|->
@@ -14003,7 +14003,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<size>%ju</size>\n"
+literal|"\t<size>%ju</size>\n"
 argument_list|,
 operator|(
 name|lun
@@ -14039,7 +14039,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<blocksize>%u</blocksize>\n"
+literal|"\t<blocksize>%u</blocksize>\n"
 argument_list|,
 name|lun
 operator|->
@@ -14061,7 +14061,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<serial_number>"
+literal|"\t<serial_number>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14113,7 +14113,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<device_id>"
+literal|"\t<device_id>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14210,7 +14210,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<%s>%s</%s>"
+literal|"\t<%s>%s</%s>\n"
 argument_list|,
 name|opt
 operator|->
