@@ -1091,6 +1091,11 @@ name|ctx
 operator|->
 name|fd
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ctx
 operator|->
