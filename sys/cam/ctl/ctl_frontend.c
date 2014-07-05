@@ -627,7 +627,7 @@ name|port_list
 argument_list|,
 name|port
 argument_list|,
-name|links
+name|fe_links
 argument_list|)
 expr_stmt|;
 name|STAILQ_INSERT_TAIL
