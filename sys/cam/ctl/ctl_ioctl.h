@@ -1191,6 +1191,63 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Port request interface:  *  * driver:		This is required, and is NUL-terminated a string  *			that is the name of the frontend, like "iscsi" .  *  * reqtype:		The type of request, CTL_REQ_CREATE to create a  *			port, CTL_REQ_REMOVE to delete a port.  *  * num_be_args:		This is the number of frontend-specific arguments  *			in the be_args array.  *  * be_args:		This is an array of frontend-specific arguments.  *			See above for a description of the fields in this  *			structure.  *  * status:		Status of the request.  *  * error_str:		If the status is CTL_LUN_ERROR, this will  *			contain a string describing the error.  *  * kern_be_args:	For kernel use only.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTL_REQ_CREATE
+block|,
+name|CTL_REQ_REMOVE
+block|,
+name|CTL_REQ_MODIFY
+block|, }
+name|ctl_req_type
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|ctl_req
+block|{
+name|char
+name|driver
+index|[
+name|CTL_DRIVER_NAME_LEN
+index|]
+decl_stmt|;
+name|ctl_req_type
+name|reqtype
+decl_stmt|;
+name|int
+name|num_args
+decl_stmt|;
+name|struct
+name|ctl_be_arg
+modifier|*
+name|args
+decl_stmt|;
+name|ctl_lun_status
+name|status
+decl_stmt|;
+name|char
+name|error_str
+index|[
+name|CTL_ERROR_STR_LEN
+index|]
+decl_stmt|;
+name|struct
+name|ctl_be_arg
+modifier|*
+name|kern_args
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * iSCSI status  *  * OK:			Request completed successfully.  *  * ERROR:		An error occured, look at the error string for a  *			description of the error.  *  * CTL_ISCSI_LIST_NEED_MORE_SPACE:  * 			User has to pass larger buffer for CTL_ISCSI_LIST ioctl.  */
 end_comment
 
@@ -1866,8 +1923,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|CTL_PORT_REQ
+value|_IOWR(CTL_MINOR, 0x26, struct ctl_req)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CTL_PORT_LIST
-value|_IOWR(CTL_MINOR, 0x26, struct ctl_lun_list)
+value|_IOWR(CTL_MINOR, 0x27, struct ctl_lun_list)
 end_define
 
 begin_endif

@@ -237,6 +237,13 @@ name|CTL_WWPN_LEN
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|CTL_DRIVER_NAME_LEN
+value|32
+end_define
+
 begin_comment
 comment|/*  * Unit attention types. ASC/ASCQ values for these should be placed in  * ctl_build_ua.  These are also listed in order of reporting priority.  * i.e. a poweron UA is reported first, bus reset second, etc.  */
 end_comment
