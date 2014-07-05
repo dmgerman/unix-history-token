@@ -916,6 +916,11 @@ operator|*
 name|lineptr
 operator|==
 literal|'/'
+operator|||
+operator|*
+name|lineptr
+operator|==
+literal|'#'
 condition|)
 continue|continue;
 name|lineptr
