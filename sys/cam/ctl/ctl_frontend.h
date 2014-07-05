@@ -420,6 +420,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Find the frontend by its name. Returns NULL if not found.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|ctl_frontend
+modifier|*
+name|ctl_frontend_find
+parameter_list|(
+name|char
+modifier|*
+name|frontend_name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * This may block until resources are allocated.  Called at FETD module load  * time. Returns 0 for success, non-zero for failure.  */
 end_comment
 
