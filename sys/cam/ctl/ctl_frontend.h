@@ -155,25 +155,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|fe_devid_t
-function_decl|)
-parameter_list|(
-name|struct
-name|ctl_scsiio
-modifier|*
-name|ctsio
-parameter_list|,
-name|int
-name|alloc_len
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -242,10 +223,6 @@ name|lun_func_t
 name|lun_disable
 decl_stmt|;
 comment|/* passed to CTL */
-name|fe_devid_t
-name|devid
-decl_stmt|;
-comment|/* passed to CTL */
 name|void
 modifier|*
 name|targ_lun_arg
@@ -312,6 +289,18 @@ decl_stmt|;
 comment|/* used by CTL */
 name|ctl_options_t
 name|options
+decl_stmt|;
+comment|/* passed to CTL */
+name|struct
+name|ctl_devid
+modifier|*
+name|port_devid
+decl_stmt|;
+comment|/* passed to CTL */
+name|struct
+name|ctl_devid
+modifier|*
+name|target_devid
 decl_stmt|;
 comment|/* passed to CTL */
 name|STAILQ_ENTRY
