@@ -9964,9 +9964,12 @@ name|val
 operator|=
 name|ctl_get_opt
 argument_list|(
+operator|&
 name|lun
 operator|->
 name|be_lun
+operator|->
+name|options
 argument_list|,
 literal|"vendor"
 argument_list|)
@@ -11187,6 +11190,7 @@ name|target
 operator|=
 name|ctl_get_opt
 argument_list|(
+operator|&
 name|control_softc
 operator|->
 name|ctl_luns
@@ -11195,6 +11199,8 @@ name|lun_id
 index|]
 operator|->
 name|be_lun
+operator|->
+name|options
 argument_list|,
 literal|"cfiscsi_target"
 argument_list|)
@@ -11203,6 +11209,7 @@ name|target_alias
 operator|=
 name|ctl_get_opt
 argument_list|(
+operator|&
 name|control_softc
 operator|->
 name|ctl_luns
@@ -11211,6 +11218,8 @@ name|lun_id
 index|]
 operator|->
 name|be_lun
+operator|->
+name|options
 argument_list|,
 literal|"cfiscsi_target_alias"
 argument_list|)
@@ -11219,6 +11228,7 @@ name|lun
 operator|=
 name|ctl_get_opt
 argument_list|(
+operator|&
 name|control_softc
 operator|->
 name|ctl_luns
@@ -11227,6 +11237,8 @@ name|lun_id
 index|]
 operator|->
 name|be_lun
+operator|->
+name|options
 argument_list|,
 literal|"cfiscsi_lun"
 argument_list|)
