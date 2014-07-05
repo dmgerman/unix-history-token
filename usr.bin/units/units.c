@@ -239,35 +239,12 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MSDOS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SEPARATOR
-value|";"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|SEPARATOR
 value|":"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -618,6 +595,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|dupstr
@@ -660,6 +638,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|readunits
 parameter_list|(
@@ -1258,6 +1237,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|initializeunit
 parameter_list|(
@@ -1305,6 +1285,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|addsubunit
 parameter_list|(
@@ -1389,6 +1370,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|showunit
 parameter_list|(
@@ -1679,6 +1661,7 @@ comment|/*    Adds the specified string to the unit.    Flip is 0 for adding nor
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|addunit
 parameter_list|(
@@ -2231,6 +2214,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|compare
 parameter_list|(
@@ -2273,6 +2257,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sortunit
 parameter_list|(
@@ -2912,6 +2897,7 @@ value|4
 end_define
 
 begin_function
+specifier|static
 name|int
 name|reduceproduct
 parameter_list|(
@@ -3070,6 +3056,7 @@ comment|/*    Reduces numerator and denominator of the specified unit.    Return
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|reduceunit
 parameter_list|(
@@ -3126,6 +3113,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|compareproducts
 parameter_list|(
@@ -3232,6 +3220,7 @@ comment|/* Return zero if units are compatible, nonzero otherwise */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|compareunits
 parameter_list|(
@@ -3273,6 +3262,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|completereduce
 parameter_list|(
@@ -3309,6 +3299,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|showanswer
 parameter_list|(
