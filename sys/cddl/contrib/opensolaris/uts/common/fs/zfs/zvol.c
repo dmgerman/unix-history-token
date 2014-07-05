@@ -7799,6 +7799,9 @@ return|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|sun
 name|sync
 operator|=
 operator|!
@@ -7810,6 +7813,12 @@ operator|&
 name|ZVOL_WCE
 operator|)
 operator|||
+else|#
+directive|else
+name|sync
+operator|=
+endif|#
+directive|endif
 operator|(
 name|zv
 operator|->
