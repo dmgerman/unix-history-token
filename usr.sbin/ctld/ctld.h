@@ -615,6 +615,12 @@ name|char
 modifier|*
 name|conn_initiator_alias
 decl_stmt|;
+name|uint8_t
+name|conn_initiator_isid
+index|[
+literal|6
+index|]
+decl_stmt|;
 name|uint32_t
 name|conn_cmdsn
 decl_stmt|;

@@ -1370,6 +1370,12 @@ index|[
 name|CTL_ISCSI_ALIAS_LEN
 index|]
 decl_stmt|;
+name|uint8_t
+name|initiator_isid
+index|[
+literal|6
+index|]
+decl_stmt|;
 name|char
 name|target_name
 index|[
