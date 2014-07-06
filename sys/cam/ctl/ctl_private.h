@@ -1129,13 +1129,6 @@ name|NUM_TARGET_PORT_GROUPS
 value|2
 end_define
 
-begin_define
-define|#
-directive|define
-name|NUM_PORTS_PER_GRP
-value|2
-end_define
-
 begin_struct
 struct|struct
 name|ctl_lun
