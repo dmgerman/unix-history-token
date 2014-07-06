@@ -14220,6 +14220,8 @@ literal|0
 index|]
 argument_list|,
 name|PGET_CANDEBUG
+operator||
+name|PGET_NOTWEXIT
 argument_list|,
 operator|&
 name|p
@@ -16702,6 +16704,8 @@ literal|0
 index|]
 argument_list|,
 name|PGET_CANDEBUG
+operator||
+name|PGET_NOTWEXIT
 argument_list|,
 operator|&
 name|p
