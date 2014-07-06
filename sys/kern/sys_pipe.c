@@ -762,7 +762,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|pipe_create
 parameter_list|(
 name|struct
@@ -778,7 +778,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|pipe_paircreate
 parameter_list|(
 name|struct
@@ -1423,7 +1423,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|pipe_paircreate
 parameter_list|(
 name|struct
@@ -1450,9 +1450,6 @@ name|rpipe
 decl_stmt|,
 modifier|*
 name|wpipe
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 operator|*
 name|p_pp
@@ -1531,51 +1528,20 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Only the forward direction pipe is backed by default */
-if|if
-condition|(
-operator|(
-name|error
-operator|=
 name|pipe_create
 argument_list|(
 name|rpipe
 argument_list|,
 literal|1
 argument_list|)
-operator|)
-operator|!=
-literal|0
-operator|||
-operator|(
-name|error
-operator|=
+expr_stmt|;
 name|pipe_create
 argument_list|(
 name|wpipe
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|pipeclose
-argument_list|(
-name|rpipe
-argument_list|)
 expr_stmt|;
-name|pipeclose
-argument_list|(
-name|wpipe
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 name|rpipe
 operator|->
 name|pipe_state
@@ -1588,16 +1554,11 @@ name|pipe_state
 operator||=
 name|PIPE_DIRECTOK
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|pipe_named_ctor
 parameter_list|(
 name|struct
@@ -1617,11 +1578,6 @@ name|pipepair
 modifier|*
 name|pp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
 name|pipe_paircreate
 argument_list|(
 name|td
@@ -1630,17 +1586,6 @@ operator|&
 name|pp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|pp
 operator|->
 name|pp_rpipe
@@ -1657,11 +1602,6 @@ name|pp
 operator|->
 name|pp_rpipe
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1845,8 +1785,6 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-name|error
-operator|=
 name|pipe_paircreate
 argument_list|(
 name|td
@@ -1855,17 +1793,6 @@ operator|&
 name|pp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|rpipe
 operator|=
 operator|&
@@ -2981,7 +2908,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|pipe_create
 parameter_list|(
 name|pipe
@@ -2997,14 +2924,12 @@ name|int
 name|backing
 decl_stmt|;
 block|{
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|backing
 condition|)
 block|{
+comment|/* 		 * Note that these functions can fail if pipe map is exhausted 		 * (as a result of too many pipes created), but we ignore the 		 * error as it is not fatal and could be provoked by 		 * unprivileged users. The only consequence is worse performance 		 * with given pipe. 		 */
 if|if
 condition|(
 name|amountpipekva
@@ -3013,8 +2938,9 @@ name|maxpipekva
 operator|/
 literal|2
 condition|)
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|pipespace_new
 argument_list|(
 name|pipe
@@ -3023,22 +2949,15 @@ name|SMALL_PIPE_SIZE
 argument_list|)
 expr_stmt|;
 else|else
-name|error
-operator|=
+operator|(
+name|void
+operator|)
 name|pipespace_new
 argument_list|(
 name|pipe
 argument_list|,
 name|PIPE_SIZE
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* If we're not backing this pipe, no need to do anything. */
-name|error
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|pipe
@@ -3048,11 +2967,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 end_function
 
