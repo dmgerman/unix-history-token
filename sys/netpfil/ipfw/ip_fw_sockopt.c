@@ -7262,6 +7262,23 @@ name|sdata
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IP_FW_TABLE_XFIND
+case|:
+comment|/* IP_FW3 */
+name|error
+operator|=
+name|ipfw_find_table_entry
+argument_list|(
+name|chain
+argument_list|,
+name|op3
+argument_list|,
+operator|&
+name|sdata
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/*--- LEGACY API ---*/
 case|case
 name|IP_FW_TABLE_ADD

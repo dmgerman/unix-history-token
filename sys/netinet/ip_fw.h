@@ -264,6 +264,17 @@ begin_comment
 comment|/* add entry */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_XFIND
+value|99
+end_define
+
+begin_comment
+comment|/* finds an entry */
+end_comment
+
 begin_comment
 comment|/*  * Usage guidelines:  *  * IP_FW_TABLE_XLIST(ver 1): Dumps all table data  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_xtable_info.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info ipfw_table_xentry x N ]  *  * IP_FW_TABLE_XDESTROY: Destroys given table  *   Request(setsockopt): [ ipfw_obj_header ]  *  * IP_FW_TABLES_XGETSIZE: Get buffer size needed to list info for all tables.  *   Request(getsockopt): [ empty ], size = sizeof(ipfw_obj_lheader)  *   Reply: [ ipfw_obj_lheader ]  *  * IP_FW_TABLES_XLIST: Lists all tables currently available in kernel.  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_obj_lheader.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info x N ]  *  * IP_FW_TABLE_XINFO: Store table info to buffer.  *   Request(getsockopt): [ ipfw_obj_header ipfw_xtable_info(empty)]  *   Reply: [ ipfw_obj_header ipfw_xtable_info ]  *  * IP_FW_TABLE_XFLUSH: Removes all data from given table leaving type etc..  *   Request(setsockopt): [ ipfw_obj_header ]  */
 end_comment
@@ -1974,20 +1985,13 @@ name|uint16_t
 name|idx
 decl_stmt|;
 comment|/* Table name index		*/
-name|uint16_t
-name|flags
-decl_stmt|;
-comment|/* Entry flags			*/
-name|uint16_t
-name|spare0
-decl_stmt|;
-name|uint32_t
-name|spare1
-decl_stmt|;
 name|uint32_t
 name|value
 decl_stmt|;
 comment|/* value			*/
+name|uint64_t
+name|spare
+decl_stmt|;
 union|union
 block|{
 comment|/* Longest field needs to be aligned by 8-byte boundary	*/
@@ -2133,9 +2137,8 @@ name|opheader
 decl_stmt|;
 comment|/* IP_FW3 opcode		*/
 name|uint32_t
-name|set
+name|spare
 decl_stmt|;
-comment|/* Set we're operating		*/
 name|uint16_t
 name|idx
 decl_stmt|;
