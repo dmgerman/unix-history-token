@@ -113,20 +113,6 @@ directive|include
 file|"pwupd.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|HAVE_PWDB_C
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_PWDB_U
-value|1
-end_define
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -445,10 +431,6 @@ name|rc
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * First, let's check the see if the database is alright 	 * Note: -C is only available in FreeBSD 2.2 and above 	 */
-ifdef|#
-directive|ifdef
-name|HAVE_PWDB_C
 name|rc
 operator|=
 name|pwdb
@@ -470,12 +452,6 @@ operator|==
 literal|0
 condition|)
 block|{
-else|#
-directive|else
-block|{
-comment|/* No -C */
-endif|#
-directive|endif
 name|int
 name|pfd
 decl_stmt|,
@@ -625,7 +601,9 @@ name|pw
 operator|!=
 name|NULL
 condition|?
-name|user
+name|pw
+operator|->
+name|pw_name
 else|:
 name|NULL
 argument_list|)
@@ -658,6 +636,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|addpwent
 parameter_list|(
@@ -676,6 +657,9 @@ name|NULL
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|chgpwent
 parameter_list|(
@@ -699,6 +683,9 @@ name|login
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|delpwent
 parameter_list|(
