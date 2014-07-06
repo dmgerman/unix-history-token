@@ -4033,10 +4033,10 @@ operator|=
 literal|0
 init|;
 name|fd
-operator|<
+operator|<=
 name|fdp
 operator|->
-name|fd_nfiles
+name|fd_lastfile
 condition|;
 name|fd
 operator|++

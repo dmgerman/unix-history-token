@@ -954,10 +954,10 @@ operator|<
 literal|0
 operator|||
 name|fd
-operator|>=
+operator|>
 name|fdp
 operator|->
-name|fd_nfiles
+name|fd_lastfile
 condition|)
 return|return
 operator|(
