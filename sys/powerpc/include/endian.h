@@ -31,6 +31,31 @@ begin_comment
 comment|/*  * Define the order of 32-bit words in 64-bit words.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LITTLE_ENDIAN__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_QUAD_HIGHWORD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|_QUAD_LOWWORD
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -44,6 +69,11 @@ directive|define
 name|_QUAD_LOWWORD
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * GCC defines _BIG_ENDIAN and _LITTLE_ENDIAN equal to __BIG_ENDIAN__  * and __LITTLE_ENDIAN__ (resp).  */
@@ -487,6 +517,57 @@ parameter_list|)
 value|(__is_constant(x) ? __bswap64_const(x) : \ 	__bswap64_var(x))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LITTLE_ENDIAN__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__htonl
+parameter_list|(
+name|x
+parameter_list|)
+value|(__bswap32((__uint32_t)(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__htons
+parameter_list|(
+name|x
+parameter_list|)
+value|(__bswap16((__uint16_t)(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ntohl
+parameter_list|(
+name|x
+parameter_list|)
+value|(__bswap32((__uint32_t)(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ntohs
+parameter_list|(
+name|x
+parameter_list|)
+value|(__bswap16((__uint16_t)(x)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -526,6 +607,11 @@ name|x
 parameter_list|)
 value|((__uint16_t)(x))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
