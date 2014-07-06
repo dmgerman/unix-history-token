@@ -8579,6 +8579,16 @@ operator|->
 name|cmsg_len
 operator|>
 name|clen
+operator|||
+name|cm
+operator|->
+name|cmsg_len
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|cm
+argument_list|)
 condition|)
 block|{
 name|error
