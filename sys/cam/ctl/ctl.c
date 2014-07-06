@@ -19191,6 +19191,8 @@ decl_stmt|,
 name|idlen1
 decl_stmt|,
 name|idlen2
+init|=
+literal|0
 decl_stmt|,
 name|len
 decl_stmt|;
