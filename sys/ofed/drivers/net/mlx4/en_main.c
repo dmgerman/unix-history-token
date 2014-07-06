@@ -1678,7 +1678,7 @@ name|mlxen
 argument_list|,
 name|mlxen_mod
 argument_list|,
-name|SI_SUB_SMP
+name|SI_SUB_OFED_PREINIT
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
