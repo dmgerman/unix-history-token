@@ -1908,7 +1908,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPFW_TLV_STATE_LIST
+name|IPFW_TLV_DYNSTATE_LIST
 value|4
 end_define
 
@@ -1917,6 +1917,13 @@ define|#
 directive|define
 name|IPFW_TLV_TBL_ENT
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_DYN_ENT
+value|6
 end_define
 
 begin_comment
@@ -2033,6 +2040,33 @@ end_define
 
 begin_comment
 comment|/* Update record if exists	*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_obj_dyntlv
+block|{
+name|ipfw_obj_tlv
+name|head
+decl_stmt|;
+name|ipfw_dyn_rule
+name|state
+decl_stmt|;
+block|}
+name|ipfw_obj_dyntlv
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_DF_LAST
+value|0x01
+end_define
+
+begin_comment
+comment|/* Last state in chain		*/
 end_comment
 
 begin_comment

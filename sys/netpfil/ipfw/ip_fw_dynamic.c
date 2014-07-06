@@ -6102,7 +6102,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Returns number of dynamic rules.  */
+comment|/*  * Returns size of dynamic states in legacy format  */
 end_comment
 
 begin_function
@@ -6129,6 +6129,31 @@ argument_list|(
 name|ipfw_dyn_rule
 argument_list|)
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns number of dynamic states.  * Used by dump format v1 (current).  */
+end_comment
+
+begin_function
+name|int
+name|ipfw_dyn_get_count
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|V_ipfw_dyn_v
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|0
+else|:
+name|DYN_COUNT
 return|;
 block|}
 end_function
@@ -6270,7 +6295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fills int buffer given by @sd with dynamic states.  *  * Returns 0 on success.  */
+comment|/*  * Fills int buffer given by @sd with dynamic states.  * Used by dump format v1 (current).  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -6291,14 +6316,13 @@ block|{
 name|ipfw_dyn_rule
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|ipfw_obj_dyntlv
 modifier|*
 name|dst
 decl_stmt|,
 modifier|*
 name|last
-init|=
-name|NULL
 decl_stmt|;
 name|ipfw_obj_ctlv
 modifier|*
@@ -6306,6 +6330,9 @@ name|ctlv
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|size_t
+name|sz
 decl_stmt|;
 if|if
 condition|(
@@ -6351,22 +6378,30 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|sz
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ipfw_obj_dyntlv
+argument_list|)
+expr_stmt|;
 name|ctlv
 operator|->
 name|head
 operator|.
 name|type
 operator|=
-name|IPFW_TLV_TBLNAME_LIST
+name|IPFW_TLV_DYNSTATE_LIST
 expr_stmt|;
 name|ctlv
 operator|->
 name|objsize
 operator|=
-sizeof|sizeof
-argument_list|(
-name|ipfw_dyn_rule
-argument_list|)
+name|sz
+expr_stmt|;
+name|last
+operator|=
+name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -6412,18 +6447,14 @@ block|{
 name|dst
 operator|=
 operator|(
-name|ipfw_dyn_rule
+name|ipfw_obj_dyntlv
 operator|*
 operator|)
 name|ipfw_get_sopt_space
 argument_list|(
 name|sd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|dst
-argument_list|)
+name|sz
 argument_list|)
 expr_stmt|;
 if|if
@@ -6448,8 +6479,27 @@ name|export_dyn_rule
 argument_list|(
 name|p
 argument_list|,
+operator|&
 name|dst
+operator|->
+name|state
 argument_list|)
+expr_stmt|;
+name|dst
+operator|->
+name|head
+operator|.
+name|length
+operator|=
+name|sz
+expr_stmt|;
+name|dst
+operator|->
+name|head
+operator|.
+name|type
+operator|=
+name|IPFW_TLV_DYN_ENT
 expr_stmt|;
 name|last
 operator|=
@@ -6469,18 +6519,13 @@ operator|!=
 name|NULL
 condition|)
 comment|/* mark last dynamic rule */
-name|bzero
-argument_list|(
-operator|&
 name|last
 operator|->
-name|next
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|last
-argument_list|)
-argument_list|)
+name|head
+operator|.
+name|flags
+operator|=
+name|IPFW_DF_LAST
 expr_stmt|;
 return|return
 operator|(
@@ -6491,7 +6536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fill given buffer with dynamic states.  * IPFW_UH_RLOCK has to be held while calling.  */
+comment|/*  * Fill given buffer with dynamic states (legacy format).  * IPFW_UH_RLOCK has to be held while calling.  */
 end_comment
 
 begin_function

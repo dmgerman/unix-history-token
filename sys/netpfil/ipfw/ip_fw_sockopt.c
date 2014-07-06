@@ -4972,13 +4972,16 @@ name|flags
 operator|&
 name|IPFW_CFG_GET_STATES
 condition|)
-block|{
 name|sz
 operator|+=
-name|ipfw_dyn_len
+name|ipfw_dyn_get_count
 argument_list|()
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ipfw_obj_dyntlv
+argument_list|)
 expr_stmt|;
-block|}
 comment|/* Fill header anyway */
 name|hdr
 operator|->
@@ -8095,7 +8098,15 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
+name|sd
+operator|->
+name|sopt
+operator|->
+name|sopt_dir
+operator|==
+name|SOPT_GET
+condition|)
+block|{
 name|error
 operator|=
 name|sooptcopyout
@@ -8112,7 +8123,10 @@ name|sd
 operator|->
 name|koff
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -8121,6 +8135,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 name|memset
 argument_list|(
 name|sd
