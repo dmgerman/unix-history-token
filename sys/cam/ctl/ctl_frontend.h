@@ -89,6 +89,26 @@ typedef|typedef
 name|int
 function_decl|(
 modifier|*
+name|port_info_func_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|onoff_arg
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
 name|lun_func_t
 function_decl|)
 parameter_list|(
@@ -207,6 +227,10 @@ decl_stmt|;
 comment|/* passed to CTL */
 name|port_func_t
 name|port_offline
+decl_stmt|;
+comment|/* passed to CTL */
+name|port_info_func_t
+name|port_info
 decl_stmt|;
 comment|/* passed to CTL */
 name|void
