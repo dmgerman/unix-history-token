@@ -8789,11 +8789,6 @@ name|void
 name|fdunshare
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
@@ -8803,6 +8798,15 @@ name|struct
 name|filedesc
 modifier|*
 name|tmp
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
 decl_stmt|;
 if|if
 condition|(

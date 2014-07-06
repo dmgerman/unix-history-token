@@ -759,11 +759,6 @@ name|void
 name|fdunshare
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td

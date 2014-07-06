@@ -2621,8 +2621,6 @@ expr_stmt|;
 comment|/* 	 * For security and other reasons, the file descriptor table cannot 	 * be shared after an exec. 	 */
 name|fdunshare
 argument_list|(
-name|p
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
