@@ -9108,12 +9108,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ctl_free_opts
-argument_list|(
-operator|&
-name|opts
-argument_list|)
-expr_stmt|;
 name|req
 operator|->
 name|status
@@ -9134,6 +9128,12 @@ name|error_str
 argument_list|)
 argument_list|,
 literal|"Missing required argument"
+argument_list|)
+expr_stmt|;
+name|ctl_free_opts
+argument_list|(
+operator|&
+name|opts
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9157,12 +9157,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ctl_free_opts
-argument_list|(
-operator|&
-name|opts
-argument_list|)
-expr_stmt|;
 name|req
 operator|->
 name|status
@@ -9187,6 +9181,12 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
+name|ctl_free_opts
+argument_list|(
+operator|&
+name|opts
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -9198,17 +9198,6 @@ operator|==
 name|CFISCSI_TARGET_STATE_ACTIVE
 condition|)
 block|{
-name|cfiscsi_target_release
-argument_list|(
-name|ct
-argument_list|)
-expr_stmt|;
-name|ctl_free_opts
-argument_list|(
-operator|&
-name|opts
-argument_list|)
-expr_stmt|;
 name|req
 operator|->
 name|status
@@ -9231,6 +9220,17 @@ argument_list|,
 literal|"target \"%s\" already exist"
 argument_list|,
 name|target
+argument_list|)
+expr_stmt|;
+name|cfiscsi_target_release
+argument_list|(
+name|ct
+argument_list|)
+expr_stmt|;
+name|ctl_free_opts
+argument_list|(
+operator|&
+name|opts
 argument_list|)
 expr_stmt|;
 return|return;
