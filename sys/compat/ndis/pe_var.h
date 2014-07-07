@@ -357,13 +357,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMAGE_FILE_MACHINE_IA64
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
 name|IMAGE_FILE_MACHINE_MIPS16
 value|0x0266
 end_define
@@ -1333,17 +1326,6 @@ directive|define
 name|IMAGE_REL_BASED_MIPS_JMPADDR16
 value|9
 end_define
-
-begin_define
-define|#
-directive|define
-name|IMAGE_REL_BASED_IA64_IMM64
-value|9
-end_define
-
-begin_comment
-comment|/* yes, 9 too */
-end_comment
 
 begin_define
 define|#

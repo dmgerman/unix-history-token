@@ -2618,7 +2618,7 @@ operator|!=
 name|AF_LINK
 condition|)
 continue|continue;
-comment|/* 		 * Not just casting because of alignment constraints 		 * on sparc64 and ia64. 		 */
+comment|/* 		 * Not just casting because of alignment constraints 		 * on sparc64. 		 */
 name|bcopy
 argument_list|(
 name|ifa

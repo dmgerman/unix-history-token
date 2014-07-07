@@ -782,14 +782,6 @@ name|strcmp
 argument_list|(
 name|optarg
 argument_list|,
-literal|"ia64"
-argument_list|)
-operator|||
-operator|!
-name|strcmp
-argument_list|(
-name|optarg
-argument_list|,
 literal|"pc98"
 argument_list|)
 condition|)

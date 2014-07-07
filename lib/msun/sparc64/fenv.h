@@ -325,7 +325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * In contrast with the ia64 platform, it seems to be worthwhile to  * inline this function on sparc64 even when the arguments are not  * compile-time constants.  Perhaps this depends on the register window.  */
+comment|/*  * It seems to be worthwhile to inline this function even when the  * arguments are not compile-time constants.  Perhaps this depends  * on the register window.  */
 end_comment
 
 begin_function

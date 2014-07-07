@@ -15626,14 +15626,9 @@ decl_stmt|;
 name|RtldLockState
 name|lockstate
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__ia64__
 name|tls_index
 name|ti
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|res
 decl_stmt|;
@@ -16164,7 +16159,7 @@ operator|&
 name|lockstate
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The value required by the caller is derived from the value 	 * of the symbol. For the ia64 architecture, we need to 	 * construct a function descriptor which the caller can use to 	 * call the function with the right 'gp' value. For other 	 * architectures and for non-functions, the value is simply 	 * the relocated value of the symbol. 	 */
+comment|/* 	 * The value required by the caller is derived from the value 	 * of the symbol. this is simply the relocated value of the 	 * symbol. 	 */
 if|if
 condition|(
 name|ELF_ST_TYPE
@@ -16221,25 +16216,6 @@ operator|==
 name|STT_TLS
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|__ia64__
-return|return
-operator|(
-name|__tls_get_addr
-argument_list|(
-name|defobj
-operator|->
-name|tlsindex
-argument_list|,
-name|def
-operator|->
-name|st_value
-argument_list|)
-operator|)
-return|;
-else|#
-directive|else
 name|ti
 operator|.
 name|ti_module
@@ -16265,8 +16241,6 @@ name|ti
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 else|else
 return|return
@@ -21764,11 +21738,6 @@ directive|if
 name|defined
 argument_list|(
 name|__arm__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
 argument_list|)
 operator|||
 name|defined

@@ -901,7 +901,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For a newly created process,  * link up all the structures and its initial threads etc.  * called from:  * {arch}/{arch}/machdep.c   ia64_init(), init386() etc.  * proc_dtor() (should go away)  * proc_init()  */
+comment|/*  * For a newly created process,  * link up all the structures and its initial threads etc.  * called from:  * {arch}/{arch}/machdep.c   {arch}_init(), init386() etc.  * proc_dtor() (should go away)  * proc_init()  */
 end_comment
 
 begin_function
