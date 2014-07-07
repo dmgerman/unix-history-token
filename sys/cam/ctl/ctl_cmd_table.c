@@ -374,7 +374,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x00
+literal|0x01
 block|,
 literal|0xff
 block|,
@@ -419,7 +419,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x00
+literal|0x02
 block|,
 literal|0xff
 block|,
@@ -464,7 +464,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x00
+literal|0x03
 block|,
 literal|0xff
 block|,
@@ -509,7 +509,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x00
+literal|0x04
 block|,
 literal|0xff
 block|,
@@ -565,7 +565,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x00
+literal|0x06
 block|,
 literal|0xff
 block|,
