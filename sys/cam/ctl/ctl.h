@@ -87,6 +87,10 @@ name|CTL_PORT_ISCSI
 init|=
 literal|0x10
 block|,
+name|CTL_PORT_SAS
+init|=
+literal|0x20
+block|,
 name|CTL_PORT_ALL
 init|=
 literal|0xff
