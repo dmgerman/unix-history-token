@@ -992,6 +992,8 @@ name|CTL_TASK_CLEAR_ACA
 block|,
 name|CTL_TASK_CLEAR_TASK_SET
 block|,
+name|CTL_TASK_I_T_NEXUS_RESET
+block|,
 name|CTL_TASK_LUN_RESET
 block|,
 name|CTL_TASK_TARGET_RESET
