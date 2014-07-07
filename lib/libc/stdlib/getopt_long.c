@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: getopt_long.c,v 1.23 2007/10/31 12:34:57 chl Exp $	*/
+comment|/*	$OpenBSD: getopt_long.c,v 1.26 2013/06/08 22:47:56 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -1536,10 +1536,13 @@ name|optchar
 decl_stmt|,
 name|short_too
 decl_stmt|;
+specifier|static
 name|int
 name|posixly_correct
+init|=
+operator|-
+literal|1
 decl_stmt|;
-comment|/* no static, can be changed on the fly */
 if|if
 condition|(
 name|options
@@ -1552,7 +1555,29 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* 	 * XXX Some GNU programs (like cvs) set optind to 0 instead of 	 * XXX using optreset.  Work around this braindamage. 	 */
+if|if
+condition|(
+name|optind
+operator|==
+literal|0
+condition|)
+name|optind
+operator|=
+name|optreset
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Disable GNU extensions if POSIXLY_CORRECT is set or options 	 * string begins with a '+'. 	 */
+if|if
+condition|(
+name|posixly_correct
+operator|==
+operator|-
+literal|1
+operator|||
+name|optreset
+condition|)
 name|posixly_correct
 operator|=
 operator|(
@@ -1564,9 +1589,6 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|GNU_COMPATIBLE
 if|if
 condition|(
 operator|*
@@ -1593,36 +1615,6 @@ operator|&=
 operator|~
 name|FLAG_PERMUTE
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|posixly_correct
-operator|||
-operator|*
-name|options
-operator|==
-literal|'+'
-condition|)
-name|flags
-operator|&=
-operator|~
-name|FLAG_PERMUTE
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|*
-name|options
-operator|==
-literal|'-'
-condition|)
-name|flags
-operator||=
-name|FLAG_ALLARGS
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|*
@@ -1637,19 +1629,6 @@ literal|'-'
 condition|)
 name|options
 operator|++
-expr_stmt|;
-comment|/* 	 * XXX Some GNU programs (like cvs) set optind to 0 instead of 	 * XXX using optreset.  Work around this braindamage. 	 */
-if|if
-condition|(
-name|optind
-operator|==
-literal|0
-condition|)
-name|optind
-operator|=
-name|optreset
-operator|=
-literal|1
 expr_stmt|;
 name|optarg
 operator|=
