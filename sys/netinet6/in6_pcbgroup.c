@@ -162,7 +162,7 @@ name|IPI_HASHFIELDS_4TUPLE
 operator|&&
 name|hashtype
 operator|==
-name|M_HASHTYPE_RSS_TCP_IPV4
+name|M_HASHTYPE_RSS_TCP_IPV6
 operator|)
 operator|||
 operator|(
@@ -174,7 +174,7 @@ name|IPI_HASHFIELDS_2TUPLE
 operator|&&
 name|hashtype
 operator|==
-name|M_HASHTYPE_RSS_IPV4
+name|M_HASHTYPE_RSS_IPV6
 operator|)
 condition|)
 return|return
