@@ -225,6 +225,9 @@ decl_stmt|;
 name|bool
 name|cs_terminating
 decl_stmt|;
+name|bool
+name|cs_tasks_aborted
+decl_stmt|;
 name|size_t
 name|cs_max_data_segment_length
 decl_stmt|;
