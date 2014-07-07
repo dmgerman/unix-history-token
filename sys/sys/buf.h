@@ -645,12 +645,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_00800000
+name|B_FS_FLAG1
 value|0x00800000
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* Available flag for FS use. */
 end_comment
 
 begin_define
