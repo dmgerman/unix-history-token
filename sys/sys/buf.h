@@ -612,7 +612,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_00100000
+name|B_001000000
 value|0x00100000
 end_define
 
