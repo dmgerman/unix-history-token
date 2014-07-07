@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/consio.h>
 end_include
 
@@ -636,6 +642,15 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|vty_enabled
+argument_list|(
+name|VTY_SC
+argument_list|)
+condition|)
+return|return;
 name|sysmouse_tty
 operator|=
 name|tty_alloc
