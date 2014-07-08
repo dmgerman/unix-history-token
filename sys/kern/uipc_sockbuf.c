@@ -4404,6 +4404,20 @@ literal|"sbcreatecontrol: short mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't leave the padding between the msg header and the 	 * cmsg data and the padding after the cmsg data un-initialized. 	 */
+name|bzero
+argument_list|(
+name|cp
+argument_list|,
+name|CMSG_SPACE
+argument_list|(
+operator|(
+name|u_int
+operator|)
+name|size
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
