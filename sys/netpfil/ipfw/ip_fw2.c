@@ -93,6 +93,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -11033,22 +11039,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ipfw_init_counters
+argument_list|()
+expr_stmt|;
 comment|/* insert the default rule and create the initial map */
 name|chain
 operator|->
 name|n_rules
 operator|=
 literal|1
-expr_stmt|;
-name|chain
-operator|->
-name|static_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip_fw
-argument_list|)
 expr_stmt|;
 name|chain
 operator|->
@@ -11070,25 +11069,17 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|chain
-operator|->
-name|map
-condition|)
 name|rule
 operator|=
-name|malloc
+name|ipfw_alloc_rule
 argument_list|(
 name|chain
-operator|->
-name|static_len
 argument_list|,
-name|M_IPFW
-argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip_fw
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Set initial number of tables */
@@ -11208,6 +11199,17 @@ operator|->
 name|id
 operator|=
 literal|1
+expr_stmt|;
+comment|/* Pre-calculate rules length for legacy dump format */
+name|chain
+operator|->
+name|static_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip_fw_rule0
+argument_list|)
 expr_stmt|;
 name|IPFW_LOCK_INIT
 argument_list|(
@@ -11426,8 +11428,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* free the remaining parts */
+name|ipfw_destroy_counters
+argument_list|()
+expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

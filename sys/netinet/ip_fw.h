@@ -26,8 +26,15 @@ name|IPFW_DEFAULT_RULE
 value|65535
 end_define
 
+begin_define
+define|#
+directive|define
+name|RESVD_SET
+value|31
+end_define
+
 begin_comment
-comment|/*  * Number of sets supported by ipfw  */
+comment|/*set for default and persistent rules*/
 end_comment
 
 begin_define
@@ -36,6 +43,10 @@ directive|define
 name|IPFW_MAX_SETS
 value|32
 end_define
+
+begin_comment
+comment|/* Number of sets supported by ipfw*/
+end_comment
 
 begin_comment
 comment|/*  * Default number of ipfw tables.  */
@@ -1282,7 +1293,109 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Here we have the structure representing an ipfw rule.  *  * It starts with a general area (with link fields and counters)  * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values.  *  * Given a rule pointer  r:  *  *  r->cmd		is the start of the first instruction.  *  ACTION_PTR(r)	is the start of the first action (things to do  *			once a rule matched).  *  * When assembling instruction, remember the following:  *  *  + if a rule has a "keep-state" (or "limit") option, then the  *	first instruction (at r->cmd) MUST BE an O_PROBE_STATE  *  + if a rule has a "log" option, then the first action  *	(at ACTION_PTR(r)) MUST be O_LOG  *  + if a rule has an "altq" option, it comes after "log"  *  + if a rule has an O_TAG option, it comes after "log" and "altq"  *  * NOTE: we use a simple linked list of rules because we never need  * 	to delete a rule without scanning the list. We do not use  *	queue(3) macros for portability and readability.  */
+comment|/*  * Here we have the structure representing an ipfw rule.  *  * Layout:  * struct ip_fw_rule  * [ counter block, size = rule->cntr_len ]  * [ one or more instructions, size = rule->cmd_len * 4 ]  *  * It starts with a general area (with link fields).  * Counter block may be next (if rule->cntr_len> 0),  * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values. rule->cmd_len represents  * the total instructions legth in u32 worrd, while act_ofs represents  * rule action offset in u32 words.  *  * When assembling instruction, remember the following:  *  *  + if a rule has a "keep-state" (or "limit") option, then the  *	first instruction (at r->cmd) MUST BE an O_PROBE_STATE  *  + if a rule has a "log" option, then the first action  *	(at ACTION_PTR(r)) MUST be O_LOG  *  + if a rule has an "altq" option, it comes after "log"  *  + if a rule has an O_TAG option, it comes after "log" and "altq"  *  *  * All structures (excluding instructions) are u64-aligned.  * Please keep this.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_fw_rule
+block|{
+name|uint16_t
+name|act_ofs
+decl_stmt|;
+comment|/* offset of action in 32-bit units */
+name|uint16_t
+name|cmd_len
+decl_stmt|;
+comment|/* # of 32-bit words in cmd	*/
+name|uint16_t
+name|spare
+decl_stmt|;
+name|uint8_t
+name|set
+decl_stmt|;
+comment|/* rule set (0..31)		*/
+name|uint8_t
+name|flags
+decl_stmt|;
+comment|/* rule flags			*/
+name|uint32_t
+name|rulenum
+decl_stmt|;
+comment|/* rule number			*/
+name|uint32_t
+name|id
+decl_stmt|;
+comment|/* rule id			*/
+name|ipfw_insn
+name|cmd
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* storage for commands		*/
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IPFW_RULE_NOOPT
+value|0x01
+end_define
+
+begin_comment
+comment|/* Has no options in body	*/
+end_comment
+
+begin_comment
+comment|/* Unaligned version */
+end_comment
+
+begin_comment
+comment|/* Base ipfw rule counter block. */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_fw_bcounter
+block|{
+name|uint16_t
+name|size
+decl_stmt|;
+comment|/* Size of counter block, bytes	*/
+name|uint8_t
+name|flags
+decl_stmt|;
+comment|/* flags for given block	*/
+name|uint8_t
+name|spare
+decl_stmt|;
+name|uint32_t
+name|timestamp
+decl_stmt|;
+comment|/* tv_sec of last match		*/
+name|uint64_t
+name|pcnt
+decl_stmt|;
+comment|/* Packet counter		*/
+name|uint64_t
+name|bcnt
+decl_stmt|;
+comment|/* Byte counter			*/
+block|}
+struct|;
+end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_comment
+comment|/*  * Legacy rule format  */
 end_comment
 
 begin_struct
@@ -1318,11 +1431,6 @@ name|uint8_t
 name|set
 decl_stmt|;
 comment|/* rule set (0..31)		*/
-define|#
-directive|define
-name|RESVD_SET
-value|31
-comment|/* set for default and persistent rules */
 name|uint8_t
 name|_pad
 decl_stmt|;
@@ -1355,6 +1463,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1373,7 +1486,7 @@ name|RULESIZE
 parameter_list|(
 name|rule
 parameter_list|)
-value|(sizeof(struct ip_fw) + \ 	((struct ip_fw *)(rule))->cmd_len * 4 - 4)
+value|(sizeof(*(rule)) + (rule)->cmd_len * 4 - 4)
 end_define
 
 begin_if
@@ -1926,6 +2039,13 @@ name|IPFW_TLV_DYN_ENT
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_RULE_ENT
+value|7
+end_define
+
 begin_comment
 comment|/* Object name TLV */
 end_comment
@@ -2086,10 +2206,17 @@ name|uint32_t
 name|count
 decl_stmt|;
 comment|/* Number of sub-TLVs		*/
-name|uint32_t
+name|uint16_t
 name|objsize
 decl_stmt|;
 comment|/* Single object size		*/
+name|uint8_t
+name|version
+decl_stmt|;
+comment|/* TLV version			*/
+name|uint8_t
+name|spare
+decl_stmt|;
 block|}
 name|ipfw_obj_ctlv
 typedef|;
@@ -2228,14 +2355,21 @@ begin_define
 define|#
 directive|define
 name|IPFW_CFG_GET_STATIC
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPFW_CFG_GET_STATES
-value|2
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_CFG_GET_COUNTERS
+value|0x04
 end_define
 
 begin_typedef
@@ -2251,6 +2385,9 @@ name|uint32_t
 name|set_mask
 decl_stmt|;
 comment|/* enabled set mask		*/
+name|uint32_t
+name|spare
+decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;

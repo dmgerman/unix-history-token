@@ -841,6 +841,102 @@ name|tables_config
 struct_decl|;
 end_struct_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ip_fw_cntr
+block|{
+name|uint64_t
+name|pcnt
+decl_stmt|;
+comment|/* Packet counter		*/
+name|uint64_t
+name|bcnt
+decl_stmt|;
+comment|/* Byte counter		 */
+name|uint64_t
+name|timestamp
+decl_stmt|;
+comment|/* tv_sec of last match	 */
+block|}
+name|ip_fw_cntr
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Here we have the structure representing an ipfw rule.  *  * It starts with a general area   * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values.  *  * Given a rule pointer  r:  *  *  r->cmd		is the start of the first instruction.  *  ACTION_PTR(r)	is the start of the first action (things to do  *			once a rule matched).  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_fw
+block|{
+name|uint16_t
+name|act_ofs
+decl_stmt|;
+comment|/* offset of action in 32-bit units */
+name|uint16_t
+name|cmd_len
+decl_stmt|;
+comment|/* # of 32-bit words in cmd	*/
+name|uint16_t
+name|rulenum
+decl_stmt|;
+comment|/* rule number			*/
+name|uint8_t
+name|set
+decl_stmt|;
+comment|/* rule set (0..31)		*/
+name|uint8_t
+name|flags
+decl_stmt|;
+comment|/* currently unused		*/
+name|counter_u64_t
+name|cntr
+decl_stmt|;
+comment|/* Pointer to rule counters	*/
+name|uint32_t
+name|timestamp
+decl_stmt|;
+comment|/* tv_sec of last match		*/
+name|uint32_t
+name|id
+decl_stmt|;
+comment|/* rule id			*/
+name|struct
+name|ip_fw
+modifier|*
+name|x_next
+decl_stmt|;
+comment|/* linked list of rules		*/
+name|struct
+name|ip_fw
+modifier|*
+name|next_rule
+decl_stmt|;
+comment|/* ptr to next [skipto] rule	*/
+name|ipfw_insn
+name|cmd
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* storage for commands		*/
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|ip_fw_chain
@@ -899,7 +995,7 @@ directive|endif
 name|int
 name|static_len
 decl_stmt|;
-comment|/* total len of static rules */
+comment|/* total len of static rules (v0) */
 name|uint32_t
 name|gencnt
 decl_stmt|;
@@ -1000,6 +1096,12 @@ begin_comment
 comment|/* Macro for working with various counters */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USERSPACE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1043,6 +1145,60 @@ name|_cntr
 parameter_list|)
 value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	} while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IPFW_INC_RULE_COUNTER
+parameter_list|(
+name|_cntr
+parameter_list|,
+name|_bytes
+parameter_list|)
+value|do {	\ 	counter_u64_add((_cntr)->cntr, 1);		\ 	counter_u64_add((_cntr)->cntr + 1, _bytes);	\ 	if ((_cntr)->timestamp != time_uptime)		\ 		(_cntr)->timestamp = time_uptime;	\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_INC_DYN_COUNTER
+parameter_list|(
+name|_cntr
+parameter_list|,
+name|_bytes
+parameter_list|)
+value|do {		\ 	(_cntr)->pcnt++;				\ 	(_cntr)->bcnt += _bytes;			\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_ZERO_RULE_COUNTER
+parameter_list|(
+name|_cntr
+parameter_list|)
+value|do {		\ 	counter_u64_zero((_cntr)->cntr);		\ 	counter_u64_zero((_cntr)->cntr + 1);		\ 	(_cntr)->timestamp = 0;				\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_ZERO_DYN_COUNTER
+parameter_list|(
+name|_cntr
+parameter_list|)
+value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1258,6 +1414,14 @@ name|uint16_t
 name|new_tables
 decl_stmt|;
 comment|/* count of opcodes referencing table */
+name|uint16_t
+name|urule_numoff
+decl_stmt|;
+comment|/* offset of rulenum in bytes */
+name|uint8_t
+name|version
+decl_stmt|;
+comment|/* rule version */
 name|ipfw_obj_ctlv
 modifier|*
 name|ctlv
@@ -1269,9 +1433,7 @@ modifier|*
 name|krule
 decl_stmt|;
 comment|/* resulting rule pointer */
-name|struct
-name|ip_fw
-modifier|*
+name|caddr_t
 name|urule
 decl_stmt|;
 comment|/* original rule pointer */
@@ -1286,6 +1448,155 @@ comment|/* table references storage */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Legacy interface support */
+end_comment
+
+begin_comment
+comment|/*  * FreeBSD 8 export rule format  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_fw_rule0
+block|{
+name|struct
+name|ip_fw
+modifier|*
+name|x_next
+decl_stmt|;
+comment|/* linked list of rules		*/
+name|struct
+name|ip_fw
+modifier|*
+name|next_rule
+decl_stmt|;
+comment|/* ptr to next [skipto] rule	*/
+comment|/* 'next_rule' is used to pass up 'set_disable' status		*/
+name|uint16_t
+name|act_ofs
+decl_stmt|;
+comment|/* offset of action in 32-bit units */
+name|uint16_t
+name|cmd_len
+decl_stmt|;
+comment|/* # of 32-bit words in cmd	*/
+name|uint16_t
+name|rulenum
+decl_stmt|;
+comment|/* rule number			*/
+name|uint8_t
+name|set
+decl_stmt|;
+comment|/* rule set (0..31)		*/
+name|uint8_t
+name|_pad
+decl_stmt|;
+comment|/* padding			*/
+name|uint32_t
+name|id
+decl_stmt|;
+comment|/* rule id */
+comment|/* These fields are present in all rules.			*/
+name|uint64_t
+name|pcnt
+decl_stmt|;
+comment|/* Packet counter		*/
+name|uint64_t
+name|bcnt
+decl_stmt|;
+comment|/* Byte counter			*/
+name|uint32_t
+name|timestamp
+decl_stmt|;
+comment|/* tv_sec of last match		*/
+name|ipfw_insn
+name|cmd
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* storage for commands		*/
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ip_fw_bcounter0
+block|{
+name|uint64_t
+name|pcnt
+decl_stmt|;
+comment|/* Packet counter		*/
+name|uint64_t
+name|bcnt
+decl_stmt|;
+comment|/* Byte counter			*/
+name|uint32_t
+name|timestamp
+decl_stmt|;
+comment|/* tv_sec of last match		*/
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Kernel rule length */
+end_comment
+
+begin_comment
+comment|/*  * RULE _K_ SIZE _V_ ->  * get kernel size from userland rool version _V_.  * RULE _U_ SIZE _V_ ->  * get user size version _V_ from kernel rule  * RULESIZE _V_ ->  * get user size rule length   */
+end_comment
+
+begin_comment
+comment|/* FreeBSD8<> current kernel format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RULEUSIZE0
+parameter_list|(
+name|r
+parameter_list|)
+value|(sizeof(struct ip_fw_rule0) + (r)->cmd_len * 4 - 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RULEKSIZE0
+parameter_list|(
+name|r
+parameter_list|)
+value|roundup2((sizeof(struct ip_fw) + (r)->cmd_len*4 - 4), 8)
+end_define
+
+begin_comment
+comment|/* FreeBSD11<> current kernel format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RULEUSIZE1
+parameter_list|(
+name|r
+parameter_list|)
+value|(roundup2(sizeof(struct ip_fw_rule) + \     (r)->cmd_len * 4 - 4, 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RULEKSIZE1
+parameter_list|(
+name|r
+parameter_list|)
+value|roundup2((sizeof(struct ip_fw) + (r)->cmd_len*4 - 4), 8)
+end_define
 
 begin_comment
 comment|/* In ip_fw_sockopt.c */
@@ -1341,6 +1652,41 @@ name|struct
 name|ip_fw
 modifier|*
 name|head
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipfw_init_counters
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipfw_destroy_counters
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ip_fw
+modifier|*
+name|ipfw_alloc_rule
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
+name|size_t
+name|rulesize
 parameter_list|)
 function_decl|;
 end_function_decl

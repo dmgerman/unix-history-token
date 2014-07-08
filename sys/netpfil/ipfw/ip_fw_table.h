@@ -668,6 +668,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ipfw_flush_table
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
+parameter_list|,
+name|ip_fw3_opheader
+modifier|*
+name|op3
+parameter_list|,
+name|struct
+name|sockopt_data
+modifier|*
+name|sd
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Exported to support legacy opcodes */
 end_comment
@@ -735,27 +756,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ipfw_flush_table
-parameter_list|(
-name|struct
-name|ip_fw_chain
-modifier|*
-name|ch
-parameter_list|,
-name|ip_fw3_opheader
-modifier|*
-name|op3
-parameter_list|,
-name|struct
-name|sockopt_data
-modifier|*
-name|sd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ipfw_rewrite_table_uidx
 parameter_list|(
 name|struct
@@ -781,7 +781,7 @@ modifier|*
 name|chain
 parameter_list|,
 name|struct
-name|ip_fw
+name|ip_fw_rule0
 modifier|*
 name|rule
 parameter_list|)

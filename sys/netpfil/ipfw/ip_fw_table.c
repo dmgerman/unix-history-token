@@ -8286,7 +8286,7 @@ modifier|*
 name|chain
 parameter_list|,
 name|struct
-name|ip_fw
+name|ip_fw_rule0
 modifier|*
 name|rule
 parameter_list|)
