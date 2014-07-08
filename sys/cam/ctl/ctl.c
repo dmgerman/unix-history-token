@@ -55123,14 +55123,6 @@ name|io
 operator|->
 name|io_hdr
 operator|.
-name|status
-operator|=
-name|CTL_CMD_ABORTED
-expr_stmt|;
-name|io
-operator|->
-name|io_hdr
-operator|.
 name|port_status
 operator|=
 literal|31337
@@ -57821,7 +57813,7 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that we look for an aborted I/O here, but don't do some of 	 * the other checks that ctl_datamove() normally does.  We don't 	 * need to run the task queue, because this I/O is on the ISC 	 * queue, which is executed by the work thread after the task queue. 	 * We don't need to run the datamove delay code, since that should 	 * have been done if need be on the other controller. 	 */
+comment|/* 	 * Note that we look for an aborted I/O here, but don't do some of 	 * the other checks that ctl_datamove() normally does. 	 * We don't need to run the datamove delay code, since that should 	 * have been done if need be on the other controller. 	 */
 if|if
 condition|(
 name|io
@@ -57881,14 +57873,6 @@ name|nexus
 operator|.
 name|targ_lun
 argument_list|)
-expr_stmt|;
-name|io
-operator|->
-name|io_hdr
-operator|.
-name|status
-operator|=
-name|CTL_CMD_ABORTED
 expr_stmt|;
 name|io
 operator|->
