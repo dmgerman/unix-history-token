@@ -2064,6 +2064,20 @@ index|]
 operator|.
 name|ptr
 expr_stmt|;
+if|if
+condition|(
+name|ccb
+operator|==
+name|NULL
+condition|)
+block|{
+name|ctl_free_io
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * At this point we should have status.  If we don't, that's a bug. 	 */
 name|KASSERT
 argument_list|(
@@ -3422,6 +3436,16 @@ name|io
 argument_list|)
 expr_stmt|;
 comment|/* Save pointers on both sides */
+if|if
+condition|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|func_code
+operator|==
+name|XPT_RESET_DEV
+condition|)
 name|io
 operator|->
 name|io_hdr
