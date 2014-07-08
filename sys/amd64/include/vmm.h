@@ -1907,6 +1907,10 @@ begin_enum
 enum|enum
 name|vm_cpu_mode
 block|{
+name|CPU_MODE_REAL
+block|,
+name|CPU_MODE_PROTECTED
+block|,
 name|CPU_MODE_COMPATIBILITY
 block|,
 comment|/* IA-32E mode (CS.L = 0) */
