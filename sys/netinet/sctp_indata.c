@@ -1062,6 +1062,16 @@ name|cmsghdr
 operator|*
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Make sure that there is no un-initialized padding between the 	 * cmsg header and cmsg data and after the cmsg data. 	 */
+name|memset
+argument_list|(
+name|cmh
+argument_list|,
+literal|0
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sctp_is_feature_on
