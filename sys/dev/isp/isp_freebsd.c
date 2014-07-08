@@ -30741,7 +30741,7 @@ name|isp
 argument_list|,
 name|ISPCTL_ABORT_CMD
 argument_list|,
-name|ccb
+name|accb
 argument_list|)
 expr_stmt|;
 if|if
