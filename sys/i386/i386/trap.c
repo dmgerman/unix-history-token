@@ -1360,6 +1360,18 @@ name|BUS_OBJERR
 expr_stmt|;
 break|break;
 case|case
+name|T_ALIGNFLT
+case|:
+name|i
+operator|=
+name|SIGBUS
+expr_stmt|;
+name|ucode
+operator|=
+name|BUS_ADRALN
+expr_stmt|;
+break|break;
+case|case
 name|T_DOUBLEFLT
 case|:
 comment|/* double fault */
