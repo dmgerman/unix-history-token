@@ -52243,7 +52243,7 @@ operator||=
 name|ua_type
 expr_stmt|;
 block|}
-name|mtx_lock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|lun
