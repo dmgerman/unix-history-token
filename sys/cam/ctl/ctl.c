@@ -52897,9 +52897,11 @@ operator|->
 name|ctl_lock
 argument_list|)
 expr_stmt|;
-goto|goto
-name|bailout
-goto|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 if|#
 directive|if
@@ -53206,8 +53208,6 @@ operator|->
 name|lun_lock
 argument_list|)
 expr_stmt|;
-name|bailout
-label|:
 if|if
 condition|(
 name|found
@@ -53222,13 +53222,7 @@ literal|0
 block|printf("ctl_abort_task: ABORT sent for nonexistent I/O: " 		       "%d:%d:%d:%d tag %d type %d\n", 		       io->io_hdr.nexus.initid.id, 		       io->io_hdr.nexus.targ_port, 		       io->io_hdr.nexus.targ_target.id, 		       io->io_hdr.nexus.targ_lun, io->taskio.tag_num, 		       io->taskio.tag_type);
 endif|#
 directive|endif
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
-else|else
 return|return
 operator|(
 literal|0
@@ -53256,9 +53250,13 @@ name|struct
 name|ctl_softc
 modifier|*
 name|ctl_softc
+init|=
+name|control_softc
 decl_stmt|;
 name|int
 name|retval
+init|=
+literal|1
 decl_stmt|;
 specifier|const
 name|char
@@ -53271,14 +53269,6 @@ operator|(
 literal|"ctl_run_task\n"
 operator|)
 argument_list|)
-expr_stmt|;
-name|ctl_softc
-operator|=
-name|control_softc
-expr_stmt|;
-name|retval
-operator|=
-literal|0
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -53450,9 +53440,6 @@ name|lun
 decl_stmt|;
 name|uint32_t
 name|targ_lun
-decl_stmt|;
-name|int
-name|retval
 decl_stmt|;
 name|targ_lun
 operator|=
@@ -53705,7 +53692,6 @@ name|status
 operator|=
 name|CTL_ERROR
 expr_stmt|;
-comment|/* 	 * This will queue this I/O to the done queue, but the 	 * work thread won't be able to process it until we 	 * return and the lock is released. 	 */
 name|ctl_done
 argument_list|(
 name|io
