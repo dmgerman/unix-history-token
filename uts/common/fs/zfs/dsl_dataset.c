@@ -7041,6 +7041,8 @@ name|snaps
 argument_list|)
 operator|*
 literal|3
+argument_list|,
+name|ZFS_SPACE_CHECK_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -7563,6 +7565,8 @@ operator|&
 name|ddsta
 argument_list|,
 literal|3
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 expr_stmt|;
 if|if
@@ -9477,6 +9481,8 @@ operator|&
 name|ddrsa
 argument_list|,
 literal|1
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 operator|)
 return|;
@@ -10231,6 +10237,8 @@ operator|&
 name|ddra
 argument_list|,
 literal|1
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 operator|)
 return|;
@@ -12902,6 +12910,8 @@ argument_list|,
 literal|2
 operator|+
 name|numsnaps
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 operator|)
 return|;
@@ -14607,6 +14617,8 @@ operator|&
 name|ddsqra
 argument_list|,
 literal|0
+argument_list|,
+name|ZFS_SPACE_CHECK_NONE
 argument_list|)
 operator|)
 return|;
@@ -15244,6 +15256,8 @@ operator|&
 name|ddsqra
 argument_list|,
 literal|0
+argument_list|,
+name|ZFS_SPACE_CHECK_NONE
 argument_list|)
 operator|)
 return|;

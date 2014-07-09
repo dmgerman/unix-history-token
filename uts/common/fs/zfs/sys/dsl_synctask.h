@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -73,6 +73,21 @@ modifier|*
 parameter_list|)
 function_decl|;
 typedef|typedef
+enum|enum
+name|zfs_space_check
+block|{
+comment|/* 	 * Normal space check: if there is less than 3.2% free space, 	 * the operation will fail.  Operations which are logically 	 * creating things should use this (e.g. "zfs create", "zfs snapshot"). 	 * User writes (via the ZPL / ZVOL) also fail at this point. 	 */
+name|ZFS_SPACE_CHECK_NORMAL
+block|,
+comment|/* 	 * Space check allows use of half the slop space.  If there 	 * is less than 1.6% free space, the operation will fail.  Most 	 * operations should use this (e.g. "zfs set", "zfs rename"), 	 * because we want them to succeed even after user writes are failing, 	 * so that they can be used as part of the space recovery process. 	 */
+name|ZFS_SPACE_CHECK_RESERVED
+block|,
+comment|/* 	 * No space check is performed.  Only operations which we expect to 	 * result in a net reduction in space should use this 	 * (e.g. "zfs destroy". Setting quotas& reservations also uses 	 * this because it needs to circumvent the quota/reservation checks). 	 * 	 * See also the comments above spa_slop_shift. 	 */
+name|ZFS_SPACE_CHECK_NONE
+block|, }
+name|zfs_space_check_t
+typedef|;
+typedef|typedef
 struct|struct
 name|dsl_sync_task
 block|{
@@ -89,6 +104,9 @@ name|dst_txg
 decl_stmt|;
 name|int
 name|dst_space
+decl_stmt|;
+name|zfs_space_check_t
+name|dst_space_check
 decl_stmt|;
 name|dsl_checkfunc_t
 modifier|*
@@ -116,11 +134,9 @@ name|dsl_sync_task_sync
 parameter_list|(
 name|dsl_sync_task_t
 modifier|*
-name|dst
 parameter_list|,
 name|dmu_tx_t
 modifier|*
-name|tx
 parameter_list|)
 function_decl|;
 name|int
@@ -129,22 +145,19 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|pool
 parameter_list|,
 name|dsl_checkfunc_t
 modifier|*
-name|checkfunc
 parameter_list|,
 name|dsl_syncfunc_t
 modifier|*
-name|syncfunc
 parameter_list|,
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|int
-name|blocks_modified
+parameter_list|,
+name|zfs_space_check_t
 parameter_list|)
 function_decl|;
 name|void
@@ -153,22 +166,19 @@ parameter_list|(
 name|struct
 name|dsl_pool
 modifier|*
-name|dp
 parameter_list|,
 name|dsl_syncfunc_t
 modifier|*
-name|syncfunc
 parameter_list|,
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|int
-name|blocks_modified
+parameter_list|,
+name|zfs_space_check_t
 parameter_list|,
 name|dmu_tx_t
 modifier|*
-name|tx
 parameter_list|)
 function_decl|;
 ifdef|#

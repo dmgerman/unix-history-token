@@ -1579,6 +1579,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|3
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 operator|)
 return|;
@@ -9224,6 +9226,8 @@ operator|&
 name|func
 argument_list|,
 literal|0
+argument_list|,
+name|ZFS_SPACE_CHECK_NONE
 argument_list|)
 operator|)
 return|;

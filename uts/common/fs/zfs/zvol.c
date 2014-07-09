@@ -9391,6 +9391,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|2
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 expr_stmt|;
 block|}
