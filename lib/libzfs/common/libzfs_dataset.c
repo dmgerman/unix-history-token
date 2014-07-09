@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2012 DEY Storage Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2012 DEY Storage Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -17320,7 +17320,15 @@ name|error
 goto|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|zhp
+operator|->
+name|zfs_type
+operator|!=
+name|ZFS_TYPE_SNAPSHOT
+condition|)
 block|{
 if|if
 condition|(
@@ -17572,8 +17580,9 @@ block|}
 comment|/* 		 * On failure, we still want to remount any filesystems that 		 * were previously mounted, so we don't alter the system state. 		 */
 if|if
 condition|(
-operator|!
-name|recursive
+name|cl
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
@@ -17588,8 +17597,9 @@ else|else
 block|{
 if|if
 condition|(
-operator|!
-name|recursive
+name|cl
+operator|!=
+name|NULL
 condition|)
 block|{
 name|changelist_rename
@@ -17618,6 +17628,8 @@ label|:
 if|if
 condition|(
 name|parentname
+operator|!=
+name|NULL
 condition|)
 block|{
 name|free
@@ -17629,6 +17641,8 @@ block|}
 if|if
 condition|(
 name|zhrp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|zfs_close
@@ -17640,6 +17654,8 @@ block|}
 if|if
 condition|(
 name|cl
+operator|!=
+name|NULL
 condition|)
 block|{
 name|changelist_free
