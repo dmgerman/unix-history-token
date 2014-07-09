@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1196,6 +1196,8 @@ name|fnvlist_num_pairs
 argument_list|(
 name|nvp
 argument_list|)
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 operator|)
 return|;

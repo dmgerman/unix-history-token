@@ -6315,6 +6315,8 @@ operator|&
 name|drba
 argument_list|,
 literal|5
+argument_list|,
+name|ZFS_SPACE_CHECK_NORMAL
 argument_list|)
 operator|)
 return|;
@@ -10996,6 +10998,8 @@ argument_list|,
 name|drc
 argument_list|,
 name|dmu_recv_end_modified_blocks
+argument_list|,
+name|ZFS_SPACE_CHECK_NORMAL
 argument_list|)
 expr_stmt|;
 if|if
@@ -11045,6 +11049,8 @@ argument_list|,
 name|drc
 argument_list|,
 name|dmu_recv_end_modified_blocks
+argument_list|,
+name|ZFS_SPACE_CHECK_NORMAL
 argument_list|)
 expr_stmt|;
 if|if

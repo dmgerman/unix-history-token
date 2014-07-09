@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * This file and its contents are supplied un
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1234,6 +1234,8 @@ name|fnvlist_num_pairs
 argument_list|(
 name|bmarks
 argument_list|)
+argument_list|,
+name|ZFS_SPACE_CHECK_NORMAL
 argument_list|)
 operator|)
 return|;
@@ -2216,6 +2218,8 @@ name|fnvlist_num_pairs
 argument_list|(
 name|bmarks
 argument_list|)
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 expr_stmt|;
 name|fnvlist_free
