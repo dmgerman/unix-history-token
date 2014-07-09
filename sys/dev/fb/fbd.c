@@ -1082,7 +1082,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|fb_write
+name|fb_read
 operator|==
 name|NULL
 condition|)
