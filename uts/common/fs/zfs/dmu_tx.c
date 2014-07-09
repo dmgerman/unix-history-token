@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2901,6 +2901,60 @@ operator|->
 name|txh_space_tounref
 operator|+=
 name|unref
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This function marks the transaction as being a "net free".  The end  * result is that refquotas will be disabled for this transaction, and  * this transaction will be able to use half of the pool space overhead  * (see dsl_pool_adjustedsize()).  Therefore this function should only  * be called for transactions that we expect will not cause a net increase  * in the amount of space used (but it's OK if that is occasionally not true).  */
+end_comment
+
+begin_function
+name|void
+name|dmu_tx_mark_netfree
+parameter_list|(
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+block|{
+name|dmu_tx_hold_t
+modifier|*
+name|txh
+decl_stmt|;
+name|txh
+operator|=
+name|dmu_tx_hold_object_impl
+argument_list|(
+name|tx
+argument_list|,
+name|tx
+operator|->
+name|tx_objset
+argument_list|,
+name|DMU_NEW_OBJECT
+argument_list|,
+name|THT_FREE
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Pretend that this operation will free 1GB of space.  This 	 * should be large enough to cancel out the largest write. 	 * We don't want to use something like UINT64_MAX, because that would 	 * cause overflows when doing math with these values (e.g. in 	 * dmu_tx_try_assign()). 	 */
+name|txh
+operator|->
+name|txh_space_tofree
+operator|=
+name|txh
+operator|->
+name|txh_space_tounref
+operator|=
+literal|1024
+operator|*
+literal|1024
+operator|*
+literal|1024
 expr_stmt|;
 block|}
 end_function

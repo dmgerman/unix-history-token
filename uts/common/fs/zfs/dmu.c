@@ -3284,6 +3284,12 @@ operator|-
 name|chunk_begin
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Mark this transaction as typically resulting in a net 		 * reduction in space used. 		 */
+name|dmu_tx_mark_netfree
+argument_list|(
+name|tx
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|dmu_tx_assign
@@ -3507,6 +3513,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|DMU_OBJECT_END
+argument_list|)
+expr_stmt|;
+name|dmu_tx_mark_netfree
+argument_list|(
+name|tx
 argument_list|)
 expr_stmt|;
 name|err

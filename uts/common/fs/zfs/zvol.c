@@ -3374,6 +3374,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|dmu_tx_mark_netfree
+argument_list|(
+name|tx
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|dmu_tx_assign
@@ -8887,6 +8892,11 @@ argument_list|(
 name|zv
 operator|->
 name|zv_objset
+argument_list|)
+expr_stmt|;
+name|dmu_tx_mark_netfree
+argument_list|(
+name|tx
 argument_list|)
 expr_stmt|;
 name|error

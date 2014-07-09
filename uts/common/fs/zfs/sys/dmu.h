@@ -1773,6 +1773,14 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|void
+name|dmu_tx_mark_netfree
+parameter_list|(
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 comment|/*  * To register a commit callback, dmu_tx_callback_register() must be called.  *  * dcb_data is a pointer to caller private data that is passed on as a  * callback parameter. The caller is responsible for properly allocating and  * freeing it.  *  * When registering a callback, the transaction must be already created, but  * it cannot be committed or aborted. It can be assigned to a txg or not.  *  * The callback will be called after the transaction has been safely written  * to stable storage and will also be called if the dmu_tx is aborted.  * If there is any error which prevents the transaction from being committed to  * disk, the callback will be called with a value of error != 0.  */
 typedef|typedef
 name|void
