@@ -329,6 +329,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|virtqueue_nfree
+parameter_list|(
+name|struct
+name|virtqueue
+modifier|*
+name|vq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|virtqueue_nused
 parameter_list|(
 name|struct
