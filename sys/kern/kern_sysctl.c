@@ -5128,6 +5128,10 @@ name|int
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|ro_string
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * A zero-length buffer indicates a fixed size read-only 	 * string: 	 */
 if|if
@@ -5136,6 +5140,7 @@ name|arg2
 operator|==
 literal|0
 condition|)
+block|{
 name|arg2
 operator|=
 name|strlen
@@ -5149,6 +5154,11 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+name|ro_string
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|req
@@ -5162,6 +5172,18 @@ name|char
 modifier|*
 name|tmparg
 decl_stmt|;
+if|if
+condition|(
+name|ro_string
+condition|)
+block|{
+name|tmparg
+operator|=
+name|arg1
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* try to make a coherent snapshot of the string */
 name|tmparg
 operator|=
@@ -5183,6 +5205,7 @@ argument_list|,
 name|arg2
 argument_list|)
 expr_stmt|;
+block|}
 name|outlen
 operator|=
 name|strnlen
@@ -5207,6 +5230,11 @@ argument_list|,
 name|outlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ro_string
+condition|)
 name|free
 argument_list|(
 name|tmparg
