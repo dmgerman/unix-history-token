@@ -5079,6 +5079,13 @@ if|if
 condition|(
 name|errno
 operator|==
+name|EAGAIN
+condition|)
+continue|continue;
+if|if
+condition|(
+name|errno
+operator|==
 name|EINTR
 operator|&&
 name|fetchRestartCalls
