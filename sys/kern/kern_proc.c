@@ -11540,6 +11540,12 @@ operator|&
 name|MAP_ENTRY_IS_SUB_MAP
 condition|)
 continue|continue;
+name|addr
+operator|=
+name|entry
+operator|->
+name|end
+expr_stmt|;
 name|bzero
 argument_list|(
 name|kve
