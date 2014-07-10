@@ -2553,6 +2553,28 @@ begin_comment
 comment|/* bool: allow bind to any address */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_BINDMULTI
+value|25
+end_define
+
+begin_comment
+comment|/* bool: allow multiple listeners on a tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RSS_LISTEN_BUCKET
+value|26
+end_define
+
+begin_comment
+comment|/* int; set RSS listen bucket */
+end_comment
+
 begin_comment
 comment|/*  * Options for controlling the firewall and dummynet.  * Historical options (from 40 to 64) will eventually be  * replaced by only two options, IP_FW3 and IP_DUMMYNET3.  */
 end_comment
