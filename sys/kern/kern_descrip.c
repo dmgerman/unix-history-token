@@ -9544,12 +9544,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|fdp
-operator|->
-name|fd_nfiles
-operator|=
-literal|0
-expr_stmt|;
 name|cdir
 operator|=
 name|fdp
