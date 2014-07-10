@@ -9797,15 +9797,13 @@ name|txd_upper
 operator||=
 name|htole16
 argument_list|(
-operator|(
 name|if_getvtag
 argument_list|(
 name|m_head
 argument_list|)
-operator|)
+argument_list|)
 operator|<<
 literal|16
-argument_list|)
 expr_stmt|;
 comment|/* Tell hardware to add tag */
 name|txd_lower
