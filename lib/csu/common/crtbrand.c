@@ -103,7 +103,7 @@ name|ABI_NOTETYPE
 block|,
 name|ABI_VENDOR
 block|,
-name|__FreeBSD_version
+literal|903000
 block|}
 struct|;
 end_struct
