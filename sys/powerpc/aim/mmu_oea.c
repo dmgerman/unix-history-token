@@ -9470,11 +9470,7 @@ if|if
 condition|(
 name|pvo
 operator|->
-name|pvo_pte
-operator|.
-name|pte
-operator|.
-name|pte_lo
+name|pvo_vaddr
 operator|&
 name|PVO_WIRED
 condition|)
@@ -9645,11 +9641,7 @@ if|if
 condition|(
 name|pvo
 operator|->
-name|pvo_pte
-operator|.
-name|pte
-operator|.
-name|pte_lo
+name|pvo_vaddr
 operator|&
 name|PVO_WIRED
 condition|)
