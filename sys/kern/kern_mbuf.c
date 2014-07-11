@@ -1912,25 +1912,6 @@ name|m
 operator|->
 name|m_flags
 operator|&
-name|M_EXT
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"%s: M_EXT set"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
 name|M_NOFREE
 operator|)
 operator|==
