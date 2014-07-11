@@ -407,10 +407,7 @@ name|buffer
 argument_list|,
 literal|"-"
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
+name|buflen
 argument_list|)
 expr_stmt|;
 break|break;
