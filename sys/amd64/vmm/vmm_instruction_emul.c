@@ -2241,6 +2241,8 @@ name|gla
 parameter_list|)
 block|{
 name|uint64_t
+name|firstoff
+decl_stmt|,
 name|low_limit
 decl_stmt|,
 name|high_limit
@@ -2321,6 +2323,10 @@ operator|,
 name|prot
 operator|)
 argument_list|)
+expr_stmt|;
+name|firstoff
+operator|=
+name|offset
 expr_stmt|;
 if|if
 condition|(
@@ -2624,8 +2630,8 @@ operator|->
 name|base
 expr_stmt|;
 block|}
-comment|/* 	 * Truncate 'offset' to the effective address size before adding 	 * it to the segment base. 	 */
-name|offset
+comment|/* 	 * Truncate 'firstoff' to the effective address size before adding 	 * it to the segment base. 	 */
+name|firstoff
 operator|&=
 name|vie_size2mask
 argument_list|(
@@ -2638,7 +2644,7 @@ operator|=
 operator|(
 name|segbase
 operator|+
-name|offset
+name|firstoff
 operator|)
 operator|&
 name|vie_size2mask
