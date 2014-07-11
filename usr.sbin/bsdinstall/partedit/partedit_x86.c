@@ -250,7 +250,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|64
+literal|512
 operator|*
 literal|1024
 operator|)
