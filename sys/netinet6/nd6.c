@@ -8095,7 +8095,7 @@ name|if_flags
 operator|&
 name|IFF_LOOPBACK
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 name|origifp
