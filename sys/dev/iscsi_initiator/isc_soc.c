@@ -639,7 +639,7 @@ name|md
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 operator|&
 name|ou_refcnt

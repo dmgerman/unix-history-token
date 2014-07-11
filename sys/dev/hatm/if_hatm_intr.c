@@ -2480,7 +2480,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 operator|&
 name|c0
@@ -2671,7 +2671,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 operator|&
 name|c1

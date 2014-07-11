@@ -1151,7 +1151,7 @@ name|mb
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 name|uma_zalloc
 argument_list|(
@@ -1166,7 +1166,7 @@ name|mb
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|==
 name|NULL
 condition|)
@@ -1181,7 +1181,7 @@ name|mb
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|)
 operator|=
 literal|1
@@ -1312,12 +1312,12 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: ref_cnt not set"
+literal|"%s: ext_cnt not set"
 operator|,
 name|__func__
 operator|)
@@ -1343,7 +1343,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|)
 operator|==
 literal|1
@@ -1354,7 +1354,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 argument_list|,
 operator|-
 literal|1
@@ -1384,7 +1384,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|)
 operator|==
 literal|0
@@ -1395,7 +1395,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|)
 operator|=
 literal|1
@@ -1487,7 +1487,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|)
 operator|=
 literal|0
@@ -1505,7 +1505,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1619,7 +1619,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 name|NULL
 expr_stmt|;
@@ -1709,12 +1709,12 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: ref_cnt not set"
+literal|"%s: ext_cnt not set"
 operator|,
 name|__func__
 operator|)
@@ -1747,7 +1747,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|)
 operator|==
 literal|1
@@ -1758,7 +1758,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|)
 operator|+=
 literal|1
@@ -1770,7 +1770,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 argument_list|,
 literal|1
 argument_list|)
@@ -1839,13 +1839,13 @@ name|n
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 expr_stmt|;
 name|n
 operator|->

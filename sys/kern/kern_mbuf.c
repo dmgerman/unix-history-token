@@ -2143,12 +2143,12 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"%s: ref_cnt != 1"
+literal|"%s: ext_cnt != 1"
 operator|,
 name|__func__
 operator|)
@@ -2420,7 +2420,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 name|refcnt
 expr_stmt|;

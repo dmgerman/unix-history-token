@@ -258,7 +258,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|)
 operator|==
 literal|0
@@ -269,7 +269,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|)
 operator|=
 literal|1
@@ -374,7 +374,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 argument_list|)
 expr_stmt|;
 block|}
@@ -391,7 +391,7 @@ name|GET_MBUF_REFCNT
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->m_ext.ref_cnt ? *(m)->m_ext.ref_cnt : -1)
+value|((m)->m_ext.ext_cnt ? *(m)->m_ext.ext_cnt : -1)
 end_define
 
 begin_else

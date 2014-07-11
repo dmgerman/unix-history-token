@@ -458,7 +458,7 @@ block|{
 specifier|volatile
 name|u_int
 modifier|*
-name|ref_cnt
+name|ext_cnt
 decl_stmt|;
 comment|/* pointer to ref count info */
 name|caddr_t
@@ -1440,7 +1440,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* has externally maintained ref_cnt ptr */
+comment|/* has externally maintained ext_cnt ptr */
 end_comment
 
 begin_comment
@@ -1455,7 +1455,7 @@ value|0x000001
 end_define
 
 begin_comment
-comment|/* embedded ref_cnt, notyet */
+comment|/* embedded ext_cnt, notyet */
 end_comment
 
 begin_define
@@ -1466,7 +1466,7 @@ value|0x000002
 end_define
 
 begin_comment
-comment|/* external ref_cnt, notyet */
+comment|/* external ext_cnt, notyet */
 end_comment
 
 begin_define
@@ -2460,7 +2460,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 name|ref_cnt
 expr_stmt|;
@@ -3240,7 +3240,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 name|uma_find_refcnt
 argument_list|(
@@ -3447,7 +3447,7 @@ name|M_WRITABLE
 parameter_list|(
 name|m
 parameter_list|)
-value|(!((m)->m_flags& M_RDONLY)&&			\ 			 (!(((m)->m_flags& M_EXT)) ||			\ 			 (*((m)->m_ext.ref_cnt) == 1)) )
+value|(!((m)->m_flags& M_RDONLY)&&			\ 			 (!(((m)->m_flags& M_EXT)) ||			\ 			 (*((m)->m_ext.ext_cnt) == 1)) )
 end_define
 
 begin_comment

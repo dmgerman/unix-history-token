@@ -800,7 +800,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|!=
 literal|1
 condition|)
@@ -814,7 +814,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 argument_list|,
 name|m
 argument_list|)
@@ -913,7 +913,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 argument_list|,
 literal|1
 argument_list|)

@@ -1569,7 +1569,7 @@ name|SCTP_BUF_EXTEND_REFCNT
 parameter_list|(
 name|m
 parameter_list|)
-value|(*m->m_ext.ref_cnt)
+value|(*m->m_ext.ext_cnt)
 end_define
 
 begin_comment
