@@ -1260,7 +1260,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|hatm_mbuf0_free
 parameter_list|(
 name|struct
@@ -1347,17 +1347,12 @@ operator|)
 name|c
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|hatm_mbuf1_free
 parameter_list|(
 name|struct
@@ -1444,11 +1439,6 @@ operator|)
 name|c
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
 block|}
 end_function
 

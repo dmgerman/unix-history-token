@@ -12286,7 +12286,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|mwl_ext_free
 parameter_list|(
 name|struct
@@ -12350,11 +12350,6 @@ name|sc_imask
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
 block|}
 end_function
 

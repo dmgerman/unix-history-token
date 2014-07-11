@@ -172,7 +172,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|sf_buf_mext
 parameter_list|(
 name|struct

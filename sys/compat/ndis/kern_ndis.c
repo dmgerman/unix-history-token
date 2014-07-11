@@ -2011,7 +2011,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|ndis_return_packet
 parameter_list|(
 name|struct
@@ -2042,11 +2042,7 @@ name|arg
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
+return|return;
 name|p
 operator|=
 name|arg
@@ -2064,11 +2060,7 @@ name|p
 operator|->
 name|np_refcnt
 condition|)
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
+return|return;
 name|block
 operator|=
 operator|(
@@ -2148,11 +2140,6 @@ argument_list|,
 name|block
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
 block|}
 end_function
 

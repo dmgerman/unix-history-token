@@ -8273,7 +8273,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rxb_free
 parameter_list|(
 name|struct
@@ -8307,11 +8307,6 @@ argument_list|,
 name|cl
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
 block|}
 end_function
 

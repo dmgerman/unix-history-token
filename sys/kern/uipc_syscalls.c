@@ -10005,7 +10005,7 @@ comment|/*  * Detach mapped page and release resources back to the system.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|sf_buf_mext
 parameter_list|(
 name|struct
@@ -10096,12 +10096,6 @@ name|sfs
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * sfs may be invalid at this point, don't use it! 	 */
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
 block|}
 end_function
 
@@ -13934,9 +13928,6 @@ else|:
 name|ENOBUFS
 operator|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sf_buf_mext
 argument_list|(
 name|NULL
@@ -13996,9 +13987,6 @@ else|:
 name|ENOBUFS
 operator|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sf_buf_mext
 argument_list|(
 name|NULL
