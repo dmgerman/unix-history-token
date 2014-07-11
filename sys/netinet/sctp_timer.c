@@ -112,11 +112,30 @@ directive|include
 file|<netinet/sctp_uio.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<netinet/udp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -7147,6 +7166,17 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 if|if
 condition|(
 name|net
@@ -7163,6 +7193,8 @@ name|udphdr
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|mtu
