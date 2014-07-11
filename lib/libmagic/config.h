@@ -12,6 +12,14 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
+comment|/* Define if building universal (internal helper macro) */
+end_comment
+
+begin_comment
+comment|/* #undef AC_APPLE_UNIVERSAL_BUILD */
+end_comment
+
+begin_comment
 comment|/* Define in built-in ELF support is used */
 end_comment
 
@@ -34,6 +42,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `asctime_r' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ASCTIME_R
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `asprintf' function. */
 end_comment
 
@@ -41,6 +60,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ASPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `ctime_r' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CTIME_R
 value|1
 end_define
 
@@ -108,6 +138,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `fmtcheck' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FMTCHECK
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `fork' function. */
 end_comment
 
@@ -163,24 +204,24 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if the system has the type `int32_t'. */
+comment|/* Define to 1 if you have the `getpagesize' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_INT32_T
+name|HAVE_GETPAGESIZE
 value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if the system has the type `int64_t'. */
+comment|/* Define to 1 if the system has the type `intptr_t'. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_INT64_T
+name|HAVE_INTPTR_T
 value|1
 end_define
 
@@ -237,7 +278,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `mbrtowc' function. */
+comment|/* Define to 1 if mbrtowc and mbstate_t are properly declared. */
 end_comment
 
 begin_define
@@ -270,6 +311,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `mkostemp' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MKOSTEMP
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `mkstemp' function. */
 end_comment
 
@@ -281,7 +333,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `mmap' function. */
+comment|/* Define to 1 if you have a working `mmap' system call. */
 end_comment
 
 begin_define
@@ -292,13 +344,24 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if the system has the type `pid_t'. */
+comment|/* Define to 1 if you have the `pread' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_PID_T
+name|HAVE_PREAD
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<stddef.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDDEF_H
 value|1
 end_define
 
@@ -321,6 +384,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDLIB_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strcasestr' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCASESTR
 value|1
 end_define
 
@@ -468,6 +542,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/param.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_PARAM_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/stat.h> header file. */
 end_comment
 
@@ -553,46 +638,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if the system has the type `uint16_t'. */
+comment|/* Define to 1 if the system has the type `uintptr_t'. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_UINT16_T
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if the system has the type `uint32_t'. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT32_T
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if the system has the type `uint64_t'. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT64_T
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if the system has the type `uint8_t'. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_UINT8_T
+name|HAVE_UINTPTR_T
 value|1
 end_define
 
@@ -652,6 +704,36 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `vfork' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VFORK
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<vfork.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_VFORK_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 or 0, depending whether the compiler supports simple visibility    declarations. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VISIBILITY
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<wchar.h> header file. */
 end_comment
 
@@ -681,6 +763,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_WCWIDTH
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `fork' works. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WORKING_FORK
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if `vfork' works. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WORKING_VFORK
 value|1
 end_define
 
@@ -720,14 +824,6 @@ end_comment
 
 begin_comment
 comment|/* #undef MAJOR_IN_SYSMACROS */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-end_comment
-
-begin_comment
-comment|/* #undef NO_MINUS_C_MINUS_O */
 end_comment
 
 begin_comment
@@ -771,7 +867,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"file 5.11"
+value|"file 5.19"
 end_define
 
 begin_comment
@@ -804,18 +900,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.11"
-end_define
-
-begin_comment
-comment|/* The size of `long long', as computed by sizeof. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_LONG_LONG
-value|8
+value|"5.19"
 end_define
 
 begin_comment
@@ -955,8 +1040,85 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.11"
+value|"5.19"
 end_define
+
+begin_comment
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|AC_APPLE_UNIVERSAL_BUILD
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__BIG_ENDIAN__
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WORDS_BIGENDIAN
+end_ifndef
+
+begin_comment
+comment|/* #  undef WORDS_BIGENDIAN */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Enable large inode numbers on Mac OS X 10.5.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DARWIN_USE_64_BIT_INODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DARWIN_USE_64_BIT_INODE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Number of bits in a file offset, on hosts where this is settable. */
@@ -1007,11 +1169,59 @@ comment|/* #undef _POSIX_SOURCE */
 end_comment
 
 begin_comment
+comment|/* Define for Solaris 2.5.1 so the uint32_t typedef from<sys/synch.h>,<pthread.h>, or<semaphore.h> is not used. If the typedef were allowed, the    #define below would cause a syntax error. */
+end_comment
+
+begin_comment
+comment|/* #undef _UINT32_T */
+end_comment
+
+begin_comment
+comment|/* Define for Solaris 2.5.1 so the uint64_t typedef from<sys/synch.h>,<pthread.h>, or<semaphore.h> is not used. If the typedef were allowed, the    #define below would cause a syntax error. */
+end_comment
+
+begin_comment
+comment|/* #undef _UINT64_T */
+end_comment
+
+begin_comment
+comment|/* Define for Solaris 2.5.1 so the uint8_t typedef from<sys/synch.h>,<pthread.h>, or<semaphore.h> is not used. If the typedef were allowed, the    #define below would cause a syntax error. */
+end_comment
+
+begin_comment
+comment|/* #undef _UINT8_T */
+end_comment
+
+begin_comment
 comment|/* Define to empty if `const' does not conform to ANSI C. */
 end_comment
 
 begin_comment
 comment|/* #undef const */
+end_comment
+
+begin_comment
+comment|/* Define to the type of a signed integer type of width exactly 32 bits if    such a type exists and the standard includes do not define it. */
+end_comment
+
+begin_comment
+comment|/* #undef int32_t */
+end_comment
+
+begin_comment
+comment|/* Define to the type of a signed integer type of width exactly 64 bits if    such a type exists and the standard includes do not define it. */
+end_comment
+
+begin_comment
+comment|/* #undef int64_t */
+end_comment
+
+begin_comment
+comment|/* Define to the type of a signed integer type wide enough to hold a pointer,    if such a type exists, and if the system does not define it. */
+end_comment
+
+begin_comment
+comment|/* #undef intptr_t */
 end_comment
 
 begin_comment
@@ -1031,6 +1241,14 @@ comment|/* #undef off_t */
 end_comment
 
 begin_comment
+comment|/* Define to `int' if<sys/types.h> does not define. */
+end_comment
+
+begin_comment
+comment|/* #undef pid_t */
+end_comment
+
+begin_comment
 comment|/* Define to `unsigned int' if<sys/types.h> does not define. */
 end_comment
 
@@ -1038,184 +1256,52 @@ begin_comment
 comment|/* #undef size_t */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_FREEBSD_UNUSED_
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_UINT8_T
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|uint8_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_UINT16_T
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|uint16_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_UINT32_T
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|uint32_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_INT32_T
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|int
-name|int32_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_UINT64_T
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|SIZEOF_LONG_LONG
-operator|==
-literal|8
-end_if
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|long
-name|uint64_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|uint64_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_INT64_T
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|SIZEOF_LONG_LONG
-operator|==
-literal|8
-end_if
-
-begin_typedef
-typedef|typedef
-name|long
-name|long
-name|int64_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|long
-name|int64_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* Define to the type of an unsigned integer type of width exactly 16 bits if    such a type exists and the standard includes do not define it. */
+end_comment
 
 begin_comment
-comment|/* _FREEBSD_UNUSED_ */
+comment|/* #undef uint16_t */
+end_comment
+
+begin_comment
+comment|/* Define to the type of an unsigned integer type of width exactly 32 bits if    such a type exists and the standard includes do not define it. */
+end_comment
+
+begin_comment
+comment|/* #undef uint32_t */
+end_comment
+
+begin_comment
+comment|/* Define to the type of an unsigned integer type of width exactly 64 bits if    such a type exists and the standard includes do not define it. */
+end_comment
+
+begin_comment
+comment|/* #undef uint64_t */
+end_comment
+
+begin_comment
+comment|/* Define to the type of an unsigned integer type of width exactly 8 bits if    such a type exists and the standard includes do not define it. */
+end_comment
+
+begin_comment
+comment|/* #undef uint8_t */
+end_comment
+
+begin_comment
+comment|/* Define to the type of an unsigned integer type wide enough to hold a    pointer, if such a type exists, and if the system does not define it. */
+end_comment
+
+begin_comment
+comment|/* #undef uintptr_t */
+end_comment
+
+begin_comment
+comment|/* Define as `fork' if `vfork' does not work. */
+end_comment
+
+begin_comment
+comment|/* #undef vfork */
 end_comment
 
 end_unit
