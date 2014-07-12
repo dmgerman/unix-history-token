@@ -944,6 +944,10 @@ begin_comment
 comment|/*  * Network interface cards are able to hash protocol fields (such as IPv4  * addresses and TCP port numbers) classify packets into flows.  These flows  * can then be used to maintain ordering while delivering packets to the OS  * via parallel input queues, as well as to provide a stateless affinity  * model.  NIC drivers can pass up the hash via m->m_pkthdr.flowid, and set  * m_flag fields to indicate how the hash should be interpreted by the  * network stack.  *  * Most NICs support RSS, which provides ordering and explicit affinity, and  * use the hash m_flag bits to indicate what header fields were covered by  * the hash.  M_HASHTYPE_OPAQUE can be set by non-RSS cards or configurations  * that provide an opaque flow identifier, allowing for ordering and  * distribution without explicit affinity.  */
 end_comment
 
+begin_comment
+comment|/* Microsoft RSS standard hash types */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1015,6 +1019,54 @@ end_define
 
 begin_comment
 comment|/* TCPv6 4-tiple + ext hdrs */
+end_comment
+
+begin_comment
+comment|/* Non-standard RSS hash types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_UDP_IPV4
+value|7
+end_define
+
+begin_comment
+comment|/* IPv4 UDP 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_UDP_IPV4_EX
+value|8
+end_define
+
+begin_comment
+comment|/* IPv4 UDP 4-tuple + ext hdrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_UDP_IPV6
+value|9
+end_define
+
+begin_comment
+comment|/* IPv6 UDP 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_UDP_IPV6_EX
+value|10
+end_define
+
+begin_comment
+comment|/* IPv6 UDP 4-tuple + ext hdrs */
 end_comment
 
 begin_define
