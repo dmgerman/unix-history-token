@@ -10085,7 +10085,6 @@ condition|)
 block|{
 name|retval
 operator|=
-operator|-
 name|EPERM
 expr_stmt|;
 break|break;
@@ -10117,7 +10116,6 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-operator|-
 name|ENOSPC
 expr_stmt|;
 break|break;
@@ -12474,7 +12472,6 @@ break|break;
 default|default:
 name|retval
 operator|=
-operator|-
 name|EINVAL
 expr_stmt|;
 break|break;
@@ -14226,7 +14223,7 @@ directive|if
 literal|0
 block|struct ctl_backend_driver *backend; 		unsigned int type; 		int found;  		found = 0;
 comment|/* 		 * We encode the backend type as the ioctl type for backend 		 * ioctls.  So parse it out here, and then search for a 		 * backend of this type. 		 */
-block|type = _IOC_TYPE(cmd);  		STAILQ_FOREACH(backend,&softc->be_list, links) { 			if (backend->type == type) { 				found = 1; 				break; 			} 		} 		if (found == 0) { 			printf("ctl: unknown ioctl command %#lx or backend " 			       "%d\n", cmd, type); 			retval = -EINVAL; 			break; 		} 		retval = backend->ioctl(dev, cmd, addr, flag, td);
+block|type = _IOC_TYPE(cmd);  		STAILQ_FOREACH(backend,&softc->be_list, links) { 			if (backend->type == type) { 				found = 1; 				break; 			} 		} 		if (found == 0) { 			printf("ctl: unknown ioctl command %#lx or backend " 			       "%d\n", cmd, type); 			retval = EINVAL; 			break; 		} 		retval = backend->ioctl(dev, cmd, addr, flag, td);
 endif|#
 directive|endif
 name|retval
@@ -14962,7 +14959,6 @@ condition|)
 block|{
 name|retval
 operator|=
-operator|-
 name|ENOMEM
 expr_stmt|;
 goto|goto
@@ -15283,7 +15279,6 @@ name|CTL_POOL_FLAG_INVALID
 condition|)
 return|return
 operator|(
-operator|-
 name|EINVAL
 operator|)
 return|;
@@ -38018,7 +38013,6 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
 name|EINVAL
 operator|)
 return|;
@@ -52544,7 +52538,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
 name|EINVAL
 operator|)
 return|;
