@@ -2094,12 +2094,6 @@ decl_stmt|;
 name|int
 name|avalue_size
 decl_stmt|;
-name|char
-name|fmt
-index|[
-literal|32
-index|]
-decl_stmt|;
 name|size_t
 name|bufsize
 decl_stmt|;
@@ -2249,16 +2243,14 @@ name|grouping
 argument_list|)
 expr_stmt|;
 comment|/* convert to string */
-name|snprintf
+name|avalue_size
+operator|=
+name|asprintf
 argument_list|(
-name|fmt
+operator|&
+name|avalue
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|fmt
-argument_list|)
-argument_list|,
-literal|"%%%d.%df"
+literal|"%*.*f"
 argument_list|,
 name|left_prec
 operator|+
@@ -2267,16 +2259,6 @@ operator|+
 literal|1
 argument_list|,
 name|right_prec
-argument_list|)
-expr_stmt|;
-name|avalue_size
-operator|=
-name|asprintf
-argument_list|(
-operator|&
-name|avalue
-argument_list|,
-name|fmt
 argument_list|,
 name|value
 argument_list|)
@@ -2295,10 +2277,7 @@ return|;
 comment|/* make sure that we've enough space for result string */
 name|bufsize
 operator|=
-name|strlen
-argument_list|(
-name|avalue
-argument_list|)
+name|avalue_size
 operator|*
 literal|2
 operator|+
