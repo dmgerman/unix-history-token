@@ -11805,7 +11805,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"<num_threads>"
+literal|"\t<num_threads>"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11845,7 +11845,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"</num_threads>"
+literal|"</num_threads>\n"
 argument_list|)
 expr_stmt|;
 name|bailout
