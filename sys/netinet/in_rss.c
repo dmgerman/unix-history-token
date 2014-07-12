@@ -1618,6 +1618,12 @@ case|:
 case|case
 name|M_HASHTYPE_RSS_TCP_IPV4
 case|:
+case|case
+name|M_HASHTYPE_RSS_IPV6
+case|:
+case|case
+name|M_HASHTYPE_RSS_TCP_IPV6
+case|:
 return|return
 operator|(
 name|rss_getcpu
@@ -1668,6 +1674,12 @@ name|M_HASHTYPE_RSS_IPV4
 case|:
 case|case
 name|M_HASHTYPE_RSS_TCP_IPV4
+case|:
+case|case
+name|M_HASHTYPE_RSS_IPV6
+case|:
+case|case
+name|M_HASHTYPE_RSS_TCP_IPV6
 case|:
 operator|*
 name|bucket_id
