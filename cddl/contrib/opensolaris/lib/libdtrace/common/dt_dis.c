@@ -8,7 +8,7 @@ comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1715,7 +1715,11 @@ name|t
 operator|->
 name|dtdt_flags
 operator|&
+operator|(
 name|DIF_TF_BYREF
+operator||
+name|DIF_TF_BYUREF
+operator|)
 condition|)
 block|{
 operator|(
@@ -1727,11 +1731,23 @@ name|buf
 argument_list|,
 name|len
 argument_list|,
-literal|"%s (%s) by ref (size %lu)"
+literal|"%s (%s) by %sref (size %lu)"
 argument_list|,
 name|kind
 argument_list|,
 name|ckind
+argument_list|,
+operator|(
+name|t
+operator|->
+name|dtdt_flags
+operator|&
+name|DIF_TF_BYUREF
+operator|)
+condition|?
+literal|"user "
+else|:
+literal|""
 argument_list|,
 operator|(
 name|ulong_t

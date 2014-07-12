@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_DT_PID_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -172,6 +169,24 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|dt_pid_get_types
+parameter_list|(
+name|dtrace_hdl_t
+modifier|*
+parameter_list|,
+specifier|const
+name|dtrace_probedesc_t
+modifier|*
+parameter_list|,
+name|dtrace_argdesc_t
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;

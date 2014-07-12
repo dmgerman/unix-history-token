@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_DT_PARSER_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -1080,6 +1077,8 @@ name|ctf_file_t
 modifier|*
 parameter_list|,
 name|ctf_id_t
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 specifier|extern

@@ -7,12 +7,9 @@ begin_comment
 comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
+end_comment
 
 begin_include
 include|#
@@ -212,6 +209,8 @@ operator|->
 name|dx_dst_ctfp
 argument_list|,
 name|type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For the member itself, we use a DT_NODE_MEMBER as usual with the 	 * appropriate name, output type, and member expression set to 'enp'. 	 */
@@ -275,6 +274,8 @@ operator|->
 name|dx_dst_ctfp
 argument_list|,
 name|type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1569,6 +1570,8 @@ argument_list|,
 name|dxp
 operator|->
 name|dx_src_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 if|if
