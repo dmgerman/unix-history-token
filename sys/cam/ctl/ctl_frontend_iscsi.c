@@ -10611,6 +10611,14 @@ name|SCSI_STATUS_OK
 expr_stmt|;
 name|ctsio
 operator|->
+name|io_hdr
+operator|.
+name|flags
+operator||=
+name|CTL_FLAG_ALLOCATED
+expr_stmt|;
+name|ctsio
+operator|->
 name|be_move_done
 operator|=
 name|ctl_config_move_done

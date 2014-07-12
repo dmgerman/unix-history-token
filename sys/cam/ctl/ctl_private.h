@@ -1623,6 +1623,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ctl_read_buffer
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ctl_write_buffer
 parameter_list|(
 name|struct

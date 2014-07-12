@@ -913,9 +913,9 @@ comment|/* 3B WRITE BUFFER */
 block|{
 name|ctl_write_buffer
 block|,
-name|CTL_SERIDX_WRITE
+name|CTL_SERIDX_MD_SEL
 block|,
-name|CTL_CMD_FLAG_OK_ON_PROC
+name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
 name|CTL_FLAG_DATA_OUT
 block|,
@@ -924,11 +924,15 @@ block|}
 block|,
 comment|/* 3C READ BUFFER */
 block|{
-name|NULL
+name|ctl_read_buffer
 block|,
-name|CTL_SERIDX_INVLD
+name|CTL_SERIDX_MD_SNS
 block|,
-name|CTL_CMD_FLAG_NONE
+name|CTL_CMD_FLAG_OK_ON_BOTH
+operator||
+name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|}
