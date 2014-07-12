@@ -7,13 +7,6 @@ begin_comment
 comment|/*  * Copyright 2008 Sun Microsystems, Inc. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_comment
 comment|/*  * DTrace - Dynamic Tracing for Solaris  *  * This is the implementation of the Solaris Dynamic Tracing framework  * (DTrace).  The user-visible interface to DTrace is described at length in  * the "Solaris Dynamic Tracing Guide".  The interfaces between the libdtrace  * library, the in-kernel DTrace framework, and the DTrace providers are  * described in the block comments in the<sys/dtrace.h> header file.  The  * internal architecture of DTrace is described in the block comments in the  *<sys/dtrace_impl.h> header file.  The comments contained within the DTrace  * implementation very much assume mastery of all of these sources; if one has  * an unanswered question about the implementation, one should consult them  * first.  *  * The functions here are ordered roughly as follows:  *  *   - Probe context functions  *   - Probe hashing functions  *   - Non-probe context utility functions  *   - Matching functions  *   - Provider-to-Framework API functions  *   - Probe management functions  *   - DIF object functions  *   - Format functions  *   - Predicate functions  *   - ECB functions  *   - Buffer functions  *   - Enabling functions  *   - DOF functions  *   - Anonymous enabling functions  *   - Consumer state functions  *   - Helper functions  *   - Hook functions  *   - Driver cookbook functions  *  * Each group of functions begins with a block comment labelled the "DTrace  * [Group] Functions", allowing one to find each block by searching forward  * on capital-f functions.  */
 end_comment
@@ -1148,6 +1141,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* list of retained enablings */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|dtrace_genid_t
+name|dtrace_retained_gen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current retained enab gen */
 end_comment
 
 begin_decl_stmt
@@ -36908,7 +36912,7 @@ name|dtdo_len
 operator|-
 literal|1
 argument_list|,
-literal|"bad return size"
+literal|"bad return size\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -47872,6 +47876,9 @@ operator|->
 name|dts_nretained
 operator|--
 expr_stmt|;
+name|dtrace_retained_gen
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -48052,6 +48059,9 @@ return|;
 name|state
 operator|->
 name|dts_nretained
+operator|++
+expr_stmt|;
+name|dtrace_retained_gen
 operator|++
 expr_stmt|;
 if|if
@@ -48872,6 +48882,9 @@ decl_stmt|;
 name|dtrace_probedesc_t
 name|desc
 decl_stmt|;
+name|dtrace_genid_t
+name|gen
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|MUTEX_HELD
@@ -48911,8 +48924,6 @@ block|{
 name|dtrace_enabling_t
 modifier|*
 name|enab
-init|=
-name|dtrace_retained
 decl_stmt|;
 name|void
 modifier|*
@@ -48922,8 +48933,17 @@ name|prv
 operator|->
 name|dtpv_arg
 decl_stmt|;
+name|retry
+label|:
+name|gen
+operator|=
+name|dtrace_retained_gen
+expr_stmt|;
 for|for
 control|(
+name|enab
+operator|=
+name|dtrace_retained
 init|;
 name|enab
 operator|!=
@@ -48987,6 +49007,16 @@ operator|&
 name|dtrace_lock
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Process the retained enablings again if 				 * they have changed while we weren't holding 				 * dtrace_lock. 				 */
+if|if
+condition|(
+name|gen
+operator|!=
+name|dtrace_retained_gen
+condition|)
+goto|goto
+name|retry
+goto|;
 block|}
 block|}
 block|}
@@ -49795,6 +49825,14 @@ name|dofh_loadsz
 argument_list|)
 operator|!=
 literal|0
+operator|||
+name|dof
+operator|->
+name|dofh_loadsz
+operator|!=
+name|hdr
+operator|.
+name|dofh_loadsz
 condition|)
 block|{
 name|kmem_free
@@ -53837,6 +53875,40 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+if|if
+condition|(
+name|DOF_SEC_ISLOADABLE
+argument_list|(
+name|sec
+operator|->
+name|dofs_type
+argument_list|)
+operator|&&
+operator|!
+operator|(
+name|sec
+operator|->
+name|dofs_flags
+operator|&
+name|DOF_SECF_LOAD
+operator|)
+condition|)
+block|{
+name|dtrace_dof_error
+argument_list|(
+name|dof
+argument_list|,
+literal|"loadable section with load "
+literal|"flag unset"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -66201,6 +66273,12 @@ operator|--
 name|dtrace_opens
 operator|==
 literal|0
+operator|&&
+name|dtrace_anon
+operator|.
+name|dta_enabling
+operator|==
+name|NULL
 condition|)
 operator|(
 name|void
@@ -66498,12 +66576,19 @@ name|defined
 argument_list|(
 name|sun
 argument_list|)
+comment|/* 	 * Only relinquish control of the kernel debugger interface when there 	 * are no consumers and no anonymous enablings. 	 */
 if|if
 condition|(
 operator|--
 name|dtrace_opens
 operator|==
 literal|0
+operator|&&
+name|dtrace_anon
+operator|.
+name|dta_enabling
+operator|==
+name|NULL
 condition|)
 operator|(
 name|void
