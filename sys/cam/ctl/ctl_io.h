@@ -611,6 +611,10 @@ name|targ_lun
 decl_stmt|;
 comment|/* Destination lun */
 name|uint32_t
+name|targ_mapped_lun
+decl_stmt|;
+comment|/* Destination lun CTL-wide */
+name|uint32_t
 function_decl|(
 modifier|*
 name|lun_map_fn
