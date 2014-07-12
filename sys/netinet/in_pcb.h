@@ -2521,6 +2521,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|in_pcbbind_check_bindmulti
+parameter_list|(
+specifier|const
+name|struct
+name|inpcb
+modifier|*
+name|ni
+parameter_list|,
+specifier|const
+name|struct
+name|inpcb
+modifier|*
+name|oi
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|inpcbgroup
 modifier|*

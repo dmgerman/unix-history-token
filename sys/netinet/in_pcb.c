@@ -2442,18 +2442,11 @@ begin_comment
 comment|/* INET || INET6 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
 begin_comment
 comment|/*  * Check if a new BINDMULTI socket is allowed to be created.  *  * ni points to the new inp.  * oi points to the exisitng inp.  *  * This checks whether the existing inp also has BINDMULTI and  * whether the credentials match.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|in_pcbbind_check_bindmulti
 parameter_list|(
@@ -2536,6 +2529,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Set up a bind operation on a PCB, performing port allocation  * as required, but do not actually modify the PCB. Callers can  * either complete the bind by setting inp_laddr/inp_lport and  * calling in_pcbinshash(), or they can just use the resulting  * port and address to authorise the sending of a once-off packet.  *  * On error, the values of *laddrp and *lportp are not changed.  */
