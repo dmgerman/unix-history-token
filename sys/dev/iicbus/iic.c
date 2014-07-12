@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/iic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/iicbus/iiconf.h>
 end_include
 
@@ -79,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<dev/iicbus/iicbus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/iicbus/iic.h>
 end_include
 
 begin_include

@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/iicbus/iic.h>
+file|<sys/iic.h>
 end_include
 
 begin_include
