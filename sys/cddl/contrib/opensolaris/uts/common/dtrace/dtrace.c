@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1180,6 +1180,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* end of dynamic hash chains */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dtrace_dynvar_failclean
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* dynvars failed to clean */
 end_comment
 
 begin_if
@@ -6245,8 +6256,15 @@ name|dtrace_dstate_percpu_t
 modifier|*
 name|dcpu
 decl_stmt|;
+name|dtrace_dynvar_t
+modifier|*
+modifier|*
+name|rinsep
+decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|,
 name|work
 init|=
@@ -6276,14 +6294,12 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|ASSERT
-argument_list|(
+name|rinsep
+operator|=
+operator|&
 name|dcpu
 operator|->
 name|dtdsc_rinsing
-operator|==
-name|NULL
-argument_list|)
 expr_stmt|;
 comment|/* 		 * If the dirty list is NULL, there is no dirty work to do. 		 */
 if|if
@@ -6295,7 +6311,18 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* 		 * If the clean list is non-NULL, then we're not going to do 		 * any work for this CPU -- it means that there has not been 		 * a dtrace_dynvar() allocation on this CPU (or from this CPU) 		 * since the last time we cleaned house. 		 */
+if|if
+condition|(
+name|dcpu
+operator|->
+name|dtdsc_rinsing
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 			 * If the rinsing list is non-NULL, then it is because 			 * this CPU was selected to accept another CPU's 			 * dirty list -- and since that time, dirty buffers 			 * have accumulated.  This is a highly unlikely 			 * condition, but we choose to ignore the dirty 			 * buffers -- they'll be picked up a future cleanse. 			 */
+continue|continue;
+block|}
 if|if
 condition|(
 name|dcpu
@@ -6304,7 +6331,86 @@ name|dtdsc_clean
 operator|!=
 name|NULL
 condition|)
+block|{
+comment|/* 			 * If the clean list is non-NULL, then we're in a 			 * situation where a CPU has done deallocations (we 			 * have a non-NULL dirty list) but no allocations (we 			 * also have a non-NULL clean list).  We can't simply 			 * move the dirty list into the clean list on this 			 * CPU, yet we also don't want to allow this condition 			 * to persist, lest a short clean list prevent a 			 * massive dirty list from being cleaned (which in 			 * turn could lead to otherwise avoidable dynamic 			 * drops).  To deal with this, we look for some CPU 			 * with a NULL clean list, NULL dirty list, and NULL 			 * rinsing list -- and then we borrow this CPU to 			 * rinse our dirty list. 			 */
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|NCPU
+condition|;
+name|j
+operator|++
+control|)
+block|{
+name|dtrace_dstate_percpu_t
+modifier|*
+name|rinser
+decl_stmt|;
+name|rinser
+operator|=
+operator|&
+name|dstate
+operator|->
+name|dtds_percpu
+index|[
+name|j
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|rinser
+operator|->
+name|dtdsc_rinsing
+operator|!=
+name|NULL
+condition|)
 continue|continue;
+if|if
+condition|(
+name|rinser
+operator|->
+name|dtdsc_dirty
+operator|!=
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+name|rinser
+operator|->
+name|dtdsc_clean
+operator|!=
+name|NULL
+condition|)
+continue|continue;
+name|rinsep
+operator|=
+operator|&
+name|rinser
+operator|->
+name|dtdsc_rinsing
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|j
+operator|==
+name|NCPU
+condition|)
+block|{
+comment|/* 				 * We were unable to find another CPU that 				 * could accept this dirty list -- we are 				 * therefore unable to clean it now. 				 */
+name|dtrace_dynvar_failclean
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+block|}
 name|work
 operator|=
 literal|1
@@ -6319,9 +6425,8 @@ operator|->
 name|dtdsc_dirty
 expr_stmt|;
 comment|/* 			 * Before we zap the dirty list, set the rinsing list. 			 * (This allows for a potential assertion in 			 * dtrace_dynvar():  if a free dynamic variable appears 			 * on a hash chain, either the dirty list or the 			 * rinsing list for some CPU must be non-NULL.) 			 */
-name|dcpu
-operator|->
-name|dtdsc_rinsing
+operator|*
+name|rinsep
 operator|=
 name|dirty
 expr_stmt|;
@@ -7744,7 +7849,17 @@ operator|==
 name|DTRACE_DYNHASH_FREE
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Now we'll move the clean list to the free list. 			 * It's impossible for this to fail:  the only way 			 * the free list can be updated is through this 			 * code path, and only one CPU can own the clean list. 			 * Thus, it would only be possible for this to fail if 			 * this code were racing with dtrace_dynvar_clean(). 			 * (That is, if dtrace_dynvar_clean() updated the clean 			 * list, and we ended up racing to update the free 			 * list.)  This race is prevented by the dtrace_sync() 			 * in dtrace_dynvar_clean() -- which flushes the 			 * owners of the clean lists out before resetting 			 * the clean lists. 			 */
+comment|/* 			 * Now we'll move the clean list to our free list. 			 * It's impossible for this to fail:  the only way 			 * the free list can be updated is through this 			 * code path, and only one CPU can own the clean list. 			 * Thus, it would only be possible for this to fail if 			 * this code were racing with dtrace_dynvar_clean(). 			 * (That is, if dtrace_dynvar_clean() updated the clean 			 * list, and we ended up racing to update the free 			 * list.)  This race is prevented by the dtrace_sync() 			 * in dtrace_dynvar_clean() -- which flushes the 			 * owners of the clean lists out before resetting 			 * the clean lists. 			 */
+name|dcpu
+operator|=
+operator|&
+name|dstate
+operator|->
+name|dtds_percpu
+index|[
+name|me
+index|]
+expr_stmt|;
 name|rval
 operator|=
 name|dtrace_casptr
@@ -17932,8 +18047,6 @@ argument_list|)
 decl_stmt|;
 name|int64_t
 name|i
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
