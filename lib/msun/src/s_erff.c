@@ -310,7 +310,7 @@ operator|>=
 literal|0x7f800000
 condition|)
 block|{
-comment|/* erf(nan)=nan */
+comment|/* erff(nan)=nan */
 name|i
 operator|=
 operator|(
@@ -338,7 +338,7 @@ name|one
 operator|/
 name|x
 return|;
-comment|/* erf(+-inf)=+-1 */
+comment|/* erff(+-inf)=+-1 */
 block|}
 if|if
 condition|(
@@ -793,8 +793,8 @@ operator|>=
 literal|0x7f800000
 condition|)
 block|{
-comment|/* erfc(nan)=nan */
-comment|/* erfc(+-inf)=0,2 */
+comment|/* erfcf(nan)=nan */
+comment|/* erfcf(+-inf)=0,2 */
 return|return
 call|(
 name|float
