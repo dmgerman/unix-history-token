@@ -5694,7 +5694,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map the given physical page at the specified virtual address in the  * target pmap with the protection requested.  If specified the page  * will be wired down.  *  * The page queues and pmap must be locked.  */
+comment|/*  * Map the given physical page at the specified virtual address in the  * target pmap with the protection requested.  If specified the page  * will be wired down.  *  * The global pvh and pmap must be locked.  */
 end_comment
 
 begin_function
@@ -5726,9 +5726,6 @@ decl_stmt|;
 name|uma_zone_t
 name|zone
 decl_stmt|;
-name|vm_page_t
-name|pg
-decl_stmt|;
 name|u_int
 name|pte_lo
 decl_stmt|,
@@ -5756,10 +5753,6 @@ name|pvo_flags
 operator|=
 literal|0
 expr_stmt|;
-name|pg
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -5769,10 +5762,6 @@ name|vm_page_to_pvoh
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|pg
-operator|=
-name|m
 expr_stmt|;
 name|zone
 operator|=
@@ -5827,7 +5816,7 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* XXX change the pvo head for fake pages */
+comment|/* XXX change the pvo head for unmanaged pages */
 if|if
 condition|(
 operator|(
