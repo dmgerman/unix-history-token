@@ -33,30 +33,43 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/* XXX Prevent compilers from erroneously constant folding: */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
+specifier|volatile
 name|float
 name|tiny
 init|=
 literal|1e-30
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|float
 name|half
 init|=
-literal|5.0000000000e-01
+literal|0.5
 decl_stmt|,
-comment|/* 0x3F000000 */
 name|one
 init|=
-literal|1.0000000000e+00
+literal|1
 decl_stmt|,
-comment|/* 0x3F800000 */
 name|two
 init|=
-literal|2.0000000000e+00
+literal|2
 decl_stmt|,
-comment|/* 0x40000000 */
-comment|/*  * Coefficients for approximation to erf on [0,0.84375]  */
+name|erx
+init|=
+literal|8.42697144e-01
+decl_stmt|,
+comment|/* 0x3f57bb00 */
+comment|/*  * In the domain [0, 2**-14], only the first term in the power series  * expansion of erf(x) is used.  The magnitude of the first neglected  * terms is less than 2**-42.  */
 name|efx
 init|=
 literal|1.2837916613e-01
@@ -102,11 +115,6 @@ literal|1.98859419e-03F
 decl_stmt|,
 comment|/* -0x1.04a626p-9 */
 comment|/*  * Domain [0.84375, 1.25], range ~[-1.953e-11,1.940e-11]:  * |(erf(x) - erx) - p(x)/q(x)|< 2**-36.  */
-name|erx
-init|=
-literal|8.42697144e-01F
-decl_stmt|,
-comment|/*  0x1.af7600p-1.  erf(1) rounded to 16 bits. */
 name|pa0
 init|=
 literal|3.64939137e-06F
