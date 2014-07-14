@@ -4137,6 +4137,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vfs_write_suspend_umnt
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vop_stdbmap
 parameter_list|(
 name|struct
