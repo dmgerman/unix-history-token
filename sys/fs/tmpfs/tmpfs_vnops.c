@@ -2698,13 +2698,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|/* XXX When can this be false? */
-name|node
-operator|=
-name|VP_TO_TMPFS_NODE
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* XXX: Why aren't the following two tests done by the caller? */
 comment|/* Hard links of directories are forbidden. */
 if|if
@@ -2744,6 +2737,13 @@ goto|goto
 name|out
 goto|;
 block|}
+name|node
+operator|=
+name|VP_TO_TMPFS_NODE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* Ensure that we do not overflow the maximum number of links imposed 	 * by the system. */
 name|MPASS
 argument_list|(
