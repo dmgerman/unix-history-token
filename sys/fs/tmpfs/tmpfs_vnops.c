@@ -1123,6 +1123,33 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* For regular files, the call below is nop. */
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VREG
+operator|||
+operator|(
+name|node
+operator|->
+name|tn_reg
+operator|.
+name|tn_aobj
+operator|->
+name|flags
+operator|&
+name|OBJ_DEAD
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"dead object"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vnode_create_vobject
 argument_list|(
 name|vp
