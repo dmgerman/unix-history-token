@@ -81,12 +81,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_XHCI_INTEL_USB2PRM
+value|0xD4
+end_define
+
+begin_comment
+comment|/* Intel USB2 Port Routing Mask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_XHCI_INTEL_USB3_PSSEN
 value|0xD8
 end_define
 
 begin_comment
 comment|/* Intel USB3 Port SuperSpeed Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_XHCI_INTEL_USB3PRM
+value|0xDC
+end_define
+
+begin_comment
+comment|/* Intel USB3 Port Routing Mask */
 end_comment
 
 begin_comment
