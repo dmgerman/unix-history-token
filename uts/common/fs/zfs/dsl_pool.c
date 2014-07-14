@@ -2617,7 +2617,7 @@ name|space
 decl_stmt|,
 name|resv
 decl_stmt|;
-comment|/* 	 * Reserve about 1.6% (1/64), or at least 32MB, for allocation 	 * efficiency. 	 * XXX The intent log is not accounted for, so it must fit 	 * within this slop. 	 * 	 * If we're trying to assess whether it's OK to do a free, 	 * cut the reservation in half to allow forward progress 	 * (e.g. make it possible to rm(1) files from a full pool). 	 */
+comment|/* 	 * If we're trying to assess whether it's OK to do a free, 	 * cut the reservation in half to allow forward progress 	 * (e.g. make it possible to rm(1) files from a full pool). 	 */
 name|space
 operator|=
 name|spa_get_dspace
@@ -2629,15 +2629,11 @@ argument_list|)
 expr_stmt|;
 name|resv
 operator|=
-name|MAX
+name|spa_get_slop_space
 argument_list|(
-name|space
-operator|>>
-literal|6
-argument_list|,
-name|SPA_MINDEVSIZE
-operator|>>
-literal|1
+name|dp
+operator|->
+name|dp_spa
 argument_list|)
 expr_stmt|;
 if|if

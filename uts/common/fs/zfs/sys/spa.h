@@ -2147,6 +2147,15 @@ name|spa
 parameter_list|)
 function_decl|;
 specifier|extern
+name|uint64_t
+name|spa_get_slop_space
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|spa_update_dspace
 parameter_list|(
