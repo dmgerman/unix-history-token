@@ -144,10 +144,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -233,10 +229,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -286,10 +278,6 @@ name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -1309,10 +1297,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED2 */
 end_comment
 
@@ -1534,10 +1518,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1598,10 +1578,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -1766,10 +1742,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED2 */
 end_comment
 
@@ -1927,10 +1899,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * tmpfs vfs operations.  */

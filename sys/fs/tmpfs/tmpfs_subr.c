@@ -518,10 +518,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Allocates a new node of type 'type' inside the 'tmp' mount point, with  * its owner set to 'uid', its group to 'gid' and its mode set to 'mode',  * using the credentials of the process 'p'.  *  * If the node type is set to 'VDIR', then the parent parameter must point  * to the parent directory of the node being created.  It may only be NULL  * while allocating the root node.  *  * If the node type is set to 'VBLK' or 'VCHR', then the rdev parameter  * specifies the device the node represents.  *  * If the node type is set to 'VLNK', then the parameter target specifies  * the file name of the target file for the symbolic link that is being  * created.  *  * Note that new nodes are retrieved from the available list if it has  * items or, if it is empty, from the node pool as long as there is enough  * space to create them.  *  * Returns zero on success or an appropriate error code on failure.  */
 end_comment
 
@@ -1035,10 +1031,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Destroys the node pointed to by node from the file system 'tmp'.  * If the node does not belong to the given mount point, the results are  * unpredicted.  *  * If the node references a directory; no entries are allowed because  * their removal could need a recursive algorithm, something forbidden in  * kernel space.  Furthermore, there is not need to provide such  * functionality (recursive removal) because the only primitives offered  * to the user are the removal of empty directories and the deletion of  * individual files.  *  * Note that nodes are not really deleted; in fact, when a node has been  * allocated, it cannot be deleted during the whole life of the file  * system.  Instead, they are moved to the available list and remain there  * until reused.  */
 end_comment
 
@@ -1266,10 +1258,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -1601,10 +1589,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Frees a directory entry.  It is the caller's responsibility to destroy  * the node referenced by it if needed.  *  * The link count of node is decreased by one to reflect the removal of an  * object that referenced it.  This only happens if 'node_exists' is true;  * otherwise the function will not access the node referred to by the  * directory entry, as it may already have been released from the outside.  */
 end_comment
 
@@ -1694,10 +1678,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 name|void
@@ -2581,10 +2561,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Destroys the association between the vnode vp and the node it  * references.  */
 end_comment
 
@@ -2661,10 +2637,6 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Allocates a new file of type 'type' and adds it to the parent directory  * 'dvp'; this addition is done using the component name given in 'cnp'.  * The ownership of the new file is automatically assigned based on the  * credentials of the caller (through 'cnp'), the group is set based on  * the parent directory and the mode is determined from the 'vap' argument.  * If successful, *vpp holds a vnode to the newly created file and zero  * is returned.  Otherwise *vpp is NULL and the function returns an  * appropriate error code.  */
@@ -2976,10 +2948,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -4393,10 +4361,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Detaches the directory entry de from the directory represented by vp.  * Note that this does not change the link count of the node pointed by  * the directory entry, as this is done by tmpfs_free_dirent.  */
 end_comment
 
@@ -4760,10 +4724,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Helper function for tmpfs_readdir.  Creates a '.' entry for the given  * directory and returns it in the uio space.  The function returns 0  * on success, -1 if there was not enough space in the uio structure to  * hold the directory entry or an appropriate error code if another  * error happens.  */
 end_comment
 
@@ -4892,10 +4852,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Helper function for tmpfs_readdir.  Creates a '..' entry for the given  * directory and returns it in the uio space.  The function returns 0  * on success, -1 if there was not enough space in the uio structure to  * hold the directory entry or an appropriate error code if another  * error happens.  */
@@ -5080,10 +5036,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Helper function for tmpfs_readdir.  Returns as much directory entries  * as can fit in the uio space.  The read starts at uio->uio_offset.  * The function returns 0 on success, -1 if there was not enough space  * in the uio structure to hold the directory entry or an appropriate  * error code if another error happens.  */
@@ -5823,10 +5775,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Resizes the aobj associated with the regular file pointed to by 'vp' to the  * size 'newsize'.  'vp' must point to a vnode that represents a regular file.  * 'newsize' must be positive.  *  * Returns zero on success or an appropriate error code on failure.  */
 end_comment
 
@@ -6317,10 +6265,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Change flags of the given vnode.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
 end_comment
 
@@ -6565,10 +6509,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Change access mode on the given vnode.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
 end_comment
 
@@ -6778,10 +6718,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Change ownership of the given vnode.  At least one of uid or gid must  * be different than VNOVAL.  If one is set to that value, the attribute  * is unchanged.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
@@ -7080,10 +7016,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Change size of the given vnode.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
 end_comment
 
@@ -7228,10 +7160,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Change access and modification times of the given vnode.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
@@ -7467,10 +7395,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/* Sync timestamps */
 end_comment
 
@@ -7625,10 +7549,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 name|void
 name|tmpfs_update
@@ -7650,10 +7570,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 name|int

@@ -19,10 +19,6 @@ directive|define
 name|_FS_TMPFS_TMPFS_H_
 end_define
 
-begin_comment
-comment|/* ---------------------------------------------------------------------  * KERNEL-SPECIFIC DEFINITIONS  * --------------------------------------------------------------------- */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -64,10 +60,6 @@ include|#
 directive|include
 file|<sys/mutex.h>
 end_include
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_include
 include|#
@@ -114,10 +106,6 @@ name|M_TMPFSNAME
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Internal representation of a tmpfs directory entry.  */
@@ -284,10 +272,6 @@ name|TMPFS_DIRCOOKIE_DUP_MAX
 define|\
 value|(TMPFS_DIRCOOKIE_DUP | TMPFS_DIRCOOKIE_MASK)
 end_define
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Internal representation of a tmpfs file system node.  *  * This structure is splitted in two parts: one holds attributes common  * to all file types and the other holds data that is only applicable to  * a particular type.  The code must be careful to only access those  * attributes that are actually allowed by the node's type.  *  *  * Below is the key of locks used to protected the fields in the following  * structures.  *  */
@@ -622,10 +606,6 @@ value|8
 end_define
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Internal representation of a tmpfs mount point.  */
 end_comment
 
@@ -711,10 +691,6 @@ value|mtx_unlock(&(tm)->allnode_lock)
 end_define
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * This structure maps a file identifier to a tmpfs node.  Used by the  * NFS code.  */
 end_comment
 
@@ -738,10 +714,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1231,10 +1203,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Convenience macros to simplify some logical expressions.  */
 end_comment
 
@@ -1263,10 +1231,6 @@ value|(IMPLIES(a, b)&& IMPLIES(b, a))
 end_define
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Checks that the directory entry pointed by 'de' matches the name 'name'  * with a length of 'len'.  */
 end_comment
 
@@ -1286,10 +1250,6 @@ value|(de->td_namelen == len&& \     bcmp((de)->ud.td_name, (name), (de)->td_nam
 end_define
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Ensures that the node pointed by 'node' is a directory and that its  * contents are consistent with respect to directories.  */
 end_comment
 
@@ -1302,10 +1262,6 @@ name|node
 parameter_list|)
 value|do { \ 	MPASS((node)->tn_type == VDIR); \ 	MPASS((node)->tn_size % sizeof(struct tmpfs_dirent) == 0); \ } while (0)
 end_define
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Memory management stuff.  */
@@ -1347,10 +1303,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Macros/functions to convert from generic data structures to tmpfs  * specific ones.  */
