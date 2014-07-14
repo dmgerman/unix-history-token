@@ -2028,7 +2028,7 @@ name|object
 operator|->
 name|flags
 operator|&
-name|OBJ_TMPFS
+name|OBJ_TMPFS_NODE
 operator|)
 operator|==
 literal|0
@@ -2085,7 +2085,7 @@ name|object
 operator|->
 name|flags
 operator|&
-name|OBJ_TMPFS
+name|OBJ_TMPFS_NODE
 operator|)
 operator|==
 literal|0
@@ -7199,7 +7199,7 @@ name|prev_object
 operator|->
 name|flags
 operator|&
-name|OBJ_TMPFS
+name|OBJ_TMPFS_NODE
 operator|)
 operator|!=
 literal|0

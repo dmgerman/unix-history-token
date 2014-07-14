@@ -333,6 +333,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OBJ_TMPFS_NODE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* object belongs to tmpfs VREG node */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OBJ_COLORED
 value|0x1000
 end_define
@@ -369,6 +380,10 @@ directive|define
 name|OBJ_TMPFS
 value|0x8000
 end_define
+
+begin_comment
+comment|/* has tmpfs vnode allocated */
+end_comment
 
 begin_define
 define|#
