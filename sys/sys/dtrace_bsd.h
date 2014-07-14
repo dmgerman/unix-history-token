@@ -94,8 +94,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|dtrace_trap
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * The dtrace module handles traps that occur during a DTrace probe.  * This type definition is used in the trap handler to provide a  * hook for the dtrace module to register it's handler with.  */
+comment|/*  * The dtrace module handles traps that occur during a DTrace probe.  * This type definition is used in the trap handler to provide a  * hook for the dtrace module to register its handler with.  */
 end_comment
 
 begin_typedef
@@ -109,24 +120,9 @@ parameter_list|(
 name|struct
 name|trapframe
 modifier|*
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_function_decl
-name|int
-name|dtrace_trap
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern
