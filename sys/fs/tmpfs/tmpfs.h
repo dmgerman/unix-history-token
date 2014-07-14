@@ -740,6 +740,11 @@ name|int
 name|tmpfs_alloc_node
 parameter_list|(
 name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|struct
 name|tmpfs_mount
 modifier|*
 parameter_list|,
