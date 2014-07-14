@@ -578,6 +578,18 @@ operator|&=
 operator|~
 name|clear
 expr_stmt|;
+comment|/* Don't set bits which the hardware doesn't support */
+name|temp
+operator|&=
+name|pci_read_config
+argument_list|(
+name|self
+argument_list|,
+name|PCI_XHCI_INTEL_USB3PRM
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|self
