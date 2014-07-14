@@ -961,6 +961,8 @@ argument_list|(
 name|obj
 argument_list|,
 name|OBJ_NOSPLIT
+operator||
+name|OBJ_TMPFS_NODE
 argument_list|)
 expr_stmt|;
 name|vm_object_clear_flag
