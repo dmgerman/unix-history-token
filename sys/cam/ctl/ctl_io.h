@@ -230,6 +230,11 @@ init|=
 literal|0x00000200
 block|,
 comment|/* on the blocked queue */
+name|CTL_FLAG_ABORT_STATUS
+init|=
+literal|0x00000400
+block|,
+comment|/* return TASK ABORTED status */
 name|CTL_FLAG_ABORT
 init|=
 literal|0x00000800

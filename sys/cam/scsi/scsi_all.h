@@ -1546,6 +1546,11 @@ name|SCP_QUEUE_ALG_UNRESTRICTED
 value|0x10
 define|#
 directive|define
+name|SCP_NUAR
+value|0x08
+comment|/*No UA on release*/
+define|#
+directive|define
 name|SCP_QUEUE_ERR
 value|0x02
 comment|/*Queued I/O aborted for CACs*/
@@ -1564,6 +1569,16 @@ value|0x80
 comment|/*Enable Extended CA*/
 define|#
 directive|define
+name|SCP_RAC
+value|0x40
+comment|/*Report a check*/
+define|#
+directive|define
+name|SCP_SWP
+value|0x08
+comment|/*Software Write Protect*/
+define|#
+directive|define
 name|SCP_RAENP
 value|0x04
 comment|/*Ready AEN Permission*/
@@ -1578,10 +1593,42 @@ name|SCP_EAENP
 value|0x01
 comment|/*Error AEN Permission*/
 name|u_int8_t
-name|reserved
+name|flags4
 decl_stmt|;
+define|#
+directive|define
+name|SCP_ATO
+value|0x80
+comment|/*Application tag owner*/
+define|#
+directive|define
+name|SCP_TAS
+value|0x40
+comment|/*Task aborted status*/
+define|#
+directive|define
+name|SCP_ATMPE
+value|0x20
+comment|/*Application tag mode page*/
+define|#
+directive|define
+name|SCP_RWWP
+value|0x10
+comment|/*Reject write without prot*/
 name|u_int8_t
 name|aen_holdoff_period
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|busy_timeout_period
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|extended_selftest_completion_time
 index|[
 literal|2
 index|]
