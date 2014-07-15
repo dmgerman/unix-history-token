@@ -2357,6 +2357,8 @@ operator|&
 name|be_lun
 operator|->
 name|ctl_be_lun
+operator|.
+name|options
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -2558,8 +2560,16 @@ operator|&
 name|be_lun
 operator|->
 name|ctl_be_lun
+operator|.
+name|options
 argument_list|,
 name|req
+operator|->
+name|num_be_args
+argument_list|,
+name|req
+operator|->
+name|kern_be_args
 argument_list|)
 expr_stmt|;
 if|if
@@ -2739,6 +2749,8 @@ operator|&
 name|be_lun
 operator|->
 name|ctl_be_lun
+operator|.
+name|options
 argument_list|,
 literal|"unmap"
 argument_list|)
@@ -3549,6 +3561,8 @@ operator|&
 name|be_lun
 operator|->
 name|ctl_be_lun
+operator|.
+name|options
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
