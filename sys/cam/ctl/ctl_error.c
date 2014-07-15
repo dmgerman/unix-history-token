@@ -1405,6 +1405,19 @@ literal|0x03
 expr_stmt|;
 break|break;
 case|case
+name|CTL_UA_I_T_NEXUS_LOSS
+case|:
+comment|/* 29h/07h  I_T NEXUS LOSS OCCURRED */
+name|asc
+operator|=
+literal|0x29
+expr_stmt|;
+name|ascq
+operator|=
+literal|0x07
+expr_stmt|;
+break|break;
+case|case
 name|CTL_UA_LUN_RESET
 case|:
 comment|/* 29h/00h  POWER ON, RESET, OR BUS DEVICE RESET OCCURRED */

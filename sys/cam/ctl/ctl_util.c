@@ -271,6 +271,12 @@ literal|"Clear Task Set"
 block|}
 block|,
 block|{
+name|CTL_TASK_I_T_NEXUS_RESET
+block|,
+literal|"I_T Nexus Reset"
+block|}
+block|,
+block|{
 name|CTL_TASK_LUN_RESET
 block|,
 literal|"LUN Reset"
