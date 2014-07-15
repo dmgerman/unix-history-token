@@ -81,8 +81,12 @@ name|int
 name|zfs_flags
 decl_stmt|;
 specifier|extern
-name|int
+name|boolean_t
 name|zfs_recover
+decl_stmt|;
+specifier|extern
+name|boolean_t
+name|zfs_free_leak_on_eio
 decl_stmt|;
 define|#
 directive|define

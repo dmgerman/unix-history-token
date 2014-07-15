@@ -370,6 +370,8 @@ name|ZPOOL_PROP_EXPANDSZ
 block|,
 name|ZPOOL_PROP_FREEING
 block|,
+name|ZPOOL_PROP_LEAKED
+block|,
 name|ZPOOL_NUM_PROPS
 block|}
 name|zpool_prop_t

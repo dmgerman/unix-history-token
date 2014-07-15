@@ -16344,20 +16344,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A bookmark in the deadlist is considered to be after 	 * everything else. 	 */
-if|if
-condition|(
-name|zb2
-operator|->
-name|zb_object
-operator|==
-name|DMU_DEADLIST_OBJECT
-condition|)
-return|return
-operator|(
-name|B_TRUE
-operator|)
-return|;
 comment|/* The objset_phys_t isn't before anything. */
 if|if
 condition|(

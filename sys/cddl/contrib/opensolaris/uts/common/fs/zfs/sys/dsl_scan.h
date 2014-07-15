@@ -187,6 +187,9 @@ decl_stmt|;
 name|boolean_t
 name|scn_async_destroying
 decl_stmt|;
+name|boolean_t
+name|scn_async_stalled
+decl_stmt|;
 comment|/* for debugging / information */
 name|uint64_t
 name|scn_visited_this_txg

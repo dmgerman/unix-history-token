@@ -628,10 +628,6 @@ define|#
 directive|define
 name|DMU_GROUPUSED_OBJECT
 value|(-2ULL)
-define|#
-directive|define
-name|DMU_DEADLIST_OBJECT
-value|(-3ULL)
 comment|/*  * artificial blkids for bonus buffer and spill blocks  */
 define|#
 directive|define

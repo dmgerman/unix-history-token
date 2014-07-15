@@ -1295,6 +1295,9 @@ case|case
 name|ZPOOL_PROP_FREEING
 case|:
 case|case
+name|ZPOOL_PROP_LEAKED
+case|:
+case|case
 name|ZPOOL_PROP_EXPANDSZ
 case|:
 if|if

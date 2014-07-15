@@ -35,14 +35,14 @@ begin_decl_stmt
 name|int
 name|zfs_dbgmsg_maxsize
 init|=
-literal|1
+literal|4
 operator|<<
 literal|20
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1MB */
+comment|/* 4MB */
 end_comment
 
 begin_function
