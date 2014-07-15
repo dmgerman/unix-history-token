@@ -143,6 +143,9 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+name|uint16_t
+name|is_tsih
+decl_stmt|;
 name|bool
 name|is_immediate_data
 decl_stmt|;
