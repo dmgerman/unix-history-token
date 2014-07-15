@@ -1906,6 +1906,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ctl_report_timestamp
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ctl_isc
 parameter_list|(
 name|struct
