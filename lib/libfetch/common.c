@@ -5075,6 +5075,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* POSIX compliance */
 if|if
 condition|(
 name|errno
