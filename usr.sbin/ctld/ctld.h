@@ -1431,18 +1431,24 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kernel_port_on
+name|kernel_port_add
 parameter_list|(
-name|void
+name|struct
+name|target
+modifier|*
+name|targ
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|kernel_port_off
+name|kernel_port_remove
 parameter_list|(
-name|void
+name|struct
+name|target
+modifier|*
+name|targ
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -19,13 +19,6 @@ directive|define
 name|_CTL_FRONTEND_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|CTL_FE_NAME_LEN
-value|32
-end_define
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -317,6 +310,10 @@ name|ctl_port_status
 name|status
 decl_stmt|;
 comment|/* used by CTL */
+name|ctl_options_t
+name|options
+decl_stmt|;
+comment|/* passed to CTL */
 name|STAILQ_ENTRY
 argument_list|(
 argument|ctl_port
@@ -342,7 +339,7 @@ block|{
 name|char
 name|name
 index|[
-name|CTL_FE_NAME_LEN
+name|CTL_DRIVER_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* passed to CTL */
