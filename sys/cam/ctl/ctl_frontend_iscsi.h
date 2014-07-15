@@ -282,8 +282,8 @@ struct|struct
 name|cfiscsi_softc
 block|{
 name|struct
-name|ctl_frontend
-name|fe
+name|ctl_port
+name|port
 decl_stmt|;
 name|struct
 name|mtx

@@ -2967,6 +2967,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|ctl_frontend
+name|ioctl_frontend
+init|=
+block|{
+operator|.
+name|name
+operator|=
+literal|"ioctl"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -4853,9 +4868,9 @@ modifier|*
 name|other_pool
 decl_stmt|;
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|;
 name|uint8_t
 name|sc_id
@@ -5184,6 +5199,14 @@ operator|&
 name|softc
 operator|->
 name|fe_list
+argument_list|)
+expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|port_list
 argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
@@ -5581,14 +5604,27 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the ioctl front end. 	 */
-name|fe
+name|ctl_frontend_register
+argument_list|(
+operator|&
+name|ioctl_frontend
+argument_list|)
+expr_stmt|;
+name|port
 operator|=
 operator|&
 name|softc
 operator|->
 name|ioctl_info
 operator|.
-name|fe
+name|port
+expr_stmt|;
+name|port
+operator|->
+name|frontend
+operator|=
+operator|&
+name|ioctl_frontend
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -5598,22 +5634,22 @@ name|ioctl_info
 operator|.
 name|port_name
 argument_list|,
-literal|"CTL ioctl"
+literal|"ioctl"
 argument_list|)
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|port_type
 operator|=
 name|CTL_PORT_IOCTL
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|num_requested_ctl_io
 operator|=
 literal|100
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|port_name
 operator|=
@@ -5623,19 +5659,19 @@ name|ioctl_info
 operator|.
 name|port_name
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|port_online
 operator|=
 name|ctl_ioctl_online
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|port_offline
 operator|=
 name|ctl_ioctl_offline
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|onoff_arg
 operator|=
@@ -5644,19 +5680,19 @@ name|softc
 operator|->
 name|ioctl_info
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|lun_enable
 operator|=
 name|ctl_ioctl_lun_enable
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|lun_disable
 operator|=
 name|ctl_ioctl_lun_disable
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|targ_lun_arg
 operator|=
@@ -5665,25 +5701,25 @@ name|softc
 operator|->
 name|ioctl_info
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|fe_datamove
 operator|=
 name|ctl_ioctl_datamove
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|fe_done
 operator|=
 name|ctl_ioctl_done
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|max_targets
 operator|=
 literal|15
 expr_stmt|;
-name|fe
+name|port
 operator|->
 name|max_target_id
 operator|=
@@ -5691,14 +5727,14 @@ literal|15
 expr_stmt|;
 if|if
 condition|(
-name|ctl_frontend_register
+name|ctl_port_register
 argument_list|(
 operator|&
 name|softc
 operator|->
 name|ioctl_info
 operator|.
-name|fe
+name|port
 argument_list|,
 operator|(
 name|softc
@@ -5799,14 +5835,14 @@ name|control_softc
 expr_stmt|;
 if|if
 condition|(
-name|ctl_frontend_deregister
+name|ctl_port_deregister
 argument_list|(
 operator|&
 name|softc
 operator|->
 name|ioctl_info
 operator|.
-name|fe
+name|port
 argument_list|)
 operator|!=
 literal|0
@@ -5867,6 +5903,12 @@ operator|&
 name|softc
 operator|->
 name|ctl_lock
+argument_list|)
+expr_stmt|;
+name|ctl_frontend_deregister
+argument_list|(
+operator|&
+name|ioctl_frontend
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This will rip the rug out from under any FETDs or anyone else 	 * that has a pool allocated.  Since we increment our module 	 * refcount any time someone outside the main CTL module allocates 	 * a pool, we shouldn't have any problems here.  The user won't be 	 * able to unload the CTL module until client modules have 	 * successfully unloaded. 	 */
@@ -6077,9 +6119,9 @@ modifier|*
 name|softc
 decl_stmt|;
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|;
 if|if
 condition|(
@@ -6178,9 +6220,9 @@ name|control_softc
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
-argument|fe
+argument|port
 argument_list|,
-argument|&softc->fe_list
+argument|&softc->port_list
 argument_list|,
 argument|links
 argument_list|)
@@ -6189,7 +6231,7 @@ if|if
 condition|(
 name|port_type
 operator|&
-name|fe
+name|port
 operator|->
 name|port_type
 condition|)
@@ -6197,12 +6239,12 @@ block|{
 if|#
 directive|if
 literal|0
-block|printf("port %d\n", fe->targ_port);
+block|printf("port %d\n", port->targ_port);
 endif|#
 directive|endif
-name|ctl_frontend_online
+name|ctl_port_online
 argument_list|(
-name|fe
+name|port
 argument_list|)
 expr_stmt|;
 block|}
@@ -6229,9 +6271,9 @@ modifier|*
 name|softc
 decl_stmt|;
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|;
 name|softc
 operator|=
@@ -6239,9 +6281,9 @@ name|control_softc
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
-argument|fe
+argument|port
 argument_list|,
-argument|&softc->fe_list
+argument|&softc->port_list
 argument_list|,
 argument|links
 argument_list|)
@@ -6250,13 +6292,13 @@ if|if
 condition|(
 name|port_type
 operator|&
-name|fe
+name|port
 operator|->
 name|port_type
 condition|)
-name|ctl_frontend_offline
+name|ctl_port_offline
 argument_list|(
-name|fe
+name|port
 argument_list|)
 expr_stmt|;
 block|}
@@ -6305,9 +6347,9 @@ modifier|*
 name|softc
 decl_stmt|;
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|;
 name|int
 name|entries_dropped
@@ -6350,9 +6392,9 @@ argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
-argument|fe
+argument|port
 argument_list|,
-argument|&softc->fe_list
+argument|&softc->port_list
 argument_list|,
 argument|links
 argument_list|)
@@ -6365,7 +6407,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|fe
+name|port
 operator|->
 name|port_type
 operator|&
@@ -6384,7 +6426,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|fe
+name|port
 operator|->
 name|virtual_port
 operator|!=
@@ -6416,7 +6458,7 @@ name|entry
 operator|->
 name|port_type
 operator|=
-name|fe
+name|port
 operator|->
 name|port_type
 expr_stmt|;
@@ -6426,7 +6468,7 @@ name|entry
 operator|->
 name|port_name
 argument_list|,
-name|fe
+name|port
 operator|->
 name|port_name
 argument_list|,
@@ -6442,7 +6484,7 @@ name|entry
 operator|->
 name|physical_port
 operator|=
-name|fe
+name|port
 operator|->
 name|physical_port
 expr_stmt|;
@@ -6450,7 +6492,7 @@ name|entry
 operator|->
 name|virtual_port
 operator|=
-name|fe
+name|port
 operator|->
 name|virtual_port
 expr_stmt|;
@@ -6458,7 +6500,7 @@ name|entry
 operator|->
 name|wwnn
 operator|=
-name|fe
+name|port
 operator|->
 name|wwnn
 expr_stmt|;
@@ -6466,7 +6508,7 @@ name|entry
 operator|->
 name|wwpn
 operator|=
-name|fe
+name|port
 operator|->
 name|wwpn
 expr_stmt|;
@@ -10063,7 +10105,7 @@ name|softc
 operator|->
 name|ioctl_info
 operator|.
-name|fe
+name|port
 operator|.
 name|ctl_pool_ref
 argument_list|)
@@ -10142,7 +10184,7 @@ name|softc
 operator|->
 name|ioctl_info
 operator|.
-name|fe
+name|port
 operator|.
 name|targ_port
 expr_stmt|;
@@ -10246,9 +10288,9 @@ name|CTL_SET_PORT_WWNS
 case|:
 block|{
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|;
 name|struct
 name|ctl_port_entry
@@ -10274,9 +10316,9 @@ argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
-argument|fe
+argument|port
 argument_list|,
-argument|&softc->fe_list
+argument|&softc->port_list
 argument_list|,
 argument|links
 argument_list|)
@@ -10309,7 +10351,7 @@ name|entry
 operator|->
 name|targ_port
 operator|==
-name|fe
+name|port
 operator|->
 name|targ_port
 operator|)
@@ -10332,7 +10374,7 @@ name|entry
 operator|->
 name|port_type
 operator|&
-name|fe
+name|port
 operator|->
 name|port_type
 condition|)
@@ -10406,11 +10448,11 @@ argument_list|,
 argument|links
 argument_list|)
 block|{
-name|fe
+name|port
 operator|->
 name|lun_enable
 argument_list|(
-name|fe
+name|port
 operator|->
 name|targ_lun_arg
 argument_list|,
@@ -10424,9 +10466,9 @@ name|lun
 argument_list|)
 expr_stmt|;
 block|}
-name|ctl_frontend_online
+name|ctl_port_online
 argument_list|(
-name|fe
+name|port
 argument_list|)
 expr_stmt|;
 block|}
@@ -10443,9 +10485,9 @@ name|ctl_lun
 modifier|*
 name|lun
 decl_stmt|;
-name|ctl_frontend_offline
+name|ctl_port_offline
 argument_list|(
-name|fe
+name|port
 argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
@@ -10457,11 +10499,11 @@ argument_list|,
 argument|links
 argument_list|)
 block|{
-name|fe
+name|port
 operator|->
 name|lun_disable
 argument_list|(
-name|fe
+name|port
 operator|->
 name|targ_lun_arg
 argument_list|,
@@ -10490,9 +10532,9 @@ name|cmd
 operator|==
 name|CTL_SET_PORT_WWNS
 condition|)
-name|ctl_frontend_set_wwns
+name|ctl_port_set_wwns
 argument_list|(
-name|fe
+name|port
 argument_list|,
 operator|(
 name|entry
@@ -10551,9 +10593,9 @@ name|CTL_GET_PORT_LIST
 case|:
 block|{
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|;
 name|struct
 name|ctl_port_list
@@ -10652,9 +10694,9 @@ argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
-argument|fe
+argument|port
 argument_list|,
-argument|&softc->fe_list
+argument|&softc->port_list
 argument_list|,
 argument|links
 argument_list|)
@@ -10688,7 +10730,7 @@ name|entry
 operator|.
 name|port_type
 operator|=
-name|fe
+name|port
 operator|->
 name|port_type
 expr_stmt|;
@@ -10698,7 +10740,7 @@ name|entry
 operator|.
 name|port_name
 argument_list|,
-name|fe
+name|port
 operator|->
 name|port_name
 argument_list|,
@@ -10714,7 +10756,7 @@ name|entry
 operator|.
 name|targ_port
 operator|=
-name|fe
+name|port
 operator|->
 name|targ_port
 expr_stmt|;
@@ -10722,7 +10764,7 @@ name|entry
 operator|.
 name|physical_port
 operator|=
-name|fe
+name|port
 operator|->
 name|physical_port
 expr_stmt|;
@@ -10730,7 +10772,7 @@ name|entry
 operator|.
 name|virtual_port
 operator|=
-name|fe
+name|port
 operator|->
 name|virtual_port
 expr_stmt|;
@@ -10738,7 +10780,7 @@ name|entry
 operator|.
 name|wwnn
 operator|=
-name|fe
+name|port
 operator|->
 name|wwnn
 expr_stmt|;
@@ -10746,13 +10788,13 @@ name|entry
 operator|.
 name|wwpn
 operator|=
-name|fe
+name|port
 operator|->
 name|wwpn
 expr_stmt|;
 if|if
 condition|(
-name|fe
+name|port
 operator|->
 name|status
 operator|&
@@ -13237,6 +13279,11 @@ decl_stmt|,
 name|k
 decl_stmt|;
 name|struct
+name|ctl_port
+modifier|*
+name|port
+decl_stmt|;
+name|struct
 name|ctl_frontend
 modifier|*
 name|fe
@@ -13485,10 +13532,72 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"CTL Frontends:\n"
+literal|"CTL Ports:\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX KDM calling this without a lock.  We'd likely want 		 * to drop the lock before calling the frontend's dump 		 * routine anyway. 		 */
+name|STAILQ_FOREACH
+argument_list|(
+argument|port
+argument_list|,
+argument|&softc->port_list
+argument_list|,
+argument|links
+argument_list|)
+block|{
+name|printf
+argument_list|(
+literal|"Port %s Frontend %s Type %u pport %d vport %d WWNN "
+literal|"%#jx WWPN %#jx\n"
+argument_list|,
+name|port
+operator|->
+name|port_name
+argument_list|,
+name|port
+operator|->
+name|frontend
+operator|->
+name|name
+argument_list|,
+name|port
+operator|->
+name|port_type
+argument_list|,
+name|port
+operator|->
+name|physical_port
+argument_list|,
+name|port
+operator|->
+name|virtual_port
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|port
+operator|->
+name|wwnn
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|port
+operator|->
+name|wwpn
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"CTL Port information end\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CTL Frontends:\n"
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|fe
@@ -13500,50 +13609,21 @@ argument_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Frontend %s Type %u pport %d vport %d WWNN "
-literal|"%#jx WWPN %#jx\n"
+literal|"Frontend %s\n"
 argument_list|,
 name|fe
 operator|->
-name|port_name
-argument_list|,
-name|fe
-operator|->
-name|port_type
-argument_list|,
-name|fe
-operator|->
-name|physical_port
-argument_list|,
-name|fe
-operator|->
-name|virtual_port
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|fe
-operator|->
-name|wwnn
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|fe
-operator|->
-name|wwpn
+name|name
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Frontends are not required to support the dump 			 * routine. 			 */
 if|if
 condition|(
 name|fe
 operator|->
 name|fe_dump
-operator|==
+operator|!=
 name|NULL
 condition|)
-continue|continue;
 name|fe
 operator|->
 name|fe_dump
@@ -14379,7 +14459,7 @@ name|strcmp
 argument_list|(
 name|fe
 operator|->
-name|port_name
+name|name
 argument_list|,
 literal|"iscsi"
 argument_list|)
@@ -14422,7 +14502,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"Backend \"iscsi\" not found."
+literal|"Frontend \"iscsi\" not found."
 argument_list|)
 expr_stmt|;
 break|break;
@@ -15451,7 +15531,7 @@ comment|/* 	 * Increment our usage count if this is an external consumer, so we 
 if|#
 directive|if
 literal|0
-block|if ((pool_type != CTL_POOL_EMERGENCY)&& (pool_type != CTL_POOL_INTERNAL)&& (pool_type != CTL_POOL_IOCTL)&& (pool_type != CTL_POOL_4OTHERSC)) 		MOD_INC_USE_COUNT;
+block|if ((pool_type != CTL_POOL_EMERGENCY)&& (pool_type != CTL_POOL_INTERNAL)&& (pool_type != CTL_POOL_4OTHERSC)) 		MOD_INC_USE_COUNT;
 endif|#
 directive|endif
 name|mtx_unlock
@@ -15641,7 +15721,7 @@ comment|/* 	 * XXX KDM will this decrement the caller's usage count or mine? 	 *
 if|#
 directive|if
 literal|0
-block|if ((pool->type != CTL_POOL_EMERGENCY)&& (pool->type != CTL_POOL_INTERNAL)&& (pool->type != CTL_POOL_IOCTL)) 		MOD_DEC_USE_COUNT;
+block|if ((pool->type != CTL_POOL_EMERGENCY)&& (pool->type != CTL_POOL_INTERNAL)&& (pool->type != CTL_POOL_4OTHERSC)) 		MOD_DEC_USE_COUNT;
 endif|#
 directive|endif
 name|free
@@ -18135,9 +18215,9 @@ modifier|*
 name|lun
 decl_stmt|;
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|;
 name|int
 name|lun_number
@@ -18810,9 +18890,9 @@ expr_stmt|;
 comment|/* 	 * Run through each registered FETD and bring it online if it isn't 	 * already.  Enable the target ID if it hasn't been enabled, and 	 * enable this particular LUN. 	 */
 name|STAILQ_FOREACH
 argument_list|(
-argument|fe
+argument|port
 argument_list|,
-argument|&ctl_softc->fe_list
+argument|&ctl_softc->port_list
 argument_list|,
 argument|links
 argument_list|)
@@ -18822,11 +18902,11 @@ name|retval
 decl_stmt|;
 name|retval
 operator|=
-name|fe
+name|port
 operator|->
 name|lun_enable
 argument_list|(
-name|fe
+name|port
 operator|->
 name|targ_lun_arg
 argument_list|,
@@ -18847,11 +18927,11 @@ argument_list|(
 literal|"ctl_alloc_lun: FETD %s port %d returned error "
 literal|"%d for lun_enable on target %ju lun %d\n"
 argument_list|,
-name|fe
+name|port
 operator|->
 name|port_name
 argument_list|,
-name|fe
+name|port
 operator|->
 name|targ_port
 argument_list|,
@@ -18869,7 +18949,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|fe
+name|port
 operator|->
 name|status
 operator||=
@@ -18907,7 +18987,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|struct ctl_frontend *fe;
+block|struct ctl_port *port;
 endif|#
 directive|endif
 name|struct
@@ -18993,15 +19073,15 @@ operator|->
 name|num_luns
 operator|--
 expr_stmt|;
-comment|/* 	 * XXX KDM this scheme only works for a single target/multiple LUN 	 * setup.  It needs to be revamped for a multiple target scheme. 	 * 	 * XXX KDM this results in fe->lun_disable() getting called twice, 	 * once when ctl_disable_lun() is called, and a second time here. 	 * We really need to re-think the LUN disable semantics.  There 	 * should probably be several steps/levels to LUN removal: 	 *  - disable 	 *  - invalidate 	 *  - free  	 * 	 * Right now we only have a disable method when communicating to 	 * the front end ports, at least for individual LUNs. 	 */
+comment|/* 	 * XXX KDM this scheme only works for a single target/multiple LUN 	 * setup.  It needs to be revamped for a multiple target scheme. 	 * 	 * XXX KDM this results in port->lun_disable() getting called twice, 	 * once when ctl_disable_lun() is called, and a second time here. 	 * We really need to re-think the LUN disable semantics.  There 	 * should probably be several steps/levels to LUN removal: 	 *  - disable 	 *  - invalidate 	 *  - free  	 * 	 * Right now we only have a disable method when communicating to 	 * the front end ports, at least for individual LUNs. 	 */
 if|#
 directive|if
 literal|0
-block|STAILQ_FOREACH(fe,&softc->fe_list, links) { 		int retval;  		retval = fe->lun_disable(fe->targ_lun_arg, lun->target, 					 lun->lun); 		if (retval != 0) { 			printf("ctl_free_lun: FETD %s port %d returned error " 			       "%d for lun_disable on target %ju lun %jd\n", 			       fe->port_name, fe->targ_port, retval, 			       (uintmax_t)lun->target.id, (intmax_t)lun->lun); 		}  		if (STAILQ_FIRST(&softc->lun_list) == NULL) { 			fe->status&= ~CTL_PORT_STATUS_LUN_ONLINE;  			retval = fe->targ_disable(fe->targ_lun_arg,lun->target); 			if (retval != 0) { 				printf("ctl_free_lun: FETD %s port %d " 				       "returned error %d for targ_disable on " 				       "target %ju\n", fe->port_name, 				       fe->targ_port, retval, 				       (uintmax_t)lun->target.id); 			} else 				fe->status&= ~CTL_PORT_STATUS_TARG_ONLINE;  			if ((fe->status& CTL_PORT_STATUS_TARG_ONLINE) != 0) 				continue;
+block|STAILQ_FOREACH(port,&softc->port_list, links) { 		int retval;  		retval = port->lun_disable(port->targ_lun_arg, lun->target, 					 lun->lun); 		if (retval != 0) { 			printf("ctl_free_lun: FETD %s port %d returned error " 			       "%d for lun_disable on target %ju lun %jd\n", 			       port->port_name, port->targ_port, retval, 			       (uintmax_t)lun->target.id, (intmax_t)lun->lun); 		}  		if (STAILQ_FIRST(&softc->lun_list) == NULL) { 			port->status&= ~CTL_PORT_STATUS_LUN_ONLINE;  			retval = port->targ_disable(port->targ_lun_arg,lun->target); 			if (retval != 0) { 				printf("ctl_free_lun: FETD %s port %d " 				       "returned error %d for targ_disable on " 				       "target %ju\n", port->port_name, 				       port->targ_port, retval, 				       (uintmax_t)lun->target.id); 			} else 				port->status&= ~CTL_PORT_STATUS_TARG_ONLINE;  			if ((port->status& CTL_PORT_STATUS_TARG_ONLINE) != 0) 				continue;
 if|#
 directive|if
 literal|0
-block|fe->port_offline(fe->onoff_arg); 			fe->status&= ~CTL_PORT_STATUS_ONLINE;
+block|port->port_offline(port->onoff_arg); 			port->status&= ~CTL_PORT_STATUS_ONLINE;
 endif|#
 directive|endif
 block|} 	}
@@ -19216,12 +19296,12 @@ modifier|*
 name|ctl_softc
 decl_stmt|;
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|,
 modifier|*
-name|nfe
+name|nport
 decl_stmt|;
 name|struct
 name|ctl_lun
@@ -19315,30 +19395,30 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|fe
+name|port
 operator|=
 name|STAILQ_FIRST
 argument_list|(
 operator|&
 name|ctl_softc
 operator|->
-name|fe_list
+name|port_list
 argument_list|)
 init|;
-name|fe
+name|port
 operator|!=
 name|NULL
 condition|;
-name|fe
+name|port
 operator|=
-name|nfe
+name|nport
 control|)
 block|{
-name|nfe
+name|nport
 operator|=
 name|STAILQ_NEXT
 argument_list|(
-name|fe
+name|port
 argument_list|,
 name|links
 argument_list|)
@@ -19354,11 +19434,11 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|fe
+name|port
 operator|->
 name|lun_enable
 argument_list|(
-name|fe
+name|port
 operator|->
 name|targ_lun_arg
 argument_list|,
@@ -19393,11 +19473,11 @@ literal|"%d for lun_enable on target %ju lun %jd\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|fe
+name|port
 operator|->
 name|port_name
 argument_list|,
-name|fe
+name|port
 operator|->
 name|targ_port
 argument_list|,
@@ -19426,7 +19506,7 @@ directive|if
 literal|0
 block|else {
 comment|/* NOTE:  TODO:  why does lun enable affect port status? */
-block|fe->status |= CTL_PORT_STATUS_LUN_ONLINE; 		}
+block|port->status |= CTL_PORT_STATUS_LUN_ONLINE; 		}
 endif|#
 directive|endif
 block|}
@@ -19462,9 +19542,9 @@ modifier|*
 name|ctl_softc
 decl_stmt|;
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|;
 name|struct
 name|ctl_lun
@@ -19552,9 +19632,9 @@ argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
-argument|fe
+argument|port
 argument_list|,
-argument|&ctl_softc->fe_list
+argument|&ctl_softc->port_list
 argument_list|,
 argument|links
 argument_list|)
@@ -19570,11 +19650,11 @@ expr_stmt|;
 comment|/* 		 * Drop the lock before we call the frontend's disable 		 * routine, to avoid lock order reversals. 		 * 		 * XXX KDM what happens if the frontend list changes while 		 * we're traversing it?  It's unlikely, but should be handled. 		 */
 name|retval
 operator|=
-name|fe
+name|port
 operator|->
 name|lun_disable
 argument_list|(
-name|fe
+name|port
 operator|->
 name|targ_lun_arg
 argument_list|,
@@ -19607,11 +19687,11 @@ argument_list|(
 literal|"ctl_alloc_lun: FETD %s port %d returned error "
 literal|"%d for lun_disable on target %ju lun %jd\n"
 argument_list|,
-name|fe
+name|port
 operator|->
 name|port_name
 argument_list|,
-name|fe
+name|port
 operator|->
 name|targ_port
 argument_list|,
@@ -41806,9 +41886,9 @@ modifier|*
 name|lun
 decl_stmt|;
 name|struct
-name|ctl_frontend
+name|ctl_port
 modifier|*
-name|fe
+name|port
 decl_stmt|;
 name|char
 modifier|*
@@ -41823,7 +41903,7 @@ name|ctl_softc
 operator|=
 name|control_softc
 expr_stmt|;
-name|fe
+name|port
 operator|=
 name|ctl_softc
 operator|->
@@ -41843,7 +41923,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|fe
+name|port
 operator|->
 name|devid
 operator|!=
@@ -41852,7 +41932,7 @@ condition|)
 return|return
 operator|(
 call|(
-name|fe
+name|port
 operator|->
 name|devid
 call|)
@@ -42216,7 +42296,7 @@ expr_stmt|;
 comment|/* 	 * For Fibre channel, 	 */
 if|if
 condition|(
-name|fe
+name|port
 operator|->
 name|port_type
 operator|==
@@ -42430,7 +42510,7 @@ name|desc1
 operator|->
 name|identifier
 argument_list|,
-name|fe
+name|port
 operator|->
 name|wwpn
 argument_list|)
