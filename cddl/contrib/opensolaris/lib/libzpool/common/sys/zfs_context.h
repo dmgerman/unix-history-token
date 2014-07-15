@@ -1635,9 +1635,17 @@ name|char
 modifier|*
 name|v_path
 decl_stmt|;
+name|int
+name|v_dump_fd
+decl_stmt|;
 block|}
 name|vnode_t
 typedef|;
+specifier|extern
+name|char
+modifier|*
+name|vn_dumpdir
+decl_stmt|;
 define|#
 directive|define
 name|AV_SCANSTAMP_SZ
