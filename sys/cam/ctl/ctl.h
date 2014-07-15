@@ -216,6 +216,13 @@ begin_define
 define|#
 directive|define
 name|CTL_DEVID_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTL_DEVID_MIN_LEN
 value|16
 end_define
 
