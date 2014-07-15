@@ -359,6 +359,9 @@ name|enum
 name|vm_cpu_mode
 name|cpu_mode
 parameter_list|,
+name|int
+name|csd
+parameter_list|,
 name|struct
 name|vie
 modifier|*

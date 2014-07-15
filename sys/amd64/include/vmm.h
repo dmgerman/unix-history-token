@@ -1858,9 +1858,9 @@ define|#
 directive|define
 name|SEG_DESC_TYPE
 parameter_list|(
-name|desc
+name|access
 parameter_list|)
-value|((desc)->access& 0x001f)
+value|((access)& 0x001f)
 end_define
 
 begin_define
@@ -1868,9 +1868,9 @@ define|#
 directive|define
 name|SEG_DESC_PRESENT
 parameter_list|(
-name|desc
+name|access
 parameter_list|)
-value|((desc)->access& 0x0080)
+value|(((access)& 0x0080) ? 1 : 0)
 end_define
 
 begin_define
@@ -1878,9 +1878,9 @@ define|#
 directive|define
 name|SEG_DESC_DEF32
 parameter_list|(
-name|desc
+name|access
 parameter_list|)
-value|((desc)->access& 0x4000)
+value|(((access)& 0x4000) ? 1 : 0)
 end_define
 
 begin_define
@@ -1888,9 +1888,9 @@ define|#
 directive|define
 name|SEG_DESC_GRANULARITY
 parameter_list|(
-name|desc
+name|access
 parameter_list|)
-value|((desc)->access& 0x8000)
+value|(((access)& 0x8000) ? 1 : 0)
 end_define
 
 begin_define
@@ -1898,9 +1898,9 @@ define|#
 directive|define
 name|SEG_DESC_UNUSABLE
 parameter_list|(
-name|desc
+name|access
 parameter_list|)
-value|((desc)->access& 0x10000)
+value|(((access)& 0x10000) ? 1 : 0)
 end_define
 
 begin_enum
@@ -2007,6 +2007,16 @@ name|uint8_t
 name|num_processed
 decl_stmt|;
 name|uint8_t
+name|addrsize
+range|:
+literal|4
+decl_stmt|,
+name|opsize
+range|:
+literal|4
+decl_stmt|;
+comment|/* address and operand sizes */
+name|uint8_t
 name|rex_w
 range|:
 literal|1
@@ -2027,7 +2037,17 @@ decl_stmt|,
 name|rex_present
 range|:
 literal|1
+decl_stmt|,
+name|opsize_override
+range|:
+literal|1
+decl_stmt|,
+comment|/* Operand size override */
+name|addrsize_override
+range|:
+literal|1
 decl_stmt|;
+comment|/* Address size override */
 name|uint8_t
 name|mod
 range|:
@@ -2257,6 +2277,10 @@ decl_stmt|;
 name|uint64_t
 name|gla
 decl_stmt|;
+name|int
+name|cs_d
+decl_stmt|;
+comment|/* CS.D */
 name|struct
 name|vm_guest_paging
 name|paging
