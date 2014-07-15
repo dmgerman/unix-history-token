@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -93,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<x86/apicreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<x86/apicvar.h>
 end_include
 
 begin_include
@@ -866,6 +878,12 @@ parameter_list|)
 block|{  }
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -1068,6 +1086,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1276,6 +1299,9 @@ name|enable_cmc
 operator|=
 name|xen_pv_lapic_enable_cmc
 block|,
+ifdef|#
+directive|ifdef
+name|SMP
 operator|.
 name|ipi_raw
 operator|=
@@ -1291,6 +1317,8 @@ name|ipi_wait
 operator|=
 name|xen_pv_lapic_ipi_wait
 block|,
+endif|#
+directive|endif
 operator|.
 name|set_lvt_mask
 operator|=

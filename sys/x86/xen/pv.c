@@ -140,6 +140,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<x86/apicvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<x86/init.h>
 end_include
 
