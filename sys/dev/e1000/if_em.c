@@ -8815,8 +8815,6 @@ name|remap
 init|=
 literal|1
 decl_stmt|;
-name|retry
-label|:
 name|m_head
 operator|=
 operator|*
@@ -9507,6 +9505,8 @@ name|tx_buffer
 operator|->
 name|map
 expr_stmt|;
+name|retry
+label|:
 name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
