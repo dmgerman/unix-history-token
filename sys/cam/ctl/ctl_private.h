@@ -1103,6 +1103,21 @@ name|CTL_PR_NO_RESERVATION
 value|0xFFF0
 end_define
 
+begin_struct
+struct|struct
+name|ctl_devid
+block|{
+name|int
+name|len
+decl_stmt|;
+name|uint8_t
+name|data
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * For report target port groups.  */
 end_comment
@@ -1259,6 +1274,11 @@ name|write_buffer
 index|[
 literal|524288
 index|]
+decl_stmt|;
+name|struct
+name|ctl_devid
+modifier|*
+name|lun_devid
 decl_stmt|;
 block|}
 struct|;
