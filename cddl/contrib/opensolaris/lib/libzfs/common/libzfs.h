@@ -73,6 +73,12 @@ directive|include
 file|<sys/zfs_ioctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libzfs_core.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2626,6 +2632,10 @@ comment|/* show progress (ie. -v) */
 name|boolean_t
 name|progress
 decl_stmt|;
+comment|/* WRITE_EMBEDDED records of type DATA are permitted */
+name|boolean_t
+name|embed_data
+decl_stmt|;
 block|}
 name|sendflags_t
 typedef|;
@@ -2684,6 +2694,9 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|enum
+name|lzc_send_flags
 parameter_list|)
 function_decl|;
 specifier|extern

@@ -1352,6 +1352,15 @@ operator|(
 literal|0
 operator|)
 return|;
+name|VERIFY
+argument_list|(
+operator|!
+name|BP_IS_EMBEDDED
+argument_list|(
+name|bp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|VERIFY3U
 argument_list|(
 name|ma

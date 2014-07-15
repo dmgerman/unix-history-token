@@ -8574,6 +8574,12 @@ name|BP_IS_HOLE
 argument_list|(
 name|bp
 argument_list|)
+operator|&&
+operator|!
+name|BP_IS_EMBEDDED
+argument_list|(
+name|bp
+argument_list|)
 condition|)
 block|{
 name|zio_t
@@ -10938,7 +10944,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|spa_vdev_err
@@ -10951,7 +10956,6 @@ name|EIO
 argument_list|)
 operator|)
 return|;
-block|}
 block|}
 name|spa
 operator|->
@@ -24970,7 +24974,6 @@ operator|->
 name|vdev_top
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX - Once we have bp-rewrite this should 		 * become the common case. 		 */
 name|mg
 operator|=
 name|vd
@@ -30466,10 +30469,12 @@ name|ub_version
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ASSERT
+name|ASSERT3U
 argument_list|(
 name|version
+argument_list|,
 operator|>=
+argument_list|,
 name|spa
 operator|->
 name|spa_uberblock

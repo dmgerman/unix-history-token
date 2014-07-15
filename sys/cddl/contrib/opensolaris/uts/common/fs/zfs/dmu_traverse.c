@@ -2412,6 +2412,11 @@ argument_list|(
 name|bp
 argument_list|)
 operator|||
+name|BP_IS_EMBEDDED
+argument_list|(
+name|bp
+argument_list|)
+operator|||
 operator|!
 operator|(
 operator|(

@@ -363,7 +363,92 @@ decl_stmt|;
 block|}
 name|zio_cksum_t
 typedef|;
-comment|/*  * Each block is described by its DVAs, time of birth, checksum, etc.  * The word-by-word, bit-by-bit layout of the blkptr is as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|		vdev1		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 1	|G|			 offset1				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 2	|		vdev2		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 3	|G|			 offset2				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 4	|		vdev3		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 5	|G|			 offset3				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| cksum | comp	|     PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 8	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 9	|			physical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|			fill count				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * c	|			checksum[0]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * d	|			checksum[1]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * e	|			checksum[2]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * f	|			checksum[3]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * vdev		virtual device ID  * offset	offset into virtual device  * LSIZE	logical size  * PSIZE	physical size (after compression)  * ASIZE	allocated size (including RAID-Z parity and gang block headers)  * GRID		RAID-Z layout information (reserved for future use)  * cksum	checksum function  * comp		compression function  * G		gang block indicator  * B		byteorder (endianness)  * D		dedup  * X		unused  * lvl		level of indirection  * type		DMU object type  * phys birth	txg of block allocation; zero if same as logical birth txg  * log. birth	transaction group in which the block was logically born  * fill count	number of non-zero blocks under this bp  * checksum[4]	256-bit checksum of the data this bp describes  */
+comment|/*  * Each block is described by its DVAs, time of birth, checksum, etc.  * The word-by-word, bit-by-bit layout of the blkptr is as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|		vdev1		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 1	|G|			 offset1				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 2	|		vdev2		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 3	|G|			 offset2				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 4	|		vdev3		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 5	|G|			 offset3				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| cksum |E| comp|    PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 8	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 9	|			physical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|			fill count				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * c	|			checksum[0]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * d	|			checksum[1]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * e	|			checksum[2]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * f	|			checksum[3]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * vdev		virtual device ID  * offset	offset into virtual device  * LSIZE	logical size  * PSIZE	physical size (after compression)  * ASIZE	allocated size (including RAID-Z parity and gang block headers)  * GRID		RAID-Z layout information (reserved for future use)  * cksum	checksum function  * comp		compression function  * G		gang block indicator  * B		byteorder (endianness)  * D		dedup  * X		encryption (on version 30, which is not supported)  * E		blkptr_t contains embedded data (see below)  * lvl		level of indirection  * type		DMU object type  * phys birth	txg of block allocation; zero if same as logical birth txg  * log. birth	transaction group in which the block was logically born  * fill count	number of non-zero blocks under this bp  * checksum[4]	256-bit checksum of the data this bp describes  */
+comment|/*  * "Embedded" blkptr_t's don't actually point to a block, instead they  * have a data payload embedded in the blkptr_t itself.  See the comment  * in blkptr.c for more details.  *  * The blkptr_t is laid out as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|      payload                                                  |  * 1	|      payload                                                  |  * 2	|      payload                                                  |  * 3	|      payload                                                  |  * 4	|      payload                                                  |  * 5	|      payload                                                  |  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| etype |E| comp| PSIZE|              LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|      payload                                                  |  * 8	|      payload                                                  |  * 9	|      payload                                                  |  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|      payload                                                  |  * c	|      payload                                                  |  * d	|      payload                                                  |  * e	|      payload                                                  |  * f	|      payload                                                  |  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * payload		contains the embedded data  * B (byteorder)	byteorder (endianness)  * D (dedup)		padding (set to zero)  * X			encryption (set to zero; see above)  * E (embedded)		set to one  * lvl			indirection level  * type			DMU object type  * etype		how to interpret embedded data (BP_EMBEDDED_TYPE_*)  * comp			compression function of payload  * PSIZE		size of payload after compression, in bytes  * LSIZE		logical size of payload, in bytes  *			note that 25 bits is enough to store the largest  *			"normal" BP's LSIZE (2^16 * 2^9) in bytes  * log. birth		transaction group in which the block was logically born  *  * Note that LSIZE and PSIZE are stored in bytes, whereas for non-embedded  * bp's they are stored in units of SPA_MINBLOCKSHIFT.  * Generally, the generic BP_GET_*() macros can be used on embedded BP's.  * The B, D, X, lvl, type, and comp fields are stored the same as with normal  * BP's so the BP_SET_* macros can be used with them.  etype, PSIZE, LSIZE must  * be set with the BPE_SET_* macros.  BP_SET_EMBEDDED() should be called before  * other macros, as they assert that they are only used on BP's of the correct  * "embedded-ness".  */
+define|#
+directive|define
+name|BPE_GET_ETYPE
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|(ASSERT(BP_IS_EMBEDDED(bp)), \ 	BF64_GET((bp)->blk_prop, 40, 8))
+define|#
+directive|define
+name|BPE_SET_ETYPE
+parameter_list|(
+name|bp
+parameter_list|,
+name|t
+parameter_list|)
+value|do { \ 	ASSERT(BP_IS_EMBEDDED(bp)); \ 	BF64_SET((bp)->blk_prop, 40, 8, t); \ _NOTE(CONSTCOND) } while (0)
+define|#
+directive|define
+name|BPE_GET_LSIZE
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|(ASSERT(BP_IS_EMBEDDED(bp)), \ 	BF64_GET_SB((bp)->blk_prop, 0, 25, 0, 1))
+define|#
+directive|define
+name|BPE_SET_LSIZE
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+value|do { \ 	ASSERT(BP_IS_EMBEDDED(bp)); \ 	BF64_SET_SB((bp)->blk_prop, 0, 25, 0, 1, x); \ _NOTE(CONSTCOND) } while (0)
+define|#
+directive|define
+name|BPE_GET_PSIZE
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|(ASSERT(BP_IS_EMBEDDED(bp)), \ 	BF64_GET_SB((bp)->blk_prop, 25, 7, 0, 1))
+define|#
+directive|define
+name|BPE_SET_PSIZE
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+value|do { \ 	ASSERT(BP_IS_EMBEDDED(bp)); \ 	BF64_SET_SB((bp)->blk_prop, 25, 7, 0, 1, x); \ _NOTE(CONSTCOND) } while (0)
+typedef|typedef
+enum|enum
+name|bp_embedded_type
+block|{
+name|BP_EMBEDDED_TYPE_DATA
+block|,
+name|BP_EMBEDDED_TYPE_RESERVED
+block|,
+comment|/* Reserved for an unintegrated feature. */
+name|NUM_BP_EMBEDDED_TYPES
+init|=
+name|BP_EMBEDDED_TYPE_RESERVED
+block|}
+name|bp_embedded_type_t
+typedef|;
+define|#
+directive|define
+name|BPE_NUM_WORDS
+value|14
+define|#
+directive|define
+name|BPE_PAYLOAD_SIZE
+value|(BPE_NUM_WORDS * sizeof (uint64_t))
+define|#
+directive|define
+name|BPE_IS_PAYLOADWORD
+parameter_list|(
+name|bp
+parameter_list|,
+name|wp
+parameter_list|)
+define|\
+value|((wp) !=&(bp)->blk_prop&& (wp) !=&(bp)->blk_birth)
 define|#
 directive|define
 name|SPA_BLKPTRSHIFT
@@ -508,7 +593,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|BF64_GET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1)
+value|(BP_IS_EMBEDDED(bp) ?	\ 	(BPE_GET_ETYPE(bp) == BP_EMBEDDED_TYPE_DATA ? BPE_GET_LSIZE(bp) : 0): \ 	BF64_GET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1))
 define|#
 directive|define
 name|BP_SET_LSIZE
@@ -517,8 +602,7 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-define|\
-value|BF64_SET_SB((bp)->blk_prop, 0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1, x)
+value|do { \ 	ASSERT(!BP_IS_EMBEDDED(bp)); \ 	BF64_SET_SB((bp)->blk_prop, \ 	    0, SPA_LSIZEBITS, SPA_MINBLOCKSHIFT, 1, x); \ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
 name|BP_GET_PSIZE
@@ -526,7 +610,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|BF64_GET_SB((bp)->blk_prop, 16, SPA_PSIZEBITS, SPA_MINBLOCKSHIFT, 1)
+value|(BP_IS_EMBEDDED(bp) ? 0 : \ 	BF64_GET_SB((bp)->blk_prop, 16, SPA_PSIZEBITS, SPA_MINBLOCKSHIFT, 1))
 define|#
 directive|define
 name|BP_SET_PSIZE
@@ -535,15 +619,14 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-define|\
-value|BF64_SET_SB((bp)->blk_prop, 16, SPA_PSIZEBITS, SPA_MINBLOCKSHIFT, 1, x)
+value|do { \ 	ASSERT(!BP_IS_EMBEDDED(bp)); \ 	BF64_SET_SB((bp)->blk_prop, \ 	    16, SPA_PSIZEBITS, SPA_MINBLOCKSHIFT, 1, x); \ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
 name|BP_GET_COMPRESS
 parameter_list|(
 name|bp
 parameter_list|)
-value|BF64_GET((bp)->blk_prop, 32, 8)
+value|BF64_GET((bp)->blk_prop, 32, 7)
 define|#
 directive|define
 name|BP_SET_COMPRESS
@@ -552,14 +635,31 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|BF64_SET((bp)->blk_prop, 32, 8, x)
+value|BF64_SET((bp)->blk_prop, 32, 7, x)
+define|#
+directive|define
+name|BP_IS_EMBEDDED
+parameter_list|(
+name|bp
+parameter_list|)
+value|BF64_GET((bp)->blk_prop, 39, 1)
+define|#
+directive|define
+name|BP_SET_EMBEDDED
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+value|BF64_SET((bp)->blk_prop, 39, 1, x)
 define|#
 directive|define
 name|BP_GET_CHECKSUM
 parameter_list|(
 name|bp
 parameter_list|)
-value|BF64_GET((bp)->blk_prop, 40, 8)
+define|\
+value|(BP_IS_EMBEDDED(bp) ? ZIO_CHECKSUM_OFF : \ 	BF64_GET((bp)->blk_prop, 40, 8))
 define|#
 directive|define
 name|BP_SET_CHECKSUM
@@ -568,7 +668,7 @@ name|bp
 parameter_list|,
 name|x
 parameter_list|)
-value|BF64_SET((bp)->blk_prop, 40, 8, x)
+value|do { \ 	ASSERT(!BP_IS_EMBEDDED(bp)); \ 	BF64_SET((bp)->blk_prop, 40, 8, x); \ _NOTE(CONSTCOND) } while (0)
 define|#
 directive|define
 name|BP_GET_TYPE
@@ -601,22 +701,6 @@ parameter_list|,
 name|x
 parameter_list|)
 value|BF64_SET((bp)->blk_prop, 56, 5, x)
-define|#
-directive|define
-name|BP_GET_PROP_BIT_61
-parameter_list|(
-name|bp
-parameter_list|)
-value|BF64_GET((bp)->blk_prop, 61, 1)
-define|#
-directive|define
-name|BP_SET_PROP_BIT_61
-parameter_list|(
-name|bp
-parameter_list|,
-name|x
-parameter_list|)
-value|BF64_SET((bp)->blk_prop, 61, 1, x)
 define|#
 directive|define
 name|BP_GET_DEDUP
@@ -656,7 +740,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|((bp)->blk_phys_birth ? (bp)->blk_phys_birth : (bp)->blk_birth)
+value|(BP_IS_EMBEDDED(bp) ? 0 : \ 	(bp)->blk_phys_birth ? (bp)->blk_phys_birth : (bp)->blk_birth)
 define|#
 directive|define
 name|BP_SET_BIRTH
@@ -668,7 +752,14 @@ parameter_list|,
 name|physical
 parameter_list|)
 define|\
-value|{						\ 	(bp)->blk_birth = (logical);		\ 	(bp)->blk_phys_birth = ((logical) == (physical) ? 0 : (physical)); \ }
+value|{						\ 	ASSERT(!BP_IS_EMBEDDED(bp));		\ 	(bp)->blk_birth = (logical);		\ 	(bp)->blk_phys_birth = ((logical) == (physical) ? 0 : (physical)); \ }
+define|#
+directive|define
+name|BP_GET_FILL
+parameter_list|(
+name|bp
+parameter_list|)
+value|(BP_IS_EMBEDDED(bp) ? 1 : (bp)->blk_fill)
 define|#
 directive|define
 name|BP_GET_ASIZE
@@ -676,7 +767,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(DVA_GET_ASIZE(&(bp)->blk_dva[0]) + DVA_GET_ASIZE(&(bp)->blk_dva[1]) + \ 		DVA_GET_ASIZE(&(bp)->blk_dva[2]))
+value|(BP_IS_EMBEDDED(bp) ? 0 : \ 	DVA_GET_ASIZE(&(bp)->blk_dva[0]) + \ 	DVA_GET_ASIZE(&(bp)->blk_dva[1]) + \ 	DVA_GET_ASIZE(&(bp)->blk_dva[2]))
 define|#
 directive|define
 name|BP_GET_UCSIZE
@@ -692,7 +783,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(!!DVA_GET_ASIZE(&(bp)->blk_dva[0]) + \ 	!!DVA_GET_ASIZE(&(bp)->blk_dva[1]) + \ 	!!DVA_GET_ASIZE(&(bp)->blk_dva[2]))
+value|(BP_IS_EMBEDDED(bp) ? 0 : \ 	!!DVA_GET_ASIZE(&(bp)->blk_dva[0]) + \ 	!!DVA_GET_ASIZE(&(bp)->blk_dva[1]) + \ 	!!DVA_GET_ASIZE(&(bp)->blk_dva[2]))
 define|#
 directive|define
 name|BP_COUNT_GANG
@@ -700,7 +791,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(DVA_GET_GANG(&(bp)->blk_dva[0]) + \ 	DVA_GET_GANG(&(bp)->blk_dva[1]) + \ 	DVA_GET_GANG(&(bp)->blk_dva[2]))
+value|(BP_IS_EMBEDDED(bp) ? 0 : \ 	(DVA_GET_GANG(&(bp)->blk_dva[0]) + \ 	DVA_GET_GANG(&(bp)->blk_dva[1]) + \ 	DVA_GET_GANG(&(bp)->blk_dva[2])))
 define|#
 directive|define
 name|DVA_EQUAL
@@ -720,7 +811,7 @@ parameter_list|,
 name|bp2
 parameter_list|)
 define|\
-value|(BP_PHYSICAL_BIRTH(bp1) == BP_PHYSICAL_BIRTH(bp2)&&	\ 	DVA_EQUAL(&(bp1)->blk_dva[0],&(bp2)->blk_dva[0])&&	\ 	DVA_EQUAL(&(bp1)->blk_dva[1],&(bp2)->blk_dva[1])&&	\ 	DVA_EQUAL(&(bp1)->blk_dva[2],&(bp2)->blk_dva[2]))
+value|(BP_PHYSICAL_BIRTH(bp1) == BP_PHYSICAL_BIRTH(bp2)&&	\ 	(bp1)->blk_birth == (bp2)->blk_birth&&			\ 	DVA_EQUAL(&(bp1)->blk_dva[0],&(bp2)->blk_dva[0])&&	\ 	DVA_EQUAL(&(bp1)->blk_dva[1],&(bp2)->blk_dva[1])&&	\ 	DVA_EQUAL(&(bp1)->blk_dva[2],&(bp2)->blk_dva[2]))
 define|#
 directive|define
 name|ZIO_CHECKSUM_EQUAL
@@ -760,14 +851,15 @@ name|BP_IDENTITY
 parameter_list|(
 name|bp
 parameter_list|)
-value|(&(bp)->blk_dva[0])
+value|(ASSERT(!BP_IS_EMBEDDED(bp)),&(bp)->blk_dva[0])
 define|#
 directive|define
 name|BP_IS_GANG
 parameter_list|(
 name|bp
 parameter_list|)
-value|DVA_GET_GANG(BP_IDENTITY(bp))
+define|\
+value|(BP_IS_EMBEDDED(bp) ? B_FALSE : DVA_GET_GANG(BP_IDENTITY(bp)))
 define|#
 directive|define
 name|DVA_IS_EMPTY
@@ -781,7 +873,8 @@ name|BP_IS_HOLE
 parameter_list|(
 name|bp
 parameter_list|)
-value|DVA_IS_EMPTY(BP_IDENTITY(bp))
+define|\
+value|(!BP_IS_EMBEDDED(bp)&& DVA_IS_EMPTY(BP_IDENTITY(bp)))
 comment|/* BP_IS_RAIDZ(bp) assumes no block compression */
 define|#
 directive|define
@@ -848,7 +941,7 @@ parameter_list|,
 name|compress
 parameter_list|)
 define|\
-value|{									\ 	static const char *copyname[] =					\ 	    { "zero", "single", "double", "triple" };			\ 	int len = 0;							\ 	int copies = 0;							\ 									\ 	if (bp == NULL) {						\ 		len += func(buf + len, size - len, "<NULL>");		\ 	} else if (BP_IS_HOLE(bp)) {					\ 		len += func(buf + len, size - len, "<hole>");		\ 		if (bp->blk_birth> 0) {				\ 			len += func(buf + len, size - len,		\ 			    " birth=%lluL",				\ 			    (u_longlong_t)bp->blk_birth);		\ 		}							\ 	} else {							\ 		for (int d = 0; d< BP_GET_NDVAS(bp); d++) {		\ 			const dva_t *dva =&bp->blk_dva[d];		\ 			if (DVA_IS_VALID(dva))				\ 				copies++;				\ 			len += func(buf + len, size - len,		\ 			    "DVA[%d]=<%llu:%llx:%llx>%c", d,		\ 			    (u_longlong_t)DVA_GET_VDEV(dva),		\ 			    (u_longlong_t)DVA_GET_OFFSET(dva),		\ 			    (u_longlong_t)DVA_GET_ASIZE(dva),		\ 			    ws);					\ 		}							\ 		if (BP_IS_GANG(bp)&&					\ 		    DVA_GET_ASIZE(&bp->blk_dva[2])<=			\ 		    DVA_GET_ASIZE(&bp->blk_dva[1]) / 2)			\ 			copies--;					\ 		len += func(buf + len, size - len,			\ 		    "[L%llu %s] %s %s %s %s %s %s%c"			\ 		    "size=%llxL/%llxP birth=%lluL/%lluP fill=%llu%c"	\ 		    "cksum=%llx:%llx:%llx:%llx",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    checksum,						\ 		    compress,						\ 		    BP_GET_BYTEORDER(bp) == 0 ? "BE" : "LE",		\ 		    BP_IS_GANG(bp) ? "gang" : "contiguous",		\ 		    BP_GET_DEDUP(bp) ? "dedup" : "unique",		\ 		    copyname[copies],					\ 		    ws,							\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)BP_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth,			\ 		    (u_longlong_t)BP_PHYSICAL_BIRTH(bp),		\ 		    (u_longlong_t)bp->blk_fill,				\ 		    ws,							\ 		    (u_longlong_t)bp->blk_cksum.zc_word[0],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[1],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[2],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[3]);		\ 	}								\ 	ASSERT(len< size);						\ }
+value|{									\ 	static const char *copyname[] =					\ 	    { "zero", "single", "double", "triple" };			\ 	int len = 0;							\ 	int copies = 0;							\ 									\ 	if (bp == NULL) {						\ 		len += func(buf + len, size - len, "<NULL>");		\ 	} else if (BP_IS_HOLE(bp)) {					\ 		len += func(buf + len, size - len, "<hole>");		\ 		if (bp->blk_birth> 0) {				\ 			len += func(buf + len, size - len,		\ 			    " birth=%lluL",				\ 			    (u_longlong_t)bp->blk_birth);		\ 		}							\ 	} else if (BP_IS_EMBEDDED(bp)) {				\ 		len = func(buf + len, size - len,			\ 		    "EMBEDDED [L%llu %s] et=%u %s "			\ 		    "size=%llxL/%llxP birth=%lluL",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    (int)BPE_GET_ETYPE(bp),				\ 		    compress,						\ 		    (u_longlong_t)BPE_GET_LSIZE(bp),			\ 		    (u_longlong_t)BPE_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth);			\ 	} else {							\ 		for (int d = 0; d< BP_GET_NDVAS(bp); d++) {		\ 			const dva_t *dva =&bp->blk_dva[d];		\ 			if (DVA_IS_VALID(dva))				\ 				copies++;				\ 			len += func(buf + len, size - len,		\ 			    "DVA[%d]=<%llu:%llx:%llx>%c", d,		\ 			    (u_longlong_t)DVA_GET_VDEV(dva),		\ 			    (u_longlong_t)DVA_GET_OFFSET(dva),		\ 			    (u_longlong_t)DVA_GET_ASIZE(dva),		\ 			    ws);					\ 		}							\ 		if (BP_IS_GANG(bp)&&					\ 		    DVA_GET_ASIZE(&bp->blk_dva[2])<=			\ 		    DVA_GET_ASIZE(&bp->blk_dva[1]) / 2)			\ 			copies--;					\ 		len += func(buf + len, size - len,			\ 		    "[L%llu %s] %s %s %s %s %s %s%c"			\ 		    "size=%llxL/%llxP birth=%lluL/%lluP fill=%llu%c"	\ 		    "cksum=%llx:%llx:%llx:%llx",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    checksum,						\ 		    compress,						\ 		    BP_GET_BYTEORDER(bp) == 0 ? "BE" : "LE",		\ 		    BP_IS_GANG(bp) ? "gang" : "contiguous",		\ 		    BP_GET_DEDUP(bp) ? "dedup" : "unique",		\ 		    copyname[copies],					\ 		    ws,							\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)BP_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth,			\ 		    (u_longlong_t)BP_PHYSICAL_BIRTH(bp),		\ 		    (u_longlong_t)BP_GET_FILL(bp),			\ 		    ws,							\ 		    (u_longlong_t)bp->blk_cksum.zc_word[0],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[1],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[2],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[3]);		\ 	}								\ 	ASSERT(len< size);						\ }
 include|#
 directive|include
 file|<sys/dmu.h>

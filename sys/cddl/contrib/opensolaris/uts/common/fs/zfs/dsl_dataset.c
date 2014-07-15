@@ -8915,13 +8915,15 @@ block|}
 operator|*
 name|usedobjsp
 operator|=
+name|BP_GET_FILL
+argument_list|(
+operator|&
 name|ds
 operator|->
 name|ds_phys
 operator|->
 name|ds_bp
-operator|.
-name|blk_fill
+argument_list|)
 expr_stmt|;
 operator|*
 name|availobjsp
