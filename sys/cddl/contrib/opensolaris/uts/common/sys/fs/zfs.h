@@ -294,6 +294,8 @@ name|ZFS_PROP_SNAPSHOT_COUNT
 block|,
 name|ZFS_PROP_REDUNDANT_METADATA
 block|,
+name|ZFS_PROP_PREV_SNAP
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t

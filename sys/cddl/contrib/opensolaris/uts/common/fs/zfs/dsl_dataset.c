@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  */
 end_comment
 
 begin_include
@@ -8345,6 +8345,48 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|ds
+operator|->
+name|ds_prev
+operator|!=
+name|NULL
+operator|&&
+name|ds
+operator|->
+name|ds_prev
+operator|!=
+name|dp
+operator|->
+name|dp_origin_snap
+condition|)
+block|{
+name|char
+name|buf
+index|[
+name|MAXNAMELEN
+index|]
+decl_stmt|;
+name|dsl_dataset_name
+argument_list|(
+name|ds
+operator|->
+name|ds_prev
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|dsl_prop_nvlist_add_string
+argument_list|(
+name|nv
+argument_list|,
+name|ZFS_PROP_PREV_SNAP
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
 name|dsl_dir_stats
 argument_list|(
 name|ds

@@ -2109,6 +2109,23 @@ argument_list|,
 literal|"INCONSISTENT"
 argument_list|)
 expr_stmt|;
+name|zprop_register_hidden
+argument_list|(
+name|ZFS_PROP_PREV_SNAP
+argument_list|,
+literal|"prevsnap"
+argument_list|,
+name|PROP_TYPE_STRING
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_VOLUME
+argument_list|,
+literal|"PREVSNAP"
+argument_list|)
+expr_stmt|;
 comment|/* oddball properties */
 name|zprop_register_impl
 argument_list|(
