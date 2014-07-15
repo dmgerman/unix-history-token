@@ -9412,16 +9412,13 @@ name|bhstmr
 operator|->
 name|bhstmr_lun
 operator|=
-name|htobe64
-argument_list|(
-name|CAM_EXTLUN_BYTE_SWIZZLE
+name|iscsi_encode_lun
 argument_list|(
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|target_lun
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bhstmr
