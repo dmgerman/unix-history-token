@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: twalk.c,v 1.1 1999/02/22 10:33:16 christos Exp $	*/
+comment|/*	$NetBSD: twalk.c,v 1.4 2012/03/20 16:38:45 matt Exp $	*/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|__RCSID("$NetBSD: twalk.c,v 1.1 1999/02/22 10:33:16 christos Exp $");
+unit|__RCSID("$NetBSD: twalk.c,v 1.4 2012/03/20 16:38:45 matt Exp $");
 endif|#
 directive|endif
 end_endif
@@ -75,19 +75,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_function_decl
-specifier|static
-name|void
-name|trecurse
-parameter_list|(
-specifier|const
-name|node_t
-modifier|*
-parameter_list|,
+begin_typedef
+typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|action
+name|cmp_fn_t
 function_decl|)
 parameter_list|(
 specifier|const
@@ -98,64 +91,30 @@ name|VISIT
 parameter_list|,
 name|int
 parameter_list|)
-parameter_list|,
-name|int
-name|level
-parameter_list|)
 function_decl|;
-end_function_decl
+end_typedef
 
 begin_comment
 comment|/* Walk the nodes of a tree */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|trecurse
-argument_list|(
-name|root
-argument_list|,
-name|action
-argument_list|,
-name|level
-argument_list|)
-decl|const
+parameter_list|(
+specifier|const
 name|node_t
 modifier|*
 name|root
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+parameter_list|,
 comment|/* Root of the tree to be walked */
-end_comment
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
+name|cmp_fn_t
 name|action
-function_decl|)
-parameter_list|(
-specifier|const
-name|void
-modifier|*
 parameter_list|,
-name|VISIT
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
 name|int
 name|level
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -265,50 +224,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Walk the nodes of a tree */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|twalk
-argument_list|(
-name|vroot
-argument_list|,
-name|action
-argument_list|)
-decl|const
-name|void
-modifier|*
-name|vroot
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Root of the tree to be walked */
-end_comment
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|action
-function_decl|)
 parameter_list|(
 specifier|const
 name|void
 modifier|*
+name|vroot
 parameter_list|,
-name|VISIT
-parameter_list|,
-name|int
+name|cmp_fn_t
+name|action
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+comment|/* Root of the tree to be walked */
 block|{
 if|if
 condition|(
@@ -330,7 +264,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
