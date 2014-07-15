@@ -1863,6 +1863,13 @@ name|CTL_ISCSI
 value|_IOWR(CTL_MINOR, 0x25, struct ctl_iscsi)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CTL_PORT_LIST
+value|_IOWR(CTL_MINOR, 0x26, struct ctl_lun_list)
+end_define
+
 begin_endif
 endif|#
 directive|endif
