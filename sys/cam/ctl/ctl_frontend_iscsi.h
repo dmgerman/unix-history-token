@@ -364,15 +364,6 @@ argument|cfiscsi_session
 argument_list|)
 name|sessions
 expr_stmt|;
-name|char
-name|ctl_initids
-index|[
-name|CTL_MAX_INIT_PER_PORT
-index|]
-decl_stmt|;
-name|int
-name|max_initiators
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ICL_KERNEL_PROXY
