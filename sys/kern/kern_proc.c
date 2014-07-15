@@ -11603,9 +11603,9 @@ if|if
 condition|(
 name|obj
 operator|->
-name|shadow_count
+name|backing_object
 operator|==
-literal|1
+name|NULL
 condition|)
 name|kve
 operator|->
