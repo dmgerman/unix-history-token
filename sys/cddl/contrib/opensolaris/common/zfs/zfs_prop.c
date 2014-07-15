@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -773,7 +773,51 @@ name|NULL
 block|}
 block|}
 decl_stmt|;
+specifier|static
+name|zprop_index_t
+name|redundant_metadata_table
+index|[]
+init|=
+block|{
+block|{
+literal|"all"
+block|,
+name|ZFS_REDUNDANT_METADATA_ALL
+block|}
+block|,
+block|{
+literal|"most"
+block|,
+name|ZFS_REDUNDANT_METADATA_MOST
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+decl_stmt|;
 comment|/* inherit index properties */
+name|zprop_register_index
+argument_list|(
+name|ZFS_PROP_REDUNDANT_METADATA
+argument_list|,
+literal|"redundant_metadata"
+argument_list|,
+name|ZFS_REDUNDANT_METADATA_ALL
+argument_list|,
+name|PROP_INHERIT
+argument_list|,
+name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_VOLUME
+argument_list|,
+literal|"all | most"
+argument_list|,
+literal|"REDUND_MD"
+argument_list|,
+name|redundant_metadata_table
+argument_list|)
+expr_stmt|;
 name|zprop_register_index
 argument_list|(
 name|ZFS_PROP_SYNC
