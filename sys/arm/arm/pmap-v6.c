@@ -11269,8 +11269,7 @@ operator|&
 name|VM_PROT_EXECUTE
 operator|)
 condition|)
-operator|*
-name|pl1pd
+name|l1pd
 operator||=
 name|L1_S_XN
 expr_stmt|;
