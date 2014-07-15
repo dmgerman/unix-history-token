@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, 2014, Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -29043,6 +29043,55 @@ block|{
 name|spa_feature_create_zap_objects
 argument_list|(
 name|spa
+argument_list|,
+name|tx
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * LZ4_COMPRESS feature's behaviour was changed to activate_on_enable 	 * when possibility to use lz4 compression for metadata was added 	 * Old pools that have this feature enabled must be upgraded to have 	 * this feature active 	 */
+if|if
+condition|(
+name|spa
+operator|->
+name|spa_uberblock
+operator|.
+name|ub_version
+operator|>=
+name|SPA_VERSION_FEATURES
+condition|)
+block|{
+name|boolean_t
+name|lz4_en
+init|=
+name|spa_feature_is_enabled
+argument_list|(
+name|spa
+argument_list|,
+name|SPA_FEATURE_LZ4_COMPRESS
+argument_list|)
+decl_stmt|;
+name|boolean_t
+name|lz4_ac
+init|=
+name|spa_feature_is_active
+argument_list|(
+name|spa
+argument_list|,
+name|SPA_FEATURE_LZ4_COMPRESS
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|lz4_en
+operator|&&
+operator|!
+name|lz4_ac
+condition|)
+name|spa_feature_incr
+argument_list|(
+name|spa
+argument_list|,
+name|SPA_FEATURE_LZ4_COMPRESS
 argument_list|,
 name|tx
 argument_list|)

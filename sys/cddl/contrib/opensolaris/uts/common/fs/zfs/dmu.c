@@ -15,6 +15,10 @@ begin_comment
 comment|/* Copyright (c) 2013, Joyent, Inc. All rights reserved. */
 end_comment
 
+begin_comment
+comment|/* Copyright (c) 2014, Nexenta Systems, Inc. All rights reserved. */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -127,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zfeature.h>
 end_include
 
 begin_ifdef
@@ -8412,14 +8422,46 @@ name|ismd
 condition|)
 block|{
 comment|/* 		 * XXX -- we should design a compression algorithm 		 * that specializes in arrays of bps. 		 */
+name|boolean_t
+name|lz4_ac
+init|=
+name|spa_feature_is_active
+argument_list|(
+name|os
+operator|->
+name|os_spa
+argument_list|,
+name|SPA_FEATURE_LZ4_COMPRESS
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|zfs_mdcomp_disable
+condition|)
+block|{
 name|compress
 operator|=
-name|zfs_mdcomp_disable
-condition|?
 name|ZIO_COMPRESS_EMPTY
-else|:
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|lz4_ac
+condition|)
+block|{
+name|compress
+operator|=
+name|ZIO_COMPRESS_LZ4
+expr_stmt|;
+block|}
+else|else
+block|{
+name|compress
+operator|=
 name|ZIO_COMPRESS_LZJB
 expr_stmt|;
+block|}
 comment|/* 		 * Metadata always gets checksummed.  If the data 		 * checksum is multi-bit correctable, and it's not a 		 * ZBT-style checksum, then it's suitable for metadata 		 * as well.  Otherwise, the metadata checksum defaults 		 * to fletcher4. 		 */
 if|if
 condition|(
