@@ -112,7 +112,7 @@ struct_decl|struct
 name|drr_end
 struct_decl|;
 struct_decl|struct
-name|zbookmark
+name|zbookmark_phys
 struct_decl|;
 struct_decl|struct
 name|spa

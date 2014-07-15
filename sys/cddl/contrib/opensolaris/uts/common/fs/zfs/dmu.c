@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -7353,7 +7353,7 @@ name|zio_prop_t
 modifier|*
 name|zp
 parameter_list|,
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -7572,7 +7572,7 @@ name|dmu_sync_arg_t
 modifier|*
 name|dsa
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|zio_prop_t

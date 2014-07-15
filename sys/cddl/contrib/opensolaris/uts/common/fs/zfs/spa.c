@@ -3579,7 +3579,7 @@ name|se_bookmark
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8596,7 +8596,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,

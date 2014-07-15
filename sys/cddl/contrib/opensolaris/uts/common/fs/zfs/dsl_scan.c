@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -177,7 +177,7 @@ name|blkptr_t
 modifier|*
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1886,7 +1886,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -2148,7 +2148,7 @@ modifier|*
 name|scn
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -2475,7 +2475,7 @@ name|zsa
 operator|->
 name|zsa_zh
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 if|if
@@ -2650,7 +2650,7 @@ name|lr
 operator|->
 name|lr_blkptr
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 if|if
@@ -2856,7 +2856,7 @@ name|uint64_t
 name|blkid
 parameter_list|)
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 name|uint32_t
@@ -2974,7 +2974,7 @@ modifier|*
 name|dnp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -3150,7 +3150,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -3337,7 +3337,7 @@ name|cbp
 operator|++
 control|)
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 name|SET_BOOKMARK
@@ -3876,7 +3876,7 @@ name|j
 operator|++
 control|)
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 name|SET_BOOKMARK
@@ -3939,7 +3939,7 @@ operator|&
 name|DNODE_FLAG_SPILL_BLKPTR
 condition|)
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 name|czb
 decl_stmt|;
 name|SET_BOOKMARK
@@ -4003,7 +4003,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -4263,7 +4263,7 @@ modifier|*
 name|tx
 parameter_list|)
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|SET_BOOKMARK
@@ -6452,7 +6452,7 @@ decl_stmt|;
 name|blkptr_t
 name|bp
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 init|=
 block|{
@@ -6809,7 +6809,7 @@ name|scn_bookmark
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9034,7 +9034,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)

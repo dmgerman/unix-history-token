@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -128,7 +128,7 @@ decl_stmt|;
 name|ddt_bookmark_t
 name|scn_ddt_bookmark
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|scn_bookmark
 decl_stmt|;
 name|uint64_t

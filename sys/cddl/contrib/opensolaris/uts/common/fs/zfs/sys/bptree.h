@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -76,7 +76,7 @@ name|uint64_t
 name|be_birth_txg
 decl_stmt|;
 comment|/* only delete blocks born after this txg */
-name|zbookmark_t
+name|zbookmark_phys_t
 name|be_zb
 decl_stmt|;
 comment|/* holds traversal resume point if needed */
