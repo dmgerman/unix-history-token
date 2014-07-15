@@ -89,25 +89,6 @@ typedef|typedef
 name|int
 function_decl|(
 modifier|*
-name|targ_func_t
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|struct
-name|ctl_id
-name|targ_id
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
 name|lun_func_t
 function_decl|)
 parameter_list|(
@@ -120,6 +101,24 @@ name|ctl_id
 name|targ_id
 parameter_list|,
 name|int
+name|lun_id
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint32_t
+function_decl|(
+modifier|*
+name|lun_map_func_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|uint32_t
 name|lun_id
 parameter_list|)
 function_decl|;
@@ -221,6 +220,10 @@ decl_stmt|;
 comment|/* passed to CTL */
 name|lun_func_t
 name|lun_disable
+decl_stmt|;
+comment|/* passed to CTL */
+name|lun_map_func_t
+name|lun_map
 decl_stmt|;
 comment|/* passed to CTL */
 name|void

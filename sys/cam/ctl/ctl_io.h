@@ -614,24 +614,6 @@ name|uint32_t
 name|targ_mapped_lun
 decl_stmt|;
 comment|/* Destination lun CTL-wide */
-name|uint32_t
-function_decl|(
-modifier|*
-name|lun_map_fn
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|uint32_t
-name|lun
-parameter_list|)
-function_decl|;
-name|void
-modifier|*
-name|lun_map_arg
-decl_stmt|;
 block|}
 struct|;
 end_struct
