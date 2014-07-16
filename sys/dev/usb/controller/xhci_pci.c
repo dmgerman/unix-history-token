@@ -609,6 +609,12 @@ block|{
 name|uint32_t
 name|temp
 decl_stmt|;
+name|uint32_t
+name|usb3_mask
+decl_stmt|;
+name|uint32_t
+name|usb2_mask
+decl_stmt|;
 name|temp
 operator|=
 name|pci_read_config
@@ -639,13 +645,24 @@ operator|~
 name|clear
 expr_stmt|;
 comment|/* Don't set bits which the hardware doesn't support */
-name|temp
-operator|&=
+name|usb3_mask
+operator|=
 name|pci_read_config
 argument_list|(
 name|self
 argument_list|,
 name|PCI_XHCI_INTEL_USB3PRM
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|usb2_mask
+operator|=
+name|pci_read_config
+argument_list|(
+name|self
+argument_list|,
+name|PCI_XHCI_INTEL_USB2PRM
 argument_list|,
 literal|4
 argument_list|)
@@ -657,6 +674,8 @@ argument_list|,
 name|PCI_XHCI_INTEL_USB3_PSSEN
 argument_list|,
 name|temp
+operator|&
+name|usb3_mask
 argument_list|,
 literal|4
 argument_list|)
@@ -668,6 +687,8 @@ argument_list|,
 name|PCI_XHCI_INTEL_XUSB2PR
 argument_list|,
 name|temp
+operator|&
+name|usb2_mask
 argument_list|,
 literal|4
 argument_list|)
