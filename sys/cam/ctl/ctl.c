@@ -1617,14 +1617,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Supported pages (0x00), Serial number (0x80), Device ID (0x83),  * SCSI Ports (0x88), Block limits (0xB0) and  * Logical Block Provisioning (0xB2)  */
+comment|/*  * Supported pages (0x00), Serial number (0x80), Device ID (0x83),  * SCSI Ports (0x88), Third-party Copy (0x8F), Block limits (0xB0) and  * Logical Block Provisioning (0xB2)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCSI_EVPD_NUM_SUPPORTED_PAGES
-value|6
+value|7
 end_define
 
 begin_function_decl
@@ -1940,28 +1940,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|ctl_get_resindex
-parameter_list|(
-name|struct
-name|ctl_nexus
-modifier|*
-name|nexus
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|uint32_t
-name|ctl_port_idx
-parameter_list|(
-name|int
-name|port_num
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -20875,6 +20853,11 @@ operator|->
 name|error_list
 argument_list|)
 expr_stmt|;
+name|ctl_tpc_init
+argument_list|(
+name|lun
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the mode page index. 	 */
 name|ctl_init_page_index
 argument_list|(
@@ -21292,6 +21275,11 @@ operator|->
 name|be_lun
 operator|->
 name|be_lun
+argument_list|)
+expr_stmt|;
+name|ctl_tpc_shutdown
+argument_list|(
+name|lun
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -44028,12 +44016,22 @@ index|]
 operator|=
 name|SVPD_SCSI_PORTS
 expr_stmt|;
-comment|/* Block limits */
+comment|/* Third-party Copy */
 name|pages
 operator|->
 name|page_list
 index|[
 literal|4
+index|]
+operator|=
+name|SVPD_SCSI_TPC
+expr_stmt|;
+comment|/* Block limits */
+name|pages
+operator|->
+name|page_list
+index|[
+literal|5
 index|]
 operator|=
 name|SVPD_BLOCK_LIMITS
@@ -44043,7 +44041,7 @@ name|pages
 operator|->
 name|page_list
 index|[
-literal|5
+literal|6
 index|]
 operator|=
 name|SVPD_LBP
@@ -45101,6 +45099,8 @@ name|data_len
 decl_stmt|,
 name|num_target_ports
 decl_stmt|,
+name|iid_len
+decl_stmt|,
 name|id_len
 decl_stmt|,
 name|g
@@ -45150,6 +45150,10 @@ operator|=
 name|NUM_TARGET_PORT_GROUPS
 expr_stmt|;
 name|num_target_ports
+operator|=
+literal|0
+expr_stmt|;
+name|iid_len
 operator|=
 literal|0
 expr_stmt|;
@@ -45210,6 +45214,20 @@ if|if
 condition|(
 name|port
 operator|->
+name|init_devid
+condition|)
+name|iid_len
+operator|+=
+name|port
+operator|->
+name|init_devid
+operator|->
+name|len
+expr_stmt|;
+if|if
+condition|(
+name|port
+operator|->
 name|port_devid
 condition|)
 name|id_len
@@ -45254,6 +45272,8 @@ expr|struct
 name|scsi_vpd_port_designation_cont
 argument_list|)
 operator|)
+operator|+
+name|iid_len
 operator|+
 name|id_len
 expr_stmt|;
@@ -45521,9 +45541,53 @@ operator|->
 name|relative_port_id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|port
+operator|->
+name|init_devid
+operator|&&
+name|g
+operator|==
+name|pg
+condition|)
+block|{
+name|iid_len
+operator|=
+name|port
+operator|->
+name|init_devid
+operator|->
+name|len
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|pd
+operator|->
+name|initiator_transportid
+argument_list|,
+name|port
+operator|->
+name|init_devid
+operator|->
+name|data
+argument_list|,
+name|port
+operator|->
+name|init_devid
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|iid_len
+operator|=
+literal|0
+expr_stmt|;
 name|scsi_ulto2b
 argument_list|(
-literal|0
+name|iid_len
 argument_list|,
 name|pd
 operator|->
@@ -45537,13 +45601,15 @@ expr|struct
 name|scsi_vpd_port_designation_cont
 operator|*
 operator|)
+operator|(
 operator|&
 name|pd
 operator|->
 name|initiator_transportid
 index|[
-literal|0
+name|iid_len
 index|]
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -45563,19 +45629,6 @@ operator|->
 name|port_devid
 operator|->
 name|len
-expr_stmt|;
-name|scsi_ulto2b
-argument_list|(
-name|port
-operator|->
-name|port_devid
-operator|->
-name|len
-argument_list|,
-name|pdc
-operator|->
-name|target_port_descriptors_length
-argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -45598,21 +45651,19 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|id_len
 operator|=
 literal|0
 expr_stmt|;
 name|scsi_ulto2b
 argument_list|(
-literal|0
+name|id_len
 argument_list|,
 name|pdc
 operator|->
 name|target_port_descriptors_length
 argument_list|)
 expr_stmt|;
-block|}
 name|pd
 operator|=
 operator|(
@@ -46410,6 +46461,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|SVPD_SCSI_TPC
+case|:
+name|retval
+operator|=
+name|ctl_inquiry_evpd_tpc
+argument_list|(
+name|ctsio
+argument_list|,
+name|alloc_len
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|SVPD_BLOCK_LIMITS
 case|:
 name|retval
@@ -46518,16 +46582,16 @@ decl_stmt|;
 name|uint32_t
 name|alloc_len
 decl_stmt|;
-name|int
-name|is_fc
+name|ctl_port_type
+name|port_type
 decl_stmt|;
 name|ctl_softc
 operator|=
 name|control_softc
 expr_stmt|;
 comment|/* 	 * Figure out whether we're talking to a Fibre Channel port or not. 	 * We treat the ioctl front end, and any SCSI adapters, as packetized 	 * SCSI front ends. 	 */
-if|if
-condition|(
+name|port_type
+operator|=
 name|ctl_softc
 operator|->
 name|ctl_ports
@@ -46545,17 +46609,20 @@ argument_list|)
 index|]
 operator|->
 name|port_type
-operator|!=
-name|CTL_PORT_FC
-condition|)
-name|is_fc
-operator|=
-literal|0
 expr_stmt|;
-else|else
-name|is_fc
+if|if
+condition|(
+name|port_type
+operator|==
+name|CTL_PORT_IOCTL
+operator|||
+name|port_type
+operator|==
+name|CTL_PORT_INTERNAL
+condition|)
+name|port_type
 operator|=
-literal|1
+name|CTL_PORT_SCSI
 expr_stmt|;
 name|lun
 operator|=
@@ -46766,7 +46833,7 @@ name|inq_ptr
 operator|->
 name|version
 operator|=
-name|SCSI_REV_SPC3
+name|SCSI_REV_SPC4
 expr_stmt|;
 comment|/* 	 * According to SAM-3, even if a device only supports a single 	 * level of LUN addressing, it should still set the HISUP bit: 	 * 	 * 4.9.1 Logical unit numbers overview 	 * 	 * All logical unit number formats described in this standard are 	 * hierarchical in structure even when only a single level in that 	 * hierarchy is used. The HISUP bit shall be set to one in the 	 * standard INQUIRY data (see SPC-2) when any logical unit number 	 * format described in this standard is used.  Non-hierarchical 	 * formats are outside the scope of this standard. 	 * 	 * Therefore we set the HiSup bit here. 	 * 	 * The reponse format is 2, per SPC-3. 	 */
 name|inq_ptr
@@ -46804,14 +46871,25 @@ name|inq_ptr
 operator|->
 name|spc3_flags
 operator|=
+name|SPC3_SID_3PC
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ctl_is_single
+condition|)
+name|inq_ptr
+operator|->
+name|spc3_flags
+operator||=
 name|SPC3_SID_TPGS_IMPLICIT
 expr_stmt|;
 comment|/* 16 bit addressing */
 if|if
 condition|(
-name|is_fc
+name|port_type
 operator|==
-literal|0
+name|CTL_PORT_SCSI
 condition|)
 name|inq_ptr
 operator|->
@@ -46827,12 +46905,11 @@ operator||=
 name|SPC2_SID_MultiP
 expr_stmt|;
 comment|/* 16 bit data bus, synchronous transfers */
-comment|/* XXX these flags don't apply for FC */
 if|if
 condition|(
-name|is_fc
+name|port_type
 operator|==
-literal|0
+name|CTL_PORT_SCSI
 condition|)
 name|inq_ptr
 operator|->
@@ -47165,9 +47242,9 @@ block|}
 comment|/* 	 * For parallel SCSI, we support double transition and single 	 * transition clocking.  We also support QAS (Quick Arbitration 	 * and Selection) and Information Unit transfers on both the 	 * control and array devices. 	 */
 if|if
 condition|(
-name|is_fc
+name|port_type
 operator|==
-literal|0
+name|CTL_PORT_SCSI
 condition|)
 name|inq_ptr
 operator|->
@@ -47179,20 +47256,20 @@ name|SID_SPI_QAS
 operator||
 name|SID_SPI_IUS
 expr_stmt|;
-comment|/* SAM-3 */
+comment|/* SAM-5 (no version claimed) */
 name|scsi_ulto2b
 argument_list|(
-literal|0x0060
+literal|0x00A0
 argument_list|,
 name|inq_ptr
 operator|->
 name|version1
 argument_list|)
 expr_stmt|;
-comment|/* SPC-3 (no version claimed) XXX should we claim a version? */
+comment|/* SPC-4 (no version claimed) */
 name|scsi_ulto2b
 argument_list|(
-literal|0x0300
+literal|0x0460
 argument_list|,
 name|inq_ptr
 operator|->
@@ -47201,7 +47278,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|is_fc
+name|port_type
+operator|==
+name|CTL_PORT_FC
 condition|)
 block|{
 comment|/* FCP-2 ANSI INCITS.350:2003 */
@@ -47215,12 +47294,56 @@ name|version3
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|port_type
+operator|==
+name|CTL_PORT_SCSI
+condition|)
 block|{
 comment|/* SPI-4 ANSI INCITS.362:200x */
 name|scsi_ulto2b
 argument_list|(
 literal|0x0B56
+argument_list|,
+name|inq_ptr
+operator|->
+name|version3
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|port_type
+operator|==
+name|CTL_PORT_ISCSI
+condition|)
+block|{
+comment|/* iSCSI (no version claimed) */
+name|scsi_ulto2b
+argument_list|(
+literal|0x0960
+argument_list|,
+name|inq_ptr
+operator|->
+name|version3
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|port_type
+operator|==
+name|CTL_PORT_SAS
+condition|)
+block|{
+comment|/* SAS (no version claimed) */
+name|scsi_ulto2b
+argument_list|(
+literal|0x0BE0
 argument_list|,
 name|inq_ptr
 operator|->
@@ -47235,10 +47358,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* SBC-2 (no version claimed) XXX should we claim a version? */
+comment|/* SBC-3 (no version claimed) */
 name|scsi_ulto2b
 argument_list|(
-literal|0x0320
+literal|0x04C0
 argument_list|,
 name|inq_ptr
 operator|->
@@ -47260,10 +47383,10 @@ block|{
 case|case
 name|T_DIRECT
 case|:
-comment|/* 			 * SBC-2 (no version claimed) XXX should we claim a 			 * version? 			 */
+comment|/* SBC-3 (no version claimed) */
 name|scsi_ulto2b
 argument_list|(
-literal|0x0320
+literal|0x04C0
 argument_list|,
 name|inq_ptr
 operator|->

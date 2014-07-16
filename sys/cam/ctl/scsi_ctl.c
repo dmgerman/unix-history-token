@@ -3596,12 +3596,10 @@ name|io
 operator|->
 name|io_hdr
 operator|.
-name|status
+name|flags
 operator|&
-name|CTL_STATUS_MASK
+name|CTL_FLAG_ABORT
 operator|)
-operator|==
-name|CTL_CMD_ABORTED
 operator|&&
 operator|(
 name|io
