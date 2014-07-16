@@ -20,25 +20,31 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<getopt.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
 end_include
 
 begin_include
@@ -62,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sysexits.h>
 end_include
 
@@ -69,36 +87,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<getopt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<spawn.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdbool.h>
 end_include
 
 begin_define
@@ -696,6 +684,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+specifier|const
 name|struct
 name|option
 name|longopts
@@ -1160,14 +1149,6 @@ argument_list|(
 name|first_kill
 argument_list|)
 expr_stmt|;
-name|sigemptyset
-argument_list|(
-operator|&
-name|signals
-operator|.
-name|sa_mask
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -1216,7 +1197,7 @@ literal|0
 operator|)
 operator|&&
 name|errno
-operator|!=
+operator|==
 name|EINTR
 condition|)
 continue|continue;
