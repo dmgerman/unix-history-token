@@ -348,7 +348,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|err
+name|errstr
 decl_stmt|;
 name|sig
 operator|=
@@ -361,12 +361,12 @@ argument_list|,
 name|sys_nsig
 argument_list|,
 operator|&
-name|err
+name|errstr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|errstr
 operator|==
 name|NULL
 condition|)
@@ -628,9 +628,6 @@ name|killsig
 init|=
 name|SIGTERM
 decl_stmt|;
-name|int
-name|killedwith
-decl_stmt|;
 name|pid_t
 name|pgid
 decl_stmt|,
@@ -690,6 +687,11 @@ operator|=
 literal|0
 expr_stmt|;
 name|cpid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|pgid
 operator|=
 operator|-
 literal|1
@@ -1172,10 +1174,6 @@ init|;
 condition|;
 control|)
 block|{
-name|killedwith
-operator|=
-name|killsig
-expr_stmt|;
 name|sigemptyset
 argument_list|(
 operator|&
