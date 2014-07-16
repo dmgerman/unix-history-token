@@ -9356,6 +9356,15 @@ name|tf_rip
 operator|=
 name|addr
 expr_stmt|;
+name|set_pcb_flags
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|,
+name|PCB_FULL_IRET
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -9972,6 +9981,7 @@ name|tf_flags
 operator|=
 name|TF_HASSEGS
 expr_stmt|;
+block|}
 name|set_pcb_flags
 argument_list|(
 name|td
@@ -9981,7 +9991,6 @@ argument_list|,
 name|PCB_FULL_IRET
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
