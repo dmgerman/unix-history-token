@@ -7632,6 +7632,24 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * Check for cross-device links.  No need to 			 * recheck vp->v_type, since it cannot change 			 * for non-doomed vnode. 			 */
+if|if
+condition|(
+name|nd
+operator|.
+name|ni_dvp
+operator|->
+name|v_mount
+operator|!=
+name|vp
+operator|->
+name|v_mount
+condition|)
+name|error
+operator|=
+name|EXDEV
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|can_hardlink
