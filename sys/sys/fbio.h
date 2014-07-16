@@ -702,16 +702,6 @@ modifier|*
 name|fb_read
 decl_stmt|;
 comment|/* if NULL, direct mem read. */
-name|fb_ioctl_t
-modifier|*
-name|fb_ioctl
-decl_stmt|;
-comment|/* Can be NULL. */
-name|fb_mmap_t
-modifier|*
-name|fb_mmap
-decl_stmt|;
-comment|/* Can be NULL. */
 name|struct
 name|cdev
 modifier|*

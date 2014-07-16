@@ -91,6 +91,18 @@ name|vt_fb_postswitch
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|vd_fb_ioctl_t
+name|vt_fb_ioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vd_fb_mmap_t
+name|vt_fb_mmap
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
