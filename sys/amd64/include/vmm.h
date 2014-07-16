@@ -108,6 +108,14 @@ name|VM_REG_GUEST_EFER
 block|,
 name|VM_REG_GUEST_CR2
 block|,
+name|VM_REG_GUEST_PDPTE0
+block|,
+name|VM_REG_GUEST_PDPTE1
+block|,
+name|VM_REG_GUEST_PDPTE2
+block|,
+name|VM_REG_GUEST_PDPTE3
+block|,
 name|VM_REG_LAST
 block|}
 enum|;
@@ -1866,6 +1874,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|SEG_DESC_DPL
+parameter_list|(
+name|access
+parameter_list|)
+value|(((access)>> 5)& 0x3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SEG_DESC_PRESENT
 parameter_list|(
 name|access
@@ -2151,6 +2169,8 @@ name|VM_EXITCODE_SUSPENDED
 block|,
 name|VM_EXITCODE_INOUT_STR
 block|,
+name|VM_EXITCODE_TASK_SWITCH
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
@@ -2228,6 +2248,54 @@ decl_stmt|;
 name|struct
 name|seg_desc
 name|seg_desc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+name|task_switch_reason
+block|{
+name|TSR_CALL
+block|,
+name|TSR_IRET
+block|,
+name|TSR_JMP
+block|,
+name|TSR_IDT_GATE
+block|,
+comment|/* task gate in IDT */
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|vm_task_switch
+block|{
+name|uint16_t
+name|tsssel
+decl_stmt|;
+comment|/* new TSS selector */
+name|int
+name|ext
+decl_stmt|;
+comment|/* task switch due to external event */
+name|uint32_t
+name|errcode
+decl_stmt|;
+name|int
+name|errcode_valid
+decl_stmt|;
+comment|/* push 'errcode' on the new stack */
+name|enum
+name|task_switch_reason
+name|reason
+decl_stmt|;
+name|struct
+name|vm_guest_paging
+name|paging
 decl_stmt|;
 block|}
 struct|;
@@ -2364,6 +2432,10 @@ decl_stmt|;
 block|}
 name|suspended
 struct|;
+name|struct
+name|vm_task_switch
+name|task_switch
+decl_stmt|;
 block|}
 name|u
 union|;

@@ -229,61 +229,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMEXIT_CONTINUE
-value|1
-end_define
-
-begin_comment
-comment|/* continue from next instruction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMEXIT_RESTART
-value|2
-end_define
-
-begin_comment
-comment|/* restart current instruction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMEXIT_ABORT
-value|3
-end_define
-
-begin_comment
-comment|/* abort the vm run loop */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMEXIT_RESET
-value|4
-end_define
-
-begin_comment
-comment|/* guest machine has reset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMEXIT_POWEROFF
-value|5
-end_define
-
-begin_comment
-comment|/* guest machine has powered off */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MB
 value|(1024UL * 1024)
 end_define
@@ -317,6 +262,26 @@ name|vcpu
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_function_decl
+specifier|extern
+name|int
+name|vmexit_task_switch
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+parameter_list|,
+name|struct
+name|vm_exit
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+name|vcpu
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|char
@@ -2554,7 +2519,13 @@ name|VM_EXITCODE_SUSPENDED
 index|]
 operator|=
 name|vmexit_suspend
-block|}
+block|,
+index|[
+name|VM_EXITCODE_TASK_SWITCH
+index|]
+operator|=
+name|vmexit_task_switch
+block|, }
 decl_stmt|;
 end_decl_stmt
 
