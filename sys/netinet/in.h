@@ -2854,43 +2854,6 @@ begin_comment
 comment|/* bool; receive IP TOS w/dgram */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_FLOWID
-value|69
-end_define
-
-begin_comment
-comment|/* get flow id for the given socket/inp */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FLOWTYPE
-value|70
-end_define
-
-begin_comment
-comment|/* get flow type (M_HASHTYPE) */
-end_comment
-
-begin_comment
-comment|/* 71 - XXX was IP_RSSCPUID - can recycle whenever */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_RSSBUCKETID
-value|72
-end_define
-
-begin_comment
-comment|/* get RSS flowid -> bucket mapping */
-end_comment
-
 begin_comment
 comment|/* IPv4 Source Filter Multicast API [RFC3678] */
 end_comment
@@ -3022,6 +2985,43 @@ end_define
 
 begin_comment
 comment|/* unblock a source */
+end_comment
+
+begin_comment
+comment|/* Flow and RSS definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FLOWID
+value|90
+end_define
+
+begin_comment
+comment|/* get flow id for the given socket/inp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FLOWTYPE
+value|91
+end_define
+
+begin_comment
+comment|/* get flow type (M_HASHTYPE) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RSSBUCKETID
+value|92
+end_define
+
+begin_comment
+comment|/* get RSS flowid -> bucket mapping */
 end_comment
 
 begin_comment
