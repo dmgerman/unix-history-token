@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: queue.c,v 1.2 2011/02/16 01:31:33 joerg Exp $	*/
+comment|/*	$NetBSD: queue.c,v 1.5 2011/08/31 16:24:57 plunky Exp $	*/
 end_comment
 
 begin_comment
@@ -232,12 +232,27 @@ name|count
 operator|>
 name|Bflag
 condition|)
-name|free
-argument_list|(
+block|{
+name|item
+operator|=
 name|dequeue
 argument_list|()
+expr_stmt|;
+name|free
+argument_list|(
+name|item
+operator|->
+name|data
+operator|.
+name|dat
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|item
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -327,10 +342,6 @@ name|data
 argument_list|,
 literal|'-'
 argument_list|,
-operator|(
-name|regmatch_t
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|0
@@ -368,11 +379,22 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|item
+operator|->
+name|data
+operator|.
+name|dat
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
