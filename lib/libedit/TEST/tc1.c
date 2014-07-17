@@ -70,7 +70,7 @@ end_comment
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: test.c,v 1.18 2005/06/01 11:37:52 lukem Exp $"
+literal|"$NetBSD: test.c,v 1.3 2009/07/17 12:25:52 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -230,7 +230,7 @@ name|char
 name|a
 index|[]
 init|=
-literal|"Edit$ "
+literal|"\1\e[7m\1Edit$\1\e[0m\1 "
 decl_stmt|;
 specifier|static
 name|char
@@ -605,12 +605,14 @@ name|el_set
 argument_list|(
 name|el
 argument_list|,
-name|EL_PROMPT
+name|EL_PROMPT_ESC
 argument_list|,
 name|prompt
+argument_list|,
+literal|'\1'
 argument_list|)
 expr_stmt|;
-comment|/* Set the prompt function	*/
+comment|/* Set the prompt function */
 comment|/* Tell editline to use this history interface	*/
 name|el_set
 argument_list|(
@@ -829,6 +831,9 @@ name|stderr
 argument_list|,
 literal|"Got signal %d.\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|gotsig
 argument_list|)
 expr_stmt|;
