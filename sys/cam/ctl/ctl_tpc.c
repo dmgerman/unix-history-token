@@ -339,7 +339,7 @@ decl_stmt|;
 name|int
 name|init_port
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|init_idx
 decl_stmt|;
 name|uint32_t
