@@ -350,6 +350,15 @@ expr_stmt|;
 name|free
 argument_list|(
 name|item
+operator|->
+name|data
+operator|.
+name|dat
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|item
 argument_list|)
 expr_stmt|;
 block|}
