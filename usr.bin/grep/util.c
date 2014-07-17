@@ -1413,7 +1413,7 @@ name|word
 operator|)
 condition|)
 block|{
-name|wint_t
+name|wchar_t
 name|wbegin
 decl_stmt|,
 name|wend
