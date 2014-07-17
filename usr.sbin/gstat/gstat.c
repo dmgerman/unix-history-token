@@ -129,6 +129,8 @@ decl_stmt|,
 name|flag_d
 decl_stmt|,
 name|flag_o
+decl_stmt|,
+name|flag_p
 decl_stmt|;
 end_decl_stmt
 
@@ -369,7 +371,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abdcf:oI:"
+literal|"abdcf:I:op"
 argument_list|)
 operator|)
 operator|!=
@@ -570,6 +572,14 @@ expr_stmt|;
 name|flag_I
 operator|=
 name|i
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|flag_p
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1263,6 +1273,36 @@ name|ISCONSUMER
 operator|&&
 operator|!
 name|flag_c
+condition|)
+continue|continue;
+if|if
+condition|(
+name|flag_p
+operator|&&
+name|gid
+operator|->
+name|lg_what
+operator|==
+name|ISPROVIDER
+operator|&&
+operator|(
+operator|(
+expr|struct
+name|gprovider
+operator|*
+operator|)
+operator|(
+name|gid
+operator|->
+name|lg_ptr
+operator|)
+operator|)
+operator|->
+name|lg_geom
+operator|->
+name|lg_rank
+operator|!=
+literal|1
 condition|)
 continue|continue;
 comment|/* Do not print past end of window */
@@ -2299,7 +2339,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: gstat [-abcd] [-f filter] [-I interval]\n"
+literal|"usage: gstat [-abcdp] [-f filter] [-I interval]\n"
 argument_list|)
 expr_stmt|;
 name|exit
