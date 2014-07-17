@@ -811,7 +811,7 @@ name|h
 operator|<
 name|info
 operator|->
-name|fb_stride
+name|fb_height
 condition|;
 name|h
 operator|++
@@ -862,7 +862,7 @@ name|h
 operator|<
 name|info
 operator|->
-name|fb_stride
+name|fb_height
 condition|;
 name|h
 operator|++
@@ -914,7 +914,7 @@ name|h
 operator|<
 name|info
 operator|->
-name|fb_stride
+name|fb_height
 condition|;
 name|h
 operator|++
@@ -1020,7 +1020,7 @@ name|h
 operator|<
 name|info
 operator|->
-name|fb_stride
+name|fb_height
 condition|;
 name|h
 operator|++
@@ -1047,6 +1047,12 @@ name|wr4
 argument_list|(
 name|info
 argument_list|,
+name|h
+operator|*
+name|info
+operator|->
+name|fb_stride
+operator|+
 name|o
 argument_list|,
 name|c
