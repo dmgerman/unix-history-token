@@ -3570,6 +3570,12 @@ name|boot
 operator|->
 name|FSFree
 operator|!=
+literal|0xffffffffU
+operator|&&
+name|boot
+operator|->
+name|FSFree
+operator|!=
 name|boot
 operator|->
 name|NumFree
@@ -3577,7 +3583,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"Free space in FSInfo block (%d) not correct (%d)\n"
+literal|"Free space in FSInfo block (%u) not correct (%u)\n"
 argument_list|,
 name|boot
 operator|->

@@ -93,15 +93,6 @@ begin_comment
 comment|/* skip clean file systems if preening */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|dosDirEntry
-modifier|*
-name|rootDir
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * function declarations  */
 end_comment

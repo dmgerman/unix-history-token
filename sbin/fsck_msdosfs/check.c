@@ -570,7 +570,11 @@ if|if
 condition|(
 name|mod
 operator|&
+operator|(
 name|FSFATMOD
+operator||
+name|FSFIXFAT
+operator|)
 condition|)
 block|{
 if|if
