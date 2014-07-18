@@ -8753,14 +8753,6 @@ name|h
 operator|=
 name|ether_crc32_le
 argument_list|(
-name|LLADDR
-argument_list|(
-operator|(
-expr|struct
-name|sockaddr_dl
-operator|*
-operator|)
-operator|(
 name|mta
 operator|+
 operator|(
@@ -8768,8 +8760,6 @@ name|i
 operator|*
 name|ETHER_ADDR_LEN
 operator|)
-operator|)
-argument_list|)
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
