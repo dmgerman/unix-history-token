@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -153,7 +153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print these messages by running:  * echo ::zfs_dbgmsg | mdb -k  *  * Monitor these messages by running:  * 	dtrace -q -n 'zfs-dbgmsg{printf("%s\n", stringof(arg0))}'  */
+comment|/*  * Print these messages by running:  * echo ::zfs_dbgmsg | mdb -k  *  * Monitor these messages by running:  * dtrace -qn 'zfs-dbgmsg{printf("%s\n", stringof(arg0))}'  *  * When used with libzpool, monitor with:  * dtrace -qn 'zfs$pid::zfs_dbgmsg:probe1{printf("%s\n", copyinstr(arg1))}'  */
 end_comment
 
 begin_function
