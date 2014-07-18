@@ -1513,6 +1513,9 @@ parameter_list|)
 function_decl|;
 comment|/** @} */
 comment|/**  * @defgroup emitter Emitting functions  * These functions are used to serialise UCL objects to some string representation.  *  * @{  */
+struct_decl|struct
+name|ucl_emitter_context
+struct_decl|;
 comment|/**  * Structure using for emitter callbacks  */
 struct|struct
 name|ucl_emitter_functions
@@ -1587,10 +1590,177 @@ modifier|*
 name|ud
 parameter_list|)
 function_decl|;
+comment|/** Free userdata */
+name|void
+function_decl|(
+modifier|*
+name|ucl_emitter_free_func
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ud
+parameter_list|)
+function_decl|;
 comment|/** Opaque userdata pointer */
 name|void
 modifier|*
 name|ud
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|ucl_emitter_operations
+block|{
+comment|/** Write a primitive element */
+name|void
+function_decl|(
+modifier|*
+name|ucl_emitter_write_elt
+function_decl|)
+parameter_list|(
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+name|bool
+name|first
+parameter_list|,
+name|bool
+name|print_key
+parameter_list|)
+function_decl|;
+comment|/** Start ucl object */
+name|void
+function_decl|(
+modifier|*
+name|ucl_emitter_start_object
+function_decl|)
+parameter_list|(
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+name|bool
+name|print_key
+parameter_list|)
+function_decl|;
+comment|/** End ucl object */
+name|void
+function_decl|(
+modifier|*
+name|ucl_emitter_end_object
+function_decl|)
+parameter_list|(
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+comment|/** Start ucl array */
+name|void
+function_decl|(
+modifier|*
+name|ucl_emitter_start_array
+function_decl|)
+parameter_list|(
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+name|bool
+name|print_key
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ucl_emitter_end_array
+function_decl|)
+parameter_list|(
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+comment|/**  * Structure that defines emitter functions  */
+struct|struct
+name|ucl_emitter_context
+block|{
+comment|/** Name of emitter (e.g. json, compact_json) */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/** Unique id (e.g. UCL_EMIT_JSON for standard emitters */
+name|int
+name|id
+decl_stmt|;
+comment|/** A set of output functions */
+specifier|const
+name|struct
+name|ucl_emitter_functions
+modifier|*
+name|func
+decl_stmt|;
+comment|/** A set of output operations */
+specifier|const
+name|struct
+name|ucl_emitter_operations
+modifier|*
+name|ops
+decl_stmt|;
+comment|/** Current amount of indent tabs */
+name|unsigned
+name|int
+name|ident
+decl_stmt|;
+comment|/** Top level object */
+specifier|const
+name|ucl_object_t
+modifier|*
+name|top
+decl_stmt|;
+comment|/** The rest of context */
+name|unsigned
+name|char
+name|data
+index|[
+literal|1
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1611,7 +1781,7 @@ name|ucl_emitter
 name|emit_type
 parameter_list|)
 function_decl|;
-comment|/**  * Emit object to a string  * @param obj object  * @param emit_type if type is #UCL_EMIT_JSON then emit json, if type is  * #UCL_EMIT_CONFIG then emit config like object  * @return dump of an object (must be freed after using) or NULL in case of error  */
+comment|/**  * Emit object to a string  * @param obj object  * @param emit_type if type is #UCL_EMIT_JSON then emit json, if type is  * #UCL_EMIT_CONFIG then emit config like object  * @param emitter a set of emitter functions  * @return dump of an object (must be freed after using) or NULL in case of error  */
 name|UCL_EXTERN
 name|bool
 name|ucl_object_emit_full
@@ -1629,6 +1799,129 @@ name|struct
 name|ucl_emitter_functions
 modifier|*
 name|emitter
+parameter_list|)
+function_decl|;
+comment|/**  * Start streamlined UCL object emitter  * @param obj top UCL object  * @param emit_type emit type  * @param emitter a set of emitter functions  * @return new streamlined context that should be freed by  * `ucl_object_emit_streamline_finish`  */
+name|UCL_EXTERN
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ucl_object_emit_streamline_new
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|,
+name|enum
+name|ucl_emitter
+name|emit_type
+parameter_list|,
+name|struct
+name|ucl_emitter_functions
+modifier|*
+name|emitter
+parameter_list|)
+function_decl|;
+comment|/**  * Start object or array container for the streamlined output  * @param ctx streamlined context  * @param obj container object  */
+name|UCL_EXTERN
+name|void
+name|ucl_object_emit_streamline_start_container
+parameter_list|(
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+comment|/**  * Add a complete UCL object to streamlined output  * @param ctx streamlined context  * @param obj object to output  */
+name|UCL_EXTERN
+name|void
+name|ucl_object_emit_streamline_add_object
+parameter_list|(
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+comment|/**  * End previously added container  * @param ctx streamlined context  */
+name|UCL_EXTERN
+name|void
+name|ucl_object_emit_streamline_end_container
+parameter_list|(
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+comment|/**  * Terminate streamlined container finishing all containers in it  * @param ctx streamlined context  */
+name|UCL_EXTERN
+name|void
+name|ucl_object_emit_streamline_finish
+parameter_list|(
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+comment|/**  * Returns functions to emit object to memory  * @param pmem target pointer (should be freed by caller)  * @return emitter functions structure  */
+name|UCL_EXTERN
+name|struct
+name|ucl_emitter_functions
+modifier|*
+name|ucl_object_emit_memory_funcs
+parameter_list|(
+name|void
+modifier|*
+modifier|*
+name|pmem
+parameter_list|)
+function_decl|;
+comment|/**  * Returns functions to emit object to FILE *  * @param fp FILE * object  * @return emitter functions structure  */
+name|UCL_EXTERN
+name|struct
+name|ucl_emitter_functions
+modifier|*
+name|ucl_object_emit_file_funcs
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+comment|/**  * Returns functions to emit object to a file descriptor  * @param fd file descriptor  * @return emitter functions structure  */
+name|UCL_EXTERN
+name|struct
+name|ucl_emitter_functions
+modifier|*
+name|ucl_object_emit_fd_funcs
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+comment|/**  * Free emitter functions  * @param f pointer to functions  */
+name|UCL_EXTERN
+name|void
+name|ucl_object_emit_funcs_free
+parameter_list|(
+name|struct
+name|ucl_emitter_functions
+modifier|*
+name|f
 parameter_list|)
 function_decl|;
 comment|/** @} */
