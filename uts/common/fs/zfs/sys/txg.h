@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -345,6 +345,15 @@ name|tl
 parameter_list|,
 name|uint64_t
 name|txg
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|txg_all_lists_empty
+parameter_list|(
+name|txg_list_t
+modifier|*
+name|tl
 parameter_list|)
 function_decl|;
 specifier|extern
