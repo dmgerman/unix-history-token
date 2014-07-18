@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -728,6 +728,11 @@ define|#
 directive|define
 name|VDEV_UBERBLOCK_RING
 value|(128<< 10)
+comment|/* The largest uberblock we support is 8k. */
+define|#
+directive|define
+name|MAX_UBERBLOCK_SHIFT
+value|(13)
 define|#
 directive|define
 name|VDEV_UBERBLOCK_SHIFT
@@ -735,7 +740,7 @@ parameter_list|(
 name|vd
 parameter_list|)
 define|\
-value|MAX((vd)->vdev_top->vdev_ashift, UBERBLOCK_SHIFT)
+value|MIN(MAX((vd)->vdev_top->vdev_ashift, UBERBLOCK_SHIFT), \ 	    MAX_UBERBLOCK_SHIFT)
 define|#
 directive|define
 name|VDEV_UBERBLOCK_COUNT
