@@ -184,7 +184,7 @@ name|boolean_t
 name|z_unmounted
 decl_stmt|;
 comment|/* unmounted */
-name|rrwlock_t
+name|rrmlock_t
 name|z_teardown_lock
 decl_stmt|;
 name|krwlock_t

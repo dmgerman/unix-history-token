@@ -5031,7 +5031,7 @@ name|z_link_node
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rrw_init
+name|rrm_init
 argument_list|(
 operator|&
 name|zfsvfs
@@ -5394,7 +5394,7 @@ operator|->
 name|z_all_znodes
 argument_list|)
 expr_stmt|;
-name|rrw_destroy
+name|rrm_destroy
 argument_list|(
 operator|&
 name|zfsvfs
@@ -8201,7 +8201,7 @@ name|znode_t
 modifier|*
 name|zp
 decl_stmt|;
-name|rrw_enter
+name|rrm_enter
 argument_list|(
 operator|&
 name|zfsvfs
@@ -8294,7 +8294,7 @@ operator|->
 name|z_teardown_inactive_lock
 argument_list|)
 expr_stmt|;
-name|rrw_exit
+name|rrm_exit
 argument_list|(
 operator|&
 name|zfsvfs
@@ -8395,7 +8395,7 @@ name|z_unmounted
 operator|=
 name|B_TRUE
 expr_stmt|;
-name|rrw_exit
+name|rrm_exit
 argument_list|(
 operator|&
 name|zfsvfs
@@ -9397,7 +9397,7 @@ literal|0
 decl_stmt|;
 name|ASSERT
 argument_list|(
-name|RRW_WRITE_HELD
+name|RRM_WRITE_HELD
 argument_list|(
 operator|&
 name|zfsvfs
@@ -9653,7 +9653,7 @@ operator|->
 name|z_teardown_inactive_lock
 argument_list|)
 expr_stmt|;
-name|rrw_exit
+name|rrm_exit
 argument_list|(
 operator|&
 name|zfsvfs

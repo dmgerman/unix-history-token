@@ -667,7 +667,7 @@ parameter_list|(
 name|zfsvfs
 parameter_list|)
 define|\
-value|{ \ 		rrw_enter_read(&(zfsvfs)->z_teardown_lock, FTAG); \ 		if ((zfsvfs)->z_unmounted) { \ 			ZFS_EXIT(zfsvfs); \ 			return (EIO); \ 		} \ 	}
+value|{ \ 		rrm_enter_read(&(zfsvfs)->z_teardown_lock, FTAG); \ 		if ((zfsvfs)->z_unmounted) { \ 			ZFS_EXIT(zfsvfs); \ 			return (EIO); \ 		} \ 	}
 comment|/* Must be called before exiting the vop */
 define|#
 directive|define
@@ -675,7 +675,7 @@ name|ZFS_EXIT
 parameter_list|(
 name|zfsvfs
 parameter_list|)
-value|rrw_exit(&(zfsvfs)->z_teardown_lock, FTAG)
+value|rrm_exit(&(zfsvfs)->z_teardown_lock, FTAG)
 comment|/* Verifies the znode is valid */
 define|#
 directive|define
