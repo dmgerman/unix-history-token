@@ -6669,11 +6669,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|if_getdrvflags
+argument_list|(
 name|sc
 operator|->
-name|ifnet
-operator|->
-name|if_drv_flags
+name|ifp
+argument_list|)
 operator|&
 name|IFF_DRV_RUNNING
 condition|)
