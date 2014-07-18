@@ -628,6 +628,54 @@ begin_comment
 comment|/* am a child process */
 end_comment
 
+begin_comment
+comment|/* additional flags for EVFILE_TIMER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_SECONDS
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* data is seconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_MSECONDS
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* data is milliseconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_USECONDS
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* data is microseconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_NSECONDS
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* data is nanoseconds */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|knote

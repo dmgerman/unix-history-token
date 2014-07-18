@@ -2490,6 +2490,13 @@ begin_comment
 comment|/*  * XXX: EVFILT_TIMER should perhaps live in kern_time.c beside the  * interval timer support code.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOTE_TIMER_PRECMASK
+value|(NOTE_SECONDS|NOTE_MSECONDS|NOTE_USECONDS| \ 				NOTE_NSECONDS)
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -2498,8 +2505,65 @@ name|timer2sbintime
 parameter_list|(
 name|intptr_t
 name|data
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
+name|sbintime_t
+name|modifier
+decl_stmt|;
+switch|switch
+condition|(
+name|flags
+operator|&
+name|NOTE_TIMER_PRECMASK
+condition|)
+block|{
+case|case
+name|NOTE_SECONDS
+case|:
+name|modifier
+operator|=
+name|SBT_1S
+expr_stmt|;
+break|break;
+case|case
+name|NOTE_MSECONDS
+case|:
+comment|/* FALLTHROUGH */
+case|case
+literal|0
+case|:
+name|modifier
+operator|=
+name|SBT_1MS
+expr_stmt|;
+break|break;
+case|case
+name|NOTE_USECONDS
+case|:
+name|modifier
+operator|=
+name|SBT_1US
+expr_stmt|;
+break|break;
+case|case
+name|NOTE_NSECONDS
+case|:
+name|modifier
+operator|=
+name|SBT_1NS
+expr_stmt|;
+break|break;
+default|default:
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|__LP64__
@@ -2509,7 +2573,7 @@ name|data
 operator|>
 name|SBT_MAX
 operator|/
-name|SBT_1MS
+name|modifier
 condition|)
 return|return
 operator|(
@@ -2520,7 +2584,7 @@ endif|#
 directive|endif
 return|return
 operator|(
-name|SBT_1MS
+name|modifier
 operator|*
 name|data
 operator|)
@@ -2598,10 +2662,13 @@ argument_list|(
 name|kn
 operator|->
 name|kn_sdata
+argument_list|,
+name|kn
+operator|->
+name|kn_sfflags
 argument_list|)
 argument_list|,
 literal|0
-comment|/* 1ms? */
 argument_list|,
 name|filt_timerexpire
 argument_list|,
@@ -2620,7 +2687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * data contains amount of time to sleep, in milliseconds  */
+comment|/*  * data contains amount of time to sleep  */
 end_comment
 
 begin_function
@@ -2689,6 +2756,21 @@ name|kn_sdata
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Only precision unit are supported in flags so far */
+if|if
+condition|(
+name|kn
+operator|->
+name|kn_sfflags
+operator|&
+operator|~
+name|NOTE_TIMER_PRECMASK
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|to
 operator|=
 name|timer2sbintime
@@ -2696,6 +2778,10 @@ argument_list|(
 name|kn
 operator|->
 name|kn_sdata
+argument_list|,
+name|kn
+operator|->
+name|kn_sfflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2804,7 +2890,6 @@ argument_list|,
 name|to
 argument_list|,
 literal|0
-comment|/* 1ms? */
 argument_list|,
 name|filt_timerexpire
 argument_list|,
