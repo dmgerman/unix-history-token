@@ -6992,6 +6992,36 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Returns true if there is a pending sync task in any of the current  * syncing txg, the current quiescing txg, or the current open txg.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|spa_has_pending_synctask
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|!
+name|txg_all_lists_empty
+argument_list|(
+operator|&
+name|spa
+operator|->
+name|spa_dsl_pool
+operator|->
+name|dp_sync_tasks
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|int
 name|spa_mode
