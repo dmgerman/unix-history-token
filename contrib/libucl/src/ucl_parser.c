@@ -1564,6 +1564,12 @@ operator|!
 name|found
 condition|)
 block|{
+if|if
+condition|(
+name|strict
+condition|)
+block|{
+comment|/* Copy '${' */
 name|memcpy
 argument_list|(
 name|d
@@ -1580,6 +1586,22 @@ expr_stmt|;
 name|ret
 operator|--
 expr_stmt|;
+block|}
+else|else
+block|{
+name|memcpy
+argument_list|(
+name|d
+argument_list|,
+name|ptr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|d
+operator|++
+expr_stmt|;
+block|}
 block|}
 block|}
 operator|*
