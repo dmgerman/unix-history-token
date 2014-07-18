@@ -29334,6 +29334,12 @@ operator|=
 literal|"CORE"
 block|,
 index|[
+name|FW_DEVLOG_FACILITY_CF
+index|]
+operator|=
+literal|"CF"
+block|,
+index|[
 name|FW_DEVLOG_FACILITY_SCHED
 index|]
 operator|=
