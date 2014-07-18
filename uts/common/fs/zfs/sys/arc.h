@@ -325,14 +325,6 @@ modifier|*
 name|buf
 parameter_list|)
 function_decl|;
-name|int
-name|arc_has_callback
-parameter_list|(
-name|arc_buf_t
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
 name|void
 name|arc_buf_freeze
 parameter_list|(
@@ -501,8 +493,8 @@ modifier|*
 name|private
 parameter_list|)
 function_decl|;
-name|int
-name|arc_buf_evict
+name|boolean_t
+name|arc_clear_callback
 parameter_list|(
 name|arc_buf_t
 modifier|*
