@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Written by J.T. Conklin<jtc@netbsd.org>  * Public domain.  *  *	$NetBSD: search.h,v 1.12 1999/02/22 10:34:28 christos Exp $  * $FreeBSD$  */
+comment|/*-  * Written by J.T. Conklin<jtc@NetBSD.org>  * Public domain.  *  *	$NetBSD: search.h,v 1.18 2005/07/06 15:47:15 drochner Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -181,19 +181,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|insque
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 modifier|*
 name|lfind
 parameter_list|(
@@ -257,6 +244,19 @@ specifier|const
 name|void
 modifier|*
 parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|insque
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
