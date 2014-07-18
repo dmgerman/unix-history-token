@@ -3424,6 +3424,7 @@ modifier|*
 name|z
 decl_stmt|;
 comment|/* this list of zones is from RFC 6303 */
+comment|/* block localhost level zones, first, later the LAN zones */
 comment|/* localhost. zone */
 if|if
 condition|(
@@ -3720,6 +3721,17 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* if unblock lan-zones, then do not add the zones below. 	 * we do add the zones above, about 127.0.0.1, because localhost is 	 * not on the lan. */
+if|if
+condition|(
+name|cfg
+operator|->
+name|unblock_lan_zones
+condition|)
+return|return
+literal|1
+return|;
+comment|/* block LAN level zones */
 if|if
 condition|(
 operator|!

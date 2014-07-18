@@ -909,6 +909,13 @@ name|VAR_DELAY_CLOSE
 value|386
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_UNBLOCK_LAN_ZONES
+value|387
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
