@@ -27449,7 +27449,7 @@ name|txr
 operator|->
 name|no_desc_avail
 argument_list|,
-literal|"Queue No Descriptor Available"
+literal|"Queue Descriptors Unavailable"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UQUAD
