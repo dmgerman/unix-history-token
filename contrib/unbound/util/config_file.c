@@ -63,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"util/configparser.h"
+file|"configparser.h"
 end_include
 
 begin_include
