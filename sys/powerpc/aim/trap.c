@@ -1076,6 +1076,15 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|EXC_MCHK
+case|:
+comment|/* 			 * Note that this may not be recoverable for the user 			 * process, depending on the type of machine check, 			 * but it at least prevents the kernel from dying. 			 */
+name|sig
+operator|=
+name|SIGBUS
+expr_stmt|;
+break|break;
 default|default:
 name|trap_fatal
 argument_list|(
