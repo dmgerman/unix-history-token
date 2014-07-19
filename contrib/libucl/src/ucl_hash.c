@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"ucl_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ucl_hash.h"
 end_include
 
@@ -77,6 +83,14 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
+specifier|const
+name|ucl_object_t
+modifier|*
+name|cur
+decl_stmt|,
+modifier|*
+name|otmp
+decl_stmt|;
 name|HASH_ITER
 argument_list|(
 argument|hh
@@ -104,13 +118,28 @@ condition|(
 name|func
 condition|)
 block|{
+name|DL_FOREACH_SAFE
+argument_list|(
+argument|elt->data
+argument_list|,
+argument|cur
+argument_list|,
+argument|otmp
+argument_list|)
+block|{
+comment|/* Need to deconst here */
 name|func
 argument_list|(
-name|elt
-operator|->
-name|data
+name|__DECONST
+argument_list|(
+name|ucl_object_t
+operator|*
+argument_list|,
+name|cur
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|UCL_FREE
 argument_list|(
@@ -144,6 +173,7 @@ name|ucl_hash_t
 modifier|*
 name|hashlin
 parameter_list|,
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -196,6 +226,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|void
 modifier|*
 name|ucl_hash_iterate
@@ -332,6 +363,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|ucl_object_t
 modifier|*
 name|ucl_hash_search
@@ -404,6 +436,7 @@ name|ucl_hash_t
 modifier|*
 name|hashlin
 parameter_list|,
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj

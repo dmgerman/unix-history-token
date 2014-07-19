@@ -36,6 +36,7 @@ typedef|typedef
 struct|struct
 name|ucl_hash_node_s
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|data
@@ -150,6 +151,7 @@ name|ucl_hash_t
 modifier|*
 name|hashlin
 parameter_list|,
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -177,6 +179,7 @@ name|ucl_hash_t
 modifier|*
 name|hashlin
 parameter_list|,
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -189,6 +192,7 @@ comment|/**  * Searches an element in the hashtable.  */
 end_comment
 
 begin_function_decl
+specifier|const
 name|ucl_object_t
 modifier|*
 name|ucl_hash_search
@@ -213,6 +217,7 @@ comment|/**  * Iterate over hash table  * @param hashlin hash  * @param iter ite
 end_comment
 
 begin_function_decl
+specifier|const
 name|void
 modifier|*
 name|ucl_hash_iterate

@@ -3,17 +3,22 @@ begin_comment
 comment|/* Copyright (c) 2013, Vsevolod Stakhov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *       * Redistributions of source code must retain the above copyright  *         notice, this list of conditions and the following disclaimer.  *       * Redistributions in binary form must reproduce the above copyright  *         notice, this list of conditions and the following disclaimer in the  *         documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED. IN NO EVENT SHALL AUTHOR BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<float.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<math.h>
+file|"config.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -33,6 +38,40 @@ directive|include
 file|"ucl_chartable.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FLOAT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<float.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MATH_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/**  * @file rcl_emitter.c  * Serialise UCL object to various of output formats  */
 end_comment
@@ -42,6 +81,7 @@ specifier|static
 name|void
 name|ucl_obj_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -69,6 +109,7 @@ specifier|static
 name|void
 name|ucl_elt_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -96,6 +137,7 @@ specifier|static
 name|void
 name|ucl_elt_write_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -126,6 +168,7 @@ specifier|static
 name|void
 name|ucl_elt_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -156,6 +199,7 @@ specifier|static
 name|void
 name|ucl_elt_array_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -511,6 +555,7 @@ specifier|static
 name|void
 name|ucl_elt_obj_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -531,6 +576,7 @@ name|bool
 name|compact
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -809,6 +855,7 @@ specifier|static
 name|void
 name|ucl_elt_array_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -829,6 +876,7 @@ name|bool
 name|compact
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -1012,6 +1060,7 @@ specifier|static
 name|void
 name|ucl_elt_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1293,6 +1342,7 @@ specifier|static
 name|void
 name|ucl_obj_write_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1313,6 +1363,7 @@ name|bool
 name|compact
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -1509,6 +1560,7 @@ specifier|static
 name|void
 name|ucl_object_emit_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1547,6 +1599,7 @@ specifier|static
 name|void
 name|ucl_elt_obj_write_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1567,6 +1620,7 @@ name|bool
 name|is_top
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -1848,6 +1902,7 @@ specifier|static
 name|void
 name|ucl_elt_array_write_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1868,6 +1923,7 @@ name|bool
 name|is_top
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -1978,6 +2034,7 @@ specifier|static
 name|void
 name|ucl_elt_write_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2290,6 +2347,7 @@ specifier|static
 name|void
 name|ucl_object_emit_config
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2323,6 +2381,7 @@ specifier|static
 name|void
 name|ucl_obj_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2400,6 +2459,7 @@ specifier|static
 name|void
 name|ucl_elt_obj_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2420,6 +2480,7 @@ name|bool
 name|is_top
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -2666,6 +2727,7 @@ specifier|static
 name|void
 name|ucl_elt_array_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -2686,6 +2748,7 @@ name|bool
 name|is_top
 parameter_list|)
 block|{
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -2796,6 +2859,7 @@ specifier|static
 name|void
 name|ucl_elt_write_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -3108,6 +3172,7 @@ specifier|static
 name|void
 name|ucl_object_emit_yaml
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -3409,6 +3474,7 @@ name|char
 modifier|*
 name|ucl_object_emit
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -3574,6 +3640,7 @@ begin_function
 name|bool
 name|ucl_object_emit_full
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -3662,6 +3729,7 @@ name|char
 modifier|*
 name|ucl_object_emit_single_json
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
