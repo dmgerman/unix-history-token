@@ -1622,7 +1622,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function to handle DTrace traps during probes. See amd64/amd64/exception.S.  */
+comment|/* Function to handle DTrace traps during probes. See amd64/amd64/trap.c. */
 end_comment
 
 begin_function
