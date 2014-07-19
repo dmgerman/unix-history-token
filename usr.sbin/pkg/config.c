@@ -1294,6 +1294,7 @@ specifier|static
 name|void
 name|config_parse
 parameter_list|(
+specifier|const
 name|ucl_object_t
 modifier|*
 name|obj
@@ -1310,6 +1311,7 @@ init|=
 name|sbuf_new_auto
 argument_list|()
 decl_stmt|;
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -1913,6 +1915,7 @@ name|it
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|ucl_object_t
 modifier|*
 name|cur
@@ -2100,7 +2103,7 @@ name|obj
 argument_list|)
 expr_stmt|;
 block|}
-name|ucl_object_free
+name|ucl_object_unref
 argument_list|(
 name|obj
 argument_list|)
