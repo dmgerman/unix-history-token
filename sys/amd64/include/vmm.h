@@ -27,6 +27,8 @@ name|VM_SUSPEND_POWEROFF
 block|,
 name|VM_SUSPEND_HALT
 block|,
+name|VM_SUSPEND_TRIPLEFAULT
+block|,
 name|VM_SUSPEND_LAST
 block|}
 enum|;
@@ -133,6 +135,72 @@ name|X2APIC_STATE_LAST
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|VM_INTINFO_VECTOR
+parameter_list|(
+name|info
+parameter_list|)
+value|((info)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_INTINFO_DEL_ERRCODE
+value|0x800
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_INTINFO_RSVD
+value|0x7ffff000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_INTINFO_VALID
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_INTINFO_TYPE
+value|0x700
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_INTINFO_HWINTR
+value|(0<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_INTINFO_NMI
+value|(2<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_INTINFO_HWEXCEPTION
+value|(3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_INTINFO_SWINTR
+value|(4<< 8)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -1693,12 +1761,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns 0 if there is no exception pending for this vcpu. Returns 1 if an  * exception is pending and also updates 'vme'. The pending exception is  * cleared when this function returns.  *  * This function should only be called in the context of the thread that is  * executing this vcpu.  */
+comment|/*  * This function is called after a VM-exit that occurred during exception or  * interrupt delivery through the IDT. The format of 'intinfo' is described  * in Figure 15-1, "EXITINTINFO for All Intercepts", APM, Vol 2.  *  * If a VM-exit handler completes the event delivery successfully then it  * should call vm_exit_intinfo() to extinguish the pending event. For e.g.,  * if the task switch emulation is triggered via a task gate then it should  * call this function with 'intinfo=0' to indicate that the external event  * is not pending anymore.  *  * Return value is 0 on success and non-zero on failure.  */
 end_comment
 
 begin_function_decl
 name|int
-name|vm_exception_pending
+name|vm_exit_intinfo
 parameter_list|(
 name|struct
 name|vm
@@ -1708,10 +1776,54 @@ parameter_list|,
 name|int
 name|vcpuid
 parameter_list|,
+name|uint64_t
+name|intinfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * This function is called before every VM-entry to retrieve a pending  * event that should be injected into the guest. This function combines  * nested events into a double or triple fault.  *  * Returns 0 if there are no events that need to be injected into the guest  * and non-zero otherwise.  */
+end_comment
+
+begin_function_decl
+name|int
+name|vm_entry_intinfo
+parameter_list|(
 name|struct
-name|vm_exception
+name|vm
 modifier|*
-name|vme
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
+parameter_list|,
+name|uint64_t
+modifier|*
+name|info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_get_intinfo
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
+parameter_list|,
+name|uint64_t
+modifier|*
+name|info1
+parameter_list|,
+name|uint64_t
+modifier|*
+name|info2
 parameter_list|)
 function_decl|;
 end_function_decl

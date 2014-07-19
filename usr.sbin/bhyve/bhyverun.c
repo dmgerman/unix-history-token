@@ -2426,6 +2426,14 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+case|case
+name|VM_SUSPEND_TRIPLEFAULT
+case|:
+name|exit
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
 default|default:
 name|fprintf
 argument_list|(

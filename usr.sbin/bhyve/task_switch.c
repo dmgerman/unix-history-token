@@ -4481,7 +4481,35 @@ block|}
 block|}
 comment|/* 	 * Treatment of virtual-NMI blocking if NMI is delivered through 	 * a task gate. 	 * 	 * Section "Architectural State Before A VM Exit", Intel SDM, Vol3: 	 * If the virtual NMIs VM-execution control is 1, VM entry injects 	 * an NMI, and delivery of the NMI causes a task switch that causes 	 * a VM exit, virtual-NMI blocking is in effect before the VM exit 	 * commences. 	 * 	 * Thus, virtual-NMI blocking is in effect at the time of the task 	 * switch VM exit. 	 */
 comment|/* 	 * Treatment of virtual-NMI unblocking on IRET from NMI handler task. 	 * 	 * Section "Changes to Instruction Behavior in VMX Non-Root Operation" 	 * If "virtual NMIs" control is 1 IRET removes any virtual-NMI blocking. 	 * This unblocking of virtual-NMI occurs even if IRET causes a fault. 	 * 	 * Thus, virtual-NMI blocking is cleared at the time of the task switch 	 * VM exit. 	 */
-comment|/* 	 * XXX is the original task switch was triggered by a hardware 	 * exception then do we generate a double-fault if we encounter 	 * an exception during the task switch? 	 */
+comment|/* 	 * If the task switch was triggered by an event delivered through 	 * the IDT then extinguish the pending event from the vcpu's 	 * exitintinfo. 	 */
+if|if
+condition|(
+name|task_switch
+operator|->
+name|reason
+operator|==
+name|TSR_IDT_GATE
+condition|)
+block|{
+name|error
+operator|=
+name|vm_set_intinfo
+argument_list|(
+name|ctx
+argument_list|,
+name|vcpu
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * XXX should inject debug exception if 'T' bit is 1 	 */
 return|return
 operator|(

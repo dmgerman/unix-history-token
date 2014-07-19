@@ -530,6 +530,23 @@ name|VM_SUSPENDED_CPUS
 value|1
 end_define
 
+begin_struct
+struct|struct
+name|vm_intinfo
+block|{
+name|int
+name|vcpuid
+decl_stmt|;
+name|uint64_t
+name|info1
+decl_stmt|;
+name|uint64_t
+name|info2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -593,6 +610,14 @@ init|=
 literal|23
 block|,
 comment|/* interrupt injection */
+name|IOCNUM_GET_INTINFO
+init|=
+literal|28
+block|,
+name|IOCNUM_SET_INTINFO
+init|=
+literal|29
+block|,
 name|IOCNUM_INJECT_EXCEPTION
 init|=
 literal|30
@@ -1003,6 +1028,22 @@ directive|define
 name|VM_GET_CPUS
 define|\
 value|_IOW('v', IOCNUM_GET_CPUSET, struct vm_cpuset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_SET_INTINFO
+define|\
+value|_IOW('v', IOCNUM_SET_INTINFO, struct vm_intinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GET_INTINFO
+define|\
+value|_IOWR('v', IOCNUM_GET_INTINFO, struct vm_intinfo)
 end_define
 
 begin_endif
