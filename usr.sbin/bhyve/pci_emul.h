@@ -62,13 +62,6 @@ begin_comment
 comment|/* BAR registers in a Type 0 header */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PCIY_RESERVED
-value|0x00
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|vmctx
@@ -346,8 +339,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|PBA_TABLE_ENTRY_SIZE
-value|8
+name|PBA_SIZE
+parameter_list|(
+name|msgnum
+parameter_list|)
+value|(roundup2((msgnum), 64) / 8)
 end_define
 
 begin_enum
@@ -392,6 +388,12 @@ index|]
 decl_stmt|;
 name|int
 name|pi_bar_getsize
+decl_stmt|;
+name|int
+name|pi_prevcap
+decl_stmt|;
+name|int
+name|pi_capend
 decl_stmt|;
 struct|struct
 block|{
@@ -439,16 +441,16 @@ decl_stmt|;
 name|int
 name|pba_bar
 decl_stmt|;
-name|size_t
+name|uint32_t
 name|table_offset
 decl_stmt|;
 name|int
 name|table_count
 decl_stmt|;
-name|size_t
+name|uint32_t
 name|pba_offset
 decl_stmt|;
-name|size_t
+name|int
 name|pba_size
 decl_stmt|;
 name|int
@@ -639,7 +641,10 @@ name|pci_lintr_cb
 function_decl|)
 parameter_list|(
 name|int
-name|slot
+name|b
+parameter_list|,
+name|int
+name|s
 parameter_list|,
 name|int
 name|pin
@@ -1016,7 +1021,8 @@ begin_function_decl
 name|int
 name|pci_count_lintr
 parameter_list|(
-name|void
+name|int
+name|bus
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1025,6 +1031,9 @@ begin_function_decl
 name|void
 name|pci_walk_lintr
 parameter_list|(
+name|int
+name|bus
+parameter_list|,
 name|pci_lintr_cb
 name|cb
 parameter_list|,
@@ -1040,6 +1049,16 @@ name|void
 name|pci_write_dsdt
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pci_bus_configured
+parameter_list|(
+name|int
+name|bus
 parameter_list|)
 function_decl|;
 end_function_decl

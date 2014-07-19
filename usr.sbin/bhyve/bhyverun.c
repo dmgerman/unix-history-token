@@ -550,6 +550,7 @@ literal|"       -l: LPC device configuration\n"
 literal|"       -m: memory size in MB\n"
 literal|"       -w: ignore unimplemented MSRs\n"
 literal|"       -x: local apic is in x2APIC mode\n"
+literal|"       -Y: disable MPtable generation\n"
 literal|"       -U: uuid\n"
 argument_list|,
 name|progname
@@ -2667,6 +2668,8 @@ name|bvmcons
 decl_stmt|;
 name|int
 name|max_vcpus
+decl_stmt|,
+name|mptgen
 decl_stmt|;
 name|struct
 name|vmctx
@@ -2707,6 +2710,10 @@ literal|256
 operator|*
 name|MB
 expr_stmt|;
+name|mptgen
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2718,7 +2725,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehwxAHIPWp:g:c:s:m:l:U:"
+literal|"abehwxAHIPWYp:g:c:s:m:l:U:"
 argument_list|)
 operator|)
 operator|!=
@@ -2918,6 +2925,14 @@ case|:
 name|x2apic_mode
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'Y'
+case|:
+name|mptgen
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -3127,6 +3142,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * build the guest tables, MP etc. 	 */
+if|if
+condition|(
+name|mptgen
+condition|)
+block|{
+name|error
+operator|=
 name|mptable_build
 argument_list|(
 name|ctx
@@ -3134,6 +3156,16 @@ argument_list|,
 name|guest_ncpus
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|smbios_build
