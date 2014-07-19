@@ -6137,7 +6137,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|rrw_enter
+name|rrm_enter
 argument_list|(
 operator|&
 operator|(
@@ -6169,7 +6169,7 @@ name|z_unmounted
 condition|)
 block|{
 comment|/* 			 * XXX we could probably try again, since the unmounting 			 * thread should be just about to disassociate the 			 * objset from the zfsvfs. 			 */
-name|rrw_exit
+name|rrm_exit
 argument_list|(
 operator|&
 operator|(
@@ -6214,7 +6214,7 @@ modifier|*
 name|tag
 parameter_list|)
 block|{
-name|rrw_exit
+name|rrm_exit
 argument_list|(
 operator|&
 name|zfsvfs
