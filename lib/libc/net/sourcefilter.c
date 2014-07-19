@@ -1440,6 +1440,9 @@ name|sockunion_t
 modifier|*
 name|psu
 decl_stmt|;
+name|socklen_t
+name|optlen
+decl_stmt|;
 name|int
 name|err
 decl_stmt|,
@@ -1448,10 +1451,6 @@ decl_stmt|,
 name|nsrcs
 decl_stmt|,
 name|optname
-decl_stmt|;
-name|unsigned
-name|int
-name|optlen
 decl_stmt|;
 if|if
 condition|(
