@@ -352,20 +352,7 @@ condition|)
 goto|goto
 name|failed
 goto|;
-comment|/* check if the group is empty */
-if|if
-condition|(
-operator|*
-name|grp
-operator|->
-name|gr_mem
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|failed
-goto|;
-comment|/* check membership */
+comment|/* check if user's own primary group */
 if|if
 condition|(
 name|pwd
@@ -379,6 +366,7 @@ condition|)
 goto|goto
 name|found
 goto|;
+comment|/* iterate over members */
 for|for
 control|(
 name|list
@@ -387,6 +375,10 @@ name|grp
 operator|->
 name|gr_mem
 init|;
+name|list
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|list
 operator|!=
