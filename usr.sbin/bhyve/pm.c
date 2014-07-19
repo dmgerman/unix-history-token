@@ -231,9 +231,11 @@ condition|(
 name|sci_active
 condition|)
 return|return;
-name|vm_ioapic_assert_irq
+name|vm_isa_assert_irq
 argument_list|(
 name|ctx
+argument_list|,
+name|SCI_INT
 argument_list|,
 name|SCI_INT
 argument_list|)
@@ -262,9 +264,11 @@ operator|!
 name|sci_active
 condition|)
 return|return;
-name|vm_ioapic_deassert_irq
+name|vm_isa_deassert_irq
 argument_list|(
 name|ctx
+argument_list|,
+name|SCI_INT
 argument_list|,
 name|SCI_INT
 argument_list|)

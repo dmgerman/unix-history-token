@@ -180,6 +180,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|vm_isa_irq
+block|{
+name|int
+name|atpic_irq
+decl_stmt|;
+name|int
+name|ioapic_irq
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vm_capability
 block|{
 name|int
@@ -545,6 +559,19 @@ block|,
 name|IOCNUM_GET_HPET_CAPABILITIES
 init|=
 literal|62
+block|,
+comment|/* legacy interrupt injection */
+name|IOCNUM_ISA_ASSERT_IRQ
+init|=
+literal|80
+block|,
+name|IOCNUM_ISA_DEASSERT_IRQ
+init|=
+literal|81
+block|,
+name|IOCNUM_ISA_PULSE_IRQ
+init|=
+literal|82
 block|, }
 enum|;
 end_enum
@@ -667,6 +694,30 @@ directive|define
 name|VM_IOAPIC_PINCOUNT
 define|\
 value|_IOR('v', IOCNUM_IOAPIC_PINCOUNT, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ISA_ASSERT_IRQ
+define|\
+value|_IOW('v', IOCNUM_ISA_ASSERT_IRQ, struct vm_isa_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ISA_DEASSERT_IRQ
+define|\
+value|_IOW('v', IOCNUM_ISA_DEASSERT_IRQ, struct vm_isa_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ISA_PULSE_IRQ
+define|\
+value|_IOW('v', IOCNUM_ISA_PULSE_IRQ, struct vm_isa_irq)
 end_define
 
 begin_define

@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_ioport.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_ipi.h"
 end_include
 
@@ -159,6 +165,12 @@ begin_include
 include|#
 directive|include
 file|"vmm_stat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vatpic.h"
 end_include
 
 begin_include
@@ -4121,6 +4133,12 @@ name|vmxstate
 operator|->
 name|vpid
 expr_stmt|;
+name|invvpid_desc
+operator|.
+name|linear_addr
+operator|=
+literal|0
+expr_stmt|;
 name|invvpid
 argument_list|(
 name|INVVPID_TYPE_SINGLE_CONTEXT
@@ -4636,6 +4654,8 @@ name|int
 name|vector
 decl_stmt|,
 name|need_nmi_exiting
+decl_stmt|,
+name|extint_pending
 decl_stmt|;
 name|uint64_t
 name|rflags
@@ -4871,8 +4891,22 @@ name|vcpu
 argument_list|)
 expr_stmt|;
 block|}
+name|extint_pending
+operator|=
+name|vm_extint_pending
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|!
+name|extint_pending
+operator|&&
 name|virtual_interrupt_delivery
 condition|)
 block|{
@@ -4916,6 +4950,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+name|extint_pending
+condition|)
+block|{
 comment|/* Ask the local apic for a vector to inject */
 if|if
 condition|(
@@ -4929,23 +4969,57 @@ name|vector
 argument_list|)
 condition|)
 return|return;
+comment|/* 		 * From the Intel SDM, Volume 3, Section "Maskable 		 * Hardware Interrupts": 		 * - maskable interrupt vectors [16,255] can be delivered 		 *   through the local APIC. 		*/
 name|KASSERT
 argument_list|(
 name|vector
 operator|>=
-literal|32
+literal|16
 operator|&&
 name|vector
 operator|<=
 literal|255
 argument_list|,
 operator|(
-literal|"invalid vector %d"
+literal|"invalid vector %d from local APIC"
 operator|,
 name|vector
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Ask the legacy pic for a vector to inject */
+name|vatpic_pending_intr
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+operator|&
+name|vector
+argument_list|)
+expr_stmt|;
+comment|/* 		 * From the Intel SDM, Volume 3, Section "Maskable 		 * Hardware Interrupts": 		 * - maskable interrupt vectors [0,255] can be delivered 		 *   through the INTR pin. 		 */
+name|KASSERT
+argument_list|(
+name|vector
+operator|>=
+literal|0
+operator|&&
+name|vector
+operator|<=
+literal|255
+argument_list|,
+operator|(
+literal|"invalid vector %d from INTR"
+operator|,
+name|vector
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Check RFLAGS.IF and the interruptibility state of the guest */
 name|rflags
 operator|=
@@ -5072,6 +5146,12 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|extint_pending
+condition|)
+block|{
 comment|/* Update the Local APIC ISR */
 name|vlapic_intr_accepted
 argument_list|(
@@ -5080,6 +5160,47 @@ argument_list|,
 name|vector
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|vm_extint_clear
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|)
+expr_stmt|;
+name|vatpic_intr_accepted
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vector
+argument_list|)
+expr_stmt|;
+comment|/* 		 * After we accepted the current ExtINT the PIC may 		 * have posted another one.  If that is the case, set 		 * the Interrupt Window Exiting execution control so 		 * we can inject that one too. 		 */
+if|if
+condition|(
+name|vm_extint_pending
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|)
+condition|)
+name|vmx_set_int_window_exiting
+argument_list|(
+name|vmx
+argument_list|,
+name|vcpu
+argument_list|)
+expr_stmt|;
+block|}
 name|VCPU_CTR1
 argument_list|(
 name|vmx
@@ -5589,6 +5710,11 @@ operator|(
 name|UNHANDLED
 operator|)
 return|;
+name|regval
+operator|=
+literal|0
+expr_stmt|;
+comment|/* silence gcc */
 name|vmxctx
 operator|=
 operator|&
@@ -7637,6 +7763,43 @@ operator|->
 name|guest_rax
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|emulate_ioport
+argument_list|(
+name|vmx
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+name|vmexit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|handled
+operator|=
+literal|1
+expr_stmt|;
+name|vmxctx
+operator|->
+name|guest_rax
+operator|=
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inout
+operator|.
+name|eax
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|EXIT_REASON_CPUID
@@ -11246,6 +11409,9 @@ name|int
 name|rvi
 decl_stmt|,
 name|pirbase
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|uint16_t
 name|intr_status_old
@@ -11303,6 +11469,11 @@ block|}
 name|pirval
 operator|=
 literal|0
+expr_stmt|;
+name|pirbase
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|lapic
 operator|=
@@ -11489,7 +11660,7 @@ argument_list|,
 literal|"vmx_inject_pir"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Update RVI so the processor can evaluate pending virtual 	 * interrupts on VM-entry. 	 */
+comment|/* 	 * Update RVI so the processor can evaluate pending virtual 	 * interrupts on VM-entry. 	 * 	 * It is possible for pirval to be 0 here, even though the 	 * pending bit has been set. The scenario is: 	 * CPU-Y is sending a posted interrupt to CPU-X, which 	 * is running a guest and processing posted interrupts in h/w. 	 * CPU-X will eventually exit and the state seen in s/w is 	 * the pending bit set, but no PIR bits set. 	 * 	 *      CPU-X                      CPU-Y 	 *   (vm running)                (host running) 	 *   rx posted interrupt 	 *   CLEAR pending bit 	 *				 SET PIR bit 	 *   READ/CLEAR PIR bits 	 *				 SET pending bit 	 *   (vm exit) 	 *   pending bit set, PIR 0 	 */
 if|if
 condition|(
 name|pirval
