@@ -245,6 +245,16 @@ name|vd_maskbitbltchr
 operator|=
 name|vt_fb_maskbitbltchr
 block|,
+operator|.
+name|vd_fb_ioctl
+operator|=
+name|vt_fb_ioctl
+block|,
+operator|.
+name|vd_fb_mmap
+operator|=
+name|vt_fb_mmap
+block|,
 comment|/* Better than VGA, but still generic driver. */
 operator|.
 name|vd_priority
@@ -773,6 +783,16 @@ operator|->
 name|fb_info
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|fb_info
+operator|.
+name|fb_flags
+operator|&=
+operator|~
+name|FB_FLAG_NOMMAP
+expr_stmt|;
+comment|/* Set wrongly by fb_probe */
 name|vt_fb_init
 argument_list|(
 name|vd
