@@ -1311,7 +1311,7 @@ name|Cflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %-16s %4s %1s %-9s %-*s "
+literal|"%5s %-16s %5s %1s %-8s %-*s "
 literal|"%-3s %-12s\n"
 argument_list|,
 literal|"PID"
@@ -1336,7 +1336,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%5s %-16s %4s %1s %1s %-9s "
+literal|"%5s %-16s %5s %1s %1s %-8s "
 literal|"%3s %7s %-3s %-12s\n"
 argument_list|,
 literal|"PID"
@@ -1839,6 +1839,11 @@ condition|?
 literal|"l"
 else|:
 literal|"-"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
 argument_list|)
 expr_stmt|;
 if|if
