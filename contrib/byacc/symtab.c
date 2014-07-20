@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: symtab.c,v 1.10 2012/05/26 15:16:12 tom Exp $ */
+comment|/* $Id: symtab.c,v 1.11 2014/03/26 00:17:09 Tom.Shields Exp $ */
 end_comment
 
 begin_include
@@ -230,6 +230,39 @@ name|assoc
 operator|=
 name|TOKEN
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBTYACC
+argument_list|)
+name|bp
+operator|->
+name|args
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|bp
+operator|->
+name|argnames
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|argtags
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|destructor
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|strcpy
 argument_list|(
 name|bp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lalr.c,v 1.9 2009/10/27 09:49:27 tom Exp $ */
+comment|/* $Id: lalr.c,v 1.10 2014/02/19 00:35:17 Tom.Shields Exp $ */
 end_comment
 
 begin_include
@@ -1000,7 +1000,7 @@ if|if
 condition|(
 name|ngotos
 operator|==
-name|MAXSHORT
+name|MAXYYINT
 condition|)
 name|fatal
 argument_list|(

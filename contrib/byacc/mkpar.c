@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: mkpar.c,v 1.12 2012/05/26 00:42:18 tom Exp $ */
+comment|/* $Id: mkpar.c,v 1.14 2014/04/01 23:05:37 tom Exp $ */
 end_comment
 
 begin_include
@@ -8,6 +8,82 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|NotSuppressed
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->suppressed == 0)
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBTYACC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MaySuppress
+parameter_list|(
+name|p
+parameter_list|)
+value|((backtrack ? ((p)->suppressed<= 1) : (p)->suppressed == 0))
+end_define
+
+begin_comment
+comment|/* suppress the preferred action => enable backtracking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|StartBacktrack
+parameter_list|(
+name|p
+parameter_list|)
+value|if (backtrack&& (p) != NULL&& NotSuppressed(p)) (p)->suppressed = 1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MaySuppress
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->suppressed == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|StartBacktrack
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_comment
+comment|/*nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -986,17 +1062,18 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|p
 operator|->
 name|action_code
 operator|==
 name|REDUCE
+operator|)
 operator|&&
+name|MaySuppress
+argument_list|(
 name|p
-operator|->
-name|suppressed
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|rules_used
 index|[
@@ -1149,6 +1226,18 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|YYBTYACC
+argument_list|)
+name|pref
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|p
@@ -1176,6 +1265,7 @@ operator|!=
 name|symbol
 condition|)
 block|{
+comment|/* the first parse action for each symbol is the preferred action */
 name|pref
 operator|=
 name|p
@@ -1187,6 +1277,7 @@ operator|->
 name|symbol
 expr_stmt|;
 block|}
+comment|/* following conditions handle multiple, i.e., conflicting, parse actions */
 elseif|else
 if|if
 condition|(
@@ -1207,6 +1298,11 @@ operator|->
 name|suppressed
 operator|=
 literal|1
+expr_stmt|;
+name|StartBacktrack
+argument_list|(
+name|pref
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -1344,6 +1440,11 @@ name|suppressed
 operator|=
 literal|1
 expr_stmt|;
+name|StartBacktrack
+argument_list|(
+name|pref
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -1356,6 +1457,11 @@ operator|->
 name|suppressed
 operator|=
 literal|1
+expr_stmt|;
+name|StartBacktrack
+argument_list|(
+name|pref
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1613,11 +1719,10 @@ name|action_code
 operator|==
 name|SHIFT
 operator|&&
+name|MaySuppress
+argument_list|(
 name|p
-operator|->
-name|suppressed
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1627,17 +1732,18 @@ return|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|p
 operator|->
 name|action_code
 operator|==
 name|REDUCE
+operator|)
 operator|&&
+name|MaySuppress
+argument_list|(
 name|p
-operator|->
-name|suppressed
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 if|if

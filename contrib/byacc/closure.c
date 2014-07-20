@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: closure.c,v 1.9 2010/06/09 08:21:47 tom Exp $ */
+comment|/* $Id: closure.c,v 1.10 2014/02/19 00:45:42 Tom.Shields Exp $ */
 end_comment
 
 begin_include
@@ -46,6 +46,47 @@ name|EFF
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
+name|print_closure
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_EFF
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_first_derives
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -61,7 +102,7 @@ decl_stmt|;
 name|int
 name|symbol
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|sp
 decl_stmt|;
@@ -215,7 +256,7 @@ name|cword
 init|=
 literal|0
 decl_stmt|;
-name|short
+name|Value_t
 modifier|*
 name|rp
 decl_stmt|;
@@ -407,7 +448,7 @@ begin_function
 name|void
 name|closure
 parameter_list|(
-name|short
+name|Value_t
 modifier|*
 name|nucleus
 parameter_list|,
@@ -734,6 +775,7 @@ name|DEBUG
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|print_closure
 parameter_list|(
@@ -741,7 +783,7 @@ name|int
 name|n
 parameter_list|)
 block|{
-name|short
+name|Value_t
 modifier|*
 name|isp
 decl_stmt|;
@@ -777,6 +819,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_EFF
 parameter_list|(
@@ -917,6 +960,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_first_derives
 parameter_list|(
