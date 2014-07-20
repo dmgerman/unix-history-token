@@ -1628,12 +1628,16 @@ condition|)
 block|{
 if|if
 condition|(
-name|prefix
+name|strncmp
 argument_list|(
+name|pathopt
+argument_list|,
 literal|"func"
 argument_list|,
-name|pathopt
+literal|4
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* handled below */
