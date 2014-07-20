@@ -18823,6 +18823,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Perform hash on these packet types */
+comment|/* 	 * Disable UDP - IP fragments aren't currently being handled 	 * and so we end up with a mix of 2-tuple and 4-tuple 	 * traffic. 	 */
 name|mrqc
 operator|=
 name|IXGBE_MRQC_RSSEN
@@ -18830,8 +18831,12 @@ operator||
 name|IXGBE_MRQC_RSS_FIELD_IPV4
 operator||
 name|IXGBE_MRQC_RSS_FIELD_IPV4_TCP
-operator||
-name|IXGBE_MRQC_RSS_FIELD_IPV4_UDP
+if|#
+directive|if
+literal|0
+expr|| IXGBE_MRQC_RSS_FIELD_IPV4_UDP
+endif|#
+directive|endif
 operator||
 name|IXGBE_MRQC_RSS_FIELD_IPV6_EX_TCP
 operator||
@@ -18840,10 +18845,12 @@ operator||
 name|IXGBE_MRQC_RSS_FIELD_IPV6
 operator||
 name|IXGBE_MRQC_RSS_FIELD_IPV6_TCP
-operator||
-name|IXGBE_MRQC_RSS_FIELD_IPV6_UDP
-operator||
-name|IXGBE_MRQC_RSS_FIELD_IPV6_EX_UDP
+if|#
+directive|if
+literal|0
+expr_stmt|| IXGBE_MRQC_RSS_FIELD_IPV6_UDP 	     | IXGBE_MRQC_RSS_FIELD_IPV6_EX_UDP
+endif|#
+directive|endif
 expr_stmt|;
 name|IXGBE_WRITE_REG
 argument_list|(
