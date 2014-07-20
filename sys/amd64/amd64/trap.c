@@ -2215,6 +2215,9 @@ modifier|*
 name|frame
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
 if|if
 condition|(
 name|dtrace_trap_func
@@ -2230,6 +2233,8 @@ name|frame
 argument_list|)
 condition|)
 return|return;
+endif|#
+directive|endif
 name|trap
 argument_list|(
 name|frame
