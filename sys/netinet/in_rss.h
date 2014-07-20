@@ -95,6 +95,120 @@ value|2
 end_define
 
 begin_comment
+comment|/*  * Define RSS representations of the M_HASHTYPE_* values, representing  * which particular bits are supported.  The NICs can then use this to  * calculate which hash types to enable and which not to enable.  *  * The fact that these line up with M_HASHTYPE_* is not to be relied  * upon.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_IPV4
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* IPv4 2-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_TCP_IPV4
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* TCPv4 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_IPV6
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* IPv6 2-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_TCP_IPV6
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* TCPv6 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_IPV6_EX
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* IPv6 2-tuple + ext hdrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_TCP_IPV6_EX
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* TCPv6 4-tiple + ext hdrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_UDP_IPV4
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* IPv4 UDP 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_UDP_IPV4_EX
+value|(1<< 8)
+end_define
+
+begin_comment
+comment|/* IPv4 UDP 4-tuple + ext hdrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_UDP_IPV6
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* IPv6 UDP 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSS_HASHTYPE_RSS_UDP_IPV6_EX
+value|(1<< 10)
+end_define
+
+begin_comment
+comment|/* IPv6 UDP 4-tuple + ext hdrs */
+end_comment
+
+begin_comment
 comment|/*  * Compile-time limits on the size of the indirection table.  */
 end_comment
 
@@ -198,6 +312,15 @@ end_function_decl
 begin_function_decl
 name|u_int
 name|rss_getnumcpus
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|rss_gethashconfig
 parameter_list|(
 name|void
 parameter_list|)

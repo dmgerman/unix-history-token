@@ -1885,6 +1885,43 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return the supported RSS hash configuration.  *  * NICs should query this to determine what to configure in their redirection  * matching table.  */
+end_comment
+
+begin_function
+name|u_int
+name|rss_gethashconfig
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Return 4-tuple for TCP; 2-tuple for others */
+comment|/* 	 * UDP may fragment more often than TCP and thus we'll end up with 	 * NICs returning 2-tuple fragments. 	 * udp_init() and udplite_init() both currently initialise things 	 * as 2-tuple. 	 * So for now disable UDP 4-tuple hashing until all of the other 	 * pieces are in place. 	 */
+return|return
+operator|(
+name|RSS_HASHTYPE_RSS_IPV4
+operator||
+name|RSS_HASHTYPE_RSS_TCP_IPV4
+operator||
+name|RSS_HASHTYPE_RSS_IPV6
+operator||
+name|RSS_HASHTYPE_RSS_TCP_IPV6
+operator||
+name|RSS_HASHTYPE_RSS_IPV6_EX
+operator||
+name|RSS_HASHTYPE_RSS_TCP_IPV6_EX
+if|#
+directive|if
+literal|0
+expr||    RSS_HASHTYPE_RSS_UDP_IPV4 	|    RSS_HASHTYPE_RSS_UDP_IPV4_EX 	|    RSS_HASHTYPE_RSS_UDP_IPV6 	|    RSS_HASHTYPE_RSS_UDP_IPV6_EX
+endif|#
+directive|endif
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * XXXRW: Confirm that sysctl -a won't dump this keying material, don't want  * it appearing in debugging output unnecessarily.  */
 end_comment
 
