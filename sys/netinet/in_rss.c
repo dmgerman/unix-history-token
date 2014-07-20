@@ -443,7 +443,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * RSS secret key, intended to prevent attacks on load-balancing.  Its  * effectiveness may be limited by algorithm choice and available entropy  * during the boot.  *  * XXXRW: And that we don't randomize it yet!  *  * XXXRW: This default is actually the default key from Chelsio T5 cards, as  * it offers reasonable distribution, unlike all-0 keys which always  * generate a hash of 0 (upsettingly).  */
+comment|/*  * RSS secret key, intended to prevent attacks on load-balancing.  Its  * effectiveness may be limited by algorithm choice and available entropy  * during the boot.  *  * XXXRW: And that we don't randomize it yet!  *  * This is the default Microsoft RSS specification key which is also  * the Chelsio T5 firmware default key.  */
 end_comment
 
 begin_decl_stmt
