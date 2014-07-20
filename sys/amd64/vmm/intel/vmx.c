@@ -4902,10 +4902,6 @@ modifier|*
 name|vlapic
 parameter_list|)
 block|{
-name|struct
-name|vm_exception
-name|exc
-decl_stmt|;
 name|int
 name|vector
 decl_stmt|,
@@ -4977,13 +4973,11 @@ literal|0
 argument_list|,
 operator|(
 literal|"%s: cannot inject "
-literal|"pending exception %d: %#x"
+literal|"pending exception: %#lx/%#x"
 operator|,
 name|__func__
 operator|,
-name|exc
-operator|.
-name|vector
+name|entryinfo
 operator|,
 name|info
 operator|)
