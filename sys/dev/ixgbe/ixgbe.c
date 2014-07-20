@@ -18739,16 +18739,27 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX endian? */
+comment|/* 		 * The low 8 bits are for hash value (n+0); 		 * The next 8 bits are for hash value (n+1), etc. 		 */
 name|reta
 operator|=
-operator|(
 name|reta
-operator|<<
+operator|>>
 literal|8
-operator|)
+expr_stmt|;
+name|reta
+operator|=
+name|reta
 operator||
+operator|(
+operator|(
+operator|(
+name|uint32_t
+operator|)
 name|queue_id
+operator|)
+operator|<<
+literal|24
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -18760,6 +18771,7 @@ operator|)
 operator|==
 literal|3
 condition|)
+block|{
 name|IXGBE_WRITE_REG
 argument_list|(
 name|hw
@@ -18774,6 +18786,11 @@ argument_list|,
 name|reta
 argument_list|)
 expr_stmt|;
+name|reta
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 comment|/* Now fill our hash function seeds */
 for|for
