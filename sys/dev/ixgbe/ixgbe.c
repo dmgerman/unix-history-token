@@ -1976,7 +1976,7 @@ name|ixgbe_txd
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of receive descriptors per queue"
+literal|"Number of transmit descriptors per queue"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
