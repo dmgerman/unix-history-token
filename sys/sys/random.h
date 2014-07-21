@@ -81,6 +81,8 @@ name|RANDOM_PURE_NEHEMIAH
 block|,
 name|RANDOM_PURE_RNDTEST
 block|,
+name|RANDOM_PURE_VIRTIO
+block|,
 name|ENTROPYSOURCE
 block|}
 enum|;
