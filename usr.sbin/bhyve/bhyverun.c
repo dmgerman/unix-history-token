@@ -1282,28 +1282,6 @@ operator|(
 name|VMEXIT_ABORT
 operator|)
 return|;
-comment|/* Special case of guest reset */
-if|if
-condition|(
-name|out
-operator|&&
-name|port
-operator|==
-literal|0x64
-operator|&&
-operator|(
-name|uint8_t
-operator|)
-name|eax
-operator|==
-literal|0xFE
-condition|)
-return|return
-operator|(
-name|vmexit_catch_reset
-argument_list|()
-operator|)
-return|;
 comment|/* Extra-special case of host notifications */
 if|if
 condition|(
