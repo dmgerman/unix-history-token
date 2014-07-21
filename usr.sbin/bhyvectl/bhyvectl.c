@@ -306,6 +306,8 @@ literal|"       [--get-highmem]\n"
 literal|"       [--get-gpa-pmap]\n"
 literal|"       [--assert-lapic-lvt=<pin>]\n"
 literal|"       [--inject-nmi]\n"
+literal|"       [--force-reset]\n"
+literal|"       [--force-poweroff]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -339,6 +341,15 @@ name|int
 name|inject_nmi
 decl_stmt|,
 name|assert_lapic_lvt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|force_reset
+decl_stmt|,
+name|force_poweroff
 decl_stmt|;
 end_decl_stmt
 
@@ -3100,6 +3111,28 @@ name|NO_ARG
 block|,
 operator|&
 name|inject_nmi
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"force-reset"
+block|,
+name|NO_ARG
+block|,
+operator|&
+name|force_reset
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"force-poweroff"
+block|,
+name|NO_ARG
+block|,
+operator|&
+name|force_poweroff
 block|,
 literal|1
 block|}
@@ -8866,6 +8899,38 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|force_reset
+condition|)
+name|error
+operator|=
+name|vm_suspend
+argument_list|(
+name|ctx
+argument_list|,
+name|VM_SUSPEND_RESET
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|force_poweroff
+condition|)
+name|error
+operator|=
+name|vm_suspend
+argument_list|(
+name|ctx
+argument_list|,
+name|VM_SUSPEND_POWEROFF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error

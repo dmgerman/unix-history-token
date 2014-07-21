@@ -430,6 +430,18 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_suspend
+block|{
+name|enum
+name|vm_suspend_how
+name|how
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -449,6 +461,10 @@ block|,
 name|IOCNUM_GET_CAPABILITY
 init|=
 literal|3
+block|,
+name|IOCNUM_SUSPEND
+init|=
+literal|4
 block|,
 comment|/* memory apis */
 name|IOCNUM_MAP_MEMORY
@@ -582,6 +598,14 @@ directive|define
 name|VM_RUN
 define|\
 value|_IOWR('v', IOCNUM_RUN, struct vm_run)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_SUSPEND
+define|\
+value|_IOW('v', IOCNUM_SUSPEND, struct vm_suspend)
 end_define
 
 begin_define

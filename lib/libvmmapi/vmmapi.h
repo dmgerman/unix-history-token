@@ -337,6 +337,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vm_suspend
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|,
+name|enum
+name|vm_suspend_how
+name|how
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vm_apicid2vcpu
 parameter_list|(
 name|struct
