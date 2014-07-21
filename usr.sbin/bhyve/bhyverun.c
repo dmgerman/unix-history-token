@@ -223,17 +223,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VMEXIT_SWITCH
-value|0
-end_define
-
-begin_comment
-comment|/* force vcpu switch in mux mode */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VMEXIT_CONTINUE
 value|1
 end_define
@@ -547,6 +536,7 @@ literal|"       -a: local apic is in xAPIC mode (deprecated)\n"
 literal|"       -A: create an ACPI table\n"
 literal|"       -g: gdb port\n"
 literal|"       -c: # cpus (default 1)\n"
+literal|"       -C: include guest memory in core file\n"
 literal|"       -p: pin 'vcpu' to 'hostcpu'\n"
 literal|"       -H: vmexit from the guest on hlt\n"
 literal|"       -P: vmexit from the guest on pause\n"
@@ -1102,22 +1092,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|vmexit_catch_inout
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|VMEXIT_ABORT
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|vmexit_handle_notify
 parameter_list|(
 name|struct
@@ -1401,8 +1375,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|vmexit_catch_inout
-argument_list|()
+name|VMEXIT_ABORT
 operator|)
 return|;
 block|}
@@ -2661,6 +2634,12 @@ operator|.
 name|inst_length
 expr_stmt|;
 break|break;
+case|case
+name|VMEXIT_ABORT
+case|:
+name|abort
+argument_list|()
+expr_stmt|;
 default|default:
 name|exit
 argument_list|(
@@ -2969,6 +2948,8 @@ decl_stmt|,
 name|bvmcons
 decl_stmt|;
 name|int
+name|dump_guest_memory
+decl_stmt|,
 name|max_vcpus
 decl_stmt|,
 name|mptgen
@@ -2985,6 +2966,10 @@ name|size_t
 name|memsize
 decl_stmt|;
 name|bvmcons
+operator|=
+literal|0
+expr_stmt|;
+name|dump_guest_memory
 operator|=
 literal|0
 expr_stmt|;
@@ -3027,7 +3012,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehwxAHIPWYp:g:c:s:m:l:U:"
+literal|"abehwxACHIPWYp:g:c:s:m:l:U:"
 argument_list|)
 operator|)
 operator|!=
@@ -3098,6 +3083,14 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|dump_guest_memory
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3354,6 +3347,17 @@ argument_list|(
 name|ctx
 argument_list|,
 name|BSP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dump_guest_memory
+condition|)
+name|vm_set_memflags
+argument_list|(
+name|ctx
+argument_list|,
+name|VM_MEM_F_INCORE
 argument_list|)
 expr_stmt|;
 name|err

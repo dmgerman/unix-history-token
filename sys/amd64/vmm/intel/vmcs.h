@@ -166,6 +166,9 @@ modifier|*
 name|vmcs
 parameter_list|,
 name|int
+name|running
+parameter_list|,
+name|int
 name|ident
 parameter_list|,
 name|struct
@@ -184,6 +187,9 @@ name|struct
 name|vmcs
 modifier|*
 name|vmcs
+parameter_list|,
+name|int
+name|running
 parameter_list|,
 name|int
 name|ident

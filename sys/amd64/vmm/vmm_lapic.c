@@ -898,13 +898,14 @@ name|gpa
 operator|-
 name|DEFAULT_APIC_BASE
 expr_stmt|;
-comment|/* 	 * Memory mapped local apic accesses must be 4 bytes wide and 	 * aligned on a 16-byte boundary. 	 */
+comment|/* 	 * Memory mapped local apic accesses should be aligned on a 	 * 16-byte boundary.  They are also suggested to be 4 bytes 	 * wide, alas not all OSes follow suggestions. 	 */
+name|off
+operator|&=
+operator|~
+literal|3
+expr_stmt|;
 if|if
 condition|(
-name|size
-operator|!=
-literal|4
-operator|||
 name|off
 operator|&
 literal|0xf
