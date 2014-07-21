@@ -480,7 +480,6 @@ name|m_char
 operator|>=
 name|c
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -490,12 +489,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|TAILQ_INSERT_TAIL
 argument_list|(
 name|ml
@@ -612,7 +605,6 @@ name|mp_normal
 operator|->
 name|m_char
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -624,12 +616,6 @@ operator|->
 name|m_char
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|mp_bold
@@ -1031,7 +1017,6 @@ name|width
 operator|*
 literal|2
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -1041,12 +1026,6 @@ argument_list|,
 name|dwidth
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 comment|/* Move pixel data right to simplify splitting double characters. */
 name|line
 operator|>>=
@@ -1166,11 +1145,6 @@ argument_list|,
 name|wbytes
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 name|line
 operator|>>=
@@ -1369,7 +1343,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -1377,12 +1350,6 @@ argument_list|,
 literal|"Unexpected EOF!\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|ln
 index|[
 name|length
@@ -2810,7 +2777,6 @@ name|val
 operator|>
 literal|128
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -2820,12 +2786,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|height
 operator|=
 name|val
