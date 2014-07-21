@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: arc4random.c,v 1.22 2010/12/22 08:23:42 otto Exp $	*/
+comment|/*	$OpenBSD: arc4random.c,v 1.24 2013/06/11 16:59:50 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -1098,60 +1098,14 @@ condition|)
 return|return
 literal|0
 return|;
-if|#
-directive|if
-operator|(
-name|ULONG_MAX
-operator|>
-literal|0xffffffffUL
-operator|)
+comment|/* 2**32 % x == (2**32 - x) % x */
 name|min
 operator|=
-literal|0x100000000UL
-operator|%
-name|upper_bound
-expr_stmt|;
-else|#
-directive|else
-comment|/* Calculate (2**32 % upper_bound) avoiding 64-bit math */
-if|if
-condition|(
-name|upper_bound
-operator|>
-literal|0x80000000
-condition|)
-name|min
-operator|=
-literal|1
-operator|+
-operator|~
-name|upper_bound
-expr_stmt|;
-comment|/* 2**32 - upper_bound */
-else|else
-block|{
-comment|/* (2**32 - (x * 2)) % x == 2**32 % x when x<= 2**31 */
-name|min
-operator|=
-operator|(
-operator|(
-literal|0xffffffff
 operator|-
-operator|(
 name|upper_bound
-operator|*
-literal|2
-operator|)
-operator|)
-operator|+
-literal|1
-operator|)
 operator|%
 name|upper_bound
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * This could theoretically loop forever but each retry has 	 * p> 0.5 (worst case, usually far better) of selecting a 	 * number inside the range we need, so it should rarely need 	 * to re-roll. 	 */
 for|for
 control|(
