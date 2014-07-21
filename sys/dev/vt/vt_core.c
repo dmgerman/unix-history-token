@@ -3025,10 +3025,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|vd
-operator|->
-name|vd_keyboard
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -8775,10 +8772,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|vd
-operator|->
-name|vd_keyboard
 argument_list|,
 name|vt_kbdevent
 argument_list|,
@@ -8810,10 +8804,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|vd
-operator|->
-name|vd_keyboard
 argument_list|)
 expr_stmt|;
 block|}
@@ -8933,10 +8924,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|vd
-operator|->
-name|vd_keyboard
 argument_list|)
 expr_stmt|;
 if|if
