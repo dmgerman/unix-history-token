@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tsearch.c,v 1.3 1999/09/16 11:45:37 lukem Exp $	*/
+comment|/*	$NetBSD: tsearch.c,v 1.7 2012/06/25 22:32:45 abs Exp $	*/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|__RCSID("$NetBSD: tsearch.c,v 1.3 1999/09/16 11:45:37 lukem Exp $");
+unit|__RCSID("$NetBSD: tsearch.c,v 1.7 2012/06/25 22:32:45 abs Exp $");
 endif|#
 directive|endif
 end_endif
@@ -79,41 +79,21 @@ begin_comment
 comment|/* find or insert datum into search tree */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 modifier|*
 name|tsearch
-argument_list|(
-name|vkey
-argument_list|,
-name|vrootp
-argument_list|,
-name|compar
-argument_list|)
-decl|const
+parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|vkey
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* key to be located */
-end_comment
-
-begin_decl_stmt
+parameter_list|,
 name|void
 modifier|*
 modifier|*
 name|vrootp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* address of tree root */
-end_comment
-
-begin_function_decl
+parameter_list|,
 name|int
 function_decl|(
 modifier|*
@@ -128,10 +108,7 @@ specifier|const
 name|void
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
 block|{
 name|node_t
 modifier|*
@@ -251,16 +228,17 @@ operator|=
 name|q
 expr_stmt|;
 comment|/* link new node to old */
-comment|/* LINTED const castaway ok */
 name|q
 operator|->
 name|key
 operator|=
-operator|(
+name|__DECONST
+argument_list|(
 name|void
 operator|*
-operator|)
+argument_list|,
 name|vkey
+argument_list|)
 expr_stmt|;
 comment|/* initialize new node */
 name|q
@@ -278,7 +256,7 @@ return|return
 name|q
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
