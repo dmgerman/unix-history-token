@@ -373,9 +373,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|errx
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|1
+name|stderr
 argument_list|,
 literal|"usage: vtfontcvt [-w width] [-h height] [-v] normal.bdf [bold.bdf] out.fnt\n"
 argument_list|)
