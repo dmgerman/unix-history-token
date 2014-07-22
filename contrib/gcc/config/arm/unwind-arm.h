@@ -705,6 +705,11 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 comment|/* Pc-relative indirect.  */
 name|tmp
 operator|+=
