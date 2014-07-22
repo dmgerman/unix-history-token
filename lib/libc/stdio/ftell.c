@@ -266,6 +266,19 @@ block|}
 comment|/* 	 * Find offset of underlying I/O object, then 	 * adjust for buffered bytes. 	 */
 if|if
 condition|(
+name|__sflush
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+comment|/* may adjust seek offset on append stream */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
 name|fp
 operator|->
 name|_flags
