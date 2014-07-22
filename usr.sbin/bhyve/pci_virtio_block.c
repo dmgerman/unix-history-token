@@ -137,29 +137,6 @@ directive|include
 file|"virtio.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|min
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)< (b) ? (a) : (b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -845,7 +822,7 @@ name|sc
 operator|->
 name|vbsc_ident
 argument_list|,
-name|min
+name|MIN
 argument_list|(
 name|iov
 index|[

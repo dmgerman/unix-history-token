@@ -48,7 +48,7 @@ end_typedef
 
 begin_function_decl
 name|int
-name|emulate_ioport
+name|vm_handle_inout
 parameter_list|(
 name|struct
 name|vm
@@ -61,7 +61,11 @@ parameter_list|,
 name|struct
 name|vm_exit
 modifier|*
-name|vmexit
+name|vme
+parameter_list|,
+name|bool
+modifier|*
+name|retu
 parameter_list|)
 function_decl|;
 end_function_decl

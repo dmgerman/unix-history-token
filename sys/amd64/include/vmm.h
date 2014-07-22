@@ -119,6 +119,12 @@ end_struct_decl
 
 begin_enum_decl
 enum_decl|enum
+name|vm_reg_name
+enum_decl|;
+end_enum_decl
+
+begin_enum_decl
+enum_decl|enum
 name|x2apic_state
 enum_decl|;
 end_enum_decl
@@ -1598,6 +1604,38 @@ begin_comment
 comment|/* undefined instruction fault */
 end_comment
 
+begin_function_decl
+name|void
+name|vm_inject_pf
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
+parameter_list|,
+name|int
+name|error_code
+parameter_list|,
+name|uint64_t
+name|cr2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|enum
+name|vm_reg_name
+name|vm_segment_name
+parameter_list|(
+name|int
+name|seg_encoding
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -1606,12 +1644,6 @@ end_endif
 begin_comment
 comment|/* KERNEL */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/vmm_instruction_emul.h>
-end_include
 
 begin_define
 define|#
@@ -1698,6 +1730,8 @@ name|VM_REG_GUEST_GDTR
 block|,
 name|VM_REG_GUEST_EFER
 block|,
+name|VM_REG_GUEST_CR2
+block|,
 name|VM_REG_LAST
 block|}
 enum|;
@@ -1771,6 +1805,243 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|SEG_DESC_TYPE
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x001f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEG_DESC_PRESENT
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x0080)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEG_DESC_DEF32
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x4000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEG_DESC_GRANULARITY
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x8000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEG_DESC_UNUSABLE
+parameter_list|(
+name|desc
+parameter_list|)
+value|((desc)->access& 0x10000)
+end_define
+
+begin_enum
+enum|enum
+name|vm_cpu_mode
+block|{
+name|CPU_MODE_COMPATIBILITY
+block|,
+comment|/* IA-32E mode (CS.L = 0) */
+name|CPU_MODE_64BIT
+block|,
+comment|/* IA-32E mode (CS.L = 1) */
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|vm_paging_mode
+block|{
+name|PAGING_MODE_FLAT
+block|,
+name|PAGING_MODE_32
+block|,
+name|PAGING_MODE_PAE
+block|,
+name|PAGING_MODE_64
+block|, }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|vm_guest_paging
+block|{
+name|uint64_t
+name|cr3
+decl_stmt|;
+name|int
+name|cpl
+decl_stmt|;
+name|enum
+name|vm_cpu_mode
+name|cpu_mode
+decl_stmt|;
+name|enum
+name|vm_paging_mode
+name|paging_mode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The data structures 'vie' and 'vie_op' are meant to be opaque to the  * consumers of instruction decoding. The only reason why their contents  * need to be exposed is because they are part of the 'vm_exit' structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vie_op
+block|{
+name|uint8_t
+name|op_byte
+decl_stmt|;
+comment|/* actual opcode byte */
+name|uint8_t
+name|op_type
+decl_stmt|;
+comment|/* type of operation (e.g. MOV) */
+name|uint16_t
+name|op_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VIE_INST_SIZE
+value|15
+end_define
+
+begin_struct
+struct|struct
+name|vie
+block|{
+name|uint8_t
+name|inst
+index|[
+name|VIE_INST_SIZE
+index|]
+decl_stmt|;
+comment|/* instruction bytes */
+name|uint8_t
+name|num_valid
+decl_stmt|;
+comment|/* size of the instruction */
+name|uint8_t
+name|num_processed
+decl_stmt|;
+name|uint8_t
+name|rex_w
+range|:
+literal|1
+decl_stmt|,
+comment|/* REX prefix */
+name|rex_r
+range|:
+literal|1
+decl_stmt|,
+name|rex_x
+range|:
+literal|1
+decl_stmt|,
+name|rex_b
+range|:
+literal|1
+decl_stmt|,
+name|rex_present
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|mod
+range|:
+literal|2
+decl_stmt|,
+comment|/* ModRM byte */
+name|reg
+range|:
+literal|4
+decl_stmt|,
+name|rm
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|ss
+range|:
+literal|2
+decl_stmt|,
+comment|/* SIB byte */
+name|index
+range|:
+literal|4
+decl_stmt|,
+name|base
+range|:
+literal|4
+decl_stmt|;
+name|uint8_t
+name|disp_bytes
+decl_stmt|;
+name|uint8_t
+name|imm_bytes
+decl_stmt|;
+name|uint8_t
+name|scale
+decl_stmt|;
+name|int
+name|base_register
+decl_stmt|;
+comment|/* VM_REG_GUEST_xyz */
+name|int
+name|index_register
+decl_stmt|;
+comment|/* VM_REG_GUEST_xyz */
+name|int64_t
+name|displacement
+decl_stmt|;
+comment|/* optional addr displacement */
+name|int64_t
+name|immediate
+decl_stmt|;
+comment|/* optional immediate operand */
+name|uint8_t
+name|decoded
+decl_stmt|;
+comment|/* set to 1 if successfully decoded */
+name|struct
+name|vie_op
+name|op
+decl_stmt|;
+comment|/* opcode description */
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 name|vm_exitcode
@@ -1806,6 +2077,8 @@ name|VM_EXITCODE_IOAPIC_EOI
 block|,
 name|VM_EXITCODE_SUSPENDED
 block|,
+name|VM_EXITCODE_INOUT_STR
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
@@ -1813,22 +2086,7 @@ end_enum
 
 begin_struct
 struct|struct
-name|vm_exit
-block|{
-name|enum
-name|vm_exitcode
-name|exitcode
-decl_stmt|;
-name|int
-name|inst_length
-decl_stmt|;
-comment|/* 0 means unknown */
-name|uint64_t
-name|rip
-decl_stmt|;
-union|union
-block|{
-struct|struct
+name|vm_inout
 block|{
 name|uint16_t
 name|bytes
@@ -1841,7 +2099,6 @@ name|in
 range|:
 literal|1
 decl_stmt|;
-comment|/* out is 0, in is 1 */
 name|uint16_t
 name|string
 range|:
@@ -1860,8 +2117,75 @@ name|eax
 decl_stmt|;
 comment|/* valid for out */
 block|}
-name|inout
 struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_inout_str
+block|{
+name|struct
+name|vm_inout
+name|inout
+decl_stmt|;
+comment|/* must be the first element */
+name|struct
+name|vm_guest_paging
+name|paging
+decl_stmt|;
+name|uint64_t
+name|rflags
+decl_stmt|;
+name|uint64_t
+name|cr0
+decl_stmt|;
+name|uint64_t
+name|index
+decl_stmt|;
+name|uint64_t
+name|count
+decl_stmt|;
+comment|/* rep=1 (%rcx), rep=0 (1) */
+name|int
+name|addrsize
+decl_stmt|;
+name|enum
+name|vm_reg_name
+name|seg_name
+decl_stmt|;
+name|struct
+name|seg_desc
+name|seg_desc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_exit
+block|{
+name|enum
+name|vm_exitcode
+name|exitcode
+decl_stmt|;
+name|int
+name|inst_length
+decl_stmt|;
+comment|/* 0 means unknown */
+name|uint64_t
+name|rip
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|vm_inout
+name|inout
+decl_stmt|;
+name|struct
+name|vm_inout_str
+name|inout_str
+decl_stmt|;
 struct|struct
 block|{
 name|uint64_t
@@ -1881,16 +2205,9 @@ decl_stmt|;
 name|uint64_t
 name|gla
 decl_stmt|;
-name|uint64_t
-name|cr3
-decl_stmt|;
-name|enum
-name|vie_cpu_mode
-name|cpu_mode
-decl_stmt|;
-name|enum
-name|vie_paging_mode
-name|paging_mode
+name|struct
+name|vm_guest_paging
+name|paging
 decl_stmt|;
 name|struct
 name|vie

@@ -27,6 +27,12 @@ name|vmctx
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vm_exit
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Handler return values. */
 end_comment
@@ -48,15 +54,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|INOUT_RESET
+name|INOUT_RESTART
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|INOUT_POWEROFF
+name|INOUT_RESET
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|INOUT_POWEROFF
+value|3
 end_define
 
 begin_typedef
@@ -197,18 +210,10 @@ parameter_list|,
 name|int
 name|vcpu
 parameter_list|,
-name|int
-name|in
-parameter_list|,
-name|int
-name|port
-parameter_list|,
-name|int
-name|bytes
-parameter_list|,
-name|uint32_t
+name|struct
+name|vm_exit
 modifier|*
-name|eax
+name|vmexit
 parameter_list|,
 name|int
 name|strict
