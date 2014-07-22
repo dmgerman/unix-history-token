@@ -385,6 +385,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"fsl,imx6q-i2c"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"fsl,imx-i2c"
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|i2c_softc
@@ -1060,13 +1089,16 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|ofw_bus_is_compatible
+name|ofw_bus_search_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"fsl,imx-i2c"
+name|compat_data
 argument_list|)
+operator|->
+name|ocd_data
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -1177,7 +1209,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"I2C bus controller"
+literal|"Freescale i.MX I2C bus controller"
 argument_list|)
 expr_stmt|;
 return|return
