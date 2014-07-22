@@ -1478,6 +1478,18 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
+comment|/// constructSubprogramArguments - Construct function argument DIEs.
+name|void
+name|constructSubprogramArguments
+parameter_list|(
+name|DIE
+modifier|&
+name|Buffer
+parameter_list|,
+name|DIArray
+name|Args
+parameter_list|)
+function_decl|;
 comment|/// constructTypeDIE - Construct basic type die from DIBasicType.
 name|void
 name|constructTypeDIE

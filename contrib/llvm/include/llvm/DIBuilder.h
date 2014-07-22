@@ -1309,7 +1309,7 @@ name|DIType
 name|T
 parameter_list|)
 function_decl|;
-comment|/// createUnspecifiedParameter - Create unspeicified type descriptor
+comment|/// createUnspecifiedParameter - Create unspecified type descriptor
 comment|/// for a subroutine type.
 name|DIDescriptor
 name|createUnspecifiedParameter
