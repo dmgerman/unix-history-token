@@ -8547,7 +8547,7 @@ if|if
 condition|(
 name|sd
 operator|->
-name|nimbuf
+name|nmbuf
 operator|*
 name|MSIZE
 operator|<
@@ -8578,7 +8578,7 @@ name|cl
 operator|+
 name|sd
 operator|->
-name|nimbuf
+name|nmbuf
 operator|*
 name|MSIZE
 operator|)
@@ -8639,7 +8639,7 @@ argument_list|)
 expr_stmt|;
 name|sd
 operator|->
-name|nimbuf
+name|nmbuf
 operator|++
 expr_stmt|;
 block|}
@@ -8715,7 +8715,7 @@ argument_list|)
 expr_stmt|;
 name|sd
 operator|->
-name|nembuf
+name|nmbuf
 operator|++
 expr_stmt|;
 block|}
@@ -18697,11 +18697,7 @@ if|if
 condition|(
 name|sd
 operator|->
-name|nimbuf
-operator|+
-name|sd
-operator|->
-name|nembuf
+name|nmbuf
 operator|==
 literal|0
 condition|)
@@ -18990,13 +18986,7 @@ expr_stmt|;
 block|}
 name|sd
 operator|->
-name|nimbuf
-operator|=
-literal|0
-expr_stmt|;
-name|sd
-operator|->
-name|nembuf
+name|nmbuf
 operator|=
 literal|0
 expr_stmt|;
@@ -19360,11 +19350,7 @@ if|if
 condition|(
 name|sd
 operator|->
-name|nimbuf
-operator|+
-name|sd
-operator|->
-name|nembuf
+name|nmbuf
 operator|==
 literal|0
 operator|||

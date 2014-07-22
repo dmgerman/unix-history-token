@@ -1171,14 +1171,10 @@ block|{
 name|caddr_t
 name|cl
 decl_stmt|;
-name|uint8_t
-name|nimbuf
+name|uint16_t
+name|nmbuf
 decl_stmt|;
-comment|/* # of inline mbufs with ref on the cluster */
-name|uint8_t
-name|nembuf
-decl_stmt|;
-comment|/* # of allocated mbufs with ref */
+comment|/* # of driver originated mbufs with ref on cluster */
 name|struct
 name|cluster_layout
 name|cll
