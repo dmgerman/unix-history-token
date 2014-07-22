@@ -194,6 +194,21 @@ end_struct
 
 begin_struct
 struct|struct
+name|vm_isa_irq_trigger
+block|{
+name|int
+name|atpic_irq
+decl_stmt|;
+name|enum
+name|vm_intr_trigger
+name|trigger
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vm_capability
 block|{
 name|int
@@ -588,6 +603,10 @@ block|,
 name|IOCNUM_ISA_PULSE_IRQ
 init|=
 literal|82
+block|,
+name|IOCNUM_ISA_SET_IRQ_TRIGGER
+init|=
+literal|83
 block|, }
 enum|;
 end_enum
@@ -742,6 +761,14 @@ directive|define
 name|VM_ISA_PULSE_IRQ
 define|\
 value|_IOW('v', IOCNUM_ISA_PULSE_IRQ, struct vm_isa_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ISA_SET_IRQ_TRIGGER
+define|\
+value|_IOW('v', IOCNUM_ISA_SET_IRQ_TRIGGER, struct vm_isa_irq_trigger)
 end_define
 
 begin_define

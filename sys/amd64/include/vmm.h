@@ -1739,6 +1739,17 @@ block|}
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|vm_intr_trigger
+block|{
+name|EDGE_TRIGGER
+block|,
+name|LEVEL_TRIGGER
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/*  * The 'access' field has the format specified in Table 21-2 of the Intel  * Architecture Manual vol 3b.  *  * XXX The contents of the 'access' field are architecturally defined except  * bit 16 - Segment Unusable.  */
 end_comment
