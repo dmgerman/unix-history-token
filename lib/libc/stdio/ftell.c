@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -396,7 +402,11 @@ name|fp
 operator|->
 name|_flags
 operator|&
+operator|(
 name|__SAPP
+operator||
+name|O_APPEND
+operator|)
 condition|)
 block|{
 name|pos
