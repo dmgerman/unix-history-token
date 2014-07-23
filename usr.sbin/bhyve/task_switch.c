@@ -808,7 +808,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|vm_gla2gpa
+name|vm_copy_setup
 argument_list|(
 name|ctx
 argument_list|,
@@ -2473,23 +2473,12 @@ operator|&
 name|reserved
 condition|)
 block|{
-name|error
-operator|=
-name|vm_inject_exception2
+name|vm_inject_gp
 argument_list|(
 name|ctx
 argument_list|,
 name|vcpu
 argument_list|,
-name|IDT_GP
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|error
-operator|==
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3332,24 +3321,13 @@ name|gla
 argument_list|)
 condition|)
 block|{
-name|error
-operator|=
-name|vm_inject_exception2
+name|vm_inject_ac
 argument_list|(
 name|ctx
 argument_list|,
 name|vcpu
 argument_list|,
-name|IDT_AC
-argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|error
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3360,7 +3338,7 @@ return|;
 block|}
 name|error
 operator|=
-name|vm_gla2gpa
+name|vm_copy_setup
 argument_list|(
 name|ctx
 argument_list|,
@@ -3871,7 +3849,7 @@ block|}
 comment|/* Fetch the new TSS */
 name|error
 operator|=
-name|vm_gla2gpa
+name|vm_copy_setup
 argument_list|(
 name|ctx
 argument_list|,
@@ -4093,7 +4071,7 @@ return|;
 comment|/* Get the old TSS */
 name|error
 operator|=
-name|vm_gla2gpa
+name|vm_copy_setup
 argument_list|(
 name|ctx
 argument_list|,

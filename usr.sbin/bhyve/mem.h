@@ -146,6 +146,11 @@ name|struct
 name|vie
 modifier|*
 name|vie
+parameter_list|,
+name|struct
+name|vm_guest_paging
+modifier|*
+name|paging
 parameter_list|)
 function_decl|;
 end_function_decl
