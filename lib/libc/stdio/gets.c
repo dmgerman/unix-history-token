@@ -125,6 +125,7 @@ name|int
 name|warned
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 name|w
 index|[]
