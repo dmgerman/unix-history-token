@@ -4178,6 +4178,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|t4_sge_modunload
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|t4_sge_extfree_refs
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|t4_init_sge_cpl_handlers
 parameter_list|(
 name|struct
