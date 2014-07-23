@@ -894,13 +894,6 @@ name|bool
 name|PrintValueObject
 argument_list|()
 expr_stmt|;
-name|bool
-name|PrintChildrenOneLiner
-parameter_list|(
-name|bool
-name|hide_names
-parameter_list|)
-function_decl|;
 name|protected
 label|:
 comment|// only this class (and subclasses, if any) should ever be concerned with
@@ -1118,6 +1111,13 @@ name|bool
 name|summary_printed
 parameter_list|)
 function_decl|;
+name|bool
+name|PrintChildrenOneLiner
+parameter_list|(
+name|bool
+name|hide_names
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|ValueObject
@@ -1188,6 +1188,10 @@ operator|::
 name|string
 name|m_error
 expr_stmt|;
+name|friend
+name|class
+name|StringSummaryFormat
+decl_stmt|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ValueObjectPrinter

@@ -207,6 +207,16 @@ return|return
 name|true
 return|;
 block|}
+comment|// The SysV x86_64 ABI requires that stack frames be 16 byte aligned.
+comment|// When there is a trap handler on the stack, e.g. _sigtramp in userland
+comment|// code, we've seen that the stack pointer is often not aligned properly
+comment|// before the handler is invoked.  This means that lldb will stop the unwind
+comment|// early -- before the function which caused the trap.
+comment|//
+comment|// To work around this, we relax that alignment to be just word-size (8-bytes).
+comment|// Whitelisting the trap handlers for user space would be easy (_sigtramp) but
+comment|// in other environments there can be a large number of different functions
+comment|// involved in async traps.
 name|virtual
 name|bool
 name|CallFrameAddressIsValid
@@ -214,13 +224,13 @@ argument_list|(
 argument|lldb::addr_t cfa
 argument_list|)
 block|{
-comment|// Make sure the stack call frame addresses are 16 byte aligned
+comment|// Make sure the stack call frame addresses are 8 byte aligned
 if|if
 condition|(
 name|cfa
 operator|&
 operator|(
-literal|16ull
+literal|8ull
 operator|-
 literal|1ull
 operator|)
@@ -228,7 +238,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|// Not 16 byte aligned
+comment|// Not 8 byte aligned
 if|if
 condition|(
 name|cfa

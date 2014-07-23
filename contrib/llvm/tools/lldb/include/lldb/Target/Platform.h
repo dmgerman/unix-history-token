@@ -629,7 +629,7 @@ comment|///     An error object.
 comment|//------------------------------------------------------------------
 name|virtual
 name|Error
-name|GetFile
+name|GetFileWithUUID
 argument_list|(
 specifier|const
 name|FileSpec
@@ -1695,6 +1695,38 @@ return|return
 name|LLDB_INVALID_QUEUE_ID
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Provide a list of trap handler function names for this platform
+comment|///
+comment|/// The unwinder needs to treat trap handlers specially -- the stack
+comment|/// frame may not be aligned correctly for a trap handler (the kernel
+comment|/// often won't perturb the stack pointer, or won't re-align it properly,
+comment|/// in the process of calling the handler) and the frame above the handler
+comment|/// needs to be treated by the unwinder's "frame 0" rules instead of its
+comment|/// "middle of the stack frame" rules.
+comment|///
+comment|/// In a user process debugging scenario, the list of trap handlers is
+comment|/// typically just "_sigtramp".
+comment|///
+comment|/// The Platform base class provides the m_trap_handlers ivar but it does
+comment|/// not populate it.  Subclasses should add the names of the asynchronous
+comment|/// signal handler routines as needed.  For most Unix platforms, add _sigtramp.
+comment|///
+comment|/// @return
+comment|///     A list of symbol names.  The list may be empty.
+comment|//------------------------------------------------------------------
+name|virtual
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+operator|&
+name|GetTrapHandlerSymbolNames
+argument_list|()
+block|;
 name|protected
 operator|:
 name|bool
@@ -1803,6 +1835,37 @@ operator|::
 name|string
 name|m_local_cache_directory
 expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+name|m_trap_handlers
+expr_stmt|;
+name|bool
+name|m_calculated_trap_handlers
+decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Ask the Platform subclass to fill in the list of trap handler names
+comment|///
+comment|/// For most Unix user process environments, this will be a single
+comment|/// function name, _sigtramp.  More specialized environments may have
+comment|/// additional handler names.  The unwinder code needs to know when a
+comment|/// trap handler is on the stack because the unwind rules for the frame
+comment|/// that caused the trap are different.
+comment|///
+comment|/// The base class Platform ivar m_trap_handlers should be updated by
+comment|/// the Platform subclass when this method is called.  If there are no
+comment|/// predefined trap handlers, this method may be a no-op.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|CalculateTrapHandlerSymbolNames
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 specifier|const
 name|char
 modifier|*

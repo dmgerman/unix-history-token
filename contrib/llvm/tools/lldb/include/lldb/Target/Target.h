@@ -182,7 +182,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Target/SectionLoadList.h"
+file|"lldb/Target/SectionLoadHistory.h"
 end_include
 
 begin_decl_stmt
@@ -442,6 +442,11 @@ name|GetUseFastStepping
 argument_list|()
 specifier|const
 block|;
+name|bool
+name|GetDisplayExpressionsInCrashlogs
+argument_list|()
+specifier|const
+block|;
 name|LoadScriptFromSymFile
 name|GetLoadScriptFromSymbolFile
 argument_list|()
@@ -458,7 +463,23 @@ name|MemoryModuleLoadLevel
 name|GetMemoryModuleLoadLevel
 argument_list|()
 specifier|const
-block|;  }
+block|;
+name|bool
+name|GetUserSpecifiedTrapHandlerNames
+argument_list|(
+argument|Args&args
+argument_list|)
+specifier|const
+block|;
+name|void
+name|SetUserSpecifiedTrapHandlerNames
+argument_list|(
+specifier|const
+name|Args
+operator|&
+name|args
+argument_list|)
+block|; }
 decl_stmt|;
 typedef|typedef
 name|std
@@ -1261,6 +1282,18 @@ name|void
 name|Destroy
 parameter_list|()
 function_decl|;
+name|Error
+name|Launch
+parameter_list|(
+name|Listener
+modifier|&
+name|listener
+parameter_list|,
+name|ProcessLaunchInfo
+modifier|&
+name|launch_info
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|// This part handles the breakpoints.
 comment|//------------------------------------------------------------------
@@ -1484,6 +1517,8 @@ argument_list|,
 argument|bool internal
 argument_list|,
 argument|bool request_hardware
+argument_list|,
+argument|bool resolve_indirect_symbols
 argument_list|)
 expr_stmt|;
 comment|// Use this to create a watchpoint:
@@ -2255,20 +2290,17 @@ name|GetSectionLoadList
 parameter_list|()
 block|{
 return|return
-name|m_section_load_list
-return|;
-block|}
-specifier|const
-name|SectionLoadList
-operator|&
-name|GetSectionLoadList
+name|m_section_load_history
+operator|.
+name|GetCurrentSectionLoadList
 argument_list|()
-specifier|const
-block|{
-return|return
-name|m_section_load_list
 return|;
 block|}
+comment|//    const SectionLoadList&
+comment|//    GetSectionLoadList() const
+comment|//    {
+comment|//        return const_cast<SectionLoadHistory *>(&m_section_load_history)->GetCurrentSectionLoadList();
+comment|//    }
 specifier|static
 name|Target
 modifier|*
@@ -2356,6 +2388,78 @@ name|ProcessLaunchInfo
 modifier|*
 name|launch_info
 parameter_list|)
+function_decl|;
+name|bool
+name|ResolveLoadAddress
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|load_addr
+argument_list|,
+name|Address
+operator|&
+name|so_addr
+argument_list|,
+name|uint32_t
+name|stop_id
+operator|=
+name|SectionLoadHistory
+operator|::
+name|eStopIDNow
+argument_list|)
+decl_stmt|;
+name|bool
+name|SetSectionLoadAddress
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SectionSP
+operator|&
+name|section
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+name|load_addr
+argument_list|,
+name|bool
+name|warn_multiple
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+name|bool
+name|SetSectionUnloaded
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SectionSP
+operator|&
+name|section_sp
+argument_list|)
+decl_stmt|;
+name|bool
+name|SetSectionUnloaded
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|SectionSP
+operator|&
+name|section_sp
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+name|load_addr
+argument_list|)
+decl_stmt|;
+name|void
+name|ClearAllLoadedSections
+parameter_list|()
 function_decl|;
 comment|// Since expressions results can persist beyond the lifetime of a process,
 comment|// and the const expression results are available after a process is gone,
@@ -2562,7 +2666,7 @@ block|;
 name|bool
 name|m_active
 block|;
-comment|// Use AddStopHook to make a new empty stop hook.  The GetCommandPointer and fill it with commands,
+comment|// Use CreateStopHook to make a new empty stop hook. The GetCommandPointer and fill it with commands,
 comment|// and SetSpecifier to set the specifier shared pointer (can be null, that will match anything.)
 name|StopHook
 argument_list|(
@@ -2587,16 +2691,10 @@ name|StopHookSP
 expr_stmt|;
 comment|// Add an empty stop hook to the Target's stop hook list, and returns a shared pointer to it in new_hook.
 comment|// Returns the id of the new hook.
-name|lldb
-operator|::
-name|user_id_t
-name|AddStopHook
-argument_list|(
 name|StopHookSP
-operator|&
-name|new_hook
-argument_list|)
-expr_stmt|;
+name|CreateStopHook
+parameter_list|()
+function_decl|;
 name|void
 name|RunStopHooks
 parameter_list|()
@@ -2838,8 +2936,8 @@ name|ModuleList
 name|m_images
 decl_stmt|;
 comment|///< The list of images for this process (shared libraries and anything dynamically loaded).
-name|SectionLoadList
-name|m_section_load_list
+name|SectionLoadHistory
+name|m_section_load_history
 decl_stmt|;
 name|BreakpointList
 name|m_breakpoint_list
@@ -2868,9 +2966,6 @@ operator|::
 name|ProcessSP
 name|m_process_sp
 expr_stmt|;
-name|bool
-name|m_valid
-decl_stmt|;
 name|lldb
 operator|::
 name|SearchFilterSP
@@ -2937,10 +3032,10 @@ name|user_id_t
 name|m_stop_hook_next_id
 expr_stmt|;
 name|bool
-name|m_suppress_stop_hooks
+name|m_valid
 decl_stmt|;
 name|bool
-name|m_suppress_synthetic_value
+name|m_suppress_stop_hooks
 decl_stmt|;
 specifier|static
 name|void

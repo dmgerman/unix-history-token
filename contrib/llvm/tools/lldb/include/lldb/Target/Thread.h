@@ -141,6 +141,12 @@ operator|*
 name|GetSymbolsToAvoidRegexp
 argument_list|()
 block|;
+name|FileSpecList
+operator|&
+name|GetLibrariesToAvoid
+argument_list|()
+specifier|const
+block|;
 name|bool
 name|GetTraceEnabledState
 argument_list|()
@@ -1060,6 +1066,70 @@ parameter_list|,
 name|uint32_t
 name|frame_idx
 parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Default implementation for stepping into.
+comment|///
+comment|/// This function is designed to be used by commands where the
+comment|/// process is publicly stopped.
+comment|///
+comment|/// @param[in] source_step
+comment|///     If true and the frame has debug info, then do a source level
+comment|///     step in, else do a single instruction step in.
+comment|///
+comment|/// @param[in] avoid_code_without_debug_info
+comment|///     If \a true, then avoid stepping into code that doesn't have
+comment|///     debug info, else step into any code regardless of wether it
+comment|///     has debug info.
+comment|///
+comment|/// @return
+comment|///     An error that describes anything that went wrong
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|StepIn
+parameter_list|(
+name|bool
+name|source_step
+parameter_list|,
+name|bool
+name|avoid_code_without_debug_info
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Default implementation for stepping over.
+comment|///
+comment|/// This function is designed to be used by commands where the
+comment|/// process is publicly stopped.
+comment|///
+comment|/// @param[in] source_step
+comment|///     If true and the frame has debug info, then do a source level
+comment|///     step over, else do a single instruction step over.
+comment|///
+comment|/// @return
+comment|///     An error that describes anything that went wrong
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|StepOver
+parameter_list|(
+name|bool
+name|source_step
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Default implementation for stepping out.
+comment|///
+comment|/// This function is designed to be used by commands where the
+comment|/// process is publicly stopped.
+comment|///
+comment|/// @return
+comment|///     An error that describes anything that went wrong
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|StepOut
+parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Retrieves the per-thread data area.

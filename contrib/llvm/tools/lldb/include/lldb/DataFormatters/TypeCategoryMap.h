@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/DataFormatters/FormatNavigator.h"
+file|"lldb/DataFormatters/FormattersContainer.h"
 end_include
 
 begin_include
@@ -464,7 +464,7 @@ return|;
 block|}
 name|friend
 name|class
-name|FormatNavigator
+name|FormattersContainer
 operator|<
 name|KeyType
 operator|,

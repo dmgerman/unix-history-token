@@ -138,7 +138,7 @@ operator|*
 name|error_ptr
 argument_list|)
 block|;
-name|size_t
+name|PacketResult
 name|SendPacketAndWaitForResponse
 argument_list|(
 argument|const char *send_payload
@@ -148,7 +148,7 @@ argument_list|,
 argument|bool send_async
 argument_list|)
 block|;
-name|size_t
+name|PacketResult
 name|SendPacketAndWaitForResponse
 argument_list|(
 argument|const char *send_payload
@@ -158,6 +158,38 @@ argument_list|,
 argument|StringExtractorGDBRemote&response
 argument_list|,
 argument|bool send_async
+argument_list|)
+block|;
+comment|// For packets which specify a range of output to be returned,
+comment|// return all of the output via a series of request packets of the form
+comment|//<prefix>0,<size>
+comment|//<prefix><size>,<size>
+comment|//<prefix><size>*2,<size>
+comment|//<prefix><size>*3,<size>
+comment|// ...
+comment|// until a "$l..." packet is received, indicating the end.
+comment|// (size is in hex; this format is used by a standard gdbserver to
+comment|// return the given portion of the output specified by<prefix>;
+comment|// for example, "qXfer:libraries-svr4:read::fff,1000" means
+comment|// "return a chunk of the xml description file for shared
+comment|// library load addresses, where the chunk starts at offset 0xfff
+comment|// and continues for 0x1000 bytes").
+comment|// Concatenate the resulting server response packets together and
+comment|// return in response_string.  If any packet fails, the return value
+comment|// indicates that failure and the returned string value is undefined.
+name|PacketResult
+name|SendPacketsAndConcatenateResponses
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|send_payload_prefix
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|response_string
 argument_list|)
 block|;
 name|lldb
@@ -232,6 +264,11 @@ operator|::
 name|pid_t
 operator|&
 name|pid
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|remote_accept_hostname
 argument_list|)
 block|;
 name|bool
@@ -506,6 +543,10 @@ operator|&
 name|GetProcessArchitecture
 argument_list|()
 block|;
+name|void
+name|GetRemoteQSupported
+argument_list|()
+block|;
 name|bool
 name|GetVContSupported
 argument_list|(
@@ -769,6 +810,22 @@ name|SetCurrentThreadForRun
 argument_list|(
 argument|uint64_t tid
 argument_list|)
+block|;
+name|bool
+name|GetQXferLibrariesReadSupported
+argument_list|()
+block|;
+name|bool
+name|GetQXferLibrariesSVR4ReadSupported
+argument_list|()
+block|;
+name|uint64_t
+name|GetRemoteMaxPacketSize
+argument_list|()
+block|;
+name|bool
+name|GetAugmentedLibrariesSVR4ReadSupported
+argument_list|()
 block|;
 name|lldb_private
 operator|::
@@ -1040,6 +1097,16 @@ argument_list|)
 block|;
 name|protected
 operator|:
+name|PacketResult
+name|SendPacketAndWaitForResponseNoLock
+argument_list|(
+argument|const char *payload
+argument_list|,
+argument|size_t payload_length
+argument_list|,
+argument|StringExtractorGDBRemote&response
+argument_list|)
+block|;
 name|bool
 name|GetCurrentProcessInfo
 argument_list|()
@@ -1147,6 +1214,21 @@ operator|::
 name|LazyBool
 name|m_supports_QSaveRegisterState
 block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_supports_qXfer_libraries_read
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_supports_qXfer_libraries_svr4_read
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|m_supports_augmented_libraries_svr4_read
+block|;
 name|bool
 name|m_supports_qProcessInfoPID
 operator|:
@@ -1231,6 +1313,9 @@ operator|::
 name|string
 name|m_async_packet
 block|;
+name|PacketResult
+name|m_async_result
+block|;
 name|StringExtractorGDBRemote
 name|m_async_response
 block|;
@@ -1293,6 +1378,10 @@ block|;
 name|uint32_t
 name|m_default_packet_timeout
 block|;
+name|uint64_t
+name|m_max_packet_size
+block|;
+comment|// as returned by qSupported
 name|bool
 name|DecodeProcessInfoResponse
 argument_list|(

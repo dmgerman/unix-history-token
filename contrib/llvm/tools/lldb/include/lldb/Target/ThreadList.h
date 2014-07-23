@@ -151,6 +151,20 @@ operator|&
 name|thread_sp
 argument_list|)
 decl_stmt|;
+name|void
+name|InsertThread
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ThreadSP
+operator|&
+name|thread_sp
+argument_list|,
+name|uint32_t
+name|idx
+argument_list|)
+decl_stmt|;
 comment|// Return the selected thread if there is one.  Otherwise, return the thread
 comment|// selected at index 0.
 name|lldb

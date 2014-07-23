@@ -218,6 +218,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Target/QueueList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/ThreadList.h"
 end_include
 
@@ -1404,8 +1410,11 @@ argument_list|)
 operator|,
 name|m_monitor_signals
 argument_list|(
-argument|false
+name|false
 argument_list|)
+operator|,
+name|m_hijack_listener_sp
+argument_list|()
 block|{     }
 name|ProcessLaunchInfo
 argument_list|(
@@ -1460,8 +1469,11 @@ argument_list|)
 operator|,
 name|m_monitor_signals
 argument_list|(
-argument|false
+name|false
 argument_list|)
+operator|,
+name|m_hijack_listener_sp
+argument_list|()
 block|{
 if|if
 condition|(
@@ -2310,6 +2322,11 @@ name|m_resume_count
 operator|=
 literal|0
 expr_stmt|;
+name|m_hijack_listener_sp
+operator|.
+name|reset
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2369,11 +2386,68 @@ block|}
 end_decl_stmt
 
 begin_expr_stmt
+name|Host
+operator|::
+name|MonitorChildProcessCallback
+name|GetMonitorProcessCallback
+argument_list|()
+block|{
+return|return
+name|m_monitor_callback
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|void
+operator|*
+name|GetMonitorProcessBaton
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_monitor_callback_baton
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// If the LaunchInfo has a monitor callback, then arrange to monitor the process.
+end_comment
+
+begin_comment
+comment|// Return true if the LaunchInfo has taken care of monitoring the process, and false if the
+end_comment
+
+begin_comment
+comment|// caller might want to monitor the process themselves.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|MonitorProcess
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|GetFlags
+argument_list|()
+operator|.
+name|Test
+argument_list|(
+name|lldb
+operator|::
+name|eLaunchFlagsDontMonitorProcess
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|m_monitor_callback
@@ -2400,7 +2474,7 @@ return|return
 name|true
 return|;
 block|}
-end_expr_stmt
+end_if
 
 begin_return
 return|return
@@ -2421,6 +2495,39 @@ name|m_pty
 return|;
 block|}
 end_expr_stmt
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ListenerSP
+name|GetHijackListener
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_hijack_listener_sp
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|SetHijackListener
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ListenerSP
+operator|&
+name|listener_sp
+argument_list|)
+block|{
+name|m_hijack_listener_sp
+operator|=
+name|listener_sp
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_label
 name|protected
@@ -2514,6 +2621,14 @@ name|bool
 name|m_monitor_signals
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ListenerSP
+name|m_hijack_listener_sp
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|};
@@ -2629,6 +2744,14 @@ argument_list|(
 name|launch_info
 operator|.
 name|GetResumeCount
+argument_list|()
+argument_list|)
+block|;
+name|SetHijackListener
+argument_list|(
+name|launch_info
+operator|.
+name|GetHijackListener
 argument_list|()
 argument_list|)
 block|;     }
@@ -2852,7 +2975,52 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|} protected:
+unit|}          lldb
+operator|::
+name|ListenerSP
+name|GetHijackListener
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_hijack_listener_sp
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|SetHijackListener
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ListenerSP
+operator|&
+name|listener_sp
+argument_list|)
+block|{
+name|m_hijack_listener_sp
+operator|=
+name|listener_sp
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_label
+name|protected
+label|:
+end_label
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ListenerSP
+name|m_hijack_listener_sp
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -4034,10 +4202,6 @@ name|PluginInterface
 block|{
 name|friend
 name|class
-name|ThreadList
-decl_stmt|;
-name|friend
-name|class
 name|ClangFunction
 decl_stmt|;
 comment|// For WaitForStateChangeEventsPrivate
@@ -4048,6 +4212,14 @@ decl_stmt|;
 name|friend
 name|class
 name|StopInfo
+decl_stmt|;
+name|friend
+name|class
+name|Target
+decl_stmt|;
+name|friend
+name|class
+name|ThreadList
 decl_stmt|;
 name|public
 label|:
@@ -5417,18 +5589,12 @@ comment|///
 comment|/// @param[in] process_name
 comment|///     The name of the process to attach to.
 comment|///
-comment|/// @param[in] wait_for_launch
-comment|///     If \b true, wait for the process to be launched and attach
-comment|///     as soon as possible after it does launch. If \b false, then
-comment|///     search for a matching process the currently exists.
-comment|///
 comment|/// @param[in] attach_info
 comment|///     Information on how to do the attach. For example, GetUserID()
 comment|///     will return the uid to attach as.
 comment|///
 comment|/// @return
-comment|///     Returns \a pid if attaching was successful, or
-comment|///     LLDB_INVALID_PROCESS_ID if attaching fails.
+comment|///     Returns an error object.
 comment|//------------------------------------------------------------------
 name|virtual
 name|Error
@@ -5438,9 +5604,6 @@ specifier|const
 name|char
 modifier|*
 name|process_name
-parameter_list|,
-name|bool
-name|wait_for_launch
 parameter_list|,
 specifier|const
 name|ProcessAttachInfo
@@ -5571,7 +5734,6 @@ name|Module
 modifier|*
 name|exe_module
 parameter_list|,
-specifier|const
 name|ProcessLaunchInfo
 modifier|&
 name|launch_info
@@ -6845,28 +7007,16 @@ operator|::
 name|addr_t
 name|ResolveIndirectFunction
 argument_list|(
-argument|const Address *address
+specifier|const
+name|Address
+operator|*
+name|address
 argument_list|,
-argument|Error&error
-argument_list|)
-block|{
+name|Error
+operator|&
 name|error
-operator|.
-name|SetErrorStringWithFormat
-argument_list|(
-literal|"error: %s does not support indirect functions in the debug process"
-argument_list|,
-name|GetPluginName
-argument_list|()
-operator|.
-name|GetCString
-argument_list|()
 argument_list|)
-block|;
-return|return
-name|LLDB_INVALID_ADDRESS
-return|;
-block|}
+expr_stmt|;
 name|virtual
 name|Error
 name|GetMemoryRegionInfo
@@ -7637,6 +7787,41 @@ name|thread_id
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|// Queue Queries
+comment|//------------------------------------------------------------------
+name|void
+name|UpdateQueueListIfNeeded
+parameter_list|()
+function_decl|;
+name|QueueList
+modifier|&
+name|GetQueueList
+parameter_list|()
+block|{
+name|UpdateQueueListIfNeeded
+argument_list|()
+expr_stmt|;
+return|return
+name|m_queue_list
+return|;
+block|}
+name|QueueList
+operator|::
+name|QueueIterable
+name|Queues
+argument_list|()
+block|{
+name|UpdateQueueListIfNeeded
+argument_list|()
+block|;
+return|return
+name|m_queue_list
+operator|.
+name|Queues
+argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
 comment|// Event Handling
 comment|//------------------------------------------------------------------
 name|lldb
@@ -7664,6 +7849,8 @@ argument_list|,
 argument|lldb::EventSP *event_sp_ptr = NULL
 argument_list|,
 argument|bool wait_always = true
+argument_list|,
+argument|Listener *hijack_listener = NULL
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -7681,8 +7868,13 @@ operator|::
 name|EventSP
 operator|&
 name|event_sp
+argument_list|,
+name|Listener
+operator|*
+name|hijack_listener
 argument_list|)
 expr_stmt|;
+comment|// Pass NULL to use builtin listener
 name|Event
 modifier|*
 name|PeekAtStateChangedEvents
@@ -8003,6 +8195,21 @@ name|int
 name|file_descriptor
 parameter_list|)
 function_decl|;
+name|void
+name|WatchForSTDIN
+parameter_list|(
+name|IOHandler
+modifier|&
+name|io_handler
+parameter_list|)
+function_decl|;
+name|void
+name|CancelWatchForSTDIN
+parameter_list|(
+name|bool
+name|exited
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Add a permanent region of memory that should never be read or
 comment|// written to. This can be used to ensure that memory reads or writes
@@ -8310,6 +8517,15 @@ name|m_private_state_thread
 argument_list|)
 return|;
 block|}
+name|void
+name|ForceNextEventDelivery
+parameter_list|()
+block|{
+name|m_force_next_event_delivery
+operator|=
+name|true
+expr_stmt|;
+block|}
 comment|//------------------------------------------------------------------
 comment|// Type definitions
 comment|//------------------------------------------------------------------
@@ -8466,6 +8682,14 @@ name|uint32_t
 name|m_extended_thread_stop_id
 decl_stmt|;
 comment|///< The natural stop id when extended_thread_list was last updated
+name|QueueList
+name|m_queue_list
+decl_stmt|;
+comment|///< The list of libdispatch queues at a given stop point
+name|uint32_t
+name|m_queue_list_stop_id
+decl_stmt|;
+comment|///< The natural stop id when queue list was last fetched
 name|std
 operator|::
 name|vector
@@ -8537,7 +8761,7 @@ name|m_abi_sp
 expr_stmt|;
 name|lldb
 operator|::
-name|InputReaderSP
+name|IOHandlerSP
 name|m_process_input_reader
 expr_stmt|;
 name|Communication
@@ -8624,12 +8848,29 @@ decl_stmt|;
 name|bool
 name|m_clear_thread_plans_on_stop
 decl_stmt|;
+name|bool
+name|m_force_next_event_delivery
+decl_stmt|;
 name|lldb
 operator|::
 name|StateType
 name|m_last_broadcast_state
 expr_stmt|;
 comment|/// This helps with the Public event coalescing in ShouldBroadcastEvent.
+name|std
+operator|::
+name|map
+operator|<
+name|lldb
+operator|::
+name|addr_t
+operator|,
+name|lldb
+operator|::
+name|addr_t
+operator|>
+name|m_resolved_indirect_addresses
+expr_stmt|;
 name|bool
 name|m_destroy_in_process
 decl_stmt|;
@@ -8880,43 +9121,17 @@ name|src_len
 parameter_list|)
 function_decl|;
 name|void
-name|PushProcessInputReader
+name|PushProcessIOHandler
 parameter_list|()
 function_decl|;
 name|void
-name|PopProcessInputReader
+name|PopProcessIOHandler
 parameter_list|()
 function_decl|;
 name|void
-name|ResetProcessInputReader
+name|ResetProcessIOHandler
 parameter_list|()
 function_decl|;
-specifier|static
-name|size_t
-name|ProcessInputReaderCallback
-argument_list|(
-name|void
-operator|*
-name|baton
-argument_list|,
-name|InputReader
-operator|&
-name|reader
-argument_list|,
-name|lldb
-operator|::
-name|InputReaderAction
-name|notification
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|bytes
-argument_list|,
-name|size_t
-name|bytes_len
-argument_list|)
-decl_stmt|;
 name|Error
 name|HaltForDestroyOrDetach
 argument_list|(

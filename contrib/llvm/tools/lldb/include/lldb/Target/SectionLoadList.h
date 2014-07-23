@@ -109,6 +109,14 @@ argument_list|(
 argument|Mutex::eMutexTypeRecursive
 argument_list|)
 block|{     }
+name|SectionLoadList
+argument_list|(
+specifier|const
+name|SectionLoadList
+operator|&
+name|rhs
+argument_list|)
+expr_stmt|;
 operator|~
 name|SectionLoadList
 argument_list|()
@@ -118,6 +126,16 @@ comment|// in case another thread is currently using this section load list
 name|Clear
 argument_list|()
 block|;     }
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|SectionLoadList
+operator|&
+name|rhs
+operator|)
+expr_stmt|;
 name|bool
 name|IsEmpty
 argument_list|()
@@ -258,13 +276,6 @@ name|mutable
 name|Mutex
 name|m_mutex
 decl_stmt|;
-name|private
-label|:
-name|DISALLOW_COPY_AND_ASSIGN
-argument_list|(
-name|SectionLoadList
-argument_list|)
-expr_stmt|;
 block|}
 empty_stmt|;
 block|}

@@ -252,6 +252,12 @@ expr_stmt|;
 name|lldb
 operator|::
 name|SBType
+name|GetTypedefedType
+argument_list|()
+expr_stmt|;
+name|lldb
+operator|::
+name|SBType
 name|GetDereferencedType
 argument_list|()
 expr_stmt|;

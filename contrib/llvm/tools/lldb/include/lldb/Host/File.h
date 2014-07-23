@@ -202,9 +202,24 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|m_owned
+name|m_own_stream
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|m_own_descriptor
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|m_is_interactive
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+operator|,
+name|m_is_real_terminal
+argument_list|(
+argument|eLazyBoolCalculate
 argument_list|)
 block|{     }
 name|File
@@ -229,9 +244,24 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|m_owned
+name|m_own_stream
 argument_list|(
-argument|transfer_ownership
+name|transfer_ownership
+argument_list|)
+operator|,
+name|m_own_descriptor
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|m_is_interactive
+argument_list|(
+name|eLazyBoolCalculate
+argument_list|)
+operator|,
+name|m_is_real_terminal
+argument_list|(
+argument|eLazyBoolCalculate
 argument_list|)
 block|{     }
 name|File
@@ -311,7 +341,7 @@ name|File
 argument_list|(
 argument|int fd
 argument_list|,
-argument|bool tranfer_ownership
+argument|bool transfer_ownership
 argument_list|)
 block|:
 name|m_descriptor
@@ -329,9 +359,14 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|m_owned
+name|m_own_stream
 argument_list|(
-argument|tranfer_ownership
+name|false
+argument_list|)
+operator|,
+name|m_own_descriptor
+argument_list|(
+argument|transfer_ownership
 argument_list|)
 block|{     }
 comment|//------------------------------------------------------------------
@@ -858,6 +893,33 @@ name|error
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Return true if this file is interactive.
+comment|///
+comment|/// @return
+comment|///     True if this file is a terminal (tty or pty), false
+comment|///     otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|GetIsInteractive
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Return true if this file from a real terminal.
+comment|///
+comment|/// Just knowing a file is a interactive isn't enough, we also need
+comment|/// to know if the terminal has a width and height so we can do
+comment|/// cursor movement and other terminal maninpulations by sending
+comment|/// escape sequences.
+comment|///
+comment|/// @return
+comment|///     True if this file is a terminal (tty, not a pty) that has
+comment|///     a non-zero width and height, false otherwise.
+comment|//------------------------------------------------------------------
+name|bool
+name|GetIsRealTerminal
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Output printf formatted output to the stream.
 comment|///
 comment|/// Print some formatted output to the stream.
@@ -909,6 +971,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+name|void
+name|SetOptions
+parameter_list|(
+name|uint32_t
+name|options
+parameter_list|)
+block|{
+name|m_options
+operator|=
+name|options
+expr_stmt|;
+block|}
+end_function
+
 begin_label
 name|protected
 label|:
@@ -941,6 +1018,13 @@ name|kInvalidStream
 return|;
 block|}
 end_expr_stmt
+
+begin_function_decl
+name|void
+name|CalculateInteractiveAndTerminal
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//------------------------------------------------------------------
@@ -975,7 +1059,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
-name|m_owned
+name|m_own_stream
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|m_own_descriptor
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LazyBool
+name|m_is_interactive
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LazyBool
+name|m_is_real_terminal
 decl_stmt|;
 end_decl_stmt
 

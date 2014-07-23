@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Target/QueueList.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/QueueItem.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-private.h"
 end_include
 
@@ -209,6 +221,17 @@ name|module_list
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
+comment|/// Called before detaching from a process.
+comment|///
+comment|/// This will give a SystemRuntime plugin a chance to free any resources
+comment|/// in the inferior process before we detach.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|Detach
+argument_list|()
+block|;
+comment|//------------------------------------------------------------------
 comment|/// Return a list of thread origin extended backtraces that may
 comment|/// be available.
 comment|///
@@ -281,6 +304,137 @@ argument_list|,
 argument|ConstString type
 argument_list|)
 block|;
+comment|//------------------------------------------------------------------
+comment|/// Get the extended backtrace thread for a QueueItem
+comment|///
+comment|/// A QueueItem represents a function/block that will be executed on
+comment|/// a libdispatch queue in the future, or it represents a function/block
+comment|/// that is currently executing on a thread.
+comment|///
+comment|/// This method will report a thread backtrace of the function that
+comment|/// enqueued it originally, if possible.
+comment|///
+comment|/// @param [in] queue_item_sp
+comment|///     The QueueItem that we are getting an extended backtrace for.
+comment|///
+comment|/// @param [in] type
+comment|///     The type of extended backtrace to fetch.  The types supported
+comment|///     are returned from SystemRuntime::GetExtendedBacktraceTypes.
+comment|///
+comment|/// @return
+comment|///     If an extended backtrace is available, it is returned.  Else
+comment|///     an empty ThreadSP is returned.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|ThreadSP
+name|GetExtendedBacktraceForQueueItem
+argument_list|(
+argument|lldb::QueueItemSP queue_item_sp
+argument_list|,
+argument|ConstString type
+argument_list|)
+block|{
+return|return
+name|lldb
+operator|::
+name|ThreadSP
+argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Populate the Process' QueueList with libdispatch / GCD queues that exist.
+comment|///
+comment|/// When process execution is paused, the SystemRuntime may be called to fill
+comment|/// in the list of Queues that currently exist.
+comment|///
+comment|/// @param [out] queue_list
+comment|///     This QueueList will be cleared, and any queues that currently exist
+comment|///     will be added.  An empty QueueList will be returned if no queues
+comment|///     exist or if this Systemruntime does not support libdispatch queues.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|PopulateQueueList
+argument_list|(
+argument|lldb_private::QueueList&queue_list
+argument_list|)
+block|{     }
+comment|//------------------------------------------------------------------
+comment|/// Get the queue name for a thread given a thread's dispatch_qaddr.
+comment|///
+comment|/// On systems using libdispatch queues, a thread may be associated with a queue.
+comment|/// There will be a call to get the thread's dispatch_qaddr.  At the dispatch_qaddr
+comment|/// we will find the address of this thread's dispatch_queue_t structure.
+comment|/// Given the address of the dispatch_queue_t structure for a thread,
+comment|/// get the queue name and return it.
+comment|///
+comment|/// @param [in] dispatch_qaddr
+comment|///     The address of the dispatch_queue_t structure for this thread.
+comment|///
+comment|/// @return
+comment|///     The string of this queue's name.  An empty string is returned if the
+comment|///     name could not be found.
+comment|//------------------------------------------------------------------
+name|virtual
+name|std
+operator|::
+name|string
+name|GetQueueNameFromThreadQAddress
+argument_list|(
+argument|lldb::addr_t dispatch_qaddr
+argument_list|)
+block|{
+return|return
+literal|""
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Get the QueueID for the libdispatch queue given the thread's dispatch_qaddr.
+comment|///
+comment|/// On systems using libdispatch queues, a thread may be associated with a queue.
+comment|/// There will be a call to get the thread's dispatch_qaddr.  At the dispatch_qaddr
+comment|/// we will find the address of this thread's dispatch_queue_t structure.
+comment|/// Given the address of the dispatch_queue_t structure for a thread,
+comment|/// get the queue ID and return it.
+comment|///
+comment|/// @param [in] dispatch_qaddr
+comment|///     The address of the dispatch_queue_t structure for this thread.
+comment|///
+comment|/// @return
+comment|///     The queue ID, or if it could not be retrieved, LLDB_INVALID_QUEUE_ID.
+comment|//------------------------------------------------------------------
+name|virtual
+name|lldb
+operator|::
+name|queue_id_t
+name|GetQueueIDFromThreadQAddress
+argument_list|(
+argument|lldb::addr_t dispatch_qaddr
+argument_list|)
+block|{
+return|return
+name|LLDB_INVALID_QUEUE_ID
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|/// Get the pending work items for a libdispatch Queue
+comment|///
+comment|/// If this system/process is using libdispatch and the runtime can do so,
+comment|/// retrieve the list of pending work items for the specified Queue and
+comment|/// add it to the Queue.
+comment|///
+comment|/// @param [in] queue
+comment|///     The queue of interest.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|PopulatePendingItemsForQueue
+argument_list|(
+argument|lldb_private::Queue *queue
+argument_list|)
+block|{     }
 name|protected
 operator|:
 comment|//------------------------------------------------------------------

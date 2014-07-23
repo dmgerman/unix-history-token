@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -192,6 +198,15 @@ name|eCore_x86_32_i486sx
 block|,
 name|eCore_x86_64_x86_64
 block|,
+name|eCore_x86_64_x86_64h
+block|,
+comment|// Haswell enabled x86_64
+name|eCore_hexagon_generic
+block|,
+name|eCore_hexagon_hexagonv4
+block|,
+name|eCore_hexagon_hexagonv5
+block|,
 name|eCore_uknownMach32
 block|,
 name|eCore_uknownMach64
@@ -210,6 +225,8 @@ block|,
 name|kCore_ppc64_any
 block|,
 name|kCore_x86_32_any
+block|,
+name|kCore_hexagon_any
 block|,
 name|kCore_arm_first
 init|=
@@ -250,6 +267,14 @@ block|,
 name|kCore_x86_32_last
 init|=
 name|eCore_x86_32_i486sx
+block|,
+name|kCore_hexagon_first
+init|=
+name|eCore_hexagon_generic
+block|,
+name|kCore_hexagon_last
+init|=
+name|eCore_hexagon_hexagonv5
 block|}
 enum|;
 comment|//------------------------------------------------------------------
@@ -406,6 +431,37 @@ name|GetMachine
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Returns the distribution id of the architecture.
+comment|///
+comment|/// This will be something like "ubuntu", "fedora", etc. on Linux.
+comment|///
+comment|/// @return A ConstString ref containing the distribution id,
+comment|///         potentially empty.
+comment|//------------------------------------------------------------------
+specifier|const
+name|ConstString
+operator|&
+name|GetDistributionId
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Set the distribution id of the architecture.
+comment|///
+comment|/// This will be something like "ubuntu", "fedora", etc. on Linux.
+comment|/// This should be the same value returned by
+comment|/// Host::GetDistributionId ().
+comment|///------------------------------------------------------------------
+name|void
+name|SetDistributionId
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|distribution_id
+parameter_list|)
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Tests if this ArchSpec is valid.
 comment|///
@@ -736,6 +792,9 @@ operator|::
 name|ByteOrder
 name|m_byte_order
 expr_stmt|;
+name|ConstString
+name|m_distribution_id
+decl_stmt|;
 comment|// Called when m_def or m_entry are changed.  Fills in all remaining
 comment|// members with default values.
 name|void

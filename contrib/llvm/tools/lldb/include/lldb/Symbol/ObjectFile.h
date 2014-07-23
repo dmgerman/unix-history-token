@@ -800,6 +800,34 @@ argument_list|()
 return|;
 block|}
 comment|//------------------------------------------------------------------
+comment|/// Sets the load address for an entire module, assuming a rigid
+comment|/// slide of sections, if possible in the implementation.
+comment|///
+comment|/// @return
+comment|///     Returns true iff any section's load address changed.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|SetLoadAddress
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+name|value
+argument_list|,
+name|bool
+name|value_is_offset
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|//------------------------------------------------------------------
 comment|/// Gets whether endian swapping should occur when extracting data
 comment|/// from this object file.
 comment|///

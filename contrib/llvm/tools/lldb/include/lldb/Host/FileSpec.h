@@ -811,7 +811,7 @@ comment|///     bytes into the file. If \a length is \c SIZE_MAX, map
 comment|///     as many bytes as possible.
 comment|///
 comment|/// @return
-comment|///     A shared pointer to the memeory mapped data. This shared
+comment|///     A shared pointer to the memory mapped data. This shared
 comment|///     pointer can contain a NULL DataBuffer pointer, so the contained
 comment|///     pointer must be checked prior to using it.
 comment|//------------------------------------------------------------------

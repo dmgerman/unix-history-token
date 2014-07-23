@@ -106,6 +106,7 @@ argument_list|(
 argument|NULL
 argument_list|)
 block|{         }
+name|explicit
 name|PythonObject
 argument_list|(
 name|PyObject
@@ -143,6 +144,7 @@ operator|.
 name|m_py_obj
 argument_list|)
 block|;         }
+name|explicit
 name|PythonObject
 argument_list|(
 specifier|const
@@ -163,52 +165,18 @@ argument_list|(
 name|NULL
 argument_list|)
 block|;         }
-specifier|const
-name|PythonObject
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|PythonObject
-operator|&
-name|rhs
-operator|)
-block|{
-if|if
-condition|(
-name|this
-operator|!=
-operator|&
-name|rhs
-condition|)
-name|Reset
-argument_list|(
-name|rhs
-operator|.
-name|m_py_obj
-argument_list|)
-expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 name|bool
 name|Reset
-parameter_list|(
-specifier|const
-name|PythonObject
-modifier|&
-name|object
-parameter_list|)
+argument_list|(
+argument|const PythonObject&object
+argument_list|)
 block|{
 return|return
 name|Reset
 argument_list|(
 name|object
 operator|.
-name|GetPythonObject
+name|get
 argument_list|()
 argument_list|)
 return|;
@@ -282,7 +250,7 @@ decl|const
 decl_stmt|;
 name|PyObject
 operator|*
-name|GetPythonObject
+name|get
 argument_list|()
 specifier|const
 block|{
@@ -310,6 +278,11 @@ operator|!=
 name|NULL
 return|;
 block|}
+name|bool
+name|IsNULLOrNone
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|PyObject
@@ -317,13 +290,7 @@ modifier|*
 name|m_py_obj
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
 name|class
 name|PythonString
 range|:
@@ -406,9 +373,6 @@ name|string
 argument_list|)
 block|;             }
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|PythonInteger
 range|:
@@ -477,9 +441,6 @@ argument|int64_t value
 argument_list|)
 block|;     }
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|PythonList
 range|:
@@ -489,7 +450,9 @@ block|{
 name|public
 operator|:
 name|PythonList
-argument_list|()
+argument_list|(
+argument|bool create_empty
+argument_list|)
 block|;
 name|PythonList
 argument_list|(
@@ -565,9 +528,6 @@ name|object
 argument_list|)
 block|;     }
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|PythonDictionary
 range|:
@@ -576,8 +536,11 @@ name|PythonObject
 block|{
 name|public
 operator|:
+name|explicit
 name|PythonDictionary
-argument_list|()
+argument_list|(
+argument|bool create_empty
+argument_list|)
 block|;
 name|PythonDictionary
 argument_list|(
@@ -680,9 +643,6 @@ name|GetKeys
 argument_list|()
 specifier|const
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|PythonString
 name|GetKeyAtPosition
 argument_list|(
@@ -691,9 +651,6 @@ name|pos
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|PythonObject
 name|GetValueAtPosition
 argument_list|(
@@ -702,9 +659,19 @@ name|pos
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+name|void
+name|SetItemForKey
+parameter_list|(
+specifier|const
+name|PythonString
+modifier|&
+name|key
+parameter_list|,
+name|PyObject
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
 name|void
 name|SetItemForKey
 parameter_list|(
@@ -719,10 +686,15 @@ modifier|&
 name|value
 parameter_list|)
 function_decl|;
-end_function_decl
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};      }
+unit|}
 comment|// namespace lldb_private
 end_comment
 

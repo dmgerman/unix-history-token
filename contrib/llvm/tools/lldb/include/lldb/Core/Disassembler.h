@@ -544,6 +544,15 @@ operator|&
 name|target
 argument_list|)
 decl_stmt|;
+name|uint32_t
+name|GetIndexOfInstructionAtAddress
+parameter_list|(
+specifier|const
+name|Address
+modifier|&
+name|addr
+parameter_list|)
+function_decl|;
 name|void
 name|Clear
 parameter_list|()

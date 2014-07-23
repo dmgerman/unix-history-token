@@ -202,6 +202,16 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+comment|// Force m_watchpoints_initialized to TRUE
+name|void
+name|ForceWatchpointsInitialized
+parameter_list|()
+block|{
+name|m_watchpoints_initialized
+operator|=
+name|true
+expr_stmt|;
+block|}
 name|protected
 label|:
 name|bool

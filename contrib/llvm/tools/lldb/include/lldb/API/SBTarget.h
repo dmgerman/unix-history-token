@@ -1291,11 +1291,56 @@ name|void
 name|Clear
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Resolve a current load address into a section offset address.
+comment|///
+comment|/// @param[in] vm_addr
+comment|///     A virtual address from the current process state that is to
+comment|///     be translated into a section offset address.
+comment|///
+comment|/// @return
+comment|///     An SBAddress which will be valid if \a vm_addr was
+comment|///     successfully resolved into a section offset address, or an
+comment|///     invalid SBAddress if \a vm_addr doesn't resolve to a section
+comment|///     in a module.
+comment|//------------------------------------------------------------------
 name|lldb
 operator|::
 name|SBAddress
 name|ResolveLoadAddress
 argument_list|(
+argument|lldb::addr_t vm_addr
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Resolve a current load address into a section offset address
+comment|/// using the process stop ID to identify a time in the past.
+comment|///
+comment|/// @param[in] stop_id
+comment|///     Each time a process stops, the process stop ID integer gets
+comment|///     incremented. These stop IDs are used to identify past times
+comment|///     and can be used in history objects as a cheap way to store
+comment|///     the time at which the sample was taken. Specifying
+comment|///     UINT32_MAX will always resolve the address using the
+comment|///     currently loaded sections.
+comment|///
+comment|/// @param[in] vm_addr
+comment|///     A virtual address from the current process state that is to
+comment|///     be translated into a section offset address.
+comment|///
+comment|/// @return
+comment|///     An SBAddress which will be valid if \a vm_addr was
+comment|///     successfully resolved into a section offset address, or an
+comment|///     invalid SBAddress if \a vm_addr doesn't resolve to a section
+comment|///     in a module.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBAddress
+name|ResolvePastLoadAddress
+argument_list|(
+argument|uint32_t stop_id
+argument_list|,
 argument|lldb::addr_t vm_addr
 argument_list|)
 expr_stmt|;

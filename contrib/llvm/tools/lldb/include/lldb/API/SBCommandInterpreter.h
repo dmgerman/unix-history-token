@@ -392,6 +392,43 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|// Access using SBDebugger::GetCommandInterpreter();
+comment|//----------------------------------------------------------------------
+comment|/// Return true if the command interpreter is the active IO handler.
+comment|///
+comment|/// This indicates that any input coming into the debugger handles will
+comment|/// go to the command interpreter and will result in LLDB command line
+comment|/// commands being executed.
+comment|//----------------------------------------------------------------------
+name|bool
+name|IsActive
+parameter_list|()
+function_decl|;
+comment|//----------------------------------------------------------------------
+comment|/// Get the string that needs to be written to the debugger stdin file
+comment|/// handle when a control character is typed.
+comment|///
+comment|/// Some GUI programs will intercept "control + char" sequences and want
+comment|/// to have them do what normally would happen when using a real
+comment|/// terminal, so this function allows GUI programs to emulate this
+comment|/// functionality.
+comment|///
+comment|/// @param[in] ch
+comment|///     The character that was typed along with the control key
+comment|///
+comment|/// @return
+comment|///     The string that should be written into the file handle that is
+comment|///     feeding the input stream for the debugger, or NULL if there is
+comment|///     no string for this control key.
+comment|//----------------------------------------------------------------------
+specifier|const
+name|char
+modifier|*
+name|GetIOHandlerControlSequence
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 name|lldb_private

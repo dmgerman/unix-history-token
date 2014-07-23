@@ -231,6 +231,29 @@ return|return
 name|m_source_map_mod_id
 return|;
 block|}
+specifier|const
+name|char
+modifier|*
+name|PeekLineData
+parameter_list|(
+name|uint32_t
+name|line
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|GetLineLength
+parameter_list|(
+name|uint32_t
+name|line
+parameter_list|,
+name|bool
+name|include_newline_chars
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|GetNumLines
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 name|bool
@@ -533,8 +556,6 @@ operator|&
 name|match_lines
 argument_list|)
 decl_stmt|;
-name|protected
-label|:
 name|FileSP
 name|GetFile
 parameter_list|(
@@ -544,6 +565,8 @@ modifier|&
 name|file_spec
 parameter_list|)
 function_decl|;
+name|protected
+label|:
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from SourceManager can see and modify these
 comment|//------------------------------------------------------------------

@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Core/ConstString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Symbol/FuncUnwinders.h"
 end_include
 
@@ -258,6 +264,33 @@ name|bool
 name|pc_register
 argument_list|)
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Provide the list of user-specified trap handler functions
+comment|///
+comment|/// The Platform is one source of trap handler function names; that
+comment|/// may be augmented via a setting.  The setting needs to be converted
+comment|/// into an array of ConstStrings before it can be used - we only want
+comment|/// to do that once per thread so it's here in the UnwindLLDB object.
+comment|///
+comment|/// @return
+comment|///     Vector of ConstStrings of trap handler function names.  May be
+comment|///     empty.
+comment|//------------------------------------------------------------------
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+operator|&
+name|GetUserSpecifiedTrapHandlerFunctionNames
+argument_list|()
+block|{
+return|return
+name|m_user_supplied_trap_handler_functions
+return|;
+block|}
 name|private
 label|:
 struct|struct
@@ -336,6 +369,14 @@ decl_stmt|;
 comment|// If this is true, we've enumerated all the frames in the stack, and m_frames.size() is the
 comment|// number of frames, etc.  Otherwise we've only gone as far as directly asked, and m_frames.size()
 comment|// is how far we've currently gone.
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstString
+operator|>
+name|m_user_supplied_trap_handler_functions
+expr_stmt|;
 name|bool
 name|AddOneMoreFrame
 parameter_list|(

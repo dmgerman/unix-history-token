@@ -1051,6 +1051,23 @@ comment|/// Constructors and Destructors
 comment|/// Only the Target can make a breakpoint, and it owns the breakpoint lifespans.
 comment|/// The constructor takes a filter and a resolver.  Up in Target there are convenience
 comment|/// variants that make breakpoints for some common cases.
+comment|///
+comment|/// @param[in] target
+comment|///    The target in which the breakpoint will be set.
+comment|///
+comment|/// @param[in] filter_sp
+comment|///    Shared pointer to the search filter that restricts the search domain of the breakpoint.
+comment|///
+comment|/// @param[in] resolver_sp
+comment|///    Shared pointer to the resolver object that will determine breakpoint matches.
+comment|///
+comment|/// @param hardware
+comment|///    If true, request a hardware breakpoint to be used to implement the breakpoint locations.
+comment|///
+comment|/// @param resolve_indirect_symbols
+comment|///    If true, and the address of a given breakpoint location in this breakpoint is set on an
+comment|///    indirect symbol (i.e. Symbol::IsIndirect returns true) then the actual breakpoint site will
+comment|///    be set on the target of the indirect symbol.
 comment|//------------------------------------------------------------------
 comment|// This is the generic constructor
 name|Breakpoint
@@ -1062,6 +1079,8 @@ argument_list|,
 argument|lldb::BreakpointResolverSP&resolver_sp
 argument_list|,
 argument|bool hardware
+argument_list|,
+argument|bool resolve_indirect_symbols = true
 argument_list|)
 empty_stmt|;
 name|friend
@@ -1122,6 +1141,9 @@ operator|::
 name|string
 name|m_kind_description
 expr_stmt|;
+name|bool
+name|m_resolve_indirect_symbols
+decl_stmt|;
 name|void
 name|SendBreakpointChangedEvent
 argument_list|(
