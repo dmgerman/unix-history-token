@@ -21175,6 +21175,9 @@ name|int
 name|queue_id
 decl_stmt|;
 name|u32
+name|reta
+decl_stmt|;
+name|u32
 name|rss_key
 index|[
 literal|10
@@ -21186,21 +21189,6 @@ name|shift
 init|=
 literal|0
 decl_stmt|;
-union|union
-name|igb_reta
-block|{
-name|u32
-name|dword
-decl_stmt|;
-name|u8
-name|bytes
-index|[
-literal|4
-index|]
-decl_stmt|;
-block|}
-name|reta
-union|;
 comment|/* XXX? */
 if|if
 condition|(
@@ -21220,6 +21208,10 @@ literal|6
 expr_stmt|;
 comment|/* 	 * The redirection table controls which destination 	 * queue each bucket redirects traffic to. 	 * Each DWORD represents four queues, with the LSB 	 * being the first queue in the DWORD. 	 * 	 * This just allocates buckets to queues using round-robin 	 * allocation. 	 * 	 * NOTE: It Just Happens to line up with the default 	 * RSS allocation method. 	 */
 comment|/* Warning FM follows */
+name|reta
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -21267,18 +21259,34 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-name|reta
-operator|.
-name|bytes
-index|[
-name|i
-operator|&
-literal|3
-index|]
+comment|/* Adjust if required */
+name|queue_id
 operator|=
 name|queue_id
 operator|<<
 name|shift
+expr_stmt|;
+comment|/* 		 * The low 8 bits are for hash value (n+0); 		 * The next 8 bits are for hash value (n+1), etc. 		 */
+name|reta
+operator|=
+name|reta
+operator|>>
+literal|8
+expr_stmt|;
+name|reta
+operator|=
+name|reta
+operator||
+operator|(
+operator|(
+operator|(
+name|uint32_t
+operator|)
+name|queue_id
+operator|)
+operator|<<
+literal|24
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -21290,6 +21298,7 @@ operator|)
 operator|==
 literal|3
 condition|)
+block|{
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -21302,10 +21311,13 @@ literal|2
 argument_list|)
 argument_list|,
 name|reta
-operator|.
-name|dword
 argument_list|)
 expr_stmt|;
+name|reta
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 comment|/* Now fill in hash table */
 comment|/* XXX This means RSS enable + 8 queues for my igb (82580.) */
