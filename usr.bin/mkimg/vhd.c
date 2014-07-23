@@ -83,6 +83,27 @@ directive|include
 file|"mkimg.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_extension
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_extension
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * General notes:  * o   File is in network byte order.  * o   The timestamp is seconds since 1/1/2000 12:00:00 AM UTC  *  * This file is divided in 3 parts:  * 1.  Common definitions  * 2.  Dynamic VHD support  * 3.  Fixed VHD support  */
 end_comment
@@ -215,6 +236,15 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|__has_extension
+argument_list|(
+name|c_static_assert
+argument_list|)
+end_if
+
 begin_assert
 assert|_Static_assert
 argument_list|(
@@ -230,6 +260,11 @@ literal|"Wrong size for footer"
 argument_list|)
 assert|;
 end_assert
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1020,6 +1055,15 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|__has_extension
+argument_list|(
+name|c_static_assert
+argument_list|)
+end_if
+
 begin_assert
 assert|_Static_assert
 argument_list|(
@@ -1037,6 +1081,11 @@ literal|"Wrong size for header"
 argument_list|)
 assert|;
 end_assert
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
