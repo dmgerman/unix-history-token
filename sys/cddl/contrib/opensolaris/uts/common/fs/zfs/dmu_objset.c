@@ -3889,6 +3889,8 @@ operator|&
 name|doca
 argument_list|,
 literal|5
+argument_list|,
+name|ZFS_SPACE_CHECK_NORMAL
 argument_list|)
 operator|)
 return|;
@@ -4437,6 +4439,8 @@ operator|&
 name|doca
 argument_list|,
 literal|5
+argument_list|,
+name|ZFS_SPACE_CHECK_NORMAL
 argument_list|)
 operator|)
 return|;

@@ -646,6 +646,18 @@ comment|/* !illumos */
 end_comment
 
 begin_comment
+comment|/*  * Normally, we don't allow the last 3.2% (1/(2^spa_slop_shift)) of space in  * the pool to be consumed.  This ensures that we don't run the pool  * completely out of space, due to unaccounted changes (e.g. to the MOS).  * It also limits the worst-case time to allocate space.  If we have  * less than this amount of free space, most ZPL operations (e.g. write,  * create) will return ENOSPC.  *  * Certain operations (e.g. file removal, most administrative actions) can  * use half the slop space.  They will only return ENOSPC if less than half  * the slop space is free.  Typically, once the pool has less than the slop  * space free, the user will use these operations to free up space in the pool.  * These are the operations that call dsl_pool_adjustedsize() with the netfree  * argument set to TRUE.  *  * A very restricted set of operations are always permitted, regardless of  * the amount of free space.  These are the operations that call  * dsl_sync_task(ZFS_SPACE_CHECK_NONE), e.g. "zfs destroy".  If these  * operations result in a net increase in the amount of space used,  * it is possible to run the pool completely out of space, causing it to  * be permanently read-only.  *  * See also the comments in zfs_space_check_t.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|spa_slop_shift
+init|=
+literal|5
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * ==========================================================================  * SPA config locking  * ==========================================================================  */
 end_comment
 
@@ -5972,6 +5984,44 @@ operator|(
 name|lsize
 operator|*
 name|spa_asize_inflation
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return the amount of slop space in bytes.  It is 1/32 of the pool (3.2%),  * or at least 32MB.  *  * See the comment above spa_slop_shift for details.  */
+end_comment
+
+begin_function
+name|uint64_t
+name|spa_get_slop_space
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+block|{
+name|uint64_t
+name|space
+init|=
+name|spa_get_dspace
+argument_list|(
+name|spa
+argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|MAX
+argument_list|(
+name|space
+operator|>>
+name|spa_slop_shift
+argument_list|,
+name|SPA_MINDEVSIZE
+operator|>>
+literal|1
+argument_list|)
 operator|)
 return|;
 block|}

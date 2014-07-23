@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1639,6 +1639,8 @@ operator|&
 name|feature
 argument_list|,
 literal|5
+argument_list|,
+name|ZFS_SPACE_CHECK_NORMAL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2179,6 +2181,8 @@ operator|&
 name|feature
 argument_list|,
 literal|5
+argument_list|,
+name|ZFS_SPACE_CHECK_NORMAL
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -3077,6 +3077,8 @@ operator|&
 name|ver
 argument_list|,
 literal|6
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 expr_stmt|;
 if|if
@@ -3116,6 +3118,8 @@ argument_list|,
 name|nvp
 argument_list|,
 literal|6
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 operator|)
 return|;
@@ -3470,6 +3474,8 @@ operator|&
 name|guid
 argument_list|,
 literal|5
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 expr_stmt|;
 if|if
