@@ -1612,7 +1612,7 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* 	 * If immutable bit set, nobody gets to write it.  "& ~VADMIN_PERMS" 	 * is here, because without it, * it would be impossible for the owner 	 * to remove the IMMUTABLE flag. 	 */
+comment|/* 	 * If immutable bit set, nobody gets to write it.  "& ~VADMIN_PERMS" 	 * permits the owner of the file to remove the IMMUTABLE flag. 	 */
 if|if
 condition|(
 operator|(
