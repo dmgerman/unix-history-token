@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -6388,7 +6388,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attempt to create a new entry in a directory.  If the entry  * already exists, truncate the file if permissible, else return  * an error.  Return the vp of the created or trunc'd file.  *  *	IN:	dvp	- vnode of directory to put new file entry in.  *		name	- name of new file entry.  *		vap	- attributes of new file.  *		excl	- flag indicating exclusive or non-exclusive mode.  *		mode	- mode to open file with.  *		cr	- credentials of caller.  *		flag	- large file flag [UNUSED].  *		ct	- caller context  *		vsecp 	- ACL to be set  *  *	OUT:	vpp	- vnode of created or trunc'd entry.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	dvp - ctime|mtime updated if new entry created  *	 vp - ctime|mtime always, atime if new  */
+comment|/*  * Attempt to create a new entry in a directory.  If the entry  * already exists, truncate the file if permissible, else return  * an error.  Return the vp of the created or trunc'd file.  *  *	IN:	dvp	- vnode of directory to put new file entry in.  *		name	- name of new file entry.  *		vap	- attributes of new file.  *		excl	- flag indicating exclusive or non-exclusive mode.  *		mode	- mode to open file with.  *		cr	- credentials of caller.  *		flag	- large file flag [UNUSED].  *		ct	- caller context  *		vsecp	- ACL to be set  *  *	OUT:	vpp	- vnode of created or trunc'd entry.  *  *	RETURN:	0 on success, error code on failure.  *  * Timestamps:  *	dvp - ctime|mtime updated if new entry created  *	 vp - ctime|mtime always, atime if new  */
 end_comment
 
 begin_comment
@@ -8088,6 +8088,16 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Mark this transaction as typically resulting in a net free of 	 * space, unless object removal will be delayed indefinitely 	 * (due to active holds on the vnode due to the file being open). 	 */
+if|if
+condition|(
+name|may_delete_now
+condition|)
+name|dmu_tx_mark_netfree
+argument_list|(
+name|tx
 argument_list|)
 expr_stmt|;
 name|error
@@ -21915,7 +21925,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The reason we push dirty pages as part of zfs_delmap() is so that we get a  * more accurate mtime for the associated file.  Since we don't have a way of  * detecting when the data was actually modified, we have to resort to  * heuristics.  If an explicit msync() is done, then we mark the mtime when the  * last page is pushed.  The problem occurs when the msync() call is omitted,  * which by far the most common case:  *  * 	open()  * 	mmap()  *<modify memory>  * 	munmap()  * 	close()  *<time lapse>  * 	putpage() via fsflush  *  * If we wait until fsflush to come along, we can have a modification time that  * is some arbitrary point in the future.  In order to prevent this in the  * common case, we flush pages whenever a (MAP_SHARED, PROT_WRITE) mapping is  * torn down.  */
+comment|/*  * The reason we push dirty pages as part of zfs_delmap() is so that we get a  * more accurate mtime for the associated file.  Since we don't have a way of  * detecting when the data was actually modified, we have to resort to  * heuristics.  If an explicit msync() is done, then we mark the mtime when the  * last page is pushed.  The problem occurs when the msync() call is omitted,  * which by far the most common case:  *  *	open()  *	mmap()  *<modify memory>  *	munmap()  *	close()  *<time lapse>  *	putpage() via fsflush  *  * If we wait until fsflush to come along, we can have a modification time that  * is some arbitrary point in the future.  In order to prevent this in the  * common case, we flush pages whenever a (MAP_SHARED, PROT_WRITE) mapping is  * torn down.  */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -7252,7 +7252,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * Increase the file length  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file  *  * 	RETURN:	0 on success, error code on failure  */
+comment|/*  * Increase the file length  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file  *  *	RETURN:	0 on success, error code on failure  */
 end_comment
 
 begin_function
@@ -7562,7 +7562,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free space in a file.  *  *	IN:	zp	- znode of file to free data in.  *		off	- start of section to free.  *		len	- length of section to free.  *  * 	RETURN:	0 on success, error code on failure  */
+comment|/*  * Free space in a file.  *  *	IN:	zp	- znode of file to free data in.  *		off	- start of section to free.  *		len	- length of section to free.  *  *	RETURN:	0 on success, error code on failure  */
 end_comment
 
 begin_function
@@ -7699,7 +7699,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Truncate a file  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file.  *  * 	RETURN:	0 on success, error code on failure  */
+comment|/*  * Truncate a file  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file.  *  *	RETURN:	0 on success, error code on failure  */
 end_comment
 
 begin_function
@@ -7850,6 +7850,11 @@ argument_list|,
 name|zp
 argument_list|)
 expr_stmt|;
+name|dmu_tx_mark_netfree
+argument_list|(
+name|tx
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|dmu_tx_assign
@@ -7993,7 +7998,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free space in a file  *  *	IN:	zp	- znode of file to free data in.  *		off	- start of range  *		len	- end of range (0 => EOF)  *		flag	- current file open mode flags.  *		log	- TRUE if this action should be logged  *  * 	RETURN:	0 on success, error code on failure  */
+comment|/*  * Free space in a file  *  *	IN:	zp	- znode of file to free data in.  *		off	- start of range  *		len	- end of range (0 => EOF)  *		flag	- current file open mode flags.  *		log	- TRUE if this action should be logged  *  *	RETURN:	0 on success, error code on failure  */
 end_comment
 
 begin_function
