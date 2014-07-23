@@ -3786,8 +3786,6 @@ name|rcr4
 argument_list|()
 operator||
 name|CR4_PGE
-operator||
-name|CR4_PSE
 argument_list|)
 expr_stmt|;
 name|load_cr3
