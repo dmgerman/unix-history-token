@@ -25,6 +25,26 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|quad_t
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|*
+literal|2
+argument_list|,
+literal|"Bitwise function in libstand are broken on this architecture\n"
+argument_list|)
+assert|;
+end_assert
+
 begin_comment
 comment|/*  * Depending on the desired operation, we view a `long long' (aka quad_t) in  * one or more of the following formats.  */
 end_comment
@@ -41,20 +61,20 @@ name|quad_t
 name|uq
 decl_stmt|;
 comment|/* as an unsigned quad */
-name|long
+name|int
 name|sl
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* as two signed longs */
-name|u_long
+comment|/* as two signed ints */
+name|u_int
 name|ul
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* as two unsigned longs */
+comment|/* as two unsigned ints */
 block|}
 union|;
 end_union
@@ -91,15 +111,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|LONG_BITS
-value|(sizeof(long) * CHAR_BIT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|HALF_BITS
-value|(sizeof(long) * CHAR_BIT / 2)
+value|(sizeof(int) * CHAR_BIT / 2)
 end_define
 
 begin_comment

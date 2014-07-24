@@ -51,24 +51,32 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(((u_long)(a)<< HALF_BITS) | (b))
+value|(((u_int)(a)<< HALF_BITS) | (b))
 end_define
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|/
+literal|2
+operator|==
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+argument_list|,
+literal|"Bitwise functions in libstand are broken on this architecture\n"
+argument_list|)
+assert|;
+end_assert
 
 begin_comment
 comment|/* select a type for digits in base B: use unsigned short if they fit */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|ULONG_MAX
-operator|==
-literal|0xffffffff
-operator|&&
-name|USHRT_MAX
-operator|>=
-literal|0xffff
-end_if
 
 begin_typedef
 typedef|typedef
@@ -77,23 +85,6 @@ name|short
 name|digit
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|digit
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Shift p[0]..p[len] left `sh' bits, ignoring any bits that  * `fall out' the left (there never will be any such anyway).  * We may assume len>= 0.  NOTE THAT THIS WRITES len+1 DIGITS.  */
@@ -180,7 +171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __qdivrem(u, v, rem) returns u/v and, optionally, sets *rem to u%v.  *  * We do this in base 2-sup-HALF_BITS, so that all intermediate products  * fit within u_long.  As a consequence, the maximum length dividend and  * divisor are 4 `digits' in this base (they are shorter if they have  * leading zeros).  */
+comment|/*  * __qdivrem(u, v, rem) returns u/v and, optionally, sets *rem to u%v.  *  * We do this in base 2-sup-HALF_BITS, so that all intermediate products  * fit within u_int.  As a consequence, the maximum length dividend and  * divisor are 4 `digits' in this base (they are shorter if they have  * leading zeros).  */
 end_comment
 
 begin_function
@@ -224,7 +215,7 @@ name|v1
 decl_stmt|,
 name|v2
 decl_stmt|;
-name|u_long
+name|u_int
 name|qhat
 decl_stmt|,
 name|rhat
@@ -522,7 +513,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|u_long
+name|u_int
 name|rbj
 decl_stmt|;
 comment|/* r*B+u[j] (not root boy jim) */
@@ -862,7 +853,7 @@ goto|;
 block|}
 else|else
 block|{
-name|u_long
+name|u_int
 name|nn
 init|=
 name|COMBINE
