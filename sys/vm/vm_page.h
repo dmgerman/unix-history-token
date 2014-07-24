@@ -242,6 +242,10 @@ name|vm_page_bits_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
+name|int8_t
+name|psind
+decl_stmt|;
+comment|/* pagesizes[] index (O) */
 block|}
 struct|;
 end_struct
@@ -1784,6 +1788,16 @@ end_function_decl
 begin_function_decl
 name|vm_page_t
 name|vm_page_prev
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|vm_page_ps_is_valid
 parameter_list|(
 name|vm_page_t
 name|m
