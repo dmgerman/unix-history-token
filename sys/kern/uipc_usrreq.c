@@ -10951,7 +10951,7 @@ name|m0
 operator|=
 name|m0
 operator|->
-name|m_act
+name|m_nextpkt
 expr_stmt|;
 block|}
 block|}
