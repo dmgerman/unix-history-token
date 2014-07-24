@@ -30227,8 +30227,6 @@ operator|->
 name|a_uio
 argument_list|,
 name|IO_UNIT
-operator||
-name|IO_SYNC
 argument_list|,
 name|ap
 operator|->
