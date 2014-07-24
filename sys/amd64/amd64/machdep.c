@@ -6322,7 +6322,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 comment|/* 	 * Find insertion point while checking for overlap.  Start off by 	 * assuming the new entry will be added to the end. 	 */
