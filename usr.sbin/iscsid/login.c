@@ -2599,7 +2599,7 @@ name|i
 decl_stmt|;
 name|log_debugx
 argument_list|(
-literal|"beginning parameter negotiation"
+literal|"beginning operational parameter negotiation"
 argument_list|)
 expr_stmt|;
 name|request
@@ -2949,7 +2949,7 @@ argument_list|)
 expr_stmt|;
 name|log_debugx
 argument_list|(
-literal|"parameter negotiation done; "
+literal|"operational parameter negotiation done; "
 literal|"transitioning to Full Feature phase"
 argument_list|)
 expr_stmt|;
@@ -4229,15 +4229,15 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"target requested transition "
-literal|"to operational negotiation, but we require "
-literal|"mutual CHAP"
+literal|"to operational parameter negotiation, "
+literal|"but we require mutual CHAP"
 argument_list|)
 expr_stmt|;
 block|}
 name|log_debugx
 argument_list|(
 literal|"target requested transition "
-literal|"to operational negotiation"
+literal|"to operational parameter negotiation"
 argument_list|)
 expr_stmt|;
 name|keys_delete
