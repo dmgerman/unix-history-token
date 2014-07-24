@@ -667,8 +667,6 @@ argument_list|(
 name|ctx
 argument_list|,
 name|vcpu
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|retval

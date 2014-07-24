@@ -549,9 +549,6 @@ name|int
 name|ext
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 comment|/* 	 * Bit 2 from the selector is retained as-is in the error code. 	 * 	 * Bit 1 can be safely cleared because none of the selectors 	 * encountered during task switch emulation refer to a task 	 * gate in the IDT. 	 * 	 * Bit 0 is set depending on the value of 'ext'. 	 */
 name|sel
 operator|&=
@@ -566,9 +563,7 @@ name|sel
 operator||=
 literal|0x1
 expr_stmt|;
-name|error
-operator|=
-name|vm_inject_exception2
+name|vm_inject_fault
 argument_list|(
 name|ctx
 argument_list|,
@@ -576,14 +571,9 @@ name|vcpu
 argument_list|,
 name|vector
 argument_list|,
+literal|1
+argument_list|,
 name|sel
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|error
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2478,8 +2468,6 @@ argument_list|(
 name|ctx
 argument_list|,
 name|vcpu
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
