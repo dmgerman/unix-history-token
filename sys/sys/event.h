@@ -629,7 +629,7 @@ comment|/* am a child process */
 end_comment
 
 begin_comment
-comment|/* additional flags for EVFILE_TIMER */
+comment|/* additional flags for EVFILT_TIMER */
 end_comment
 
 begin_define
