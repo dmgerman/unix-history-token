@@ -369,16 +369,6 @@ parameter_list|)
 value|((vw)->vw_device->vd_unit * VT_MAXWINDOWS + \ 			(vw)->vw_number)
 end_define
 
-begin_comment
-comment|/* XXX while syscons is here. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|sc_txtmouse_no_retrace_wait
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
