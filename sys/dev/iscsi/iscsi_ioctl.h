@@ -616,6 +616,28 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|iscsi_session_modify
+block|{
+name|unsigned
+name|int
+name|ism_session_id
+decl_stmt|;
+name|struct
+name|iscsi_session_conf
+name|ism_conf
+decl_stmt|;
+name|int
+name|ism_spare
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -635,6 +657,13 @@ define|#
 directive|define
 name|ISCSISLIST
 value|_IOWR('I', 0x13, struct iscsi_session_list)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISCSISMODIFY
+value|_IOWR('I', 0x14, struct iscsi_session_modify)
 end_define
 
 begin_endif

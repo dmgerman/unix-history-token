@@ -1475,6 +1475,8 @@ block|,
 name|ISCSISADD
 block|,
 name|ISCSISREMOVE
+block|,
+name|ISCSISMODIFY
 block|}
 decl_stmt|;
 else|#
@@ -1493,6 +1495,8 @@ block|,
 name|ISCSISADD
 block|,
 name|ISCSISREMOVE
+block|,
+name|ISCSISMODIFY
 block|}
 decl_stmt|;
 endif|#
