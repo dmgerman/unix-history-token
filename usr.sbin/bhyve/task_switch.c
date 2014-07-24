@@ -108,30 +108,6 @@ file|"bhyverun.h"
 end_include
 
 begin_comment
-comment|/*  * Various functions in this file use 0 to denote success and VMEXIT_ABORT  * or VMEXIT_RESTART to denote failure. This assumes that the VMEXIT_xyz  * macros expand to non-zero values. Enforce this with a compile-time  * assertion.  */
-end_comment
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-name|VMEXIT_ABORT
-operator|!=
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-name|VMEXIT_RESTART
-operator|!=
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Using 'struct i386tss' is tempting but causes myriad sign extension  * issues because all of its fields are defined as signed integers.  */
 end_comment
 
@@ -579,6 +555,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return 0 if the selector 'sel' in within the limits of the GDT/LDT  * and non-zero otherwise.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -697,6 +677,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Read/write the segment descriptor 'desc' into the GDT/LDT slot referenced  * by the selector 'sel'.  *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  */
+end_comment
 
 begin_function
 specifier|static
@@ -984,6 +968,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Read the TSS descriptor referenced by 'sel' into 'desc'.  *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1091,7 +1079,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -1124,33 +1112,9 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+return|return
+operator|(
 name|error
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|VMEXIT_ABORT
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
-name|error
-operator|>
-literal|0
-condition|)
-return|return
-operator|(
-name|VMEXIT_RESTART
-operator|)
-return|;
-else|else
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
@@ -1254,6 +1218,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Validate the descriptor 'seg_desc' associated with 'segment'.  *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1421,7 +1389,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -1455,7 +1423,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -1495,7 +1463,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -1558,24 +1526,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|<
-literal|0
 condition|)
 return|return
 operator|(
-name|VMEXIT_ABORT
-operator|)
-return|;
-elseif|else
-if|if
-condition|(
 name|error
-operator|>
-literal|0
-condition|)
-return|return
-operator|(
-name|VMEXIT_RESTART
 operator|)
 return|;
 comment|/* Verify that the descriptor type is compatible with the segment */
@@ -1647,7 +1601,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -1699,7 +1653,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -1764,7 +1718,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -1828,7 +1782,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -1900,7 +1854,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -2252,6 +2206,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Update the vcpu registers to reflect the state of the new task.  *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2472,7 +2430,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -3070,6 +3028,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Push an error code on the stack of the new task. This is needed if the  * task switch was triggered by a hardware exception that causes an error  * code to be saved (e.g. #PF).  *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3287,7 +3249,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -3320,7 +3282,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|VMEXIT_RESTART
+literal|1
 operator|)
 return|;
 block|}
@@ -3348,41 +3310,15 @@ name|iov
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
-name|error
-operator|==
-literal|0
-operator|||
-name|error
-operator|==
-literal|1
-operator|||
-name|error
-operator|==
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
-operator|(
 name|error
-operator|==
-literal|1
-operator|)
-condition|?
-name|VMEXIT_RESTART
-else|:
-name|VMEXIT_ABORT
 operator|)
 return|;
-block|}
 name|vm_copyout
 argument_list|(
 name|ctx
@@ -3415,6 +3351,21 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Evaluate return value from helper functions and potentially return to  * the VM run loop.  *  0: success  * +1: an exception was injected into the guest vcpu  * -1: unrecoverable/programming error  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHKERR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|do {								\ 		assert(((x) == 0) || ((x) == 1) || ((x) == -1));	\ 		if ((x) == -1)						\ 			return (VMEXIT_ABORT);				\ 		else if ((x) == 1)					\ 			return (VMEXIT_CONTINUE);			\ 	} while (0)
+end_define
 
 begin_function
 name|int
@@ -3599,15 +3550,11 @@ operator|&
 name|nt_desc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|CHKERR
+argument_list|(
 name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|nt
 operator|=
 name|usd_to_seg_desc
@@ -3658,11 +3605,9 @@ argument_list|,
 name|ext
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|VMEXIT_RESTART
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* TSS descriptor must have present bit set */
 if|if
@@ -3689,11 +3634,9 @@ argument_list|,
 name|ext
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|VMEXIT_RESTART
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* 	 * TSS must have a minimum length of 104 bytes for a 32-bit TSS and 	 * 44 bytes for a 16-bit TSS. 	 */
 if|if
@@ -3763,11 +3706,9 @@ argument_list|,
 name|ext
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|VMEXIT_RESTART
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* TSS must be busy if task switch is due to IRET */
 if|if
@@ -3796,11 +3737,9 @@ argument_list|,
 name|ext
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|VMEXIT_RESTART
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* 	 * TSS must be available (not busy) if task switch reason is 	 * CALL, JMP, exception or interrupt. 	 */
 if|if
@@ -3828,11 +3767,9 @@ argument_list|,
 name|ext
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|VMEXIT_RESTART
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* Fetch the new TSS */
 name|error
@@ -3866,42 +3803,9 @@ name|nt_iov
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|1
-condition|)
-block|{
-comment|/* Restart vcpu execution to handle the page fault */
-return|return
-operator|(
-name|VMEXIT_RESTART
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|error
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-return|return
-operator|(
-name|VMEXIT_ABORT
-operator|)
-return|;
-block|}
-else|else
-block|{
-name|assert
+name|CHKERR
 argument_list|(
 name|error
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 name|vm_copyin
@@ -3920,7 +3824,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Get the old TSS selector from the guest's task register */
 name|ot_sel
 operator|=
@@ -3964,11 +3867,9 @@ operator|->
 name|ext
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|VMEXIT_RESTART
-operator|)
-return|;
+goto|goto
+name|done
+goto|;
 block|}
 comment|/* Get the old TSS base and limit from the guest's task register */
 name|error
@@ -4047,15 +3948,11 @@ operator|&
 name|ot_desc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|CHKERR
+argument_list|(
 name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 comment|/* Get the old TSS */
 name|error
 operator|=
@@ -4086,51 +3983,9 @@ name|ot_iov
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|1
-condition|)
-block|{
-comment|/* Restart vcpu execution to handle the page fault */
-return|return
-operator|(
-name|VMEXIT_RESTART
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|error
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Error copying in old TSS: %d\n"
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|VMEXIT_ABORT
-operator|)
-return|;
-block|}
-else|else
-block|{
-name|assert
+name|CHKERR
 argument_list|(
 name|error
-operator|==
-literal|0
 argument_list|)
 expr_stmt|;
 name|vm_copyin
@@ -4149,7 +4004,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Clear the busy bit in the old TSS descriptor if the task switch 	 * due to an IRET or JMP instruction. 	 */
 if|if
 condition|(
@@ -4186,15 +4040,11 @@ operator|&
 name|ot_desc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|CHKERR
+argument_list|(
 name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4278,15 +4128,11 @@ operator|&
 name|nt_desc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|CHKERR
+argument_list|(
 name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Update task register to point at the new TSS */
 name|SETREG
@@ -4380,15 +4226,11 @@ argument_list|,
 name|nt_iov
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|CHKERR
+argument_list|(
 name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Section "Interrupt Tasks" in Intel SDM, Vol 3: if an exception 	 * caused an error code to be generated, this error code is copied 	 * to the stack of the new task. 	 */
 if|if
 condition|(
@@ -4433,17 +4275,11 @@ operator|->
 name|errcode
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|CHKERR
+argument_list|(
 name|error
-condition|)
-block|{
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Treatment of virtual-NMI blocking if NMI is delivered through 	 * a task gate. 	 * 	 * Section "Architectural State Before A VM Exit", Intel SDM, Vol3: 	 * If the virtual NMIs VM-execution control is 1, VM entry injects 	 * an NMI, and delivery of the NMI causes a task switch that causes 	 * a VM exit, virtual-NMI blocking is in effect before the VM exit 	 * commences. 	 * 	 * Thus, virtual-NMI blocking is in effect at the time of the task 	 * switch VM exit. 	 */
 comment|/* 	 * Treatment of virtual-NMI unblocking on IRET from NMI handler task. 	 * 	 * Section "Changes to Instruction Behavior in VMX Non-Root Operation" 	 * If "virtual NMIs" control is 1 IRET removes any virtual-NMI blocking. 	 * This unblocking of virtual-NMI occurs even if IRET causes a fault. 	 * 	 * Thus, virtual-NMI blocking is cleared at the time of the task switch 	 * VM exit. 	 */
@@ -4477,9 +4313,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * XXX should inject debug exception if 'T' bit is 1 	 */
+name|done
+label|:
 return|return
 operator|(
-name|VMEXIT_RESTART
+name|VMEXIT_CONTINUE
 operator|)
 return|;
 block|}
