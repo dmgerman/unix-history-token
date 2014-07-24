@@ -110,7 +110,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|KMC_NOTOUCH
+name|KM_NORMALPRI
 value|0
 end_define
 
@@ -119,6 +119,13 @@ define|#
 directive|define
 name|KMC_NODEBUG
 value|UMA_ZONE_NODUMP
+end_define
+
+begin_define
+define|#
+directive|define
+name|KMC_NOTOUCH
+value|0
 end_define
 
 begin_typedef
