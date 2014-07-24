@@ -2320,7 +2320,7 @@ operator|->
 name|v_lock
 argument_list|,
 operator|(
-literal|"Reclaiming inclomplete null vnode %p"
+literal|"Reclaiming incomplete null vnode %p"
 operator|,
 name|vp
 operator|)
