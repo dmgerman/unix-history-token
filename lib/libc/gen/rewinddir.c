@@ -180,6 +180,11 @@ name|dd_loc
 operator|=
 literal|0
 expr_stmt|;
+name|_reclaim_telldir
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|__isthreaded
