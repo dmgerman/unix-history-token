@@ -2673,10 +2673,12 @@ name|cpu_mode
 operator|==
 name|CPU_MODE_REAL
 condition|)
+block|{
 name|stackaddrsize
 operator|=
 literal|2
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2686,10 +2688,23 @@ name|cpu_mode
 operator|==
 name|CPU_MODE_64BIT
 condition|)
+block|{
+comment|/* 		 * "Stack Manipulation Instructions in 64-bit Mode", SDM, Vol 3 		 * - Stack pointer size is always 64-bits. 		 * - PUSH/POP of 32-bit values is not possible in 64-bit mode. 		 * - 16-bit PUSH/POP is supported by using the operand size 		 *   override prefix (66H). 		 */
 name|stackaddrsize
 operator|=
 literal|8
 expr_stmt|;
+name|size
+operator|=
+name|vie
+operator|->
+name|opsize_override
+condition|?
+literal|2
+else|:
+literal|8
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* 		 * In protected or compability mode the 'B' flag in the 		 * stack-segment descriptor determines the size of the 		 * stack pointer. 		 */
@@ -2960,12 +2975,30 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
-name|error
+operator|-
+literal|1
 operator|)
 return|;
+comment|/* Unrecoverable error */
+elseif|else
+if|if
+condition|(
+name|error
+operator|==
+literal|1
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Return to guest to handle page fault */
 name|error
 operator|=
 name|memread
