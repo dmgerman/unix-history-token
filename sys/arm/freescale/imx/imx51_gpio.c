@@ -1726,7 +1726,7 @@ name|WRITE4
 argument_list|(
 name|sc
 argument_list|,
-name|IMX_GPIO_DR_REG
+name|IMX_GPIO_ISR_REG
 argument_list|,
 name|input
 argument_list|)
