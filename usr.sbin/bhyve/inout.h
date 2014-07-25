@@ -34,43 +34,8 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* Handler return values. */
+comment|/*  * inout emulation handlers return 0 on success and -1 on failure.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|INOUT_ERROR
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|INOUT_OK
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|INOUT_RESTART
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|INOUT_RESET
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|INOUT_POWEROFF
-value|3
-end_define
 
 begin_typedef
 typedef|typedef

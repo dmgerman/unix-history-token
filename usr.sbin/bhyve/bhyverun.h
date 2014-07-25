@@ -97,28 +97,6 @@ begin_comment
 comment|/* abort the vm run loop */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VMEXIT_RESET
-value|4
-end_define
-
-begin_comment
-comment|/* guest machine has reset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMEXIT_POWEROFF
-value|5
-end_define
-
-begin_comment
-comment|/* guest machine has powered off */
-end_comment
-
 begin_struct_decl
 struct_decl|struct
 name|vmctx
