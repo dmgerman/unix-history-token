@@ -12968,6 +12968,7 @@ name|vdev_ashift
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|!
 operator|(
 name|zio
@@ -12975,6 +12976,17 @@ operator|->
 name|io_flags
 operator|&
 name|ZIO_FLAG_PHYSICAL
+operator|)
+operator|||
+operator|(
+name|vd
+operator|->
+name|vdev_top
+operator|->
+name|vdev_physical_ashift
+operator|>
+name|SPA_MINBLOCKSHIFT
+operator|)
 operator|)
 operator|&&
 name|P2PHASE
