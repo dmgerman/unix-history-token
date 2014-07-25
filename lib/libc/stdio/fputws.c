@@ -219,13 +219,13 @@ condition|)
 goto|goto
 name|error
 goto|;
-name|iov
-operator|.
-name|iov_len
-operator|=
 name|uio
 operator|.
 name|uio_resid
+operator|=
+name|iov
+operator|.
+name|iov_len
 operator|=
 name|nbytes
 expr_stmt|;
