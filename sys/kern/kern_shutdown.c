@@ -1128,6 +1128,13 @@ block|{
 name|boolean_t
 name|coredump
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|dumping
@@ -1196,6 +1203,8 @@ if|if
 condition|(
 name|coredump
 condition|)
+name|error
+operator|=
 name|dumpsys
 argument_list|(
 operator|&
@@ -1207,7 +1216,7 @@ operator|--
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

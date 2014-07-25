@@ -1967,7 +1967,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|dumpsys
 parameter_list|(
 name|struct
