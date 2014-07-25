@@ -15271,7 +15271,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"failed to allocate egress queue(%d): %d"
+literal|"failed to allocate egress queue(%d): %d\n"
 argument_list|,
 name|eq
 operator|->
