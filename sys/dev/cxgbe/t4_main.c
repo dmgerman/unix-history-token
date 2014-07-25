@@ -41139,16 +41139,18 @@ name|i2cd
 operator|->
 name|len
 operator|>
-literal|1
+sizeof|sizeof
+argument_list|(
+name|i2cd
+operator|->
+name|data
+argument_list|)
 condition|)
-block|{
-comment|/* XXX: need fw support for longer reads in one go */
 return|return
 operator|(
-name|ENOTSUP
+name|EFBIG
 operator|)
 return|;
-block|}
 name|rc
 operator|=
 name|begin_synchronized_op
@@ -41195,6 +41197,10 @@ argument_list|,
 name|i2cd
 operator|->
 name|offset
+argument_list|,
+name|i2cd
+operator|->
+name|len
 argument_list|,
 operator|&
 name|i2cd
