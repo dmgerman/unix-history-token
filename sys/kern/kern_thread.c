@@ -2094,7 +2094,7 @@ argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|p
