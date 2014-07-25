@@ -1240,12 +1240,9 @@ name|t
 operator|->
 name|plaintext
 argument_list|,
-sizeof|sizeof
-argument_list|(
 name|t
 operator|->
-name|plaintext
-argument_list|)
+name|plaintext_len
 argument_list|)
 expr_stmt|;
 goto|goto
