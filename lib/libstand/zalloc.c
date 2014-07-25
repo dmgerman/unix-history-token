@@ -28,6 +28,40 @@ file|"zalloc_defs.h"
 end_include
 
 begin_comment
+comment|/*  * Objects in the pool must be aligned to at least the size of struct MemNode.  * They must also be aligned to MALLOCALIGN, which should normally be larger  * than the struct, so assert that to be so at compile time.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+name|assert_align
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|MemNode
+argument_list|)
+operator|<=
+name|MALLOCALIGN
+operator|)
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MEMNODE_SIZE_MASK
+value|MALLOCALIGN_MASK
+end_define
+
+begin_comment
 comment|/*  * znalloc() -	allocate memory (without zeroing) from pool.  Call reclaim  *		and retry if appropriate, return NULL if unable to allocate  *		memory.  */
 end_comment
 
