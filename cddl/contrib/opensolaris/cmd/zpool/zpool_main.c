@@ -13281,7 +13281,7 @@ name|char
 name|default_props
 index|[]
 init|=
-literal|"name,size,allocated,free,capacity,dedupratio,"
+literal|"name,size,allocated,free,expandsize,capacity,dedupratio,"
 literal|"health,altroot"
 decl_stmt|;
 name|char
