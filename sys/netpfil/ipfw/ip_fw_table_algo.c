@@ -1876,6 +1876,10 @@ parameter_list|,
 name|void
 modifier|*
 name|ta_buf
+parameter_list|,
+name|uint64_t
+modifier|*
+name|pflags
 parameter_list|)
 block|{
 name|struct
@@ -2557,6 +2561,10 @@ parameter_list|,
 name|void
 modifier|*
 name|ta_buf
+parameter_list|,
+name|uint64_t
+modifier|*
+name|pflags
 parameter_list|)
 block|{
 name|struct
@@ -3294,6 +3302,10 @@ parameter_list|,
 name|void
 modifier|*
 name|ta_buf
+parameter_list|,
+name|uint64_t
+modifier|*
+name|pflags
 parameter_list|)
 block|{
 name|struct
@@ -3686,6 +3698,10 @@ parameter_list|,
 name|void
 modifier|*
 name|ta_buf
+parameter_list|,
+name|uint64_t
+modifier|*
+name|pflags
 parameter_list|)
 block|{
 name|struct

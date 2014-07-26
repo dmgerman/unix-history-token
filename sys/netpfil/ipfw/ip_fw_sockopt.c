@@ -8522,7 +8522,7 @@ case|:
 comment|/* IP_FW3 */
 name|error
 operator|=
-name|ipfw_modify_table
+name|ipfw_manage_table_ent
 argument_list|(
 name|chain
 argument_list|,
