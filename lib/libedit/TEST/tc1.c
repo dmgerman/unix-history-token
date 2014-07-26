@@ -1273,7 +1273,6 @@ name|__DECONST
 argument_list|(
 name|char
 operator|*
-specifier|const
 operator|*
 argument_list|,
 name|av
