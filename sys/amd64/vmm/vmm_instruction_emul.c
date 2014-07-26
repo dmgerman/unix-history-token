@@ -2979,13 +2979,14 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+comment|/* 		 * XXX cannot return a negative error value here because it 		 * ends up being the return value of the VM_RUN() ioctl and 		 * is interpreted as a pseudo-error (for e.g. ERESTART). 		 */
 return|return
 operator|(
-operator|-
-literal|1
+name|EFAULT
 operator|)
 return|;
-comment|/* Unrecoverable error */
+block|}
 elseif|else
 if|if
 condition|(
@@ -2993,12 +2994,14 @@ name|error
 operator|==
 literal|1
 condition|)
+block|{
+comment|/* Resume guest execution to handle page fault */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* Return to guest to handle page fault */
+block|}
 name|error
 operator|=
 name|memread
