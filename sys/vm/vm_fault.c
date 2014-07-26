@@ -204,6 +204,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|vm_fault_unwire
+parameter_list|(
+name|vm_map_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -4392,6 +4408,7 @@ comment|/*  *	vm_fault_unwire:  *  *	Unwire a range of virtual addresses in a ma
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vm_fault_unwire
 parameter_list|(
