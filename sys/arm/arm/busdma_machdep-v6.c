@@ -855,6 +855,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * This routine checks the exclusion zone constraints from a tag against the  * physical RAM available on the machine.  If a tag specifies an exclusion zone  * but there's no RAM in that zone, then we avoid allocating resources to bounce  * a request, and we can use any memory allocator (as opposed to needing  * kmem_alloc_contig() just because it can allocate pages in an address range).  *  * Most tags have BUS_SPACE_MAXADDR or BUS_SPACE_MAXADDR_32BIT (they are the  * same value on 32-bit architectures) as their lowaddr constraint, and we can't  * possibly have RAM at an address higher than the highest address we can  * express, so we take a fast out.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -871,6 +875,17 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|lowaddr
+operator|>=
+name|BUS_SPACE_MAXADDR
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 for|for
 control|(
 name|i
