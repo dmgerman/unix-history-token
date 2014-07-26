@@ -4258,7 +4258,7 @@ argument_list|()
 condition|)
 name|prefix
 index|[
-literal|2
+literal|1
 index|]
 operator|=
 name|vt_keymap_path
