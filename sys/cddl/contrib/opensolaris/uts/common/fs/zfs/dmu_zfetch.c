@@ -192,7 +192,7 @@ name|OID_AUTO
 argument_list|,
 name|min_sec_reap
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfetch_min_sec_reap
@@ -213,7 +213,7 @@ name|OID_AUTO
 argument_list|,
 name|block_cap
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfetch_block_cap
@@ -234,7 +234,7 @@ name|OID_AUTO
 argument_list|,
 name|array_rd_sz
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfetch_array_rd_sz
