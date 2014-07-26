@@ -312,7 +312,7 @@ specifier|static
 specifier|const
 name|unsigned
 name|char
-name|flags
+name|bootflags
 index|[
 name|NOPT
 index|]
@@ -1320,7 +1320,7 @@ name|opts
 operator|^=
 name|OPT_SET
 argument_list|(
-name|flags
+name|bootflags
 index|[
 name|i
 index|]
