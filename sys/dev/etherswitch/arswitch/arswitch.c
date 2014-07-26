@@ -569,6 +569,9 @@ break|break;
 case|case
 literal|0x1202
 case|:
+case|case
+literal|0x1204
+case|:
 name|chipname
 operator|=
 literal|"AR8327"
