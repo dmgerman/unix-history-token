@@ -4852,6 +4852,17 @@ block|{
 break|break;
 block|}
 block|}
+comment|/* Don't go to sleep if the vcpu thread needs to yield */
+if|if
+condition|(
+name|vcpu_should_yield
+argument_list|(
+name|vm
+argument_list|,
+name|vcpuid
+argument_list|)
+condition|)
+break|break;
 comment|/* 		 * Some Linux guests implement "halt" by having all vcpus 		 * execute HLT with interrupts disabled. 'halted_cpus' keeps 		 * track of the vcpus that have entered this state. When all 		 * vcpus enter the halted state the virtual machine is halted. 		 */
 if|if
 condition|(
@@ -4937,6 +4948,7 @@ argument_list|,
 name|VCPU_SLEEPING
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX msleep_spin() cannot be interrupted by signals so 		 * wake up periodically to check pending signals. 		 */
 name|msleep_spin
 argument_list|(
 name|vcpu
@@ -4948,7 +4960,7 @@ name|mtx
 argument_list|,
 name|wmesg
 argument_list|,
-literal|0
+name|hz
 argument_list|)
 expr_stmt|;
 name|vcpu_require_state_locked
