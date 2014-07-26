@@ -384,6 +384,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|int
+name|main
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|load
@@ -847,6 +856,11 @@ name|load
 argument_list|()
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
