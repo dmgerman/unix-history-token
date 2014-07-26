@@ -319,6 +319,13 @@ argument_list|)
 operator|-
 literal|1
 decl_stmt|;
+name|ASSERT
+argument_list|(
+name|size
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
 name|ASSERT3U
 argument_list|(
 name|idx
@@ -411,6 +418,13 @@ argument_list|)
 operator|-
 literal|1
 decl_stmt|;
+name|ASSERT
+argument_list|(
+name|size
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
 name|ASSERT3U
 argument_list|(
 name|idx

@@ -71,6 +71,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/*  * A metaslab class encompasses a category of allocatable top-level vdevs.  * Each top-level vdev is associated with a metaslab group which defines  * the allocatable region for that vdev. Examples of these categories include  * "normal" for data block allocations (i.e. main pool allocations) or "log"  * for allocations designated for intent log devices (i.e. slog devices).  * When a block allocation is requested from the SPA it is associated with a  * metaslab_class_t, and only top-level vdevs (i.e. metaslab groups) belonging  * to the class can be used to satisfy that request. Allocations are done  * by traversing the metaslab groups that are linked off of the mc_rotor field.  * This rotor points to the next metaslab group where allocations will be  * attempted. Allocating a block is a 3 step process -- select the metaslab  * group, select the metaslab, and then allocate the block. The metaslab  * class defines the low-level block allocator that will be used as the  * final step in allocation. These allocators are pluggable allowing each class  * to use a block allocator that best suits that class.  */
 struct|struct
 name|metaslab_class
 block|{
@@ -112,8 +113,15 @@ comment|/* total deflated space */
 name|uint64_t
 name|mc_minblocksize
 decl_stmt|;
+name|uint64_t
+name|mc_histogram
+index|[
+name|RANGE_TREE_HISTOGRAM_SIZE
+index|]
+decl_stmt|;
 block|}
 struct|;
+comment|/*  * Metaslab groups encapsulate all the allocatable regions (i.e. metaslabs)  * of a top-level vdev. They are linked togther to form a circular linked  * list and can belong to only one metaslab class. Metaslab groups may become  * ineligible for allocations for a number of reasons such as limited free  * space, fragmentation, or going offline. When this happens the allocator will  * simply find the next metaslab group in the linked list and attempt  * to allocate from that group instead.  */
 struct|struct
 name|metaslab_group
 block|{
@@ -160,9 +168,18 @@ name|metaslab_group_t
 modifier|*
 name|mg_next
 decl_stmt|;
+name|uint64_t
+name|mg_fragmentation
+decl_stmt|;
+name|uint64_t
+name|mg_histogram
+index|[
+name|RANGE_TREE_HISTOGRAM_SIZE
+index|]
+decl_stmt|;
 block|}
 struct|;
-comment|/*  * This value defines the number of elements in the ms_lbas array. The value  * of 64 was chosen as it covers to cover all power of 2 buckets up to  * UINT64_MAX. This is the equivalent of highbit(UINT64_MAX).  */
+comment|/*  * This value defines the number of elements in the ms_lbas array. The value  * of 64 was chosen as it covers all power of 2 buckets up to UINT64_MAX.  * This is the equivalent of highbit(UINT64_MAX).  */
 define|#
 directive|define
 name|MAX_LBAS
@@ -194,6 +211,9 @@ decl_stmt|;
 name|uint64_t
 name|ms_size
 decl_stmt|;
+name|uint64_t
+name|ms_fragmentation
+decl_stmt|;
 name|range_tree_t
 modifier|*
 name|ms_alloctree
@@ -224,6 +244,9 @@ name|ms_condensing
 decl_stmt|;
 comment|/* condensing? */
 name|boolean_t
+name|ms_condense_wanted
+decl_stmt|;
+name|boolean_t
 name|ms_loaded
 decl_stmt|;
 name|boolean_t
@@ -237,9 +260,6 @@ name|uint64_t
 name|ms_weight
 decl_stmt|;
 comment|/* weight vs. others in group	*/
-name|uint64_t
-name|ms_factor
-decl_stmt|;
 name|uint64_t
 name|ms_access_txg
 decl_stmt|;

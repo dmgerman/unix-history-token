@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -61,11 +61,7 @@ value|(3 * sizeof (uint64_t))
 define|#
 directive|define
 name|SPACE_MAP_HISTOGRAM_SIZE
-parameter_list|(
-name|sm
-parameter_list|)
-define|\
-value|(sizeof ((sm)->sm_phys->smp_histogram) /	\ 	sizeof ((sm)->sm_phys->smp_histogram[0]))
+value|32
 comment|/*  * The space_map_phys is the on-disk representation of the space map.  * Consumers of space maps should never reference any of the members of this  * structure directly. These members may only be updated in syncing context.  *  * Note the smp_object is no longer used but remains in the structure  * for backward compatibility.  */
 typedef|typedef
 struct|struct
@@ -94,10 +90,9 @@ comment|/* 	 * The smp_histogram maintains a histogram of free regions. Each 	 *
 name|uint64_t
 name|smp_histogram
 index|[
-literal|32
+name|SPACE_MAP_HISTOGRAM_SIZE
 index|]
 decl_stmt|;
-comment|/* histogram of free space */
 block|}
 name|space_map_phys_t
 typedef|;
