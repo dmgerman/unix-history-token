@@ -4233,6 +4233,8 @@ name|blank
 block|,
 name|blank
 block|,
+name|blank
+block|,
 name|keymap_path
 block|,
 name|NULL
@@ -4258,7 +4260,7 @@ argument_list|()
 condition|)
 name|prefix
 index|[
-literal|1
+literal|2
 index|]
 operator|=
 name|vt_keymap_path
