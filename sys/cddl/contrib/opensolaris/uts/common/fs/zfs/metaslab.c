@@ -261,6 +261,29 @@ literal|85
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mg_fragmentation_threshold
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zfs_mg_fragmentation_threshold
+argument_list|,
+literal|0
+argument_list|,
+literal|"Percentage of metaslab group size that should be considered "
+literal|"eligible for allocations unless all metaslab groups within the metaslab class "
+literal|"have also crossed this threshold"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Allow metaslabs to keep their active state as long as their fragmentation  * percentage is less than or equal to zfs_metaslab_fragmentation_threshold. An  * active metaslab that exceeds this threshold will no longer keep its active  * status allowing better metaslabs to be selected.  */
 end_comment
@@ -272,6 +295,27 @@ init|=
 literal|70
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_metaslab
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|fragmentation_threshold
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zfs_metaslab_fragmentation_threshold
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum percentage of metaslab fragmentation level to keep their active state"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * When set will load all metaslabs when pool is first opened.  */
