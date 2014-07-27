@@ -1294,6 +1294,57 @@ if|if
 condition|(
 name|id
 operator|==
+name|HDA_CODEC_CX20561
+operator|&&
+name|subid
+operator|==
+name|LENOVO_T400_SUBVENDOR
+condition|)
+block|{
+switch|switch
+condition|(
+name|nid
+condition|)
+block|{
+case|case
+literal|22
+case|:
+name|patch
+operator|=
+literal|"as=1 seq=15"
+expr_stmt|;
+break|break;
+case|case
+literal|24
+case|:
+name|patch
+operator|=
+literal|"as=2 seq=14"
+expr_stmt|;
+break|break;
+case|case
+literal|26
+case|:
+name|patch
+operator|=
+literal|"as=1 seq=0"
+expr_stmt|;
+break|break;
+case|case
+literal|29
+case|:
+name|patch
+operator|=
+literal|"as=2 seq=0"
+expr_stmt|;
+break|break;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
 name|HDA_CODEC_CX20590
 operator|&&
 operator|(

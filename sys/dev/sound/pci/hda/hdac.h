@@ -1268,6 +1268,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LENOVO_T400_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x20f2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LENOVO_T420_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0x21ce)
 end_define
