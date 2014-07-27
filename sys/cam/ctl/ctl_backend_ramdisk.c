@@ -3937,7 +3937,7 @@ name|softc
 operator|->
 name|lun_list
 argument_list|,
-name|be_lun
+name|lun
 argument_list|,
 name|ctl_be_ramdisk_lun
 argument_list|,
