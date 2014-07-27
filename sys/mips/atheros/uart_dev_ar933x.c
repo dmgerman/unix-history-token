@@ -1623,7 +1623,7 @@ name|sc
 operator|->
 name|sc_hwsig
 decl_stmt|;
-comment|/* 	 * For now, let's just return that DSR/DCD/CTS is asserted. 	 * 	 * XXX TODO: actually verify whether this is correct! 	 */
+comment|/* 	 * For now, let's just return that DSR/DCD/CTS is asserted. 	 */
 name|SIGCHG
 argument_list|(
 literal|1
@@ -1685,6 +1685,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX TODO: actually implement the rest of this!  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1702,15 +1706,51 @@ name|intptr_t
 name|data
 parameter_list|)
 block|{
-if|#
-directive|if
+name|int
+name|error
+init|=
 literal|0
-block|struct uart_bas *bas; 	int baudrate, divisor, error; 	uint8_t efr, lcr;  	bas =&sc->sc_bas; 	error = 0; 	uart_lock(sc->sc_hwmtx); 	switch (request) { 	case UART_IOCTL_BREAK: 		lcr = uart_getreg(bas, REG_LCR); 		if (data) 			lcr |= LCR_SBREAK; 		else 			lcr&= ~LCR_SBREAK; 		uart_setreg(bas, REG_LCR, lcr); 		uart_barrier(bas); 		break; 	case UART_IOCTL_IFLOW: 		lcr = uart_getreg(bas, REG_LCR); 		uart_barrier(bas); 		uart_setreg(bas, REG_LCR, 0xbf); 		uart_barrier(bas); 		efr = uart_getreg(bas, REG_EFR); 		if (data) 			efr |= EFR_RTS; 		else 			efr&= ~EFR_RTS; 		uart_setreg(bas, REG_EFR, efr); 		uart_barrier(bas); 		uart_setreg(bas, REG_LCR, lcr); 		uart_barrier(bas); 		break; 	case UART_IOCTL_OFLOW: 		lcr = uart_getreg(bas, REG_LCR); 		uart_barrier(bas); 		uart_setreg(bas, REG_LCR, 0xbf); 		uart_barrier(bas); 		efr = uart_getreg(bas, REG_EFR); 		if (data) 			efr |= EFR_CTS; 		else 			efr&= ~EFR_CTS; 		uart_setreg(bas, REG_EFR, efr); 		uart_barrier(bas); 		uart_setreg(bas, REG_LCR, lcr); 		uart_barrier(bas); 		break; 	case UART_IOCTL_BAUD: 		lcr = uart_getreg(bas, REG_LCR); 		uart_setreg(bas, REG_LCR, lcr | LCR_DLAB); 		uart_barrier(bas); 		divisor = uart_getreg(bas, REG_DLL) | 		    (uart_getreg(bas, REG_DLH)<< 8); 		uart_barrier(bas); 		uart_setreg(bas, REG_LCR, lcr); 		uart_barrier(bas); 		baudrate = (divisor> 0) ? bas->rclk / divisor / 16 : 0; 		if (baudrate> 0) 			*(int*)data = baudrate; 		else 			error = ENXIO; 		break; 	default: 		error = EINVAL; 		break; 	} 	uart_unlock(sc->sc_hwmtx); 	return (error);
-endif|#
-directive|endif
+decl_stmt|;
+comment|/* XXX lock */
+switch|switch
+condition|(
+name|request
+condition|)
+block|{
+case|case
+name|UART_IOCTL_BREAK
+case|:
+case|case
+name|UART_IOCTL_IFLOW
+case|:
+case|case
+name|UART_IOCTL_OFLOW
+case|:
+break|break;
+case|case
+name|UART_IOCTL_BAUD
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|=
+literal|115200
+expr_stmt|;
+break|break;
+default|default:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
+comment|/* XXX unlock */
 return|return
 operator|(
-name|ENXIO
+name|error
 operator|)
 return|;
 block|}
@@ -1838,7 +1878,7 @@ name|bas
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Only signal TX idle if we're not busy transmitting. 	 */
+comment|/* 	 * Only signal TX idle if we're not busy transmitting. 	 * 	 * XXX I never get _out_ of txbusy? Debug that! 	 */
 if|if
 condition|(
 name|sc
