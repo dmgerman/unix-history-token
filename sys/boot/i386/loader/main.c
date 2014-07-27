@@ -800,10 +800,31 @@ comment|/* optional */
 name|bios_getsmap
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOADER_TFTP_SUPPORT
+if|if
+condition|(
+name|kargs
+operator|->
+name|bootflags
+operator|&
+name|KARGS_FLAGS_PXE
+condition|)
 name|interact
+argument_list|(
+name|pxe_default_rc
 argument_list|()
+argument_list|)
 expr_stmt|;
-comment|/* doesn't return */
+else|else
+endif|#
+directive|endif
+name|interact
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* if we ever get here, it is an error */
 return|return
 operator|(
