@@ -1315,27 +1315,11 @@ literal|"as=1 seq=15"
 expr_stmt|;
 break|break;
 case|case
-literal|24
-case|:
-name|patch
-operator|=
-literal|"as=2 seq=14"
-expr_stmt|;
-break|break;
-case|case
 literal|26
 case|:
 name|patch
 operator|=
 literal|"as=1 seq=0"
-expr_stmt|;
-break|break;
-case|case
-literal|29
-case|:
-name|patch
-operator|=
-literal|"as=2 seq=0"
 expr_stmt|;
 break|break;
 block|}
