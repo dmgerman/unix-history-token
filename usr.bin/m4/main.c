@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: main.c,v 1.81 2012/04/12 17:00:11 espie Exp $	*/
+comment|/*	$OpenBSD: main.c,v 1.83 2014/05/12 19:11:19 espie Exp $ */
 end_comment
 
 begin_comment
@@ -981,28 +981,22 @@ name|INITSTACKMAX
 expr_stmt|;
 name|mstack
 operator|=
-operator|(
-name|stae
-operator|*
-operator|)
-name|xalloc
+name|xreallocarray
 argument_list|(
+name|NULL
+argument_list|,
+name|STACKMAX
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|stae
 argument_list|)
-operator|*
-name|STACKMAX
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 name|sstack
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xalloc
 argument_list|(
 name|STACKMAX
@@ -2067,6 +2061,10 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|mimic_gnu
+comment|/* you can puke right there */
+operator|&&
 name|sp
 operator|>
 operator|-
@@ -2997,16 +2995,16 @@ literal|2
 expr_stmt|;
 name|mstack
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|mstack
+argument_list|,
+name|STACKMAX
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|stae
 argument_list|)
-operator|*
-name|STACKMAX
 argument_list|,
 literal|"Evaluation stack overflow (%lu)"
 argument_list|,
