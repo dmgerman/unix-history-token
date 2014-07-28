@@ -286,6 +286,17 @@ begin_comment
 comment|/* finds an entry */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_XIFLIST
+value|100
+end_define
+
+begin_comment
+comment|/* list tracked interfaces */
+end_comment
+
 begin_comment
 comment|/*  * Usage guidelines:  *  * IP_FW_TABLE_XLIST(ver 1): Dumps all table data  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_xtable_info.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info ipfw_table_xentry x N ]  *  * IP_FW_TABLE_XDESTROY: Destroys given table  *   Request(setsockopt): [ ipfw_obj_header ]  *  * IP_FW_TABLES_XGETSIZE: Get buffer size needed to list info for all tables.  *   Request(getsockopt): [ empty ], size = sizeof(ipfw_obj_lheader)  *   Reply: [ ipfw_obj_lheader ]  *  * IP_FW_TABLES_XLIST: Lists all tables currently available in kernel.  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_obj_lheader.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info x N ]  *  * IP_FW_TABLE_XINFO: Store table info to buffer.  *   Request(getsockopt): [ ipfw_obj_header ipfw_xtable_info(empty)]  *   Reply: [ ipfw_obj_header ipfw_xtable_info ]  *  * IP_FW_TABLE_XFLUSH: Removes all data from given table leaving type etc..  *   Request(setsockopt): [ ipfw_obj_header ]  */
 end_comment
@@ -2046,6 +2057,13 @@ name|IPFW_TLV_RULE_ENT
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_TBLENT_LIST
+value|8
+end_define
+
 begin_comment
 comment|/* Object name TLV */
 end_comment
@@ -2281,6 +2299,53 @@ name|ipfw_xtable_info
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_iface_info
+block|{
+name|char
+name|ifname
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* interface name		*/
+name|uint32_t
+name|ifindex
+decl_stmt|;
+comment|/* interface index		*/
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* flags			*/
+name|uint32_t
+name|refcnt
+decl_stmt|;
+comment|/* number of references		*/
+name|uint32_t
+name|gencnt
+decl_stmt|;
+comment|/* number of changes		*/
+name|uint64_t
+name|spare
+decl_stmt|;
+block|}
+name|ipfw_iface_info
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_IFFLAG_RESOLVED
+value|0x01
+end_define
+
+begin_comment
+comment|/* Interface exists		*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2341,7 +2406,7 @@ comment|/* Total objects count		*/
 name|uint32_t
 name|size
 decl_stmt|;
-comment|/* Total objects size		*/
+comment|/* Total size (incl. header)	*/
 name|uint32_t
 name|objsize
 decl_stmt|;

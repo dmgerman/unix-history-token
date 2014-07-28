@@ -1670,7 +1670,9 @@ name|NULL
 condition|)
 comment|/* no iface with this packet, match fails */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* Check by name or by IP address */
 if|if
@@ -1711,9 +1713,10 @@ name|glob
 argument_list|,
 literal|0
 argument_list|,
+operator|&
 name|ifp
 operator|->
-name|if_xname
+name|if_index
 argument_list|,
 name|tablearg
 argument_list|)
@@ -10929,6 +10932,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* init */
+name|ipfw_iface_init
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -10949,6 +10955,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ipfw_iface_destroy
+argument_list|()
+expr_stmt|;
 name|ipfw_log_bpf
 argument_list|(
 literal|0
@@ -11415,6 +11424,11 @@ condition|)
 name|ipfw_reap_rules
 argument_list|(
 name|reap
+argument_list|)
+expr_stmt|;
+name|vnet_ipfw_iface_destroy
+argument_list|(
+name|chain
 argument_list|)
 expr_stmt|;
 name|IPFW_LOCK_DESTROY

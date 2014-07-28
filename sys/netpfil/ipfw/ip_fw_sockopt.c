@@ -7945,6 +7945,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|IP_FW_XIFLIST
+case|:
+comment|/* IP_FW3 */
+name|error
+operator|=
+name|ipfw_list_ifaces
+argument_list|(
+name|chain
+argument_list|,
+operator|&
+name|sdata
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|IP_FW_XADD
 case|:
 comment|/* IP_FW3 */
