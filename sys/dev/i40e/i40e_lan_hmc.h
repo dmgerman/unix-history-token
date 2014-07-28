@@ -29,18 +29,12 @@ name|i40e_hw
 struct_decl|;
 end_struct_decl
 
-begin_enum_decl
-enum_decl|enum
-name|i40e_status_code
-enum_decl|;
-end_enum_decl
-
 begin_comment
 comment|/* HMC element context information */
 end_comment
 
 begin_comment
-comment|/* Rx queue context data */
+comment|/* Rx queue context data  *  * The sizes of the variables may be larger than needed due to crossing byte  * boundaries. If we do not have the width of the variable set to the correct  * size then we could end up shifting bits off the top of the variable when the  * variable is at the top of a byte and crosses over into the next byte.  */
 end_comment
 
 begin_struct
@@ -50,9 +44,10 @@ block|{
 name|u16
 name|head
 decl_stmt|;
-name|u8
+name|u16
 name|cpuid
 decl_stmt|;
+comment|/* bigger than needed, see above for reason */
 name|u64
 name|base
 decl_stmt|;
@@ -63,16 +58,18 @@ define|#
 directive|define
 name|I40E_RXQ_CTX_DBUFF_SHIFT
 value|7
-name|u8
+name|u16
 name|dbuff
 decl_stmt|;
+comment|/* bigger than needed, see above for reason */
 define|#
 directive|define
 name|I40E_RXQ_CTX_HBUFF_SHIFT
 value|6
-name|u8
+name|u16
 name|hbuff
 decl_stmt|;
+comment|/* bigger than needed, see above for reason */
 name|u8
 name|dtype
 decl_stmt|;
@@ -97,9 +94,10 @@ decl_stmt|;
 name|u8
 name|showiv
 decl_stmt|;
-name|u16
+name|u32
 name|rxmax
 decl_stmt|;
+comment|/* bigger than needed, see above for reason */
 name|u8
 name|tphrdesc_ena
 decl_stmt|;
@@ -112,9 +110,10 @@ decl_stmt|;
 name|u8
 name|tphhead_ena
 decl_stmt|;
-name|u8
+name|u16
 name|lrxqthresh
 decl_stmt|;
+comment|/* bigger than needed, see above for reason */
 name|u8
 name|prefena
 decl_stmt|;
@@ -124,7 +123,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Tx queue context data */
+comment|/* Tx queue context data * * The sizes of the variables may be larger than needed due to crossing byte * boundaries. If we do not have the width of the variable set to the correct * size then we could end up shifting bits off the top of the variable when the * variable is at the top of a byte and crosses over into the next byte. */
 end_comment
 
 begin_struct
@@ -155,7 +154,7 @@ decl_stmt|;
 name|u16
 name|thead_wb
 decl_stmt|;
-name|u16
+name|u8
 name|cpuid
 decl_stmt|;
 name|u8
@@ -312,35 +311,12 @@ name|I40E_HMC_OBJ_SIZE_RXQ
 value|32
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FORTVILLE_A0_SUPPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|I40E_HMC_OBJ_SIZE_FCOE_CNTX
-value|128
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|I40E_HMC_OBJ_SIZE_FCOE_CNTX
 value|64
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

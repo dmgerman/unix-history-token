@@ -1382,24 +1382,6 @@ argument_list|)
 expr_stmt|;
 name|ret_code
 operator|=
-name|i40e_acquire_nvm
-argument_list|(
-name|hw
-argument_list|,
-name|I40E_RESOURCE_READ
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret_code
-operator|!=
-name|I40E_SUCCESS
-condition|)
-goto|goto
-name|i40e_validate_nvm_checksum_exit
-goto|;
-name|ret_code
-operator|=
 name|i40e_calc_nvm_checksum
 argument_list|(
 name|hw
@@ -1415,7 +1397,7 @@ operator|!=
 name|I40E_SUCCESS
 condition|)
 goto|goto
-name|i40e_validate_nvm_checksum_free
+name|i40e_validate_nvm_checksum_exit
 goto|;
 comment|/* Do not use i40e_read_nvm_word() because we do not want to take 	 * the synchronization semaphores twice here. 	 */
 name|i40e_read_nvm_word
@@ -1448,13 +1430,6 @@ operator|*
 name|checksum
 operator|=
 name|checksum_local
-expr_stmt|;
-name|i40e_validate_nvm_checksum_free
-label|:
-name|i40e_release_nvm
-argument_list|(
-name|hw
-argument_list|)
 expr_stmt|;
 name|i40e_validate_nvm_checksum_exit
 label|:

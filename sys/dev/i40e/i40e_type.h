@@ -132,24 +132,6 @@ name|I40E_DEV_ID_QSFP_C
 value|0x1585
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FORTVILLE_A0_SUPPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|I40E_DEV_ID_10G_BASE_T
-value|0x1586
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -174,6 +156,12 @@ parameter_list|)
 value|((d) == I40E_DEV_ID_QSFP_A  || \ 					 (d) == I40E_DEV_ID_QSFP_B  || \ 					 (d) == I40E_DEV_ID_QSFP_C)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|I40E_MASK
+end_ifndef
+
 begin_comment
 comment|/* I40E_MASK is a macro used on 32 bit registers */
 end_comment
@@ -189,6 +177,11 @@ name|shift
 parameter_list|)
 value|(mask<< shift)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -732,7 +725,7 @@ name|I40E_SET_FC_AQ_FAIL_NONE
 init|=
 literal|0
 block|,
-name|I40E_SET_FC_AQ_FAIL_GET1
+name|I40E_SET_FC_AQ_FAIL_GET
 init|=
 literal|1
 block|,
@@ -740,11 +733,11 @@ name|I40E_SET_FC_AQ_FAIL_SET
 init|=
 literal|2
 block|,
-name|I40E_SET_FC_AQ_FAIL_GET2
+name|I40E_SET_FC_AQ_FAIL_UPDATE
 init|=
 literal|4
 block|,
-name|I40E_SET_FC_AQ_FAIL_SET_GET
+name|I40E_SET_FC_AQ_FAIL_SET_UPDATE
 init|=
 literal|6
 block|}
@@ -1762,6 +1755,18 @@ name|struct
 name|i40e_adminq_info
 name|aq
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|I40E_QV
+name|bool
+name|aq_dbg_ena
+decl_stmt|;
+comment|/* use Tools AQ instead of PF AQ */
+name|bool
+name|qv_force_init
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* state of nvm update process */
 name|enum
 name|i40e_nvmupd_state

@@ -110,6 +110,12 @@ decl_stmt|;
 name|u32
 name|len
 decl_stmt|;
+name|u32
+name|bah
+decl_stmt|;
+name|u32
+name|bal
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -200,6 +206,10 @@ name|i40e_adminq_ring
 name|asq
 decl_stmt|;
 comment|/* send queue */
+name|u32
+name|asq_cmd_timeout
+decl_stmt|;
+comment|/* send queue cmd write back timeout*/
 name|u16
 name|num_arq_entries
 decl_stmt|;

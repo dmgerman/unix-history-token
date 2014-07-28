@@ -271,7 +271,7 @@ name|va
 argument_list|,
 name|BUS_DMA_NOWAIT
 operator||
-name|M_ZERO
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|dma
@@ -403,6 +403,12 @@ argument_list|)
 expr_stmt|;
 name|fail_0
 label|:
+name|dma
+operator|->
+name|map
+operator|=
+name|NULL
+expr_stmt|;
 name|dma
 operator|->
 name|tag

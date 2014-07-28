@@ -11,6 +11,12 @@ begin_comment
 comment|/* **	I40E driver TX/RX Routines: **	    This was seperated to allow usage by ** 	    both the BASE and the VF drivers. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_KERNEL_OPTION_HEADERS
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -22,6 +28,11 @@ include|#
 directive|include
 file|"opt_inet6.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -46,7 +57,7 @@ name|u32
 parameter_list|,
 name|u32
 parameter_list|,
-name|u32
+name|u8
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -153,7 +164,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|u32
+name|u8
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -235,6 +246,32 @@ name|vsi
 operator|->
 name|num_queues
 expr_stmt|;
+comment|/* Check for a hung queue and pick alternative */
+if|if
+condition|(
+operator|(
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|&
+name|vsi
+operator|->
+name|active_queues
+operator|)
+operator|==
+literal|0
+condition|)
+name|i
+operator|=
+name|ffsl
+argument_list|(
+name|vsi
+operator|->
+name|active_queues
+argument_list|)
+expr_stmt|;
 name|que
 operator|=
 operator|&
@@ -282,8 +319,6 @@ name|txr
 argument_list|)
 condition|)
 block|{
-name|err
-operator|=
 name|i40e_mq_start_locked
 argument_list|(
 name|ifp
@@ -312,7 +347,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|err
+literal|0
 operator|)
 return|;
 block|}
@@ -694,6 +729,110 @@ block|}
 end_function
 
 begin_comment
+comment|/* ** Find mbuf chains passed to the driver  ** that are 'sparse', using more than 8 ** mbufs to deliver an mss-size chunk of data */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|i40e_tso_detect_sparse
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|mp
+parameter_list|)
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|int
+name|num
+init|=
+literal|0
+decl_stmt|,
+name|mss
+decl_stmt|;
+name|bool
+name|ret
+init|=
+name|FALSE
+decl_stmt|;
+name|mss
+operator|=
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|tso_segsz
+expr_stmt|;
+for|for
+control|(
+name|m
+operator|=
+name|mp
+operator|->
+name|m_next
+init|;
+name|m
+operator|!=
+name|NULL
+condition|;
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+control|)
+block|{
+name|num
+operator|++
+expr_stmt|;
+name|mss
+operator|-=
+name|m
+operator|->
+name|m_len
+expr_stmt|;
+if|if
+condition|(
+name|mss
+operator|<
+literal|1
+condition|)
+break|break;
+if|if
+condition|(
+name|m
+operator|->
+name|m_next
+operator|==
+name|NULL
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|num
+operator|>
+name|I40E_SPARSE_CHAIN
+condition|)
+name|ret
+operator|=
+name|TRUE
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*********************************************************************  *  *  This routine maps the mbufs to tx descriptors, allowing the  *  TX engine to transmit the packets.   *  	- return 0 on success, positive on failure  *  **********************************************************************/
 end_comment
 
@@ -765,6 +904,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m_head
+decl_stmt|,
+modifier|*
+name|m
 decl_stmt|;
 name|int
 name|i
@@ -774,6 +916,8 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|nsegs
+decl_stmt|,
+name|maxsegs
 decl_stmt|;
 name|int
 name|first
@@ -795,10 +939,13 @@ decl_stmt|;
 name|bus_dmamap_t
 name|map
 decl_stmt|;
+name|bus_dma_tag_t
+name|tag
+decl_stmt|;
 name|bus_dma_segment_t
 name|segs
 index|[
-name|I40E_MAX_SEGS
+name|I40E_MAX_TSO_SEGS
 index|]
 decl_stmt|;
 name|cmd
@@ -811,26 +958,6 @@ name|m_head
 operator|=
 operator|*
 name|m_headp
-expr_stmt|;
-comment|/* Grab the VLAN tag */
-if|if
-condition|(
-name|m_head
-operator|->
-name|m_flags
-operator|&
-name|M_VLANTAG
-condition|)
-name|vtag
-operator|=
-name|htole16
-argument_list|(
-name|m_head
-operator|->
-name|m_pkthdr
-operator|.
-name|ether_vtag
-argument_list|)
 expr_stmt|;
 comment|/*          * Important to capture the first descriptor          * used because it will contain the index of          * the one we tell the hardware to report back          */
 name|first
@@ -855,13 +982,67 @@ name|buf
 operator|->
 name|map
 expr_stmt|;
+name|tag
+operator|=
+name|txr
+operator|->
+name|tx_tag
+expr_stmt|;
+name|maxsegs
+operator|=
+name|I40E_MAX_TX_SEGS
+expr_stmt|;
+if|if
+condition|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_TSO
+condition|)
+block|{
+comment|/* Use larger mapping for TSO */
+name|tag
+operator|=
+name|txr
+operator|->
+name|tso_tag
+expr_stmt|;
+name|maxsegs
+operator|=
+name|I40E_MAX_TSO_SEGS
+expr_stmt|;
+if|if
+condition|(
+name|i40e_tso_detect_sparse
+argument_list|(
+name|m_head
+argument_list|)
+condition|)
+block|{
+name|m
+operator|=
+name|m_defrag
+argument_list|(
+name|m_head
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+operator|*
+name|m_headp
+operator|=
+name|m
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * Map the packet for DMA. 	 */
 name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
 argument_list|(
-name|txr
-operator|->
 name|tag
 argument_list|,
 name|map
@@ -891,12 +1072,14 @@ name|m
 decl_stmt|;
 name|m
 operator|=
-name|m_defrag
+name|m_collapse
 argument_list|(
 operator|*
 name|m_headp
 argument_list|,
 name|M_NOWAIT
+argument_list|,
+name|maxsegs
 argument_list|)
 expr_stmt|;
 if|if
@@ -938,8 +1121,6 @@ name|error
 operator|=
 name|bus_dmamap_load_mbuf_sg
 argument_list|(
-name|txr
-operator|->
 name|tag
 argument_list|,
 name|map
@@ -1084,6 +1265,17 @@ operator|*
 name|m_headp
 expr_stmt|;
 comment|/* Set up the TSO/CSUM offload */
+if|if
+condition|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_OFFLOAD
+condition|)
+block|{
 name|error
 operator|=
 name|i40e_tx_setup_offload
@@ -1106,11 +1298,12 @@ condition|)
 goto|goto
 name|xmit_fail
 goto|;
+block|}
 name|cmd
 operator||=
 name|I40E_TX_DESC_CMD_ICRC
 expr_stmt|;
-comment|/* Add vlan tag to each descriptor */
+comment|/* Grab the VLAN tag */
 if|if
 condition|(
 name|m_head
@@ -1119,10 +1312,23 @@ name|m_flags
 operator|&
 name|M_VLANTAG
 condition|)
+block|{
 name|cmd
 operator||=
 name|I40E_TX_DESC_CMD_IL2TAG1
 expr_stmt|;
+name|vtag
+operator|=
+name|htole16
+argument_list|(
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|ether_vtag
+argument_list|)
+expr_stmt|;
+block|}
 name|i
 operator|=
 name|txr
@@ -1156,6 +1362,13 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|buf
+operator|->
+name|tag
+operator|=
+name|tag
+expr_stmt|;
+comment|/* Keep track of the type tag */
 name|txd
 operator|=
 operator|&
@@ -1323,8 +1536,6 @@ name|map
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
-name|txr
-operator|->
 name|tag
 argument_list|,
 name|map
@@ -1378,12 +1589,9 @@ name|wr32
 argument_list|(
 name|hw
 argument_list|,
-name|I40E_QTX_TAIL
-argument_list|(
-name|que
+name|txr
 operator|->
-name|me
-argument_list|)
+name|tail
 argument_list|,
 name|i
 argument_list|)
@@ -1417,8 +1625,6 @@ name|xmit_fail
 label|:
 name|bus_dmamap_unload
 argument_list|(
-name|txr
-operator|->
 name|tag
 argument_list|,
 name|buf
@@ -1514,8 +1720,9 @@ comment|/* filter, filterarg */
 name|I40E_TSO_SIZE
 argument_list|,
 comment|/* maxsize */
-literal|32
+name|I40E_MAX_TX_SEGS
 argument_list|,
+comment|/* nsegments */
 name|PAGE_SIZE
 argument_list|,
 comment|/* maxsegsize */
@@ -1531,7 +1738,7 @@ comment|/* lockfuncarg */
 operator|&
 name|txr
 operator|->
-name|tag
+name|tx_tag
 argument_list|)
 operator|)
 condition|)
@@ -1541,6 +1748,70 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Unable to allocate TX DMA tag\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+comment|/* Make a special tag for TSO */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|bus_dma_tag_create
+argument_list|(
+name|NULL
+argument_list|,
+comment|/* parent */
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+comment|/* alignment, bounds */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* filter, filterarg */
+name|I40E_TSO_SIZE
+argument_list|,
+comment|/* maxsize */
+name|I40E_MAX_TSO_SEGS
+argument_list|,
+comment|/* nsegments */
+name|PAGE_SIZE
+argument_list|,
+comment|/* maxsegsize */
+literal|0
+argument_list|,
+comment|/* flags */
+name|NULL
+argument_list|,
+comment|/* lockfunc */
+name|NULL
+argument_list|,
+comment|/* lockfuncarg */
+operator|&
+name|txr
+operator|->
+name|tso_tag
+argument_list|)
+operator|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Unable to allocate TX TSO DMA tag\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1596,7 +1867,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Create the descriptor buffer dma maps */
+comment|/* Create the descriptor buffer default dma maps */
 name|buf
 operator|=
 name|txr
@@ -1623,11 +1894,19 @@ name|buf
 operator|++
 control|)
 block|{
+name|buf
+operator|->
+name|tag
+operator|=
+name|txr
+operator|->
+name|tx_tag
+expr_stmt|;
 name|error
 operator|=
 name|bus_dmamap_create
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -1795,7 +2074,7 @@ condition|)
 block|{
 name|bus_dmamap_sync
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -1808,7 +2087,7 @@ argument_list|)
 expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -1948,7 +2227,7 @@ condition|)
 block|{
 name|bus_dmamap_sync
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -1961,7 +2240,7 @@ argument_list|)
 expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -1994,7 +2273,7 @@ condition|)
 block|{
 name|bus_dmamap_destroy
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -2023,7 +2302,7 @@ condition|)
 block|{
 name|bus_dmamap_unload
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -2034,7 +2313,7 @@ argument_list|)
 expr_stmt|;
 name|bus_dmamap_destroy
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -2097,7 +2376,7 @@ if|if
 condition|(
 name|txr
 operator|->
-name|tag
+name|tx_tag
 operator|!=
 name|NULL
 condition|)
@@ -2106,12 +2385,35 @@ name|bus_dma_tag_destroy
 argument_list|(
 name|txr
 operator|->
-name|tag
+name|tx_tag
 argument_list|)
 expr_stmt|;
 name|txr
 operator|->
-name|tag
+name|tx_tag
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|txr
+operator|->
+name|tso_tag
+operator|!=
+name|NULL
+condition|)
+block|{
+name|bus_dma_tag_destroy
+argument_list|(
+name|txr
+operator|->
+name|tso_tag
+argument_list|)
+expr_stmt|;
+name|txr
+operator|->
+name|tso_tag
 operator|=
 name|NULL
 expr_stmt|;
@@ -2460,15 +2762,11 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
+operator|(
 name|CSUM_TCP
-operator|||
-name|mp
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
-operator|&
+operator||
 name|CSUM_TCP_IPV6
+operator|)
 condition|)
 block|{
 operator|*
@@ -2514,15 +2812,11 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
+operator|(
 name|CSUM_UDP
-operator|||
-name|mp
-operator|->
-name|m_pkthdr
-operator|.
-name|csum_flags
-operator|&
+operator||
 name|CSUM_UDP_IPV6
+operator|)
 condition|)
 block|{
 operator|*
@@ -2558,7 +2852,11 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
+operator|(
 name|CSUM_SCTP
+operator||
+name|CSUM_SCTP_IPV6
+operator|)
 condition|)
 block|{
 operator|*
@@ -3117,6 +3415,61 @@ block|}
 end_function
 
 begin_comment
+comment|/*              ** i40e_get_tx_head - Retrieve the value from the  **    location the HW records its HEAD index */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|u32
+name|i40e_get_tx_head
+parameter_list|(
+name|struct
+name|i40e_queue
+modifier|*
+name|que
+parameter_list|)
+block|{
+name|struct
+name|tx_ring
+modifier|*
+name|txr
+init|=
+operator|&
+name|que
+operator|->
+name|txr
+decl_stmt|;
+name|void
+modifier|*
+name|head
+init|=
+operator|&
+name|txr
+operator|->
+name|base
+index|[
+name|que
+operator|->
+name|num_desc
+index|]
+decl_stmt|;
+return|return
+name|LE32_TO_CPU
+argument_list|(
+operator|*
+operator|(
+specifier|volatile
+name|__le32
+operator|*
+operator|)
+name|head
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**********************************************************************  *  *  Examine each tx_buffer in the used queue. If the hardware is done  *  processing the packet then free associated resources. The  *  tx_buffer is put back on the free queue.  *  **********************************************************************/
 end_comment
 
@@ -3162,6 +3515,8 @@ name|u32
 name|first
 decl_stmt|,
 name|last
+decl_stmt|,
+name|head
 decl_stmt|,
 name|done
 decl_stmt|,
@@ -3278,6 +3633,14 @@ index|[
 name|last
 index|]
 expr_stmt|;
+comment|/* Get the Head WB value */
+name|head
+operator|=
+name|i40e_get_tx_head
+argument_list|(
+name|que
+argument_list|)
+expr_stmt|;
 comment|/* 	** Get the index of the first descriptor 	** BEYOND the EOP and call that 'done'. 	** I do this so the comparison in the 	** inner while loop below can be simple 	*/
 if|if
 condition|(
@@ -3313,17 +3676,12 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|/* 	** Only the EOP descriptor of a packet now has the DD 	** bit set, this is what we look for... 	*/
+comment|/* 	** The HEAD index of the ring is written in a  	** defined location, this rather than a done bit 	** is what is used to keep track of what must be 	** 'cleaned'. 	*/
 while|while
 condition|(
-name|eop_desc
-operator|->
-name|cmd_type_offset_bsz
-operator|&
-name|htole32
-argument_list|(
-name|I40E_TX_DESC_DTYPE_DESC_DONE
-argument_list|)
+name|first
+operator|!=
+name|head
 condition|)
 block|{
 comment|/* We clean the range of the packet */
@@ -3334,13 +3692,6 @@ operator|!=
 name|done
 condition|)
 block|{
-name|tx_desc
-operator|->
-name|cmd_type_offset_bsz
-operator|&=
-operator|~
-name|I40E_TXD_QW1_DTYPE_MASK
-expr_stmt|;
 operator|++
 name|txr
 operator|->
@@ -3370,7 +3721,7 @@ name|len
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -3383,7 +3734,7 @@ argument_list|)
 expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
-name|txr
+name|buf
 operator|->
 name|tag
 argument_list|,
@@ -3538,21 +3889,36 @@ expr_stmt|;
 comment|/* 	** Hang detection, we know there's 	** work outstanding or the first return 	** would have been taken, so indicate an 	** unsuccessful pass, in local_timer if 	** the value is too great the queue will 	** be considered hung. If anything has been 	** cleaned then reset the state. 	*/
 if|if
 condition|(
-operator|!
+operator|(
 name|processed
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|que
+operator|->
+name|busy
+operator|!=
+name|I40E_QUEUE_HUNG
+operator|)
 condition|)
 operator|++
 name|que
 operator|->
 name|busy
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|processed
+condition|)
 name|que
 operator|->
 name|busy
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Note this turns off HUNG */
 comment|/* 	 * If there are no pending descriptors, clear the timeout. 	 */
 if|if
 condition|(
@@ -4009,6 +4375,7 @@ operator|.
 name|ds_addr
 argument_list|)
 expr_stmt|;
+comment|/* Used only when doing header split */
 name|rxr
 operator|->
 name|base
@@ -4064,12 +4431,9 @@ name|vsi
 operator|->
 name|hw
 argument_list|,
-name|I40E_QRX_TAIL
-argument_list|(
-name|que
+name|rxr
 operator|->
-name|me
-argument_list|)
+name|tail
 argument_list|,
 name|rxr
 operator|->
@@ -4664,6 +5028,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* header split is off */
 name|rxr
 operator|->
 name|hdr_split
@@ -5444,7 +5809,7 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|u32
+name|u8
 name|ptype
 parameter_list|)
 block|{
@@ -5764,8 +6129,6 @@ decl_stmt|;
 name|u32
 name|rsc
 decl_stmt|,
-name|ptype
-decl_stmt|,
 name|status
 decl_stmt|,
 name|error
@@ -5779,6 +6142,9 @@ name|vtag
 decl_stmt|;
 name|u64
 name|qword
+decl_stmt|;
+name|u8
+name|ptype
 decl_stmt|;
 name|bool
 name|eop
@@ -6649,10 +7015,21 @@ parameter_list|,
 name|u32
 name|error
 parameter_list|,
-name|u32
+name|u8
 name|ptype
 parameter_list|)
 block|{
+name|struct
+name|i40e_rx_ptype_decoded
+name|decoded
+decl_stmt|;
+name|decoded
+operator|=
+name|decode_rx_desc_ptype
+argument_list|(
+name|ptype
+argument_list|)
+expr_stmt|;
 comment|/* Errors? */
 if|if
 condition|(
@@ -6670,6 +7047,42 @@ literal|1
 operator|<<
 name|I40E_RX_DESC_ERROR_L4E_SHIFT
 operator|)
+operator|)
+condition|)
+block|{
+name|mp
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
+comment|/* IPv6 with extension headers likely have bad csum */
+if|if
+condition|(
+name|decoded
+operator|.
+name|outer_ip
+operator|==
+name|I40E_RX_PTYPE_OUTER_IP
+operator|&&
+name|decoded
+operator|.
+name|outer_ip_ver
+operator|==
+name|I40E_RX_PTYPE_OUTER_IPV6
+condition|)
+if|if
+condition|(
+name|status
+operator|&
+operator|(
+literal|1
+operator|<<
+name|I40E_RX_DESC_STATUS_IPV6EXADD_SHIFT
 operator|)
 condition|)
 block|{
