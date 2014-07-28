@@ -810,6 +810,15 @@ argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 block|}
 block|}
 block|}
