@@ -1692,6 +1692,13 @@ name|vm_object_t
 name|obj
 parameter_list|)
 block|{
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"tmpfs_destroy_vobject"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
