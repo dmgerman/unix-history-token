@@ -4765,9 +4765,10 @@ name|auth_portal_find
 argument_list|(
 name|ag
 argument_list|,
+operator|&
 name|conn
 operator|->
-name|conn_initiator_addr
+name|conn_initiator_sa
 argument_list|)
 operator|==
 name|NULL
