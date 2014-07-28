@@ -2593,14 +2593,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_assert
-argument_list|(
-name|TMPFS_NODE_MTX
+name|TMPFS_NODE_ASSERT_LOCKED
 argument_list|(
 name|node
-argument_list|)
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|node

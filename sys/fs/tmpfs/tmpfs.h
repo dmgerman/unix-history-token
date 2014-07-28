@@ -521,6 +521,16 @@ parameter_list|)
 value|(&(node)->tn_interlock)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TMPFS_NODE_ASSERT_LOCKED
+parameter_list|(
+name|node
+parameter_list|)
+value|mtx_assert(TMPFS_NODE_MTX(node), \     MA_OWNED)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
