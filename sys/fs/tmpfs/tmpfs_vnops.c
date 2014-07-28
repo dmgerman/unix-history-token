@@ -200,10 +200,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -863,10 +859,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -946,10 +938,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -1038,10 +1026,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -1167,10 +1151,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1204,10 +1184,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 name|int
@@ -1397,10 +1373,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 name|int
@@ -2394,10 +2366,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2436,10 +2404,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -2657,10 +2621,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -2914,10 +2874,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * We acquire all but fdvp locks using non-blocking acquisitions.  If we  * fail to acquire any lock in the path we will drop all held locks,  * acquire the new lock in a blocking fashion, and then release it and  * restart the rename.  This acquire/release step ensures that we do not  * spin on a lock waiting for release.  On error release all vnode locks  * and decrement references the way tmpfs_rename() would do.  */
@@ -4732,10 +4688,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -4809,10 +4761,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -5172,10 +5120,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5271,10 +5215,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -5531,10 +5471,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5631,10 +5567,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5685,10 +5617,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 name|int
@@ -5846,10 +5774,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5948,10 +5872,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -6270,10 +6190,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * vnode operations vector used for files stored in a tmpfs file system.  */
