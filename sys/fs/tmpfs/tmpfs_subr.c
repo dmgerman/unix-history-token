@@ -2769,13 +2769,11 @@ operator|==
 name|LINK_MAX
 condition|)
 block|{
-name|error
-operator|=
+return|return
+operator|(
 name|EMLINK
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|)
+return|;
 block|}
 name|parent
 operator|=
@@ -2837,9 +2835,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* Allocate a directory entry that points to the new file. */
 name|error
 operator|=
@@ -2875,9 +2875,11 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 comment|/* Allocate a vnode for the new file. */
 name|error
@@ -2916,9 +2918,11 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 comment|/* Now that all required items are allocated, we can proceed to 	 * insert the new node into the directory, an operation that 	 * cannot fail. */
 if|if
@@ -2943,10 +2947,10 @@ argument_list|,
 name|de
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
-name|error
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
