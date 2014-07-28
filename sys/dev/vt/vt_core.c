@@ -10578,6 +10578,7 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
+comment|/* Update windows sizes and initialize last items. */
 name|vt_upgrade
 argument_list|(
 name|vd
@@ -10610,6 +10611,7 @@ operator|&
 name|VDF_ASYNC
 condition|)
 block|{
+comment|/* Allow to put chars now. */
 name|terminal_mute
 argument_list|(
 name|vd
@@ -10621,6 +10623,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Rerun timer for screen updates. */
 name|callout_schedule
 argument_list|(
 operator|&
@@ -10634,6 +10637,7 @@ name|VT_TIMERFREQ
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Register as console. If it already registered, cnadd() will ignore 	 * it. 	 */
 name|termcn_cnregister
 argument_list|(
 name|vd
