@@ -73,11 +73,11 @@ name|int
 name|s_error
 decl_stmt|;
 comment|/* current error code */
-name|size_t
+name|ssize_t
 name|s_size
 decl_stmt|;
 comment|/* size of storage buffer */
-name|size_t
+name|ssize_t
 name|s_len
 decl_stmt|;
 comment|/* current length of string */
@@ -124,18 +124,6 @@ name|ssize_t
 name|s_sect_len
 decl_stmt|;
 comment|/* current length of section */
-define|#
-directive|define
-name|SBUF_STATIC_LEN
-value|64
-comment|/* static storage buffer length */
-name|char
-name|s_static_buf
-index|[
-name|SBUF_STATIC_LEN
-index|]
-decl_stmt|;
-comment|/* static storage buffer */
 block|}
 struct|;
 end_struct
@@ -190,7 +178,7 @@ name|struct
 name|sbuf
 modifier|*
 parameter_list|,
-name|size_t
+name|ssize_t
 parameter_list|)
 function_decl|;
 end_function_decl
