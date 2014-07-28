@@ -2229,6 +2229,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* lkflag is ignored, the lock is exclusive */
 operator|(
 name|void
 operator|)
