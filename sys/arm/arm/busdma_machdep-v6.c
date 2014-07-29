@@ -3101,15 +3101,6 @@ name|ba
 operator|=
 name|standard_allocator
 expr_stmt|;
-operator|(
-operator|*
-name|mapp
-operator|)
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
 block|}
 comment|/* 	 * Try to find a bufzone in the allocator that holds a cache of buffers 	 * of the right size for this request.  If the buffer is too big to be 	 * held in the allocator cache, this returns NULL. 	 */
 name|bufzone
