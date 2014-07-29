@@ -1927,6 +1927,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ipfw_ctl3
+parameter_list|(
+name|struct
+name|sockopt
+modifier|*
+name|sopt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ipfw_chk
 parameter_list|(
 name|struct
