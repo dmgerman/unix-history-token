@@ -1699,26 +1699,6 @@ name|u_int
 name|ifa_refcnt
 decl_stmt|;
 comment|/* references to this structure */
-name|int
-name|ifa_metric
-decl_stmt|;
-comment|/* cost of going out this interface */
-name|int
-function_decl|(
-modifier|*
-name|ifa_claim_addr
-function_decl|)
-comment|/* check if an addr goes to this if */
-parameter_list|(
-name|struct
-name|ifaddr
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|)
-function_decl|;
 name|counter_u64_t
 name|ifa_ipackets
 decl_stmt|;

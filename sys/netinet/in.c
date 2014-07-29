@@ -1652,16 +1652,6 @@ name|ifp
 expr_stmt|;
 name|ia
 operator|->
-name|ia_ifa
-operator|.
-name|ifa_metric
-operator|=
-name|ifp
-operator|->
-name|if_metric
-expr_stmt|;
-name|ia
-operator|->
 name|ia_addr
 operator|=
 operator|*
