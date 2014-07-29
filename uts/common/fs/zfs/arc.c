@@ -354,6 +354,20 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|zfs_arc_average_blocksize
+init|=
+literal|8
+operator|*
+literal|1024
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 8KB */
+end_comment
+
 begin_comment
 comment|/*  * Note that buffers can be in one of 6 states:  *	ARC_anon	- anonymous (discussed below)  *	ARC_mru		- recently used, currently cached  *	ARC_mru_ghost	- recentely used, no longer in cache  *	ARC_mfu		- frequently used, currently cached  *	ARC_mfu_ghost	- frequently used, no longer in cache  *	ARC_l2c_only	- exists in L2ARC but not other states  * When there are no active references to the buffer, they are  * are linked onto a list in one of these arc states.  These are  * the only buffers that can be evicted or deleted.  Within each  * state there are multiple lists, one for meta-data and one for  * non-meta-data.  Meta-data (indirect blocks, blocks of dnodes,  * etc.) is tracked separately so that it can be managed more  * explicitly: favored over data, limited explicitly.  *  * Anonymous buffers are buffers that are not associated with  * a DVA.  These are buffers that hold dirty block copies  * before they are written to stable storage.  By definition,  * they are "ref'd" and are considered part of arc_mru  * that cannot be freed.  Generally, they will aquire a DVA  * as they are written and migrate onto the arc_mru list.  *  * The ARC_l2c_only state is for buffers that are in the second  * level ARC but no longer in any of the ARC_m* lists.  The second  * level ARC itself may also contain buffers that are in any of  * the ARC_m* states - meaning that a buffer can exist in two  * places.  The reason for the ARC_l2c_only state is to keep the  * buffer header in the hash table, so that reads that hit the  * second level ARC benefit from these fast lookups.  */
 end_comment
@@ -3644,12 +3658,12 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-comment|/* 	 * The hash table is big enough to fill all of physical memory 	 * with an average 64K block size.  The table will take up 	 * totalmem*sizeof(void*)/64K (eg. 128KB/GB with 8-byte pointers). 	 */
+comment|/* 	 * The hash table is big enough to fill all of physical memory 	 * with an average block size of zfs_arc_average_blocksize (default 8K). 	 * By default, the table will take up 	 * totalmem * sizeof(void*) / 8K (1MB per GB with 8-byte pointers). 	 */
 while|while
 condition|(
 name|hsize
 operator|*
-literal|65536
+name|zfs_arc_average_blocksize
 operator|<
 name|physmem
 operator|*
