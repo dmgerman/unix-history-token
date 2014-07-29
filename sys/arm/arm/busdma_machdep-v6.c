@@ -933,7 +933,7 @@ name|i
 index|]
 operator|&&
 name|lowaddr
-operator|<=
+operator|<
 name|phys_avail
 index|[
 name|i
@@ -951,7 +951,7 @@ name|i
 index|]
 operator|&&
 name|highaddr
-operator|>
+operator|>=
 name|phys_avail
 index|[
 name|i
