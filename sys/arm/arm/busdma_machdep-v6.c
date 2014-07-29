@@ -1218,12 +1218,9 @@ name|filter
 operator|==
 name|NULL
 operator|||
-call|(
-modifier|*
 name|dmat
 operator|->
 name|filter
-call|)
 argument_list|(
 name|dmat
 operator|->
@@ -7391,11 +7388,9 @@ name|map
 operator|->
 name|dmat
 expr_stmt|;
-call|(
 name|dmat
 operator|->
 name|lockfunc
-call|)
 argument_list|(
 name|dmat
 operator|->
@@ -7428,11 +7423,9 @@ argument_list|,
 name|BUS_DMA_WAITOK
 argument_list|)
 expr_stmt|;
-call|(
 name|dmat
 operator|->
 name|lockfunc
-call|)
 argument_list|(
 name|dmat
 operator|->
