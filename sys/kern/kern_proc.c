@@ -11422,12 +11422,6 @@ argument_list|(
 name|entry
 operator|->
 name|offset
-operator|+
-name|addr
-operator|-
-name|entry
-operator|->
-name|start
 argument_list|)
 expr_stmt|;
 for|for
