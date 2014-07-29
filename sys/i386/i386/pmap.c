@@ -5262,6 +5262,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * NB:  The sequence of updating a page table followed by accesses to the  * corresponding pages is subject to the situation described in the "AMD64  * Architecture Programmer's Manual Volume 2: System Programming" rev. 3.23,  * "7.3.1 Special Coherency Considerations".  Therefore, issuing the INVLPG  * right after modifying the PTE bits is crucial.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -17609,26 +17613,6 @@ expr_stmt|;
 name|sched_pin
 argument_list|()
 expr_stmt|;
-name|invlpg
-argument_list|(
-operator|(
-name|u_int
-operator|)
-name|sysmaps
-operator|->
-name|CADDR1
-argument_list|)
-expr_stmt|;
-name|invlpg
-argument_list|(
-operator|(
-name|u_int
-operator|)
-name|sysmaps
-operator|->
-name|CADDR2
-argument_list|)
-expr_stmt|;
 operator|*
 name|sysmaps
 operator|->
@@ -17652,6 +17636,13 @@ operator|.
 name|pat_mode
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|invlcaddr
+argument_list|(
+name|sysmaps
+operator|->
+name|CADDR1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -17681,6 +17672,13 @@ operator|.
 name|pat_mode
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|invlcaddr
+argument_list|(
+name|sysmaps
+operator|->
+name|CADDR2
 argument_list|)
 expr_stmt|;
 name|bcopy
