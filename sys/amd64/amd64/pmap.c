@@ -22618,6 +22618,7 @@ decl_stmt|;
 name|boolean_t
 name|pinned
 decl_stmt|;
+comment|/* 	 * NB:  The sequence of updating a page table followed by accesses 	 * to the corresponding pages used in the !DMAP case is subject to 	 * the situation described in the "AMD64 Architecture Programmer's 	 * Manual Volume 2: System Programming" rev. 3.23, "7.3.1 Special 	 * Coherency Considerations".  Therefore, issuing the INVLPG right 	 * after modifying the PTE bits is crucial. 	 */
 name|pinned
 operator|=
 name|FALSE
