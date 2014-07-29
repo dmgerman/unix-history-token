@@ -301,17 +301,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if the system has the type `intptr_t'. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_INTPTR_T
-value|1
-end_define
-
-begin_comment
 comment|/* define if you have inttypes.h */
 end_comment
 
@@ -936,7 +925,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"ldns 1.6.16"
+value|"ldns 1.6.17"
 end_define
 
 begin_comment
@@ -969,8 +958,48 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.6.16"
+value|"1.6.17"
 end_define
+
+begin_comment
+comment|/* Define this to enable RR type CDS. */
+end_comment
+
+begin_comment
+comment|/* #undef RRTYPE_CDS */
+end_comment
+
+begin_comment
+comment|/* Define this to enable RR type NINFO. */
+end_comment
+
+begin_comment
+comment|/* #undef RRTYPE_NINFO */
+end_comment
+
+begin_comment
+comment|/* Define this to enable RR type RKEY. */
+end_comment
+
+begin_comment
+comment|/* #undef RRTYPE_RKEY */
+end_comment
+
+begin_comment
+comment|/* Define this to enable RR type TA. */
+end_comment
+
+begin_comment
+comment|/* #undef RRTYPE_TA */
+end_comment
+
+begin_comment
+comment|/* Define this to enable RR type URI. */
+end_comment
+
+begin_comment
+comment|/* #undef RRTYPE_URI */
+end_comment
 
 begin_comment
 comment|/* The size of `time_t', as computed by sizeof. */
@@ -995,6 +1024,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define this to enable messages to stderr. */
+end_comment
+
+begin_comment
+comment|/* #undef STDERR_MSGS */
+end_comment
+
+begin_comment
 comment|/* System configuration dir */
 end_comment
 
@@ -1003,6 +1040,17 @@ define|#
 directive|define
 name|SYSCONFDIR
 value|sysconfdir
+end_define
+
+begin_comment
+comment|/* Define this to enable DANE support. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_DANE
+value|1
 end_define
 
 begin_comment
@@ -1322,7 +1370,7 @@ comment|/* #undef int8_t */
 end_comment
 
 begin_comment
-comment|/* Define to the type of a signed integer type wide enough to hold a pointer,    if such a type exists, and if the system does not define it. */
+comment|/* Define to `size_t' if<sys/types.h> does not define. */
 end_comment
 
 begin_comment
@@ -1704,6 +1752,120 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+name|int
+name|ldns_b64_ntop
+parameter_list|(
+name|uint8_t
+specifier|const
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|srclength
+parameter_list|,
+name|char
+modifier|*
+name|target
+parameter_list|,
+name|size_t
+name|targsize
+parameter_list|)
+function_decl|;
+comment|/**  * calculates the size needed to store the result of b64_ntop  */
+comment|/*@unused@*/
+specifier|static
+specifier|inline
+name|size_t
+name|ldns_b64_ntop_calculate_size
+parameter_list|(
+name|size_t
+name|srcsize
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+operator|(
+name|srcsize
+operator|+
+literal|2
+operator|)
+operator|/
+literal|3
+operator|)
+operator|*
+literal|4
+operator|)
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|int
+name|ldns_b64_pton
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+name|src
+parameter_list|,
+name|uint8_t
+modifier|*
+name|target
+parameter_list|,
+name|size_t
+name|targsize
+parameter_list|)
+function_decl|;
+comment|/**  * calculates the size needed to store the result of ldns_b64_pton  */
+comment|/*@unused@*/
+specifier|static
+specifier|inline
+name|size_t
+name|ldns_b64_pton_calculate_size
+parameter_list|(
+name|size_t
+name|srcsize
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+operator|(
+operator|(
+name|srcsize
+operator|+
+literal|3
+operator|)
+operator|/
+literal|4
+operator|)
+operator|*
+literal|3
+operator|)
+operator|)
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+comment|/**  * Given in dnssec_zone.c, also used in dnssec_sign.c:w   */
+name|int
+name|ldns_dname_compare_v
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
 ifndef|#
 directive|ifndef
 name|HAVE_SLEEP

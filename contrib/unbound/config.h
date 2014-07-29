@@ -194,6 +194,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `endprotoent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ENDPROTOENT
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `endservent' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ENDSERVENT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `event_base_free' function. */
 end_comment
 
@@ -519,36 +541,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `ldns_key_EVP_unload_gost' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_LDNS_KEY_EVP_UNLOAD_GOST */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the<ldns/ldns.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LDNS_LDNS_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `ldns' library (-lldns). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LIBLDNS
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `localtime_r' function. */
 end_comment
 
@@ -711,6 +703,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Have PTHREAD_PRIO_INHERIT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PTHREAD_PRIO_INHERIT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if the system has the type `pthread_rwlock_t'. */
 end_comment
 
@@ -777,12 +780,9 @@ begin_comment
 comment|/* Define to 1 if you have the `sbrk' function. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SBRK
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SBRK */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `sendmsg' function. */
@@ -1017,6 +1017,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRING_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `strlcat' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRLCAT
 value|1
 end_define
 
@@ -1433,7 +1444,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"unbound 1.4.20"
+value|"unbound 1.4.22"
 end_define
 
 begin_comment
@@ -1466,7 +1477,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.4.20"
+value|"1.4.22"
 end_define
 
 begin_comment
@@ -1529,7 +1540,7 @@ begin_define
 define|#
 directive|define
 name|RSRC_PACKAGE_VERSION
-value|1,4,2,0
+value|1,4,22,0
 end_define
 
 begin_comment
@@ -1552,6 +1563,17 @@ define|#
 directive|define
 name|SHARE_DIR
 value|"/var/unbound"
+end_define
+
+begin_comment
+comment|/* The size of `time_t', as computed by sizeof. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_TIME_T
+value|8
 end_define
 
 begin_comment
@@ -1884,6 +1906,14 @@ end_comment
 
 begin_comment
 comment|/* #undef _MINIX */
+end_comment
+
+begin_comment
+comment|/* Enable for compile on Minix */
+end_comment
+
+begin_comment
+comment|/* #undef _NETBSD_SOURCE */
 end_comment
 
 begin_comment
@@ -2330,6 +2360,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/** Use small-ldns codebase */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_SLDNS
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SSL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LDNS_BUILD_CONFIG_HAVE_SSL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -2370,6 +2429,23 @@ begin_include
 include|#
 directive|include
 file|<stddef.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDARG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
 end_include
 
 begin_endif
@@ -2513,6 +2589,36 @@ include|#
 directive|include
 file|<ws2tcpip.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_WINSOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ARG_LL
+value|"%ll"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ARG_LL
+value|"%I64"
+end_define
 
 begin_endif
 endif|#
@@ -2943,6 +3049,43 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_STRLCAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|strlcat
+value|strlcat_unbound
+end_define
+
+begin_function_decl
+name|size_t
+name|strlcat
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|size_t
+name|siz
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_STRLCPY
 end_ifndef
 
@@ -3014,11 +3157,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_SLEEP
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_WINDOWS_H
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -3423,17 +3575,6 @@ end_endif
 begin_comment
 comment|/* CHECKED_INET6 */
 end_comment
-
-begin_comment
-comment|/* maximum nesting of included files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXINCLUDES
-value|10
-end_define
 
 begin_ifndef
 ifndef|#

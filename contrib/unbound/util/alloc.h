@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * util/alloc.h - memory allocation service.   *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * util/alloc.h - memory allocation service.   *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -622,77 +622,77 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|ldns_rr2str
+name|sldns_rr2str
 parameter_list|(
 name|rr
 parameter_list|)
-value|unbound_lite_wrapstr(ldns_rr2str(rr))
+value|unbound_lite_wrapstr(sldns_rr2str(rr))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ldns_rdf2str
+name|sldns_rdf2str
 parameter_list|(
 name|rdf
 parameter_list|)
-value|unbound_lite_wrapstr(ldns_rdf2str(rdf))
+value|unbound_lite_wrapstr(sldns_rdf2str(rdf))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ldns_rr_type2str
+name|sldns_rr_type2str
 parameter_list|(
 name|t
 parameter_list|)
-value|unbound_lite_wrapstr(ldns_rr_type2str(t))
+value|unbound_lite_wrapstr(sldns_rr_type2str(t))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ldns_rr_class2str
+name|sldns_rr_class2str
 parameter_list|(
 name|c
 parameter_list|)
-value|unbound_lite_wrapstr(ldns_rr_class2str(c))
+value|unbound_lite_wrapstr(sldns_rr_class2str(c))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ldns_rr_list2str
+name|sldns_rr_list2str
 parameter_list|(
 name|r
 parameter_list|)
-value|unbound_lite_wrapstr(ldns_rr_list2str(r))
+value|unbound_lite_wrapstr(sldns_rr_list2str(r))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ldns_pkt2str
+name|sldns_pkt2str
 parameter_list|(
 name|p
 parameter_list|)
-value|unbound_lite_wrapstr(ldns_pkt2str(p))
+value|unbound_lite_wrapstr(sldns_pkt2str(p))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ldns_pkt_rcode2str
+name|sldns_pkt_rcode2str
 parameter_list|(
 name|r
 parameter_list|)
-value|unbound_lite_wrapstr(ldns_pkt_rcode2str(r))
+value|unbound_lite_wrapstr(sldns_pkt_rcode2str(r))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ldns_pkt2wire
+name|sldns_pkt2wire
 parameter_list|(
 name|a
 parameter_list|,
@@ -704,7 +704,7 @@ value|unbound_lite_pkt2wire(a, r, s)
 end_define
 
 begin_function_decl
-name|ldns_status
+name|sldns_status
 name|unbound_lite_pkt2wire
 parameter_list|(
 name|uint8_t
@@ -713,7 +713,7 @@ modifier|*
 name|dest
 parameter_list|,
 specifier|const
-name|ldns_pkt
+name|sldns_pkt
 modifier|*
 name|p
 parameter_list|,

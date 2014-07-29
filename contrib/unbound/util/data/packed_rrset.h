@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * util/data/packed_rrset.h - data storage for a set of resource records.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * util/data/packed_rrset.h - data storage for a set of resource records.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"util/storage/lruhash.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/rr.h>
 end_include
 
 begin_struct_decl
@@ -235,7 +229,7 @@ struct|struct
 name|packed_rrset_data
 block|{
 comment|/** TTL (in seconds like time()) of the rrset. 	 * Same for all RRs see rfc2181(5.2).  */
-name|uint32_t
+name|time_t
 name|ttl
 decl_stmt|;
 comment|/** number of rrs. */
@@ -262,7 +256,7 @@ modifier|*
 name|rr_len
 decl_stmt|;
 comment|/** ttl of every rr. rr_ttl[i] ttl of rr i. */
-name|uint32_t
+name|time_t
 modifier|*
 name|rr_ttl
 decl_stmt|;
@@ -365,7 +359,7 @@ comment|/**  * Get TTL of rrset. RRset data must be filled in correctly.  * @par
 end_comment
 
 begin_function_decl
-name|uint32_t
+name|time_t
 name|ub_packed_rrset_ttl
 parameter_list|(
 name|struct
@@ -518,7 +512,7 @@ name|packed_rrset_data
 modifier|*
 name|data
 parameter_list|,
-name|uint32_t
+name|time_t
 name|add
 parameter_list|)
 function_decl|;
@@ -609,6 +603,60 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Convert RR from RRset to string.  * @param rrset: structure with data.  * @param i: index of rr or RRSIG.  * @param now: time that is subtracted from ttl before printout. Can be 0.  * @param dest: destination string buffer. Must be nonNULL.  * @param dest_len: length of dest buffer (>0).  * @return false on failure.  */
+end_comment
+
+begin_function_decl
+name|int
+name|packed_rr_to_string
+parameter_list|(
+name|struct
+name|ub_packed_rrset_key
+modifier|*
+name|rrset
+parameter_list|,
+name|size_t
+name|i
+parameter_list|,
+name|time_t
+name|now
+parameter_list|,
+name|char
+modifier|*
+name|dest
+parameter_list|,
+name|size_t
+name|dest_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Print the string with prefix, one rr per line.  * @param v: at what verbosity level to print this.  * @param str: string of message.  * @param rrset: with name, and rdata, and rrsigs.  */
+end_comment
+
+begin_function_decl
+name|void
+name|log_packed_rrset
+parameter_list|(
+name|enum
+name|verbosity_value
+name|v
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|struct
+name|ub_packed_rrset_key
+modifier|*
+name|rrset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**   * Allocate rrset in region - no more locks needed   * @param key: a (just from rrset cache looked up) rrset key + valid,  * 	packed data record.  * @param region: where to alloc the copy  * @param now: adjust the TTLs to be relative (subtract from all TTLs).  * @return new region-alloced rrset key or NULL on alloc failure.  */
 end_comment
 
@@ -628,7 +676,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 function_decl|;
@@ -654,63 +702,8 @@ name|alloc_cache
 modifier|*
 name|alloc
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * Create a ub_packed_rrset_key allocated on the heap.  * It therefore does not have the correct ID value, and cannot be used  * inside the cache.  It can be used in storage outside of the cache.  * Keys for the cache have to be obtained from alloc.h .  * @param rrset: the ldns rr set.  * @return key allocated or NULL on failure.  */
-end_comment
-
-begin_function_decl
-name|struct
-name|ub_packed_rrset_key
-modifier|*
-name|ub_packed_rrset_heap_key
-parameter_list|(
-name|ldns_rr_list
-modifier|*
-name|rrset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * Create packed_rrset data on the heap.  * @param rrset: the ldns rr set with the data to copy.  * @return data allocated or NULL on failure.  */
-end_comment
-
-begin_function_decl
-name|struct
-name|packed_rrset_data
-modifier|*
-name|packed_rrset_heap_data
-parameter_list|(
-name|ldns_rr_list
-modifier|*
-name|rrset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/**  * Convert packed rrset to ldns rr list.  * @param rrset: packed rrset.  * @param buf: scratch buffer.  * @return rr list or NULL on failure.  */
-end_comment
-
-begin_function_decl
-name|ldns_rr_list
-modifier|*
-name|packed_rrset_to_rr_list
-parameter_list|(
-name|struct
-name|ub_packed_rrset_key
-modifier|*
-name|rrset
-parameter_list|,
-name|ldns_buffer
-modifier|*
-name|buf
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * services/cache/dns.c - Cache services for DNS using msg and rrset caches.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * services/cache/dns.c - Cache services for DNS using msg and rrset caches.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -79,6 +79,12 @@ directive|include
 file|"util/config_file.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
+end_include
+
 begin_comment
 comment|/** store rrsets in the rrset cache.   * @param env: module environment with caches.  * @param rep: contains list of rrsets to store.  * @param now: current time.  * @param leeway: during prefetch how much leeway to update TTLs.  * 	This makes rrsets (other than type NS) timeout sooner so they get  * 	updated with a new full TTL.  * 	Type NS does not get this, because it must not be refreshed from the  * 	child domain, but keep counting down properly.  * @param pside: if from parentside discovered NS, so that its NS is okay  * 	in a prefetch situation to be updated (without becoming sticky).  * @param qrep: update rrsets here if cache is better  * @param region: for qrep allocs.  */
 end_comment
@@ -98,10 +104,10 @@ name|reply_info
 modifier|*
 name|rep
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int
@@ -383,7 +389,7 @@ name|reply_info
 modifier|*
 name|rep
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int
@@ -405,7 +411,7 @@ name|msgreply_entry
 modifier|*
 name|e
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|ttl
 init|=
 name|rep
@@ -599,7 +605,7 @@ parameter_list|,
 name|uint16_t
 name|qclass
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|uint16_t
@@ -728,7 +734,7 @@ name|dns_msg
 modifier|*
 name|msg
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -806,7 +812,7 @@ parameter_list|,
 name|uint16_t
 name|qclass
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|int
@@ -951,7 +957,7 @@ name|delegpt
 modifier|*
 name|dp
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -1316,7 +1322,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|akey
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|now
 init|=
 operator|*
@@ -1384,9 +1390,6 @@ name|region
 argument_list|,
 name|akey
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ns
 operator|->
 name|lame
@@ -1525,9 +1528,6 @@ name|region
 argument_list|,
 name|akey
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ns
 operator|->
 name|lame
@@ -1659,7 +1659,7 @@ name|delegpt
 modifier|*
 name|dp
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -2053,7 +2053,7 @@ name|ub_packed_rrset_key
 modifier|*
 name|rrset
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -2136,7 +2136,7 @@ modifier|*
 modifier|*
 name|msg
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|)
 block|{
@@ -2607,7 +2607,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -3013,7 +3013,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -3228,7 +3228,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|uint32_t
+name|time_t
 name|now
 parameter_list|,
 name|struct
@@ -3744,7 +3744,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -3871,7 +3871,7 @@ operator|->
 name|ttl
 argument_list|)
 expr_stmt|;
-name|ldns_write_uint16
+name|sldns_write_uint16
 argument_list|(
 name|newd
 operator|->
@@ -3969,7 +3969,7 @@ decl_stmt|;
 name|hashvalue_t
 name|h
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|now
 init|=
 operator|*
@@ -4604,7 +4604,7 @@ parameter_list|,
 name|int
 name|is_referral
 parameter_list|,
-name|uint32_t
+name|time_t
 name|leeway
 parameter_list|,
 name|int

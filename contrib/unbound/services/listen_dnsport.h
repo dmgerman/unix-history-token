@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * services/listen_dnsport.h - listen on port 53 for incoming DNS queries.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * services/listen_dnsport.h - listen on port 53 for incoming DNS queries.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -43,6 +43,12 @@ name|addrinfo
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|sldns_buffer
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/**  * Listening for queries structure.  * Contains list of query-listen sockets.  */
 end_comment
@@ -58,7 +64,8 @@ modifier|*
 name|base
 decl_stmt|;
 comment|/** buffer shared by UDP connections, since there is only one 	    datagram at any time. */
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|udp_buff
 decl_stmt|;
@@ -147,7 +154,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * Create shared listening ports  * Getaddrinfo, create socket, bind and listen to zero or more   * interfaces for IP4 and/or IP6, for UDP and/or TCP.  * On the given port number. It creates the sockets.  * @param cfg: settings on what ports to open.  * @return: linked list of ports or NULL on error.  */
+comment|/**  * Create shared listening ports  * Getaddrinfo, create socket, bind and listen to zero or more   * interfaces for IP4 and/or IP6, for UDP and/or TCP.  * On the given port number. It creates the sockets.  * @param cfg: settings on what ports to open.  * @param reuseport: set to true if you want reuseport, or NULL to not have it,  *   set to false on exit if reuseport failed to apply (because of no  *   kernel support).  * @return: linked list of ports or NULL on error.  */
 end_comment
 
 begin_function_decl
@@ -160,6 +167,10 @@ name|struct
 name|config_file
 modifier|*
 name|cfg
+parameter_list|,
+name|int
+modifier|*
+name|reuseport
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -302,7 +313,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Create and bind nonblocking UDP socket  * @param family: for socket call.  * @param socktype: for socket call.  * @param addr: for bind call.  * @param addrlen: for bind call.  * @param v6only: if enabled, IP6 sockets get IP6ONLY option set.  * 	if enabled with value 2 IP6ONLY option is disabled.  * @param inuse: on error, this is set true if the port was in use.  * @param noproto: on error, this is set true if cause is that the 	IPv6 proto (family) is not available.  * @param rcv: set size on rcvbuf with socket option, if 0 it is not set.  * @param snd: set size on sndbuf with socket option, if 0 it is not set.  * @return: the socket. -1 on error.  */
+comment|/**  * Create and bind nonblocking UDP socket  * @param family: for socket call.  * @param socktype: for socket call.  * @param addr: for bind call.  * @param addrlen: for bind call.  * @param v6only: if enabled, IP6 sockets get IP6ONLY option set.  * 	if enabled with value 2 IP6ONLY option is disabled.  * @param inuse: on error, this is set true if the port was in use.  * @param noproto: on error, this is set true if cause is that the 	IPv6 proto (family) is not available.  * @param rcv: set size on rcvbuf with socket option, if 0 it is not set.  * @param snd: set size on sndbuf with socket option, if 0 it is not set.  * @param listen: if true, this is a listening UDP port, eg port 53, and   * 	set SO_REUSEADDR on it.  * @param reuseport: if nonNULL and true, try to set SO_REUSEPORT on  * 	listening UDP port.  Set to false on return if it failed to do so.  * @return: the socket. -1 on error.  */
 end_comment
 
 begin_function_decl
@@ -339,12 +350,19 @@ name|rcv
 parameter_list|,
 name|int
 name|snd
+parameter_list|,
+name|int
+name|listen
+parameter_list|,
+name|int
+modifier|*
+name|reuseport
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Create and bind TCP listening socket  * @param addr: address info ready to make socket.  * @param v6only: enable ip6 only flag on ip6 sockets.  * @param noproto: if error caused by lack of protocol support.  * @return: the socket. -1 on error.  */
+comment|/**  * Create and bind TCP listening socket  * @param addr: address info ready to make socket.  * @param v6only: enable ip6 only flag on ip6 sockets.  * @param noproto: if error caused by lack of protocol support.  * @param reuseport: if nonNULL and true, try to set SO_REUSEPORT on  * 	listening UDP port.  Set to false on return if it failed to do so.  * @return: the socket. -1 on error.  */
 end_comment
 
 begin_function_decl
@@ -362,6 +380,10 @@ parameter_list|,
 name|int
 modifier|*
 name|noproto
+parameter_list|,
+name|int
+modifier|*
+name|reuseport
 parameter_list|)
 function_decl|;
 end_function_decl

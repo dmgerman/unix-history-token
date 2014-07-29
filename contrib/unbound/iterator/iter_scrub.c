@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * iterator/iter_scrub.c - scrubbing, normalization, sanitization of DNS msgs.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * iterator/iter_scrub.c - scrubbing, normalization, sanitization of DNS msgs.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -91,6 +91,12 @@ directive|include
 file|"util/alloc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
+end_include
+
 begin_comment
 comment|/** RRset flag used during scrubbing. The RRset is OK. */
 end_comment
@@ -116,7 +122,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -142,6 +148,8 @@ condition|(
 name|verbosity
 operator|>=
 name|VERB_QUERY
+operator|&&
+name|str
 operator|&&
 operator|(
 operator|*
@@ -398,7 +406,7 @@ name|size_t
 modifier|*
 name|nmlen
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -470,7 +478,7 @@ return|;
 block|}
 name|len
 operator|=
-name|ldns_read_uint16
+name|sldns_read_uint16
 argument_list|(
 name|rr
 operator|->
@@ -515,12 +523,12 @@ name|offset
 expr_stmt|;
 name|oldpos
 operator|=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -531,7 +539,7 @@ argument_list|(
 operator|*
 name|nm
 operator|-
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -546,7 +554,7 @@ argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -578,7 +586,7 @@ specifier|static
 name|void
 name|mark_additional_rrset
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -982,7 +990,7 @@ name|size_t
 modifier|*
 name|aliaslen
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -1132,7 +1140,7 @@ name|rrset_parse
 modifier|*
 name|nx
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -1388,7 +1396,7 @@ condition|)
 return|return
 name|NULL
 return|;
-name|ldns_write_uint32
+name|sldns_write_uint32
 argument_list|(
 name|cn
 operator|->
@@ -1400,7 +1408,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* TTL = 0 */
-name|ldns_write_uint16
+name|sldns_write_uint16
 argument_list|(
 name|cn
 operator|->
@@ -1527,7 +1535,7 @@ specifier|static
 name|int
 name|pkt_strict_sub
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1595,7 +1603,7 @@ specifier|static
 name|int
 name|pkt_sub
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1645,7 +1653,7 @@ specifier|static
 name|int
 name|sub_of_pkt
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1695,7 +1703,7 @@ specifier|static
 name|int
 name|scrub_normalize
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2505,7 +2513,7 @@ specifier|static
 name|void
 name|store_rrset
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2539,7 +2547,7 @@ name|struct
 name|rrset_ref
 name|ref
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|now
 init|=
 operator|*
@@ -2783,7 +2791,7 @@ literal|2
 expr_stmt|;
 name|len
 operator|=
-name|ldns_read_uint16
+name|sldns_read_uint16
 argument_list|(
 name|rr
 operator|->
@@ -2841,7 +2849,7 @@ specifier|static
 name|int
 name|scrub_sanitize
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -3051,7 +3059,12 @@ name|type
 operator|==
 name|LDNS_RR_TYPE_AAAA
 operator|)
-operator|&&
+condition|)
+block|{
+comment|/* do not set servfail since this leads to too 			 * many drops of other people using rfc1918 space */
+comment|/* also do not remove entire rrset, unless all records 			 * in it are bad */
+if|if
+condition|(
 name|priv_rrset_bad
 argument_list|(
 name|ie
@@ -3064,11 +3077,9 @@ name|rrset
 argument_list|)
 condition|)
 block|{
-comment|/* do not set servfail since this leads to too 			 * many drops of other people using rfc1918 space */
 name|remove_rrset
 argument_list|(
-literal|"sanitize: removing public name with "
-literal|"private address"
+name|NULL
 argument_list|,
 name|pkt
 argument_list|,
@@ -3081,6 +3092,7 @@ name|rrset
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 comment|/* skip DNAME records -- they will always be followed by a  		 * synthesized CNAME, which will be relevant. 		 * FIXME: should this do something differently with DNAME  		 * rrsets NOT in Section.ANSWER? */
 comment|/* But since DNAME records are also subdomains of the zone, 		 * same check can be used */
@@ -3309,7 +3321,7 @@ begin_function
 name|int
 name|scrub_message
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,

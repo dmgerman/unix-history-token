@@ -142,6 +142,16 @@ name|ldns_rbtree_t
 modifier|*
 name|names
 decl_stmt|;
+comment|/** tree of ldns_dnssec_names by nsec3 hashes (when applicible) */
+name|ldns_rbtree_t
+modifier|*
+name|hashed_names
+decl_stmt|;
+comment|/** points to the first added NSEC3 rr whose parameters will be  	 *  assumed for all subsequent NSEC3 rr's and which will be used 	 *  to calculate hashed names 	 */
+name|ldns_rr
+modifier|*
+name|_nsec3params
+decl_stmt|;
 block|}
 struct|;
 typedef|typedef
@@ -175,7 +185,7 @@ modifier|*
 name|rrs
 parameter_list|)
 function_decl|;
-comment|/**  * Adds an RR to the list of RRs. The list will remain ordered  *  * \param[in] rrs the list to add to  * \param[in] rr the RR to add  * \return LDNS_STATUS_OK on success  */
+comment|/**  * Adds an RR to the list of RRs. The list will remain ordered.  * If an equal RR already exists, this RR will not be added.  *  * \param[in] rrs the list to add to  * \param[in] rr the RR to add  * \return LDNS_STATUS_OK on success  */
 name|ldns_status
 name|ldns_dnssec_rrs_add_rr
 parameter_list|(
