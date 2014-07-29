@@ -5809,6 +5809,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|rate
+operator|==
+literal|0
+condition|)
+name|rate
+operator|=
+literal|2
+expr_stmt|;
+comment|/* avoid division by zero */
 name|plcp_length
 operator|=
 operator|(
