@@ -297,6 +297,17 @@ begin_comment
 comment|/* list tracked interfaces */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLES_ALIST
+value|101
+end_define
+
+begin_comment
+comment|/* list table algorithms */
+end_comment
+
 begin_comment
 comment|/*  * Usage guidelines:  *  * IP_FW_TABLE_XLIST(ver 1): Dumps all table data  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_xtable_info.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info ipfw_table_xentry x N ]  *  * IP_FW_TABLE_XDESTROY: Destroys given table  *   Request(setsockopt): [ ipfw_obj_header ]  *  * IP_FW_TABLES_XGETSIZE: Get buffer size needed to list info for all tables.  *   Request(getsockopt): [ empty ], size = sizeof(ipfw_obj_lheader)  *   Reply: [ ipfw_obj_lheader ]  *  * IP_FW_TABLES_XLIST: Lists all tables currently available in kernel.  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_obj_lheader.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info x N ]  *  * IP_FW_TABLE_XINFO: Store table info to buffer.  *   Request(getsockopt): [ ipfw_obj_header ipfw_xtable_info(empty)]  *   Reply: [ ipfw_obj_header ipfw_xtable_info ]  *  * IP_FW_TABLE_XFLUSH: Removes all data from given table leaving type etc..  *   Request(setsockopt): [ ipfw_obj_header ]  */
 end_comment
@@ -2345,6 +2356,39 @@ end_define
 begin_comment
 comment|/* Interface exists		*/
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_ta_info
+block|{
+name|char
+name|algoname
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* algorithm name		*/
+name|uint32_t
+name|type
+decl_stmt|;
+comment|/* lookup type			*/
+name|uint32_t
+name|flags
+decl_stmt|;
+name|uint32_t
+name|refcnt
+decl_stmt|;
+name|uint32_t
+name|spare0
+decl_stmt|;
+name|uint64_t
+name|spare1
+decl_stmt|;
+block|}
+name|ipfw_ta_info
+typedef|;
+end_typedef
 
 begin_define
 define|#

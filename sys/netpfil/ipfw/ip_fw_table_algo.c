@@ -2776,6 +2776,11 @@ operator|=
 literal|"cidr:radix"
 block|,
 operator|.
+name|type
+operator|=
+name|IPFW_TABLE_CIDR
+block|,
+operator|.
 name|init
 operator|=
 name|ta_init_radix
@@ -6432,6 +6437,11 @@ operator|=
 literal|"cidr:hash"
 block|,
 operator|.
+name|type
+operator|=
+name|IPFW_TABLE_CIDR
+block|,
+operator|.
 name|init
 operator|=
 name|ta_init_chash
@@ -9372,6 +9382,11 @@ operator|.
 name|name
 operator|=
 literal|"iface:array"
+block|,
+operator|.
+name|type
+operator|=
+name|IPFW_TABLE_INTERFACE
 block|,
 operator|.
 name|init

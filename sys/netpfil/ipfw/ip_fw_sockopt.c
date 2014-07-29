@@ -8565,6 +8565,21 @@ name|sdata
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IP_FW_TABLES_ALIST
+case|:
+comment|/* IP_FW3 */
+name|error
+operator|=
+name|ipfw_list_table_algo
+argument_list|(
+name|chain
+argument_list|,
+operator|&
+name|sdata
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/*--- LEGACY API ---*/
 case|case
 name|IP_FW_TABLE_ADD
