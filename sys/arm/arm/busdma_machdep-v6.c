@@ -543,6 +543,14 @@ define|#
 directive|define
 name|DMAMAP_COHERENT
 value|(1<< 0)
+define|#
+directive|define
+name|DMAMAP_DMAMEM_ALLOC
+value|(1<< 1)
+define|#
+directive|define
+name|DMAMAP_MBUF
+value|(1<< 2)
 name|STAILQ_ENTRY
 argument_list|(
 argument|bus_dmamap
@@ -1013,7 +1021,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return true if the buffer start or end does not fall on a cacheline boundary.  */
+comment|/*  * Return true if the DMA should bounce because the start or end does not fall  * on a cacheline boundary (which would require a partial cacheline flush).  * COHERENT memory doesn't trigger cacheline flushes.  Memory allocated by  * bus_dmamem_alloc() is always aligned to cacheline boundaries, and there's a  * strict rule that such memory cannot be accessed by the CPU while DMA is in  * progress (or by multiple DMA engines at once), so that it's always safe to do  * full cacheline flushes even if that affects memory outside the range of a  * given DMA operation that doesn't involve the full allocated buffer.  If we're  * mapping an mbuf, that follows the same rules as a buffer we allocated.  */
 end_comment
 
 begin_function
@@ -1022,6 +1030,9 @@ name|__inline
 name|int
 name|cacheline_bounce
 parameter_list|(
+name|bus_dmamap_t
+name|map
+parameter_list|,
 name|bus_addr_t
 name|addr
 parameter_list|,
@@ -1029,6 +1040,25 @@ name|bus_size_t
 name|size
 parameter_list|)
 block|{
+if|if
+condition|(
+name|map
+operator|->
+name|flags
+operator|&
+operator|(
+name|DMAMAP_DMAMEM_ALLOC
+operator||
+name|DMAMAP_COHERENT
+operator||
+name|DMAMAP_MBUF
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 operator|(
@@ -1073,26 +1103,24 @@ name|dmat
 operator|->
 name|flags
 operator|&
-name|BUS_DMA_COULD_BOUNCE
+name|BUS_DMA_EXCL_BOUNCE
 operator|)
 operator|||
-operator|!
-operator|(
-operator|(
-name|map
-operator|->
-name|flags
-operator|&
-name|DMAMAP_COHERENT
-operator|)
-operator|&&
+name|alignment_bounce
+argument_list|(
+name|dmat
+argument_list|,
+name|addr
+argument_list|)
+operator|||
 name|cacheline_bounce
 argument_list|(
+name|map
+argument_list|,
 name|addr
 argument_list|,
 name|size
 argument_list|)
-operator|)
 operator|)
 return|;
 block|}
@@ -1120,20 +1148,12 @@ name|bus_size_t
 name|size
 parameter_list|)
 block|{
-comment|/* Coherent memory doesn't need to bounce due to cache alignment. */
 if|if
 condition|(
-operator|!
-operator|(
-name|map
-operator|->
-name|flags
-operator|&
-name|DMAMAP_COHERENT
-operator|)
-operator|&&
 name|cacheline_bounce
 argument_list|(
+name|map
+argument_list|,
 name|paddr
 argument_list|,
 name|size
@@ -2907,6 +2927,15 @@ operator|*
 name|mapp
 operator|)
 operator|->
+name|flags
+operator|=
+name|DMAMAP_DMAMEM_ALLOC
+expr_stmt|;
+operator|(
+operator|*
+name|mapp
+operator|)
+operator|->
 name|sync_count
 operator|=
 literal|0
@@ -4544,6 +4573,18 @@ name|dmat
 operator|->
 name|segments
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|BUS_DMA_LOAD_MBUF
+condition|)
+name|map
+operator|->
+name|flags
+operator||=
+name|DMAMAP_MBUF
+expr_stmt|;
 name|map
 operator|->
 name|pmap
@@ -5100,6 +5141,13 @@ operator|->
 name|sync_count
 operator|=
 literal|0
+expr_stmt|;
+name|map
+operator|->
+name|flags
+operator|&=
+operator|~
+name|DMAMAP_MBUF
 expr_stmt|;
 block|}
 end_function
