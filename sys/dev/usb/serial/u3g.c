@@ -2280,6 +2280,15 @@ name|U3G_DEV
 argument_list|(
 name|NOVATEL
 argument_list|,
+name|MC679
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|NOVATEL
+argument_list|,
 name|MC950D
 argument_list|,
 literal|0
