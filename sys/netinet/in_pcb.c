@@ -1854,6 +1854,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Select a local port (number) to use.  */
+end_comment
+
 begin_if
 if|#
 directive|if
