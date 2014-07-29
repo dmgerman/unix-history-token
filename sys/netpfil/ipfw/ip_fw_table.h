@@ -670,9 +670,9 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|table_algo
-name|radix_cidr
+name|cidr_radix
 decl_stmt|,
-name|idx_iface
+name|iface_idx
 decl_stmt|;
 end_decl_stmt
 

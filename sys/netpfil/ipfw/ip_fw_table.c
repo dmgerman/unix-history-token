@@ -7186,7 +7186,7 @@ case|:
 return|return
 operator|(
 operator|&
-name|radix_cidr
+name|cidr_radix
 operator|)
 return|;
 case|case
@@ -7195,10 +7195,9 @@ case|:
 return|return
 operator|(
 operator|&
-name|idx_iface
+name|iface_idx
 operator|)
 return|;
-comment|//return (&radix_iface);
 block|}
 return|return
 operator|(
