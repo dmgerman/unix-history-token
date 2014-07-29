@@ -3361,9 +3361,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If this is a write, we're all done. 	 * If this is a read, we can now send the data to the user. 	 */
+comment|/* 	 * If this is a write or a verify, we're all done. 	 * If this is a read, we can now send the data to the user. 	 */
 if|if
 condition|(
+operator|(
+name|beio
+operator|->
+name|bio_cmd
+operator|==
+name|BIO_WRITE
+operator|)
+operator|||
+operator|(
 name|ARGS
 argument_list|(
 name|io
@@ -3371,9 +3380,6 @@ argument_list|)
 operator|->
 name|flags
 operator|&
-operator|(
-name|CTL_LLF_WRITE
-operator||
 name|CTL_LLF_VERIFY
 operator|)
 condition|)
