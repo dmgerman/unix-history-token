@@ -272,6 +272,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|pflags
+parameter_list|,
+name|uint32_t
+modifier|*
+name|pnum
 parameter_list|)
 function_decl|;
 end_typedef
@@ -304,6 +308,10 @@ parameter_list|,
 name|uint64_t
 modifier|*
 name|pflags
+parameter_list|,
+name|uint32_t
+modifier|*
+name|pnum
 parameter_list|)
 function_decl|;
 end_typedef
