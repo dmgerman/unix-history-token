@@ -195,21 +195,8 @@ name|size_t
 parameter_list|,
 name|uint32_t
 parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(__bounded__
-parameter_list|(
-name|__string__
-parameter_list|,
-function_decl|2
-operator|,
-function_decl|3
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|void
