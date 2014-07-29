@@ -1505,6 +1505,10 @@ name|VHD_BLOCK_SIZE
 operator|/
 name|secsz
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|nblks
 operator|=
 name|image_get_size
