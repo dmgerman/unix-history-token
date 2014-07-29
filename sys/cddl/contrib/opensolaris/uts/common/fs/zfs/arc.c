@@ -376,6 +376,20 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|uint64_t
+name|zfs_arc_average_blocksize
+init|=
+literal|8
+operator|*
+literal|1024
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 8KB */
+end_comment
+
 begin_expr_stmt
 name|TUNABLE_QUAD
 argument_list|(
@@ -433,6 +447,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Minimum ARC size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UQUAD
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|arc_average_blocksize
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|zfs_arc_average_blocksize
+argument_list|,
+literal|0
+argument_list|,
+literal|"ARC average blocksize"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4525,12 +4560,12 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-comment|/* 	 * The hash table is big enough to fill all of physical memory 	 * with an average 64K block size.  The table will take up 	 * totalmem*sizeof(void*)/64K (eg. 128KB/GB with 8-byte pointers). 	 */
+comment|/* 	 * The hash table is big enough to fill all of physical memory 	 * with an average block size of zfs_arc_average_blocksize (default 8K). 	 * By default, the table will take up 	 * totalmem * sizeof(void*) / 8K (1MB per GB with 8-byte pointers). 	 */
 while|while
 condition|(
 name|hsize
 operator|*
-literal|65536
+name|zfs_arc_average_blocksize
 operator|<
 operator|(
 name|uint64_t
