@@ -14251,6 +14251,7 @@ decl_stmt|,
 name|totlen
 decl_stmt|;
 specifier|static
+specifier|const
 name|uint8_t
 name|ratediv
 index|[]
