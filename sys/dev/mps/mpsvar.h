@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPS_DRIVER_VERSION
-value|"18.00.00.00-fbsd"
+value|"19.00.00.00-fbsd"
 end_define
 
 begin_define
