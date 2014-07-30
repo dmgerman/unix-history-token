@@ -1070,14 +1070,14 @@ begin_define
 define|#
 directive|define
 name|CTL_PR_ALL_REGISTRANTS
-value|0xFFFF
+value|0xFFFFFFFF
 end_define
 
 begin_define
 define|#
 directive|define
 name|CTL_PR_NO_RESERVATION
-value|0xFFF0
+value|0xFFFFFFF0
 end_define
 
 begin_struct
@@ -1250,7 +1250,7 @@ decl_stmt|;
 name|int
 name|pr_key_count
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|pr_res_idx
 decl_stmt|;
 name|uint8_t

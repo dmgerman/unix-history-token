@@ -1082,7 +1082,7 @@ decl_stmt|;
 name|uint8_t
 name|res_type
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|residx
 decl_stmt|;
 block|}

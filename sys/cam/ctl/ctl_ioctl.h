@@ -105,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|CTL_MAX_PORTS
-value|32
+value|128
 end_define
 
 begin_comment
