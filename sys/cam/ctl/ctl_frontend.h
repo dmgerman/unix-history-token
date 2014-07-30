@@ -357,6 +357,12 @@ modifier|*
 name|target_devid
 decl_stmt|;
 comment|/* passed to CTL */
+name|struct
+name|ctl_devid
+modifier|*
+name|init_devid
+decl_stmt|;
+comment|/* passed to CTL */
 name|STAILQ_ENTRY
 argument_list|(
 argument|ctl_port

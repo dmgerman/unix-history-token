@@ -12654,13 +12654,15 @@ directive|endif
 comment|/* 	 * Do not return status for aborted commands. 	 * There are exceptions, but none supported by CTL yet. 	 */
 if|if
 condition|(
+operator|(
 name|io
 operator|->
 name|io_hdr
 operator|.
-name|status
-operator|==
-name|CTL_CMD_ABORTED
+name|flags
+operator|&
+name|CTL_FLAG_ABORT
+operator|)
 operator|&&
 operator|(
 name|io
