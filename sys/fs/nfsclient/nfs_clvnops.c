@@ -10515,23 +10515,6 @@ name|attrflag
 decl_stmt|,
 name|dattrflag
 decl_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_mount
-operator|!=
-name|tdvp
-operator|->
-name|v_mount
-condition|)
-block|{
-return|return
-operator|(
-name|EXDEV
-operator|)
-return|;
-block|}
 comment|/* 	 * Push all writes to the server, so that the attribute cache 	 * doesn't get "out of sync" with the server. 	 * XXX There should be a better way! 	 */
 name|VOP_FSYNC
 argument_list|(

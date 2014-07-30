@@ -2745,45 +2745,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|/* XXX When can this be false? */
-comment|/* XXX: Why aren't the following two tests done by the caller? */
-comment|/* Hard links of directories are forbidden. */
-if|if
-condition|(
-name|vp
-operator|->
-name|v_type
-operator|==
-name|VDIR
-condition|)
-block|{
-name|error
-operator|=
-name|EPERM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* Cannot create cross-device links. */
-if|if
-condition|(
-name|dvp
-operator|->
-name|v_mount
-operator|!=
-name|vp
-operator|->
-name|v_mount
-condition|)
-block|{
-name|error
-operator|=
-name|EXDEV
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|node
 operator|=
 name|VP_TO_TMPFS_NODE
