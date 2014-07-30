@@ -4968,11 +4968,16 @@ literal|"unknown"
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s type: %s references: %u\n"
+literal|"--- %s ---\n"
 argument_list|,
 name|info
 operator|->
 name|algoname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" type: %s\n refcount: %u\n"
 argument_list|,
 name|atype
 argument_list|,
