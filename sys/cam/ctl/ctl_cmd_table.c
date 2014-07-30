@@ -143,7 +143,7 @@ comment|/* 00 READ KEYS */
 block|{
 name|ctl_persistent_reserve_in
 block|,
-name|CTL_SERIDX_PRES_IN
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -188,7 +188,7 @@ comment|/* 01 READ RESERVATION */
 block|{
 name|ctl_persistent_reserve_in
 block|,
-name|CTL_SERIDX_PRES_IN
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -342,7 +342,7 @@ comment|/* 00 REGISTER */
 block|{
 name|ctl_persistent_reserve_out
 block|,
-name|CTL_SERIDX_PRES_OUT
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -387,7 +387,7 @@ comment|/* 01 RESERVE */
 block|{
 name|ctl_persistent_reserve_out
 block|,
-name|CTL_SERIDX_PRES_OUT
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -432,7 +432,7 @@ comment|/* 02 RELEASE */
 block|{
 name|ctl_persistent_reserve_out
 block|,
-name|CTL_SERIDX_PRES_OUT
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -477,7 +477,7 @@ comment|/* 03 CLEAR */
 block|{
 name|ctl_persistent_reserve_out
 block|,
-name|CTL_SERIDX_PRES_OUT
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -522,7 +522,7 @@ comment|/* 04 PREEMPT */
 block|{
 name|ctl_persistent_reserve_out
 block|,
-name|CTL_SERIDX_PRES_OUT
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -578,7 +578,7 @@ comment|/* 06 REGISTER AND IGNORE EXISTING KEY */
 block|{
 name|ctl_persistent_reserve_out
 block|,
-name|CTL_SERIDX_PRES_OUT
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -1013,7 +1013,7 @@ comment|/* 0A REPORT TARGET PORT GROUPS */
 block|{
 name|ctl_report_tagret_port_groups
 block|,
-name|CTL_SERIDX_MAIN_IN
+name|CTL_SERIDX_INQ
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
@@ -1069,7 +1069,7 @@ comment|/* 0C REPORT SUPPORTED_OPCODES */
 block|{
 name|ctl_report_supported_opcodes
 block|,
-name|CTL_SERIDX_MAIN_IN
+name|CTL_SERIDX_INQ
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
@@ -1114,7 +1114,7 @@ comment|/* 0D REPORT SUPPORTED_TASK MANAGEMENT FUNCTIONS */
 block|{
 name|ctl_report_supported_tmf
 block|,
-name|CTL_SERIDX_MAIN_IN
+name|CTL_SERIDX_INQ
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
@@ -1170,7 +1170,7 @@ comment|/* 0F REPORT TIMESTAMP */
 block|{
 name|ctl_report_timestamp
 block|,
-name|CTL_SERIDX_MAIN_IN
+name|CTL_SERIDX_INQ
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
@@ -1628,7 +1628,7 @@ comment|/* 16 RESERVE(6) */
 block|{
 name|ctl_scsi_reserve
 block|,
-name|CTL_SERIDX_RESV
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -1663,7 +1663,7 @@ comment|/* 17 RELEASE(6) */
 block|{
 name|ctl_scsi_release
 block|,
-name|CTL_SERIDX_REL
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -2722,7 +2722,7 @@ comment|/* 56 RESERVE(10) */
 block|{
 name|ctl_scsi_reserve
 block|,
-name|CTL_SERIDX_RESV
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||
@@ -2765,7 +2765,7 @@ comment|/* 57 RELEASE(10) */
 block|{
 name|ctl_scsi_release
 block|,
-name|CTL_SERIDX_REL
+name|CTL_SERIDX_RES
 block|,
 name|CTL_CMD_FLAG_ALLOW_ON_RESV
 operator||

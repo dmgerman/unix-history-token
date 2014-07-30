@@ -392,21 +392,13 @@ name|CTL_SERIDX_INQ
 block|,
 name|CTL_SERIDX_RD_CAP
 block|,
-name|CTL_SERIDX_RESV
-block|,
-name|CTL_SERIDX_REL
+name|CTL_SERIDX_RES
 block|,
 name|CTL_SERIDX_LOG_SNS
 block|,
 name|CTL_SERIDX_FORMAT
 block|,
 name|CTL_SERIDX_START
-block|,
-name|CTL_SERIDX_PRES_IN
-block|,
-name|CTL_SERIDX_PRES_OUT
-block|,
-name|CTL_SERIDX_MAIN_IN
 block|,
 comment|/* TBD: others to be filled in as needed */
 name|CTL_SERIDX_COUNT
