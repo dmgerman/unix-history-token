@@ -2463,6 +2463,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
+name|fs_ops
+modifier|*
+name|exclusive_file_system
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|devsw
 modifier|*
 name|devsw
