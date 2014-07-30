@@ -1790,12 +1790,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPFW_TABLE_U32
+name|IPFW_TABLE_NUMBER
 value|3
 end_define
 
 begin_comment
-comment|/* Table for holidng ports/uid/gid/etc */
+comment|/* Table for holding ports/uid/gid/etc */
 end_comment
 
 begin_define

@@ -6198,10 +6198,7 @@ literal|2
 condition|)
 name|key
 operator|=
-name|htonl
-argument_list|(
 name|dst_port
-argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -6212,10 +6209,7 @@ literal|3
 condition|)
 name|key
 operator|=
-name|htonl
-argument_list|(
 name|src_port
-argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -6322,13 +6316,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !__FreeBSD__ */
-name|key
-operator|=
-name|htonl
-argument_list|(
-name|key
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 endif|#

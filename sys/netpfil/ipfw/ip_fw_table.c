@@ -2668,6 +2668,17 @@ name|EINVAL
 operator|)
 return|;
 block|}
+case|case
+name|IPFW_TABLE_NUMBER
+case|:
+name|plen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+expr_stmt|;
+break|break;
 break|break;
 default|default:
 name|IPFW_UH_RUNLOCK
@@ -7860,23 +7871,41 @@ case|case
 literal|3
 case|:
 comment|/* src/dst port */
-comment|//type = IPFW_TABLE_U16;
+operator|*
+name|ptype
+operator|=
+name|IPFW_TABLE_NUMBER
+expr_stmt|;
 break|break;
 case|case
 literal|4
 case|:
 comment|/* uid/gid */
-comment|//type = IPFW_TABLE_U32;
+operator|*
+name|ptype
+operator|=
+name|IPFW_TABLE_NUMBER
+expr_stmt|;
+break|break;
 case|case
 literal|5
 case|:
-comment|//type = IPFW_TABLE_U32;
 comment|/* jid */
+operator|*
+name|ptype
+operator|=
+name|IPFW_TABLE_NUMBER
+expr_stmt|;
+break|break;
 case|case
 literal|6
 case|:
-comment|//type = IPFW_TABLE_U16;
 comment|/* dscp */
+operator|*
+name|ptype
+operator|=
+name|IPFW_TABLE_NUMBER
+expr_stmt|;
 break|break;
 block|}
 block|}
