@@ -241,6 +241,13 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* Formatted CID info (serial, MFG, etc) */
+name|char
+name|card_sn_string
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Formatted serial # for disk->d_ident */
 block|}
 struct|;
 end_struct
@@ -5089,7 +5096,7 @@ decl_stmt|;
 name|uint8_t
 name|c2
 decl_stmt|;
-comment|/* 	 * Format a card ID string for use by the mmcsd driver, it's what 	 * appears between the<> in the following: 	 * mmcsd0: 968MB<SD SD01G 8.0 SN 2686905 Mfg 08/2008 by 3 TN> at mmc0 	 * 22.5MHz/4bit/128-block 	 * 	 * The card_id_string in mmc_ivars is currently allocated as 64 bytes, 	 * and our max formatted length is currently 55 bytes if every field 	 * contains the largest value. 	 * 	 * Sometimes the oid is two printable ascii chars; when it's not, 	 * format it as 0xnnnn instead. 	 */
+comment|/* 	 * Format a card ID string for use by the mmcsd driver, it's what 	 * appears between the<> in the following: 	 * mmcsd0: 968MB<SD SD01G 8.0 SN 2686905 Mfg 08/2008 by 3 TN> at mmc0 	 * 22.5MHz/4bit/128-block 	 * 	 * Also format just the card serial number, which the mmcsd driver will 	 * use as the disk->d_ident string. 	 * 	 * The card_id_string in mmc_ivars is currently allocated as 64 bytes, 	 * and our max formatted length is currently 55 bytes if every field 	 * contains the largest value. 	 * 	 * Sometimes the oid is two printable ascii chars; when it's not, 	 * format it as 0xnnnn instead. 	 */
 name|c1
 operator|=
 operator|(
@@ -5171,6 +5178,28 @@ name|snprintf
 argument_list|(
 name|ivar
 operator|->
+name|card_sn_string
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ivar
+operator|->
+name|card_sn_string
+argument_list|)
+argument_list|,
+literal|"%08X"
+argument_list|,
+name|ivar
+operator|->
+name|cid
+operator|.
+name|psn
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|ivar
+operator|->
 name|card_id_string
 argument_list|,
 sizeof|sizeof
@@ -5180,7 +5209,7 @@ operator|->
 name|card_id_string
 argument_list|)
 argument_list|,
-literal|"%s%s %s %d.%d SN %u MFG %02d/%04d by %d %s"
+literal|"%s%s %s %d.%d SN %08X MFG %02d/%04d by %d %s"
 argument_list|,
 name|ivar
 operator|->
@@ -10626,6 +10655,22 @@ operator|=
 name|ivar
 operator|->
 name|card_id_string
+expr_stmt|;
+break|break;
+case|case
+name|MMC_IVAR_CARD_SN_STRING
+case|:
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|result
+operator|=
+name|ivar
+operator|->
+name|card_sn_string
 expr_stmt|;
 break|break;
 block|}
