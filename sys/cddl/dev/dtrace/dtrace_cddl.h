@@ -183,6 +183,11 @@ name|int
 name|td_errno
 decl_stmt|;
 comment|/* Syscall return value. */
+name|void
+modifier|*
+name|td_dtrace_sscr
+decl_stmt|;
+comment|/* Saved scratch space location. */
 block|}
 name|kdtrace_thread_t
 typedef|;
@@ -302,6 +307,13 @@ define|#
 directive|define
 name|t_dtrace_regv
 value|td_dtrace->td_dtrace_regv
+end_define
+
+begin_define
+define|#
+directive|define
+name|t_dtrace_sscr
+value|td_dtrace->td_dtrace_sscr
 end_define
 
 begin_define
