@@ -585,6 +585,9 @@ comment|/* 2 u32 = DSCP mask */
 name|O_SETDSCP
 block|,
 comment|/* arg1=DSCP value */
+name|O_IP_FLOW_LOOKUP
+block|,
+comment|/* arg1=table number, u32=value	*/
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -1801,8 +1804,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPFW_TABLE_FLOW
+value|4
+end_define
+
+begin_comment
+comment|/* Table for holding flow data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPFW_TABLE_MAXTYPE
-value|3
+value|4
 end_define
 
 begin_comment
@@ -2117,6 +2131,64 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* IPv4/IPv6 L4 flow description */
+end_comment
+
+begin_struct
+struct|struct
+name|tflow_entry
+block|{
+name|uint8_t
+name|af
+decl_stmt|;
+name|uint8_t
+name|proto
+decl_stmt|;
+name|uint16_t
+name|spare
+decl_stmt|;
+name|uint16_t
+name|sport
+decl_stmt|;
+name|uint16_t
+name|dport
+decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
+name|struct
+name|in_addr
+name|sip
+decl_stmt|;
+name|struct
+name|in_addr
+name|dip
+decl_stmt|;
+block|}
+name|a4
+struct|;
+struct|struct
+block|{
+name|struct
+name|in6_addr
+name|sip6
+decl_stmt|;
+name|struct
+name|in6_addr
+name|dip6
+decl_stmt|;
+block|}
+name|a6
+struct|;
+block|}
+name|a
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* Table entry TLV */
 end_comment
 
@@ -2155,16 +2227,16 @@ name|struct
 name|in_addr
 name|addr
 decl_stmt|;
-comment|/* IPv4 address			*/
+comment|/* IPv4 address		*/
 name|uint32_t
 name|key
 decl_stmt|;
-comment|/* uid/gid/port			*/
+comment|/* uid/gid/port	*/
 name|struct
 name|in6_addr
 name|addr6
 decl_stmt|;
-comment|/* IPv6 address 		*/
+comment|/* IPv6 address 	*/
 name|char
 name|iface
 index|[
@@ -2172,6 +2244,10 @@ name|IF_NAMESIZE
 index|]
 decl_stmt|;
 comment|/* interface name	*/
+name|struct
+name|tflow_entry
+name|flow
+decl_stmt|;
 block|}
 name|k
 union|;
@@ -2254,12 +2330,119 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
+name|_ifpw_ta_tinfo
+block|{
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* Format flags			*/
+name|uint8_t
+name|taclass
+decl_stmt|;
+comment|/* algorithm class		*/
+name|uint8_t
+name|spare0
+decl_stmt|;
+name|uint16_t
+name|spare1
+decl_stmt|;
+name|uint32_t
+name|rssize4
+decl_stmt|;
+comment|/* runtime structure size	*/
+name|uint32_t
+name|rcount4
+decl_stmt|;
+comment|/* number of items in runtime	*/
+name|uint32_t
+name|rsize4
+decl_stmt|;
+comment|/* item size in runtime		*/
+name|uint32_t
+name|rssize6
+decl_stmt|;
+comment|/* runtime structure size	*/
+name|uint32_t
+name|rcount6
+decl_stmt|;
+comment|/* number of items in runtime	*/
+name|uint32_t
+name|rsize6
+decl_stmt|;
+comment|/* item size in runtime		*/
+block|}
+name|ifpw_ta_tinfo
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_TACLASS_HASH
+value|1
+end_define
+
+begin_comment
+comment|/* algo is based on hash	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TACLASS_ARRAY
+value|2
+end_define
+
+begin_comment
+comment|/* algo is based on array	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TACLASS_RADIX
+value|3
+end_define
+
+begin_comment
+comment|/* algo is based on radix tree	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TATFLAGS_DATA
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Has data filled in	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TATFLAGS_AF
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Separate data per AF	*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
 name|_ipfw_xtable_info
 block|{
 name|uint8_t
 name|type
 decl_stmt|;
 comment|/* table type (cidr,iface,..)	*/
+name|uint8_t
+name|tflags
+decl_stmt|;
+comment|/* type flags			*/
 name|uint8_t
 name|ftype
 decl_stmt|;
@@ -2268,9 +2451,6 @@ name|uint8_t
 name|vtype
 decl_stmt|;
 comment|/* value type			*/
-name|uint16_t
-name|spare0
-decl_stmt|;
 name|uint32_t
 name|set
 decl_stmt|;
@@ -2290,7 +2470,7 @@ comment|/* Number of records		*/
 name|uint32_t
 name|size
 decl_stmt|;
-comment|/* Total size of records	*/
+comment|/* Total size of records(export)*/
 name|char
 name|tablename
 index|[
@@ -2301,14 +2481,53 @@ comment|/* table name */
 name|char
 name|algoname
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 comment|/* algorithm name		*/
+name|ifpw_ta_tinfo
+name|ta_info
+decl_stmt|;
+comment|/* additional algo stats	*/
 block|}
 name|ipfw_xtable_info
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_TFFLAG_SRCIP
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TFFLAG_DSTIP
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TFFLAG_SRCPORT
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TFFLAG_DSTPORT
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TFFLAG_PROTO
+value|0x10
+end_define
 
 begin_typedef
 typedef|typedef
@@ -2365,7 +2584,7 @@ block|{
 name|char
 name|algoname
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 comment|/* algorithm name		*/
