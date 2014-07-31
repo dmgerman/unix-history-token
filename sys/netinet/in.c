@@ -1991,6 +1991,7 @@ name|vhid
 operator|!=
 literal|0
 condition|)
+block|{
 name|error
 operator|=
 call|(
@@ -2013,6 +2014,7 @@ condition|)
 goto|goto
 name|fail1
 goto|;
+block|}
 comment|/* 	 * Give the interface a chance to initialize 	 * if this is its first address, 	 * and to validate the address if necessary. 	 */
 if|if
 condition|(
@@ -2022,6 +2024,7 @@ name|if_ioctl
 operator|!=
 name|NULL
 condition|)
+block|{
 name|error
 operator|=
 call|(
@@ -2048,6 +2051,7 @@ condition|)
 goto|goto
 name|fail2
 goto|;
+block|}
 comment|/* 	 * Add route for the network. 	 */
 if|if
 condition|(
