@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/counter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/interrupt.h>
 end_include
 
@@ -480,42 +486,42 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|counter_u64_t
 name|maploads_total
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|counter_u64_t
 name|maploads_bounced
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|counter_u64_t
 name|maploads_coherent
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|counter_u64_t
 name|maploads_dmamem
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|counter_u64_t
 name|maploads_mbuf
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint64_t
+name|counter_u64_t
 name|maploads_physmem
 decl_stmt|;
 end_decl_stmt
@@ -634,7 +640,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UQUAD
+name|SYSCTL_COUNTER_U64
 argument_list|(
 name|_hw_busdma
 argument_list|,
@@ -646,8 +652,6 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|maploads_total
-argument_list|,
-literal|0
 argument_list|,
 literal|"Number of load operations performed"
 argument_list|)
@@ -655,7 +659,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UQUAD
+name|SYSCTL_COUNTER_U64
 argument_list|(
 name|_hw_busdma
 argument_list|,
@@ -668,15 +672,13 @@ argument_list|,
 operator|&
 name|maploads_bounced
 argument_list|,
-literal|0
-argument_list|,
 literal|"Number of load operations that used bounce buffers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UQUAD
+name|SYSCTL_COUNTER_U64
 argument_list|(
 name|_hw_busdma
 argument_list|,
@@ -689,15 +691,13 @@ argument_list|,
 operator|&
 name|maploads_dmamem
 argument_list|,
-literal|0
-argument_list|,
 literal|"Number of load operations on BUS_DMA_COHERENT memory"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UQUAD
+name|SYSCTL_COUNTER_U64
 argument_list|(
 name|_hw_busdma
 argument_list|,
@@ -709,8 +709,6 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|maploads_dmamem
-argument_list|,
-literal|0
 argument_list|,
 literal|"Number of load operations on bus_dmamem_alloc buffers"
 argument_list|)
@@ -718,7 +716,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UQUAD
+name|SYSCTL_COUNTER_U64
 argument_list|(
 name|_hw_busdma
 argument_list|,
@@ -730,8 +728,6 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|maploads_mbuf
-argument_list|,
-literal|0
 argument_list|,
 literal|"Number of load operations for mbufs"
 argument_list|)
@@ -739,7 +735,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UQUAD
+name|SYSCTL_COUNTER_U64
 argument_list|(
 name|_hw_busdma
 argument_list|,
@@ -751,8 +747,6 @@ name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|maploads_physmem
-argument_list|,
-literal|0
 argument_list|,
 literal|"Number of load operations on physical buffers"
 argument_list|)
@@ -1063,6 +1057,48 @@ block|{
 name|int
 name|uma_flags
 decl_stmt|;
+name|maploads_total
+operator|=
+name|counter_u64_alloc
+argument_list|(
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|maploads_bounced
+operator|=
+name|counter_u64_alloc
+argument_list|(
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|maploads_coherent
+operator|=
+name|counter_u64_alloc
+argument_list|(
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|maploads_dmamem
+operator|=
+name|counter_u64_alloc
+argument_list|(
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|maploads_mbuf
+operator|=
+name|counter_u64_alloc
+argument_list|(
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|maploads_physmem
+operator|=
+name|counter_u64_alloc
+argument_list|(
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
 name|uma_flags
 operator|=
 literal|0
@@ -1119,7 +1155,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This init historically used SI_SUB_VM, but now the init code requires  * malloc(9) using M_DEVBUF memory, which is set up later than SI_SUB_VM, by  * SI_SUB_KMEM and SI_ORDER_THIRD, so we'll go right after that by using  * SI_SUB_KMEM and SI_ORDER_FOURTH.  */
+comment|/*  * This init historically used SI_SUB_VM, but now the init code requires  * malloc(9) using M_DEVBUF memory and the pcpu zones for counter(9), which get  * set up by SI_SUB_KMEM and SI_ORDER_LAST, so we'll go right after that by  * using SI_SUB_KMEM+1.  */
 end_comment
 
 begin_expr_stmt
@@ -1128,8 +1164,10 @@ argument_list|(
 name|busdma
 argument_list|,
 name|SI_SUB_KMEM
+operator|+
+literal|1
 argument_list|,
-name|SI_ORDER_FOURTH
+name|SI_ORDER_FIRST
 argument_list|,
 name|busdma_init
 argument_list|,
@@ -4467,11 +4505,19 @@ name|map
 operator|->
 name|segments
 expr_stmt|;
+name|counter_u64_add
+argument_list|(
 name|maploads_total
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
+name|counter_u64_add
+argument_list|(
 name|maploads_physmem
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4509,8 +4555,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|counter_u64_add
+argument_list|(
 name|maploads_bounced
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -4776,8 +4826,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|counter_u64_add
+argument_list|(
 name|maploads_total
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4787,8 +4841,12 @@ name|flags
 operator|&
 name|DMAMAP_COHERENT
 condition|)
+name|counter_u64_add
+argument_list|(
 name|maploads_coherent
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4798,8 +4856,12 @@ name|flags
 operator|&
 name|DMAMAP_DMAMEM_ALLOC
 condition|)
+name|counter_u64_add
+argument_list|(
 name|maploads_dmamem
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4820,8 +4882,12 @@ operator|&
 name|BUS_DMA_LOAD_MBUF
 condition|)
 block|{
+name|counter_u64_add
+argument_list|(
 name|maploads_mbuf
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|map
 operator|->
@@ -4875,8 +4941,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|counter_u64_add
+argument_list|(
 name|maploads_bounced
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
