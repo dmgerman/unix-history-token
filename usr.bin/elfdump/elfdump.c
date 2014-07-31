@@ -1631,6 +1631,12 @@ case|:
 return|return
 literal|"EM_X86_64"
 return|;
+case|case
+name|EM_AARCH64
+case|:
+return|return
+literal|"EM_AARCH64"
+return|;
 block|}
 name|snprintf
 argument_list|(
