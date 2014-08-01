@@ -123,7 +123,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Update record if exists	*/
+comment|/* Add or update rec if exists	*/
 end_comment
 
 begin_define
@@ -146,6 +146,17 @@ end_define
 
 begin_comment
 comment|/* Called from old ABI		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEI_FLAGS_DONTADD
+value|0x08
+end_define
+
+begin_comment
+comment|/* Do not create new rec	*/
 end_comment
 
 begin_typedef

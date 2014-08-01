@@ -2569,7 +2569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * do_set3 - pass ipfw control cmd to kernel  * @optname: option name  * @optval: pointer to option data  * @optlen: option length  *  * Assumes op3 header is already embedded.  * Calls setsockopt() with IP_FW3 as kernel-visible opcode.  * Returns 0 on success or -1 otherwise.  */
+comment|/*  * do_set3 - pass ipfw control cmd to kernel  * @optname: option name  * @optval: pointer to option data  * @optlen: option length  *  * Assumes op3 header is already embedded.  * Calls setsockopt() with IP_FW3 as kernel-visible opcode.  * Returns 0 on success or errno otherwise.  */
 end_comment
 
 begin_function
@@ -2587,6 +2587,9 @@ name|uintptr_t
 name|optlen
 parameter_list|)
 block|{
+name|int
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|co
@@ -2635,8 +2638,8 @@ name|opcode
 operator|=
 name|optname
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 name|setsockopt
 argument_list|(
 name|ipfw_socket
@@ -2649,6 +2652,17 @@ name|op3
 argument_list|,
 name|optlen
 argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|errno
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

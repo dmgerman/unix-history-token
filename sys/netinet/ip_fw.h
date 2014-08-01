@@ -2471,6 +2471,13 @@ name|uint32_t
 name|size
 decl_stmt|;
 comment|/* Total size of records(export)*/
+name|uint32_t
+name|limit
+decl_stmt|;
+comment|/* Max number of records	*/
+name|uint32_t
+name|spare
+decl_stmt|;
 name|char
 name|tablename
 index|[
