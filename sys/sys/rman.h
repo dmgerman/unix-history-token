@@ -86,24 +86,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RF_TIMESHARE
+name|RF_SPARE1
 value|0x0008
 end_define
-
-begin_comment
-comment|/* resource permits time-division sharing */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|RF_WANTED
+name|RF_SPARE2
 value|0x0010
 end_define
-
-begin_comment
-comment|/* somebody is waiting for this resource */
-end_comment
 
 begin_define
 define|#
