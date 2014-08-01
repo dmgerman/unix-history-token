@@ -161,9 +161,6 @@ name|uint32_t
 name|sctp_use_cwnd_based_maxburst
 decl_stmt|;
 name|uint32_t
-name|sctp_asconf_auth_nochk
-decl_stmt|;
-name|uint32_t
 name|sctp_auth_disable
 decl_stmt|;
 name|uint32_t
@@ -1553,38 +1550,6 @@ define|#
 directive|define
 name|SCTPCTL_CWND_MAXBURST_DEFAULT
 value|1
-end_define
-
-begin_comment
-comment|/* asconf_auth_nochk: Disable SCTP ASCONF AUTH requirement */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ASCONF_AUTH_NOCHK_DESC
-value|"Disable SCTP ASCONF AUTH requirement"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ASCONF_AUTH_NOCHK_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ASCONF_AUTH_NOCHK_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ASCONF_AUTH_NOCHK_DEFAULT
-value|0
 end_define
 
 begin_comment
