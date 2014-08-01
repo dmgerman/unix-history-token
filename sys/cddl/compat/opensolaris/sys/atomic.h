@@ -63,6 +63,12 @@ name|defined
 argument_list|(
 name|__mips_n32
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 end_if
 
 begin_function_decl
@@ -385,6 +391,11 @@ operator|||
 name|defined
 argument_list|(
 name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arm__
 argument_list|)
 end_if
 
