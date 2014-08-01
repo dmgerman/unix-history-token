@@ -27688,6 +27688,8 @@ name|chk_length
 argument_list|,
 name|NULL
 argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|sctp_m_freem

@@ -640,7 +640,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|struct
+name|mbuf
+modifier|*
 name|sctp_add_pad_tombuf
 parameter_list|(
 name|struct
@@ -653,7 +655,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|struct
+name|mbuf
+modifier|*
 name|sctp_pad_lastmbuf
 parameter_list|(
 name|struct
