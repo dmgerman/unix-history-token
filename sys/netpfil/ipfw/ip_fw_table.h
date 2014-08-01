@@ -591,17 +591,20 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|int
+name|uint32_t
 name|idx
 decl_stmt|;
-name|int
+name|uint32_t
 name|type
 decl_stmt|;
-name|int
+name|uint32_t
 name|refcnt
 decl_stmt|;
-name|int
-name|spare
+name|uint32_t
+name|flags
+decl_stmt|;
+name|size_t
+name|ta_buf_size
 decl_stmt|;
 name|ta_init
 modifier|*
@@ -675,6 +678,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|TA_FLAG_DEFAULT
+value|0x01
+end_define
+
+begin_comment
+comment|/* Algorithm is default for given type */
+end_comment
+
 begin_function_decl
 name|int
 name|ipfw_add_table_algo
@@ -713,20 +727,6 @@ name|idx
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|table_algo
-name|cidr_radix
-decl_stmt|,
-name|iface_idx
-decl_stmt|,
-name|number_array
-decl_stmt|,
-name|flow_hash
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|void
