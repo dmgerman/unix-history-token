@@ -143,9 +143,14 @@ argument_list|(
 name|ENOTSUP
 argument_list|)
 expr_stmt|;
+name|zio_interrupt
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|ZIO_PIPELINE_CONTINUE
+name|ZIO_PIPELINE_STOP
 operator|)
 return|;
 block|}
