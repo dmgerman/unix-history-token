@@ -4207,6 +4207,14 @@ name|mtx
 modifier|*
 name|mutex
 decl_stmt|;
+if|if
+condition|(
+name|rp
+operator|==
+name|NULL
+condition|)
+comment|/* For NFSv4.1, there is no cache entry. */
+return|return;
 name|mutex
 operator|=
 name|nfsrc_cachemutex
