@@ -971,7 +971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove an entry from the hash table.  This operation will  * fail if there are any existing holds on the db.  */
+comment|/*  * Remove an entry from the hash table.  It must be in the EVICTING state.  */
 end_comment
 
 begin_function
@@ -1032,7 +1032,7 @@ modifier|*
 modifier|*
 name|dbp
 decl_stmt|;
-comment|/* 	 * We musn't hold db_mtx to maintin lock ordering: 	 * DBUF_HASH_MUTEX> db_mtx. 	 */
+comment|/* 	 * We musn't hold db_mtx to maintain lock ordering: 	 * DBUF_HASH_MUTEX> db_mtx. 	 */
 name|ASSERT
 argument_list|(
 name|refcount_is_zero
@@ -2338,23 +2338,6 @@ operator|&
 name|db
 operator|->
 name|db_mtx
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
-name|db
-operator|->
-name|db_buf
-operator|==
-name|NULL
-operator|||
-operator|!
-name|arc_has_callback
-argument_list|(
-name|db
-operator|->
-name|db_buf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8384,7 +8367,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * "Clear" the contents of this dbuf.  This will mark the dbuf  * EVICTING and clear *most* of its references.  Unfortunately,  * when we are not holding the dn_dbufs_mtx, we can't clear the  * entry in the dn_dbufs list.  We have to wait until dbuf_destroy()  * in this case.  For callers from the DMU we will usually see:  *	dbuf_clear()->arc_buf_evict()->dbuf_do_evict()->dbuf_destroy()  * For the arc callback, we will usually see:  *	dbuf_do_evict()->dbuf_clear();dbuf_destroy()  * Sometimes, though, we will get a mix of these two:  *	DMU: dbuf_clear()->arc_buf_evict()  *	ARC: dbuf_do_evict()->dbuf_destroy()  */
+comment|/*  * "Clear" the contents of this dbuf.  This will mark the dbuf  * EVICTING and clear *most* of its references.  Unfortunately,  * when we are not holding the dn_dbufs_mtx, we can't clear the  * entry in the dn_dbufs list.  We have to wait until dbuf_destroy()  * in this case.  For callers from the DMU we will usually see:  *	dbuf_clear()->arc_clear_callback()->dbuf_do_evict()->dbuf_destroy()  * For the arc callback, we will usually see:  *	dbuf_do_evict()->dbuf_clear();dbuf_destroy()  * Sometimes, though, we will get a mix of these two:  *	DMU: dbuf_clear()->arc_clear_callback()  *	ARC: dbuf_do_evict()->dbuf_destroy()  *  * This routine will dissociate the dbuf from the arc, by calling  * arc_clear_callback(), but will not evict the data from the ARC.  */
 end_comment
 
 begin_function
@@ -8412,10 +8395,10 @@ name|dmu_buf_impl_t
 modifier|*
 name|dndb
 decl_stmt|;
-name|int
+name|boolean_t
 name|dbuf_gone
 init|=
-name|FALSE
+name|B_FALSE
 decl_stmt|;
 name|ASSERT
 argument_list|(
@@ -8638,7 +8621,7 @@ name|db_buf
 condition|)
 name|dbuf_gone
 operator|=
-name|arc_buf_evict
+name|arc_clear_callback
 argument_list|(
 name|db
 operator|->
@@ -9612,19 +9595,11 @@ modifier|*
 name|private
 parameter_list|)
 block|{
-name|arc_buf_t
-modifier|*
-name|buf
-init|=
-name|private
-decl_stmt|;
 name|dmu_buf_impl_t
 modifier|*
 name|db
 init|=
-name|buf
-operator|->
-name|b_private
+name|private
 decl_stmt|;
 if|if
 condition|(
@@ -11322,7 +11297,78 @@ name|DBUF_IS_CACHEABLE
 argument_list|(
 name|db
 argument_list|)
-operator|||
+condition|)
+block|{
+if|if
+condition|(
+name|db
+operator|->
+name|db_blkptr
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|BP_IS_HOLE
+argument_list|(
+name|db
+operator|->
+name|db_blkptr
+argument_list|)
+operator|&&
+operator|!
+name|BP_IS_EMBEDDED
+argument_list|(
+name|db
+operator|->
+name|db_blkptr
+argument_list|)
+condition|)
+block|{
+name|spa_t
+modifier|*
+name|spa
+init|=
+name|dmu_objset_spa
+argument_list|(
+name|db
+operator|->
+name|db_objset
+argument_list|)
+decl_stmt|;
+name|blkptr_t
+name|bp
+init|=
+operator|*
+name|db
+operator|->
+name|db_blkptr
+decl_stmt|;
+name|dbuf_clear
+argument_list|(
+name|db
+argument_list|)
+expr_stmt|;
+name|arc_freed
+argument_list|(
+name|spa
+argument_list|,
+operator|&
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|dbuf_clear
+argument_list|(
+name|db
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
 name|arc_buf_eviction_needed
 argument_list|(
 name|db
@@ -11330,12 +11376,15 @@ operator|->
 name|db_buf
 argument_list|)
 condition|)
+block|{
 name|dbuf_clear
 argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|mutex_exit
 argument_list|(
 operator|&
@@ -11344,6 +11393,7 @@ operator|->
 name|db_mtx
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
