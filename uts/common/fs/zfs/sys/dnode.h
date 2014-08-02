@@ -622,9 +622,7 @@ decl_stmt|;
 comment|/* number of children */
 name|dnode_handle_t
 name|dnc_children
-index|[
-literal|1
-index|]
+index|[]
 decl_stmt|;
 comment|/* sized dynamically */
 block|}
