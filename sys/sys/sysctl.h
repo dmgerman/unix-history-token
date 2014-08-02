@@ -373,6 +373,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CTLFLAG_NOFETCH
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Don't fetch tunable from getenv() */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CTLFLAG_CAPRW
 value|(CTLFLAG_CAPRD|CTLFLAG_CAPWR)
 end_define
@@ -874,6 +885,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYSCTL_PARENT
+parameter_list|(
+name|oid_ptr
+parameter_list|)
+value|NULL
+end_define
+
+begin_comment
+comment|/* not supported */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SYSCTL_CHILDREN_SET
 parameter_list|(
 name|oid_ptr
@@ -1242,6 +1267,29 @@ value|sysctl_add_oid(ctx, parent, nbr, name, kind, a1, a2, handler, fmt, __DESCR
 end_define
 
 begin_comment
+comment|/* This constructs a root node from which other nodes can hang. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ROOT_NODE
+parameter_list|(
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|handler
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_NODE(, nbr, name, access, handler, descr)
+end_define
+
+begin_comment
 comment|/* This constructs a node from which other oids can hang. */
 end_comment
 
@@ -1264,6 +1312,27 @@ name|descr
 parameter_list|)
 define|\
 value|struct sysctl_oid_list SYSCTL_NODE_CHILDREN(parent, name);	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|(access),		    \ 	    (void*)&SYSCTL_NODE_CHILDREN(parent, name), 0, handler, "N", descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ADD_ROOT_NODE
+parameter_list|(
+name|ctx
+parameter_list|,
+name|nbr
+parameter_list|,
+name|name
+parameter_list|,
+name|access
+parameter_list|,
+name|handler
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_ADD_NODE(ctx, SYSCTL_STATIC_CHILDREN(), nbr, name, access, handler, descr)
 end_define
 
 begin_define
