@@ -19198,7 +19198,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|ecn_allowed
+name|ecn_supported
 operator|==
 literal|1
 operator|)
@@ -23996,7 +23996,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|ecn_allowed
+name|ecn_supported
 operator|==
 literal|1
 condition|)
@@ -29859,7 +29859,7 @@ operator|&&
 operator|(
 name|asoc
 operator|->
-name|ecn_allowed
+name|ecn_supported
 operator|==
 literal|1
 operator|)
@@ -29875,7 +29875,7 @@ operator|&&
 operator|(
 name|inp
 operator|->
-name|sctp_ecn_enable
+name|ecn_supported
 operator|==
 literal|1
 operator|)

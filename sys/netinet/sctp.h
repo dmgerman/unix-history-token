@@ -441,6 +441,13 @@ name|SCTP_REMOTE_UDP_ENCAPS_PORT
 value|0x00000024
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_ECN_SUPPORTED
+value|0x00000025
+end_define
+
 begin_comment
 comment|/*  * read-only options  */
 end_comment
