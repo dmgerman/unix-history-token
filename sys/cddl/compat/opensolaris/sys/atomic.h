@@ -67,7 +67,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__arm__
+name|ARM_HAVE_ATOMIC64
 argument_list|)
 end_if
 
@@ -395,7 +395,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__arm__
+name|ARM_HAVE_ATOMIC64
 argument_list|)
 end_if
 

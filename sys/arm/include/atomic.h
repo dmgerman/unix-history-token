@@ -308,6 +308,12 @@ name|__ARM_ARCH_6ZK__
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|ARM_HAVE_ATOMIC64
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -2488,6 +2494,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ARM_HAVE_ATOMIC64
+end_define
 
 begin_function
 unit|static
