@@ -30179,7 +30179,7 @@ name|inp
 operator|->
 name|ecn_supported
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 name|SCTP_INP_WUNLOCK
