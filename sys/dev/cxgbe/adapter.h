@@ -520,41 +520,34 @@ end_typedef
 begin_enum
 enum|enum
 block|{
+comment|/* 	 * All ingress queues use this entry size.  Note that the firmware event 	 * queue and any iq expecting CPL_RX_PKT in the descriptor needs this to 	 * be at least 64. 	 */
+name|IQ_ESIZE
+init|=
+literal|64
+block|,
+comment|/* Default queue sizes for all kinds of ingress queues */
 name|FW_IQ_QSIZE
 init|=
 literal|256
 block|,
-name|FW_IQ_ESIZE
-init|=
-literal|64
-block|,
-comment|/* At least 64 mandated by the firmware spec */
 name|RX_IQ_QSIZE
 init|=
 literal|1024
 block|,
-name|RX_IQ_ESIZE
-init|=
-literal|64
-block|,
-comment|/* At least 64 so CPL_RX_PKT will fit */
-name|EQ_ESIZE
-init|=
-literal|64
-block|,
 comment|/* All egress queues use this entry size */
-name|SGE_MAX_WR_NDESC
-init|=
-name|SGE_MAX_WR_LEN
-operator|/
 name|EQ_ESIZE
-block|,
-comment|/* max WR size in desc */
-name|RX_FL_ESIZE
 init|=
-name|EQ_ESIZE
+literal|64
 block|,
-comment|/* 8 64bit addresses */
+comment|/* Default queue sizes for all kinds of egress queues */
+name|CTRL_EQ_QSIZE
+init|=
+literal|128
+block|,
+name|TX_EQ_QSIZE
+init|=
+literal|1024
+block|,
 if|#
 directive|if
 name|MJUMPAGESIZE
@@ -578,14 +571,13 @@ name|CL_METADATA_SIZE
 init|=
 name|CACHE_LINE_SIZE
 block|,
-name|CTRL_EQ_QSIZE
+name|SGE_MAX_WR_NDESC
 init|=
-literal|128
+name|SGE_MAX_WR_LEN
+operator|/
+name|EQ_ESIZE
 block|,
-name|TX_EQ_QSIZE
-init|=
-literal|1024
-block|,
+comment|/* max WR size in desc */
 name|TX_SGL_SEGS
 init|=
 literal|36
@@ -1262,6 +1254,55 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IQ_PAD
+value|(IQ_ESIZE - sizeof(struct rsp_ctrl) - sizeof(struct rss_header))
+end_define
+
+begin_struct
+struct|struct
+name|iq_desc
+block|{
+name|struct
+name|rss_header
+name|rss
+decl_stmt|;
+name|uint8_t
+name|cpl
+index|[
+name|IQ_PAD
+index|]
+decl_stmt|;
+name|struct
+name|rsp_ctrl
+name|rsp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_undef
+undef|#
+directive|undef
+name|IQ_PAD
+end_undef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|iq_desc
+argument_list|)
+operator|==
+name|IQ_ESIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_enum
 enum|enum
 block|{
@@ -1326,35 +1367,9 @@ begin_struct
 struct|struct
 name|sge_iq
 block|{
-name|bus_dma_tag_t
-name|desc_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|desc_map
-decl_stmt|;
-name|bus_addr_t
-name|ba
-decl_stmt|;
-comment|/* bus address of descriptor ring */
 name|uint32_t
 name|flags
 decl_stmt|;
-name|uint16_t
-name|abs_id
-decl_stmt|;
-comment|/* absolute SGE id for the iq */
-name|int8_t
-name|intr_pktc_idx
-decl_stmt|;
-comment|/* packet count threshold index */
-name|int8_t
-name|pad0
-decl_stmt|;
-name|__be64
-modifier|*
-name|desc
-decl_stmt|;
-comment|/* KVA of descriptor ring */
 specifier|volatile
 name|int
 name|state
@@ -1364,12 +1379,16 @@ name|adapter
 modifier|*
 name|adapter
 decl_stmt|;
-specifier|const
-name|__be64
+name|struct
+name|iq_desc
 modifier|*
-name|cdesc
+name|desc
 decl_stmt|;
-comment|/* current descriptor */
+comment|/* KVA of descriptor ring */
+name|int8_t
+name|intr_pktc_idx
+decl_stmt|;
+comment|/* packet count threshold index */
 name|uint8_t
 name|gen
 decl_stmt|;
@@ -1382,14 +1401,14 @@ name|uint8_t
 name|intr_next
 decl_stmt|;
 comment|/* XXX: holdoff for next interrupt */
-name|uint8_t
-name|esize
-decl_stmt|;
-comment|/* size (bytes) of each entry in the queue */
 name|uint16_t
 name|qsize
 decl_stmt|;
 comment|/* size (# of entries) of the queue */
+name|uint16_t
+name|sidx
+decl_stmt|;
+comment|/* index of the entry with the status page */
 name|uint16_t
 name|cidx
 decl_stmt|;
@@ -1398,12 +1417,26 @@ name|uint16_t
 name|cntxt_id
 decl_stmt|;
 comment|/* SGE context id for the iq */
+name|uint16_t
+name|abs_id
+decl_stmt|;
+comment|/* absolute SGE id for the iq */
 name|STAILQ_ENTRY
 argument_list|(
 argument|sge_iq
 argument_list|)
 name|link
 expr_stmt|;
+name|bus_dma_tag_t
+name|desc_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|desc_map
+decl_stmt|;
+name|bus_addr_t
+name|ba
+decl_stmt|;
+comment|/* bus address of descriptor ring */
 block|}
 struct|;
 end_struct
@@ -2168,62 +2201,6 @@ directive|ifdef
 name|DEV_NETMAP
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|CPL_PAD
-value|(RX_IQ_ESIZE - sizeof(struct rsp_ctrl) - \     sizeof(struct rss_header))
-end_define
-
-begin_struct
-struct|struct
-name|nm_iq_desc
-block|{
-name|struct
-name|rss_header
-name|rss
-decl_stmt|;
-union|union
-block|{
-name|uint8_t
-name|cpl
-index|[
-name|CPL_PAD
-index|]
-decl_stmt|;
-name|struct
-name|cpl_fw6_msg
-name|fw6_msg
-decl_stmt|;
-name|struct
-name|cpl_rx_pkt
-name|rx_pkt
-decl_stmt|;
-block|}
-name|u
-union|;
-name|struct
-name|rsp_ctrl
-name|rsp
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nm_iq_desc
-argument_list|)
-operator|==
-name|RX_IQ_ESIZE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|sge_nm_rxq
@@ -2234,7 +2211,7 @@ modifier|*
 name|pi
 decl_stmt|;
 name|struct
-name|nm_iq_desc
+name|iq_desc
 modifier|*
 name|iq_desc
 decl_stmt|;
@@ -3335,6 +3312,35 @@ name|q
 parameter_list|)
 define|\
 value|for (q =&pi->adapter->sge.nm_rxq[pi->first_nm_rxq], iter = 0; \ 	    iter< pi->nnmrxq; ++iter, ++q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDXINCR
+parameter_list|(
+name|head
+parameter_list|,
+name|incr
+parameter_list|,
+name|wrap
+parameter_list|)
+value|do { \ 	head = wrap - head> incr ? head + incr : incr - (wrap - head); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDXDIFF
+parameter_list|(
+name|head
+parameter_list|,
+name|tail
+parameter_list|,
+name|wrap
+parameter_list|)
+define|\
+value|(head>= tail ? head - tail : wrap - tail + head)
 end_define
 
 begin_comment
