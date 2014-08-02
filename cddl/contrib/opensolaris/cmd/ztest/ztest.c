@@ -474,6 +474,8 @@ operator|.
 name|zo_vdev_size
 operator|=
 name|SPA_MINDEVSIZE
+operator|*
+literal|2
 block|,
 operator|.
 name|zo_datasets
