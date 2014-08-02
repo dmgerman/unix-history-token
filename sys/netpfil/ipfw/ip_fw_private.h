@@ -1156,6 +1156,10 @@ modifier|*
 name|sopt
 decl_stmt|;
 comment|/* socket data */
+name|caddr_t
+name|sopt_val
+decl_stmt|;
+comment|/* sopt user buffer */
 name|size_t
 name|valsize
 decl_stmt|;
