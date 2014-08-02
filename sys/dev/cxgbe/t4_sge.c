@@ -16952,7 +16952,7 @@ condition|(
 name|eq
 operator|->
 name|udb_qid
-operator|>
+operator|>=
 name|PAGE_SIZE
 operator|/
 name|UDBS_SEG_SIZE
