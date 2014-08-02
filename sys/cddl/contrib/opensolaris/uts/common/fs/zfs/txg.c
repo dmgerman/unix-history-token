@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -3102,6 +3102,60 @@ name|TXG_MASK
 index|]
 operator|==
 name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Returns true if all txg lists are empty.  *  * Warning: this is inherently racy (an item could be added immediately after this  * function returns). We don't bother with the lock because it wouldn't change the  * semantics.  */
+end_comment
+
+begin_function
+name|boolean_t
+name|txg_all_lists_empty
+parameter_list|(
+name|txg_list_t
+modifier|*
+name|tl
+parameter_list|)
+block|{
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|TXG_SIZE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|txg_list_empty
+argument_list|(
+name|tl
+argument_list|,
+name|i
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|B_FALSE
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+name|B_TRUE
 operator|)
 return|;
 block|}

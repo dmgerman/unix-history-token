@@ -2571,6 +2571,15 @@ name|spa
 parameter_list|)
 function_decl|;
 specifier|extern
+name|boolean_t
+name|spa_has_pending_synctask
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
 name|int
 name|spa_mode
 parameter_list|(
