@@ -1187,7 +1187,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If the znode is still valid, then so is the file system. We know that 	 * no valid file system can be freed while we hold zfsvfs_lock, so we 	 * can safely ensure that the filesystem is not and will not be 	 * unmounted. The next statement is equivalent to ZFS_ENTER(). 	 */
-name|rrw_enter
+name|rrm_enter
 argument_list|(
 operator|&
 name|zfsvfs
