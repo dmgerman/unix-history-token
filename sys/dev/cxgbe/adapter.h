@@ -1716,6 +1716,15 @@ literal|2
 operator|)
 block|,
 comment|/* buffer packing enabled */
+name|FL_BUF_RESUME
+init|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
+comment|/* resume from the middle of the frame */
 block|}
 enum|;
 end_enum
@@ -1727,7 +1736,8 @@ name|FL_RUNNING_LOW
 parameter_list|(
 name|fl
 parameter_list|)
-value|(fl->cap - fl->needed<= fl->lowat)
+define|\
+value|(IDXDIFF(fl->dbidx * 8, fl->cidx, fl->sidx * 8)<= fl->lowat)
 end_define
 
 begin_define
@@ -1737,113 +1747,77 @@ name|FL_NOT_RUNNING_LOW
 parameter_list|(
 name|fl
 parameter_list|)
-value|(fl->cap - fl->needed>= 2 * fl->lowat)
+define|\
+value|(IDXDIFF(fl->dbidx * 8, fl->cidx, fl->sidx * 8)>= 2 * fl->lowat)
 end_define
 
 begin_struct
 struct|struct
 name|sge_fl
 block|{
-name|bus_dma_tag_t
-name|desc_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|desc_map
-decl_stmt|;
-name|struct
-name|cluster_layout
-name|cll_def
-decl_stmt|;
-comment|/* default refill zone, layout */
-name|struct
-name|cluster_layout
-name|cll_alt
-decl_stmt|;
-comment|/* alternate refill zone, layout */
 name|struct
 name|mtx
 name|fl_lock
-decl_stmt|;
-name|char
-name|lockname
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|int
-name|flags
 decl_stmt|;
 name|__be64
 modifier|*
 name|desc
 decl_stmt|;
 comment|/* KVA of descriptor ring, ptr to addresses */
-name|bus_addr_t
-name|ba
-decl_stmt|;
-comment|/* bus address of descriptor ring */
 name|struct
 name|fl_sdesc
 modifier|*
 name|sdesc
 decl_stmt|;
 comment|/* KVA of software descriptor ring */
-name|uint32_t
-name|cap
+name|struct
+name|cluster_layout
+name|cll_def
 decl_stmt|;
-comment|/* max # of buffers, for convenience */
+comment|/* default refill zone, layout */
 name|uint16_t
-name|qsize
-decl_stmt|;
-comment|/* size (# of entries) of the queue */
-name|uint16_t
-name|cntxt_id
-decl_stmt|;
-comment|/* SGE context id for the freelist */
-name|uint32_t
-name|cidx
-decl_stmt|;
-comment|/* consumer idx (buffer idx, NOT hw desc idx) */
-name|uint32_t
-name|rx_offset
-decl_stmt|;
-comment|/* offset in fl buf (when buffer packing) */
-name|uint32_t
-name|pidx
-decl_stmt|;
-comment|/* producer idx (buffer idx, NOT hw desc idx) */
-name|uint32_t
-name|needed
-decl_stmt|;
-comment|/* # of buffers needed to fill up fl. */
-name|uint32_t
 name|lowat
 decl_stmt|;
 comment|/* # of buffers<= this means fl needs help */
+name|int
+name|flags
+decl_stmt|;
+name|uint16_t
+name|buf_boundary
+decl_stmt|;
+comment|/* The 16b idx all deal with hw descriptors */
+name|uint16_t
+name|dbidx
+decl_stmt|;
+comment|/* hw pidx after last doorbell */
+name|uint16_t
+name|sidx
+decl_stmt|;
+comment|/* index of status page */
+specifier|volatile
+name|uint16_t
+name|hw_cidx
+decl_stmt|;
+comment|/* The 32b idx are all buffer idx, not hardware descriptor idx */
 name|uint32_t
-name|pending
+name|cidx
 decl_stmt|;
-comment|/* # of bufs allocated since last doorbell */
-name|TAILQ_ENTRY
-argument_list|(
-argument|sge_fl
-argument_list|)
-name|link
-expr_stmt|;
-comment|/* All starving freelists */
-name|struct
-name|mbuf
-modifier|*
-name|m0
+comment|/* consumer index */
+name|uint32_t
+name|pidx
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|pnext
+comment|/* producer index */
+name|uint32_t
+name|dbval
 decl_stmt|;
 name|u_int
-name|remaining
+name|rx_offset
+decl_stmt|;
+comment|/* offset in fl buf (when buffer packing) */
+specifier|volatile
+name|uint32_t
+modifier|*
+name|udb
 decl_stmt|;
 name|uint64_t
 name|mbuf_allocated
@@ -1865,6 +1839,57 @@ name|uint64_t
 name|cl_fast_recycled
 decl_stmt|;
 comment|/* # of clusters recycled (fast) */
+comment|/* These 3 are valid when FL_BUF_RESUME is set, stale otherwise. */
+name|struct
+name|mbuf
+modifier|*
+name|m0
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|pnext
+decl_stmt|;
+name|u_int
+name|remaining
+decl_stmt|;
+name|uint16_t
+name|qsize
+decl_stmt|;
+comment|/* # of hw descriptors (status page included) */
+name|uint16_t
+name|cntxt_id
+decl_stmt|;
+comment|/* SGE context id for the freelist */
+name|TAILQ_ENTRY
+argument_list|(
+argument|sge_fl
+argument_list|)
+name|link
+expr_stmt|;
+comment|/* All starving freelists */
+name|bus_dma_tag_t
+name|desc_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|desc_map
+decl_stmt|;
+name|char
+name|lockname
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|bus_addr_t
+name|ba
+decl_stmt|;
+comment|/* bus address of descriptor ring */
+name|struct
+name|cluster_layout
+name|cll_alt
+decl_stmt|;
+comment|/* alternate refill zone, layout */
 block|}
 struct|;
 end_struct
@@ -3319,13 +3344,13 @@ define|#
 directive|define
 name|IDXINCR
 parameter_list|(
-name|head
+name|idx
 parameter_list|,
 name|incr
 parameter_list|,
 name|wrap
 parameter_list|)
-value|do { \ 	head = wrap - head> incr ? head + incr : incr - (wrap - head); \ } while (0)
+value|do { \ 	idx = wrap - idx> incr ? idx + incr : incr - (wrap - idx); \ } while (0)
 end_define
 
 begin_define
@@ -3340,7 +3365,7 @@ parameter_list|,
 name|wrap
 parameter_list|)
 define|\
-value|(head>= tail ? head - tail : wrap - tail + head)
+value|((head)>= (tail) ? (head) - (tail) : (wrap) - (tail) + (head))
 end_define
 
 begin_comment
