@@ -1134,6 +1134,9 @@ decl_stmt|;
 name|uint8_t
 name|ecn_supported
 decl_stmt|;
+name|uint8_t
+name|prsctp_supported
+decl_stmt|;
 name|struct
 name|sctp_nonpad_sndrcvinfo
 name|def_send
