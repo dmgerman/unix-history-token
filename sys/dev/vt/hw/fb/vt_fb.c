@@ -2096,7 +2096,11 @@ literal|16
 expr_stmt|;
 block|}
 comment|/* Clear the screen. */
-name|vt_fb_blank
+name|vd
+operator|->
+name|vd_driver
+operator|->
+name|vd_blank
 argument_list|(
 name|vd
 argument_list|,
