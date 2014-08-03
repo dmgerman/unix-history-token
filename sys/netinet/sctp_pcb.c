@@ -10522,6 +10522,18 @@ argument_list|(
 name|sctp_pr_enable
 argument_list|)
 expr_stmt|;
+name|inp
+operator|->
+name|nrsack_supported
+operator|=
+operator|(
+name|uint8_t
+operator|)
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_nrsack_enable
+argument_list|)
+expr_stmt|;
 comment|/* init the small hash table we use to track asocid<-> tcb */
 name|inp
 operator|->
@@ -27508,6 +27520,9 @@ decl_stmt|;
 name|uint8_t
 name|prsctp_supported
 decl_stmt|;
+name|uint8_t
+name|nrsack_supported
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
@@ -27633,6 +27648,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|prsctp_supported
+operator|=
+literal|0
+expr_stmt|;
+name|nrsack_supported
 operator|=
 literal|0
 expr_stmt|;
@@ -29240,14 +29259,6 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_nr_sack
-operator|=
-literal|0
-expr_stmt|;
-name|stcb
-operator|->
-name|asoc
-operator|.
 name|peer_supports_auth
 operator|=
 literal|0
@@ -29333,11 +29344,7 @@ break|break;
 case|case
 name|SCTP_NR_SELECTIVE_ACK
 case|:
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_nr_sack
+name|nrsack_supported
 operator|=
 literal|1
 expr_stmt|;
@@ -30087,6 +30094,14 @@ operator|.
 name|prsctp_supported
 operator|&=
 name|prsctp_supported
+expr_stmt|;
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|nrsack_supported
+operator|&=
+name|nrsack_supported
 expr_stmt|;
 comment|/* validate authentication required parameters */
 if|if

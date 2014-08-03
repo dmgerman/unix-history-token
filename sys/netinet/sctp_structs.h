@@ -3238,6 +3238,9 @@ decl_stmt|;
 name|uint8_t
 name|prsctp_supported
 decl_stmt|;
+name|uint8_t
+name|nrsack_supported
+decl_stmt|;
 comment|/* Did the peer make the stream config (add out) request */
 name|uint8_t
 name|peer_req_out
@@ -3245,10 +3248,6 @@ decl_stmt|;
 comment|/* flag to indicate if peer can do asconf */
 name|uint8_t
 name|peer_supports_asconf
-decl_stmt|;
-comment|/* EY - flag to indicate if peer can do nr_sack */
-name|uint8_t
-name|peer_supports_nr_sack
 decl_stmt|;
 comment|/* peer authentication support flag */
 name|uint8_t
@@ -3336,10 +3335,6 @@ name|cookie_how
 index|[
 literal|8
 index|]
-decl_stmt|;
-comment|/* EY 05/05/08 - NR_SACK variable */
-name|uint8_t
-name|sctp_nr_sack_on_off
 decl_stmt|;
 comment|/* JRS 5/21/07 - CMT PF variable */
 name|uint8_t

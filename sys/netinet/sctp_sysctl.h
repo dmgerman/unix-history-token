@@ -64,6 +64,9 @@ name|uint32_t
 name|sctp_pr_enable
 decl_stmt|;
 name|uint32_t
+name|sctp_nrsack_enable
+decl_stmt|;
+name|uint32_t
 name|sctp_fr_max_burst_default
 decl_stmt|;
 name|uint32_t
@@ -155,10 +158,6 @@ name|sctp_cmt_on_off
 decl_stmt|;
 name|uint32_t
 name|sctp_cmt_use_dac
-decl_stmt|;
-comment|/* EY 5/5/08 - nr_sack flag variable */
-name|uint32_t
-name|sctp_nr_sack_on_off
 decl_stmt|;
 name|uint32_t
 name|sctp_use_cwnd_based_maxburst
@@ -497,6 +496,38 @@ define|#
 directive|define
 name|SCTPCTL_PR_ENABLE_DEFAULT
 value|1
+end_define
+
+begin_comment
+comment|/* nrsack_enable: Enable NR_SACK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NRSACK_ENABLE_DESC
+value|"Enable NR_SACK"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NRSACK_ENABLE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NRSACK_ENABLE_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_NRSACK_ENABLE_DEFAULT
+value|0
 end_define
 
 begin_comment
@@ -1489,38 +1520,6 @@ define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_DEFAULT
 value|SCTP_CMT_OFF
-end_define
-
-begin_comment
-comment|/* EY - nr_sack_on_off: NR_SACK on/off flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_NR_SACK_ON_OFF_DESC
-value|"NR_SACK on/off flag"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_NR_SACK_ON_OFF_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_NR_SACK_ON_OFF_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_NR_SACK_ON_OFF_DEFAULT
-value|0
 end_define
 
 begin_comment
