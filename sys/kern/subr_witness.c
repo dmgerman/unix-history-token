@@ -270,12 +270,23 @@ directive|undef
 name|BLESSING
 end_undef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITNESS_COUNT
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|WITNESS_COUNT
 value|1536
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
