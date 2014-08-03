@@ -54,6 +54,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -100,11 +106,17 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|errno
+operator|=
+name|EBADF
+expr_stmt|;
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
+block|}
 name|c
 operator|=
 operator|(

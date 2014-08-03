@@ -328,7 +328,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|EINVAL
+name|EBADF
 expr_stmt|;
 return|return
 operator|(

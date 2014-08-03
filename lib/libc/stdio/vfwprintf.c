@@ -2055,11 +2055,17 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|errno
+operator|=
+name|EBADF
+expr_stmt|;
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
+block|}
 name|convbuf
 operator|=
 name|NULL
