@@ -970,6 +970,11 @@ modifier|*
 name|tablestate
 decl_stmt|;
 comment|/* runtime table info */
+name|int
+modifier|*
+name|idxmap
+decl_stmt|;
+comment|/* skipto array of rules */
 if|#
 directive|if
 name|defined
@@ -1022,6 +1027,11 @@ modifier|*
 name|ifcfg
 decl_stmt|;
 comment|/* interface module data */
+name|int
+modifier|*
+name|idxmap_back
+decl_stmt|;
+comment|/* standby skipto array of rules */
 if|#
 directive|if
 name|defined
@@ -1898,6 +1908,30 @@ end_function_decl
 begin_comment
 comment|/* In ip_fw_sockopt.c */
 end_comment
+
+begin_function_decl
+name|void
+name|ipfw_init_skipto_cache
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipfw_destroy_skipto_cache
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
