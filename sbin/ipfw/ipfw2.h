@@ -373,6 +373,10 @@ name|TOK_SOCKARG
 block|,
 name|TOK_SETDSCP
 block|,
+name|TOK_FLOW
+block|,
+name|TOK_IFLIST
+block|,
 comment|/* Table tokens */
 name|TOK_CREATE
 block|,
@@ -381,6 +385,8 @@ block|,
 name|TOK_LIST
 block|,
 name|TOK_INFO
+block|,
+name|TOK_DETAIL
 block|,
 name|TOK_FLUSH
 block|,
@@ -392,7 +398,7 @@ name|TOK_VALTYPE
 block|,
 name|TOK_ALGO
 block|,
-name|TOK_FLOW
+name|TOK_TALIST
 block|, }
 enum|;
 end_enum
@@ -1019,16 +1025,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipfw_list_tifaces
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ipfw_list_ta
+name|ipfw_internal_handler
 parameter_list|(
 name|int
 name|ac
@@ -1373,6 +1370,21 @@ parameter_list|(
 name|char
 modifier|*
 name|tablename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipfw_list_ta
+parameter_list|(
+name|int
+name|ac
+parameter_list|,
+name|char
+modifier|*
+name|av
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
