@@ -315,6 +315,38 @@ define|\
 value|static int vt_##_name = _default;					\ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RWTUN,&vt_##_name, _default,\ 		_descr);
 end_define
 
+begin_comment
+comment|/* Allow to disable some special keys by users. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VT_DEBUG_KEY_ENABLED
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_REBOOT_KEY_ENABLED
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_HALT_KEY_ENABLED
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_POWEROFF_KEY_ENABLED
+value|(1<< 3)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|vt_driver
