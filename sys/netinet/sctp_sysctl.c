@@ -5491,7 +5491,7 @@ name|_net_inet_sctp
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|nr_sack_on_off
+name|nrsack_enable
 argument_list|,
 name|CTLTYPE_UINT
 operator||
