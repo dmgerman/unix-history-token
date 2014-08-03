@@ -16,7 +16,7 @@ name|_IPFW2_TABLE_H
 end_define
 
 begin_comment
-comment|/*  * Internal constants and data structures used by ipfw tables  * and not meant to be exported outside the kernel.  */
+comment|/*  * Internal constants and data structures used by ipfw tables  * not meant to be exported outside the kernel.  */
 end_comment
 
 begin_ifdef
