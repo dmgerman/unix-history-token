@@ -14560,6 +14560,9 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|vfsconf_slock
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|vfsp
@@ -14607,6 +14610,9 @@ name|error
 condition|)
 break|break;
 block|}
+name|vfsconf_sunlock
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -14627,6 +14633,8 @@ argument_list|,
 name|CTLTYPE_OPAQUE
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -14783,6 +14791,9 @@ name|ENOTDIR
 operator|)
 return|;
 comment|/* overloaded */
+name|vfsconf_slock
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|vfsp
@@ -14791,6 +14802,7 @@ argument|&vfsconf
 argument_list|,
 argument|vfc_list
 argument_list|)
+block|{
 if|if
 condition|(
 name|vfsp
@@ -14803,6 +14815,10 @@ literal|2
 index|]
 condition|)
 break|break;
+block|}
+name|vfsconf_sunlock
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|vfsp
@@ -14870,6 +14886,8 @@ argument_list|,
 name|CTLFLAG_RD
 operator||
 name|CTLFLAG_SKIP
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 name|vfs_sysctl
 argument_list|,
@@ -14909,6 +14927,9 @@ name|struct
 name|ovfsconf
 name|ovfs
 decl_stmt|;
+name|vfsconf_slock
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|vfsp
@@ -14989,13 +15010,27 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
+block|{
+name|vfsconf_sunlock
+argument_list|()
+expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
+block|}
+name|vfsconf_sunlock
+argument_list|()
+expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -15459,6 +15494,8 @@ argument_list|,
 name|CTLTYPE_OPAQUE
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
