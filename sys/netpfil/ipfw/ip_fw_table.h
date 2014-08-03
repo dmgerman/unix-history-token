@@ -962,6 +962,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ipfw_swap_table
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
+parameter_list|,
+name|ip_fw3_opheader
+modifier|*
+name|op3
+parameter_list|,
+name|struct
+name|sockopt_data
+modifier|*
+name|sd
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Exported to support legacy opcodes */
 end_comment
@@ -1145,23 +1166,6 @@ end_function_decl
 begin_comment
 comment|/* utility functions  */
 end_comment
-
-begin_function_decl
-name|void
-name|objheader_to_ti
-parameter_list|(
-name|struct
-name|_ipfw_obj_header
-modifier|*
-name|oh
-parameter_list|,
-name|struct
-name|tid_info
-modifier|*
-name|ti
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int

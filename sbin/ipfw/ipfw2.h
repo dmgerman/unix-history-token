@@ -390,6 +390,8 @@ name|TOK_DETAIL
 block|,
 name|TOK_FLUSH
 block|,
+name|TOK_SWAP
+block|,
 name|TOK_ADD
 block|,
 name|TOK_DEL

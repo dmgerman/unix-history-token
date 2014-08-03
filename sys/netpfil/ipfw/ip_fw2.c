@@ -11280,11 +11280,6 @@ name|id
 operator|=
 literal|1
 expr_stmt|;
-name|ipfw_init_skipto_cache
-argument_list|(
-name|chain
-argument_list|)
-expr_stmt|;
 comment|/* Pre-calculate rules length for legacy dump format */
 name|chain
 operator|->
@@ -11302,6 +11297,11 @@ name|chain
 argument_list|)
 expr_stmt|;
 name|ipfw_dyn_init
+argument_list|(
+name|chain
+argument_list|)
+expr_stmt|;
+name|ipfw_init_skipto_cache
 argument_list|(
 name|chain
 argument_list|)
