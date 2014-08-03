@@ -44920,21 +44920,19 @@ operator|->
 name|iv_state
 argument_list|)
 expr_stmt|;
-name|iwn_stop
+name|IWN_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|iwn_init
+name|iwn_stop_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|iwn_start
+name|iwn_init_locked
 argument_list|(
 name|sc
-operator|->
-name|sc_ifp
 argument_list|)
 expr_stmt|;
 if|if
@@ -45005,6 +45003,19 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Only run start once the NIC is in a useful state, like associated */
+name|iwn_start_locked
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
+argument_list|)
+expr_stmt|;
+name|IWN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
