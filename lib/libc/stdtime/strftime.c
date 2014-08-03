@@ -177,6 +177,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|locale_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -231,6 +233,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|locale_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -540,13 +544,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fprintf_l
+name|fputs
 argument_list|(
-name|stderr
-argument_list|,
-name|loc
-argument_list|,
 literal|"NULL strftime format "
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 else|else
@@ -567,13 +569,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fprintf_l
+name|fputs
 argument_list|(
-name|stderr
-argument_list|,
-name|loc
-argument_list|,
 literal|"yields only two digits of years in "
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 if|if
@@ -585,13 +585,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fprintf_l
+name|fputs
 argument_list|(
-name|stderr
-argument_list|,
-name|loc
-argument_list|,
 literal|"some locales"
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -604,38 +602,32 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fprintf_l
+name|fputs
 argument_list|(
-name|stderr
-argument_list|,
-name|loc
-argument_list|,
 literal|"the current locale"
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 else|else
 operator|(
 name|void
 operator|)
-name|fprintf_l
+name|fputs
 argument_list|(
-name|stderr
-argument_list|,
-name|loc
-argument_list|,
 literal|"all locales"
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fprintf_l
+name|fputs
 argument_list|(
-name|stderr
-argument_list|,
-name|loc
-argument_list|,
 literal|"\n"
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1007,6 +999,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1106,6 +1100,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1164,6 +1160,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1210,6 +1208,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1249,6 +1249,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1276,6 +1278,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1302,6 +1306,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1364,6 +1370,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1389,6 +1397,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1416,6 +1426,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1533,6 +1545,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1581,9 +1595,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sprintf
+name|sprintf_l
 argument_list|(
 name|buf
+argument_list|,
+name|loc
 argument_list|,
 literal|"%ld"
 argument_list|,
@@ -1597,9 +1613,11 @@ else|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|sprintf_l
 argument_list|(
 name|buf
+argument_list|,
+name|loc
 argument_list|,
 literal|"%lu"
 argument_list|,
@@ -1691,6 +1709,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1721,6 +1741,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1962,6 +1984,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1993,6 +2017,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 block|}
@@ -2012,6 +2038,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 block|}
@@ -2086,6 +2114,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2105,6 +2135,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2209,6 +2241,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2232,6 +2266,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2440,6 +2476,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 block|}
@@ -2562,6 +2600,8 @@ parameter_list|,
 name|pt
 parameter_list|,
 name|ptlim
+parameter_list|,
+name|loc
 parameter_list|)
 specifier|const
 name|int
@@ -2584,6 +2624,9 @@ modifier|*
 specifier|const
 name|ptlim
 decl_stmt|;
+name|locale_t
+name|loc
+decl_stmt|;
 block|{
 name|char
 name|buf
@@ -2599,9 +2642,11 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|sprintf_l
 argument_list|(
 name|buf
+argument_list|,
+name|loc
 argument_list|,
 name|format
 argument_list|,
@@ -2698,6 +2743,8 @@ parameter_list|,
 name|pt
 parameter_list|,
 name|ptlim
+parameter_list|,
+name|loc
 parameter_list|)
 specifier|const
 name|int
@@ -2724,6 +2771,9 @@ name|char
 modifier|*
 specifier|const
 name|ptlim
+decl_stmt|;
+name|locale_t
+name|loc
 decl_stmt|;
 block|{
 specifier|register
@@ -2843,6 +2893,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 block|}
@@ -2872,6 +2924,8 @@ argument_list|,
 name|pt
 argument_list|,
 name|ptlim
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 return|return
