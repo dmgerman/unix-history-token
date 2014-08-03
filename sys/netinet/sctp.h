@@ -462,6 +462,13 @@ name|SCTP_NRSACK_SUPPORTED
 value|0x00000027
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_PKTDROP_SUPPORTED
+value|0x00000028
+end_define
+
 begin_comment
 comment|/*  * read-only options  */
 end_comment

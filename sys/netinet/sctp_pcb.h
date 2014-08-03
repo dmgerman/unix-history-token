@@ -1140,6 +1140,9 @@ decl_stmt|;
 name|uint8_t
 name|nrsack_supported
 decl_stmt|;
+name|uint8_t
+name|pktdrop_supported
+decl_stmt|;
 name|struct
 name|sctp_nonpad_sndrcvinfo
 name|def_send

@@ -13800,6 +13800,17 @@ name|nrsack_supported
 expr_stmt|;
 name|inp
 operator|->
+name|pktdrop_supported
+operator|=
+operator|(
+operator|*
+name|inp_p
+operator|)
+operator|->
+name|pktdrop_supported
+expr_stmt|;
+name|inp
+operator|->
 name|partial_delivery_point
 operator|=
 operator|(
