@@ -2330,48 +2330,55 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|_ifpw_ta_tinfo
+name|_ipfw_ta_tinfo
 block|{
 name|uint32_t
 name|flags
 decl_stmt|;
 comment|/* Format flags			*/
+name|uint32_t
+name|spare
+decl_stmt|;
 name|uint8_t
-name|taclass
+name|taclass4
 decl_stmt|;
 comment|/* algorithm class		*/
 name|uint8_t
-name|spare0
+name|spare4
 decl_stmt|;
 name|uint16_t
-name|spare1
-decl_stmt|;
-name|uint32_t
-name|rssize4
-decl_stmt|;
-comment|/* runtime structure size	*/
-name|uint32_t
-name|rcount4
-decl_stmt|;
-comment|/* number of items in runtime	*/
-name|uint32_t
-name|rsize4
+name|itemsize4
 decl_stmt|;
 comment|/* item size in runtime		*/
 name|uint32_t
-name|rssize6
+name|size4
 decl_stmt|;
 comment|/* runtime structure size	*/
 name|uint32_t
-name|rcount6
+name|count4
 decl_stmt|;
 comment|/* number of items in runtime	*/
-name|uint32_t
-name|rsize6
+name|uint8_t
+name|taclass6
+decl_stmt|;
+comment|/* algorithm class		*/
+name|uint8_t
+name|spare6
+decl_stmt|;
+name|uint16_t
+name|itemsize6
 decl_stmt|;
 comment|/* item size in runtime		*/
+name|uint32_t
+name|size6
+decl_stmt|;
+comment|/* runtime structure size	*/
+name|uint32_t
+name|count6
+decl_stmt|;
+comment|/* number of items in runtime	*/
 block|}
-name|ifpw_ta_tinfo
+name|ipfw_ta_tinfo
 typedef|;
 end_typedef
 
@@ -2422,12 +2429,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPFW_TATFLAGS_AF
+name|IPFW_TATFLAGS_AFDATA
 value|0x0002
 end_define
 
 begin_comment
 comment|/* Separate data per AF	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TATFLAGS_AFITEM
+value|0x0004
+end_define
+
+begin_comment
+comment|/* diff. items per AF	*/
 end_comment
 
 begin_typedef
@@ -2492,7 +2510,7 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* algorithm name		*/
-name|ifpw_ta_tinfo
+name|ipfw_ta_tinfo
 name|ta_info
 decl_stmt|;
 comment|/* additional algo stats	*/

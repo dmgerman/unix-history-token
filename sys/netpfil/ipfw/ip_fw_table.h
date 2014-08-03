@@ -591,7 +591,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
+name|void
 name|ta_dump_tinfo
 parameter_list|(
 name|void
@@ -603,7 +603,7 @@ name|table_info
 modifier|*
 name|ti
 parameter_list|,
-name|ifpw_ta_tinfo
+name|ipfw_ta_tinfo
 modifier|*
 name|tinfo
 parameter_list|)
