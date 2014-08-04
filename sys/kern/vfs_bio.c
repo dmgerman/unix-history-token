@@ -299,8 +299,11 @@ name|unmapped_buf
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Used below and for softdep flushing threads in ufs/ffs/ffs_softdep.c */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|struct
 name|proc
 modifier|*
