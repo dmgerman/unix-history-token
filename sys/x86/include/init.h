@@ -95,6 +95,39 @@ name|init_ops
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Knob to disable acpi_cpu devices */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|acpi_cpu_disabled
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Knob to disable acpi_hpet device */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|acpi_hpet_disabled
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Knob to disable acpi_timer device */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|acpi_timer_disabled
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

@@ -406,6 +406,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Knob to disable acpi_hpet device */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|acpi_hpet_disabled
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|u_int
@@ -1898,6 +1910,8 @@ name|acpi_disabled
 argument_list|(
 literal|"hpet"
 argument_list|)
+operator|||
+name|acpi_hpet_disabled
 condition|)
 return|return
 operator|(

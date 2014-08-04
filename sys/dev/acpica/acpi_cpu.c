@@ -521,6 +521,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Knob to disable acpi_cpu devices */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|acpi_cpu_disabled
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Platform hardware resource information. */
 end_comment
 
@@ -1162,6 +1174,8 @@ name|dev
 argument_list|)
 operator|!=
 name|ACPI_TYPE_PROCESSOR
+operator|||
+name|acpi_cpu_disabled
 condition|)
 return|return
 operator|(
