@@ -9450,16 +9450,6 @@ name|vpp
 operator|=
 name|NULL
 expr_stmt|;
-else|else
-operator|(
-operator|*
-name|vpp
-operator|)
-operator|->
-name|v_hash
-operator|=
-name|ino
-expr_stmt|;
 return|return
 operator|(
 name|err

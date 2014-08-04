@@ -5940,6 +5940,13 @@ name|err
 operator|==
 literal|0
 condition|)
+block|{
+name|vp
+operator|->
+name|v_hash
+operator|=
+name|obj_num
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -5947,6 +5954,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|zp
