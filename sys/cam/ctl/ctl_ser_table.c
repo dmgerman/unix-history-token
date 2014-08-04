@@ -382,7 +382,7 @@ name|pS
 block|,
 name|bK
 block|,
-name|bK
+name|pS
 block|}
 block|,
 comment|/*RES     */
