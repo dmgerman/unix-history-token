@@ -298,11 +298,7 @@ argument_list|(
 operator|&
 name|pathfds
 argument_list|,
-literal|"::"
-argument_list|,
-name|files
-operator|.
-name|etc
+literal|"LD_LIBRARY_PATH_FDS=::"
 argument_list|)
 operator|>
 literal|0
