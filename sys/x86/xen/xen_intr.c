@@ -2374,7 +2374,7 @@ name|xen_intr_init
 argument_list|,
 name|SI_SUB_INTR
 argument_list|,
-name|SI_ORDER_MIDDLE
+name|SI_ORDER_SECOND
 argument_list|,
 name|xen_intr_init
 argument_list|,

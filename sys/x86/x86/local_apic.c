@@ -6659,7 +6659,7 @@ name|apic_setup_io
 argument_list|,
 name|SI_SUB_INTR
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_THIRD
 argument_list|,
 name|apic_setup_io
 argument_list|,
