@@ -11782,7 +11782,13 @@ operator|==
 name|vd
 operator|->
 name|vdev_top
+operator|&&
+operator|!
+name|vd
+operator|->
+name|vdev_ishole
 condition|)
+block|{
 name|vs
 operator|->
 name|vs_fragmentation
@@ -11793,6 +11799,7 @@ name|vdev_mg
 operator|->
 name|mg_fragmentation
 expr_stmt|;
+block|}
 comment|/* 	 * If we're getting stats on the root vdev, aggregate the I/O counts 	 * over all top-level vdevs (i.e. the direct children of the root). 	 */
 if|if
 condition|(
