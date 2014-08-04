@@ -347,5 +347,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_dtrace
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|memstr_max
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dtrace_memstr_max
+argument_list|,
+literal|0
+argument_list|,
+literal|"largest allowed argument to memstr(), 0 indicates no limit"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

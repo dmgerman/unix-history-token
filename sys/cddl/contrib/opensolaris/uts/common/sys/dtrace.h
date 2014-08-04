@@ -1112,8 +1112,12 @@ name|DIF_SUBR_SX_ISEXCLUSIVE
 value|50
 define|#
 directive|define
+name|DIF_SUBR_MEMSTR
+value|51
+define|#
+directive|define
 name|DIF_SUBR_MAX
-value|50
+value|51
 comment|/* max subroutine value */
 typedef|typedef
 name|uint32_t
