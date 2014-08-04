@@ -559,6 +559,14 @@ name|prsctp_supported
 expr_stmt|;
 name|n_inp
 operator|->
+name|reconfig_supported
+operator|=
+name|inp
+operator|->
+name|reconfig_supported
+expr_stmt|;
+name|n_inp
+operator|->
 name|nrsack_supported
 operator|=
 name|inp

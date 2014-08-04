@@ -5156,6 +5156,14 @@ name|prsctp_supported
 expr_stmt|;
 name|asoc
 operator|->
+name|reconfig_supported
+operator|=
+name|inp
+operator|->
+name|reconfig_supported
+expr_stmt|;
+name|asoc
+operator|->
 name|nrsack_supported
 operator|=
 name|inp
@@ -13522,7 +13530,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_strreset
+name|reconfig_supported
 condition|)
 block|{
 name|sac

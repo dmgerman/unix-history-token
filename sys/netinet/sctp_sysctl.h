@@ -64,6 +64,9 @@ name|uint32_t
 name|sctp_pr_enable
 decl_stmt|;
 name|uint32_t
+name|sctp_reconfig_enable
+decl_stmt|;
+name|uint32_t
 name|sctp_nrsack_enable
 decl_stmt|;
 name|uint32_t
@@ -502,6 +505,38 @@ value|1
 end_define
 
 begin_comment
+comment|/* reconfig_enable: Enable SCTP RE-CONFIG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RECONFIG_ENABLE_DESC
+value|"Enable SCTP RE-CONFIG"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RECONFIG_ENABLE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RECONFIG_ENABLE_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RECONFIG_ENABLE_DEFAULT
+value|1
+end_define
+
+begin_comment
 comment|/* nrsack_enable: Enable NR_SACK */
 end_comment
 
@@ -509,7 +544,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_NRSACK_ENABLE_DESC
-value|"Enable NR_SACK"
+value|"Enable SCTP NR-SACK"
 end_define
 
 begin_define
