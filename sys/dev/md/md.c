@@ -4512,11 +4512,18 @@ name|bio_cmd
 operator|==
 name|BIO_WRITE
 condition|)
+block|{
 name|vm_page_dirty
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_pager_page_unswapped
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Actions on further pages start at offset 0 */
 name|p
 operator|+=

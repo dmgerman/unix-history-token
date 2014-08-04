@@ -919,6 +919,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_pager_page_unswapped
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|obj
