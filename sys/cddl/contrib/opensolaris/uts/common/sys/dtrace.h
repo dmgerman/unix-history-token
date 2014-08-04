@@ -1112,6 +1112,10 @@ name|DIF_SUBR_SX_ISEXCLUSIVE
 value|50
 define|#
 directive|define
+name|DIF_SUBR_MEMSTR
+value|51
+define|#
+directive|define
 name|DIF_SUBR_GETF
 value|52
 define|#
