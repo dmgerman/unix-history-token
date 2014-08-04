@@ -426,15 +426,6 @@ expr_stmt|;
 name|free
 argument_list|(
 name|ie
-operator|->
-name|ent
-operator|.
-name|key
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|ie
 argument_list|)
 expr_stmt|;
 block|}
