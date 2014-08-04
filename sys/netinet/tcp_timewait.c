@@ -1193,6 +1193,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 		 * Reached limit on total number of TIMEWAIT connections 		 * allowed. Remove a connection from TIMEWAIT queue in LRU 		 * fashion to make room for this connection. 		 */
 name|tw
 operator|=
 name|tcp_tw_2msl_reuse
