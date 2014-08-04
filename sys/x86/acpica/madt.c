@@ -466,7 +466,8 @@ operator|)
 return|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|50
 operator|)
 return|;
 block|}

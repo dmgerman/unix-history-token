@@ -181,8 +181,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|-
-literal|100
+literal|0
 operator|)
 return|;
 block|}
