@@ -137,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|EXT2_LINK_MAX
-value|LINK_MAX
+value|32000
 end_define
 
 begin_comment
