@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bootstrap.h"
 end_include
 
@@ -1810,6 +1816,13 @@ argument_list|,
 name|loadaddr
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s "
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|laddr
 operator|=
 name|loadaddr
@@ -1885,6 +1898,20 @@ operator|+=
 name|got
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"size=%#jx\n"
+argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
+name|laddr
+operator|-
+name|loadaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Looks OK so far; create& populate control structure */
 name|fp
 operator|=
