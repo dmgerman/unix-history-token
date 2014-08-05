@@ -1303,6 +1303,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LENOVO_G580_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x3977)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LENOVO_ALL_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0xffff)
 end_define
