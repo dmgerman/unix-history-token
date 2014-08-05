@@ -1200,8 +1200,10 @@ name|end
 argument_list|,
 name|NULL
 argument_list|)
+operator|==
+literal|0
 condition|)
-return|return;
+block|{
 for|for
 control|(
 name|prov
@@ -1221,6 +1223,7 @@ operator|*
 name|prov
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|linker_file_lookup_set
@@ -1237,8 +1240,10 @@ name|p_end
 argument_list|,
 name|NULL
 argument_list|)
+operator|==
+literal|0
 condition|)
-return|return;
+block|{
 for|for
 control|(
 name|probe
@@ -1280,6 +1285,7 @@ name|argtype_list
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|linker_file_lookup_set
@@ -1296,8 +1302,10 @@ name|a_end
 argument_list|,
 name|NULL
 argument_list|)
+operator|==
+literal|0
 condition|)
-return|return;
+block|{
 for|for
 control|(
 name|argtype
@@ -1340,6 +1348,7 @@ argument_list|,
 name|argtype_entry
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
