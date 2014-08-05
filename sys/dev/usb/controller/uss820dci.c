@@ -1674,6 +1674,12 @@ operator|->
 name|remainder
 operator|==
 literal|0
+operator|&&
+name|td
+operator|->
+name|ep_index
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 			 * We are actually complete and have 			 * received the next SETUP 			 */
@@ -2123,6 +2129,28 @@ argument_list|,
 name|USS820_TXFLG
 argument_list|)
 expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+literal|"tx_flag=0x%02x rem=%u\n"
+argument_list|,
+name|tx_flag
+argument_list|,
+name|td
+operator|->
+name|remainder
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|ep_index
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* read out RX FIFO status last */
 name|rx_stat
 operator|=
@@ -2137,15 +2165,9 @@ name|DPRINTFN
 argument_list|(
 literal|5
 argument_list|,
-literal|"rx_stat=0x%02x tx_flag=0x%02x rem=%u\n"
+literal|"rx_stat=0x%02x\n"
 argument_list|,
 name|rx_stat
-argument_list|,
-name|tx_flag
-argument_list|,
-name|td
-operator|->
-name|remainder
 argument_list|)
 expr_stmt|;
 if|if
@@ -2161,7 +2183,7 @@ name|USS820_RXSTAT_EDOVW
 operator|)
 condition|)
 block|{
-comment|/* 	         * The current transfer was aborted 	         * by the USB Host 	         */
+comment|/* 			 * The current transfer was aborted by the USB 			 * Host: 			 */
 name|td
 operator|->
 name|error
@@ -2174,6 +2196,7 @@ literal|0
 operator|)
 return|;
 comment|/* complete */
+block|}
 block|}
 if|if
 condition|(
@@ -2510,6 +2533,15 @@ argument_list|,
 name|USS820_TXFLG
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|ep_index
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* read out RX FIFO status last */
 name|rx_stat
 operator|=
@@ -2560,6 +2592,7 @@ literal|0
 operator|)
 return|;
 comment|/* complete */
+block|}
 block|}
 name|DPRINTFN
 argument_list|(
@@ -2618,6 +2651,12 @@ comment|/* not complete */
 block|}
 if|if
 condition|(
+name|td
+operator|->
+name|ep_index
+operator|==
+literal|0
+operator|&&
 name|sc
 operator|->
 name|sc_dv_addr
@@ -6130,7 +6169,7 @@ name|sc
 argument_list|,
 name|USS820_EPCON
 argument_list|,
-literal|0xFF
+literal|0
 argument_list|,
 name|temp
 argument_list|)
