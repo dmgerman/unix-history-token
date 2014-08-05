@@ -5488,6 +5488,21 @@ expr_stmt|;
 name|done
 label|:
 comment|//printf("ZZZ done\n");
+name|free
+argument_list|(
+name|list
+operator|->
+name|params
+argument_list|,
+name|M_CTL
+argument_list|)
+expr_stmt|;
+name|list
+operator|->
+name|params
+operator|=
+name|NULL
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
