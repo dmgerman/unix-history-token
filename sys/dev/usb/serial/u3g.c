@@ -5550,8 +5550,14 @@ argument_list|,
 name|MSC_EJECT_STOPUNIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|error
-operator||=
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
 name|usb_msc_eject
 argument_list|(
 name|udev
