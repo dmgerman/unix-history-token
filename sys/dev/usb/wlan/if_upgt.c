@@ -2395,7 +2395,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: out of buffer.\n"
+literal|"%s: out of buffers.\n"
 argument_list|,
 name|__func__
 argument_list|)

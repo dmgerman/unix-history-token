@@ -7535,7 +7535,7 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"Warning: unknown FTDI "
-literal|"device type, bcdDevice=0x%04x, assuming 232R"
+literal|"device type, bcdDevice=0x%04x, assuming 232R\n"
 argument_list|,
 name|uaa
 operator|->
