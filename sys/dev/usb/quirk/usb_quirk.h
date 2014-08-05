@@ -203,6 +203,9 @@ comment|/* ejects after Sael USB commands */
 name|UQ_MSC_EJECT_HUAWEISCSI
 block|,
 comment|/* ejects after Huawei SCSI command */
+name|UQ_MSC_EJECT_HUAWEISCSI2
+block|,
+comment|/* ejects after Huawei SCSI 2 command */
 name|UQ_MSC_EJECT_TCT
 block|,
 comment|/* ejects after TCT SCSI command */
