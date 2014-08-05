@@ -670,7 +670,7 @@ name|raw
 index|[
 literal|0
 index|]
-operator|>=
+operator|==
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -737,7 +737,7 @@ name|raw
 index|[
 literal|0
 index|]
-operator|>=
+operator|==
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -784,7 +784,7 @@ name|raw
 index|[
 literal|0
 index|]
-operator|>=
+operator|==
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -5446,6 +5446,20 @@ name|udev
 argument_list|,
 operator|&
 name|usb_template_mouse
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_TEMP_PHONE
+case|:
+name|err
+operator|=
+name|usb_temp_setup
+argument_list|(
+name|udev
+argument_list|,
+operator|&
+name|usb_template_phone
 argument_list|)
 expr_stmt|;
 break|break;
