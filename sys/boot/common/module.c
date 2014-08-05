@@ -1068,7 +1068,7 @@ name|sprintf
 argument_list|(
 name|lbuf
 argument_list|,
-literal|" %p: %s (%s, 0x%lx)\n"
+literal|" %p: "
 argument_list|,
 operator|(
 name|void
@@ -1077,10 +1077,25 @@ operator|)
 name|fp
 operator|->
 name|f_addr
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|pager_output
+argument_list|(
+name|lbuf
+argument_list|)
+expr_stmt|;
+name|pager_output
+argument_list|(
 name|fp
 operator|->
 name|f_name
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|lbuf
+argument_list|,
+literal|" (%s, 0x%lx)\n"
 argument_list|,
 name|fp
 operator|->
