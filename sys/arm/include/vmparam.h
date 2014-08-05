@@ -506,6 +506,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SFBUF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFBUF_MAP
+end_define
+
 begin_endif
 endif|#
 directive|endif

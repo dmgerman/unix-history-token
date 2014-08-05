@@ -717,6 +717,29 @@ begin_comment
 comment|/* 64KB */
 end_comment
 
+begin_comment
+comment|/*  * On 32-bit OEA, the only purpose for which sf_buf is used is to implement  * an opaque pointer required by the machine-independent parts of the kernel.  * That pointer references the vm_page that is "mapped" by the sf_buf.  The  * actual mapping is provided by the direct virtual-to-physical mapping.  *  * On OEA64 and Book-E, we need to do something a little more complicated. Use  * the runtime-detected hw_direct_map to pick between the two cases. Our  * friends in vm_machdep.c will do the same to ensure nothing gets confused.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFBUF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFBUF_NOMD
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFBUF_OPTIONAL_DIRECT_MAP
+value|hw_direct_map
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -553,6 +553,23 @@ begin_comment
 comment|/* 64KB */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__mips_n64
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SFBUF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
