@@ -1193,40 +1193,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Macros to control when a vnode is freed and recycled.  All require  * the vnode interlock.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VCANRECYCLE
-parameter_list|(
-name|vp
-parameter_list|)
-value|(((vp)->v_iflag& VI_FREE)&& !(vp)->v_holdcnt)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VSHOULDFREE
-parameter_list|(
-name|vp
-parameter_list|)
-value|(!((vp)->v_iflag& VI_FREE)&& !(vp)->v_holdcnt)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VSHOULDBUSY
-parameter_list|(
-name|vp
-parameter_list|)
-value|(((vp)->v_iflag& VI_FREE)&& (vp)->v_holdcnt)
-end_define
-
-begin_comment
 comment|/* Shift count for (uintptr_t)vp to initialize vp->v_hash. */
 end_comment
 
@@ -3554,10 +3520,21 @@ continue|continue;
 block|}
 name|VNASSERT
 argument_list|(
-name|VCANRECYCLE
-argument_list|(
+operator|(
 name|vp
-argument_list|)
+operator|->
+name|v_iflag
+operator|&
+name|VI_FREE
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|vp
+operator|->
+name|v_holdcnt
+operator|==
+literal|0
 argument_list|,
 name|vp
 argument_list|,
@@ -3566,6 +3543,7 @@ literal|"vp inconsistent on freelist"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * The clear of VI_FREE prevents activation of the 		 * vnode.  There is no sense in putting the vnode on 		 * the mount point active list, only to remove it 		 * later during recycling.  Inline the relevant part 		 * of vholdl(), to avoid triggering assertions or 		 * activating. 		 */
 name|freevnodes
 operator|--
 expr_stmt|;
@@ -3576,10 +3554,10 @@ operator|&=
 operator|~
 name|VI_FREE
 expr_stmt|;
-name|vholdl
-argument_list|(
 name|vp
-argument_list|)
+operator|->
+name|v_holdcnt
+operator|++
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -8809,6 +8787,11 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+name|vholdl
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_usecount
@@ -8843,11 +8826,6 @@ name|dev_unlock
 argument_list|()
 expr_stmt|;
 block|}
-name|vholdl
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -9885,20 +9863,25 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|vp
-operator|->
-name|v_holdcnt
-operator|++
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+comment|/* getnewvnode() calls v_incr_usecount() without holding interlock. */
 if|if
 condition|(
-operator|!
-name|VSHOULDBUSY
-argument_list|(
 name|vp
-argument_list|)
+operator|->
+name|v_type
+operator|!=
+name|VNON
+operator|||
+name|vp
+operator|->
+name|v_data
+operator|!=
+name|NULL
 condition|)
-return|return;
+block|{
 name|ASSERT_VI_LOCKED
 argument_list|(
 name|vp
@@ -9908,6 +9891,12 @@ argument_list|)
 expr_stmt|;
 name|VNASSERT
 argument_list|(
+name|vp
+operator|->
+name|v_holdcnt
+operator|>
+literal|0
+operator|||
 operator|(
 name|vp
 operator|->
@@ -9921,7 +9910,43 @@ argument_list|,
 name|vp
 argument_list|,
 operator|(
-literal|"vnode not free"
+literal|"vholdl: free vnode is held"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|vp
+operator|->
+name|v_holdcnt
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|vp
+operator|->
+name|v_iflag
+operator|&
+name|VI_FREE
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+name|VNASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_holdcnt
+operator|==
+literal|1
+argument_list|,
+name|vp
+argument_list|,
+operator|(
+literal|"vholdl: wrong hold count"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -10186,10 +10211,11 @@ argument_list|)
 expr_stmt|;
 name|VNASSERT
 argument_list|(
-name|VSHOULDFREE
-argument_list|(
 name|vp
-argument_list|)
+operator|->
+name|v_holdcnt
+operator|==
+literal|0
 argument_list|,
 name|vp
 argument_list|,
