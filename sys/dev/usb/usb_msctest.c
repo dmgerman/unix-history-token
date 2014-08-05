@@ -2393,6 +2393,12 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
 name|cmd_len
 operator|=
 name|cmd_len
