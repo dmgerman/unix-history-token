@@ -663,7 +663,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|usbus
 argument_list|,
-name|uss820
+name|uss820dci
 argument_list|,
 name|usb_driver
 argument_list|,

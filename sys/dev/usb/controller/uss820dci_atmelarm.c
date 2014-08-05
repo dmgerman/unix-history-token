@@ -270,7 +270,7 @@ block|{
 operator|.
 name|name
 operator|=
-literal|"uss820"
+literal|"uss820dci"
 block|,
 operator|.
 name|methods
@@ -299,7 +299,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|uss820
+name|uss820dci
 argument_list|,
 name|atmelarm
 argument_list|,
@@ -317,7 +317,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|uss820
+name|uss820dci
 argument_list|,
 name|usb
 argument_list|,
