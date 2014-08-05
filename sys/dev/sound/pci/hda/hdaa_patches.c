@@ -1249,6 +1249,10 @@ operator|||
 name|subid
 operator|==
 name|LENOVO_T520_SUBVENDOR
+operator|||
+name|subid
+operator|==
+name|LENOVO_G580_SUBVENDOR
 operator|)
 condition|)
 block|{
