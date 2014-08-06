@@ -26779,6 +26779,9 @@ name|type
 parameter_list|,
 name|int
 name|minmaxen
+parameter_list|,
+name|int
+name|sleep_ok
 parameter_list|)
 block|{
 name|struct
@@ -26875,7 +26878,7 @@ argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
-literal|1
+name|sleep_ok
 argument_list|)
 return|;
 block|}
@@ -26922,6 +26925,9 @@ name|weight
 parameter_list|,
 name|int
 name|pktsize
+parameter_list|,
+name|int
+name|sleep_ok
 parameter_list|)
 block|{
 name|struct
@@ -27120,7 +27126,7 @@ argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
-literal|1
+name|sleep_ok
 argument_list|)
 return|;
 block|}

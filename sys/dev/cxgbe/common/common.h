@@ -4392,6 +4392,9 @@ name|type
 parameter_list|,
 name|int
 name|minmaxen
+parameter_list|,
+name|int
+name|sleep_ok
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4437,6 +4440,9 @@ name|weight
 parameter_list|,
 name|int
 name|pktsize
+parameter_list|,
+name|int
+name|sleep_ok
 parameter_list|)
 function_decl|;
 end_function_decl

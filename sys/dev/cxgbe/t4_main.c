@@ -42653,6 +42653,8 @@ operator|.
 name|config
 operator|.
 name|minmax
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -43263,6 +43265,8 @@ operator|.
 name|params
 operator|.
 name|pktsize
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
