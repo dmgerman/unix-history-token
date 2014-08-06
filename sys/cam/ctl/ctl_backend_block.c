@@ -5050,6 +5050,8 @@ operator|(
 name|SWS_LBDATA
 operator||
 name|SWS_UNMAP
+operator||
+name|SWS_ANCHOR
 operator|)
 operator|||
 operator|(
@@ -5057,7 +5059,11 @@ name|lbalen
 operator|->
 name|flags
 operator|&
+operator|(
 name|SWS_UNMAP
+operator||
+name|SWS_ANCHOR
+operator|)
 operator|&&
 name|be_lun
 operator|->
@@ -5184,7 +5190,11 @@ name|lbalen
 operator|->
 name|flags
 operator|&
+operator|(
 name|SWS_UNMAP
+operator||
+name|SWS_ANCHOR
+operator|)
 condition|)
 block|{
 name|beio
@@ -5587,9 +5597,14 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ptrlen
 operator|->
 name|flags
+operator|&
+operator|~
+name|SU_ANCHOR
+operator|)
 operator|!=
 literal|0
 operator|||

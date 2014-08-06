@@ -3278,7 +3278,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x0a
+literal|0x1a
 block|,
 literal|0xff
 block|,
@@ -3313,7 +3313,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0
+literal|1
 block|,
 literal|0
 block|,
@@ -4610,7 +4610,7 @@ block|,
 literal|16
 block|,
 block|{
-literal|0x0a
+literal|0x1a
 block|,
 literal|0xff
 block|,
