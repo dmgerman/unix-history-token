@@ -3616,6 +3616,10 @@ index|]
 operator|.
 name|macbase
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -3718,6 +3722,10 @@ index|]
 operator|.
 name|miibase
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|sc
