@@ -2031,14 +2031,6 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
-name|fb_probe
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|fb
-argument_list|)
-expr_stmt|;
 name|vt_fb_init
 argument_list|(
 name|vd

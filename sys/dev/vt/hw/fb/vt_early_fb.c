@@ -1305,11 +1305,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|fb_probe
-argument_list|(
-name|info
-argument_list|)
-expr_stmt|;
 name|vt_fb_init
 argument_list|(
 name|vd
