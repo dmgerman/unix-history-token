@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|e1000_rar_set_generic
 parameter_list|(
 name|struct
@@ -311,6 +311,7 @@ name|e1000_null_ops_generic
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|)
@@ -336,6 +337,7 @@ name|e1000_null_mac_generic
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|)
@@ -359,14 +361,17 @@ name|e1000_null_link_info
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|,
 name|u16
+name|E1000_UNUSEDARG
 modifier|*
 name|s
 parameter_list|,
 name|u16
+name|E1000_UNUSEDARG
 modifier|*
 name|d
 parameter_list|)
@@ -392,6 +397,7 @@ name|e1000_null_mng_mode
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|)
@@ -417,14 +423,17 @@ name|e1000_null_update_mc
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|,
 name|u8
+name|E1000_UNUSEDARG
 modifier|*
 name|h
 parameter_list|,
 name|u32
+name|E1000_UNUSEDARG
 name|a
 parameter_list|)
 block|{
@@ -447,13 +456,16 @@ name|e1000_null_write_vfta
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|,
 name|u32
+name|E1000_UNUSEDARG
 name|a
 parameter_list|,
 name|u32
+name|E1000_UNUSEDARG
 name|b
 parameter_list|)
 block|{
@@ -467,23 +479,26 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_null_rar_set - No-op function, return void  *  @hw: pointer to the HW structure  **/
+comment|/**  *  e1000_null_rar_set - No-op function, return 0  *  @hw: pointer to the HW structure  **/
 end_comment
 
 begin_function
-name|void
+name|int
 name|e1000_null_rar_set
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|,
 name|u8
+name|E1000_UNUSEDARG
 modifier|*
 name|h
 parameter_list|,
 name|u32
+name|E1000_UNUSEDARG
 name|a
 parameter_list|)
 block|{
@@ -492,7 +507,9 @@ argument_list|(
 literal|"e1000_null_rar_set"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|E1000_SUCCESS
+return|;
 block|}
 end_function
 
@@ -506,10 +523,12 @@ name|e1000_null_set_obff_timer
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|,
 name|u32
+name|E1000_UNUSEDARG
 name|a
 parameter_list|)
 block|{
@@ -1556,7 +1575,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|e1000_rar_set_generic
 parameter_list|(
 name|struct
@@ -1701,6 +1720,9 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+return|return
+name|E1000_SUCCESS
+return|;
 block|}
 end_function
 
@@ -3256,12 +3278,64 @@ decl_stmt|;
 name|u16
 name|nvm_data
 decl_stmt|;
+name|u16
+name|nvm_offset
+init|=
+literal|0
+decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"e1000_set_default_fc_generic"
 argument_list|)
 expr_stmt|;
 comment|/* Read and store word 0x0F of the EEPROM. This word contains bits 	 * that determine the hardware's default PAUSE (flow control) mode, 	 * a bit that determines whether the HW defaults to enabling or 	 * disabling auto-negotiation, and the direction of the 	 * SW defined pins. If there is no SW over-ride of the flow 	 * control setting, then the variable hw->fc will 	 * be initialized based on a value in the EEPROM. 	 */
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_i350
+condition|)
+block|{
+name|nvm_offset
+operator|=
+name|NVM_82580_LAN_FUNC_OFFSET
+argument_list|(
+name|hw
+operator|->
+name|bus
+operator|.
+name|func
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|hw
+operator|->
+name|nvm
+operator|.
+name|ops
+operator|.
+name|read
+argument_list|(
+name|hw
+argument_list|,
+name|NVM_INIT_CONTROL2_REG
+operator|+
+name|nvm_offset
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|nvm_data
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ret_val
 operator|=
 name|hw
@@ -3282,6 +3356,7 @@ operator|&
 name|nvm_data
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ret_val
@@ -5135,6 +5210,7 @@ name|e1000_get_speed_and_duplex_fiber_serdes_generic
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|,
@@ -6531,6 +6607,13 @@ argument_list|)
 operator|&
 name|E1000_STATUS_GIO_MASTER_ENABLE
 operator|)
+operator|||
+name|E1000_REMOVED
+argument_list|(
+name|hw
+operator|->
+name|hw_addr
+argument_list|)
 condition|)
 break|break;
 name|usec_delay
@@ -6906,6 +6989,7 @@ name|e1000_validate_mdi_setting_crossover_generic
 parameter_list|(
 name|struct
 name|e1000_hw
+name|E1000_UNUSEDARG
 modifier|*
 name|hw
 parameter_list|)

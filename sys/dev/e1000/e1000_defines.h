@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -65,6 +65,28 @@ end_define
 
 begin_comment
 comment|/* PME Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_WUC_PME_STATUS
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* PME Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_WUC_APMPME
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Assert PME on APM Wakeup */
 end_comment
 
 begin_define
@@ -326,6 +348,17 @@ directive|define
 name|E1000_CTRL_EXT_PFRSTD
 value|0x00004000
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_SDLPE
+value|0X00040000
+end_define
+
+begin_comment
+comment|/* SerDes Low Power Enable */
+end_comment
 
 begin_define
 define|#
@@ -795,7 +828,7 @@ begin_define
 define|#
 directive|define
 name|E1000_RXDEXT_STATERR_TST
-value|0x00010000
+value|0x00000100
 end_define
 
 begin_comment
@@ -878,6 +911,13 @@ define|#
 directive|define
 name|E1000_RXDEXT_ERR_FRAME_ERR_MASK
 value|( \ 	E1000_RXDEXT_STATERR_CE  |	\ 	E1000_RXDEXT_STATERR_SE  |	\ 	E1000_RXDEXT_STATERR_SEQ |	\ 	E1000_RXDEXT_STATERR_CXE |	\ 	E1000_RXDEXT_STATERR_RXE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_ENABLE_RSS_2Q
+value|0x00000001
 end_define
 
 begin_define
@@ -1893,8 +1933,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_CONNSW_PHY_PDN
+value|0x800
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_CONNSW_SERDESD
 value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CONNSW_AUTOSENSE_CONF
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CONNSW_AUTOSENSE_EN
+value|0x1
 end_define
 
 begin_define
@@ -2194,6 +2255,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_STATUS_2P5_SKU
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Val of 2.5GBE SKU strap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_STATUS_2P5_SKU_OVER
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* Val of 2.5GBE SKU Over */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_STATUS_PCIX_MODE
 value|0x00002000
 end_define
@@ -2269,6 +2352,13 @@ define|#
 directive|define
 name|SPEED_1000
 value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPEED_2500
+value|2500
 end_define
 
 begin_define
@@ -3048,6 +3138,13 @@ define|#
 directive|define
 name|MAX_JUMBO_FRAME_SIZE
 value|0x3F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TX_PTR_GAP
+value|0x1F
 end_define
 
 begin_comment
@@ -4534,6 +4631,13 @@ begin_comment
 comment|/* Don't reset counters on write */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_EITR_INTERVAL
+value|0x00007FFC
+end_define
+
 begin_comment
 comment|/* Transmit Descriptor Control */
 end_comment
@@ -5553,6 +5657,84 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_MEDIA_PORT_COPPER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MEDIA_PORT_OTHER
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1112_AUTO_COPPER_SGMII
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1112_AUTO_COPPER_BASEX
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1112_STATUS_LINK
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Interface Link Bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1112_MAC_CTRL_1
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1112_MAC_CTRL_1_MODE_MASK
+value|0x0380
+end_define
+
+begin_comment
+comment|/* Mode Select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1112_MAC_CTRL_1_MODE_SHIFT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1112_PAGE_ADDR
+value|0x16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1112_STATUS
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_THSTAT_LOW_EVENT
 value|0x20000000
 end_define
@@ -5704,12 +5886,166 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_EEE_LP_ADV_ADDR_I350
+value|0x040F
+end_define
+
+begin_comment
+comment|/* EEE LP Advertisement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1543_PAGE_ADDR
+value|0x16
+end_define
+
+begin_comment
+comment|/* Page Offset Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1543_EEE_CTRL_1
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1543_EEE_CTRL_1_MS
+value|0x0001
+end_define
+
+begin_comment
+comment|/* EEE Master/Slave */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_ADV_DEV_I354
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_ADV_ADDR_I354
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_ADV_100_SUPPORTED
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* 100BaseTx EEE Supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_ADV_1000_SUPPORTED
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* 1000BaseT EEE Supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PCS_STATUS_DEV_I354
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PCS_STATUS_ADDR_I354
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PCS_STATUS_RX_LPI_RCVD
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PCS_STATUS_TX_LPI_RCVD
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1512_CFG_REG_1
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1512_CFG_REG_2
+value|0x0011
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1512_CFG_REG_3
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1512_MODE
+value|0x0014
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_EEE_SU_LPI_CLK_STP
 value|0x00800000
 end_define
 
 begin_comment
 comment|/* EEE LPI Clock Stop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_LP_ADV_DEV_I210
+value|7
+end_define
+
+begin_comment
+comment|/* EEE LP Adv Device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_LP_ADV_ADDR_I210
+value|61
+end_define
+
+begin_comment
+comment|/* EEE LP Adv Register */
 end_comment
 
 begin_comment
@@ -5792,6 +6128,17 @@ directive|define
 name|PCIE_NO_SNOOP_ALL
 value|(E1000_GCR_RXD_NO_SNOOP | \ 				 E1000_GCR_RXDSCW_NO_SNOOP | \ 				 E1000_GCR_RXDSCR_NO_SNOOP | \ 				 E1000_GCR_TXD_NO_SNOOP    | \ 				 E1000_GCR_TXDSCW_NO_SNOOP | \ 				 E1000_GCR_TXDSCR_NO_SNOOP)
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MMDAC_FUNC_DATA
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Data, no post increment */
+end_comment
 
 begin_comment
 comment|/* mPHY address control and data registers */
@@ -8214,6 +8561,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|M88E1543_E_PHY_ID
+value|0x01410EA0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M88E1512_E_PHY_ID
+value|0x01410DD0
+end_define
+
+begin_define
+define|#
+directive|define
 name|M88E1112_E_PHY_ID
 value|0x01410C90
 end_define
@@ -9473,6 +9834,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|I210_RXPBSIZE_DEFAULT
+value|0x000000A2
+end_define
+
+begin_comment
+comment|/* RXPBSIZE default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I210_TXPBSIZE_DEFAULT
+value|0x04000014
+end_define
+
+begin_comment
+comment|/* TXPBSIZE default */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_DOBFFCTL_OBFFTHR_MASK
 value|0x000000FF
 end_define
@@ -9668,6 +10051,37 @@ directive|define
 name|E1000_VFTA_ENTRIES
 value|128
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_UNUSEDARG
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ERROR_REPORT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ERROR_REPORT
+parameter_list|(
+name|fmt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ERROR_REPORT */
+end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -65,7 +65,7 @@ value|200
 end_define
 
 begin_comment
-comment|/* Number of retries to clear RSTI */
+comment|/* Num of retries to clear RSTI */
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* Enable specific Tx Queue */
+comment|/* Ena specific Tx Queue */
 end_comment
 
 begin_define
@@ -91,12 +91,22 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* Enable specific Rx Queue */
+comment|/* Ena specific Rx Queue */
 end_comment
 
 begin_comment
 comment|/* SRRCTL bit definitions */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SRRCTL
+parameter_list|(
+name|_n
+parameter_list|)
+value|((_n)< 4 ? (0x0280C + ((_n) * 0x100)) : \ 				 (0x0C00C + ((_n) * 0x40)))
+end_define
 
 begin_define
 define|#
@@ -230,7 +240,7 @@ value|0x01520
 end_define
 
 begin_comment
-comment|/* Ext. Interrupt Cause Set - W0 */
+comment|/* Ext. Intr Cause Set -W0 */
 end_comment
 
 begin_define
@@ -241,7 +251,7 @@ value|0x01524
 end_define
 
 begin_comment
-comment|/* Ext. Interrupt Mask Set/Read - RW */
+comment|/* Ext. Intr Mask Set/Read -RW */
 end_comment
 
 begin_define
@@ -252,7 +262,7 @@ value|0x01528
 end_define
 
 begin_comment
-comment|/* Ext. Interrupt Mask Clear - WO */
+comment|/* Ext. Intr Mask Clear -WO */
 end_comment
 
 begin_define
@@ -263,7 +273,7 @@ value|0x0152C
 end_define
 
 begin_comment
-comment|/* Ext. Interrupt Auto Clear - RW */
+comment|/* Ext. Intr Auto Clear -RW */
 end_comment
 
 begin_define
@@ -274,7 +284,7 @@ value|0x01530
 end_define
 
 begin_comment
-comment|/* Ext. Interrupt Ack Auto Clear Mask - RW */
+comment|/* Ext. Intr Ack Auto Clear Mask -RW */
 end_comment
 
 begin_define
@@ -285,7 +295,7 @@ value|0x01700
 end_define
 
 begin_comment
-comment|/* Interrupt Vector Allocation (array) - RW */
+comment|/* Intr Vector Alloc (array) -RW */
 end_comment
 
 begin_define
@@ -296,7 +306,7 @@ value|0x01740
 end_define
 
 begin_comment
-comment|/* IVAR for "other" causes - RW */
+comment|/* IVAR for "other" causes -RW */
 end_comment
 
 begin_define
@@ -883,7 +893,7 @@ parameter_list|,
 name|u32
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|rar_set

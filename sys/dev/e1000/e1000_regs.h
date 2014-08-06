@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -187,6 +187,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_MPHY_ADDR_CTRL
+value|0x0024
+end_define
+
+begin_comment
+comment|/* GbE MPHY Address Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_DATA
+value|0x0E10
+end_define
+
+begin_comment
+comment|/* GBE MPHY Data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_STAT
+value|0x0E0C
+end_define
+
+begin_comment
+comment|/* GBE MPHY Statistics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PPHY_CTRL
+value|0x5b48
+end_define
+
+begin_comment
+comment|/* PCIe PHY Control */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_I350_BARCTRL
 value|0x5BFC
 end_define
@@ -237,6 +281,17 @@ end_define
 
 begin_comment
 comment|/* Flow Control Address High -RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXT
+value|0x0002C
+end_define
+
+begin_comment
+comment|/* Future Extended - RW */
 end_comment
 
 begin_define
@@ -662,6 +717,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_LEDMUX
+value|0x08130
+end_define
+
+begin_comment
+comment|/* LED MUX Control */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_EXTCNF_CTRL
 value|0x00F00
 end_define
@@ -752,6 +818,17 @@ define|#
 directive|define
 name|E1000_EEARBC
 value|0x01024
+end_define
+
+begin_comment
+comment|/* EEPROM Auto Read Bus Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEARBC_I210
+value|0x12024
 end_define
 
 begin_comment
@@ -1293,6 +1370,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_EMIADD
+value|0x10
+end_define
+
+begin_comment
+comment|/* Extended Memory Indirect Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EMIDATA
+value|0x11
+end_define
+
+begin_comment
+comment|/* Extended Memory Indirect Data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_SRWR
 value|0x12018
 end_define
@@ -1592,6 +1691,28 @@ name|_s
 parameter_list|)
 value|((_s)<< (6 * _n))
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MMDAC
+value|13
+end_define
+
+begin_comment
+comment|/* MMD Access Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MMDAAD
+value|14
+end_define
+
+begin_comment
+comment|/* MMD Access Address/Data */
+end_comment
 
 begin_comment
 comment|/* Convenience macros  *  * Note: "_n" is the queue number of the register to be written to.  *  * Example usage:  * E1000_RDBAL_REG(current_rx_queue)  */
@@ -4138,28 +4259,6 @@ end_define
 
 begin_comment
 comment|/* Host Interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FFMT
-value|0x09000
-end_define
-
-begin_comment
-comment|/* Flexible Filter Mask Table - RW Array */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E1000_FFVT
-value|0x09800
-end_define
-
-begin_comment
-comment|/* Flexible Filter Value Table - RW Array */
 end_comment
 
 begin_define

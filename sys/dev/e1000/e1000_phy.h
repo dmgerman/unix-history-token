@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1202,6 +1202,58 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|s32
+name|e1000_read_phy_reg_mphy
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|address
+parameter_list|,
+name|u32
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_write_phy_reg_mphy
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u32
+name|address
+parameter_list|,
+name|u32
+name|data
+parameter_list|,
+name|bool
+name|line_override
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|e1000_is_mphy_ready
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -1375,13 +1427,6 @@ name|GS40G_COPPER_SPEC
 value|0x0010
 end_define
 
-begin_define
-define|#
-directive|define
-name|GS40G_CS_POWER_DOWN
-value|0x0002
-end_define
-
 begin_comment
 comment|/* BM/HV Specific Registers */
 end_comment
@@ -1534,7 +1579,7 @@ value|(3<< 10)
 end_define
 
 begin_comment
-comment|/* auto downshift 100/10 */
+comment|/* auto downshift */
 end_comment
 
 begin_define
@@ -1706,6 +1751,61 @@ begin_comment
 comment|/* Go Link Disconnect */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_DIS_ACCESS
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* disable_access bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_ENA_ACCESS
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* enable_access bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_BUSY
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* busy bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_ADDRESS_FNC_OVERRIDE
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* fnc_override bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MPHY_ADDRESS_MASK
+value|0x0000FFFF
+end_define
+
+begin_comment
+comment|/* address mask */
+end_comment
+
 begin_comment
 comment|/* BM PHY Copper Specific Control 1 */
 end_comment
@@ -1786,6 +1886,13 @@ define|#
 directive|define
 name|HV_M_STATUS_SPEED_1000
 value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_M_STATUS_SPEED_100
+value|0x0100
 end_define
 
 begin_define
@@ -1967,7 +2074,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* Course - 15:13, Fine - 12:9 */
+comment|/* Course=15:13, Fine=12:9 */
 end_comment
 
 begin_define
@@ -2122,7 +2229,7 @@ value|0x11
 end_define
 
 begin_comment
-comment|/* 100BaseTx PHY Special Control */
+comment|/* 100BaseTx PHY Special Ctrl */
 end_comment
 
 begin_define
@@ -2133,7 +2240,7 @@ value|0x1B
 end_define
 
 begin_comment
-comment|/* PHY Special and LED Control */
+comment|/* PHY Special and LED Ctrl */
 end_comment
 
 begin_define
