@@ -1747,6 +1747,8 @@ name|ret
 argument_list|,
 name|f
 argument_list|)
+operator|>
+literal|0
 condition|)
 name|res
 operator|=
