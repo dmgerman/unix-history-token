@@ -4762,14 +4762,6 @@ operator|->
 name|ccb_h
 operator|.
 name|target_id
-operator|<
-literal|0
-operator|||
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|target_id
 operator|>=
 name|sc
 operator|->
