@@ -347,10 +347,6 @@ return|;
 if|if
 condition|(
 name|val
-operator|<
-literal|0
-operator|||
-name|val
 operator|>
 literal|100
 condition|)
