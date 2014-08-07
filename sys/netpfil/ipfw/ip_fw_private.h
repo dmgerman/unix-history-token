@@ -506,6 +506,18 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
+name|int
+name|ipfw_is_dyn_rule
+parameter_list|(
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ipfw_expire_dyn_rules
 parameter_list|(
@@ -513,11 +525,8 @@ name|struct
 name|ip_fw_chain
 modifier|*
 parameter_list|,
-name|struct
-name|ip_fw
+name|ipfw_range_tlv
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1005,12 +1014,6 @@ name|uint32_t
 name|gencnt
 decl_stmt|;
 comment|/* NAT generation count */
-name|struct
-name|ip_fw
-modifier|*
-name|reap
-decl_stmt|;
-comment|/* list of rules to reap */
 name|struct
 name|ip_fw
 modifier|*
@@ -2035,6 +2038,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ipfw_match_range
+parameter_list|(
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+parameter_list|,
+name|ipfw_range_tlv
+modifier|*
+name|rt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|caddr_t
 name|ipfw_get_sopt_space
 parameter_list|(
@@ -2449,6 +2468,22 @@ parameter_list|,
 name|unsigned
 name|int
 name|ntables
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ipfw_switch_tables_namespace
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
+parameter_list|,
+name|unsigned
+name|int
+name|nsets
 parameter_list|)
 function_decl|;
 end_function_decl

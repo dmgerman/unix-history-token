@@ -272,14 +272,91 @@ value|98
 end_define
 
 begin_comment
-comment|/* add entry */
+comment|/* add rule */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_XDEL
+value|99
+end_define
+
+begin_comment
+comment|/* del rule */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_XMOVE
+value|100
+end_define
+
+begin_comment
+comment|/* move rules to different set  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_XZERO
+value|101
+end_define
+
+begin_comment
+comment|/* clear accounting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_XRESETLOG
+value|102
+end_define
+
+begin_comment
+comment|/* zero rules logs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_SET_SWAP
+value|103
+end_define
+
+begin_comment
+comment|/* Swap between 2 sets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_SET_MOVE
+value|104
+end_define
+
+begin_comment
+comment|/* Move one set to another one */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_SET_ENABLE
+value|105
+end_define
+
+begin_comment
+comment|/* Enable/disable sets */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_FW_TABLE_XFIND
-value|99
+value|106
 end_define
 
 begin_comment
@@ -290,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_XIFLIST
-value|100
+value|107
 end_define
 
 begin_comment
@@ -301,7 +378,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_TABLES_ALIST
-value|101
+value|108
 end_define
 
 begin_comment
@@ -312,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_TABLE_XSWAP
-value|102
+value|109
 end_define
 
 begin_comment
@@ -2100,6 +2177,13 @@ name|IPFW_TLV_TBLENT_LIST
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPFW_TLV_RANGE
+value|9
+end_define
+
 begin_comment
 comment|/* Object name TLV */
 end_comment
@@ -2337,6 +2421,77 @@ block|}
 name|ipfw_obj_ctlv
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Range TLV */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_range_tlv
+block|{
+name|ipfw_obj_tlv
+name|head
+decl_stmt|;
+comment|/* TLV header			*/
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* Range flags			*/
+name|uint16_t
+name|start_rule
+decl_stmt|;
+comment|/* Range start			*/
+name|uint16_t
+name|end_rule
+decl_stmt|;
+comment|/* Range end			*/
+name|uint32_t
+name|set
+decl_stmt|;
+comment|/* Range set to match		 */
+name|uint32_t
+name|new_set
+decl_stmt|;
+comment|/* New set to move/swap to	*/
+block|}
+name|ipfw_range_tlv
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IPFW_RCFLAG_RANGE
+value|0x01
+end_define
+
+begin_comment
+comment|/* rule range is set		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_RCFLAG_ALL
+value|0x02
+end_define
+
+begin_comment
+comment|/* match ALL rules		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_RCFLAG_SET
+value|0x04
+end_define
+
+begin_comment
+comment|/* match rules in given set	*/
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -2768,6 +2923,23 @@ name|end_rule
 decl_stmt|;
 block|}
 name|ipfw_cfg_lheader
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_range_header
+block|{
+name|ip_fw3_opheader
+name|opheader
+decl_stmt|;
+comment|/* IP_FW3 opcode		*/
+name|ipfw_range_tlv
+name|range
+decl_stmt|;
+block|}
+name|ipfw_range_header
 typedef|;
 end_typedef
 
