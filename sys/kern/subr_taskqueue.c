@@ -2605,7 +2605,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|cpuset_setithread
+name|cpuset_setthread
 argument_list|(
 name|td
 operator|->
