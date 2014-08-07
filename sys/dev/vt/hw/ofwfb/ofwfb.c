@@ -188,11 +188,6 @@ operator|=
 name|ofwfb_bitbltchr
 block|,
 operator|.
-name|vd_maskbitbltchr
-operator|=
-name|ofwfb_bitbltchr
-block|,
-operator|.
 name|vd_fb_ioctl
 operator|=
 name|vt_fb_ioctl

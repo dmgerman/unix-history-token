@@ -234,13 +234,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vd_maskbitbltchr_t
-name|vga_maskbitbltchr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|vd_drawrect_t
 name|vga_drawrect
 decl_stmt|;
@@ -297,11 +290,6 @@ name|vga_blank
 block|,
 operator|.
 name|vd_bitbltchr
-operator|=
-name|vga_bitbltchr
-block|,
-operator|.
-name|vd_maskbitbltchr
 operator|=
 name|vga_bitbltchr
 block|,
