@@ -2556,6 +2556,10 @@ modifier|*
 name|p_procdesc
 decl_stmt|;
 comment|/* (e) Process descriptor, if any. */
+name|u_int
+name|p_treeflag
+decl_stmt|;
+comment|/* (e) P_TREE flags */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -3080,13 +3084,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_ORPHAN
+name|P_UNUSED1
 value|0x2000000
 end_define
-
-begin_comment
-comment|/* Orphaned. */
-end_comment
 
 begin_define
 define|#
@@ -3194,6 +3194,32 @@ end_define
 
 begin_comment
 comment|/* New children get P_PROTECTED. */
+end_comment
+
+begin_comment
+comment|/* Flags protected by proctree_lock, kept in p_treeflags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_TREE_ORPHANED
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Reparented, on orphan list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_TREE_FIRST_ORPHAN
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* First element of orphan 						   list */
 end_comment
 
 begin_comment
@@ -4876,6 +4902,20 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|proc
+modifier|*
+name|proc_realparent
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|child
 parameter_list|)
 function_decl|;
 end_function_decl
