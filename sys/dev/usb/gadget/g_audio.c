@@ -2727,7 +2727,7 @@ name|sc
 operator|->
 name|sc_volume_limit
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2786,6 +2786,15 @@ operator|==
 literal|0
 condition|)
 block|{
+name|USETW
+argument_list|(
+name|sc
+operator|->
+name|sc_volume_setting
+argument_list|,
+literal|0x2000
+argument_list|)
+expr_stmt|;
 operator|*
 name|plen
 operator|=
