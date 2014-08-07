@@ -1074,7 +1074,7 @@ name|void
 name|m4errx
 parameter_list|(
 name|int
-name|eval
+name|exitstatus
 parameter_list|,
 specifier|const
 name|char
@@ -1145,7 +1145,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|eval
+name|exitstatus
 argument_list|)
 expr_stmt|;
 block|}
