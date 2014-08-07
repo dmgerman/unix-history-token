@@ -1884,6 +1884,26 @@ name|NULL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|PURIFY
+comment|/* Valgrind complains in BN_consttime_swap because we process the whole 	 * array even if it's not initialised yet. This doesn't matter in that 	 * function - what's important is constant time operation (we're not 	 * actually going to use the data) 	*/
+name|memset
+argument_list|(
+name|a
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|BN_ULONG
+argument_list|)
+operator|*
+name|words
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|1

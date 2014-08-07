@@ -855,6 +855,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -verify_return_error - return verification errors\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -cert arg     - certificate file to use, PEM format assumed\n"
 argument_list|)
 expr_stmt|;
@@ -919,6 +926,13 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -pause        - sleep(1) after each read(2) and write(2) system call\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -prexit       - print session information even on connection failure\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf

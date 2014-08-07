@@ -234,9 +234,9 @@ condition|(
 operator|!
 name|env
 condition|)
-goto|goto
-name|err
-goto|;
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 name|wrap_nid

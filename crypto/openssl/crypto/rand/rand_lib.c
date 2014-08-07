@@ -66,6 +66,12 @@ directive|include
 file|<openssl/fips_rand.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rand_lcl.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -633,15 +639,16 @@ literal|0
 return|;
 if|if
 condition|(
-name|RAND_SSLeay
-argument_list|()
-operator|->
-name|bytes
+name|ssleay_rand_bytes
 argument_list|(
 operator|*
 name|pout
 argument_list|,
 name|min_len
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|<=
 literal|0
