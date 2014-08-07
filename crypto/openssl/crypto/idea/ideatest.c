@@ -1082,7 +1082,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-literal|17
+literal|13
 argument_list|,
 operator|&
 name|eks
@@ -1101,7 +1101,7 @@ operator|&
 operator|(
 name|cfb_buf1
 index|[
-literal|17
+literal|13
 index|]
 operator|)
 argument_list|,
@@ -1109,7 +1109,7 @@ operator|&
 operator|(
 name|cfb_buf2
 index|[
-literal|17
+literal|13
 index|]
 operator|)
 argument_list|,
@@ -1118,10 +1118,10 @@ name|long
 operator|)
 name|CFB_TEST_SIZE
 operator|-
-literal|17
+literal|13
 argument_list|,
 operator|&
-name|dks
+name|eks
 argument_list|,
 name|cfb_tmp
 argument_list|,

@@ -9525,9 +9525,8 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|514
+name|SSL3_RT_MAX_PLAIN_LENGTH
 argument_list|,
-comment|/* 514? */
 operator|&
 name|ok
 argument_list|)

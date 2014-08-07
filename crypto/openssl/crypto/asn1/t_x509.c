@@ -2963,6 +2963,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|b
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
 operator|*
 name|b
 condition|)
