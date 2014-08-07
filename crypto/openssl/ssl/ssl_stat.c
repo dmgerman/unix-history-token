@@ -909,19 +909,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_SSL2
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_SSL3
-argument_list|)
 comment|/* SSLv2/v3 compatibility states */
 comment|/* client */
 case|case
@@ -973,8 +960,6 @@ operator|=
 literal|"SSLv2/v3 read client hello B"
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 comment|/* DTLS */
 case|case
 name|DTLS1_ST_CR_HELLO_VERIFY_REQUEST_A
@@ -1892,19 +1877,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_SSL2
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_SSL3
-argument_list|)
 comment|/* SSLv2/v3 compatibility states */
 comment|/* client */
 case|case
@@ -1956,8 +1928,6 @@ operator|=
 literal|"23RCHB"
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 comment|/* DTLS */
 case|case
 name|DTLS1_ST_CR_HELLO_VERIFY_REQUEST_A

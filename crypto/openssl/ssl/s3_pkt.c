@@ -3485,8 +3485,6 @@ name|type
 operator|!=
 name|SSL3_RT_HANDSHAKE
 operator|)
-operator|&&
-name|type
 operator|)
 operator|||
 operator|(
