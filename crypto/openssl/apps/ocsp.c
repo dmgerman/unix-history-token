@@ -6493,7 +6493,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Error querying OCSP responsder\n"
+literal|"Error querying OCSP responder\n"
 argument_list|)
 expr_stmt|;
 name|end

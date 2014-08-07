@@ -20,6 +20,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -1760,7 +1766,7 @@ operator|->
 name|s3
 operator|->
 name|wnum
-operator|<
+operator|<=
 name|INT_MAX
 argument_list|)
 expr_stmt|;
@@ -2984,8 +2990,6 @@ name|type
 operator|!=
 name|SSL3_RT_HANDSHAKE
 operator|)
-operator|&&
-name|type
 operator|)
 operator|||
 operator|(
