@@ -1403,6 +1403,18 @@ name|__noinline
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|_r_debug_postinit
+argument_list|(
+expr|struct
+name|link_map
+operator|*
+argument_list|)
+name|__noinline
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Data declarations.  */
 end_comment
@@ -3938,6 +3950,14 @@ name|initlist
 argument_list|,
 operator|&
 name|lockstate
+argument_list|)
+expr_stmt|;
+name|_r_debug_postinit
+argument_list|(
+operator|&
+name|obj_main
+operator|->
+name|linkmap
 argument_list|)
 expr_stmt|;
 name|objlist_clear
@@ -17656,7 +17676,30 @@ name|m
 parameter_list|)
 block|{
 comment|/*      * The following is a hack to force the compiler to emit calls to      * this function, even when optimizing.  If the function is empty,      * the compiler is not obliged to emit any code for calls to it,      * even when marked __noinline.  However, gdb depends on those      * calls being made.      */
-asm|__asm __volatile("" : : : "memory");
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * A function called after init routines have completed. This can be used to  * break before a program's entry routine is called, and can be used when  * main is not available in the symbol table.  */
+end_comment
+
+begin_function
+name|void
+name|_r_debug_postinit
+parameter_list|(
+name|struct
+name|link_map
+modifier|*
+name|m
+parameter_list|)
+block|{
+comment|/* See r_debug_state(). */
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
