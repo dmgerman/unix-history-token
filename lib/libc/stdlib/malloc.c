@@ -19,10 +19,10 @@ directive|define
 name|MALLOC_PRODUCTION
 end_define
 
-begin_define
-define|#
-directive|define
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
