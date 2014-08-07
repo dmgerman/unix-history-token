@@ -9263,6 +9263,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|cq
 operator|->
 name|cq_cfg
