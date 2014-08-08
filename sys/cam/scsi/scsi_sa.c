@@ -402,48 +402,15 @@ name|ccb_bp
 value|ppriv_ptr1
 end_define
 
-begin_define
-define|#
-directive|define
-name|SA_CCB_BUFFER_IO
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SA_CCB_TYPEMASK
-value|0x1
-end_define
+begin_comment
+comment|/* bits in ccb_pflags */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SA_POSITION_UPDATED
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|Set_CCB_Type
-parameter_list|(
-name|x
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|x->ccb_h.ccb_pflags&= ~SA_CCB_TYPEMASK;	\ 	x->ccb_h.ccb_pflags |= type
-end_define
-
-begin_define
-define|#
-directive|define
-name|CCB_Type
-parameter_list|(
-name|x
-parameter_list|)
-value|(x->ccb_h.ccb_pflags& SA_CCB_TYPEMASK)
+value|0x1
 end_define
 
 begin_typedef
@@ -7818,13 +7785,6 @@ operator|&=
 operator|~
 name|SA_POSITION_UPDATED
 expr_stmt|;
-name|Set_CCB_Type
-argument_list|(
-name|start_ccb
-argument_list|,
-name|SA_CCB_BUFFER_IO
-argument_list|)
-expr_stmt|;
 name|start_ccb
 operator|->
 name|ccb_h
@@ -7911,6 +7871,14 @@ name|ccb_scsiio
 modifier|*
 name|csio
 decl_stmt|;
+name|struct
+name|bio
+modifier|*
+name|bp
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|softc
 operator|=
 operator|(
@@ -7929,26 +7897,6 @@ name|done_ccb
 operator|->
 name|csio
 expr_stmt|;
-switch|switch
-condition|(
-name|CCB_Type
-argument_list|(
-name|csio
-argument_list|)
-condition|)
-block|{
-case|case
-name|SA_CCB_BUFFER_IO
-case|:
-block|{
-name|struct
-name|bio
-modifier|*
-name|bp
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|softc
 operator|->
 name|dsreg
@@ -8005,7 +7953,7 @@ operator|==
 name|ERESTART
 condition|)
 block|{
-comment|/* 				 * A retry was scheduled, so just return. 				 */
+comment|/* 			 * A retry was scheduled, so just return. 			 */
 return|return;
 block|}
 block|}
@@ -8016,7 +7964,7 @@ operator|==
 name|EIO
 condition|)
 block|{
-comment|/* 			 * Catastrophic error. Mark the tape as frozen 			 * (we no longer know tape position). 			 * 			 * Return all queued I/O with EIO, and unfreeze 			 * our queue so that future transactions that 			 * attempt to fix this problem can get to the 			 * device. 			 * 			 */
+comment|/* 		 * Catastrophic error. Mark the tape as frozen 		 * (we no longer know tape position). 		 * 		 * Return all queued I/O with EIO, and unfreeze 		 * our queue so that future transactions that 		 * attempt to fix this problem can get to the 		 * device. 		 * 		 */
 name|softc
 operator|->
 name|flags
@@ -8063,7 +8011,7 @@ name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-comment|/* 			 * In the error case, position is updated in saerror. 			 */
+comment|/* 		 * In the error case, position is updated in saerror. 		 */
 block|}
 else|else
 block|{
@@ -8214,7 +8162,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 		 * If we had an error (immediate or pending), 		 * release the device queue now. 		 */
+comment|/* 	 * If we had an error (immediate or pending), 	 * release the device queue now. 	 */
 if|if
 condition|(
 name|error
@@ -8288,9 +8236,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
-block|}
 name|xpt_release_ccb
 argument_list|(
 name|done_ccb
@@ -10498,12 +10443,27 @@ block|}
 block|}
 if|if
 condition|(
-name|CCB_Type
-argument_list|(
 name|csio
-argument_list|)
+operator|->
+name|cdb_io
+operator|.
+name|cdb_bytes
+index|[
+literal|0
+index|]
 operator|==
-name|SA_CCB_BUFFER_IO
+name|SA_READ
+operator|||
+name|csio
+operator|->
+name|cdb_io
+operator|.
+name|cdb_bytes
+index|[
+literal|0
+index|]
+operator|==
+name|SA_WRITE
 condition|)
 block|{
 name|bcopy
