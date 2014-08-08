@@ -329,9 +329,6 @@ name|dst
 parameter_list|,
 name|size_t
 name|s_len
-parameter_list|,
-name|size_t
-name|minblocksize
 parameter_list|)
 function_decl|;
 specifier|extern
