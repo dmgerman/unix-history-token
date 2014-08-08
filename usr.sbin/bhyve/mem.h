@@ -119,6 +119,17 @@ name|MEM_F_RW
 value|0x3
 end_define
 
+begin_define
+define|#
+directive|define
+name|MEM_F_IMMUTABLE
+value|0x4
+end_define
+
+begin_comment
+comment|/* mem_range cannot be unregistered */
+end_comment
+
 begin_function_decl
 name|void
 name|init_mem
