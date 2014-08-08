@@ -3104,7 +3104,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ul "
+literal|"%lu "
 argument_list|,
 name|thr_self
 argument_list|()
