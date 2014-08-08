@@ -5404,7 +5404,8 @@ name|__func__
 argument_list|,
 name|m
 argument_list|,
-name|off
+operator|*
+name|offp
 argument_list|)
 expr_stmt|;
 name|m
