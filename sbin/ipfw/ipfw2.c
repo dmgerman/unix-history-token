@@ -13562,7 +13562,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|10
+literal|16
 condition|;
 name|i
 operator|++
@@ -13669,8 +13669,6 @@ operator|=
 name|sz
 operator|*
 literal|2
-operator|+
-literal|200
 expr_stmt|;
 if|if
 condition|(
@@ -13685,9 +13683,8 @@ operator|=
 name|cfg
 operator|->
 name|size
-operator|+
-literal|200
 expr_stmt|;
+continue|continue;
 block|}
 operator|*
 name|pcfg

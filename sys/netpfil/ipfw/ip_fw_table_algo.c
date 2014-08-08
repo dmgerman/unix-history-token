@@ -1631,7 +1631,7 @@ modifier|*
 name|mask
 decl_stmt|;
 name|struct
-name|sockaddr_in6
+name|sa_in6
 modifier|*
 name|addr6
 decl_stmt|,
@@ -1793,7 +1793,7 @@ name|addr6
 operator|=
 operator|(
 expr|struct
-name|sockaddr_in6
+name|sa_in6
 operator|*
 operator|)
 name|sa
@@ -1802,7 +1802,7 @@ name|mask6
 operator|=
 operator|(
 expr|struct
-name|sockaddr_in6
+name|sa_in6
 operator|*
 operator|)
 name|ma
