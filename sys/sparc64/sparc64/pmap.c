@@ -479,7 +479,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|pmap_enter_locked
 parameter_list|(
 name|pmap_t
@@ -494,8 +494,11 @@ parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6702,7 +6705,7 @@ comment|/*  * Map the given physical page at the specified virtual address in th
 end_comment
 
 begin_function
-name|void
+name|int
 name|pmap_enter
 parameter_list|(
 name|pmap_t
@@ -6711,19 +6714,22 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_prot_t
-name|access
-parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
 parameter_list|)
 block|{
+name|int
+name|rv
+decl_stmt|;
 name|rw_wlock
 argument_list|(
 operator|&
@@ -6735,6 +6741,8 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
+name|rv
+operator|=
 name|pmap_enter_locked
 argument_list|(
 name|pm
@@ -6745,7 +6753,9 @@ name|m
 argument_list|,
 name|prot
 argument_list|,
-name|wired
+name|flags
+argument_list|,
+name|psind
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
@@ -6759,6 +6769,11 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rv
+operator|)
+return|;
 block|}
 end_function
 
@@ -6768,7 +6783,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pmap_enter_locked
 parameter_list|(
 name|pmap_t
@@ -6783,8 +6798,12 @@ parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -6800,6 +6819,9 @@ name|real
 decl_stmt|;
 name|u_long
 name|data
+decl_stmt|;
+name|boolean_t
+name|wired
 decl_stmt|;
 name|rw_assert
 argument_list|(
@@ -6852,6 +6874,16 @@ name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|wired
+operator|=
+operator|(
+name|flags
+operator|&
+name|PMAP_ENTER_WIRED
+operator|)
+operator|!=
+literal|0
 expr_stmt|;
 comment|/* 	 * If this is a fake page from the device_pager, but it covers actual 	 * physical memory, convert to the real backing page. 	 */
 if|if
@@ -7318,6 +7350,11 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
 block|}
 end_function
 
@@ -7426,7 +7463,9 @@ operator||
 name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|m
@@ -7497,7 +7536,9 @@ operator||
 name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rw_wunlock

@@ -354,7 +354,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|pmap_enter_locked
 parameter_list|(
 name|pmap_t
@@ -365,9 +365,7 @@ name|vm_page_t
 parameter_list|,
 name|vm_prot_t
 parameter_list|,
-name|boolean_t
-parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -12117,7 +12115,7 @@ comment|/*  *	Insert the given physical page (p) at  *	the specified virtual add
 end_comment
 
 begin_function
-name|void
+name|int
 name|pmap_enter
 parameter_list|(
 name|pmap_t
@@ -12126,19 +12124,23 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_prot_t
-name|access
-parameter_list|,
 name|vm_page_t
 name|m
 parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
+name|__unused
 parameter_list|)
 block|{
+name|int
+name|rv
+decl_stmt|;
 name|rw_wlock
 argument_list|(
 operator|&
@@ -12150,6 +12152,8 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+name|rv
+operator|=
 name|pmap_enter_locked
 argument_list|(
 name|pmap
@@ -12160,9 +12164,7 @@ name|m
 argument_list|,
 name|prot
 argument_list|,
-name|wired
-argument_list|,
-name|M_WAITOK
+name|flags
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
@@ -12176,6 +12178,11 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rv
+operator|)
+return|;
 block|}
 end_function
 
@@ -12185,7 +12192,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pmap_enter_locked
 parameter_list|(
 name|pmap_t
@@ -12200,10 +12207,7 @@ parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
-parameter_list|,
-name|int
+name|u_int
 name|flags
 parameter_list|)
 block|{
@@ -12276,8 +12280,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 operator|(
 name|m
 operator|->
@@ -12285,27 +12289,20 @@ name|oflags
 operator|&
 name|VPO_UNMANAGED
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|||
+operator|&&
+operator|!
 name|vm_page_xbusied
 argument_list|(
 name|m
 argument_list|)
-operator|||
-operator|(
-name|flags
-operator|&
-name|M_NOWAIT
-operator|)
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"pmap_enter_locked: page %p is not busy"
-operator|,
+condition|)
+name|VM_OBJECT_ASSERT_LOCKED
+argument_list|(
 name|m
-operator|)
+operator|->
+name|object
 argument_list|)
 expr_stmt|;
 name|pa
@@ -12342,7 +12339,13 @@ name|PVF_EXEC
 expr_stmt|;
 if|if
 condition|(
-name|wired
+operator|(
+name|flags
+operator|&
+name|PMAP_ENTER_WIRED
+operator|)
+operator|!=
+literal|0
 condition|)
 name|nflags
 operator||=
@@ -12355,7 +12358,7 @@ argument_list|,
 name|printf
 argument_list|(
 literal|"pmap_enter: pmap = %08x, va = %08x, m = %08x, prot = %x, "
-literal|"wired = %x\n"
+literal|"flags = %x\n"
 argument_list|,
 operator|(
 name|uint32_t
@@ -12371,7 +12374,7 @@ name|m
 argument_list|,
 name|prot
 argument_list|,
-name|wired
+name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12430,9 +12433,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
-name|M_WAITOK
+name|PMAP_ENTER_NOSLEEP
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|PMAP_UNLOCK
@@ -12463,7 +12470,11 @@ goto|goto
 name|do_l2b_alloc
 goto|;
 block|}
-return|return;
+return|return
+operator|(
+name|KERN_RESOURCE_SHORTAGE
+operator|)
+return|;
 block|}
 block|}
 name|ptep
@@ -13300,6 +13311,11 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
 block|}
 end_function
 
@@ -13408,9 +13424,7 @@ operator||
 name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
-name|FALSE
-argument_list|,
-name|M_NOWAIT
+name|PMAP_ENTER_NOSLEEP
 argument_list|)
 expr_stmt|;
 name|m
@@ -13485,9 +13499,7 @@ operator||
 name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
-name|FALSE
-argument_list|,
-name|M_NOWAIT
+name|PMAP_ENTER_NOSLEEP
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
@@ -14491,8 +14503,6 @@ name|pmap
 argument_list|,
 name|vector_page
 argument_list|,
-name|VM_PROT_READ
-argument_list|,
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|systempage
@@ -14502,7 +14512,11 @@ argument_list|)
 argument_list|,
 name|VM_PROT_READ
 argument_list|,
-literal|1
+name|PMAP_ENTER_WIRED
+operator||
+name|VM_PROT_READ
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

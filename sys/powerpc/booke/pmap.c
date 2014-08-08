@@ -486,7 +486,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mmu_booke_enter_locked
 parameter_list|(
 name|mmu_t
@@ -499,7 +499,11 @@ name|vm_page_t
 parameter_list|,
 name|vm_prot_t
 parameter_list|,
-name|boolean_t
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -962,6 +966,8 @@ name|pmap_t
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1042,7 +1048,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|pte_enter
 parameter_list|(
 name|mmu_t
@@ -1054,6 +1060,8 @@ parameter_list|,
 name|vm_offset_t
 parameter_list|,
 name|uint32_t
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1284,7 +1292,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mmu_booke_enter
 parameter_list|(
 name|mmu_t
@@ -1297,7 +1305,11 @@ name|vm_page_t
 parameter_list|,
 name|vm_prot_t
 parameter_list|,
-name|boolean_t
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2996,6 +3008,9 @@ parameter_list|,
 name|unsigned
 name|int
 name|pdir_idx
+parameter_list|,
+name|boolean_t
+name|nosleep
 parameter_list|)
 block|{
 name|vm_page_t
@@ -3022,6 +3037,8 @@ name|ptbl
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|CTR4
 argument_list|(
@@ -3170,6 +3187,55 @@ operator|&
 name|pvh_global_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nosleep
+condition|)
+block|{
+name|ptbl_free_pmap_ptbl
+argument_list|(
+name|pmap
+argument_list|,
+name|ptbl
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|i
+condition|;
+name|j
+operator|++
+control|)
+name|vm_page_free
+argument_list|(
+name|mtbl
+index|[
+name|j
+index|]
+argument_list|)
+expr_stmt|;
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|vm_cnt
+operator|.
+name|v_wire_count
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|VM_WAIT
 expr_stmt|;
 name|rw_wlock
@@ -4309,7 +4375,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pte_enter
 parameter_list|(
 name|mmu_t
@@ -4326,6 +4392,9 @@ name|va
 parameter_list|,
 name|uint32_t
 name|flags
+parameter_list|,
+name|boolean_t
+name|nosleep
 parameter_list|)
 block|{
 name|unsigned
@@ -4397,8 +4466,32 @@ argument_list|,
 name|pmap
 argument_list|,
 name|pdir_idx
+argument_list|,
+name|nosleep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ptbl
+operator|==
+name|NULL
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|nosleep
+argument_list|,
+operator|(
+literal|"nosleep and NULL ptbl"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 block|}
 else|else
 block|{
@@ -4575,6 +4668,11 @@ operator|&
 name|tlbivax_mutex
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -7238,7 +7336,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mmu_booke_enter
 parameter_list|(
 name|mmu_t
@@ -7256,10 +7354,16 @@ parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|rw_wlock
 argument_list|(
 operator|&
@@ -7271,6 +7375,8 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|mmu_booke_enter_locked
 argument_list|(
 name|mmu
@@ -7283,7 +7389,9 @@ name|m
 argument_list|,
 name|prot
 argument_list|,
-name|wired
+name|flags
+argument_list|,
+name|psind
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
@@ -7297,12 +7405,17 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mmu_booke_enter_locked
 parameter_list|(
 name|mmu_t
@@ -7320,8 +7433,12 @@ parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
+name|u_int
+name|pmap_flags
+parameter_list|,
+name|int8_t
+name|psind
+name|__unused
 parameter_list|)
 block|{
 name|pte_t
@@ -7335,6 +7452,8 @@ name|uint32_t
 name|flags
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|su
 decl_stmt|,
 name|sync
@@ -7359,9 +7478,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|//debugf("mmu_booke_enter_locked: s (pmap=0x%08x su=%d tid=%d m=0x%08x va=0x%08x "
-comment|//		"pa=0x%08x prot=0x%08x wired=%d)\n",
+comment|//		"pa=0x%08x prot=0x%08x flags=%#x)\n",
 comment|//		(u_int32_t)pmap, su, pmap->pm_tid,
-comment|//		(u_int32_t)m, va, pa, prot, wired);
+comment|//		(u_int32_t)m, va, pa, prot, flags);
 if|if
 condition|(
 name|su
@@ -7499,7 +7618,13 @@ expr_stmt|;
 comment|/* Wiring change, just update stats. */
 if|if
 condition|(
-name|wired
+operator|(
+name|pmap_flags
+operator|&
+name|PMAP_ENTER_WIRED
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -7774,21 +7899,20 @@ block|}
 comment|/* If its wired update stats. */
 if|if
 condition|(
-name|wired
+operator|(
+name|pmap_flags
+operator|&
+name|PMAP_ENTER_WIRED
+operator|)
+operator|!=
+literal|0
 condition|)
-block|{
-name|pmap
-operator|->
-name|pm_stats
-operator|.
-name|wired_count
-operator|++
-expr_stmt|;
 name|flags
 operator||=
 name|PTE_WIRED
 expr_stmt|;
-block|}
+name|error
+operator|=
 name|pte_enter
 argument_list|(
 name|mmu
@@ -7800,7 +7924,43 @@ argument_list|,
 name|va
 argument_list|,
 name|flags
+argument_list|,
+operator|(
+name|pmap_flags
+operator|&
+name|PMAP_ENTER_NOSLEEP
+operator|)
+operator|!=
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|KERN_RESOURCE_SHORTAGE
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|PMAP_ENTER_WIRED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|pmap
+operator|->
+name|pm_stats
+operator|.
+name|wired_count
+operator|++
 expr_stmt|;
 comment|/* Flush the real memory from the instruction cache. */
 if|if
@@ -7845,6 +8005,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
 block|}
 end_function
 
@@ -7959,7 +8124,9 @@ operator||
 name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
-name|FALSE
+name|PMAP_ENTER_NOSLEEP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|m
@@ -8036,7 +8203,9 @@ operator||
 name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
-name|FALSE
+name|PMAP_ENTER_NOSLEEP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
@@ -9267,6 +9436,8 @@ operator||
 name|PTE_VALID
 operator||
 name|PTE_UR
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|__syncicache

@@ -879,7 +879,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|moea_enter_locked
 parameter_list|(
 name|pmap_t
@@ -890,7 +890,9 @@ name|vm_page_t
 parameter_list|,
 name|vm_prot_t
 parameter_list|,
-name|boolean_t
+name|u_int
+parameter_list|,
+name|int8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1008,7 +1010,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|moea_enter
 parameter_list|(
 name|mmu_t
@@ -1021,7 +1023,9 @@ name|vm_page_t
 parameter_list|,
 name|vm_prot_t
 parameter_list|,
-name|boolean_t
+name|u_int
+parameter_list|,
+name|int8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5494,7 +5498,7 @@ comment|/*  * Map the given physical page at the specified virtual address in th
 end_comment
 
 begin_function
-name|void
+name|int
 name|moea_enter
 parameter_list|(
 name|mmu_t
@@ -5512,9 +5516,21 @@ parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
 parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|rw_wlock
 argument_list|(
@@ -5527,6 +5543,8 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|moea_enter_locked
 argument_list|(
 name|pmap
@@ -5537,7 +5555,9 @@ name|m
 argument_list|,
 name|prot
 argument_list|,
-name|wired
+name|flags
+argument_list|,
+name|psind
 argument_list|)
 expr_stmt|;
 name|rw_wunlock
@@ -5551,6 +5571,42 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+name|ENOMEM
+condition|)
+return|return
+operator|(
+name|KERN_SUCCESS
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|PMAP_ENTER_NOSLEEP
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|KERN_RESOURCE_SHORTAGE
+operator|)
+return|;
+name|VM_OBJECT_ASSERT_UNLOCKED
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|)
+expr_stmt|;
+name|VM_WAIT
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5560,7 +5616,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|moea_enter_locked
 parameter_list|(
 name|pmap_t
@@ -5575,8 +5631,12 @@ parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -5742,7 +5802,13 @@ name|PTE_BR
 expr_stmt|;
 if|if
 condition|(
-name|wired
+operator|(
+name|flags
+operator|&
+name|PMAP_ENTER_WIRED
+operator|)
+operator|!=
+literal|0
 condition|)
 name|pvo_flags
 operator||=
@@ -5803,6 +5869,11 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
@@ -5914,7 +5985,9 @@ operator||
 name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|m
@@ -5988,7 +6061,9 @@ operator||
 name|VM_PROT_EXECUTE
 operator|)
 argument_list|,
-name|FALSE
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rw_wunlock

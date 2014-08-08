@@ -81,6 +81,24 @@ name|kernel_vm_end
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Flags for pmap_enter().  The bits in the low-order byte are reserved  * for the protection code (vm_prot_t) that describes the fault type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMAP_ENTER_NOSLEEP
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMAP_ENTER_WIRED
+value|0x0200
+end_define
+
 begin_function_decl
 name|void
 name|pmap_activate
@@ -191,20 +209,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pmap_enter
 parameter_list|(
 name|pmap_t
+name|pmap
 parameter_list|,
 name|vm_offset_t
-parameter_list|,
-name|vm_prot_t
+name|va
 parameter_list|,
 name|vm_page_t
+name|m
 parameter_list|,
 name|vm_prot_t
+name|prot
 parameter_list|,
-name|boolean_t
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
 parameter_list|)
 function_decl|;
 end_function_decl
