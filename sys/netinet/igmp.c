@@ -5402,7 +5402,8 @@ literal|"%s: called w/mbuf (%p,%d)"
 argument_list|,
 name|__func__
 argument_list|,
-name|m
+operator|*
+name|mp
 argument_list|,
 operator|*
 name|offp
