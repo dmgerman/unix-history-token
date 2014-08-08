@@ -184,6 +184,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|psanl
+value|PS.append_newline
+end_define
+
+begin_define
+define|#
+directive|define
 name|hs
 value|HS.space
 end_define
@@ -379,7 +386,7 @@ define|#
 directive|define
 name|OUT
 parameter_list|()
-value|do {fwrite(ps, 1, psl, outfile); fputc('\n', outfile);} while (0)
+value|do {							\ 	fwrite(ps, 1, psl, outfile);					\ 	if (psanl) fputc('\n', outfile);				\ } while (0)
 end_define
 
 begin_function
@@ -405,6 +412,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|oldpsanl
 decl_stmt|;
 name|p
 operator|=
@@ -924,11 +934,19 @@ name|oldpsl
 operator|=
 name|psl
 expr_stmt|;
+name|oldpsanl
+operator|=
+name|psanl
+expr_stmt|;
 name|psl
 operator|=
 name|p
 operator|-
 name|ps
+expr_stmt|;
+name|psanl
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|OUT
@@ -940,10 +958,16 @@ name|p
 operator|!=
 name|NULL
 condition|)
+block|{
 name|psl
 operator|=
 name|oldpsl
 expr_stmt|;
+name|psanl
+operator|=
+name|oldpsanl
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'q'
@@ -1216,6 +1240,12 @@ expr_stmt|;
 name|PS
 operator|=
 name|HS
+expr_stmt|;
+name|psanl
+operator|=
+name|tspace
+operator|.
+name|append_newline
 expr_stmt|;
 name|HS
 operator|=
@@ -2203,6 +2233,12 @@ name|PS
 operator|=
 name|SS
 expr_stmt|;
+name|psanl
+operator|=
+name|tspace
+operator|.
+name|append_newline
+expr_stmt|;
 name|SS
 operator|=
 name|tspace
@@ -2642,6 +2678,12 @@ expr_stmt|;
 name|PS
 operator|=
 name|YS
+expr_stmt|;
+name|psanl
+operator|=
+name|tmp
+operator|.
+name|append_newline
 expr_stmt|;
 name|YS
 operator|=
