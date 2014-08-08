@@ -1400,12 +1400,6 @@ name|argv
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|BACKWARD_COMPATIBILITY
-ifdef|#
-directive|ifdef
-name|BACKWARD_COMPATIBILITY
 if|if
 condition|(
 operator|*
@@ -1441,8 +1435,6 @@ name|argv
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|interval
@@ -7723,9 +7715,9 @@ name|stderr
 argument_list|,
 literal|"%s%s"
 argument_list|,
-literal|"usage: vmstat [-afHhimPsz] [-c count] [-M core [-N system]] [-w wait]\n"
+literal|"usage: vmstat [-afHhimPsz] [-M core [-N system]] [-c count] [-n devs]\n"
 argument_list|,
-literal|"              [-n devs] [-p type,if,pass] [disks]\n"
+literal|"              [-p type,if,pass] [-w wait] [disks] [wait [count]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
