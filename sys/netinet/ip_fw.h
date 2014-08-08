@@ -67,7 +67,7 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * Most commands (queue, pipe, tag, untag, limit...) can have a 16-bit  * argument between 1 and 65534. The value 0 is unused, the value  * 65535 (IP_FW_TABLEARG) is used to represent 'tablearg', i.e. the  * can be 1..65534, or 65535 to indicate the use of a 'tablearg'  * result of the most recent table() lookup.  * Note that 16bit is only a historical limit, resulting from  * the use of a 16-bit fields for that value. In reality, we can have  * 2^32 pipes, queues, tag values and so on, and use 0 as a tablearg.  */
+comment|/*  * Most commands (queue, pipe, tag, untag, limit...) can have a 16-bit  * argument between 1 and 65534. The value 0 is unused, the value  * 65535 (IP_FW_TABLEARG) is used to represent 'tablearg', i.e. the  * can be 1..65534, or 0 to indicate the use of a 'tablearg'  * result of the most recent table() lookup.  * Note that 16bit is only a historical limit, resulting from  * the use of a 16-bit fields for that value. In reality, we can have  * 2^32 pipes, queues, tag values and so on, and use 0 as a tablearg.  */
 end_comment
 
 begin_define
@@ -92,7 +92,18 @@ value|65535
 end_define
 
 begin_comment
-comment|/* XXX should use 0 */
+comment|/* Compat value for old clients */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TARG
+value|0
+end_define
+
+begin_comment
+comment|/* Current tablearg value */
 end_comment
 
 begin_comment
@@ -962,6 +973,9 @@ name|ip
 decl_stmt|;
 name|int
 name|glob
+decl_stmt|;
+name|uint16_t
+name|kidx
 decl_stmt|;
 block|}
 name|p

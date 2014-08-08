@@ -1721,7 +1721,7 @@ name|cmd
 operator|->
 name|p
 operator|.
-name|glob
+name|kidx
 argument_list|,
 literal|0
 argument_list|,
@@ -3768,7 +3768,7 @@ if|if
 condition|(
 name|num
 operator|!=
-name|IP_FW_TABLEARG
+name|IP_FW_TARG
 operator|&&
 operator|(
 name|uintptr_t
@@ -3855,7 +3855,7 @@ if|if
 condition|(
 name|num
 operator|!=
-name|IP_FW_TABLEARG
+name|IP_FW_TARG
 condition|)
 block|{
 name|f
@@ -10436,7 +10436,7 @@ name|cmd
 operator|->
 name|arg1
 operator|!=
-name|IP_FW_TABLEARG
+name|IP_FW_TARG
 condition|)
 operator|(
 operator|(
