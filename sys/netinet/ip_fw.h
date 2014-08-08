@@ -197,17 +197,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_TABLES_XGETSIZE
-value|91
-end_define
-
-begin_comment
-comment|/* get size for tables list */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IP_FW_TABLES_XLIST
 value|92
 end_define

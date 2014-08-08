@@ -5088,97 +5088,6 @@ comment|/*  * High-level 'get' cmds sysctl handlers  */
 end_comment
 
 begin_comment
-comment|/*  * Get buffer size needed to list info for all tables.  * Data layout (v0)(current):  * Request: [ empty ], size = sizeof(ipfw_obj_lheader)  * Reply: [ ipfw_obj_lheader ]  *  * Returns 0 on success  */
-end_comment
-
-begin_function
-name|int
-name|ipfw_listsize_tables
-parameter_list|(
-name|struct
-name|ip_fw_chain
-modifier|*
-name|ch
-parameter_list|,
-name|struct
-name|sockopt_data
-modifier|*
-name|sd
-parameter_list|)
-block|{
-name|struct
-name|_ipfw_obj_lheader
-modifier|*
-name|olh
-decl_stmt|;
-name|olh
-operator|=
-operator|(
-expr|struct
-name|_ipfw_obj_lheader
-operator|*
-operator|)
-name|ipfw_get_sopt_header
-argument_list|(
-name|sd
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|olh
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|olh
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-name|olh
-operator|->
-name|size
-operator|=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|olh
-argument_list|)
-expr_stmt|;
-comment|/* Make export_table store needed size */
-name|IPFW_UH_RLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
-name|export_tables
-argument_list|(
-name|ch
-argument_list|,
-name|olh
-argument_list|,
-name|sd
-argument_list|)
-expr_stmt|;
-name|IPFW_UH_RUNLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Lists all tables currently available in kernel.  * Data layout (v0)(current):  * Request: [ ipfw_obj_lheader ], size = ipfw_obj_lheader.size  * Reply: [ ipfw_obj_lheader ipfw_xtable_info x N ]  *  * Returns 0 on success  */
 end_comment
 
@@ -7146,7 +7055,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Export all tables as ipfw_xtable_info structures to  * storage provided by @sd.  * Returns 0 on success.  */
+comment|/*  * Export all tables as ipfw_xtable_info structures to  * storage provided by @sd.  *  * If supplied buffer is too small, fills in required size  * and returns ENOMEM.  * Returns 0 on success.  */
 end_comment
 
 begin_function
