@@ -17477,13 +17477,6 @@ name|bf
 operator|->
 name|bf_node
 decl_stmt|;
-name|struct
-name|ath_node
-modifier|*
-name|an
-init|=
-name|NULL
-decl_stmt|;
 name|ATH_TX_UNLOCK_ASSERT
 argument_list|(
 name|sc
@@ -17502,13 +17495,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|an
-operator|=
-name|ATH_NODE
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 comment|/* update statistics */
 name|ath_tx_update_stats
 argument_list|(
