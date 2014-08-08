@@ -1328,13 +1328,7 @@ parameter_list|)
 block|{
 name|int
 name|error
-decl_stmt|,
-name|last
 decl_stmt|;
-name|last
-operator|=
-name|an_cache_mode
-expr_stmt|;
 switch|switch
 condition|(
 name|an_cache_mode
