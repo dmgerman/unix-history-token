@@ -5682,6 +5682,19 @@ operator|++
 name|i
 control|)
 empty_stmt|;
+if|if
+condition|(
+name|rate
+operator|==
+literal|0
+condition|)
+operator|*
+name|divisor
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX */
+else|else
 operator|*
 name|divisor
 operator|=
