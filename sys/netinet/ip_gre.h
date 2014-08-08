@@ -18,11 +18,15 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
-name|void
+name|int
 name|gre_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int
@@ -31,11 +35,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|gre_mobile_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int

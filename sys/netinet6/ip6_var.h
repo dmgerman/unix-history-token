@@ -2019,6 +2019,10 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+name|struct
+name|socket
+modifier|*
+parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;

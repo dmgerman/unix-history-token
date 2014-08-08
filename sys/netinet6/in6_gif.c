@@ -198,12 +198,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_ecn.h>
 end_include
 
@@ -312,7 +306,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ip6protosw
+name|protosw
 name|in6_gif_protosw
 init|=
 block|{
@@ -348,6 +342,10 @@ block|,
 operator|.
 name|pr_output
 operator|=
+operator|(
+name|pr_output_t
+operator|*
+operator|)
 name|rip6_output
 block|,
 operator|.
