@@ -317,7 +317,7 @@ name|tok
 parameter_list|,
 name|s_x
 parameter_list|)
-value|do {			\ 	if (!av[0])							\ 		errx(EX_USAGE, "%s: missing argument", match_value(s_x, tok)); \ 	if (_substrcmp(*av, "tablearg") == 0) {				\ 		arg = IP_FW_TARG;					\ 		break;							\ 	}								\ 									\ 	{								\ 	long _xval;							\ 	char *end;							\ 									\ 	_xval = strtol(*av,&end, 10);					\ 									\ 	if (!isdigit(**av) || *end != '\0' || (_xval == 0&& errno == EINVAL)) \ 		errx(EX_DATAERR, "%s: invalid argument: %s",		\ 		    match_value(s_x, tok), *av);			\ 									\ 	if (errno == ERANGE || _xval< min || _xval> max)		\ 		errx(EX_DATAERR, "%s: argument is out of range (%u..%u): %s", \ 		    match_value(s_x, tok), min, max, *av);		\ 									\ 	if (_xval == IP_FW_TARG)					\ 		errx(EX_DATAERR, "%s: illegal argument value: %s",	\ 		    match_value(s_x, tok), *av);			\ 	arg = _xval;							\ 	}								\ } while (0)
+value|do {			\ 	if (!av[0])							\ 		errx(EX_USAGE, "%s: missing argument", match_value(s_x, tok)); \ 	if (_substrcmp(*av, "tablearg") == 0) {				\ 		arg = IP_FW_TABLEARG;					\ 		break;							\ 	}								\ 									\ 	{								\ 	long _xval;							\ 	char *end;							\ 									\ 	_xval = strtol(*av,&end, 10);					\ 									\ 	if (!isdigit(**av) || *end != '\0' || (_xval == 0&& errno == EINVAL)) \ 		errx(EX_DATAERR, "%s: invalid argument: %s",		\ 		    match_value(s_x, tok), *av);			\ 									\ 	if (errno == ERANGE || _xval< min || _xval> max)		\ 		errx(EX_DATAERR, "%s: argument is out of range (%u..%u): %s", \ 		    match_value(s_x, tok), min, max, *av);		\ 									\ 	if (_xval == IP_FW_TABLEARG)					\ 		errx(EX_DATAERR, "%s: illegal argument value: %s",	\ 		    match_value(s_x, tok), *av);			\ 	arg = _xval;							\ 	}								\ } while (0)
 end_define
 
 begin_function
@@ -351,7 +351,7 @@ if|if
 condition|(
 name|arg
 operator|==
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 condition|)
 name|printf
 argument_list|(
@@ -2149,7 +2149,7 @@ if|if
 condition|(
 name|arg
 operator|==
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 condition|)
 name|bprintf
 argument_list|(
@@ -18851,7 +18851,7 @@ name|action
 operator|->
 name|arg1
 operator|>=
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 condition|)
 name|errx
 argument_list|(
@@ -18886,7 +18886,7 @@ name|action
 operator|->
 name|arg1
 operator|=
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 expr_stmt|;
 block|}
 elseif|else
@@ -19465,7 +19465,7 @@ name|action
 operator|->
 name|arg1
 operator|=
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 expr_stmt|;
 block|}
 else|else
@@ -19568,7 +19568,7 @@ name|action
 operator|->
 name|arg1
 operator|=
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 expr_stmt|;
 block|}
 elseif|else

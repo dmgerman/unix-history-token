@@ -1394,7 +1394,7 @@ name|IP_FW_ARG_TABLEARG
 parameter_list|(
 name|a
 parameter_list|)
-value|(((a) == IP_FW_TARG) ? tablearg : (a))
+value|(((a) == IP_FW_TABLEARG) ? tablearg : (a))
 end_define
 
 begin_comment

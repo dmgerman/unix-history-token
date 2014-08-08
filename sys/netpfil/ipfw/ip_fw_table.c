@@ -9336,7 +9336,7 @@ name|cmdif
 operator|->
 name|p
 operator|.
-name|kidx
+name|glob
 expr_stmt|;
 name|skip
 operator|=
@@ -9436,7 +9436,7 @@ name|cmdif
 operator|->
 name|p
 operator|.
-name|kidx
+name|glob
 operator|=
 name|idx
 expr_stmt|;

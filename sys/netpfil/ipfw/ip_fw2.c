@@ -3768,7 +3768,7 @@ if|if
 condition|(
 name|num
 operator|!=
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 operator|&&
 operator|(
 name|uintptr_t
@@ -3855,7 +3855,7 @@ if|if
 condition|(
 name|num
 operator|!=
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 condition|)
 block|{
 name|f
@@ -10436,7 +10436,7 @@ name|cmd
 operator|->
 name|arg1
 operator|!=
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 condition|)
 operator|(
 operator|(

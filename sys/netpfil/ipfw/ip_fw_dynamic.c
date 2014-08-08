@@ -3271,7 +3271,7 @@ argument_list|)
 expr_stmt|;
 name|DEB
 argument_list|(
-argument|if (cmd->conn_limit == IP_FW_TARG) 			printf(
+argument|if (cmd->conn_limit == IP_FW_TABLEARG) 			printf(
 literal|"ipfw: %s: O_LIMIT rule, conn_limit: %u "
 literal|"(tablearg)\n"
 argument|, __func__, conn_limit); 		else 			printf(
