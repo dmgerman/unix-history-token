@@ -7824,7 +7824,7 @@ name|dtp
 operator|->
 name|dt_prcmode
 operator|=
-name|DT_PROC_STOP_MAIN
+name|DT_PROC_STOP_POSTINIT
 expr_stmt|;
 endif|#
 directive|endif
