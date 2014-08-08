@@ -18000,6 +18000,10 @@ name|ZPOOL_STATUS_VERSION_OLDER
 operator|||
 name|reason
 operator|==
+name|ZPOOL_STATUS_NON_NATIVE_ASHIFT
+operator|||
+name|reason
+operator|==
 name|ZPOOL_STATUS_FEAT_DISABLED
 operator|)
 condition|)
