@@ -888,6 +888,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ipfw_modify_table
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
+parameter_list|,
+name|ip_fw3_opheader
+modifier|*
+name|op3
+parameter_list|,
+name|struct
+name|sockopt_data
+modifier|*
+name|sd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ipfw_manage_table_ent
 parameter_list|(
 name|struct

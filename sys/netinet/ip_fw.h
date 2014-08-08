@@ -238,8 +238,15 @@ begin_comment
 comment|/* create new table  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_XMODIFY
+value|96
+end_define
+
 begin_comment
-comment|//#define	IP_FW_TABLE_XMODIFY	96	/* modify existing table */
+comment|/* modify existing table */
 end_comment
 
 begin_define
@@ -1900,6 +1907,10 @@ begin_comment
 comment|/* Maximum valid number */
 end_comment
 
+begin_comment
+comment|/* Value types */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1911,26 +1922,30 @@ begin_comment
 comment|/* Skipto/tablearg integer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPFW_VTYPE_IP
-value|2
-end_define
-
 begin_comment
-comment|/* Nexthop IP address */
+comment|/* Value format types */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IPFW_VTYPE_DSCP
-value|3
+name|IPFW_VFTYPE_U32
+value|0
 end_define
 
 begin_comment
-comment|/* DiffServ codepoints */
+comment|/* Skipto/tablearg integer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VFTYPE_IP
+value|1
+end_define
+
+begin_comment
+comment|/* Nexthop IP address */
 end_comment
 
 begin_typedef
@@ -2617,13 +2632,20 @@ name|tflags
 decl_stmt|;
 comment|/* type flags			*/
 name|uint8_t
-name|ftype
-decl_stmt|;
-comment|/* table value format type	*/
-name|uint8_t
 name|vtype
 decl_stmt|;
-comment|/* value type			*/
+comment|/* value type (u32)		*/
+name|uint8_t
+name|vftype
+decl_stmt|;
+comment|/* value format type (ip,number)*/
+name|uint16_t
+name|mflags
+decl_stmt|;
+comment|/* modification flags		*/
+name|uint16_t
+name|spare
+decl_stmt|;
 name|uint32_t
 name|set
 decl_stmt|;
@@ -2648,9 +2670,6 @@ name|uint32_t
 name|limit
 decl_stmt|;
 comment|/* Max number of records	*/
-name|uint32_t
-name|spare
-decl_stmt|;
 name|char
 name|tablename
 index|[
@@ -2708,6 +2727,28 @@ directive|define
 name|IPFW_TFFLAG_PROTO
 value|0x10
 end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TMFLAGS_FTYPE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Change ftype field		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TMFLAGS_LIMIT
+value|0x02
+end_define
+
+begin_comment
+comment|/* Change limit value		*/
+end_comment
 
 begin_typedef
 typedef|typedef

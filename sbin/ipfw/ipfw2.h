@@ -388,6 +388,8 @@ name|TOK_INFO
 block|,
 name|TOK_DETAIL
 block|,
+name|TOK_MODIFY
+block|,
 name|TOK_FLUSH
 block|,
 name|TOK_SWAP
@@ -401,6 +403,8 @@ block|,
 name|TOK_ALGO
 block|,
 name|TOK_TALIST
+block|,
+name|TOK_FTYPE
 block|, }
 enum|;
 end_enum
