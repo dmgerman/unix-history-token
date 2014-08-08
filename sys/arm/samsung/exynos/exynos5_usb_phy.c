@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -115,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/fdt.h>
 end_include
 
 begin_include
@@ -747,13 +735,12 @@ operator|-
 literal|1
 operator|)
 return|;
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
 literal|"vbus-supply"
 argument_list|,
-operator|&
 name|dts_value
 argument_list|,
 name|len
@@ -761,13 +748,10 @@ argument_list|)
 expr_stmt|;
 name|pin
 operator|=
-name|fdt32_to_cpu
-argument_list|(
 name|dts_value
 index|[
 literal|0
 index|]
-argument_list|)
 expr_stmt|;
 name|gpio_dev
 operator|=
