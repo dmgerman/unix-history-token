@@ -27082,8 +27082,6 @@ decl_stmt|,
 name|name_len
 decl_stmt|;
 name|int
-name|is_full_id
-decl_stmt|,
 name|retval
 decl_stmt|;
 name|unsigned
@@ -27113,10 +27111,6 @@ name|scsi_transportid_iscsi_device
 modifier|*
 name|iscsi
 decl_stmt|;
-name|is_full_id
-operator|=
-literal|0
-expr_stmt|;
 name|retval
 operator|=
 literal|0
