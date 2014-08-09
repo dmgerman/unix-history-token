@@ -148,7 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Used by the machine dependent trap() code. */
+comment|/*  * A hook which removes active FBT probes before executing the double fault  * handler. We want to ensure that DTrace doesn't trigger another trap, which  * would result in a reset.  */
 end_comment
 
 begin_typedef
@@ -181,10 +181,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/* Global variables in trap.c */
-end_comment
 
 begin_decl_stmt
 specifier|extern

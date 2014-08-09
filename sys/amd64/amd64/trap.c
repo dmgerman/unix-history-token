@@ -319,48 +319,6 @@ directive|include
 file|<sys/dtrace_bsd.h>
 end_include
 
-begin_comment
-comment|/*  * This is a hook which is initialised by the dtrace module  * to handle traps which might occur during DTrace probe  * execution.  */
-end_comment
-
-begin_decl_stmt
-name|dtrace_trap_func_t
-name|dtrace_trap_func
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dtrace_doubletrap_func_t
-name|dtrace_doubletrap_func
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * This is a hook which is initialised by the systrace module  * when it is loaded. This keeps the DTrace syscall provider  * implementation opaque.   */
-end_comment
-
-begin_decl_stmt
-name|systrace_probe_func_t
-name|systrace_probe_func
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * These hooks are necessary for the pid and usdt providers.  */
-end_comment
-
-begin_decl_stmt
-name|dtrace_pid_probe_ptr_t
-name|dtrace_pid_probe_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dtrace_return_probe_ptr_t
-name|dtrace_return_probe_ptr
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
