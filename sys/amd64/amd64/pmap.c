@@ -18925,7 +18925,7 @@ operator|!=
 name|PG_M
 argument_list|,
 operator|(
-literal|"pmap_enter: access includes VM_PROT_WRITE but prot doesn't"
+literal|"pmap_enter: flags includes VM_PROT_WRITE but prot doesn't"
 operator|)
 argument_list|)
 expr_stmt|;
