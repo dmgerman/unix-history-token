@@ -181,37 +181,6 @@ end_endif
 
 begin_function
 specifier|static
-name|void
-name|proc_cont
-parameter_list|(
-name|struct
-name|proc_handle
-modifier|*
-name|phdl
-parameter_list|)
-block|{
-name|ptrace
-argument_list|(
-name|PT_CONTINUE
-argument_list|,
-name|proc_getpid
-argument_list|(
-name|phdl
-argument_list|)
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|proc_stop
 parameter_list|(
@@ -358,6 +327,8 @@ name|int
 name|ret
 init|=
 literal|0
+decl_stmt|,
+name|stopped
 decl_stmt|;
 operator|*
 name|saved
@@ -403,6 +374,10 @@ argument_list|,
 name|address
 argument_list|)
 expr_stmt|;
+name|stopped
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|phdl
@@ -411,6 +386,7 @@ name|status
 operator|!=
 name|PS_STOP
 condition|)
+block|{
 if|if
 condition|(
 name|proc_stop
@@ -426,6 +402,11 @@ operator|-
 literal|1
 operator|)
 return|;
+name|stopped
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	 * Read the original instruction. 	 */
 name|caddr
 operator|=
@@ -591,14 +572,10 @@ name|done
 label|:
 if|if
 condition|(
-name|phdl
-operator|->
-name|status
-operator|!=
-name|PS_STOP
+name|stopped
 condition|)
 comment|/* Restart the process if we had to stop it. */
-name|proc_cont
+name|proc_continue
 argument_list|(
 name|phdl
 argument_list|)
@@ -642,6 +619,8 @@ name|int
 name|ret
 init|=
 literal|0
+decl_stmt|,
+name|stopped
 decl_stmt|;
 if|if
 condition|(
@@ -682,6 +661,10 @@ argument_list|,
 name|address
 argument_list|)
 expr_stmt|;
+name|stopped
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|phdl
@@ -690,6 +673,7 @@ name|status
 operator|!=
 name|PS_STOP
 condition|)
+block|{
 if|if
 condition|(
 name|proc_stop
@@ -705,6 +689,11 @@ operator|-
 literal|1
 operator|)
 return|;
+name|stopped
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	 * Overwrite the breakpoint instruction that we setup previously. 	 */
 name|caddr
 operator|=
@@ -782,14 +771,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|phdl
-operator|->
-name|status
-operator|!=
-name|PS_STOP
+name|stopped
 condition|)
 comment|/* Restart the process if we had to stop it. */
-name|proc_cont
+name|proc_continue
 argument_list|(
 name|phdl
 argument_list|)
