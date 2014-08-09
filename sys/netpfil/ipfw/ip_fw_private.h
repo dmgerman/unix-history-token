@@ -918,18 +918,14 @@ name|uint32_t
 name|id
 decl_stmt|;
 comment|/* rule id			*/
-name|struct
-name|ip_fw
-modifier|*
-name|x_next
+name|uint32_t
+name|cached_id
 decl_stmt|;
-comment|/* linked list of rules		*/
-name|struct
-name|ip_fw
-modifier|*
-name|next_rule
+comment|/* used by jump_fast		*/
+name|uint32_t
+name|cached_pos
 decl_stmt|;
-comment|/* ptr to next [skipto] rule	*/
+comment|/* used by jump_fast		*/
 name|ipfw_insn
 name|cmd
 index|[
@@ -1974,6 +1970,29 @@ name|struct
 name|ip_fw_args
 modifier|*
 name|args
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipfw_reap_add
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
+name|struct
+name|ip_fw
+modifier|*
+modifier|*
+name|head
+parameter_list|,
+name|struct
+name|ip_fw
+modifier|*
+name|rule
 parameter_list|)
 function_decl|;
 end_function_decl

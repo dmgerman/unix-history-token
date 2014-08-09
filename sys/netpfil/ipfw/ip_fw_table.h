@@ -1150,23 +1150,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|ipfw_unbind_table_list
-parameter_list|(
-name|struct
-name|ip_fw_chain
-modifier|*
-name|chain
-parameter_list|,
-name|struct
-name|ip_fw
-modifier|*
-name|head
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* utility functions  */
 end_comment
