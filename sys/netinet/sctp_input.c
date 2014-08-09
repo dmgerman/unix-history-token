@@ -30716,6 +30716,7 @@ name|offp
 parameter_list|,
 name|int
 name|proto
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -30752,6 +30753,13 @@ name|defined
 argument_list|(
 name|SMP
 argument_list|)
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
+condition|)
+block|{
 name|struct
 name|ip
 modifier|*
@@ -30773,13 +30781,6 @@ name|flowid
 decl_stmt|,
 name|tag
 decl_stmt|;
-if|if
-condition|(
-name|mp_ncpus
-operator|>
-literal|1
-condition|)
-block|{
 if|if
 condition|(
 name|m
