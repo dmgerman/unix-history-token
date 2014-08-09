@@ -183,11 +183,11 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|uint16_t
+name|uint32_t
 name|start
 decl_stmt|;
 comment|/* first register */
-name|uint16_t
+name|uint32_t
 name|end
 decl_stmt|;
 comment|/* ending register or zero */
