@@ -521,7 +521,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SFBUF_NOMD
+name|SFBUF_MAP
 end_define
 
 begin_endif
