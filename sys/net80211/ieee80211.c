@@ -2679,31 +2679,6 @@ operator|->
 name|iv_myaddr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vap
-operator|->
-name|iv_opmode
-operator|==
-name|IEEE80211_M_MONITOR
-condition|)
-block|{
-comment|/* NB: disallow transmit */
-name|ifp
-operator|->
-name|if_transmit
-operator|=
-name|null_transmit
-expr_stmt|;
-name|ifp
-operator|->
-name|if_output
-operator|=
-name|null_output
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* hook output method setup by ether_ifattach */
 name|vap
 operator|->
@@ -2719,7 +2694,6 @@ name|if_output
 operator|=
 name|ieee80211_output
 expr_stmt|;
-block|}
 comment|/* NB: if_mtu set by ether_ifattach to ETHERMTU */
 name|IEEE80211_LOCK
 argument_list|(
