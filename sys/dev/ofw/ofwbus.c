@@ -2013,6 +2013,8 @@ name|int
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|rid
 decl_stmt|;
 name|int
 name|nintr
@@ -2197,6 +2199,10 @@ control|(
 name|i
 operator|=
 literal|0
+operator|,
+name|rid
+operator|=
+literal|0
 init|;
 name|i
 operator|<
@@ -2211,6 +2217,9 @@ operator|+
 name|sc
 operator|->
 name|scells
+operator|,
+name|rid
+operator|++
 control|)
 block|{
 name|phys
@@ -2299,7 +2308,7 @@ name|ndi_rl
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|i
+name|rid
 argument_list|,
 name|phys
 argument_list|,
@@ -2392,6 +2401,10 @@ control|(
 name|i
 operator|=
 literal|0
+operator|,
+name|rid
+operator|=
+literal|0
 init|;
 name|i
 operator|<
@@ -2400,6 +2413,9 @@ condition|;
 name|i
 operator|+=
 name|icells
+operator|,
+name|rid
+operator|++
 control|)
 block|{
 name|intr
@@ -2431,7 +2447,7 @@ name|ndi_rl
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
-name|i
+name|rid
 argument_list|,
 name|intr
 index|[
