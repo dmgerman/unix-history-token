@@ -705,7 +705,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 32-bit VGA palette */
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|sc
 operator|->
@@ -717,7 +717,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|255
 argument_list|,
-literal|16
+literal|0
 argument_list|,
 literal|255
 argument_list|,
@@ -725,8 +725,16 @@ literal|8
 argument_list|,
 literal|255
 argument_list|,
-literal|0
+literal|16
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|fb
+operator|.
+name|fb_cmsize
+operator|=
+literal|16
 expr_stmt|;
 name|vt_fb_init
 argument_list|(

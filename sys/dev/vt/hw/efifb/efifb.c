@@ -524,7 +524,7 @@ operator|/
 literal|8
 operator|)
 expr_stmt|;
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|info
 operator|->

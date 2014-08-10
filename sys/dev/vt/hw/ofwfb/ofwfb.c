@@ -950,7 +950,7 @@ block|{
 case|case
 literal|8
 case|:
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|sc
 operator|->
@@ -962,7 +962,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|255
 argument_list|,
-literal|0
+literal|16
 argument_list|,
 literal|255
 argument_list|,
@@ -970,7 +970,7 @@ literal|8
 argument_list|,
 literal|255
 argument_list|,
-literal|16
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -1125,7 +1125,7 @@ operator|)
 operator|==
 literal|0xff
 condition|)
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|sc
 operator|->
@@ -1137,7 +1137,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|255
 argument_list|,
-literal|16
+literal|0
 argument_list|,
 literal|255
 argument_list|,
@@ -1145,11 +1145,11 @@ literal|8
 argument_list|,
 literal|255
 argument_list|,
-literal|0
+literal|16
 argument_list|)
 expr_stmt|;
 else|else
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|sc
 operator|->
@@ -1161,7 +1161,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|255
 argument_list|,
-literal|0
+literal|16
 argument_list|,
 literal|255
 argument_list|,
@@ -1169,7 +1169,7 @@ literal|8
 argument_list|,
 literal|255
 argument_list|,
-literal|16
+literal|0
 argument_list|)
 expr_stmt|;
 name|bus_space_write_4
