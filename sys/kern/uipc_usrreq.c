@@ -4034,7 +4034,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sbappendaddr_nospacecheck_locked
+name|sbappendaddr_locked
 argument_list|(
 operator|&
 name|so2
