@@ -841,9 +841,6 @@ condition|(
 name|idx
 operator|<
 name|SPACE_MAP_HISTOGRAM_SIZE
-argument_list|(
-name|sm
-argument_list|)
 operator|-
 literal|1
 condition|)
@@ -871,9 +868,6 @@ argument_list|,
 operator|<
 argument_list|,
 name|SPACE_MAP_HISTOGRAM_SIZE
-argument_list|(
-name|sm
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
