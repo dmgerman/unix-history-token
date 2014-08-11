@@ -136,14 +136,14 @@ value|3
 end_define
 
 begin_comment
-comment|/* Maximum length of a challenge (otp-md? 9999 seed) */
+comment|/* Maximum length of a challenge (otp-md? 9999 seed ext) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPIE_CHALLENGE_MAX
-value|(4+OPIE_HASHNAME_MAX+1+4+1+OPIE_SEED_MAX)
+value|(4+OPIE_HASHNAME_MAX+1+4+1+OPIE_SEED_MAX+1+3)
 end_define
 
 begin_comment
