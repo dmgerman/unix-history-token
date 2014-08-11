@@ -2315,8 +2315,18 @@ name|uint32_t
 name|value
 decl_stmt|;
 comment|/* value			*/
-name|uint64_t
-name|spare
+name|uint8_t
+name|result
+decl_stmt|;
+comment|/* request result		*/
+name|uint8_t
+name|spare0
+decl_stmt|;
+name|uint16_t
+name|spare1
+decl_stmt|;
+name|uint32_t
+name|spare2
 decl_stmt|;
 union|union
 block|{
@@ -2363,6 +2373,113 @@ end_define
 
 begin_comment
 comment|/* Update record if exists	*/
+end_comment
+
+begin_comment
+comment|/* Container TLV */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_CTF_ATOMIC
+value|0x01
+end_define
+
+begin_comment
+comment|/* Perform atomic operation	*/
+end_comment
+
+begin_comment
+comment|/* Operation results */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TR_IGNORED
+value|0
+end_define
+
+begin_comment
+comment|/* Entry was ignored (rollback)	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TR_ADDED
+value|1
+end_define
+
+begin_comment
+comment|/* Entry was succesfully added	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TR_UPDATED
+value|2
+end_define
+
+begin_comment
+comment|/* Entry was succesfully updated*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TR_DELETED
+value|3
+end_define
+
+begin_comment
+comment|/* Entry was succesfully deleted*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TR_LIMIT
+value|4
+end_define
+
+begin_comment
+comment|/* Entry was ignored (limit)	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TR_NOTFOUND
+value|5
+end_define
+
+begin_comment
+comment|/* Entry was not found		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TR_EXISTS
+value|6
+end_define
+
+begin_comment
+comment|/* Entry already exists		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TR_ERROR
+value|7
+end_define
+
+begin_comment
+comment|/* Request has failed (unknown)	*/
 end_comment
 
 begin_typedef
@@ -2418,8 +2535,9 @@ name|version
 decl_stmt|;
 comment|/* TLV version			*/
 name|uint8_t
-name|spare
+name|flags
 decl_stmt|;
+comment|/* TLV-specific flags		*/
 block|}
 name|ipfw_obj_ctlv
 typedef|;

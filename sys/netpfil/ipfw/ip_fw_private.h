@@ -1590,11 +1590,11 @@ struct|struct
 name|rule_check_info
 block|{
 name|uint16_t
-name|table_opcodes
+name|flags
 decl_stmt|;
-comment|/* count of opcodes referencing table */
+comment|/* rule-specific check flags */
 name|uint16_t
-name|new_tables
+name|table_opcodes
 decl_stmt|;
 comment|/* count of opcodes referencing table */
 name|uint16_t
@@ -1605,6 +1605,9 @@ name|uint8_t
 name|version
 decl_stmt|;
 comment|/* rule version */
+name|uint8_t
+name|spare
+decl_stmt|;
 name|ipfw_obj_ctlv
 modifier|*
 name|ctlv
@@ -1631,6 +1634,17 @@ comment|/* table references storage */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IPFW_RCF_TABLES
+value|0x01
+end_define
+
+begin_comment
+comment|/* Has table-referencing opcode */
+end_comment
 
 begin_comment
 comment|/* Legacy interface support */

@@ -2809,6 +2809,17 @@ argument_list|,
 name|rnh
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rn
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 comment|/* Save entry value to @tei */
 if|if
 condition|(
@@ -2855,17 +2866,6 @@ name|ent_ptr
 operator|=
 name|rn
 expr_stmt|;
-if|if
-condition|(
-name|rn
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
 if|if
 condition|(
 name|tei

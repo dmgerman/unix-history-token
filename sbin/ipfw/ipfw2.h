@@ -405,6 +405,8 @@ block|,
 name|TOK_TALIST
 block|,
 name|TOK_FTYPE
+block|,
+name|TOK_ATOMIC
 block|, }
 enum|;
 end_enum

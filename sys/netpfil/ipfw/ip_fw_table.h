@@ -119,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|TEI_FLAGS_UPDATE
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -130,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|TEI_FLAGS_UPDATED
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -141,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|TEI_FLAGS_COMPAT
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -152,11 +152,77 @@ begin_define
 define|#
 directive|define
 name|TEI_FLAGS_DONTADD
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
 comment|/* Do not create new rec	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEI_FLAGS_ADDED
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Entry was added		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEI_FLAGS_DELETED
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Entry was deleted		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEI_FLAGS_LIMIT
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Limit was hit		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEI_FLAGS_ERROR
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Unknown request error	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEI_FLAGS_NOTFOUND
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Entry was not found		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEI_FLAGS_EXISTS
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Entry already exists		*/
 end_comment
 
 begin_typedef
@@ -1010,6 +1076,9 @@ name|tentry_info
 modifier|*
 name|tei
 parameter_list|,
+name|uint8_t
+name|flags
+parameter_list|,
 name|uint32_t
 name|count
 parameter_list|)
@@ -1034,6 +1103,9 @@ name|struct
 name|tentry_info
 modifier|*
 name|tei
+parameter_list|,
+name|uint8_t
+name|flags
 parameter_list|,
 name|uint32_t
 name|count
