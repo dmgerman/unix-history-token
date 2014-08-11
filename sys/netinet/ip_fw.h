@@ -2761,8 +2761,9 @@ name|mflags
 decl_stmt|;
 comment|/* modification flags		*/
 name|uint16_t
-name|spare
+name|flags
 decl_stmt|;
+comment|/* generic table flags		*/
 name|uint32_t
 name|set
 decl_stmt|;
@@ -2810,6 +2811,25 @@ name|ipfw_xtable_info
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Generic table flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TGFLAGS_LOCKED
+value|0x01
+end_define
+
+begin_comment
+comment|/* Tables is locked from changes*/
+end_comment
+
+begin_comment
+comment|/* Table type-specific flags */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2845,11 +2865,15 @@ name|IPFW_TFFLAG_PROTO
 value|0x10
 end_define
 
+begin_comment
+comment|/* Table modification flags */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IPFW_TMFLAGS_FTYPE
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -2860,11 +2884,22 @@ begin_define
 define|#
 directive|define
 name|IPFW_TMFLAGS_LIMIT
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
 comment|/* Change limit value		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TMFLAGS_LOCK
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Change table lock state	*/
 end_comment
 
 begin_typedef

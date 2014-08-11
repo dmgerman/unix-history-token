@@ -407,6 +407,10 @@ block|,
 name|TOK_FTYPE
 block|,
 name|TOK_ATOMIC
+block|,
+name|TOK_LOCK
+block|,
+name|TOK_UNLOCK
 block|, }
 enum|;
 end_enum
