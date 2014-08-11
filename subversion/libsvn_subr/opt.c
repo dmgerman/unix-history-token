@@ -1714,6 +1714,15 @@ condition|(
 name|err
 condition|)
 block|{
+comment|/* Issue #3014: Don't print anything on broken pipes. */
+if|if
+condition|(
+name|err
+operator|->
+name|apr_err
+operator|!=
+name|SVN_ERR_IO_PIPE_WRITE_ERROR
+condition|)
 name|svn_handle_error2
 argument_list|(
 name|err

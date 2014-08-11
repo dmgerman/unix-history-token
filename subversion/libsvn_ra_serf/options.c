@@ -1212,7 +1212,7 @@ literal|","
 argument_list|,
 name|TRUE
 argument_list|,
-name|opt_ctx
+name|session
 operator|->
 name|pool
 argument_list|)
