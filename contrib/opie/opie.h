@@ -125,14 +125,14 @@ value|16
 end_define
 
 begin_comment
-comment|/* Max length of hash algorithm name (md4/md5) */
+comment|/* Max length of hash algorithm name (md4/md5/sha1) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPIE_HASHNAME_MAX
-value|3
+value|4
 end_define
 
 begin_comment
