@@ -211,6 +211,33 @@ parameter_list|)
 value|.size x, . - x; _FNEND
 end_define
 
+begin_comment
+comment|/*  * EENTRY()/EEND() mark "extra" entry/exit points from a function.  * The unwind info cannot handle the concept of a nested function, or a function  * with multiple .fnstart directives, but some of our assembler code is written  * with multiple labels to allow entry at several points.  The EENTRY() macro  * defines such an extra entry point without a new .fnstart, so that it's  * basically just a label that you can jump to.  The EEND() macro does nothing  * at all, except document the exit point associated with the same-named entry.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_EENTRY
+parameter_list|(
+name|x
+parameter_list|)
+value|.globl x; .type x,_ASM_TYPE_FUNCTION; x:
+end_define
+
+begin_define
+define|#
+directive|define
+name|_EEND
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -254,11 +281,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|EENTRY
+parameter_list|(
+name|y
+parameter_list|)
+value|_EENTRY(_C_LABEL(y)); _PROF_PROLOGUE
+end_define
+
+begin_define
+define|#
+directive|define
 name|ENTRY_NP
 parameter_list|(
 name|y
 parameter_list|)
 value|_ENTRY(_C_LABEL(y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EENTRY_NP
+parameter_list|(
+name|y
+parameter_list|)
+value|_EENTRY(_C_LABEL(y))
 end_define
 
 begin_define
@@ -274,11 +321,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|EEND
+parameter_list|(
+name|y
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASENTRY
 parameter_list|(
 name|y
 parameter_list|)
 value|_ENTRY(_ASM_LABEL(y)); _PROF_PROLOGUE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASEENTRY
+parameter_list|(
+name|y
+parameter_list|)
+value|_EENTRY(_ASM_LABEL(y)); _PROF_PROLOGUE
 end_define
 
 begin_define
@@ -294,11 +360,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASEENTRY_NP
+parameter_list|(
+name|y
+parameter_list|)
+value|_EENTRY(_ASM_LABEL(y))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASEND
 parameter_list|(
 name|y
 parameter_list|)
 value|_END(_ASM_LABEL(y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASEEND
+parameter_list|(
+name|y
+parameter_list|)
 end_define
 
 begin_define
