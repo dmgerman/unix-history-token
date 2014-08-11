@@ -126,7 +126,7 @@ file|<netpfil/ipfw/ip_fw_table.h>
 end_include
 
 begin_comment
-comment|/*  * Table has the following `type` concepts:  *  * `no.type` represents lookup key type (cidr, ifp, uid, etc..)  * `ta->atype` represents exact lookup algorithm.  *     For example, we can use more efficient search schemes if we plan  *     to use some specific table for storing host-routes only.  * `ftype` (at the moment )is pure userland field helping to properly  *     format value data e.g. "value is IPv4 nexthop" or "value is DSCP"  *     or "value is port".  *  */
+comment|/*  * Table has the following `type` concepts:  *  * `no.type` represents lookup key type (cidr, ifp, uid, etc..)  * `vtype` represents table value type (currently U32)  * `ftype` (at the moment )is pure userland field helping to properly  *     format value data e.g. "value is IPv4 nexthop" or "value is DSCP"  *     or "value is port".  *  */
 end_comment
 
 begin_struct
@@ -1204,7 +1204,7 @@ name|ch
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Prepare record (allocate memory) */
+comment|/* Allocate memory and prepare record(s) */
 name|ta_buf_sz
 operator|=
 name|ta
@@ -2123,7 +2123,7 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-comment|/* Prepare record (allocate memory) */
+comment|/* Allocate memory and prepare record(s) */
 name|ta_buf_sz
 operator|=
 name|ta
@@ -2576,18 +2576,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|tc
-operator|->
-name|no
-operator|.
-name|refcnt
-operator|--
-expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
 comment|/* We have to shrink/grow table */
 name|IPFW_UH_WUNLOCK
@@ -2674,7 +2667,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Other threads has already performed resize. 			 * Flush our state and return/ 			 */
+comment|/* 			 * Other thread has already performed resize. 			 * Flush our state and return. 			 */
 name|ta
 operator|->
 name|flush_mod
@@ -3344,7 +3337,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Mark entire buffer as "read". 	 * This makes sopt api write it back 	 * after function return. 	 */
+comment|/* 	 * Mark entire buffer as "read". 	 * This instructs sopt api write it back 	 * after function return. 	 */
 name|ipfw_get_sopt_header
 argument_list|(
 name|sd
@@ -4192,6 +4185,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Flushes given table.  *  * Function create new table instance with the same  * parameters, swaps it with old one and  * flushes state without holding any locks.  *  * Returns 0 on success.  */
+end_comment
+
 begin_function
 name|int
 name|flush_table
@@ -4309,7 +4306,7 @@ operator|.
 name|refcnt
 operator|++
 expr_stmt|;
-comment|/* Save statup algo parameters */
+comment|/* Save startup algo parameters */
 if|if
 condition|(
 name|ta
@@ -4658,6 +4655,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Swaps two tables of the same type/valtype.  *  * Checks if tables are compatible and limits  * permits swap, than actually perform swap  * by switching  * 1) runtime data (ch->tablestate)  * 2) runtime cache in @tc  * 3) algo-specific data (tc->astate)  * 4) number of items  *  * Since @ti has changed for each table, calls notification callbacks.  *  * Returns 0 on success.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4711,7 +4712,7 @@ decl_stmt|;
 name|uint32_t
 name|count
 decl_stmt|;
-comment|/* 	 * Stage 1: find both tables and ensure they are of 	 * the same type and algo. 	 */
+comment|/* 	 * Stage 1: find both tables and ensure they are of 	 * the same type. 	 */
 name|IPFW_UH_WLOCK
 argument_list|(
 name|ch
@@ -5352,6 +5353,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Shuts tables module down.  */
+end_comment
+
 begin_function
 name|void
 name|ipfw_destroy_tables
@@ -5430,6 +5435,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Starts tables module.  */
+end_comment
 
 begin_function
 name|int
@@ -5512,6 +5521,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Grow tables index.  *  * Returns 0 on success.  */
+end_comment
 
 begin_function
 name|int
@@ -5834,7 +5847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Switch between "set 0" and "rule set" table binding,  * Check all ruleset bindings and permits changing  * IFF each binding has both rule AND table in default set (set 0).  *  * Returns 0 on success.  */
+comment|/*  * Switch between "set 0" and "rule's set" table binding,  * Check all ruleset bindings and permits changing  * IFF each binding has both rule AND table in default set (set 0).  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -5913,6 +5926,7 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Scan all rules and examine tables opcodes. 	 */
 for|for
 control|(
 name|i
@@ -6002,6 +6016,7 @@ argument_list|,
 name|kidx
 argument_list|)
 expr_stmt|;
+comment|/* Check if both table object and rule has the set 0 */
 if|if
 condition|(
 name|no
@@ -7918,6 +7933,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Exports basic table info as name TLV.  * Used inside dump_static_rules() to provide info  * about all tables referenced by current ruleset.  *  * Returns 0 on success.  */
+end_comment
+
 begin_function
 name|int
 name|ipfw_export_table_ntlv
@@ -8058,6 +8077,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Exports table @tc info into standard ipfw_xtable_info format.  */
+end_comment
 
 begin_function
 specifier|static
@@ -9491,7 +9514,7 @@ comment|/*  * Table algorithms  */
 end_comment
 
 begin_comment
-comment|/*  * Finds algoritm by index, table type or supplied name  */
+comment|/*  * Finds algoritm by index, table type or supplied name.  *  * Returns pointer to algo or NULL.  */
 end_comment
 
 begin_function
@@ -9683,7 +9706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Register new table algo @ta.  * Stores algo id iside @idx.<F2>  *  * Returns 0 on success.  */
+comment|/*  * Register new table algo @ta.  * Stores algo id inside @idx.  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -9776,6 +9799,7 @@ literal|"Increase IPFW_TABLE_MAXTYPE"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Copy algorithm data to stable storage. */
 name|ta_new
 operator|=
 name|malloc
@@ -10946,6 +10970,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Allocate new table config structure using  * specified @algo and @aname.  *  * Returns pointer to config or NULL.  */
+end_comment
+
 begin_function
 specifier|static
 name|struct
@@ -11253,6 +11281,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Destroys table state and config.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -11269,14 +11301,19 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|tc
 operator|->
 name|linked
 operator|==
 literal|0
-condition|)
+argument_list|,
+operator|(
+literal|"free() on linked config"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tc
 operator|->
 name|ta
@@ -11559,7 +11596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finds named object by @uidx number.  * Refs found object, allocate new index for non-existing object.  * Fills in @oib with userland/kernel indexes.  * First free oidx pointer is saved back in @oib.  *  * Returns 0 on success.  */
+comment|/*  * Finds and bumps refcount for tables referenced by given @rule.  * Allocates new indexes for non-existing tables.  * Fills in @oib array with userland/kernel indexes.  * First free oidx pointer is saved back in @oib.  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -11665,6 +11702,7 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Increase refcount on each referenced table. 	 * Allocate table indexes for non-existing tables. 	 */
 for|for
 control|(
 init|;
@@ -12758,7 +12796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compatibility function for old ipfw(8) binaries.  * Rewrites table kernel indices with userland ones.  * Works for \d+ talbes only (e.g. for tables, converted  * from old numbered system calls).  *  * Returns 0 on success.  * Raises error on any other tables.  */
+comment|/*  * Compatibility function for old ipfw(8) binaries.  * Rewrites table kernel indices with userland ones.  * Convert tables matching '/^\d+$/' to their atoi() value.  * Use number 65535 for other tables.  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -12933,7 +12971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sets every table kidx in @bmask which is used in rule @rule.  *   * Returns number of newly-referenced tables.  */
+comment|/*  * Marks every table kidx used in @rule with bit in @bmask.  * Used to generate bitmask of referenced tables for given ruleset.  *   * Returns number of newly-referenced tables.  */
 end_comment
 
 begin_function
@@ -13171,7 +13209,7 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-comment|/* Prepare queue to store configs */
+comment|/* Prepare queue to store newly-allocated configs */
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -13529,7 +13567,7 @@ name|nn_next
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Stage 2.1: Check if we're going to create 2 tables 		 * with the same name, but different table types. 		 */
+comment|/* 		 * Stage 2.1: Check if we're going to create two tables 		 * with the same name, but different table types. 		 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|no
@@ -14144,10 +14182,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* end of file */
-end_comment
 
 end_unit
 
