@@ -371,20 +371,9 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|sf_bufs
-argument_list|,
-operator|(
-literal|"%s: malloc failure"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
