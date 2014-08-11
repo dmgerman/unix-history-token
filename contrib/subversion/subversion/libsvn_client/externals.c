@@ -3617,9 +3617,11 @@ name|wc_ctx
 argument_list|,
 name|parent_abspath
 argument_list|,
-name|TRUE
+name|FALSE
+comment|/* show_deleted*/
 argument_list|,
 name|FALSE
+comment|/* show_hidden */
 argument_list|,
 name|iterpool
 argument_list|)
@@ -3648,7 +3650,10 @@ expr_stmt|;
 if|if
 condition|(
 name|err
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|APR_STATUS_IS_ENOTEMPTY
 argument_list|(
 name|err
@@ -3663,13 +3668,41 @@ name|err
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* No parents to delete */
 block|}
-else|else
-name|SVN_ERR
+elseif|else
+if|if
+condition|(
+name|APR_STATUS_IS_ENOENT
+argument_list|(
+name|err
+operator|->
+name|apr_err
+argument_list|)
+operator|||
+name|APR_STATUS_IS_ENOTDIR
+argument_list|(
+name|err
+operator|->
+name|apr_err
+argument_list|)
+condition|)
+block|{
+name|svn_error_clear
 argument_list|(
 name|err
 argument_list|)
 expr_stmt|;
+comment|/* Fall through; parent dir might be unversioned */
+block|}
+else|else
+return|return
+name|svn_error_trace
+argument_list|(
+name|err
+argument_list|)
+return|;
+block|}
 block|}
 block|}
 do|while
