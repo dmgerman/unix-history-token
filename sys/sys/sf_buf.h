@@ -260,6 +260,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sf_buf_ref
+parameter_list|(
+name|struct
+name|sf_buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 specifier|inline
@@ -520,6 +531,20 @@ specifier|static
 specifier|inline
 name|void
 name|sf_buf_free
+parameter_list|(
+name|struct
+name|sf_buf
+modifier|*
+name|sf
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|sf_buf_ref
 parameter_list|(
 name|struct
 name|sf_buf

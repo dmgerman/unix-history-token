@@ -10039,15 +10039,9 @@ argument_list|(
 name|sf
 argument_list|)
 decl_stmt|;
-comment|/* XXXGL: there should be sf_buf_ref() */
-name|sf_buf_alloc
-argument_list|(
-name|sf_buf_page
+name|sf_buf_ref
 argument_list|(
 name|sf
-argument_list|)
-argument_list|,
-name|SFB_NOWAIT
 argument_list|)
 expr_stmt|;
 name|vm_page_lock
