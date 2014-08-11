@@ -879,6 +879,12 @@ condition|)
 return|return;
 endif|#
 directive|endif
+name|mtx_lock
+argument_list|(
+operator|&
+name|sf_buf_lock
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|sf
@@ -894,12 +900,6 @@ name|__func__
 operator|,
 name|sf
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sf_buf_lock
 argument_list|)
 expr_stmt|;
 name|sf
