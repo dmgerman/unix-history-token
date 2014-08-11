@@ -376,6 +376,15 @@ directive|define
 name|AH_TIME_QUANTUM
 value|100
 comment|/* usec */
+name|OS_MARK
+argument_list|(
+name|ah
+argument_list|,
+name|AH_MARK_RX_CTL
+argument_list|,
+name|AH_MARK_RX_CTL_DMA_STOP
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|timeout
@@ -562,6 +571,19 @@ argument_list|,
 name|AR_MACMISC
 argument_list|,
 name|org_value
+argument_list|)
+expr_stmt|;
+name|OS_MARK
+argument_list|(
+name|ah
+argument_list|,
+name|AH_MARK_RX_CTL
+argument_list|,
+name|status
+condition|?
+name|AH_MARK_RX_CTL_DMA_STOP_OK
+else|:
+name|AH_MARK_RX_CTL_DMA_STOP_ERR
 argument_list|)
 expr_stmt|;
 return|return
