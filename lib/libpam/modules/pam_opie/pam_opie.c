@@ -147,6 +147,8 @@ name|char
 name|challenge
 index|[
 name|OPIE_CHALLENGE_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
