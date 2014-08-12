@@ -12372,7 +12372,7 @@ decl_stmt|;
 name|int
 name|max_blocks
 decl_stmt|;
-name|void
+name|u_long
 modifier|*
 name|idx_mask
 decl_stmt|;
@@ -12423,6 +12423,16 @@ operator|*
 name|IPFW_MAX_SETS
 argument_list|)
 expr_stmt|;
+operator|*
+name|idx_mask
+operator|&=
+operator|~
+operator|(
+name|u_long
+operator|)
+literal|1
+expr_stmt|;
+comment|/* Skip index 0 */
 operator|*
 name|idx
 operator|=
