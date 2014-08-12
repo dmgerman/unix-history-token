@@ -503,6 +503,22 @@ literal|"Intel PCH USB 2.0 controller USB-B"
 operator|)
 return|;
 case|case
+literal|0x8c268086
+case|:
+return|return
+operator|(
+literal|"Intel Lynx Point USB 2.0 controller USB-A"
+operator|)
+return|;
+case|case
+literal|0x8c2d8086
+case|:
+return|return
+operator|(
+literal|"Intel Lynx Point USB 2.0 controller USB-B"
+operator|)
+return|;
+case|case
 literal|0x00e01033
 case|:
 return|return
