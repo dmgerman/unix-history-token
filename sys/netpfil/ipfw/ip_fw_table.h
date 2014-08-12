@@ -1207,7 +1207,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipfw_unbind_table_rule
+name|ipfw_unref_rule_tables
 parameter_list|(
 name|struct
 name|ip_fw_chain

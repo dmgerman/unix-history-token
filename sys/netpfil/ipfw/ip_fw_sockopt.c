@@ -2691,7 +2691,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|ipfw_unbind_table_rule
+name|ipfw_unref_rule_tables
 argument_list|(
 name|chain
 argument_list|,

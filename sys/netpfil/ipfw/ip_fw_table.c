@@ -12956,13 +12956,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finds and bumps refcount for tables referenced by given @rule.  * Allocates new indexes for non-existing tables.  * Fills in @oib array with userland/kernel indexes.  * First free oidx pointer is saved back in @oib.  *  * Returns 0 on success.  */
+comment|/*  * Finds and bumps refcount for tables referenced by given @rule.  * Auto-creates non-existing tables.  * Fills in @oib array with userland/kernel indexes.  * First free oidx pointer is saved back in @oib.  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|bind_table_rule
+name|find_ref_rule_tables
 parameter_list|(
 name|struct
 name|ip_fw_chain
@@ -13078,7 +13078,7 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Increase refcount on each referenced table. 	 * Allocate table indexes for non-existing tables. 	 */
+comment|/* Increase refcount on each existing referenced table. */
 for|for
 control|(
 init|;
@@ -13463,7 +13463,7 @@ end_comment
 
 begin_function
 name|void
-name|ipfw_unbind_table_rule
+name|ipfw_unref_rule_tables
 parameter_list|(
 name|struct
 name|ip_fw_chain
@@ -14024,7 +14024,7 @@ block|}
 comment|/* Reference all used tables */
 name|error
 operator|=
-name|bind_table_rule
+name|find_ref_rule_tables
 argument_list|(
 name|chain
 argument_list|,
