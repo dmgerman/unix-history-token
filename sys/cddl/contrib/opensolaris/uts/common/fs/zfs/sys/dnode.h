@@ -546,7 +546,7 @@ decl_stmt|;
 name|kmutex_t
 name|dn_dbufs_mtx
 decl_stmt|;
-name|list_t
+name|avl_tree_t
 name|dn_dbufs
 decl_stmt|;
 comment|/* descendent dbufs */
