@@ -320,55 +320,6 @@ parameter_list|)
 value|do {			\ 	if (!av[0])							\ 		errx(EX_USAGE, "%s: missing argument", match_value(s_x, tok)); \ 	if (_substrcmp(*av, "tablearg") == 0) {				\ 		arg = IP_FW_TARG;					\ 		break;							\ 	}								\ 									\ 	{								\ 	long _xval;							\ 	char *end;							\ 									\ 	_xval = strtol(*av,&end, 10);					\ 									\ 	if (!isdigit(**av) || *end != '\0' || (_xval == 0&& errno == EINVAL)) \ 		errx(EX_DATAERR, "%s: invalid argument: %s",		\ 		    match_value(s_x, tok), *av);			\ 									\ 	if (errno == ERANGE || _xval< min || _xval> max)		\ 		errx(EX_DATAERR, "%s: argument is out of range (%u..%u): %s", \ 		    match_value(s_x, tok), min, max, *av);		\ 									\ 	if (_xval == IP_FW_TARG)					\ 		errx(EX_DATAERR, "%s: illegal argument value: %s",	\ 		    match_value(s_x, tok), *av);			\ 	arg = _xval;							\ 	}								\ } while (0)
 end_define
 
-begin_function
-specifier|static
-name|void
-name|PRINT_UINT_ARG
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|,
-name|uint32_t
-name|arg
-parameter_list|)
-block|{
-if|if
-condition|(
-name|str
-operator|!=
-name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|arg
-operator|==
-name|IP_FW_TARG
-condition|)
-name|printf
-argument_list|(
-literal|"tablearg"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%u"
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -3672,6 +3623,11 @@ specifier|static
 name|void
 name|print_port
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|int
 name|proto
 parameter_list|,
@@ -3708,16 +3664,20 @@ name|port
 argument_list|)
 operator|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"0x%04x"
 argument_list|,
 name|port
@@ -3773,8 +3733,10 @@ if|if
 condition|(
 name|se
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s"
 argument_list|,
 name|se
@@ -3783,8 +3745,10 @@ name|s_name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%d"
 argument_list|,
 name|port
@@ -3874,6 +3838,11 @@ specifier|static
 name|void
 name|print_newports
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|ipfw_insn_u16
 modifier|*
 name|cmd
@@ -3927,8 +3896,10 @@ name|sep
 operator|=
 literal|"???"
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" %s"
 argument_list|,
 name|sep
@@ -3966,8 +3937,10 @@ operator|+=
 literal|2
 control|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s"
 argument_list|,
 name|sep
@@ -3975,6 +3948,8 @@ argument_list|)
 expr_stmt|;
 name|print_port
 argument_list|(
+name|bp
+argument_list|,
 name|proto
 argument_list|,
 name|p
@@ -3996,13 +3971,17 @@ literal|1
 index|]
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"-"
 argument_list|)
 expr_stmt|;
 name|print_port
 argument_list|(
+name|bp
+argument_list|,
 name|proto
 argument_list|,
 name|p
@@ -5150,6 +5129,11 @@ specifier|static
 name|void
 name|print_flags
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|char
 specifier|const
 modifier|*
@@ -5212,15 +5196,19 @@ operator|==
 name|TH_ACK
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" setup"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" %s "
 argument_list|,
 name|name
@@ -5267,8 +5255,10 @@ index|]
 operator|.
 name|x
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s%s"
 argument_list|,
 name|comma
@@ -5308,8 +5298,10 @@ index|]
 operator|.
 name|x
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s!%s"
 argument_list|,
 name|comma
@@ -5341,6 +5333,11 @@ name|void
 name|print_ip
 parameter_list|(
 name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
+name|struct
 name|format_opts
 modifier|*
 name|fo
@@ -5361,6 +5358,11 @@ modifier|*
 name|he
 init|=
 name|NULL
+decl_stmt|;
+name|struct
+name|in_addr
+modifier|*
+name|ia
 decl_stmt|;
 name|uint32_t
 name|len
@@ -5473,8 +5475,10 @@ operator|->
 name|arg1
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s lookup %s %s"
 argument_list|,
 name|cmd
@@ -5496,8 +5500,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s%s "
 argument_list|,
 name|cmd
@@ -5534,8 +5540,10 @@ operator|==
 name|O_IP_DST_ME
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"me"
 argument_list|)
 expr_stmt|;
@@ -5579,8 +5587,10 @@ operator|->
 name|arg1
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"table(%s"
 argument_list|,
 name|t
@@ -5595,16 +5605,20 @@ argument_list|(
 name|ipfw_insn_u32
 argument_list|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|",%u"
 argument_list|,
 operator|*
 name|a
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|")"
 argument_list|)
 expr_stmt|;
@@ -5689,8 +5703,10 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s/%d"
 argument_list|,
 name|inet_ntoa
@@ -5815,8 +5831,10 @@ operator|)
 operator|)
 condition|)
 break|break;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%c%d"
 argument_list|,
 name|comma
@@ -5836,8 +5854,10 @@ literal|2
 condition|)
 block|{
 comment|/* range has at least 3 elements */
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"-%d"
 argument_list|,
 name|j
@@ -5859,8 +5879,10 @@ operator|=
 literal|','
 expr_stmt|;
 block|}
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"}"
 argument_list|)
 expr_stmt|;
@@ -5969,8 +5991,10 @@ operator|!=
 name|NULL
 condition|)
 comment|/* resolved to name */
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s"
 argument_list|,
 name|he
@@ -5986,22 +6010,18 @@ operator|==
 literal|0
 condition|)
 comment|/* any */
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"any"
 argument_list|)
 expr_stmt|;
 else|else
 block|{
 comment|/* numeric IP followed by some kind of mask */
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|inet_ntoa
-argument_list|(
-operator|*
-operator|(
+name|ia
+operator|=
 operator|(
 expr|struct
 name|in_addr
@@ -6012,7 +6032,17 @@ name|a
 index|[
 literal|0
 index|]
-operator|)
+expr_stmt|;
+name|bprintf
+argument_list|(
+name|bp
+argument_list|,
+literal|"%s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+operator|*
+name|ia
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6022,25 +6052,16 @@ name|mb
 operator|<
 literal|0
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|":%s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
 operator|*
-operator|(
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|)
-operator|&
-name|a
-index|[
-literal|1
-index|]
-operator|)
+name|ia
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6051,8 +6072,10 @@ name|mb
 operator|<
 literal|32
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"/%d"
 argument_list|,
 name|mb
@@ -6065,8 +6088,10 @@ name|len
 operator|>
 literal|1
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|","
 argument_list|)
 expr_stmt|;
@@ -6083,6 +6108,11 @@ specifier|static
 name|void
 name|print_mac
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|uint8_t
 modifier|*
 name|addr
@@ -6108,15 +6138,19 @@ name|l
 operator|==
 literal|0
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" any"
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" %02x:%02x:%02x:%02x:%02x:%02x"
 argument_list|,
 name|addr
@@ -6157,8 +6191,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"&%02x:%02x:%02x:%02x:%02x:%02x"
 argument_list|,
 name|mask
@@ -6199,8 +6235,10 @@ name|l
 operator|<
 literal|48
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"/%d"
 argument_list|,
 name|l
@@ -6335,6 +6373,11 @@ specifier|static
 name|void
 name|print_icmptypes
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|ipfw_insn_u32
 modifier|*
 name|cmd
@@ -6348,8 +6391,10 @@ name|sep
 init|=
 literal|' '
 decl_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" icmptypes"
 argument_list|)
 expr_stmt|;
@@ -6389,8 +6434,10 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%c%d"
 argument_list|,
 name|sep
@@ -6411,6 +6458,11 @@ specifier|static
 name|void
 name|print_dscp
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|ipfw_insn_u32
 modifier|*
 name|cmd
@@ -6435,8 +6487,10 @@ name|char
 modifier|*
 name|code
 decl_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" dscp"
 argument_list|)
 expr_stmt|;
@@ -6488,8 +6542,10 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%c%s"
 argument_list|,
 name|sep
@@ -6498,8 +6554,10 @@ name|code
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%c%d"
 argument_list|,
 name|sep
@@ -6588,6 +6646,11 @@ specifier|static
 name|void
 name|show_prerequisites
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|int
 modifier|*
 name|flags
@@ -6665,8 +6728,10 @@ operator|&
 name|HAVE_PROTO4
 operator|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ip4"
 argument_list|)
 expr_stmt|;
@@ -6680,14 +6745,18 @@ operator|&
 name|HAVE_PROTO6
 operator|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ip6"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ip"
 argument_list|)
 expr_stmt|;
@@ -6708,8 +6777,10 @@ operator|&
 name|HAVE_SRCIP
 operator|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" from any"
 argument_list|)
 expr_stmt|;
@@ -6729,8 +6800,10 @@ operator|&
 name|HAVE_DSTIP
 operator|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" to any"
 argument_list|)
 expr_stmt|;
@@ -7887,16 +7960,6 @@ name|arg1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * TODO: convert remainings to use @bp buffer 	 * 	 */
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|bp
-operator|->
-name|buf
-argument_list|)
-expr_stmt|;
 comment|/* 	 * then print the body. 	 */
 for|for
 control|(
@@ -8002,6 +8065,8 @@ condition|)
 block|{
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8010,8 +8075,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" from any to any"
 argument_list|)
 expr_stmt|;
@@ -8099,8 +8166,10 @@ operator|!=
 name|O_NOP
 condition|)
 continue|continue;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" // %s\n"
 argument_list|,
 operator|(
@@ -8118,6 +8187,8 @@ return|return;
 block|}
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8162,6 +8233,8 @@ name|O_IP_SRC_SET
 case|:
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8179,8 +8252,10 @@ operator|&
 name|HAVE_SRCIP
 operator|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" from"
 argument_list|)
 expr_stmt|;
@@ -8197,13 +8272,17 @@ operator|&&
 operator|!
 name|or_block
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" {"
 argument_list|)
 expr_stmt|;
 name|print_ip
 argument_list|(
+name|bp
+argument_list|,
 name|fo
 argument_list|,
 operator|(
@@ -8245,6 +8324,8 @@ name|O_IP_DST_SET
 case|:
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8264,8 +8345,10 @@ operator|&
 name|HAVE_DSTIP
 operator|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" to"
 argument_list|)
 expr_stmt|;
@@ -8282,13 +8365,17 @@ operator|&&
 operator|!
 name|or_block
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" {"
 argument_list|)
 expr_stmt|;
 name|print_ip
 argument_list|(
+name|bp
+argument_list|,
 name|fo
 argument_list|,
 operator|(
@@ -8324,6 +8411,8 @@ name|O_IP6_SRC_ME
 case|:
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8341,8 +8430,10 @@ operator|&
 name|HAVE_SRCIP
 operator|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" from"
 argument_list|)
 expr_stmt|;
@@ -8359,13 +8450,17 @@ operator|&&
 operator|!
 name|or_block
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" {"
 argument_list|)
 expr_stmt|;
 name|print_ip6
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_ip6
 operator|*
@@ -8401,6 +8496,8 @@ name|O_IP6_DST_ME
 case|:
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8420,8 +8517,10 @@ operator|&
 name|HAVE_DSTIP
 operator|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" to"
 argument_list|)
 expr_stmt|;
@@ -8438,13 +8537,17 @@ operator|&&
 operator|!
 name|or_block
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" {"
 argument_list|)
 expr_stmt|;
 name|print_ip6
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_ip6
 operator|*
@@ -8472,6 +8575,8 @@ name|O_FLOW6ID
 case|:
 name|print_flow6id
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u32
 operator|*
@@ -8489,6 +8594,8 @@ name|O_IP_DSTPORT
 case|:
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8518,6 +8625,8 @@ name|HAVE_IP
 expr_stmt|;
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8541,8 +8650,10 @@ operator|&&
 operator|!
 name|or_block
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" {"
 argument_list|)
 expr_stmt|;
@@ -8554,13 +8665,17 @@ name|len
 operator|&
 name|F_NOT
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" not"
 argument_list|)
 expr_stmt|;
 name|print_newports
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u16
 operator|*
@@ -8607,8 +8722,10 @@ operator|&&
 operator|!
 name|or_block
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" {"
 argument_list|)
 expr_stmt|;
@@ -8620,8 +8737,10 @@ name|len
 operator|&
 name|F_NOT
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" not"
 argument_list|)
 expr_stmt|;
@@ -8661,6 +8780,8 @@ operator|)
 condition|)
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8683,8 +8804,10 @@ name|flags
 operator|&
 name|HAVE_OPTIONS
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" proto"
 argument_list|)
 expr_stmt|;
@@ -8692,8 +8815,10 @@ if|if
 condition|(
 name|pe
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" %s"
 argument_list|,
 name|pe
@@ -8702,8 +8827,10 @@ name|p_name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" %u"
 argument_list|,
 name|cmd
@@ -8771,6 +8898,8 @@ condition|)
 break|break;
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -8800,8 +8929,10 @@ operator|&&
 operator|!
 name|or_block
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" {"
 argument_list|)
 expr_stmt|;
@@ -8819,8 +8950,10 @@ name|opcode
 operator|!=
 name|O_IN
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" not"
 argument_list|)
 expr_stmt|;
@@ -8845,13 +8978,17 @@ operator|*
 operator|)
 name|cmd
 decl_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" MAC"
 argument_list|)
 expr_stmt|;
 name|print_mac
 argument_list|(
+name|bp
+argument_list|,
 name|m
 operator|->
 name|addr
@@ -8863,6 +9000,8 @@ argument_list|)
 expr_stmt|;
 name|print_mac
 argument_list|(
+name|bp
+argument_list|,
 name|m
 operator|->
 name|addr
@@ -8883,6 +9022,8 @@ name|O_MAC_TYPE
 case|:
 name|print_newports
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u16
 operator|*
@@ -8900,8 +9041,10 @@ break|break;
 case|case
 name|O_FRAG
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" frag"
 argument_list|)
 expr_stmt|;
@@ -8909,8 +9052,10 @@ break|break;
 case|case
 name|O_FIB
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" fib %u"
 argument_list|,
 name|cmd
@@ -8922,8 +9067,10 @@ break|break;
 case|case
 name|O_SOCKARG
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" sockarg"
 argument_list|)
 expr_stmt|;
@@ -8931,8 +9078,10 @@ break|break;
 case|case
 name|O_IN
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 name|cmd
 operator|->
 name|len
@@ -8958,8 +9107,10 @@ block|{
 case|case
 literal|3
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" diverted"
 argument_list|)
 expr_stmt|;
@@ -8967,8 +9118,10 @@ break|break;
 case|case
 literal|1
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" diverted-loopback"
 argument_list|)
 expr_stmt|;
@@ -8976,15 +9129,19 @@ break|break;
 case|case
 literal|2
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" diverted-output"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" diverted-?<%u>"
 argument_list|,
 name|cmd
@@ -8998,8 +9155,10 @@ break|break;
 case|case
 name|O_LAYER2
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" layer2"
 argument_list|)
 expr_stmt|;
@@ -9074,8 +9233,10 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" %s %s"
 argument_list|,
 name|s
@@ -9119,8 +9280,10 @@ operator|.
 name|kidx
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" %s table(%s)"
 argument_list|,
 name|s
@@ -9130,8 +9293,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" %s %s"
 argument_list|,
 name|s
@@ -9164,8 +9329,10 @@ operator|->
 name|arg1
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" flow table(%s"
 argument_list|,
 name|t
@@ -9183,8 +9350,10 @@ argument_list|(
 name|ipfw_insn_u32
 argument_list|)
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|",%u"
 argument_list|,
 operator|(
@@ -9201,8 +9370,10 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|")"
 argument_list|)
 expr_stmt|;
@@ -9220,8 +9391,10 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ipid %u"
 argument_list|,
 name|cmd
@@ -9232,6 +9405,8 @@ expr_stmt|;
 else|else
 name|print_newports
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u16
 operator|*
@@ -9256,8 +9431,10 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ipttl %u"
 argument_list|,
 name|cmd
@@ -9268,6 +9445,8 @@ expr_stmt|;
 else|else
 name|print_newports
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u16
 operator|*
@@ -9283,8 +9462,10 @@ break|break;
 case|case
 name|O_IPVER
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ipver %u"
 argument_list|,
 name|cmd
@@ -9296,15 +9477,15 @@ break|break;
 case|case
 name|O_IPPRECEDENCE
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ipprecedence %u"
 argument_list|,
-operator|(
 name|cmd
 operator|->
 name|arg1
-operator|)
 operator|>>
 literal|5
 argument_list|)
@@ -9315,6 +9496,8 @@ name|O_DSCP
 case|:
 name|print_dscp
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u32
 operator|*
@@ -9335,8 +9518,10 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" iplen %u"
 argument_list|,
 name|cmd
@@ -9347,6 +9532,8 @@ expr_stmt|;
 else|else
 name|print_newports
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u16
 operator|*
@@ -9364,6 +9551,8 @@ name|O_IPOPT
 case|:
 name|print_flags
 argument_list|(
+name|bp
+argument_list|,
 literal|"ipoptions"
 argument_list|,
 name|cmd
@@ -9377,6 +9566,8 @@ name|O_IPTOS
 case|:
 name|print_flags
 argument_list|(
+name|bp
+argument_list|,
 literal|"iptos"
 argument_list|,
 name|cmd
@@ -9390,6 +9581,8 @@ name|O_ICMPTYPE
 case|:
 name|print_icmptypes
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u32
 operator|*
@@ -9401,8 +9594,10 @@ break|break;
 case|case
 name|O_ESTAB
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" established"
 argument_list|)
 expr_stmt|;
@@ -9419,8 +9614,10 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" tcpdatalen %u"
 argument_list|,
 name|cmd
@@ -9431,6 +9628,8 @@ expr_stmt|;
 else|else
 name|print_newports
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u16
 operator|*
@@ -9448,6 +9647,8 @@ name|O_TCPFLAGS
 case|:
 name|print_flags
 argument_list|(
+name|bp
+argument_list|,
 literal|"tcpflags"
 argument_list|,
 name|cmd
@@ -9461,6 +9662,8 @@ name|O_TCPOPTS
 case|:
 name|print_flags
 argument_list|(
+name|bp
+argument_list|,
 literal|"tcpoptions"
 argument_list|,
 name|cmd
@@ -9481,8 +9684,10 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" tcpwin %u"
 argument_list|,
 name|cmd
@@ -9493,6 +9698,8 @@ expr_stmt|;
 else|else
 name|print_newports
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u16
 operator|*
@@ -9508,8 +9715,10 @@ break|break;
 case|case
 name|O_TCPACK
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" tcpack %d"
 argument_list|,
 name|ntohl
@@ -9527,8 +9736,10 @@ break|break;
 case|case
 name|O_TCPSEQ
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" tcpseq %d"
 argument_list|,
 name|ntohl
@@ -9566,8 +9777,10 @@ if|if
 condition|(
 name|pwd
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" uid %s"
 argument_list|,
 name|pwd
@@ -9576,8 +9789,10 @@ name|pw_name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" uid %u"
 argument_list|,
 name|cmd32
@@ -9613,8 +9828,10 @@ if|if
 condition|(
 name|grp
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" gid %s"
 argument_list|,
 name|grp
@@ -9623,8 +9840,10 @@ name|gr_name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" gid %u"
 argument_list|,
 name|cmd32
@@ -9640,8 +9859,10 @@ break|break;
 case|case
 name|O_JAIL
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" jail %d"
 argument_list|,
 name|cmd32
@@ -9656,8 +9877,10 @@ break|break;
 case|case
 name|O_VERREVPATH
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" verrevpath"
 argument_list|)
 expr_stmt|;
@@ -9665,8 +9888,10 @@ break|break;
 case|case
 name|O_VERSRCREACH
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" versrcreach"
 argument_list|)
 expr_stmt|;
@@ -9674,8 +9899,10 @@ break|break;
 case|case
 name|O_ANTISPOOF
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" antispoof"
 argument_list|)
 expr_stmt|;
@@ -9683,8 +9910,10 @@ break|break;
 case|case
 name|O_IPSEC
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ipsec"
 argument_list|)
 expr_stmt|;
@@ -9708,8 +9937,10 @@ break|break;
 case|case
 name|O_KEEP_STATE
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" keep-state"
 argument_list|)
 expr_stmt|;
@@ -9749,8 +9980,10 @@ name|comma
 init|=
 literal|" "
 decl_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" limit"
 argument_list|)
 expr_stmt|;
@@ -9788,8 +10021,10 @@ name|p
 operator|->
 name|x
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s%s"
 argument_list|,
 name|comma
@@ -9804,8 +10039,10 @@ operator|=
 literal|","
 expr_stmt|;
 block|}
-name|PRINT_UINT_ARG
+name|bprint_uint_arg
 argument_list|(
+name|bp
+argument_list|,
 literal|" "
 argument_list|,
 name|c
@@ -9818,8 +10055,10 @@ block|}
 case|case
 name|O_IP6
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ip6"
 argument_list|)
 expr_stmt|;
@@ -9827,8 +10066,10 @@ break|break;
 case|case
 name|O_IP4
 case|:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ip4"
 argument_list|)
 expr_stmt|;
@@ -9838,6 +10079,8 @@ name|O_ICMP6TYPE
 case|:
 name|print_icmp6types
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u32
 operator|*
@@ -9851,6 +10094,8 @@ name|O_EXT_HDR
 case|:
 name|print_ext6hdr
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn
 operator|*
@@ -9871,8 +10116,10 @@ argument_list|)
 operator|==
 literal|1
 condition|)
-name|PRINT_UINT_ARG
+name|bprint_uint_arg
 argument_list|(
+name|bp
+argument_list|,
 literal|" tagged "
 argument_list|,
 name|cmd
@@ -9883,6 +10130,8 @@ expr_stmt|;
 else|else
 name|print_newports
 argument_list|(
+name|bp
+argument_list|,
 operator|(
 name|ipfw_insn_u16
 operator|*
@@ -9896,8 +10145,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" [opcode %d len %d]"
 argument_list|,
 name|cmd
@@ -9920,8 +10171,10 @@ operator|&
 name|F_OR
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" or"
 argument_list|)
 expr_stmt|;
@@ -9936,8 +10189,10 @@ condition|(
 name|or_block
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" }"
 argument_list|)
 expr_stmt|;
@@ -9949,6 +10204,8 @@ block|}
 block|}
 name|show_prerequisites
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|flags
 argument_list|,
@@ -9967,15 +10224,19 @@ if|if
 condition|(
 name|comment
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" // %s"
 argument_list|,
 name|comment
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -12421,6 +12682,15 @@ argument_list|,
 name|r
 argument_list|,
 name|cntr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|bp
+operator|->
+name|buf
 argument_list|)
 expr_stmt|;
 name|c
@@ -24028,6 +24298,15 @@ argument_list|,
 name|rule
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|bp
+operator|.
+name|buf
 argument_list|)
 expr_stmt|;
 name|bp_free

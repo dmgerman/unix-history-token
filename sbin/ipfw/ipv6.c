@@ -284,6 +284,11 @@ begin_function
 name|void
 name|print_ip6
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|ipfw_insn_ip6
 modifier|*
 name|cmd
@@ -333,8 +338,10 @@ index|[
 literal|255
 index|]
 decl_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s%s "
 argument_list|,
 name|cmd
@@ -371,8 +378,10 @@ operator|==
 name|O_IP6_DST_ME
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"me6"
 argument_list|)
 expr_stmt|;
@@ -389,8 +398,10 @@ operator|==
 name|O_IP6
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ip6"
 argument_list|)
 expr_stmt|;
@@ -495,8 +506,10 @@ operator|!=
 name|NULL
 condition|)
 comment|/* resolved to name */
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s"
 argument_list|,
 name|he
@@ -512,8 +525,10 @@ operator|==
 literal|0
 condition|)
 comment|/* any */
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"any"
 argument_list|)
 expr_stmt|;
@@ -538,13 +553,17 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"Error ntop in print_ip6\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%s"
 argument_list|,
 name|trad
@@ -557,8 +576,10 @@ operator|<
 literal|0
 condition|)
 comment|/* XXX not really legal... */
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|":%s"
 argument_list|,
 name|inet_ntop
@@ -587,8 +608,10 @@ name|mb
 operator|<
 literal|128
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"/%d"
 argument_list|,
 name|mb
@@ -601,8 +624,10 @@ name|len
 operator|>
 literal|2
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|","
 argument_list|)
 expr_stmt|;
@@ -757,6 +782,11 @@ begin_function
 name|void
 name|print_icmp6types
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|ipfw_insn_u32
 modifier|*
 name|cmd
@@ -772,8 +802,10 @@ name|sep
 init|=
 literal|' '
 decl_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" ip6 icmp6types"
 argument_list|)
 expr_stmt|;
@@ -826,8 +858,10 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%c%d"
 argument_list|,
 name|sep
@@ -853,6 +887,11 @@ begin_function
 name|void
 name|print_flow6id
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|ipfw_insn_u32
 modifier|*
 name|cmd
@@ -874,8 +913,10 @@ name|sep
 init|=
 literal|','
 decl_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" flow-id "
 argument_list|)
 expr_stmt|;
@@ -905,8 +946,10 @@ name|sep
 operator|=
 literal|' '
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%d%c"
 argument_list|,
 name|cmd
@@ -1180,6 +1223,11 @@ begin_function
 name|void
 name|print_ext6hdr
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|ipfw_insn
 modifier|*
 name|cmd
@@ -1190,8 +1238,10 @@ name|sep
 init|=
 literal|' '
 decl_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" extension header:"
 argument_list|)
 expr_stmt|;
@@ -1204,8 +1254,10 @@ operator|&
 name|EXT_FRAGMENT
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%cfragmentation"
 argument_list|,
 name|sep
@@ -1225,8 +1277,10 @@ operator|&
 name|EXT_HOPOPTS
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%chop options"
 argument_list|,
 name|sep
@@ -1246,8 +1300,10 @@ operator|&
 name|EXT_ROUTING
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%crouting options"
 argument_list|,
 name|sep
@@ -1267,8 +1323,10 @@ operator|&
 name|EXT_RTHDR0
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%crthdr0"
 argument_list|,
 name|sep
@@ -1288,8 +1346,10 @@ operator|&
 name|EXT_RTHDR2
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%crthdr2"
 argument_list|,
 name|sep
@@ -1309,8 +1369,10 @@ operator|&
 name|EXT_DSTOPTS
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%cdestination options"
 argument_list|,
 name|sep
@@ -1330,8 +1392,10 @@ operator|&
 name|EXT_AH
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%cauthentication header"
 argument_list|,
 name|sep
@@ -1351,8 +1415,10 @@ operator|&
 name|EXT_ESP
 condition|)
 block|{
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%cencapsulated security payload"
 argument_list|,
 name|sep

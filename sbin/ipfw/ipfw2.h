@@ -1194,6 +1194,11 @@ name|void
 name|print_ip6
 parameter_list|(
 name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
+name|struct
 name|_ipfw_insn_ip6
 modifier|*
 name|cmd
@@ -1211,6 +1216,11 @@ name|void
 name|print_flow6id
 parameter_list|(
 name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
+name|struct
 name|_ipfw_insn_u32
 modifier|*
 name|cmd
@@ -1223,6 +1233,11 @@ name|void
 name|print_icmp6types
 parameter_list|(
 name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
+name|struct
 name|_ipfw_insn_u32
 modifier|*
 name|cmd
@@ -1234,6 +1249,11 @@ begin_function_decl
 name|void
 name|print_ext6hdr
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|struct
 name|_ipfw_insn
 modifier|*
