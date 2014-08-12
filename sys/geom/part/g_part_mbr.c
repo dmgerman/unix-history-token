@@ -167,7 +167,7 @@ specifier|static
 name|u_int
 name|enforce_chs
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -185,7 +185,7 @@ argument_list|,
 operator|&
 name|enforce_chs
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Enforce alignment to CHS addressing"
 argument_list|)
