@@ -4621,6 +4621,14 @@ parameter_list|)
 value|sqlite3_api=v;
 end_define
 
+begin_define
+define|#
+directive|define
+name|SQLITE_EXTENSION_INIT3
+define|\
+value|extern const sqlite3_api_routines *sqlite3_api;
+end_define
+
 begin_else
 else|#
 directive|else
@@ -4652,6 +4660,16 @@ end_define
 
 begin_comment
 comment|/* unused parameter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQLITE_EXTENSION_INIT3
+end_define
+
+begin_comment
+comment|/*no-op*/
 end_comment
 
 begin_endif
