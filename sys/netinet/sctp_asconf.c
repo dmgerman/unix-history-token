@@ -3454,12 +3454,6 @@ block|{
 case|case
 name|SCTP_ADD_IP_ADDRESS
 case|:
-name|asoc
-operator|->
-name|peer_supports_asconf
-operator|=
-literal|1
-expr_stmt|;
 name|m_result
 operator|=
 name|sctp_process_asconf_add_ip
@@ -3489,12 +3483,6 @@ break|break;
 case|case
 name|SCTP_DEL_IP_ADDRESS
 case|:
-name|asoc
-operator|->
-name|peer_supports_asconf
-operator|=
-literal|1
-expr_stmt|;
 name|m_result
 operator|=
 name|sctp_process_asconf_delete_ip
@@ -3517,12 +3505,6 @@ break|break;
 case|case
 name|SCTP_SET_PRIM_ADDR
 case|:
-name|asoc
-operator|->
-name|peer_supports_asconf
-operator|=
-literal|1
-expr_stmt|;
 name|m_result
 operator|=
 name|sctp_process_asconf_set_primary
@@ -4331,15 +4313,6 @@ modifier|*
 name|net
 parameter_list|)
 block|{
-comment|/* mark peer as ASCONF incapable */
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_asconf
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * clear out any existing asconfs going out 	 */
 name|sctp_timer_stop
 argument_list|(
@@ -6162,7 +6135,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_asconf
+name|asconf_supported
 operator|==
 literal|0
 condition|)
@@ -6499,7 +6472,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_asconf
+name|asconf_supported
 operator|==
 literal|0
 condition|)
@@ -7085,6 +7058,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_asconf_paramhdr
@@ -7248,26 +7222,9 @@ case|:
 case|case
 name|SCTP_DEL_IP_ADDRESS
 case|:
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_asconf
-operator|=
-literal|0
-expr_stmt|;
-break|break;
 case|case
 name|SCTP_SET_PRIM_ADDR
 case|:
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_asconf
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 default|default:
 break|break;
@@ -7365,20 +7322,6 @@ literal|"process_param_ack: set primary IP address\n"
 argument_list|)
 expr_stmt|;
 comment|/* nothing to do... peer may start using this addr */
-if|if
-condition|(
-name|flag
-operator|==
-literal|0
-condition|)
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_asconf
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 default|default:
 comment|/* should NEVER happen */
@@ -7435,17 +7378,10 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 comment|/* assume peer doesn't really know how to do asconfs */
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|peer_supports_asconf
-operator|=
-literal|0
-expr_stmt|;
 comment|/* XXX we could free the pending queue here */
 block|}
 end_function
@@ -8752,7 +8688,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_asconf
+name|asconf_supported
 condition|)
 block|{
 comment|/* queue an asconf for this addr */
@@ -9817,7 +9753,9 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_asconf
+name|asconf_supported
+operator|==
+literal|1
 condition|)
 block|{
 comment|/* queue an asconf for this addr */
@@ -12823,7 +12761,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_asconf
+name|asconf_supported
 condition|)
 block|{
 comment|/* queue an ASCONF DEL_IP_ADDRESS */
