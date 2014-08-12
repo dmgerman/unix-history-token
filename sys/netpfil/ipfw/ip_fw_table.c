@@ -2077,7 +2077,15 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Ensure we are able to add all entries without additional 	 * memory allocations. May release/reacquire UH_WLOCK. 	 */
+comment|/* Drop reference we've used in first search */
+name|tc
+operator|->
+name|no
+operator|.
+name|refcnt
+operator|--
+expr_stmt|;
+comment|/* 	 * Ensure we are able to add all entries without additional 	 * memory allocations. May release/reacquire UH_WLOCK. 	 * check_table_space() guarantees us @tc won't disappear 	 * by referencing it internally. 	 */
 name|kidx
 operator|=
 name|tc
@@ -2120,14 +2128,29 @@ goto|goto
 name|cleanup
 goto|;
 block|}
-comment|/* Drop reference we've used in first search */
+comment|/* 	 * Check if table algo is still the same. 	 * (changed ta may be the result of table swap). 	 */
+if|if
+condition|(
+name|ta
+operator|!=
 name|tc
 operator|->
-name|no
-operator|.
-name|refcnt
-operator|--
+name|ta
+condition|)
+block|{
+name|IPFW_UH_WUNLOCK
+argument_list|(
+name|ch
+argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 comment|/* We've got valid table in @tc. Let's try to add data */
 name|kidx
 operator|=
@@ -2530,6 +2553,29 @@ operator|.
 name|refcnt
 operator|--
 expr_stmt|;
+comment|/* 	 * Check if table algo is still the same. 	 * (changed ta may be the result of table swap). 	 */
+if|if
+condition|(
+name|ta
+operator|!=
+name|tc
+operator|->
+name|ta
+condition|)
+block|{
+name|IPFW_UH_WUNLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 name|kidx
 operator|=
 name|tc
@@ -4904,7 +4950,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Swaps two tables of the same type/valtype.  *  * Checks if tables are compatible and limits  * permits swap, than actually perform swap  * by switching  * 1) runtime data (ch->tablestate)  * 2) runtime cache in @tc  * 3) algo-specific data (tc->astate)  * 4) number of items  *  * Since @ti has changed for each table, calls notification callbacks.  *  * Returns 0 on success.  */
+comment|/*  * Swaps two tables of the same type/valtype.  *  * Checks if tables are compatible and limits  * permits swap, than actually perform swap.  *  * Each table consists of 2 different parts:  * config:  *   @tc (with name, set, kidx) and rule bindings, which is "stable".  *   number of items  *   table algo  * runtime:  *   runtime data @ti (ch->tablestate)  *   runtime cache in @tc  *   algo-specific data (@tc->astate)  *  * So we switch:  *  all runtime data  *   number of items  *   table algo  *  * After that we call @ti change handler for each table.  *  * Note that referencing @tc won't protect tc->ta from change.  * XXX: Do we need to restrict swap between locked tables?  * XXX: Do we need to exchange ftype?  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -6310,6 +6356,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Lookup an IP @addr in table @tbl.  * Stores found value in @val.  *  * Returns 1 if @addr was found.  */
+end_comment
+
 begin_function
 name|int
 name|ipfw_lookup_table
@@ -6337,22 +6387,12 @@ name|ti
 decl_stmt|;
 name|ti
 operator|=
-operator|&
-operator|(
-operator|(
-operator|(
-expr|struct
-name|table_info
-operator|*
-operator|)
+name|KIDX_TO_TI
+argument_list|(
 name|ch
-operator|->
-name|tablestate
-operator|)
-index|[
+argument_list|,
 name|tbl
-index|]
-operator|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6376,6 +6416,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Lookup an arbtrary key @paddr of legth @plen in table @tbl.  * Stores found value in @val.  *  * Returns 1 if key was found.  */
+end_comment
 
 begin_function
 name|int
@@ -6408,22 +6452,12 @@ name|ti
 decl_stmt|;
 name|ti
 operator|=
-operator|&
-operator|(
-operator|(
-operator|(
-expr|struct
-name|table_info
-operator|*
-operator|)
+name|KIDX_TO_TI
+argument_list|(
 name|ch
-operator|->
-name|tablestate
-operator|)
-index|[
+argument_list|,
 name|tbl
-index|]
-operator|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7267,7 +7301,6 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|table_algo
 modifier|*
@@ -10461,7 +10494,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unregisters table algo using @idx as id.  */
+comment|/*  * Unregisters table algo using @idx as id.  * XXX: It is NOT safe to call this function in any place  * other than ipfw instance destroy handler.  */
 end_comment
 
 begin_function
@@ -10838,7 +10871,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Tables rewriting code   *  */
+comment|/*  * Tables rewriting code   */
 end_comment
 
 begin_comment
