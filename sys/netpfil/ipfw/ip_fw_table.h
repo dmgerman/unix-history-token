@@ -416,7 +416,7 @@ begin_typedef
 typedef|typedef
 name|int
 function_decl|(
-name|ta_has_space
+name|ta_need_modify
 function_decl|)
 parameter_list|(
 name|void
@@ -485,7 +485,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
+name|void
 function_decl|(
 name|ta_modify
 function_decl|)
@@ -733,9 +733,9 @@ name|ta_find_tentry
 modifier|*
 name|find_tentry
 decl_stmt|;
-name|ta_has_space
+name|ta_need_modify
 modifier|*
-name|has_space
+name|need_modify
 decl_stmt|;
 name|ta_prepare_mod
 modifier|*

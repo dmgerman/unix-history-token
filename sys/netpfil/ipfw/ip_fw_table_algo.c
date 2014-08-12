@@ -158,6 +158,10 @@ directive|include
 file|<netpfil/ipfw/ip_fw_table.h>
 end_include
 
+begin_comment
+comment|/*  * IPFW table lookup algorithms.  *  * What is needed to add another table algo?  *  * Algo init:  * * struct table_algo has to be filled with:  *   name: "type:algoname" format, e.g. "cidr:radix". Currently  *     there are the following types: "cidr", "iface", "number" and "flow".  *   type: one of IPFW_TABLE_* types  *   flags: one or more TA_FLAGS_*  *   ta_buf_size: size of structure used to store add/del item state.  *     Needs to be less than TA_BUF_SZ.  *   callbacks: see below for description.  * * ipfw_add_table_algo / ipfw_del_table_algo has to be called  *  * Callbacks description:  *  * -init: request to initialize new table instance.  * typedef int (ta_init)(struct ip_fw_chain *ch, void **ta_state,  *     struct table_info *ti, char *data, uint8_t tflags);  * MANDATORY, unlocked. (M_WAITOK). Returns 0 on success.  *  *  Allocate all structures needed for normal operations.  *  * Caller may want to parse @data for some algo-specific  *    options provided by userland.  *  * Caller may want to save configuration state pointer to @ta_state  *  * Caller needs to save desired runtime structure pointer(s)  *    inside @ti fields. Note that it is not correct to save  *    @ti pointer at this moment. Use -change_ti hook for that.  *  * Caller has to fill in ti->lookup to appropriate function  *    pointer.  *  *  *  * -destroy: request to destroy table instance.  * typedef void (ta_destroy)(void *ta_state, struct table_info *ti);  * MANDATORY, may be locked (UH+WLOCK). (M_NOWAIT).  *  * Frees all table entries and all tables structures allocated by -init.  *  *  *  * -prepare_add: request to allocate state for adding new entry.  * typedef int (ta_prepare_add)(struct ip_fw_chain *ch, struct tentry_info *tei,  *     void *ta_buf);  * MANDATORY, unlocked. (M_WAITOK). Returns 0 on success.  *  * Buffer ta_buf of size ta->ta_buf_sz may be used to store  * allocated state.  *  *  *  * -prepare_del: request to set state for deleting existing entry.  * typedef int (ta_prepare_del)(struct ip_fw_chain *ch, struct tentry_info *tei,  *     void *ta_buf);  * MANDATORY, locked, UH. (M_NOWAIT). Returns 0 on success.  *  * Buffer ta_buf of size ta->ta_buf_sz may be used to store  * allocated state. Caller should use on-stack ta_buf allocation  * instead of doing malloc().  *  *  *  * -add: request to insert new entry into runtime/config structures.  *  typedef int (ta_add)(void *ta_state, struct table_info *ti,  *     struct tentry_info *tei, void *ta_buf, uint32_t *pnum);  * MANDATORY, UH+WLOCK. (M_NOWAIT). Returns 0 on success.  *  * Insert new entry using previously-allocated state in @ta_buf.  * * @tei may have the following flags:  *   TEI_FLAGS_UPDATE: request to add or update entry.  *   TEI_FLAGS_DONTADD: request to update (but not add) entry.  * * Caller is required to do the following:  *   entry added: return 0, set 1 to @pnum  *   entry updated: return 0, store 0 to @pnum, store old value in @tei,  *     add TEI_FLAGS_UPDATED flag to @tei.  *   entry exists: return EEXIST  *   entry not found: return ENOENT  *   other error: return non-zero error code.  *  *  *  * -del: request to delete existing entry from runtime/config structures.  *  typedef int (ta_del)(void *ta_state, struct table_info *ti,  *     struct tentry_info *tei, void *ta_buf, uint32_t *pnum);  *  MANDATORY, UH+WLOCK. (M_NOWAIT). Returns 0 on success.  *  *  Delete entry using previously set up in @ta_buf.  * * Caller is required to do the following:  *   entry deleted: return 0, set 1 to @pnum  *   entry not found: return ENOENT  *   other error: return non-zero error code.  *  *  *  * -flush_entry: flush entry state created by -prepare_add / -del / others  *  typedef void (ta_flush_entry)(struct ip_fw_chain *ch,  *      struct tentry_info *tei, void *ta_buf);  *  MANDATORY, may be locked. (M_NOWAIT).  *  *  Delete state allocated by:  *  -prepare_add (-add returned EEXIST|UPDATED)  *  -prepare_del (if any)  *  -del  *  * Caller is required to handle empty @ta_buf correctly.  *  *  * -find_tentry: finds entry specified by key @tei  *  typedef int ta_find_tentry(void *ta_state, struct table_info *ti,  *      ipfw_obj_tentry *tent);  *  OPTIONAL, locked (UH). (M_NOWAIT). Returns 0 on success.  *  *  Finds entry specified by given key.  *  * Caller is requred to do the following:  *    entry found: returns 0, export entry to @tent  *    entry not found: returns ENOENT  *  *  * -need_modify: checks if @ti has enough space to hold another @count items.  *  typedef int (ta_need_modify)(void *ta_state, struct table_info *ti,  *      uint32_t count, uint64_t *pflags);  *  MANDATORY, locked (UH). (M_NOWAIT). Returns 0 if has.  *  *  Checks if given table has enough space to add @count items without  *  resize. Caller may use @pflags to store desired modification data.  *  *  *  * -prepare_mod: allocate structures for table modification.  *  typedef int (ta_prepare_mod)(void *ta_buf, uint64_t *pflags);  * MANDATORY, unlocked. (M_WAITOK). Returns 0 on success.  *  * Allocate all needed state for table modification. Caller  * should use `struct mod_item` to store new state in @ta_buf.  * Up to TA_BUF_SZ (128 bytes) can be stored in @ta_buf.  *   *  *  * -fill_mod: copy some data to new state/  *  typedef int (ta_fill_mod)(void *ta_state, struct table_info *ti,  *      void *ta_buf, uint64_t *pflags);  * MANDATORY, locked (UH). (M_NOWAIT). Returns 0 on success.  *  * Copy as much data as we can to minimize changes under WLOCK.  * For example, array can be merged inside this callback.  *  *  *  * -modify: perform final modification.  *  typedef void (ta_modify)(void *ta_state, struct table_info *ti,  *      void *ta_buf, uint64_t pflags);  * MANDATORY, locked (UH+WLOCK). (M_NOWAIT).   *  * Performs all changes necessary to switch to new structures.  * * Caller should save old pointers to @ta_buf storage.  *  *  *  * -flush_mod: flush table modification state.  *  typedef void (ta_flush_mod)(void *ta_buf);  * MANDATORY, unlocked. (M_WAITOK).  *  * Performs flush for the following:  *   - prepare_mod (modification was not necessary)  *   - modify (for the old state)  *  *  *  * -change_gi: monitor table info pointer changes  * typedef void (ta_change_ti)(void *ta_state, struct table_info *ti);  * OPTIONAL, locked (UH). (M_NOWAIT).  *  * Called on @ti pointer changed. Called immediately after -init  * to set initial state.  *  *  *  * -foreach: calls @f for each table entry  *  typedef void ta_foreach(void *ta_state, struct table_info *ti,  *      ta_foreach_f *f, void *arg);  * MANDATORY, locked(UH). (M_NOWAIT).  *  * Runs callback with specified argument for each table entry,  * Typically used for dumping table entries.  *  *  *  * -dump_tentry: dump table entry in current @tentry format.  *  typedef int ta_dump_tentry(void *ta_state, struct table_info *ti, void *e,  *      ipfw_obj_tentry *tent);  * MANDATORY, locked(UH). (M_NOWAIT). Returns 0 on success.  *  * Dumps entry @e to @tent.  *  *  * -print_config: prints custom algoritm options into buffer.  *  typedef void (ta_print_config)(void *ta_state, struct table_info *ti,  *      char *buf, size_t bufsize);  * OPTIONAL. locked(UH). (M_NOWAIT).  *  * Prints custom algorithm options in the format suitable to pass  * back to -init callback.  *  *  *  * -dump_tinfo: dumps algo-specific info.  *  typedef void ta_dump_tinfo(void *ta_state, struct table_info *ti,  *      ipfw_ta_tinfo *tinfo);  * OPTIONAL. locked(UH). (M_NOWAIT).  *  * Dumps options like items size/hash size, etc.  */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -2955,7 +2959,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ta_has_space_radix
+name|ta_need_modify_radix
 parameter_list|(
 name|void
 modifier|*
@@ -2977,7 +2981,7 @@ block|{
 comment|/* 	 * radix does not require additional memory allocations 	 * other than nodes itself. Adding new masks to the tree do 	 * but we don't have any API to call (and we don't known which 	 * sizes do we need). 	 */
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -3069,9 +3073,9 @@ operator|=
 name|ta_dump_radix_tinfo
 block|,
 operator|.
-name|has_space
+name|need_modify
 operator|=
-name|ta_has_space_radix
+name|ta_need_modify_radix
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -7097,7 +7101,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ta_has_space_chash
+name|ta_need_modify_chash
 parameter_list|(
 name|void
 modifier|*
@@ -7204,13 +7208,13 @@ name|data
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -7463,7 +7467,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ta_modify_chash
 parameter_list|(
 name|void
@@ -7842,11 +7846,6 @@ operator|->
 name|size6
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -8001,9 +8000,9 @@ operator|=
 name|ta_dump_chash_tinfo
 block|,
 operator|.
-name|has_space
+name|need_modify
 operator|=
-name|ta_has_space_chash
+name|ta_need_modify_chash
 block|,
 operator|.
 name|prepare_mod
@@ -10255,7 +10254,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ta_has_space_ifidx
+name|ta_need_modify_ifidx
 parameter_list|(
 name|void
 modifier|*
@@ -10327,13 +10326,13 @@ name|size
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -10535,7 +10534,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ta_modify_ifidx
 parameter_list|(
 name|void
@@ -10623,11 +10622,6 @@ name|main_ptr
 operator|=
 name|old_ptr
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -11104,9 +11098,9 @@ operator|=
 name|ta_dump_ifidx_tinfo
 block|,
 operator|.
-name|has_space
+name|need_modify
 operator|=
-name|ta_has_space_ifidx
+name|ta_need_modify_ifidx
 block|,
 operator|.
 name|prepare_mod
@@ -12150,7 +12144,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ta_has_space_numarray
+name|ta_need_modify_numarray
 parameter_list|(
 name|void
 modifier|*
@@ -12222,13 +12216,13 @@ name|size
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -12430,7 +12424,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ta_modify_numarray
 parameter_list|(
 name|void
@@ -12518,11 +12512,6 @@ name|main_ptr
 operator|=
 name|old_ptr
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -12882,9 +12871,9 @@ operator|=
 name|ta_dump_numarray_tinfo
 block|,
 operator|.
-name|has_space
+name|need_modify
 operator|=
-name|ta_has_space_numarray
+name|ta_need_modify_numarray
 block|,
 operator|.
 name|prepare_mod
@@ -15902,7 +15891,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ta_has_space_fhash
+name|ta_need_modify_fhash
 parameter_list|(
 name|void
 modifier|*
@@ -15963,13 +15952,13 @@ literal|2
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -16136,7 +16125,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ta_modify_fhash
 parameter_list|(
 name|void
@@ -16209,7 +16198,6 @@ operator|*
 operator|)
 name|ta_state
 expr_stmt|;
-comment|/* Check which hash we need to grow and do we still need that */
 name|old_size
 operator|=
 name|cfg
@@ -16222,19 +16210,6 @@ name|ti
 operator|->
 name|state
 expr_stmt|;
-if|if
-condition|(
-name|old_size
-operator|>=
-name|mi
-operator|->
-name|size
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|new_head
 operator|=
 operator|(
@@ -16331,11 +16306,6 @@ name|main_ptr
 operator|=
 name|old_head
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -16473,9 +16443,9 @@ operator|=
 name|ta_dump_fhash_tinfo
 block|,
 operator|.
-name|has_space
+name|need_modify
 operator|=
-name|ta_has_space_fhash
+name|ta_need_modify_fhash
 block|,
 operator|.
 name|prepare_mod

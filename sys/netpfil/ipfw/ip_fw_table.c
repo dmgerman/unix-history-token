@@ -2721,7 +2721,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Ensure that table @tc has enough space to add @count entries without  * need for reallocation.  *  * Callbacks order:  * 0) has_space() (UH_WLOCK) - checks if @count items can be added w/o resize.  *  * 1) alloc_modify (no locks, M_WAITOK) - alloc new state based on @pflags.  * 2) prepare_modifyt (UH_WLOCK) - copy old data into new storage  * 3) modify (UH_WLOCK + WLOCK) - switch pointers  * 4) flush_modify (UH_WLOCK) - free state, if needed  *  * Returns 0 on success.  */
+comment|/*  * Ensure that table @tc has enough space to add @count entries without  * need for reallocation.  *  * Callbacks order:  * 0) need_modify() (UH_WLOCK) - checks if @count items can be added w/o resize.  *  * 1) alloc_modify (no locks, M_WAITOK) - alloc new state based on @pflags.  * 2) prepare_modifyt (UH_WLOCK) - copy old data into new storage  * 3) modify (UH_WLOCK + WLOCK) - switch pointers  * 4) flush_modify (UH_WLOCK) - free state, if needed  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -2802,7 +2802,7 @@ if|if
 condition|(
 name|ta
 operator|->
-name|has_space
+name|need_modify
 argument_list|(
 name|tc
 operator|->
@@ -2815,7 +2815,7 @@ argument_list|,
 operator|&
 name|pflags
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
@@ -2893,7 +2893,7 @@ if|if
 condition|(
 name|ta
 operator|->
-name|has_space
+name|need_modify
 argument_list|(
 name|tc
 operator|->
@@ -2906,10 +2906,15 @@ argument_list|,
 operator|&
 name|pflags
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
+name|IPFW_UH_WUNLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Other thread has already performed resize. 			 * Flush our state and return. 			 */
 name|ta
 operator|->
