@@ -649,6 +649,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|match_token_relaxed
+parameter_list|(
+name|struct
+name|_s_x
+modifier|*
+name|table
+parameter_list|,
+name|char
+modifier|*
+name|string
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 specifier|const
 modifier|*

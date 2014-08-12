@@ -54,16 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stddef.h>
-end_include
-
-begin_comment
-comment|/* offsetof */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -85,37 +75,11 @@ directive|include
 file|<sysexits.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|IPFW_INTERNAL
-end_define
-
-begin_comment
-comment|/* Access to protected structures in ip_fw.h. */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<net/if.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
-begin_comment
-comment|/* def. of struct route */
-end_comment
 
 begin_include
 include|#
@@ -133,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<alias.h>
 end_include
 
 begin_include
@@ -873,8 +831,74 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|get_token
+parameter_list|(
+name|struct
+name|_s_x
+modifier|*
+name|table
+parameter_list|,
+name|char
+modifier|*
+name|string
+parameter_list|,
+name|char
+modifier|*
+name|errbase
+parameter_list|)
+block|{
+name|int
+name|tcmd
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|tcmd
+operator|=
+name|match_token_relaxed
+argument_list|(
+name|table
+argument_list|,
+name|string
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"%s %s %s"
+argument_list|,
+operator|(
+name|tcmd
+operator|==
+literal|0
+operator|)
+condition|?
+literal|"invalid"
+else|:
+literal|"ambiguous"
+argument_list|,
+name|errbase
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|tcmd
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * This one handles all table-related commands  * 	ipfw table NAME create ...  * 	ipfw table NAME destroy  * 	ipfw table NAME add addr[/masklen] [value]  * 	ipfw table NAME delete addr[/masklen]  * 	ipfw table {NAME | all} flush  * 	ipfw table {NAME | all} list  * 	ipfw table {NAME | all} info  */
+comment|/*  * This one handles all table-related commands  * 	ipfw table NAME create ...  * 	ipfw table NAME modify ...  * 	ipfw table NAME destroy  * 	ipfw table NAME swap NAME  * 	ipfw table NAME lock  * 	ipfw table NAME unlock  * 	ipfw table NAME add addr[/masklen] [value]   * 	ipfw table NAME add [addr[/masklen] value] [addr[/masklen] value] ..  * 	ipfw table NAME delete addr[/masklen] [addr[/masklen]] ..  * 	ipfw table NAME lookup addr  * 	ipfw table {NAME | all} flush  * 	ipfw table {NAME | all} list  * 	ipfw table {NAME | all} info  * 	ipfw table {NAME | all} detail  */
 end_comment
 
 begin_function
@@ -1044,31 +1068,16 @@ argument_list|(
 literal|"table needs command"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|tcmd
 operator|=
-name|match_token
+name|get_token
 argument_list|(
 name|tablecmds
 argument_list|,
 operator|*
 name|av
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
 argument_list|,
-literal|"invalid table command %s"
-argument_list|,
-operator|*
-name|av
+literal|"table command"
 argument_list|)
 expr_stmt|;
 comment|/* Check if atomic operation was requested */
@@ -1094,31 +1103,16 @@ argument_list|(
 literal|"atomic needs command"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|tcmd
 operator|=
-name|match_token
+name|get_token
 argument_list|(
 name|tablecmds
 argument_list|,
 operator|*
 name|av
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
 argument_list|,
-literal|"invalid table command %s"
-argument_list|,
-operator|*
-name|av
+literal|"table command"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2058,31 +2052,16 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|tcmd
 operator|=
-name|match_token
+name|get_token
 argument_list|(
 name|tablenewcmds
 argument_list|,
 operator|*
 name|av
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
 argument_list|,
-literal|"unknown option: %s"
-argument_list|,
-operator|*
-name|av
+literal|"option"
 argument_list|)
 expr_stmt|;
 name|ac
@@ -2645,31 +2624,16 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|tcmd
 operator|=
-name|match_token
+name|get_token
 argument_list|(
 name|tablenewcmds
 argument_list|,
 operator|*
 name|av
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
 argument_list|,
-literal|"unknown option: %s"
-argument_list|,
-operator|*
-name|av
+literal|"option"
 argument_list|)
 expr_stmt|;
 name|ac
