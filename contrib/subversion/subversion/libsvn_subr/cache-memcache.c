@@ -605,19 +605,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|svn_string_t
+name|svn_stringbuf_t
 modifier|*
 name|value
 init|=
-name|apr_pcalloc
+name|svn_stringbuf_create_empty
 argument_list|(
 name|result_pool
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|value
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|value
@@ -628,10 +622,19 @@ name|data
 expr_stmt|;
 name|value
 operator|->
-name|len
+name|blocksize
 operator|=
 name|data_len
 expr_stmt|;
+name|value
+operator|->
+name|len
+operator|=
+name|data_len
+operator|-
+literal|1
+expr_stmt|;
+comment|/* account for trailing NUL */
 operator|*
 name|value_p
 operator|=
@@ -859,7 +862,10 @@ operator|=
 name|value_str
 operator|->
 name|len
+operator|+
+literal|1
 expr_stmt|;
+comment|/* copy trailing NUL */
 block|}
 name|err
 operator|=

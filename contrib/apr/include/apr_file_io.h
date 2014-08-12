@@ -126,12 +126,12 @@ define|#
 directive|define
 name|APR_FOPEN_BINARY
 value|0x00020
-comment|/**< Open the file in binary mode */
+comment|/**< Open the file in binary mode 				         (This flag is ignored on UNIX  					 because it has no meaning)*/
 define|#
 directive|define
 name|APR_FOPEN_EXCL
 value|0x00040
-comment|/**< Open should fail if APR_CREATE                                          and file exists. */
+comment|/**< Open should fail if #APR_FOPEN_CREATE                                          and file exists. */
 define|#
 directive|define
 name|APR_FOPEN_BUFFERED
@@ -156,7 +156,7 @@ define|#
 directive|define
 name|APR_FOPEN_NOCLEANUP
 value|0x00800
-comment|/**< Do not register a cleanup                                          when the file is opened */
+comment|/**< Do not register a cleanup                                          when the file is opened. The 					 apr_os_file_t handle in apr_file_t 					 will not be closed when the pool 					 is destroyed. */
 define|#
 directive|define
 name|APR_FOPEN_SENDFILE_ENABLED
@@ -172,6 +172,11 @@ directive|define
 name|APR_FOPEN_SPARSE
 value|0x08000
 comment|/**< Platform dependent flag to enable                                        * sparse file support, see WARNING below                                        */
+define|#
+directive|define
+name|APR_FOPEN_NONBLOCK
+value|0x40000
+comment|/**< Platform dependent flag to enable                                        * non blocking file io */
 comment|/* backcompat */
 define|#
 directive|define
@@ -243,7 +248,7 @@ directive|define
 name|APR_LARGEFILE
 value|APR_FOPEN_LARGEFILE
 comment|/**< @deprecated @see APR_FOPEN_LARGEFILE */
-comment|/** @warning APR_FOPEN_LARGEFILE flag only has effect on some  * platforms where sizeof(apr_off_t) == 4.  Where implemented, it  * allows opening and writing to a file which exceeds the size which  * can be represented by apr_off_t (2 gigabytes).  When a file's size  * does exceed 2Gb, apr_file_info_get() will fail with an error on the  * descriptor, likewise apr_stat()/apr_lstat() will fail on the  * filename.  apr_dir_read() will fail with APR_INCOMPLETE on a  * directory entry for a large file depending on the particular  * APR_FINFO_* flags.  Generally, it is not recommended to use this  * flag.  *  * @warning APR_FOPEN_SPARSE may, depending on platform, convert a  * normal file to a sparse file.  Some applications may be unable  * to decipher a sparse file, so it's critical that the sparse file  * flag should only be used for files accessed only by APR or other  * applications known to be able to decipher them.  APR does not  * guarantee that it will compress the file into sparse segments  * if it was previously created and written without the sparse flag.  * On platforms which do not understand, or on file systems which  * cannot handle sparse files, the flag is ignored by apr_file_open().  */
+comment|/** @def APR_FOPEN_LARGEFILE   * @warning APR_FOPEN_LARGEFILE flag only has effect on some  * platforms where sizeof(apr_off_t) == 4.  Where implemented, it  * allows opening and writing to a file which exceeds the size which  * can be represented by apr_off_t (2 gigabytes).  When a file's size  * does exceed 2Gb, apr_file_info_get() will fail with an error on the  * descriptor, likewise apr_stat()/apr_lstat() will fail on the  * filename.  apr_dir_read() will fail with #APR_INCOMPLETE on a  * directory entry for a large file depending on the particular  * APR_FINFO_* flags.  Generally, it is not recommended to use this  * flag.  *  * @def APR_FOPEN_SPARSE  * @warning APR_FOPEN_SPARSE may, depending on platform, convert a  * normal file to a sparse file.  Some applications may be unable  * to decipher a sparse file, so it's critical that the sparse file  * flag should only be used for files accessed only by APR or other  * applications known to be able to decipher them.  APR does not  * guarantee that it will compress the file into sparse segments  * if it was previously created and written without the sparse flag.  * On platforms which do not understand, or on file systems which  * cannot handle sparse files, the flag is ignored by apr_file_open().  *  * @def APR_FOPEN_NONBLOCK  * @warning APR_FOPEN_NONBLOCK is not implemented on all platforms.  * Callers should be prepared for it to fail with #APR_ENOTIMPL.  */
 comment|/** @} */
 comment|/**  * @defgroup apr_file_seek_flags File Seek Flags  * @{  */
 comment|/* flags for apr_file_seek */
@@ -361,7 +366,7 @@ name|APR_FLOCK_NONBLOCK
 value|0x0010
 comment|/**< do not block while acquiring the                                            file lock */
 comment|/** @} */
-comment|/**  * Open the specified file.  * @param newf The opened file descriptor.  * @param fname The full path to the file (using / on all systems)  * @param flag Or'ed value of:  *<PRE>  *         APR_READ              open for reading  *         APR_WRITE             open for writing  *         APR_CREATE            create the file if not there  *         APR_APPEND            file ptr is set to end prior to all writes  *         APR_TRUNCATE          set length to zero if file exists  *         APR_BINARY            not a text file (This flag is ignored on   *                               UNIX because it has no meaning)  *         APR_BUFFERED          buffer the data.  Default is non-buffered  *         APR_EXCL              return error if APR_CREATE and file exists  *         APR_DELONCLOSE        delete the file after closing.  *         APR_XTHREAD           Platform dependent tag to open the file  *                               for use across multiple threads  *         APR_SHARELOCK         Platform dependent support for higher  *                               level locked read/write access to support  *                               writes across process/machines  *         APR_FILE_NOCLEANUP    Do not register a cleanup with the pool   *                               passed in on the<EM>pool</EM> argument (see below).  *                               The apr_os_file_t handle in apr_file_t will not  *                               be closed when the pool is destroyed.  *         APR_SENDFILE_ENABLED  Open with appropriate platform semantics  *                               for sendfile operations.  Advisory only,  *                               apr_socket_sendfile does not check this flag.  *</PRE>  * @param perm Access permissions for file.  * @param pool The pool to use.  * @remark If perm is APR_OS_DEFAULT and the file is being created,  * appropriate default permissions will be used.  * @remark By default, the returned file descriptor will not be  * inherited by child processes created by apr_proc_create().  This  * can be changed using apr_file_inherit_set().  */
+comment|/**  * Open the specified file.  * @param newf The opened file descriptor.  * @param fname The full path to the file (using / on all systems)  * @param flag Or'ed value of:  * @li #APR_FOPEN_READ           open for reading  * @li #APR_FOPEN_WRITE          open for writing  * @li #APR_FOPEN_CREATE         create the file if not there  * @li #APR_FOPEN_APPEND         file ptr is set to end prior to all writes  * @li #APR_FOPEN_TRUNCATE       set length to zero if file exists  * @li #APR_FOPEN_BINARY         not a text file  * @li #APR_FOPEN_BUFFERED       buffer the data.  Default is non-buffered  * @li #APR_FOPEN_EXCL           return error if #APR_FOPEN_CREATE and file exists  * @li #APR_FOPEN_DELONCLOSE     delete the file after closing  * @li #APR_FOPEN_XTHREAD        Platform dependent tag to open the file  *                               for use across multiple threads  * @li #APR_FOPEN_SHARELOCK      Platform dependent support for higher  *                               level locked read/write access to support  *                               writes across process/machines  * @li #APR_FOPEN_NOCLEANUP      Do not register a cleanup with the pool   *                               passed in on the @a pool argument (see below)  * @li #APR_FOPEN_SENDFILE_ENABLED  Open with appropriate platform semantics  *                               for sendfile operations.  Advisory only,  *                               apr_socket_sendfile does not check this flag  * @li #APR_FOPEN_LARGEFILE      Platform dependent flag to enable large file  *                               support, see WARNING below   * @li #APR_FOPEN_SPARSE         Platform dependent flag to enable sparse file  *                               support, see WARNING below  * @li #APR_FOPEN_NONBLOCK       Platform dependent flag to enable  *                               non blocking file io  * @param perm Access permissions for file.  * @param pool The pool to use.  * @remark If perm is #APR_FPROT_OS_DEFAULT and the file is being created,  * appropriate default permissions will be used.  * @remark By default, the returned file descriptor will not be  * inherited by child processes created by apr_proc_create().  This  * can be changed using apr_file_inherit_set().  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -448,7 +453,7 @@ operator|*
 name|to_path
 argument_list|)
 expr_stmt|;
-comment|/**  * Copy the specified file to another file.  * @param from_path The full path to the original file (using / on all systems)  * @param to_path The full path to the new file (using / on all systems)  * @param perms Access permissions for the new file if it is created.  *     In place of the usual or'd combination of file permissions, the  *     value APR_FILE_SOURCE_PERMS may be given, in which case the source  *     file's permissions are copied.  * @param pool The pool to use.  * @remark The new file does not need to exist, it will be created if required.  * @warning If the new file already exists, its contents will be overwritten.  */
+comment|/**  * Copy the specified file to another file.  * @param from_path The full path to the original file (using / on all systems)  * @param to_path The full path to the new file (using / on all systems)  * @param perms Access permissions for the new file if it is created.  *     In place of the usual or'd combination of file permissions, the  *     value #APR_FPROT_FILE_SOURCE_PERMS may be given, in which case the source  *     file's permissions are copied.  * @param pool The pool to use.  * @remark The new file does not need to exist, it will be created if required.  * @warning If the new file already exists, its contents will be overwritten.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -464,7 +469,7 @@ argument_list|,
 argument|apr_pool_t *pool
 argument_list|)
 empty_stmt|;
-comment|/**  * Append the specified file to another file.  * @param from_path The full path to the source file (use / on all systems)  * @param to_path The full path to the destination file (use / on all systems)  * @param perms Access permissions for the destination file if it is created.  *     In place of the usual or'd combination of file permissions, the  *     value APR_FILE_SOURCE_PERMS may be given, in which case the source  *     file's permissions are copied.  * @param pool The pool to use.  * @remark The new file does not need to exist, it will be created if required.  */
+comment|/**  * Append the specified file to another file.  * @param from_path The full path to the source file (use / on all systems)  * @param to_path The full path to the destination file (use / on all systems)  * @param perms Access permissions for the destination file if it is created.  *     In place of the usual or'd combination of file permissions, the  *     value #APR_FPROT_FILE_SOURCE_PERMS may be given, in which case the source  *     file's permissions are copied.  * @param pool The pool to use.  * @remark The new file does not need to exist, it will be created if required.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -480,7 +485,7 @@ argument_list|,
 argument|apr_pool_t *pool
 argument_list|)
 empty_stmt|;
-comment|/**  * Are we at the end of the file  * @param fptr The apr file we are testing.  * @remark Returns APR_EOF if we are at the end of file, APR_SUCCESS otherwise.  */
+comment|/**  * Are we at the end of the file  * @param fptr The apr file we are testing.  * @remark Returns #APR_EOF if we are at the end of file, #APR_SUCCESS otherwise.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -509,7 +514,7 @@ operator|*
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/**  * open standard output as an apr file pointer.  * @param thefile The apr file to use as stdout.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr.  */
+comment|/**  * open standard output as an apr file pointer.  * @param thefile The apr file to use as stdout.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr().  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -526,7 +531,7 @@ operator|*
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/**  * open standard input as an apr file pointer.  * @param thefile The apr file to use as stdin.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr.  */
+comment|/**  * open standard input as an apr file pointer.  * @param thefile The apr file to use as stdin.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr().  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -543,7 +548,7 @@ operator|*
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/**  * open standard error as an apr file pointer, with flags.  * @param thefile The apr file to use as stderr.  * @param flags The flags to open the file with. Only the APR_EXCL,  *              APR_BUFFERED, APR_XTHREAD, APR_SHARELOCK,   *              APR_SENDFILE_ENABLED and APR_LARGEFILE flags should  *              be used. The APR_WRITE flag will be set unconditionally.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr.  */
+comment|/**  * open standard error as an apr file pointer, with flags.  * @param thefile The apr file to use as stderr.  * @param flags The flags to open the file with. Only the   *              @li #APR_FOPEN_EXCL  *              @li #APR_FOPEN_BUFFERED  *              @li #APR_FOPEN_XTHREAD  *              @li #APR_FOPEN_SHARELOCK   *              @li #APR_FOPEN_SENDFILE_ENABLED  *              @li #APR_FOPEN_LARGEFILE  *  *              flags should be used. The #APR_FOPEN_WRITE flag will  *              be set unconditionally.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr().  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -557,7 +562,7 @@ argument_list|,
 argument|apr_pool_t *pool
 argument_list|)
 empty_stmt|;
-comment|/**  * open standard output as an apr file pointer, with flags.  * @param thefile The apr file to use as stdout.  * @param flags The flags to open the file with. Only the APR_EXCL,  *              APR_BUFFERED, APR_XTHREAD, APR_SHARELOCK,   *              APR_SENDFILE_ENABLED and APR_LARGEFILE flags should  *              be used. The APR_WRITE flag will be set unconditionally.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr.  */
+comment|/**  * open standard output as an apr file pointer, with flags.  * @param thefile The apr file to use as stdout.  * @param flags The flags to open the file with. Only the   *              @li #APR_FOPEN_EXCL  *              @li #APR_FOPEN_BUFFERED  *              @li #APR_FOPEN_XTHREAD  *              @li #APR_FOPEN_SHARELOCK   *              @li #APR_FOPEN_SENDFILE_ENABLED  *              @li #APR_FOPEN_LARGEFILE  *  *              flags should be used. The #APR_FOPEN_WRITE flag will  *              be set unconditionally.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr().  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -571,7 +576,7 @@ argument_list|,
 argument|apr_pool_t *pool
 argument_list|)
 empty_stmt|;
-comment|/**  * open standard input as an apr file pointer, with flags.  * @param thefile The apr file to use as stdin.  * @param flags The flags to open the file with. Only the APR_EXCL,  *              APR_BUFFERED, APR_XTHREAD, APR_SHARELOCK,   *              APR_SENDFILE_ENABLED and APR_LARGEFILE flags should  *              be used. The APR_READ flag will be set unconditionally.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr.  */
+comment|/**  * open standard input as an apr file pointer, with flags.  * @param thefile The apr file to use as stdin.  * @param flags The flags to open the file with. Only the   *              @li #APR_FOPEN_EXCL  *              @li #APR_FOPEN_BUFFERED  *              @li #APR_FOPEN_XTHREAD  *              @li #APR_FOPEN_SHARELOCK   *              @li #APR_FOPEN_SENDFILE_ENABLED  *              @li #APR_FOPEN_LARGEFILE  *  *              flags should be used. The #APR_FOPEN_WRITE flag will  *              be set unconditionally.  * @param pool The pool to allocate the file out of.  *   * @remark See remarks for apr_file_open_stderr().  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -585,7 +590,7 @@ argument_list|,
 argument|apr_pool_t *pool
 argument_list|)
 empty_stmt|;
-comment|/**  * Read data from the specified file.  * @param thefile The file descriptor to read from.  * @param buf The buffer to store the data to.  * @param nbytes On entry, the number of bytes to read; on exit, the number  * of bytes read.  *  * @remark apr_file_read will read up to the specified number of  * bytes, but never more.  If there isn't enough data to fill that  * number of bytes, all of the available data is read.  The third  * argument is modified to reflect the number of bytes read.  If a  * char was put back into the stream via ungetc, it will be the first  * character returned.  *  * @remark It is not possible for both bytes to be read and an APR_EOF  * or other error to be returned.  APR_EINTR is never returned.  */
+comment|/**  * Read data from the specified file.  * @param thefile The file descriptor to read from.  * @param buf The buffer to store the data to.  * @param nbytes On entry, the number of bytes to read; on exit, the number  * of bytes read.  *  * @remark apr_file_read() will read up to the specified number of  * bytes, but never more.  If there isn't enough data to fill that  * number of bytes, all of the available data is read.  The third  * argument is modified to reflect the number of bytes read.  If a  * char was put back into the stream via ungetc, it will be the first  * character returned.  *  * @remark It is not possible for both bytes to be read and an #APR_EOF  * or other error to be returned.  #APR_EINTR is never returned.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -605,7 +610,7 @@ operator|*
 name|nbytes
 argument_list|)
 expr_stmt|;
-comment|/**  * Write data to the specified file.  * @param thefile The file descriptor to write to.  * @param buf The buffer which contains the data.  * @param nbytes On entry, the number of bytes to write; on exit, the number   *               of bytes written.  *  * @remark apr_file_write will write up to the specified number of  * bytes, but never more.  If the OS cannot write that many bytes, it  * will write as many as it can.  The third argument is modified to  * reflect the * number of bytes written.  *  * @remark It is possible for both bytes to be written and an error to  * be returned.  APR_EINTR is never returned.  */
+comment|/**  * Write data to the specified file.  * @param thefile The file descriptor to write to.  * @param buf The buffer which contains the data.  * @param nbytes On entry, the number of bytes to write; on exit, the number   *               of bytes written.  *  * @remark apr_file_write() will write up to the specified number of  * bytes, but never more.  If the OS cannot write that many bytes, it  * will write as many as it can.  The third argument is modified to  * reflect the * number of bytes written.  *  * @remark It is possible for both bytes to be written and an error to  * be returned.  #APR_EINTR is never returned.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -626,7 +631,7 @@ operator|*
 name|nbytes
 argument_list|)
 expr_stmt|;
-comment|/**  * Write data from iovec array to the specified file.  * @param thefile The file descriptor to write to.  * @param vec The array from which to get the data to write to the file.  * @param nvec The number of elements in the struct iovec array. This must   *             be smaller than APR_MAX_IOVEC_SIZE.  If it isn't, the function   *             will fail with APR_EINVAL.  * @param nbytes The number of bytes written.  *  * @remark It is possible for both bytes to be written and an error to  * be returned.  APR_EINTR is never returned.  *  * @remark apr_file_writev is available even if the underlying  * operating system doesn't provide writev().  */
+comment|/**  * Write data from iovec array to the specified file.  * @param thefile The file descriptor to write to.  * @param vec The array from which to get the data to write to the file.  * @param nvec The number of elements in the struct iovec array. This must   *             be smaller than #APR_MAX_IOVEC_SIZE.  If it isn't, the function   *             will fail with #APR_EINVAL.  * @param nbytes The number of bytes written.  *  * @remark It is possible for both bytes to be written and an error to  * be returned.  #APR_EINTR is never returned.  *  * @remark apr_file_writev() is available even if the underlying  * operating system doesn't provide writev().  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -642,7 +647,7 @@ argument_list|,
 argument|apr_size_t *nbytes
 argument_list|)
 empty_stmt|;
-comment|/**  * Read data from the specified file, ensuring that the buffer is filled  * before returning.  * @param thefile The file descriptor to read from.  * @param buf The buffer to store the data to.  * @param nbytes The number of bytes to read.  * @param bytes_read If non-NULL, this will contain the number of bytes read.  *  * @remark apr_file_read will read up to the specified number of  * bytes, but never more.  If there isn't enough data to fill that  * number of bytes, then the process/thread will block until it is  * available or EOF is reached.  If a char was put back into the  * stream via ungetc, it will be the first character returned.  *  * @remark It is possible for both bytes to be read and an error to be  * returned.  And if *bytes_read is less than nbytes, an accompanying  * error is _always_ returned.  *  * @remark APR_EINTR is never returned.  */
+comment|/**  * Read data from the specified file, ensuring that the buffer is filled  * before returning.  * @param thefile The file descriptor to read from.  * @param buf The buffer to store the data to.  * @param nbytes The number of bytes to read.  * @param bytes_read If non-NULL, this will contain the number of bytes read.  *  * @remark apr_file_read_full() will read up to the specified number of  * bytes, but never more.  If there isn't enough data to fill that  * number of bytes, then the process/thread will block until it is  * available or EOF is reached.  If a char was put back into the  * stream via ungetc, it will be the first character returned.  *  * @remark It is possible for both bytes to be read and an error to be  * returned.  And if *bytes_read is less than nbytes, an accompanying  * error is _always_ returned.  *  * @remark #APR_EINTR is never returned.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -658,7 +663,7 @@ argument_list|,
 argument|apr_size_t *bytes_read
 argument_list|)
 empty_stmt|;
-comment|/**  * Write data to the specified file, ensuring that all of the data is  * written before returning.  * @param thefile The file descriptor to write to.  * @param buf The buffer which contains the data.  * @param nbytes The number of bytes to write.  * @param bytes_written If non-NULL, set to the number of bytes written.  *   * @remark apr_file_write will write up to the specified number of  * bytes, but never more.  If the OS cannot write that many bytes, the  * process/thread will block until they can be written. Exceptional  * error such as "out of space" or "pipe closed" will terminate with  * an error.  *  * @remark It is possible for both bytes to be written and an error to  * be returned.  And if *bytes_written is less than nbytes, an  * accompanying error is _always_ returned.  *  * @remark APR_EINTR is never returned.  */
+comment|/**  * Write data to the specified file, ensuring that all of the data is  * written before returning.  * @param thefile The file descriptor to write to.  * @param buf The buffer which contains the data.  * @param nbytes The number of bytes to write.  * @param bytes_written If non-NULL, set to the number of bytes written.  *   * @remark apr_file_write_full() will write up to the specified number of  * bytes, but never more.  If the OS cannot write that many bytes, the  * process/thread will block until they can be written. Exceptional  * error such as "out of space" or "pipe closed" will terminate with  * an error.  *  * @remark It is possible for both bytes to be written and an error to  * be returned.  And if *bytes_written is less than nbytes, an  * accompanying error is _always_ returned.  *  * @remark #APR_EINTR is never returned.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -674,7 +679,7 @@ argument_list|,
 argument|apr_size_t *bytes_written
 argument_list|)
 empty_stmt|;
-comment|/**  * Write data from iovec array to the specified file, ensuring that all of the  * data is written before returning.  * @param thefile The file descriptor to write to.  * @param vec The array from which to get the data to write to the file.  * @param nvec The number of elements in the struct iovec array. This must   *             be smaller than APR_MAX_IOVEC_SIZE.  If it isn't, the function   *             will fail with APR_EINVAL.  * @param nbytes The number of bytes written.  *  * @remark apr_file_writev_full is available even if the underlying  * operating system doesn't provide writev().  */
+comment|/**  * Write data from iovec array to the specified file, ensuring that all of the  * data is written before returning.  * @param thefile The file descriptor to write to.  * @param vec The array from which to get the data to write to the file.  * @param nvec The number of elements in the struct iovec array. This must   *             be smaller than #APR_MAX_IOVEC_SIZE.  If it isn't, the function   *             will fail with #APR_EINVAL.  * @param nbytes The number of bytes written.  *  * @remark apr_file_writev_full() is available even if the underlying  * operating system doesn't provide writev().  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -859,7 +864,7 @@ operator|*
 name|p
 argument_list|)
 expr_stmt|;
-comment|/**  * Give the specified apr file handle a new buffer   * @param thefile  The file handle that is to be modified  * @param buffer   The buffer  * @param bufsize  The size of the buffer  * @remark It is possible to add a buffer to previously unbuffered  *         file handles, the APR_BUFFERED flag will be added to  *         the file handle's flags. Likewise, with buffer=NULL and  *         bufsize=0 arguments it is possible to make a previously  *         buffered file handle unbuffered.  */
+comment|/**  * Give the specified apr file handle a new buffer   * @param thefile  The file handle that is to be modified  * @param buffer   The buffer  * @param bufsize  The size of the buffer  * @remark It is possible to add a buffer to previously unbuffered  *         file handles, the #APR_FOPEN_BUFFERED flag will be added to  *         the file handle's flags. Likewise, with buffer=NULL and  *         bufsize=0 arguments it is possible to make a previously  *         buffered file handle unbuffered.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -885,7 +890,7 @@ operator|*
 name|thefile
 argument_list|)
 expr_stmt|;
-comment|/**  * Move the read/write file offset to a specified byte within a file.  * @param thefile The file descriptor  * @param where How to move the pointer, one of:  *<PRE>  *            APR_SET  --  set the offset to offset  *            APR_CUR  --  add the offset to the current position   *            APR_END  --  add the offset to the current file size   *</PRE>  * @param offset The offset to move the pointer to.  * @remark The third argument is modified to be the offset the pointer           was actually moved to.  */
+comment|/**  * Move the read/write file offset to a specified byte within a file.  * @param thefile The file descriptor  * @param where How to move the pointer, one of:  *              @li #APR_SET  --  set the offset to offset  *              @li #APR_CUR  --  add the offset to the current position   *              @li #APR_END  --  add the offset to the current file size   * @param offset The offset to move the pointer to.  * @remark The third argument is modified to be the offset the pointer           was actually moved to.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -899,7 +904,7 @@ argument_list|,
 argument|apr_off_t *offset
 argument_list|)
 empty_stmt|;
-comment|/**  * Create an anonymous pipe.  * @param in The newly created pipe's file for reading.  * @param out The newly created pipe's file for writing.  * @param pool The pool to operate on.  * @remark By default, the returned file descriptors will be inherited  * by child processes created using apr_proc_create().  This can be  * changed using apr_file_inherit_unset().  * @bug  Some platforms cannot toggle between blocking and nonblocking,  * and when passing a pipe as a standard handle to an application which  * does not expect it, a non-blocking stream will fluxor the client app.  * @deprecated @see apr_file_pipe_create_ex  */
+comment|/**  * Create an anonymous pipe.  * @param in The newly created pipe's file for reading.  * @param out The newly created pipe's file for writing.  * @param pool The pool to operate on.  * @remark By default, the returned file descriptors will be inherited  * by child processes created using apr_proc_create().  This can be  * changed using apr_file_inherit_unset().  * @bug  Some platforms cannot toggle between blocking and nonblocking,  * and when passing a pipe as a standard handle to an application which  * does not expect it, a non-blocking stream will fluxor the client app.  * @deprecated @see apr_file_pipe_create_ex()  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -921,7 +926,7 @@ operator|*
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/**  * Create an anonymous pipe which portably supports async timeout options.  * @param in The newly created pipe's file for reading.  * @param out The newly created pipe's file for writing.  * @param blocking one of these values defined in apr_thread_proc.h;  * @param pool The pool to operate on.  *<pre>  *       APR_FULL_BLOCK  *       APR_READ_BLOCK  *       APR_WRITE_BLOCK  *       APR_FULL_NONBLOCK  *</pre>  * @remark By default, the returned file descriptors will be inherited  * by child processes created using apr_proc_create().  This can be  * changed using apr_file_inherit_unset().  * @remark Some platforms cannot toggle between blocking and nonblocking,  * and when passing a pipe as a standard handle to an application which  * does not expect it, a non-blocking stream will fluxor the client app.  * Use this function rather than apr_file_pipe_create to create pipes   * where one or both ends require non-blocking semantics.  */
+comment|/**  * Create an anonymous pipe which portably supports async timeout options.  * @param in The newly created pipe's file for reading.  * @param out The newly created pipe's file for writing.  * @param blocking one of these values defined in apr_thread_proc.h;  *                 @li #APR_FULL_BLOCK  *                 @li #APR_READ_BLOCK  *                 @li #APR_WRITE_BLOCK  *                 @li #APR_FULL_NONBLOCK  * @param pool The pool to operate on.  * @remark By default, the returned file descriptors will be inherited  * by child processes created using apr_proc_create().  This can be  * changed using apr_file_inherit_unset().  * @remark Some platforms cannot toggle between blocking and nonblocking,  * and when passing a pipe as a standard handle to an application which  * does not expect it, a non-blocking stream will fluxor the client app.  * Use this function rather than apr_file_pipe_create() to create pipes   * where one or both ends require non-blocking semantics.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -1103,7 +1108,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/**  * set the specified file's permission bits.  * @param fname The file (name) to apply the permissions to.  * @param perms The permission bits to apply to the file.  *  * @warning Some platforms may not be able to apply all of the  * available permission bits; APR_INCOMPLETE will be returned if some  * permissions are specified which could not be set.  *  * @warning Platforms which do not implement this feature will return  * APR_ENOTIMPL.  */
+comment|/**  * set the specified file's permission bits.  * @param fname The file (name) to apply the permissions to.  * @param perms The permission bits to apply to the file.  *  * @warning Some platforms may not be able to apply all of the  * available permission bits; #APR_INCOMPLETE will be returned if some  * permissions are specified which could not be set.  *  * @warning Platforms which do not implement this feature will return  * #APR_ENOTIMPL.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -1115,7 +1120,7 @@ argument_list|,
 argument|apr_fileperms_t perms
 argument_list|)
 empty_stmt|;
-comment|/**  * Set attributes of the specified file.  * @param fname The full path to the file (using / on all systems)  * @param attributes Or'd combination of  *<PRE>  *            APR_FILE_ATTR_READONLY   - make the file readonly  *            APR_FILE_ATTR_EXECUTABLE - make the file executable  *            APR_FILE_ATTR_HIDDEN     - make the file hidden  *</PRE>  * @param attr_mask Mask of valid bits in attributes.  * @param pool the pool to use.  * @remark This function should be used in preference to explicit manipulation  *      of the file permissions, because the operations to provide these  *      attributes are platform specific and may involve more than simply  *      setting permission bits.  * @warning Platforms which do not implement this feature will return  *      APR_ENOTIMPL.  */
+comment|/**  * Set attributes of the specified file.  * @param fname The full path to the file (using / on all systems)  * @param attributes Or'd combination of  *            @li #APR_FILE_ATTR_READONLY   - make the file readonly  *            @li #APR_FILE_ATTR_EXECUTABLE - make the file executable  *            @li #APR_FILE_ATTR_HIDDEN     - make the file hidden  * @param attr_mask Mask of valid bits in attributes.  * @param pool the pool to use.  * @remark This function should be used in preference to explicit manipulation  *      of the file permissions, because the operations to provide these  *      attributes are platform specific and may involve more than simply  *      setting permission bits.  * @warning Platforms which do not implement this feature will return  *      #APR_ENOTIMPL.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -1131,7 +1136,7 @@ argument_list|,
 argument|apr_pool_t *pool
 argument_list|)
 empty_stmt|;
-comment|/**  * Set the mtime of the specified file.  * @param fname The full path to the file (using / on all systems)  * @param mtime The mtime to apply to the file.  * @param pool The pool to use.  * @warning Platforms which do not implement this feature will return  *      APR_ENOTIMPL.  */
+comment|/**  * Set the mtime of the specified file.  * @param fname The full path to the file (using / on all systems)  * @param mtime The mtime to apply to the file.  * @param pool The pool to use.  * @warning Platforms which do not implement this feature will return  *      #APR_ENOTIMPL.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -1190,7 +1195,7 @@ operator|*
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/**  * get the specified file's stats.  * @param finfo Where to store the information about the file.  * @param wanted The desired apr_finfo_t fields, as a bit flag of APR_FINFO_ values   * @param thefile The file to get information about.  */
+comment|/**  * get the specified file's stats.  * @param finfo Where to store the information about the file.  * @param wanted The desired apr_finfo_t fields, as a bit flag of APR_FINFO_* values   * @param thefile The file to get information about.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -1246,7 +1251,7 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-comment|/**  * Open a temporary file  * @param fp The apr file to use as a temporary file.  * @param templ The template to use when creating a temp file.  * @param flags The flags to open the file with. If this is zero,  *              the file is opened with   *              APR_CREATE | APR_READ | APR_WRITE | APR_EXCL | APR_DELONCLOSE  * @param p The pool to allocate the file out of.  * @remark     * This function  generates  a unique temporary file name from template.    * The last six characters of template must be XXXXXX and these are replaced   * with a string that makes the filename unique. Since it will  be  modified,  * template must not be a string constant, but should be declared as a character  * array.    *  */
+comment|/**  * Open a temporary file  * @param fp The apr file to use as a temporary file.  * @param templ The template to use when creating a temp file.  * @param flags The flags to open the file with. If this is zero,  *              the file is opened with   *              #APR_FOPEN_CREATE | #APR_FOPEN_READ | #APR_FOPEN_WRITE |  *              #APR_FOPEN_EXCL | #APR_FOPEN_DELONCLOSE  * @param p The pool to allocate the file out of.  * @remark     * This function  generates  a unique temporary file name from template.    * The last six characters of template must be XXXXXX and these are replaced   * with a string that makes the filename unique. Since it will  be  modified,  * template must not be a string constant, but should be declared as a character  * array.    *  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t

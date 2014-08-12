@@ -236,7 +236,7 @@ define|#
 directive|define
 name|APR_OC_REASON_RESTART
 value|2
-comment|/**< a restart is occuring, perform                                            * any necessary cleanup (including                                            * sending a special signal to child)                                            */
+comment|/**< a restart is occurring, perform                                            * any necessary cleanup (including                                            * sending a special signal to child)                                            */
 define|#
 directive|define
 name|APR_OC_REASON_UNREGISTER
@@ -251,7 +251,7 @@ define|#
 directive|define
 name|APR_OC_REASON_RUNNING
 value|5
-comment|/**< a health check is occuring,                                             * for most maintainence functions                                            * this is a no-op.                                            */
+comment|/**< a health check is occurring,                                             * for most maintainence functions                                            * this is a no-op.                                            */
 comment|/** @} */
 comment|/** The APR process type */
 typedef|typedef
@@ -390,7 +390,7 @@ enum|enum
 block|{
 name|APR_KILL_NEVER
 block|,
-comment|/**< process is never sent any signals */
+comment|/**< process is never killed (i.e., never sent                                  * any signals), but it will be reaped if it exits                                  * before the pool is cleaned up */
 name|APR_KILL_ALWAYS
 block|,
 comment|/**< process is sent SIGKILL on apr_pool_t cleanup */
@@ -1055,7 +1055,7 @@ operator|*
 name|pool
 argument_list|)
 expr_stmt|;
-comment|/**  * Wait for a child process to die  * @param proc The process handle that corresponds to the desired child process   * @param exitcode The returned exit status of the child, if a child process   *                 dies, or the signal that caused the child to die.  *                 On platforms that don't support obtaining this information,   *                 the status parameter will be returned as APR_ENOTIMPL.  * @param exitwhy Why the child died, the bitwise or of:  *<PRE>  *            APR_PROC_EXIT         -- process terminated normally  *            APR_PROC_SIGNAL       -- process was killed by a signal  *            APR_PROC_SIGNAL_CORE  -- process was killed by a signal, and  *                                     generated a core dump.  *</PRE>  * @param waithow How should we wait.  One of:  *<PRE>  *            APR_WAIT   -- block until the child process dies.  *            APR_NOWAIT -- return immediately regardless of if the   *                          child is dead or not.  *</PRE>  * @remark The childs status is in the return code to this process.  It is one of:  *<PRE>  *            APR_CHILD_DONE     -- child is no longer running.  *            APR_CHILD_NOTDONE  -- child is still running.  *</PRE>  */
+comment|/**  * Wait for a child process to die  * @param proc The process handle that corresponds to the desired child process   * @param exitcode The returned exit status of the child, if a child process   *                 dies, or the signal that caused the child to die.  *                 On platforms that don't support obtaining this information,   *                 the status parameter will be returned as APR_ENOTIMPL.  * @param exitwhy Why the child died, the bitwise or of:  *<PRE>  *            APR_PROC_EXIT         -- process terminated normally  *            APR_PROC_SIGNAL       -- process was killed by a signal  *            APR_PROC_SIGNAL_CORE  -- process was killed by a signal, and  *                                     generated a core dump.  *</PRE>  * @param waithow How should we wait.  One of:  *<PRE>  *            APR_WAIT   -- block until the child process dies.  *            APR_NOWAIT -- return immediately regardless of if the   *                          child is dead or not.  *</PRE>  * @remark The child's status is in the return code to this process.  It is one of:  *<PRE>  *            APR_CHILD_DONE     -- child is no longer running.  *            APR_CHILD_NOTDONE  -- child is still running.  *</PRE>  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t

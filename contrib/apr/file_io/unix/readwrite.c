@@ -35,7 +35,10 @@ begin_if
 if|#
 directive|if
 operator|!
+name|defined
+argument_list|(
 name|BEOS_R5
+argument_list|)
 end_if
 
 begin_define

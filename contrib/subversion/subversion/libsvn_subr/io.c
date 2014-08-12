@@ -4538,21 +4538,34 @@ operator|%
 name|APR_USEC_PER_SEC
 condition|)
 block|{
-comment|/* Very simplistic but safe approach:               If the filesystem has< sec mtime we can be reasonably sure               that the filesystem has<= millisecond precision.               ## Perhaps find a better algorithm here. This will fail once                 in every 1000 cases on a millisecond precision filesystem.                  But better to fail once in every thousand cases than every                 time, like we did before.                 (All tested filesystems I know have at least microsecond precision.)               Note for further research on algorithm:                FAT32 has< 1 sec precision on ctime, but 2 sec on mtime */
-comment|/* Sleep for at least 1 millisecond.              (t< 1000 will be round to 0 in apr) */
-name|apr_sleep
+comment|/* Very simplistic but safe approach:               If the filesystem has< sec mtime we can be reasonably sure               that the filesystem has some sub-second resolution.  On Windows               it is likely to be sub-millisecond; on Linux systems it depends               on the filesystem, ext4 is typically 1ms, 4ms or 10ms resolution.               ## Perhaps find a better algorithm here. This will fail once                 in every 1000 cases on a millisecond precision filesystem                 if the mtime happens to be an exact second.                  But better to fail once in every thousand cases than every                 time, like we did before.               Note for further research on algorithm:                FAT32 has< 1 sec precision on ctime, but 2 sec on mtime.                 Linux/ext4 with CONFIG_HZ=250 has high resolution                apr_time_now and although the filesystem timestamps                have similar high precision they are only updated with                a coarser 4ms resolution. */
+comment|/* 10 milliseconds after now. */
+ifndef|#
+directive|ifndef
+name|SVN_HI_RES_SLEEP_MS
+define|#
+directive|define
+name|SVN_HI_RES_SLEEP_MS
+value|10
+endif|#
+directive|endif
+name|then
+operator|=
+name|now
+operator|+
+name|apr_time_from_msec
 argument_list|(
-literal|1000
+name|SVN_HI_RES_SLEEP_MS
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+comment|/* Remove time taken to do stat() from sleep. */
 name|now
 operator|=
 name|apr_time_now
 argument_list|()
 expr_stmt|;
-comment|/* Extract the time used for the path stat */
+block|}
 if|if
 condition|(
 name|now
@@ -4561,7 +4574,21 @@ name|then
 condition|)
 return|return;
 comment|/* Passing negative values may suspend indefinitely (Windows) */
-block|}
+comment|/* (t< 1000 will be round to 0 in apr) */
+if|if
+condition|(
+name|then
+operator|-
+name|now
+operator|<
+literal|1000
+condition|)
+name|apr_sleep
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+else|else
 name|apr_sleep
 argument_list|(
 name|then

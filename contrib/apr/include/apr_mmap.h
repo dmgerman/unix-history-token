@@ -225,7 +225,7 @@ parameter_list|)
 define|\
 value|((filelength>= APR_MMAP_THRESHOLD)&& (filelength< APR_MMAP_LIMIT))
 comment|/*   Function definitions */
-comment|/**   * Create a new mmap'ed file out of an existing APR file.  * @param newmmap The newly created mmap'ed file.  * @param file The file turn into an mmap.  * @param offset The offset into the file to start the data pointer at.  * @param size The size of the file  * @param flag bit-wise or of:  *<PRE>  *          APR_MMAP_READ       MMap opened for reading  *          APR_MMAP_WRITE      MMap opened for writing  *</PRE>  * @param cntxt The pool to use when creating the mmap.  */
+comment|/**   * Create a new mmap'ed file out of an existing APR file.  * @param newmmap The newly created mmap'ed file.  * @param file The file to turn into an mmap.  * @param offset The offset into the file to start the data pointer at.  * @param size The size of the file  * @param flag bit-wise or of:  *<PRE>  *          APR_MMAP_READ       MMap opened for reading  *          APR_MMAP_WRITE      MMap opened for writing  *</PRE>  * @param cntxt The pool to use when creating the mmap.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t

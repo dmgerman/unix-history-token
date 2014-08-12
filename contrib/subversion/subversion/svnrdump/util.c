@@ -69,6 +69,9 @@ name|svn_prop_needs_translation
 argument_list|(
 name|name
 argument_list|)
+operator|&&
+operator|*
+name|value
 condition|)
 block|{
 specifier|const

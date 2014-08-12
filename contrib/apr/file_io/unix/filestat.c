@@ -418,7 +418,7 @@ name|HAVE_STRUCT_STAT_ST_ATIME_N
 argument_list|)
 name|finfo
 operator|->
-name|ctime
+name|atime
 operator|+=
 name|info
 operator|->
@@ -488,7 +488,7 @@ name|HAVE_STRUCT_STAT_ST_MTIME_N
 argument_list|)
 name|finfo
 operator|->
-name|ctime
+name|mtime
 operator|+=
 name|info
 operator|->

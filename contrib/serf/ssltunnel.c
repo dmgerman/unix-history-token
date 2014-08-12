@@ -212,25 +212,15 @@ name|request
 operator|->
 name|conn
 decl_stmt|;
+comment|/* CONNECT request was cancelled. Assuming that this is during connection        reset, we can safely discard the request as a new one will be created        when setting up the next connection. */
 if|if
 condition|(
 operator|!
 name|response
 condition|)
-block|{
-name|serf_connection_request_create
-argument_list|(
-name|conn
-argument_list|,
-name|setup_request
-argument_list|,
-name|ctx
-argument_list|)
-expr_stmt|;
 return|return
 name|APR_SUCCESS
 return|;
-block|}
 name|status
 operator|=
 name|serf_bucket_response_status

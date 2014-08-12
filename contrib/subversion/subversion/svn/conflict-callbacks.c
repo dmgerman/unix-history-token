@@ -4301,7 +4301,7 @@ block|}
 comment|/* We only allow the user accept the merged version of              the file if they've edited it, or at least looked at              the diff. */
 if|if
 condition|(
-name|result
+name|opt
 operator|->
 name|choice
 operator|==

@@ -499,7 +499,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/** The file's handle, if accessed (can be submitted to apr_duphandle) */
+comment|/** Unused */
 name|struct
 name|apr_file_t
 modifier|*
@@ -622,7 +622,7 @@ define|#
 directive|define
 name|APR_FILEPATH_TRUENAME
 value|0x20
-comment|/**  * Extract the rootpath from the given filepath  * @param rootpath the root file path returned with APR_SUCCESS or APR_EINCOMPLETE  * @param filepath the pathname to parse for its root component  * @param flags the desired rules to apply, from  *<PRE>  *      APR_FILEPATH_NATIVE    Use native path seperators (e.g. '\' on Win32)  *      APR_FILEPATH_TRUENAME  Tests that the root exists, and makes it proper  *</PRE>  * @param p the pool to allocate the new path string from  * @remark on return, filepath points to the first non-root character in the  * given filepath.  In the simplest example, given a filepath of "/foo",   * returns the rootpath of "/" and filepath points at "foo".  This is far   * more complex on other platforms, which will canonicalize the root form  * to a consistant format, given the APR_FILEPATH_TRUENAME flag, and also  * test for the validity of that root (e.g., that a drive d:/ or network   * share //machine/foovol/).   * The function returns APR_ERELATIVE if filepath isn't rooted (an  * error), APR_EINCOMPLETE if the root path is ambigious (but potentially  * legitimate, e.g. "/" on Windows is incomplete because it doesn't specify  * the drive letter), or APR_EBADPATH if the root is simply invalid.  * APR_SUCCESS is returned if filepath is an absolute path.  */
+comment|/**  * Extract the rootpath from the given filepath  * @param rootpath the root file path returned with APR_SUCCESS or APR_EINCOMPLETE  * @param filepath the pathname to parse for its root component  * @param flags the desired rules to apply, from  *<PRE>  *      APR_FILEPATH_NATIVE    Use native path separators (e.g. '\' on Win32)  *      APR_FILEPATH_TRUENAME  Tests that the root exists, and makes it proper  *</PRE>  * @param p the pool to allocate the new path string from  * @remark on return, filepath points to the first non-root character in the  * given filepath.  In the simplest example, given a filepath of "/foo",   * returns the rootpath of "/" and filepath points at "foo".  This is far   * more complex on other platforms, which will canonicalize the root form  * to a consistant format, given the APR_FILEPATH_TRUENAME flag, and also  * test for the validity of that root (e.g., that a drive d:/ or network   * share //machine/foovol/).   * The function returns APR_ERELATIVE if filepath isn't rooted (an  * error), APR_EINCOMPLETE if the root path is ambiguous (but potentially  * legitimate, e.g. "/" on Windows is incomplete because it doesn't specify  * the drive letter), or APR_EBADPATH if the root is simply invalid.  * APR_SUCCESS is returned if filepath is an absolute path.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -656,7 +656,7 @@ argument_list|,
 argument|apr_pool_t *p
 argument_list|)
 empty_stmt|;
-comment|/**  * Split a search path into separate components  * @param pathelts the returned components of the search path  * @param liststr the search path (e.g.,<tt>getenv("PATH")</tt>)  * @param p the pool to allocate the array and path components from  * @remark empty path componenta do not become part of @a pathelts.  * @remark the path separator in @a liststr is system specific;  * e.g., ':' on Unix, ';' on Windows, etc.  */
+comment|/**  * Split a search path into separate components  * @param pathelts the returned components of the search path  * @param liststr the search path (e.g.,<tt>getenv("PATH")</tt>)  * @param p the pool to allocate the array and path components from  * @remark empty path components do not become part of @a pathelts.  * @remark the path separator in @a liststr is system specific;  * e.g., ':' on Unix, ';' on Windows, etc.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t

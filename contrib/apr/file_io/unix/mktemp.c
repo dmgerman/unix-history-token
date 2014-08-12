@@ -192,11 +192,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|APR_HAVE_SYS_STAT_H
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_STAT_H
+end_ifdef
 
 begin_include
 include|#
