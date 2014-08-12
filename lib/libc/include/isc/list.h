@@ -126,7 +126,7 @@ name|elt
 parameter_list|,
 name|link
 parameter_list|)
-value|((void *)((elt)->link.prev) != (void *)(-1))
+value|((void *)((elt)->link.prev) != (void *)(-1)&& \ 			   (void *)((elt)->link.next) != (void *)(-1))
 end_define
 
 begin_define
