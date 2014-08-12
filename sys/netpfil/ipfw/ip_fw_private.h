@@ -1574,9 +1574,8 @@ name|off
 decl_stmt|;
 comment|/* tlv offset from rule end in 4-byte words */
 name|uint8_t
-name|new
+name|spare
 decl_stmt|;
-comment|/* index is newly-allocated */
 name|uint8_t
 name|type
 decl_stmt|;
@@ -1634,17 +1633,6 @@ comment|/* table references storage */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|IPFW_RCF_TABLES
-value|0x01
-end_define
-
-begin_comment
-comment|/* Has table-referencing opcode */
-end_comment
 
 begin_comment
 comment|/* Legacy interface support */
