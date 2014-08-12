@@ -64,7 +64,7 @@ name|uint32_t
 name|sctp_pr_enable
 decl_stmt|;
 name|uint32_t
-name|sctp_auth_disable
+name|sctp_auth_enable
 decl_stmt|;
 name|uint32_t
 name|sctp_asconf_enable
@@ -508,35 +508,35 @@ value|1
 end_define
 
 begin_comment
-comment|/* auth_disable: Disable SCTP AUTH function */
+comment|/* auth_enable: Enable SCTP AUTH function */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCTPCTL_AUTH_DISABLE_DESC
-value|"Disable SCTP AUTH function"
+name|SCTPCTL_AUTH_ENABLE_DESC
+value|"Enable SCTP AUTH function"
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTPCTL_AUTH_DISABLE_MIN
+name|SCTPCTL_AUTH_ENABLE_MIN
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTPCTL_AUTH_DISABLE_MAX
+name|SCTPCTL_AUTH_ENABLE_MAX
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTPCTL_AUTH_DISABLE_DEFAULT
-value|0
+name|SCTPCTL_AUTH_ENABLE_DEFAULT
+value|1
 end_define
 
 begin_comment
