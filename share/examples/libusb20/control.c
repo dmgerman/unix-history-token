@@ -4,7 +4,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*  * Simple demo program to illustrate the handling of FreeBSD's  * libusb20.  *  * XXX  */
+comment|/*  * Simple demo program to illustrate the handling of FreeBSD's  * libusb20.  */
 end_comment
 
 begin_comment
@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libusb20.h>
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"util.h"
 end_include
 
 begin_comment
@@ -214,7 +226,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_dev_open: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -245,7 +257,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_dev_set_config_index: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -349,7 +361,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_dev_request_sync: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -428,7 +440,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_tr_get_pointer: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -463,7 +475,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_tr_open: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)
@@ -509,7 +521,7 @@ name|stderr
 argument_list|,
 literal|"libusb20_tr_bulk_intr_sync: %s\n"
 argument_list|,
-name|usb_error
+name|libusb20_strerror
 argument_list|(
 name|rv
 argument_list|)

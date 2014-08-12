@@ -16,19 +16,6 @@ file|<libusb20.h>
 end_include
 
 begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|usb_error
-parameter_list|(
-name|enum
-name|libusb20_error
-name|r
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|print_formatted
 parameter_list|(
