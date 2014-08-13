@@ -653,7 +653,7 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m
 operator|->
