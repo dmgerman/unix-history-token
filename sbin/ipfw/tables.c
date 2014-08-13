@@ -466,6 +466,9 @@ name|char
 modifier|*
 name|key
 parameter_list|,
+name|int
+name|add
+parameter_list|,
 name|uint8_t
 modifier|*
 name|ptype
@@ -4867,6 +4870,8 @@ argument_list|,
 operator|*
 name|av
 argument_list|,
+name|add
+argument_list|,
 operator|&
 name|type
 argument_list|,
@@ -5450,6 +5455,8 @@ argument_list|,
 name|tent
 argument_list|,
 name|key
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|type
@@ -6073,7 +6080,7 @@ name|af
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Handle<ipv4|ipv6>*/
+comment|/* Handle<ipv4|ipv6> */
 if|if
 condition|(
 operator|(
@@ -6235,6 +6242,19 @@ condition|)
 block|{
 if|if
 condition|(
+name|arg
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"invalid key: proto missing"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|p
 operator|=
@@ -6344,6 +6364,19 @@ condition|)
 block|{
 if|if
 condition|(
+name|arg
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"invalid key: src port missing"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|p
 operator|=
@@ -6439,6 +6472,19 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|arg
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"invalid key: dst ip missing"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6589,6 +6635,19 @@ condition|)
 block|{
 if|if
 condition|(
+name|arg
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"invalid key: dst port missing"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|p
 operator|=
@@ -6722,6 +6781,9 @@ name|char
 modifier|*
 name|key
 parameter_list|,
+name|int
+name|add
+parameter_list|,
 name|uint8_t
 modifier|*
 name|ptype
@@ -6826,6 +6888,25 @@ argument_list|(
 name|EX_OSERR
 argument_list|,
 literal|"Error requesting table %s info"
+argument_list|,
+name|oh
+operator|->
+name|ntlv
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|add
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"Table %s does not exist"
 argument_list|,
 name|oh
 operator|->
