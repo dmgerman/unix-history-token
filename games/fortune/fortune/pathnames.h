@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|FORTDIR
-value|"/usr/share/games/fortune"
+value|"/usr/share/games/fortune:" \ 			"/usr/local/share/games/fortune"
 end_define
 
 end_unit
