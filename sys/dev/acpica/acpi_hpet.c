@@ -2996,7 +2996,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Can't allocate interrupt for t%d.\n"
+literal|"Can't allocate interrupt for t%d: %d\n"
+argument_list|,
+name|i
 argument_list|,
 name|j
 argument_list|)
