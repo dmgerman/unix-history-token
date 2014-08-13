@@ -581,6 +581,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_OBJECT_ASSERT_UNLOCKED
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_assert(&(object)->lock, RA_UNLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_OBJECT_LOCK_DOWNGRADE
 parameter_list|(
 name|object
@@ -650,6 +661,17 @@ name|object
 parameter_list|)
 define|\
 value|rw_try_wlock(&(object)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_OBJECT_TRYUPGRADE
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_try_upgrade(&(object)->lock)
 end_define
 
 begin_define
