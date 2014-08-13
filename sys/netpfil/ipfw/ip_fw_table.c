@@ -10368,7 +10368,7 @@ argument_list|(
 name|ta
 operator|->
 name|type
-operator|>=
+operator|<=
 name|IPFW_TABLE_MAXTYPE
 argument_list|,
 operator|(
