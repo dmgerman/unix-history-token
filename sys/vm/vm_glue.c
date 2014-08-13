@@ -911,6 +911,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_activate
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_unlock
 argument_list|(
 name|m
