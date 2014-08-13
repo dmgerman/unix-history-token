@@ -301,17 +301,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.debug"
-argument_list|,
-operator|&
-name|zfs_debug_level
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -320,7 +309,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfs_debug_level
@@ -4971,7 +4960,7 @@ name|z_link_node
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rrw_init
+name|rrm_init
 argument_list|(
 operator|&
 name|zfsvfs
@@ -5340,7 +5329,7 @@ operator|->
 name|z_all_znodes
 argument_list|)
 expr_stmt|;
-name|rrw_destroy
+name|rrm_destroy
 argument_list|(
 operator|&
 name|zfsvfs
@@ -8514,7 +8503,7 @@ name|znode_t
 modifier|*
 name|zp
 decl_stmt|;
-name|rrw_enter
+name|rrm_enter
 argument_list|(
 operator|&
 name|zfsvfs
@@ -8621,7 +8610,7 @@ operator|->
 name|z_teardown_inactive_lock
 argument_list|)
 expr_stmt|;
-name|rrw_exit
+name|rrm_exit
 argument_list|(
 operator|&
 name|zfsvfs
@@ -8722,7 +8711,7 @@ name|z_unmounted
 operator|=
 name|B_TRUE
 expr_stmt|;
-name|rrw_exit
+name|rrm_exit
 argument_list|(
 operator|&
 name|zfsvfs
@@ -9025,7 +9014,7 @@ name|MS_FORCE
 condition|)
 block|{
 comment|/* 		 * Mark file system as unmounted before calling 		 * vflush(FORCECLOSE). This way we ensure no future vnops 		 * will be called and risk operating on DOOMED vnodes. 		 */
-name|rrw_enter
+name|rrm_enter
 argument_list|(
 operator|&
 name|zfsvfs
@@ -9043,7 +9032,7 @@ name|z_unmounted
 operator|=
 name|B_TRUE
 expr_stmt|;
-name|rrw_exit
+name|rrm_exit
 argument_list|(
 operator|&
 name|zfsvfs
@@ -9449,16 +9438,6 @@ operator|*
 name|vpp
 operator|=
 name|NULL
-expr_stmt|;
-else|else
-operator|(
-operator|*
-name|vpp
-operator|)
-operator|->
-name|v_hash
-operator|=
-name|ino
 expr_stmt|;
 return|return
 operator|(
@@ -10325,7 +10304,7 @@ literal|0
 decl_stmt|;
 name|ASSERT
 argument_list|(
-name|RRW_WRITE_HELD
+name|RRM_WRITE_HELD
 argument_list|(
 operator|&
 name|zfsvfs
@@ -10581,7 +10560,7 @@ operator|->
 name|z_teardown_inactive_lock
 argument_list|)
 expr_stmt|;
-name|rrw_exit
+name|rrm_exit
 argument_list|(
 operator|&
 name|zfsvfs

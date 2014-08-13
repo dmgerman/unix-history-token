@@ -1633,6 +1633,7 @@ name|f_cuse
 argument_list|,
 name|CUSE_IOCTL_DESTROY_DEV
 argument_list|,
+operator|&
 name|cdev
 argument_list|)
 expr_stmt|;

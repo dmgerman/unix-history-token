@@ -283,17 +283,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.journal.debug"
-argument_list|,
-operator|&
-name|g_journal_debug
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|u_int
@@ -385,7 +374,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_journal_debug
@@ -647,17 +636,6 @@ literal|1024
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.journal.cache.limit"
-argument_list|,
-operator|&
-name|g_journal_cache_limit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|u_int
@@ -666,17 +644,6 @@ init|=
 literal|2
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.journal.cache.divisor"
-argument_list|,
-operator|&
-name|g_journal_cache_divisor
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -836,7 +803,7 @@ name|limit
 argument_list|,
 name|CTLTYPE_UINT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|NULL
 argument_list|,
@@ -923,10 +890,6 @@ operator|)
 return|;
 if|if
 condition|(
-name|cswitch
-operator|<
-literal|0
-operator|||
 name|cswitch
 operator|>
 literal|100

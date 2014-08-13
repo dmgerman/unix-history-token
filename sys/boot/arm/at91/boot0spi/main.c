@@ -34,8 +34,17 @@ name|OFFSET
 value|0
 end_define
 
-begin_function
+begin_function_decl
+name|int
+name|main
+parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|int
 name|main
 parameter_list|(
 name|void
@@ -231,6 +240,11 @@ expr_stmt|;
 name|reset
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

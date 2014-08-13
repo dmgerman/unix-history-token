@@ -318,7 +318,7 @@ name|OID_AUTO
 argument_list|,
 name|enabled
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|lomac_enabled
@@ -326,17 +326,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enforce MAC/LOMAC policy"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"security.mac.lomac.enabled"
-argument_list|,
-operator|&
-name|lomac_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -387,7 +376,7 @@ name|OID_AUTO
 argument_list|,
 name|trust_all_interfaces
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|trust_all_interfaces
@@ -395,17 +384,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Consider all interfaces 'trusted' by MAC/LOMAC"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"security.mac.lomac.trust_all_interfaces"
-argument_list|,
-operator|&
-name|trust_all_interfaces
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -429,28 +407,13 @@ name|OID_AUTO
 argument_list|,
 name|trusted_interfaces
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 name|trusted_interfaces
 argument_list|,
 literal|0
 argument_list|,
 literal|"Interfaces considered 'trusted' by MAC/LOMAC"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_STR
-argument_list|(
-literal|"security.mac.lomac.trusted_interfaces"
-argument_list|,
-name|trusted_interfaces
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|trusted_interfaces
-argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -473,7 +436,7 @@ name|OID_AUTO
 argument_list|,
 name|ptys_equal
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ptys_equal
@@ -481,17 +444,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Label pty devices as lomac/equal on create"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"security.mac.lomac.ptys_equal"
-argument_list|,
-operator|&
-name|ptys_equal
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -514,7 +466,7 @@ name|OID_AUTO
 argument_list|,
 name|revocation_enabled
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|revocation_enabled
@@ -522,17 +474,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Revoke access to objects on relabel"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"security.mac.lomac.revocation_enabled"
-argument_list|,
-operator|&
-name|revocation_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt

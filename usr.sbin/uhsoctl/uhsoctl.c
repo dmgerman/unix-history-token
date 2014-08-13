@@ -2984,7 +2984,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"SYNC_EXP: %s (%d)\n"
+literal|"SYNC_EXP: %s (%zu)\n"
 argument_list|,
 name|resp
 argument_list|,

@@ -294,6 +294,8 @@ name|ZFS_PROP_SNAPSHOT_COUNT
 block|,
 name|ZFS_PROP_REDUNDANT_METADATA
 block|,
+name|ZFS_PROP_PREV_SNAP
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t
@@ -369,6 +371,10 @@ block|,
 name|ZPOOL_PROP_EXPANDSZ
 block|,
 name|ZPOOL_PROP_FREEING
+block|,
+name|ZPOOL_PROP_FRAGMENTATION
+block|,
+name|ZPOOL_PROP_LEAKED
 block|,
 name|ZPOOL_NUM_PROPS
 block|}
@@ -1665,6 +1671,11 @@ define|#
 directive|define
 name|SPA_MINDEVSIZE
 value|(64ULL<< 20)
+comment|/*  * Set if the fragmentation has not yet been calculated. This can happen  * because the space maps have not been upgraded or the histogram feature  * is not enabled.  */
+define|#
+directive|define
+name|ZFS_FRAG_INVALID
+value|UINT64_MAX
 comment|/*  * The location of the pool configuration repository, shared between kernel and  * userland.  */
 define|#
 directive|define
@@ -1993,6 +2004,10 @@ name|uint64_t
 name|vs_physical_ashift
 decl_stmt|;
 comment|/* vdev_physical_ashift */
+name|uint64_t
+name|vs_fragmentation
+decl_stmt|;
+comment|/* device fragmentation */
 block|}
 name|vdev_stat_t
 typedef|;

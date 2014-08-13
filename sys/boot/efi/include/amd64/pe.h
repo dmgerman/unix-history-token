@@ -2703,13 +2703,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMAGE_REL_BASED_IA64_IMM64
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
 name|IMAGE_REL_BASED_DIR64
 value|10
 end_define

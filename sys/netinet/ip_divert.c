@@ -497,18 +497,31 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|div_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|off
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+operator|*
+name|mp
+decl_stmt|;
 name|KMOD_IPSTAT_INC
 argument_list|(
 name|ips_noproto
@@ -519,6 +532,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 end_function
 

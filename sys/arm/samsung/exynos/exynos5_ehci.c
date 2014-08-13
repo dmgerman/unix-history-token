@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2013-2014 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -134,12 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -147,6 +141,18 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/samsung/exynos/exynos5_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arm/samsung/exynos/exynos5_pmu.h>
 end_include
 
 begin_include
@@ -184,31 +190,6 @@ define|#
 directive|define
 name|PIN_USB
 value|161
-end_define
-
-begin_comment
-comment|/* PWR control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXYNOS5_PWR_USBHOST_PHY
-value|0x708
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_POWER_ON
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_POWER_OFF
-value|0
 end_define
 
 begin_comment
@@ -341,23 +322,17 @@ name|resource
 modifier|*
 name|res
 index|[
-literal|5
+literal|4
 index|]
 decl_stmt|;
 name|bus_space_tag_t
 name|host_bst
 decl_stmt|;
 name|bus_space_tag_t
-name|pwr_bst
-decl_stmt|;
-name|bus_space_tag_t
 name|sysreg_bst
 decl_stmt|;
 name|bus_space_handle_t
 name|host_bsh
-decl_stmt|;
-name|bus_space_handle_t
-name|pwr_bsh
 decl_stmt|;
 name|bus_space_handle_t
 name|sysreg_bsh
@@ -394,14 +369,6 @@ block|{
 name|SYS_RES_MEMORY
 block|,
 literal|2
-block|,
-name|RF_ACTIVE
-block|}
-block|,
-block|{
-name|SYS_RES_MEMORY
-block|,
-literal|3
 block|,
 name|RF_ACTIVE
 block|}
@@ -740,7 +707,7 @@ decl_stmt|;
 name|pcell_t
 name|pin
 decl_stmt|;
-comment|/* TODO(imax): check that hub is compatible with "smsc,usb3503" */
+comment|/* TODO: check that hub is compatible with "smsc,usb3503" */
 if|if
 condition|(
 operator|!
@@ -752,15 +719,6 @@ literal|"freebsd,reset-gpio"
 argument_list|)
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|esc
-operator|->
-name|dev
-argument_list|,
-literal|"cannot detect reset GPIO pin for HSIC hub\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -828,7 +786,7 @@ name|esc
 operator|->
 name|dev
 argument_list|,
-literal|"cant find gpio_dev\n"
+literal|"Cant find gpio device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -911,20 +869,8 @@ name|USB2_MODE_HOST
 argument_list|)
 expr_stmt|;
 comment|/* Power ON phy */
-name|bus_space_write_4
-argument_list|(
-name|esc
-operator|->
-name|pwr_bst
-argument_list|,
-name|esc
-operator|->
-name|pwr_bsh
-argument_list|,
-name|EXYNOS5_PWR_USBHOST_PHY
-argument_list|,
-name|PHY_POWER_ON
-argument_list|)
+name|usb2_phy_power_on
+argument_list|()
 expr_stmt|;
 name|reg
 operator|=
@@ -1229,35 +1175,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* PWR registers */
-name|esc
-operator|->
-name|pwr_bst
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|esc
-operator|->
-name|res
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-name|esc
-operator|->
-name|pwr_bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|esc
-operator|->
-name|res
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* SYSREG */
 name|esc
 operator|->
@@ -1269,7 +1186,7 @@ name|esc
 operator|->
 name|res
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -1283,7 +1200,7 @@ name|esc
 operator|->
 name|res
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -1361,7 +1278,7 @@ name|esc
 operator|->
 name|res
 index|[
-literal|4
+literal|3
 index|]
 argument_list|,
 name|INTR_TYPE_BIO
@@ -1449,7 +1366,7 @@ name|esc
 operator|->
 name|res
 index|[
-literal|4
+literal|3
 index|]
 argument_list|,
 name|sc
@@ -1578,7 +1495,7 @@ name|esc
 operator|->
 name|res
 index|[
-literal|4
+literal|3
 index|]
 argument_list|,
 name|sc
@@ -1717,7 +1634,7 @@ name|esc
 operator|->
 name|res
 index|[
-literal|4
+literal|3
 index|]
 operator|&&
 name|sc
@@ -1735,7 +1652,7 @@ name|esc
 operator|->
 name|res
 index|[
-literal|4
+literal|3
 index|]
 argument_list|,
 name|sc

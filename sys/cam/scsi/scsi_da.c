@@ -3617,7 +3617,7 @@ name|OID_AUTO
 argument_list|,
 name|poll_period
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|da_poll_period
@@ -3625,17 +3625,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Media polling period in seconds"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.da.poll_period"
-argument_list|,
-operator|&
-name|da_poll_period
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3649,7 +3638,7 @@ name|OID_AUTO
 argument_list|,
 name|retry_count
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|da_retry_count
@@ -3657,17 +3646,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Normal I/O retry count"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.da.retry_count"
-argument_list|,
-operator|&
-name|da_retry_count
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3681,7 +3659,7 @@ name|OID_AUTO
 argument_list|,
 name|default_timeout
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|da_default_timeout
@@ -3689,17 +3667,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Normal I/O timeout (in seconds)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.da.default_timeout"
-argument_list|,
-operator|&
-name|da_default_timeout
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3713,7 +3680,7 @@ name|OID_AUTO
 argument_list|,
 name|send_ordered
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|da_send_ordered
@@ -3721,17 +3688,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Send Ordered Tags"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.da.send_ordered"
-argument_list|,
-operator|&
-name|da_send_ordered
 argument_list|)
 expr_stmt|;
 end_expr_stmt

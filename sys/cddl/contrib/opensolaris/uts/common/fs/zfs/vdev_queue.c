@@ -8,7 +8,7 @@ comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -234,17 +234,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vdev.max_active"
-argument_list|,
-operator|&
-name|zfs_vdev_max_active
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_vfs_zfs_vdev
@@ -253,7 +242,7 @@ name|OID_AUTO
 argument_list|,
 name|max_active
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfs_vdev_max_active
@@ -273,7 +262,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|TUNABLE_INT("vfs.zfs.vdev." #name "_min_active",			\&zfs_vdev_ ## name ## _min_active);					\ SYSCTL_UINT(_vfs_zfs_vdev, OID_AUTO, name ## _min_active, CTLFLAG_RW,	\&zfs_vdev_ ## name ## _min_active, 0,				\     "Initial number of I/O requests of type " #name			\     " active for each device");
+value|SYSCTL_UINT(_vfs_zfs_vdev, OID_AUTO, name ## _min_active, CTLFLAG_RWTUN,\&zfs_vdev_ ## name ## _min_active, 0,				\     "Initial number of I/O requests of type " #name			\     " active for each device");
 end_define
 
 begin_define
@@ -284,7 +273,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|TUNABLE_INT("vfs.zfs.vdev." #name "_max_active",			\&zfs_vdev_ ## name ## _max_active);					\ SYSCTL_UINT(_vfs_zfs_vdev, OID_AUTO, name ## _max_active, CTLFLAG_RW,	\&zfs_vdev_ ## name ## _max_active, 0,				\     "Maximum number of I/O requests of type " #name			\     " active for each device");
+value|SYSCTL_UINT(_vfs_zfs_vdev, OID_AUTO, name ## _max_active, CTLFLAG_RWTUN,\&zfs_vdev_ ## name ## _max_active, 0,				\     "Maximum number of I/O requests of type " #name			\     " active for each device");
 end_define
 
 begin_expr_stmt
@@ -390,17 +379,6 @@ name|ZFS_VDEV_QUEUE_KNOB
 end_undef
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vdev.aggregation_limit"
-argument_list|,
-operator|&
-name|zfs_vdev_aggregation_limit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vdev
@@ -409,7 +387,7 @@ name|OID_AUTO
 argument_list|,
 name|aggregation_limit
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfs_vdev_aggregation_limit
@@ -417,17 +395,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"I/O requests are aggregated up to this size"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vdev.read_gap_limit"
-argument_list|,
-operator|&
-name|zfs_vdev_read_gap_limit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -441,7 +408,7 @@ name|OID_AUTO
 argument_list|,
 name|read_gap_limit
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfs_vdev_read_gap_limit
@@ -449,17 +416,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Acceptable gap between two reads being aggregated"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vdev.write_gap_limit"
-argument_list|,
-operator|&
-name|zfs_vdev_write_gap_limit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -473,7 +429,7 @@ name|OID_AUTO
 argument_list|,
 name|write_gap_limit
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfs_vdev_write_gap_limit
@@ -1595,12 +1551,22 @@ specifier|static
 name|int
 name|vdev_queue_max_async_writes
 parameter_list|(
-name|uint64_t
-name|dirty
+name|spa_t
+modifier|*
+name|spa
 parameter_list|)
 block|{
 name|int
 name|writes
+decl_stmt|;
+name|uint64_t
+name|dirty
+init|=
+name|spa
+operator|->
+name|spa_dsl_pool
+operator|->
+name|dp_dirty_total
 decl_stmt|;
 name|uint64_t
 name|min_bytes
@@ -1620,6 +1586,21 @@ name|zfs_vdev_async_write_active_max_dirty_percent
 operator|/
 literal|100
 decl_stmt|;
+comment|/* 	 * Sync tasks correspond to interactive user actions. To reduce the 	 * execution time of those actions we push data out as fast as possible. 	 */
+if|if
+condition|(
+name|spa_has_pending_synctask
+argument_list|(
+name|spa
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|zfs_vdev_async_write_max_active
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|dirty
@@ -1741,10 +1722,6 @@ operator|(
 name|vdev_queue_max_async_writes
 argument_list|(
 name|spa
-operator|->
-name|spa_dsl_pool
-operator|->
-name|dp_dirty_total
 argument_list|)
 operator|)
 return|;
@@ -3190,26 +3167,6 @@ operator|=
 name|gethrtime
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|zio
-operator|->
-name|io_flags
-operator|&
-name|ZIO_FLAG_QUEUE_IO_DONE
-condition|)
-block|{
-comment|/* 		 * Executing from a previous vdev_queue_io_done so 		 * to avoid recursion we just unlock and return. 		 */
-name|mutex_exit
-argument_list|(
-operator|&
-name|vq
-operator|->
-name|vq_lock
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 while|while
 condition|(
 operator|(
@@ -3231,12 +3188,6 @@ name|vq
 operator|->
 name|vq_lock
 argument_list|)
-expr_stmt|;
-name|nio
-operator|->
-name|io_flags
-operator||=
-name|ZIO_FLAG_QUEUE_IO_DONE
 expr_stmt|;
 if|if
 condition|(
@@ -3266,13 +3217,6 @@ name|nio
 argument_list|)
 expr_stmt|;
 block|}
-name|nio
-operator|->
-name|io_flags
-operator|&=
-operator|~
-name|ZIO_FLAG_QUEUE_IO_DONE
-expr_stmt|;
 name|mutex_enter
 argument_list|(
 operator|&

@@ -473,17 +473,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.ktrace.genio_size"
-argument_list|,
-operator|&
-name|ktr_geniosize
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_ktrace
@@ -492,7 +481,7 @@ name|OID_AUTO
 argument_list|,
 name|genio_size
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ktr_geniosize

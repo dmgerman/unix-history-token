@@ -609,7 +609,7 @@ name|OID_AUTO
 argument_list|,
 name|kdb_on_nmi
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|kdb_on_nmi
@@ -617,17 +617,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Go to KDB on NMI"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"machdep.kdb_on_nmi"
-argument_list|,
-operator|&
-name|kdb_on_nmi
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -655,7 +644,7 @@ name|OID_AUTO
 argument_list|,
 name|panic_on_nmi
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|panic_on_nmi
@@ -663,17 +652,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Panic on NMI"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"machdep.panic_on_nmi"
-argument_list|,
-operator|&
-name|panic_on_nmi
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -954,8 +932,6 @@ name|dtrace_trap_func
 call|)
 argument_list|(
 name|frame
-argument_list|,
-name|type
 argument_list|)
 condition|)
 goto|goto
@@ -1379,6 +1355,18 @@ expr_stmt|;
 name|ucode
 operator|=
 name|BUS_OBJERR
+expr_stmt|;
+break|break;
+case|case
+name|T_ALIGNFLT
+case|:
+name|i
+operator|=
+name|SIGBUS
+expr_stmt|;
+name|ucode
+operator|=
+name|BUS_ADRALN
 expr_stmt|;
 break|break;
 case|case

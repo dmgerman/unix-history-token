@@ -212,14 +212,6 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"machdep.max_ldt_segment"
-argument_list|,
-operator|&
-name|max_ldt_segment
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|max_ldt_segment

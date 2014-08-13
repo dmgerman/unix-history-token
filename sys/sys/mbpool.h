@@ -162,7 +162,7 @@ comment|/* free a chunk that is an external mbuf */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|mbp_ext_free
 parameter_list|(
 name|struct

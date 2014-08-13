@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2012 Milan Jurik. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  * Copyright (c) 2013 Steven Hartland.  All rights reserved.  * Copyright 2013 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -1373,9 +1373,9 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tsend [-DnPpRv] [-[iI] snapshot] "
+literal|"\tsend [-DnPpRve] [-[iI] snapshot] "
 literal|"<snapshot>\n"
-literal|"\tsend [-i snapshot|bookmark] "
+literal|"\tsend [-e] [-i snapshot|bookmark] "
 literal|"<filesystem|volume|snapshot>\n"
 argument_list|)
 operator|)
@@ -17163,7 +17163,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":i:I:RDpvnP"
+literal|":i:I:RDpvnPe"
 argument_list|)
 operator|)
 operator|!=
@@ -17294,6 +17294,16 @@ case|:
 name|flags
 operator|.
 name|dryrun
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|flags
+operator|.
+name|embed_data
 operator|=
 name|B_TRUE
 expr_stmt|;
@@ -17477,6 +17487,12 @@ index|[
 name|ZFS_MAXNAMELEN
 index|]
 decl_stmt|;
+name|enum
+name|lzc_send_flags
+name|lzc_flags
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|flags
@@ -17553,6 +17569,16 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|flags
+operator|.
+name|embed_data
+condition|)
+name|lzc_flags
+operator||=
+name|LZC_SEND_FLAG_EMBED_DATA
+expr_stmt|;
 if|if
 condition|(
 name|fromname
@@ -17644,6 +17670,8 @@ argument_list|,
 name|fromname
 argument_list|,
 name|STDOUT_FILENO
+argument_list|,
+name|lzc_flags
 argument_list|)
 expr_stmt|;
 name|zfs_close
@@ -32169,6 +32197,14 @@ operator|=
 literal|"bookmark feature not enabled"
 expr_stmt|;
 break|break;
+case|case
+name|ENOSPC
+case|:
+name|err_msg
+operator|=
+literal|"out of space"
+expr_stmt|;
+break|break;
 default|default:
 name|err_msg
 operator|=
@@ -32199,6 +32235,8 @@ block|}
 return|return
 operator|(
 name|ret
+operator|!=
+literal|0
 operator|)
 return|;
 name|usage

@@ -321,9 +321,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ehcidebug
@@ -331,17 +329,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Debug level"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ehci.debug"
-argument_list|,
-operator|&
-name|ehcidebug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -355,9 +342,7 @@ name|OID_AUTO
 argument_list|,
 name|no_hs
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ehcinohighspeed
@@ -365,17 +350,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Disable High Speed USB"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ehci.no_hs"
-argument_list|,
-operator|&
-name|ehcinohighspeed
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -389,9 +363,7 @@ name|OID_AUTO
 argument_list|,
 name|iaadbug
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ehciiaadbug
@@ -399,17 +371,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable doorbell bug workaround"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ehci.iaadbug"
-argument_list|,
-operator|&
-name|ehciiaadbug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -423,9 +384,7 @@ name|OID_AUTO
 argument_list|,
 name|lostintrbug
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ehcilostintrbug
@@ -433,17 +392,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable lost interrupt bug workaround"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ehci.lostintrbug"
-argument_list|,
-operator|&
-name|ehcilostintrbug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1079,7 +1027,7 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
-literal|"Reset timeout\n"
+literal|"reset timeout\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1408,7 +1356,7 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
-literal|"Run timeout\n"
+literal|"run timeout\n"
 argument_list|)
 expr_stmt|;
 return|return

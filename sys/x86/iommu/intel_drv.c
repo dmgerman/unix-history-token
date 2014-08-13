@@ -32,10 +32,6 @@ name|__amd64__
 argument_list|)
 end_if
 
-begin_comment
-comment|/* || defined(__ia64__) */
-end_comment
-
 begin_define
 define|#
 directive|define

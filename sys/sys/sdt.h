@@ -24,13 +24,6 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_DTRACE_VERSION
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|DTRACE_PROBE
 parameter_list|(
 name|prov

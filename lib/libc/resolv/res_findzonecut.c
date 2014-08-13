@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_findzonecut.c,v 1.7.18.3 2005/10/11 00:25:11 marka Exp $"
+literal|"$Id: res_findzonecut.c,v 1.10 2005/10/11 00:10:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: fparseln.c,v 1.9 1999/09/20 04:48:06 lukem Exp $	*/
+comment|/*	$NetBSD: fparseln.c,v 1.7 2007/03/08 19:57:53 drochner Exp $	*/
 end_comment
 
 begin_comment
@@ -126,7 +126,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-literal|1
+literal|0
 return|;
 comment|/* Count the number of escape characters that precede ours */
 for|for
@@ -461,7 +461,7 @@ block|{
 name|s
 operator|--
 expr_stmt|;
-comment|/* forget escape */
+comment|/* forget continuation char */
 name|cnt
 operator|=
 literal|1
@@ -473,12 +473,19 @@ condition|(
 name|s
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+comment|/* 			 * nothing to add, skip realloc except in case 			 * we need a minimal buf to return an empty line 			 */
+if|if
+condition|(
+name|cnt
+operator|||
 name|buf
 operator|!=
 name|NULL
 condition|)
 continue|continue;
+block|}
 if|if
 condition|(
 operator|(

@@ -255,7 +255,7 @@ decl_stmt|;
 name|u_register_t
 name|c
 decl_stmt|;
-comment|/* 32 bit on i386, 64 bit on alpha,ia64 */
+comment|/* 32 bit on i386, 64 bit on alpha */
 while|while
 condition|(
 operator|(

@@ -346,7 +346,7 @@ name|OID_AUTO
 argument_list|,
 name|lookup_shared
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|lookup_shared
@@ -354,17 +354,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enables/Disables shared locks for path name translation"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.lookup_shared"
-argument_list|,
-operator|&
-name|lookup_shared
 argument_list|)
 expr_stmt|;
 end_expr_stmt

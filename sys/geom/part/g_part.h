@@ -194,6 +194,9 @@ comment|/* A DfBSD HAMMER FS partition entry */
 name|G_PART_ALIAS_DFBSD_HAMMER2
 block|,
 comment|/* A DfBSD HAMMER2 FS partition entry */
+name|G_PART_ALIAS_PREP_BOOT
+block|,
+comment|/* A PREP/CHRP boot partition entry. */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}

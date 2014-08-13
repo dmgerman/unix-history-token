@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2013 by Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  * Copyright (c) 2013 by Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -2499,6 +2499,8 @@ operator|&
 name|dsda
 argument_list|,
 literal|0
+argument_list|,
+name|ZFS_SPACE_CHECK_NONE
 argument_list|)
 expr_stmt|;
 name|fnvlist_free
@@ -2621,7 +2623,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -2653,6 +2655,11 @@ decl_stmt|;
 if|if
 condition|(
 name|BP_IS_HOLE
+argument_list|(
+name|bp
+argument_list|)
+operator|||
+name|BP_IS_EMBEDDED
 argument_list|(
 name|bp
 argument_list|)
@@ -2857,6 +2864,15 @@ name|objset_t
 modifier|*
 name|mos
 decl_stmt|;
+name|ASSERT
+argument_list|(
+operator|!
+name|dsl_dataset_is_snapshot
+argument_list|(
+name|ds
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dsl_dataset_is_snapshot
@@ -3531,7 +3547,7 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-comment|/* Remove our reservation */
+comment|/* Remove our reservation. */
 if|if
 condition|(
 name|ds
@@ -4536,6 +4552,8 @@ operator|&
 name|ddha
 argument_list|,
 literal|0
+argument_list|,
+name|ZFS_SPACE_CHECK_NONE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4654,6 +4672,8 @@ operator|&
 name|ddha
 argument_list|,
 literal|0
+argument_list|,
+name|ZFS_SPACE_CHECK_NONE
 argument_list|)
 operator|)
 return|;

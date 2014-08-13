@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2014, Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_ifdef
@@ -662,7 +662,7 @@ name|B_FALSE
 argument_list|,
 name|B_FALSE
 argument_list|,
-name|B_FALSE
+name|B_TRUE
 argument_list|,
 name|NULL
 argument_list|)
@@ -833,6 +833,25 @@ argument_list|,
 name|B_FALSE
 argument_list|,
 name|filesystem_limits_deps
+argument_list|)
+expr_stmt|;
+name|zfeature_register
+argument_list|(
+name|SPA_FEATURE_EMBEDDED_DATA
+argument_list|,
+literal|"com.delphix:embedded_data"
+argument_list|,
+literal|"embedded_data"
+argument_list|,
+literal|"Blocks which compress very well use even less space."
+argument_list|,
+name|B_FALSE
+argument_list|,
+name|B_TRUE
+argument_list|,
+name|B_TRUE
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

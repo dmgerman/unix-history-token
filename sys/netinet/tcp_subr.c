@@ -823,8 +823,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|tcp_tcbhashsize
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -838,6 +836,8 @@ argument_list|,
 name|tcbhashsize
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|tcp_tcbhashsize
@@ -997,8 +997,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|tcp_soreceive_stream
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1746,14 +1744,6 @@ expr_stmt|;
 name|tcp_tcbhashsize
 operator|=
 name|hashsize
-expr_stmt|;
-name|TUNABLE_INT_FETCH
-argument_list|(
-literal|"net.inet.tcp.soreceive_stream"
-argument_list|,
-operator|&
-name|tcp_soreceive_stream
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

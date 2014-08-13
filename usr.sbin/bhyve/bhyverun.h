@@ -64,6 +64,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|VMEXIT_CONTINUE
+value|1
+end_define
+
+begin_comment
+comment|/* continue from next instruction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMEXIT_RESTART
+value|2
+end_define
+
+begin_comment
+comment|/* restart current instruction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMEXIT_ABORT
+value|3
+end_define
+
+begin_comment
+comment|/* abort the vm run loop */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|vmctx

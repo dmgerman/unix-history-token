@@ -745,7 +745,7 @@ name|params
 modifier|...
 parameter_list|)
 define|\
-value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    SCTP_PRINTF(params);						\ 	}								\     } while (0);							\ }
+value|{									\ 	do {								\ 		if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {		\ 			SCTP_PRINTF(params);				\ 		}							\ 	} while (0);							\ }
 end_define
 
 begin_define
@@ -758,7 +758,7 @@ parameter_list|,
 name|addr
 parameter_list|)
 define|\
-value|{									\     do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 	    sctp_print_address(addr);					\ 	}								\     } while (0);							\ }
+value|{									\ 	do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 		sctp_print_address(addr);				\ 	}								\ 	} while (0);							\ }
 end_define
 
 begin_else
@@ -865,7 +865,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|if (SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \         	SCTP_PRINTF("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 		            m, inp, stcb, net, file, __LINE__, err);
+value|if (SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \ 		SCTP_PRINTF("mbuf:%p inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 		            m, inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_define
@@ -884,7 +884,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|if (SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \         	SCTP_PRINTF("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 		            inp, stcb, net, file, __LINE__, err);
+value|if (SCTP_BASE_SYSCTL(sctp_logging_level)& SCTP_LTRACE_ERROR_ENABLE) \ 		SCTP_PRINTF("inp:%p stcb:%p net:%p file:%x line:%d error:%d\n", \ 		            inp, stcb, net, file, __LINE__, err);
 end_define
 
 begin_else
@@ -1064,7 +1064,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do { \ 	var = (type)malloc(size, name, M_NOWAIT); \     } while (0)
+value|do { \ 		var = (type)malloc(size, name, M_NOWAIT); \ 	} while (0)
 end_define
 
 begin_define
@@ -1091,7 +1091,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|do { \ 	var = (type)malloc(size, M_SONAME, M_WAITOK | M_ZERO); \     } while (0)
+value|do { \ 		var = (type)malloc(size, M_SONAME, M_WAITOK | M_ZERO); \ 	} while (0)
 end_define
 
 begin_define
@@ -1569,7 +1569,7 @@ name|SCTP_BUF_EXTEND_REFCNT
 parameter_list|(
 name|m
 parameter_list|)
-value|(*m->m_ext.ref_cnt)
+value|(*m->m_ext.ext_cnt)
 end_define
 
 begin_comment

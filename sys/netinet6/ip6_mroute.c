@@ -244,12 +244,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/pim6.h>
 end_include
 
@@ -406,7 +400,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ip6protosw
+name|protosw
 name|in6_pim_protosw
 init|=
 block|{
@@ -443,6 +437,10 @@ block|,
 operator|.
 name|pr_output
 operator|=
+operator|(
+name|pr_output_t
+operator|*
+operator|)
 name|rip6_output
 block|,
 operator|.

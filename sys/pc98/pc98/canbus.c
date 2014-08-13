@@ -835,17 +835,12 @@ argument_list|)
 expr_stmt|;
 name|canbus_sysctl_tree
 operator|=
-name|SYSCTL_ADD_NODE
+name|SYSCTL_ADD_ROOT_NODE
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|canbus_sysctl_ctx
-argument_list|,
-name|SYSCTL_STATIC_CHILDREN
-argument_list|(
-comment|/* tree top */
-argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,

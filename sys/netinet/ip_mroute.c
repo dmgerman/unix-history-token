@@ -7437,19 +7437,38 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|X_rsvp_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|off
-name|__unused
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|m
+operator|=
+operator|*
+name|mp
+expr_stmt|;
+operator|*
+name|mp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7460,6 +7479,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 end_function
 
@@ -10908,18 +10932,31 @@ comment|/*  * PIM-SMv2 and PIM-DM messages processing.  * Receives and verifies 
 end_comment
 
 begin_function
-name|void
+name|int
 name|pim_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|iphlen
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+operator|*
+name|mp
+decl_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -10940,6 +10977,12 @@ modifier|*
 name|pim
 decl_stmt|;
 name|int
+name|iphlen
+init|=
+operator|*
+name|offp
+decl_stmt|;
+name|int
 name|minlen
 decl_stmt|;
 name|int
@@ -10957,6 +11000,11 @@ decl_stmt|;
 name|int
 name|ip_tos
 decl_stmt|;
+operator|*
+name|mp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Keep statistics */
 name|PIMSTAT_INC
 argument_list|(
@@ -11006,7 +11054,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/*      * If the packet is at least as big as a REGISTER, go agead      * and grab the PIM REGISTER header size, to avoid another      * possible m_pullup() later.      *      * PIM_MINLEN       == pimhdr + u_int32_t == 4 + 4 = 8      * PIM_REG_MINLEN   == pimhdr + reghdr + encap_iphdr == 4 + 4 + 20 = 28      */
 name|minlen
@@ -11055,7 +11107,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* m_pullup() may have given us a new mbuf so reset ip. */
 name|ip
@@ -11153,7 +11209,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* PIM version check */
 if|if
@@ -11199,7 +11259,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* restore mbuf back to the outer IP */
 name|m
@@ -11299,7 +11363,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* XXX need refcnt? */
 name|vifp
@@ -11346,7 +11414,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 name|reghdr
 operator|=
@@ -11425,7 +11497,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* verify the inner packet is destined to a mcast group */
 if|if
@@ -11470,7 +11546,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* If a NULL_REGISTER, pass it to the daemon */
 if|if
@@ -11605,7 +11685,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* Keep statistics */
 comment|/* XXX: registers_bytes include only the encap. mcast pkt */
@@ -11697,14 +11781,25 @@ block|}
 name|pim_input_to_daemon
 label|:
 comment|/*      * Pass the PIM message up to the daemon; if it is a Register message,      * pass the 'head' only up to the daemon. This includes the      * outer IP header, PIM header, PIM-Register header and the      * inner IP header.      * XXX: the outer IP header pkt size of a Register is not adjust to      * reflect the fact that the inner multicast data is truncated.      */
+operator|*
+name|mp
+operator|=
+name|m
+expr_stmt|;
 name|rip_input
 argument_list|(
-name|m
+name|mp
 argument_list|,
-name|iphlen
+name|offp
+argument_list|,
+name|proto
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 end_function
 

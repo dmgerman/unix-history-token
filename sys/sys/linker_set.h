@@ -36,6 +36,42 @@ begin_comment
 comment|/*  * The following macros are used to declare global sets of objects, which  * are collected by the linker into a `linker_set' as defined below.  * For ELF, this is done by constructing a separate segment for each set.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Move the symbol pointer from ".text" to ".data" segment, to make  * the GCC compiler happy:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__MAKE_SET_CONST
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__MAKE_SET_CONST
+value|const
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Private macros, not to be used outside this header file.  */
 end_comment
@@ -56,7 +92,7 @@ parameter_list|,
 name|sym
 parameter_list|)
 define|\
-value|__GLOBL(__CONCAT(__start_set_,set));				\ 	__GLOBL(__CONCAT(__stop_set_,set));				\ 	static void const * const __set_##set##_sym_##sym 		\ 	__section("set_" #set) __used =&sym
+value|__GLOBL(__CONCAT(__start_set_,set));		\ 	__GLOBL(__CONCAT(__stop_set_,set));		\ 	static void const * __MAKE_SET_CONST		\ 	__set_##set##_sym_##sym __section("set_" #set)	\ 	__used =&(sym)
 end_define
 
 begin_else
@@ -188,7 +224,7 @@ parameter_list|,
 name|ptype
 parameter_list|)
 define|\
-value|extern ptype *__CONCAT(__start_set_,set);			\ 	extern ptype *__CONCAT(__stop_set_,set)
+value|extern ptype __weak *__CONCAT(__start_set_,set);	\ 	extern ptype __weak *__CONCAT(__stop_set_,set)
 end_define
 
 begin_define

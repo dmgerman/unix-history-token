@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: extern.h,v 1.52 2012/04/12 17:00:11 espie Exp $	*/
+comment|/*	$OpenBSD: extern.h,v 1.54 2014/05/12 19:11:19 espie Exp $ */
 end_comment
 
 begin_comment
@@ -656,7 +656,25 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|xcalloc
+parameter_list|(
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -677,7 +695,28 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|xreallocarray
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)

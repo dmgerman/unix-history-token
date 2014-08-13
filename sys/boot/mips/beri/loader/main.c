@@ -538,7 +538,9 @@ block|printf("bootpath=\"%s\"\n", bootpath);
 endif|#
 directive|endif
 name|interact
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

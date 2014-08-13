@@ -198,12 +198,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_ecn.h>
 end_include
 
@@ -312,7 +306,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ip6protosw
+name|protosw
 name|in6_gif_protosw
 init|=
 block|{
@@ -348,6 +342,10 @@ block|,
 operator|.
 name|pr_output
 operator|=
+operator|(
+name|pr_output_t
+operator|*
+operator|)
 name|rip6_output
 block|,
 operator|.
@@ -782,6 +780,10 @@ expr|struct
 name|etherip_header
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|itos
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -1253,6 +1255,17 @@ block|ifp->if_mtu = sc->gif_ro6.ro_rt->rt_ifp->if_mtu 			- sizeof(struct ip6_hdr
 endif|#
 directive|endif
 block|}
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_BCAST
+operator||
+name|M_MCAST
+operator|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPV6_MINMTU

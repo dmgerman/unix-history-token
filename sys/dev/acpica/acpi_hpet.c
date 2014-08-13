@@ -30,11 +30,6 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
 end_if
 
 begin_define
@@ -408,6 +403,18 @@ literal|"PNP0103"
 block|,
 name|NULL
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Knob to disable acpi_hpet device */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|acpi_hpet_disabled
+init|=
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -1903,6 +1910,8 @@ name|acpi_disabled
 argument_list|(
 literal|"hpet"
 argument_list|)
+operator|||
+name|acpi_hpet_disabled
 condition|)
 return|return
 operator|(
@@ -2987,7 +2996,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Can't allocate interrupt for t%d.\n"
+literal|"Can't allocate interrupt for t%d: %d\n"
+argument_list|,
+name|i
 argument_list|,
 name|j
 argument_list|)

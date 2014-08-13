@@ -458,7 +458,7 @@ block|{
 specifier|volatile
 name|u_int
 modifier|*
-name|ref_cnt
+name|ext_cnt
 decl_stmt|;
 comment|/* pointer to ref count info */
 name|caddr_t
@@ -480,7 +480,7 @@ range|:
 literal|24
 decl_stmt|;
 comment|/* external storage mbuf flags */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|ext_free
@@ -606,13 +606,6 @@ define|#
 directive|define
 name|m_nextpkt
 value|m_hdr.mh_nextpkt
-end_define
-
-begin_define
-define|#
-directive|define
-name|m_act
-value|m_nextpkt
 end_define
 
 begin_define
@@ -944,6 +937,10 @@ begin_comment
 comment|/*  * Network interface cards are able to hash protocol fields (such as IPv4  * addresses and TCP port numbers) classify packets into flows.  These flows  * can then be used to maintain ordering while delivering packets to the OS  * via parallel input queues, as well as to provide a stateless affinity  * model.  NIC drivers can pass up the hash via m->m_pkthdr.flowid, and set  * m_flag fields to indicate how the hash should be interpreted by the  * network stack.  *  * Most NICs support RSS, which provides ordering and explicit affinity, and  * use the hash m_flag bits to indicate what header fields were covered by  * the hash.  M_HASHTYPE_OPAQUE can be set by non-RSS cards or configurations  * that provide an opaque flow identifier, allowing for ordering and  * distribution without explicit affinity.  */
 end_comment
 
+begin_comment
+comment|/* Microsoft RSS standard hash types */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1015,6 +1012,54 @@ end_define
 
 begin_comment
 comment|/* TCPv6 4-tiple + ext hdrs */
+end_comment
+
+begin_comment
+comment|/* Non-standard RSS hash types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_UDP_IPV4
+value|7
+end_define
+
+begin_comment
+comment|/* IPv4 UDP 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_UDP_IPV4_EX
+value|8
+end_define
+
+begin_comment
+comment|/* IPv4 UDP 4-tuple + ext hdrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_UDP_IPV6
+value|9
+end_define
+
+begin_comment
+comment|/* IPv6 UDP 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_UDP_IPV6_EX
+value|10
+end_define
+
+begin_comment
+comment|/* IPv6 UDP 4-tuple + ext hdrs */
 end_comment
 
 begin_define
@@ -1440,7 +1485,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* has externally maintained ref_cnt ptr */
+comment|/* has externally maintained ext_cnt ptr */
 end_comment
 
 begin_comment
@@ -1455,7 +1500,7 @@ value|0x000001
 end_define
 
 begin_comment
-comment|/* embedded ref_cnt, notyet */
+comment|/* embedded ext_cnt, notyet */
 end_comment
 
 begin_define
@@ -1466,7 +1511,7 @@ value|0x000002
 end_define
 
 begin_comment
-comment|/* external ref_cnt, notyet */
+comment|/* external ext_cnt, notyet */
 end_comment
 
 begin_define
@@ -1581,19 +1626,34 @@ value|"\20\1EXT_FLAG_EMBREF\2EXT_FLAG_EXTREF\5EXT_FLAG_NOFREE" \     "\21EXT_FLA
 end_define
 
 begin_comment
-comment|/*  * Return values for (*ext_free).  */
+comment|/*  * External reference/free functions.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|EXT_FREE_OK
-value|0
-end_define
+begin_function_decl
+name|void
+name|sf_ext_ref
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* Normal return */
-end_comment
+begin_function_decl
+name|void
+name|sf_ext_free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Flags indicating checksum, segmentation and other offload work to be  * done, or already done, by hardware or lower layers.  It is split into  * separate inbound and outbound flags.  *  * Outbound flags that are set by upper protocol layers requesting lower  * layers, or ideally the hardware, to perform these offloading tasks.  * For outbound packets this field and its flags can be directly tested  * against if_data.ifi_hwassist.  */
@@ -2411,7 +2471,7 @@ name|u_int
 modifier|*
 name|ref_cnt
 parameter_list|,
-name|int
+name|void
 function_decl|(
 modifier|*
 name|freef
@@ -2475,7 +2535,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 name|ref_cnt
 expr_stmt|;
@@ -3255,7 +3315,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 name|uma_find_refcnt
 argument_list|(
@@ -3462,7 +3522,7 @@ name|M_WRITABLE
 parameter_list|(
 name|m
 parameter_list|)
-value|(!((m)->m_flags& M_RDONLY)&&			\ 			 (!(((m)->m_flags& M_EXT)) ||			\ 			 (*((m)->m_ext.ref_cnt) == 1)) )
+value|(!((m)->m_flags& M_RDONLY)&&			\ 			 (!(((m)->m_flags& M_EXT)) ||			\ 			 (*((m)->m_ext.ext_cnt) == 1)) )
 end_define
 
 begin_comment
@@ -3798,7 +3858,7 @@ name|caddr_t
 parameter_list|,
 name|u_int
 parameter_list|,
-name|int
+name|void
 function_decl|(
 modifier|*
 function_decl|)

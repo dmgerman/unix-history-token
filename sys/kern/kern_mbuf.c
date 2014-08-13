@@ -212,6 +212,8 @@ argument_list|,
 name|maxmbufmem
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|maxmbufmem
@@ -1910,25 +1912,6 @@ name|m
 operator|->
 name|m_flags
 operator|&
-name|M_EXT
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"%s: M_EXT set"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
 name|M_NOFREE
 operator|)
 operator|==
@@ -2141,12 +2124,12 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"%s: ref_cnt != 1"
+literal|"%s: ext_cnt != 1"
 operator|,
 name|__func__
 operator|)
@@ -2418,7 +2401,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 name|refcnt
 expr_stmt|;

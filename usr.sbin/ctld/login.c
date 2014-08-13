@@ -4238,6 +4238,24 @@ literal|"received Login PDU with non-zero TSIH"
 argument_list|)
 expr_stmt|;
 block|}
+name|memcpy
+argument_list|(
+name|conn
+operator|->
+name|conn_initiator_isid
+argument_list|,
+name|bhslr
+operator|->
+name|bhslr_isid
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|conn
+operator|->
+name|conn_initiator_isid
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX: Implement the C flag some day. 	 */
 name|request_keys
 operator|=
@@ -4747,9 +4765,10 @@ name|auth_portal_find
 argument_list|(
 name|ag
 argument_list|,
+operator|&
 name|conn
 operator|->
-name|conn_initiator_addr
+name|conn_initiator_sa
 argument_list|)
 operator|==
 name|NULL

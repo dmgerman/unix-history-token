@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1187,7 +1187,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If the znode is still valid, then so is the file system. We know that 	 * no valid file system can be freed while we hold zfsvfs_lock, so we 	 * can safely ensure that the filesystem is not and will not be 	 * unmounted. The next statement is equivalent to ZFS_ENTER(). 	 */
-name|rrw_enter
+name|rrm_enter
 argument_list|(
 operator|&
 name|zfsvfs
@@ -5940,6 +5940,13 @@ name|err
 operator|==
 literal|0
 condition|)
+block|{
+name|vp
+operator|->
+name|v_hash
+operator|=
+name|obj_num
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
@@ -5947,6 +5954,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|zp
@@ -7252,7 +7260,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * Increase the file length  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file  *  * 	RETURN:	0 on success, error code on failure  */
+comment|/*  * Increase the file length  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file  *  *	RETURN:	0 on success, error code on failure  */
 end_comment
 
 begin_function
@@ -7562,7 +7570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free space in a file.  *  *	IN:	zp	- znode of file to free data in.  *		off	- start of section to free.  *		len	- length of section to free.  *  * 	RETURN:	0 on success, error code on failure  */
+comment|/*  * Free space in a file.  *  *	IN:	zp	- znode of file to free data in.  *		off	- start of section to free.  *		len	- length of section to free.  *  *	RETURN:	0 on success, error code on failure  */
 end_comment
 
 begin_function
@@ -7699,7 +7707,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Truncate a file  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file.  *  * 	RETURN:	0 on success, error code on failure  */
+comment|/*  * Truncate a file  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file.  *  *	RETURN:	0 on success, error code on failure  */
 end_comment
 
 begin_function
@@ -7850,6 +7858,11 @@ argument_list|,
 name|zp
 argument_list|)
 expr_stmt|;
+name|dmu_tx_mark_netfree
+argument_list|(
+name|tx
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|dmu_tx_assign
@@ -7993,7 +8006,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free space in a file  *  *	IN:	zp	- znode of file to free data in.  *		off	- start of range  *		len	- end of range (0 => EOF)  *		flag	- current file open mode flags.  *		log	- TRUE if this action should be logged  *  * 	RETURN:	0 on success, error code on failure  */
+comment|/*  * Free space in a file  *  *	IN:	zp	- znode of file to free data in.  *		off	- start of range  *		len	- end of range (0 => EOF)  *		flag	- current file open mode flags.  *		log	- TRUE if this action should be logged  *  *	RETURN:	0 on success, error code on failure  */
 end_comment
 
 begin_function

@@ -798,14 +798,6 @@ name|ch
 operator|->
 name|dma
 operator|.
-name|work_map
-operator|=
-name|NULL
-expr_stmt|;
-name|ch
-operator|->
-name|dma
-operator|.
 name|work
 operator|=
 name|NULL

@@ -121,17 +121,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vdev.cache.max"
-argument_list|,
-operator|&
-name|zfs_vdev_cache_max
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vdev_cache
@@ -153,17 +142,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vdev.cache.size"
-argument_list|,
-operator|&
-name|zfs_vdev_cache_size
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_vdev_cache
@@ -180,17 +158,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Size of VDEV cache"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vdev.cache.bshift"
-argument_list|,
-operator|&
-name|zfs_vdev_cache_bshift
 argument_list|)
 expr_stmt|;
 end_expr_stmt

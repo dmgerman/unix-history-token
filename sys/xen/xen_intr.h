@@ -246,6 +246,28 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Register a physical interrupt vector and setup the interrupt source.  *  * \param vector        The global vector to use.  * \param trig          Default trigger method.  * \param pol           Default polarity of the interrupt.  *  * \returns  0 on success, otherwise an errno.  */
+end_comment
+
+begin_function_decl
+name|int
+name|xen_register_pirq
+parameter_list|(
+name|int
+name|vector
+parameter_list|,
+name|enum
+name|intr_trigger
+name|trig
+parameter_list|,
+name|enum
+name|intr_polarity
+name|pol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Unbind an interrupt handler from its interrupt source.  *  * \param handlep  A pointer to the opaque handle that was initialized  *		   at the time the interrupt source was bound.  *  * \returns  0 on success, otherwise an errno.  *  * \note  The event channel, if any, that was allocated at bind time is  *        closed upon successful return of this method.  *  * \note  It is always safe to call xen_intr_unbind() on a handle that  *        has been initilized to NULL.  */
 end_comment
 

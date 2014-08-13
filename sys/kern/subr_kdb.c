@@ -555,9 +555,7 @@ name|break_to_debugger
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 operator||
 name|CTLFLAG_SECURE
 argument_list|,
@@ -567,17 +565,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable break to debugger"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.kdb.break_to_debugger"
-argument_list|,
-operator|&
-name|kdb_break_to_debugger
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -593,9 +580,7 @@ name|alt_break_to_debugger
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 operator||
 name|CTLFLAG_SECURE
 argument_list|,
@@ -605,17 +590,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable alternative break to debugger"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.kdb.alt_break_to_debugger"
-argument_list|,
-operator|&
-name|kdb_alt_break_to_debugger
 argument_list|)
 expr_stmt|;
 end_expr_stmt

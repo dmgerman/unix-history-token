@@ -241,9 +241,14 @@ operator|=
 name|vt_fb_bitbltchr
 block|,
 operator|.
-name|vd_maskbitbltchr
+name|vd_fb_ioctl
 operator|=
-name|vt_fb_maskbitbltchr
+name|vt_fb_ioctl
+block|,
+operator|.
+name|vd_fb_mmap
+operator|=
+name|vt_fb_mmap
 block|,
 comment|/* Better than VGA, but still generic driver. */
 operator|.
@@ -707,7 +712,7 @@ operator|=
 literal|0x10000000
 expr_stmt|;
 comment|/* 32-bit VGA palette */
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|sc
 operator|->
@@ -719,7 +724,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|255
 argument_list|,
-literal|16
+literal|0
 argument_list|,
 literal|255
 argument_list|,
@@ -727,7 +732,7 @@ literal|8
 argument_list|,
 literal|255
 argument_list|,
-literal|0
+literal|16
 argument_list|)
 expr_stmt|;
 comment|/* Set correct graphics context */
@@ -765,27 +770,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fb_probe
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|fb_info
-argument_list|)
-expr_stmt|;
 name|vt_fb_init
 argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
-comment|/* Clear the screen. */
-name|vt_fb_blank
-argument_list|(
-name|vd
-argument_list|,
-name|TC_BLACK
-argument_list|)
+name|sc
+operator|->
+name|fb_info
+operator|.
+name|fb_flags
+operator|&=
+operator|~
+name|FB_FLAG_NOMMAP
 expr_stmt|;
+comment|/* Set wrongly by vt_fb_init */
 return|return
 operator|(
 name|CN_INTERNAL

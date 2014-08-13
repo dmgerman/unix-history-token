@@ -66,6 +66,28 @@ value|(1<< 24)
 end_define
 
 begin_comment
+comment|/* Support for indirect buffer descriptors. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_RING_F_INDIRECT_DESC
+value|(1<< 28)
+end_define
+
+begin_comment
+comment|/* Support to suppress interrupt until specific index is reached. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIRTIO_RING_F_EVENT_IDX
+value|(1<< 29)
+end_define
+
+begin_comment
 comment|/*  * The guest should never negotiate this feature; it  * is used to detect faulty drivers.  */
 end_comment
 

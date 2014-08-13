@@ -333,6 +333,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OBJ_TMPFS_NODE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* object belongs to tmpfs VREG node */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OBJ_COLORED
 value|0x1000
 end_define
@@ -369,6 +380,10 @@ directive|define
 name|OBJ_TMPFS
 value|0x8000
 end_define
+
+begin_comment
+comment|/* has tmpfs vnode allocated */
+end_comment
 
 begin_define
 define|#
@@ -566,6 +581,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_OBJECT_ASSERT_UNLOCKED
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_assert(&(object)->lock, RA_UNLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_OBJECT_LOCK_DOWNGRADE
 parameter_list|(
 name|object
@@ -635,6 +661,17 @@ name|object
 parameter_list|)
 define|\
 value|rw_try_wlock(&(object)->lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_OBJECT_TRYUPGRADE
+parameter_list|(
+name|object
+parameter_list|)
+define|\
+value|rw_try_upgrade(&(object)->lock)
 end_define
 
 begin_define
@@ -1037,6 +1074,25 @@ parameter_list|,
 name|boolean_t
 parameter_list|,
 name|boolean_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_object_unwire
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_ooffset_t
+name|offset
+parameter_list|,
+name|vm_size_t
+name|length
+parameter_list|,
+name|uint8_t
+name|queue
 parameter_list|)
 function_decl|;
 end_function_decl

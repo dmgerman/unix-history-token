@@ -21,6 +21,12 @@ directive|include
 file|<sys/pcpu.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -60,10 +66,6 @@ directive|ifdef
 name|IN_SUBR_COUNTER_C
 end_ifdef
 
-begin_comment
-comment|/* XXXKIB non-atomic 64bit read */
-end_comment
-
 begin_function
 specifier|static
 specifier|inline
@@ -80,7 +82,8 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|*
+name|atomic_load_64
+argument_list|(
 operator|(
 name|uint64_t
 operator|*
@@ -100,6 +103,7 @@ argument_list|)
 operator|*
 name|cpu
 operator|)
+argument_list|)
 operator|)
 return|;
 block|}
@@ -160,10 +164,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXXKIB non-atomic 64bit store, might interrupt increment */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -174,8 +174,8 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-operator|*
-operator|(
+name|atomic_store_64
+argument_list|(
 operator|(
 name|uint64_t
 operator|*
@@ -198,9 +198,9 @@ argument_list|(
 name|cpuid
 argument_list|)
 operator|)
-operator|)
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -243,7 +243,7 @@ name|c
 parameter_list|,
 name|inc
 parameter_list|)
-value|do {	\ 	CRITICAL_ASSERT(curthread);			\ 	*(uint64_t *)zpcpu_get(c) += (inc);		\ } while (0)
+value|do {	\ 	CRITICAL_ASSERT(curthread);			\ 	atomic_add_64((uint64_t *)zpcpu_get(c), (inc));	\ } while (0)
 end_define
 
 begin_function

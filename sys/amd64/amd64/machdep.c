@@ -3242,17 +3242,6 @@ comment|/* Use MONITOR/MWAIT for short idle. */
 end_comment
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"machdep.idle_mwait"
-argument_list|,
-operator|&
-name|idle_mwait
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_machdep
@@ -3261,7 +3250,7 @@ name|OID_AUTO
 argument_list|,
 name|idle_mwait
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|idle_mwait
@@ -9221,6 +9210,29 @@ comment|/* 	 * Initialize the clock before the console so that console 	 * initi
 name|clock_init
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Use vt(4) by default for UEFI boot (during the sc(4)/vt(4) 	 * transition). 	 */
+if|if
+condition|(
+name|kmdp
+operator|!=
+name|NULL
+operator|&&
+name|preload_search_info
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFO_METADATA
+operator||
+name|MODINFOMD_EFI_MAP
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|vty_set_preferred
+argument_list|(
+name|VTY_VT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
 name|cninit
 argument_list|()
@@ -10020,6 +10032,15 @@ name|tf_rip
 operator|=
 name|addr
 expr_stmt|;
+name|set_pcb_flags
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|,
+name|PCB_FULL_IRET
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10636,6 +10657,7 @@ name|tf_flags
 operator|=
 name|TF_HASSEGS
 expr_stmt|;
+block|}
 name|set_pcb_flags
 argument_list|(
 name|td
@@ -10645,7 +10667,6 @@ argument_list|,
 name|PCB_FULL_IRET
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0

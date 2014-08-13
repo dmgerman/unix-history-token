@@ -872,6 +872,14 @@ operator|==
 name|NULL
 condition|)
 break|break;
+comment|/* Peel the mbuf off any stale tags */
+name|m_tag_delete_chain
+argument_list|(
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Berkeley packet filter. 		 * Pass packet to bpf if there is a listener. 		 * XXX is this safe? locking? 		 */
 name|BPF_MTAP
 argument_list|(

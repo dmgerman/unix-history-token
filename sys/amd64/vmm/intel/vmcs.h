@@ -1932,6 +1932,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMCS_INTR_T_SWINTR
+value|(4<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_T_PRIV_SWEXCEPTION
+value|(5<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_T_SWEXCEPTION
+value|(6<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMCS_INTR_DEL_ERRCODE
 value|(1<< 11)
 end_define

@@ -82,12 +82,6 @@ literal|"sparc64"
 block|}
 block|,
 block|{
-name|EM_IA_64
-block|,
-literal|"ia64"
-block|}
-block|,
-block|{
 operator|-
 literal|1
 block|,

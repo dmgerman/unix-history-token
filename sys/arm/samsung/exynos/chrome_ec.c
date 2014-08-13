@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -115,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/fdt.h>
 end_include
 
 begin_include
@@ -284,7 +272,7 @@ argument_list|,
 name|GPIO_PIN_LOW
 argument_list|)
 expr_stmt|;
-comment|/* TODO(imax): insert a delay to allow EC to react. */
+comment|/* TODO: insert a delay to allow EC to react. */
 comment|/* Check EC decision */
 name|GPIO_PIN_GET
 argument_list|(
@@ -830,7 +818,7 @@ literal|0x10
 expr_stmt|;
 name|ec_command
 argument_list|(
-name|EC_CMD_MKBP_STATE
+name|EC_CMD_HELLO
 argument_list|,
 name|data_in
 argument_list|,
@@ -863,7 +851,7 @@ block|{
 name|phandle_t
 name|arbitrator
 decl_stmt|;
-comment|/* TODO(imax): look for compatible entry instead of hard-coded path */
+comment|/* TODO: look for compatible entry instead of hard-coded path */
 name|arbitrator
 operator|=
 name|OF_finddevice

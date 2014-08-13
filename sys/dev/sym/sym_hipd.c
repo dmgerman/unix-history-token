@@ -308,21 +308,6 @@ begin_elif
 elif|#
 directive|elif
 name|defined
-name|__ia64__
-end_elif
-
-begin_define
-define|#
-directive|define
-name|MEMORY_BARRIER
-parameter_list|()
-value|__asm__ volatile("mf.a; mf" : : : "memory")
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
 name|__sparc64__
 end_elif
 

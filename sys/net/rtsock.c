@@ -6170,7 +6170,9 @@ name|ifam_metric
 operator|=
 name|ifa
 operator|->
-name|ifa_metric
+name|ifa_ifp
+operator|->
+name|if_metric
 expr_stmt|;
 name|ifam
 operator|->
@@ -8095,7 +8097,9 @@ name|ifam_metric
 operator|=
 name|ifa
 operator|->
-name|ifa_metric
+name|ifa_ifp
+operator|->
+name|if_metric
 expr_stmt|;
 name|ifd
 operator|=
@@ -8169,7 +8173,9 @@ name|ifam_metric
 operator|=
 name|ifa
 operator|->
-name|ifa_metric
+name|ifa_ifp
+operator|->
+name|if_metric
 expr_stmt|;
 name|ifd
 operator|=
@@ -8354,7 +8360,9 @@ name|ifam_metric
 operator|=
 name|ifa
 operator|->
-name|ifa_metric
+name|ifa_ifp
+operator|->
+name|if_metric
 expr_stmt|;
 return|return
 operator|(

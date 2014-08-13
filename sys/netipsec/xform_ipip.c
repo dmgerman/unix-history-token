@@ -443,16 +443,21 @@ comment|/*  * Really only a wrapper for ipip_input(), for use with IPv4.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ip4_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|off
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 block|{
 if|#
@@ -464,13 +469,20 @@ endif|#
 directive|endif
 name|_ipip_input
 argument_list|(
-name|m
+operator|*
+name|mp
 argument_list|,
-name|off
+operator|*
+name|offp
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 end_function
 
@@ -2602,7 +2614,7 @@ end_if
 begin_decl_stmt
 specifier|static
 name|struct
-name|ip6protosw
+name|protosw
 name|ipe6_protosw
 init|=
 block|{

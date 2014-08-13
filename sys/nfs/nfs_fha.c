@@ -1919,8 +1919,6 @@ block|{
 name|int
 name|error
 decl_stmt|,
-name|count
-decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
@@ -1934,8 +1932,8 @@ name|fhe
 decl_stmt|;
 name|bool_t
 name|first
-init|=
-name|TRUE
+decl_stmt|,
+name|hfirst
 decl_stmt|;
 name|SVCTHREAD
 modifier|*
@@ -1952,7 +1950,7 @@ name|sb
 argument_list|,
 name|NULL
 argument_list|,
-literal|4096
+literal|65536
 argument_list|,
 name|SBUF_FIXEDLEN
 argument_list|)
@@ -1989,10 +1987,6 @@ name|softc
 operator|->
 name|pool
 expr_stmt|;
-name|count
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2022,14 +2016,12 @@ operator|.
 name|list
 argument_list|)
 condition|)
-name|count
-operator|++
-expr_stmt|;
+break|break;
 if|if
 condition|(
-name|count
+name|i
 operator|==
-literal|0
+name|FHA_HASH_SIZE
 condition|)
 block|{
 name|sbuf_printf
@@ -2044,11 +2036,12 @@ goto|goto
 name|out
 goto|;
 block|}
+name|hfirst
+operator|=
+name|TRUE
+expr_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
 init|;
 name|i
 operator|<
@@ -2071,6 +2064,57 @@ operator|.
 name|mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|fha_hash
+index|[
+name|i
+index|]
+operator|.
+name|list
+argument_list|)
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|fha_hash
+index|[
+name|i
+index|]
+operator|.
+name|mtx
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|sbuf_printf
+argument_list|(
+operator|&
+name|sb
+argument_list|,
+literal|"%shash %d: {\n"
+argument_list|,
+name|hfirst
+condition|?
+literal|""
+else|:
+literal|", "
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|first
+operator|=
+name|TRUE
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|fhe
@@ -2089,7 +2133,7 @@ literal|"%sfhe %p: {\n"
 argument_list|,
 name|first
 condition|?
-literal|""
+literal|"  "
 else|:
 literal|", "
 argument_list|,
@@ -2116,19 +2160,11 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"    num_rw: %d\n"
+literal|"    num_rw/exclusive: %d/%d\n"
 argument_list|,
 name|fhe
 operator|->
 name|num_rw
-argument_list|)
-expr_stmt|;
-name|sbuf_printf
-argument_list|(
-operator|&
-name|sb
-argument_list|,
-literal|"    num_exclusive: %d\n"
 argument_list|,
 name|fhe
 operator|->
@@ -2161,8 +2197,8 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"    thread %p offset %ju "
-literal|"(count %d)\n"
+literal|"      thread %p offset %ju "
+literal|"reqs %d\n"
 argument_list|,
 name|thread
 argument_list|,
@@ -2181,33 +2217,22 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"}"
+literal|"  }"
 argument_list|)
 expr_stmt|;
 name|first
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* Limit the output. */
-if|if
-condition|(
-operator|++
-name|count
-operator|>
-literal|128
-condition|)
-block|{
+block|}
 name|sbuf_printf
 argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"..."
+literal|"\n}"
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -2220,6 +2245,10 @@ index|]
 operator|.
 name|mtx
 argument_list|)
+expr_stmt|;
+name|hfirst
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 name|out

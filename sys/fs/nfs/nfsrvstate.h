@@ -63,6 +63,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|nfssessionhead
+argument_list|,
+name|nfsdsession
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|nfssessionhashhead
+argument_list|,
+name|nfsdsession
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * List head for nfsusrgrp.  */
 end_comment
@@ -159,6 +179,33 @@ define|\
 value|(&nfsgroupnamehash[((l)>=4?(*(p)+*((p)+1)+*((p)+2)+*((p)+3)):*(p)) \ 		% NFSGROUPHASHSIZE])
 end_define
 
+begin_struct
+struct|struct
+name|nfssessionhash
+block|{
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+name|struct
+name|nfssessionhashhead
+name|list
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NFSSESSIONHASH
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|(&nfssessionhash[nfsrv_hashsessionid(f) % NFSSESSIONHASHSIZE])
+end_define
+
 begin_comment
 comment|/*  * Client server structure for V4. It is doubly linked into two lists.  * The first is a hash table based on the clientid and the second is a  * list of all clients maintained in LRU order.  * The actual size malloc'd is large enough to accomodate the id string.  */
 end_comment
@@ -197,6 +244,11 @@ name|nfsstatehead
 name|lc_olddeleg
 decl_stmt|;
 comment|/* and old delegations */
+name|struct
+name|nfssessionhead
+name|lc_session
+decl_stmt|;
+comment|/* List of NFSv4.1 sessions */
 name|time_t
 name|lc_expiry
 decl_stmt|;
@@ -298,6 +350,93 @@ directive|define
 name|CLOPS_RENEWOP
 value|0x0004
 end_define
+
+begin_comment
+comment|/*  * Structure for an NFSv4.1 session.  * Locking rules for this structure.  * To add/delete one of these structures from the lists, you must lock  * both: NFSLOCKSESSION(session hashhead) and NFSLOCKSTATE() in that order.  * To traverse the lists looking for one of these, you must hold one  * of these two locks.  * The exception is if the thread holds the exclusive root sleep lock.  * In this case, all other nfsd threads are blocked, so locking the  * mutexes isn't required.  * When manipulating sess_refcnt, NFSLOCKSTATE() must be locked.  * When manipulating the fields withinsess_cbsess except nfsess_xprt,  * sess_cbsess.nfsess_mtx must be locked.  * When manipulating sess_slots and sess_cbsess.nfsess_xprt,  * NFSLOCKSESSION(session hashhead) must be locked.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nfsdsession
+block|{
+name|uint64_t
+name|sess_refcnt
+decl_stmt|;
+comment|/* Reference count. */
+name|LIST_ENTRY
+argument_list|(
+argument|nfsdsession
+argument_list|)
+name|sess_hash
+expr_stmt|;
+comment|/* Hash list of sessions. */
+name|LIST_ENTRY
+argument_list|(
+argument|nfsdsession
+argument_list|)
+name|sess_list
+expr_stmt|;
+comment|/* List of client sessions. */
+name|struct
+name|nfsslot
+name|sess_slots
+index|[
+name|NFSV4_SLOTS
+index|]
+decl_stmt|;
+name|struct
+name|nfsclient
+modifier|*
+name|sess_clp
+decl_stmt|;
+comment|/* Associated clientid. */
+name|uint32_t
+name|sess_crflags
+decl_stmt|;
+name|uint32_t
+name|sess_cbprogram
+decl_stmt|;
+name|uint32_t
+name|sess_maxreq
+decl_stmt|;
+name|uint32_t
+name|sess_maxresp
+decl_stmt|;
+name|uint32_t
+name|sess_maxrespcached
+decl_stmt|;
+name|uint32_t
+name|sess_maxops
+decl_stmt|;
+name|uint32_t
+name|sess_maxslots
+decl_stmt|;
+name|uint32_t
+name|sess_cbmaxreq
+decl_stmt|;
+name|uint32_t
+name|sess_cbmaxresp
+decl_stmt|;
+name|uint32_t
+name|sess_cbmaxrespcached
+decl_stmt|;
+name|uint32_t
+name|sess_cbmaxops
+decl_stmt|;
+name|uint8_t
+name|sess_sessionid
+index|[
+name|NFSX_V4SESSIONID
+index|]
+decl_stmt|;
+name|struct
+name|nfsclsession
+name|sess_cbsess
+decl_stmt|;
+comment|/* Callback session. */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Nfs state structure. I couldn't resist overloading this one, since  * it makes cleanup, etc. simpler. These structures are used in four ways:  * - open_owner structures chained off of nfsclient  * - open file structures chained off an open_owner structure  * - lock_owner structures chained off an open file structure  * - delegated file structures chained off of nfsclient and nfslockfile  * - the ls_list field is used for the chain it is in  * - the ls_head structure is used to chain off the sibling structure  *   (it is a union between an nfsstate and nfslock structure head)  *    If it is a lockowner stateid, nfslock structures hang off it.  * For the open file and lockowner cases, it is in the hash table in  * nfsclient for stateid.  */

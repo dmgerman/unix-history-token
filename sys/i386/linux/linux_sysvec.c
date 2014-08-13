@@ -5527,8 +5527,6 @@ operator|=
 name|BI_CAN_EXEC_DYN
 operator||
 name|BI_BRAND_NOTE
-operator||
-name|BI_CAN_EXEC_INTERP
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5587,8 +5585,6 @@ operator|=
 name|BI_CAN_EXEC_DYN
 operator||
 name|BI_BRAND_NOTE
-operator||
-name|BI_CAN_EXEC_INTERP
 block|}
 decl_stmt|;
 end_decl_stmt

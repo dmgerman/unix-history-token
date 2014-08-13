@@ -1017,7 +1017,7 @@ name|vm_radix_reserve_kva
 argument_list|,
 name|SI_SUB_KMEM
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_THIRD
 argument_list|,
 name|vm_radix_reserve_kva
 argument_list|,

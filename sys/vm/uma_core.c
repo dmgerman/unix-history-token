@@ -632,7 +632,7 @@ begin_define
 define|#
 directive|define
 name|BUCKET_MAX
-value|BUCKET_SIZE(128)
+value|BUCKET_SIZE(256)
 end_define
 
 begin_decl_stmt
@@ -744,6 +744,19 @@ literal|128
 argument_list|)
 block|,
 literal|128
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|"256 Bucket"
+block|,
+name|BUCKET_SIZE
+argument_list|(
+literal|256
+argument_list|)
+block|,
+literal|64
 block|}
 block|,
 block|{
@@ -1470,17 +1483,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vm.zone_warnings"
-argument_list|,
-operator|&
-name|zone_warnings
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vm
@@ -1489,7 +1491,7 @@ name|OID_AUTO
 argument_list|,
 name|zone_warnings
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zone_warnings
@@ -1886,6 +1888,27 @@ name|zone
 operator|->
 name|uz_count
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ubz
+operator|->
+name|ubz_zone
+operator|==
+name|zone
+operator|&&
+operator|(
+name|ubz
+operator|+
+literal|1
+operator|)
+operator|->
+name|ubz_entries
+operator|!=
+literal|0
+condition|)
+name|ubz
+operator|++
 expr_stmt|;
 name|bucket
 operator|=
@@ -4758,7 +4781,7 @@ name|vm_page_unwire
 argument_list|(
 name|p
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_free

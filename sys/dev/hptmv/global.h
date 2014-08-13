@@ -529,49 +529,6 @@ value|(x * y)
 end_define
 
 begin_comment
-comment|/* Minimum and maximum macros */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|<
-literal|501000
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)> (b)) ? (a) : (b))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)< (b)) ? (a) : (b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*************************************************************************  * C library  *************************************************************************/
 end_comment
 
@@ -679,44 +636,6 @@ define|#
 directive|define
 name|strlen
 value|os_strlen
-end_define
-
-begin_elif
-elif|#
-directive|elif
-operator|(
-name|__FreeBSD_version
-operator|<=
-literal|410000
-operator|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|memcpy
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|len
-parameter_list|)
-value|bcopy((s),(d),(len))
-end_define
-
-begin_define
-define|#
-directive|define
-name|memset
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|,
-name|len
-parameter_list|)
-value|bzero((d),(len))
 end_define
 
 begin_endif

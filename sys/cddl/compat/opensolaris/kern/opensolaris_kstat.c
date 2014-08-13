@@ -67,8 +67,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|OID_AUTO
 argument_list|,
 name|kstat

@@ -2016,28 +2016,20 @@ modifier|*
 name|ret_highmem
 parameter_list|)
 block|{
-name|vm_get_memory_seg
+operator|*
+name|ret_lowmem
+operator|=
+name|vm_get_lowmem_size
 argument_list|(
 name|ctx
-argument_list|,
-literal|0
-argument_list|,
-name|ret_lowmem
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
-name|vm_get_memory_seg
+operator|*
+name|ret_highmem
+operator|=
+name|vm_get_highmem_size
 argument_list|(
 name|ctx
-argument_list|,
-literal|4
-operator|*
-name|GB
-argument_list|,
-name|ret_highmem
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2496,8 +2488,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-m mem-size] [-d<disk-path>] [-h<host-path>]\n"
-literal|"       %*s [-e<name=value>] [-c<console-device>]<vmname>\n"
+literal|"usage: %s [-c<console-device>] [-d<disk-path>] [-e<name=value>]\n"
+literal|"       %*s [-h<host-path>] [-m mem-size]<vmname>\n"
 argument_list|,
 name|progname
 argument_list|,

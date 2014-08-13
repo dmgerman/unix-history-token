@@ -3175,6 +3175,13 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
+comment|/* Tell the upper layer(s) we support long frames. */
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_VLAN_MTU
+expr_stmt|;
 name|ifp
 operator|->
 name|if_capenable

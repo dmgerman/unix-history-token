@@ -439,6 +439,17 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|bus_dmamap_unload
+argument_list|(
+name|dmah
+operator|->
+name|tag
+argument_list|,
+name|dmah
+operator|->
+name|map
+argument_list|)
+expr_stmt|;
 name|bus_dmamem_free
 argument_list|(
 name|dmah

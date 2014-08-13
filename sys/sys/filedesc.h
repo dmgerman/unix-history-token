@@ -744,11 +744,6 @@ name|void
 name|fdunshare
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
@@ -939,10 +934,10 @@ operator|<
 literal|0
 operator|||
 name|fd
-operator|>=
+operator|>
 name|fdp
 operator|->
-name|fd_nfiles
+name|fd_lastfile
 condition|)
 return|return
 operator|(

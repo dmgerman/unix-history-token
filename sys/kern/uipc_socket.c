@@ -1360,9 +1360,6 @@ argument_list|,
 name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
 comment|/* remove acccept filter if one is present. */
 if|if
 condition|(
@@ -1379,8 +1376,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|MAC
@@ -10984,9 +10979,6 @@ operator|->
 name|sopt_name
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET
 case|case
 name|SO_ACCEPTFILTER
 case|:
@@ -11007,8 +10999,6 @@ goto|goto
 name|bad
 goto|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|SO_LINGER
 case|:
@@ -11632,6 +11622,19 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|tv
+operator|.
+name|tv_sec
+operator|>
+name|INT32_MAX
+condition|)
+name|val
+operator|=
+name|SBT_MAX
+expr_stmt|;
+else|else
 name|val
 operator|=
 name|tvtosbt
@@ -11976,9 +11979,6 @@ operator|->
 name|sopt_name
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET
 case|case
 name|SO_ACCEPTFILTER
 case|:
@@ -11992,8 +11992,6 @@ name|sopt
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|SO_LINGER
 case|:
@@ -12217,9 +12215,10 @@ case|:
 case|case
 name|SO_RCVTIMEO
 case|:
-name|optval
+name|tv
 operator|=
-operator|(
+name|sbttotv
+argument_list|(
 name|sopt
 operator|->
 name|sopt_name
@@ -12237,13 +12236,6 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_timeo
-operator|)
-expr_stmt|;
-name|tv
-operator|=
-name|sbttotv
-argument_list|(
-name|optval
 argument_list|)
 expr_stmt|;
 ifdef|#

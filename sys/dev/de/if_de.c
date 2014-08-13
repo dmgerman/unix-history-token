@@ -23132,12 +23132,6 @@ argument_list|)
 expr_stmt|;
 name|ri
 operator|->
-name|ri_ring_map
-operator|=
-name|NULL
-expr_stmt|;
-name|ri
-operator|->
 name|ri_descs
 operator|=
 name|NULL
@@ -23599,12 +23593,6 @@ name|sc
 operator|->
 name|tulip_setup_map
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|tulip_setup_map
-operator|=
-name|NULL
 expr_stmt|;
 name|sc
 operator|->

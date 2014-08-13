@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -217,6 +217,17 @@ name|E1000_FWSM_WLOCK_MAC_SHIFT
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|E1000_FWSM_ULP_CFG_DONE
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Low power cfg done */
+end_comment
+
 begin_comment
 comment|/* Shared Receive Address Registers */
 end_comment
@@ -240,6 +251,39 @@ name|_i
 parameter_list|)
 value|(0x0540C + ((_i) * 8))
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME
+value|0x05B50
+end_define
+
+begin_comment
+comment|/* Host to ME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME_ULP
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* ULP Indication Bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME_ENFORCE_SETTINGS
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* Enforce Settings */
+end_comment
 
 begin_define
 define|#
@@ -281,6 +325,17 @@ define|#
 directive|define
 name|E1000_ICH8_LAN_INIT_TIMEOUT
 value|1500
+end_define
+
+begin_comment
+comment|/* FEXT register bit definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXT_PHY_CABLE_DISCONNECTED
+value|0x00000004
 end_define
 
 begin_define
@@ -353,6 +408,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_FEXTNVM7_DISABLE_SMB_PERST
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIE_ICH8_SNOOP_ALL
 value|PCIE_NO_SNOOP_ALL
 end_define
@@ -368,11 +430,11 @@ begin_define
 define|#
 directive|define
 name|E1000_PCH2_RAR_ENTRIES
-value|11
+value|5
 end_define
 
 begin_comment
-comment|/* RAR[0-6], SHRA[0-3] */
+comment|/* RAR[0], SHRA[0-3] */
 end_comment
 
 begin_define
@@ -835,6 +897,94 @@ value|0x0001
 end_define
 
 begin_comment
+comment|/* I218 Ultra Low Power Configuration 1 Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1
+value|PHY_REG(779, 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1_START
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Start auto ULP config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1_IND
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Pwr up from ULP indication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1_STICKY_ULP
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Set sticky ULP mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1_INBAND_EXIT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Inband on ULP exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1_WOL_HOST
+value|0x0040
+end_define
+
+begin_comment
+comment|/* WoL Host on ULP exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1_RESET_TO_SMBUS
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Reset to SMBus mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I218_ULP_CONFIG1_DISABLE_SMB_PERST
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Disable on PERST# */
+end_comment
+
+begin_comment
 comment|/* SMBus Address Phy Register */
 end_comment
 
@@ -1034,6 +1184,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HV_PM_CTRL_K1_ENABLE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SW_FLAG_TIMEOUT
 value|1000
 end_define
@@ -1115,13 +1272,6 @@ define|#
 directive|define
 name|I82579_LPI_CTRL_ENABLE_MASK
 value|0x6000
-end_define
-
-begin_define
-define|#
-directive|define
-name|I82579_LPI_CTRL_FORCE_PLL_LOCK_COUNT
-value|0x80
 end_define
 
 begin_comment
@@ -1222,6 +1372,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|I82579_LPI_PLL_SHUT
+value|0x4412
+end_define
+
+begin_comment
+comment|/* LPI PLL Shut Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|I82579_EEE_PCS_STATUS
 value|0x182E
 end_define
@@ -1288,6 +1449,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|I82579_LPI_100_PLL_SHUT
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* 100M LPI PLL Shut Enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|I217_EEE_PCS_STATUS
 value|0x9401
 end_define
@@ -1327,6 +1499,17 @@ end_define
 
 begin_comment
 comment|/* IEEE MMD Register 7.61 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I217_RX_CONFIG
+value|0xB20C
+end_define
+
+begin_comment
+comment|/* Receive configuration */
 end_comment
 
 begin_define
@@ -1542,6 +1725,37 @@ name|E1000_SVT_OFF_HWM_MASK
 value|0x0000001F
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|QV_RELEASE
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|NO_PCH_LPT_B0_SUPPORT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|E1000_PCI_REVISION_ID_REG
+value|0x08
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(QV_RELEASE) || !defined(NO_PCH_LPT_B0_SUPPORT) */
+end_comment
+
 begin_function_decl
 name|void
 name|e1000_set_kmrn_lock_loss_workaround_ich8lan
@@ -1697,13 +1911,31 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|e1000_toggle_lanphypc_pch_lpt
+name|s32
+name|e1000_enable_ulp_lpt_lp
 parameter_list|(
 name|struct
 name|e1000_hw
 modifier|*
 name|hw
+parameter_list|,
+name|bool
+name|to_sx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_disable_ulp_lpt_lp
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|bool
+name|force
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1193,7 +1193,7 @@ name|NANDFS_GATHER
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->b_flags |= B_00800000)
+value|((x)->b_flags |= B_FS_FLAG1)
 end_define
 
 begin_define
@@ -1203,7 +1203,7 @@ name|NANDFS_UNGATHER
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->b_flags&= ~B_00800000)
+value|((x)->b_flags&= ~B_FS_FLAG1)
 end_define
 
 begin_define
@@ -1213,7 +1213,7 @@ name|NANDFS_ISGATHERED
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->b_flags& B_00800000)
+value|((x)->b_flags& B_FS_FLAG1)
 end_define
 
 begin_endif

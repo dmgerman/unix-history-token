@@ -685,17 +685,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"machdep.apm_swab_batt_minutes"
-argument_list|,
-operator|&
-name|apm_swab_batt_minutes
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_machdep
@@ -704,7 +693,7 @@ name|OID_AUTO
 argument_list|,
 name|apm_swab_batt_minutes
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|apm_swab_batt_minutes

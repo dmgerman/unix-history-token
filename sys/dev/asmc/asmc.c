@@ -942,6 +942,33 @@ block|,
 name|ASMC_MM_TEMPDESCS
 block|}
 block|,
+comment|/* The Mac Mini 3,1 has no SMS */
+block|{
+literal|"Macmini3,1"
+block|,
+literal|"Apple SMC Mac Mini 3,1"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|ASMC_FAN_FUNCS
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|ASMC_MM31_TEMPS
+block|,
+name|ASMC_MM31_TEMPNAMES
+block|,
+name|ASMC_MM31_TEMPDESCS
+block|}
+block|,
 comment|/* Idem for the MacPro */
 block|{
 literal|"MacPro2"

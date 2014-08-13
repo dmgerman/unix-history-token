@@ -369,16 +369,6 @@ parameter_list|)
 value|((vw)->vw_device->vd_unit * VT_MAXWINDOWS + \ 			(vw)->vw_number)
 end_define
 
-begin_comment
-comment|/* XXX while syscons is here. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|sc_txtmouse_no_retrace_wait
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|SYSCTL_NODE
@@ -442,6 +432,27 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"Switch to VT0 before suspend"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VT_SYSCTL_INT
+argument_list|(
+name|spclkeys
+argument_list|,
+operator|(
+name|VT_DEBUG_KEY_ENABLED
+operator||
+name|VT_REBOOT_KEY_ENABLED
+operator||
+name|VT_HALT_KEY_ENABLED
+operator||
+name|VT_POWEROFF_KEY_ENABLED
+operator|)
+argument_list|,
+literal|"Enabled special keys "
+literal|"handled by vt(4)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -813,12 +824,20 @@ block|{
 operator|.
 name|vb_buffer
 operator|=
+operator|&
 name|vt_constextbuf
+index|[
+literal|0
+index|]
 block|,
 operator|.
 name|vb_rows
 operator|=
+operator|&
 name|vt_constextbufrows
+index|[
+literal|0
+index|]
 block|,
 operator|.
 name|vb_history_size
@@ -1030,6 +1049,15 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|vty_enabled
+argument_list|(
+name|VTY_VT
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|main_vd
@@ -1874,6 +1902,12 @@ name|SPCLKEY
 operator||
 name|DBG
 case|:
+if|if
+condition|(
+name|vt_spclkeys
+operator|&
+name|VT_DEBUG_KEY_ENABLED
+condition|)
 name|kdb_enter
 argument_list|(
 name|KDB_WHY_BREAK
@@ -1891,6 +1925,12 @@ name|SPCLKEY
 operator||
 name|RBT
 case|:
+if|if
+condition|(
+name|vt_spclkeys
+operator|&
+name|VT_REBOOT_KEY_ENABLED
+condition|)
 comment|/* XXX: Make this configurable! */
 name|shutdown_nice
 argument_list|(
@@ -1907,6 +1947,12 @@ name|SPCLKEY
 operator||
 name|HALT
 case|:
+if|if
+condition|(
+name|vt_spclkeys
+operator|&
+name|VT_HALT_KEY_ENABLED
+condition|)
 name|shutdown_nice
 argument_list|(
 name|RB_HALT
@@ -1922,6 +1968,12 @@ name|SPCLKEY
 operator||
 name|PDWN
 case|:
+if|if
+condition|(
+name|vt_spclkeys
+operator|&
+name|VT_POWEROFF_KEY_ENABLED
+condition|)
 name|shutdown_nice
 argument_list|(
 name|RB_HALT
@@ -3016,10 +3068,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|vd
-operator|->
-name|vd_keyboard
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -4434,7 +4483,7 @@ name|vd
 operator|->
 name|vd_driver
 operator|->
-name|vd_maskbitbltchr
+name|vd_bitbltchr
 argument_list|(
 name|vd
 argument_list|,
@@ -4831,6 +4880,21 @@ name|struct
 name|winsize
 name|wsz
 decl_stmt|;
+name|term_attr_t
+name|attr
+decl_stmt|;
+name|term_char_t
+name|c
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|vty_enabled
+argument_list|(
+name|VTY_VT
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|vd
@@ -5000,7 +5064,6 @@ expr_stmt|;
 comment|/* Attach default font if not in TEXTMODE. */
 if|if
 condition|(
-operator|!
 operator|(
 name|vd
 operator|->
@@ -5008,6 +5071,8 @@ name|vd_flags
 operator|&
 name|VDF_TEXTMODE
 operator|)
+operator|==
+literal|0
 condition|)
 name|vw
 operator|->
@@ -5039,12 +5104,58 @@ operator|&
 name|wsz
 argument_list|)
 expr_stmt|;
-name|terminal_set_winsize
+name|c
+operator|=
+operator|(
+name|boothowto
+operator|&
+name|RB_MUTE
+operator|)
+operator|==
+literal|0
+condition|?
+name|TERMINAL_KERN_ATTR
+else|:
+name|TERMINAL_NORM_ATTR
+expr_stmt|;
+name|attr
+operator|.
+name|ta_format
+operator|=
+name|TCHAR_FORMAT
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|attr
+operator|.
+name|ta_fgcolor
+operator|=
+name|TCHAR_FGCOLOR
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|attr
+operator|.
+name|ta_bgcolor
+operator|=
+name|TCHAR_BGCOLOR
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|terminal_set_winsize_blank
 argument_list|(
 name|tm
 argument_list|,
 operator|&
 name|wsz
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|attr
 argument_list|)
 expr_stmt|;
 if|if
@@ -5632,11 +5743,11 @@ return|;
 block|}
 if|if
 condition|(
-name|vw
+name|vd
 operator|->
-name|vw_font
-operator|==
-name|NULL
+name|vd_flags
+operator|&
+name|VDF_TEXTMODE
 condition|)
 block|{
 comment|/* Our device doesn't need fonts. */
@@ -5752,6 +5863,8 @@ operator|&
 name|wsz
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|terminal_mute
@@ -5767,6 +5880,16 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vw
+operator|->
+name|vw_font
+operator|!=
+name|vf
+condition|)
+block|{
+comment|/* 		 * In case vt_change_font called to update size we don't need 		 * to update font link. 		 */
 name|vtfont_unref
 argument_list|(
 name|vw
@@ -5783,6 +5906,7 @@ argument_list|(
 name|vf
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Force a full redraw the next timer tick. */
 if|if
 condition|(
@@ -8703,10 +8827,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|vd
-operator|->
-name|vd_keyboard
 argument_list|,
 name|vt_kbdevent
 argument_list|,
@@ -8738,10 +8859,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|vd
-operator|->
-name|vd_keyboard
 argument_list|)
 expr_stmt|;
 block|}
@@ -8861,10 +8979,7 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|&
 name|vd
-operator|->
-name|vd_keyboard
 argument_list|)
 expr_stmt|;
 if|if
@@ -9900,7 +10015,6 @@ name|K_XLATE
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|vd
 operator|->
@@ -9908,6 +10022,8 @@ name|vd_flags
 operator|&
 name|VDF_TEXTMODE
 operator|)
+operator|==
+literal|0
 condition|)
 name|vw
 operator|->
@@ -10022,6 +10138,15 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|vty_enabled
+argument_list|(
+name|VTY_VT
+argument_list|)
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -10171,19 +10296,6 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|20
-argument_list|,
-literal|"%s: vd_keyboard = %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|vd
-operator|->
-name|vd_keyboard
-argument_list|)
-expr_stmt|;
 comment|/* Init 25 Hz timer. */
 name|callout_init_mtx
 argument_list|(
@@ -10319,6 +10431,8 @@ name|vd
 argument_list|)
 expr_stmt|;
 comment|/* Resize terminal windows */
+while|while
+condition|(
 name|vt_change_font
 argument_list|(
 name|vw
@@ -10327,7 +10441,23 @@ name|vw
 operator|->
 name|vw_font
 argument_list|)
+operator|==
+name|EBUSY
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|100
+argument_list|,
+literal|"%s: vt_change_font() is busy, "
+literal|"window %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -10351,10 +10481,15 @@ name|vt_device
 modifier|*
 name|vd
 decl_stmt|;
-name|struct
-name|winsize
-name|wsz
-decl_stmt|;
+if|if
+condition|(
+operator|!
+name|vty_enabled
+argument_list|(
+name|VTY_VT
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|main_vd
@@ -10440,22 +10575,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|drv
-operator|->
-name|vd_maskbitbltchr
-operator|==
-name|NULL
-condition|)
-name|drv
-operator|->
-name|vd_maskbitbltchr
-operator|=
-name|drv
-operator|->
-name|vd_bitbltchr
-expr_stmt|;
-if|if
-condition|(
 name|vd
 operator|->
 name|vd_flags
@@ -10519,6 +10638,7 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
+comment|/* Update windows sizes and initialize last items. */
 name|vt_upgrade
 argument_list|(
 name|vd
@@ -10551,6 +10671,7 @@ operator|&
 name|VDF_ASYNC
 condition|)
 block|{
+comment|/* Allow to put chars now. */
 name|terminal_mute
 argument_list|(
 name|vd
@@ -10562,6 +10683,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Rerun timer for screen updates. */
 name|callout_schedule
 argument_list|(
 operator|&
@@ -10575,6 +10697,7 @@ name|VT_TIMERFREQ
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Register as console. If it already registered, cnadd() will ignore 	 * it. 	 */
 name|termcn_cnregister
 argument_list|(
 name|vd
@@ -10585,41 +10708,6 @@ name|VT_CONSWINDOW
 index|]
 operator|->
 name|vw_terminal
-argument_list|)
-expr_stmt|;
-comment|/* Update console window sizes to actual. */
-name|vt_winsize
-argument_list|(
-name|vd
-argument_list|,
-name|vd
-operator|->
-name|vd_windows
-index|[
-name|VT_CONSWINDOW
-index|]
-operator|->
-name|vw_font
-argument_list|,
-operator|&
-name|wsz
-argument_list|)
-expr_stmt|;
-name|terminal_set_winsize_blank
-argument_list|(
-name|vd
-operator|->
-name|vd_windows
-index|[
-name|VT_CONSWINDOW
-index|]
-operator|->
-name|vw_terminal
-argument_list|,
-operator|&
-name|wsz
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

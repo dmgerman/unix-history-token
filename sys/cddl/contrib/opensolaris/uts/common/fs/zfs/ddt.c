@@ -118,17 +118,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.dedup.prefetch"
-argument_list|,
-operator|&
-name|zfs_dedup_prefetch
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs_dedup
@@ -137,7 +126,7 @@ name|OID_AUTO
 argument_list|,
 name|prefetch
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zfs_dedup_prefetch

@@ -7,6 +7,18 @@ begin_comment
 comment|/*  * Unit test for TLS heartbeats.  *  * Acts as a regression test against the Heartbleed bug (CVE-2014-0160).  *  * Author:  Mike Bland (mbland@acm.org, http://mike-bland.com/)  * Date:    2014-04-12  * License: Creative Commons Attribution 4.0 International (CC By 4.0)  *          http://creativecommons.org/licenses/by/4.0/deed.en_US  *  * OUTPUT  * ------  * The program returns zero on success. It will print a message with a count  * of the number of failed tests and return nonzero if any tests fail.  *  * It will print the contents of the request and response buffers for each  * failing test. In a "fixed" version, all the tests should pass and there  * should be no output.  *  * In a "bleeding" version, you'll see:  *  *   test_dtls1_heartbleed failed:  *     expected payload len: 0  *     received: 1024  *   sent 26 characters  *     "HEARTBLEED                "  *   received 1024 characters  *     "HEARTBLEED                \xde\xad\xbe\xef..."  *   ** test_dtls1_heartbleed failed **  *  * The contents of the returned buffer in the failing test will depend on the  * contents of memory on your machine.  *  * MORE INFORMATION  * ----------------  * http://mike-bland.com/2014/04/12/heartbleed.html  * http://mike-bland.com/tags/heartbleed.html  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OPENSSL_UNIT_TEST
+end_define
+
+begin_include
+include|#
+directive|include
+file|"../test/testutil.h"
+end_include
+
 begin_include
 include|#
 directive|include
@@ -49,7 +61,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|OPENSSL_SYS_WINDOWS
+name|OPENSSL_NO_UNIT_TEST
 argument_list|)
 end_if
 
@@ -992,7 +1004,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|HEARTBEAT_TEST_FIXTURE fixture = set_up_##type(__func__);\ 	int result = 0
+value|SETUP_TEST_FIXTURE(HEARTBEAT_TEST_FIXTURE, set_up_##type)
 end_define
 
 begin_define
@@ -1001,7 +1013,7 @@ directive|define
 name|EXECUTE_HEARTBEAT_TEST
 parameter_list|()
 define|\
-value|if (execute_heartbeat(fixture) != 0) result = 1;\ 	tear_down(fixture);\ 	return result
+value|EXECUTE_TEST(execute_heartbeat, tear_down)
 end_define
 
 begin_function

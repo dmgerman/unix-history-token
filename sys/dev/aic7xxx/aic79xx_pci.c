@@ -1091,11 +1091,6 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
-name|struct
-name|scb_data
-modifier|*
-name|shared_scb_data
-decl_stmt|;
 name|u_int
 name|command
 decl_stmt|;
@@ -1111,10 +1106,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|shared_scb_data
-operator|=
-name|NULL
-expr_stmt|;
 name|ahd
 operator|->
 name|description

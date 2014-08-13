@@ -188,7 +188,7 @@ name|OID_AUTO
 argument_list|,
 name|txcoalesce
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|malo_txcoalesce
@@ -196,17 +196,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"tx buffers to send at once"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.malo.txcoalesce"
-argument_list|,
-operator|&
-name|malo_txcoalesce
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -233,7 +222,7 @@ name|OID_AUTO
 argument_list|,
 name|rxbuf
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|malo_rxbuf
@@ -241,17 +230,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"rx buffers allocated"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.malo.rxbuf"
-argument_list|,
-operator|&
-name|malo_rxbuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -278,7 +256,7 @@ name|OID_AUTO
 argument_list|,
 name|rxquota
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|malo_rxquota
@@ -286,17 +264,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"max rx buffers to process per interrupt"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.malo.rxquota"
-argument_list|,
-operator|&
-name|malo_rxquota
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -323,7 +290,7 @@ name|OID_AUTO
 argument_list|,
 name|txbuf
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|malo_txbuf
@@ -331,17 +298,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"tx buffers allocated"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.malo.txbuf"
-argument_list|,
-operator|&
-name|malo_txbuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -370,7 +326,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|malo_debug
@@ -378,17 +334,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"control debugging printfs"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.malo.debug"
-argument_list|,
-operator|&
-name|malo_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt

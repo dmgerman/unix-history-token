@@ -512,6 +512,10 @@ name|config_strlist
 modifier|*
 name|local_data
 decl_stmt|;
+comment|/** unblock lan zones (reverse lookups for 10/8 and so on) */
+name|int
+name|unblock_lan_zones
+decl_stmt|;
 comment|/** remote control section. enable toggle. */
 name|int
 name|remote_control_enable

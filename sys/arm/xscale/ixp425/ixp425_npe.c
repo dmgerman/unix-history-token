@@ -453,7 +453,7 @@ name|OID_AUTO
 argument_list|,
 name|ixp425npe
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|npe_debug
@@ -461,17 +461,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"IXP4XX NPE debug msgs"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.ixp425npe"
-argument_list|,
-operator|&
-name|npe_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt

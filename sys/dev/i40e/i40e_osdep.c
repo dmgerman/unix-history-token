@@ -271,7 +271,7 @@ name|va
 argument_list|,
 name|BUS_DMA_NOWAIT
 operator||
-name|M_ZERO
+name|BUS_DMA_ZERO
 argument_list|,
 operator|&
 name|dma

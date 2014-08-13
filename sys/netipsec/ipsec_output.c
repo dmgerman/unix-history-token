@@ -2184,6 +2184,15 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_v
+operator|==
+name|IPVERSION
+condition|)
+block|{
 name|ip
 operator|->
 name|ip_len
@@ -2218,6 +2227,7 @@ operator|<<
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Encapsulate the packet */
 name|error
 operator|=

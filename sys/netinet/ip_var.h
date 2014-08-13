@@ -1164,11 +1164,15 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|void
+name|int
 name|rip_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int
@@ -1194,11 +1198,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ipip_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int
@@ -1207,11 +1215,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|rsvp_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int
@@ -1275,7 +1287,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 function_decl|(
 modifier|*
 name|rsvp_input_p
@@ -1284,10 +1296,12 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
 parameter_list|,
 name|int
-name|off
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

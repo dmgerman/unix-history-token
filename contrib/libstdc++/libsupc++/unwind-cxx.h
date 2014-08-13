@@ -520,7 +520,7 @@ end_typedef
 begin_extern
 extern|extern
 literal|"C"
-name|bool
+name|__cxa_type_match_result
 name|__cxa_type_match
 argument_list|(
 name|_Unwind_Exception
@@ -544,7 +544,7 @@ end_extern
 begin_extern
 extern|extern
 literal|"C"
-name|void
+name|bool
 name|__cxa_begin_cleanup
 parameter_list|(
 name|_Unwind_Exception

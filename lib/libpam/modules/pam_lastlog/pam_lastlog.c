@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -127,11 +121,6 @@ name|__unused
 parameter_list|)
 block|{
 name|struct
-name|passwd
-modifier|*
-name|pwd
-decl_stmt|;
-name|struct
 name|utmpx
 modifier|*
 name|utx
@@ -187,17 +176,6 @@ return|;
 if|if
 condition|(
 name|user
-operator|==
-name|NULL
-operator|||
-operator|(
-name|pwd
-operator|=
-name|getpwnam
-argument_list|(
-name|user
-argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)

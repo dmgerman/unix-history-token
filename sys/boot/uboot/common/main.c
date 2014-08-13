@@ -2064,7 +2064,9 @@ operator|=
 name|uboot_autoload
 expr_stmt|;
 name|interact
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* doesn't return */
 return|return

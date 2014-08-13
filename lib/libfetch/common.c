@@ -5075,6 +5075,14 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* POSIX compliance */
+if|if
+condition|(
+name|errno
+operator|==
+name|EAGAIN
+condition|)
+continue|continue;
 if|if
 condition|(
 name|errno

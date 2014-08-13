@@ -131,11 +131,15 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
-name|void
+name|int
 name|pim_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int

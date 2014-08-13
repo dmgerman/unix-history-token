@@ -1403,23 +1403,19 @@ case|:
 comment|/* 		 * XXX - The standard doesn't tell us how to define 		 * _POSIX_FILE_LOCKING, so we can't answer this one. 		 */
 endif|#
 directive|endif
-if|#
-directive|if
-name|_POSIX_THREAD_SAFE_FUNCTIONS
-operator|>
-operator|-
-literal|1
+comment|/* 	 * SUSv4tc1 says the following about _SC_GETGR_R_SIZE_MAX and 	 * _SC_GETPW_R_SIZE_MAX: 	 * Note that sysconf(_SC_GETGR_R_SIZE_MAX) may return -1 if 	 * there is no hard limit on the size of the buffer needed to 	 * store all the groups returned. 	 */
 case|case
 name|_SC_GETGR_R_SIZE_MAX
 case|:
 case|case
 name|_SC_GETPW_R_SIZE_MAX
 case|:
-error|#
-directive|error
-literal|"somebody needs to implement this"
-endif|#
-directive|endif
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 case|case
 name|_SC_HOST_NAME_MAX
 case|:

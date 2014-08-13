@@ -210,6 +210,16 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+enum|enum
+name|lzc_send_flags
+block|{
+name|LZC_SEND_FLAG_EMBED_DATA
+init|=
+literal|1
+operator|<<
+literal|0
+block|}
+enum|;
 name|int
 name|lzc_send
 parameter_list|(
@@ -222,6 +232,9 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|enum
+name|lzc_send_flags
 parameter_list|)
 function_decl|;
 name|int

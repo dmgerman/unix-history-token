@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: look.c,v 1.22 2010/09/07 19:58:09 marco Exp $	*/
+comment|/*	$OpenBSD: look.c,v 1.23 2014/05/12 19:11:19 espie Exp $ */
 end_comment
 
 begin_comment
@@ -89,8 +89,10 @@ begin_function_decl
 specifier|static
 name|void
 modifier|*
-name|hash_alloc
+name|hash_calloc
 parameter_list|(
+name|size_t
+parameter_list|,
 name|size_t
 parameter_list|,
 name|void
@@ -106,8 +108,6 @@ name|hash_free
 parameter_list|(
 name|void
 modifier|*
-parameter_list|,
-name|size_t
 parameter_list|,
 name|void
 modifier|*
@@ -166,7 +166,7 @@ argument_list|)
 block|,
 name|NULL
 block|,
-name|hash_alloc
+name|hash_calloc
 block|,
 name|hash_free
 block|,
@@ -189,41 +189,33 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|hash_alloc
+name|hash_calloc
 parameter_list|(
+name|size_t
+name|n
+parameter_list|,
 name|size_t
 name|s
 parameter_list|,
-name|__unused
 name|void
 modifier|*
 name|u
+name|__unused
 parameter_list|)
 block|{
 name|void
 modifier|*
 name|storage
 init|=
-name|xalloc
+name|xcalloc
 argument_list|(
+name|n
+argument_list|,
 name|s
 argument_list|,
 literal|"hash alloc"
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|storage
-condition|)
-name|memset
-argument_list|(
-name|storage
-argument_list|,
-literal|0
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 name|storage
 return|;
@@ -238,14 +230,10 @@ name|void
 modifier|*
 name|p
 parameter_list|,
-name|__unused
-name|size_t
-name|s
-parameter_list|,
-name|__unused
 name|void
 modifier|*
 name|u
+name|__unused
 parameter_list|)
 block|{
 name|free
@@ -264,10 +252,10 @@ parameter_list|(
 name|size_t
 name|s
 parameter_list|,
-name|__unused
 name|void
 modifier|*
 name|u
+name|__unused
 parameter_list|)
 block|{
 return|return

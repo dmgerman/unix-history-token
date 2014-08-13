@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sf_buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -200,9 +194,46 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
+begin_function
+specifier|static
+name|int
+name|tmpfs_vn_get_ino_alloc
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|lkflags
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|rvp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|tmpfs_alloc_vp
+argument_list|(
+name|mp
+argument_list|,
+name|arg
+argument_list|,
+name|lkflags
+argument_list|,
+name|rvp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -243,9 +274,6 @@ name|v
 operator|->
 name|a_cnp
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|tmpfs_dirent
 modifier|*
@@ -255,6 +283,9 @@ name|struct
 name|tmpfs_node
 modifier|*
 name|dnode
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|dnode
 operator|=
@@ -358,38 +389,13 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
-name|int
-name|ltype
-init|=
-literal|0
-decl_stmt|;
-name|ltype
+name|error
 operator|=
-name|VOP_ISLOCKED
-argument_list|(
-name|dvp
-argument_list|)
-expr_stmt|;
-name|vhold
-argument_list|(
-name|dvp
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
+name|vn_vget_ino_gen
 argument_list|(
 name|dvp
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Allocate a new vnode on the matching entry. */
-name|error
-operator|=
-name|tmpfs_alloc_vp
-argument_list|(
-name|dvp
-operator|->
-name|v_mount
+name|tmpfs_vn_get_ino_alloc
 argument_list|,
 name|dnode
 operator|->
@@ -404,20 +410,15 @@ argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;
-name|vn_lock
-argument_list|(
-name|dvp
-argument_list|,
-name|ltype
-operator||
-name|LK_RETRY
-argument_list|)
-expr_stmt|;
-name|vdrop
-argument_list|(
-name|dvp
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 block|}
 elseif|else
 if|if
@@ -803,6 +804,15 @@ argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 block|}
 block|}
 block|}
@@ -862,10 +872,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -946,10 +952,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -1038,10 +1040,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -1139,6 +1137,33 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* For regular files, the call below is nop. */
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VREG
+operator|||
+operator|(
+name|node
+operator|->
+name|tn_reg
+operator|.
+name|tn_aobj
+operator|->
+name|flags
+operator|&
+name|OBJ_DEAD
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"dead object"
+operator|)
+argument_list|)
+expr_stmt|;
 name|vnode_create_vobject
 argument_list|(
 name|vp
@@ -1166,10 +1191,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -1204,10 +1225,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 name|int
@@ -1397,10 +1414,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 name|int
@@ -1620,14 +1633,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
-comment|/* XXX Should this operation be atomic?  I think it should, but code in  * XXX other places (e.g., ufs) doesn't seem to be... */
-end_comment
 
 begin_function
 name|int
@@ -1940,24 +1945,7 @@ name|tmpfs_chtimes
 argument_list|(
 name|vp
 argument_list|,
-operator|&
 name|vap
-operator|->
-name|va_atime
-argument_list|,
-operator|&
-name|vap
-operator|->
-name|va_mtime
-argument_list|,
-operator|&
-name|vap
-operator|->
-name|va_birthtime
-argument_list|,
-name|vap
-operator|->
-name|va_vaflags
 argument_list|,
 name|cred
 argument_list|,
@@ -2419,10 +2407,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2461,10 +2445,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -2683,10 +2663,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -2770,45 +2746,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Why aren't the following two tests done by the caller? */
-comment|/* Hard links of directories are forbidden. */
-if|if
-condition|(
-name|vp
-operator|->
-name|v_type
-operator|==
-name|VDIR
-condition|)
-block|{
-name|error
-operator|=
-name|EPERM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* Cannot create cross-device links. */
-if|if
-condition|(
-name|dvp
-operator|->
-name|v_mount
-operator|!=
-name|vp
-operator|->
-name|v_mount
-condition|)
-block|{
-name|error
-operator|=
-name|EXDEV
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* Ensure that we do not overflow the maximum number of links imposed 	 * by the system. */
 name|MPASS
 argument_list|(
@@ -2939,10 +2876,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * We acquire all but fdvp locks using non-blocking acquisitions.  If we  * fail to acquire any lock in the path we will drop all held locks,  * acquire the new lock in a blocking fashion, and then release it and  * restart the rename.  This acquire/release step ensures that we do not  * spin on a lock waiting for release.  On error release all vnode locks  * and decrement references the way tmpfs_rename() would do.  */
@@ -4757,10 +4690,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -4834,10 +4763,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -5197,10 +5122,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5296,10 +5217,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -5556,10 +5473,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5656,10 +5569,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5710,10 +5619,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 name|int
@@ -5871,10 +5776,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -5973,10 +5874,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -6295,10 +6192,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * vnode operations vector used for files stored in a tmpfs file system.  */

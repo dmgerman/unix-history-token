@@ -188,11 +188,6 @@ directive|define
 name|BI_BRAND_NOTE_MANDATORY
 value|0x0004
 comment|/* Must have note.ABI-tag section. */
-define|#
-directive|define
-name|BI_CAN_EXEC_INTERP
-value|0x0008
-comment|/* Allow to run interpreter itself. */
 block|}
 name|__ElfN
 typedef|(

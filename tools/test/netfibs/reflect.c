@@ -341,10 +341,7 @@ name|snprintf
 argument_list|(
 name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|buflen
 argument_list|,
 literal|"FIB %u\n"
 argument_list|,

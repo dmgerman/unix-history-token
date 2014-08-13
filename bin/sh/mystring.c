@@ -96,51 +96,6 @@ comment|/*  * equal - #defined in mystring.h  */
 end_comment
 
 begin_comment
-comment|/*  * prefix -- see if pfx is a prefix of string.  */
-end_comment
-
-begin_function
-name|int
-name|prefix
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|pfx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string
-parameter_list|)
-block|{
-while|while
-condition|(
-operator|*
-name|pfx
-condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|pfx
-operator|++
-operator|!=
-operator|*
-name|string
-operator|++
-condition|)
-return|return
-literal|0
-return|;
-block|}
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Convert a string of digits to an integer, printing an error message on  * failure.  */
 end_comment
 

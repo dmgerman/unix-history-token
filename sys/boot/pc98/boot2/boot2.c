@@ -95,6 +95,28 @@ directive|include
 file|"lib.h"
 end_include
 
+begin_comment
+comment|/* Define to 0 to omit serial support */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SERIAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SERIAL
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -108,6 +130,50 @@ directive|define
 name|IO_SERIAL
 value|2
 end_define
+
+begin_if
+if|#
+directive|if
+name|SERIAL
+end_if
+
+begin_define
+define|#
+directive|define
+name|DO_KBD
+value|(ioctrl& IO_KEYBOARD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_SIO
+value|(ioctrl& IO_SERIAL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DO_KBD
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DO_SIO
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -639,18 +705,24 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|bootinfo
+name|bootinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|SERIAL
+end_if
+
+begin_decl_stmt
+specifier|static
 name|int
 name|comspeed
 init|=
 name|SIOSPD
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|bootinfo
-name|bootinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -662,6 +734,11 @@ init|=
 name|IO_KEYBOARD
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -2133,9 +2210,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctrl
-operator|&
-name|IO_SERIAL
+name|DO_SIO
 condition|)
 name|sio_flush
 argument_list|()
@@ -2950,6 +3025,9 @@ name|cp
 argument_list|)
 expr_stmt|;
 continue|continue;
+if|#
+directive|if
+name|SERIAL
 block|}
 elseif|else
 if|if
@@ -3008,6 +3086,8 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Fall through to error below ('S' not in optstr[]). */
+endif|#
+directive|endif
 block|}
 for|for
 control|(
@@ -3048,6 +3128,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|SERIAL
 name|ioctrl
 operator|=
 name|OPT_CHECK
@@ -3072,9 +3155,7 @@ name|IO_KEYBOARD
 expr_stmt|;
 if|if
 condition|(
-name|ioctrl
-operator|&
-name|IO_SERIAL
+name|DO_SIO
 condition|)
 block|{
 if|if
@@ -3094,6 +3175,8 @@ operator|~
 name|IO_SERIAL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -4351,9 +4434,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|ioctrl
-operator|&
-name|IO_KEYBOARD
+name|DO_KBD
 condition|)
 name|putc
 argument_list|(
@@ -4362,9 +4443,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctrl
-operator|&
-name|IO_SERIAL
+name|DO_SIO
 condition|)
 name|sio_putc
 argument_list|(
@@ -4456,9 +4535,7 @@ control|)
 block|{
 if|if
 condition|(
-name|ioctrl
-operator|&
-name|IO_KEYBOARD
+name|DO_KBD
 operator|&&
 name|getc
 argument_list|(
@@ -4477,9 +4554,7 @@ argument_list|)
 return|;
 if|if
 condition|(
-name|ioctrl
-operator|&
-name|IO_SERIAL
+name|DO_SIO
 operator|&&
 name|sio_ischar
 argument_list|()

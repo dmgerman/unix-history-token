@@ -63,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"util/configparser.h"
+file|"configparser.h"
 end_include
 
 begin_include
@@ -981,6 +981,12 @@ operator|->
 name|local_data
 operator|=
 name|NULL
+expr_stmt|;
+name|cfg
+operator|->
+name|unblock_lan_zones
+operator|=
+literal|0
 expr_stmt|;
 name|cfg
 operator|->
@@ -2540,6 +2546,13 @@ argument_list|(
 literal|"local-data:"
 argument_list|,
 argument|local_data
+argument_list|)
+else|else
+name|S_YNO
+argument_list|(
+literal|"unblock-lan-zones:"
+argument_list|,
+argument|unblock_lan_zones
 argument_list|)
 else|else
 name|S_YNO
@@ -4373,6 +4386,15 @@ argument_list|,
 literal|"rrset-roundrobin"
 argument_list|,
 argument|rrset_roundrobin
+argument_list|)
+else|else
+name|O_YNO
+argument_list|(
+argument|opt
+argument_list|,
+literal|"unblock-lan-zones"
+argument_list|,
+argument|unblock_lan_zones
 argument_list|)
 else|else
 name|O_DEC

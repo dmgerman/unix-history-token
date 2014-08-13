@@ -511,6 +511,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `sysctl' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYSCTL
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/dir.h> header file, and it defines `DIR'.    */
 end_comment
 
@@ -567,6 +578,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/sysctl.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SYSCTL_H
 value|1
 end_define
 
@@ -803,7 +825,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"bmake 20140101"
+value|"bmake 20140214"
 end_define
 
 begin_comment
@@ -836,7 +858,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"20140101"
+value|"20140214"
 end_define
 
 begin_comment
@@ -1075,6 +1097,14 @@ end_comment
 
 begin_comment
 comment|/* #undef _POSIX_SOURCE */
+end_comment
+
+begin_comment
+comment|/* C99 function name */
+end_comment
+
+begin_comment
+comment|/* #undef __func__ */
 end_comment
 
 begin_comment

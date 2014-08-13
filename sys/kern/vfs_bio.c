@@ -299,8 +299,11 @@ name|unmapped_buf
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Used below and for softdep flushing threads in ufs/ffs/ffs_softdep.c */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|struct
 name|proc
 modifier|*
@@ -7713,7 +7716,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Might as well free the page if we can and it has 		 * no valid data.  We also free the page if the 		 * buffer was used for direct I/O 		 */
@@ -13913,7 +13916,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock

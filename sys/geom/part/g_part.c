@@ -510,6 +510,12 @@ literal|"dragonfly-hammer2"
 block|,
 name|G_PART_ALIAS_DFBSD_HAMMER2
 block|}
+block|,
+block|{
+literal|"prep-boot"
+block|,
+name|G_PART_ALIAS_PREP_BOOT
+block|}
 block|, }
 struct|;
 end_struct
@@ -550,17 +556,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.part.check_integrity"
-argument_list|,
-operator|&
-name|check_integrity
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_part
@@ -569,9 +564,7 @@ name|OID_AUTO
 argument_list|,
 name|check_integrity
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|check_integrity

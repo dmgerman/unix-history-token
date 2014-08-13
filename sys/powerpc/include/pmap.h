@@ -301,17 +301,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PVO_EXECUTABLE
-value|0x040UL
-end_define
-
-begin_comment
-comment|/* PVO entry is executable */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PVO_BOOTSTRAP
 value|0x080UL
 end_define

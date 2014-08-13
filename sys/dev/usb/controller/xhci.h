@@ -1537,9 +1537,6 @@ name|struct
 name|xhci_trb
 name|trb
 index|[
-name|XHCI_MAX_ENDPOINTS
-index|]
-index|[
 operator|(
 name|XHCI_MAX_STREAMS
 operator|*
@@ -1804,6 +1801,9 @@ decl_stmt|;
 name|struct
 name|usb_page_cache
 name|endpoint_pc
+index|[
+name|XHCI_MAX_ENDPOINTS
+index|]
 decl_stmt|;
 name|struct
 name|usb_page
@@ -1816,6 +1816,9 @@ decl_stmt|;
 name|struct
 name|usb_page
 name|endpoint_pg
+index|[
+name|XHCI_MAX_ENDPOINTS
+index|]
 decl_stmt|;
 name|struct
 name|xhci_endpoint_ext

@@ -157,6 +157,9 @@ comment|/* USB Keyboard */
 name|USB_TEMP_MOUSE
 block|,
 comment|/* USB Mouse */
+name|USB_TEMP_PHONE
+block|,
+comment|/* USB Phone */
 name|USB_TEMP_MAX
 block|, }
 enum|;

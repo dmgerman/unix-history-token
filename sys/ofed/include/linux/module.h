@@ -106,6 +106,28 @@ name|name
 parameter_list|)
 end_define
 
+begin_comment
+comment|/* OFED pre-module initialization */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI_SUB_OFED_PREINIT
+value|(SI_SUB_KTHREAD_INIT - 2)
+end_define
+
+begin_comment
+comment|/* OFED default module initialization */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI_SUB_OFED_MODINIT
+value|(SI_SUB_KTHREAD_INIT - 1)
+end_define
+
 begin_include
 include|#
 directive|include
@@ -216,7 +238,7 @@ parameter_list|(
 name|fn
 parameter_list|)
 define|\
-value|SYSINIT(fn, SI_SUB_LAST, SI_ORDER_FIRST, _module_run, (fn))
+value|SYSINIT(fn, SI_SUB_OFED_MODINIT, SI_ORDER_FIRST, _module_run, (fn))
 end_define
 
 begin_comment
@@ -233,7 +255,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|SYSINIT(fn, SI_SUB_LAST, (order), _module_run, (fn))
+value|SYSINIT(fn, SI_SUB_OFED_MODINIT, (order), _module_run, (fn))
 end_define
 
 begin_define
@@ -244,7 +266,7 @@ parameter_list|(
 name|fn
 parameter_list|)
 define|\
-value|SYSUNINIT(fn, SI_SUB_LAST, SI_ORDER_FIRST, _module_run, (fn))
+value|SYSUNINIT(fn, SI_SUB_OFED_MODINIT, SI_ORDER_FIRST, _module_run, (fn))
 end_define
 
 begin_define

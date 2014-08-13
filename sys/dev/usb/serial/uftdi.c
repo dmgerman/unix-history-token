@@ -7029,17 +7029,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.uftdi.skip_jtag_interfaces"
-argument_list|,
-operator|&
-name|skip_jtag_interfaces
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb_uftdi
@@ -7546,7 +7535,7 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"Warning: unknown FTDI "
-literal|"device type, bcdDevice=0x%04x, assuming 232R"
+literal|"device type, bcdDevice=0x%04x, assuming 232R\n"
 argument_list|,
 name|uaa
 operator|->

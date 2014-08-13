@@ -305,17 +305,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.txq_mr_size"
-argument_list|,
-operator|&
-name|cxgb_txq_buf_ring_size
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
@@ -346,17 +335,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.tx_coalesce_force"
-argument_list|,
-operator|&
-name|cxgb_tx_coalesce_force
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
@@ -365,7 +343,7 @@ name|OID_AUTO
 argument_list|,
 name|tx_coalesce_force
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cxgb_tx_coalesce_force
@@ -436,17 +414,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.tx_coalesce_enable_start"
-argument_list|,
-operator|&
-name|cxgb_tx_coalesce_enable_start
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
@@ -455,7 +422,7 @@ name|OID_AUTO
 argument_list|,
 name|tx_coalesce_enable_start
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cxgb_tx_coalesce_enable_start
@@ -477,17 +444,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.tx_coalesce_enable_stop"
-argument_list|,
-operator|&
-name|cxgb_tx_coalesce_enable_stop
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
@@ -496,7 +452,7 @@ name|OID_AUTO
 argument_list|,
 name|tx_coalesce_enable_stop
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cxgb_tx_coalesce_enable_stop
@@ -518,17 +474,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.tx_reclaim_threshold"
-argument_list|,
-operator|&
-name|cxgb_tx_reclaim_threshold
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
@@ -537,7 +482,7 @@ name|OID_AUTO
 argument_list|,
 name|tx_reclaim_threshold
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cxgb_tx_reclaim_threshold

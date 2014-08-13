@@ -1335,6 +1335,10 @@ operator|*
 name|p
 operator|!=
 literal|'\0'
+operator|&&
+name|ss
+operator|!=
+name|p
 condition|)
 block|{
 name|ss

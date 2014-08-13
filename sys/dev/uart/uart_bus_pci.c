@@ -928,6 +928,20 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x9710
+block|,
+literal|0x9922
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"MosChip MCS9922 Multi I/O Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0xdeaf
 block|,
 literal|0x9051

@@ -362,11 +362,6 @@ case|case
 literal|0x0a
 case|:
 comment|/* decrease brightness */
-if|if
-condition|(
-name|devctl_process_running
-argument_list|()
-condition|)
 name|devctl_notify
 argument_list|(
 literal|"PMU"
@@ -383,11 +378,6 @@ case|case
 literal|0x09
 case|:
 comment|/* increase brightness */
-if|if
-condition|(
-name|devctl_process_running
-argument_list|()
-condition|)
 name|devctl_notify
 argument_list|(
 literal|"PMU"
@@ -408,11 +398,6 @@ case|case
 literal|0x01
 case|:
 comment|/* mute, AV hardware */
-if|if
-condition|(
-name|devctl_process_running
-argument_list|()
-condition|)
 name|devctl_notify
 argument_list|(
 literal|"PMU"
@@ -433,11 +418,6 @@ case|case
 literal|0x02
 case|:
 comment|/* decrease volume, AV hardware */
-if|if
-condition|(
-name|devctl_process_running
-argument_list|()
-condition|)
 name|devctl_notify
 argument_list|(
 literal|"PMU"
@@ -458,11 +438,6 @@ case|case
 literal|0x03
 case|:
 comment|/* increase volume, AV hardware */
-if|if
-condition|(
-name|devctl_process_running
-argument_list|()
-condition|)
 name|devctl_notify
 argument_list|(
 literal|"PMU"
@@ -485,11 +460,6 @@ case|case
 literal|0x0b
 case|:
 comment|/* eject tray */
-if|if
-condition|(
-name|devctl_process_running
-argument_list|()
-condition|)
 name|devctl_notify
 argument_list|(
 literal|"PMU"
@@ -501,6 +471,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|0x7f
 case|:

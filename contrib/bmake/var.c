@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.184 2013/09/04 15:38:26 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.186 2014/06/20 06:13:45 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.184 2013/09/04 15:38:26 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.186 2014/06/20 06:13:45 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.184 2013/09/04 15:38:26 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.186 2014/06/20 06:13:45 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9847,7 +9847,7 @@ argument_list|)
 expr_stmt|;
 name|newStr
 operator|=
-name|var_Error
+name|varNoError
 expr_stmt|;
 break|break;
 block|}
@@ -14288,6 +14288,11 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Holds the variable name */
+name|int
+name|depth
+init|=
+literal|1
+decl_stmt|;
 name|endc
 operator|=
 name|startc
@@ -14319,21 +14324,55 @@ operator|*
 name|tstr
 operator|!=
 literal|'\0'
-operator|&&
-operator|*
-name|tstr
-operator|!=
-name|endc
-operator|&&
-operator|*
-name|tstr
-operator|!=
-literal|':'
 condition|;
 name|tstr
 operator|++
 control|)
 block|{
+comment|/* 	     * Track depth so we can spot parse errors. 	     */
+if|if
+condition|(
+operator|*
+name|tstr
+operator|==
+name|startc
+condition|)
+block|{
+name|depth
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|tstr
+operator|==
+name|endc
+condition|)
+block|{
+if|if
+condition|(
+operator|--
+name|depth
+operator|==
+literal|0
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|depth
+operator|==
+literal|1
+operator|&&
+operator|*
+name|tstr
+operator|==
+literal|':'
+condition|)
+block|{
+break|break;
+block|}
 comment|/* 	     * A variable inside a variable, expand 	     */
 if|if
 condition|(
@@ -14435,8 +14474,8 @@ if|if
 condition|(
 operator|*
 name|tstr
-operator|!=
-literal|'\0'
+operator|==
+name|endc
 condition|)
 block|{
 name|haveModifier
@@ -15826,6 +15865,10 @@ elseif|else
 if|if
 condition|(
 name|undefErr
+operator|||
+name|val
+operator|==
+name|var_Error
 condition|)
 block|{
 comment|/* 		     * If variable is undefined, complain and skip the 		     * variable. The complaint will stop us from doing anything 		     * when the file is parsed. 		     */

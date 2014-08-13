@@ -36126,6 +36126,15 @@ name|fs
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Create the fsfs.conf file if supported.  Older server versions would      simply ignore the file but that might result in a different behavior      than with the later releases.  Also, hotcopy would ignore, i.e. not      copy, a fsfs.conf with old formats. */
+if|if
+condition|(
+name|ffd
+operator|->
+name|format
+operator|>=
+name|SVN_FS_FS__MIN_CONFIG_FILE
+condition|)
 name|SVN_ERR
 argument_list|(
 name|write_config

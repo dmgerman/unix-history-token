@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -81,8 +81,12 @@ name|int
 name|zfs_flags
 decl_stmt|;
 specifier|extern
-name|int
+name|boolean_t
 name|zfs_recover
+decl_stmt|;
+specifier|extern
+name|boolean_t
+name|zfs_free_leak_on_eio
 decl_stmt|;
 define|#
 directive|define
@@ -112,6 +116,10 @@ define|#
 directive|define
 name|ZFS_DEBUG_ZIO_FREE
 value|(1<<6)
+define|#
+directive|define
+name|ZFS_DEBUG_HISTOGRAM_VERIFY
+value|(1<<7)
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG

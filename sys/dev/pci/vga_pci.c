@@ -75,11 +75,6 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
 end_if
 
 begin_include
@@ -246,17 +241,6 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.default_vgapci_unit"
-argument_list|,
-operator|&
-name|vga_pci_default_unit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -490,11 +474,6 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
 if|if
 condition|(
 name|vga_pci_is_boot_display
@@ -618,11 +597,6 @@ operator|||
 name|defined
 argument_list|(
 name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
 argument_list|)
 if|if
 condition|(

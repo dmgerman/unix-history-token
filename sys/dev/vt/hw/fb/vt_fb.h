@@ -49,18 +49,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|fb_probe
-parameter_list|(
-name|struct
-name|fb_info
-modifier|*
-name|info
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|vd_init_t
 name|vt_fb_init
@@ -80,14 +68,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vd_maskbitbltchr_t
-name|vt_fb_maskbitbltchr
+name|vd_postswitch_t
+name|vt_fb_postswitch
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vd_postswitch_t
-name|vt_fb_postswitch
+name|vd_fb_ioctl_t
+name|vt_fb_ioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vd_fb_mmap_t
+name|vt_fb_mmap
 decl_stmt|;
 end_decl_stmt
 

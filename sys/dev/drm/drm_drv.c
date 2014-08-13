@@ -794,17 +794,6 @@ comment|/* Enable by default. */
 end_comment
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.drm.msi"
-argument_list|,
-operator|&
-name|drm_msi
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_hw

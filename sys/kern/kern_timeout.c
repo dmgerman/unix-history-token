@@ -46,6 +46,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -440,6 +446,8 @@ argument_list|,
 name|ncallout
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|ncallout
@@ -450,6 +458,35 @@ literal|"Number of entries in callwheel and size of timeout() preallocation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pin_default_swi
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pin_pcpu_swi
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -469,6 +506,11 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -479,6 +521,8 @@ argument_list|,
 name|pin_default_swi
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|pin_default_swi
@@ -500,6 +544,8 @@ argument_list|,
 name|pin_pcpu_swi
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|pin_pcpu_swi

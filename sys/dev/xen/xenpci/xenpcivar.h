@@ -15,17 +15,8 @@ name|int
 name|rid_ioport
 decl_stmt|;
 name|int
-name|rid_memory
-decl_stmt|;
-name|int
 name|rid_irq
 decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|res_memory
-decl_stmt|;
-comment|/* Resource for mem range. */
 name|struct
 name|resource
 modifier|*
@@ -36,28 +27,9 @@ name|void
 modifier|*
 name|intr_cookie
 decl_stmt|;
-name|vm_paddr_t
-name|phys_next
-decl_stmt|;
-comment|/* next page from mem range */
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-specifier|extern
-name|int
-name|xenpci_alloc_space
-parameter_list|(
-name|size_t
-name|sz
-parameter_list|,
-name|vm_paddr_t
-modifier|*
-name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
 
 end_unit
 

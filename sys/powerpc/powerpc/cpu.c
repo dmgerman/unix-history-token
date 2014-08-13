@@ -550,6 +550,22 @@ name|NULL
 block|}
 block|,
 block|{
+literal|"IBM POWER8E"
+block|,
+name|IBMPOWER8E
+block|,
+name|REVFMT_MAJMIN
+block|,
+name|PPC_FEATURE_64
+operator||
+name|PPC_FEATURE_HAS_ALTIVEC
+operator||
+name|PPC_FEATURE_HAS_FPU
+block|,
+name|NULL
+block|}
+block|,
+block|{
 literal|"IBM POWER8"
 block|,
 name|IBMPOWER8

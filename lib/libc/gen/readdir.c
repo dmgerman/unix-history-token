@@ -189,7 +189,11 @@ name|dirp
 operator|->
 name|dd_flags
 operator|&
+operator|(
 name|__DTF_READALL
+operator||
+name|__DTF_SKIPREAD
+operator|)
 operator|)
 condition|)
 block|{
@@ -231,6 +235,13 @@ name|NULL
 operator|)
 return|;
 block|}
+name|dirp
+operator|->
+name|dd_flags
+operator|&=
+operator|~
+name|__DTF_SKIPREAD
+expr_stmt|;
 name|dp
 operator|=
 operator|(

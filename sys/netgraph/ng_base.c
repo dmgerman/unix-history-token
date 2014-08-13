@@ -11600,17 +11600,6 @@ comment|/* limit the damage of a DoS */
 end_comment
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.graph.threads"
-argument_list|,
-operator|&
-name|numthreads
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_graph
@@ -11632,17 +11621,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.graph.maxalloc"
-argument_list|,
-operator|&
-name|maxalloc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_graph
@@ -11659,17 +11637,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum number of non-data queue items to allocate"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.graph.maxdata"
-argument_list|,
-operator|&
-name|maxdata
 argument_list|)
 expr_stmt|;
 end_expr_stmt

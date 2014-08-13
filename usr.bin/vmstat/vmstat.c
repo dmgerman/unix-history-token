@@ -279,7 +279,7 @@ directive|define
 name|X_SUM
 value|0
 block|{
-literal|"_cnt"
+literal|"_vm_cnt"
 block|}
 block|,
 define|#
@@ -1194,6 +1194,8 @@ name|errbuf
 argument_list|)
 expr_stmt|;
 block|}
+name|retry_nlist
+label|:
 if|if
 condition|(
 name|kd
@@ -1221,6 +1223,46 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* 			 * 'cnt' was renamed to 'vm_cnt'. If 'vm_cnt' is not 			 * found try looking up older 'cnt' symbol. 			 * */
+if|if
+condition|(
+name|namelist
+index|[
+name|X_SUM
+index|]
+operator|.
+name|n_type
+operator|==
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|namelist
+index|[
+name|X_SUM
+index|]
+operator|.
+name|n_name
+argument_list|,
+literal|"_vm_cnt"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|namelist
+index|[
+name|X_SUM
+index|]
+operator|.
+name|n_name
+operator|=
+literal|"_cnt"
+expr_stmt|;
+goto|goto
+name|retry_nlist
+goto|;
+block|}
 name|warnx
 argument_list|(
 literal|"undefined symbols:"
@@ -1358,12 +1400,6 @@ name|argv
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|BACKWARD_COMPATIBILITY
-ifdef|#
-directive|ifdef
-name|BACKWARD_COMPATIBILITY
 if|if
 condition|(
 operator|*
@@ -1399,8 +1435,6 @@ name|argv
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|interval
@@ -7681,9 +7715,9 @@ name|stderr
 argument_list|,
 literal|"%s%s"
 argument_list|,
-literal|"usage: vmstat [-afHhimPsz] [-c count] [-M core [-N system]] [-w wait]\n"
+literal|"usage: vmstat [-afHhimPsz] [-M core [-N system]] [-c count] [-n devs]\n"
 argument_list|,
-literal|"              [-n devs] [-p type,if,pass] [disks]\n"
+literal|"              [-p type,if,pass] [-w wait] [disks] [wait [count]]\n"
 argument_list|)
 expr_stmt|;
 name|exit

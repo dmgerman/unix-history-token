@@ -372,17 +372,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.no_boot_wait"
-argument_list|,
-operator|&
-name|usb_no_boot_wait
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb
@@ -391,9 +380,7 @@ name|OID_AUTO
 argument_list|,
 name|no_boot_wait
 argument_list|,
-name|CTLFLAG_RD
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|usb_no_boot_wait
@@ -420,17 +407,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.no_suspend_wait"
-argument_list|,
-operator|&
-name|usb_no_suspend_wait
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb
@@ -439,9 +415,7 @@ name|OID_AUTO
 argument_list|,
 name|no_suspend_wait
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_no_suspend_wait
@@ -463,17 +437,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.no_shutdown_wait"
-argument_list|,
-operator|&
-name|usb_no_shutdown_wait
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb
@@ -482,9 +445,7 @@ name|OID_AUTO
 argument_list|,
 name|no_shutdown_wait
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_no_shutdown_wait
@@ -702,7 +663,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|usbus
 argument_list|,
-name|uss820
+name|uss820dci
 argument_list|,
 name|usb_driver
 argument_list|,

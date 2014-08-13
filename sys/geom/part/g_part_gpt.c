@@ -1244,6 +1244,16 @@ name|GPT_ENT_TYPE_DRAGONFLY_LABEL64
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|uuid
+name|gpt_uuid_prep_boot
+init|=
+name|GPT_ENT_TYPE_PREP_BOOT
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 specifier|static
 struct|struct
@@ -1659,6 +1669,15 @@ block|,
 name|G_PART_ALIAS_DFBSD64
 block|,
 literal|0xa5
+block|}
+block|,
+block|{
+operator|&
+name|gpt_uuid_prep_boot
+block|,
+name|G_PART_ALIAS_PREP_BOOT
+block|,
+literal|0x41
 block|}
 block|,
 block|{

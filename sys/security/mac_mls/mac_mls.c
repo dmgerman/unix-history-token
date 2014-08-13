@@ -314,7 +314,7 @@ name|OID_AUTO
 argument_list|,
 name|enabled
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|mls_enabled
@@ -322,17 +322,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enforce MAC/MLS policy"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"security.mac.mls.enabled"
-argument_list|,
-operator|&
-name|mls_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -383,7 +372,7 @@ name|OID_AUTO
 argument_list|,
 name|ptys_equal
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ptys_equal
@@ -391,17 +380,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Label pty devices as mls/equal on create"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"security.mac.mls.ptys_equal"
-argument_list|,
-operator|&
-name|ptys_equal
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -424,7 +402,7 @@ name|OID_AUTO
 argument_list|,
 name|revocation_enabled
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|revocation_enabled
@@ -432,17 +410,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Revoke access to objects on relabel"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"security.mac.mls.revocation_enabled"
-argument_list|,
-operator|&
-name|revocation_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt

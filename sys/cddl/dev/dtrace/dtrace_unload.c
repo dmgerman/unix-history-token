@@ -18,41 +18,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800039
-comment|/* 	 * Check if there is still an event handler callback 	 * registered. 	 */
-if|if
-condition|(
-name|eh_tag
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* De-register the device cloning event handler. */
-name|EVENTHANDLER_DEREGISTER
-argument_list|(
-name|dev_clone
-argument_list|,
-name|eh_tag
-argument_list|)
-expr_stmt|;
-name|eh_tag
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Stop device cloning. */
-name|clone_cleanup
-argument_list|(
-operator|&
-name|dtrace_clones
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
 name|destroy_dev
 argument_list|(
 name|dtrace_dev
@@ -63,8 +28,6 @@ argument_list|(
 name|helper_dev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mutex_enter
 argument_list|(
 operator|&
