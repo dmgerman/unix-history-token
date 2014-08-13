@@ -473,7 +473,12 @@ expr_stmt|;
 else|else
 name|warnx
 argument_list|(
-literal|"fail to extract pkg-static"
+literal|"failed to extract pkg-static: %s"
+argument_list|,
+name|archive_error_string
+argument_list|(
+name|a
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cleanup
