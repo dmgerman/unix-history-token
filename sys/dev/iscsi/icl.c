@@ -2671,11 +2671,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|icl_pdu_free
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Don't free the PDU; it's pointed to by ic->ic_receive_pdu 		 * and will get freed in icl_conn_close(). 		 */
 name|icl_conn_fail
 argument_list|(
 name|ic
