@@ -11489,9 +11489,10 @@ name|ntlv
 operator|->
 name|name
 expr_stmt|;
+comment|/* 		 * Use set provided by @ti instead of @ntlv one. 		 * This is needed due to different sets behavior 		 * controlled by V_fw_tables_sets. 		 */
 name|set
 operator|=
-name|ntlv
+name|ti
 operator|->
 name|set
 expr_stmt|;

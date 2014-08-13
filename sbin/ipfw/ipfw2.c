@@ -14095,6 +14095,9 @@ decl_stmt|;
 name|uint16_t
 name|counter
 decl_stmt|;
+name|uint8_t
+name|set
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -14112,9 +14115,6 @@ parameter_list|,
 name|char
 modifier|*
 name|name
-parameter_list|,
-name|uint32_t
-name|set
 parameter_list|)
 block|{
 name|int
@@ -14184,6 +14184,8 @@ index|]
 operator|.
 name|set
 operator|!=
+name|tstate
+operator|->
 name|set
 condition|)
 continue|continue;
@@ -14314,6 +14316,8 @@ name|ntlv
 operator|->
 name|set
 operator|=
+name|tstate
+operator|->
 name|set
 expr_stmt|;
 name|ntlv
@@ -14447,8 +14451,6 @@ argument_list|,
 name|av
 operator|+
 literal|6
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 operator|==
@@ -16173,8 +16175,6 @@ argument_list|,
 name|arg
 operator|+
 literal|6
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 operator|==
@@ -18673,6 +18673,12 @@ index|]
 argument_list|)
 expr_stmt|;
 name|rule
+operator|->
+name|set
+operator|=
+name|set
+expr_stmt|;
+name|tstate
 operator|->
 name|set
 operator|=
@@ -23127,8 +23133,6 @@ name|tstate
 argument_list|,
 operator|*
 name|av
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 operator|==
