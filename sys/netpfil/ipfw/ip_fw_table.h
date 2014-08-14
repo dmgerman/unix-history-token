@@ -785,7 +785,18 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Algorithm is default for given type */
+comment|/* Algo is default for given type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TA_FLAG_READONLY
+value|0x02
+end_define
+
+begin_comment
+comment|/* Algo does not support modifications*/
 end_comment
 
 begin_function_decl
