@@ -4696,9 +4696,11 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"IO error; status MCI_SR = 0x%x cmd opcode = %d%s\n"
+literal|"IO error; status MCI_SR = 0x%b cmd opcode = %d%s\n"
 argument_list|,
 name|sr
+argument_list|,
+name|MCI_SR_BITSTRING
 argument_list|,
 name|cmd
 operator|->
