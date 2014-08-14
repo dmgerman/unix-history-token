@@ -676,6 +676,23 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|ta_get_count
+parameter_list|(
+name|void
+modifier|*
+name|ta_state
+parameter_list|,
+name|struct
+name|table_info
+modifier|*
+name|ti
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|table_algo
@@ -773,6 +790,10 @@ name|ta_dump_tinfo
 modifier|*
 name|dump_tinfo
 decl_stmt|;
+name|ta_get_count
+modifier|*
+name|get_count
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -797,6 +818,17 @@ end_define
 
 begin_comment
 comment|/* Algo does not support modifications*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TA_FLAG_EXTCOUNTER
+value|0x04
+end_define
+
+begin_comment
+comment|/* Algo has external counter available*/
 end_comment
 
 begin_function_decl
