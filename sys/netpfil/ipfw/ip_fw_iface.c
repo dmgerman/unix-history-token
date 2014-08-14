@@ -291,6 +291,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|vnet_mtx
@@ -334,6 +335,13 @@ decl_stmt|;
 name|uintptr_t
 name|htype
 decl_stmt|;
+if|if
+condition|(
+name|V_ipfw_vnet_ready
+operator|==
+literal|0
+condition|)
+return|return;
 name|ch
 operator|=
 operator|&
@@ -346,13 +354,6 @@ name|uintptr_t
 operator|)
 name|arg
 expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|==
-name|NULL
-condition|)
-return|return;
 name|IPFW_UH_WLOCK
 argument_list|(
 name|ch
@@ -392,9 +393,10 @@ name|ii
 argument_list|,
 literal|0
 argument_list|,
+name|if_name
+argument_list|(
 name|ifp
-operator|->
-name|if_xname
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -559,14 +561,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|--
 name|num_vnets
 operator|==
-literal|0
+literal|1
 condition|)
 name|destroy
 operator|=
 literal|1
+expr_stmt|;
+name|num_vnets
+operator|--
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -806,38 +810,10 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|struct
-name|ipfw_iface
-modifier|*
-name|iif
-decl_stmt|;
-name|struct
-name|ip_fw_chain
-modifier|*
-name|ch
-decl_stmt|;
-name|ch
-operator|=
-operator|(
-expr|struct
-name|ip_fw_chain
-operator|*
-operator|)
-name|arg
-expr_stmt|;
-name|iif
-operator|=
-operator|(
-expr|struct
-name|ipfw_iface
-operator|*
-operator|)
-name|no
-expr_stmt|;
 comment|/* Assume all consumers have been already detached */
 name|free
 argument_list|(
-name|iif
+name|no
 argument_list|,
 name|M_IPFW
 argument_list|)
@@ -1317,7 +1293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unlinks interface tracker object @ic from interface.  * Must be called whi holding UH lock.  */
+comment|/*  * Unlinks interface tracker object @ic from interface.  * Must be called while holding UH lock.  */
 end_comment
 
 begin_function

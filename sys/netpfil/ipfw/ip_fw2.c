@@ -388,30 +388,6 @@ begin_comment
 comment|/*  * static variables followed by global ones.  * All ipfw global variables are here.  */
 end_comment
 
-begin_comment
-comment|/* ipfw_vnet_ready controls when we are open for business */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|ipfw_vnet_ready
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ipfw_vnet_ready
-value|VNET(ipfw_vnet_ready)
-end_define
-
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -689,6 +665,22 @@ name|ip_fw_chain
 argument_list|,
 name|layer3_chain
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* ipfw_vnet_ready controls when we are open for business */
+end_comment
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|ipfw_vnet_ready
+argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 end_expr_stmt
 
