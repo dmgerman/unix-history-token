@@ -574,9 +574,9 @@ index|[]
 init|=
 block|{
 block|{
-literal|"cidr"
+literal|"addr"
 block|,
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 block|}
 block|,
 block|{
@@ -1971,7 +1971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Creates new table  *  * ipfw table NAME create [ type { cidr | iface | u32 } ]  *     [ valtype { number | ip | dscp } ]  *     [ algo algoname ]  */
+comment|/*  * Creates new table  *  * ipfw table NAME create [ type { addr | iface | number | flow } ]  *     [ algo algoname ]  */
 end_comment
 
 begin_function
@@ -2442,7 +2442,7 @@ name|xi
 operator|.
 name|type
 operator|=
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 expr_stmt|;
 if|if
 condition|(
@@ -5816,7 +5816,7 @@ name|type
 condition|)
 block|{
 case|case
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 case|:
 comment|/* Remove / if exists */
 if|if
@@ -5995,7 +5995,7 @@ literal|32
 expr_stmt|;
 name|type
 operator|=
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 expr_stmt|;
 name|af
 operator|=
@@ -6940,7 +6940,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Table does not exist. 		 * Compability layer: try to interpret data as CIDR 		 * before failing. 		 */
+comment|/* 		 * Table does not exist. 		 * Compability layer: try to interpret data as ADDR 		 * before failing. 		 */
 if|if
 condition|(
 operator|(
@@ -6999,7 +6999,7 @@ block|{
 comment|/* OK Prepare and send */
 name|type
 operator|=
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 expr_stmt|;
 comment|/* 			 * XXX: Value type is forced to be u32. 			 * This should be changed for MFC. 			 */
 name|vtype
@@ -7867,7 +7867,7 @@ name|type
 condition|)
 block|{
 case|case
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 case|:
 comment|/* IPv4 or IPv6 prefixes */
 name|inet_ntop

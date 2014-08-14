@@ -1865,7 +1865,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 value|1
 end_define
 
@@ -1915,6 +1915,17 @@ end_define
 
 begin_comment
 comment|/* Maximum valid number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_TABLE_CIDR
+value|IPFW_TABLE_ADDR
+end_define
+
+begin_comment
+comment|/* compat */
 end_comment
 
 begin_comment
@@ -2754,7 +2765,7 @@ block|{
 name|uint8_t
 name|type
 decl_stmt|;
-comment|/* table type (cidr,iface,..)	*/
+comment|/* table type (addr,iface,..)	*/
 name|uint8_t
 name|tflags
 decl_stmt|;

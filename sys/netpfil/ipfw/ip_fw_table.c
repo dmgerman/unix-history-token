@@ -126,7 +126,7 @@ file|<netpfil/ipfw/ip_fw_table.h>
 end_include
 
 begin_comment
-comment|/*  * Table has the following `type` concepts:  *  * `no.type` represents lookup key type (cidr, ifp, uid, etc..)  * `vtype` represents table value type (currently U32)  * `ftype` (at the moment )is pure userland field helping to properly  *     format value data e.g. "value is IPv4 nexthop" or "value is DSCP"  *     or "value is port".  *  */
+comment|/*  * Table has the following `type` concepts:  *  * `no.type` represents lookup key type (addr, ifp, uid, etc..)  * `vtype` represents table value type (currently U32)  * `ftype` (at the moment )is pure userland field helping to properly  *     format value data e.g. "value is IPv4 nexthop" or "value is DSCP"  *     or "value is port".  *  */
 end_comment
 
 begin_struct
@@ -3284,7 +3284,7 @@ name|xent
 operator|->
 name|type
 operator|==
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 condition|)
 block|{
 if|if
@@ -9885,7 +9885,7 @@ name|no
 operator|.
 name|type
 operator|!=
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 condition|)
 return|return
 operator|(
@@ -10318,7 +10318,7 @@ name|no
 operator|.
 name|type
 operator|==
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 operator|&&
 name|tent
 operator|->
@@ -10521,7 +10521,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 		 * One can supply additional algorithm 		 * parameters so we compare only the first word 		 * of supplied name: 		 * 'hash_cidr hsize=32' 		 * '^^^^^^^^^' 		 * 		 */
+comment|/* 		 * One can supply additional algorithm 		 * parameters so we compare only the first word 		 * of supplied name: 		 * 'addr:chash hsize=32' 		 * '^^^^^^^^^' 		 * 		 */
 name|l
 operator|=
 name|strlen
@@ -11249,11 +11249,11 @@ name|cmd
 operator|->
 name|arg1
 expr_stmt|;
-comment|/* Assume CIDR by default */
+comment|/* Assume ADDR by default */
 operator|*
 name|ptype
 operator|=
-name|IPFW_TABLE_CIDR
+name|IPFW_TABLE_ADDR
 expr_stmt|;
 name|skip
 operator|=
