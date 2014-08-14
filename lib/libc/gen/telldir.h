@@ -21,6 +21,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
 begin_comment
 comment|/*  * One of these structures is malloced to describe the current directory  * position each time telldir is called. It records the current magic  * cookie returned by getdirentries and the offset within the buffer  * associated with that return value.  */
 end_comment
@@ -75,6 +81,18 @@ comment|/* index of entry for sequential readdir's */
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|bool
+name|_filldir
+parameter_list|(
+name|DIR
+modifier|*
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|struct
