@@ -1667,7 +1667,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.enable_aim"
+literal|"hw.ix.enable_aim"
 argument_list|,
 operator|&
 name|ixgbe_enable_aim
@@ -1712,7 +1712,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.max_interrupt_rate"
+literal|"hw.ix.max_interrupt_rate"
 argument_list|,
 operator|&
 name|ixgbe_max_interrupt_rate
@@ -1757,7 +1757,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.rx_process_limit"
+literal|"hw.ix.rx_process_limit"
 argument_list|,
 operator|&
 name|ixgbe_rx_process_limit
@@ -1803,7 +1803,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.tx_process_limit"
+literal|"hw.ix.tx_process_limit"
 argument_list|,
 operator|&
 name|ixgbe_tx_process_limit
@@ -1862,7 +1862,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.enable_msix"
+literal|"hw.ix.enable_msix"
 argument_list|,
 operator|&
 name|ixgbe_enable_msix
@@ -1907,7 +1907,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.num_queues"
+literal|"hw.ix.num_queues"
 argument_list|,
 operator|&
 name|ixgbe_num_queues
@@ -1952,7 +1952,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.txd"
+literal|"hw.ix.txd"
 argument_list|,
 operator|&
 name|ixgbe_txd
@@ -1997,7 +1997,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.rxd"
+literal|"hw.ix.rxd"
 argument_list|,
 operator|&
 name|ixgbe_rxd
@@ -2042,7 +2042,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.unsupported_sfp"
+literal|"hw.ix.unsupported_sfp"
 argument_list|,
 operator|&
 name|allow_unsupported_sfp
