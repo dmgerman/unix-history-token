@@ -400,27 +400,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|free_table_state
-parameter_list|(
-name|void
-modifier|*
-modifier|*
-name|state
-parameter_list|,
-name|void
-modifier|*
-modifier|*
-name|xstate
-parameter_list|,
-name|uint8_t
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|export_tables
 parameter_list|(

@@ -147,7 +147,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* IPFW extented tables support */
+comment|/* IP_FW3 opcodes */
 end_comment
 
 begin_define
@@ -401,10 +401,6 @@ end_define
 
 begin_comment
 comment|/* swap two tables */
-end_comment
-
-begin_comment
-comment|/*  * Usage guidelines:  *  * IP_FW_TABLE_XLIST(ver 1): Dumps all table data  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_xtable_info.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info ipfw_table_xentry x N ]  *  * IP_FW_TABLE_XDESTROY: Destroys given table  *   Request(setsockopt): [ ipfw_obj_header ]  *  * IP_FW_TABLES_XGETSIZE: Get buffer size needed to list info for all tables.  *   Request(getsockopt): [ empty ], size = sizeof(ipfw_obj_lheader)  *   Reply: [ ipfw_obj_lheader ]  *  * IP_FW_TABLES_XLIST: Lists all tables currently available in kernel.  *   Request(getsockopt): [ ipfw_obj_lheader ], size = ipfw_obj_lheader.size  *   Reply: [ ipfw_obj_lheader ipfw_xtable_info x N ]  *  * IP_FW_TABLE_XINFO: Store table info to buffer.  *   Request(getsockopt): [ ipfw_obj_header ipfw_xtable_info(empty)]  *   Reply: [ ipfw_obj_header ipfw_xtable_info ]  *  * IP_FW_TABLE_XFLUSH: Removes all data from given table leaving type etc..  *   Request(setsockopt): [ ipfw_obj_header ]  */
 end_comment
 
 begin_comment
