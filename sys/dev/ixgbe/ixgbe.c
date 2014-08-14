@@ -1977,7 +1977,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"hw.ixgbe.unsupported_sfp"
+literal|"hw.ix.unsupported_sfp"
 argument_list|,
 operator|&
 name|allow_unsupported_sfp
