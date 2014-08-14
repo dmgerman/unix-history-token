@@ -696,12 +696,15 @@ name|STEP_CALLT
 operator|)
 condition|)
 block|{
+comment|/* 	     * We are about to execute this instruction, 	     * so count it now. 	     */
+ifdef|#
+directive|ifdef
+name|SOFTWARE_SSTEP
 name|db_expr_t
 name|ins
-decl_stmt|;
-comment|/* 	     * We are about to execute this instruction, 	     * so count it now. 	     */
-name|ins
-operator|=
+init|=
+endif|#
+directive|endif
 name|db_get_value
 argument_list|(
 name|pc
@@ -713,7 +716,7 @@ argument_list|)
 argument_list|,
 name|FALSE
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|db_inst_count
 operator|++
 expr_stmt|;
