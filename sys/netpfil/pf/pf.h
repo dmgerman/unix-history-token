@@ -759,8 +759,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PFRES_MAX
+name|PFRES_MAPFAILED
 value|15
+end_define
+
+begin_comment
+comment|/* pf_map_addr() failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFRES_MAX
+value|16
 end_define
 
 begin_comment
@@ -771,7 +782,7 @@ begin_define
 define|#
 directive|define
 name|PFRES_NAMES
-value|{ \ 	"match", \ 	"bad-offset", \ 	"fragment", \ 	"short", \ 	"normalize", \ 	"memory", \ 	"bad-timestamp", \ 	"congestion", \ 	"ip-option", \ 	"proto-cksum", \ 	"state-mismatch", \ 	"state-insert", \ 	"state-limit", \ 	"src-limit", \ 	"synproxy", \ 	NULL \ }
+value|{ \ 	"match", \ 	"bad-offset", \ 	"fragment", \ 	"short", \ 	"normalize", \ 	"memory", \ 	"bad-timestamp", \ 	"congestion", \ 	"ip-option", \ 	"proto-cksum", \ 	"state-mismatch", \ 	"state-insert", \ 	"state-limit", \ 	"src-limit", \ 	"synproxy", \ 	"map-failed", \ 	NULL \ }
 end_define
 
 begin_comment
