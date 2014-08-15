@@ -682,7 +682,6 @@ name|create_pos
 operator|!=
 name|NULL
 condition|)
-empty_stmt|;
 name|got_create_event
 operator|=
 name|true
@@ -702,7 +701,6 @@ name|destroy_pos
 operator|!=
 name|NULL
 condition|)
-empty_stmt|;
 name|got_destroy_event
 operator|=
 name|true
