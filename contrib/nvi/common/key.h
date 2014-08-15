@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1991, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: key.h,v 10.55 2012/10/07 01:31:17 zy Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1991, 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  *	$Id: key.h,v 10.56 2013/11/13 12:15:27 zy Exp $  */
 end_comment
 
 begin_include
@@ -125,6 +125,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|INTISWIDE
+parameter_list|(
+name|c
+parameter_list|)
+value|(wctob(c) == EOF)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHAR_WIDTH
 parameter_list|(
 name|sp
@@ -137,11 +147,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|INTISWIDE
+name|CAN_PRINT
 parameter_list|(
-name|c
+name|sp
+parameter_list|,
+name|ch
 parameter_list|)
-value|(wctob(c) == EOF)
+value|(CHAR_WIDTH(sp, ch)> 0)
 end_define
 
 begin_else
@@ -277,6 +289,18 @@ parameter_list|,
 name|ch
 parameter_list|)
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAN_PRINT
+parameter_list|(
+name|sp
+parameter_list|,
+name|ch
+parameter_list|)
+value|isprint(ch)
 end_define
 
 begin_endif

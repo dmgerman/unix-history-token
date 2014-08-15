@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: key.c,v 10.53 2013/03/11 01:20:53 yamt Exp $"
+literal|"$Id: key.c,v 10.54 2013/11/13 12:15:27 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1064,8 +1064,10 @@ goto|;
 comment|/* 	 * Historical (ARPA standard) mappings.  Printable characters are left 	 * alone.  Control characters less than 0x20 are represented as '^' 	 * followed by the character offset from the '@' character in the ASCII 	 * character set.  Del (0x7f) is represented as '^' followed by '?'. 	 * 	 * XXX 	 * The following code depends on the current locale being identical to 	 * the ASCII map from 0x40 to 0x5f (since 0x1f + 0x40 == 0x5f).  I'm 	 * told that this is a reasonable assumption... 	 * 	 * XXX 	 * The code prints non-printable wide characters in 4 or 5 digits 	 * Unicode escape sequences, so only supports plane 0 to 15. 	 */
 if|if
 condition|(
-name|ISPRINT
+name|CAN_PRINT
 argument_list|(
+name|sp
+argument_list|,
 name|ach
 argument_list|)
 condition|)
