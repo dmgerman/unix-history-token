@@ -233,6 +233,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
@@ -1975,8 +1981,7 @@ name|socket
 modifier|*
 name|so
 parameter_list|,
-name|u_long
-name|dst
+modifier|...
 parameter_list|)
 block|{
 name|struct
@@ -1997,6 +2002,12 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+name|va_list
+name|ap
+decl_stmt|;
+name|u_long
+name|dst
+decl_stmt|;
 name|int
 name|flags
 init|=
@@ -2016,6 +2027,27 @@ operator|)
 operator||
 name|IP_ALLOWBROADCAST
 decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|so
+argument_list|)
+expr_stmt|;
+name|dst
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|u_long
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the user handed us a complete IP packet, use it.  Otherwise, 	 * allocate an mbuf for a header and fill it in. 	 */
 if|if
 condition|(

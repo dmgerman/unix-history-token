@@ -1192,7 +1192,7 @@ name|struct
 name|socket
 modifier|*
 parameter_list|,
-name|u_long
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
