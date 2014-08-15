@@ -20910,13 +20910,6 @@ operator|!=
 name|PF_FASTROUTE
 condition|)
 block|{
-name|struct
-name|pf_src_node
-modifier|*
-name|sn
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|pf_map_addr
