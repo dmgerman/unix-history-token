@@ -7097,6 +7097,8 @@ decl_stmt|;
 comment|/* Try to interpret as number first */
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 name|strtoul
@@ -7134,6 +7136,8 @@ condition|)
 block|{
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 name|ntohl
@@ -7158,6 +7162,8 @@ operator|)
 operator|&
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 argument_list|)
 operator|==
@@ -7806,6 +7812,8 @@ name|tval
 operator|=
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 expr_stmt|;
 if|if

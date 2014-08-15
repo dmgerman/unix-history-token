@@ -2329,14 +2329,6 @@ name|uint8_t
 name|masklen
 decl_stmt|;
 comment|/* mask length			*/
-name|uint16_t
-name|idx
-decl_stmt|;
-comment|/* Table name index		*/
-name|uint32_t
-name|value
-decl_stmt|;
-comment|/* value			*/
 name|uint8_t
 name|result
 decl_stmt|;
@@ -2345,10 +2337,11 @@ name|uint8_t
 name|spare0
 decl_stmt|;
 name|uint16_t
-name|spare1
+name|idx
 decl_stmt|;
-name|uint32_t
-name|spare2
+comment|/* Table name index		*/
+name|uint16_t
+name|spare1
 decl_stmt|;
 union|union
 block|{
@@ -2380,6 +2373,22 @@ name|flow
 decl_stmt|;
 block|}
 name|k
+union|;
+union|union
+block|{
+name|uint32_t
+name|value
+decl_stmt|;
+comment|/* 32-bit value */
+name|char
+name|storage
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Future needs	*/
+block|}
+name|v
 union|;
 block|}
 name|ipfw_obj_tentry

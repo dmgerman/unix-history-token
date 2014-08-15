@@ -1180,6 +1180,8 @@ name|AF_INET
 expr_stmt|;
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 name|n
@@ -1238,6 +1240,8 @@ name|AF_INET6
 expr_stmt|;
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 name|xn
@@ -5380,6 +5384,8 @@ name|AF_INET
 expr_stmt|;
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 name|ent
@@ -5429,6 +5435,8 @@ name|AF_INET6
 expr_stmt|;
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 name|ent
@@ -10742,6 +10750,8 @@ argument_list|)
 expr_stmt|;
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 name|ife
@@ -12618,6 +12628,8 @@ name|number
 expr_stmt|;
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 name|na
@@ -14485,6 +14497,8 @@ argument_list|)
 expr_stmt|;
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 name|ent
@@ -17382,6 +17396,8 @@ name|AF_INET
 expr_stmt|;
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 literal|0
@@ -17489,6 +17505,8 @@ name|AF_INET6
 expr_stmt|;
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 operator|=
 literal|0

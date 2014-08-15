@@ -3848,6 +3848,8 @@ name|value
 operator|=
 name|ptent
 operator|->
+name|v
+operator|.
 name|value
 expr_stmt|;
 block|}
@@ -9793,6 +9795,8 @@ name|da
 operator|->
 name|tent
 operator|.
+name|v
+operator|.
 name|value
 expr_stmt|;
 return|return
@@ -10307,6 +10311,8 @@ name|value
 operator|=
 name|tent
 operator|->
+name|v
+operator|.
 name|value
 expr_stmt|;
 comment|/* Apply some hacks */
