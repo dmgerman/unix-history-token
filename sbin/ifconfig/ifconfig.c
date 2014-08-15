@@ -234,7 +234,7 @@ file|"ifconfig.h"
 end_include
 
 begin_comment
-comment|/*  * Since "struct ifreq" is composed of various union members, callers  * should pay special attention to interprete the value.  * (.e.g. little/big endian difference in the structure.)  */
+comment|/*  * Since "struct ifreq" is composed of various union members, callers  * should pay special attention to interpret the value.  * (.e.g. little/big endian difference in the structure.)  */
 end_comment
 
 begin_decl_stmt
