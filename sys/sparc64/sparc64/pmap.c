@@ -5417,18 +5417,11 @@ name|pm_tsb
 operator|==
 name|NULL
 condition|)
-block|{
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 comment|/* 	 * Allocate an object for it. 	 */
 if|if
