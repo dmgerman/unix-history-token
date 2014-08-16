@@ -6043,7 +6043,8 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|get_socket_domain
+argument_list|()
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
@@ -6187,7 +6188,8 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|get_socket_domain
+argument_list|()
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
