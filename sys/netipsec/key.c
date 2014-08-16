@@ -5453,9 +5453,14 @@ name|u_int
 modifier|*
 name|saorder_state_valid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC_NAT_T
 name|int
-name|chkport
+name|natt_chkport
 decl_stmt|;
+endif|#
+directive|endif
 name|IPSEC_ASSERT
 argument_list|(
 name|dst
@@ -5486,7 +5491,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC_NAT_T
-name|chkport
+name|natt_chkport
 operator|=
 operator|(
 name|dst
@@ -5517,12 +5522,6 @@ name|sin_port
 operator|!=
 literal|0
 operator|)
-expr_stmt|;
-else|#
-directive|else
-name|chkport
-operator|=
-literal|0
 expr_stmt|;
 endif|#
 directive|endif
@@ -5570,6 +5569,9 @@ argument_list|,
 argument|chain
 argument_list|)
 block|{
+name|int
+name|checkport
+decl_stmt|;
 comment|/* search valid state */
 for|for
 control|(
@@ -5651,12 +5653,34 @@ operator|->
 name|spi
 condition|)
 continue|continue;
+name|checkport
+operator|=
+literal|0
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC_NAT_T
+comment|/* 				 * Really only check ports when this is a NAT-T 				 * SA.  Otherwise other lookups providing ports 				 * might suffer. 				 */
+if|if
+condition|(
+name|sav
+operator|->
+name|natt_type
+operator|&&
+name|natt_chkport
+condition|)
+name|checkport
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
 comment|/* don't check src */
 comment|/* check src address */
-block|if (key_sockaddrcmp(&src->sa,&sav->sah->saidx.src.sa, chkport) != 0) 					continue;
+block|if (key_sockaddrcmp(&src->sa,&sav->sah->saidx.src.sa, checkport) != 0) 					continue;
 endif|#
 directive|endif
 comment|/* check dst address */
@@ -5680,7 +5704,7 @@ name|dst
 operator|.
 name|sa
 argument_list|,
-name|chkport
+name|checkport
 argument_list|)
 operator|!=
 literal|0
