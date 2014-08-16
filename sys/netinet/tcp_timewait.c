@@ -395,6 +395,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|tcp_twrespond
+parameter_list|(
+name|struct
+name|tcptw
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|int
@@ -1742,6 +1756,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|tcp_twrespond
 parameter_list|(
