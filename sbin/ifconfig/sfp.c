@@ -113,135 +113,6 @@ directive|include
 file|"ifconfig.h"
 end_include
 
-begin_comment
-comment|/* Definitions from Table 3.1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_MSA_IDENTIFIER
-value|0
-end_define
-
-begin_comment
-comment|/* Type of transceiver (T. 3.2), 1B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_MSA_CONNECTOR
-value|2
-end_define
-
-begin_comment
-comment|/* Connector type (T. 3.3), 1B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_MSA_TRANSCEIVER_CLASS
-value|3
-end_define
-
-begin_comment
-comment|/* Ethernet/Sonet/IB code, 1B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_MSA_VENDOR_NAME
-value|20
-end_define
-
-begin_comment
-comment|/* ASCII vendor name, 16B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_MSA_VENDOR_PN
-value|40
-end_define
-
-begin_comment
-comment|/* ASCII vendor partnum, 16B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_MSA_VENDOR_SN
-value|68
-end_define
-
-begin_comment
-comment|/* ASCII vendor serialnum, 16B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_MSA_VENDOR_DATE
-value|84
-end_define
-
-begin_comment
-comment|/* Vendor's date code, 8B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_MSA_DMONTYPE
-value|92
-end_define
-
-begin_comment
-comment|/* Type of disagnostic monitoring, 1B */
-end_comment
-
-begin_comment
-comment|/* Definitions from table 3.17 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_DDM_TEMP
-value|96
-end_define
-
-begin_comment
-comment|/* Module temperature, 2B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_DDM_TXPOWER
-value|102
-end_define
-
-begin_comment
-comment|/* Measured TX output power, 2B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFP_DDM_RXPOWER
-value|104
-end_define
-
-begin_comment
-comment|/* Measured RX input power, 2B */
-end_comment
-
 begin_struct_decl
 struct_decl|struct
 name|i2c_info
@@ -1089,13 +960,13 @@ name|data
 operator|<=
 name|SFF_8472_ID_LAST
 condition|)
-block|{
 name|x
 operator|=
-name|NULL
+name|sff_8472_id
+index|[
+name|data
+index|]
 expr_stmt|;
-comment|//x = sff_8472_id[data];
-block|}
 else|else
 block|{
 if|if
@@ -1319,7 +1190,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Check 10G first */
+comment|/* Check 10G ethernet first */
 name|tech_class
 operator|=
 name|find_zero_bit
@@ -2187,6 +2058,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Converts value in @xbuf to both milliwats and dBm  * human representation.  */
+end_comment
 
 begin_function
 specifier|static
