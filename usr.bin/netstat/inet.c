@@ -3982,6 +3982,41 @@ argument_list|,
 literal|"\t%ju time%s ECN reduced the congestion window\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_rcvgoodsig
+argument_list|,
+literal|"\t%ju packet%s with valid tcp-md5 signature received\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_rcvbadsig
+argument_list|,
+literal|"\t%ju packet%s with invalid tcp-md5 signature received\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_err_buildsig
+argument_list|,
+literal|"\t%ju packet%s with tcp-md5 signature mismatch\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_err_sigopt
+argument_list|,
+literal|"\t%ju packet%s with unexpected tcp-md5 signature received\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sig_err_nosigopt
+argument_list|,
+literal|"\t%ju packet%s without expected tcp-md5 signature received\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
