@@ -5179,7 +5179,7 @@ name|m_adj
 argument_list|(
 name|m
 argument_list|,
-literal|2
+name|ETHER_ALIGN
 argument_list|)
 expr_stmt|;
 name|sc
@@ -7706,7 +7706,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Shared between nexus anf fdt implementation. */
+comment|/* Shared between nexus and fdt implementation. */
 end_comment
 
 begin_function
