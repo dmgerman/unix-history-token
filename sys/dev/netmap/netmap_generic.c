@@ -177,7 +177,7 @@ comment|/*  * mbuf wrappers  */
 end_comment
 
 begin_comment
-comment|/*  * mbuf destructor, also need to change the type to EXT_EXTREF,  * add an M_NOFREE flag, and then clear the flag and  * chain into uma_zfree(zone_pack, mf)  * (or reinstall the buffer ?)  *  * On FreeBSD 9 the destructor is called as ext_free(ext_arg1, ext_arg2)  * whereas newer version have ext_free(m, ext_arg1, ext_arg2)  * For compatibility we set ext_arg1 = m on allocation so we have  * the same code on both.  */
+comment|/* mbuf destructor, also need to change the type to EXT_EXTREF,  * add an M_NOFREE flag, and then clear the flag and  * chain into uma_zfree(zone_pack, mf)  * (or reinstall the buffer ?)  */
 end_comment
 
 begin_define
@@ -189,7 +189,7 @@ name|m
 parameter_list|,
 name|fn
 parameter_list|)
-value|do {		\ 		(m)->m_ext.ext_free = (void *)fn;	\ 		(m)->m_ext.ext_type = EXT_EXTREF;	\ 	} while (0)
+value|do {		\ 	(m)->m_ext.ext_free = (void *)fn;	\ 	(m)->m_ext.ext_type = EXT_EXTREF;	\ } while (0)
 end_define
 
 begin_function
@@ -203,7 +203,7 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-comment|/* restore original data pointer and type */
+comment|/* restore original mbuf */
 name|m
 operator|->
 name|m_ext
@@ -218,7 +218,15 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_arg2
+name|ext_arg1
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg1
+operator|=
+name|NULL
 expr_stmt|;
 name|m
 operator|->
@@ -236,43 +244,21 @@ name|ext_free
 operator|=
 name|NULL
 expr_stmt|;
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_arg1
-operator|=
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_arg2
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
-operator|*
-operator|(
+name|GET_MBUF_REFCNT
+argument_list|(
 name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_cnt
-operator|)
+argument_list|)
 operator|==
 literal|0
 condition|)
-operator|*
-operator|(
+name|SET_MBUF_REFCNT
+argument_list|(
 name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_cnt
-operator|)
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|uma_zfree
 argument_list|(
@@ -326,21 +312,12 @@ operator|.
 name|ext_arg1
 operator|=
 name|m
-expr_stmt|;
-comment|/* FreeBSD 9 compat */
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_arg2
-operator|=
-name|m
 operator|->
 name|m_ext
 operator|.
 name|ext_buf
 expr_stmt|;
-comment|/* save original */
+comment|// XXX save
 name|m
 operator|->
 name|m_ext
@@ -369,12 +346,10 @@ literal|"create m %p refcnt %d"
 argument_list|,
 name|m
 argument_list|,
-operator|*
+name|GET_MBUF_REFCNT
+argument_list|(
 name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_cnt
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -383,16 +358,6 @@ name|m
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|GET_MBUF_REFCNT
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_ext.ext_cnt ? *(m)->m_ext.ext_cnt : -1)
-end_define
 
 begin_else
 else|#
@@ -436,10 +401,6 @@ file|<linux/hrtimer.h>
 end_include
 
 begin_comment
-comment|//#define RATE  /* Enables communication statistics. */
-end_comment
-
-begin_comment
 comment|//#define REG_RESET
 end_comment
 
@@ -481,7 +442,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|RATE
+name|RATE_GENERIC
 end_ifdef
 
 begin_define
@@ -683,6 +644,98 @@ name|rate_ctx
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+name|void
+name|generic_rate
+parameter_list|(
+name|int
+name|txp
+parameter_list|,
+name|int
+name|txs
+parameter_list|,
+name|int
+name|txi
+parameter_list|,
+name|int
+name|rxp
+parameter_list|,
+name|int
+name|rxs
+parameter_list|,
+name|int
+name|rxi
+parameter_list|)
+block|{
+if|if
+condition|(
+name|txp
+condition|)
+name|rate_ctx
+operator|.
+name|new
+operator|.
+name|txpkt
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|txs
+condition|)
+name|rate_ctx
+operator|.
+name|new
+operator|.
+name|txsync
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|txi
+condition|)
+name|rate_ctx
+operator|.
+name|new
+operator|.
+name|txirq
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|rxp
+condition|)
+name|rate_ctx
+operator|.
+name|new
+operator|.
+name|rxpkt
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|rxs
+condition|)
+name|rate_ctx
+operator|.
+name|new
+operator|.
+name|rxsync
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|rxi
+condition|)
+name|rate_ctx
+operator|.
+name|new
+operator|.
+name|rxirq
+operator|++
+expr_stmt|;
+block|}
+end_function
+
 begin_else
 else|#
 directive|else
@@ -714,19 +767,8 @@ begin_comment
 comment|/* =============== GENERIC NETMAP ADAPTER SUPPORT ================= */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GENERIC_BUF_SIZE
-value|netmap_buf_size
-end_define
-
 begin_comment
-comment|/* Size of the mbufs in the Tx pool. */
-end_comment
-
-begin_comment
-comment|/*  * Wrapper used by the generic adapter layer to notify  * the poller threads. Differently from netmap_rx_irq(), we check  * only IFCAP_NETMAP instead of NAF_NATIVE_ON to enable the irq.  */
+comment|/*  * Wrapper used by the generic adapter layer to notify  * the poller threads. Differently from netmap_rx_irq(), we check  * only NAF_NETMAP_ON instead of NAF_NATIVE_ON to enable the irq.  */
 end_comment
 
 begin_function
@@ -747,18 +789,25 @@ modifier|*
 name|work_done
 parameter_list|)
 block|{
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+init|=
+name|NA
+argument_list|(
+name|ifp
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|unlikely
 argument_list|(
 operator|!
-operator|(
-name|ifp
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_NETMAP
-operator|)
+name|nm_netmap_on
+argument_list|(
+name|na
+argument_list|)
 argument_list|)
 condition|)
 return|return;
@@ -792,15 +841,6 @@ name|int
 name|enable
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|na
-operator|->
-name|ifp
-decl_stmt|;
 name|struct
 name|netmap_generic_adapter
 modifier|*
@@ -935,6 +975,8 @@ name|mit
 index|[
 name|r
 index|]
+argument_list|,
+name|r
 argument_list|,
 name|na
 argument_list|)
@@ -1117,7 +1159,10 @@ name|m
 operator|=
 name|netmap_get_mbuf
 argument_list|(
-name|GENERIC_BUF_SIZE
+name|NETMAP_BUF_SIZE
+argument_list|(
+name|na
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1186,11 +1231,11 @@ goto|goto
 name|register_handler
 goto|;
 block|}
-name|ifp
+name|na
 operator|->
-name|if_capenable
+name|na_flags
 operator||=
-name|IFCAP_NETMAP
+name|NAF_NETMAP_ON
 expr_stmt|;
 comment|/* Make netmap control the packet steering. */
 name|netmap_catch_tx
@@ -1205,7 +1250,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|RATE
+name|RATE_GENERIC
 if|if
 condition|(
 name|rate_ctx
@@ -1302,12 +1347,12 @@ comment|/* Disable netmap mode. We enter here only if the previous 		   generic_
 name|rtnl_lock
 argument_list|()
 expr_stmt|;
-name|ifp
+name|na
 operator|->
-name|if_capenable
+name|na_flags
 operator|&=
 operator|~
-name|IFCAP_NETMAP
+name|NAF_NETMAP_ON
 expr_stmt|;
 comment|/* Release packet steering control. */
 name|netmap_catch_tx
@@ -1472,7 +1517,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|RATE
+name|RATE_GENERIC
 if|if
 condition|(
 operator|--
@@ -1777,6 +1822,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|netmap_adaptive_io
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Record completed transmissions and update hwtail.  *  * The oldest tx buffer not yet completed is at nr_hwtail + 1,  * nr_hwcur is the first unsent buffer.  */
 end_comment
@@ -1874,7 +1926,12 @@ name|m
 operator|=
 name|netmap_get_mbuf
 argument_list|(
-name|GENERIC_BUF_SIZE
+name|NETMAP_BUF_SIZE
+argument_list|(
+name|kring
+operator|->
+name|na
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1925,6 +1982,15 @@ argument_list|,
 name|lim
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* rate adaptation */
+block|if (netmap_adaptive_io> 1) { 			if (n>= netmap_adaptive_io) 				break; 		} else if (netmap_adaptive_io) {
+comment|/* if hwcur - nm_i< lim/8 do an early break 			 * so we prevent the sender from stalling. See CVT. 			 */
+block|if (hwcur>= nm_i) { 				if (hwcur - nm_i< lim/2) 					break; 			} else { 				if (hwcur + lim + 1 - nm_i< lim/2) 					break; 			} 		}
+endif|#
+directive|endif
 block|}
 name|kring
 operator|->
@@ -2204,17 +2270,23 @@ name|int
 name|generic_netmap_txsync
 parameter_list|(
 name|struct
-name|netmap_adapter
+name|netmap_kring
 modifier|*
-name|na
-parameter_list|,
-name|u_int
-name|ring_nr
+name|kring
 parameter_list|,
 name|int
 name|flags
 parameter_list|)
 block|{
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+init|=
+name|kring
+operator|->
+name|na
+decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
@@ -2223,19 +2295,6 @@ init|=
 name|na
 operator|->
 name|ifp
-decl_stmt|;
-name|struct
-name|netmap_kring
-modifier|*
-name|kring
-init|=
-operator|&
-name|na
-operator|->
-name|tx_rings
-index|[
-name|ring_nr
-index|]
 decl_stmt|;
 name|struct
 name|netmap_ring
@@ -2268,6 +2327,13 @@ init|=
 name|kring
 operator|->
 name|rhead
+decl_stmt|;
+name|u_int
+name|ring_nr
+init|=
+name|kring
+operator|->
+name|ring_id
 decl_stmt|;
 name|IFRATE
 argument_list|(
@@ -2331,6 +2397,8 @@ name|addr
 init|=
 name|NMB
 argument_list|(
+name|na
+argument_list|,
 name|slot
 argument_list|)
 decl_stmt|;
@@ -2345,6 +2413,8 @@ name|tx_ret
 decl_stmt|;
 name|NM_CHECK_ADDR_LEN
 argument_list|(
+name|na
+argument_list|,
 name|addr
 argument_list|,
 name|len
@@ -2387,7 +2457,10 @@ name|m
 operator|=
 name|netmap_get_mbuf
 argument_list|(
-name|GENERIC_BUF_SIZE
+name|NETMAP_BUF_SIZE
+argument_list|(
+name|na
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2432,7 +2505,7 @@ name|tx_ret
 argument_list|)
 condition|)
 block|{
-name|RD
+name|ND
 argument_list|(
 literal|5
 argument_list|,
@@ -2794,30 +2867,14 @@ name|int
 name|generic_netmap_rxsync
 parameter_list|(
 name|struct
-name|netmap_adapter
+name|netmap_kring
 modifier|*
-name|na
-parameter_list|,
-name|u_int
-name|ring_nr
+name|kring
 parameter_list|,
 name|int
 name|flags
 parameter_list|)
 block|{
-name|struct
-name|netmap_kring
-modifier|*
-name|kring
-init|=
-operator|&
-name|na
-operator|->
-name|rx_rings
-index|[
-name|ring_nr
-index|]
-decl_stmt|;
 name|struct
 name|netmap_ring
 modifier|*
@@ -2826,6 +2883,15 @@ init|=
 name|kring
 operator|->
 name|ring
+decl_stmt|;
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+init|=
+name|kring
+operator|->
+name|na
 decl_stmt|;
 name|u_int
 name|nm_i
@@ -2939,6 +3005,8 @@ name|addr
 init|=
 name|NMB
 argument_list|(
+name|na
+argument_list|,
 operator|&
 name|ring
 operator|->
@@ -2958,7 +3026,10 @@ if|if
 condition|(
 name|addr
 operator|==
-name|netmap_buffer_base
+name|NETMAP_BUF_BASE
+argument_list|(
+name|na
+argument_list|)
 condition|)
 block|{
 comment|/* Bad buffer */
@@ -3432,7 +3503,7 @@ operator|=
 operator|&
 name|generic_netmap_dtor
 expr_stmt|;
-comment|/* when using generic, IFCAP_NETMAP is set so we force 	 * NAF_SKIP_INTR to use the regular interrupt handler 	 */
+comment|/* when using generic, NAF_NETMAP_ON is set so we force 	 * NAF_SKIP_INTR to use the regular interrupt handler 	 */
 name|na
 operator|->
 name|na_flags

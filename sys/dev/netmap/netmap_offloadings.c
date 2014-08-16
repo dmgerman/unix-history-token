@@ -709,7 +709,7 @@ index|]
 expr_stmt|;
 name|dst
 operator|=
-name|BDG_NMB
+name|NMB
 argument_list|(
 operator|&
 name|dst_na
@@ -1227,7 +1227,7 @@ index|]
 expr_stmt|;
 name|dst
 operator|=
-name|BDG_NMB
+name|NMB
 argument_list|(
 operator|&
 name|dst_na
@@ -1504,7 +1504,7 @@ index|]
 expr_stmt|;
 name|dst
 operator|=
-name|BDG_NMB
+name|NMB
 argument_list|(
 operator|&
 name|dst_na

@@ -14047,6 +14047,8 @@ argument_list|)
 decl_stmt|;
 name|netmap_load_map
 argument_list|(
+name|na
+argument_list|,
 name|txr
 operator|->
 name|txtag
@@ -14057,6 +14059,8 @@ name|map
 argument_list|,
 name|NMB
 argument_list|(
+name|na
+argument_list|,
 name|slot
 operator|+
 name|si
@@ -18154,6 +18158,8 @@ name|addr
 operator|=
 name|PNMB
 argument_list|(
+name|na
+argument_list|,
 name|slot
 operator|+
 name|sj
@@ -18164,6 +18170,8 @@ argument_list|)
 expr_stmt|;
 name|netmap_load_map
 argument_list|(
+name|na
+argument_list|,
 name|rxr
 operator|->
 name|ptag

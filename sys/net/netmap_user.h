@@ -413,7 +413,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {							\ 		struct timeval t0;				\ 		gettimeofday(&t0, NULL);			\ 		fprintf(stderr, "%03d.%06d %s [%d] " _fmt "\n",	\ 		    (int)(t0.tv_sec % 1000), (int)t0.tv_usec,	\ 		    __FUNCTION__, __LINE__, ##__VA_ARGS__);	\         } while (0)
+value|do {							\ 		struct timeval _t0;				\ 		gettimeofday(&_t0, NULL);			\ 		fprintf(stderr, "%03d.%06d %s [%d] " _fmt "\n",	\ 		    (int)(_t0.tv_sec % 1000), (int)_t0.tv_usec,	\ 		    __FUNCTION__, __LINE__, ##__VA_ARGS__);	\         } while (0)
 end_define
 
 begin_comment
@@ -432,7 +432,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {                                                        \         static int t0, __cnt;                                   \         struct timeval __xxts;                                  \         gettimeofday(&__xxts, NULL);                            \         if (t0 != __xxts.tv_sec) {                              \             t0 = __xxts.tv_sec;                                 \             __cnt = 0;                                          \         }                                                       \         if (__cnt++< lps) {                                    \             D(format, ##__VA_ARGS__);                           \         }                                                       \     } while (0)
+value|do {                                                        \         static int __t0, __cnt;                                 \         struct timeval __xxts;                                  \         gettimeofday(&__xxts, NULL);                            \         if (__t0 != __xxts.tv_sec) {                            \             __t0 = __xxts.tv_sec;                               \             __cnt = 0;                                          \         }                                                       \         if (__cnt++< lps) {                                    \             D(format, ##__VA_ARGS__);                           \         }                                                       \     } while (0)
 end_define
 
 begin_endif
@@ -1911,6 +1911,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|d
+operator|->
+name|req
+operator|.
 name|nr_flags
 operator|==
 name|NR_REG_SW
@@ -1949,6 +1953,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|d
+operator|->
+name|req
+operator|.
 name|nr_flags
 operator|==
 name|NR_REG_ALL_NIC
@@ -1995,6 +2003,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|d
+operator|->
+name|req
+operator|.
 name|nr_flags
 operator|==
 name|NR_REG_NIC_SW
@@ -2036,6 +2048,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|d
+operator|->
+name|req
+operator|.
 name|nr_flags
 operator|==
 name|NR_REG_ONE_NIC
@@ -2058,7 +2074,13 @@ name|d
 operator|->
 name|last_rx_ring
 operator|=
+name|d
+operator|->
+name|req
+operator|.
 name|nr_ringid
+operator|&
+name|NETMAP_RING_MASK
 expr_stmt|;
 block|}
 else|else
