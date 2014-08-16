@@ -8305,12 +8305,6 @@ else|else
 block|{
 if|if
 condition|(
-name|mreq
-operator|.
-name|ipv6mr_interface
-operator|<
-literal|0
-operator|||
 name|V_if_index
 operator|<
 name|mreq
@@ -9700,10 +9694,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifindex
-operator|<
-literal|0
-operator|||
 name|V_if_index
 operator|<
 name|ifindex
@@ -10352,10 +10342,6 @@ operator|)
 return|;
 if|if
 condition|(
-name|ifindex
-operator|<
-literal|0
-operator|||
 name|V_if_index
 operator|<
 name|ifindex
