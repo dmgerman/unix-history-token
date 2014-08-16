@@ -1961,7 +1961,7 @@ name|hostp
 argument_list|,
 name|MOUNTPROG
 argument_list|,
-name|MOUNTVERS
+name|MOUNTVERS3
 argument_list|,
 literal|"udp"
 argument_list|)
