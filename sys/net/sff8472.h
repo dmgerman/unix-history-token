@@ -678,6 +678,7 @@ end_enum
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sff_8472_id
