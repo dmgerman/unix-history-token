@@ -397,6 +397,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vm_reinit
+parameter_list|(
+name|struct
+name|vmctx
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vm_apicid2vcpu
 parameter_list|(
 name|struct

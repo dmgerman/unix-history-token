@@ -554,6 +554,10 @@ name|IOCNUM_SUSPEND
 init|=
 literal|4
 block|,
+name|IOCNUM_REINIT
+init|=
+literal|5
+block|,
 comment|/* memory apis */
 name|IOCNUM_MAP_MEMORY
 init|=
@@ -711,6 +715,14 @@ directive|define
 name|VM_SUSPEND
 define|\
 value|_IOW('v', IOCNUM_SUSPEND, struct vm_suspend)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_REINIT
+define|\
+value|_IO('v', IOCNUM_REINIT)
 end_define
 
 begin_define
