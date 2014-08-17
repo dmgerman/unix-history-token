@@ -5301,6 +5301,11 @@ operator|->
 name|io_pools
 argument_list|)
 expr_stmt|;
+name|ctl_tpc_init
+argument_list|(
+name|softc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ctl_pool_create
@@ -5998,6 +6003,11 @@ literal|0
 block|ctl_shutdown_thread(softc->work_thread); 	mtx_destroy(&softc->queue_lock);
 endif|#
 directive|endif
+name|ctl_tpc_shutdown
+argument_list|(
+name|softc
+argument_list|)
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -20875,7 +20885,7 @@ operator|->
 name|error_list
 argument_list|)
 expr_stmt|;
-name|ctl_tpc_init
+name|ctl_tpc_lun_init
 argument_list|(
 name|lun
 argument_list|)
@@ -21295,7 +21305,7 @@ operator|->
 name|be_lun
 argument_list|)
 expr_stmt|;
-name|ctl_tpc_shutdown
+name|ctl_tpc_lun_shutdown
 argument_list|(
 name|lun
 argument_list|)
