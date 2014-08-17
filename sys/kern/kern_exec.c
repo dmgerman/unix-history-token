@@ -2732,10 +2732,17 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|oldsigacts
 operator|=
 name|NULL
 expr_stmt|;
+name|newsigacts
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* satisfy gcc */
+block|}
 name|PROC_LOCK
 argument_list|(
 name|p
