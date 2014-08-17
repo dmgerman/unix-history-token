@@ -213,7 +213,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|u
 block|}
 end_function
 
