@@ -332,6 +332,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vlapic_set_cr8
+parameter_list|(
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|vlapic_get_cr8
+parameter_list|(
+name|struct
+name|vlapic
+modifier|*
+name|vlapic
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* APIC write handlers */
 end_comment
