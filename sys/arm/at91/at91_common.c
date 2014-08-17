@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/at91/at91var.h>
 end_include
 
@@ -254,7 +260,7 @@ end_function
 
 begin_function
 name|vm_offset_t
-name|initarm_lastaddr
+name|platform_lastaddr
 parameter_list|(
 name|void
 parameter_list|)
@@ -270,7 +276,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_early_init
+name|platform_probe_and_attach
 parameter_list|(
 name|void
 parameter_list|)
@@ -282,22 +288,22 @@ expr_stmt|;
 name|at91_soc_id
 argument_list|()
 expr_stmt|;
-name|arm_devmap_register_table
-argument_list|(
-name|at91_devmap
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_function
 name|int
-name|initarm_devmap_init
+name|platform_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 comment|//	arm_devmap_add_entry(0xfff00000, 0x00100000); /* 1MB - uart, aic and timers*/
+name|arm_devmap_register_table
+argument_list|(
+name|at91_devmap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -308,7 +314,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_gpio_init
+name|platform_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -317,7 +323,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_late_init
+name|platform_late_init
 parameter_list|(
 name|void
 parameter_list|)
