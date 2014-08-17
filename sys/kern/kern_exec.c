@@ -2895,15 +2895,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_pptr
-operator|&&
-operator|(
-name|p
-operator|->
 name|p_flag
 operator|&
 name|P_PPWAIT
-operator|)
 condition|)
 block|{
 name|p
