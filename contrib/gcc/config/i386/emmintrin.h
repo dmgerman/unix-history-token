@@ -6603,7 +6603,7 @@ parameter_list|,
 name|__B
 parameter_list|)
 define|\
-value|((__m128i)__builtin_ia32_psrlqi128 ((__v4si)(__A), __B))
+value|((__m128i)__builtin_ia32_psrlqi128 ((__v2di)(__A), __B))
 end_define
 
 begin_endif
