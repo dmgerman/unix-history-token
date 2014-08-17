@@ -53,6 +53,7 @@ comment|/* Free all the unused buffer in all the RX virtqueues.  * This function
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vtnet_netmap_free_bufs
 parameter_list|(
@@ -265,6 +266,7 @@ comment|/* Register and unregister. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|vtnet_netmap_reg
 parameter_list|(
@@ -1036,9 +1038,6 @@ decl_stmt|;
 name|struct
 name|sglist
 name|sg
-index|[
-literal|1
-index|]
 init|=
 block|{
 name|ss
@@ -1136,6 +1135,7 @@ name|NS_BUF_CHANGED
 expr_stmt|;
 name|sglist_reset
 argument_list|(
+operator|&
 name|sg
 argument_list|)
 expr_stmt|;
@@ -1144,6 +1144,7 @@ name|err
 operator|=
 name|sglist_append
 argument_list|(
+operator|&
 name|sg
 argument_list|,
 operator|&
@@ -1158,6 +1159,7 @@ name|err
 operator|=
 name|sglist_append_phys
 argument_list|(
+operator|&
 name|sg
 argument_list|,
 name|paddr
@@ -1177,12 +1179,13 @@ name|vq
 argument_list|,
 name|rxq
 argument_list|,
+operator|&
 name|sg
 argument_list|,
 literal|0
 argument_list|,
 name|sg
-operator|->
+operator|.
 name|sg_nseg
 argument_list|)
 expr_stmt|;
