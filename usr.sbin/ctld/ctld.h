@@ -33,16 +33,16 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -174,6 +174,13 @@ decl_stmt|;
 name|char
 modifier|*
 name|ap_initator_portal
+decl_stmt|;
+name|struct
+name|sockaddr_storage
+name|ap_sa
+decl_stmt|;
+name|int
+name|ap_mask
 decl_stmt|;
 block|}
 struct|;
@@ -621,6 +628,10 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+name|struct
+name|sockaddr_storage
+name|conn_initiator_sa
+decl_stmt|;
 name|uint32_t
 name|conn_cmdsn
 decl_stmt|;
@@ -1017,9 +1028,10 @@ modifier|*
 name|ag
 parameter_list|,
 specifier|const
-name|char
+name|struct
+name|sockaddr_storage
 modifier|*
-name|initiator_portal
+name|sa
 parameter_list|)
 function_decl|;
 end_function_decl
