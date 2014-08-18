@@ -5816,11 +5816,7 @@ argument_list|(
 name|dnode_children_t
 argument_list|)
 operator|+
-operator|(
 name|epb
-operator|-
-literal|1
-operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -6277,11 +6273,7 @@ argument_list|(
 name|dnode_children_t
 argument_list|)
 operator|+
-operator|(
 name|epb
-operator|-
-literal|1
-operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -6396,11 +6388,7 @@ argument_list|(
 name|dnode_children_t
 argument_list|)
 operator|+
-operator|(
 name|epb
-operator|-
-literal|1
-operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
