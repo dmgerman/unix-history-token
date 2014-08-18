@@ -2437,6 +2437,15 @@ name|len
 operator|=
 literal|1
 expr_stmt|;
+name|ixreq
+operator|.
+name|data
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
