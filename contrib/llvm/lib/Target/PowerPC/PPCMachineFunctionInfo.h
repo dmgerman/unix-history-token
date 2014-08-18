@@ -177,6 +177,15 @@ literal|3
 operator|>
 name|MustSaveCRs
 block|;
+comment|/// Hold onto our MachineFunction context.
+name|MachineFunction
+operator|&
+name|MF
+block|;
+comment|/// Whether this uses the PIC Base register or not.
+name|bool
+name|UsesPICBase
+block|;
 name|public
 operator|:
 name|explicit
@@ -263,6 +272,16 @@ literal|0
 argument_list|)
 block|,
 name|CRSpillFrameIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|MF
+argument_list|(
+name|MF
+argument_list|)
+block|,
+name|UsesPICBase
 argument_list|(
 literal|0
 argument_list|)
@@ -610,8 +629,33 @@ argument_list|(
 name|Reg
 argument_list|)
 block|; }
-expr|}
-block|;  }
+name|void
+name|setUsesPICBase
+argument_list|(
+argument|bool uses
+argument_list|)
+block|{
+name|UsesPICBase
+operator|=
+name|uses
+block|; }
+name|bool
+name|usesPICBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsesPICBase
+return|;
+block|}
+name|MCSymbol
+operator|*
+name|getPICOffsetSymbol
+argument_list|()
+specifier|const
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
