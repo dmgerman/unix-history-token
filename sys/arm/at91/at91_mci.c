@@ -4729,6 +4729,7 @@ else|:
 literal|" after write"
 argument_list|)
 expr_stmt|;
+comment|/* XXX not sure RTOE needs a full reset, just a retry */
 name|at91_mci_reset
 argument_list|(
 name|sc
