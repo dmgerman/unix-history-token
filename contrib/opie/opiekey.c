@@ -654,7 +654,7 @@ if|if
 condition|(
 name|slash
 operator|=
-name|strchr
+name|strrchr
 argument_list|(
 name|argv
 index|[
