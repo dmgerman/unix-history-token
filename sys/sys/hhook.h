@@ -102,6 +102,13 @@ name|HHOOK_TYPE_TCP
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HHOOK_TYPE_SOCKET
+value|2
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|helper
