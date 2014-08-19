@@ -984,12 +984,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Free ROD tokens for this LUN. */
-name|mtx_lock
+name|mtx_assert
 argument_list|(
 operator|&
 name|control_softc
 operator|->
 name|ctl_lock
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH_SAFE
@@ -1047,14 +1049,6 @@ name|M_CTL
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|control_softc
-operator|->
-name|ctl_lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
