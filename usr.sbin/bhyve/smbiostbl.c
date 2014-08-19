@@ -1263,10 +1263,10 @@ block|{
 literal|"BHYVE"
 block|,
 comment|/* vendor string */
-name|__TIME__
+literal|"1.00"
 block|,
 comment|/* bios version string */
-name|__DATE__
+literal|"03/14/2014"
 block|,
 comment|/* bios release date string */
 name|NULL

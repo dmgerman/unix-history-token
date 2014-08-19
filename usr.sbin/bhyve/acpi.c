@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2012 NetApp, Inc.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  * bhyve ACPI table generator.  *  * Create the minimal set of ACPI tables required to boot FreeBSD (and  * hopefully other o/s's) by writing out ASL template files for each of  * the tables and the compiling them to AML with the Intel iasl compiler.  * The AML files are then read into guest memory.  *  *  The tables are placed in the guest's ROM area just below 1MB physical,  * above the MPTable.  *  *  Layout  *  ------  *   RSDP  ->   0xf2400    (36 bytes fixed)  *     RSDT  ->   0xf2440    (36 bytes + 4*N table addrs, 2 used)  *     XSDT  ->   0xf2480    (36 bytes + 8*N table addrs, 2 used)  *       MADT  ->   0xf2500  (depends on #CPUs)  *       FADT  ->   0xf2600  (268 bytes)  *       HPET  ->   0xf2740  (56 bytes)  *         FACS  ->   0xf2780 (64 bytes)  *         DSDT  ->   0xf2800 (variable - can go up to 0x100000)  */
+comment|/*  * bhyve ACPI table generator.  *  * Create the minimal set of ACPI tables required to boot FreeBSD (and  * hopefully other o/s's) by writing out ASL template files for each of  * the tables and the compiling them to AML with the Intel iasl compiler.  * The AML files are then read into guest memory.  *  *  The tables are placed in the guest's ROM area just below 1MB physical,  * above the MPTable.  *  *  Layout  *  ------  *   RSDP  ->   0xf2400    (36 bytes fixed)  *     RSDT  ->   0xf2440    (36 bytes + 4*7 table addrs, 4 used)  *     XSDT  ->   0xf2480    (36 bytes + 8*7 table addrs, 4 used)  *       MADT  ->   0xf2500  (depends on #CPUs)  *       FADT  ->   0xf2600  (268 bytes)  *       HPET  ->   0xf2740  (56 bytes)  *       MCFG  ->   0xf2780  (60 bytes)  *         FACS  ->   0xf27C0 (64 bytes)  *         DSDT  ->   0xf2800 (variable - can go up to 0x100000)  */
 end_comment
 
 begin_include
@@ -154,8 +154,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|FACS_OFFSET
+name|MCFG_OFFSET
 value|0x380
+end_define
+
+begin_define
+define|#
+directive|define
+name|FACS_OFFSET
+value|0x3C0
 end_define
 
 begin_define
@@ -588,6 +595,17 @@ operator|+
 name|HPET_OFFSET
 argument_list|)
 expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tACPI Table Address 3 : %08X\n"
+argument_list|,
+name|basl_acpi_base
+operator|+
+name|MCFG_OFFSET
+argument_list|)
+expr_stmt|;
 name|EFFLUSH
 argument_list|(
 name|fp
@@ -749,6 +767,17 @@ argument_list|,
 name|basl_acpi_base
 operator|+
 name|HPET_OFFSET
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tACPI Table Address 3 : 00000000%08X\n"
+argument_list|,
+name|basl_acpi_base
+operator|+
+name|MCFG_OFFSET
 argument_list|)
 expr_stmt|;
 name|EFFLUSH
@@ -2669,6 +2698,178 @@ end_function
 begin_function
 specifier|static
 name|int
+name|basl_fwrite_mcfg
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"/*\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|" * bhyve MCFG template\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|" */\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tSignature : \"MCFG\"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tTable Length : 00000000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tRevision : 01\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tChecksum : 00\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0006]\t\tOem ID : \"BHYVE \"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0008]\t\tOem Table ID : \"BVMCFG  \"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tOem Revision : 00000001\n"
+argument_list|)
+expr_stmt|;
+comment|/* iasl will fill in the compiler ID/revision fields */
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tAsl Compiler ID : \"xxxx\"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tAsl Compiler Revision : 00000000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0008]\t\tReserved : 0\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0008]\t\tBase Address : %016lX\n"
+argument_list|,
+name|pci_ecfg_base
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0002]\t\tSegment Group: 0000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tStart Bus: 00\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tEnd Bus: FF\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0004]\t\tReserved : 0\n"
+argument_list|)
+expr_stmt|;
+name|EFFLUSH
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|err_exit
+label|:
+return|return
+operator|(
+name|errno
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|basl_fwrite_facs
 parameter_list|(
 name|FILE
@@ -4103,6 +4304,12 @@ block|{
 name|basl_fwrite_hpet
 block|,
 name|HPET_OFFSET
+block|}
+block|,
+block|{
+name|basl_fwrite_mcfg
+block|,
+name|MCFG_OFFSET
 block|}
 block|,
 block|{

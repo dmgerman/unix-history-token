@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<amd64/vmm/intel/vmx_controls.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<x86/isa/icu.h>
 end_include
 
@@ -200,6 +206,16 @@ begin_function_decl
 specifier|static
 name|void
 name|print_via_padlock_info
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_vmx_info
 parameter_list|(
 name|void
 parameter_list|)
@@ -1256,6 +1272,15 @@ operator|!=
 literal|0
 condition|)
 name|print_via_padlock_info
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cpu_feature2
+operator|&
+name|CPUID2_VMX
+condition|)
+name|print_vmx_info
 argument_list|()
 expr_stmt|;
 if|if
@@ -2656,6 +2681,693 @@ literal|"\015RSA"
 comment|/* PMM */
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|uint32_t
+name|vmx_settable
+parameter_list|(
+name|uint64_t
+name|basic
+parameter_list|,
+name|int
+name|msr
+parameter_list|,
+name|int
+name|true_msr
+parameter_list|)
+block|{
+name|uint64_t
+name|val
+decl_stmt|;
+if|if
+condition|(
+name|basic
+operator|&
+operator|(
+literal|1UL
+operator|<<
+literal|55
+operator|)
+condition|)
+name|val
+operator|=
+name|rdmsr
+argument_list|(
+name|true_msr
+argument_list|)
+expr_stmt|;
+else|else
+name|val
+operator|=
+name|rdmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
+comment|/* Just report the controls that can be set to 1. */
+return|return
+operator|(
+name|val
+operator|>>
+literal|32
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|print_vmx_info
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint64_t
+name|basic
+decl_stmt|,
+name|msr
+decl_stmt|;
+name|uint32_t
+name|entry
+decl_stmt|,
+name|exit
+decl_stmt|,
+name|mask
+decl_stmt|,
+name|pin
+decl_stmt|,
+name|proc
+decl_stmt|,
+name|proc2
+decl_stmt|;
+name|int
+name|comma
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"\n  VT-x: "
+argument_list|)
+expr_stmt|;
+name|msr
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_IA32_FEATURE_CONTROL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|msr
+operator|&
+name|IA32_FEATURE_CONTROL_VMX_EN
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"(disabled in BIOS) "
+argument_list|)
+expr_stmt|;
+name|basic
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_VMX_BASIC
+argument_list|)
+expr_stmt|;
+name|pin
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_PINBASED_CTLS
+argument_list|,
+name|MSR_VMX_TRUE_PINBASED_CTLS
+argument_list|)
+expr_stmt|;
+name|proc
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_PROCBASED_CTLS
+argument_list|,
+name|MSR_VMX_TRUE_PROCBASED_CTLS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_SECONDARY_CONTROLS
+condition|)
+name|proc2
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_PROCBASED_CTLS2
+argument_list|,
+name|MSR_VMX_PROCBASED_CTLS2
+argument_list|)
+expr_stmt|;
+else|else
+name|proc2
+operator|=
+literal|0
+expr_stmt|;
+name|exit
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_EXIT_CTLS
+argument_list|,
+name|MSR_VMX_TRUE_EXIT_CTLS
+argument_list|)
+expr_stmt|;
+name|entry
+operator|=
+name|vmx_settable
+argument_list|(
+name|basic
+argument_list|,
+name|MSR_VMX_ENTRY_CTLS
+argument_list|,
+name|MSR_VMX_TRUE_ENTRY_CTLS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bootverbose
+condition|)
+block|{
+name|comma
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|exit
+operator|&
+name|VM_EXIT_SAVE_PAT
+operator|&&
+name|exit
+operator|&
+name|VM_EXIT_LOAD_PAT
+operator|&&
+name|entry
+operator|&
+name|VM_ENTRY_LOAD_PAT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sPAT"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_HLT_EXITING
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sHLT"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_MTF
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sMTF"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_PAUSE_EXITING
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sPAUSE"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc2
+operator|&
+name|PROCBASED2_ENABLE_EPT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sEPT"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc2
+operator|&
+name|PROCBASED2_UNRESTRICTED_GUEST
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sUG"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc2
+operator|&
+name|PROCBASED2_ENABLE_VPID
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sVPID"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_USE_TPR_SHADOW
+operator|&&
+name|proc2
+operator|&
+name|PROCBASED2_VIRTUALIZE_APIC_ACCESSES
+operator|&&
+name|proc2
+operator|&
+name|PROCBASED2_VIRTUALIZE_X2APIC_MODE
+operator|&&
+name|proc2
+operator|&
+name|PROCBASED2_APIC_REGISTER_VIRTUALIZATION
+operator|&&
+name|proc2
+operator|&
+name|PROCBASED2_VIRTUAL_INTERRUPT_DELIVERY
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sVID"
+argument_list|,
+name|comma
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+name|comma
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|pin
+operator|&
+name|PINBASED_POSTED_INTERRUPT
+condition|)
+name|printf
+argument_list|(
+literal|",PostIntr"
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+name|mask
+operator|=
+name|basic
+operator|>>
+literal|32
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Basic Features=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\02132PA"
+comment|/* 32-bit physical addresses */
+literal|"\022SMM"
+comment|/* SMM dual-monitor */
+literal|"\027INS/OUTS"
+comment|/* VM-exit info for INS and OUTS */
+literal|"\030TRUE"
+comment|/* TRUE_CTLS MSRs */
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        Pin-Based Controls=0x%b"
+argument_list|,
+name|pin
+argument_list|,
+literal|"\020"
+literal|"\001ExtINT"
+comment|/* External-interrupt exiting */
+literal|"\004NMI"
+comment|/* NMI exiting */
+literal|"\006VNMI"
+comment|/* Virtual NMIs */
+literal|"\007PreTmr"
+comment|/* Activate VMX-preemption timer */
+literal|"\010PostIntr"
+comment|/* Process posted interrupts */
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        Primary Processor Controls=0x%b"
+argument_list|,
+name|proc
+argument_list|,
+literal|"\020"
+literal|"\003INTWIN"
+comment|/* Interrupt-window exiting */
+literal|"\004TSCOff"
+comment|/* Use TSC offsetting */
+literal|"\010HLT"
+comment|/* HLT exiting */
+literal|"\012INVLPG"
+comment|/* INVLPG exiting */
+literal|"\013MWAIT"
+comment|/* MWAIT exiting */
+literal|"\014RDPMC"
+comment|/* RDPMC exiting */
+literal|"\015RDTSC"
+comment|/* RDTSC exiting */
+literal|"\020CR3-LD"
+comment|/* CR3-load exiting */
+literal|"\021CR3-ST"
+comment|/* CR3-store exiting */
+literal|"\024CR8-LD"
+comment|/* CR8-load exiting */
+literal|"\025CR8-ST"
+comment|/* CR8-store exiting */
+literal|"\026TPR"
+comment|/* Use TPR shadow */
+literal|"\027NMIWIN"
+comment|/* NMI-window exiting */
+literal|"\030MOV-DR"
+comment|/* MOV-DR exiting */
+literal|"\031IO"
+comment|/* Unconditional I/O exiting */
+literal|"\032IOmap"
+comment|/* Use I/O bitmaps */
+literal|"\034MTF"
+comment|/* Monitor trap flag */
+literal|"\035MSRmap"
+comment|/* Use MSR bitmaps */
+literal|"\036MONITOR"
+comment|/* MONITOR exiting */
+literal|"\037PAUSE"
+comment|/* PAUSE exiting */
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_SECONDARY_CONTROLS
+condition|)
+name|printf
+argument_list|(
+literal|"\n        Secondary Processor Controls=0x%b"
+argument_list|,
+name|proc2
+argument_list|,
+literal|"\020"
+literal|"\001APIC"
+comment|/* Virtualize APIC accesses */
+literal|"\002EPT"
+comment|/* Enable EPT */
+literal|"\003DT"
+comment|/* Descriptor-table exiting */
+literal|"\004RDTSCP"
+comment|/* Enable RDTSCP */
+literal|"\005x2APIC"
+comment|/* Virtualize x2APIC mode */
+literal|"\006VPID"
+comment|/* Enable VPID */
+literal|"\007WBINVD"
+comment|/* WBINVD exiting */
+literal|"\010UG"
+comment|/* Unrestricted guest */
+literal|"\011APIC-reg"
+comment|/* APIC-register virtualization */
+literal|"\012VID"
+comment|/* Virtual-interrupt delivery */
+literal|"\013PAUSE-loop"
+comment|/* PAUSE-loop exiting */
+literal|"\014RDRAND"
+comment|/* RDRAND exiting */
+literal|"\015INVPCID"
+comment|/* Enable INVPCID */
+literal|"\016VMFUNC"
+comment|/* Enable VM functions */
+literal|"\017VMCS"
+comment|/* VMCS shadowing */
+literal|"\020EPT#VE"
+comment|/* EPT-violation #VE */
+literal|"\021XSAVES"
+comment|/* Enable XSAVES/XRSTORS */
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        Exit Controls=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\003DR"
+comment|/* Save debug controls */
+comment|/* Ignore Host address-space size */
+literal|"\015PERF"
+comment|/* Load MSR_PERF_GLOBAL_CTRL */
+literal|"\020AckInt"
+comment|/* Acknowledge interrupt on exit */
+literal|"\023PAT-SV"
+comment|/* Save MSR_PAT */
+literal|"\024PAT-LD"
+comment|/* Load MSR_PAT */
+literal|"\025EFER-SV"
+comment|/* Save MSR_EFER */
+literal|"\026EFER-LD"
+comment|/* Load MSR_EFER */
+literal|"\027PTMR-SV"
+comment|/* Save VMX-preemption timer value */
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        Entry Controls=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\003DR"
+comment|/* Save debug controls */
+comment|/* Ignore IA-32e mode guest */
+comment|/* Ignore Entry to SMM */
+comment|/* Ignore Deactivate dual-monitor treatment */
+literal|"\016PERF"
+comment|/* Load MSR_PERF_GLOBAL_CTRL */
+literal|"\017PAT"
+comment|/* Load MSR_PAT */
+literal|"\020EFER"
+comment|/* Load MSR_EFER */
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|proc
+operator|&
+name|PROCBASED_SECONDARY_CONTROLS
+operator|&&
+operator|(
+name|proc2
+operator|&
+operator|(
+name|PROCBASED2_ENABLE_EPT
+operator||
+name|PROCBASED2_ENABLE_VPID
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|msr
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_VMX_EPT_VPID_CAP
+argument_list|)
+expr_stmt|;
+name|mask
+operator|=
+name|msr
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        EPT Features=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\001XO"
+comment|/* Execute-only translations */
+literal|"\007PW4"
+comment|/* Page-walk length of 4 */
+literal|"\011UC"
+comment|/* EPT paging-structure mem can be UC */
+literal|"\017WB"
+comment|/* EPT paging-structure mem can be WB */
+literal|"\0212M"
+comment|/* EPT PDE can map a 2-Mbyte page */
+literal|"\0221G"
+comment|/* EPT PDPTE can map a 1-Gbyte page */
+literal|"\025INVEPT"
+comment|/* INVEPT is supported */
+literal|"\026AD"
+comment|/* Accessed and dirty flags for EPT */
+literal|"\032single"
+comment|/* INVEPT single-context type */
+literal|"\033all"
+comment|/* INVEPT all-context type */
+argument_list|)
+expr_stmt|;
+name|mask
+operator|=
+name|msr
+operator|>>
+literal|32
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n        VPID Features=0x%b"
+argument_list|,
+name|mask
+argument_list|,
+literal|"\020"
+literal|"\001INVVPID"
+comment|/* INVVPID is supported */
+literal|"\011individual"
+comment|/* INVVPID individual-address type */
+literal|"\012single"
+comment|/* INVVPID single-context type */
+literal|"\013all"
+comment|/* INVVPID all-context type */
+comment|/* INVVPID single-context-retaining-globals type */
+literal|"\014single-globals"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

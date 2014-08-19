@@ -2488,8 +2488,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-m mem-size] [-d<disk-path>] [-h<host-path>]\n"
-literal|"       %*s [-e<name=value>] [-c<console-device>]<vmname>\n"
+literal|"usage: %s [-c<console-device>] [-d<disk-path>] [-e<name=value>]\n"
+literal|"       %*s [-h<host-path>] [-m mem-size]<vmname>\n"
 argument_list|,
 name|progname
 argument_list|,

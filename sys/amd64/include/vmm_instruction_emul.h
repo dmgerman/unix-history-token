@@ -111,6 +111,11 @@ name|vie
 modifier|*
 name|vie
 parameter_list|,
+name|struct
+name|vm_guest_paging
+modifier|*
+name|paging
+parameter_list|,
 name|mem_region_read_t
 name|mrr
 parameter_list|,
@@ -358,6 +363,9 @@ parameter_list|,
 name|enum
 name|vm_cpu_mode
 name|cpu_mode
+parameter_list|,
+name|int
+name|csd
 parameter_list|,
 name|struct
 name|vie
