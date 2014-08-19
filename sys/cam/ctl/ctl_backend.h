@@ -144,28 +144,6 @@ end_comment
 
 begin_struct
 struct|struct
-name|ctl_be_lun_option
-block|{
-name|STAILQ_ENTRY
-argument_list|(
-argument|ctl_be_lun_option
-argument_list|)
-name|links
-expr_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|char
-modifier|*
-name|value
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|ctl_be_lun
 block|{
 name|uint8_t
@@ -238,13 +216,9 @@ modifier|*
 name|ctl_lun
 decl_stmt|;
 comment|/* used by CTL */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ctl_be_lun_option
-argument_list|)
+name|ctl_options_t
 name|options
-expr_stmt|;
+decl_stmt|;
 comment|/* passed to CTL */
 name|STAILQ_ENTRY
 argument_list|(

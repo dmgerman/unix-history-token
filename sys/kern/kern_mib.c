@@ -108,8 +108,8 @@ file|<sys/unistd.h>
 end_include
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 literal|0
 argument_list|,
 name|sysctl
@@ -124,8 +124,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|CTL_KERN
 argument_list|,
 name|kern
@@ -142,8 +142,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|CTL_VM
 argument_list|,
 name|vm
@@ -158,8 +158,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|CTL_VFS
 argument_list|,
 name|vfs
@@ -174,8 +174,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|CTL_NET
 argument_list|,
 name|net
@@ -190,8 +190,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|CTL_DEBUG
 argument_list|,
 name|debug
@@ -224,8 +224,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|CTL_HW
 argument_list|,
 name|hw
@@ -240,8 +240,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|CTL_MACHDEP
 argument_list|,
 name|machdep
@@ -256,8 +256,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|CTL_USER
 argument_list|,
 name|user
@@ -272,8 +272,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|CTL_P1003_1B
 argument_list|,
 name|p1003_1b
@@ -288,8 +288,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|OID_AUTO
 argument_list|,
 name|compat
@@ -304,8 +304,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|OID_AUTO
 argument_list|,
 name|security
@@ -326,8 +326,8 @@ name|REGRESSION
 end_ifdef
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(,
+name|SYSCTL_ROOT_NODE
+argument_list|(
 name|OID_AUTO
 argument_list|,
 name|regression
@@ -519,6 +519,8 @@ argument_list|,
 name|maxproc
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|maxproc
@@ -561,6 +563,8 @@ argument_list|,
 name|maxusers
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|maxusers
@@ -626,6 +630,8 @@ argument_list|,
 name|ngroups
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
@@ -3000,9 +3006,9 @@ name|pid_max
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_NOFETCH
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,

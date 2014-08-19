@@ -405,6 +405,9 @@ name|lintr_stat
 name|state
 decl_stmt|;
 name|int
+name|pirq_pin
+decl_stmt|;
+name|int
 name|ioapic_irq
 decl_stmt|;
 name|pthread_mutex_t
@@ -650,6 +653,9 @@ name|int
 name|pin
 parameter_list|,
 name|int
+name|pirq_pin
+parameter_list|,
+name|int
 name|ioapic_irq
 parameter_list|,
 name|void
@@ -860,7 +866,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|pci_lintr_request
 parameter_list|(
 name|struct

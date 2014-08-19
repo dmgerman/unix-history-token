@@ -2924,8 +2924,6 @@ directive|if
 name|__POSIX_VISIBLE
 operator|>=
 literal|200809
-operator|||
-name|__BSD_VISIBLE
 end_if
 
 begin_function_decl
@@ -3062,7 +3060,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __POSIX_VISIBLE>= 200809 || __BSD_VISIBLE */
+comment|/* __POSIX_VISIBLE>= 200809 */
 end_comment
 
 begin_comment
@@ -3079,8 +3077,6 @@ operator|||
 name|__XSI_VISIBLE
 operator|>=
 literal|402
-operator|||
-name|__BSD_VISIBLE
 end_if
 
 begin_function_decl

@@ -24,7 +24,7 @@ name|SM_TAILQ_H_
 end_define
 
 begin_comment
-comment|/*  * $Id: tailq.h,v 1.3 2012/01/21 00:12:14 ashish Exp $  *  * This file is a modified copy of queue.h from a BSD system:  * we only need tail queues here.  * We do not use queue.h directly because there is a conflict with  * some versions of that file on some OSs.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  */
+comment|/*  * $Id: tailq.h,v 1.3 2012-01-21 00:12:14 ashish Exp $  *  * This file is a modified copy of queue.h from a BSD system:  * we only need tail queues here.  * We do not use queue.h directly because there is a conflict with  * some versions of that file on some OSs.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  */
 end_comment
 
 begin_comment

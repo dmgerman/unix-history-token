@@ -1693,6 +1693,9 @@ name|LDNS_SIGN_RSASHA256
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|STDERR_MSGS
 name|fprintf
 argument_list|(
 name|stderr
@@ -1707,6 +1710,8 @@ argument_list|,
 literal|"version of ldns\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -1733,6 +1738,9 @@ name|LDNS_SIGN_RSASHA512
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|STDERR_MSGS
 name|fprintf
 argument_list|(
 name|stderr
@@ -1747,6 +1755,8 @@ argument_list|,
 literal|"version of ldns\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -1773,6 +1783,9 @@ name|LDNS_SIGN_ECC_GOST
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|STDERR_MSGS
 name|fprintf
 argument_list|(
 name|stderr
@@ -1787,6 +1800,8 @@ argument_list|,
 literal|"version of ldns, use --enable-gost\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -1813,6 +1828,9 @@ name|LDNS_SIGN_ECDSAP256SHA256
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|STDERR_MSGS
 name|fprintf
 argument_list|(
 name|stderr
@@ -1827,6 +1845,8 @@ argument_list|,
 literal|"version of ldns, use --enable-ecdsa\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -1853,6 +1873,9 @@ name|LDNS_SIGN_ECDSAP384SHA384
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|STDERR_MSGS
 name|fprintf
 argument_list|(
 name|stderr
@@ -1867,6 +1890,8 @@ argument_list|,
 literal|"version of ldns, use --enable-ecdsa\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -6170,6 +6195,9 @@ operator|>
 literal|8
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|STDERR_MSGS
 name|fprintf
 argument_list|(
 name|stderr
@@ -6184,6 +6212,8 @@ argument_list|,
 literal|" not implemented\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|false
 return|;
@@ -7470,6 +7500,9 @@ operator|!
 name|fp
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|STDERR_MSGS
 name|fprintf
 argument_list|(
 name|stderr
@@ -7484,6 +7517,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|LDNS_FREE
 argument_list|(
 name|line
@@ -7545,6 +7580,9 @@ operator|<=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|STDERR_MSGS
 name|fprintf
 argument_list|(
 name|stderr
@@ -7554,6 +7592,8 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|LDNS_FREE
 argument_list|(
 name|line
@@ -7615,6 +7655,9 @@ return|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|STDERR_MSGS
 name|fprintf
 argument_list|(
 name|stderr
@@ -7629,6 +7672,8 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|LDNS_FREE
 argument_list|(
 name|line

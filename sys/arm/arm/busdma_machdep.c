@@ -928,7 +928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This init historically used SI_SUB_VM, but now the init code requires  * malloc(9) using M_DEVBUF memory, which is set up later than SI_SUB_VM, by  * SI_SUB_KMEM and SI_ORDER_SECOND, so we'll go right after that by using  * SI_SUB_KMEM and SI_ORDER_THIRD.  */
+comment|/*  * This init historically used SI_SUB_VM, but now the init code requires  * malloc(9) using M_DEVBUF memory, which is set up later than SI_SUB_VM, by  * SI_SUB_KMEM and SI_ORDER_THIRD, so we'll go right after that by using  * SI_SUB_KMEM and SI_ORDER_FOURTH.  */
 end_comment
 
 begin_expr_stmt
@@ -938,7 +938,7 @@ name|busdma
 argument_list|,
 name|SI_SUB_KMEM
 argument_list|,
-name|SI_ORDER_THIRD
+name|SI_ORDER_FOURTH
 argument_list|,
 name|busdma_init
 argument_list|,

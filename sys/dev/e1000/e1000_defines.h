@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -348,6 +348,17 @@ directive|define
 name|E1000_CTRL_EXT_PFRSTD
 value|0x00004000
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_CTRL_EXT_SDLPE
+value|0X00040000
+end_define
+
+begin_comment
+comment|/* SerDes Low Power Enable */
+end_comment
 
 begin_define
 define|#
@@ -817,7 +828,7 @@ begin_define
 define|#
 directive|define
 name|E1000_RXDEXT_STATERR_TST
-value|0x00010000
+value|0x00000100
 end_define
 
 begin_comment
@@ -3120,6 +3131,13 @@ define|#
 directive|define
 name|MAX_JUMBO_FRAME_SIZE
 value|0x3F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_TX_PTR_GAP
+value|0x1F
 end_define
 
 begin_comment
@@ -5960,6 +5978,34 @@ define|#
 directive|define
 name|E1000_PCS_STATUS_TX_LPI_RCVD
 value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1512_CFG_REG_1
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1512_CFG_REG_2
+value|0x0011
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1512_CFG_REG_3
+value|0x0007
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_M88E1512_MODE
+value|0x0014
 end_define
 
 begin_define
@@ -9781,6 +9827,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|I210_RXPBSIZE_DEFAULT
+value|0x000000A2
+end_define
+
+begin_comment
+comment|/* RXPBSIZE default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I210_TXPBSIZE_DEFAULT
+value|0x04000014
+end_define
+
+begin_comment
+comment|/* TXPBSIZE default */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_DOBFFCTL_OBFFTHR_MASK
 value|0x000000FF
 end_define
@@ -9983,6 +10051,12 @@ directive|define
 name|E1000_UNUSEDARG
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ERROR_REPORT
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -9992,6 +10066,15 @@ name|fmt
 parameter_list|)
 value|do { } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ERROR_REPORT */
+end_comment
 
 begin_endif
 endif|#

@@ -107,64 +107,75 @@ define|#
 directive|define
 name|LDNS_APL_NEGATION
 value|0x80
-comment|/**   * Represent a NULL pointer (in stead of a pointer to a ldns_rr as "; (null)"   * as opposed to outputting nothing at all in such a case.  */
+comment|/**   * Represent a NULL pointer (instead of a pointer to a ldns_rr as "; (null)"   * as opposed to outputting nothing at all in such a case.  */
+comment|/*	Flag Name			Flag Nr.	Has data associated 	---------------------------------------------------------------------*/
 define|#
 directive|define
 name|LDNS_COMMENT_NULLS
-value|0x0001
+value|(1<<  0)
 comment|/** Show key id with DNSKEY RR's as comment */
 define|#
 directive|define
 name|LDNS_COMMENT_KEY_ID
-value|0x0002
+value|(1<<  1)
 comment|/** Show if a DNSKEY is a ZSK or KSK as comment */
 define|#
 directive|define
 name|LDNS_COMMENT_KEY_TYPE
-value|0x0004
+value|(1<<  2)
 comment|/** Show DNSKEY key size as comment */
 define|#
 directive|define
 name|LDNS_COMMENT_KEY_SIZE
-value|0x0008
+value|(1<<  3)
+comment|/** Provide bubblebabble representation for DS RR's as comment */
+define|#
+directive|define
+name|LDNS_COMMENT_BUBBLEBABBLE
+value|(1<<  4)
+comment|/** Show when a NSEC3 RR has the optout flag set as comment */
+define|#
+directive|define
+name|LDNS_COMMENT_FLAGS
+value|(1<<  5)
+comment|/** Show the unhashed owner and next owner names for NSEC3 RR's as comment */
+define|#
+directive|define
+name|LDNS_COMMENT_NSEC3_CHAIN
+value|(1<<  6)
+comment|/* yes */
+comment|/** Print mark up */
+define|#
+directive|define
+name|LDNS_COMMENT_LAYOUT
+value|(1<<  7)
+comment|/** Also comment KEY_ID with RRSIGS **/
+define|#
+directive|define
+name|LDNS_COMMENT_RRSIGS
+value|(1<<  8)
+define|#
+directive|define
+name|LDNS_FMT_ZEROIZE_RRSIGS
+value|(1<<  9)
+define|#
+directive|define
+name|LDNS_FMT_PAD_SOA_SERIAL
+value|(1<< 10)
+define|#
+directive|define
+name|LDNS_FMT_RFC3597
+value|(1<< 11)
+comment|/* yes */
+define|#
+directive|define
+name|LDNS_FMT_FLAGS_WITH_DATA
+value|2
 comment|/** Show key id, type and size as comment for DNSKEY RR's */
 define|#
 directive|define
 name|LDNS_COMMENT_KEY
 value|(LDNS_COMMENT_KEY_ID  \ 					|LDNS_COMMENT_KEY_TYPE\ 					|LDNS_COMMENT_KEY_SIZE)
-comment|/** Provide bubblebabble representation for DS RR's as comment */
-define|#
-directive|define
-name|LDNS_COMMENT_BUBBLEBABBLE
-value|0x0010
-comment|/** Show when a NSEC3 RR has the optout flag set as comment */
-define|#
-directive|define
-name|LDNS_COMMENT_FLAGS
-value|0x0020
-comment|/** Show the unhashed owner and next owner names for NSEC3 RR's as comment */
-define|#
-directive|define
-name|LDNS_COMMENT_NSEC3_CHAIN
-value|0x0040
-comment|/** Print mark up */
-define|#
-directive|define
-name|LDNS_COMMENT_LAYOUT
-value|0x0080
-comment|/** Also comment KEY_ID with RRSIGS **/
-define|#
-directive|define
-name|LDNS_COMMENT_RRSIGS
-value|0x0100
-define|#
-directive|define
-name|LDNS_FMT_ZEROIZE_RRSIGS
-value|0x0200
-define|#
-directive|define
-name|LDNS_FMT_PAD_SOA_SERIAL
-value|0x0400
 comment|/**  * Output format specifier  *  * Determines how Packets, Resource Records and Resource record data fiels are  * formatted when printing or converting to string.  * Currently it is only used to specify what aspects of a Resource Record are  * annotated in the comment section of the textual representation the record.  * This is speciefed with flags and potential exra data (such as for example  * a lookup map of hashes to real names for annotation NSEC3 records).  */
 struct|struct
 name|ldns_struct_output_format
@@ -184,6 +195,30 @@ typedef|typedef
 name|struct
 name|ldns_struct_output_format
 name|ldns_output_format
+typedef|;
+comment|/**  * Output format struct with additional data for flags that use them.  * This struct may not be initialized directly. Use ldns_output_format_init  * to initialize.  */
+struct|struct
+name|ldns_struct_output_format_storage
+block|{
+name|int
+name|flags
+decl_stmt|;
+name|ldns_rbtree_t
+modifier|*
+name|hashmap
+decl_stmt|;
+comment|/* for LDNS_COMMENT_NSEC3_CHAIN */
+name|ldns_rdf
+modifier|*
+name|bitmap
+decl_stmt|;
+comment|/* for LDNS_FMT_RFC3597     */
+block|}
+struct|;
+typedef|typedef
+name|struct
+name|ldns_struct_output_format_storage
+name|ldns_output_format_storage
 typedef|;
 comment|/**  * Standard output format record that disables commenting in the textual   * representation of Resource Records completely.  */
 specifier|extern
@@ -213,6 +248,110 @@ name|ldns_output_format
 modifier|*
 name|ldns_output_format_bubblebabble
 decl_stmt|;
+comment|/**  * Initialize output format storage to the default value.  * \param[in] fmt A reference to an output_format_ storage struct  * \return The initialized storage struct typecasted to ldns_output_format  */
+name|INLINE
+name|ldns_output_format
+modifier|*
+name|ldns_output_format_init
+parameter_list|(
+name|ldns_output_format_storage
+modifier|*
+name|fmt
+parameter_list|)
+block|{
+name|fmt
+operator|->
+name|flags
+operator|=
+name|ldns_output_format_default
+operator|->
+name|flags
+expr_stmt|;
+name|fmt
+operator|->
+name|hashmap
+operator|=
+name|NULL
+expr_stmt|;
+name|fmt
+operator|->
+name|bitmap
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|ldns_output_format
+operator|*
+operator|)
+name|fmt
+return|;
+block|}
+comment|/**  * Set an ouput format flag.  */
+name|INLINE
+name|void
+name|ldns_output_format_set
+parameter_list|(
+name|ldns_output_format
+modifier|*
+name|fmt
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+block|{
+name|fmt
+operator|->
+name|flags
+operator||=
+name|flag
+expr_stmt|;
+block|}
+comment|/**  * Clear an ouput format flag.  */
+name|INLINE
+name|void
+name|ldns_output_format_clear
+parameter_list|(
+name|ldns_output_format
+modifier|*
+name|fmt
+parameter_list|,
+name|int
+name|flag
+parameter_list|)
+block|{
+name|fmt
+operator|->
+name|flags
+operator|&=
+operator|!
+name|flag
+expr_stmt|;
+block|}
+comment|/**  * Makes sure the LDNS_FMT_RFC3597 is set in the output format.  * Marks the type to be printed in RFC3597 format.  * /param[in] fmt the output format to update  * /param[in] the type to be printed in RFC3597 format  * /return LDNS_STATUS_OK on success  */
+name|ldns_status
+name|ldns_output_format_set_type
+parameter_list|(
+name|ldns_output_format
+modifier|*
+name|fmt
+parameter_list|,
+name|ldns_rr_type
+name|type
+parameter_list|)
+function_decl|;
+comment|/**  * Makes sure the LDNS_FMT_RFC3597 is set in the output format.  * Marks the type to not be printed in RFC3597 format. When no other types  * have been marked before, all known types (except the given one) will be  * marked for printing in RFC3597 format.  * /param[in] fmt the output format to update  * /param[in] the type not to be printed in RFC3597 format  * /return LDNS_STATUS_OK on success  */
+name|ldns_status
+name|ldns_output_format_clear_type
+parameter_list|(
+name|ldns_output_format
+modifier|*
+name|fmt
+parameter_list|,
+name|ldns_rr_type
+name|type
+parameter_list|)
+function_decl|;
 comment|/**  * Converts an ldns packet opcode value to its mnemonic, and adds that  * to the output buffer  * \param[in] *output the buffer to add the data to  * \param[in] opcode to find the string representation of  * \return LDNS_STATUS_OK on success, or a buffer failure mode on error  */
 name|ldns_status
 name|ldns_pkt_opcode2buffer_str
@@ -637,20 +776,6 @@ modifier|*
 name|rdf
 parameter_list|)
 function_decl|;
-comment|/**   * Converts an LDNS_RDF_TYPE_TSIG rdata element to string format and adds it to the output buffer   * \param[in] *rdf The rdata to convert  * \param[in] *output The buffer to add the data to  * \return LDNS_STATUS_OK on success, and error status on failure  */
-name|ldns_status
-name|ldns_rdf2buffer_str_tsig
-parameter_list|(
-name|ldns_buffer
-modifier|*
-name|output
-parameter_list|,
-specifier|const
-name|ldns_rdf
-modifier|*
-name|rdf
-parameter_list|)
-function_decl|;
 comment|/**  * Converts the data in the rdata field to presentation  * format (as char *) and appends it to the given buffer  *  * \param[in] output pointer to the buffer to append the data to  * \param[in] rdf the pointer to the rdafa field containing the data  * \return status  */
 name|ldns_status
 name|ldns_rdf2buffer_str
@@ -804,6 +929,90 @@ function_decl|;
 comment|/**  * Converts an LDNS_RDF_TYPE_TIME rdata element to string format and adds it to the output buffer  * \param[in] *rdf The rdata to convert  * \param[in] *output The buffer to add the data to  * \return LDNS_STATUS_OK on success, and error status on failure  */
 name|ldns_status
 name|ldns_rdf2buffer_str_time
+parameter_list|(
+name|ldns_buffer
+modifier|*
+name|output
+parameter_list|,
+specifier|const
+name|ldns_rdf
+modifier|*
+name|rdf
+parameter_list|)
+function_decl|;
+comment|/**   * Converts an LDNS_RDF_TYPE_ILNP64 rdata element to 4 hexadecimal numbers  * separated by colons and adds it to the output buffer   * \param[in] *rdf The rdata to convert  * \param[in] *output The buffer to add the data to  * \return LDNS_STATUS_OK on success, and error status on failure  */
+name|ldns_status
+name|ldns_rdf2buffer_str_ilnp64
+parameter_list|(
+name|ldns_buffer
+modifier|*
+name|output
+parameter_list|,
+specifier|const
+name|ldns_rdf
+modifier|*
+name|rdf
+parameter_list|)
+function_decl|;
+comment|/**   * Converts an LDNS_RDF_TYPE_EUI48 rdata element to 6 hexadecimal numbers  * separated by dashes and adds it to the output buffer   * \param[in] *rdf The rdata to convert  * \param[in] *output The buffer to add the data to  * \return LDNS_STATUS_OK on success, and error status on failure  */
+name|ldns_status
+name|ldns_rdf2buffer_str_eui48
+parameter_list|(
+name|ldns_buffer
+modifier|*
+name|output
+parameter_list|,
+specifier|const
+name|ldns_rdf
+modifier|*
+name|rdf
+parameter_list|)
+function_decl|;
+comment|/**   * Converts an LDNS_RDF_TYPE_EUI64 rdata element to 8 hexadecimal numbers  * separated by dashes and adds it to the output buffer   * \param[in] *rdf The rdata to convert  * \param[in] *output The buffer to add the data to  * \return LDNS_STATUS_OK on success, and error status on failure  */
+name|ldns_status
+name|ldns_rdf2buffer_str_eui64
+parameter_list|(
+name|ldns_buffer
+modifier|*
+name|output
+parameter_list|,
+specifier|const
+name|ldns_rdf
+modifier|*
+name|rdf
+parameter_list|)
+function_decl|;
+comment|/**   * Adds the LDNS_RDF_TYPE_TAG rdata to the output buffer,  * provided it contains only alphanumeric characters.  * \param[in] *rdf The rdata to convert  * \param[in] *output The buffer to add the data to  * \return LDNS_STATUS_OK on success, and error status on failure  */
+name|ldns_status
+name|ldns_rdf2buffer_str_tag
+parameter_list|(
+name|ldns_buffer
+modifier|*
+name|output
+parameter_list|,
+specifier|const
+name|ldns_rdf
+modifier|*
+name|rdf
+parameter_list|)
+function_decl|;
+comment|/**   * Adds the LDNS_RDF_TYPE_LONG_STR rdata to the output buffer, in-between   * double quotes and all non printable characters properly escaped.  * \param[in] *rdf The rdata to convert  * \param[in] *output The buffer to add the data to  * \return LDNS_STATUS_OK on success, and error status on failure  */
+name|ldns_status
+name|ldns_rdf2buffer_str_long_str
+parameter_list|(
+name|ldns_buffer
+modifier|*
+name|output
+parameter_list|,
+specifier|const
+name|ldns_rdf
+modifier|*
+name|rdf
+parameter_list|)
+function_decl|;
+comment|/**   * Converts an LDNS_RDF_TYPE_HIP rdata element to presentation format for  * the algorithm, HIT and Public Key and adds it the output buffer .  * \param[in] *rdf The rdata to convert  * \param[in] *output The buffer to add the data to  * \return LDNS_STATUS_OK on success, and error status on failure  */
+name|ldns_status
+name|ldns_rdf2buffer_str_hip
 parameter_list|(
 name|ldns_buffer
 modifier|*

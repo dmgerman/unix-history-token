@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|TI_ADC_NPINS
-value|7
+value|8
 end_define
 
 begin_define

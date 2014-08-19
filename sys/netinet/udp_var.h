@@ -430,6 +430,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<netinet/in_pcb.h>
+end_include
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(

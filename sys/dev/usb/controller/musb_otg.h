@@ -2106,7 +2106,7 @@ name|struct
 name|usb_hw_ep_profile
 name|sc_hw_ep_profile
 index|[
-literal|16
+name|MUSB2_EP_MAX
 index|]
 decl_stmt|;
 name|struct

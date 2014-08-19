@@ -1780,6 +1780,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Rflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show flow / RSS statistics */
+end_comment
+
+begin_decl_stmt
+name|int
 name|sflag
 decl_stmt|;
 end_decl_stmt
@@ -1928,7 +1938,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46AaBbdF:f:ghI:iLlM:mN:np:Qq:rSTsuWw:xz"
+literal|"46AaBbdF:f:ghI:iLlM:mN:np:Qq:RrSTsuWw:xz"
 argument_list|)
 operator|)
 operator|!=
@@ -2376,6 +2386,14 @@ case|case
 literal|'r'
 case|:
 name|rflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|Rflag
 operator|=
 literal|1
 expr_stmt|;
@@ -4046,25 +4064,27 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: netstat [-46AaLnSTWx] [-f protocol_family | -p protocol]\n"
+literal|"usage: netstat [-46AaLnRSTWx] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -i | -I interface [-46abdhnW] [-f address_family]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -w wait [-I interface] [-46d] [-M core] [-N system] [-q howmany]"
+literal|"       netstat -w wait [-I interface] [-46d] [-M core] [-N system]\n"
+literal|"               [-q howmany]"
 argument_list|,
-literal|"       netstat -s [-s] [-46z] [-f protocol_family | -p protocol]\n"
+literal|"       netstat -s [-46sz] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -i | -I interface [-46s] [-f protocol_family | -p protocol]\n"
-literal|"               [-M core] [-N system]"
+literal|"       netstat -i | -I interface -s [-46s]\n"
+literal|"               [-f protocol_family | -p protocol] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -m [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -B [-I interface]"
+literal|"       netstat -B [-z] [-I interface]"
 argument_list|,
-literal|"       netstat -r [-46AanW] [-f address_family] [-M core] [-N system]"
+literal|"       netstat -r [-46AnW] [-F fibnum] [-f address_family]\n"
+literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -rs [-s] [-M core] [-N system]"
 argument_list|,

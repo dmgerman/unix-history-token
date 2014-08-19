@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/platform.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/mv/mvreg.h>
 end_include
 
@@ -808,7 +814,7 @@ end_function
 
 begin_function
 name|vm_offset_t
-name|initarm_lastaddr
+name|platform_lastaddr
 parameter_list|(
 name|void
 parameter_list|)
@@ -823,7 +829,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_early_init
+name|platform_probe_and_attach
 parameter_list|(
 name|void
 parameter_list|)
@@ -847,7 +853,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_gpio_init
+name|platform_gpio_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -870,7 +876,7 @@ end_function
 
 begin_function
 name|void
-name|initarm_late_init
+name|platform_late_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1136,7 +1142,7 @@ name|map
 operator|->
 name|pd_cache
 operator|=
-name|PTE_NOCACHE
+name|PTE_DEVICE
 expr_stmt|;
 return|return
 operator|(
@@ -1156,7 +1162,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Supply a default do-nothing implementation of mv_pci_devmap() via a weak  * alias.  Many Marvell platforms don't support a PCI interface, but to support  * those that do, we end up with a reference to this function below, in  * initarm_devmap_init().  If "device pci" appears in the kernel config, the  * real implementation of this function in arm/mv/mv_pci.c overrides the weak  * alias defined here.  */
+comment|/*  * Supply a default do-nothing implementation of mv_pci_devmap() via a weak  * alias.  Many Marvell platforms don't support a PCI interface, but to support  * those that do, we end up with a reference to this function below, in  * platform_devmap_init().  If "device pci" appears in the kernel config, the  * real implementation of this function in arm/mv/mv_pci.c overrides the weak  * alias defined here.  */
 end_comment
 
 begin_function_decl
@@ -1227,7 +1233,7 @@ end_comment
 
 begin_function
 name|int
-name|initarm_devmap_init
+name|platform_devmap_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -1334,7 +1340,7 @@ index|]
 operator|.
 name|pd_cache
 operator|=
-name|PTE_NOCACHE
+name|PTE_DEVICE
 expr_stmt|;
 name|i
 operator|++

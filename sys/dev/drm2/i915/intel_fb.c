@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_syscons.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/drm2/drmP.h>
 end_include
 
@@ -678,12 +684,23 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_SC
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|sc_txtmouse_no_retrace_wait
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -795,10 +812,15 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_SC
 name|sc_txtmouse_no_retrace_wait
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;

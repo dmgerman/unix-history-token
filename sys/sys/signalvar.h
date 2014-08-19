@@ -108,7 +108,7 @@ comment|/* SunOS compat; libc sigtramp. XXX */
 name|int
 name|ps_flag
 decl_stmt|;
-name|int
+name|u_int
 name|ps_refcnt
 decl_stmt|;
 name|struct

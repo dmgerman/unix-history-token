@@ -489,17 +489,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.snd.vpc_autoreset"
-argument_list|,
-operator|&
-name|chn_vpc_autoreset
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_snd
@@ -508,7 +497,7 @@ name|OID_AUTO
 argument_list|,
 name|vpc_autoreset
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|chn_vpc_autoreset

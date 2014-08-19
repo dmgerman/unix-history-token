@@ -343,7 +343,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|wb_bfree
 parameter_list|(
 name|struct
@@ -3586,7 +3586,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|wb_bfree
 parameter_list|(
 name|struct
@@ -3602,13 +3602,7 @@ name|void
 modifier|*
 name|args
 parameter_list|)
-block|{
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
-block|}
+block|{ }
 end_function
 
 begin_comment

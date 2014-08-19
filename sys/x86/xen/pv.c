@@ -140,6 +140,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<x86/apicvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<x86/init.h>
 end_include
 
@@ -171,6 +183,12 @@ begin_include
 include|#
 directive|include
 file|<xen/xenstore/xenstorevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/xen_pv.h>
 end_include
 
 begin_include
@@ -610,7 +628,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Each slot of the level 4 pages points to the same level 3 page */
+comment|/* 		 * Each slot of the level 4 pages points 		 * to the same level 3 page 		 */
 name|PT4
 index|[
 name|i
@@ -640,7 +658,7 @@ name|PG_RW
 operator||
 name|PG_U
 expr_stmt|;
-comment|/* Each slot of the level 3 pages points to the same level 2 page */
+comment|/* 		 * Each slot of the level 3 pages points 		 * to the same level 2 page 		 */
 name|PT3
 index|[
 name|i
@@ -670,7 +688,7 @@ name|PG_RW
 operator||
 name|PG_U
 expr_stmt|;
-comment|/* The level 2 page slots are mapped with 2MB pages for 1GB. */
+comment|/* 		 * The level 2 page slots are mapped with 		 * 2MB pages for 1GB. 		 */
 name|PT2
 index|[
 name|i
@@ -720,6 +738,10 @@ comment|/* Set the hooks for early functions that diverge from bare metal */
 name|init_ops
 operator|=
 name|xen_init_ops
+expr_stmt|;
+name|apic_ops
+operator|=
+name|xen_apic_ops
 expr_stmt|;
 comment|/* Now we can jump into the native init function */
 return|return

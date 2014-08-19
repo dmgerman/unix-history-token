@@ -730,6 +730,16 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX: g_dev_orphan method does deferred destroying 		 * and it is possible, that other event could already 		 * call the orphan method. Check consumer's flags to 		 * do not schedule it twice. 		 */
+if|if
+condition|(
+name|cp
+operator|->
+name|flags
+operator|&
+name|G_CF_ORPHAN
+condition|)
+continue|continue;
 name|cp
 operator|->
 name|flags

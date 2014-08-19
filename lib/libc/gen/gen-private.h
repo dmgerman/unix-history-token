@@ -64,10 +64,6 @@ name|long
 name|dd_seek
 decl_stmt|;
 comment|/* magic cookie returned by getdirentries */
-name|long
-name|dd_rewind
-decl_stmt|;
-comment|/* magic cookie for rewinding */
 name|int
 name|dd_flags
 decl_stmt|;

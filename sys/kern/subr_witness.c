@@ -1602,17 +1602,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.witness.watch"
-argument_list|,
-operator|&
-name|witness_watch
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
 name|_debug_witness
@@ -1621,7 +1610,7 @@ name|OID_AUTO
 argument_list|,
 name|watch
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 operator||
 name|CTLTYPE_INT
 argument_list|,
@@ -1681,17 +1670,6 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.witness.kdb"
-argument_list|,
-operator|&
-name|witness_kdb
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_witness
@@ -1700,7 +1678,7 @@ name|OID_AUTO
 argument_list|,
 name|kdb
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|witness_kdb
@@ -1725,17 +1703,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.witness.trace"
-argument_list|,
-operator|&
-name|witness_trace
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_witness
@@ -1744,7 +1711,7 @@ name|OID_AUTO
 argument_list|,
 name|trace
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|witness_trace
@@ -1796,17 +1763,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.witness.skipspin"
-argument_list|,
-operator|&
-name|witness_skipspin
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -3057,18 +3013,6 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|__ia64__
-block|{
-literal|"MCA spin lock"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined

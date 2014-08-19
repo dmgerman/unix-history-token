@@ -2340,6 +2340,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIS_BASEPERIPH_IOMMU
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIS_BASEPERIPH_OTHER
 value|0x80
 end_define

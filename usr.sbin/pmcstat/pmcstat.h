@@ -233,6 +233,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FLAG_HAS_DURATION
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* -l secs */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_SAMPLE_COUNT
 value|65536
 end_define
@@ -277,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_CALLGRAPH_DEPTH
-value|4
+value|16
 end_define
 
 begin_define
@@ -675,6 +686,10 @@ name|int
 name|pa_mergepmc
 decl_stmt|;
 comment|/* merge PMC with same name */
+name|double
+name|pa_duration
+decl_stmt|;
+comment|/* time duration */
 name|int
 name|pa_argc
 decl_stmt|;

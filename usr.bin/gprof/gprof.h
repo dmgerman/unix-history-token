@@ -87,23 +87,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__ia64__
-end_if
-
-begin_include
-include|#
-directive|include
-file|"ia64.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|__mips__
 end_if
 

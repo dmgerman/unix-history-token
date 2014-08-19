@@ -1153,7 +1153,7 @@ name|READ4
 argument_list|(
 name|sc
 argument_list|,
-name|GPIO_PDOR
+name|GPIO_PDIR
 argument_list|(
 name|i
 argument_list|)
@@ -1169,6 +1169,10 @@ literal|32
 operator|)
 operator|)
 operator|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 name|GPIO_UNLOCK
 argument_list|(

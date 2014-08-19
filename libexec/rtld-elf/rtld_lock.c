@@ -1404,6 +1404,14 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|locks
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* 	 * Warning: this does not work with the rtld compat locks 	 * above, since the thread signal mask is corrupted (set to 	 * all signals blocked) if two locks are taken in write mode. 	 * The caller of the _rtld_atfork_pre() must provide the 	 * working implementation of the locks, and libthr locks are 	 * fine. 	 */
 name|wlock_acquire
 argument_list|(
 name|rtld_phdr_lock
@@ -1415,7 +1423,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|rlock_acquire
+name|wlock_acquire
 argument_list|(
 name|rtld_bind_lock
 argument_list|,
@@ -1469,6 +1477,13 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|locks
+operator|==
+name|NULL
+condition|)
+return|return;
 name|bzero
 argument_list|(
 name|ls

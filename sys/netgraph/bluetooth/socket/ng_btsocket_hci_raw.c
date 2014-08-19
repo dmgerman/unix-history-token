@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -2929,6 +2935,16 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/* Skip initialization of globals for non-default instances. */
+if|if
+condition|(
+operator|!
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+return|return;
 name|ng_btsocket_hci_raw_node
 operator|=
 name|NULL

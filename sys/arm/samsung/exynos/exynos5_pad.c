@@ -1599,7 +1599,7 @@ name|n
 operator|+
 name|ngpio
 operator|)
-operator|>=
+operator|>
 name|gpio_number
 condition|)
 block|{

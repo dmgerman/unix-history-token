@@ -3042,21 +3042,10 @@ block|{
 name|u_int16_t
 name|bmcr
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 name|MY_LOCK_ASSERT
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|=
-name|sc
-operator|->
-name|my_ifp
 expr_stmt|;
 comment|/* 	 * If an autoneg session is in progress, stop it. 	 */
 if|if

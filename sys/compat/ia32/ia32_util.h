@@ -51,49 +51,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ia64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FREEBSD32_MAXUSER
-value|((1ul<< 32) - IA32_PAGE_SIZE * 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREEBSD32_MINUSER
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREEBSD32_SHAREDPAGE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREEBSD32_USRSTACK
-value|FREEBSD32_MAXUSER
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __ia64__ */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -121,15 +78,6 @@ directive|define
 name|FREEBSD32_USRSTACK
 value|FREEBSD32_SHAREDPAGE
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __ia64 */
-end_comment
 
 begin_define
 define|#

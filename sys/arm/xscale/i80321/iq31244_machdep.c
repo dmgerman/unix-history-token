@@ -435,7 +435,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	    }
 block|,
 block|{
@@ -449,7 +449,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	    }
 block|,
 block|{
@@ -463,7 +463,7 @@ name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
 block|,
-name|PTE_NOCACHE
+name|PTE_DEVICE
 block|, 	    }
 block|,
 block|{
@@ -1220,6 +1220,30 @@ argument_list|(
 name|SDRAM_START
 argument_list|,
 name|memsize
+argument_list|)
+expr_stmt|;
+name|arm_physmem_exclude_region
+argument_list|(
+name|freemem_pt
+argument_list|,
+name|KERNPHYSADDR
+operator|-
+name|freemem_pt
+argument_list|,
+name|EXFLAG_NOALLOC
+argument_list|)
+expr_stmt|;
+name|arm_physmem_exclude_region
+argument_list|(
+name|freemempos
+argument_list|,
+name|KERNPHYSADDR
+operator|-
+literal|0x100000
+operator|-
+name|freemempos
+argument_list|,
+name|EXFLAG_NOALLOC
 argument_list|)
 expr_stmt|;
 name|arm_physmem_exclude_region

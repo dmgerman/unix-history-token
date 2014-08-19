@@ -10107,11 +10107,6 @@ name|spc
 operator|->
 name|spc_dev
 decl_stmt|;
-name|struct
-name|siba_softc
-modifier|*
-name|siba
-decl_stmt|;
 if|if
 condition|(
 name|sd
@@ -10119,12 +10114,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|siba
-operator|=
-name|sd
-operator|->
-name|sd_bus
-expr_stmt|;
 if|if
 condition|(
 operator|!

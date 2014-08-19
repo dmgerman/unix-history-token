@@ -253,6 +253,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|mv_gpio_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|mv_gpio_intr_handler
 parameter_list|(
@@ -1005,7 +1015,7 @@ block|}
 block|}
 return|return
 operator|(
-name|platform_gpio_init
+name|mv_gpio_init
 argument_list|()
 operator|)
 return|;
@@ -2631,8 +2641,9 @@ value|4
 end_define
 
 begin_function
+specifier|static
 name|int
-name|platform_gpio_init
+name|mv_gpio_init
 parameter_list|(
 name|void
 parameter_list|)

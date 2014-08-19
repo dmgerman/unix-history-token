@@ -304,6 +304,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -504,7 +510,7 @@ name|void
 modifier|*
 name|mem
 decl_stmt|;
-name|int
+name|uint32_t
 name|memsize
 decl_stmt|;
 name|int
@@ -1248,17 +1254,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* add the *XPOLL flags */
-name|nr_ringid
-operator||=
-name|new_flags
-operator|&
-operator|(
-name|NETMAP_NO_TX_POLL
-operator||
-name|NETMAP_DO_RX_POLL
-operator|)
-expr_stmt|;
 name|d
 operator|=
 operator|(
@@ -1657,6 +1652,21 @@ name|nr_flags
 expr_stmt|;
 block|}
 block|}
+comment|/* add the *XPOLL flags */
+name|d
+operator|->
+name|req
+operator|.
+name|nr_ringid
+operator||=
+name|new_flags
+operator|&
+operator|(
+name|NETMAP_NO_TX_POLL
+operator||
+name|NETMAP_DO_RX_POLL
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -1726,6 +1736,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* XXX TODO: check if memsize is too large (or there is overflow) */
 name|d
 operator|->
 name|memsize
@@ -1767,7 +1778,7 @@ name|d
 operator|->
 name|mem
 operator|==
-name|NULL
+name|MAP_FAILED
 condition|)
 block|{
 name|errmsg

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2004 Tim J. Robbins  * All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2002-2004 Tim J. Robbins  * All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -417,9 +417,9 @@ operator|->
 name|want
 operator|==
 literal|0
-operator|&&
-operator|(
-operator|(
+condition|)
+block|{
+comment|/* 		 * Determine the number of octets that make up this character 		 * from the first octet, and a mask that extracts the 		 * interesting bits of the first octet. We already know 		 * the character is at least two bytes long. 		 * 		 * We also specify a lower bound for the character code to 		 * detect redundant, non-"shortest form" encodings. For 		 * example, the sequence C0 80 is _not_ a legal representation 		 * of the null character. This enforces a 1-to-1 mapping 		 * between character codes and their multibyte representations. 		 */
 name|ch
 operator|=
 operator|(
@@ -428,10 +428,13 @@ name|char
 operator|)
 operator|*
 name|s
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ch
 operator|&
-operator|~
-literal|0x7f
+literal|0x80
 operator|)
 operator|==
 literal|0
@@ -461,50 +464,6 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|us
-operator|->
-name|want
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 		 * Determine the number of octets that make up this character 		 * from the first octet, and a mask that extracts the 		 * interesting bits of the first octet. We already know 		 * the character is at least two bytes long. 		 * 		 * We also specify a lower bound for the character code to 		 * detect redundant, non-"shortest form" encodings. For 		 * example, the sequence C0 80 is _not_ a legal representation 		 * of the null character. This enforces a 1-to-1 mapping 		 * between character codes and their multibyte representations. 		 */
-name|ch
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|s
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ch
-operator|&
-literal|0x80
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|mask
-operator|=
-literal|0x7f
-expr_stmt|;
-name|want
-operator|=
-literal|1
-expr_stmt|;
-name|lbound
-operator|=
-literal|0
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 operator|(
@@ -1347,6 +1306,7 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* 	 * Determine the number of octets needed to represent this character. 	 * We always output the shortest sequence possible. Also specify the 	 * first few bits of the first octet, which contains the information 	 * about the sequence length. 	 */
 if|if
 condition|(
 operator|(
@@ -1373,28 +1333,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-comment|/* 	 * Determine the number of octets needed to represent this character. 	 * We always output the shortest sequence possible. Also specify the 	 * first few bits of the first octet, which contains the information 	 * about the sequence length. 	 */
-if|if
-condition|(
-operator|(
-name|wc
-operator|&
-operator|~
-literal|0x7f
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|lead
-operator|=
-literal|0
-expr_stmt|;
-name|len
-operator|=
-literal|1
-expr_stmt|;
 block|}
 elseif|else
 if|if

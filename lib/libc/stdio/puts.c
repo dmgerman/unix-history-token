@@ -112,11 +112,6 @@ name|retval
 decl_stmt|;
 name|size_t
 name|c
-init|=
-name|strlen
-argument_list|(
-name|s
-argument_list|)
 decl_stmt|;
 name|struct
 name|__suio
@@ -150,6 +145,11 @@ operator|.
 name|iov_len
 operator|=
 name|c
+operator|=
+name|strlen
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|iov
 index|[

@@ -383,8 +383,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|wpi_debug
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -397,7 +395,7 @@ name|OID_AUTO
 argument_list|,
 name|wpi
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|wpi_debug
@@ -405,17 +403,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"wpi debug level"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.wpi"
-argument_list|,
-operator|&
-name|wpi_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4819,7 +4806,7 @@ if|if
 condition|(
 name|dma
 operator|->
-name|map
+name|vaddr_start
 operator|!=
 name|NULL
 condition|)
@@ -4866,7 +4853,6 @@ name|dma
 operator|->
 name|tag
 argument_list|,
-operator|&
 name|dma
 operator|->
 name|vaddr_start

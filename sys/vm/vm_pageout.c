@@ -3500,25 +3500,6 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|__ia64__
-comment|/* 	 * Remove all non-wired, managed mappings if a process is swapped out. 	 * This will free page table pages. 	 */
-if|if
-condition|(
-name|desired
-operator|==
-literal|0
-condition|)
-name|pmap_remove_pages
-argument_list|(
-name|map
-operator|->
-name|pmap
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 comment|/* 	 * Remove all mappings if a process is swapped out, this will free page 	 * table pages. 	 */
 if|if
 condition|(
@@ -3548,8 +3529,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|vm_map_unlock
 argument_list|(
 name|map

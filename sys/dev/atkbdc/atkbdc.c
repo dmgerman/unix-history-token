@@ -754,16 +754,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__ia64__
-argument_list|)
-name|tag
-operator|=
-name|IA64_BUS_SPACE_IO
-expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
 name|__sparc64__
 argument_list|)
 name|tag

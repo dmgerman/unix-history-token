@@ -294,6 +294,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|const
+specifier|static
 name|struct
 name|ti_scm_padconf
 name|ti_padconf_devmap

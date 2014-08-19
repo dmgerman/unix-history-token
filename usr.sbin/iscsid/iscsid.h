@@ -91,6 +91,9 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+name|uint16_t
+name|conn_tsih
+decl_stmt|;
 name|uint32_t
 name|conn_statsn
 decl_stmt|;

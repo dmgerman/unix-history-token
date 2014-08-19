@@ -301,6 +301,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|uhub_explore_handle_re_enumerate
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

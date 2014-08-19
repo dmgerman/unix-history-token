@@ -133,17 +133,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
+name|errno
+operator|=
+name|serrno
+expr_stmt|;
 name|clearerr_unlocked
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-name|serrno
-expr_stmt|;
-block|}
+comment|/* POSIX: clear stdio error regardless */
 name|FUNLOCKFILE
 argument_list|(
 name|fp

@@ -78,7 +78,7 @@ comment|/* Delayed the include to avoid a circular reference */
 include|#
 directive|include
 file|"apr_pools.h"
-comment|/**  * Create and initialize a mutex that can be used to synchronize threads.  * @param mutex the memory address where the newly created mutex will be  *        stored.  * @param flags Or'ed value of:  *<PRE>  *           APR_THREAD_MUTEX_DEFAULT   platform-optimal lock behavior.  *           APR_THREAD_MUTEX_NESTED    enable nested (recursive) locks.  *           APR_THREAD_MUTEX_UNNESTED  disable nested locks (non-recursive).  *</PRE>  * @param pool the pool from which to allocate the mutex.  * @warning Be cautious in using APR_THREAD_MUTEX_DEFAULT.  While this is the  * most optimial mutex based on a given platform's performance charateristics,  * it will behave as either a nested or an unnested lock.  */
+comment|/**  * Create and initialize a mutex that can be used to synchronize threads.  * @param mutex the memory address where the newly created mutex will be  *        stored.  * @param flags Or'ed value of:  *<PRE>  *           APR_THREAD_MUTEX_DEFAULT   platform-optimal lock behavior.  *           APR_THREAD_MUTEX_NESTED    enable nested (recursive) locks.  *           APR_THREAD_MUTEX_UNNESTED  disable nested locks (non-recursive).  *</PRE>  * @param pool the pool from which to allocate the mutex.  * @warning Be cautious in using APR_THREAD_MUTEX_DEFAULT.  While this is the  * most optimal mutex based on a given platform's performance characteristics,  * it will behave as either a nested or an unnested lock.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t

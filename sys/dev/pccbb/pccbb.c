@@ -328,17 +328,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_ULONG
-argument_list|(
-literal|"hw.cbb.start_memory"
-argument_list|,
-operator|&
-name|cbb_start_mem
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
 name|_hw_cbb
@@ -347,7 +336,7 @@ name|OID_AUTO
 argument_list|,
 name|start_memory
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cbb_start_mem
@@ -368,17 +357,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_ULONG
-argument_list|(
-literal|"hw.cbb.start_16_io"
-argument_list|,
-operator|&
-name|cbb_start_16_io
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
 name|_hw_cbb
@@ -387,7 +365,7 @@ name|OID_AUTO
 argument_list|,
 name|start_16_io
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cbb_start_16_io
@@ -408,17 +386,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_ULONG
-argument_list|(
-literal|"hw.cbb.start_32_io"
-argument_list|,
-operator|&
-name|cbb_start_32_io
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
 name|_hw_cbb
@@ -427,7 +394,7 @@ name|OID_AUTO
 argument_list|,
 name|start_32_io
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cbb_start_32_io
@@ -448,17 +415,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cbb.debug"
-argument_list|,
-operator|&
-name|cbb_debug
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cbb
@@ -467,7 +423,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|cbb_debug

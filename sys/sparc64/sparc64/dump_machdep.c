@@ -604,7 +604,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|dumpsys
 parameter_list|(
 name|struct
@@ -1014,7 +1014,11 @@ argument_list|(
 literal|"\nDump complete\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|fail
 label|:
 comment|/* XXX It should look more like VMS :-) */
@@ -1025,6 +1029,11 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 

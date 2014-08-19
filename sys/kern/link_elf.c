@@ -1504,26 +1504,6 @@ begin_comment
 comment|/* GDB */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ia64__
-end_ifdef
-
-begin_function_decl
-name|Elf_Addr
-name|link_elf_get_gp
-parameter_list|(
-name|linker_file_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * The kernel symbol table starts here.  */
 end_comment
@@ -7530,50 +7510,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ia64__
-end_ifdef
-
-begin_comment
-comment|/*  * Each KLD has its own GP. The GP value for each load module is given by  * DT_PLTGOT on ia64. We need GP to construct function descriptors, but  * don't have direct access to the ELF file structure. The link_elf_get_gp()  * function returns the GP given a pointer to a generic linker file struct.  */
-end_comment
-
-begin_function
-name|Elf_Addr
-name|link_elf_get_gp
-parameter_list|(
-name|linker_file_t
-name|lf
-parameter_list|)
-block|{
-name|elf_file_t
-name|ef
-init|=
-operator|(
-name|elf_file_t
-operator|)
-name|lf
-decl_stmt|;
-return|return
-operator|(
-operator|(
-name|Elf_Addr
-operator|)
-name|ef
-operator|->
-name|got
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|const

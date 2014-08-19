@@ -237,7 +237,7 @@ begin_define
 define|#
 directive|define
 name|RTL8366RB_PLSR_FULLDUPLEX
-value|0x08
+value|0x04
 end_define
 
 begin_define
@@ -723,6 +723,13 @@ end_define
 begin_comment
 comment|/* general characteristics of the chip */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RTL8366RB_CPU_PORT
+value|5
+end_define
 
 begin_define
 define|#

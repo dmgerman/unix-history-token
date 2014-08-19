@@ -166,6 +166,9 @@ modifier|*
 name|vmcs
 parameter_list|,
 name|int
+name|running
+parameter_list|,
+name|int
 name|ident
 parameter_list|,
 name|struct
@@ -184,6 +187,9 @@ name|struct
 name|vmcs
 modifier|*
 name|vmcs
+parameter_list|,
+name|int
+name|running
 parameter_list|,
 name|int
 name|ident
@@ -1921,6 +1927,27 @@ define|#
 directive|define
 name|VMCS_INTR_T_HWEXCEPTION
 value|(3<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_T_SWINTR
+value|(4<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_T_PRIV_SWEXCEPTION
+value|(5<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCS_INTR_T_SWEXCEPTION
+value|(6<< 8)
 end_define
 
 begin_define

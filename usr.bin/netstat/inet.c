@@ -2204,6 +2204,9 @@ if|if
 condition|(
 operator|!
 name|xflag
+operator|&&
+operator|!
+name|Rflag
 condition|)
 name|printf
 argument_list|(
@@ -2260,6 +2263,22 @@ argument_list|,
 literal|"delack"
 argument_list|,
 literal|"rcvtime"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Rflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"  %8.8s %5.5s"
+argument_list|,
+literal|"flowid"
+argument_list|,
+literal|"ftype"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3092,6 +3111,9 @@ name|xflag
 operator|&&
 operator|!
 name|Tflag
+operator|&&
+operator|!
+name|Rflag
 condition|)
 block|{
 if|if
@@ -3164,6 +3186,25 @@ endif|#
 directive|endif
 comment|/* defined(TF_NEEDSYN)&& defined(TF_NEEDFIN) */
 block|}
+block|}
+if|if
+condition|(
+name|Rflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" %08x %5d"
+argument_list|,
+name|inp
+operator|->
+name|inp_flowid
+argument_list|,
+name|inp
+operator|->
+name|inp_flowtype
+argument_list|)
+expr_stmt|;
 block|}
 name|putchar
 argument_list|(

@@ -533,22 +533,23 @@ modifier|*
 name|WeakRefDirective
 decl_stmt|;
 comment|// Defaults to NULL.
-comment|/// WeakDefDirective - This directive, if non-null, is used to declare a
-comment|/// global as being a weak defined symbol.
-specifier|const
-name|char
-modifier|*
-name|WeakDefDirective
+comment|/// True if we have a directive to declare a global as being a weak
+comment|/// defined symbol.
+name|bool
+name|HasWeakDefDirective
 decl_stmt|;
-comment|// Defaults to NULL.
-comment|/// LinkOnceDirective - This directive, if non-null is used to declare a
-comment|/// global as being a weak defined symbol.  This is used on cygwin/mingw.
-specifier|const
-name|char
-modifier|*
-name|LinkOnceDirective
+comment|// Defaults to false.
+comment|/// True if we have a directive to declare a global as being a weak
+comment|/// defined symbol that can be hidden (unexported).
+name|bool
+name|HasWeakDefCanBeHiddenDirective
 decl_stmt|;
-comment|// Defaults to NULL.
+comment|// Defaults to false.
+comment|/// True if we have a .linkonce directive.  This is used on cygwin/mingw.
+name|bool
+name|HasLinkOnceDirective
+decl_stmt|;
+comment|// Defaults to false.
 comment|/// HiddenVisibilityAttr - This attribute, if not MCSA_Invalid, is used to
 comment|/// declare a symbol as having hidden visibility.
 name|MCSymbolAttr
@@ -590,6 +591,11 @@ comment|/// DwarfUsesRelocationsAcrossSections - True if Dwarf2 output generally
 comment|/// uses relocations for references to other .debug_* sections.
 name|bool
 name|DwarfUsesRelocationsAcrossSections
+decl_stmt|;
+comment|/// DwarfFDESymbolsUseAbsDiff - true if DWARF FDE symbol reference
+comment|/// relocations should be replaced by an absolute difference.
+name|bool
+name|DwarfFDESymbolsUseAbsDiff
 decl_stmt|;
 comment|/// DwarfRegNumForCFI - True if dwarf register numbers are printed
 comment|/// instead of symbolic register names in .cfi_* directives.
@@ -1238,26 +1244,31 @@ return|return
 name|WeakRefDirective
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getWeakDefDirective
+name|bool
+name|hasWeakDefDirective
 argument_list|()
 specifier|const
 block|{
 return|return
-name|WeakDefDirective
+name|HasWeakDefDirective
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getLinkOnceDirective
+name|bool
+name|hasWeakDefCanBeHiddenDirective
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LinkOnceDirective
+name|HasWeakDefCanBeHiddenDirective
+return|;
+block|}
+name|bool
+name|hasLinkOnceDirective
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasLinkOnceDirective
 return|;
 block|}
 name|MCSymbolAttr
@@ -1363,6 +1374,15 @@ specifier|const
 block|{
 return|return
 name|DwarfUsesRelocationsAcrossSections
+return|;
+block|}
+name|bool
+name|doDwarfFDESymbolsUseAbsDiff
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfFDESymbolsUseAbsDiff
 return|;
 block|}
 name|bool

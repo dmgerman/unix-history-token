@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * util/data/msgreply.c - store message and reply data.   *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * util/data/msgreply.c - store message and reply data.   *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/ldns.h>
 end_include
 
 begin_include
@@ -79,12 +73,24 @@ directive|include
 file|"util/data/msgencode.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/wire2str.h"
+end_include
+
 begin_comment
 comment|/** MAX TTL default for messages and rrsets */
 end_comment
 
 begin_decl_stmt
-name|uint32_t
+name|time_t
 name|MAX_TTL
 init|=
 literal|3600
@@ -104,7 +110,7 @@ comment|/** MIN TTL default for messages and rrsets */
 end_comment
 
 begin_decl_stmt
-name|uint32_t
+name|time_t
 name|MIN_TTL
 init|=
 literal|0
@@ -120,7 +126,7 @@ specifier|static
 name|int
 name|parse_create_qinfo
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -267,10 +273,10 @@ parameter_list|,
 name|size_t
 name|qd
 parameter_list|,
-name|uint32_t
+name|time_t
 name|ttl
 parameter_list|,
-name|uint32_t
+name|time_t
 name|prettl
 parameter_list|,
 name|size_t
@@ -780,7 +786,7 @@ specifier|static
 name|int
 name|rdata_copy
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -798,7 +804,7 @@ name|rr_parse
 modifier|*
 name|rr
 parameter_list|,
-name|uint32_t
+name|time_t
 modifier|*
 name|rr_ttl
 parameter_list|,
@@ -810,14 +816,14 @@ name|uint16_t
 name|pkt_len
 decl_stmt|;
 specifier|const
-name|ldns_rr_descriptor
+name|sldns_rr_descriptor
 modifier|*
 name|desc
 decl_stmt|;
 operator|*
 name|rr_ttl
 operator|=
-name|ldns_read_uint32
+name|sldns_read_uint32
 argument_list|(
 name|rr
 operator|->
@@ -895,7 +901,7 @@ return|return
 literal|1
 return|;
 block|}
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -907,7 +913,7 @@ name|rr
 operator|->
 name|ttl_data
 operator|-
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|pkt
 argument_list|)
@@ -952,14 +958,14 @@ expr_stmt|;
 comment|/* read packet rdata len */
 name|pkt_len
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -971,7 +977,7 @@ literal|0
 return|;
 name|desc
 operator|=
-name|ldns_rr_descript
+name|sldns_rr_descript
 argument_list|(
 name|type
 argument_list|)
@@ -1037,7 +1043,7 @@ name|LDNS_RDF_TYPE_DNAME
 case|:
 name|oldpos
 operator|=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -1048,7 +1054,7 @@ name|pkt
 argument_list|,
 name|to
 argument_list|,
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -1063,7 +1069,7 @@ argument_list|)
 expr_stmt|;
 name|pkt_len
 operator|-=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
@@ -1083,7 +1089,7 @@ name|LDNS_RDF_TYPE_STR
 case|:
 name|len
 operator|=
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -1118,7 +1124,7 @@ name|memmove
 argument_list|(
 name|to
 argument_list|,
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -1130,7 +1136,7 @@ name|to
 operator|+=
 name|len
 expr_stmt|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -1168,7 +1174,7 @@ name|memmove
 argument_list|(
 name|to
 argument_list|,
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|pkt
 argument_list|)
@@ -1191,7 +1197,7 @@ specifier|static
 name|int
 name|parse_rr_copy
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1314,7 +1320,7 @@ operator|->
 name|rr_ttl
 operator|=
 operator|(
-name|uint32_t
+name|time_t
 operator|*
 operator|)
 operator|&
@@ -1529,7 +1535,7 @@ specifier|static
 name|int
 name|parse_create_rrset
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1584,7 +1590,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|time_t
 argument_list|)
 operator|)
 operator|+
@@ -1848,7 +1854,7 @@ begin_function
 name|int
 name|parse_copy_decompress_rrset
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2070,7 +2076,7 @@ specifier|static
 name|int
 name|parse_copy_decompress
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2242,7 +2248,7 @@ begin_function
 name|int
 name|parse_create_msg
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2356,7 +2362,7 @@ begin_function
 name|int
 name|reply_info_parse
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2443,7 +2449,7 @@ name|msg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -2661,7 +2667,7 @@ name|reply_info
 modifier|*
 name|rep
 parameter_list|,
-name|uint32_t
+name|time_t
 name|timenow
 parameter_list|)
 block|{
@@ -2859,7 +2865,7 @@ name|query_info
 modifier|*
 name|m
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|query
 parameter_list|)
@@ -2868,7 +2874,7 @@ name|uint8_t
 modifier|*
 name|q
 init|=
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|query
 argument_list|)
@@ -2876,7 +2882,7 @@ decl_stmt|;
 comment|/* minimum size: header + \0 + qtype + qclass */
 if|if
 condition|(
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|query
 argument_list|)
@@ -2904,7 +2910,7 @@ argument_list|)
 operator|!=
 literal|1
 operator|||
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|query
 argument_list|)
@@ -2914,7 +2920,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|query
 argument_list|,
@@ -2925,7 +2931,7 @@ name|m
 operator|->
 name|qname
 operator|=
-name|ldns_buffer_current
+name|sldns_buffer_current
 argument_list|(
 name|query
 argument_list|)
@@ -2951,7 +2957,7 @@ return|;
 comment|/* parse error */
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|query
 argument_list|)
@@ -2966,7 +2972,7 @@ name|m
 operator|->
 name|qtype
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|query
 argument_list|)
@@ -2975,7 +2981,7 @@ name|m
 operator|->
 name|qclass
 operator|=
-name|ldns_buffer_read_u16
+name|sldns_buffer_read_u16
 argument_list|(
 name|query
 argument_list|)
@@ -4698,11 +4704,11 @@ name|rep
 parameter_list|)
 block|{
 comment|/* not particularly fast but flexible, make wireformat and print */
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 init|=
-name|ldns_buffer_new
+name|sldns_buffer_new
 argument_list|(
 literal|65535
 argument_list|)
@@ -4752,78 +4758,34 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ldns_status
-name|s
-decl_stmt|;
-name|ldns_pkt
+name|char
 modifier|*
-name|pkt
+name|str
 init|=
-name|NULL
+name|sldns_wire2str_pkt
+argument_list|(
+name|sldns_buffer_begin
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|sldns_buffer_limit
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
 decl_stmt|;
-name|s
-operator|=
-name|ldns_buffer2pkt_wire
-argument_list|(
-operator|&
-name|pkt
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|s
-operator|!=
-name|LDNS_STATUS_OK
+operator|!
+name|str
 condition|)
 block|{
 name|log_info
 argument_list|(
-literal|"%s: log_dns_msg: ldns parse gave: %s"
+literal|"%s: log_dns_msg: ldns tostr failed"
 argument_list|,
 name|str
-argument_list|,
-name|ldns_get_errorstr_by_id
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ldns_buffer_clear
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|ldns_pkt2buffer_str
-argument_list|(
-name|buf
-argument_list|,
-name|pkt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|!=
-name|LDNS_STATUS_OK
-condition|)
-block|{
-name|log_info
-argument_list|(
-literal|"%s: log_dns_msg: ldns tostr gave: %s"
-argument_list|,
-name|str
-argument_list|,
-name|ldns_get_errorstr_by_id
-argument_list|(
-name|s
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4839,21 +4801,20 @@ operator|(
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|ldns_pkt_free
+name|free
 argument_list|(
-name|pkt
+name|str
 argument_list|)
 expr_stmt|;
 block|}
-name|ldns_buffer_free
+name|sldns_buffer_free
 argument_list|(
 name|buf
 argument_list|)

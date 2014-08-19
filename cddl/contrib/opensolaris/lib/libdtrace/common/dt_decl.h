@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Joyent, Inc. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,13 +22,6 @@ define|#
 directive|define
 name|_DT_DECL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -152,6 +149,11 @@ directive|define
 name|DT_DA_PAREN
 value|0x0100
 comment|/* parenthesis tag */
+define|#
+directive|define
+name|DT_DA_USER
+value|0x0200
+comment|/* user-land type specifier */
 typedef|typedef
 enum|enum
 name|dt_dclass

@@ -534,6 +534,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|tcp_twrespond
+parameter_list|(
+name|struct
+name|tcptw
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * tw_pcbref() bumps the reference count on an tw in order to maintain  * stability of an tw pointer despite the tw lock being released.  */
 end_comment
@@ -1519,33 +1533,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * The appromixate rate of ISN increase of Microsoft TCP stacks;  * the actual rate is slightly higher due to the addition of  * random positive increments.  *  * Most other new OSes use semi-randomized ISN values, so we  * do not need to worry about them.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MS_ISN_BYTES_PER_SECOND
-value|250000
-end_define
-
-begin_comment
-comment|/*  * Determine if the ISN we will generate has advanced beyond the last  * sequence number used by the previous connection.  If so, indicate  * that it is safe to recycle this tw socket by returning 1.  */
-end_comment
-
-begin_endif
-unit|int tcp_twrecycleable(struct tcptw *tw) { 	tcp_seq new_iss = tw->iss; 	tcp_seq new_irs = tw->irs;  	INP_INFO_WLOCK_ASSERT(&V_tcbinfo); 	new_iss += (ticks - tw->t_starttime) * (ISN_BYTES_PER_SECOND / hz); 	new_irs += (ticks - tw->t_starttime) * (MS_ISN_BYTES_PER_SECOND / hz);  	if (SEQ_GT(new_iss, tw->snd_nxt)&& SEQ_GT(new_irs, tw->rcv_nxt)) 		return (1); 	else 		return (0); }
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Returns 1 if the TIME_WAIT state was killed and we should start over,  * looking for a pcb in the listen state.  Returns 0 otherwise.  */
 end_comment
@@ -1563,6 +1550,7 @@ name|struct
 name|tcpopt
 modifier|*
 name|to
+name|__unused
 parameter_list|,
 name|struct
 name|tcphdr
@@ -1978,6 +1966,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|tcp_twrespond
 parameter_list|(

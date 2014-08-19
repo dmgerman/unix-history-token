@@ -502,6 +502,8 @@ name|rootshell
 operator|=
 literal|1
 expr_stmt|;
+name|INTOFF
+expr_stmt|;
 name|initvar
 argument_list|()
 expr_stmt|;
@@ -528,6 +530,8 @@ name|pwd_init
 argument_list|(
 name|iflag
 argument_list|)
+expr_stmt|;
+name|INTON
 expr_stmt|;
 if|if
 condition|(

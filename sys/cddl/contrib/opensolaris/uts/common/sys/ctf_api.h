@@ -8,7 +8,7 @@ comment|/*  * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2012, Joyent, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -389,6 +389,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
+name|ctf_file_t
+modifier|*
+name|ctf_dup
+parameter_list|(
+name|ctf_file_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|ctf_close
 parameter_list|(
@@ -577,6 +586,26 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|ctf_type_qname
+parameter_list|(
+name|ctf_file_t
+modifier|*
+parameter_list|,
+name|ctf_id_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern

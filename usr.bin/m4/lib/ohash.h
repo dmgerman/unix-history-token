@@ -1,4 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $OpenBSD: src/lib/libutil/ohash.h,v 1.2 2014/06/02 18:52:03 deraadt Exp $ */
+end_comment
+
+begin_comment
+comment|/* Copyright (c) 1999, 2004 Marc Espie<espie@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -12,19 +20,11 @@ name|OHASH_H
 end_define
 
 begin_comment
-comment|/* $OpenBSD: ohash.h,v 1.8 2005/12/29 18:54:47 jaredy Exp $ */
-end_comment
-
-begin_comment
-comment|/* ex:ts=8 sw=4:   */
-end_comment
-
-begin_comment
-comment|/* Copyright (c) 1999, 2004 Marc Espie<espie@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * $FreeBSD$  */
-end_comment
-
-begin_comment
 comment|/* Open hashing support.   * Open hashing was chosen because it is much lighter than other hash  * techniques, and more efficient in most cases.  */
+end_comment
+
+begin_comment
+comment|/* user-visible data structure */
 end_comment
 
 begin_struct
@@ -43,9 +43,11 @@ name|void
 modifier|*
 function_decl|(
 modifier|*
-name|halloc
+name|calloc
 function_decl|)
 parameter_list|(
+name|size_t
+parameter_list|,
 name|size_t
 parameter_list|,
 name|void
@@ -55,13 +57,11 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|hfree
+name|free
 function_decl|)
 parameter_list|(
 name|void
 modifier|*
-parameter_list|,
-name|size_t
 parameter_list|,
 name|void
 modifier|*
@@ -89,6 +89,10 @@ struct_decl|struct
 name|_ohash_record
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* private structure. It's there just so you can do a sizeof */
+end_comment
 
 begin_struct
 struct|struct
@@ -169,7 +173,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -189,10 +193,23 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__bounded__
+parameter_list|(
+name|__string__
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -308,7 +325,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int32_t
+name|uint32_t
 name|ohash_interval
 parameter_list|(
 specifier|const

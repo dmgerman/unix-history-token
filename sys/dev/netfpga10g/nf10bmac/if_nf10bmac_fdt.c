@@ -217,13 +217,106 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * FDT lists our resources.  For convenience we use three different 	 * mappings.  We need to attach them in the oder specified in .dts: 	 * TX (size 0xc), RX (size 0xc), LOOP (size 0x4). 	 */
-comment|/*          * TX and TX metadata FIFO memory region.          * 0x00: 32bit FIFO data, 	 * 0x04: 32bit FIFO metadata,          * 0x08: 32bit packet length.          */
+comment|/* 	 * FDT lists our resources.  For convenience we use three different 	 * mappings.  We need to attach them in the oder specified in .dts: 	 * LOOP (size 0x1f), TX (0x2f), RX (0x2f), INTR (0xf). 	 */
+comment|/* 	 * LOOP memory region (this could be a general control region). 	 * 0x00: 32/64bit register to enable a Y-"lopback". 	 */
+name|sc
+operator|->
+name|nf10bmac_ctrl_rid
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|nf10bmac_ctrl_res
+operator|=
+name|bus_alloc_resource_any
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|nf10bmac_ctrl_rid
+argument_list|,
+name|RF_ACTIVE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|nf10bmac_ctrl_res
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"failed to map memory for CTRL region\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|nf10bmac_dev
+argument_list|,
+literal|"CTRL region at mem %p-%p\n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|rman_get_start
+argument_list|(
+name|sc
+operator|->
+name|nf10bmac_ctrl_res
+argument_list|)
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|rman_get_start
+argument_list|(
+name|sc
+operator|->
+name|nf10bmac_ctrl_res
+argument_list|)
+operator|+
+name|rman_get_size
+argument_list|(
+name|sc
+operator|->
+name|nf10bmac_ctrl_res
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * TX and TX metadata FIFO memory region. 	 * 0x00: 32/64bit FIFO data, 	 * 0x08: 32/64bit FIFO metadata, 	 * 0x10: 32/64bit packet length. 	 */
 name|sc
 operator|->
 name|nf10bmac_tx_mem_rid
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|sc
 operator|->
@@ -311,12 +404,12 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * RX and RXC metadata FIFO memory region.          * 0x00: 32bit FIFO data, 	 * 0x04: 32bit FIFO metadata,          * 0x08: 32bit packet length.          */
+comment|/* 	 * RX and RXC metadata FIFO memory region. 	 * 0x00: 32/64bit FIFO data, 	 * 0x08: 32/64bit FIFO metadata, 	 * 0x10: 32/64bit packet length. 	 */
 name|sc
 operator|->
 name|nf10bmac_rx_mem_rid
 operator|=
-literal|1
+literal|2
 expr_stmt|;
 name|sc
 operator|->
@@ -404,16 +497,16 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * LOOP memory region (this could be a general control region). 	 * 0x00: 32bit register to enable a Y-"lopback". 	 */
+comment|/* 	 * Interrupt handling registers. 	 * 0x00: 32/64bit register to clear (and disable) the RX interrupt. 	 * 0x08: 32/64bit register to enable or disable the RX interrupt. 	 */
 name|sc
 operator|->
-name|nf10bmac_mem_rid
+name|nf10bmac_intr_rid
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 name|sc
 operator|->
-name|nf10bmac_mem_res
+name|nf10bmac_intr_res
 operator|=
 name|bus_alloc_resource_any
 argument_list|(
@@ -424,7 +517,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|nf10bmac_mem_rid
+name|nf10bmac_intr_rid
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -433,7 +526,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|nf10bmac_mem_res
+name|nf10bmac_intr_res
 operator|==
 name|NULL
 condition|)
@@ -442,7 +535,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed to map memory for CTRL region\n"
+literal|"failed to map memory for INTR region\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -463,7 +556,7 @@ name|sc
 operator|->
 name|nf10bmac_dev
 argument_list|,
-literal|"CTRL region at mem %p-%p\n"
+literal|"INTR region at mem %p-%p\n"
 argument_list|,
 operator|(
 name|void
@@ -473,7 +566,7 @@ name|rman_get_start
 argument_list|(
 name|sc
 operator|->
-name|nf10bmac_mem_res
+name|nf10bmac_intr_res
 argument_list|)
 argument_list|,
 operator|(
@@ -485,16 +578,43 @@ name|rman_get_start
 argument_list|(
 name|sc
 operator|->
-name|nf10bmac_mem_res
+name|nf10bmac_intr_res
 argument_list|)
 operator|+
 name|rman_get_size
 argument_list|(
 name|sc
 operator|->
-name|nf10bmac_mem_res
+name|nf10bmac_intr_res
 argument_list|)
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/* (Optional) RX and TX IRQ. */
+name|sc
+operator|->
+name|nf10bmac_rx_irq_rid
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|nf10bmac_rx_irq_res
+operator|=
+name|bus_alloc_resource_any
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|nf10bmac_rx_irq_rid
+argument_list|,
+name|RF_ACTIVE
+operator||
+name|RF_SHAREABLE
 argument_list|)
 expr_stmt|;
 name|error

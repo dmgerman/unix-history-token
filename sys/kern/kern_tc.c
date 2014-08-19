@@ -887,17 +887,6 @@ name|TC_DEFAULTPERC
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.timecounter.alloweddeviation"
-argument_list|,
-operator|&
-name|tc_timepercentage
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -919,7 +908,7 @@ name|alloweddeviation
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
@@ -8116,9 +8105,18 @@ name|tc_timepercentage
 operator|=
 name|val
 expr_stmt|;
+if|if
+condition|(
+name|cold
+condition|)
+goto|goto
+name|done
+goto|;
 name|tc_adjprecision
 argument_list|()
 expr_stmt|;
+name|done
+label|:
 return|return
 operator|(
 literal|0

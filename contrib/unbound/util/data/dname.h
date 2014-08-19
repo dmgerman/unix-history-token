@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * util/data/dname.h - domain name routines  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * util/data/dname.h - domain name routines  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ directive|include
 file|"util/storage/lruhash.h"
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|sldns_buffer
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/** max number of compression ptrs to follow */
 end_comment
@@ -44,7 +50,8 @@ begin_function_decl
 name|size_t
 name|query_dname_len
 parameter_list|(
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|query
 parameter_list|)
@@ -92,7 +99,8 @@ begin_function_decl
 name|void
 name|pkt_dname_tolower
 parameter_list|(
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -130,7 +138,8 @@ begin_function_decl
 name|size_t
 name|pkt_dname_len
 parameter_list|(
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -145,7 +154,8 @@ begin_function_decl
 name|int
 name|dname_pkt_compare
 parameter_list|(
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -186,7 +196,8 @@ begin_function_decl
 name|hashvalue_t
 name|dname_pkt_hash
 parameter_list|(
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -208,7 +219,8 @@ begin_function_decl
 name|void
 name|dname_pkt_copy
 parameter_list|(
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -231,7 +243,8 @@ begin_function_decl
 name|int
 name|dname_buffer_write
 parameter_list|(
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -380,7 +393,8 @@ name|FILE
 modifier|*
 name|out
 parameter_list|,
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,

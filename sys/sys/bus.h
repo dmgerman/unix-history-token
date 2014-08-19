@@ -298,7 +298,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * @brief A device method (included mainly for compatibility with  * FreeBSD 4.x).  */
+comment|/**  * @brief A device method  */
 end_comment
 
 begin_define

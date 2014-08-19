@@ -1748,6 +1748,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* Skip initialization of globals for non-default instances. */
+if|if
+condition|(
+operator|!
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|)
+return|return;
 name|ng_btsocket_rfcomm_debug_level
 operator|=
 name|NG_BTSOCKET_WARN_LEVEL

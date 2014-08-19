@@ -1171,6 +1171,17 @@ argument_list|,
 literal|"ioctl(IOETHERSWITCHGETPORT)"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|.
+name|es_ifmr
+operator|.
+name|ifm_count
+operator|==
+literal|0
+condition|)
+return|return;
 name|subtype
 operator|=
 name|get_media_subtype

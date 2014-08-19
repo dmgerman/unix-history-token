@@ -3,6 +3,12 @@ begin_comment
 comment|/*-  * Copyright (c) 2014 Ruslan Bukin<br@bsdpad.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
 begin_function_decl
 name|void
 name|ckb_ec_intr
@@ -13,23 +19,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct
-struct|struct
-name|key
-block|{
-name|uint8_t
-name|row
-decl_stmt|;
-name|uint8_t
-name|col
-decl_stmt|;
-name|uint8_t
-name|key
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -38,687 +27,236 @@ value|75
 end_define
 
 begin_decl_stmt
-name|struct
-name|key
-name|keymap
+name|pcell_t
+name|default_keymap
 index|[
 name|KEYMAP_LEN
 index|]
 init|=
 block|{
-block|{
-literal|0x00
-block|,
-literal|0x01
-block|,
-literal|0x7d
-block|}
+literal|0x0001007d
 block|,
 comment|/* lmeta */
-block|{
-literal|0x00
-block|,
-literal|0x02
-block|,
-literal|0x3b
-block|}
+literal|0x0002003b
 block|,
 comment|/* F1 */
-block|{
-literal|0x00
-block|,
-literal|0x03
-block|,
-literal|0x30
-block|}
+literal|0x00030030
 block|,
 comment|/* B */
-block|{
-literal|0x00
-block|,
-literal|0x04
-block|,
-literal|0x44
-block|}
+literal|0x00040044
 block|,
 comment|/* F10 */
-block|{
-literal|0x00
-block|,
-literal|0x06
-block|,
-literal|0x31
-block|}
+literal|0x00060031
 block|,
 comment|/* N */
-block|{
-literal|0x00
-block|,
-literal|0x08
-block|,
-literal|0x0d
-block|}
+literal|0x0008000d
 block|,
 comment|/* = */
-block|{
-literal|0x00
-block|,
-literal|0x0a
-block|,
-literal|0x64
-block|}
+literal|0x000a0064
 block|,
 comment|/* ralt */
-block|{
-literal|0x01
-block|,
-literal|0x01
-block|,
-literal|0x01
-block|}
+literal|0x01010001
 block|,
 comment|/* escape */
-block|{
-literal|0x01
-block|,
-literal|0x02
-block|,
-literal|0x3e
-block|}
+literal|0x0102003e
 block|,
 comment|/* F4 */
-block|{
-literal|0x01
-block|,
-literal|0x03
-block|,
-literal|0x22
-block|}
+literal|0x01030022
 block|,
 comment|/* G */
-block|{
-literal|0x01
-block|,
-literal|0x04
-block|,
-literal|0x41
-block|}
+literal|0x01040041
 block|,
 comment|/* F7 */
-block|{
-literal|0x01
-block|,
-literal|0x06
-block|,
-literal|0x23
-block|}
+literal|0x01060023
 block|,
 comment|/* H */
-block|{
-literal|0x01
-block|,
-literal|0x08
-block|,
-literal|0x28
-block|}
+literal|0x01080028
 block|,
 comment|/* ' */
-block|{
-literal|0x01
-block|,
-literal|0x09
-block|,
-literal|0x43
-block|}
+literal|0x01090043
 block|,
 comment|/* F9 */
-block|{
-literal|0x01
-block|,
-literal|0x0b
-block|,
-literal|0x0e
-block|}
+literal|0x010b000e
 block|,
 comment|/* backspace */
-block|{
-literal|0x02
-block|,
-literal|0x00
-block|,
-literal|0x1d
-block|}
+literal|0x0200001d
 block|,
 comment|/* lctrl */
-block|{
-literal|0x02
-block|,
-literal|0x01
-block|,
-literal|0x0f
-block|}
+literal|0x0201000f
 block|,
 comment|/* tab */
-block|{
-literal|0x02
-block|,
-literal|0x02
-block|,
-literal|0x3d
-block|}
+literal|0x0202003d
 block|,
 comment|/* F3 */
-block|{
-literal|0x02
-block|,
-literal|0x03
-block|,
-literal|0x14
-block|}
+literal|0x02030014
 block|,
 comment|/* t */
-block|{
-literal|0x02
-block|,
-literal|0x04
-block|,
-literal|0x40
-block|}
+literal|0x02040040
 block|,
 comment|/* F6 */
-block|{
-literal|0x02
-block|,
-literal|0x05
-block|,
-literal|0x1b
-block|}
+literal|0x0205001b
 block|,
 comment|/* ] */
-block|{
-literal|0x02
-block|,
-literal|0x06
-block|,
-literal|0x15
-block|}
+literal|0x02060015
 block|,
 comment|/* y */
-block|{
-literal|0x02
-block|,
-literal|0x07
-block|,
-literal|0x56
-block|}
+literal|0x02070056
 block|,
 comment|/* 102nd */
-block|{
-literal|0x02
-block|,
-literal|0x08
-block|,
-literal|0x1a
-block|}
+literal|0x0208001a
 block|,
 comment|/* [ */
-block|{
-literal|0x02
-block|,
-literal|0x09
-block|,
-literal|0x42
-block|}
+literal|0x02090042
 block|,
 comment|/* F8 */
-block|{
-literal|0x03
-block|,
-literal|0x01
-block|,
-literal|0x29
-block|}
+literal|0x03010029
 block|,
 comment|/* grave */
-block|{
-literal|0x03
-block|,
-literal|0x02
-block|,
-literal|0x3c
-block|}
+literal|0x0302003c
 block|,
 comment|/* F2 */
-block|{
-literal|0x03
-block|,
-literal|0x03
-block|,
-literal|0x06
-block|}
+literal|0x03030006
 block|,
 comment|/* 5 */
-block|{
-literal|0x03
-block|,
-literal|0x04
-block|,
-literal|0x3f
-block|}
+literal|0x0304003f
 block|,
 comment|/* F5 */
-block|{
-literal|0x03
-block|,
-literal|0x06
-block|,
-literal|0x07
-block|}
+literal|0x03060007
 block|,
 comment|/* 6 */
-block|{
-literal|0x03
-block|,
-literal|0x08
-block|,
-literal|0x0c
-block|}
+literal|0x0308000c
 block|,
 comment|/* - */
-block|{
-literal|0x03
-block|,
-literal|0x0b
-block|,
-literal|0x2b
-block|}
+literal|0x030b002b
 block|,
 comment|/* \ */
-block|{
-literal|0x04
-block|,
-literal|0x00
-block|,
-literal|0x61
-block|}
+literal|0x04000061
 block|,
 comment|/* rctrl */
-block|{
-literal|0x04
-block|,
-literal|0x01
-block|,
-literal|0x1e
-block|}
+literal|0x0401001e
 block|,
 comment|/* a */
-block|{
-literal|0x04
-block|,
-literal|0x02
-block|,
-literal|0x20
-block|}
+literal|0x04020020
 block|,
 comment|/* d */
-block|{
-literal|0x04
-block|,
-literal|0x03
-block|,
-literal|0x21
-block|}
+literal|0x04030021
 block|,
 comment|/* f */
-block|{
-literal|0x04
-block|,
-literal|0x04
-block|,
-literal|0x1f
-block|}
+literal|0x0404001f
 block|,
 comment|/* s */
-block|{
-literal|0x04
-block|,
-literal|0x05
-block|,
-literal|0x25
-block|}
+literal|0x04050025
 block|,
 comment|/* k */
-block|{
-literal|0x04
-block|,
-literal|0x06
-block|,
-literal|0x24
-block|}
+literal|0x04060024
 block|,
 comment|/* j */
-block|{
-literal|0x04
-block|,
-literal|0x08
-block|,
-literal|0x27
-block|}
+literal|0x04080027
 block|,
 comment|/* ; */
-block|{
-literal|0x04
-block|,
-literal|0x09
-block|,
-literal|0x26
-block|}
+literal|0x04090026
 block|,
 comment|/* l */
-block|{
-literal|0x04
-block|,
-literal|0x0a
-block|,
-literal|0x2b
-block|}
+literal|0x040a002b
 block|,
 comment|/* \ */
-block|{
-literal|0x04
-block|,
-literal|0x0b
-block|,
-literal|0x1c
-block|}
+literal|0x040b001c
 block|,
 comment|/* enter */
-block|{
-literal|0x05
-block|,
-literal|0x01
-block|,
-literal|0x2c
-block|}
+literal|0x0501002c
 block|,
 comment|/* z */
-block|{
-literal|0x05
-block|,
-literal|0x02
-block|,
-literal|0x2e
-block|}
+literal|0x0502002e
 block|,
 comment|/* c */
-block|{
-literal|0x05
-block|,
-literal|0x03
-block|,
-literal|0x2f
-block|}
+literal|0x0503002f
 block|,
 comment|/* v */
-block|{
-literal|0x05
-block|,
-literal|0x04
-block|,
-literal|0x2d
-block|}
+literal|0x0504002d
 block|,
 comment|/* x */
-block|{
-literal|0x05
-block|,
-literal|0x05
-block|,
-literal|0x33
-block|}
+literal|0x05050033
 block|,
 comment|/* , */
-block|{
-literal|0x05
-block|,
-literal|0x06
-block|,
-literal|0x32
-block|}
+literal|0x05060032
 block|,
 comment|/* m */
-block|{
-literal|0x05
-block|,
-literal|0x07
-block|,
-literal|0x2a
-block|}
+literal|0x0507002a
 block|,
 comment|/* lsh */
-block|{
-literal|0x05
-block|,
-literal|0x08
-block|,
-literal|0x35
-block|}
+literal|0x05080035
 block|,
 comment|/* / */
-block|{
-literal|0x05
-block|,
-literal|0x09
-block|,
-literal|0x34
-block|}
+literal|0x05090034
 block|,
 comment|/* . */
-block|{
-literal|0x05
-block|,
-literal|0x0B
-block|,
-literal|0x39
-block|}
+literal|0x050B0039
 block|,
 comment|/* space */
-block|{
-literal|0x06
-block|,
-literal|0x01
-block|,
-literal|0x02
-block|}
+literal|0x06010002
 block|,
 comment|/* 1 */
-block|{
-literal|0x06
-block|,
-literal|0x02
-block|,
-literal|0x04
-block|}
+literal|0x06020004
 block|,
 comment|/* 3 */
-block|{
-literal|0x06
-block|,
-literal|0x03
-block|,
-literal|0x05
-block|}
+literal|0x06030005
 block|,
 comment|/* 4 */
-block|{
-literal|0x06
-block|,
-literal|0x04
-block|,
-literal|0x03
-block|}
+literal|0x06040003
 block|,
 comment|/* 2 */
-block|{
-literal|0x06
-block|,
-literal|0x05
-block|,
-literal|0x09
-block|}
+literal|0x06050009
 block|,
 comment|/* 8 */
-block|{
-literal|0x06
-block|,
-literal|0x06
-block|,
-literal|0x08
-block|}
+literal|0x06060008
 block|,
 comment|/* 7 */
-block|{
-literal|0x06
-block|,
-literal|0x08
-block|,
-literal|0x0b
-block|}
+literal|0x0608000b
 block|,
 comment|/* 0 */
-block|{
-literal|0x06
-block|,
-literal|0x09
-block|,
-literal|0x0a
-block|}
+literal|0x0609000a
 block|,
 comment|/* 9 */
-block|{
-literal|0x06
-block|,
-literal|0x0a
-block|,
-literal|0x38
-block|}
+literal|0x060a0038
 block|,
 comment|/* lalt */
-block|{
-literal|0x06
-block|,
-literal|0x0b
-block|,
-literal|0x64
-block|}
+literal|0x060b0064
 block|,
 comment|/* down */
-block|{
-literal|0x06
-block|,
-literal|0x0c
-block|,
-literal|0x62
-block|}
+literal|0x060c0062
 block|,
 comment|/* right */
-block|{
-literal|0x07
-block|,
-literal|0x01
-block|,
-literal|0x10
-block|}
+literal|0x07010010
 block|,
 comment|/* q */
-block|{
-literal|0x07
-block|,
-literal|0x02
-block|,
-literal|0x12
-block|}
+literal|0x07020012
 block|,
 comment|/* e */
-block|{
-literal|0x07
-block|,
-literal|0x03
-block|,
-literal|0x13
-block|}
+literal|0x07030013
 block|,
 comment|/* r */
-block|{
-literal|0x07
-block|,
-literal|0x04
-block|,
-literal|0x11
-block|}
+literal|0x07040011
 block|,
 comment|/* w */
-block|{
-literal|0x07
-block|,
-literal|0x05
-block|,
-literal|0x17
-block|}
+literal|0x07050017
 block|,
 comment|/* i */
-block|{
-literal|0x07
-block|,
-literal|0x06
-block|,
-literal|0x16
-block|}
+literal|0x07060016
 block|,
 comment|/* u */
-block|{
-literal|0x07
-block|,
-literal|0x07
-block|,
-literal|0x36
-block|}
+literal|0x07070036
 block|,
 comment|/* rsh */
-block|{
-literal|0x07
-block|,
-literal|0x08
-block|,
-literal|0x19
-block|}
+literal|0x07080019
 block|,
 comment|/* p */
-block|{
-literal|0x07
-block|,
-literal|0x09
-block|,
-literal|0x18
-block|}
+literal|0x07090018
 block|,
 comment|/* o */
-block|{
-literal|0x07
-block|,
-literal|0x0b
-block|,
-literal|0x5F
-block|}
+literal|0x070b005F
 block|,
 comment|/* up */
-block|{
-literal|0x07
-block|,
-literal|0x0c
-block|,
-literal|0x61
-block|}
+literal|0x070c0061
 block|,
 comment|/* left */
 block|}

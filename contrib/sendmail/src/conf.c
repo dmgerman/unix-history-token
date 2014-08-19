@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.1191 2014/01/08 17:03:14 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1191 2014-01-08 17:03:14 ca Exp $"
 argument_list|)
 end_macro
 
@@ -21104,14 +21104,14 @@ comment|/* **  SM_CLOSE_ON_EXEC -- arrange for file descriptors to be closed ** 
 name|void
 name|sm_close_on_exec
 parameter_list|(
-name|highest
-parameter_list|,
 name|lowest
+parameter_list|,
+name|highest
 parameter_list|)
 name|int
-name|highest
-decl_stmt|,
 name|lowest
+decl_stmt|,
+name|highest
 decl_stmt|;
 block|{
 if|#
@@ -24414,7 +24414,7 @@ comment|/* _FFR_TRUSTED_QF */
 if|#
 directive|if
 name|_FFR_USE_GETPWNAM_ERRNO
-comment|/* 	**  See libsm/mbdb.c: only enable this on OSs 	**  that implement the correct (POSIX) semantics. 	**  This will need to become an OS-specific #if 	**  enabled in include/sm/os/*.h. 	*/
+comment|/* 	**  See libsm/mbdb.c: only enable this on OSs 	**  that implement the correct (POSIX) semantics. 	**  This will need to become an OS-specific #if enabled 	**  in one of the headers files under include/sm/os/ . 	*/
 literal|"_FFR_USE_GETPWNAM_ERRNO"
 block|,
 endif|#

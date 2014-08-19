@@ -612,7 +612,7 @@ if|if
 condition|(
 name|b
 operator|->
-name|dmamap
+name|buf_addr
 condition|)
 name|bus_dmamap_unload
 argument_list|(

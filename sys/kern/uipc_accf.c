@@ -190,21 +190,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_DECL
-argument_list|(
-name|_net_inet
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* XXX: some header should do this for me */
-end_comment
-
-begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_net_inet
+name|_net
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -222,7 +210,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_accf
+name|_net_accf
 argument_list|,
 name|OID_AUTO
 argument_list|,

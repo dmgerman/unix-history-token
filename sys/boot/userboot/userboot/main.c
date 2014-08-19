@@ -472,7 +472,9 @@ argument_list|)
 condition|)
 return|return;
 name|interact
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* doesn't return */
 name|exit

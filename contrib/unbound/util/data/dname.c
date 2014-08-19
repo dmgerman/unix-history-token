@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * util/data/dname.h - domain name handling  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * util/data/dname.h - domain name handling  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -43,6 +43,12 @@ directive|include
 file|"util/storage/lookup3.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
+end_include
+
 begin_comment
 comment|/* determine length of a dname in buffer, no compression pointers allowed */
 end_comment
@@ -51,7 +57,7 @@ begin_function
 name|size_t
 name|query_dname_len
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|query
 parameter_list|)
@@ -71,7 +77,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|query
 argument_list|)
@@ -84,7 +90,7 @@ return|;
 comment|/* parse error, need label len */
 name|labellen
 operator|=
-name|ldns_buffer_read_u8
+name|sldns_buffer_read_u8
 argument_list|(
 name|query
 argument_list|)
@@ -126,7 +132,7 @@ name|len
 return|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|query
 argument_list|)
@@ -137,7 +143,7 @@ return|return
 literal|0
 return|;
 comment|/* parse error, need content */
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|query
 argument_list|,
@@ -492,7 +498,7 @@ begin_function
 name|void
 name|pkt_dname_tolower
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -513,7 +519,7 @@ if|if
 condition|(
 name|dname
 operator|>=
-name|ldns_buffer_end
+name|sldns_buffer_end
 argument_list|(
 name|pkt
 argument_list|)
@@ -551,7 +557,7 @@ operator|*
 name|dname
 argument_list|)
 operator|>=
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -559,7 +565,7 @@ condition|)
 return|return;
 name|dname
 operator|=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
@@ -594,7 +600,7 @@ name|dname
 operator|+
 name|lablen
 operator|>=
-name|ldns_buffer_end
+name|sldns_buffer_end
 argument_list|(
 name|pkt
 argument_list|)
@@ -629,7 +635,7 @@ if|if
 condition|(
 name|dname
 operator|>=
-name|ldns_buffer_end
+name|sldns_buffer_end
 argument_list|(
 name|pkt
 argument_list|)
@@ -649,7 +655,7 @@ begin_function
 name|size_t
 name|pkt_dname_len
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|)
@@ -682,7 +688,7 @@ block|{
 comment|/* read next label */
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -694,7 +700,7 @@ literal|0
 return|;
 name|labellen
 operator|=
-name|ldns_buffer_read_u8
+name|sldns_buffer_read_u8
 argument_list|(
 name|pkt
 argument_list|)
@@ -713,7 +719,7 @@ name|ptr
 decl_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -729,7 +735,7 @@ name|PTR_OFFSET
 argument_list|(
 name|labellen
 argument_list|,
-name|ldns_buffer_read_u8
+name|sldns_buffer_read_u8
 argument_list|(
 name|pkt
 argument_list|)
@@ -748,7 +754,7 @@ return|;
 comment|/* loop! */
 if|if
 condition|(
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -766,12 +772,12 @@ name|endpos
 condition|)
 name|endpos
 operator|=
-name|ldns_buffer_position
+name|sldns_buffer_position
 argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -819,7 +825,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -829,7 +835,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|ldns_buffer_skip
+name|sldns_buffer_skip
 argument_list|(
 name|pkt
 argument_list|,
@@ -845,7 +851,7 @@ if|if
 condition|(
 name|endpos
 condition|)
-name|ldns_buffer_set_position
+name|sldns_buffer_set_position
 argument_list|(
 name|pkt
 argument_list|,
@@ -862,7 +868,7 @@ begin_function
 name|int
 name|dname_pkt_compare
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -923,7 +929,7 @@ condition|)
 block|{
 name|d1
 operator|=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
@@ -954,7 +960,7 @@ condition|)
 block|{
 name|d2
 operator|=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
@@ -1219,7 +1225,7 @@ begin_function
 name|hashvalue_t
 name|dname_pkt_hash
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1268,7 +1274,7 @@ block|{
 comment|/* follow pointer */
 name|dname
 operator|=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
@@ -1364,7 +1370,7 @@ begin_function
 name|void
 name|dname_pkt_copy
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1408,7 +1414,7 @@ block|{
 comment|/* follow pointer */
 name|dname
 operator|=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
@@ -1512,7 +1518,8 @@ name|FILE
 modifier|*
 name|out
 parameter_list|,
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -1588,7 +1595,7 @@ return|return;
 block|}
 name|dname
 operator|=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
@@ -2221,7 +2228,7 @@ begin_function
 name|int
 name|dname_buffer_write
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -2235,7 +2242,7 @@ name|lablen
 decl_stmt|;
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -2251,7 +2258,7 @@ operator|*
 name|dname
 operator|++
 expr_stmt|;
-name|ldns_buffer_write_u8
+name|sldns_buffer_write_u8
 argument_list|(
 name|pkt
 argument_list|,
@@ -2265,7 +2272,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ldns_buffer_remaining
+name|sldns_buffer_remaining
 argument_list|(
 name|pkt
 argument_list|)
@@ -2280,7 +2287,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|pkt
 argument_list|,
@@ -2299,7 +2306,7 @@ operator|*
 name|dname
 operator|++
 expr_stmt|;
-name|ldns_buffer_write_u8
+name|sldns_buffer_write_u8
 argument_list|(
 name|pkt
 argument_list|,

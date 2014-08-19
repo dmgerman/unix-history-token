@@ -1603,10 +1603,8 @@ name|mask
 decl_stmt|,
 name|pinon
 decl_stmt|;
-name|int
-name|old
-init|=
-literal|0
+name|uint32_t
+name|oe
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -1823,10 +1821,6 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-name|old
-operator|=
-literal|1
-expr_stmt|;
 block|}
 comment|/* Disable function bits that are required */
 if|if
@@ -1868,36 +1862,8 @@ argument_list|,
 name|mask
 argument_list|)
 expr_stmt|;
-name|old
-operator|=
-literal|1
-expr_stmt|;
 block|}
-comment|/* Handle previous behaviour */
-if|if
-condition|(
-name|old
-operator|==
-literal|0
-condition|)
-block|{
-name|ar71xx_gpio_function_enable
-argument_list|(
-name|sc
-argument_list|,
-name|GPIO_FUNC_SPI_CS1_EN
-argument_list|)
-expr_stmt|;
-name|ar71xx_gpio_function_enable
-argument_list|(
-name|sc
-argument_list|,
-name|GPIO_FUNC_SPI_CS2_EN
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Configure all pins as input */
-comment|/* disable interrupts for all pins */
+comment|/* Disable interrupts for all pins. */
 name|GPIO_WRITE
 argument_list|(
 name|sc
@@ -2015,6 +1981,16 @@ name|gpio_npins
 operator|++
 expr_stmt|;
 block|}
+comment|/* Iniatilize the GPIO pins, keep the loader settings. */
+name|oe
+operator|=
+name|GPIO_READ
+argument_list|(
+name|sc
+argument_list|,
+name|AR71XX_GPIO_OE
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|gpio_pins
@@ -2113,6 +2089,16 @@ name|gp_caps
 operator|=
 name|DEFAULT_CAPS
 expr_stmt|;
+if|if
+condition|(
+name|oe
+operator|&
+operator|(
+literal|1
+operator|<<
+name|j
+operator|)
+condition|)
 name|sc
 operator|->
 name|gpio_pins
@@ -2122,27 +2108,25 @@ index|]
 operator|.
 name|gp_flags
 operator|=
-literal|0
+name|GPIO_PIN_OUTPUT
 expr_stmt|;
-name|ar71xx_gpio_pin_configure
-argument_list|(
-name|sc
-argument_list|,
-operator|&
+else|else
 name|sc
 operator|->
 name|gpio_pins
 index|[
 name|i
 index|]
-argument_list|,
-name|DEFAULT_CAPS
-argument_list|)
+operator|.
+name|gp_flags
+operator|=
+name|GPIO_PIN_INPUT
 expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
 block|}
+comment|/* Turn on the hinted pins. */
 for|for
 control|(
 name|i
@@ -2184,6 +2168,16 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|ar71xx_gpio_pin_setflags
+argument_list|(
+name|dev
+argument_list|,
+name|j
+argument_list|,
+name|GPIO_PIN_OUTPUT
+argument_list|)
+expr_stmt|;
 name|ar71xx_gpio_pin_set
 argument_list|(
 name|dev
@@ -2193,6 +2187,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|device_add_child
 argument_list|(
@@ -2261,20 +2256,6 @@ argument_list|,
 operator|(
 literal|"gpio mutex not initialized"
 operator|)
-argument_list|)
-expr_stmt|;
-name|ar71xx_gpio_function_disable
-argument_list|(
-name|sc
-argument_list|,
-name|GPIO_FUNC_SPI_CS1_EN
-argument_list|)
-expr_stmt|;
-name|ar71xx_gpio_function_disable
-argument_list|(
-name|sc
-argument_list|,
-name|GPIO_FUNC_SPI_CS2_EN
 argument_list|)
 expr_stmt|;
 name|bus_generic_detach

@@ -59,26 +59,6 @@ name|SAREA_MAX
 value|0x2000
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|SAREA_MAX
-value|0x10000
-end_define
-
-begin_comment
-comment|/* 64kB */
-end_comment
-
 begin_else
 else|#
 directive|else

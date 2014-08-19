@@ -1272,7 +1272,7 @@ block|{
 default|default:
 name|printf
 argument_list|(
-literal|"WARNING: Bogus Interrupt Polarity. Assume CONFORMS"
+literal|"WARNING: Bogus Interrupt Polarity. Assume CONFORMS\n"
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH*/
@@ -1341,7 +1341,7 @@ block|{
 default|default:
 name|printf
 argument_list|(
-literal|"WARNING: Bogus Interrupt Trigger Mode. Assume CONFORMS."
+literal|"WARNING: Bogus Interrupt Trigger Mode. Assume CONFORMS.\n"
 argument_list|)
 expr_stmt|;
 comment|/*FALLTHROUGH*/

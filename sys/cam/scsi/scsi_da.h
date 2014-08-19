@@ -558,12 +558,12 @@ end_struct
 
 begin_struct
 struct|struct
-name|scsi_verify
+name|scsi_verify_10
 block|{
 name|uint8_t
 name|opcode
 decl_stmt|;
-comment|/* VERIFY */
+comment|/* VERIFY(10) */
 name|uint8_t
 name|byte2
 decl_stmt|;
@@ -577,7 +577,7 @@ name|SVFY_RELADR
 value|0x01
 define|#
 directive|define
-name|SVFY_BYTECHK
+name|SVFY_BYTCHK
 value|0x02
 define|#
 directive|define
@@ -591,23 +591,125 @@ index|]
 decl_stmt|;
 comment|/* LBA to begin verification at */
 name|uint8_t
-name|reserved0
-index|[
-literal|1
-index|]
+name|group
 decl_stmt|;
 name|uint8_t
-name|len
+name|length
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* number of blocks to verify */
 name|uint8_t
-name|reserved1
+name|control
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|scsi_verify_12
+block|{
+name|uint8_t
+name|opcode
+decl_stmt|;
+comment|/* VERIFY(12) */
+name|uint8_t
+name|byte2
+decl_stmt|;
+name|uint8_t
+name|addr
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* LBA to begin verification at */
+name|uint8_t
+name|length
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* number of blocks to verify */
+name|uint8_t
+name|group
+decl_stmt|;
+name|uint8_t
+name|control
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|scsi_verify_16
+block|{
+name|uint8_t
+name|opcode
+decl_stmt|;
+comment|/* VERIFY(16) */
+name|uint8_t
+name|byte2
+decl_stmt|;
+name|uint8_t
+name|addr
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* LBA to begin verification at */
+name|uint8_t
+name|length
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* number of blocks to verify */
+name|uint8_t
+name|group
+decl_stmt|;
+name|uint8_t
+name|control
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|scsi_compare_and_write
+block|{
+name|uint8_t
+name|opcode
+decl_stmt|;
+comment|/* COMPARE AND WRITE */
+name|uint8_t
+name|byte2
+decl_stmt|;
+name|uint8_t
+name|addr
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* LBA to begin verification at */
+name|uint8_t
+name|reserved
 index|[
 literal|3
 index|]
+decl_stmt|;
+name|uint8_t
+name|length
+decl_stmt|;
+comment|/* number of blocks */
+name|uint8_t
+name|group
+decl_stmt|;
+name|uint8_t
+name|control
 decl_stmt|;
 block|}
 struct|;

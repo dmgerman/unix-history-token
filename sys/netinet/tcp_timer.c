@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_rss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -122,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/cc.h>
 end_include
 
@@ -135,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_rss.h>
 end_include
 
 begin_include
@@ -599,6 +617,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|per_cpu_timers
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -607,6 +645,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -629,6 +672,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -638,6 +687,124 @@ name|inp
 parameter_list|)
 value|(per_cpu_timers ? (!CPU_ABSENT(((inp)->inp_flowid % (mp_maxid+1))) ? \ 		((inp)->inp_flowid % (mp_maxid+1)) : curcpu) : 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Map the given inp to a CPU id.  *  * This queries RSS if it's compiled in, else it defaults to the current  * CPU ID.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|inp_to_cpuid
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+name|inp
+parameter_list|)
+block|{
+name|u_int
+name|cpuid
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RSS
+if|if
+condition|(
+name|per_cpu_timers
+condition|)
+block|{
+name|cpuid
+operator|=
+name|rss_hash2cpuid
+argument_list|(
+name|inp
+operator|->
+name|inp_flowid
+argument_list|,
+name|inp
+operator|->
+name|inp_flowtype
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuid
+operator|==
+name|NETISR_CPUID_NONE
+condition|)
+return|return
+operator|(
+name|curcpu
+operator|)
+return|;
+comment|/* XXX */
+else|else
+return|return
+operator|(
+name|cpuid
+operator|)
+return|;
+block|}
+else|#
+directive|else
+comment|/* Legacy, pre-RSS behaviour */
+if|if
+condition|(
+name|per_cpu_timers
+condition|)
+block|{
+comment|/* 		 * We don't have a flowid -> cpuid mapping, so cheat and 		 * just map unknown cpuids to curcpu.  Not the best, but 		 * apparently better than defaulting to swi 0. 		 */
+name|cpuid
+operator|=
+name|inp
+operator|->
+name|inp_flowid
+operator|%
+operator|(
+name|mp_maxid
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|CPU_ABSENT
+argument_list|(
+name|cpuid
+argument_list|)
+condition|)
+return|return
+operator|(
+name|cpuid
+operator|)
+return|;
+return|return
+operator|(
+name|curcpu
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* Default for RSS and non-RSS - cpuid 0 */
+else|else
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*  * Tcp protocol timeout routine called every 500 ms.  * Updates timestamps used for TCP  * causes finite state machine actions if timers expire.  */
@@ -1212,7 +1379,7 @@ name|tcp_timer_2msl
 argument_list|,
 name|tp
 argument_list|,
-name|INP_CPU
+name|inp_to_cpuid
 argument_list|(
 name|inp
 argument_list|)
@@ -1598,7 +1765,7 @@ name|tcp_timer_keep
 argument_list|,
 name|tp
 argument_list|,
-name|INP_CPU
+name|inp_to_cpuid
 argument_list|(
 name|inp
 argument_list|)
@@ -1624,7 +1791,7 @@ name|tcp_timer_keep
 argument_list|,
 name|tp
 argument_list|,
-name|INP_CPU
+name|inp_to_cpuid
 argument_list|(
 name|inp
 argument_list|)
@@ -2849,7 +3016,7 @@ decl_stmt|;
 name|int
 name|cpu
 init|=
-name|INP_CPU
+name|inp_to_cpuid
 argument_list|(
 name|inp
 argument_list|)

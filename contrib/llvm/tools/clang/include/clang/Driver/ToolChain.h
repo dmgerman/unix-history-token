@@ -1076,7 +1076,7 @@ decl_stmt|;
 comment|/// AddFastMathRuntimeIfAvailable - If a runtime library exists that sets
 comment|/// global flags for unsafe floating point math, add it and return true.
 comment|///
-comment|/// This checks for presence of the -ffast-math or -funsafe-math flags.
+comment|/// This checks for presence of the -Ofast, -ffast-math or -funsafe-math flags.
 name|virtual
 name|bool
 name|AddFastMathRuntimeIfAvailable

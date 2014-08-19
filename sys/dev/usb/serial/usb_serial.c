@@ -367,17 +367,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ucom.cons_unit"
-argument_list|,
-operator|&
-name|ucom_cons_unit
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb_ucom
@@ -386,9 +375,7 @@ name|OID_AUTO
 argument_list|,
 name|cons_unit
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ucom_cons_unit
@@ -396,17 +383,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"console unit number"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ucom.cons_subunit"
-argument_list|,
-operator|&
-name|ucom_cons_subunit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -420,9 +396,7 @@ name|OID_AUTO
 argument_list|,
 name|cons_subunit
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ucom_cons_subunit
@@ -430,17 +404,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"console subunit number"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ucom.cons_baud"
-argument_list|,
-operator|&
-name|ucom_cons_baud
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -454,9 +417,7 @@ name|OID_AUTO
 argument_list|,
 name|cons_baud
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ucom_cons_baud
@@ -957,7 +918,7 @@ name|ucom_uninit
 argument_list|,
 name|SI_SUB_KLD
 operator|-
-literal|2
+literal|3
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|,

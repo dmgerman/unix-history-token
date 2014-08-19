@@ -128,7 +128,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|2
+literal|2000
 argument_list|)
 expr_stmt|;
 comment|/* Disable the special tagging mode. */

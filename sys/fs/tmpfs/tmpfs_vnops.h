@@ -41,10 +41,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Declarations for tmpfs_vnops.c.  */
 end_comment
 
@@ -79,10 +75,6 @@ name|vop_reclaim_t
 name|tmpfs_reclaim
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_endif
 endif|#

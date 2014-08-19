@@ -1367,6 +1367,13 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
+literal|"int\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
 literal|"main(int argc, char *argv[])\n{\n"
 argument_list|)
 expr_stmt|;

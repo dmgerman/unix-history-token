@@ -74,7 +74,7 @@ begin_function_decl
 name|int
 name|gnttab_init
 parameter_list|(
-name|void
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -369,7 +369,7 @@ begin_function_decl
 name|int
 name|gnttab_resume
 parameter_list|(
-name|void
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

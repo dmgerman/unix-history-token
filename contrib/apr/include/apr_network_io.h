@@ -186,6 +186,11 @@ directive|define
 name|APR_TCP_DEFER_ACCEPT
 value|32768
 comment|/**< Delay accepting of new connections                                      * until data is available.                                     * @see apr_socket_accept_filter                                     */
+define|#
+directive|define
+name|APR_SO_BROADCAST
+value|65536
+comment|/**< Allow broadcast                                     */
 comment|/** @} */
 comment|/** Define what type of socket shutdown should occur. */
 typedef|typedef
@@ -479,7 +484,7 @@ decl_stmt|;
 block|}
 struct|;
 comment|/* function definitions */
-comment|/**  * Create a socket.  * @param new_sock The new socket that has been set up.  * @param family The address family of the socket (e.g., APR_INET).  * @param type The type of the socket (e.g., SOCK_STREAM).  * @param protocol The protocol of the socket (e.g., APR_PROTO_TCP).  * @param cont The pool for the apr_socket_t and associated storage.  */
+comment|/**  * Create a socket.  * @param new_sock The new socket that has been set up.  * @param family The address family of the socket (e.g., APR_INET).  * @param type The type of the socket (e.g., SOCK_STREAM).  * @param protocol The protocol of the socket (e.g., APR_PROTO_TCP).  * @param cont The pool for the apr_socket_t and associated storage.  * @note The pool will be used by various functions that operate on the  *       socket. The caller must ensure that it is not used by other threads  *       at the same time.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -549,7 +554,7 @@ argument_list|,
 argument|apr_int32_t backlog
 argument_list|)
 empty_stmt|;
-comment|/**  * Accept a new connection request  * @param new_sock A copy of the socket that is connected to the socket that  *                 made the connection request.  This is the socket which should  *                 be used for all future communication.  * @param sock The socket we are listening on.  * @param connection_pool The pool for the new socket.  */
+comment|/**  * Accept a new connection request  * @param new_sock A copy of the socket that is connected to the socket that  *                 made the connection request.  This is the socket which should  *                 be used for all future communication.  * @param sock The socket we are listening on.  * @param connection_pool The pool for the new socket.  * @note The pool will be used by various functions that operate on the  *       socket. The caller must ensure that it is not used by other threads  *       at the same time.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -622,7 +627,7 @@ argument_list|,
 argument|apr_pool_t *p
 argument_list|)
 empty_stmt|;
-comment|/**  * Look up the host name from an apr_sockaddr_t.  * @param hostname The hostname.  * @param sa The apr_sockaddr_t.  * @param flags Special processing flags.  */
+comment|/**  * Look up the host name from an apr_sockaddr_t.  * @param hostname The hostname.  * @param sa The apr_sockaddr_t.  * @param flags Special processing flags.  * @remark Results can vary significantly between platforms  * when processing wildcard socket addresses.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -755,7 +760,7 @@ operator|*
 name|len
 argument_list|)
 expr_stmt|;
-comment|/**  * Send multiple packets of data over a network.  * @param sock The socket to send the data over.  * @param vec The array of iovec structs containing the data to send   * @param nvec The number of iovec structs in the array  * @param len Receives the number of bytes actually written  * @remark  *<PRE>  * This functions acts like a blocking write by default.  To change   * this behavior, use apr_socket_timeout_set() or the APR_SO_NONBLOCK  * socket option.  * The number of bytes actually sent is stored in argument 3.  *  * It is possible for both bytes to be sent and an error to be returned.  *  * APR_EINTR is never returned.  *</PRE>  */
+comment|/**  * Send multiple buffers over a network.  * @param sock The socket to send the data over.  * @param vec The array of iovec structs containing the data to send   * @param nvec The number of iovec structs in the array  * @param len Receives the number of bytes actually written  * @remark  *<PRE>  * This functions acts like a blocking write by default.  To change   * this behavior, use apr_socket_timeout_set() or the APR_SO_NONBLOCK  * socket option.  * The number of bytes actually sent is stored in argument 4.  *  * It is possible for both bytes to be sent and an error to be returned.  *  * APR_EINTR is never returned.  *</PRE>  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -930,7 +935,7 @@ operator|*
 name|atmark
 argument_list|)
 expr_stmt|;
-comment|/**  * Return an address associated with a socket; either the address to  * which the socket is bound locally or the the address of the peer  * to which the socket is connected.  * @param sa The returned apr_sockaddr_t.  * @param which Whether to retrieve the local or remote address  * @param sock The socket to use  */
+comment|/**  * Return an address associated with a socket; either the address to  * which the socket is bound locally or the address of the peer  * to which the socket is connected.  * @param sa The returned apr_sockaddr_t.  * @param which Whether to retrieve the local or remote address  * @param sock The socket to use  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -991,6 +996,19 @@ specifier|const
 name|apr_sockaddr_t
 operator|*
 name|addr2
+argument_list|)
+expr_stmt|;
+comment|/**  * See if the IP address in an APR socket address refers to the wildcard  * address for the protocol family (e.g., INADDR_ANY for IPv4).  *  * @param addr The APR socket address to examine.  * @remark The return value will be non-zero if the address is  * initialized and is the wildcard address.  */
+name|APR_DECLARE
+argument_list|(
+argument|int
+argument_list|)
+name|apr_sockaddr_is_wildcard
+argument_list|(
+specifier|const
+name|apr_sockaddr_t
+operator|*
+name|addr
 argument_list|)
 expr_stmt|;
 comment|/** * Return the type of the socket. * @param sock The socket to query. * @param type The returned type (e.g., SOCK_STREAM). */

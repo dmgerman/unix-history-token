@@ -727,7 +727,7 @@ decl_stmt|;
 comment|/* Defaults */
 name|minr
 operator|=
-literal|'a'
+literal|'b'
 expr_stmt|;
 name|logr
 operator|=

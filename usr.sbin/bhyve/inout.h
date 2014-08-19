@@ -27,37 +27,15 @@ name|vmctx
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vm_exit
+struct_decl|;
+end_struct_decl
+
 begin_comment
-comment|/* Handler return values. */
+comment|/*  * inout emulation handlers return 0 on success and -1 on failure.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|INOUT_ERROR
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|INOUT_OK
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|INOUT_RESET
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|INOUT_POWEROFF
-value|2
-end_define
 
 begin_typedef
 typedef|typedef
@@ -197,18 +175,10 @@ parameter_list|,
 name|int
 name|vcpu
 parameter_list|,
-name|int
-name|in
-parameter_list|,
-name|int
-name|port
-parameter_list|,
-name|int
-name|bytes
-parameter_list|,
-name|uint32_t
+name|struct
+name|vm_exit
 modifier|*
-name|eax
+name|vmexit
 parameter_list|,
 name|int
 name|strict

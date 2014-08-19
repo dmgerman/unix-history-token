@@ -782,6 +782,13 @@ name|ucl_variable
 modifier|*
 name|variables
 decl_stmt|;
+name|ucl_variable_handler
+name|var_handler
+decl_stmt|;
+name|void
+modifier|*
+name|var_data
+decl_stmt|;
 name|UT_string
 modifier|*
 name|err
@@ -1527,6 +1534,48 @@ name|hashlin
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * Get standard emitter context for a specified emit_type  * @param emit_type type of emitter  * @return context or NULL if input is invalid  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ucl_emit_get_standard_context
+parameter_list|(
+name|enum
+name|ucl_emitter
+name|emit_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Serialise string  * @param str string to emit  * @param buf target buffer  */
+end_comment
+
+begin_function_decl
+name|void
+name|ucl_elt_string_write_json
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/**  * Emit a single object to string  * @param obj  * @return  */

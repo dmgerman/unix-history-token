@@ -45,6 +45,12 @@ directive|include
 file|<net/vnet.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_decl_stmt
 name|uma_zone_t
 name|sdp_zone

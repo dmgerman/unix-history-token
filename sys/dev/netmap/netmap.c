@@ -867,6 +867,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* stop or enable all the rings of na */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1036,6 +1040,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Convenience function used in drivers.  Waits for current txsync()s/rxsync()s  * to finish and prevents any new one from starting.  Call this before turning  * netmap mode off, or before removing the harware rings (e.g., on module  * onload).  As a rule of thumb for linux drivers, this should be placed near  * each napi_disable().  */
+end_comment
+
 begin_function
 name|void
 name|netmap_disable_all_rings
@@ -1056,6 +1064,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Convenience function used in drivers.  Re-enables rxsync and txsync on the  * adapter's rings In linux drivers, this should be placed near each  * napi_enable().  */
+end_comment
 
 begin_function
 name|void
@@ -1494,6 +1506,10 @@ begin_comment
 comment|/*  * Fetch configuration from the device, to cope with dynamic  * reconfigurations after loading the module.  */
 end_comment
 
+begin_comment
+comment|/* call with NMG_LOCK held */
+end_comment
+
 begin_function
 name|int
 name|netmap_update_config
@@ -1806,6 +1822,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* kring->nm_sync callback for the host tx ring */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1825,6 +1845,7 @@ name|void
 operator|)
 name|flags
 expr_stmt|;
+comment|/* unused */
 name|netmap_txsync_to_host
 argument_list|(
 name|kring
@@ -1837,6 +1858,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* kring->nm_sync callback for the host rx ring */
+end_comment
 
 begin_function
 specifier|static
@@ -1857,6 +1882,7 @@ name|void
 operator|)
 name|flags
 expr_stmt|;
+comment|/* unused */
 name|netmap_rxsync_from_host
 argument_list|(
 name|kring
@@ -1876,6 +1902,10 @@ end_function
 
 begin_comment
 comment|/* create the krings array and initialize the fields common to all adapters.  * The array layout is this:  *  *                    +----------+  * na->tx_rings ----->|          | \  *                    |          |  } na->num_tx_ring  *                    |          | /  *                    +----------+  *                    |          |    host tx kring  * na->rx_rings ----> +----------+  *                    |          | \  *                    |          |  } na->num_rx_rings  *                    |          | /  *                    +----------+  *                    |          |    host rx kring  *                    +----------+  * na->tailroom ----->|          | \  *                    |          |  } tailroom bytes  *                    |          | /  *                    +----------+  *  * Note: for compatibility, host krings are created even when not needed.  * The tailroom space is currently used by vale ports for allocating leases.  */
+end_comment
+
+begin_comment
+comment|/* call with NMG_LOCK held */
 end_comment
 
 begin_function
@@ -2405,6 +2435,10 @@ begin_comment
 comment|/* undo the actions performed by netmap_krings_create */
 end_comment
 
+begin_comment
+comment|/* call with NMG_LOCK held */
+end_comment
+
 begin_function
 name|void
 name|netmap_krings_delete
@@ -2477,6 +2511,10 @@ begin_comment
 comment|/*  * Destructor for NIC ports. They also have an mbuf queue  * on the rings connected to the host so we need to purge  * them first.  */
 end_comment
 
+begin_comment
+comment|/* call with NMG_LOCK held */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2533,6 +2571,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* create a new netmap_if for a newly registered fd.  * If this is the first registration of the adapter,  * also create the netmap rings and their in-kernel view,  * the netmap krings.  */
+end_comment
+
+begin_comment
+comment|/* call with NMG_LOCK held */
+end_comment
+
 begin_function
 specifier|static
 name|struct
@@ -2575,9 +2621,11 @@ name|na
 operator|->
 name|active_fds
 condition|)
+comment|/* already registered */
 goto|goto
 name|final
 goto|;
+comment|/* create and init the krings arrays. 	 * Depending on the adapter, this may also create 	 * the netmap rings themselves 	 */
 if|if
 condition|(
 name|na
@@ -2590,6 +2638,7 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
+comment|/* create all missing netmap rings */
 if|if
 condition|(
 name|netmap_mem_rings_create
@@ -2602,6 +2651,7 @@ name|cleanup
 goto|;
 name|final
 label|:
+comment|/* in all cases, create a new netmap if */
 name|nifp
 operator|=
 name|netmap_mem_if_new
@@ -2656,7 +2706,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* grab a reference to the memory allocator, if we don't have one already.  The  * reference is taken from the netmap_adapter registered with the priv.  *  */
+comment|/* grab a reference to the memory allocator, if we don't have one already.  The  * reference is taken from the netmap_adapter registered with the priv.  */
+end_comment
+
+begin_comment
+comment|/* call with NMG_LOCK held */
 end_comment
 
 begin_function
@@ -2765,6 +2819,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* call with NMG_LOCK *not* held */
+end_comment
+
 begin_function
 name|int
 name|netmap_get_memory
@@ -2797,6 +2855,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* call with NMG_LOCK held */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2817,6 +2879,10 @@ name|NULL
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* call with NMG_LOCK held */
+end_comment
 
 begin_function
 specifier|static
@@ -2971,6 +3037,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* call with NMG_LOCK held */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -3006,6 +3076,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* call with NMG_LOCK held */
+end_comment
 
 begin_function
 specifier|static
@@ -3044,7 +3118,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * returns 1 if this is the last instance and we can free priv  */
+comment|/*  * Destructor of the netmap_priv_d, called when the fd has  * no active open() and mmap(). Also called in error paths.  *  * returns 1 if this is the last instance and we can free priv  */
+end_comment
+
+begin_comment
+comment|/* call with NMG_LOCK held */
 end_comment
 
 begin_function
@@ -3166,6 +3244,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* call with NMG_LOCK *not* held */
+end_comment
 
 begin_function
 name|void
@@ -3747,6 +3829,10 @@ name|NS_BUF_CHANGED
 expr_stmt|;
 name|rdst
 operator|->
+name|head
+operator|=
+name|rdst
+operator|->
 name|cur
 operator|=
 name|nm_next
@@ -3909,7 +3995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rxsync backend for packets coming from the host stack.  * They have been put in kring->rx_queue by netmap_transmit().  * We protect access to the kring using kring->rx_queue.lock  *  * This routine also does the selrecord if called from the poll handler  * (we know because td != NULL).  *  * NOTE: on linux, selrecord() is defined as a macro and uses pwait  *     as an additional hidden argument.  * returns the number of packets delivered to tx queues in  * transparent mode, or a negative value if error  */
+comment|/*  * rxsync backend for packets coming from the host stack.  * They have been put in kring->rx_queue by netmap_transmit().  * We protect access to the kring using kring->rx_queue.lock  *  * returns the number of packets delivered to tx queues in  * transparent mode, or a negative value if error  */
 end_comment
 
 begin_function
@@ -4004,12 +4090,9 @@ name|void
 operator|)
 name|td
 expr_stmt|;
-name|mtx_lock
+name|mbq_lock
 argument_list|(
-operator|&
 name|q
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 comment|/* First part: import newly received packets */
@@ -4215,36 +4298,9 @@ argument_list|(
 name|kring
 argument_list|)
 expr_stmt|;
-comment|/* access copies of cur,tail in the kring */
-if|if
-condition|(
-name|kring
-operator|->
-name|rcur
-operator|==
-name|kring
-operator|->
-name|rtail
-operator|&&
-name|td
-condition|)
-comment|/* no bufs available */
-name|selrecord
+name|mbq_unlock
 argument_list|(
-name|td
-argument_list|,
-operator|&
-name|kring
-operator|->
-name|si
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
 name|q
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -4577,6 +4633,7 @@ comment|/* valid match in netmap_get_bdg_na() */
 goto|goto
 name|pipes
 goto|;
+comment|/* 	 * This must be a hardware na, lookup the name in the system. 	 * Note that by hardware we actually mean "it shows up in ifconfig". 	 * This may still be a tap, a veth/epair, or even a 	 * persistent VALE port. 	 */
 name|ifp
 operator|=
 name|ifunit_ref
@@ -4643,6 +4700,7 @@ argument_list|)
 expr_stmt|;
 name|pipes
 label|:
+comment|/* 	 * If we are opening a pipe whose parent was not in netmap mode, 	 * we have to allocate the pipe array now. 	 * XXX get rid of this clumsiness (2014-03-15) 	 */
 name|error
 operator|=
 name|netmap_pipe_alloc
@@ -4677,6 +4735,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* allow live unloading of drivers modules */
 return|return
 name|error
 return|;
@@ -6225,6 +6284,7 @@ argument_list|,
 name|na
 argument_list|)
 expr_stmt|;
+comment|/* Allocate a netmap_if and, if necessary, all the netmap_ring's */
 if|if
 condition|(
 name|nifp
@@ -6233,7 +6293,6 @@ name|NULL
 condition|)
 block|{
 comment|/* allocation failed */
-comment|/* we should drop the allocator, but only 		 * if we were the ones who grabbed it 		 */
 name|error
 operator|=
 name|ENOMEM
@@ -6260,7 +6319,8 @@ comment|/* was already set */
 block|}
 else|else
 block|{
-comment|/* Otherwise set the card in netmap mode 		 * and make it use the shared buffers. 		 * 		 * do not core lock because the race is harmless here, 		 * there cannot be any traffic to netmap_transmit() 		 */
+comment|/* Otherwise set the card in netmap mode 		 * and make it use the shared buffers. 		 */
+comment|/* cache the allocator info in the na */
 name|na
 operator|->
 name|na_lut
@@ -6350,6 +6410,7 @@ name|np_na
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* we should drop the allocator, but only 		 * if we were the ones who grabbed it 		 */
 if|if
 condition|(
 name|need_mem
@@ -8058,6 +8119,7 @@ name|kring
 argument_list|)
 condition|)
 block|{
+comment|/* either busy or stopped 				 * XXX if the ring is stopped, sleeping would 				 * be better. In current code, however, we only 				 * stop the rings for brief intervals (2014-03-14) 				 */
 if|if
 condition|(
 name|netmap_verbose
@@ -8215,7 +8277,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* transparent mode */
-comment|/* two rounds here to for race avoidance */
+comment|/* two rounds here for race avoidance */
 name|do_retry_rx
 label|:
 for|for
@@ -8276,7 +8338,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * transparent mode support: collect packets 			 * from the rxring(s). 			 * XXX NR_FORWARD should only be read on 			 * physical or NIC ports 			 */
+comment|/* 			 * transparent mode support: collect packets 			 * from the rxring(s). 			 */
 if|if
 condition|(
 name|netmap_fwd
@@ -8427,9 +8489,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|check_all_rx
-operator|&&
-operator|(
 name|netmap_fwd
 operator|||
 name|kring
@@ -8439,19 +8498,8 @@ operator|->
 name|flags
 operator|&
 name|NR_FORWARD
-operator|)
 condition|)
 block|{
-comment|/* XXX fix to use kring fields */
-if|if
-condition|(
-name|nm_ring_empty
-argument_list|(
-name|kring
-operator|->
-name|ring
-argument_list|)
-condition|)
 name|send_down
 operator|=
 name|netmap_rxsync_from_host
@@ -8465,18 +8513,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|nm_ring_empty
-argument_list|(
+name|send_down
+operator|&&
+operator|(
+name|netmap_no_timestamp
+operator|==
+literal|0
+operator|||
 name|kring
 operator|->
 name|ring
-argument_list|)
+operator|->
+name|flags
+operator|&
+name|NR_TIMESTAMP
+operator|)
 condition|)
-name|revents
-operator||=
-name|want_rx
+block|{
+name|microtime
+argument_list|(
+operator|&
+name|kring
+operator|->
+name|ring
+operator|->
+name|ts
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -8537,7 +8601,7 @@ name|do_retry_rx
 goto|;
 block|}
 block|}
-comment|/* 	 * Transparent mode: marked bufs on rx rings between 	 * kring->nr_hwcur and ring->head 	 * are passed to the other endpoint. 	 *  	 * In this mode we also scan the sw rxring, which in 	 * turn passes packets up. 	 * 	 * XXX Transparent mode at the moment requires to bind all  	 * rings to a single file descriptor. 	 */
+comment|/* 	 * Transparent mode: marked bufs on rx rings between 	 * kring->nr_hwcur and ring->head 	 * are passed to the other endpoint. 	 * 	 * In this mode we also scan the sw rxring, which in 	 * turn passes packets up. 	 * 	 * XXX Transparent mode at the moment requires to bind all  	 * rings to a single file descriptor. 	 */
 if|if
 condition|(
 name|q
@@ -8577,6 +8641,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* default notify callback */
+end_comment
 
 begin_function
 specifier|static
@@ -8629,6 +8697,7 @@ argument_list|,
 name|PI_NET
 argument_list|)
 expr_stmt|;
+comment|/* optimization: avoid a wake up on the global 		 * queue if nobody has registered for more 		 * than one ring 		 */
 if|if
 condition|(
 name|na
@@ -8668,6 +8737,7 @@ argument_list|,
 name|PI_NET
 argument_list|)
 expr_stmt|;
+comment|/* optimization: same as above */
 if|if
 condition|(
 name|na
@@ -8694,7 +8764,7 @@ block|}
 end_function
 
 begin_comment
-comment|// XXX check handling of failures
+comment|/* called by all routines that create netmap_adapters.  * Attach na to the ifp (if any) and provide defaults  * for optional callbacks. Defaults assume that we  * are creating an hardware netmap_adapter.  */
 end_comment
 
 begin_function
@@ -8789,6 +8859,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* we assume that we have been called by a driver, 		 * since other port types all provide their own 		 * nm_krings_create 		 */
 name|na
 operator|->
 name|nm_krings_create
@@ -8843,6 +8914,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* standard cleanup, called by all destructors */
+end_comment
+
 begin_function
 name|void
 name|netmap_detach_common
@@ -8858,6 +8933,8 @@ condition|(
 name|na
 operator|->
 name|ifp
+operator|!=
+name|NULL
 condition|)
 name|WNA
 argument_list|(
@@ -9110,12 +9187,36 @@ directive|endif
 comment|/* linux */
 name|D
 argument_list|(
-literal|"success for %s"
+literal|"success for %s tx %d/%d rx %d/%d queues/slots"
 argument_list|,
 name|NM_IFPNAME
 argument_list|(
 name|ifp
 argument_list|)
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_tx_rings
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_tx_desc
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_rx_rings
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_rx_desc
 argument_list|)
 expr_stmt|;
 return|return
@@ -9134,6 +9235,10 @@ argument_list|,
 name|hwna
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
 name|netmap_detach
 argument_list|(
 name|ifp
@@ -9246,6 +9351,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* nm_krings_create callback for all hardware native adapters */
+end_comment
+
 begin_function
 name|int
 name|netmap_hw_krings_create
@@ -9306,7 +9415,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free the allocated memory linked to the given ``netmap_adapter``  * object.  */
+comment|/*  * Called on module unload by the netmap-enabled drivers  */
 end_comment
 
 begin_function
@@ -9518,12 +9627,9 @@ name|done
 goto|;
 block|}
 comment|/* protect against rxsync_from_host(), netmap_sw_to_nic() 	 * and maybe other instances of netmap_transmit (the latter 	 * not possible on Linux). 	 * Also avoid overflowing the queue. 	 */
-name|mtx_lock
+name|mbq_lock
 argument_list|(
-operator|&
 name|q
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|space
@@ -9635,12 +9741,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|mbq_unlock
 argument_list|(
-operator|&
 name|q
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 name|done
@@ -9670,6 +9773,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* this is normally netmap_notify(), but for nics 	 * connected to a bridge it is netmap_bwrap_intr_notify(), 	 * that possibly forwards the frames through the switch 	 */
 return|return
 operator|(
 name|error

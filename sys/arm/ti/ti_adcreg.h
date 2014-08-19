@@ -382,6 +382,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ADC_STEPCFG8
+value|0x09c
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADC_STEPDLY8
+value|0x0a0
+end_define
+
+begin_define
+define|#
+directive|define
 name|ADC_STEP_DIFF_CNTRL
 value|(1<< 25)
 end_define

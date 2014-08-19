@@ -25,11 +25,17 @@ directive|define
 name|_KERNEL
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|__FreeBSD_version
+end_undef
+
 begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1000000
+value|1100000
 end_define
 
 begin_include
@@ -78,6 +84,13 @@ parameter_list|(
 modifier|...
 parameter_list|)
 value|do { printf("USB PANIC: " __VA_ARGS__); while (1) ; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|rebooting
+value|0
 end_define
 
 begin_define
@@ -410,12 +423,24 @@ name|hz
 value|1000
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|PAGE_SIZE
+end_undef
+
 begin_define
 define|#
 directive|define
 name|PAGE_SIZE
 value|4096
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|MIN
+end_undef
 
 begin_define
 define|#
@@ -428,6 +453,12 @@ name|b
 parameter_list|)
 value|(((a)< (b)) ? (a) : (b))
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
 
 begin_define
 define|#
@@ -445,6 +476,13 @@ begin_define
 define|#
 directive|define
 name|MTX_DEF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTX_SPIN
 value|0
 end_define
 
@@ -499,12 +537,24 @@ name|CALLOUT_RETURNUNLOCKED
 value|0x1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|va_list
+end_undef
+
 begin_define
 define|#
 directive|define
 name|va_list
 value|__builtin_va_list
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|va_size
+end_undef
 
 begin_define
 define|#
@@ -515,6 +565,12 @@ name|type
 parameter_list|)
 value|__builtin_va_size(type)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|va_start
+end_undef
 
 begin_define
 define|#
@@ -528,6 +584,12 @@ parameter_list|)
 value|__builtin_va_start(ap, last)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|va_end
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -537,6 +599,12 @@ name|ap
 parameter_list|)
 value|__builtin_va_end(ap)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|va_arg
+end_undef
 
 begin_define
 define|#
@@ -743,6 +811,18 @@ name|usb_process
 struct_decl|;
 end_struct_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STANDARD_DEFS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_UINT8_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -750,6 +830,12 @@ name|char
 name|uint8_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_INT8_T_DECLARED
+end_define
 
 begin_typedef
 typedef|typedef
@@ -759,6 +845,12 @@ name|int8_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_UINT16_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -766,6 +858,12 @@ name|short
 name|uint16_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_INT16_T_DECLARED
+end_define
 
 begin_typedef
 typedef|typedef
@@ -775,6 +873,12 @@ name|int16_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_UINT32_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -783,6 +887,12 @@ name|uint32_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_INT32_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|signed
@@ -790,6 +900,12 @@ name|int
 name|int32_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_UINT64_T_DECLARED
+end_define
 
 begin_typedef
 typedef|typedef
@@ -800,76 +916,18 @@ name|uint64_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_INT16_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|signed
 name|long
 name|long
 name|int64_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|bus_size_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|size_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|u_long
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|bus_dmamap_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|bus_dma_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|bus_space_tag_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint8_t
-modifier|*
-name|bus_space_handle_t
 typedef|;
 end_typedef
 
@@ -902,11 +960,31 @@ name|caddr_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|_UINTPTR_T_DECLARED
+end_define
+
 begin_typedef
 typedef|typedef
 name|unsigned
 name|long
-name|__uintptr_t
+name|uintptr_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|size_t
 typedef|;
 end_typedef
 
@@ -914,7 +992,60 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|long
-name|uintptr_t
+name|u_long
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|bus_addr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|bus_size_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|bus_dmamap_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|bus_dma_tag_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|bus_space_tag_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+modifier|*
+name|bus_space_handle_t
 typedef|;
 end_typedef
 
@@ -1023,6 +1154,26 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|mtx_lock_spin
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_lock(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_unlock_spin
+parameter_list|(
+name|x
+parameter_list|)
+value|mtx_unlock(x)
+end_define
 
 begin_function_decl
 name|int
@@ -1445,7 +1596,7 @@ begin_typedef
 typedef|typedef
 name|void
 function_decl|(
-name|intr_fn_t
+name|driver_intr_t
 function_decl|)
 parameter_list|(
 name|void
@@ -1454,6 +1605,41 @@ name|arg
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|driver_filter_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|FILTER_STRAY
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILTER_HANDLED
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILTER_SCHEDULE_THREAD
+value|0x04
+end_define
 
 begin_typedef
 typedef|typedef
@@ -1641,7 +1827,11 @@ name|void
 modifier|*
 name|dev_aux
 decl_stmt|;
-name|intr_fn_t
+name|driver_filter_t
+modifier|*
+name|dev_irq_filter
+decl_stmt|;
+name|driver_intr_t
 modifier|*
 name|dev_irq_fn
 decl_stmt|;
@@ -1901,13 +2091,14 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|intr_fn_t
+name|driver_filter_t
 modifier|*
-name|fn
+parameter_list|,
+name|driver_intr_t
+modifier|*
 parameter_list|,
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2682,6 +2873,12 @@ begin_comment
 comment|/* MALLOC API */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|malloc
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -2705,6 +2902,12 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_undef
+undef|#
+directive|undef
+name|free
+end_undef
 
 begin_define
 define|#
@@ -2756,6 +2959,12 @@ end_function_decl
 begin_comment
 comment|/* ENDIANNESS */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ENDIAN_DEFS
+end_ifndef
 
 begin_comment
 comment|/* Assume little endian */
@@ -2840,6 +3049,22 @@ name|x
 parameter_list|)
 value|((uint32_t)(x))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* USB */

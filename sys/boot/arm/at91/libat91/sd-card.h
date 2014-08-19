@@ -15,22 +15,9 @@ directive|define
 name|__SD_CARD_H
 end_define
 
-begin_function_decl
-name|int
-name|MCI_write
-parameter_list|(
-name|unsigned
-name|dest
-parameter_list|,
-name|char
-modifier|*
-name|source
-parameter_list|,
-name|unsigned
-name|length
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* MCI_read() is the original read function, taking a byte offset and byte  * count.  It is preserved to support existing customized boot code that still  * refers to it; it will work fine even on SDHC cards as long as the kernel and  * the metadata for locating it all exist within the first 4GB of the card.  *  * MCI_readblocks() is the new read function, taking offset and length in terms  * of block counts (where the SD spec defines a block as 512 bytes), allowing  * the kernel and filesystem metadata to be located anywhere on an SDHC card.  *  * Returns 0 on success, non-zero on failure.  */
+end_comment
 
 begin_function_decl
 name|int
@@ -41,7 +28,7 @@ modifier|*
 name|dest
 parameter_list|,
 name|unsigned
-name|source
+name|bytenum
 parameter_list|,
 name|unsigned
 name|length
@@ -51,9 +38,44 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|MCI_readblocks
+parameter_list|(
+name|char
+modifier|*
+name|dest
+parameter_list|,
+name|unsigned
+name|blknum
+parameter_list|,
+name|unsigned
+name|blkcount
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* sdcard_init() - get things set up to read from an SD or SDHC card.  *  * Returns 0 on failure, non-zero on success.  */
+end_comment
+
+begin_function_decl
+name|int
 name|sdcard_init
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* By default sdcard_init() sets things up for a 1-wire interface to the  * SD card.  Calling sdcard_4wire(true) after sdcard_init() allows customized  * boot code to change to 4-bit transfers when the hardware supports it.  *  * Returns 0 on failure, non-zero on success.  */
+end_comment
+
+begin_function_decl
+name|int
+name|sdcard_use4wire
+parameter_list|(
+name|int
+name|use4wire
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -248,9 +248,9 @@ if|if
 condition|(
 name|dma
 operator|->
-name|map
+name|paddr
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|bus_dmamap_sync
@@ -279,6 +279,12 @@ operator|->
 name|map
 argument_list|)
 expr_stmt|;
+name|dma
+operator|->
+name|paddr
+operator|=
+literal|0
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -303,12 +309,6 @@ name|dma
 operator|->
 name|map
 argument_list|)
-expr_stmt|;
-name|dma
-operator|->
-name|map
-operator|=
-name|NULL
 expr_stmt|;
 name|dma
 operator|->

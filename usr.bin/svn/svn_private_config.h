@@ -358,7 +358,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"subversion 1.8.8"
+value|"subversion 1.8.9"
 end_define
 
 begin_comment
@@ -391,7 +391,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.8.8"
+value|"1.8.9"
 end_define
 
 begin_comment

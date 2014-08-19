@@ -854,9 +854,7 @@ begin_struct
 struct|struct
 name|adapter
 block|{
-name|struct
-name|ifnet
-modifier|*
+name|if_t
 name|ifp
 decl_stmt|;
 if|#

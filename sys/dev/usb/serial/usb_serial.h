@@ -784,7 +784,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|SYSUNINIT(var, SI_SUB_KLD - 3, SI_ORDER_ANY, ucom_drain_all, 0)
+value|SYSUNINIT(var, SI_SUB_KLD - 2, SI_ORDER_ANY, ucom_drain_all, 0)
 end_define
 
 begin_define

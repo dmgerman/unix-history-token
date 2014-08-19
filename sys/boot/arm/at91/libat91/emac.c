@@ -392,7 +392,7 @@ operator|&
 name|AT91C_EMAC_BNQ
 operator|)
 condition|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|AT91C_EMAC_TSR
 operator||=
@@ -724,7 +724,7 @@ operator|&
 name|AT91C_EMAC_BNQ
 operator|)
 condition|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|AT91C_EMAC_TSR
 operator||=

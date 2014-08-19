@@ -611,7 +611,7 @@ name|OID_AUTO
 argument_list|,
 name|fallback_brand
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|__elfN
@@ -631,25 +631,6 @@ name|__ELF_WORD_SIZE
 argument_list|)
 argument_list|)
 literal|" brand of last resort"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.elf"
-name|__XSTRING
-argument_list|(
-name|__ELF_WORD_SIZE
-argument_list|)
-literal|".fallback_brand"
-argument_list|,
-operator|&
-name|__elfN
-argument_list|(
-name|fallback_brand
-argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -777,11 +758,6 @@ directive|if
 name|defined
 argument_list|(
 name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
 argument_list|)
 end_if
 
@@ -11534,11 +11510,6 @@ directive|if
 name|defined
 argument_list|(
 name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
 argument_list|)
 if|if
 condition|(

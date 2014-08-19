@@ -29,7 +29,7 @@ comment|/*   * OUIs are most often used to uniquely identify network interfaces 
 end_comment
 
 begin_comment
-comment|/* Allocate 64K to bhyve */
+comment|/* Allocate 20 bits to bhyve */
 end_comment
 
 begin_define
@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|OUI_FREEBSD_BHYVE_HIGH
-value|OUI_FREEBSD(0x00ffff)
+value|OUI_FREEBSD(0x0fffff)
 end_define
 
 end_unit

@@ -191,6 +191,10 @@ name|mtx
 name|bus_mtx
 decl_stmt|;
 name|struct
+name|mtx
+name|bus_spin_lock
+decl_stmt|;
+name|struct
 name|usb_xfer_queue
 name|intr_q
 decl_stmt|;

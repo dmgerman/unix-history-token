@@ -192,6 +192,15 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|vty_enabled
+argument_list|(
+name|VTY_VT
+argument_list|)
+condition|)
+return|return;
 name|make_dev
 argument_list|(
 operator|&

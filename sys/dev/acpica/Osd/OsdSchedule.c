@@ -127,17 +127,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.acpi.max_tasks"
-argument_list|,
-operator|&
-name|acpi_max_tasks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_acpi
@@ -170,17 +159,6 @@ init|=
 name|ACPI_MAX_THREADS
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.acpi.max_threads"
-argument_list|,
-operator|&
-name|acpi_max_threads
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

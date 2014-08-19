@@ -3133,7 +3133,7 @@ argument_list|)
 expr_stmt|;
 name|dsdt_line
 argument_list|(
-literal|"  Name (_S5, Package (0x02)"
+literal|"  Name (_S5, Package ()"
 argument_list|)
 expr_stmt|;
 name|dsdt_line

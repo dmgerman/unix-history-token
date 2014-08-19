@@ -1541,17 +1541,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.enable_io_modes"
-argument_list|,
-operator|&
-name|pci_enable_io_modes
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -1560,7 +1549,7 @@ name|OID_AUTO
 argument_list|,
 name|enable_io_modes
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pci_enable_io_modes
@@ -1582,17 +1571,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.realloc_bars"
-argument_list|,
-operator|&
-name|pci_do_realloc_bars
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -1601,14 +1579,15 @@ name|OID_AUTO
 argument_list|,
 name|realloc_bars
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pci_do_realloc_bars
 argument_list|,
 literal|0
 argument_list|,
-literal|"Attempt to allocate a new range for any BARs whose original firmware-assigned ranges fail to allocate during the initial device scan."
+literal|"Attempt to allocate a new range for any BARs whose original "
+literal|"firmware-assigned ranges fail to allocate during the initial device scan."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1623,17 +1602,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.do_power_nodriver"
-argument_list|,
-operator|&
-name|pci_do_power_nodriver
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -1642,7 +1610,7 @@ name|OID_AUTO
 argument_list|,
 name|do_power_nodriver
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pci_do_power_nodriver
@@ -1663,17 +1631,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.do_power_resume"
-argument_list|,
-operator|&
-name|pci_do_power_resume
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -1682,7 +1639,7 @@ name|OID_AUTO
 argument_list|,
 name|do_power_resume
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pci_do_power_resume
@@ -1703,17 +1660,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.do_power_suspend"
-argument_list|,
-operator|&
-name|pci_do_power_suspend
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -1722,7 +1668,7 @@ name|OID_AUTO
 argument_list|,
 name|do_power_suspend
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pci_do_power_suspend
@@ -1744,17 +1690,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.enable_msi"
-argument_list|,
-operator|&
-name|pci_do_msi
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -1763,7 +1698,7 @@ name|OID_AUTO
 argument_list|,
 name|enable_msi
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pci_do_msi
@@ -1785,17 +1720,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.enable_msix"
-argument_list|,
-operator|&
-name|pci_do_msix
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -1804,7 +1728,7 @@ name|OID_AUTO
 argument_list|,
 name|enable_msix
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pci_do_msix
@@ -1826,17 +1750,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.honor_msi_blacklist"
-argument_list|,
-operator|&
-name|pci_honor_msi_blacklist
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -1845,7 +1758,7 @@ name|OID_AUTO
 argument_list|,
 name|honor_msi_blacklist
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pci_honor_msi_blacklist
@@ -1900,17 +1813,6 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.usb_early_takeover"
-argument_list|,
-operator|&
-name|pci_usb_takeover
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -1937,17 +1839,6 @@ name|int
 name|pci_clear_bars
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.clear_bars"
-argument_list|,
-operator|&
-name|pci_clear_bars
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1992,17 +1883,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.clear_buses"
-argument_list|,
-operator|&
-name|pci_clear_buses
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_pci
@@ -2036,17 +1916,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.pci.enable_ari"
-argument_list|,
-operator|&
-name|pci_enable_ari
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -20479,6 +20348,16 @@ block|,
 literal|1
 block|,
 literal|"SD host controller"
+block|}
+block|,
+block|{
+name|PCIC_BASEPERIPH
+block|,
+name|PCIS_BASEPERIPH_IOMMU
+block|,
+literal|1
+block|,
+literal|"IOMMU"
 block|}
 block|,
 block|{

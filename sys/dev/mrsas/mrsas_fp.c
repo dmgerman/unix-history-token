@@ -6141,7 +6141,11 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|cdb
+name|io_request
+operator|->
+name|CDB
+operator|.
+name|CDB32
 argument_list|)
 argument_list|)
 expr_stmt|;

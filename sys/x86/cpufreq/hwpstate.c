@@ -479,9 +479,7 @@ name|OID_AUTO
 argument_list|,
 name|hwpstate_verbose
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|hwpstate_verbose
@@ -489,17 +487,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Debug hwpstate"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.hwpstate_verbose"
-argument_list|,
-operator|&
-name|hwpstate_verbose
 argument_list|)
 expr_stmt|;
 end_expr_stmt

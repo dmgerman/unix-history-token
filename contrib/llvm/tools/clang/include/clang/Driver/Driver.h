@@ -1236,6 +1236,21 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
+comment|/// \return True if the last defined optimization level is -Ofast.
+comment|/// And False otherwise.
+name|bool
+name|isOptimizationLevelFast
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

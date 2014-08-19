@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012, Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -292,6 +292,10 @@ name|ZFS_PROP_FILESYSTEM_COUNT
 block|,
 name|ZFS_PROP_SNAPSHOT_COUNT
 block|,
+name|ZFS_PROP_REDUNDANT_METADATA
+block|,
+name|ZFS_PROP_PREV_SNAP
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t
@@ -367,6 +371,10 @@ block|,
 name|ZPOOL_PROP_EXPANDSZ
 block|,
 name|ZPOOL_PROP_FREEING
+block|,
+name|ZPOOL_PROP_FRAGMENTATION
+block|,
+name|ZPOOL_PROP_LEAKED
 block|,
 name|ZPOOL_NUM_PROPS
 block|}
@@ -889,6 +897,15 @@ init|=
 literal|3
 block|}
 name|zfs_volmode_t
+typedef|;
+typedef|typedef
+enum|enum
+block|{
+name|ZFS_REDUNDANT_METADATA_ALL
+block|,
+name|ZFS_REDUNDANT_METADATA_MOST
+block|}
+name|zfs_redundant_metadata_type_t
 typedef|;
 comment|/*  * On-disk version number.  */
 define|#
@@ -1654,6 +1671,11 @@ define|#
 directive|define
 name|SPA_MINDEVSIZE
 value|(64ULL<< 20)
+comment|/*  * Set if the fragmentation has not yet been calculated. This can happen  * because the space maps have not been upgraded or the histogram feature  * is not enabled.  */
+define|#
+directive|define
+name|ZFS_FRAG_INVALID
+value|UINT64_MAX
 comment|/*  * The location of the pool configuration repository, shared between kernel and  * userland.  */
 define|#
 directive|define
@@ -1982,6 +2004,10 @@ name|uint64_t
 name|vs_physical_ashift
 decl_stmt|;
 comment|/* vdev_physical_ashift */
+name|uint64_t
+name|vs_fragmentation
+decl_stmt|;
+comment|/* device fragmentation */
 block|}
 name|vdev_stat_t
 typedef|;

@@ -137,7 +137,7 @@ block|{
 operator|.
 name|ident
 operator|=
-literal|"Hardware, Intel IvyBridge+ RNG"
+literal|"Hardware, Intel Secure Key RNG"
 block|,
 operator|.
 name|source

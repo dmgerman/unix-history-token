@@ -219,6 +219,10 @@ name|queue
 decl_stmt|;
 comment|/* page queue index (P,Q) */
 name|int8_t
+name|psind
+decl_stmt|;
+comment|/* pagesizes[] index (O) */
+name|int8_t
 name|segind
 decl_stmt|;
 name|uint8_t
@@ -1771,6 +1775,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|boolean_t
+name|vm_page_ps_is_valid
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vm_page_putfake
 parameter_list|(
@@ -1948,8 +1962,10 @@ name|void
 name|vm_page_unwire
 parameter_list|(
 name|vm_page_t
+name|m
 parameter_list|,
-name|int
+name|uint8_t
+name|queue
 parameter_list|)
 function_decl|;
 end_function_decl

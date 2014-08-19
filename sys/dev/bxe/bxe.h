@@ -188,13 +188,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_media.h>
+file|<net/if_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
+file|<net/if_media.h>
 end_include
 
 begin_include
@@ -5076,11 +5076,9 @@ begin_struct
 struct|struct
 name|bxe_softc
 block|{
-comment|/*      * First entry must be a pointer to the BSD ifnet struct which      * has a first element of 'void *if_softc' (which is us).      */
-name|struct
-name|ifnet
-modifier|*
-name|ifnet
+comment|/*      * First entry must be a pointer to the BSD ifnet struct which      * has a first element of 'void *if_softc' (which is us). XXX      */
+name|if_t
+name|ifp
 decl_stmt|;
 name|struct
 name|ifmedia
@@ -5727,7 +5725,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {                          \         mtx_lock(&sc->mcast_mtx); \         IF_ADDR_LOCK(sc->ifnet);  \     } while (0)
+value|do {                          \         mtx_lock(&sc->mcast_mtx); \         IF_ADDR_LOCK(sc->ifp);  \     } while (0)
 define|#
 directive|define
 name|BXE_MCAST_UNLOCK
@@ -5735,7 +5733,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {                            \         IF_ADDR_UNLOCK(sc->ifnet);  \         mtx_unlock(&sc->mcast_mtx); \     } while (0)
+value|do {                            \         IF_ADDR_UNLOCK(sc->ifp);  \         mtx_unlock(&sc->mcast_mtx); \     } while (0)
 else|#
 directive|else
 define|#
@@ -5745,7 +5743,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {                           \         mtx_lock(&sc->mcast_mtx);  \         if_maddr_rlock(sc->ifnet); \     } while (0)
+value|do {                           \         mtx_lock(&sc->mcast_mtx);  \         if_maddr_rlock(sc->ifp); \     } while (0)
 define|#
 directive|define
 name|BXE_MCAST_UNLOCK
@@ -5753,7 +5751,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|do {                             \         if_maddr_runlock(sc->ifnet); \         mtx_unlock(&sc->mcast_mtx);  \     } while (0)
+value|do {                             \         if_maddr_runlock(sc->ifp); \         mtx_unlock(&sc->mcast_mtx);  \     } while (0)
 endif|#
 directive|endif
 define|#
@@ -9015,6 +9013,12 @@ define|\
 value|do {                                              \         if (__predict_false(sc->debug)) {             \             device_printf((sc)->dev,                  \                           "%s(%s:%d) ERROR: " format, \                           __FUNCTION__,               \                           __FILE__,                   \                           __LINE__,                   \                           ## args);                   \         } else {                                      \             device_printf((sc)->dev,                  \                           "ERROR: " format,           \                           ## args);                   \         }                                             \     } while(0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ECORE_STOP_ON_ERROR
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -9027,6 +9031,29 @@ parameter_list|)
 define|\
 value|do {                   \         panic msg;         \     } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|bxe_panic
+parameter_list|(
+name|sc
+parameter_list|,
+name|msg
+parameter_list|)
+define|\
+value|device_printf((sc)->dev, "%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

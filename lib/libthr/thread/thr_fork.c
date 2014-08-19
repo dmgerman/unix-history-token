@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"namespace.h"
 end_include
 
@@ -539,15 +545,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Fork a new process: */
-if|if
-condition|(
-operator|(
+comment|/* 	 * Fork a new process. 	 * There is no easy way to pre-resolve the __sys_fork symbol 	 * without performing the fork.  Use the syscall(2) 	 * indirection, the syscall symbol is resolved in 	 * _thr_rtld_init() with side-effect free call. 	 */
 name|ret
 operator|=
-name|__sys_fork
-argument_list|()
-operator|)
+name|syscall
+argument_list|(
+name|SYS_fork
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|==
 literal|0
 condition|)
@@ -778,7 +786,6 @@ name|errno
 operator|=
 name|errsave
 expr_stmt|;
-comment|/* Return the process ID: */
 return|return
 operator|(
 name|ret

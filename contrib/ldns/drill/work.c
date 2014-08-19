@@ -893,6 +893,11 @@ argument_list|(
 name|wire
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|fprintf

@@ -463,6 +463,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|t4_iscsi_init
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|,
+specifier|const
+name|unsigned
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

@@ -4630,6 +4630,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * In order to do checksumming faster we do 'end-around carry' here 	 * (and not in for{} loop), though it implies we are not going to 	 * reassemble more than 64k fragments. 	 */
+while|while
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_data
+operator|&
+literal|0xffff0000
+condition|)
 name|m
 operator|->
 name|m_pkthdr

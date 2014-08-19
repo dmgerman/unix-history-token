@@ -65,6 +65,77 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* This '#if' asks the question 'Does CP15/SCC include performance counters?' */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM1136
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|CPU_CORTEXA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_KRAIT
+argument_list|)
+name|uint32_t
+name|ccnt
+decl_stmt|;
+name|uint64_t
+name|ccnt64
+decl_stmt|;
+comment|/* 	 * Read PMCCNTR. Curses! Its only 32 bits. 	 * TODO: Fix this by catching overflow with interrupt? 	 */
+comment|/* The ARMv6 vs ARMv7 divide is going to need a better way of  * distinguishing between them.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ARM1136
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_ARM1176
+argument_list|)
+comment|/* ARMv6 - Earlier model SCCs */
+asm|__asm __volatile("mrc p15, 0, %0, c15, c12, 1": "=r" (ccnt));
+else|#
+directive|else
+comment|/* ARMv7 - Later model SCCs */
+asm|__asm __volatile("mrc p15, 0, %0, c9, c13, 0": "=r" (ccnt));
+endif|#
+directive|endif
+name|ccnt64
+operator|=
+operator|(
+name|uint64_t
+operator|)
+name|ccnt
+expr_stmt|;
+return|return
+operator|(
+name|ccnt64
+operator|)
+return|;
+else|#
+directive|else
+comment|/* No performance counters, so use binuptime(9). This is slooooow */
 name|struct
 name|bintime
 name|bt
@@ -93,6 +164,8 @@ operator|>>
 literal|8
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

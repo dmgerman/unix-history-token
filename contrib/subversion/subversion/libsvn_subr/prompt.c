@@ -629,9 +629,9 @@ name|tmpfd
 argument_list|,
 literal|"/dev/tty"
 argument_list|,
-name|APR_FOPEN_READ
+name|APR_READ
 operator||
-name|APR_FOPEN_WRITE
+name|APR_WRITE
 argument_list|,
 name|APR_OS_DEFAULT
 argument_list|,

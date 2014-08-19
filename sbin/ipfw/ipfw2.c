@@ -22281,10 +22281,15 @@ name|addr6
 expr_stmt|;
 if|if
 condition|(
-name|IN6_IS_ADDR_V4COMPAT
-argument_list|(
-name|addr6
-argument_list|)
+operator|(
+name|xent
+operator|->
+name|flags
+operator|&
+name|IPFW_TCF_INET
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* IPv4 address */

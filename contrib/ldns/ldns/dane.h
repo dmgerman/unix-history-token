@@ -19,6 +19,12 @@ directive|define
 name|LDNS_DANE_H
 end_define
 
+begin_if
+if|#
+directive|if
+name|LDNS_BUILD_CONFIG_USE_DANE
+end_if
+
 begin_include
 include|#
 directive|include
@@ -336,6 +342,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LDNS_BUILD_CONFIG_USE_DANE */
+end_comment
 
 begin_endif
 endif|#

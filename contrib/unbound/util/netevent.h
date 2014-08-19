@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * util/netevent.h - event notification  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * util/netevent.h - event notification  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -19,11 +19,11 @@ directive|define
 name|NET_EVENT_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<ldns/buffer.h>
-end_include
+begin_struct_decl
+struct_decl|struct
+name|sldns_buffer
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -281,7 +281,8 @@ modifier|*
 name|timeout
 decl_stmt|;
 comment|/** buffer pointer. Either to perthread, or own buffer or NULL */
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|buffer
 decl_stmt|;
@@ -501,6 +502,40 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Create comm base that uses the given event_base (underlying event  * mechanism pointer).  * @param base: underlying lib event base.  * @return: the new comm base. NULL on error.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|comm_base
+modifier|*
+name|comm_base_create_event
+parameter_list|(
+name|struct
+name|event_base
+modifier|*
+name|base
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Delete comm base structure but not the underlying lib event base.  * All comm points must have been deleted.  * @param b: the base to delete.  */
+end_comment
+
+begin_function_decl
+name|void
+name|comm_base_delete_no_base
+parameter_list|(
+name|struct
+name|comm_base
+modifier|*
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Destroy a comm base.  * All comm points must have been deleted.  * @param b: the base to delete.  */
 end_comment
 
@@ -529,7 +564,7 @@ name|comm_base
 modifier|*
 name|b
 parameter_list|,
-name|uint32_t
+name|time_t
 modifier|*
 modifier|*
 name|tt
@@ -651,7 +686,8 @@ parameter_list|,
 name|int
 name|fd
 parameter_list|,
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|buffer
 parameter_list|,
@@ -684,7 +720,8 @@ parameter_list|,
 name|int
 name|fd
 parameter_list|,
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|buffer
 parameter_list|,
@@ -904,7 +941,8 @@ name|comm_point
 modifier|*
 name|c
 parameter_list|,
-name|ldns_buffer
+name|struct
+name|sldns_buffer
 modifier|*
 name|packet
 parameter_list|,

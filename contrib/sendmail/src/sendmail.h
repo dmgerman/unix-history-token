@@ -230,7 +230,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.1104 2013/11/22 20:51:56 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.1104 2013-11-22 20:51:56 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 

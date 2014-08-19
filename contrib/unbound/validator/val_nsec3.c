@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * validator/val_nsec3.c - validator NSEC3 denial of existance functions.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * validator/val_nsec3.c - validator NSEC3 denial of existance functions.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -133,13 +133,19 @@ directive|include
 file|"validator/val_nsec.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
+end_include
+
 begin_comment
 comment|/**   * This function we get from ldns-compat or from base system   * it returns the number of data bytes stored at the target, or<0 on error.  */
 end_comment
 
 begin_function_decl
 name|int
-name|ldns_b32_ntop_extended_hex
+name|sldns_b32_ntop_extended_hex
 parameter_list|(
 name|uint8_t
 specifier|const
@@ -165,7 +171,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|ldns_b32_pton_extended_hex
+name|sldns_b32_pton_extended_hex
 parameter_list|(
 name|char
 specifier|const
@@ -1277,7 +1283,7 @@ literal|0
 return|;
 name|ret
 operator|=
-name|ldns_b32_ntop_extended_hex
+name|sldns_b32_ntop_extended_hex
 argument_list|(
 name|hash
 argument_list|,
@@ -2716,7 +2722,7 @@ begin_function
 name|size_t
 name|nsec3_get_hashed
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
@@ -2754,12 +2760,12 @@ decl_stmt|,
 name|hash_len
 decl_stmt|;
 comment|/* prepare buffer for first iteration */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buf
 argument_list|,
@@ -2770,13 +2776,13 @@ argument_list|)
 expr_stmt|;
 name|query_dname_tolower
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buf
 argument_list|,
@@ -2785,7 +2791,7 @@ argument_list|,
 name|saltlen
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buf
 argument_list|)
@@ -2846,7 +2852,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -2855,7 +2861,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -2889,7 +2895,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -2898,7 +2904,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -2920,12 +2926,12 @@ name|i
 operator|++
 control|)
 block|{
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buf
 argument_list|,
@@ -2934,7 +2940,7 @@ argument_list|,
 name|hash_len
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buf
 argument_list|,
@@ -2943,7 +2949,7 @@ argument_list|,
 name|saltlen
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buf
 argument_list|)
@@ -2961,7 +2967,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -2970,7 +2976,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -3004,7 +3010,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -3013,7 +3019,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -3058,7 +3064,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
@@ -3130,12 +3136,12 @@ operator|-
 literal|1
 return|;
 comment|/* prepare buffer for first iteration */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buf
 argument_list|,
@@ -3150,13 +3156,13 @@ argument_list|)
 expr_stmt|;
 name|query_dname_tolower
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buf
 argument_list|,
@@ -3165,7 +3171,7 @@ argument_list|,
 name|saltlen
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buf
 argument_list|)
@@ -3248,7 +3254,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -3257,7 +3263,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -3295,7 +3301,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -3304,7 +3310,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -3326,12 +3332,12 @@ name|i
 operator|++
 control|)
 block|{
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buf
 argument_list|,
@@ -3344,7 +3350,7 @@ operator|->
 name|hash_len
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buf
 argument_list|,
@@ -3353,7 +3359,7 @@ argument_list|,
 name|saltlen
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buf
 argument_list|)
@@ -3371,7 +3377,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -3380,7 +3386,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -3418,7 +3424,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -3427,7 +3433,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -3473,7 +3479,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
@@ -3486,14 +3492,14 @@ block|{
 name|int
 name|r
 decl_stmt|;
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|ldns_b32_ntop_extended_hex
+name|sldns_b32_ntop_extended_hex
 argument_list|(
 name|c
 operator|->
@@ -3507,12 +3513,12 @@ operator|(
 name|char
 operator|*
 operator|)
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)
@@ -3553,7 +3559,7 @@ name|regional_alloc_init
 argument_list|(
 name|region
 argument_list|,
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
@@ -3592,7 +3598,7 @@ name|regional
 modifier|*
 name|region
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|,
@@ -3806,6 +3812,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|n
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert
@@ -4250,7 +4261,7 @@ parameter_list|,
 name|int
 name|rr
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buf
 parameter_list|)
@@ -4393,21 +4404,21 @@ return|return
 literal|1
 return|;
 comment|/* convert owner name from text to binary */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
 name|owner
 operator|=
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|ldns_b32_pton_extended_hex
+name|sldns_b32_pton_extended_hex
 argument_list|(
 operator|(
 name|char
@@ -4427,7 +4438,7 @@ name|b32_len
 argument_list|,
 name|owner
 argument_list|,
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buf
 argument_list|)

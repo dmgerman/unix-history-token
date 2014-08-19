@@ -161,6 +161,7 @@ define|#
 directive|define
 name|isb
 parameter_list|()
+value|__asm __volatile("mcr p15, 0, %0, c7, c5, 4" : : "r" (0) : "memory")
 end_define
 
 begin_define
@@ -168,6 +169,7 @@ define|#
 directive|define
 name|dsb
 parameter_list|()
+value|__asm __volatile("mcr p15, 0, %0, c7, c10, 4" : : "r" (0) : "memory")
 end_define
 
 begin_define
@@ -175,6 +177,7 @@ define|#
 directive|define
 name|dmb
 parameter_list|()
+value|dsb()
 end_define
 
 begin_endif

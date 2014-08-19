@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.192 2013/10/18 20:47:06 christos Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.194 2014/02/15 00:17:17 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.192 2013/10/18 20:47:06 christos Exp $"
+literal|"$NetBSD: parse.c,v 1.194 2014/02/15 00:17:17 christos Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.192 2013/10/18 20:47:06 christos Exp $"
+literal|"$NetBSD: parse.c,v 1.194 2014/02/15 00:17:17 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1253,6 +1253,16 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ParseSetIncludedFile
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3155,7 +3165,9 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"# ParseLinkSrc: added child %s - %s\n"
+literal|"# %s: added child %s - %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|pgn
 operator|->
@@ -3672,7 +3684,9 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"# ParseDoSrc: added Order dependency %s - %s\n"
+literal|"# %s: added Order dependency %s - %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|predecessor
 operator|->
@@ -7120,6 +7134,9 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
+name|ParseSetIncludedFile
+argument_list|()
+expr_stmt|;
 comment|/* Start reading from this file next */
 name|Parse_SetInput
 argument_list|(
@@ -7328,6 +7345,124 @@ block|}
 end_function
 
 begin_comment
+comment|/*-  *---------------------------------------------------------------------  * ParseSetIncludedFile  --  *	Set the .INCLUDEDFROMFILE variable to the contents of .PARSEFILE  *	and the .INCLUDEDFROMDIR variable to the contents of .PARSEDIR  *  * Results:  *	None  *  * Side Effects:  *	The .INCLUDEDFROMFILE variable is overwritten by the contents  *	of .PARSEFILE and the .INCLUDEDFROMDIR variable is overwriten  *	by the contents of .PARSEDIR  *---------------------------------------------------------------------  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ParseSetIncludedFile
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|pf
+decl_stmt|,
+modifier|*
+name|fp
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|pd
+decl_stmt|,
+modifier|*
+name|dp
+init|=
+name|NULL
+decl_stmt|;
+name|pf
+operator|=
+name|Var_Value
+argument_list|(
+literal|".PARSEFILE"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+operator|&
+name|fp
+argument_list|)
+expr_stmt|;
+name|Var_Set
+argument_list|(
+literal|".INCLUDEDFROMFILE"
+argument_list|,
+name|pf
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|pd
+operator|=
+name|Var_Value
+argument_list|(
+literal|".PARSEDIR"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+operator|&
+name|dp
+argument_list|)
+expr_stmt|;
+name|Var_Set
+argument_list|(
+literal|".INCLUDEDFROMDIR"
+argument_list|,
+name|pd
+argument_list|,
+name|VAR_GLOBAL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DEBUG
+argument_list|(
+name|PARSE
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|debug_file
+argument_list|,
+literal|"%s: ${.INCLUDEDFROMDIR} = `%s' "
+literal|"${.INCLUDEDFROMFILE} = `%s'\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|pd
+argument_list|,
+name|pf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+condition|)
+name|free
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+condition|)
+name|free
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseSetParseFile  --  *	Set the .PARSEDIR and .PARSEFILE variables to the dirname and  *	basename of the given filename  *  * Results:  *	None  *  * Side Effects:  *	The .PARSEDIR and .PARSEFILE variables are overwritten by the  *	dirname and basename of the given filename.  *---------------------------------------------------------------------  */
 end_comment
 
@@ -7480,8 +7615,9 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"ParseSetParseFile: ${.PARSEDIR} = `%s' "
-literal|"${.PARSEFILE} = `%s'\n"
+literal|"%s: ${.PARSEDIR} = `%s' ${.PARSEFILE} = `%s'\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|pd
 argument_list|,
@@ -7707,7 +7843,9 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"Parse_SetInput: file %s, line %d, fd %d, nextbuf %p, arg %p\n"
+literal|"%s: file %s, line %d, fd %d, nextbuf %p, arg %p\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|name
 argument_list|,
@@ -7956,7 +8094,9 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"ParseTraditionalInclude: %s\n"
+literal|"%s: %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|file
 argument_list|)
@@ -8134,7 +8274,9 @@ name|fprintf
 argument_list|(
 name|debug_file
 argument_list|,
-literal|"ParseGmakeExport: %s\n"
+literal|"%s: %s\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|variable
 argument_list|)
@@ -8382,6 +8524,20 @@ expr_stmt|;
 name|Var_Delete
 argument_list|(
 literal|".PARSEFILE"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+name|Var_Delete
+argument_list|(
+literal|".INCLUDEDFROMDIR"
+argument_list|,
+name|VAR_GLOBAL
+argument_list|)
+expr_stmt|;
+name|Var_Delete
+argument_list|(
+literal|".INCLUDEDFROMFILE"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|)

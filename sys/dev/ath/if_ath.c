@@ -1512,7 +1512,7 @@ name|OID_AUTO
 argument_list|,
 name|rxbuf
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ath_rxbuf
@@ -1520,17 +1520,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"rx buffers allocated"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.ath.rxbuf"
-argument_list|,
-operator|&
-name|ath_rxbuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1556,7 +1545,7 @@ name|OID_AUTO
 argument_list|,
 name|txbuf
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ath_txbuf
@@ -1564,17 +1553,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"tx buffers allocated"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.ath.txbuf"
-argument_list|,
-operator|&
-name|ath_txbuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1600,7 +1578,7 @@ name|OID_AUTO
 argument_list|,
 name|txbuf_mgmt
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ath_txbuf_mgmt
@@ -1608,17 +1586,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"tx (mgmt) buffers allocated"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.ath.txbuf_mgmt"
-argument_list|,
-operator|&
-name|ath_txbuf_mgmt
 argument_list|)
 expr_stmt|;
 end_expr_stmt

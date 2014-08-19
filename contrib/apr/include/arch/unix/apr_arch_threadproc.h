@@ -139,11 +139,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_SCHED_H
-end_if
+end_ifdef
 
 begin_include
 include|#

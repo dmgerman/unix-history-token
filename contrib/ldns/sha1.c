@@ -7,10 +7,6 @@ begin_comment
 comment|/* #define LITTLE_ENDIAN * This should be #define'd already, if true. */
 end_comment
 
-begin_comment
-comment|/* #define SHA1HANDSOFF * Copies data before messing with it. */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -28,6 +24,17 @@ include|#
 directive|include
 file|<strings.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|SHA1HANDSOFF
+value|1
+end_define
+
+begin_comment
+comment|/* Copies data before messing with it. */
+end_comment
 
 begin_define
 define|#

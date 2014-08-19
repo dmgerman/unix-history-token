@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2013 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/zfeature.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<zfeature_common.h>
 end_include
 
@@ -107,7 +113,7 @@ typedef|typedef
 struct|struct
 name|spa_error_entry
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 name|se_bookmark
 decl_stmt|;
 name|char

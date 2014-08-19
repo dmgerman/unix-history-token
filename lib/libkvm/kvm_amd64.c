@@ -206,7 +206,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Map the ELF headers into the process' address space. We do this in two  * steps: first the ELF header itself and using that information the whole  * set of headers. (Taken from kvm_ia64.c)  */
+comment|/*  * Map the ELF headers into the process' address space. We do this in two  * steps: first the ELF header itself and using that information the whole  * set of headers.  */
 end_comment
 
 begin_function
@@ -322,7 +322,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Translate a physical memory address to a file-offset in the crash-dump.  * (Taken from kvm_ia64.c)  */
+comment|/*  * Translate a physical memory address to a file-offset in the crash-dump.  */
 end_comment
 
 begin_function

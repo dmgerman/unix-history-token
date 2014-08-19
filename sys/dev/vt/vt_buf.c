@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -1829,7 +1835,7 @@ operator|.
 name|tp_row
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked begin.tp_row %d must be< screen width %d"
+literal|"vtbuf_fill_locked begin.tp_row %d must be< screen height %d"
 operator|,
 name|r
 operator|->
@@ -1860,7 +1866,7 @@ operator|.
 name|tp_col
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked begin.tp_col %d must be< screen height %d"
+literal|"vtbuf_fill_locked begin.tp_col %d must be< screen width %d"
 operator|,
 name|r
 operator|->
@@ -1891,7 +1897,7 @@ operator|.
 name|tp_row
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked end.tp_row %d must be<= screen width %d"
+literal|"vtbuf_fill_locked end.tp_row %d must be<= screen height %d"
 operator|,
 name|r
 operator|->
@@ -1922,7 +1928,7 @@ operator|.
 name|tp_col
 argument_list|,
 operator|(
-literal|"vtbuf_fill_locked end.tp_col %d must be<= screen height %d"
+literal|"vtbuf_fill_locked end.tp_col %d must be<= screen width %d"
 operator|,
 name|r
 operator|->
@@ -2047,6 +2053,9 @@ modifier|*
 name|vb
 parameter_list|)
 block|{
+name|term_rect_t
+name|rect
+decl_stmt|;
 name|vb
 operator|->
 name|vb_flags
@@ -2100,6 +2109,51 @@ expr_stmt|;
 name|vtbuf_init_rows
 argument_list|(
 name|vb
+argument_list|)
+expr_stmt|;
+name|rect
+operator|.
+name|tr_begin
+operator|.
+name|tp_row
+operator|=
+name|rect
+operator|.
+name|tr_begin
+operator|.
+name|tp_col
+operator|=
+literal|0
+expr_stmt|;
+name|rect
+operator|.
+name|tr_end
+operator|=
+name|vb
+operator|->
+name|vb_scr_size
+expr_stmt|;
+name|vtbuf_fill
+argument_list|(
+name|vb
+argument_list|,
+operator|&
+name|rect
+argument_list|,
+name|VTBUF_SPACE_CHAR
+argument_list|(
+operator|(
+name|boothowto
+operator|&
+name|RB_MUTE
+operator|)
+operator|==
+literal|0
+condition|?
+name|TERMINAL_KERN_ATTR
+else|:
+name|TERMINAL_NORM_ATTR
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vtbuf_make_undirty
@@ -2559,6 +2613,7 @@ name|r
 operator|++
 control|)
 block|{
+comment|/* 			 * XXX VTBUF_SPACE_CHAR(TERMINAL_NORM_ATTR) will 			 * extended lines of kernel text using the wrong 			 * background color. 			 */
 name|row
 operator|=
 name|rows
@@ -2630,6 +2685,9 @@ name|c
 index|]
 operator|=
 name|VTBUF_SPACE_CHAR
+argument_list|(
+name|TERMINAL_NORM_ATTR
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2680,6 +2738,9 @@ operator|&
 name|rect
 argument_list|,
 name|VTBUF_SPACE_CHAR
+argument_list|(
+name|TERMINAL_NORM_ATTR
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2709,6 +2770,17 @@ name|oldrows
 argument_list|,
 name|M_VTBUF
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Just update the size. */
+name|vb
+operator|->
+name|vb_scr_size
+operator|=
+operator|*
+name|p
 expr_stmt|;
 block|}
 block|}

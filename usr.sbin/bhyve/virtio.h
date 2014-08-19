@@ -773,7 +773,7 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 comment|/* called to write config regs */
-name|uint32_t
+name|uint64_t
 name|vc_hv_caps
 decl_stmt|;
 comment|/* hypervisor-provided capabilities */

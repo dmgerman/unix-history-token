@@ -127,6 +127,10 @@ decl_stmt|,
 name|flag_c
 decl_stmt|,
 name|flag_d
+decl_stmt|,
+name|flag_o
+decl_stmt|,
+name|flag_p
 decl_stmt|;
 end_decl_stmt
 
@@ -294,7 +298,7 @@ name|long
 name|double
 name|ld
 index|[
-literal|11
+literal|13
 index|]
 decl_stmt|;
 name|uint64_t
@@ -367,7 +371,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adcf:I:b"
+literal|"abdcf:I:op"
 argument_list|)
 operator|)
 operator|!=
@@ -471,6 +475,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'o'
+case|:
+name|flag_o
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'I'
 case|:
 name|p
@@ -560,6 +572,14 @@ expr_stmt|;
 name|flag_I
 operator|=
 name|i
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|flag_p
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1121,6 +1141,15 @@ argument_list|(
 literal|" d/s   kBps   ms/d   "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag_o
+condition|)
+name|PRINTMSG
+argument_list|(
+literal|" o/s   ms/o   "
+argument_list|)
+expr_stmt|;
 name|PRINTMSG
 argument_list|(
 literal|"%%busy Name\n"
@@ -1244,6 +1273,36 @@ name|ISCONSUMER
 operator|&&
 operator|!
 name|flag_c
+condition|)
+continue|continue;
+if|if
+condition|(
+name|flag_p
+operator|&&
+name|gid
+operator|->
+name|lg_what
+operator|==
+name|ISPROVIDER
+operator|&&
+operator|(
+operator|(
+expr|struct
+name|gprovider
+operator|*
+operator|)
+operator|(
+name|gid
+operator|->
+name|lg_ptr
+operator|)
+operator|)
+operator|->
+name|lg_geom
+operator|->
+name|lg_rank
+operator|!=
+literal|1
 condition|)
 continue|continue;
 comment|/* Do not print past end of window */
@@ -1441,6 +1500,22 @@ operator|&
 name|ld
 index|[
 literal|10
+index|]
+argument_list|,
+name|DSM_TRANSFERS_PER_SECOND_OTHER
+argument_list|,
+operator|&
+name|ld
+index|[
+literal|11
+index|]
+argument_list|,
+name|DSM_MS_PER_TRANSACTION_OTHER
+argument_list|,
+operator|&
+name|ld
+index|[
+literal|12
 index|]
 argument_list|,
 name|DSM_NONE
@@ -1683,6 +1758,61 @@ operator|)
 name|ld
 index|[
 literal|10
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flag_o
+condition|)
+block|{
+name|PRINTMSG
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|11
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ld
+index|[
+literal|12
+index|]
+operator|>
+literal|1e3
+condition|)
+name|PRINTMSG
+argument_list|(
+literal|" %6.0f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|12
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|PRINTMSG
+argument_list|(
+literal|" %6.1f"
+argument_list|,
+operator|(
+name|double
+operator|)
+name|ld
+index|[
+literal|12
 index|]
 argument_list|)
 expr_stmt|;
@@ -2209,7 +2339,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: gstat [-abcd] [-f filter] [-I interval]\n"
+literal|"usage: gstat [-abcdp] [-f filter] [-I interval]\n"
 argument_list|)
 expr_stmt|;
 name|exit

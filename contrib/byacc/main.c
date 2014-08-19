@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.49 2014/04/09 21:25:20 Rick.Spates Exp $ */
+comment|/* $Id: main.c,v 1.51 2014/05/28 02:01:55 Tom.Shields Exp $ */
 end_comment
 
 begin_include
@@ -823,6 +823,9 @@ expr_stmt|;
 name|mkpar_leaks
 argument_list|()
 expr_stmt|;
+name|mstring_leaks
+argument_list|()
+expr_stmt|;
 name|output_leaks
 argument_list|()
 expr_stmt|;
@@ -968,8 +971,6 @@ block|,
 literal|"  -d                    write definitions ("
 name|DEFINES_SUFFIX
 literal|")"
-block|,
-literal|"  -D                    enable value stack memory reclamation"
 block|,
 literal|"  -i                    write interface (y.tab.i)"
 block|,

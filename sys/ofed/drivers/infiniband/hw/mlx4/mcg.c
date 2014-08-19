@@ -3556,11 +3556,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|method
 operator|==
 name|IB_MGMT_METHOD_GET_RESP
-operator|)
 condition|)
 block|{
 if|if

@@ -3228,7 +3228,7 @@ if|if
 condition|(
 name|oflags
 operator|&
-name|AU_OFLAG_RAW
+name|AU_OFLAG_XML
 condition|)
 block|{
 name|open_attr

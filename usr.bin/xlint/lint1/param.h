@@ -58,31 +58,11 @@ begin_comment
 comment|/*  * Should be set to 1 if the difference of two pointers is of type long  * or the value of sizeof is of type unsigned long.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ia64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PTRDIFF_IS_LONG
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_IS_ULONG
-value|1
-end_define
-
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|__amd64__
-end_elif
+end_if
 
 begin_define
 define|#

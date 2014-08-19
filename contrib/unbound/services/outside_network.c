@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * services/outside_network.c - implement sending of queries and wait answer.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * services/outside_network.c - implement sending of queries and wait answer.  *  * Copyright (c) 2007, NLnet Labs. All rights reserved.  *  * This software is open source.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer.  *   * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * Neither the name of the NLNET LABS nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -40,12 +40,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ldns/wire2host.h>
 end_include
 
 begin_include
@@ -118,6 +112,12 @@ begin_include
 include|#
 directive|include
 file|"util/fptr_wlist.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldns/sbuffer.h"
 end_include
 
 begin_ifdef
@@ -212,7 +212,7 @@ name|serviced_query
 modifier|*
 name|sq
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|)
@@ -238,7 +238,7 @@ name|pending
 modifier|*
 name|pend
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|packet
 parameter_list|,
@@ -1422,7 +1422,7 @@ operator|->
 name|addrlen
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|pend
 operator|->
@@ -1431,7 +1431,7 @@ operator|->
 name|buffer
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|pend
 operator|->
@@ -1444,7 +1444,7 @@ argument_list|,
 name|pkt_len
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|pend
 operator|->
@@ -1782,7 +1782,7 @@ block|{
 comment|/* check ID */
 if|if
 condition|(
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|c
 operator|->
@@ -1796,7 +1796,7 @@ argument_list|)
 operator|||
 name|LDNS_ID_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -2084,14 +2084,14 @@ name|udp_wait_last
 operator|=
 name|NULL
 expr_stmt|;
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|outnet
 operator|->
 name|udp_buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|outnet
 operator|->
@@ -2106,7 +2106,7 @@ operator|->
 name|pkt_len
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|outnet
 operator|->
@@ -2153,6 +2153,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* callback error on pending */
+if|if
+condition|(
+name|pend
+operator|->
+name|cb
+condition|)
+block|{
 name|fptr_ok
 argument_list|(
 name|fptr_whitelist_pending_udp
@@ -2188,6 +2195,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 name|pending_delete
 argument_list|(
 name|outnet
@@ -2269,7 +2277,7 @@ return|;
 block|}
 if|if
 condition|(
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|c
 operator|->
@@ -2305,7 +2313,7 @@ name|unsigned
 operator|)
 name|LDNS_ID_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -2627,6 +2635,13 @@ operator|.
 name|key
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|cb
+condition|)
+block|{
 name|fptr_ok
 argument_list|(
 name|fptr_whitelist_pending_udp
@@ -2662,6 +2677,7 @@ argument_list|,
 name|reply_info
 argument_list|)
 expr_stmt|;
+block|}
 name|portcomm_loweruse
 argument_list|(
 name|outnet
@@ -2807,6 +2823,64 @@ block|}
 block|}
 block|}
 name|void
+name|pending_udp_timer_delay_cb
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|pending
+modifier|*
+name|p
+init|=
+operator|(
+expr|struct
+name|pending
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+name|struct
+name|outside_network
+modifier|*
+name|outnet
+init|=
+name|p
+operator|->
+name|outnet
+decl_stmt|;
+name|verbose
+argument_list|(
+name|VERB_ALGO
+argument_list|,
+literal|"timeout udp with delay"
+argument_list|)
+expr_stmt|;
+name|portcomm_loweruse
+argument_list|(
+name|outnet
+argument_list|,
+name|p
+operator|->
+name|pc
+argument_list|)
+expr_stmt|;
+name|pending_delete
+argument_list|(
+name|outnet
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|outnet_send_wait_udp
+argument_list|(
+name|outnet
+argument_list|)
+expr_stmt|;
+block|}
+name|void
 name|pending_udp_timer_cb
 parameter_list|(
 name|void
@@ -2843,6 +2917,13 @@ argument_list|,
 literal|"timeout udp"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|cb
+condition|)
+block|{
 name|fptr_ok
 argument_list|(
 name|fptr_whitelist_pending_udp
@@ -2878,6 +2959,49 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* if delayclose, keep port open for a longer time. 	 * But if the udpwaitlist exists, then we are struggling to 	 * keep up with demand for sockets, so do not wait, but service 	 * the customer (customer service more important than portICMPs) */
+if|if
+condition|(
+name|outnet
+operator|->
+name|delayclose
+operator|&&
+operator|!
+name|outnet
+operator|->
+name|udp_wait_first
+condition|)
+block|{
+name|p
+operator|->
+name|cb
+operator|=
+name|NULL
+expr_stmt|;
+name|p
+operator|->
+name|timer
+operator|->
+name|callback
+operator|=
+operator|&
+name|pending_udp_timer_delay_cb
+expr_stmt|;
+name|comm_timer_set
+argument_list|(
+name|p
+operator|->
+name|timer
+argument_list|,
+operator|&
+name|outnet
+operator|->
+name|delay_tv
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|portcomm_loweruse
 argument_list|(
 name|outnet
@@ -3294,6 +3418,9 @@ parameter_list|,
 name|void
 modifier|*
 name|sslctx
+parameter_list|,
+name|int
+name|delayclose
 parameter_list|)
 block|{
 name|struct
@@ -3422,6 +3549,47 @@ name|do_udp
 operator|=
 name|do_udp
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|S_SPLINT_S
+if|if
+condition|(
+name|delayclose
+condition|)
+block|{
+name|outnet
+operator|->
+name|delayclose
+operator|=
+literal|1
+expr_stmt|;
+name|outnet
+operator|->
+name|delay_tv
+operator|.
+name|tv_sec
+operator|=
+name|delayclose
+operator|/
+literal|1000
+expr_stmt|;
+name|outnet
+operator|->
+name|delay_tv
+operator|.
+name|tv_usec
+operator|=
+operator|(
+name|delayclose
+operator|%
+literal|1000
+operator|)
+operator|*
+literal|1000
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|numavailports
@@ -3591,7 +3759,7 @@ name|outnet
 operator|->
 name|udp_buff
 operator|=
-name|ldns_buffer_new
+name|sldns_buffer_new
 argument_list|(
 name|bufsize
 argument_list|)
@@ -4234,7 +4402,7 @@ name|outnet
 operator|->
 name|udp_buff
 condition|)
-name|ldns_buffer_free
+name|sldns_buffer_free
 argument_list|(
 name|outnet
 operator|->
@@ -4950,6 +5118,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5009,6 +5181,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5031,7 +5207,7 @@ name|pending
 modifier|*
 name|pend
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|packet
 parameter_list|)
@@ -5063,7 +5239,7 @@ literal|0xffff
 expr_stmt|;
 name|LDNS_ID_SET
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|packet
 argument_list|)
@@ -5121,7 +5297,7 @@ literal|0xffff
 expr_stmt|;
 name|LDNS_ID_SET
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|packet
 argument_list|)
@@ -5587,7 +5763,7 @@ name|pending
 modifier|*
 name|pend
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|packet
 parameter_list|,
@@ -5785,7 +5961,7 @@ name|outside_network
 modifier|*
 name|outnet
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|packet
 parameter_list|,
@@ -5941,7 +6117,7 @@ name|pend
 operator|->
 name|pkt_len
 operator|=
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|packet
 argument_list|)
@@ -5956,7 +6132,7 @@ operator|*
 operator|)
 name|memdup
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|packet
 argument_list|)
@@ -6267,7 +6443,7 @@ name|outside_network
 modifier|*
 name|outnet
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|packet
 parameter_list|,
@@ -6336,7 +6512,7 @@ name|pend
 condition|?
 literal|0
 else|:
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|packet
 argument_list|)
@@ -6415,7 +6591,7 @@ literal|0xffff
 expr_stmt|;
 name|LDNS_ID_SET
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|packet
 argument_list|)
@@ -6505,12 +6681,12 @@ name|outnet_tcp_take_into_use
 argument_list|(
 name|w
 argument_list|,
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|packet
 argument_list|)
 argument_list|,
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|packet
 argument_list|)
@@ -6550,7 +6726,7 @@ name|w
 operator|->
 name|pkt_len
 operator|=
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|packet
 argument_list|)
@@ -6561,7 +6737,7 @@ name|w
 operator|->
 name|pkt
 argument_list|,
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|packet
 argument_list|)
@@ -6614,7 +6790,7 @@ specifier|static
 name|void
 name|serviced_gen_query
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|,
@@ -6635,20 +6811,20 @@ name|uint16_t
 name|flags
 parameter_list|)
 block|{
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
 comment|/* skip id */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|buff
 argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|buff
 argument_list|,
@@ -6656,7 +6832,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* qdcount */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|buff
 argument_list|,
@@ -6664,7 +6840,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* ancount */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|buff
 argument_list|,
@@ -6672,7 +6848,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* nscount */
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|buff
 argument_list|,
@@ -6680,7 +6856,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* arcount */
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -6689,21 +6865,21 @@ argument_list|,
 name|qnamelen
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|buff
 argument_list|,
 name|qtype
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|buff
 argument_list|,
 name|qclass
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -6721,7 +6897,7 @@ name|outside_network
 modifier|*
 name|outnet
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|,
@@ -6754,7 +6930,7 @@ name|key
 operator|.
 name|qbuf
 operator|=
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -6763,7 +6939,7 @@ name|key
 operator|.
 name|qbuflen
 operator|=
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buff
 argument_list|)
@@ -6827,7 +7003,7 @@ name|outside_network
 modifier|*
 name|outnet
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|,
@@ -6912,12 +7088,12 @@ name|qbuf
 operator|=
 name|memdup
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
 argument_list|,
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buff
 argument_list|)
@@ -6944,7 +7120,7 @@ name|sq
 operator|->
 name|qbuflen
 operator|=
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|buff
 argument_list|)
@@ -7079,6 +7255,11 @@ directive|ifdef
 name|UNBOUND_DEBUG
 name|ins
 operator|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_insert
@@ -7576,7 +7757,7 @@ name|serviced_query
 modifier|*
 name|sq
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|,
@@ -7613,12 +7794,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* generate query */
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write_u16
+name|sldns_buffer_write_u16
 argument_list|(
 name|buff
 argument_list|,
@@ -7626,7 +7807,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* id placeholder */
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|buff
 argument_list|,
@@ -7639,7 +7820,7 @@ operator|->
 name|qbuflen
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|buff
 argument_list|)
@@ -7778,7 +7959,7 @@ name|BIT_CD
 condition|)
 name|LDNS_CD_SET
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|buff
 argument_list|)
@@ -7804,7 +7985,7 @@ name|serviced_query
 modifier|*
 name|sq
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|)
@@ -7817,7 +7998,7 @@ decl_stmt|;
 name|uint8_t
 name|edns_lame_known
 decl_stmt|;
-name|uint32_t
+name|time_t
 name|now
 init|=
 operator|*
@@ -8057,7 +8238,7 @@ specifier|static
 name|int
 name|serviced_check_qname
 parameter_list|(
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|pkt
 parameter_list|,
@@ -8073,7 +8254,7 @@ name|uint8_t
 modifier|*
 name|d1
 init|=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
@@ -8120,7 +8301,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -8156,7 +8337,7 @@ condition|)
 block|{
 name|d1
 operator|=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
@@ -8173,11 +8354,11 @@ if|if
 condition|(
 name|d1
 operator|>=
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|pkt
 argument_list|,
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|pkt
 argument_list|)
@@ -8363,6 +8544,11 @@ name|rbnode_t
 modifier|*
 name|rem
 init|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 comment|/* remove from tree, and schedule for deletion, so that callbacks 	 * can safely deregister themselves and even create new serviced 	 * queries that are identical to this one. */
@@ -8414,7 +8600,7 @@ block|{
 comment|/* noerror and nxdomain must have a qname in reply */
 if|if
 condition|(
-name|ldns_buffer_read_u16_at
+name|sldns_buffer_read_u16_at
 argument_list|(
 name|c
 operator|->
@@ -8428,7 +8614,7 @@ operator|&&
 operator|(
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -8440,7 +8626,7 @@ name|LDNS_RCODE_NOERROR
 operator|||
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -8498,7 +8684,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ldns_buffer_read_u16_at
+name|sldns_buffer_read_u16_at
 argument_list|(
 name|c
 operator|->
@@ -8571,7 +8757,7 @@ name|c
 operator|->
 name|buffer
 argument_list|,
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|c
 operator|->
@@ -8598,7 +8784,7 @@ name|c
 operator|->
 name|buffer
 argument_list|,
-name|ldns_buffer_at
+name|sldns_buffer_at
 argument_list|(
 name|c
 operator|->
@@ -8620,7 +8806,7 @@ block|{
 comment|/* make a backup of the query, since the querystate processing 		 * may send outgoing queries that overwrite the buffer. 		 * use secondary buffer to store the query. 		 * This is a data copy, but faster than packet to server */
 name|backlen
 operator|=
-name|ldns_buffer_limit
+name|sldns_buffer_limit
 argument_list|(
 name|c
 operator|->
@@ -8631,7 +8817,7 @@ name|backup_p
 operator|=
 name|memdup
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -8700,14 +8886,14 @@ operator|&&
 name|c
 condition|)
 block|{
-name|ldns_buffer_clear
+name|sldns_buffer_clear
 argument_list|(
 name|c
 operator|->
 name|buffer
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_write
+name|sldns_buffer_write
 argument_list|(
 name|c
 operator|->
@@ -8718,7 +8904,7 @@ argument_list|,
 name|backlen
 argument_list|)
 expr_stmt|;
-name|ldns_buffer_flip
+name|sldns_buffer_flip
 argument_list|(
 name|c
 operator|->
@@ -8917,7 +9103,7 @@ operator|&&
 operator|(
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -8929,7 +9115,7 @@ name|LDNS_RCODE_FORMERR
 operator|||
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -8981,7 +9167,7 @@ operator|&&
 operator|(
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -8993,7 +9179,7 @@ name|LDNS_RCODE_NOERROR
 operator|||
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -9005,7 +9191,7 @@ name|LDNS_RCODE_NXDOMAIN
 operator|||
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -9139,21 +9325,20 @@ name|int
 name|roundtime
 init|=
 operator|(
-operator|(
+call|(
 name|int
-operator|)
+call|)
+argument_list|(
 name|now
 operator|.
 name|tv_sec
 operator|-
-operator|(
-name|int
-operator|)
 name|sq
 operator|->
 name|last_sent_time
 operator|.
 name|tv_sec
+argument_list|)
 operator|)
 operator|*
 literal|1000
@@ -9243,7 +9428,7 @@ operator|->
 name|last_rtt
 argument_list|,
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|now
 operator|.
@@ -9332,7 +9517,7 @@ name|serviced_query
 modifier|*
 name|sq
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|)
@@ -9445,7 +9630,7 @@ name|serviced_query
 modifier|*
 name|sq
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|)
@@ -9820,7 +10005,7 @@ operator|->
 name|last_rtt
 argument_list|,
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|now
 operator|.
@@ -9973,7 +10158,7 @@ operator|&&
 operator|(
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -9985,7 +10170,7 @@ name|LDNS_RCODE_FORMERR
 operator|||
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -10112,7 +10297,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|now
 operator|.
@@ -10194,7 +10379,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|now
 operator|.
@@ -10232,7 +10417,7 @@ operator|&&
 operator|(
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -10244,7 +10429,7 @@ name|LDNS_RCODE_NOERROR
 operator|||
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -10256,7 +10441,7 @@ name|LDNS_RCODE_NXDOMAIN
 operator|||
 name|LDNS_RCODE_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -10324,7 +10509,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|now
 operator|.
@@ -10406,21 +10591,20 @@ name|int
 name|roundtime
 init|=
 operator|(
-operator|(
+call|(
 name|int
-operator|)
+call|)
+argument_list|(
 name|now
 operator|.
 name|tv_sec
 operator|-
-operator|(
-name|int
-operator|)
 name|sq
 operator|->
 name|last_sent_time
 operator|.
 name|tv_sec
+argument_list|)
 operator|)
 operator|*
 literal|1000
@@ -10506,7 +10690,7 @@ operator|->
 name|last_rtt
 argument_list|,
 operator|(
-name|uint32_t
+name|time_t
 operator|)
 name|now
 operator|.
@@ -10527,7 +10711,7 @@ if|if
 condition|(
 name|LDNS_TC_WIRE
 argument_list|(
-name|ldns_buffer_begin
+name|sldns_buffer_begin
 argument_list|(
 name|c
 operator|->
@@ -10666,7 +10850,7 @@ name|void
 modifier|*
 name|callback_arg
 parameter_list|,
-name|ldns_buffer
+name|sldns_buffer
 modifier|*
 name|buff
 parameter_list|)
@@ -11066,6 +11250,11 @@ name|rbnode_t
 modifier|*
 name|rem
 init|=
+else|#
+directive|else
+operator|(
+name|void
+operator|)
 endif|#
 directive|endif
 name|rbtree_delete
@@ -11336,7 +11525,7 @@ operator|->
 name|udp_buff
 argument_list|)
 operator|+
-name|ldns_buffer_capacity
+name|sldns_buffer_capacity
 argument_list|(
 name|outnet
 operator|->

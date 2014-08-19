@@ -350,17 +350,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.uaudio.default_rate"
-argument_list|,
-operator|&
-name|uaudio_default_rate
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb_uaudio
@@ -369,7 +358,7 @@ name|OID_AUTO
 argument_list|,
 name|default_rate
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|uaudio_default_rate
@@ -377,17 +366,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"uaudio default sample rate"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.uaudio.default_bits"
-argument_list|,
-operator|&
-name|uaudio_default_bits
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -401,7 +379,7 @@ name|OID_AUTO
 argument_list|,
 name|default_bits
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|uaudio_default_bits
@@ -409,17 +387,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"uaudio default sample bits"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.uaudio.default_channels"
-argument_list|,
-operator|&
-name|uaudio_default_channels
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -433,7 +400,7 @@ name|OID_AUTO
 argument_list|,
 name|default_channels
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|uaudio_default_channels
@@ -30641,7 +30608,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|DRIVER_MODULE_ORDERED
 argument_list|(
 name|uaudio
 argument_list|,
@@ -30654,6 +30621,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
 end_expr_stmt

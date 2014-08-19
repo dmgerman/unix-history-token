@@ -35,8 +35,6 @@ begin_decl_stmt
 name|__BEGIN_DECLS
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__XSI_VISIBLE
 operator|>=
 literal|600
@@ -111,8 +109,6 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
-operator|||
 name|__POSIX_VISIBLE
 operator|||
 name|__XSI_VISIBLE

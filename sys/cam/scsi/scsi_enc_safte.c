@@ -773,7 +773,7 @@ name|OID_AUTO
 argument_list|,
 name|emulate_array_devices
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|emulate_array_devices
@@ -781,17 +781,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Emulate Array Devices for SAF-TE"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.enc.emulate_array_devices"
-argument_list|,
-operator|&
-name|emulate_array_devices
 argument_list|)
 expr_stmt|;
 end_expr_stmt

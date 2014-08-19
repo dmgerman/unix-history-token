@@ -194,6 +194,21 @@ end_struct
 
 begin_struct
 struct|struct
+name|vm_isa_irq_trigger
+block|{
+name|int
+name|atpic_irq
+decl_stmt|;
+name|enum
+name|vm_intr_trigger
+name|trigger
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vm_capability
 block|{
 name|int
@@ -442,6 +457,96 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_gla2gpa
+block|{
+name|int
+name|vcpuid
+decl_stmt|;
+comment|/* inputs */
+name|int
+name|prot
+decl_stmt|;
+comment|/* PROT_READ or PROT_WRITE */
+name|uint64_t
+name|gla
+decl_stmt|;
+name|struct
+name|vm_guest_paging
+name|paging
+decl_stmt|;
+name|int
+name|fault
+decl_stmt|;
+comment|/* outputs */
+name|uint64_t
+name|gpa
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_activate_cpu
+block|{
+name|int
+name|vcpuid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_cpuset
+block|{
+name|int
+name|which
+decl_stmt|;
+name|int
+name|cpusetsize
+decl_stmt|;
+name|cpuset_t
+modifier|*
+name|cpus
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|VM_ACTIVE_CPUS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_SUSPENDED_CPUS
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|vm_intinfo
+block|{
+name|int
+name|vcpuid
+decl_stmt|;
+name|uint64_t
+name|info1
+decl_stmt|;
+name|uint64_t
+name|info2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -466,6 +571,10 @@ name|IOCNUM_SUSPEND
 init|=
 literal|4
 block|,
+name|IOCNUM_REINIT
+init|=
+literal|5
+block|,
 comment|/* memory apis */
 name|IOCNUM_MAP_MEMORY
 init|=
@@ -478,6 +587,10 @@ block|,
 name|IOCNUM_GET_GPA_PMAP
 init|=
 literal|12
+block|,
+name|IOCNUM_GLA2GPA
+init|=
+literal|13
 block|,
 comment|/* register/state accessors */
 name|IOCNUM_SET_REGISTER
@@ -497,6 +610,14 @@ init|=
 literal|23
 block|,
 comment|/* interrupt injection */
+name|IOCNUM_GET_INTINFO
+init|=
+literal|28
+block|,
+name|IOCNUM_SET_INTINFO
+init|=
+literal|29
+block|,
 name|IOCNUM_INJECT_EXCEPTION
 init|=
 literal|30
@@ -588,6 +709,19 @@ block|,
 name|IOCNUM_ISA_PULSE_IRQ
 init|=
 literal|82
+block|,
+name|IOCNUM_ISA_SET_IRQ_TRIGGER
+init|=
+literal|83
+block|,
+comment|/* vm_cpuset */
+name|IOCNUM_ACTIVATE_CPU
+init|=
+literal|90
+block|,
+name|IOCNUM_GET_CPUSET
+init|=
+literal|91
 block|, }
 enum|;
 end_enum
@@ -606,6 +740,14 @@ directive|define
 name|VM_SUSPEND
 define|\
 value|_IOW('v', IOCNUM_SUSPEND, struct vm_suspend)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_REINIT
+define|\
+value|_IO('v', IOCNUM_REINIT)
 end_define
 
 begin_define
@@ -747,6 +889,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_ISA_SET_IRQ_TRIGGER
+define|\
+value|_IOW('v', IOCNUM_ISA_SET_IRQ_TRIGGER, struct vm_isa_irq_trigger)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_SET_CAPABILITY
 define|\
 value|_IOW('v', IOCNUM_SET_CAPABILITY, struct vm_capability)
@@ -854,6 +1004,46 @@ directive|define
 name|VM_GET_GPA_PMAP
 define|\
 value|_IOWR('v', IOCNUM_GET_GPA_PMAP, struct vm_gpa_pte)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GLA2GPA
+define|\
+value|_IOWR('v', IOCNUM_GLA2GPA, struct vm_gla2gpa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_ACTIVATE_CPU
+define|\
+value|_IOW('v', IOCNUM_ACTIVATE_CPU, struct vm_activate_cpu)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GET_CPUS
+define|\
+value|_IOW('v', IOCNUM_GET_CPUSET, struct vm_cpuset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_SET_INTINFO
+define|\
+value|_IOW('v', IOCNUM_SET_INTINFO, struct vm_intinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_GET_INTINFO
+define|\
+value|_IOWR('v', IOCNUM_GET_INTINFO, struct vm_intinfo)
 end_define
 
 begin_endif

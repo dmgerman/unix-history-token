@@ -551,7 +551,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t\t\t  }\n"
+literal|"\t\t\t\t  },\n"
 argument_list|)
 expr_stmt|;
 name|printf

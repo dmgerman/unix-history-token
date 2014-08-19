@@ -234,7 +234,7 @@ comment|/* max_ll_items */
 operator|.
 name|shadow_ram_support
 operator|=
-name|true
+name|false
 block|,
 comment|/* shadow_ram_support */
 operator|.
@@ -682,9 +682,9 @@ operator|.
 name|calib_need
 operator|=
 operator|(
-name|IWN_FLG_NEED_PHY_CALIB_DC
-operator||
 name|IWN_FLG_NEED_PHY_CALIB_LO
+operator||
+name|IWN_FLG_NEED_PHY_CALIB_TX_IQ_PERIODIC
 operator||
 name|IWN_FLG_NEED_PHY_CALIB_TX_IQ
 operator||
@@ -706,10 +706,11 @@ name|additional_gp_drv_bit
 operator|=
 name|IWN_GP_DRIVER_NONE
 block|,
+comment|/* XXX 1000 - no BT */
 operator|.
 name|bt_mode
 operator|=
-name|IWN_BT_NONE
+name|IWN_BT_SIMPLE
 block|,
 operator|.
 name|plcp_err_threshold

@@ -94,8 +94,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|dtrace_trap
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * The dtrace module handles traps that occur during a DTrace probe.  * This type definition is used in the trap handler to provide a  * hook for the dtrace module to register it's handler with.  */
+comment|/*  * The dtrace module handles traps that occur during a DTrace probe.  * This type definition is used in the trap handler to provide a  * hook for the dtrace module to register its handler with.  */
 end_comment
 
 begin_typedef
@@ -109,24 +120,9 @@ parameter_list|(
 name|struct
 name|trapframe
 modifier|*
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_function_decl
-name|int
-name|dtrace_trap
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -136,26 +132,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Used by the machine dependent trap() code. */
+comment|/*  * A hook which removes active FBT probes before executing the double fault  * handler. We want to ensure that DTrace doesn't trigger another trap, which  * would result in a reset.  */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|dtrace_invop_func_t
-function_decl|)
-parameter_list|(
-name|uintptr_t
-parameter_list|,
-name|uintptr_t
-modifier|*
-parameter_list|,
-name|uintptr_t
-parameter_list|)
-function_decl|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -169,17 +147,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/* Global variables in trap.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|dtrace_invop_func_t
-name|dtrace_invop_func
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

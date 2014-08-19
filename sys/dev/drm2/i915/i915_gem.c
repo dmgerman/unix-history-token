@@ -5043,7 +5043,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|1
+name|PQ_ACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock
@@ -10832,7 +10832,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock
@@ -11193,7 +11193,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|1
+name|PQ_ACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock
@@ -17535,7 +17535,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock
@@ -17912,7 +17912,7 @@ name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|PQ_INACTIVE
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock

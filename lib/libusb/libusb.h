@@ -48,6 +48,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|LIBUSB_CALL
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

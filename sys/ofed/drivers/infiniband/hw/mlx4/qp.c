@@ -1358,7 +1358,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||
@@ -6077,6 +6077,9 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|__acquire
 argument_list|(
 operator|&
@@ -6182,6 +6185,9 @@ operator|==
 name|recv_cq
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|__release
 argument_list|(
 operator|&
@@ -13754,7 +13760,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||
@@ -13787,7 +13793,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||
@@ -13848,7 +13854,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||
@@ -15285,7 +15291,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||
@@ -15318,7 +15324,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||
@@ -15379,7 +15385,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||
@@ -16531,7 +16537,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||
@@ -16569,7 +16575,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||
@@ -16622,7 +16628,7 @@ name|byte_count
 operator|=
 name|cpu_to_be32
 argument_list|(
-literal|1
+literal|1U
 operator|<<
 literal|31
 operator||

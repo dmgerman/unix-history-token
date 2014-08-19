@@ -7,12 +7,9 @@ begin_comment
 comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
+begin_comment
+comment|/*  * Copyright (c) 2013, Joyent, Inc.  All rights reserved.  */
+end_comment
 
 begin_include
 include|#
@@ -118,6 +115,18 @@ begin_include
 include|#
 directive|include
 file|<dt_list.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dt_pid.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dtrace.h>
 end_include
 
 begin_function
@@ -1405,6 +1414,54 @@ expr_stmt|;
 name|nc
 operator|++
 expr_stmt|;
+comment|/* 	 * The pid provider believes in giving the kernel a break. No reason to 	 * give the kernel all the ctf containers that we're keeping ourselves 	 * just to get it back from it. So if we're coming from a pid provider 	 * probe and the kernel gave us no argument information we'll get some 	 * here. If for some crazy reason the kernel knows about our userland 	 * types then we just ignore this. 	 */
+if|if
+condition|(
+name|xc
+operator|==
+literal|0
+operator|&&
+name|nc
+operator|==
+literal|0
+operator|&&
+name|strncmp
+argument_list|(
+name|pvp
+operator|->
+name|pv_desc
+operator|.
+name|dtvd_name
+argument_list|,
+literal|"pid"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|nc
+operator|=
+name|adc
+expr_stmt|;
+name|dt_pid_get_types
+argument_list|(
+name|dtp
+argument_list|,
+name|pdp
+argument_list|,
+name|adv
+argument_list|,
+operator|&
+name|nc
+argument_list|)
+expr_stmt|;
+name|xc
+operator|=
+name|nc
+expr_stmt|;
+block|}
 comment|/* 	 * Now that we have discovered the number of native and translated 	 * arguments from the argument descriptions, allocate a new probe ident 	 * and corresponding dt_probe_t and hash it into the provider. 	 */
 name|xargs
 operator|=
@@ -1657,6 +1714,16 @@ argument_list|,
 name|dtt
 operator|.
 name|dtt_type
+argument_list|,
+name|dtt
+operator|.
+name|dtt_flags
+operator|&
+name|DTT_FL_USER
+condition|?
+name|B_TRUE
+else|:
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1800,6 +1867,8 @@ argument_list|,
 name|dtt
 operator|.
 name|dtt_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3522,6 +3591,8 @@ argument_list|,
 name|dtt
 operator|.
 name|dtt_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 name|dt_node_attr_assign

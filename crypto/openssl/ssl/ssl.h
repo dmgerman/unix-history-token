@@ -1543,7 +1543,7 @@ name|SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG
 value|0x00000008L
 define|#
 directive|define
-name|SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG
+name|SSL_OP_TLSEXT_PADDING
 value|0x00000010L
 define|#
 directive|define
@@ -1569,6 +1569,11 @@ comment|/* Hasn't done anything since OpenSSL 0.9.7h, retained for compatibility
 define|#
 directive|define
 name|SSL_OP_MSIE_SSLV2_RSA_PADDING
+value|0x0
+comment|/* Refers to ancient SSLREF and SSLv2, retained for compatibility */
+define|#
+directive|define
+name|SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG
 value|0x0
 comment|/* Disable SSL 3.0/TLS 1.0 CBC vulnerability workaround that was added  * in OpenSSL 0.9.6d.  Usually (depending on the application protocol)  * the workaround is not needed.  Unfortunately some broken SSL/TLS  * implementations cannot handle it at all, which is why we include  * it in SSL_OP_ALL. */
 define|#

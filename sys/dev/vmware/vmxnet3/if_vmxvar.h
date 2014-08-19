@@ -581,6 +581,16 @@ name|int
 name|vxrxq_intr_idx
 decl_stmt|;
 name|struct
+name|mbuf
+modifier|*
+name|vxrxq_mhead
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|vxrxq_mtail
+decl_stmt|;
+name|struct
 name|vmxnet3_rxring
 name|vxrxq_cmd_ring
 index|[

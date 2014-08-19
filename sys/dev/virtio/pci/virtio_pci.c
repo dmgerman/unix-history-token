@@ -920,6 +920,17 @@ name|vtpci_setup_msi_interrupt
 value|vtpci_setup_legacy_interrupt
 end_define
 
+begin_define
+define|#
+directive|define
+name|VIRTIO_PCI_CONFIG
+parameter_list|(
+name|_sc
+parameter_list|)
+define|\
+value|VIRTIO_PCI_CONFIG_OFF((((_sc)->vtpci_flags& VTPCI_FLAG_MSIX)) != 0)
+end_define
+
 begin_comment
 comment|/*  * I/O port read/write wrappers.  */
 end_comment

@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<getopt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdbool.h>
 end_include
 
@@ -233,35 +239,12 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MSDOS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SEPARATOR
-value|";"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|SEPARATOR
 value|":"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -283,6 +266,24 @@ name|bool
 name|verbose
 init|=
 name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|terse
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|outputformat
 decl_stmt|;
 end_decl_stmt
 
@@ -603,6 +604,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|dupstr
@@ -619,14 +621,9 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|malloc
-argument_list|(
-name|strlen
+name|strdup
 argument_list|(
 name|str
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -634,18 +631,11 @@ condition|(
 operator|!
 name|ret
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|3
 argument_list|,
-literal|"memory allocation error"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|ret
-argument_list|,
-name|str
+literal|"dupstr"
 argument_list|)
 expr_stmt|;
 return|return
@@ -657,6 +647,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|readunits
 parameter_list|(
@@ -913,6 +904,11 @@ operator|*
 name|lineptr
 operator|==
 literal|'/'
+operator|||
+operator|*
+name|lineptr
+operator|==
+literal|'#'
 condition|)
 continue|continue;
 name|lineptr
@@ -1250,6 +1246,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|initializeunit
 parameter_list|(
@@ -1297,6 +1294,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|addsubunit
 parameter_list|(
@@ -1381,6 +1379,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|showunit
 parameter_list|(
@@ -1671,6 +1670,7 @@ comment|/*    Adds the specified string to the unit.    Flip is 0 for adding nor
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|addunit
 parameter_list|(
@@ -2223,6 +2223,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|compare
 parameter_list|(
@@ -2265,6 +2266,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sortunit
 parameter_list|(
@@ -2904,6 +2906,7 @@ value|4
 end_define
 
 begin_function
+specifier|static
 name|int
 name|reduceproduct
 parameter_list|(
@@ -3062,6 +3065,7 @@ comment|/*    Reduces numerator and denominator of the specified unit.    Return
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|reduceunit
 parameter_list|(
@@ -3118,6 +3122,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|compareproducts
 parameter_list|(
@@ -3224,6 +3229,7 @@ comment|/* Return zero if units are compatible, nonzero otherwise */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|compareunits
 parameter_list|(
@@ -3265,6 +3271,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|completereduce
 parameter_list|(
@@ -3301,6 +3308,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|showanswer
 parameter_list|(
@@ -3317,6 +3325,10 @@ parameter_list|)
 block|{
 name|double
 name|ans
+decl_stmt|;
+name|char
+modifier|*
+name|oformat
 decl_stmt|;
 if|if
 condition|(
@@ -3344,7 +3356,12 @@ argument_list|,
 name|havestr
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|printf
 argument_list|(
 literal|"\t"
@@ -3355,6 +3372,12 @@ argument_list|(
 name|have
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
+block|{
 if|if
 condition|(
 name|verbose
@@ -3377,6 +3400,7 @@ argument_list|(
 name|want
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -3407,9 +3431,20 @@ name|have
 operator|->
 name|quantity
 condition|)
+block|{
+name|asprintf
+argument_list|(
+operator|&
+name|oformat
+argument_list|,
+literal|"\t%s\n"
+argument_list|,
+name|outputformat
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%.8g\n"
+name|oformat
 argument_list|,
 operator|(
 name|have
@@ -3430,11 +3465,33 @@ operator|->
 name|factor
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|oformat
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
+name|asprintf
+argument_list|(
+operator|&
+name|oformat
+argument_list|,
+literal|"\t (-> x*%sg %sg)\n\t (<- y*%sg %sg)\n"
+argument_list|,
+name|outputformat
+argument_list|,
+name|outputformat
+argument_list|,
+name|outputformat
+argument_list|,
+name|outputformat
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t (-> x*%.8g %+.8g)\n\t (<- y*%.8g %+.8g)\n"
+name|oformat
 argument_list|,
 name|have
 operator|->
@@ -3499,57 +3556,135 @@ if|if
 condition|(
 name|verbose
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"\t%s = %.8g * %s\n"
+literal|"\t%s = "
 argument_list|,
 name|havestr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|outputformat
 argument_list|,
 name|ans
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" * %s"
 argument_list|,
 name|wantstr
 argument_list|)
 expr_stmt|;
-else|else
 name|printf
 argument_list|(
-literal|"\t* %.8g\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|terse
+condition|)
+block|{
+name|printf
+argument_list|(
+name|outputformat
 argument_list|,
 name|ans
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\t* "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|outputformat
+argument_list|,
+name|ans
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|verbose
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"\t%s = (1 / %.8g) * %s\n"
+literal|"\t%s = (1 / "
 argument_list|,
 name|havestr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|outputformat
 argument_list|,
 literal|1
 operator|/
 name|ans
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|") * %s\n"
 argument_list|,
 name|wantstr
 argument_list|)
 expr_stmt|;
-else|else
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"\t/ %.8g\n"
+literal|"\t/ "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|outputformat
 argument_list|,
 literal|1
 operator|/
 name|ans
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -3570,6 +3705,117 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|option
+name|longopts
+index|[]
+init|=
+block|{
+block|{
+literal|"help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'h'
+block|}
+block|,
+block|{
+literal|"exponential"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'e'
+block|}
+block|,
+block|{
+literal|"file"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'f'
+block|}
+block|,
+block|{
+literal|"output-format"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'o'
+block|}
+block|,
+block|{
+literal|"quiet"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'q'
+block|}
+block|,
+block|{
+literal|"terse"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'t'
+block|}
+block|,
+block|{
+literal|"unitsfile"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'U'
+block|}
+block|,
+block|{
+literal|"verbose"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'v'
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'V'
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -3621,18 +3867,26 @@ name|readfile
 operator|=
 name|false
 expr_stmt|;
+name|outputformat
+operator|=
+literal|"%.8g"
+expr_stmt|;
 while|while
 condition|(
 operator|(
 name|optchar
 operator|=
-name|getopt
+name|getopt_long
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fqvUV:"
+literal|"+ehf:oqtvUV"
+argument_list|,
+name|longopts
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|!=
@@ -3645,6 +3899,14 @@ condition|(
 name|optchar
 condition|)
 block|{
+case|case
+literal|'e'
+case|:
+name|outputformat
+operator|=
+literal|"%6e"
+expr_stmt|;
+break|break;
 case|case
 literal|'f'
 case|:
@@ -3682,6 +3944,22 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|terse
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|outputformat
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 name|verbose
@@ -3689,6 +3967,17 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
+case|case
+literal|'V'
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"FreeBSD units\n"
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
 case|case
 literal|'U'
 case|:
@@ -3723,19 +4012,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'V'
+literal|'h'
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"FreeBSD units\n"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-break|break;
+comment|/* FALLTHROUGH */
 default|default:
 name|usage
 argument_list|()
@@ -3841,7 +4120,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Could not initalize history"
+literal|"Could not initialize history"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4137,6 +4416,11 @@ block|}
 name|history_end
 argument_list|(
 name|inhistory
+argument_list|)
+expr_stmt|;
+name|el_end
+argument_list|(
+name|el
 argument_list|)
 expr_stmt|;
 return|return

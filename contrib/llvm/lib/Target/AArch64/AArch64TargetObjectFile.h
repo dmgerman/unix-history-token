@@ -81,8 +81,29 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// AArch64LinuxTargetObjectFile - This implementation is used for linux
-comment|/// AArch64.
+comment|/// AArch64ElfTargetObjectFile - This implementation is used for ELF
+comment|/// AArch64 targets.
+name|class
+name|AArch64ElfTargetObjectFile
+range|:
+name|public
+name|TargetLoweringObjectFileELF
+block|{
+name|virtual
+name|void
+name|Initialize
+argument_list|(
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+specifier|const
+name|TargetMachine
+operator|&
+name|TM
+argument_list|)
+block|;   }
+decl_stmt|;
 name|class
 name|AArch64LinuxTargetObjectFile
 range|:

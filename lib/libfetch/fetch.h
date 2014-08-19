@@ -485,6 +485,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|FILE
+modifier|*
+name|fetchReqHTTP
+parameter_list|(
+name|struct
+name|url
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* FTP-specific functions */
 end_comment

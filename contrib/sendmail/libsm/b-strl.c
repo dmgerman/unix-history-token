@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: b-strl.c,v 1.26 2013/11/22 20:51:42 ca Exp $"
+literal|"@(#)$Id: b-strl.c,v 1.26 2013-11-22 20:51:42 ca Exp $"
 argument_list|)
 end_macro
 

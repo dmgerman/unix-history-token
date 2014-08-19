@@ -176,6 +176,18 @@ parameter_list|)
 value|HIST_FUN(el, H_SAVE fname)
 end_define
 
+begin_define
+define|#
+directive|define
+name|HIST_SAVE_FP
+parameter_list|(
+name|el
+parameter_list|,
+name|fp
+parameter_list|)
+value|HIST_FUN(el, H_SAVE_FP fp)
+end_define
+
 begin_function_decl
 name|protected
 name|int

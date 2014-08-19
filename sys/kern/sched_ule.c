@@ -3002,7 +3002,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|__inline
+name|__always_inline
 name|int
 name|cpu_search
 parameter_list|(
@@ -3031,6 +3031,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|__noinline
 name|cpu_search_lowest
 parameter_list|(
 specifier|const
@@ -3049,6 +3050,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|__noinline
 name|cpu_search_highest
 parameter_list|(
 specifier|const
@@ -3067,6 +3069,7 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|__noinline
 name|cpu_search_both
 parameter_list|(
 specifier|const
@@ -3094,7 +3097,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+name|__always_inline
 name|int
 name|cpu_search
 parameter_list|(
@@ -11640,11 +11643,6 @@ name|td
 parameter_list|)
 block|{
 name|struct
-name|td_sched
-modifier|*
-name|ts
-decl_stmt|;
-name|struct
 name|tdq
 modifier|*
 name|tdq
@@ -11666,12 +11664,6 @@ name|TDQ_CPU
 argument_list|(
 name|cpuid
 argument_list|)
-expr_stmt|;
-name|ts
-operator|=
-name|td
-operator|->
-name|td_sched
 expr_stmt|;
 if|if
 condition|(

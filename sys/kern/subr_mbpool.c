@@ -1253,7 +1253,7 @@ comment|/*  * Mbuf system external mbuf free routine  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|mbp_ext_free
 parameter_list|(
 name|struct
@@ -1277,11 +1277,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
 block|}
 end_function
 

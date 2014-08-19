@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_pragma
@@ -388,7 +388,7 @@ block|,
 operator|&
 name|info_attr
 block|,
-literal|0
+name|DTRACE_PRIV_USER
 block|}
 block|,
 block|{
@@ -399,7 +399,7 @@ block|,
 operator|&
 name|info_attr
 block|,
-literal|0
+name|DTRACE_PRIV_USER
 block|}
 block|,
 block|{
@@ -421,7 +421,7 @@ block|,
 operator|&
 name|stab_attr
 block|,
-literal|0
+name|DTRACE_PRIV_USER
 block|}
 block|,
 block|{
@@ -432,7 +432,7 @@ block|,
 operator|&
 name|stab_attr
 block|,
-literal|0
+name|DTRACE_PRIV_USER
 block|}
 block|,
 block|{
@@ -6968,6 +6968,39 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_function
+name|int
+name|sdt_mode
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|dtrace_id_t
+name|id
+parameter_list|,
+name|void
+modifier|*
+name|parg
+parameter_list|)
+block|{
+comment|/* 	 * We tell DTrace that we're in kernel mode, that the firing needs to 	 * be dropped for anything that doesn't have necessary privileges, and 	 * that it needs to be restricted for anything that has restricted 	 * (i.e., not all-zone) privileges. 	 */
+return|return
+operator|(
+name|DTRACE_MODE_KERNEL
+operator||
+name|DTRACE_MODE_NOPRIV_DROP
+operator||
+name|DTRACE_MODE_LIMITEDPRIV_RESTRICT
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*ARGSUSED*/

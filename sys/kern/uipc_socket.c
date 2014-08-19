@@ -1360,9 +1360,6 @@ argument_list|,
 name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET
 comment|/* remove acccept filter if one is present. */
 if|if
 condition|(
@@ -1379,8 +1376,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|MAC
@@ -10984,9 +10979,6 @@ operator|->
 name|sopt_name
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET
 case|case
 name|SO_ACCEPTFILTER
 case|:
@@ -11007,8 +10999,6 @@ goto|goto
 name|bad
 goto|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|SO_LINGER
 case|:
@@ -11976,9 +11966,6 @@ operator|->
 name|sopt_name
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET
 case|case
 name|SO_ACCEPTFILTER
 case|:
@@ -11992,8 +11979,6 @@ name|sopt
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|SO_LINGER
 case|:

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: eval.c,v 1.70 2012/04/12 17:00:11 espie Exp $	*/
+comment|/*	$OpenBSD: eval.c,v 1.73 2014/07/11 21:04:17 espie Exp $ */
 end_comment
 
 begin_comment
@@ -1043,6 +1043,7 @@ name|argc
 operator|>
 literal|2
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -1096,6 +1097,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -3163,12 +3165,12 @@ literal|2
 expr_stmt|;
 name|m4wraps
 operator|=
-name|xrealloc
+name|xreallocarray
 argument_list|(
 name|m4wraps
 argument_list|,
 name|maxwraps
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -3278,6 +3280,14 @@ operator|)
 operator|<
 literal|0
 operator|||
+name|unlink
+argument_list|(
+name|fname
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
 operator|(
 name|outfile
 index|[
@@ -3299,25 +3309,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"%s: cannot divert"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|unlink
-argument_list|(
-name|fname
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s: cannot unlink"
 argument_list|,
 name|fname
 argument_list|)

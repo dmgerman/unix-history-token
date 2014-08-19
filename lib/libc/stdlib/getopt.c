@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: getopt.c,v 1.26 2003/08/07 16:43:40 agc Exp $	*/
+comment|/*	$NetBSD: getopt.c,v 1.29 2014/06/05 22:00:22 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -160,26 +160,20 @@ begin_function
 name|int
 name|getopt
 parameter_list|(
-name|nargc
-parameter_list|,
-name|nargv
-parameter_list|,
-name|ostr
-parameter_list|)
 name|int
 name|nargc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 specifier|const
 name|nargv
 index|[]
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|ostr
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -415,6 +409,21 @@ condition|)
 name|optarg
 operator|=
 name|place
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|oli
+index|[
+literal|2
+index|]
+operator|==
+literal|':'
+condition|)
+comment|/* 			 * GNU Extension, for optional arguments if the rest of 			 * the argument is empty, we return NULL 			 */
+name|optarg
+operator|=
+name|NULL
 expr_stmt|;
 elseif|else
 if|if

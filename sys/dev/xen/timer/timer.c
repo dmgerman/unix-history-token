@@ -2135,7 +2135,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|xentimer
 argument_list|,
-name|nexus
+name|xenpv
 argument_list|,
 name|xentimer_driver
 argument_list|,
@@ -2153,7 +2153,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|xentimer
 argument_list|,
-name|nexus
+name|xenpv
 argument_list|,
 literal|1
 argument_list|,

@@ -341,8 +341,6 @@ directive|if
 name|__POSIX_VISIBLE
 operator|>=
 literal|200112
-operator|||
-name|__BSD_VISIBLE
 end_if
 
 begin_function_decl

@@ -438,10 +438,18 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* (x) route caching / general use */
+name|uint32_t
+name|inp_flowtype
+decl_stmt|;
+comment|/* (x) M_HASHTYPE value */
+name|uint32_t
+name|inp_rss_listen_bucket
+decl_stmt|;
+comment|/* (x) overridden RSS listen bucket */
 name|u_int
 name|inp_ispare
 index|[
-literal|6
+literal|4
 index|]
 decl_stmt|;
 comment|/* (x) route caching / user cookie / 					 *     general use */
@@ -2103,6 +2111,28 @@ begin_comment
 comment|/* SO_REUSEADDR option is set */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INP_BINDMULTI
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* IP_BINDMULTI option is set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RSS_BUCKET_SET
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* IP_RSS_LISTEN_BUCKET is set */
+end_comment
+
 begin_comment
 comment|/*  * Flags passed to in_pcblookup*() functions.  */
 end_comment
@@ -2486,6 +2516,25 @@ parameter_list|,
 name|uint32_t
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_pcbbind_check_bindmulti
+parameter_list|(
+specifier|const
+name|struct
+name|inpcb
+modifier|*
+name|ni
+parameter_list|,
+specifier|const
+name|struct
+name|inpcb
+modifier|*
+name|oi
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -76,7 +76,7 @@ name|struct
 name|apr_pool_t
 name|apr_pool_t
 typedef|;
-comment|/**  * Declaration helper macro to construct apr_foo_pool_get()s.  *  * This standardized macro is used by opaque (APR) data types to return  * the apr_pool_t that is associated with the data type.  *  * APR_POOL_DECLARE_ACCESSOR() is used in a header file to declare the  * accessor function. A typical usage and result would be:  *<pre>  *    APR_POOL_DECLARE_ACCESSOR(file);  * becomes:  *    APR_DECLARE(apr_pool_t *) apr_file_pool_get(apr_file_t *ob);  *</pre>  * @remark Doxygen unwraps this macro (via doxygen.conf) to provide   * actual help for each specific occurance of apr_foo_pool_get.  * @remark the linkage is specified for APR. It would be possible to expand  *       the macros to support other linkages.  */
+comment|/**  * Declaration helper macro to construct apr_foo_pool_get()s.  *  * This standardized macro is used by opaque (APR) data types to return  * the apr_pool_t that is associated with the data type.  *  * APR_POOL_DECLARE_ACCESSOR() is used in a header file to declare the  * accessor function. A typical usage and result would be:  *<pre>  *    APR_POOL_DECLARE_ACCESSOR(file);  * becomes:  *    APR_DECLARE(apr_pool_t *) apr_file_pool_get(const apr_file_t *thefile);  *</pre>  * @remark Doxygen unwraps this macro (via doxygen.conf) to provide   * actual help for each specific occurrence of apr_foo_pool_get.  * @remark the linkage is specified for APR. It would be possible to expand  *       the macros to support other linkages.  */
 define|#
 directive|define
 name|APR_POOL_DECLARE_ACCESSOR
@@ -94,7 +94,7 @@ name|type
 parameter_list|)
 define|\
 value|APR_DECLARE(apr_pool_t *) apr_##type##_pool_get \             (const apr_##type##_t *the##type) \         { return the##type->pool; }
-comment|/**  * Pool debug levels  *  *<pre>  * | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |  * ---------------------------------  * |   |   |   |   |   |   |   | x |  General debug code enabled (useful in  *                                    combination with --with-efence).  *  * |   |   |   |   |   |   | x |   |  Verbose output on stderr (report  *                                    CREATE, CLEAR, DESTROY).  *  * |   |   |   | x |   |   |   |   |  Verbose output on stderr (report  *                                    PALLOC, PCALLOC).  *  * |   |   |   |   |   | x |   |   |  Lifetime checking. On each use of a  *                                    pool, check its lifetime.  If the pool  *                                    is out of scope, abort().  *                                    In combination with the verbose flag  *                                    above, it will output LIFE in such an  *                                    event prior to aborting.  *  * |   |   |   |   | x |   |   |   |  Pool owner checking.  On each use of a  *                                    pool, check if the current thread is the  *                                    pools owner.  If not, abort().  In  *                                    combination with the verbose flag above,  *                                    it will output OWNER in such an event  *                                    prior to aborting.  Use the debug  *                                    function apr_pool_owner_set() to switch  *                                    a pools ownership.  *  * When no debug level was specified, assume general debug mode.  * If level 0 was specified, debugging is switched off  *</pre>  */
+comment|/**  * Pool debug levels  *  *<pre>  * | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |  * ---------------------------------  * |   |   |   |   |   |   |   | x |  General debug code enabled (useful in  *                                    combination with --with-efence).  *  * |   |   |   |   |   |   | x |   |  Verbose output on stderr (report  *                                    CREATE, CLEAR, DESTROY).  *  * |   |   |   | x |   |   |   |   |  Verbose output on stderr (report  *                                    PALLOC, PCALLOC).  *  * |   |   |   |   |   | x |   |   |  Lifetime checking. On each use of a  *                                    pool, check its lifetime.  If the pool  *                                    is out of scope, abort().  *                                    In combination with the verbose flag  *                                    above, it will output LIFE in such an  *                                    event prior to aborting.  *  * |   |   |   |   | x |   |   |   |  Pool owner checking.  On each use of a  *                                    pool, check if the current thread is the  *                                    pool's owner.  If not, abort().  In  *                                    combination with the verbose flag above,  *                                    it will output OWNER in such an event  *                                    prior to aborting.  Use the debug  *                                    function apr_pool_owner_set() to switch  *                                    a pool's ownership.  *  * When no debug level was specified, assume general debug mode.  * If level 0 was specified, debugging is switched off.  *</pre>  */
 if|#
 directive|if
 name|defined
@@ -212,7 +212,7 @@ argument_list|,
 argument|apr_allocator_t *allocator
 argument_list|)
 empty_stmt|;
-comment|/**  * Create a new unmanaged pool.  * @param newpool The pool we have just created.  * @param abort_fn A function to use if the pool cannot allocate more memory.  * @param allocator The allocator to use with the new pool.  If NULL a  *        new allocator will be crated with newpool as owner.  * @remark An unmanaged pool is a special pool without a parent; it will  *         NOT be destroyed upon apr_terminate.  It must be explicitly  *         destroyed by calling apr_pool_destroy, to prevent memory leaks.  *         Use of this function is discouraged, think twice about whether  *         you really really need it.  */
+comment|/**  * Create a new unmanaged pool.  * @param newpool The pool we have just created.  * @param abort_fn A function to use if the pool cannot allocate more memory.  * @param allocator The allocator to use with the new pool.  If NULL a  *        new allocator will be created with the new pool as owner.  * @remark An unmanaged pool is a special pool without a parent; it will  *         NOT be destroyed upon apr_terminate.  It must be explicitly  *         destroyed by calling apr_pool_destroy, to prevent memory leaks.  *         Use of this function is discouraged, think twice about whether  *         you really really need it.  * @warning Any child cleanups registered against the new pool, or  *         against sub-pools thereof, will not be executed during an  *         invocation of apr_proc_create(), so resources created in an  *         "unmanaged" pool hierarchy will leak to child processes.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -235,7 +235,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/**  * Debug version of apr_pool_create_ex.  * @param newpool @see apr_pool_create.  * @param parent @see apr_pool_create.  * @param abort_fn @see apr_pool_create.  * @param allocator @see apr_pool_create.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have you apr_pool_create_ex  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_create_ex in a wrapper, trust the macro  *         and don't call apr_pool_create_ex_debug directly.  */
+comment|/**  * Debug version of apr_pool_create_ex.  * @param newpool @see apr_pool_create.  * @param parent @see apr_pool_create.  * @param abort_fn @see apr_pool_create.  * @param allocator @see apr_pool_create.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have your apr_pool_create_ex  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_create_ex in a wrapper, trust the macro  *         and don't call apr_pool_create_ex_debug directly.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -297,7 +297,7 @@ argument_list|,
 argument|const char *file_line
 argument_list|)
 empty_stmt|;
-comment|/**  * Debug version of apr_pool_create_unmanaged_ex.  * @param newpool @see apr_pool_create_unmanaged.  * @param abort_fn @see apr_pool_create_unmanaged.  * @param allocator @see apr_pool_create_unmanaged.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have you apr_pool_create_unmanaged_ex  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_create_core_ex in a wrapper, trust the macro  *         and don't call apr_pool_create_core_ex_debug directly.  */
+comment|/**  * Debug version of apr_pool_create_unmanaged_ex.  * @param newpool @see apr_pool_create_unmanaged.  * @param abort_fn @see apr_pool_create_unmanaged.  * @param allocator @see apr_pool_create_unmanaged.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have your apr_pool_create_unmanaged_ex  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_create_core_ex in a wrapper, trust the macro  *         and don't call apr_pool_create_core_ex_debug directly.  */
 name|APR_DECLARE
 argument_list|(
 argument|apr_status_t
@@ -405,7 +405,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/**  * Create a new pool.  * @param newpool The pool we have just created.  */
+comment|/**  * Create a new unmanaged pool.  * @param newpool The pool we have just created.  */
 if|#
 directive|if
 name|defined
@@ -517,7 +517,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/**  * Debug version of apr_pool_clear.  * @param p See: apr_pool_clear.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have you apr_pool_clear  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_clear in a wrapper, trust the macro  *         and don't call apr_pool_destroy_clear directly.  */
+comment|/**  * Debug version of apr_pool_clear.  * @param p See: apr_pool_clear.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have your apr_pool_clear  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_clear in a wrapper, trust the macro  *         and don't call apr_pool_destroy_clear directly.  */
 name|APR_DECLARE
 argument_list|(
 argument|void
@@ -570,7 +570,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/**  * Debug version of apr_pool_destroy.  * @param p See: apr_pool_destroy.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have you apr_pool_destroy  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_destroy in a wrapper, trust the macro  *         and don't call apr_pool_destroy_debug directly.  */
+comment|/**  * Debug version of apr_pool_destroy.  * @param p See: apr_pool_destroy.  * @param file_line Where the function is called from.  *        This is usually APR_POOL__FILE_LINE__.  * @remark Only available when APR_POOL_DEBUG is defined.  *         Call this directly if you have your apr_pool_destroy  *         calls in a wrapper function and wish to override  *         the file_line argument to reflect the caller of  *         your wrapper function.  If you do not have  *         apr_pool_destroy in a wrapper, trust the macro  *         and don't call apr_pool_destroy_debug directly.  */
 name|APR_DECLARE
 argument_list|(
 argument|void
@@ -975,7 +975,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/**  * @defgroup PoolCleanup  Pool Cleanup Functions  *  * Cleanups are performed in the reverse order they were registered.  That is:  * Last In, First Out.  A cleanup function can safely allocate memory from  * the pool that is being cleaned up. It can also safely register additional  * cleanups which will be run LIFO, directly after the current cleanup  * terminates.  Cleanups have to take caution in calling functions that  * create subpools. Subpools, created during cleanup will NOT automatically  * be cleaned up.  In other words, cleanups are to clean up after themselves.  *  * @{  */
-comment|/**  * Register a function to be called when a pool is cleared or destroyed  * @param p The pool register the cleanup with  * @param data The data to pass to the cleanup function.  * @param plain_cleanup The function to call when the pool is cleared  *                      or destroyed  * @param child_cleanup The function to call when a child process is about  *                      to exec - this function is called in the child, obviously!  */
+comment|/**  * Register a function to be called when a pool is cleared or destroyed  * @param p The pool to register the cleanup with  * @param data The data to pass to the cleanup function.  * @param plain_cleanup The function to call when the pool is cleared  *                      or destroyed  * @param child_cleanup The function to call when a child process is about  *                      to exec - this function is called in the child, obviously!  */
 name|APR_DECLARE
 argument_list|(
 argument|void
@@ -1002,7 +1002,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/**  * Register a function to be called when a pool is cleared or destroyed.  *  * Unlike apr_pool_cleanup_register which register a cleanup  * that is called AFTER all subpools are destroyed this function register  * a function that will be called before any of the subpool is destoryed.  *  * @param p The pool register the cleanup with  * @param data The data to pass to the cleanup function.  * @param plain_cleanup The function to call when the pool is cleared  *                      or destroyed  */
+comment|/**  * Register a function to be called when a pool is cleared or destroyed.  *  * Unlike apr_pool_cleanup_register which registers a cleanup  * that is called AFTER all subpools are destroyed, this function registers  * a function that will be called before any of the subpools are destroyed.  *  * @param p The pool to register the cleanup with  * @param data The data to pass to the cleanup function.  * @param plain_cleanup The function to call when the pool is cleared  *                      or destroyed  */
 name|APR_DECLARE
 argument_list|(
 argument|void

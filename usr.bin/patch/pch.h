@@ -113,6 +113,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|unsigned
 name|short
 name|pch_line_len
 parameter_list|(

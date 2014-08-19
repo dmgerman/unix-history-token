@@ -2003,8 +2003,7 @@ name|PAGE_SIZE
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-operator|~
-literal|0
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2027,16 +2026,13 @@ name|dummy_page
 operator|.
 name|addr
 operator|=
-operator|(
-name|dma_addr_t
-operator|)
 name|rdev
 operator|->
 name|dummy_page
 operator|.
 name|dmah
 operator|->
-name|vaddr
+name|busaddr
 expr_stmt|;
 return|return
 literal|0

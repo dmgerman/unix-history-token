@@ -372,17 +372,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.mfi.allow_cam_disk_passthrough"
-argument_list|,
-operator|&
-name|mfi_allow_disks
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_mfi
@@ -391,7 +380,7 @@ name|OID_AUTO
 argument_list|,
 name|allow_cam_disk_passthrough
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|mfi_allow_disks
@@ -1067,6 +1056,8 @@ operator|=
 name|PIM_NOBUSRESET
 operator||
 name|PIM_SEQSCAN
+operator||
+name|PIM_UNMAPPED
 expr_stmt|;
 name|cpi
 operator|->

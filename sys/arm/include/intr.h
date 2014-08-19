@@ -348,6 +348,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|arm_irq_memory_barrier
+parameter_list|(
+name|uintptr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|gic_init_secondary
 parameter_list|(
 name|void

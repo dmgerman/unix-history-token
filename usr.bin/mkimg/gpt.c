@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"image.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mkimg.h"
 end_include
 
@@ -1087,9 +1093,6 @@ specifier|static
 name|int
 name|gpt_write_pmbr
 parameter_list|(
-name|int
-name|fd
-parameter_list|,
 name|lba_t
 name|blks
 parameter_list|,
@@ -1259,10 +1262,8 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|mkimg_write
+name|image_write
 argument_list|(
-name|fd
-argument_list|,
 literal|0
 argument_list|,
 name|pmbr
@@ -1367,12 +1368,10 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|uuidgen
+name|mkimg_uuid
 argument_list|(
 operator|&
 name|uuid
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|gpt_uuid_enc
@@ -1475,9 +1474,6 @@ specifier|static
 name|int
 name|gpt_write_hdr
 parameter_list|(
-name|int
-name|fd
-parameter_list|,
 name|struct
 name|gpt_hdr
 modifier|*
@@ -1559,10 +1555,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|mkimg_write
+name|image_write
 argument_list|(
-name|fd
-argument_list|,
 name|self
 argument_list|,
 name|hdr
@@ -1579,9 +1573,6 @@ specifier|static
 name|int
 name|gpt_write
 parameter_list|(
-name|int
-name|fd
-parameter_list|,
 name|lba_t
 name|imgsz
 parameter_list|,
@@ -1617,8 +1608,6 @@ name|error
 operator|=
 name|gpt_write_pmbr
 argument_list|(
-name|fd
-argument_list|,
 name|imgsz
 argument_list|,
 name|bootcode
@@ -1659,10 +1648,8 @@ operator|)
 return|;
 name|error
 operator|=
-name|mkimg_write
+name|image_write
 argument_list|(
-name|fd
-argument_list|,
 literal|2
 argument_list|,
 name|tbl
@@ -1679,10 +1666,8 @@ name|out
 goto|;
 name|error
 operator|=
-name|mkimg_write
+name|image_write
 argument_list|(
-name|fd
-argument_list|,
 name|imgsz
 operator|-
 operator|(
@@ -1803,12 +1788,10 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-name|uuidgen
+name|mkimg_uuid
 argument_list|(
 operator|&
 name|uuid
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|gpt_uuid_enc
@@ -1875,8 +1858,6 @@ name|error
 operator|=
 name|gpt_write_hdr
 argument_list|(
-name|fd
-argument_list|,
 name|hdr
 argument_list|,
 literal|1
@@ -1897,8 +1878,6 @@ name|error
 operator|=
 name|gpt_write_hdr
 argument_list|(
-name|fd
-argument_list|,
 name|hdr
 argument_list|,
 name|imgsz

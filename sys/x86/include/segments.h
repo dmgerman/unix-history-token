@@ -1248,11 +1248,6 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
 end_if
 
 begin_comment
@@ -1592,7 +1587,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__i386__&& !__ia64__ */
+comment|/* !__i386__ */
 end_comment
 
 begin_comment
@@ -1741,7 +1736,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ || __ia64__ */
+comment|/* __i386__ */
 end_comment
 
 begin_endif

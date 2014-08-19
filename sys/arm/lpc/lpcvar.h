@@ -67,7 +67,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|platform_gpio_init
+name|lpc_gpio_init
 parameter_list|(
 name|void
 parameter_list|)

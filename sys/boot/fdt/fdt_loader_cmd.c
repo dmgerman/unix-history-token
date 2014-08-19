@@ -1144,7 +1144,7 @@ name|err
 decl_stmt|;
 name|debugf
 argument_list|(
-literal|"fdt_load_dtb_addr(0x%p)\n"
+literal|"fdt_load_dtb_addr(%p)\n"
 argument_list|,
 name|header
 argument_list|)
@@ -1538,7 +1538,7 @@ block|{
 name|printf
 argument_list|(
 literal|"Using DTB provided by U-Boot at "
-literal|"address 0x%p.\n"
+literal|"address %p.\n"
 argument_list|,
 name|hdr
 argument_list|)

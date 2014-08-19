@@ -561,6 +561,8 @@ name|struct
 name|musbotg_td
 modifier|*
 name|td
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -661,6 +663,9 @@ name|struct
 name|musbotg_td
 modifier|*
 name|td
+parameter_list|,
+name|uint8_t
+name|is_tx
 parameter_list|)
 block|{
 name|int
@@ -755,20 +760,20 @@ for|for
 control|(
 name|ch
 operator|=
-literal|1
+name|sc
+operator|->
+name|sc_ep_max
 init|;
 name|ch
-operator|<
-name|MUSB2_EP_MAX
+operator|!=
+literal|0
 condition|;
 name|ch
-operator|++
+operator|--
 control|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
 name|sc
 operator|->
 name|sc_channel_mask
@@ -778,9 +783,50 @@ literal|1
 operator|<<
 name|ch
 operator|)
-operator|)
+condition|)
+continue|continue;
+comment|/* check FIFO size requirement */
+if|if
+condition|(
+name|is_tx
 condition|)
 block|{
+if|if
+condition|(
+name|td
+operator|->
+name|max_frame_size
+operator|>
+name|sc
+operator|->
+name|sc_hw_ep_profile
+index|[
+name|ch
+index|]
+operator|.
+name|max_in_frame_size
+condition|)
+continue|continue;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|td
+operator|->
+name|max_frame_size
+operator|>
+name|sc
+operator|->
+name|sc_hw_ep_profile
+index|[
+name|ch
+index|]
+operator|.
+name|max_out_frame_size
+condition|)
+continue|continue;
+block|}
 name|sc
 operator|->
 name|sc_channel_mask
@@ -805,7 +851,6 @@ operator|(
 name|ch
 operator|)
 return|;
-block|}
 block|}
 name|DPRINTFN
 argument_list|(
@@ -1608,6 +1653,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* EP0 is busy, wait */
@@ -2105,6 +2152,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* EP0 is busy, wait */
@@ -3679,6 +3728,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* EP0 is busy, wait */
@@ -4459,6 +4510,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* No free EPs */
@@ -5342,6 +5395,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* EP0 is busy, wait */
@@ -5707,6 +5762,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* EP0 is busy, wait */
@@ -6035,6 +6092,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* EP0 is busy, wait */
@@ -6646,6 +6705,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* EP0 is busy, wait */
@@ -7191,6 +7252,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* No free EPs */
@@ -8111,6 +8174,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|td
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* No free EPs */
@@ -10090,6 +10155,12 @@ operator|->
 name|flags_int
 operator|.
 name|short_frames_ok
+operator|||
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|isochronous_xfr
 expr_stmt|;
 name|temp
 operator|.
@@ -11338,6 +11409,12 @@ operator|->
 name|flags_int
 operator|.
 name|short_frames_ok
+operator|||
+name|xfer
+operator|->
+name|flags_int
+operator|.
+name|isochronous_xfr
 condition|)
 block|{
 comment|/* follow alt next */
@@ -13391,6 +13468,12 @@ name|frx
 expr_stmt|;
 name|pf
 operator|->
+name|max_in_frame_size
+operator|=
+literal|0
+expr_stmt|;
+name|pf
+operator|->
 name|is_simplex
 operator|=
 literal|1
@@ -13446,6 +13529,12 @@ operator|=
 literal|1
 operator|<<
 name|ftx
+expr_stmt|;
+name|pf
+operator|->
+name|max_out_frame_size
+operator|=
+literal|0
 expr_stmt|;
 name|pf
 operator|->
@@ -13666,36 +13755,6 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|musbotg_suspend
-parameter_list|(
-name|struct
-name|musbotg_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-comment|/* TODO */
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|musbotg_resume
-parameter_list|(
-name|struct
-name|musbotg_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-comment|/* TODO */
 block|}
 end_function
 
@@ -17008,7 +17067,7 @@ block|{
 case|case
 name|USB_HW_POWER_SUSPEND
 case|:
-name|musbotg_suspend
+name|musbotg_uninit
 argument_list|(
 name|sc
 argument_list|)
@@ -17026,7 +17085,7 @@ break|break;
 case|case
 name|USB_HW_POWER_RESUME
 case|:
-name|musbotg_resume
+name|musbotg_init
 argument_list|(
 name|sc
 argument_list|)

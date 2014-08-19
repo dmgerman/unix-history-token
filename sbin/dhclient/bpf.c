@@ -28,12 +28,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/capsicum.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"dhcpd.h"
 end_include
 

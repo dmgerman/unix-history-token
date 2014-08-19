@@ -540,24 +540,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|syncache
-modifier|*
-name|syncache_lookup
-parameter_list|(
-name|struct
-name|in_conninfo
-modifier|*
-parameter_list|,
-name|struct
-name|syncache_head
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|int
 name|syncache_respond
@@ -2352,6 +2334,7 @@ comment|/*  * Find an entry in the syncache.  * Returns always with locked synca
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|syncache
 modifier|*
@@ -3301,6 +3284,15 @@ operator|->
 name|m_pkthdr
 operator|.
 name|flowid
+expr_stmt|;
+name|inp
+operator|->
+name|inp_flowtype
+operator|=
+name|M_HASHTYPE_GET
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Install in the reservation hash table for now, but don't yet 	 * install a connection group since the full 4-tuple isn't yet 	 * configured. 	 */

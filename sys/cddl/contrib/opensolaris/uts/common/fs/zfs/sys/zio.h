@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -158,6 +158,11 @@ block|,
 name|ZIO_CHECKSUM_FUNCTIONS
 block|}
 enum|;
+comment|/*  * The number of "legacy" compression functions which can be set on individual  * objects.  */
+define|#
+directive|define
+name|ZIO_CHECKSUM_LEGACY_FUNCTIONS
+value|ZIO_CHECKSUM_ZILOG2
 define|#
 directive|define
 name|ZIO_CHECKSUM_ON_VALUE
@@ -222,6 +227,11 @@ block|,
 name|ZIO_COMPRESS_FUNCTIONS
 block|}
 enum|;
+comment|/*  * The number of "legacy" compression functions which can be set on individual  * objects.  */
+define|#
+directive|define
+name|ZIO_COMPRESS_LEGACY_FUNCTIONS
+value|ZIO_COMPRESS_LZ4
 comment|/* N.B. when altering this value, also change BOOTFS_COMPRESS_VALID below */
 define|#
 directive|define
@@ -327,6 +337,12 @@ literal|1
 operator|<<
 literal|5
 block|,
+name|ZIO_FLAG_PHYSICAL
+init|=
+literal|1
+operator|<<
+literal|6
+block|,
 define|#
 directive|define
 name|ZIO_FLAG_AGG_INHERIT
@@ -336,44 +352,44 @@ name|ZIO_FLAG_CANFAIL
 init|=
 literal|1
 operator|<<
-literal|6
+literal|7
 block|,
 comment|/* must be first for INHERIT */
 name|ZIO_FLAG_SPECULATIVE
 init|=
 literal|1
 operator|<<
-literal|7
+literal|8
 block|,
 name|ZIO_FLAG_CONFIG_WRITER
 init|=
 literal|1
 operator|<<
-literal|8
+literal|9
 block|,
 name|ZIO_FLAG_DONT_RETRY
 init|=
 literal|1
 operator|<<
-literal|9
+literal|10
 block|,
 name|ZIO_FLAG_DONT_CACHE
 init|=
 literal|1
 operator|<<
-literal|10
+literal|11
 block|,
 name|ZIO_FLAG_NODATA
 init|=
 literal|1
 operator|<<
-literal|11
+literal|12
 block|,
 name|ZIO_FLAG_INDUCE_DAMAGE
 init|=
 literal|1
 operator|<<
-literal|12
+literal|13
 block|,
 define|#
 directive|define
@@ -388,26 +404,26 @@ name|ZIO_FLAG_IO_RETRY
 init|=
 literal|1
 operator|<<
-literal|13
+literal|14
 block|,
 comment|/* must be first for INHERIT */
 name|ZIO_FLAG_PROBE
 init|=
 literal|1
 operator|<<
-literal|14
+literal|15
 block|,
 name|ZIO_FLAG_TRYHARD
 init|=
 literal|1
 operator|<<
-literal|15
+literal|16
 block|,
 name|ZIO_FLAG_OPTIONAL
 init|=
 literal|1
 operator|<<
-literal|16
+literal|17
 block|,
 define|#
 directive|define
@@ -418,74 +434,74 @@ name|ZIO_FLAG_DONT_QUEUE
 init|=
 literal|1
 operator|<<
-literal|17
+literal|18
 block|,
 comment|/* must be first for INHERIT */
 name|ZIO_FLAG_DONT_PROPAGATE
 init|=
 literal|1
 operator|<<
-literal|18
+literal|19
 block|,
 name|ZIO_FLAG_IO_BYPASS
 init|=
 literal|1
 operator|<<
-literal|19
+literal|20
 block|,
 name|ZIO_FLAG_IO_REWRITE
 init|=
 literal|1
 operator|<<
-literal|20
+literal|21
 block|,
 name|ZIO_FLAG_RAW
 init|=
 literal|1
 operator|<<
-literal|21
+literal|22
 block|,
 name|ZIO_FLAG_GANG_CHILD
 init|=
 literal|1
 operator|<<
-literal|22
+literal|23
 block|,
 name|ZIO_FLAG_DDT_CHILD
 init|=
 literal|1
 operator|<<
-literal|23
+literal|24
 block|,
 name|ZIO_FLAG_GODFATHER
 init|=
 literal|1
 operator|<<
-literal|24
+literal|25
 block|,
 name|ZIO_FLAG_NOPWRITE
 init|=
 literal|1
 operator|<<
-literal|25
+literal|26
 block|,
 name|ZIO_FLAG_REEXECUTED
 init|=
 literal|1
 operator|<<
-literal|26
+literal|27
 block|,
 name|ZIO_FLAG_DELEGATED
 init|=
 literal|1
 operator|<<
-literal|27
+literal|28
 block|,
 name|ZIO_FLAG_QUEUE_IO_DONE
 init|=
 literal|1
 operator|<<
-literal|28
+literal|29
 block|, }
 enum|;
 define|#
@@ -571,10 +587,10 @@ index|[
 name|ZIO_TYPES
 index|]
 decl_stmt|;
-comment|/*  * A bookmark is a four-tuple<objset, object, level, blkid> that uniquely  * identifies any block in the pool.  By convention, the meta-objset (MOS)  * is objset 0, and the meta-dnode is object 0.  This covers all blocks  * except root blocks and ZIL blocks, which are defined as follows:  *  * Root blocks (objset_phys_t) are object 0, level -1:<objset, 0, -1, 0>.  * ZIL blocks are bookmarked<objset, 0, -2, blkid == ZIL sequence number>.  * dmu_sync()ed ZIL data blocks are bookmarked<objset, object, -2, blkid>.  *  * Note: this structure is called a bookmark because its original purpose  * was to remember where to resume a pool-wide traverse.  *  * Note: this structure is passed between userland and the kernel.  * Therefore it must not change size or alignment between 32/64 bit  * compilation options.  */
+comment|/*  * A bookmark is a four-tuple<objset, object, level, blkid> that uniquely  * identifies any block in the pool.  By convention, the meta-objset (MOS)  * is objset 0, and the meta-dnode is object 0.  This covers all blocks  * except root blocks and ZIL blocks, which are defined as follows:  *  * Root blocks (objset_phys_t) are object 0, level -1:<objset, 0, -1, 0>.  * ZIL blocks are bookmarked<objset, 0, -2, blkid == ZIL sequence number>.  * dmu_sync()ed ZIL data blocks are bookmarked<objset, object, -2, blkid>.  *  * Note: this structure is called a bookmark because its original purpose  * was to remember where to resume a pool-wide traverse.  *  * Note: this structure is passed between userland and the kernel, and is  * stored on disk (by virtue of being incorporated into other on-disk  * structures, e.g. dsl_scan_phys_t).  */
 typedef|typedef
 struct|struct
-name|zbookmark
+name|zbookmark_phys
 block|{
 name|uint64_t
 name|zb_objset
@@ -589,7 +605,7 @@ name|uint64_t
 name|zb_blkid
 decl_stmt|;
 block|}
-name|zbookmark_t
+name|zbookmark_phys_t
 typedef|;
 define|#
 directive|define
@@ -973,7 +989,7 @@ struct|struct
 name|zio
 block|{
 comment|/* Core information about this I/O */
-name|zbookmark_t
+name|zbookmark_phys_t
 name|io_bookmark
 decl_stmt|;
 name|zio_prop_t
@@ -1290,7 +1306,7 @@ name|zio_flag
 name|flags
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -1351,7 +1367,7 @@ name|zio_flag
 name|flags
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -1398,7 +1414,7 @@ name|enum
 name|zio_flag
 name|flags
 parameter_list|,
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -2333,7 +2349,7 @@ modifier|*
 name|spa
 parameter_list|)
 function_decl|;
-comment|/* zbookmark functions */
+comment|/* zbookmark_phys functions */
 name|boolean_t
 name|zbookmark_is_before
 parameter_list|(
@@ -2344,12 +2360,12 @@ modifier|*
 name|dnp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb1
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb2
 parameter_list|)

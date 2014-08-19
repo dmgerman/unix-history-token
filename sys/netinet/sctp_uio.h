@@ -1139,12 +1139,6 @@ decl_stmt|;
 name|sctp_assoc_t
 name|spc_assoc_id
 decl_stmt|;
-name|uint8_t
-name|spc_padding
-index|[
-literal|4
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1253,9 +1247,7 @@ name|sre_assoc_id
 decl_stmt|;
 name|uint8_t
 name|sre_data
-index|[
-literal|4
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;

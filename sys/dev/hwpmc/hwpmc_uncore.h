@@ -328,19 +328,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|pmc_uncore_mark_started
-parameter_list|(
-name|int
-name|_cpu
-parameter_list|,
-name|int
-name|_pmc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pmc_ucf_initialize
 parameter_list|(

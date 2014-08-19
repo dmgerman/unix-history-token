@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -66,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -134,11 +146,34 @@ directive|ifndef
 name|__unused
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__unused
+value|__attribute__((__unused__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|__unused
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -5168,9 +5203,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
-name|fd2
-decl_stmt|;
 name|struct
 name|flock
 name|fl
@@ -5325,8 +5357,9 @@ argument_list|,
 literal|"reading from pipe (child)"
 argument_list|)
 expr_stmt|;
-name|fd2
-operator|=
+operator|(
+name|void
+operator|)
 name|dup
 argument_list|(
 name|fd

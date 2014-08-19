@@ -130,7 +130,7 @@ define|#
 directive|define
 name|rtnl_lock
 parameter_list|()
-value|D("rtnl_lock called");
+value|ND("rtnl_lock called")
 end_define
 
 begin_define
@@ -138,7 +138,7 @@ define|#
 directive|define
 name|rtnl_unlock
 parameter_list|()
-value|D("rtnl_unlock called");
+value|ND("rtnl_unlock called")
 end_define
 
 begin_define
@@ -169,25 +169,15 @@ parameter_list|()
 end_define
 
 begin_comment
+comment|/*  * FreeBSD mbuf allocator/deallocator in emulation mode:  *  * We allocate EXT_PACKET mbuf+clusters, but need to set M_NOFREE  * so that the destructor, if invoked, will not free the packet.  *    In principle we should set the destructor only on demand,  * but since there might be a race we better do it on allocation.  * As a consequence, we also need to set the destructor or we  * would leak buffers.  */
+end_comment
+
+begin_comment
 comment|/*  * mbuf wrappers  */
 end_comment
 
 begin_comment
-comment|/*  * we allocate an EXT_PACKET  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|netmap_get_mbuf
-parameter_list|(
-name|len
-parameter_list|)
-value|m_getcl(M_NOWAIT, MT_DATA, M_PKTHDR|M_NOFREE)
-end_define
-
-begin_comment
-comment|/* mbuf destructor, also need to change the type to EXT_EXTREF,  * add an M_NOFREE flag, and then clear the flag and  * chain into uma_zfree(zone_pack, mf)  * (or reinstall the buffer ?)  */
+comment|/*  * mbuf destructor, also need to change the type to EXT_EXTREF,  * add an M_NOFREE flag, and then clear the flag and  * chain into uma_zfree(zone_pack, mf)  * (or reinstall the buffer ?)  *  * On FreeBSD 9 the destructor is called as ext_free(ext_arg1, ext_arg2)  * whereas newer version have ext_free(m, ext_arg1, ext_arg2)  * For compatibility we set ext_arg1 = m on allocation so we have  * the same code on both.  */
 end_comment
 
 begin_define
@@ -199,8 +189,200 @@ name|m
 parameter_list|,
 name|fn
 parameter_list|)
-value|do {		\ 	(m)->m_ext.ext_free = (void *)fn;	\ 	(m)->m_ext.ext_type = EXT_EXTREF;	\ } while (0)
+value|do {		\ 		(m)->m_ext.ext_free = (void *)fn;	\ 		(m)->m_ext.ext_type = EXT_EXTREF;	\ 	} while (0)
 end_define
+
+begin_function
+specifier|static
+name|void
+name|netmap_default_mbuf_destructor
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+comment|/* restore original data pointer and type */
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
+operator|=
+name|m
+operator|->
+name|m_data
+operator|=
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_type
+operator|=
+name|EXT_PACKET
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_free
+operator|=
+name|NULL
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg1
+operator|=
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|(
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_cnt
+operator|)
+operator|==
+literal|0
+condition|)
+operator|*
+operator|(
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_cnt
+operator|)
+operator|=
+literal|1
+expr_stmt|;
+name|uma_zfree
+argument_list|(
+name|zone_pack
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|struct
+name|mbuf
+modifier|*
+name|netmap_get_mbuf
+parameter_list|(
+name|int
+name|len
+parameter_list|)
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+name|m
+operator|=
+name|m_getcl
+argument_list|(
+name|M_NOWAIT
+argument_list|,
+name|MT_DATA
+argument_list|,
+name|M_PKTHDR
+operator||
+name|M_NOFREE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+condition|)
+block|{
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg1
+operator|=
+name|m
+expr_stmt|;
+comment|/* FreeBSD 9 compat */
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_arg2
+operator|=
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
+expr_stmt|;
+comment|/* save original */
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_free
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|netmap_default_mbuf_destructor
+expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_type
+operator|=
+name|EXT_EXTREF
+expr_stmt|;
+name|ND
+argument_list|(
+literal|5
+argument_list|,
+literal|"create m %p refcnt %d"
+argument_list|,
+name|m
+argument_list|,
+operator|*
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_cnt
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|m
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -209,7 +391,7 @@ name|GET_MBUF_REFCNT
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->m_ext.ref_cnt ? *(m)->m_ext.ref_cnt : -1)
+value|((m)->m_ext.ext_cnt ? *(m)->m_ext.ext_cnt : -1)
 end_define
 
 begin_else
@@ -684,7 +866,7 @@ name|enable
 condition|)
 block|{
 comment|/* Enable netmap mode. */
-comment|/* Init the mitigation support. */
+comment|/* Init the mitigation support on all the rx queues. */
 name|gna
 operator|->
 name|mit
@@ -1526,22 +1708,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-if|if
-condition|(
-name|netmap_verbose
-condition|)
-name|D
-argument_list|(
-literal|"Tx irq (%p) queue %d"
-argument_list|,
-name|m
-argument_list|,
-name|MBUF_TXQ
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|netmap_generic_irq
 argument_list|(
 name|MBUF_IFP
@@ -1560,50 +1726,38 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_type
-operator|=
-name|EXT_PACKET
-expr_stmt|;
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_free
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
-operator|*
-operator|(
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ref_cnt
-operator|)
-operator|==
-literal|0
+name|netmap_verbose
 condition|)
-operator|*
+name|RD
+argument_list|(
+literal|5
+argument_list|,
+literal|"Tx irq (%p) queue %d index %d"
+argument_list|,
+name|m
+argument_list|,
+name|MBUF_TXQ
+argument_list|(
+name|m
+argument_list|)
+argument_list|,
 operator|(
+name|int
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|m
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
-operator|)
-operator|=
-literal|1
+name|ext_arg1
+argument_list|)
 expr_stmt|;
-name|uma_zfree
+name|netmap_default_mbuf_destructor
 argument_list|(
-name|zone_pack
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -1980,6 +2134,27 @@ index|[
 name|e
 index|]
 expr_stmt|;
+name|ND
+argument_list|(
+literal|5
+argument_list|,
+literal|"Request Event at %d mbuf %p refcnt %d"
+argument_list|,
+name|e
+argument_list|,
+name|m
+argument_list|,
+name|m
+condition|?
+name|GET_MBUF_REFCNT
+argument_list|(
+name|m
+argument_list|)
+else|:
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -1990,20 +2165,6 @@ block|{
 comment|/* This can happen if there is already an event on the netmap 		   slot 'e': There is nothing to do. */
 return|return;
 block|}
-name|ND
-argument_list|(
-literal|"Event at %d mbuf %p refcnt %d"
-argument_list|,
-name|e
-argument_list|,
-name|m
-argument_list|,
-name|GET_MBUF_REFCNT
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|kring
 operator|->
 name|tx_pool
@@ -3159,6 +3320,30 @@ argument_list|,
 name|num_rx_desc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|num_tx_desc
+operator|==
+literal|0
+operator|||
+name|num_rx_desc
+operator|==
+literal|0
+condition|)
+block|{
+name|D
+argument_list|(
+literal|"Device has no hw slots (tx %u, rx %u)"
+argument_list|,
+name|num_tx_desc
+argument_list|,
+name|num_rx_desc
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 name|gna
 operator|=
 name|malloc

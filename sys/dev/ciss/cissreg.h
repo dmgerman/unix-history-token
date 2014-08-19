@@ -2100,7 +2100,7 @@ name|u_int8_t
 name|hardware_revision
 decl_stmt|;
 name|u_int8_t
-name|res1
+name|boot_block_revision
 index|[
 literal|4
 index|]
@@ -2115,52 +2115,136 @@ name|u_int32_t
 name|board_id
 decl_stmt|;
 name|u_int8_t
-name|res2
+name|swapped_error_cable
 decl_stmt|;
 name|u_int32_t
 name|deprecated_non_disk_map
 decl_stmt|;
 name|u_int8_t
+name|bad_host_ram_addr
+decl_stmt|;
+name|u_int8_t
+name|cpu_revision
+decl_stmt|;
+name|u_int8_t
 name|res3
 index|[
-literal|5
+literal|3
 index|]
 decl_stmt|;
 name|char
 name|marketting_revision
 decl_stmt|;
 name|u_int8_t
-name|res4
-range|:
-literal|3
+name|controller_flags
 decl_stmt|;
+define|#
+directive|define
+name|CONTROLLER_FLAGS_FLASH_ROM_INSTALLED
+value|0x01
+define|#
+directive|define
+name|CONTROLLER_FLAGS_DIAGS_MODE_BIT
+value|0x02
+define|#
+directive|define
+name|CONTROLLER_FLAGS_EXPAND_32MB_FX
+value|0x04
+define|#
+directive|define
+name|CONTROLLER_FLAGS_MORE_THAN_7_SUPPORT
+value|0x08
+define|#
+directive|define
+name|CONTROLLER_FLAGS_DAISY_SUPPORT_BIT
+value|0x10
+define|#
+directive|define
+name|CONTROLLER_FLAGS_RES6
+value|0x20
+define|#
+directive|define
+name|CONTROLLER_FLAGS_RES7
+value|0x40
+define|#
+directive|define
+name|CONTROLLER_FLAGS_BIG_MAP_SUPPORT
+value|0x80
 name|u_int8_t
-name|more_than_seven_supported
-range|:
-literal|1
+name|host_flags
 decl_stmt|;
+define|#
+directive|define
+name|HOST_FLAGS_SDB_ASIC_WORK_AROUND
+value|0x01
+define|#
+directive|define
+name|HOST_FLAGS_PCI_DATA_BUS_PARITY_SUPPORT
+value|0x02
+define|#
+directive|define
+name|HOST_FLAGS_RES3
+value|0x04
+define|#
+directive|define
+name|HOST_FLAGS_RES4
+value|0x08
+define|#
+directive|define
+name|HOST_FLAGS_RES5
+value|0x10
+define|#
+directive|define
+name|HOST_FLAGS_RES6
+value|0x20
+define|#
+directive|define
+name|HOST_FLAGS_RES7
+value|0x30
+define|#
+directive|define
+name|HOST_FLAGS_RES8
+value|0x40
 name|u_int8_t
-name|res5
-range|:
-literal|3
+name|expand_disable_code
 decl_stmt|;
+define|#
+directive|define
+name|EXPAND_DISABLE_NOT_NEEDED
+value|0x01
+define|#
+directive|define
+name|EXPAND_DISABLE_MISSING_CACHE_BOARD
+value|0x02
+define|#
+directive|define
+name|EXPAND_DISABLE_WCXC_FATAL_CACHE_BITS
+value|0x04
+define|#
+directive|define
+name|EXPAND_DISABLE_CACHE_PERM_DISABLED
+value|0x08
+define|#
+directive|define
+name|EXPAND_DISABLE_RAM_ALLOCATION_FAILED
+value|0x10
+define|#
+directive|define
+name|EXPAND_DISABLE_BATTEREIS_DISCHARGED
+value|0x20
+define|#
+directive|define
+name|EXPAND_DISABLE_RES7
+value|0x40
+define|#
+directive|define
+name|EXPAND_DISABLE_REBUILD_RUNNING
+value|0x80
 name|u_int8_t
-name|big_map_supported
-range|:
-literal|1
-decl_stmt|;
-comment|/* must be set! */
-name|u_int8_t
-name|res6
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u_int8_t
-name|scsi_bus_count
+name|scsi_chip_count
 decl_stmt|;
 name|u_int32_t
-name|res7
+name|maximum_blocks
 decl_stmt|;
 name|u_int32_t
 name|controller_clock
@@ -2190,6 +2274,254 @@ index|[
 name|CISS_BIG_MAP_ENTRIES
 operator|/
 literal|8
+index|]
+decl_stmt|;
+name|u_int16_t
+name|task_flags
+decl_stmt|;
+comment|/* used for FW debugging */
+name|u_int8_t
+name|ICL_bus_map
+decl_stmt|;
+comment|/* Bitmap used for ICL between controllers */
+name|u_int8_t
+name|redund_ctlr_modes_support
+decl_stmt|;
+comment|/* See REDUNDANT MODE VALUES */
+name|u_int8_t
+name|curr_redund_ctlr_mode
+decl_stmt|;
+name|u_int8_t
+name|redund_ctlr_status
+decl_stmt|;
+name|u_int8_t
+name|redund_op_failure_code
+decl_stmt|;
+name|u_int8_t
+name|unsupported_nile_bus
+decl_stmt|;
+name|u_int8_t
+name|host_i2c_autorev
+decl_stmt|;
+name|u_int8_t
+name|cpld_revision
+decl_stmt|;
+name|u_int8_t
+name|fibre_chip_count
+decl_stmt|;
+name|u_int8_t
+name|daughterboard_type
+decl_stmt|;
+name|u_int8_t
+name|more_swapped_config_cable_error
+decl_stmt|;
+name|u_int8_t
+name|license_key_status
+decl_stmt|;
+name|u_int8_t
+name|access_module_status
+decl_stmt|;
+name|u_int8_t
+name|features_supported
+index|[
+literal|12
+index|]
+decl_stmt|;
+name|u_int8_t
+name|rec_rom_inact_rev
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Recovery ROM inactive f/w revision  */
+name|u_int8_t
+name|rec_rom_act_status
+decl_stmt|;
+comment|/* Recovery ROM flags                  */
+name|u_int8_t
+name|pci_to_pci_status
+decl_stmt|;
+comment|/* PCI to PCI bridge status            */
+name|u_int32_t
+name|redundant_server_info
+decl_stmt|;
+comment|/* Reserved for future use             */
+name|u_int8_t
+name|percent_write_cache
+decl_stmt|;
+comment|/* Percent of memory allocated to write cache */
+name|u_int16_t
+name|daughterboard_size_mb
+decl_stmt|;
+comment|/* Total size (MB) of cache board      */
+name|u_int8_t
+name|cache_batter_count
+decl_stmt|;
+comment|/* Number of cache batteries           */
+name|u_int16_t
+name|total_controller_mem_mb
+decl_stmt|;
+comment|/* Total size (MB) of atttached memory */
+name|u_int8_t
+name|more_controller_flags
+decl_stmt|;
+comment|/* Additional controller flags byte    */
+name|u_int8_t
+name|x_board_host_i2c_rev
+decl_stmt|;
+comment|/* 2nd byte of 3 byte autorev field    */
+name|u_int8_t
+name|battery_pic_rev
+decl_stmt|;
+comment|/* BBWC PIC revision                   */
+comment|/*  * Below here I have no documentation on the rest of this data structure.  It is  * inferred from the opensource cciss_vol_status application.  I assume that this   * data strucutre is 512 bytes in total size, do not exceed it.  */
+name|u_int8_t
+name|bDdffVersion
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* DDFF update engine version          */
+name|u_int16_t
+name|usMaxLogicalUnits
+decl_stmt|;
+comment|/* Maximum logical units supported */
+name|u_int16_t
+name|usExtLogicalUnitCount
+decl_stmt|;
+comment|/* Big num configured logical units */
+name|u_int16_t
+name|usMaxPhysicalDevices
+decl_stmt|;
+comment|/* Maximum physical devices supported */
+name|u_int16_t
+name|usMaxPhyDrvPerLogicalUnit
+decl_stmt|;
+comment|/* Max physical drive per logical unit */
+name|u_int8_t
+name|bEnclosureCount
+decl_stmt|;
+comment|/* Number of attached enclosures */
+name|u_int8_t
+name|bExpanderCount
+decl_stmt|;
+comment|/* Number of expanders detected */
+name|u_int16_t
+name|usOffsetToEDPbitmap
+decl_stmt|;
+comment|/* Offset to extended drive present map*/
+name|u_int16_t
+name|usOffsetToEEDPbitmap
+decl_stmt|;
+comment|/* Offset to extended external drive present map */
+name|u_int16_t
+name|usOffsetToENDbitmap
+decl_stmt|;
+comment|/* Offset to extended non-disk map */
+name|u_int8_t
+name|bInternalPortStatus
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Internal port status bytes */
+name|u_int8_t
+name|bExternalPortStatus
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* External port status bytes */
+name|u_int32_t
+name|uiYetMoreControllerFlags
+decl_stmt|;
+comment|/* Yet More Controller flags  */
+define|#
+directive|define
+name|YMORE_CONTROLLER_FLAGS_JBOD_SUPPORTED
+define|\
+value|( 1<< 25 )
+comment|/* Controller has JBOD support */
+name|u_int8_t
+name|bLastLockup
+decl_stmt|;
+comment|/* Last lockup code */
+name|u_int8_t
+name|bSlot
+decl_stmt|;
+comment|/* PCI slot according to option ROM*/
+name|u_int16_t
+name|usBuildNum
+decl_stmt|;
+comment|/* Build number */
+name|u_int32_t
+name|uiMaxSafeFullStripeSize
+decl_stmt|;
+comment|/* Maximum safe full stripe size */
+name|u_int32_t
+name|uiTotalLength
+decl_stmt|;
+comment|/* Total structure length */
+name|u_int8_t
+name|bVendorID
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Vendor ID */
+name|u_int8_t
+name|bProductID
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Product ID */
+comment|/*  * These are even more obscure as they seem to only be available in cciss_vol_status  */
+name|u_int32_t
+name|ExtendedLastLockupCode
+decl_stmt|;
+name|u_int16_t
+name|MaxRaid
+decl_stmt|;
+name|u_int16_t
+name|MaxParity
+decl_stmt|;
+name|u_int16_t
+name|MaxADGStripSize
+decl_stmt|;
+name|u_int16_t
+name|YetMoreSwappedCables
+decl_stmt|;
+name|u_int8_t
+name|MaxDevicePaths
+decl_stmt|;
+name|u_int8_t
+name|PowerUPNvramFlags
+decl_stmt|;
+define|#
+directive|define
+name|PWR_UP_FLAG_JBOD_ENABLED
+value|0x08
+comment|/*JBOD mode is enabled, all RAID features off */
+name|u_int16_t
+name|ZonedOffset
+decl_stmt|;
+name|u_int32_t
+name|FixedFieldsLength
+decl_stmt|;
+name|u_int8_t
+name|FWCompileTimeStamp
+index|[
+literal|24
+index|]
+decl_stmt|;
+name|u_int32_t
+name|EvenMoreControllerFlags
+decl_stmt|;
+name|u_int8_t
+name|padding
+index|[
+literal|240
 index|]
 decl_stmt|;
 block|}

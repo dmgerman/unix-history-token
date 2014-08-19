@@ -1384,7 +1384,11 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|intr_fn_t
+name|driver_filter_t
+modifier|*
+name|filter
+parameter_list|,
+name|driver_intr_t
 modifier|*
 name|fn
 parameter_list|,
@@ -1393,6 +1397,12 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|dev
+operator|->
+name|dev_irq_filter
+operator|=
+name|filter
+expr_stmt|;
 name|dev
 operator|->
 name|dev_irq_fn
@@ -1435,6 +1445,40 @@ argument_list|,
 argument|dev_link
 argument_list|)
 block|{
+name|int
+name|status
+decl_stmt|;
+if|if
+condition|(
+name|child
+operator|->
+name|dev_irq_filter
+operator|!=
+name|NULL
+condition|)
+name|status
+operator|=
+name|child
+operator|->
+name|dev_irq_filter
+argument_list|(
+name|child
+operator|->
+name|dev_irq_arg
+argument_list|)
+expr_stmt|;
+else|else
+name|status
+operator|=
+name|FILTER_SCHEDULE_THREAD
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|FILTER_SCHEDULE_THREAD
+condition|)
+block|{
 if|if
 condition|(
 name|child
@@ -1454,6 +1498,7 @@ operator|->
 name|dev_irq_arg
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -4114,6 +4159,12 @@ begin_comment
 comment|/*------------------------------------------------------------------------*  * SYSTEM attach  *------------------------------------------------------------------------*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_PCI_PROBE_LIST
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -4179,12 +4230,7 @@ name|usb_pci_devices
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|USB_PROBE_LIST
-name|USB_PROBE_LIST
-endif|#
-directive|endif
+name|USB_PCI_PROBE_LIST
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4407,9 +4453,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  * MALLOC API  *------------------------------------------------------------------------*/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MALLOC
+end_ifndef
 
 begin_define
 define|#
@@ -4549,7 +4606,7 @@ condition|(
 name|hdr
 condition|)
 block|{
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"MALLOC: Entries = %d; Remainder = %d; Size = %d\n"
 argument_list|,
@@ -4640,7 +4697,7 @@ expr_stmt|;
 name|usb_pool_entries
 operator|++
 expr_stmt|;
-name|printf
+name|DPRINTF
 argument_list|(
 literal|"MALLOC: Entries = %d; Remainder = %d; Size = %d\n"
 argument_list|,
@@ -4736,6 +4793,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|char
 modifier|*
@@ -4765,9 +4827,13 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|usb_malloc
+name|malloc
 argument_list|(
 name|len
+argument_list|,
+name|XXX
+argument_list|,
+name|XXX
 argument_list|)
 expr_stmt|;
 if|if

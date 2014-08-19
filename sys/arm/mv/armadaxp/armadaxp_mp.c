@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/fdt/fdt_common.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -286,6 +292,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|mptramp_end
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|mptramp_pmu_boot
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|platform_mp_start_ap
@@ -310,6 +332,8 @@ name|cputype
 decl_stmt|;
 name|vm_offset_t
 name|smp_boot
+decl_stmt|,
+name|pmu_boot_off
 decl_stmt|;
 comment|/* 	 * Initialization procedure depends on core revision, 	 * in this step CHIP ID is checked to choose proper procedure 	 */
 name|cputype
@@ -343,6 +367,26 @@ operator|*
 operator|)
 name|smp_boot
 expr_stmt|;
+comment|/* 	 * Set the PA of CPU0 Boot Address Redirect register used in 	 * mptramp according to the actual SoC registers' base address. 	 */
+name|pmu_boot_off
+operator|=
+operator|(
+name|CPU_PMU
+argument_list|(
+literal|0
+argument_list|)
+operator|-
+name|MV_BASE
+operator|)
+operator|+
+name|CPU_PMU_BOOT
+expr_stmt|;
+name|mptramp_pmu_boot
+operator|=
+name|fdt_immr_pa
+operator|+
+name|pmu_boot_off
+expr_stmt|;
 for|for
 control|(
 name|src
@@ -359,7 +403,7 @@ operator|(
 name|uint32_t
 operator|*
 operator|)
-name|mpentry
+name|mptramp_end
 condition|;
 name|src
 operator|++

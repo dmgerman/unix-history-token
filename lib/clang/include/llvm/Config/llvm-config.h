@@ -335,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_PREFIX
-value|""
+value|"/usr"
 end_define
 
 begin_comment

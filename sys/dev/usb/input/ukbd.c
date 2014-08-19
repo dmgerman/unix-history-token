@@ -345,9 +345,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ukbd_debug
@@ -355,17 +353,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Debug level"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ukbd.debug"
-argument_list|,
-operator|&
-name|ukbd_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -379,9 +366,7 @@ name|OID_AUTO
 argument_list|,
 name|no_leds
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ukbd_no_leds
@@ -389,17 +374,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Disables setting of keyboard leds"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ukbd.no_leds"
-argument_list|,
-operator|&
-name|ukbd_no_leds
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -413,9 +387,7 @@ name|OID_AUTO
 argument_list|,
 name|pollrate
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ukbd_pollrate
@@ -423,17 +395,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Force this polling rate, 1-1000Hz"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ukbd.pollrate"
-argument_list|,
-operator|&
-name|ukbd_pollrate
 argument_list|)
 expr_stmt|;
 end_expr_stmt

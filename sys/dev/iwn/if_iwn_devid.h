@@ -1015,6 +1015,56 @@ value|0x1027
 end_define
 
 begin_comment
+comment|/*  * --------------------------------------------------------------------------  * Device ID for 105 Series  * --------------------------------------------------------------------------  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_DID_105_1
+value|0x0894
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_DID_105_2
+value|0x0895
+end_define
+
+begin_comment
+comment|/* SubDevice ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWN_SDID_105_1
+value|0x0022
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_SDID_105_2
+value|0x0222
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_SDID_105_3
+value|0x0422
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWN_SDID_105_4
+value|0x0822
+end_define
+
+begin_comment
 comment|/*  * --------------------------------------------------------------------------  * Device ID for 135 Series  * --------------------------------------------------------------------------  */
 end_comment
 

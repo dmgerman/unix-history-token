@@ -227,8 +227,11 @@ name|info
 operator|->
 name|ctx
 argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
 operator|&
-name|sysctl__hw_children
+name|sysctl___hw
+argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,

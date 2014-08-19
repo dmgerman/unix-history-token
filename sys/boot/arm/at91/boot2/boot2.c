@@ -312,7 +312,7 @@ specifier|static
 specifier|const
 name|unsigned
 name|char
-name|flags
+name|bootflags
 index|[
 name|NOPT
 index|]
@@ -382,6 +382,15 @@ name|uint8_t
 name|dsk_meta
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|main
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -847,6 +856,11 @@ name|load
 argument_list|()
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -1306,7 +1320,7 @@ name|opts
 operator|^=
 name|OPT_SET
 argument_list|(
-name|flags
+name|bootflags
 index|[
 name|i
 index|]

@@ -350,7 +350,7 @@ name|OID_AUTO
 argument_list|,
 name|fibs
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|rt_numfibs
@@ -358,21 +358,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* and this can be set too big but will be fixed before it is used */
-end_comment
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.fibs"
-argument_list|,
-operator|&
-name|rt_numfibs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -398,7 +383,7 @@ name|OID_AUTO
 argument_list|,
 name|add_addr_allfibs
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|rt_add_addr_allfibs
@@ -406,17 +391,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.add_addr_allfibs"
-argument_list|,
-operator|&
-name|rt_add_addr_allfibs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2335,7 +2309,7 @@ condition|(
 operator|(
 name|ifa
 operator|=
-name|ifa_ifwithnet
+name|ifa_ifwithnet_fib
 argument_list|(
 name|gateway
 argument_list|,
@@ -3010,7 +2984,7 @@ name|RTF_HOST
 condition|)
 name|ifa
 operator|=
-name|ifa_ifwithdstaddr
+name|ifa_ifwithdstaddr_fib
 argument_list|(
 name|dst
 argument_list|,
@@ -3036,7 +3010,7 @@ block|{
 comment|/* 		 * If we are adding a route to a remote net 		 * or host, the gateway may still be on the 		 * other end of a pt to pt link. 		 */
 name|ifa
 operator|=
-name|ifa_ifwithdstaddr
+name|ifa_ifwithdstaddr_fib
 argument_list|(
 name|gateway
 argument_list|,
@@ -3052,7 +3026,7 @@ name|NULL
 condition|)
 name|ifa
 operator|=
-name|ifa_ifwithnet
+name|ifa_ifwithnet_fib
 argument_list|(
 name|gateway
 argument_list|,
@@ -3550,7 +3524,7 @@ operator|&&
 operator|(
 name|ifa
 operator|=
-name|ifa_ifwithnet
+name|ifa_ifwithnet_fib
 argument_list|(
 name|ifpaddr
 argument_list|,

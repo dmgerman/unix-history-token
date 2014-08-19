@@ -3269,8 +3269,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|HCSPLT_XACTLEN_MAX
-value|188
+name|HCSPLT_XACTLEN_BURST
+value|1023
 end_define
 
 begin_comment
@@ -3327,6 +3327,14 @@ directive|define
 name|HCINT_DEFAULT_MASK
 define|\
 value|(HCINT_STALL | HCINT_BBLERR | \    HCINT_XACTERR | HCINT_NAK | HCINT_ACK | HCINT_NYET | \    HCINT_CHHLTD | HCINT_FRMOVRUN | \    HCINT_DATATGLERR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HCINT_HCH_DONE_MASK
+define|\
+value|(HCINT_ACK | HCINT_RETRY | HCINT_NYET | \    HCINT_ERRORS | HCINT_STALL | HCINT_SOFTWARE_ONLY)
 end_define
 
 begin_define

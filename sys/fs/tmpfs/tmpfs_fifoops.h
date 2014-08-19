@@ -47,10 +47,6 @@ file|<fs/tmpfs/tmpfs_vnops.h>
 end_include
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Declarations for tmpfs_fifoops.c.  */
 end_comment
 
@@ -61,10 +57,6 @@ name|vop_vector
 name|tmpfs_fifoop_entries
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_endif
 endif|#

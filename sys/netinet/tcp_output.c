@@ -4553,7 +4553,7 @@ endif|#
 directive|endif
 comment|/* TCPDEBUG */
 comment|/* 	 * Fill in IP length and desired time to live and 	 * send to IP level.  There should be a better way 	 * to handle ttl and tos; we could keep them in 	 * the template, but need a way to checksum without them. 	 */
-comment|/* 	 * m->m_pkthdr.len should have been set before cksum calcuration, 	 * because in6_cksum() need it. 	 */
+comment|/* 	 * m->m_pkthdr.len should have been set before checksum calculation, 	 * because in6_cksum() need it. 	 */
 ifdef|#
 directive|ifdef
 name|INET6

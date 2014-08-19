@@ -1815,5 +1815,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_inet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|accf
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Accept filters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

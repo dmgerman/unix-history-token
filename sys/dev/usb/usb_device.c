@@ -576,17 +576,6 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.usb_template"
-argument_list|,
-operator|&
-name|usb_template
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb
@@ -595,9 +584,7 @@ name|OID_AUTO
 argument_list|,
 name|template
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_template
@@ -632,17 +619,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.usb_lang_id"
-argument_list|,
-operator|&
-name|usb_lang_id
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb
@@ -651,9 +627,7 @@ name|OID_AUTO
 argument_list|,
 name|usb_lang_id
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_lang_id
@@ -666,17 +640,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.usb_lang_mask"
-argument_list|,
-operator|&
-name|usb_lang_mask
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_usb
@@ -685,9 +648,7 @@ name|OID_AUTO
 argument_list|,
 name|usb_lang_mask
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_lang_mask
@@ -4205,6 +4166,12 @@ name|ppdev
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|rebooting
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -4228,6 +4195,7 @@ operator|->
 name|address
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|device_is_attached
@@ -8117,6 +8085,12 @@ directive|endif
 if|#
 directive|if
 name|USB_HAVE_UGEN
+if|if
+condition|(
+operator|!
+name|rebooting
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s:<%s> at %s (disconnected)\n"
@@ -8138,6 +8112,7 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Destroy UGEN symlink, if any */
 if|if
 condition|(

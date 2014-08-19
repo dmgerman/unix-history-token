@@ -60,7 +60,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|)
 function_decl|;
 end_typedef
@@ -76,7 +75,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|,
 name|struct
 name|ifmediareq

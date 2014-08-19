@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmm_instruction_emul.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -564,6 +570,11 @@ name|struct
 name|vie
 modifier|*
 name|vie
+parameter_list|,
+name|struct
+name|vm_guest_paging
+modifier|*
+name|paging
 parameter_list|)
 block|{
 name|struct
@@ -698,6 +709,8 @@ argument_list|,
 name|paddr
 argument_list|,
 name|vie
+argument_list|,
+name|paging
 argument_list|,
 name|mem_read
 argument_list|,

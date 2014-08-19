@@ -528,6 +528,26 @@ name|dm_sec_offsets
 decl_stmt|;
 endif|#
 directive|endif
+name|pid_t
+name|dm_pid
+decl_stmt|;
+comment|/* pid for this module */
+name|uint_t
+name|dm_nctflibs
+decl_stmt|;
+comment|/* number of ctf children libraries */
+name|ctf_file_t
+modifier|*
+modifier|*
+name|dm_libctfp
+decl_stmt|;
+comment|/* process library ctf pointers */
+name|char
+modifier|*
+modifier|*
+name|dm_libctfn
+decl_stmt|;
+comment|/* names of process ctf containers */
 block|}
 name|dt_module_t
 typedef|;
@@ -703,6 +723,18 @@ name|int
 name|dtpa_allunprint
 decl_stmt|;
 comment|/* print only unprinted aggregations */
+name|int
+name|dtpa_agghist
+decl_stmt|;
+comment|/* print aggregation as histogram */
+name|int
+name|dtpa_agghisthdr
+decl_stmt|;
+comment|/* aggregation histogram hdr printed */
+name|int
+name|dtpa_aggpack
+decl_stmt|;
+comment|/* pack quantized aggregations */
 block|}
 name|dt_print_aggdata_t
 typedef|;
@@ -1114,6 +1146,10 @@ name|dt_stdcmode
 decl_stmt|;
 comment|/* dtrace stdc compatibility mode (see below) */
 name|uint_t
+name|dt_encoding
+decl_stmt|;
+comment|/* dtrace output encoding (see below) */
+name|uint_t
 name|dt_treedump
 decl_stmt|;
 comment|/* dtrace tree debug bitmap (see below) */
@@ -1412,6 +1448,19 @@ directive|define
 name|DT_STDC_XT
 value|3
 comment|/* ISO C + K&R C compat with ISO: __STDC__=0 */
+comment|/*  * Values for the dt_encoding property, which is used to force a particular  * character encoding (overriding default behavior and/or automatic detection).  */
+define|#
+directive|define
+name|DT_ENCODING_UNSET
+value|0
+define|#
+directive|define
+name|DT_ENCODING_ASCII
+value|1
+define|#
+directive|define
+name|DT_ENCODING_UTF8
+value|2
 comment|/*  * Macro to test whether a given pass bit is set in the dt_treedump bit-vector.  * If the bit for pass 'p' is set, the D compiler displays the parse tree for  * the program by printing it to stderr at the end of compiler pass 'p'.  */
 define|#
 directive|define
@@ -1944,7 +1993,10 @@ name|EDT_ENABLING_ERR
 block|,
 comment|/* failed to enable probe */
 name|EDT_NOPROBES
+block|,
 comment|/* no probes sites for declared provider */
+name|EDT_CANTLOAD
+comment|/* failed to load a module */
 block|}
 enum|;
 comment|/*  * Interfaces for parsing and comparing DTrace attribute tuples, which describe  * stability and architectural binding information.  The dtrace_attribute_t  * structure and associated constant definitions are found in<sys/dtrace.h>.  */

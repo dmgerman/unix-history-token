@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -114,17 +114,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.zil_replay_disable"
-argument_list|,
-operator|&
-name|zil_replay_disable
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -133,7 +122,7 @@ name|OID_AUTO
 argument_list|,
 name|zil_replay_disable
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|zil_replay_disable
@@ -156,17 +145,6 @@ init|=
 name|B_FALSE
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.cache_flush_disable"
-argument_list|,
-operator|&
-name|zfs_nocacheflush
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -201,17 +179,6 @@ begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_vfs_zfs_trim
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.trim.enabled"
-argument_list|,
-operator|&
-name|zfs_trim_enabled
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -532,11 +499,6 @@ specifier|const
 name|dva_t
 modifier|*
 name|dva
-init|=
-name|BP_IDENTITY
-argument_list|(
-name|bp
-argument_list|)
 decl_stmt|;
 name|zil_bp_node_t
 modifier|*
@@ -545,6 +507,25 @@ decl_stmt|;
 name|avl_index_t
 name|where
 decl_stmt|;
+if|if
+condition|(
+name|BP_IS_EMBEDDED
+argument_list|(
+name|bp
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|dva
+operator|=
+name|BP_IDENTITY
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|avl_find
@@ -752,7 +733,7 @@ name|abuf
 init|=
 name|NULL
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|int
@@ -1174,7 +1155,7 @@ name|abuf
 init|=
 name|NULL
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|int
@@ -4027,11 +4008,12 @@ argument_list|)
 expr_stmt|;
 name|ASSERT
 argument_list|(
+name|BP_GET_FILL
+argument_list|(
 name|zio
 operator|->
 name|io_bp
-operator|->
-name|blk_fill
+argument_list|)
 operator|==
 literal|0
 argument_list|)
@@ -4103,7 +4085,7 @@ modifier|*
 name|lwb
 parameter_list|)
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 name|SET_BOOKMARK

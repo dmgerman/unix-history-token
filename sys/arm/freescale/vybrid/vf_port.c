@@ -656,7 +656,7 @@ name|INT_EITHER_EDGE
 case|:
 name|val
 operator|=
-name|PCR_INT_RE
+name|PCR_INT_EE
 expr_stmt|;
 break|break;
 case|case

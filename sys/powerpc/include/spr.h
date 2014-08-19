@@ -846,8 +846,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IBMPOWER8
+name|IBMPOWER8E
 value|0x004b
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBMPOWER8
+value|0x004d
 end_define
 
 begin_define

@@ -561,7 +561,7 @@ begin_define
 define|#
 directive|define
 name|SBT_MAX
-value|INT64_MAX
+value|0x7fffffffffffffffLL
 end_define
 
 begin_function

@@ -79,10 +79,6 @@ directive|include
 file|<fs/tmpfs/tmpfs_vnops.h>
 end_include
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -157,10 +153,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static

@@ -64,7 +64,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.988 2013/11/23 02:52:37 gshapiro Exp $"
+literal|"@(#)$Id: main.c,v 8.988 2013-11-23 02:52:37 gshapiro Exp $"
 argument_list|)
 end_macro
 

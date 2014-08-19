@@ -4,11 +4,11 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
-comment|/*  * Routines to manage the on-disk persistent error log.  *  * Each pool stores a log of all logical data errors seen during normal  * operation.  This is actually the union of two distinct logs: the last log,  * and the current log.  All errors seen are logged to the current log.  When a  * scrub completes, the current log becomes the last log, the last log is thrown  * out, and the current log is reinitialized.  This way, if an error is somehow  * corrected, a new scrub will show that that it no longer exists, and will be  * deleted from the log when the scrub completes.  *  * The log is stored using a ZAP object whose key is a string form of the  * zbookmark tuple (objset, object, level, blkid), and whose contents is an  * optional 'objset:object' human-readable string describing the data.  When an  * error is first logged, this string will be empty, indicating that no name is  * known.  This prevents us from having to issue a potentially large amount of  * I/O to discover the object name during an error path.  Instead, we do the  * calculation when the data is requested, storing the result so future queries  * will be faster.  *  * This log is then shipped into an nvlist where the key is the dataset name and  * the value is the object name.  Userland is then responsible for uniquifying  * this list and displaying it to the user.  */
+comment|/*  * Routines to manage the on-disk persistent error log.  *  * Each pool stores a log of all logical data errors seen during normal  * operation.  This is actually the union of two distinct logs: the last log,  * and the current log.  All errors seen are logged to the current log.  When a  * scrub completes, the current log becomes the last log, the last log is thrown  * out, and the current log is reinitialized.  This way, if an error is somehow  * corrected, a new scrub will show that that it no longer exists, and will be  * deleted from the log when the scrub completes.  *  * The log is stored using a ZAP object whose key is a string form of the  * zbookmark_phys tuple (objset, object, level, blkid), and whose contents is an  * optional 'objset:object' human-readable string describing the data.  When an  * error is first logged, this string will be empty, indicating that no name is  * known.  This prevents us from having to issue a potentially large amount of  * I/O to discover the object name during an error path.  Instead, we do the  * calculation when the data is requested, storing the result so future queries  * will be faster.  *  * This log is then shipped into an nvlist where the key is the dataset name and  * the value is the object name.  Userland is then responsible for uniquifying  * this list and displaying it to the user.  */
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ specifier|static
 name|void
 name|bookmark_to_name
 parameter_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -124,7 +124,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|)
@@ -243,7 +243,7 @@ modifier|*
 name|zio
 parameter_list|)
 block|{
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 init|=
@@ -559,7 +559,7 @@ decl_stmt|;
 name|zap_attribute_t
 name|za
 decl_stmt|;
-name|zbookmark_t
+name|zbookmark_phys_t
 name|zb
 decl_stmt|;
 if|if
@@ -660,12 +660,12 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|)
 operator|!=
@@ -791,12 +791,12 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|zbookmark_t
+name|zbookmark_phys_t
 argument_list|)
 argument_list|)
 operator|!=
