@@ -1415,6 +1415,7 @@ name|sc
 operator|->
 name|ir_firmware
 condition|)
+block|{
 name|_mapping_get_ir_maprange
 argument_list|(
 name|sc
@@ -1443,6 +1444,7 @@ name|end_idx
 operator|=
 name|start_idx_ir
 expr_stmt|;
+block|}
 name|mt_entry
 operator|=
 operator|&

@@ -28,6 +28,9 @@ decl_stmt|;
 name|uint32_t
 name|eedp_block_size
 decl_stmt|;
+name|uint8_t
+name|stop_at_shutdown
+decl_stmt|;
 block|}
 struct|;
 end_struct
