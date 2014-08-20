@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  *  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_THREAD_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * thread.h:  * definitions needed to use the thread interface except synchronization.  * use<synch.h> for thread synchronization.  */
@@ -88,15 +81,6 @@ name|unsigned
 name|int
 name|thread_key_t
 typedef|;
-endif|#
-directive|endif
-comment|/* _ASM */
-ifndef|#
-directive|ifndef
-name|_ASM
-ifdef|#
-directive|ifdef
-name|__STDC__
 specifier|extern
 name|int
 name|thr_create
@@ -339,112 +323,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-comment|/* __STDC */
-specifier|extern
-name|int
-name|thr_create
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_join
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_setconcurrency
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_getconcurrency
-parameter_list|()
-function_decl|;
-specifier|extern
-name|void
-name|thr_exit
-parameter_list|()
-function_decl|;
-specifier|extern
-name|thread_t
-name|thr_self
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_sigsetmask
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_stksegment
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_main
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_kill
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_suspend
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_continue
-parameter_list|()
-function_decl|;
-specifier|extern
-name|void
-name|thr_yield
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_setprio
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_getprio
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_keycreate
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_keycreate_once
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_setspecific
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|thr_getspecific
-parameter_list|()
-function_decl|;
-specifier|extern
-name|size_t
-name|thr_min_stack
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-comment|/* __STDC */
 endif|#
 directive|endif
 comment|/* _ASM */
