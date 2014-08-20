@@ -170,6 +170,13 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+name|ATF_REQUIRE
+argument_list|(
+name|destroy_stdout
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* We expect no output */
 name|ATF_REQUIRE_EQ
 argument_list|(
@@ -352,6 +359,7 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+comment|/* Read 1 less than sizeof(event) to allow space for NULL */
 name|len
 operator|=
 name|recv
@@ -364,6 +372,8 @@ sizeof|sizeof
 argument_list|(
 name|event
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|MSG_WAITALL
 argument_list|)
@@ -444,6 +454,11 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -620,6 +635,7 @@ decl_stmt|,
 modifier|*
 name|destroy_pos
 decl_stmt|;
+comment|/* Read 1 less than sizeof(event) to allow space for NULL */
 name|newlen
 operator|=
 name|read
@@ -638,6 +654,8 @@ name|event
 argument_list|)
 operator|-
 name|len
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE
@@ -706,6 +724,11 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
