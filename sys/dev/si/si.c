@@ -23,26 +23,35 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
+begin_expr_stmt
+name|__IDSTRING
+argument_list|(
 name|si_copyright1
-index|[]
-init|=
+argument_list|,
 literal|"@(#) Copyright (C) Specialix International, 1990,1992,1998"
-decl_stmt|,
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__IDSTRING
+argument_list|(
 name|si_copyright2
-index|[]
-init|=
+argument_list|,
 literal|"@(#) Copyright (C) Andy Rutter 1993"
-decl_stmt|,
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__IDSTRING
+argument_list|(
 name|si_copyright3
-index|[]
-init|=
+argument_list|,
 literal|"@(#) Copyright (C) Peter Wemm 2000"
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
