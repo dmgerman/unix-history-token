@@ -689,10 +689,6 @@ operator|++
 name|nitems
 control|)
 block|{
-comment|/* Don't allow zero-length paths. */
-if|if
-condition|(
-operator|(
 name|len
 operator|=
 name|strlen
@@ -700,19 +696,7 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|errno
-operator|=
-name|ENOENT
 expr_stmt|;
-goto|goto
-name|mem3
-goto|;
-block|}
 name|p
 operator|=
 name|fts_alloc
