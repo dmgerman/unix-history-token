@@ -16477,6 +16477,8 @@ name|addr
 operator|=
 name|PNMB
 argument_list|(
+name|na
+argument_list|,
 name|slot
 operator|+
 name|si
@@ -16502,6 +16504,8 @@ expr_stmt|;
 comment|/* reload the map for netmap mode */
 name|netmap_load_map
 argument_list|(
+name|na
+argument_list|,
 name|txr
 operator|->
 name|txtag
@@ -19861,6 +19865,8 @@ name|addr
 operator|=
 name|PNMB
 argument_list|(
+name|na
+argument_list|,
 name|slot
 operator|+
 name|si
@@ -19871,6 +19877,8 @@ argument_list|)
 expr_stmt|;
 name|netmap_load_map
 argument_list|(
+name|na
+argument_list|,
 name|rxr
 operator|->
 name|rxtag
