@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  *  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -62,12 +62,6 @@ block|{
 endif|#
 directive|endif
 comment|/*  * ASSERT(ex) causes a panic or debugger entry if expression ex is not  * true.  ASSERT() is included only for debugging, and is a no-op in  * production kernels.  VERIFY(ex), on the other hand, behaves like  * ASSERT and is evaluated on both debug and non-debug kernels.  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
 specifier|extern
 name|int
 name|assfail
@@ -111,45 +105,6 @@ parameter_list|)
 value|((void)0)
 endif|#
 directive|endif
-else|#
-directive|else
-comment|/* defined(__STDC__) */
-specifier|extern
-name|int
-name|assfail
-parameter_list|()
-function_decl|;
-define|#
-directive|define
-name|VERIFY
-parameter_list|(
-name|EX
-parameter_list|)
-value|((void)((EX) || assfail("EX", __FILE__, __LINE__)))
-if|#
-directive|if
-name|DEBUG
-define|#
-directive|define
-name|ASSERT
-parameter_list|(
-name|EX
-parameter_list|)
-value|((void)((EX) || assfail("EX", __FILE__, __LINE__)))
-else|#
-directive|else
-define|#
-directive|define
-name|ASSERT
-parameter_list|(
-name|x
-parameter_list|)
-value|((void)0)
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* defined(__STDC__) */
 comment|/*  * Assertion variants sensitive to the compilation data model  */
 if|#
 directive|if
