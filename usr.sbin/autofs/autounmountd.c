@@ -807,11 +807,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|bool
-name|unmounted
-init|=
-name|false
-decl_stmt|;
 name|now
 operator|=
 name|time
@@ -956,33 +951,6 @@ operator|=
 name|mounted_for
 expr_stmt|;
 block|}
-else|else
-block|{
-name|unmounted
-operator|=
-name|true
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|unmounted
-condition|)
-block|{
-comment|/* 		 * Successful unmount of a filesystem could unbusy its parent 		 * filesystem that can now be unmounted. 		 */
-name|log_debugx
-argument_list|(
-literal|"filesystem got unmounted; go around"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|expire_automounted
-argument_list|(
-name|expiration_time
-argument_list|)
-operator|)
-return|;
 block|}
 return|return
 operator|(
