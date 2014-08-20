@@ -3751,11 +3751,9 @@ name|vdev_ms_array
 operator|!=
 literal|0
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|good_writes
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4129,11 +4127,9 @@ name|io_error
 operator|==
 literal|0
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|good_writes
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

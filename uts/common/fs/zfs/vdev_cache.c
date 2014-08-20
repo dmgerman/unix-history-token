@@ -156,7 +156,7 @@ name|VDCSTAT_BUMP
 parameter_list|(
 name|stat
 parameter_list|)
-value|atomic_add_64(&vdc_stats.stat.value.ui64, 1);
+value|atomic_inc_64(&vdc_stats.stat.value.ui64);
 end_define
 
 begin_function

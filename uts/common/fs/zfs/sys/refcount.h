@@ -298,7 +298,7 @@ name|rc
 parameter_list|,
 name|holder
 parameter_list|)
-value|atomic_add_64_nv(&(rc)->rc_count, 1)
+value|atomic_inc_64_nv(&(rc)->rc_count)
 define|#
 directive|define
 name|refcount_remove
@@ -307,7 +307,7 @@ name|rc
 parameter_list|,
 name|holder
 parameter_list|)
-value|atomic_add_64_nv(&(rc)->rc_count, -1)
+value|atomic_dec_64_nv(&(rc)->rc_count)
 define|#
 directive|define
 name|refcount_add_many
