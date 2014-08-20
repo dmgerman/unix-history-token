@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|NMG_LOCK_T
-value|struct mtx
+value|struct sx
 end_define
 
 begin_define
@@ -89,7 +89,7 @@ define|#
 directive|define
 name|NMG_LOCK_INIT
 parameter_list|()
-value|mtx_init(&netmap_global_lock, \ 				"netmap global lock", NULL, MTX_DEF)
+value|sx_init(&netmap_global_lock, \ 				"netmap global lock")
 end_define
 
 begin_define
@@ -97,7 +97,7 @@ define|#
 directive|define
 name|NMG_LOCK_DESTROY
 parameter_list|()
-value|mtx_destroy(&netmap_global_lock)
+value|sx_destroy(&netmap_global_lock)
 end_define
 
 begin_define
@@ -105,7 +105,7 @@ define|#
 directive|define
 name|NMG_LOCK
 parameter_list|()
-value|mtx_lock(&netmap_global_lock)
+value|sx_xlock(&netmap_global_lock)
 end_define
 
 begin_define
@@ -113,7 +113,7 @@ define|#
 directive|define
 name|NMG_UNLOCK
 parameter_list|()
-value|mtx_unlock(&netmap_global_lock)
+value|sx_xunlock(&netmap_global_lock)
 end_define
 
 begin_define
@@ -121,7 +121,7 @@ define|#
 directive|define
 name|NMG_LOCK_ASSERT
 parameter_list|()
-value|mtx_assert(&netmap_global_lock, MA_OWNED)
+value|sx_assert(&netmap_global_lock, SA_XLOCKED)
 end_define
 
 begin_define
