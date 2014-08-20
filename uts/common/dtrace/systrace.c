@@ -741,7 +741,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|casptr
+name|atomic_cas_ptr
 argument_list|(
 operator|&
 name|sysent
@@ -775,7 +775,7 @@ name|_SYSCALL32_IMPL
 operator|(
 name|void
 operator|)
-name|casptr
+name|atomic_cas_ptr
 argument_list|(
 operator|&
 name|sysent32
@@ -876,7 +876,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|casptr
+name|atomic_cas_ptr
 argument_list|(
 operator|&
 name|sysent
@@ -910,7 +910,7 @@ name|_SYSCALL32_IMPL
 operator|(
 name|void
 operator|)
-name|casptr
+name|atomic_cas_ptr
 argument_list|(
 operator|&
 name|sysent32

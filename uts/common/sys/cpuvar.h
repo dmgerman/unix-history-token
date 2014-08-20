@@ -1365,7 +1365,7 @@ name|set
 parameter_list|,
 name|cpu
 parameter_list|)
-value|atomic_and_long(&(set), ~CPUSET(cpu))
+value|atomic_and_ulong(&(set), ~CPUSET(cpu))
 define|#
 directive|define
 name|CPUSET_ATOMIC_ADD
@@ -1374,7 +1374,7 @@ name|set
 parameter_list|,
 name|cpu
 parameter_list|)
-value|atomic_or_long(&(set), CPUSET(cpu))
+value|atomic_or_ulong(&(set), CPUSET(cpu))
 define|#
 directive|define
 name|CPUSET_ATOMIC_XADD

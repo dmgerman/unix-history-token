@@ -1599,7 +1599,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|casptr
+name|atomic_cas_ptr
 argument_list|(
 operator|(
 name|void

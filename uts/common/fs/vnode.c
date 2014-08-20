@@ -11132,7 +11132,7 @@ expr_stmt|;
 name|membar_consumer
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If vp->v_femhead == NULL, then we'll call casptr() to do the 	 * compare-and-swap on vp->v_op.  If either fails, then FEM is 	 * in effect on the vnode and we need to have FEM deal with it. 	 */
+comment|/* 	 * If vp->v_femhead == NULL, then we'll call atomic_cas_ptr() to do 	 * the compare-and-swap on vp->v_op.  If either fails, then FEM is 	 * in effect on the vnode and we need to have FEM deal with it. 	 */
 if|if
 condition|(
 name|vp
@@ -11141,7 +11141,7 @@ name|v_femhead
 operator|!=
 name|NULL
 operator|||
-name|casptr
+name|atomic_cas_ptr
 argument_list|(
 operator|&
 name|vp
