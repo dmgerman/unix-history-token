@@ -2501,8 +2501,15 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Enable msix, positive errors indicate actual number of available  * vectors.  Negative errors are failures.  */
+comment|/*  * Enable msix, positive errors indicate actual number of available  * vectors.  Negative errors are failures.  *  * NB: define added to prevent this definition of pci_enable_msix from  * clashing with the native FreeBSD version.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|pci_enable_msix
+value|linux_pci_enable_msix
+end_define
 
 begin_function
 specifier|static
