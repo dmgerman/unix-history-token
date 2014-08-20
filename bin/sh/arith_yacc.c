@@ -604,9 +604,6 @@ operator|)
 name|a
 operator|<<
 operator|(
-operator|(
-name|uintmax_t
-operator|)
 name|b
 operator|&
 operator|(
@@ -628,9 +625,6 @@ return|return
 name|a
 operator|>>
 operator|(
-operator|(
-name|uintmax_t
-operator|)
 name|b
 operator|&
 operator|(
