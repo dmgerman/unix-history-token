@@ -780,7 +780,9 @@ modifier|*
 name|dof
 decl_stmt|;
 name|int
-name|err
+name|error
+decl_stmt|,
+name|r
 decl_stmt|;
 if|if
 condition|(
@@ -874,7 +876,7 @@ name|n_matched
 operator|=
 literal|0
 expr_stmt|;
-name|err
+name|r
 operator|=
 name|dt_ioctl
 argument_list|(
@@ -886,6 +888,10 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|dtrace_dof_destroy
 argument_list|(
 name|dtp
@@ -895,13 +901,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|r
 operator|==
 operator|-
 literal|1
 operator|&&
 operator|(
-name|errno
+name|error
 operator|!=
 name|ENOTTY
 operator|||
@@ -918,7 +924,7 @@ name|dt_set_errno
 argument_list|(
 name|dtp
 argument_list|,
-name|errno
+name|error
 argument_list|)
 operator|)
 return|;
