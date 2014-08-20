@@ -740,6 +740,16 @@ name|SFBUF_OPTIONAL_DIRECT_MAP
 value|hw_direct_map
 end_define
 
+begin_define
+define|#
+directive|define
+name|SFBUF_PHYS_DMAP
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
 begin_endif
 endif|#
 directive|endif
