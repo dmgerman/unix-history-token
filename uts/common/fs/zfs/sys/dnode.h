@@ -546,10 +546,10 @@ decl_stmt|;
 name|kmutex_t
 name|dn_dbufs_mtx
 decl_stmt|;
+comment|/* 	 * Descendent dbufs, ordered by dbuf_compare. Note that dn_dbufs 	 * can contain multiple dbufs of the same (level, blkid) when a 	 * dbuf is marked DB_EVICTING without being removed from 	 * dn_dbufs. To maintain the avl invariant that there cannot be 	 * duplicate entries, we order the dbufs by an arbitrary value - 	 * their address in memory. This means that dn_dbufs cannot be used to 	 * directly look up a dbuf. Instead, callers must use avl_walk, have 	 * a reference to the dbuf, or look up a non-existant node with 	 * db_state = DB_SEARCH (see dbuf_free_range for an example). 	 */
 name|avl_tree_t
 name|dn_dbufs
 decl_stmt|;
-comment|/* descendent dbufs */
 comment|/* protected by dn_struct_rwlock */
 name|struct
 name|dmu_buf_impl

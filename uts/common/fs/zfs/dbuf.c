@@ -252,13 +252,6 @@ operator|->
 name|db_holds
 argument_list|)
 expr_stmt|;
-name|db
-operator|->
-name|db_creation
-operator|=
-name|gethrtime
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4497,9 +4490,9 @@ name|start_blkid
 expr_stmt|;
 name|db_search
 operator|.
-name|db_creation
+name|db_state
 operator|=
-literal|0
+name|DB_SEARCH
 expr_stmt|;
 name|mutex_enter
 argument_list|(
