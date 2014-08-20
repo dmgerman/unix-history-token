@@ -561,7 +561,7 @@ begin_define
 define|#
 directive|define
 name|SBT_MAX
-value|0x7fffffffffffffffLL
+value|0x7fffffffffffffff
 end_define
 
 begin_function
@@ -753,7 +753,7 @@ operator|*
 operator|(
 name|uint64_t
 operator|)
-literal|18446744073LL
+literal|18446744073
 expr_stmt|;
 block|}
 end_function
@@ -849,7 +849,7 @@ operator|*
 operator|(
 name|uint64_t
 operator|)
-literal|18446744073709LL
+literal|18446744073709
 expr_stmt|;
 block|}
 end_function
