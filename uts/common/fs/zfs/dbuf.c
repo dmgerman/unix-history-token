@@ -8680,10 +8680,7 @@ argument_list|,
 name|db
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|atomic_dec_32_nv
+name|atomic_dec_32
 argument_list|(
 operator|&
 name|dn
@@ -9666,10 +9663,7 @@ argument_list|,
 name|db
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|atomic_inc_32_nv
+name|atomic_inc_32
 argument_list|(
 operator|&
 name|dn
@@ -9873,10 +9867,7 @@ argument_list|,
 name|db
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|atomic_dec_32_nv
+name|atomic_dec_32
 argument_list|(
 operator|&
 name|dn
@@ -11265,10 +11256,7 @@ argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|atomic_dec_32_nv
+name|atomic_dec_32
 argument_list|(
 operator|&
 name|DB_DNODE
