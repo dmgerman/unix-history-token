@@ -279,10 +279,13 @@ comment|/* spa_sync() */
 name|ZIO_PRIORITY_SCRUB
 block|,
 comment|/* asynchronous scrub/resilver reads */
+name|ZIO_PRIORITY_TRIM
+block|,
+comment|/* free requests used for TRIM */
 name|ZIO_PRIORITY_NUM_QUEUEABLE
 block|,
 name|ZIO_PRIORITY_NOW
-comment|/* non-queued i/os (e.g. free) */
+comment|/* non-queued I/Os (e.g. ioctl) */
 block|}
 name|zio_priority_t
 typedef|;
@@ -896,8 +899,7 @@ name|zio_pipe_stage_t
 parameter_list|(
 name|zio_t
 modifier|*
-modifier|*
-name|ziop
+name|zio
 parameter_list|)
 function_decl|;
 comment|/*  * The io_reexecute flags are distinct from io_flags because the child must  * be able to propagate them to the parent.  The normal io_flags are local  * to the zio, not protected by any lock, and not modifiable by children;  * the reexecute flags are protected by io_lock, modifiable by children,  * and always propagated -- even when ZIO_FLAG_DONT_PROPAGATE is set.  */
@@ -1513,6 +1515,9 @@ parameter_list|,
 name|void
 modifier|*
 name|priv
+parameter_list|,
+name|zio_priority_t
+name|priority
 parameter_list|,
 name|enum
 name|zio_flag

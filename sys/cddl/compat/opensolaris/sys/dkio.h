@@ -68,11 +68,6 @@ directive|define
 name|DKIOCFLUSHWRITECACHE
 value|(DKIOC|34)
 comment|/* flush cache to phys medium */
-define|#
-directive|define
-name|DKIOCTRIM
-value|(DKIOC|35)
-comment|/* TRIM a block */
 struct|struct
 name|dk_callback
 block|{

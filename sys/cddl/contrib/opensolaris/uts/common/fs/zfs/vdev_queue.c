@@ -48,11 +48,11 @@ file|<sys/dsl_pool.h>
 end_include
 
 begin_comment
-comment|/*  * ZFS I/O Scheduler  * ---------------  *  * ZFS issues I/O operations to leaf vdevs to satisfy and complete zios.  The  * I/O scheduler determines when and in what order those operations are  * issued.  The I/O scheduler divides operations into five I/O classes  * prioritized in the following order: sync read, sync write, async read,  * async write, and scrub/resilver.  Each queue defines the minimum and  * maximum number of concurrent operations that may be issued to the device.  * In addition, the device has an aggregate maximum. Note that the sum of the  * per-queue minimums must not exceed the aggregate maximum, and if the  * aggregate maximum is equal to or greater than the sum of the per-queue  * maximums, the per-queue minimum has no effect.  *  * For many physical devices, throughput increases with the number of  * concurrent operations, but latency typically suffers. Further, physical  * devices typically have a limit at which more concurrent operations have no  * effect on throughput or can actually cause it to decrease.  *  * The scheduler selects the next operation to issue by first looking for an  * I/O class whose minimum has not been satisfied. Once all are satisfied and  * the aggregate maximum has not been hit, the scheduler looks for classes  * whose maximum has not been satisfied. Iteration through the I/O classes is  * done in the order specified above. No further operations are issued if the  * aggregate maximum number of concurrent operations has been hit or if there  * are no operations queued for an I/O class that has not hit its maximum.  * Every time an i/o is queued or an operation completes, the I/O scheduler  * looks for new operations to issue.  *  * All I/O classes have a fixed maximum number of outstanding operations  * except for the async write class. Asynchronous writes represent the data  * that is committed to stable storage during the syncing stage for  * transaction groups (see txg.c). Transaction groups enter the syncing state  * periodically so the number of queued async writes will quickly burst up and  * then bleed down to zero. Rather than servicing them as quickly as possible,  * the I/O scheduler changes the maximum number of active async write i/os  * according to the amount of dirty data in the pool (see dsl_pool.c). Since  * both throughput and latency typically increase with the number of  * concurrent operations issued to physical devices, reducing the burstiness  * in the number of concurrent operations also stabilizes the response time of  * operations from other -- and in particular synchronous -- queues. In broad  * strokes, the I/O scheduler will issue more concurrent operations from the  * async write queue as there's more dirty data in the pool.  *  * Async Writes  *  * The number of concurrent operations issued for the async write I/O class  * follows a piece-wise linear function defined by a few adjustable points.  *  *        |                   o---------|<-- zfs_vdev_async_write_max_active  *   ^    |                  /^         |  *   |    |                 / |         |  * active |                /  |         |  *  I/O   |               /   |         |  * count  |              /    |         |  *        |             /     |         |  *        |------------o      |         |<-- zfs_vdev_async_write_min_active  *       0|____________^______|_________|  *        0%           |      |       100% of zfs_dirty_data_max  *                     |      |  *                     |      `-- zfs_vdev_async_write_active_max_dirty_percent  *                     `--------- zfs_vdev_async_write_active_min_dirty_percent  *  * Until the amount of dirty data exceeds a minimum percentage of the dirty  * data allowed in the pool, the I/O scheduler will limit the number of  * concurrent operations to the minimum. As that threshold is crossed, the  * number of concurrent operations issued increases linearly to the maximum at  * the specified maximum percentage of the dirty data allowed in the pool.  *  * Ideally, the amount of dirty data on a busy pool will stay in the sloped  * part of the function between zfs_vdev_async_write_active_min_dirty_percent  * and zfs_vdev_async_write_active_max_dirty_percent. If it exceeds the  * maximum percentage, this indicates that the rate of incoming data is  * greater than the rate that the backend storage can handle. In this case, we  * must further throttle incoming writes (see dmu_tx_delay() for details).  */
+comment|/*  * ZFS I/O Scheduler  * ---------------  *  * ZFS issues I/O operations to leaf vdevs to satisfy and complete zios.  The  * I/O scheduler determines when and in what order those operations are  * issued.  The I/O scheduler divides operations into six I/O classes  * prioritized in the following order: sync read, sync write, async read,  * async write, scrub/resilver and trim.  Each queue defines the minimum and  * maximum number of concurrent operations that may be issued to the device.  * In addition, the device has an aggregate maximum. Note that the sum of the  * per-queue minimums must not exceed the aggregate maximum, and if the  * aggregate maximum is equal to or greater than the sum of the per-queue  * maximums, the per-queue minimum has no effect.  *  * For many physical devices, throughput increases with the number of  * concurrent operations, but latency typically suffers. Further, physical  * devices typically have a limit at which more concurrent operations have no  * effect on throughput or can actually cause it to decrease.  *  * The scheduler selects the next operation to issue by first looking for an  * I/O class whose minimum has not been satisfied. Once all are satisfied and  * the aggregate maximum has not been hit, the scheduler looks for classes  * whose maximum has not been satisfied. Iteration through the I/O classes is  * done in the order specified above. No further operations are issued if the  * aggregate maximum number of concurrent operations has been hit or if there  * are no operations queued for an I/O class that has not hit its maximum.  * Every time an I/O is queued or an operation completes, the I/O scheduler  * looks for new operations to issue.  *  * All I/O classes have a fixed maximum number of outstanding operations  * except for the async write class. Asynchronous writes represent the data  * that is committed to stable storage during the syncing stage for  * transaction groups (see txg.c). Transaction groups enter the syncing state  * periodically so the number of queued async writes will quickly burst up and  * then bleed down to zero. Rather than servicing them as quickly as possible,  * the I/O scheduler changes the maximum number of active async write I/Os  * according to the amount of dirty data in the pool (see dsl_pool.c). Since  * both throughput and latency typically increase with the number of  * concurrent operations issued to physical devices, reducing the burstiness  * in the number of concurrent operations also stabilizes the response time of  * operations from other -- and in particular synchronous -- queues. In broad  * strokes, the I/O scheduler will issue more concurrent operations from the  * async write queue as there's more dirty data in the pool.  *  * Async Writes  *  * The number of concurrent operations issued for the async write I/O class  * follows a piece-wise linear function defined by a few adjustable points.  *  *        |                   o---------|<-- zfs_vdev_async_write_max_active  *   ^    |                  /^         |  *   |    |                 / |         |  * active |                /  |         |  *  I/O   |               /   |         |  * count  |              /    |         |  *        |             /     |         |  *        |------------o      |         |<-- zfs_vdev_async_write_min_active  *       0|____________^______|_________|  *        0%           |      |       100% of zfs_dirty_data_max  *                     |      |  *                     |      `-- zfs_vdev_async_write_active_max_dirty_percent  *                     `--------- zfs_vdev_async_write_active_min_dirty_percent  *  * Until the amount of dirty data exceeds a minimum percentage of the dirty  * data allowed in the pool, the I/O scheduler will limit the number of  * concurrent operations to the minimum. As that threshold is crossed, the  * number of concurrent operations issued increases linearly to the maximum at  * the specified maximum percentage of the dirty data allowed in the pool.  *  * Ideally, the amount of dirty data on a busy pool will stay in the sloped  * part of the function between zfs_vdev_async_write_active_min_dirty_percent  * and zfs_vdev_async_write_active_max_dirty_percent. If it exceeds the  * maximum percentage, this indicates that the rate of incoming data is  * greater than the rate that the backend storage can handle. In this case, we  * must further throttle incoming writes (see dmu_tx_delay() for details).  */
 end_comment
 
 begin_comment
-comment|/*  * The maximum number of i/os active to each device.  Ideally, this will be>=  * the sum of each queue's max_active.  It must be at least the sum of each  * queue's min_active.  */
+comment|/*  * The maximum number of I/Os active to each device.  Ideally, this will be>=  * the sum of each queue's max_active.  It must be at least the sum of each  * queue's min_active.  */
 end_comment
 
 begin_decl_stmt
@@ -64,7 +64,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Per-queue limits on the number of i/os active to each device.  If the  * sum of the queue's max_active is< zfs_vdev_max_active, then the  * min_active comes into play.  We will send min_active from each queue,  * and then select from queues in the order defined by zio_priority_t.  *  * In general, smaller max_active's will lead to lower latency of synchronous  * operations.  Larger max_active's may lead to higher overall throughput,  * depending on underlying storage.  *  * The ratio of the queues' max_actives determines the balance of performance  * between reads, writes, and scrubs.  E.g., increasing  * zfs_vdev_scrub_max_active will cause the scrub or resilver to complete  * more quickly, but reads and writes to have higher latency and lower  * throughput.  */
+comment|/*  * Per-queue limits on the number of I/Os active to each device.  If the  * sum of the queue's max_active is< zfs_vdev_max_active, then the  * min_active comes into play.  We will send min_active from each queue,  * and then select from queues in the order defined by zio_priority_t.  *  * In general, smaller max_active's will lead to lower latency of synchronous  * operations.  Larger max_active's may lead to higher overall throughput,  * depending on underlying storage.  *  * The ratio of the queues' max_actives determines the balance of performance  * between reads, writes, and scrubs.  E.g., increasing  * zfs_vdev_scrub_max_active will cause the scrub or resilver to complete  * more quickly, but reads and writes to have higher latency and lower  * throughput.  */
 end_comment
 
 begin_decl_stmt
@@ -144,6 +144,26 @@ name|uint32_t
 name|zfs_vdev_scrub_max_active
 init|=
 literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|zfs_vdev_trim_min_active
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * TRIM max active is large in comparison to the other values due to the fact  * that TRIM IOs are coalesced at the device layer. This value is set such  * that a typical SSD can process the queued IOs in a single request.  */
+end_comment
+
+begin_decl_stmt
+name|uint32_t
+name|zfs_vdev_trim_max_active
+init|=
+literal|64
 decl_stmt|;
 end_decl_stmt
 
@@ -240,7 +260,7 @@ name|zfs_vdev_max_active
 argument_list|,
 literal|0
 argument_list|,
-literal|"The maximum number of i/os of all types active for each device."
+literal|"The maximum number of I/Os of all types active for each device."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -343,6 +363,22 @@ begin_expr_stmt
 name|ZFS_VDEV_QUEUE_KNOB_MAX
 argument_list|(
 name|scrub
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ZFS_VDEV_QUEUE_KNOB_MIN
+argument_list|(
+name|trim
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ZFS_VDEV_QUEUE_KNOB_MAX
+argument_list|(
+name|trim
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -848,6 +884,17 @@ name|zio
 operator|->
 name|io_spa
 decl_stmt|;
+name|ASSERT
+argument_list|(
+name|MUTEX_HELD
+argument_list|(
+operator|&
+name|vq
+operator|->
+name|vq_lock
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ASSERT3U
 argument_list|(
 name|zio
@@ -951,6 +998,17 @@ name|zio
 operator|->
 name|io_spa
 decl_stmt|;
+name|ASSERT
+argument_list|(
+name|MUTEX_HELD
+argument_list|(
+operator|&
+name|vq
+operator|->
+name|vq_lock
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ASSERT3U
 argument_list|(
 name|zio
@@ -1501,6 +1559,14 @@ operator|(
 name|zfs_vdev_scrub_min_active
 operator|)
 return|;
+case|case
+name|ZIO_PRIORITY_TRIM
+case|:
+return|return
+operator|(
+name|zfs_vdev_trim_min_active
+operator|)
+return|;
 default|default:
 name|panic
 argument_list|(
@@ -1705,6 +1771,14 @@ operator|(
 name|zfs_vdev_scrub_max_active
 operator|)
 return|;
+case|case
+name|ZIO_PRIORITY_TRIM
+case|:
+return|return
+operator|(
+name|zfs_vdev_trim_max_active
+operator|)
+return|;
 default|default:
 name|panic
 argument_list|(
@@ -1749,6 +1823,17 @@ decl_stmt|;
 name|zio_priority_t
 name|p
 decl_stmt|;
+name|ASSERT
+argument_list|(
+name|MUTEX_HELD
+argument_list|(
+operator|&
+name|vq
+operator|->
+name|vq_lock
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|avl_numnodes
@@ -1953,42 +2038,26 @@ name|size
 decl_stmt|;
 name|boolean_t
 name|stretch
-init|=
-name|B_FALSE
-decl_stmt|;
-name|vdev_queue_class_t
-modifier|*
-name|vqc
-init|=
-operator|&
-name|vq
-operator|->
-name|vq_class
-index|[
-name|zio
-operator|->
-name|io_priority
-index|]
 decl_stmt|;
 name|avl_tree_t
 modifier|*
 name|t
-init|=
-operator|&
-name|vqc
-operator|->
-name|vqc_queued_tree
 decl_stmt|;
 name|enum
 name|zio_flag
 name|flags
-init|=
-name|zio
-operator|->
-name|io_flags
-operator|&
-name|ZIO_FLAG_AGG_INHERIT
 decl_stmt|;
+name|ASSERT
+argument_list|(
+name|MUTEX_HELD
+argument_list|(
+operator|&
+name|vq
+operator|->
+name|vq_lock
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|zio
@@ -2057,6 +2126,28 @@ else|:
 name|first
 expr_stmt|;
 comment|/* 	 * Walk backwards through sufficiently contiguous I/Os 	 * recording the last non-option I/O. 	 */
+name|flags
+operator|=
+name|zio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_AGG_INHERIT
+expr_stmt|;
+name|t
+operator|=
+operator|&
+name|vq
+operator|->
+name|vq_class
+index|[
+name|zio
+operator|->
+name|io_priority
+index|]
+operator|.
+name|vqc_queued_tree
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2224,6 +2315,10 @@ name|last
 expr_stmt|;
 block|}
 comment|/* 	 * Now that we've established the range of the I/O aggregation 	 * we must decide what to do with trailing optional I/Os. 	 * For reads, there's nothing to do. While we are unable to 	 * aggregate further, it's possible that a trailing optional 	 * I/O would allow the underlying device to aggregate with 	 * subsequent I/Os. We must therefore determine if the next 	 * non-optional I/O is close enough to make aggregation 	 * worthwhile. 	 */
+name|stretch
+operator|=
+name|B_FALSE
+expr_stmt|;
 if|if
 condition|(
 name|zio
@@ -2916,17 +3011,16 @@ operator|=
 name|ZIO_PRIORITY_ASYNC_READ
 expr_stmt|;
 block|}
-else|else
-block|{
-name|ASSERT
-argument_list|(
+elseif|else
+if|if
+condition|(
 name|zio
 operator|->
 name|io_type
 operator|==
 name|ZIO_TYPE_WRITE
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
 if|if
 condition|(
 name|zio
@@ -2946,6 +3040,24 @@ operator|->
 name|io_priority
 operator|=
 name|ZIO_PRIORITY_ASYNC_WRITE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ASSERT
+argument_list|(
+name|zio
+operator|->
+name|io_type
+operator|==
+name|ZIO_TYPE_FREE
+argument_list|)
+expr_stmt|;
+name|zio
+operator|->
+name|io_priority
+operator|=
+name|ZIO_PRIORITY_TRIM
 expr_stmt|;
 block|}
 name|zio
