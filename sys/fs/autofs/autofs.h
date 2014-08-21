@@ -15,20 +15,6 @@ directive|define
 name|AUTOFS_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
