@@ -150,13 +150,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"icl.h"
+file|<dev/iscsi/icl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iscsi_proto.h"
+file|<dev/iscsi/iscsi_proto.h>
 end_include
 
 begin_expr_stmt

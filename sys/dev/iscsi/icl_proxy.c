@@ -130,7 +130,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"icl.h"
+file|<dev/iscsi/icl.h>
 end_include
 
 begin_decl_stmt

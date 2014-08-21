@@ -198,19 +198,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../dev/iscsi/icl.h"
+file|<dev/iscsi/icl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../../dev/iscsi/iscsi_proto.h"
+file|<dev/iscsi/iscsi_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ctl_frontend_iscsi.h"
+file|<cam/ctl/ctl_frontend_iscsi.h>
 end_include
 
 begin_ifdef
