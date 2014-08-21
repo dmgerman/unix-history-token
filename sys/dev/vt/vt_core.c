@@ -7599,6 +7599,35 @@ name|VWF_MOUSE_HIDE
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * Mark mouse position as dirty. 	 * 	 * FIXME: See comments in vt_flush(). 	 */
+name|vtbuf_mouse_cursor_position
+argument_list|(
+operator|&
+name|vw
+operator|->
+name|vw_buf
+argument_list|,
+name|vd
+operator|->
+name|vd_mx
+operator|/
+name|vw
+operator|->
+name|vw_font
+operator|->
+name|vf_width
+argument_list|,
+name|vd
+operator|->
+name|vd_my
+operator|/
+name|vw
+operator|->
+name|vw_font
+operator|->
+name|vf_height
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
