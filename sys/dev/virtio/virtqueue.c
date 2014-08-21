@@ -1594,6 +1594,26 @@ end_function
 
 begin_function
 name|int
+name|virtqueue_nfree
+parameter_list|(
+name|struct
+name|virtqueue
+modifier|*
+name|vq
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vq
+operator|->
+name|vq_free_cnt
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|virtqueue_empty
 parameter_list|(
 name|struct
