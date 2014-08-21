@@ -1392,7 +1392,7 @@ literal|8
 case|:
 return|return
 operator|(
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|cmap
 argument_list|,
@@ -1417,7 +1417,7 @@ literal|15
 case|:
 return|return
 operator|(
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|cmap
 argument_list|,
@@ -1442,7 +1442,7 @@ literal|16
 case|:
 return|return
 operator|(
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|cmap
 argument_list|,
@@ -1471,7 +1471,7 @@ case|:
 comment|/* Ignore alpha. */
 return|return
 operator|(
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|cmap
 argument_list|,
@@ -1479,7 +1479,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|0xff
 argument_list|,
-literal|0
+literal|16
 argument_list|,
 literal|0xff
 argument_list|,
@@ -1487,7 +1487,7 @@ literal|8
 argument_list|,
 literal|0xff
 argument_list|,
-literal|16
+literal|0
 argument_list|)
 operator|)
 return|;
