@@ -4330,13 +4330,6 @@ name|ofs
 operator|++
 control|)
 block|{
-name|MEM_READ1
-argument_list|(
-name|sc
-argument_list|,
-name|ofs
-argument_list|)
-expr_stmt|;
 name|MEM_WRITE1
 argument_list|(
 name|sc
