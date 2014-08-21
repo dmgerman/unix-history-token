@@ -1757,6 +1757,12 @@ argument_list|)
 expr_stmt|;
 name|p2
 operator|->
+name|p_treeflag
+operator|=
+literal|0
+expr_stmt|;
+name|p2
+operator|->
 name|p_ucred
 operator|=
 name|crhold
