@@ -269,7 +269,7 @@ block|{
 case|case
 literal|8
 case|:
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|info
 operator|->
@@ -294,7 +294,7 @@ break|break;
 case|case
 literal|15
 case|:
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|info
 operator|->
@@ -319,7 +319,7 @@ break|break;
 case|case
 literal|16
 case|:
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|info
 operator|->
@@ -352,7 +352,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|info
 operator|->
@@ -362,7 +362,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|255
 argument_list|,
-literal|16
+literal|0
 argument_list|,
 literal|255
 argument_list|,
@@ -370,12 +370,12 @@ literal|8
 argument_list|,
 literal|255
 argument_list|,
-literal|0
+literal|16
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|info
 operator|->
@@ -385,7 +385,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|255
 argument_list|,
-literal|0
+literal|16
 argument_list|,
 literal|255
 argument_list|,
@@ -393,7 +393,7 @@ literal|8
 argument_list|,
 literal|255
 argument_list|,
-literal|16
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
