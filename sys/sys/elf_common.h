@@ -3302,7 +3302,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DT_FEATURE_1
+name|DT_FEATURE
 value|0x6ffffdfc
 end_define
 

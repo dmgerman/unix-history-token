@@ -1336,7 +1336,7 @@ return|return
 literal|"DT_MOVESZ"
 return|;
 case|case
-literal|0x6ffffdfc
+name|DT_FEATURE
 case|:
 return|return
 literal|"DT_FEATURE"
