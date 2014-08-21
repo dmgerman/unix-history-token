@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"autofs.h"
+file|<fs/autofs/autofs.h>
 end_include
 
 begin_function_decl
