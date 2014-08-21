@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/efi.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -67,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/efi.h>
 end_include
 
 begin_include

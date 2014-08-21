@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/efi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/efi.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include

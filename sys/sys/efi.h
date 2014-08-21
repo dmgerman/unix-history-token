@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_EFI_H_
+name|_SYS_EFI_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_EFI_H_
+name|_SYS_EFI_H_
 end_define
 
 begin_include
@@ -572,11 +572,19 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -801,7 +809,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* _KERNEL&& __ia64__ */
 end_comment
 
 begin_endif
@@ -810,7 +818,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_EFI_H_ */
+comment|/* _SYS_EFI_H_ */
 end_comment
 
 end_unit
