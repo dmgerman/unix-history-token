@@ -506,6 +506,7 @@ specifier|static
 name|int
 name|vtbuf_htw
 parameter_list|(
+specifier|const
 name|struct
 name|vt_buf
 modifier|*
@@ -542,6 +543,7 @@ begin_function
 name|int
 name|vtbuf_iscursor
 parameter_list|(
+specifier|const
 name|struct
 name|vt_buf
 modifier|*
