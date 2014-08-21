@@ -163,7 +163,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|testsimpel
 parameter_list|(
 name|void
@@ -337,7 +337,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|testgcd
 parameter_list|(
 name|void
@@ -366,7 +366,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|testmsqrt
 parameter_list|(
 name|void
@@ -431,7 +431,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|testdiv
 parameter_list|(
 name|void
@@ -593,7 +593,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|testmult
 parameter_list|(
 name|void
@@ -640,7 +640,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|testpow
 parameter_list|(
 name|void
