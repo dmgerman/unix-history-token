@@ -4155,7 +4155,7 @@ operator|->
 name|vd_my
 condition|)
 block|{
-comment|/* 			 * Mark last mouse position as dirty to erase. 			 * 			 * FIXME: The font size could be different among 			 * all windows, so the column/row calculation 			 * below isn't correct for all windows. 			 * 			 * FIXME: The cursor can span more than one 			 * character cell. vtbuf_mouse_cursor_position 			 * marks surrounding cells as dirty. But due 			 * to font size possibly inconsistent across 			 * windows, this may not be sufficient. This 			 * causes part of the cursor to not be erased. 			 */
+comment|/* 			 * Mark last mouse position as dirty to erase. 			 * 			 * FIXME: The font size could be different among 			 * all windows, so the column/row calculation 			 * below isn't correct for all windows. 			 * 			 * FIXME: The cursor can span more than one 			 * character cell. vtbuf_mouse_cursor_position 			 * marks surrounding cells as dirty. But due 			 * to font size possibly inconsistent across 			 * windows, this may not be sufficient. This 			 * causes part of the cursor to not be erased. 			 * 			 * FIXME: The vt_buf lock is acquired twice in a 			 * row. 			 */
 name|vtbuf_mouse_cursor_position
 argument_list|(
 operator|&
@@ -4174,6 +4174,30 @@ argument_list|,
 name|vd
 operator|->
 name|vd_moldy
+operator|/
+name|vf
+operator|->
+name|vf_height
+argument_list|)
+expr_stmt|;
+name|vtbuf_mouse_cursor_position
+argument_list|(
+operator|&
+name|vw
+operator|->
+name|vw_buf
+argument_list|,
+name|vd
+operator|->
+name|vd_mx
+operator|/
+name|vf
+operator|->
+name|vf_width
+argument_list|,
+name|vd
+operator|->
+name|vd_my
 operator|/
 name|vf
 operator|->
