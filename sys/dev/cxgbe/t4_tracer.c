@@ -802,11 +802,6 @@ argument_list|,
 name|lla
 argument_list|)
 expr_stmt|;
-name|if_up
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
