@@ -557,7 +557,7 @@ end_ifndef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mouse_cursor
+name|vt_mouse_cursor
 name|vt_default_mouse_pointer
 decl_stmt|;
 end_decl_stmt
@@ -4179,7 +4179,7 @@ ifndef|#
 directive|ifndef
 name|SC_NO_CUTPASTE
 name|struct
-name|mouse_cursor
+name|vt_mouse_cursor
 modifier|*
 name|cursor
 decl_stmt|;
@@ -4579,7 +4579,7 @@ operator|=
 operator|(
 name|cursor
 operator|->
-name|w
+name|width
 operator|+
 literal|7
 operator|)
@@ -4591,13 +4591,13 @@ name|w
 operator|=
 name|cursor
 operator|->
-name|w
+name|width
 expr_stmt|;
 name|h
 operator|=
 name|cursor
 operator|->
-name|h
+name|height
 expr_stmt|;
 if|if
 condition|(
@@ -4608,7 +4608,7 @@ name|vd_mx
 operator|+
 name|cursor
 operator|->
-name|w
+name|width
 operator|)
 operator|>
 operator|(
@@ -4648,7 +4648,7 @@ name|vd_my
 operator|+
 name|cursor
 operator|->
-name|h
+name|height
 operator|)
 operator|>
 operator|(
