@@ -447,19 +447,19 @@ comment|/* (u) Driver data. */
 name|uint16_t
 name|vd_mx
 decl_stmt|;
-comment|/* (?) Mouse X. */
+comment|/* (?) Current mouse X. */
 name|uint16_t
 name|vd_my
 decl_stmt|;
-comment|/* (?) Mouse Y. */
+comment|/* (?) current mouse Y. */
 name|vt_axis_t
-name|vd_mdirtyx
+name|vd_moldx
 decl_stmt|;
-comment|/* (?) Screen width. */
+comment|/* (?) Mouse X as of last redraw. */
 name|vt_axis_t
-name|vd_mdirtyy
+name|vd_moldy
 decl_stmt|;
-comment|/* (?) Screen height. */
+comment|/* (?) Mouse Y as of last redraw. */
 name|uint32_t
 name|vd_mstate
 decl_stmt|;
