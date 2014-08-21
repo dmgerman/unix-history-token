@@ -65,7 +65,7 @@ block|,
 comment|/* "_**_****" */
 literal|0x4c
 block|,
-comment|/* "_*__**__" */
+comment|/* "_*__**_ " */
 literal|0x0c
 block|,
 comment|/* " _ _**_ " */
@@ -108,12 +108,12 @@ comment|/* "________" */
 literal|0xff
 block|,
 comment|/* "________" */
-literal|0xff
+literal|0xfe
 block|,
-comment|/* "________" */
-literal|0x1e
+comment|/* "_______ " */
+literal|0x5e
 block|,
-comment|/* "   ____ " */
+comment|/* " _ ____ " */
 literal|0x0f
 block|,
 comment|/* "    ____" */
