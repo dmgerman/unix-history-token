@@ -4117,16 +4117,25 @@ name|SC_NO_CUTPASTE
 if|if
 condition|(
 operator|(
+name|vd
+operator|->
+name|vd_flags
+operator|&
+name|VDF_MOUSECURSOR
+operator|)
+operator|&&
+comment|/* Mouse support enabled. */
+operator|!
+operator|(
 name|vw
 operator|->
 name|vw_flags
 operator|&
 name|VWF_MOUSE_HIDE
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
+comment|/* Cursor displayed.      */
 comment|/* Mark last mouse position as dirty to erase. */
 name|vtbuf_mouse_cursor_position
 argument_list|(
