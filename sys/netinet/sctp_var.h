@@ -160,7 +160,7 @@ parameter_list|,
 name|feature
 parameter_list|)
 define|\
-value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == 0)) || \ 	 ((stcb == NULL)&& (inp != NULL)&& \ 	  ((inp->sctp_features& feature) == 0)) || \          ((stcb == NULL)&& (inp == NULL)))
+value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == 0)) || \ 	 ((stcb == NULL)&& (inp != NULL)&& \ 	  ((inp->sctp_features& feature) == 0)) || \ 	 ((stcb == NULL)&& (inp == NULL)))
 end_define
 
 begin_comment
@@ -284,7 +284,7 @@ name|_stcb
 parameter_list|,
 name|_readq
 parameter_list|)
-value|{ \ 	(_readq) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_readq), struct sctp_queued_to_read); \ 	if ((_readq)) { \  	     SCTP_INCR_READQ_COUNT(); \ 	} \ }
+value|{ \ 	(_readq) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_readq), struct sctp_queued_to_read); \ 	if ((_readq)) { \ 	     SCTP_INCR_READQ_COUNT(); \ 	} \ }
 end_define
 
 begin_define
@@ -310,7 +310,7 @@ name|_stcb
 parameter_list|,
 name|_strmoq
 parameter_list|)
-value|{ \ 	(_strmoq) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_strmoq), struct sctp_stream_queue_pending); \          if ((_strmoq)) {			  \ 		memset(_strmoq, 0, sizeof(struct sctp_stream_queue_pending)); \ 		SCTP_INCR_STRMOQ_COUNT(); \ 		(_strmoq)->holds_key_ref = 0; \  	} \ }
+value|{ \ 	(_strmoq) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_strmoq), struct sctp_stream_queue_pending); \ 	if ((_strmoq)) { \ 		memset(_strmoq, 0, sizeof(struct sctp_stream_queue_pending)); \ 		SCTP_INCR_STRMOQ_COUNT(); \ 		(_strmoq)->holds_key_ref = 0; \ 	} \ }
 end_define
 
 begin_define
@@ -324,7 +324,7 @@ name|_chk
 parameter_list|,
 name|_so_locked
 parameter_list|)
-value|{ \ 	if ((_chk)->holds_key_ref) {\ 		sctp_auth_key_release((_stcb), (_chk)->auth_keyid, _so_locked); \ 		(_chk)->holds_key_ref = 0; \ 	} \         if (_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \                (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 	 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \           } \         } else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
+value|{ \ 	if ((_chk)->holds_key_ref) {\ 		sctp_auth_key_release((_stcb), (_chk)->auth_keyid, _so_locked); \ 		(_chk)->holds_key_ref = 0; \ 	} \ 	if (_stcb) { \ 		SCTP_TCB_LOCK_ASSERT((_stcb)); \ 		if ((_chk)->whoTo) { \ 			sctp_free_remote_addr((_chk)->whoTo); \ 			(_chk)->whoTo = NULL; \ 		} \ 		if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \ 		    (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 			SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 			SCTP_DECR_CHK_COUNT(); \ 		} else { \ 			TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 			(_stcb)->asoc.free_chunk_cnt++; \ 			atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \ 		} \ 	} else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
 end_define
 
 begin_define
@@ -336,7 +336,7 @@ name|_stcb
 parameter_list|,
 name|_chk
 parameter_list|)
-value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_chunks)) { \ 		(_chk) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_chunk), struct sctp_tmit_chunk); \ 		if ((_chk)) { \ 			SCTP_INCR_CHK_COUNT(); \                         (_chk)->whoTo = NULL; \ 			(_chk)->holds_key_ref = 0; \ 		} \ 	} else { \ 		(_chk) = TAILQ_FIRST(&(_stcb)->asoc.free_chunks); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		atomic_subtract_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \ 		(_chk)->holds_key_ref = 0; \                 SCTP_STAT_INCR(sctps_cached_chk); \ 		(_stcb)->asoc.free_chunk_cnt--; \ 	} \ }
+value|{ \ 	if (TAILQ_EMPTY(&(_stcb)->asoc.free_chunks)) { \ 		(_chk) = SCTP_ZONE_GET(SCTP_BASE_INFO(ipi_zone_chunk), struct sctp_tmit_chunk); \ 		if ((_chk)) { \ 			SCTP_INCR_CHK_COUNT(); \ 			(_chk)->whoTo = NULL; \ 			(_chk)->holds_key_ref = 0; \ 		} \ 	} else { \ 		(_chk) = TAILQ_FIRST(&(_stcb)->asoc.free_chunks); \ 		TAILQ_REMOVE(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 		atomic_subtract_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \ 		(_chk)->holds_key_ref = 0; \ 		SCTP_STAT_INCR(sctps_cached_chk); \ 		(_stcb)->asoc.free_chunk_cnt--; \ 	} \ }
 end_define
 
 begin_define
@@ -346,7 +346,7 @@ name|sctp_free_remote_addr
 parameter_list|(
 name|__net
 parameter_list|)
-value|{ \ 	if ((__net)) {  \ 		if (SCTP_DECREMENT_AND_CHECK_REFCOUNT(&(__net)->ref_count)) { \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \                         if ((__net)->ro.ro_rt) { \ 				RTFREE((__net)->ro.ro_rt); \ 				(__net)->ro.ro_rt = NULL; \                         } \ 			if ((__net)->src_addr_selected) { \ 				sctp_free_ifa((__net)->ro._s_addr); \ 				(__net)->ro._s_addr = NULL; \ 			} \                         (__net)->src_addr_selected = 0; \ 			(__net)->dest_state&= ~SCTP_ADDR_REACHABLE; \ 			SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_net), (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
+value|{ \ 	if ((__net)) {  \ 		if (SCTP_DECREMENT_AND_CHECK_REFCOUNT(&(__net)->ref_count)) { \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \ 			if ((__net)->ro.ro_rt) { \ 				RTFREE((__net)->ro.ro_rt); \ 				(__net)->ro.ro_rt = NULL; \ 			} \ 			if ((__net)->src_addr_selected) { \ 				sctp_free_ifa((__net)->ro._s_addr); \ 				(__net)->ro._s_addr = NULL; \ 			} \ 			(__net)->src_addr_selected = 0; \ 			(__net)->dest_state&= ~SCTP_ADDR_REACHABLE; \ 			SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_net), (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
 end_define
 
 begin_define
@@ -426,7 +426,7 @@ name|sctp_flight_size_increase
 parameter_list|(
 name|tp1
 parameter_list|)
-value|do { \        (tp1)->whoTo->flight_size += (tp1)->book_size; \ } while (0)
+value|do { \ 	(tp1)->whoTo->flight_size += (tp1)->book_size; \ } while (0)
 end_define
 
 begin_ifdef
@@ -444,7 +444,7 @@ name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \         if (stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 0; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 1; \ 	stcb->asoc.fs_index++; \         tp1->window_probe = 0; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
+value|do { \ 	if (stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 0; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 1; \ 	stcb->asoc.fs_index++; \ 	tp1->window_probe = 0; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
 end_define
 
 begin_define
@@ -456,7 +456,7 @@ name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \         if (stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 1; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 0; \ 	stcb->asoc.fs_index++; \        (stcb)->asoc.total_flight_count++; \        (stcb)->asoc.total_flight += (tp1)->book_size; \ } while (0)
+value|do { \ 	if (stcb->asoc.fs_index> SCTP_FS_SPEC_LOG_SIZE) \ 		stcb->asoc.fs_index = 0;\ 	stcb->asoc.fslog[stcb->asoc.fs_index].total_flight = stcb->asoc.total_flight; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].tsn = tp1->rec.data.TSN_seq; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].book = tp1->book_size; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].sent = tp1->sent; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].incr = 1; \ 	stcb->asoc.fslog[stcb->asoc.fs_index].decr = 0; \ 	stcb->asoc.fs_index++; \ 	(stcb)->asoc.total_flight_count++; \ 	(stcb)->asoc.total_flight += (tp1)->book_size; \ } while (0)
 end_define
 
 begin_else
@@ -473,7 +473,7 @@ name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \         tp1->window_probe = 0; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
+value|do { \ 	tp1->window_probe = 0; \ 	if (stcb->asoc.total_flight>= tp1->book_size) { \ 		stcb->asoc.total_flight -= tp1->book_size; \ 		if (stcb->asoc.total_flight_count> 0) \ 			stcb->asoc.total_flight_count--; \ 	} else { \ 		stcb->asoc.total_flight = 0; \ 		stcb->asoc.total_flight_count = 0; \ 	} \ } while (0)
 end_define
 
 begin_define
@@ -485,7 +485,7 @@ name|stcb
 parameter_list|,
 name|tp1
 parameter_list|)
-value|do { \        (stcb)->asoc.total_flight_count++; \        (stcb)->asoc.total_flight += (tp1)->book_size; \ } while (0)
+value|do { \ 	(stcb)->asoc.total_flight_count++; \ 	(stcb)->asoc.total_flight += (tp1)->book_size; \ } while (0)
 end_define
 
 begin_endif
