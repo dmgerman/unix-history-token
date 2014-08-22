@@ -1138,6 +1138,9 @@ name|uint8_t
 name|prsctp_supported
 decl_stmt|;
 name|uint8_t
+name|reconfig_supported
+decl_stmt|;
+name|uint8_t
 name|nrsack_supported
 decl_stmt|;
 name|uint8_t

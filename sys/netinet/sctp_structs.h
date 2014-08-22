@@ -3239,6 +3239,9 @@ name|uint8_t
 name|prsctp_supported
 decl_stmt|;
 name|uint8_t
+name|reconfig_supported
+decl_stmt|;
+name|uint8_t
 name|nrsack_supported
 decl_stmt|;
 name|uint8_t
@@ -3255,10 +3258,6 @@ decl_stmt|;
 comment|/* peer authentication support flag */
 name|uint8_t
 name|peer_supports_auth
-decl_stmt|;
-comment|/* stream resets are supported by the peer */
-name|uint8_t
-name|peer_supports_strreset
 decl_stmt|;
 name|uint8_t
 name|local_strreset_support

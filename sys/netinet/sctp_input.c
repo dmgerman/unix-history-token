@@ -13789,6 +13789,17 @@ name|prsctp_supported
 expr_stmt|;
 name|inp
 operator|->
+name|reconfig_supported
+operator|=
+operator|(
+operator|*
+name|inp_p
+operator|)
+operator|->
+name|reconfig_supported
+expr_stmt|;
+name|inp
+operator|->
 name|nrsack_supported
 operator|=
 operator|(
@@ -27256,7 +27267,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_strreset
+name|reconfig_supported
 operator|==
 literal|0
 condition|)
@@ -27266,7 +27277,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_strreset
+name|reconfig_supported
 operator|=
 literal|1
 expr_stmt|;
