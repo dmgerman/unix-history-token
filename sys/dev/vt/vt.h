@@ -1361,7 +1361,7 @@ value|((vw)->vw_smode.mode == VT_PROCESS)
 end_define
 
 begin_comment
-comment|/*  * Per-device driver routines.  *  * vd_bitbltchr is used when the driver operates in graphics mode, while  * vd_putchar is used when the driver operates in text mode  * (VDF_TEXTMODE).  */
+comment|/*  * Per-device driver routines.  */
 end_comment
 
 begin_ifndef
@@ -1464,6 +1464,10 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/*  * FIXME: Remove vd_bitblt_t and vd_putchar_t, once vd_bitblt_text_t is  * provided by all drivers.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|void
@@ -1533,6 +1537,53 @@ name|fg
 parameter_list|,
 name|term_color_t
 name|bg
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|vd_bitblt_text_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|,
+specifier|const
+name|struct
+name|vt_buf
+modifier|*
+name|vb
+parameter_list|,
+specifier|const
+name|struct
+name|vt_font
+modifier|*
+name|vf
+parameter_list|,
+specifier|const
+name|term_rect_t
+modifier|*
+name|area
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+parameter_list|,
+specifier|const
+name|struct
+name|vt_mouse_cursor
+modifier|*
+name|cursor
+parameter_list|,
+name|term_color_t
+name|cursor_fg
+parameter_list|,
+name|term_color_t
+name|cursor_bg
+endif|#
+directive|endif
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1649,6 +1700,7 @@ name|vd_bitbltchr_t
 modifier|*
 name|vd_bitbltchr
 decl_stmt|;
+comment|/* FIXME: Deprecated. */
 name|vd_drawrect_t
 modifier|*
 name|vd_drawrect
@@ -1656,6 +1708,10 @@ decl_stmt|;
 name|vd_setpixel_t
 modifier|*
 name|vd_setpixel
+decl_stmt|;
+name|vd_bitblt_text_t
+modifier|*
+name|vd_bitblt_text
 decl_stmt|;
 comment|/* Framebuffer ioctls, if present. */
 name|vd_fb_ioctl_t
@@ -1672,6 +1728,7 @@ name|vd_putchar_t
 modifier|*
 name|vd_putchar
 decl_stmt|;
+comment|/* FIXME: Deprecated. */
 comment|/* Update display setting on vt switch. */
 name|vd_postswitch_t
 modifier|*
@@ -1987,6 +2044,31 @@ directive|define
 name|VT_MOUSE_HIDE
 value|0
 end_define
+
+begin_comment
+comment|/* Utilities. */
+end_comment
+
+begin_function_decl
+name|void
+name|vt_determine_colors
+parameter_list|(
+name|term_char_t
+name|c
+parameter_list|,
+name|int
+name|cursor
+parameter_list|,
+name|term_color_t
+modifier|*
+name|fg
+parameter_list|,
+name|term_color_t
+modifier|*
+name|bg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
