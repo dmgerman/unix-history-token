@@ -4506,12 +4506,7 @@ name|vd_bitblt_text
 argument_list|(
 name|vd
 argument_list|,
-operator|&
 name|vw
-operator|->
-name|vw_buf
-argument_list|,
-name|vf
 argument_list|,
 operator|&
 name|tarea

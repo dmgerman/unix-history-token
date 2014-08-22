@@ -1544,15 +1544,9 @@ name|vd
 parameter_list|,
 specifier|const
 name|struct
-name|vt_buf
+name|vt_window
 modifier|*
-name|vb
-parameter_list|,
-specifier|const
-name|struct
-name|vt_font
-modifier|*
-name|vf
+name|vw
 parameter_list|,
 specifier|const
 name|term_rect_t
