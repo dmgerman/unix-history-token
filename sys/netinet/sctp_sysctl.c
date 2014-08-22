@@ -74,11 +74,6 @@ name|void
 name|sctp_init_sysctls
 parameter_list|()
 block|{
-name|printf
-argument_list|(
-literal|"sctp_init_sysctls().\n"
-argument_list|)
-expr_stmt|;
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_sendspace
