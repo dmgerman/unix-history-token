@@ -67,6 +67,9 @@ name|uint32_t
 name|sctp_nrsack_enable
 decl_stmt|;
 name|uint32_t
+name|sctp_pktdrop_enable
+decl_stmt|;
+name|uint32_t
 name|sctp_fr_max_burst_default
 decl_stmt|;
 name|uint32_t
@@ -527,6 +530,38 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_NRSACK_ENABLE_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* pktdrop_enable: Enable SCTP Packet Drop Reports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PKTDROP_ENABLE_DESC
+value|"Enable SCTP PKTDROP"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PKTDROP_ENABLE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PKTDROP_ENABLE_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PKTDROP_ENABLE_DEFAULT
 value|0
 end_define
 

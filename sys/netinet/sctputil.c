@@ -5164,6 +5164,14 @@ name|nrsack_supported
 expr_stmt|;
 name|asoc
 operator|->
+name|pktdrop_supported
+operator|=
+name|inp
+operator|->
+name|pktdrop_supported
+expr_stmt|;
+name|asoc
+operator|->
 name|sctp_cmt_pf
 operator|=
 operator|(
@@ -5462,12 +5470,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* we are optimisitic here */
-name|asoc
-operator|->
-name|peer_supports_pktdrop
-operator|=
-literal|1
-expr_stmt|;
 name|asoc
 operator|->
 name|peer_supports_nat

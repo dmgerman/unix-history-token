@@ -3241,6 +3241,9 @@ decl_stmt|;
 name|uint8_t
 name|nrsack_supported
 decl_stmt|;
+name|uint8_t
+name|pktdrop_supported
+decl_stmt|;
 comment|/* Did the peer make the stream config (add out) request */
 name|uint8_t
 name|peer_req_out
@@ -3262,10 +3265,6 @@ name|local_strreset_support
 decl_stmt|;
 name|uint8_t
 name|peer_supports_nat
-decl_stmt|;
-comment|/* 	 * packet drop's are supported by the peer, we don't really care 	 * about this but we bookkeep it anyway. 	 */
-name|uint8_t
-name|peer_supports_pktdrop
 decl_stmt|;
 name|struct
 name|sctp_scoping
