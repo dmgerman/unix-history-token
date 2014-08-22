@@ -134,12 +134,8 @@ name|ASSERT
 parameter_list|(
 name|x
 parameter_list|)
-value|if(!(x)) panic("I40E: x")
+value|if(!(x)) panic("IXL: x")
 end_define
-
-begin_comment
-comment|/* The happy-fun DELAY macro is defined in /usr/src/sys/i386/include/clock.h */
-end_comment
 
 begin_define
 define|#
@@ -807,6 +803,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|mem_bus_space_handle
 decl_stmt|;
+name|bus_size_t
+name|mem_bus_space_size
+decl_stmt|;
 name|struct
 name|device
 modifier|*
@@ -886,13 +885,6 @@ name|u16
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|I40E_READ_PCIE_WORD
-value|i40e_read_pci_cfg
-end_define
 
 begin_define
 define|#
@@ -1002,12 +994,136 @@ parameter_list|)
 value|i40e_free_virt(h, m)
 end_define
 
+begin_comment
+comment|/* ** This hardware supports either 16 or 32 byte rx descriptors ** we default here to the larger size. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|i40e_rx_desc
 value|i40e_32byte_rx_desc
 end_define
+
+begin_function
+specifier|static
+name|__inline
+name|uint32_t
+name|rd32_osdep
+parameter_list|(
+name|struct
+name|i40e_osdep
+modifier|*
+name|osdep
+parameter_list|,
+name|uint32_t
+name|reg
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|reg
+operator|<
+name|osdep
+operator|->
+name|mem_bus_space_size
+argument_list|,
+operator|(
+literal|"ixl: register offset %#jx too large (max is %#jx"
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|a
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|osdep
+operator|->
+name|mem_bus_space_size
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|bus_space_read_4
+argument_list|(
+name|osdep
+operator|->
+name|mem_bus_space_tag
+argument_list|,
+name|osdep
+operator|->
+name|mem_bus_space_handle
+argument_list|,
+name|reg
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|wr32_osdep
+parameter_list|(
+name|struct
+name|i40e_osdep
+modifier|*
+name|osdep
+parameter_list|,
+name|uint32_t
+name|reg
+parameter_list|,
+name|uint32_t
+name|value
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|reg
+operator|<
+name|osdep
+operator|->
+name|mem_bus_space_size
+argument_list|,
+operator|(
+literal|"ixl: register offset %#jx too large (max is %#jx"
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|a
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|osdep
+operator|->
+name|mem_bus_space_size
+operator|)
+argument_list|)
+expr_stmt|;
+name|bus_space_write_4
+argument_list|(
+name|osdep
+operator|->
+name|mem_bus_space_tag
+argument_list|,
+name|osdep
+operator|->
+name|mem_bus_space_handle
+argument_list|,
+name|reg
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -1018,7 +1134,7 @@ name|a
 parameter_list|,
 name|reg
 parameter_list|)
-value|(\    bus_space_read_4( ((struct i40e_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct i40e_osdep *)(a)->back)->mem_bus_space_handle, \                      reg))
+value|rd32_osdep((a)->back, (reg))
 end_define
 
 begin_define
@@ -1032,7 +1148,7 @@ name|reg
 parameter_list|,
 name|value
 parameter_list|)
-value|(\    bus_space_write_4( ((struct i40e_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct i40e_osdep *)(a)->back)->mem_bus_space_handle, \                      reg, value))
+value|wr32_osdep((a)->back, (reg), (value))
 end_define
 
 begin_define
@@ -1064,7 +1180,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|i40e_flush
+name|ixl_flush
 parameter_list|(
 name|a
 parameter_list|)

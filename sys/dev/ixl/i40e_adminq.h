@@ -178,7 +178,10 @@ name|i40e_aq_desc
 name|desc
 decl_stmt|;
 name|u16
-name|msg_size
+name|msg_len
+decl_stmt|;
+name|u16
+name|buf_len
 decl_stmt|;
 name|u8
 modifier|*
@@ -286,11 +289,11 @@ begin_define
 define|#
 directive|define
 name|I40E_ASQ_CMD_TIMEOUT
-value|100000
+value|100
 end_define
 
 begin_comment
-comment|/* usecs */
+comment|/* msecs */
 end_comment
 
 begin_function_decl

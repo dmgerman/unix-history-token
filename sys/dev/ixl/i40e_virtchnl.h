@@ -77,6 +77,8 @@ name|I40E_VIRTCHNL_OP_GET_STATS
 block|,
 name|I40E_VIRTCHNL_OP_FCOE
 block|,
+name|I40E_VIRTCHNL_OP_CONFIG_RSS
+block|,
 comment|/* PF sends status change events to vfs using  * the following op.  */
 name|I40E_VIRTCHNL_OP_EVENT
 block|, }

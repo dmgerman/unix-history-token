@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I40E_PF_H_
+name|_IXL_PF_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I40E_PF_H_
+name|_IXL_PF_H_
 end_define
 
 begin_comment
@@ -25,7 +25,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|i40e_pf
+name|ixl_pf
 block|{
 name|struct
 name|i40e_hw
@@ -89,9 +89,12 @@ name|taskqueue
 modifier|*
 name|tq
 decl_stmt|;
+name|int
+name|advertised_speed
+decl_stmt|;
 comment|/* 	** VSI - Stations:  	**   These are the traffic class holders, and 	**   will have a stack interface and queues  	**   associated with them. 	** NOTE: for now using just one, so embed it. 	*/
 name|struct
-name|i40e_vsi
+name|ixl_vsi
 name|vsi
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
@@ -120,20 +123,20 @@ end_struct
 begin_define
 define|#
 directive|define
-name|I40E_PF_LOCK_INIT
+name|IXL_PF_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->pf_mtx, _name, "I40E PF Lock", MTX_DEF)
+value|mtx_init(&(_sc)->pf_mtx, _name, "IXL PF Lock", MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_PF_LOCK
+name|IXL_PF_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -143,7 +146,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_PF_UNLOCK
+name|IXL_PF_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -153,7 +156,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_PF_LOCK_DESTROY
+name|IXL_PF_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -163,7 +166,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_PF_LOCK_ASSERT
+name|IXL_PF_LOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -176,7 +179,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _I40E_PF_H_ */
+comment|/* _IXL_PF_H_ */
 end_comment
 
 end_unit

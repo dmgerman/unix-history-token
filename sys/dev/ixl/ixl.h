@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I40E_H_
+name|_IXL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I40E_H_
+name|_IXL_H_
 end_define
 
 begin_include
@@ -304,7 +304,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|I40E_DEBUG
+name|IXL_DEBUG
 end_ifdef
 
 begin_include
@@ -344,11 +344,55 @@ end_define
 begin_define
 define|#
 directive|define
+name|_DBG_PRINTF
+parameter_list|(
+name|S
+parameter_list|,
+modifier|...
+parameter_list|)
+value|printf("%s: " S "\n", __func__, ##__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_DEV_DBG_PRINTF
+parameter_list|(
+name|dev
+parameter_list|,
+name|S
+parameter_list|,
+modifier|...
+parameter_list|)
+value|device_printf(dev, "%s: " S "\n", __func__, ##__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IF_DBG_PRINTF
+parameter_list|(
+name|ifp
+parameter_list|,
+name|S
+parameter_list|,
+modifier|...
+parameter_list|)
+value|if_printf(ifp, "%s: " S "\n", __func__, ##__VA_ARGS__)
+end_define
+
+begin_comment
+comment|/* Defines for printing generic debug information */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DPRINTF
 parameter_list|(
 modifier|...
 parameter_list|)
-value|printf(__VA_ARGS__)
+value|_DBG_PRINTF(__VA_ARGS__)
 end_define
 
 begin_define
@@ -356,11 +400,9 @@ define|#
 directive|define
 name|DDPRINTF
 parameter_list|(
-name|dev
-parameter_list|,
 modifier|...
 parameter_list|)
-value|device_printf(dev, __VA_ARGS__)
+value|_DEV_DBG_PRINTF(__VA_ARGS__)
 end_define
 
 begin_define
@@ -368,16 +410,109 @@ define|#
 directive|define
 name|IDPRINTF
 parameter_list|(
-name|ifp
-parameter_list|,
 modifier|...
 parameter_list|)
-value|if_printf(ifp, __VA_ARGS__)
+value|_IF_DBG_PRINTF(__VA_ARGS__)
 end_define
 
 begin_comment
-comment|// static void	i40e_dump_desc(void *, u8, u16);
+comment|/* Defines for printing specific debug information */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DEBUG_INIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_IOCTL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_HW
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_DEBUGOUT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|if (DEBUG_INIT) _DBG_PRINTF(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_DBG_DEV
+parameter_list|(
+modifier|...
+parameter_list|)
+value|if (DEBUG_INIT) _DEV_DBG_PRINTF(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_DBG_IF
+parameter_list|(
+modifier|...
+parameter_list|)
+value|if (DEBUG_INIT) _IF_DBG_PRINTF(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCTL_DEBUGOUT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|if (DEBUG_IOCTL) _DBG_PRINTF(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCTL_DBG_IF2
+parameter_list|(
+name|ifp
+parameter_list|,
+name|S
+parameter_list|,
+modifier|...
+parameter_list|)
+value|if (DEBUG_IOCTL) \ 					    if_printf(ifp, S "\n", ##__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCTL_DBG_IF
+parameter_list|(
+modifier|...
+parameter_list|)
+value|if (DEBUG_IOCTL) _IF_DBG_PRINTF(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HW_DEBUGOUT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|if (DEBUG_HW) _DBG_PRINTF(__VA_ARGS__)
+end_define
 
 begin_else
 else|#
@@ -387,6 +522,27 @@ end_else
 begin_define
 define|#
 directive|define
+name|DEBUG_INIT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_IOCTL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_HW
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|DPRINTF
 parameter_list|(
 modifier|...
@@ -406,6 +562,69 @@ begin_define
 define|#
 directive|define
 name|IDPRINTF
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_DEBUGOUT
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_DBG_DEV
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_DBG_IF
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCTL_DEBUGOUT
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCTL_DBG_IF2
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCTL_DBG_IF
+parameter_list|(
+modifier|...
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HW_DEBUGOUT
 parameter_list|(
 modifier|...
 parameter_list|)
@@ -453,6 +672,17 @@ value|32
 end_define
 
 begin_comment
+comment|/* ** Default number of entries in Tx queue buf_ring. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_TXBRSZ
+value|(4096 * 4096)
+end_define
+
+begin_comment
 comment|/* Alignment for rings */
 end_comment
 
@@ -481,7 +711,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I40E_WATCHDOG
+name|IXL_WATCHDOG
 value|(10 * hz)
 end_define
 
@@ -492,14 +722,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I40E_TX_CLEANUP_THRESHOLD
+name|IXL_TX_CLEANUP_THRESHOLD
 value|(que->num_desc / 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_TX_OP_THRESHOLD
+name|IXL_TX_OP_THRESHOLD
 value|(que->num_desc / 32)
 end_define
 
@@ -510,155 +740,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I40E_FC_PAUSE
+name|IXL_FC_PAUSE
 value|0xFFFF
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_FC_HI
+name|IXL_FC_HI
 value|0x20000
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_FC_LO
+name|IXL_FC_LO
 value|0x10000
-end_define
-
-begin_comment
-comment|/* Defines for printing debug information */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEBUG_INIT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUG_IOCTL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUG_HW
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|INIT_DEBUGOUT
-parameter_list|(
-name|S
-parameter_list|)
-value|if (DEBUG_INIT)  printf(S "\n")
-end_define
-
-begin_define
-define|#
-directive|define
-name|INIT_DEBUGOUT1
-parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|)
-value|if (DEBUG_INIT)  printf(S "\n", A)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INIT_DEBUGOUT2
-parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|if (DEBUG_INIT)  printf(S "\n", A, B)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOCTL_DEBUGOUT
-parameter_list|(
-name|S
-parameter_list|)
-value|if (DEBUG_IOCTL) printf(S "\n")
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOCTL_DEBUGOUT1
-parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|)
-value|if (DEBUG_IOCTL) printf(S "\n", A)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOCTL_DEBUGOUT2
-parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|if (DEBUG_IOCTL) printf(S "\n", A, B)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HW_DEBUGOUT
-parameter_list|(
-name|S
-parameter_list|)
-value|if (DEBUG_HW) printf(S "\n")
-end_define
-
-begin_define
-define|#
-directive|define
-name|HW_DEBUGOUT1
-parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|)
-value|if (DEBUG_HW) printf(S "\n", A)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HW_DEBUGOUT2
-parameter_list|(
-name|S
-parameter_list|,
-name|A
-parameter_list|,
-name|B
-parameter_list|)
-value|if (DEBUG_HW) printf(S "\n", A, B)
 end_define
 
 begin_define
@@ -671,126 +768,126 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_BAR
+name|IXL_BAR
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_ADM_LIMIT
+name|IXL_ADM_LIMIT
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_TSO_SIZE
+name|IXL_TSO_SIZE
 value|65535
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_TX_BUF_SZ
+name|IXL_TX_BUF_SZ
 value|((u32) 1514)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_AQ_BUF_SZ
+name|IXL_AQ_BUF_SZ
 value|((u32) 4096)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_RX_HDR
+name|IXL_RX_HDR
 value|128
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_AQ_LEN
-value|32
+name|IXL_AQ_LEN
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_AQ_BUFSZ
+name|IXL_AQ_BUFSZ
 value|4096
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_RX_LIMIT
+name|IXL_RX_LIMIT
 value|512
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_RX_ITR
+name|IXL_RX_ITR
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_TX_ITR
+name|IXL_TX_ITR
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_ITR_NONE
+name|IXL_ITR_NONE
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_QUEUE_EOL
+name|IXL_QUEUE_EOL
 value|0x7FF
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_MAX_FRAME
+name|IXL_MAX_FRAME
 value|0x2600
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_MAX_TX_SEGS
+name|IXL_MAX_TX_SEGS
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_MAX_TSO_SEGS
+name|IXL_MAX_TSO_SEGS
 value|66
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_SPARSE_CHAIN
+name|IXL_SPARSE_CHAIN
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_QUEUE_HUNG
+name|IXL_QUEUE_HUNG
 value|0x80000000
 end_define
 
@@ -801,43 +898,43 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I40E_MAX_FILTERS
+name|IXL_MAX_FILTERS
 value|256
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_MAX_TX_BUSY
+name|IXL_MAX_TX_BUSY
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_NVM_VERSION_LO_SHIFT
+name|IXL_NVM_VERSION_LO_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_NVM_VERSION_LO_MASK
-value|(0xff<< I40E_NVM_VERSION_LO_SHIFT)
+name|IXL_NVM_VERSION_LO_MASK
+value|(0xff<< IXL_NVM_VERSION_LO_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_NVM_VERSION_HI_SHIFT
+name|IXL_NVM_VERSION_HI_SHIFT
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_NVM_VERSION_HI_MASK
-value|(0xf<< I40E_NVM_VERSION_HI_SHIFT)
+name|IXL_NVM_VERSION_HI_MASK
+value|(0xf<< IXL_NVM_VERSION_HI_SHIFT)
 end_define
 
 begin_comment
@@ -847,63 +944,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I40E_MAX_ITR
+name|IXL_MAX_ITR
 value|0x07FF
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_ITR_100K
+name|IXL_ITR_100K
 value|0x0005
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_ITR_20K
+name|IXL_ITR_20K
 value|0x0019
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_ITR_8K
+name|IXL_ITR_8K
 value|0x003E
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_ITR_4K
+name|IXL_ITR_4K
 value|0x007A
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_ITR_DYNAMIC
+name|IXL_ITR_DYNAMIC
 value|0x8000
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_LOW_LATENCY
+name|IXL_LOW_LATENCY
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_AVE_LATENCY
+name|IXL_AVE_LATENCY
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_BULK_LATENCY
+name|IXL_BULK_LATENCY
 value|2
 end_define
 
@@ -914,35 +1011,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I40E_FILTER_USED
+name|IXL_FILTER_USED
 value|(u16)(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_FILTER_VLAN
+name|IXL_FILTER_VLAN
 value|(u16)(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_FILTER_ADD
+name|IXL_FILTER_ADD
 value|(u16)(1<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_FILTER_DEL
+name|IXL_FILTER_DEL
 value|(u16)(1<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_FILTER_MC
+name|IXL_FILTER_MC
 value|(u16)(1<< 4)
 end_define
 
@@ -953,7 +1050,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|I40E_VLAN_ANY
+name|IXL_VLAN_ANY
 value|-1
 end_define
 
@@ -979,27 +1076,27 @@ value|(CSUM_OFFLOAD_IPV4|CSUM_OFFLOAD_IPV6|CSUM_TSO)
 end_define
 
 begin_comment
-comment|/* Misc flags for i40e_vsi.flags */
+comment|/* Misc flags for ixl_vsi.flags */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|I40E_FLAGS_KEEP_TSO4
+name|IXL_FLAGS_KEEP_TSO4
 value|(1<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_FLAGS_KEEP_TSO6
+name|IXL_FLAGS_KEEP_TSO6
 value|(1<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_TX_LOCK
+name|IXL_TX_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1009,7 +1106,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_TX_UNLOCK
+name|IXL_TX_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1019,7 +1116,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_TX_LOCK_DESTROY
+name|IXL_TX_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1029,7 +1126,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_TX_TRYLOCK
+name|IXL_TX_TRYLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1039,7 +1136,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_TX_LOCK_ASSERT
+name|IXL_TX_LOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1049,7 +1146,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_RX_LOCK
+name|IXL_RX_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1059,7 +1156,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_RX_UNLOCK
+name|IXL_RX_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1069,7 +1166,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_RX_LOCK_DESTROY
+name|IXL_RX_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1083,7 +1180,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|_i40e_vendor_info_t
+name|_ixl_vendor_info_t
 block|{
 name|unsigned
 name|int
@@ -1106,13 +1203,13 @@ name|int
 name|index
 decl_stmt|;
 block|}
-name|i40e_vendor_info_t
+name|ixl_vendor_info_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|i40e_tx_buf
+name|ixl_tx_buf
 block|{
 name|u32
 name|eop_index
@@ -1134,7 +1231,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|i40e_rx_buf
+name|ixl_rx_buf
 block|{
 name|struct
 name|mbuf
@@ -1157,6 +1254,14 @@ decl_stmt|;
 name|bus_dmamap_t
 name|pmap
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|u64
+name|addr
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1167,11 +1272,11 @@ end_comment
 
 begin_struct
 struct|struct
-name|i40e_mac_filter
+name|ixl_mac_filter
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|i40e_mac_filter
+argument|ixl_mac_filter
 argument_list|)
 name|next
 expr_stmt|;
@@ -1200,7 +1305,7 @@ struct|struct
 name|tx_ring
 block|{
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 name|que
 decl_stmt|;
@@ -1239,7 +1344,7 @@ name|u16
 name|latency
 decl_stmt|;
 name|struct
-name|i40e_tx_buf
+name|ixl_tx_buf
 modifier|*
 name|buffers
 decl_stmt|;
@@ -1267,12 +1372,16 @@ name|buf_ring
 modifier|*
 name|br
 decl_stmt|;
-comment|/* Soft Stats */
+comment|/* Used for Dynamic ITR calculation */
 name|u32
 name|packets
 decl_stmt|;
 name|u32
 name|bytes
+decl_stmt|;
+comment|/* Soft Stats */
+name|u64
+name|tx_bytes
 decl_stmt|;
 name|u64
 name|no_desc
@@ -1293,7 +1402,7 @@ struct|struct
 name|rx_ring
 block|{
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 name|que
 decl_stmt|;
@@ -1342,7 +1451,7 @@ literal|16
 index|]
 decl_stmt|;
 name|struct
-name|i40e_rx_buf
+name|ixl_rx_buf
 modifier|*
 name|buffers
 decl_stmt|;
@@ -1358,13 +1467,14 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|ptag
 decl_stmt|;
-comment|/* Soft stats */
+comment|/* Used for Dynamic ITR calculation */
 name|u32
 name|packets
 decl_stmt|;
 name|u32
 name|bytes
 decl_stmt|;
+comment|/* Soft stats */
 name|u64
 name|split
 decl_stmt|;
@@ -1390,10 +1500,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|i40e_queue
+name|ixl_queue
 block|{
 name|struct
-name|i40e_vsi
+name|ixl_vsi
 modifier|*
 name|vsi
 decl_stmt|;
@@ -1481,16 +1591,16 @@ end_comment
 begin_expr_stmt
 name|SLIST_HEAD
 argument_list|(
-name|i40e_ftl_head
+name|ixl_ftl_head
 argument_list|,
-name|i40e_mac_filter
+name|ixl_mac_filter
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_struct
 struct|struct
-name|i40e_vsi
+name|ixl_vsi
 block|{
 name|void
 modifier|*
@@ -1535,7 +1645,7 @@ name|u16
 name|tx_itr_setting
 decl_stmt|;
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 name|queues
 decl_stmt|;
@@ -1561,7 +1671,7 @@ decl_stmt|;
 comment|/* local flow ctrl setting */
 comment|/* MAC/VLAN Filter list */
 name|struct
-name|i40e_ftl_head
+name|ixl_ftl_head
 name|ftl
 decl_stmt|;
 name|struct
@@ -1615,10 +1725,10 @@ begin_function
 specifier|static
 specifier|inline
 name|u16
-name|i40e_rx_unrefreshed
+name|ixl_rx_unrefreshed
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 name|que
 parameter_list|)
@@ -1687,18 +1797,18 @@ begin_function
 specifier|static
 specifier|inline
 name|struct
-name|i40e_mac_filter
+name|ixl_mac_filter
 modifier|*
-name|i40e_get_filter
+name|ixl_get_filter
 parameter_list|(
 name|struct
-name|i40e_vsi
+name|ixl_vsi
 modifier|*
 name|vsi
 parameter_list|)
 block|{
 name|struct
-name|i40e_mac_filter
+name|ixl_mac_filter
 modifier|*
 name|f
 decl_stmt|;
@@ -1710,7 +1820,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|i40e_mac_filter
+name|ixl_mac_filter
 argument_list|)
 argument_list|,
 name|M_DEVBUF
@@ -1856,7 +1966,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|i40e_sysctl_info
+name|ixl_sysctl_info
 block|{
 name|u64
 modifier|*
@@ -1877,12 +1987,12 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|int
-name|i40e_atr_rate
+name|ixl_atr_rate
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ** i40e_fw_version_str - format the FW and NVM version strings */
+comment|/* ** ixl_fw_version_str - format the FW and NVM version strings */
 end_comment
 
 begin_function
@@ -1890,7 +2000,7 @@ specifier|static
 specifier|inline
 name|char
 modifier|*
-name|i40e_fw_version_str
+name|ixl_fw_version_str
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -1947,10 +2057,10 @@ name|nvm
 operator|.
 name|version
 operator|&
-name|I40E_NVM_VERSION_HI_MASK
+name|IXL_NVM_VERSION_HI_MASK
 operator|)
 operator|>>
-name|I40E_NVM_VERSION_HI_SHIFT
+name|IXL_NVM_VERSION_HI_SHIFT
 argument_list|,
 operator|(
 name|hw
@@ -1959,10 +2069,10 @@ name|nvm
 operator|.
 name|version
 operator|&
-name|I40E_NVM_VERSION_LO_MASK
+name|IXL_NVM_VERSION_LO_MASK
 operator|)
 operator|>>
-name|I40E_NVM_VERSION_LO_SHIFT
+name|IXL_NVM_VERSION_LO_SHIFT
 argument_list|,
 name|hw
 operator|->
@@ -1983,10 +2093,10 @@ end_comment
 
 begin_function_decl
 name|int
-name|i40e_allocate_tx_data
+name|ixl_allocate_tx_data
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1994,10 +2104,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|i40e_allocate_rx_data
+name|ixl_allocate_rx_data
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2005,10 +2115,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|i40e_init_tx_ring
+name|ixl_init_tx_ring
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2016,10 +2126,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|i40e_init_rx_ring
+name|ixl_init_rx_ring
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2027,10 +2137,10 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|i40e_rxeof
+name|ixl_rxeof
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 parameter_list|,
 name|int
@@ -2040,10 +2150,10 @@ end_function_decl
 
 begin_function_decl
 name|bool
-name|i40e_txeof
+name|ixl_txeof
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2051,7 +2161,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|i40e_mq_start
+name|ixl_mq_start
 parameter_list|(
 name|struct
 name|ifnet
@@ -2066,7 +2176,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|i40e_mq_start_locked
+name|ixl_mq_start_locked
 parameter_list|(
 name|struct
 name|ifnet
@@ -2081,7 +2191,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|i40e_deferred_mq_start
+name|ixl_deferred_mq_start
 parameter_list|(
 name|void
 modifier|*
@@ -2093,7 +2203,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|i40e_qflush
+name|ixl_qflush
 parameter_list|(
 name|struct
 name|ifnet
@@ -2104,10 +2214,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|i40e_free_vsi
+name|ixl_free_vsi
 parameter_list|(
 name|struct
-name|i40e_vsi
+name|ixl_vsi
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2115,10 +2225,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|i40e_free_que_tx
+name|ixl_free_que_tx
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2126,10 +2236,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|i40e_free_que_rx
+name|ixl_free_que_rx
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2138,15 +2248,15 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|I40E_FDIR
+name|IXL_FDIR
 end_ifdef
 
 begin_function_decl
 name|void
-name|i40e_atr
+name|ixl_atr
 parameter_list|(
 name|struct
-name|i40e_queue
+name|ixl_queue
 modifier|*
 parameter_list|,
 name|struct
@@ -2169,7 +2279,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _I40E_H_ */
+comment|/* _IXL_H_ */
 end_comment
 
 end_unit

@@ -421,7 +421,7 @@ name|I40E_AQ_RC_EFLUSHED
 init|=
 literal|19
 block|,
-comment|/* Cmd flushed because of prev cmd error */
+comment|/* Cmd flushed due to prev cmd error */
 name|I40E_AQ_RC_BAD_ADDR
 init|=
 literal|20
@@ -2539,7 +2539,7 @@ value|0x00
 define|#
 directive|define
 name|I40E_AQ_VSI_PVLAN_MODE_MASK
-value|(0x03<< \ 						I40E_AQ_VSI_PVLAN_MODE_SHIFT)
+value|(0x03<< \ 					 I40E_AQ_VSI_PVLAN_MODE_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_PVLAN_MODE_TAGGED
@@ -2563,7 +2563,7 @@ value|0x03
 define|#
 directive|define
 name|I40E_AQ_VSI_PVLAN_EMOD_MASK
-value|(0x3<< \ 					I40E_AQ_VSI_PVLAN_EMOD_SHIFT)
+value|(0x3<< \ 					 I40E_AQ_VSI_PVLAN_EMOD_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_PVLAN_EMOD_STR_BOTH
@@ -2598,7 +2598,7 @@ value|0
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP0_MASK
-value|(0x7<< \ 					I40E_AQ_VSI_UP_TABLE_UP0_SHIFT)
+value|(0x7<< \ 					 I40E_AQ_VSI_UP_TABLE_UP0_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP1_SHIFT
@@ -2606,7 +2606,7 @@ value|3
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP1_MASK
-value|(0x7<< \ 					I40E_AQ_VSI_UP_TABLE_UP1_SHIFT)
+value|(0x7<< \ 					 I40E_AQ_VSI_UP_TABLE_UP1_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP2_SHIFT
@@ -2614,7 +2614,7 @@ value|6
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP2_MASK
-value|(0x7<< \ 					I40E_AQ_VSI_UP_TABLE_UP2_SHIFT)
+value|(0x7<< \ 					 I40E_AQ_VSI_UP_TABLE_UP2_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP3_SHIFT
@@ -2622,7 +2622,7 @@ value|9
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP3_MASK
-value|(0x7<< \ 					I40E_AQ_VSI_UP_TABLE_UP3_SHIFT)
+value|(0x7<< \ 					 I40E_AQ_VSI_UP_TABLE_UP3_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP4_SHIFT
@@ -2630,7 +2630,7 @@ value|12
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP4_MASK
-value|(0x7<< \ 					I40E_AQ_VSI_UP_TABLE_UP4_SHIFT)
+value|(0x7<< \ 					 I40E_AQ_VSI_UP_TABLE_UP4_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP5_SHIFT
@@ -2638,7 +2638,7 @@ value|15
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP5_MASK
-value|(0x7<< \ 					I40E_AQ_VSI_UP_TABLE_UP5_SHIFT)
+value|(0x7<< \ 					 I40E_AQ_VSI_UP_TABLE_UP5_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP6_SHIFT
@@ -2646,7 +2646,7 @@ value|18
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP6_MASK
-value|(0x7<< \ 					I40E_AQ_VSI_UP_TABLE_UP6_SHIFT)
+value|(0x7<< \ 					 I40E_AQ_VSI_UP_TABLE_UP6_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP7_SHIFT
@@ -2654,7 +2654,7 @@ value|21
 define|#
 directive|define
 name|I40E_AQ_VSI_UP_TABLE_UP7_MASK
-value|(0x7<< \ 					I40E_AQ_VSI_UP_TABLE_UP7_SHIFT)
+value|(0x7<< \ 					 I40E_AQ_VSI_UP_TABLE_UP7_SHIFT)
 name|__le32
 name|egress_table
 decl_stmt|;
@@ -2673,7 +2673,7 @@ value|0x00
 define|#
 directive|define
 name|I40E_AQ_VSI_CAS_PV_TAGX_MASK
-value|(0x03<< \ 						I40E_AQ_VSI_CAS_PV_TAGX_SHIFT)
+value|(0x03<< \ 						 I40E_AQ_VSI_CAS_PV_TAGX_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_CAS_PV_TAGX_LEAVE
@@ -2740,7 +2740,7 @@ value|0
 define|#
 directive|define
 name|I40E_AQ_VSI_TC_QUE_OFFSET_MASK
-value|(0x1FF<< \ 						I40E_AQ_VSI_TC_QUE_OFFSET_SHIFT)
+value|(0x1FF<< \ 					 I40E_AQ_VSI_TC_QUE_OFFSET_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_VSI_TC_QUE_NUMBER_SHIFT
@@ -2748,7 +2748,7 @@ value|9
 define|#
 directive|define
 name|I40E_AQ_VSI_TC_QUE_NUMBER_MASK
-value|(0x7<< \ 						I40E_AQ_VSI_TC_QUE_NUMBER_SHIFT)
+value|(0x7<< \ 					 I40E_AQ_VSI_TC_QUE_NUMBER_SHIFT)
 comment|/* queueing option section */
 name|u8
 name|queueing_opt_flags
@@ -3379,7 +3379,7 @@ value|1
 define|#
 directive|define
 name|I40E_AQC_ADD_PVLAN_TYPE_MASK
-value|(0x3<< \ 						I40E_AQC_ADD_PVLAN_TYPE_SHIFT)
+value|(0x3<< I40E_AQC_ADD_PVLAN_TYPE_SHIFT)
 define|#
 directive|define
 name|I40E_AQC_ADD_PVLAN_TYPE_REGULAR
@@ -4127,7 +4127,7 @@ value|0
 define|#
 directive|define
 name|I40E_AQC_ADD_CLOUD_QUEUE_MASK
-value|(0x3F<< \ 					I40E_AQC_ADD_CLOUD_QUEUE_SHIFT)
+value|(0x3F<< \ 						 I40E_AQC_ADD_CLOUD_QUEUE_SHIFT)
 name|u8
 name|reserved2
 index|[
@@ -5950,7 +5950,7 @@ value|2
 define|#
 directive|define
 name|I40E_AQ_PHY_DEBUG_RESET_EXTERNAL_MASK
-value|(0x03<< I40E_AQ_PHY_DEBUG_RESET_EXTERNAL_SHIFT)
+value|(0x03<< \ 					I40E_AQ_PHY_DEBUG_RESET_EXTERNAL_SHIFT)
 define|#
 directive|define
 name|I40E_AQ_PHY_DEBUG_RESET_EXTERNAL_NONE

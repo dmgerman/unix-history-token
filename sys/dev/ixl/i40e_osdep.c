@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"i40e.h"
+file|"ixl.h"
 end_include
 
 begin_comment

@@ -135,6 +135,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|I40E_DEV_ID_10G_BASE_T
+value|0x1586
+end_define
+
+begin_define
+define|#
+directive|define
 name|I40E_DEV_ID_VF
 value|0x154C
 end_define
@@ -1755,18 +1762,6 @@ name|struct
 name|i40e_adminq_info
 name|aq
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|I40E_QV
-name|bool
-name|aq_dbg_ena
-decl_stmt|;
-comment|/* use Tools AQ instead of PF AQ */
-name|bool
-name|qv_force_init
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* state of nvm update process */
 name|enum
 name|i40e_nvmupd_state
@@ -1798,6 +1793,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|i40e_is_vf
+parameter_list|(
+name|_hw
+parameter_list|)
+value|((_hw)->mac.type == I40E_MAC_VF)
+end_define
 
 begin_struct
 struct|struct
