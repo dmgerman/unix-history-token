@@ -462,6 +462,9 @@ name|int
 name|vtnet_rx_new_clsize
 decl_stmt|;
 name|int
+name|vtnet_tx_intr_thresh
+decl_stmt|;
+name|int
 name|vtnet_tx_nsegs
 decl_stmt|;
 name|int
@@ -547,6 +550,17 @@ begin_define
 define|#
 directive|define
 name|VTNET_INTR_DISABLE_RETRIES
+value|4
+end_define
+
+begin_comment
+comment|/*  * Similarly, additional completed entries can appear in a virtqueue  * between when lasted checked and before notifying the host. Number  * of times to retry before scheduling the taskqueue to process the  * queue.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTNET_NOTIFY_RETRIES
 value|4
 end_define
 
