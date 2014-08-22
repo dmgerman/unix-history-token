@@ -13767,14 +13767,14 @@ name|sctp_cmt_on_off
 expr_stmt|;
 name|inp
 operator|->
-name|sctp_ecn_enable
+name|ecn_supported
 operator|=
 operator|(
 operator|*
 name|inp_p
 operator|)
 operator|->
-name|sctp_ecn_enable
+name|ecn_supported
 expr_stmt|;
 name|inp
 operator|->
@@ -29584,7 +29584,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|ecn_allowed
+name|ecn_supported
 operator|==
 literal|1
 operator|)

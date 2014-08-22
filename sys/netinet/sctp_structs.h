@@ -3233,7 +3233,7 @@ comment|/* asconf delete last addr pending */
 comment|/* 	 * This value, plus all other ack'd but above cum-ack is added 	 * together to cross check against the bit that we have yet to 	 * define (probably in the SACK). When the cum-ack is updated, this 	 * sum is updated as well. 	 */
 comment|/* Flag to tell if ECN is allowed */
 name|uint8_t
-name|ecn_allowed
+name|ecn_supported
 decl_stmt|;
 comment|/* Did the peer make the stream config (add out) request */
 name|uint8_t

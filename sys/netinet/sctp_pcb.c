@@ -10500,8 +10500,11 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|sctp_ecn_enable
+name|ecn_supported
 operator|=
+operator|(
+name|uint8_t
+operator|)
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_ecn_enable
@@ -27488,7 +27491,7 @@ init|=
 literal|0
 decl_stmt|;
 name|uint8_t
-name|ecn_allowed
+name|ecn_supported
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -27610,7 +27613,7 @@ name|src
 expr_stmt|;
 block|}
 comment|/* Turn off ECN until we get through all params */
-name|ecn_allowed
+name|ecn_supported
 operator|=
 literal|0
 expr_stmt|;
@@ -28707,7 +28710,7 @@ operator|==
 name|SCTP_ECN_CAPABLE
 condition|)
 block|{
-name|ecn_allowed
+name|ecn_supported
 operator|=
 literal|1
 expr_stmt|;
@@ -30066,22 +30069,14 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|ecn_allowed
-operator|==
-literal|0
-condition|)
-block|{
 name|stcb
 operator|->
 name|asoc
 operator|.
-name|ecn_allowed
-operator|=
-literal|0
+name|ecn_supported
+operator|&=
+name|ecn_supported
 expr_stmt|;
-block|}
 comment|/* validate authentication required parameters */
 if|if
 condition|(

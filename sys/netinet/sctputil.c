@@ -5140,11 +5140,11 @@ name|sctp_cmt_on_off
 expr_stmt|;
 name|asoc
 operator|->
-name|ecn_allowed
+name|ecn_supported
 operator|=
 name|inp
 operator|->
-name|sctp_ecn_enable
+name|ecn_supported
 expr_stmt|;
 name|asoc
 operator|->

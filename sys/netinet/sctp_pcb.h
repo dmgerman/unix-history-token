@@ -1131,8 +1131,8 @@ decl_stmt|;
 name|uint32_t
 name|sctp_cmt_on_off
 decl_stmt|;
-name|uint32_t
-name|sctp_ecn_enable
+name|uint8_t
+name|ecn_supported
 decl_stmt|;
 name|struct
 name|sctp_nonpad_sndrcvinfo
