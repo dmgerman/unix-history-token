@@ -2002,7 +2002,7 @@ argument_list|,
 name|whence
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Offset changed, please update Nth lines on sceen. 	 * +N - Nth lines at top; 	 * -N - Nth lines at bottom. 	 */
+comment|/* 	 * Offset changed, please update Nth lines on screen. 	 * +N - Nth lines at top; 	 * -N - Nth lines at bottom. 	 */
 if|if
 condition|(
 name|diff
@@ -4473,7 +4473,7 @@ operator|->
 name|vd_my
 condition|)
 block|{
-comment|/* 			 * Mark last mouse position as dirty to erase. 			 * 			 * FIXME: The vt_buf lock is acquired twice in a 			 * row. 			 */
+comment|/* Mark last mouse position as dirty to erase. */
 name|vt_mark_mouse_position_as_dirty
 argument_list|(
 name|vd
