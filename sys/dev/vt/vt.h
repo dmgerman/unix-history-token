@@ -500,10 +500,6 @@ name|uint32_t
 name|vd_mstate
 decl_stmt|;
 comment|/* (?) Mouse state. */
-name|term_pos_t
-name|vd_offset
-decl_stmt|;
-comment|/* (?) Pixel offset. */
 name|vt_axis_t
 name|vd_width
 decl_stmt|;
@@ -1258,6 +1254,10 @@ modifier|*
 name|vw_font
 decl_stmt|;
 comment|/* (d) Graphical font. */
+name|term_pos_t
+name|vw_offset
+decl_stmt|;
+comment|/* (?) Pixel offset. */
 name|unsigned
 name|int
 name|vw_number
