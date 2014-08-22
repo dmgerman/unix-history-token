@@ -74,6 +74,11 @@ name|void
 name|sctp_init_sysctls
 parameter_list|()
 block|{
+name|printf
+argument_list|(
+literal|"sctp_init_sysctls().\n"
+argument_list|)
+expr_stmt|;
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_sendspace
@@ -590,6 +595,16 @@ name|sctp_debug_on
 argument_list|)
 operator|=
 name|SCTPCTL_DEBUG_DEFAULT
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"debug = %d.\n"
+argument_list|,
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_debug_on
+argument_list|)
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

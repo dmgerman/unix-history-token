@@ -95,11 +95,30 @@ directive|include
 file|<netinet/sctp_dtrace_define.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<netinet/udp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -17695,6 +17714,17 @@ default|default:
 break|break;
 block|}
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 if|if
 condition|(
 name|net
@@ -17716,6 +17746,8 @@ name|udphdr
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|from
