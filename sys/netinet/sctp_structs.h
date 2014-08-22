@@ -3239,6 +3239,12 @@ name|uint8_t
 name|prsctp_supported
 decl_stmt|;
 name|uint8_t
+name|auth_supported
+decl_stmt|;
+name|uint8_t
+name|asconf_supported
+decl_stmt|;
+name|uint8_t
 name|reconfig_supported
 decl_stmt|;
 name|uint8_t
@@ -3250,14 +3256,6 @@ decl_stmt|;
 comment|/* Did the peer make the stream config (add out) request */
 name|uint8_t
 name|peer_req_out
-decl_stmt|;
-comment|/* flag to indicate if peer can do asconf */
-name|uint8_t
-name|peer_supports_asconf
-decl_stmt|;
-comment|/* peer authentication support flag */
-name|uint8_t
-name|peer_supports_auth
 decl_stmt|;
 name|uint8_t
 name|local_strreset_support

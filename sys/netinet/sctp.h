@@ -458,14 +458,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_NRSACK_SUPPORTED
+name|SCTP_AUTH_SUPPORTED
 value|0x00000027
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_PKTDROP_SUPPORTED
+name|SCTP_ASCONF_SUPPORTED
 value|0x00000028
 end_define
 
@@ -474,6 +474,20 @@ define|#
 directive|define
 name|SCTP_RECONFIG_SUPPORTED
 value|0x00000029
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NRSACK_SUPPORTED
+value|0x00000030
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PKTDROP_SUPPORTED
+value|0x00000031
 end_define
 
 begin_comment

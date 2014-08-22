@@ -374,18 +374,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|sctp_auth_set_default_chunks
-parameter_list|(
-name|sctp_auth_chklist_t
-modifier|*
-name|list
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|sctp_serialize_auth_chunks
 parameter_list|(
