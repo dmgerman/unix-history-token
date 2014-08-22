@@ -1100,6 +1100,13 @@ argument_list|,
 name|pci_get_rid_method
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pci_child_added
+argument_list|,
+name|pci_child_added_method
+argument_list|)
+block|,
 name|DEVMETHOD_END
 block|}
 decl_stmt|;
@@ -17607,7 +17614,29 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|pci_child_added
+argument_list|(
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|dev
+argument_list|)
+expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|pci_child_added_method
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{  }
 end_function
 
 begin_function
