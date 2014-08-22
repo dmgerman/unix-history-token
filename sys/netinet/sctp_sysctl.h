@@ -61,6 +61,9 @@ name|uint32_t
 name|sctp_ecn_enable
 decl_stmt|;
 name|uint32_t
+name|sctp_pr_enable
+decl_stmt|;
+name|uint32_t
 name|sctp_fr_max_burst_default
 decl_stmt|;
 name|uint32_t
@@ -461,6 +464,38 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_ECN_ENABLE_DEFAULT
+value|1
+end_define
+
+begin_comment
+comment|/* pr_enable: Enable PR-SCTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PR_ENABLE_DESC
+value|"Enable PR-SCTP"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PR_ENABLE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PR_ENABLE_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_PR_ENABLE_DEFAULT
 value|1
 end_define
 

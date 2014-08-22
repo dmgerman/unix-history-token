@@ -3231,9 +3231,12 @@ name|asconf_del_pending
 decl_stmt|;
 comment|/* asconf delete last addr pending */
 comment|/* 	 * This value, plus all other ack'd but above cum-ack is added 	 * together to cross check against the bit that we have yet to 	 * define (probably in the SACK). When the cum-ack is updated, this 	 * sum is updated as well. 	 */
-comment|/* Flag to tell if ECN is allowed */
+comment|/* Flags whether an extension is supported or not */
 name|uint8_t
 name|ecn_supported
+decl_stmt|;
+name|uint8_t
+name|prsctp_supported
 decl_stmt|;
 comment|/* Did the peer make the stream config (add out) request */
 name|uint8_t
@@ -3246,10 +3249,6 @@ decl_stmt|;
 comment|/* EY - flag to indicate if peer can do nr_sack */
 name|uint8_t
 name|peer_supports_nr_sack
-decl_stmt|;
-comment|/* pr-sctp support flag */
-name|uint8_t
-name|peer_supports_prsctp
 decl_stmt|;
 comment|/* peer authentication support flag */
 name|uint8_t

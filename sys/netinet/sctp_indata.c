@@ -14619,7 +14619,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_prsctp
+name|prsctp_supported
 condition|)
 block|{
 operator|(
@@ -14724,7 +14724,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_prsctp
+name|prsctp_supported
 condition|)
 block|{
 if|if
@@ -15582,7 +15582,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|)
 operator|&&
 operator|(
@@ -16035,7 +16035,7 @@ if|if
 condition|(
 name|asoc
 operator|->
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|==
 literal|0
 condition|)
@@ -19237,7 +19237,7 @@ condition|(
 operator|(
 name|asoc
 operator|->
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|)
 operator|&&
 operator|(
@@ -21111,7 +21111,7 @@ if|if
 condition|(
 name|asoc
 operator|->
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|&&
 name|PR_SCTP_BUF_ENABLED
 argument_list|(
@@ -23063,7 +23063,7 @@ condition|(
 operator|(
 name|asoc
 operator|->
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|)
 operator|&&
 operator|(

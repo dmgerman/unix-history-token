@@ -5148,6 +5148,14 @@ name|ecn_supported
 expr_stmt|;
 name|asoc
 operator|->
+name|prsctp_supported
+operator|=
+name|inp
+operator|->
+name|prsctp_supported
+expr_stmt|;
+name|asoc
+operator|->
 name|sctp_nr_sack_on_off
 operator|=
 operator|(
@@ -13446,7 +13454,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_prsctp
+name|prsctp_supported
 condition|)
 block|{
 name|sac

@@ -5509,7 +5509,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|=
 literal|0
 expr_stmt|;
@@ -5587,7 +5587,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|=
 literal|0
 expr_stmt|;
@@ -13775,6 +13775,17 @@ name|inp_p
 operator|)
 operator|->
 name|ecn_supported
+expr_stmt|;
+name|inp
+operator|->
+name|prsctp_supported
+operator|=
+operator|(
+operator|*
+name|inp_p
+operator|)
+operator|->
+name|prsctp_supported
 expr_stmt|;
 name|inp
 operator|->
