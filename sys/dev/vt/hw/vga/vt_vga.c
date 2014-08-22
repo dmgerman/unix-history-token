@@ -4047,7 +4047,7 @@ name|vw_offset
 operator|.
 name|tp_row
 expr_stmt|;
-comment|/* 	 * Clip the area to the screen size. 	 * 	 * FIXME: The problem with handling the dirty area in character 	 * cells is that when using different fonts, the dirty area was 	 * possibly calculated with a different font than the one we use 	 * here, leading to out-of-screen coordinates. The dirty area 	 * should be stored in pixels. 	 */
+comment|/* Clip the area to the screen size. */
 name|x2
 operator|=
 name|min
