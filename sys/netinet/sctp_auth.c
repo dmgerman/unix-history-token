@@ -8976,12 +8976,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_asconf_auth_nochk
-argument_list|)
-operator|&&
 name|peer_supports_asconf
 operator|&&
 operator|!
