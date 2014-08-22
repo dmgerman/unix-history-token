@@ -4029,6 +4029,33 @@ name|vd_offset
 operator|.
 name|tp_row
 expr_stmt|;
+comment|/* 	 * Clip the area to the screen size. 	 * 	 * FIXME: The problem with handling the dirty area in character 	 * cells is that when using different fonts, the dirty area was 	 * possibly calculated with a different font than the one we use 	 * here, leading to out-of-screen coordinates. The dirty area 	 * should be stored in pixels. 	 */
+name|x2
+operator|=
+name|min
+argument_list|(
+name|x2
+argument_list|,
+name|vd
+operator|->
+name|vd_width
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|y2
+operator|=
+name|min
+argument_list|(
+name|y2
+argument_list|,
+name|vd
+operator|->
+name|vd_height
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now, we take care of N pixels line at a time (the first for 	 * loop, N = font height), and for these lines, draw one pixels 	 * block at a time (the second for loop), not a character at a 	 * time. 	 * 	 * Therefore, on the X-axis, characters my be drawn partially if 	 * they are not aligned on 8-pixels boundary. 	 * 	 * However, the operation is repeated for the full height of the 	 * font before moving to the next character, because it allows 	 * to keep the color settings and write mode, before perhaps 	 * changing them with the next one. 	 */
 for|for
 control|(
