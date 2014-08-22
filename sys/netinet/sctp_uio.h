@@ -820,7 +820,7 @@ comment|/* for the endpoint */
 end_comment
 
 begin_comment
-comment|/* The lower byte is an enumeration of PR-SCTP policies */
+comment|/* The lower four bits is an enumeration of PR-SCTP policies */
 end_comment
 
 begin_define
@@ -870,6 +870,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCTP_PR_SCTP_MAX
+value|SCTP_PR_SCTP_RTX
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PR_SCTP_ALL
+value|0x000f
+end_define
+
+begin_comment
+comment|/* Used for aggregated stats */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PR_SCTP_POLICY
 parameter_list|(
 name|x
@@ -884,7 +902,7 @@ name|PR_SCTP_ENABLED
 parameter_list|(
 name|x
 parameter_list|)
-value|(PR_SCTP_POLICY(x) != SCTP_PR_SCTP_NONE)
+value|((PR_SCTP_POLICY(x) != SCTP_PR_SCTP_NONE)&& \                                    (PR_SCTP_POLICY(x) != SCTP_PR_SCTP_ALL))
 end_define
 
 begin_define
@@ -924,7 +942,17 @@ name|PR_SCTP_INVALID_POLICY
 parameter_list|(
 name|x
 parameter_list|)
-value|(PR_SCTP_POLICY(x)> SCTP_PR_SCTP_RTX)
+value|(PR_SCTP_POLICY(x)> SCTP_PR_SCTP_MAX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_SCTP_VALID_POLICY
+parameter_list|(
+name|x
+parameter_list|)
+value|(PR_SCTP_POLICY(x)<= SCTP_PR_SCTP_MAX)
 end_define
 
 begin_comment
@@ -2497,6 +2525,29 @@ name|sue_assoc_id
 decl_stmt|;
 name|uint16_t
 name|sue_port
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_prstatus
+block|{
+name|sctp_assoc_t
+name|sprstat_assoc_id
+decl_stmt|;
+name|uint16_t
+name|sprstat_sid
+decl_stmt|;
+name|uint16_t
+name|sprstat_policy
+decl_stmt|;
+name|uint64_t
+name|sprstat_abandoned_unsent
+decl_stmt|;
+name|uint64_t
+name|sprstat_abandoned_sent
 decl_stmt|;
 block|}
 struct|;

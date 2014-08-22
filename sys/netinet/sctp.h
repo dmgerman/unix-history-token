@@ -555,6 +555,20 @@ name|SCTP_TIMEOUTS
 value|0x00000106
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_PR_STREAM_STATUS
+value|0x00000107
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PR_ASSOC_STATUS
+value|0x00000108
+end_define
+
 begin_comment
 comment|/*  * user socket options: BSD implementation specific  */
 end_comment
