@@ -662,6 +662,9 @@ modifier|*
 name|fstype
 decl_stmt|,
 modifier|*
+name|nobrowse
+decl_stmt|,
+modifier|*
 name|retrycnt
 decl_stmt|,
 modifier|*
@@ -915,6 +918,79 @@ operator|->
 name|n_config_line
 argument_list|)
 expr_stmt|;
+name|options
+operator|=
+name|node_options
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Prepend options passed via automountd(8) command line. 		 */
+if|if
+condition|(
+name|cmdline_options
+operator|!=
+name|NULL
+condition|)
+block|{
+name|options
+operator|=
+name|separated_concat
+argument_list|(
+name|cmdline_options
+argument_list|,
+name|options
+argument_list|,
+literal|','
+argument_list|)
+expr_stmt|;
+block|}
+name|nobrowse
+operator|=
+name|pick_option
+argument_list|(
+literal|"nobrowse"
+argument_list|,
+operator|&
+name|options
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nobrowse
+operator|!=
+name|NULL
+operator|&&
+name|adr
+operator|->
+name|adr_key
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|log_debugx
+argument_list|(
+literal|"skipping map %s due to \"nobrowse\" "
+literal|"option; exiting"
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Exit without calling exit_callback(). 			 */
+name|quick_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Not a mountpoint; create directories in the autofs mount 		 * and complete the request. 		 */
 name|create_subtree
 argument_list|(
@@ -976,14 +1052,14 @@ name|false
 argument_list|)
 expr_stmt|;
 block|}
-name|done
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|log_debugx
 argument_list|(
 literal|"nothing to mount; exiting"
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Exit without calling exit_callback(). 		 */
@@ -1088,6 +1164,15 @@ argument_list|,
 literal|"automounted"
 argument_list|,
 literal|','
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Remove "nobrowse", mount(8) doesn't understand it. 	 */
+name|pick_option
+argument_list|(
+literal|"nobrowse"
+argument_list|,
+operator|&
+name|options
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Figure out fstype. 	 */
@@ -1251,14 +1336,14 @@ argument_list|,
 literal|"mount failed"
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 name|log_debugx
 argument_list|(
 literal|"mount done; exiting"
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Exit without calling exit_callback(). 	 */
