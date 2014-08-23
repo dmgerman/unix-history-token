@@ -6229,6 +6229,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
 block|}
 case|case
 name|ns_t_ipseckey

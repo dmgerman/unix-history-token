@@ -276,6 +276,15 @@ init|=
 block|{
 name|DEVICE
 argument_list|(
+literal|"at91_aic"
+argument_list|,
+name|AIC
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|DEVICE
+argument_list|(
 literal|"at91_pmc"
 argument_list|,
 name|PMC

@@ -5154,8 +5154,6 @@ else|else
 block|{
 name|LIST_INSERT_AFTER
 argument_list|(
-name|child
-argument_list|,
 name|LIST_FIRST
 argument_list|(
 operator|&
@@ -5165,6 +5163,8 @@ name|p_pptr
 operator|->
 name|p_orphans
 argument_list|)
+argument_list|,
+name|child
 argument_list|,
 name|p_orphan
 argument_list|)

@@ -6210,7 +6210,7 @@ operator|=
 name|fs
 operator|->
 name|fs_ronly
-operator|!=
+operator|==
 literal|0
 expr_stmt|;
 block|}

@@ -420,7 +420,7 @@ literal|0
 decl_stmt|,
 name|mntvers
 init|=
-literal|1
+literal|3
 decl_stmt|;
 specifier|const
 name|char
@@ -443,7 +443,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ade3"
+literal|"ade13"
 argument_list|)
 operator|)
 operator|!=
@@ -509,6 +509,14 @@ case|:
 name|rpcs
 operator||=
 name|DOEXPORTS
+expr_stmt|;
+break|break;
+case|case
+literal|'1'
+case|:
+name|mntvers
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case

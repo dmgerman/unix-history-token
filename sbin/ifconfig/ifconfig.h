@@ -646,6 +646,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sfp_status
+parameter_list|(
+name|int
+name|s
+parameter_list|,
+name|struct
+name|ifreq
+modifier|*
+name|ifr
+parameter_list|,
+name|int
+name|verbose
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * XXX expose this so modules that neeed to know of any pending  * operations on ifmedia can avoid cmd line ordering confusion.  */
 end_comment

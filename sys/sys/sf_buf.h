@@ -292,12 +292,15 @@ name|SFBUF_OPTIONAL_DIRECT_MAP
 condition|)
 return|return
 operator|(
+name|SFBUF_PHYS_DMAP
+argument_list|(
 name|VM_PAGE_TO_PHYS
 argument_list|(
 operator|(
 name|vm_page_t
 operator|)
 name|sf
+argument_list|)
 argument_list|)
 operator|)
 return|;

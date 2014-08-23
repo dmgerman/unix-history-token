@@ -174,6 +174,17 @@ name|Elf_Brandnote
 modifier|*
 name|brand_note
 decl_stmt|;
+name|boolean_t
+function_decl|(
+modifier|*
+name|header_supported
+function_decl|)
+parameter_list|(
+name|struct
+name|image_params
+modifier|*
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|BI_CAN_EXEC_DYN

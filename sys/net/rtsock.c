@@ -698,6 +698,8 @@ name|struct
 name|socket
 modifier|*
 name|so
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2420,6 +2422,8 @@ name|struct
 name|socket
 modifier|*
 name|so
+parameter_list|,
+modifier|...
 parameter_list|)
 block|{
 name|struct

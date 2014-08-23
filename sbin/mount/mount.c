@@ -551,6 +551,12 @@ literal|"gjournal"
 block|}
 block|,
 block|{
+name|MNT_AUTOMOUNTED
+block|,
+literal|"automounted"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

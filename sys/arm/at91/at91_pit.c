@@ -888,7 +888,7 @@ name|FDT
 end_ifdef
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|at91_pit
 argument_list|,
@@ -901,6 +901,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|BUS_PASS_TIMER
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -911,7 +913,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|at91_pit
 argument_list|,
@@ -924,6 +926,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|BUS_PASS_TIMER
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -396,7 +396,7 @@ begin_define
 define|#
 directive|define
 name|KMEM_ZMAX
-value|PAGE_SIZE
+value|65536
 end_define
 
 begin_define
@@ -524,73 +524,30 @@ block|,
 literal|"4096"
 block|, }
 block|,
-if|#
-directive|if
-name|PAGE_SIZE
-operator|>
-literal|4096
 block|{
 literal|8192
 block|,
 literal|"8192"
 block|, }
 block|,
-if|#
-directive|if
-name|PAGE_SIZE
-operator|>
-literal|8192
 block|{
 literal|16384
 block|,
 literal|"16384"
 block|, }
 block|,
-if|#
-directive|if
-name|PAGE_SIZE
-operator|>
-literal|16384
 block|{
 literal|32768
 block|,
 literal|"32768"
 block|, }
 block|,
-if|#
-directive|if
-name|PAGE_SIZE
-operator|>
-literal|32768
 block|{
 literal|65536
 block|,
 literal|"65536"
 block|, }
 block|,
-if|#
-directive|if
-name|PAGE_SIZE
-operator|>
-literal|65536
-error|#
-directive|error
-literal|"Unsupported PAGE_SIZE"
-endif|#
-directive|endif
-comment|/* 65536 */
-endif|#
-directive|endif
-comment|/* 32768 */
-endif|#
-directive|endif
-comment|/* 16384 */
-endif|#
-directive|endif
-comment|/* 8192 */
-endif|#
-directive|endif
-comment|/* 4096 */
 block|{
 literal|0
 block|,
@@ -634,6 +591,36 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Size of kernel memory"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|kmem_zmax
+init|=
+name|KMEM_ZMAX
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|kmem_zmax
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|kmem_zmax
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum allocation size that malloc(9) would use UMA as backend"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2021,7 +2008,7 @@ if|if
 condition|(
 name|size
 operator|<=
-name|KMEM_ZMAX
+name|kmem_zmax
 condition|)
 block|{
 name|mtip
@@ -3133,6 +3120,20 @@ argument_list|()
 expr_stmt|;
 name|uma_startup2
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|kmem_zmax
+operator|<
+name|PAGE_SIZE
+operator|||
+name|kmem_zmax
+operator|>
+name|KMEM_ZMAX
+condition|)
+name|kmem_zmax
+operator|=
+name|KMEM_ZMAX
 expr_stmt|;
 name|mt_zone
 operator|=

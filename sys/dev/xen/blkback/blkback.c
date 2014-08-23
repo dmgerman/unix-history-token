@@ -12620,7 +12620,7 @@ name|xbb
 operator|->
 name|dev_mode
 argument_list|,
-name|M_XENBUS
+name|M_XENSTORE
 argument_list|)
 expr_stmt|;
 name|xbb
@@ -12645,7 +12645,7 @@ name|xbb
 operator|->
 name|dev_type
 argument_list|,
-name|M_XENBUS
+name|M_XENSTORE
 argument_list|)
 expr_stmt|;
 name|xbb
@@ -12670,7 +12670,7 @@ name|xbb
 operator|->
 name|dev_name
 argument_list|,
-name|M_XENBUS
+name|M_XENSTORE
 argument_list|)
 expr_stmt|;
 name|xbb

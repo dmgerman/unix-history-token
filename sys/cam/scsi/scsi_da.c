@@ -2802,7 +2802,7 @@ name|DA_Q_4K
 block|}
 block|,
 block|{
-comment|/* 		 * Corsair Force GT SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+comment|/* 		 * Corsair Force GT& GS SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -2810,7 +2810,7 @@ name|SIP_MEDIA_FIXED
 block|,
 literal|"ATA"
 block|,
-literal|"Corsair Force GT*"
+literal|"Corsair Force G*"
 block|,
 literal|"*"
 block|}
@@ -3117,6 +3117,42 @@ block|,
 literal|"ATA"
 block|,
 literal|"SAMSUNG SSD 830 Series*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung 840 SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"Samsung SSD 840*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung 843T Series SSDs 		 * 4k optimised 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"ATA"
+block|,
+literal|"SAMSUNG MZ7WD*"
 block|,
 literal|"*"
 block|}

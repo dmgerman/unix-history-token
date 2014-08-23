@@ -35,6 +35,12 @@ directive|define
 name|WITH_PIPES
 end_define
 
+begin_define
+define|#
+directive|define
+name|WITH_MONITOR
+end_define
+
 begin_if
 if|#
 directive|if
@@ -75,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|NMG_LOCK_T
-value|struct mtx
+value|struct sx
 end_define
 
 begin_define
@@ -83,7 +89,7 @@ define|#
 directive|define
 name|NMG_LOCK_INIT
 parameter_list|()
-value|mtx_init(&netmap_global_lock, \ 				"netmap global lock", NULL, MTX_DEF)
+value|sx_init(&netmap_global_lock, \ 				"netmap global lock")
 end_define
 
 begin_define
@@ -91,7 +97,7 @@ define|#
 directive|define
 name|NMG_LOCK_DESTROY
 parameter_list|()
-value|mtx_destroy(&netmap_global_lock)
+value|sx_destroy(&netmap_global_lock)
 end_define
 
 begin_define
@@ -99,7 +105,7 @@ define|#
 directive|define
 name|NMG_LOCK
 parameter_list|()
-value|mtx_lock(&netmap_global_lock)
+value|sx_xlock(&netmap_global_lock)
 end_define
 
 begin_define
@@ -107,7 +113,7 @@ define|#
 directive|define
 name|NMG_UNLOCK
 parameter_list|()
-value|mtx_unlock(&netmap_global_lock)
+value|sx_xunlock(&netmap_global_lock)
 end_define
 
 begin_define
@@ -115,7 +121,7 @@ define|#
 directive|define
 name|NMG_LOCK_ASSERT
 parameter_list|()
-value|mtx_assert(&netmap_global_lock, MA_OWNED)
+value|sx_assert(&netmap_global_lock, SA_XLOCKED)
 end_define
 
 begin_define
@@ -223,6 +229,88 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100027
+end_if
+
+begin_define
+define|#
+directive|define
+name|GET_MBUF_REFCNT
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_ext.ext_cnt ? *((m)->m_ext.ext_cnt) : -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_MBUF_REFCNT
+parameter_list|(
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+value|*((m)->m_ext.ext_cnt) = x
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNT_MBUF_REFCNT
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_ext.ext_cnt)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GET_MBUF_REFCNT
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_ext.ref_cnt ? *((m)->m_ext.ref_cnt) : -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_MBUF_REFCNT
+parameter_list|(
+name|m
+parameter_list|,
+name|x
+parameter_list|)
+value|*((m)->m_ext.ref_cnt) = x
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNT_MBUF_REFCNT
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_ext.ref_cnt)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -238,6 +326,13 @@ end_comment
 begin_struct
 struct|struct
 name|net_device_ops
+block|{ }
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ethtool_ops
 block|{ }
 struct|;
 end_struct
@@ -306,7 +401,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do { \                             m->priority = NM_MAGIC_PRIORITY; \                             netif_rx(m); \                         } while (0)
+value|do { \                             m->priority = NM_MAGIC_PRIORITY_RX; \                             netif_rx(m); \                         } while (0)
 end_define
 
 begin_define
@@ -389,49 +484,6 @@ end_endif
 begin_comment
 comment|/* DEV_NETMAP */
 end_comment
-
-begin_comment
-comment|/*  * IFCAP_NETMAP goes into net_device's priv_flags (if_capenable).  * This was 16 bits up to linux 2.6.36, so we need a 16 bit value on older  * platforms and tolerate the clash with IFF_DYNAMIC and IFF_BRIDGE_PORT.  * For the 32-bit value, 0x100000 has no clashes until at least 3.5.1  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|LINUX_VERSION_CODE
-operator|<
-name|KERNEL_VERSION
-argument_list|(
-literal|2
-operator|,
-literal|6
-operator|,
-literal|37
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|IFCAP_NETMAP
-value|0x8000
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IFCAP_NETMAP
-value|0x200000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_elif
 elif|#
@@ -628,7 +680,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * private, kernel view of a ring. Keeps track of the status of  * a ring across system calls.  *  *	nr_hwcur	index of the next buffer to refill.  *			It corresponds to ring->head  *			at the time the system call returns.  *  *	nr_hwtail	index of the first buffer owned by the kernel.  *			On RX, hwcur->hwtail are receive buffers  *			not yet released. hwcur is advanced following  *			ring->head, hwtail is advanced on incoming packets,  *			and a wakeup is generated when hwtail passes ring->cur  *			    On TX, hwcur->rcur have been filled by the sender  *			but not sent yet to the NIC; rcur->hwtail are available  *			for new transmissions, and hwtail->hwcur-1 are pending  *			transmissions not yet acknowledged.  *  * The indexes in the NIC and netmap rings are offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwtail + hwofs) coincides with  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  *  * For received packets, slot->flags is set to nkr_slot_flags  * so we can provide a proper initial value (e.g. set NS_FORWARD  * when operating in 'transparent' mode).  *  * The following fields are used to implement lock-free copy of packets  * from input to output ports in VALE switch:  *	nkr_hwlease	buffer after the last one being copied.  *			A writer in nm_bdg_flush reserves N buffers  *			from nr_hwlease, advances it, then does the  *			copy outside the lock.  *			In RX rings (used for VALE ports),  *			nkr_hwtail<= nkr_hwlease< nkr_hwcur+N-1  *			In TX rings (used for NIC or host stack ports)  *			nkr_hwcur<= nkr_hwlease< nkr_hwtail  *	nkr_leases	array of nkr_num_slots where writers can report  *			completion of their block. NR_NOSLOT (~0) indicates  *			that the writer has not finished yet  *	nkr_lease_idx	index of next free slot in nr_leases, to be assigned  *  * The kring is manipulated by txsync/rxsync and generic netmap function.  *  * Concurrent rxsync or txsync on the same ring are prevented through  * by nm_kr_(try)lock() which in turn uses nr_busy. This is all we need  * for NIC rings, and for TX rings attached to the host stack.  *  * RX rings attached to the host stack use an mbq (rx_queue) on both  * rxsync_from_host() and netmap_transmit(). The mbq is protected  * by its internal lock.  *  * RX rings attached to the VALE switch are accessed by both sender  * and receiver. They are protected through the q_lock on the RX ring.  */
+comment|/*  * private, kernel view of a ring. Keeps track of the status of  * a ring across system calls.  *  *	nr_hwcur	index of the next buffer to refill.  *			It corresponds to ring->head  *			at the time the system call returns.  *  *	nr_hwtail	index of the first buffer owned by the kernel.  *			On RX, hwcur->hwtail are receive buffers  *			not yet released. hwcur is advanced following  *			ring->head, hwtail is advanced on incoming packets,  *			and a wakeup is generated when hwtail passes ring->cur  *			    On TX, hwcur->rcur have been filled by the sender  *			but not sent yet to the NIC; rcur->hwtail are available  *			for new transmissions, and hwtail->hwcur-1 are pending  *			transmissions not yet acknowledged.  *  * The indexes in the NIC and netmap rings are offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwtail + hwofs) coincides with  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  *  * For received packets, slot->flags is set to nkr_slot_flags  * so we can provide a proper initial value (e.g. set NS_FORWARD  * when operating in 'transparent' mode).  *  * The following fields are used to implement lock-free copy of packets  * from input to output ports in VALE switch:  *	nkr_hwlease	buffer after the last one being copied.  *			A writer in nm_bdg_flush reserves N buffers  *			from nr_hwlease, advances it, then does the  *			copy outside the lock.  *			In RX rings (used for VALE ports),  *			nkr_hwtail<= nkr_hwlease< nkr_hwcur+N-1  *			In TX rings (used for NIC or host stack ports)  *			nkr_hwcur<= nkr_hwlease< nkr_hwtail  *	nkr_leases	array of nkr_num_slots where writers can report  *			completion of their block. NR_NOSLOT (~0) indicates  *			that the writer has not finished yet  *	nkr_lease_idx	index of next free slot in nr_leases, to be assigned  *  * The kring is manipulated by txsync/rxsync and generic netmap function.  *  * Concurrent rxsync or txsync on the same ring are prevented through  * by nm_kr_(try)lock() which in turn uses nr_busy. This is all we need  * for NIC rings, and for TX rings attached to the host stack.  *  * RX rings attached to the host stack use an mbq (rx_queue) on both  * rxsync_from_host() and netmap_transmit(). The mbq is protected  * by its internal lock.  *  * RX rings attached to the VALE switch are accessed by both senders  * and receiver. They are protected through the q_lock on the RX ring.  */
 end_comment
 
 begin_struct
@@ -718,11 +770,11 @@ decl_stmt|;
 name|uint32_t
 name|nkr_lease_idx
 decl_stmt|;
+comment|/* while nkr_stopped is set, no new [tr]xsync operations can 	 * be started on this kring. 	 * This is used by netmap_disable_all_rings() 	 * to find a synchronization point where critical data 	 * structures pointed to by the kring can be added or removed 	 */
 specifier|volatile
 name|int
 name|nkr_stopped
 decl_stmt|;
-comment|// XXX what for ?
 comment|/* Support for adapters without native netmap support. 	 * On tx rings we preallocate an array of tx buffers 	 * (same size as the netmap ring), on rx rings we 	 * store incoming mbufs in a queue that is drained by 	 * a rxsync. 	 */
 name|struct
 name|mbuf
@@ -747,6 +799,7 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* diagnostic */
+comment|/* [tx]sync callback for this kring. 	 * The default nm_kring_create callback (netmap_krings_create) 	 * sets the nm_sync callback of each hardware tx(rx) kring to 	 * the corresponding nm_txsync(nm_rxsync) taken from the 	 * netmap_adapter; moreover, it sets the sync callback 	 * of the host tx(rx) ring to netmap_txsync_to_host 	 * (netmap_rxsync_from_host). 	 * 	 * Overrides: the above configuration is not changed by 	 * any of the nm_krings_create callbacks. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -770,14 +823,43 @@ name|netmap_kring
 modifier|*
 name|pipe
 decl_stmt|;
+comment|/* if this is a pipe ring, 					 * pointer to the other end 					 */
 name|struct
 name|netmap_ring
 modifier|*
 name|save_ring
 decl_stmt|;
+comment|/* pointer to hidden rings        					 * (see netmap_pipe.c for details) 					 */
 endif|#
 directive|endif
 comment|/* WITH_PIPES */
+ifdef|#
+directive|ifdef
+name|WITH_MONITOR
+comment|/* pointer to the adapter that is monitoring this kring (if any) 	 */
+name|struct
+name|netmap_monitor_adapter
+modifier|*
+name|monitor
+decl_stmt|;
+comment|/* 	 * Monitors work by intercepting the txsync and/or rxsync of the 	 * monitored krings. This is implemented by replacing 	 * the nm_sync pointer above and saving the previous 	 * one in save_sync below. 	 */
+name|int
+function_decl|(
+modifier|*
+name|save_sync
+function_decl|)
+parameter_list|(
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 block|}
 name|__attribute__
 argument_list|(
@@ -878,6 +960,16 @@ block|}
 enum|;
 end_enum
 
+begin_struct_decl
+struct_decl|struct
+name|netmap_vp_adapter
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|// forward
+end_comment
+
 begin_comment
 comment|/*  * The "struct netmap_adapter" extends the "struct adapter"  * (or equivalent) device descriptor.  * It contains all base fields needed to support netmap operation.  * There are in fact different types of netmap adapters  * (native, generic, VALE switch...) so a netmap_adapter is  * just the first field in the derived type.  */
 end_comment
@@ -918,17 +1010,27 @@ define|#
 directive|define
 name|NAF_NATIVE_ON
 value|16
-comment|/* the adapter is native and the attached 				 * interface is in netmap mode 				 */
+comment|/* the adapter is native and the attached 				 * interface is in netmap mode. 				 * Virtual ports (vale, pipe, monitor...) 				 * should never use this flag. 				 */
 define|#
 directive|define
 name|NAF_NETMAP_ON
 value|32
-comment|/* netmap is active (either native or 				 * emulated. Where possible (e.g. FreeBSD) 				 * IFCAP_NETMAP also mirrors this flag. 				 */
+comment|/* netmap is active (either native or 				 * emulated). Where possible (e.g. FreeBSD) 				 * IFCAP_NETMAP also mirrors this flag. 				 */
 define|#
 directive|define
 name|NAF_HOST_RINGS
 value|64
 comment|/* the adapter supports the host rings */
+define|#
+directive|define
+name|NAF_FORCE_NATIVE
+value|128
+comment|/* the adapter is always NATIVE */
+define|#
+directive|define
+name|NAF_BUSY
+value|(1U<<31)
+comment|/* the adapter is used internally and 				  * cannot be registered from userspace 				  */
 name|int
 name|active_fds
 decl_stmt|;
@@ -979,6 +1081,11 @@ name|tx_si_users
 decl_stmt|,
 name|rx_si_users
 decl_stmt|;
+name|void
+modifier|*
+name|pdev
+decl_stmt|;
+comment|/* used to store pci device */
 comment|/* copy of if_qflush and if_transmit pointers, to intercept 	 * packets from the network stack when netmap is active. 	 */
 name|int
 function_decl|(
@@ -1019,7 +1126,7 @@ name|ifp
 decl_stmt|;
 comment|/* adapter is ifp->if_softc */
 comment|/*---- callbacks for this netmap adapter -----*/
-comment|/* 	 * nm_dtor() is the cleanup routine called when destroying 	 *	the adapter. 	 *	Called with NMG_LOCK held. 	 * 	 * nm_register() is called on NIOCREGIF and close() to enter 	 *	or exit netmap mode on the NIC 	 *	Called with NMG_LOCK held. 	 * 	 * nm_txsync() pushes packets to the underlying hw/switch 	 * 	 * nm_rxsync() collects packets from the underlying hw/switch 	 * 	 * nm_config() returns configuration information from the OS 	 *	Called with NMG_LOCK held. 	 * 	 * nm_krings_create() create and init the krings array 	 * 	(the array layout must conform to the description 	 * 	found above the definition of netmap_krings_create) 	 * 	 * nm_krings_delete() cleanup and delete the kring array 	 * 	 * nm_notify() is used to act after data have become available 	 *	(or the stopped state of the ring has changed) 	 *	For hw devices this is typically a selwakeup(), 	 *	but for NIC/host ports attached to a switch (or vice-versa) 	 *	we also need to invoke the 'txsync' code downstream. 	 */
+comment|/* 	 * nm_dtor() is the cleanup routine called when destroying 	 *	the adapter. 	 *	Called with NMG_LOCK held. 	 * 	 * nm_register() is called on NIOCREGIF and close() to enter 	 *	or exit netmap mode on the NIC 	 *	Called with NNG_LOCK held. 	 * 	 * nm_txsync() pushes packets to the underlying hw/switch 	 * 	 * nm_rxsync() collects packets from the underlying hw/switch 	 * 	 * nm_config() returns configuration information from the OS 	 *	Called with NMG_LOCK held. 	 * 	 * nm_krings_create() create and init the tx_rings and 	 * 	rx_rings arrays of kring structures. In particular, 	 * 	set the nm_sync callbacks for each ring. 	 * 	There is no need to also allocate the corresponding 	 * 	netmap_rings, since netmap_mem_rings_create() will always 	 * 	be called to provide the missing ones. 	 *	Called with NNG_LOCK held. 	 * 	 * nm_krings_delete() cleanup and delete the tx_rings and rx_rings 	 * 	arrays 	 *	Called with NMG_LOCK held. 	 * 	 * nm_notify() is used to act after data have become available 	 * 	(or the stopped state of the ring has changed) 	 *	For hw devices this is typically a selwakeup(), 	 *	but for NIC/host ports attached to a switch (or vice-versa) 	 *	we also need to invoke the 'txsync' code downstream. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -1052,11 +1159,9 @@ name|nm_txsync
 function_decl|)
 parameter_list|(
 name|struct
-name|netmap_adapter
+name|netmap_kring
 modifier|*
-parameter_list|,
-name|u_int
-name|ring
+name|kring
 parameter_list|,
 name|int
 name|flags
@@ -1069,11 +1174,9 @@ name|nm_rxsync
 function_decl|)
 parameter_list|(
 name|struct
-name|netmap_adapter
+name|netmap_kring
 modifier|*
-parameter_list|,
-name|u_int
-name|ring
+name|kring
 parameter_list|,
 name|int
 name|flags
@@ -1161,6 +1264,58 @@ define|#
 directive|define
 name|NAF_DISABLE_NOTIFY
 value|8
+comment|/* notify that the stopped state of the 				 * ring has changed (kring->nkr_stopped) 				 */
+ifdef|#
+directive|ifdef
+name|WITH_VALE
+comment|/* 	 * nm_bdg_attach() initializes the na_vp field to point 	 *      to an adapter that can be attached to a VALE switch. If the 	 *      current adapter is already a VALE port, na_vp is simply a cast; 	 *      otherwise, na_vp points to a netmap_bwrap_adapter. 	 *      If applicable, this callback also initializes na_hostvp, 	 *      that can be used to connect the adapter host rings to the 	 *      switch. 	 *      Called with NMG_LOCK held. 	 * 	 * nm_bdg_ctl() is called on the actual attach/detach to/from 	 *      to/from the switch, to perform adapter-specific 	 *      initializations 	 *      Called with NMG_LOCK held. 	 */
+name|int
+function_decl|(
+modifier|*
+name|nm_bdg_attach
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|bdg_name
+parameter_list|,
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|nm_bdg_ctl
+function_decl|)
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|struct
+name|nmreq
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* adapter used to attach this adapter to a VALE switch (if any) */
+name|struct
+name|netmap_vp_adapter
+modifier|*
+name|na_vp
+decl_stmt|;
+comment|/* adapter used to attach the host rings of this adapter 	 * to a VALE switch (if any) */
+name|struct
+name|netmap_vp_adapter
+modifier|*
+name|na_hostvp
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* standard refcount to control the lifetime of the adapter 	 * (it should be equal to the lifetime of the corresponding ifp) 	 */
 name|int
 name|na_refcount
@@ -1180,7 +1335,11 @@ name|uint32_t
 name|na_lut_objtotal
 decl_stmt|;
 comment|/* max buffer index */
-comment|/* used internally. If non-null, the interface cannot be bound 	 * from userspace 	 */
+name|uint32_t
+name|na_lut_objsize
+decl_stmt|;
+comment|/* buffer size */
+comment|/* additional information attached to this adapter 	 * by other netmap subsystems. Currently used by 	 * bwrap and LINUX/v1000. 	 */
 name|void
 modifier|*
 name|na_private
@@ -1188,6 +1347,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|WITH_PIPES
+comment|/* array of pipes that have this adapter as a parent */
 name|struct
 name|netmap_pipe_adapter
 modifier|*
@@ -1197,12 +1357,20 @@ decl_stmt|;
 name|int
 name|na_next_pipe
 decl_stmt|;
+comment|/* next free slot in the array */
 name|int
 name|na_max_pipes
 decl_stmt|;
+comment|/* size of the array */
 endif|#
 directive|endif
 comment|/* WITH_PIPES */
+name|char
+name|name
+index|[
+literal|64
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1218,7 +1386,7 @@ name|NETMAP_OWNED_BY_KERN
 parameter_list|(
 name|na
 parameter_list|)
-value|(na->na_private)
+value|((na)->na_flags& NAF_BUSY)
 end_define
 
 begin_define
@@ -1229,7 +1397,7 @@ parameter_list|(
 name|na
 parameter_list|)
 define|\
-value|(NETMAP_OWNED_BY_KERN(na) || (na->active_fds> 0))
+value|(NETMAP_OWNED_BY_KERN(na) || ((na)->active_fds> 0))
 end_define
 
 begin_comment
@@ -1283,6 +1451,31 @@ name|net_device_ops
 name|nm_ndo
 decl_stmt|;
 comment|// XXX linux only
+name|struct
+name|ethtool_ops
+name|nm_eto
+decl_stmt|;
+comment|// XXX linux only
+specifier|const
+name|struct
+name|ethtool_ops
+modifier|*
+name|save_ethtool
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|nm_hw_register
+function_decl|)
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|int
+name|onoff
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -1302,6 +1495,10 @@ decl_stmt|;
 name|int
 name|mit_pending
 decl_stmt|;
+name|int
+name|mit_ring_idx
+decl_stmt|;
+comment|/* index of the ring being mitigated */
 name|struct
 name|netmap_adapter
 modifier|*
@@ -1486,7 +1683,13 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
-comment|/* 	 * When we attach a physical interface to the bridge, we 	 * allow the controlling process to terminate, so we need 	 * a place to store the netmap_priv_d data structure. 	 * This is only done when physical interfaces 	 * are attached to a bridge. 	 */
+comment|/* backup of the hwna memory allocator */
+name|struct
+name|netmap_mem_d
+modifier|*
+name|save_nmd
+decl_stmt|;
+comment|/* 	 * When we attach a physical interface to the bridge, we 	 * allow the controlling process to terminate, so we need 	 * a place to store the n_detmap_priv_d data structure. 	 * This is only done when physical interfaces 	 * are attached to a bridge. 	 */
 name|struct
 name|netmap_priv_d
 modifier|*
@@ -1495,6 +1698,22 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|int
+name|netmap_bwrap_attach
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1792,7 +2011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The following functions are used by individual drivers to  * support netmap operation.  *  * netmap_attach() initializes a struct netmap_adapter, allocating the  * 	struct netmap_ring's and the struct selinfo.  *  * netmap_detach() frees the memory allocated by netmap_attach().  *  * netmap_transmit() replaces the if_transmit routine of the interface,  *	and is used to intercept packets coming from the stack.  *  * netmap_load_map/netmap_reload_map are helper routines to set/reset  *	the dmamap for a packet buffer  *  * netmap_reset() is a helper routine to be called in the driver  *	when reinitializing a ring.  */
+comment|/*  * The following functions are used by individual drivers to  * support netmap operation.  *  * netmap_attach() initializes a struct netmap_adapter, allocating the  * 	struct netmap_ring's and the struct selinfo.  *  * netmap_detach() frees the memory allocated by netmap_attach().  *  * netmap_transmit() replaces the if_transmit routine of the interface,  *	and is used to intercept packets coming from the stack.  *  * netmap_load_map/netmap_reload_map are helper routines to set/reset  *	the dmamap for a packet buffer  *  * netmap_reset() is a helper routine to be called in the hw driver  *	when reinitializing a ring. It should not be called by  *	virtual ports (vale, pipes, monitor)  */
 end_comment
 
 begin_function_decl
@@ -1802,29 +2021,6 @@ parameter_list|(
 name|struct
 name|netmap_adapter
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|netmap_attach_common
-parameter_list|(
-name|struct
-name|netmap_adapter
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|netmap_detach_common
-parameter_list|(
-name|struct
-name|netmap_adapter
-modifier|*
-name|na
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1939,39 +2135,184 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_VALE
+end_ifdef
+
+begin_comment
+comment|/* functions used by external modules to interface with VALE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_vp_to_ifp
+parameter_list|(
+name|_vp
+parameter_list|)
+value|((_vp)->up.ifp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_ifp_to_vp
+parameter_list|(
+name|_ifp
+parameter_list|)
+value|(NA(_ifp)->na_vp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_ifp_to_host_vp
+parameter_list|(
+name|_ifp
+parameter_list|)
+value|(NA(_ifp)->na_hostvp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_bdg_idx
+parameter_list|(
+name|_vp
+parameter_list|)
+value|((_vp)->bdg_port)
+end_define
+
 begin_function_decl
-name|void
-name|netmap_disable_all_rings
+specifier|const
+name|char
+modifier|*
+name|netmap_bdg_name
 parameter_list|(
 name|struct
-name|ifnet
+name|netmap_vp_adapter
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|netmap_enable_all_rings
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_else
+else|#
+directive|else
+end_else
 
-begin_function_decl
-name|void
-name|netmap_disable_ring
+begin_comment
+comment|/* !WITH_VALE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_vp_to_ifp
+parameter_list|(
+name|_vp
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_ifp_to_vp
+parameter_list|(
+name|_ifp
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_ifp_to_host_vp
+parameter_list|(
+name|_ifp
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_bdg_idx
+parameter_list|(
+name|_vp
+parameter_list|)
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_bdg_name
+parameter_list|(
+name|_vp
+parameter_list|)
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_VALE */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|nm_native_on
 parameter_list|(
 name|struct
-name|netmap_kring
+name|netmap_adapter
 modifier|*
-name|kr
+name|na
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|na
+operator|&&
+name|na
+operator|->
+name|na_flags
+operator|&
+name|NAF_NATIVE_ON
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|nm_netmap_on
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|)
+block|{
+return|return
+name|na
+operator|&&
+name|na
+operator|->
+name|na_flags
+operator|&
+name|NAF_NETMAP_ON
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* set/clear native flags and if_transmit/netdev_ops */
@@ -2067,6 +2408,37 @@ operator|)
 operator|->
 name|nm_ndo
 expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|netmap_hw_adapter
+operator|*
+operator|)
+name|na
+operator|)
+operator|->
+name|save_ethtool
+operator|=
+name|ifp
+operator|->
+name|ethtool_ops
+expr_stmt|;
+name|ifp
+operator|->
+name|ethtool_ops
+operator|=
+operator|&
+operator|(
+operator|(
+expr|struct
+name|netmap_hw_adapter
+operator|*
+operator|)
+name|na
+operator|)
+operator|->
+name|nm_eto
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -2117,6 +2489,21 @@ operator|)
 name|na
 operator|->
 name|if_transmit
+expr_stmt|;
+name|ifp
+operator|->
+name|ethtool_ops
+operator|=
+operator|(
+operator|(
+expr|struct
+name|netmap_hw_adapter
+operator|*
+operator|)
+name|na
+operator|)
+operator|->
+name|save_ethtool
 expr_stmt|;
 endif|#
 directive|endif
@@ -2339,11 +2726,13 @@ define|#
 directive|define
 name|NM_CHECK_ADDR_LEN
 parameter_list|(
+name|_na
+parameter_list|,
 name|_a
 parameter_list|,
 name|_l
 parameter_list|)
-value|do {				\ 	if (_a == netmap_buffer_base || _l> NETMAP_BUF_SIZE) {		\ 		RD(5, "bad addr/len ring %d slot %d idx %d len %d",	\ 			ring_nr, nm_i, slot->buf_idx, len);		\ 		if (_l> NETMAP_BUF_SIZE)				\ 			_l = NETMAP_BUF_SIZE;				\ 	} } while (0)
+value|do {				\ 	if (_a == NETMAP_BUF_BASE(_na) || _l> NETMAP_BUF_SIZE(_na)) {	\ 		RD(5, "bad addr/len ring %d slot %d idx %d len %d",	\ 			kring->ring_id, nm_i, slot->buf_idx, len);	\ 		if (_l> NETMAP_BUF_SIZE(_na))				\ 			_l = NETMAP_BUF_SIZE(_na);			\ 	} } while (0)
 end_define
 
 begin_else
@@ -2360,11 +2749,13 @@ define|#
 directive|define
 name|NM_CHECK_ADDR_LEN
 parameter_list|(
+name|_na
+parameter_list|,
 name|_a
 parameter_list|,
 name|_l
 parameter_list|)
-value|do {				\ 		if (_l> NETMAP_BUF_SIZE)				\ 			_l = NETMAP_BUF_SIZE;				\ 	} while (0)
+value|do {				\ 		if (_l> NETMAP_BUF_SIZE(_na))				\ 			_l = NETMAP_BUF_SIZE(_na);			\ 	} while (0)
 end_define
 
 begin_endif
@@ -2377,7 +2768,63 @@ comment|/*---------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*  * Support routines to be used with the VALE switch  */
+comment|/*  * Support routines used by netmap subsystems  * (native drivers, VALE, generic, pipes, monitors, ...)  */
+end_comment
+
+begin_comment
+comment|/* common routine for all functions that create a netmap adapter. It performs  * two main tasks:  * - if the na points to an ifp, mark the ifp as netmap capable  *   using na as its native adapter;  * - provide defaults for the setup callbacks and the memory allocator  */
+end_comment
+
+begin_function_decl
+name|int
+name|netmap_attach_common
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* common actions to be performed on netmap adapter destruction */
+end_comment
+
+begin_function_decl
+name|void
+name|netmap_detach_common
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* fill priv->np_[tr]xq{first,last} using the ringid and flags information  * coming from a struct nmreq  */
+end_comment
+
+begin_function_decl
+name|int
+name|netmap_interp_ringid
+parameter_list|(
+name|struct
+name|netmap_priv_d
+modifier|*
+name|priv
+parameter_list|,
+name|uint16_t
+name|ringid
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* update the ring parameters (number and size of tx and rx rings).  * It calls the nm_config callback, if available.  */
 end_comment
 
 begin_function_decl
@@ -2391,6 +2838,10 @@ name|na
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* create and initialize the common fields of the krings array.  * using the information that must be already available in the na.  * tailroom can be used to request the allocation of additional  * tailroom bytes after the krings array. This is used by  * netmap_vp_adapter's (i.e., VALE ports) to make room for  * leasing-related data structures  */
+end_comment
 
 begin_function_decl
 name|int
@@ -2407,6 +2858,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* deletes the kring array of the adapter. The array must have  * been created using netmap_krings_create  */
+end_comment
+
 begin_function_decl
 name|void
 name|netmap_krings_delete
@@ -2415,6 +2870,88 @@ name|struct
 name|netmap_adapter
 modifier|*
 name|na
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* set the stopped/enabled status of ring  * When stopping, they also wait for all current activity on the ring to  * terminate. The status change is then notified using the na nm_notify  * callback.  */
+end_comment
+
+begin_function_decl
+name|void
+name|netmap_set_txring
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|u_int
+name|ring_id
+parameter_list|,
+name|int
+name|stopped
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netmap_set_rxring
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|u_int
+name|ring_id
+parameter_list|,
+name|int
+name|stopped
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* set the stopped/enabled status of all rings of the adapter. */
+end_comment
+
+begin_function_decl
+name|void
+name|netmap_set_all_rings
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+parameter_list|,
+name|int
+name|stopped
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* convenience wrappers for netmap_set_all_rings, used in drivers */
+end_comment
+
+begin_function_decl
+name|void
+name|netmap_disable_all_rings
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|netmap_enable_all_rings
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2551,17 +3088,16 @@ modifier|*
 name|bdg_lookup_fn_t
 function_decl|)
 parameter_list|(
-name|char
+name|struct
+name|nm_bdg_fwd
 modifier|*
-name|buf
-parameter_list|,
-name|u_int
-name|len
+name|ft
 parameter_list|,
 name|uint8_t
 modifier|*
 name|ring_nr
 parameter_list|,
+specifier|const
 name|struct
 name|netmap_vp_adapter
 modifier|*
@@ -2569,18 +3105,68 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|bdg_config_fn_t
+function_decl|)
+parameter_list|(
+name|struct
+name|nm_ifreq
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|bdg_dtor_fn_t
+function_decl|)
+parameter_list|(
+specifier|const
+name|struct
+name|netmap_vp_adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_struct
+struct|struct
+name|netmap_bdg_ops
+block|{
+name|bdg_lookup_fn_t
+name|lookup
+decl_stmt|;
+name|bdg_config_fn_t
+name|config
+decl_stmt|;
+name|bdg_dtor_fn_t
+name|dtor
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 name|u_int
 name|netmap_bdg_learning
 parameter_list|(
-name|char
+name|struct
+name|nm_bdg_fwd
 modifier|*
-parameter_list|,
-name|u_int
+name|ft
 parameter_list|,
 name|uint8_t
 modifier|*
+name|dst_ring
 parameter_list|,
+specifier|const
 name|struct
 name|netmap_vp_adapter
 modifier|*
@@ -2667,8 +3253,22 @@ name|nmreq
 modifier|*
 name|nmr
 parameter_list|,
-name|bdg_lookup_fn_t
-name|func
+name|struct
+name|netmap_bdg_ops
+modifier|*
+name|bdg_ops
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|netmap_bdg_config
+parameter_list|(
+name|struct
+name|nmreq
+modifier|*
+name|nmr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2855,6 +3455,57 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_MONITOR
+end_ifdef
+
+begin_function_decl
+name|int
+name|netmap_get_monitor_na
+parameter_list|(
+name|struct
+name|nmreq
+modifier|*
+name|nmr
+parameter_list|,
+name|struct
+name|netmap_adapter
+modifier|*
+modifier|*
+name|na
+parameter_list|,
+name|int
+name|create
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|netmap_get_monitor_na
+parameter_list|(
+name|_1
+parameter_list|,
+name|_2
+parameter_list|,
+name|_3
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Various prototypes */
 end_comment
@@ -2962,16 +3613,6 @@ begin_comment
 comment|/* netmap_adapter creation/destruction */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NM_IFPNAME
-parameter_list|(
-name|ifp
-parameter_list|)
-value|((ifp) ? (ifp)->if_xname : "zombie")
-end_define
-
 begin_comment
 comment|// #define NM_DEBUG_PUTGET 1
 end_comment
@@ -3012,7 +3653,7 @@ parameter_list|(
 name|na
 parameter_list|)
 define|\
-value|do {						\ 		struct netmap_adapter *__na = na;	\ 		D("getting %p:%s (%d)", __na, NM_IFPNAME(__na->ifp), __na->na_refcount);	\ 		__netmap_adapter_get(__na);		\ 	} while (0)
+value|do {						\ 		struct netmap_adapter *__na = na;	\ 		D("getting %p:%s (%d)", __na, (__na)->name, (__na)->na_refcount);	\ 		__netmap_adapter_get(__na);		\ 	} while (0)
 end_define
 
 begin_function_decl
@@ -3035,7 +3676,7 @@ parameter_list|(
 name|na
 parameter_list|)
 define|\
-value|({						\ 		struct netmap_adapter *__na = na;	\ 		D("putting %p:%s (%d)", __na, NM_IFPNAME(__na->ifp), __na->na_refcount);	\ 		__netmap_adapter_put(__na);		\ 	})
+value|({						\ 		struct netmap_adapter *__na = na;	\ 		D("putting %p:%s (%d)", __na, (__na)->name, (__na)->na_refcount);	\ 		__netmap_adapter_put(__na);		\ 	})
 end_define
 
 begin_else
@@ -3094,23 +3735,25 @@ begin_comment
 comment|/*  * module variables  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|netmap_buf_size
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|NETMAP_BUF_BASE
+parameter_list|(
+name|na
+parameter_list|)
+value|((na)->na_lut[0].vaddr)
+end_define
 
 begin_define
 define|#
 directive|define
 name|NETMAP_BUF_SIZE
-value|netmap_buf_size
+parameter_list|(
+name|na
+parameter_list|)
+value|((na)->na_lut_objsize)
 end_define
-
-begin_comment
-comment|// XXX remove
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -3129,29 +3772,6 @@ name|int
 name|netmap_no_pendintr
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|netmap_total_buffers
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// global allocator
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|netmap_buffer_base
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// global allocator
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -3363,6 +3983,20 @@ name|__FreeBSD__
 end_ifdef
 
 begin_comment
+comment|/* Assigns the device IOMMU domain to an allocator.  * Returns -ENOMEM in case the domain is different */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nm_iommu_group_id
+parameter_list|(
+name|dev
+parameter_list|)
+value|(0)
+end_define
+
+begin_comment
 comment|/* Callback invoked by the dma machinery after a successful dmamap_load */
 end_comment
 
@@ -3402,6 +4036,11 @@ specifier|inline
 name|void
 name|netmap_load_map
 parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
 name|bus_dma_tag_t
 name|tag
 parameter_list|,
@@ -3426,12 +4065,47 @@ argument_list|,
 name|buf
 argument_list|,
 name|NETMAP_BUF_SIZE
+argument_list|(
+name|na
+argument_list|)
 argument_list|,
 name|netmap_dmamap_cb
 argument_list|,
 name|NULL
 argument_list|,
 name|BUS_DMA_NOWAIT
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|netmap_unload_map
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
+name|bus_dma_tag_t
+name|tag
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|)
+block|{
+if|if
+condition|(
+name|map
+condition|)
+name|bus_dmamap_unload
+argument_list|(
+name|tag
+argument_list|,
+name|map
 argument_list|)
 expr_stmt|;
 block|}
@@ -3447,6 +4121,11 @@ specifier|inline
 name|void
 name|netmap_reload_map
 parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
 name|bus_dma_tag_t
 name|tag
 parameter_list|,
@@ -3479,6 +4158,9 @@ argument_list|,
 name|buf
 argument_list|,
 name|NETMAP_BUF_SIZE
+argument_list|(
+name|na
+argument_list|)
 argument_list|,
 name|netmap_dmamap_cb
 argument_list|,
@@ -3500,35 +4182,213 @@ begin_comment
 comment|/* linux */
 end_comment
 
+begin_function_decl
+name|int
+name|nm_iommu_group_id
+parameter_list|(
+name|bus_dma_tag_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|size_t
+name|netmap_mem_get_bufsize
+parameter_list|(
+name|struct
+name|netmap_mem_d
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_include
+include|#
+directive|include
+file|<linux/dma-mapping.h>
+end_include
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|netmap_load_map
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
+name|bus_dma_tag_t
+name|tag
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|)
+block|{
+if|if
+condition|(
+name|map
+condition|)
+block|{
+operator|*
+name|map
+operator|=
+name|dma_map_single
+argument_list|(
+name|na
+operator|->
+name|pdev
+argument_list|,
+name|buf
+argument_list|,
+name|netmap_mem_get_bufsize
+argument_list|(
+name|na
+operator|->
+name|nm_mem
+argument_list|)
+argument_list|,
+name|DMA_BIDIRECTIONAL
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|netmap_unload_map
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
+name|bus_dma_tag_t
+name|tag
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|)
+block|{
+name|u_int
+name|sz
+init|=
+name|netmap_mem_get_bufsize
+argument_list|(
+name|na
+operator|->
+name|nm_mem
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|map
+condition|)
+block|{
+name|dma_unmap_single
+argument_list|(
+name|na
+operator|->
+name|pdev
+argument_list|,
+operator|*
+name|map
+argument_list|,
+name|sz
+argument_list|,
+name|DMA_BIDIRECTIONAL
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|netmap_reload_map
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
+name|bus_dma_tag_t
+name|tag
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|)
+block|{
+name|u_int
+name|sz
+init|=
+name|netmap_mem_get_bufsize
+argument_list|(
+name|na
+operator|->
+name|nm_mem
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|map
+condition|)
+block|{
+name|dma_unmap_single
+argument_list|(
+name|na
+operator|->
+name|pdev
+argument_list|,
+operator|*
+name|map
+argument_list|,
+name|sz
+argument_list|,
+name|DMA_BIDIRECTIONAL
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|map
+operator|=
+name|dma_map_single
+argument_list|(
+name|na
+operator|->
+name|pdev
+argument_list|,
+name|buf
+argument_list|,
+name|sz
+argument_list|,
+name|DMA_BIDIRECTIONAL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * XXX How do we redefine these functions:  *  * on linux we need  *	dma_map_single(&pdev->dev, virt_addr, len, direction)  *	dma_unmap_single(&adapter->pdev->dev, phys_addr, len, direction  * The len can be implicit (on netmap it is NETMAP_BUF_SIZE)  * unfortunately the direction is not, so we need to change  * something to have a cross API  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|netmap_load_map
-parameter_list|(
-name|_t
-parameter_list|,
-name|_m
-parameter_list|,
-name|_b
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|netmap_reload_map
-parameter_list|(
-name|_t
-parameter_list|,
-name|_m
-parameter_list|,
-name|_b
-parameter_list|)
-end_define
 
 begin_if
 if|#
@@ -3742,35 +4602,6 @@ name|netmap_obj_pool
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|lut_entry
-modifier|*
-name|netmap_buffer_lut
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|NMB_VA
-parameter_list|(
-name|i
-parameter_list|)
-value|(netmap_buffer_lut[i].vaddr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NMB_PA
-parameter_list|(
-name|i
-parameter_list|)
-value|(netmap_buffer_lut[i].paddr)
-end_define
-
 begin_comment
 comment|/*  * NMB return the virtual address of a buffer (buffer 0 on bad index)  * PNMB also fills the physical address  */
 end_comment
@@ -3781,122 +4612,6 @@ specifier|inline
 name|void
 modifier|*
 name|NMB
-parameter_list|(
-name|struct
-name|netmap_slot
-modifier|*
-name|slot
-parameter_list|)
-block|{
-name|uint32_t
-name|i
-init|=
-name|slot
-operator|->
-name|buf_idx
-decl_stmt|;
-return|return
-operator|(
-name|unlikely
-argument_list|(
-name|i
-operator|>=
-name|netmap_total_buffers
-argument_list|)
-operator|)
-condition|?
-name|NMB_VA
-argument_list|(
-literal|0
-argument_list|)
-else|:
-name|NMB_VA
-argument_list|(
-name|i
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-modifier|*
-name|PNMB
-parameter_list|(
-name|struct
-name|netmap_slot
-modifier|*
-name|slot
-parameter_list|,
-name|uint64_t
-modifier|*
-name|pp
-parameter_list|)
-block|{
-name|uint32_t
-name|i
-init|=
-name|slot
-operator|->
-name|buf_idx
-decl_stmt|;
-name|void
-modifier|*
-name|ret
-init|=
-operator|(
-name|i
-operator|>=
-name|netmap_total_buffers
-operator|)
-condition|?
-name|NMB_VA
-argument_list|(
-literal|0
-argument_list|)
-else|:
-name|NMB_VA
-argument_list|(
-name|i
-argument_list|)
-decl_stmt|;
-operator|*
-name|pp
-operator|=
-operator|(
-name|i
-operator|>=
-name|netmap_total_buffers
-operator|)
-condition|?
-name|NMB_PA
-argument_list|(
-literal|0
-argument_list|)
-else|:
-name|NMB_PA
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Generic version of NMB, which uses device-specific memory. */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-modifier|*
-name|BDG_NMB
 parameter_list|(
 name|struct
 name|netmap_adapter
@@ -3953,6 +4668,105 @@ name|vaddr
 return|;
 block|}
 end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|PNMB
+parameter_list|(
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+parameter_list|,
+name|struct
+name|netmap_slot
+modifier|*
+name|slot
+parameter_list|,
+name|uint64_t
+modifier|*
+name|pp
+parameter_list|)
+block|{
+name|uint32_t
+name|i
+init|=
+name|slot
+operator|->
+name|buf_idx
+decl_stmt|;
+name|struct
+name|lut_entry
+modifier|*
+name|lut
+init|=
+name|na
+operator|->
+name|na_lut
+decl_stmt|;
+name|void
+modifier|*
+name|ret
+init|=
+operator|(
+name|i
+operator|>=
+name|na
+operator|->
+name|na_lut_objtotal
+operator|)
+condition|?
+name|lut
+index|[
+literal|0
+index|]
+operator|.
+name|vaddr
+else|:
+name|lut
+index|[
+name|i
+index|]
+operator|.
+name|vaddr
+decl_stmt|;
+operator|*
+name|pp
+operator|=
+operator|(
+name|i
+operator|>=
+name|na
+operator|->
+name|na_lut_objtotal
+operator|)
+condition|?
+name|lut
+index|[
+literal|0
+index|]
+operator|.
+name|paddr
+else|:
+name|lut
+index|[
+name|i
+index|]
+operator|.
+name|paddr
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Generic version of NMB, which uses device-specific memory. */
+end_comment
 
 begin_function_decl
 name|void
@@ -4034,6 +4848,40 @@ comment|/* kqueue, just debugging */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_MONITOR
+end_ifdef
+
+begin_struct
+struct|struct
+name|netmap_monitor_adapter
+block|{
+name|struct
+name|netmap_adapter
+name|up
+decl_stmt|;
+name|struct
+name|netmap_priv_d
+name|priv
+decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_MONITOR */
+end_comment
 
 begin_comment
 comment|/*  * generic netmap emulation for devices that do not have  * native netmap support.  */
@@ -4170,6 +5018,70 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|//#define RATE_GENERIC  /* Enables communication statistics for generic. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RATE_GENERIC
+end_ifdef
+
+begin_function_decl
+name|void
+name|generic_rate
+parameter_list|(
+name|int
+name|txp
+parameter_list|,
+name|int
+name|txs
+parameter_list|,
+name|int
+name|txi
+parameter_list|,
+name|int
+name|rxp
+parameter_list|,
+name|int
+name|rxs
+parameter_list|,
+name|int
+name|rxi
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|generic_rate
+parameter_list|(
+name|txp
+parameter_list|,
+name|txs
+parameter_list|,
+name|txi
+parameter_list|,
+name|rxp
+parameter_list|,
+name|rxs
+parameter_list|,
+name|rxi
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * netmap_mitigation API. This is used by the generic adapter  * to reduce the number of interrupt requests/selwakeup  * to clients on incoming packets.  */
 end_comment
 
@@ -4181,6 +5093,9 @@ name|struct
 name|nm_generic_mit
 modifier|*
 name|mit
+parameter_list|,
+name|int
+name|idx
 parameter_list|,
 name|struct
 name|netmap_adapter
@@ -4623,6 +5538,46 @@ parameter_list|,
 name|u_int
 modifier|*
 name|howmany
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* persistent virtual port routines */
+end_comment
+
+begin_function_decl
+name|int
+name|nm_vi_persist
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_vi_detach
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nm_vi_init_index
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
