@@ -553,6 +553,11 @@ begin_function
 name|void
 name|print_altq_cmd
 parameter_list|(
+name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
 name|ipfw_insn_altq
 modifier|*
 name|altqptr
@@ -583,8 +588,10 @@ name|qname
 operator|==
 name|NULL
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" altq ?<%u>"
 argument_list|,
 name|altqptr
@@ -593,8 +600,10 @@ name|qid
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" altq %s"
 argument_list|,
 name|qname

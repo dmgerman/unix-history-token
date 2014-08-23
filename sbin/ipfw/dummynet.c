@@ -712,13 +712,14 @@ name|void
 name|list_flow
 parameter_list|(
 name|struct
+name|buf_pr
+modifier|*
+name|bp
+parameter_list|,
+name|struct
 name|dn_flow
 modifier|*
 name|ni
-parameter_list|,
-name|int
-modifier|*
-name|print
 parameter_list|)
 block|{
 name|char
@@ -748,26 +749,6 @@ name|ni
 operator|->
 name|fid
 decl_stmt|;
-if|if
-condition|(
-operator|*
-name|print
-condition|)
-block|{
-name|print_header
-argument_list|(
-operator|&
-name|ni
-operator|->
-name|fid
-argument_list|)
-expr_stmt|;
-operator|*
-name|print
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|pe
 operator|=
 name|getprotobynumber
@@ -778,8 +759,10 @@ name|proto
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Should check for IPv4 flows */
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%3u%c"
 argument_list|,
 operator|(
@@ -814,8 +797,10 @@ if|if
 condition|(
 name|pe
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%-4s "
 argument_list|,
 name|pe
@@ -824,8 +809,10 @@ name|p_name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%4u "
 argument_list|,
 name|id
@@ -844,8 +831,10 @@ operator|->
 name|src_ip
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%15s/%-5d "
 argument_list|,
 name|inet_ntoa
@@ -869,8 +858,10 @@ operator|->
 name|dst_ip
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%15s/%-5d "
 argument_list|,
 name|inet_ntoa
@@ -893,8 +884,10 @@ name|pe
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%9s "
 argument_list|,
 name|pe
@@ -903,8 +896,10 @@ name|p_name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%9u "
 argument_list|,
 name|id
@@ -912,8 +907,10 @@ operator|->
 name|proto
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|"%7d  %39s/%-5d "
 argument_list|,
 name|id
@@ -944,8 +941,10 @@ operator|->
 name|src_port
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
+name|bp
+argument_list|,
 literal|" %39s/%-5d "
 argument_list|,
 name|inet_ntop
@@ -975,6 +974,8 @@ expr_stmt|;
 block|}
 name|pr_u64
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|ni
 operator|->
@@ -985,6 +986,8 @@ argument_list|)
 expr_stmt|;
 name|pr_u64
 argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|ni
 operator|->
@@ -993,9 +996,11 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|bprintf
 argument_list|(
-literal|"%2u %4u %3u\n"
+name|bp
+argument_list|,
+literal|"%2u %4u %3u"
 argument_list|,
 name|ni
 operator|->
@@ -1462,12 +1467,24 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* print header */
+name|struct
+name|buf_pr
+name|bp
+decl_stmt|;
 name|buf
 index|[
 literal|0
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|bp_alloc
+argument_list|(
+operator|&
+name|bp
+argument_list|,
+literal|4096
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1730,17 +1747,53 @@ break|break;
 case|case
 name|DN_FLOW
 case|:
-name|list_flow
+if|if
+condition|(
+name|toPrint
+operator|!=
+literal|0
+condition|)
+block|{
+name|print_header
 argument_list|(
+operator|&
+operator|(
 operator|(
 expr|struct
 name|dn_flow
 operator|*
 operator|)
 name|oid
-argument_list|,
-operator|&
+operator|)
+operator|->
+name|fid
+argument_list|)
+expr_stmt|;
 name|toPrint
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|list_flow
+argument_list|(
+operator|&
+name|bp
+argument_list|,
+operator|(
+expr|struct
+name|dn_flow
+operator|*
+operator|)
+name|oid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|bp
+operator|.
+name|buf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1954,6 +2007,12 @@ argument_list|)
 expr_stmt|;
 comment|// XXX does it really go here ?
 block|}
+name|bp_free
+argument_list|(
+operator|&
+name|bp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
