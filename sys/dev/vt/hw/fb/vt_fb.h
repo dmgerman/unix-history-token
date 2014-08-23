@@ -62,8 +62,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vd_bitbltchr_t
-name|vt_fb_bitbltchr
+name|vd_bitblt_text_t
+name|vt_fb_bitblt_text
 decl_stmt|;
 end_decl_stmt
 

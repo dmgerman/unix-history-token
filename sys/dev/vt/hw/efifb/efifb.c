@@ -161,9 +161,9 @@ operator|=
 name|vt_fb_blank
 block|,
 operator|.
-name|vd_bitbltchr
+name|vd_bitblt_text
 operator|=
-name|vt_fb_bitbltchr
+name|vt_fb_bitblt_text
 block|,
 operator|.
 name|vd_fb_ioctl
