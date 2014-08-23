@@ -478,8 +478,21 @@ name|term_color_t
 name|vd_mcursor_bg
 decl_stmt|;
 comment|/* (?) Cursor bg color. */
+name|vt_axis_t
+name|vd_mx_drawn
+decl_stmt|;
+comment|/* (?) Mouse X and Y      */
+name|vt_axis_t
+name|vd_my_drawn
+decl_stmt|;
+comment|/*     as of last redraw. */
+name|int
+name|vd_mshown
+decl_stmt|;
+comment|/* (?) Mouse shown during */
 endif|#
 directive|endif
+comment|/*     last redrawn.      */
 name|uint16_t
 name|vd_mx
 decl_stmt|;
@@ -488,14 +501,6 @@ name|uint16_t
 name|vd_my
 decl_stmt|;
 comment|/* (?) current mouse Y. */
-name|vt_axis_t
-name|vd_moldx
-decl_stmt|;
-comment|/* (?) Mouse X as of last redraw. */
-name|vt_axis_t
-name|vd_moldy
-decl_stmt|;
-comment|/* (?) Mouse Y as of last redraw. */
 name|uint32_t
 name|vd_mstate
 decl_stmt|;
@@ -1551,9 +1556,6 @@ specifier|const
 name|term_rect_t
 modifier|*
 name|area
-parameter_list|,
-name|int
-name|cursor_displayed
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2081,6 +2083,24 @@ parameter_list|,
 name|term_color_t
 modifier|*
 name|bg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vt_is_cursor_in_area
+parameter_list|(
+specifier|const
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|,
+specifier|const
+name|term_rect_t
+modifier|*
+name|area
 parameter_list|)
 function_decl|;
 end_function_decl
