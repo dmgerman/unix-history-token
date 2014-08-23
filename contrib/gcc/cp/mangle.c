@@ -2604,7 +2604,12 @@ name|decl
 argument_list|)
 operator|==
 name|VAR_DECL
-comment|/* The names of global variables aren't mangled.  */
+comment|/* The names of non-static global variables aren't mangled.  */
+operator|&&
+name|DECL_EXTERNAL_LINKAGE_P
+argument_list|(
+name|decl
+argument_list|)
 operator|&&
 operator|(
 name|CP_DECL_CONTEXT
@@ -3747,7 +3752,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We don't need to handle thunks, vtables, or VTTs here.  Those are    mangled through special entry points.<unqualified-name>  ::=<operator-name> 			::=<special-name> 			::=<source-name>  */
+comment|/* We don't need to handle thunks, vtables, or VTTs here.  Those are    mangled through special entry points.<unqualified-name>  ::=<operator-name> 			::=<special-name> 			::=<source-name> 			::=<local-source-name><local-source-name>	::= L<source-name><discriminator> */
 end_comment
 
 begin_function
@@ -3927,6 +3932,55 @@ operator|.
 name|mangled_name
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|VAR_OR_FUNCTION_DECL_P
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
+operator|!
+name|TREE_PUBLIC
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
+name|DECL_NAMESPACE_SCOPE_P
+argument_list|(
+name|decl
+argument_list|)
+operator|&&
+name|decl_linkage
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|lk_internal
+condition|)
+block|{
+name|MANGLE_TRACE_TREE
+argument_list|(
+literal|"local-source-name"
+argument_list|,
+name|decl
+argument_list|)
+expr_stmt|;
+name|write_char
+argument_list|(
+literal|'L'
+argument_list|)
+expr_stmt|;
+name|write_source_name
+argument_list|(
+name|DECL_NAME
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* The default discriminator is 1, and that's all we ever use, 	 so there's no code to output one here.  */
 block|}
 else|else
 name|write_source_name
@@ -4671,6 +4725,10 @@ name|buffer
 argument_list|,
 literal|"%08lx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|target_real
 index|[
 name|i

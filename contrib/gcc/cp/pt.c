@@ -29765,10 +29765,24 @@ block|}
 case|case
 name|FOR_STMT
 case|:
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|tmp
+operator|=
+name|RECUR
+argument_list|(
+name|FOR_ATTRIBUTES
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|stmt
 operator|=
 name|begin_for_stmt
-argument_list|()
+argument_list|(
+name|tmp
+argument_list|)
 expr_stmt|;
 name|RECUR
 argument_list|(
@@ -29778,6 +29792,8 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|finish_for_init_stmt
 argument_list|(
 name|stmt
@@ -29834,11 +29850,27 @@ break|break;
 case|case
 name|WHILE_STMT
 case|:
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|tmp
+operator|=
+name|RECUR
+argument_list|(
+name|WHILE_ATTRIBUTES
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|stmt
 operator|=
 name|begin_while_stmt
-argument_list|()
+argument_list|(
+name|tmp
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|tmp
 operator|=
 name|RECUR
@@ -29873,11 +29905,27 @@ break|break;
 case|case
 name|DO_STMT
 case|:
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|tmp
+operator|=
+name|RECUR
+argument_list|(
+name|DO_ATTRIBUTES
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|stmt
 operator|=
 name|begin_do_stmt
-argument_list|()
+argument_list|(
+name|tmp
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|RECUR
 argument_list|(
 name|DO_BODY

@@ -3443,6 +3443,59 @@ value|XCINT (RTX, 4, CODE_LABEL)
 end_define
 
 begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
+begin_comment
+unit|\
+comment|/* The alignment of the label, as the log-base-2 of the alignment in bytes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LABEL_ALIGN_LOG
+parameter_list|(
+name|RTX
+parameter_list|)
+value|(XCUINT (RTX, 8, CODE_LABEL)& 0xFF)
+end_define
+
+begin_comment
+comment|/* The maximum number of bytes to skip to achieve that alignment.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LABEL_MAX_SKIP
+parameter_list|(
+name|RTX
+parameter_list|)
+value|(XCUINT (RTX, 8, CODE_LABEL)>> 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_LABEL_ALIGN
+parameter_list|(
+name|RTX
+parameter_list|,
+name|ALIGN
+parameter_list|,
+name|MAX_SKIP
+parameter_list|)
+define|\
+value|(XCUINT (RTX, 8, CODE_LABEL) = (ALIGN) | ((MAX_SKIP)<< 8))
+end_define
+
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
+begin_comment
+unit|\
 comment|/* Labels carry a two-bit field composed of the ->jump and ->call    bits.  This field indicates whether the label is an alternate    entry point, and if so, what kind.  */
 end_comment
 

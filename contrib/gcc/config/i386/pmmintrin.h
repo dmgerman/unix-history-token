@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street, Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -23,11 +23,26 @@ directive|define
 name|_PMMINTRIN_H_INCLUDED
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__SSE3__
-end_ifdef
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"SSE3 instruction set not enabled"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* We need definitions from the SSE2 and SSE header files*/
+end_comment
 
 begin_include
 include|#

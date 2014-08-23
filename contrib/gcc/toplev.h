@@ -577,6 +577,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL "unavailable" attribute (radar 2809697) */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|error_unavailable_use
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef

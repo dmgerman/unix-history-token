@@ -656,6 +656,8 @@ end_comment
 begin_function
 specifier|static
 name|tree
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+function|\
 name|gimplify_cp_loop
 parameter_list|(
 name|tree
@@ -667,9 +669,17 @@ parameter_list|,
 name|tree
 name|incr
 parameter_list|,
+name|tree
+name|attrs
+parameter_list|,
 name|bool
 name|cond_is_first
+parameter_list|,
+name|tree
+name|inner_foreach
 parameter_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+function|\
 block|{
 name|tree
 name|top
@@ -782,6 +792,24 @@ name|top
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* Add the attributes to the 'top' label.  */
+name|decl_attributes
+argument_list|(
+operator|&
+name|LABEL_EXPR_LABEL
+argument_list|(
+name|top
+argument_list|)
+argument_list|,
+name|attrs
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 if|if
 condition|(
 name|cond
@@ -998,6 +1026,8 @@ argument_list|,
 name|pre_p
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 operator|*
 name|stmt_p
 operator|=
@@ -1018,10 +1048,18 @@ argument_list|(
 name|stmt
 argument_list|)
 argument_list|,
+name|FOR_ATTRIBUTES
+argument_list|(
+name|stmt
+argument_list|)
+argument_list|,
 literal|1
+argument_list|,
+name|NULL_TREE
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ }
 end_function
 
 begin_comment
@@ -1044,6 +1082,8 @@ init|=
 operator|*
 name|stmt_p
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 operator|*
 name|stmt_p
 operator|=
@@ -1061,10 +1101,18 @@ argument_list|)
 argument_list|,
 name|NULL_TREE
 argument_list|,
+name|WHILE_ATTRIBUTES
+argument_list|(
+name|stmt
+argument_list|)
+argument_list|,
 literal|1
+argument_list|,
+name|NULL_TREE
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ }
 end_function
 
 begin_comment
@@ -1087,6 +1135,8 @@ init|=
 operator|*
 name|stmt_p
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 operator|*
 name|stmt_p
 operator|=
@@ -1104,10 +1154,21 @@ argument_list|)
 argument_list|,
 name|NULL_TREE
 argument_list|,
+name|DO_ATTRIBUTES
+argument_list|(
+name|stmt
+argument_list|)
+argument_list|,
 literal|0
+argument_list|,
+name|DO_FOREACH
+argument_list|(
+name|stmt
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\ }
 end_function
 
 begin_comment

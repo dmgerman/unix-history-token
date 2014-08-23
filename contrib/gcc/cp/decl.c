@@ -946,6 +946,18 @@ begin_comment
 comment|/* States indicating how grokdeclarator() should handle declspecs marked    with __attribute__((deprecated)).  An object declared as    __attribute__((deprecated)) suppresses warnings of uses of other    deprecated items.  */
 end_comment
 
+begin_comment
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+end_comment
+
+begin_comment
+comment|/* An object declared as __attribute__((unavailable)) suppresses    any reports of being declared with unavailable or deprecated    items.  */
+end_comment
+
+begin_comment
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
+end_comment
+
 begin_enum
 enum|enum
 name|deprecated_states
@@ -953,6 +965,9 @@ block|{
 name|DEPRECATED_NORMAL
 block|,
 name|DEPRECATED_SUPPRESS
+comment|/* APPLE LOCAL "unavailable" attribute (radar 2809697) */
+block|,
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
 block|}
 enum|;
 end_enum
@@ -2605,6 +2620,18 @@ if|if
 condition|(
 name|functionbody
 condition|)
+block|{
+comment|/* The current function is being defined, so its DECL_INITIAL 	 should be error_mark_node.  */
+name|gcc_assert
+argument_list|(
+name|DECL_INITIAL
+argument_list|(
+name|current_function_decl
+argument_list|)
+operator|==
+name|error_mark_node
+argument_list|)
+expr_stmt|;
 name|DECL_INITIAL
 argument_list|(
 name|current_function_decl
@@ -2612,6 +2639,7 @@ argument_list|)
 operator|=
 name|block
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -6161,7 +6189,7 @@ name|olddecl
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If the new declaration is a definition, update the file and 	 line information on the declaration.  */
+comment|/* If the new declaration is a definition, update the file and 	 line information on the declaration, and also make 	 the old declaration the same definition.  */
 if|if
 condition|(
 name|DECL_INITIAL
@@ -6192,6 +6220,16 @@ operator|=
 name|DECL_SOURCE_LOCATION
 argument_list|(
 name|newdecl
+argument_list|)
+expr_stmt|;
+name|DECL_INITIAL
+argument_list|(
+name|old_result
+argument_list|)
+operator|=
+name|DECL_INITIAL
+argument_list|(
+name|new_result
 argument_list|)
 expr_stmt|;
 if|if
@@ -12354,20 +12392,13 @@ name|flag_inline_trees
 operator|=
 literal|2
 expr_stmt|;
-comment|/* Force minimum function alignment if using the least significant      bit of function pointers to store the virtual bit.  */
 if|if
 condition|(
-name|TARGET_PTRMEMFUNC_VBIT_LOCATION
-operator|==
-name|ptrmemfunc_vbit_in_pfn
-operator|&&
-name|force_align_functions_log
-operator|<
-literal|1
+name|flag_visibility_ms_compat
 condition|)
-name|force_align_functions_log
+name|default_visibility
 operator|=
-literal|1
+name|VISIBILITY_HIDDEN
 expr_stmt|;
 comment|/* Initially, C.  */
 name|current_lang_name
@@ -14744,6 +14775,10 @@ decl_stmt|;
 name|tree
 name|context
 decl_stmt|;
+comment|/* APPLE LOCAL "unavailable" attribute (radar 2809697) */
+name|tree
+name|a
+decl_stmt|;
 name|bool
 name|was_public
 decl_stmt|;
@@ -14752,7 +14787,12 @@ name|pushed_scope_p
 operator|=
 name|NULL_TREE
 expr_stmt|;
-comment|/* An object declared as __attribute__((deprecated)) suppresses      warnings of uses of other deprecated items.  */
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+comment|/* An object declared as __attribute__((unavailable)) suppresses      any reports of being declared with unavailable or deprecated      items.  An object declared as __attribute__((deprecated))      suppresses warnings of uses of other deprecated items.  */
+ifdef|#
+directive|ifdef
+name|A_LESS_INEFFICENT_WAY
+comment|/* which I really don't want to do!  */
 if|if
 condition|(
 name|lookup_attribute
@@ -14766,6 +14806,92 @@ name|deprecated_state
 operator|=
 name|DEPRECATED_SUPPRESS
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|lookup_attribute
+argument_list|(
+literal|"unavailable"
+argument_list|,
+name|attributes
+argument_list|)
+condition|)
+name|deprecated_state
+operator|=
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
+expr_stmt|;
+else|#
+directive|else
+comment|/* a more efficient way doing what lookup_attribute would do */
+for|for
+control|(
+name|a
+operator|=
+name|attributes
+init|;
+name|a
+condition|;
+name|a
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|a
+argument_list|)
+control|)
+block|{
+name|tree
+name|name
+init|=
+name|TREE_PURPOSE
+argument_list|(
+name|a
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|name
+argument_list|)
+operator|==
+name|IDENTIFIER_NODE
+condition|)
+if|if
+condition|(
+name|is_attribute_p
+argument_list|(
+literal|"deprecated"
+argument_list|,
+name|name
+argument_list|)
+condition|)
+block|{
+name|deprecated_state
+operator|=
+name|DEPRECATED_SUPPRESS
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|is_attribute_p
+argument_list|(
+literal|"unavailable"
+argument_list|,
+name|name
+argument_list|)
+condition|)
+block|{
+name|deprecated_state
+operator|=
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
+expr_stmt|;
+break|break;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 name|attributes
 operator|=
 name|chainon
@@ -22394,6 +22520,38 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+comment|/* If pointers to member functions use the least significant bit to      indicate whether a function is virtual, ensure a pointer      to this function will have that bit clear.  */
+if|if
+condition|(
+name|TARGET_PTRMEMFUNC_VBIT_LOCATION
+operator|==
+name|ptrmemfunc_vbit_in_pfn
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|METHOD_TYPE
+operator|&&
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
+operator|<
+literal|2
+operator|*
+name|BITS_PER_UNIT
+condition|)
+name|DECL_ALIGN
+argument_list|(
+name|decl
+argument_list|)
+operator|=
+literal|2
+operator|*
+name|BITS_PER_UNIT
+expr_stmt|;
 if|if
 condition|(
 name|friendp
@@ -26304,6 +26462,37 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+comment|/* APPLE LOCAL begin unavailable attribute (radar 2809697) --bowdidge */
+comment|/* If the entire declaration is itself tagged as unavailable then      suppress reports of unavailable/deprecated items.  If the      entire declaration is tagged as only deprecated we still      report unavailable uses.  */
+if|if
+condition|(
+name|type
+operator|&&
+name|TREE_DEPRECATED
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+name|TREE_UNAVAILABLE
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|deprecated_state
+operator|!=
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
+condition|)
+name|warn_deprecated_use
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+comment|/* APPLE LOCAL end unavailable attribute (radar 2809697) --bowdidge */
 comment|/* If the entire declaration is itself tagged as deprecated then      suppress reports of deprecated items.  */
 if|if
 condition|(
@@ -37370,7 +37559,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create the FUNCTION_DECL for a function definition.    DECLSPECS and DECLARATOR are the parts of the declaration;    they describe the function's name and the type it returns,    but twisted together in a fashion that parallels the syntax of C.     FLAGS is a bitwise or of SF_PRE_PARSED (indicating that the    DECLARATOR is really the DECL for the function we are about to    process and that DECLSPECS should be ignored), SF_INCLASS_INLINE    indicating that the function is an inline defined in-class.     This function creates a binding context for the function body    as well as setting up the FUNCTION_DECL in current_function_decl.     For C++, we must first check whether that datum makes any sense.    For example, "class A local_a(1,2);" means that variable local_a    is an aggregate of type A, which should have a constructor    applied to it with the argument list [1, 2].  */
+comment|/* Create the FUNCTION_DECL for a function definition.    DECLSPECS and DECLARATOR are the parts of the declaration;    they describe the function's name and the type it returns,    but twisted together in a fashion that parallels the syntax of C.     FLAGS is a bitwise or of SF_PRE_PARSED (indicating that the    DECLARATOR is really the DECL for the function we are about to    process and that DECLSPECS should be ignored), SF_INCLASS_INLINE    indicating that the function is an inline defined in-class.     This function creates a binding context for the function body    as well as setting up the FUNCTION_DECL in current_function_decl.     For C++, we must first check whether that datum makes any sense.    For example, "class A local_a(1,2);" means that variable local_a    is an aggregate of type A, which should have a constructor    applied to it with the argument list [1, 2].     On entry, DECL_INITIAL (decl1) should be NULL_TREE or error_mark_node,    or may be a BLOCK if the function has been defined previously    in this translation unit.  On exit, DECL_INITIAL (decl1) will be    error_mark_node if the function has never been defined, or    a BLOCK if the function has been defined somewhere.  */
 end_comment
 
 begin_function
@@ -37807,36 +37996,6 @@ name|resdecl
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Initialize RTL machinery.  We cannot do this until      CURRENT_FUNCTION_DECL and DECL_RESULT are set up.  We do this      even when processing a template; this is how we get      CFUN set up, and our per-function variables initialized.      FIXME factor out the non-RTL stuff.  */
-name|bl
-operator|=
-name|current_binding_level
-expr_stmt|;
-name|allocate_struct_function
-argument_list|(
-name|decl1
-argument_list|)
-expr_stmt|;
-name|current_binding_level
-operator|=
-name|bl
-expr_stmt|;
-comment|/* Even though we're inside a function body, we still don't want to      call expand_expr to calculate the size of a variable-sized array.      We haven't necessarily assigned RTL to all variables yet, so it's      not safe to try to expand expressions involving them.  */
-name|cfun
-operator|->
-name|x_dont_save_pending_sizes_p
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Start the statement-tree, start the tree now.  */
-name|DECL_SAVED_TREE
-argument_list|(
-name|decl1
-argument_list|)
-operator|=
-name|push_stmt_list
-argument_list|()
-expr_stmt|;
 comment|/* Let the user know we're compiling this function.  */
 name|announce_function
 argument_list|(
@@ -37958,16 +38117,59 @@ name|decl1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reset these in case the call to pushdecl changed them.  */
+comment|/* Reset this in case the call to pushdecl changed it.  */
 name|current_function_decl
 operator|=
 name|decl1
 expr_stmt|;
+name|gcc_assert
+argument_list|(
+name|DECL_INITIAL
+argument_list|(
+name|decl1
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* This function may already have been parsed, in which case just      return; our caller will skip over the body without parsing.  */
+if|if
+condition|(
+name|DECL_INITIAL
+argument_list|(
+name|decl1
+argument_list|)
+operator|!=
+name|error_mark_node
+condition|)
+return|return;
+comment|/* Initialize RTL machinery.  We cannot do this until      CURRENT_FUNCTION_DECL and DECL_RESULT are set up.  We do this      even when processing a template; this is how we get      CFUN set up, and our per-function variables initialized.      FIXME factor out the non-RTL stuff.  */
+name|bl
+operator|=
+name|current_binding_level
+expr_stmt|;
+name|allocate_struct_function
+argument_list|(
+name|decl1
+argument_list|)
+expr_stmt|;
+name|current_binding_level
+operator|=
+name|bl
+expr_stmt|;
+comment|/* Even though we're inside a function body, we still don't want to      call expand_expr to calculate the size of a variable-sized array.      We haven't necessarily assigned RTL to all variables yet, so it's      not safe to try to expand expressions involving them.  */
 name|cfun
 operator|->
-name|decl
+name|x_dont_save_pending_sizes_p
 operator|=
+literal|1
+expr_stmt|;
+comment|/* Start the statement-tree, start the tree now.  */
+name|DECL_SAVED_TREE
+argument_list|(
 name|decl1
+argument_list|)
+operator|=
+name|push_stmt_list
+argument_list|()
 expr_stmt|;
 comment|/* If we are (erroneously) defining a function that we have already      defined before, wipe out what we knew before.  */
 if|if
@@ -39431,6 +39633,17 @@ name|gcc_assert
 argument_list|(
 name|building_stmt_tree
 argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* The current function is being defined, so its DECL_INITIAL should      be set, and unless there's a multiple definition, it should be      error_mark_node.  */
+name|gcc_assert
+argument_list|(
+name|DECL_INITIAL
+argument_list|(
+name|fndecl
+argument_list|)
+operator|==
+name|error_mark_node
 argument_list|)
 expr_stmt|;
 comment|/* For a cloned function, we've already got all the code we need;      there's no need to add any extra bits.  */

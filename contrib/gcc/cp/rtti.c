@@ -69,6 +69,12 @@ directive|include
 file|"convert.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"target.h"
+end_include
+
 begin_comment
 comment|/* C++ returns type information to the user in struct type_info    objects. We also use type information to implement dynamic_cast and    exception handlers. Type information for a particular type is    indicated with an ABI defined structure derived from type_info.    This would all be very straight forward, but for the fact that the    runtime library provides the definitions of the type_info structure    and the ABI defined derived classes. We cannot build declarations    of them directly in the compiler, but we need to layout objects of    their type.  Somewhere we have to lie.     We define layout compatible POD-structs with compiler-defined names    and generate the appropriate initializations for them (complete    with explicit mention of their vtable). When we have to provide a    type_info to the user we reinterpret_cast the internal compiler    type to type_info.  A well formed program can only explicitly refer    to the type_infos of complete types (& cv void).  However, we chain    pointer type_infos to the pointed-to-type, and that can be    incomplete.  We only need the addresses of such incomplete    type_info objects for static initialization.     The type information VAR_DECL of a type is held on the    IDENTIFIER_GLOBAL_VALUE of the type's mangled name. That VAR_DECL    will be the internal type.  It will usually have the correct    internal type reflecting the kind of type it represents (pointer,    array, function, class, inherited class, etc).  When the type it    represents is incomplete, it will have the internal type    corresponding to type_info.  That will only happen at the end of    translation, when we are emitting the type info objects.  */
 end_comment
@@ -834,8 +840,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|VOID_TYPE_P
+name|CLASS_TYPE_P
 argument_list|(
 name|type
 argument_list|)
@@ -1560,8 +1565,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|VOID_TYPE_P
+name|CLASS_TYPE_P
 argument_list|(
 name|type
 argument_list|)
@@ -5614,11 +5618,19 @@ argument_list|(
 name|tinfo
 argument_list|)
 expr_stmt|;
-comment|/* The C++ ABI requires that these objects be COMDAT.  But, 	     On systems without weak symbols, initialized COMDAT 	     objects are emitted with internal linkage.  (See 	     comdat_linkage for details.)  Since we want these objects 	     to have external linkage so that copies do not have to be 	     emitted in code outside the runtime library, we make them 	     non-COMDAT here.  */
+comment|/* The C++ ABI requires that these objects be COMDAT.  But, 	     On systems without weak symbols, initialized COMDAT 	     objects are emitted with internal linkage.  (See 	     comdat_linkage for details.)  Since we want these objects 	     to have external linkage so that copies do not have to be 	     emitted in code outside the runtime library, we make them 	     non-COMDAT here.    	     It might also not be necessary to follow this detail of the 	     ABI.  */
 if|if
 condition|(
 operator|!
 name|flag_weak
+operator|||
+operator|!
+name|targetm
+operator|.
+name|cxx
+operator|.
+name|library_rtti_comdat
+argument_list|()
 condition|)
 block|{
 name|gcc_assert

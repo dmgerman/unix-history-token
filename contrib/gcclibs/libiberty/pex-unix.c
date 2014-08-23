@@ -1662,7 +1662,7 @@ name|writeerr
 parameter_list|(
 name|s
 parameter_list|)
-value|write (STDERR_FILE_NO, s, strlen (s))
+value|(void) write (STDERR_FILE_NO, s, strlen (s))
 name|writeerr
 argument_list|(
 name|obj

@@ -459,6 +459,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEBUG_PUBTYPES_SECTION
+value|"__DWARF,__debug_pubtypes,regular,debug"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEBUG_STR_SECTION
 value|"__DWARF,__debug_str,regular,debug"
 end_define
@@ -589,6 +596,17 @@ begin_define
 define|#
 directive|define
 name|TARGET_CXX_CLASS_DATA_ALWAYS_COMDAT
+value|hook_bool_void_false
+end_define
+
+begin_comment
+comment|/* For efficiency, on Darwin the RTTI information that is always    emitted in the standard C++ library should not be COMDAT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_CXX_LIBRARY_RTTI_COMDAT
 value|hook_bool_void_false
 end_define
 
@@ -1537,7 +1555,13 @@ directive|define
 name|DARWIN_REGISTER_TARGET_PRAGMAS
 parameter_list|()
 define|\
-value|do {								\     c_register_pragma (0, "mark", darwin_pragma_ignore);	\     c_register_pragma (0, "options", darwin_pragma_options);	\     c_register_pragma (0, "segment", darwin_pragma_ignore);	\     c_register_pragma (0, "unused", darwin_pragma_unused);	\     c_register_pragma (0, "ms_struct", darwin_pragma_ms_struct); \   } while (0)
+value|do {								\
+comment|/* APPLE LOCAL begin pragma mark 5614511 */
+value|\
+comment|/* Removed mark.  */
+value|\
+comment|/* APPLE LOCAL end pragma mark 5614511 */
+value|\     c_register_pragma (0, "options", darwin_pragma_options);	\     c_register_pragma (0, "segment", darwin_pragma_ignore);	\     c_register_pragma (0, "unused", darwin_pragma_unused);	\     c_register_pragma (0, "ms_struct", darwin_pragma_ms_struct); \   } while (0)
 end_define
 
 begin_undef

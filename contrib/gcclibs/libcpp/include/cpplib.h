@@ -620,6 +620,13 @@ name|unsigned
 name|char
 name|warn_trigraphs
 decl_stmt|;
+comment|/* APPLE LOCAL begin -Wnewline-eof 2001-08-23 --sts */
+comment|/* Nonzero means warn if no newline at end of file.  */
+name|unsigned
+name|char
+name|warn_newline_at_eof
+decl_stmt|;
+comment|/* APPLE LOCAL end -Wnewline-eof 2001-08-23 --sts */
 comment|/* Nonzero means warn about multicharacter charconsts.  */
 name|unsigned
 name|char
@@ -803,6 +810,10 @@ decl_stmt|;
 comment|/* True means error callback should be used for diagnostics.  */
 name|bool
 name|client_diagnostic
+decl_stmt|;
+comment|/* True disables tokenization outside of preprocessing directives. */
+name|bool
+name|directives_only
 decl_stmt|;
 block|}
 struct|;
@@ -1266,7 +1277,10 @@ name|BT_PRAGMA
 block|,
 comment|/* `_Pragma' operator */
 name|BT_TIMESTAMP
+block|,
 comment|/* `__TIMESTAMP__' */
+name|BT_COUNTER
+comment|/* `__COUNTER__' */
 block|}
 enum|;
 end_enum
@@ -1620,6 +1634,21 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set up built-ins with special behavior.  Use cpp_init_builtins()    instead unless your know what you are doing.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|cpp_init_special_builtins
+parameter_list|(
+name|cpp_reader
 modifier|*
 parameter_list|)
 function_decl|;

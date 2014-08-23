@@ -6896,6 +6896,61 @@ operator|==
 name|convert_no_conversion
 condition|)
 block|{
+comment|/* APPLE LOCAL begin UTF-8 BOM 5774975 */
+comment|/* Eat the UTF-8 BOM.  */
+if|if
+condition|(
+name|len
+operator|>=
+literal|3
+operator|&&
+name|input
+index|[
+literal|0
+index|]
+operator|==
+literal|0xef
+operator|&&
+name|input
+index|[
+literal|1
+index|]
+operator|==
+literal|0xbb
+operator|&&
+name|input
+index|[
+literal|2
+index|]
+operator|==
+literal|0xbf
+condition|)
+block|{
+name|memmove
+argument_list|(
+operator|&
+name|input
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|input
+index|[
+literal|3
+index|]
+argument_list|,
+name|size
+operator|-
+literal|3
+argument_list|)
+expr_stmt|;
+name|len
+operator|-=
+literal|3
+expr_stmt|;
+block|}
+comment|/* APPLE LOCAL end UTF-8 BOM 5774975 */
 name|to
 operator|.
 name|text
@@ -7043,6 +7098,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* If the file is using old-school Mac line endings (\r only),      terminate with another \r, not an \n, so that we do not mistake      the \r\n sequence for a single DOS line ending and erroneously      issue the "No newline at end of file" diagnostic.  */
+comment|/* APPLE LOCAL don't access to.text[-1] radar 6121572 */
 if|if
 condition|(
 name|to

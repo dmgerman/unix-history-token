@@ -1248,6 +1248,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means allow implicit conversions between vectors with    differing numbers of subparts and/or differing element types.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_lax_vector_conversions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means allow Microsoft extensions without warnings or errors.  */
 end_comment
 
@@ -2128,6 +2139,10 @@ name|binary_op_error
 parameter_list|(
 name|enum
 name|tree_code
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2160,7 +2175,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|bool
 name|strict_aliasing_warning
 parameter_list|(
 name|tree
@@ -2961,7 +2976,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|bool
 name|vector_types_convertible_p
 parameter_list|(
 name|tree
@@ -2969,6 +2984,9 @@ name|t1
 parameter_list|,
 name|tree
 name|t2
+parameter_list|,
+name|bool
+name|emit_lax_note
 parameter_list|)
 function_decl|;
 end_function_decl

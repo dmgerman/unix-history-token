@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Part of CPP library.  (Macro and #define handling.)    Copyright (C) 1986, 1987, 1989, 1992, 1993, 1994, 1995, 1996, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Written by Per Bothner, 1994.    Based on CCCP program by Paul Rubin, June 1986    Adapted to ANSI C, Richard Stallman, Jan 1987  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
+comment|/* Part of CPP library.  (Macro and #define handling.)    Copyright (C) 1986, 1987, 1989, 1992, 1993, 1994, 1995, 1996, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005,    2006 Free Software Foundation, Inc.    Written by Per Bothner, 1994.    Based on CCCP program by Paul Rubin, June 1986    Adapted to ANSI C, Richard Stallman, Jan 1987  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
 end_comment
 
 begin_include
@@ -1266,6 +1266,41 @@ operator|->
 name|time
 expr_stmt|;
 break|break;
+case|case
+name|BT_COUNTER
+case|:
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|directives_only
+argument_list|)
+operator|&&
+name|pfile
+operator|->
+name|state
+operator|.
+name|in_directive
+condition|)
+name|cpp_error
+argument_list|(
+name|pfile
+argument_list|,
+name|CPP_DL_ERROR
+argument_list|,
+literal|"__COUNTER__ expanded inside directive with -fdirectives-only"
+argument_list|)
+expr_stmt|;
+name|number
+operator|=
+name|pfile
+operator|->
+name|nextcounter
+operator|++
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -2058,7 +2093,6 @@ decl_stmt|,
 modifier|*
 name|lhsend
 decl_stmt|;
-specifier|const
 name|cpp_token
 modifier|*
 name|lhs
@@ -2067,16 +2101,12 @@ name|unsigned
 name|int
 name|len
 decl_stmt|;
-name|lhs
-operator|=
-operator|*
-name|plhs
-expr_stmt|;
 name|len
 operator|=
 name|cpp_token_len
 argument_list|(
-name|lhs
+operator|*
+name|plhs
 argument_list|)
 operator|+
 name|cpp_token_len
@@ -2106,7 +2136,8 @@ name|cpp_spell_token
 argument_list|(
 name|pfile
 argument_list|,
-name|lhs
+operator|*
+name|plhs
 argument_list|,
 name|buf
 argument_list|,
@@ -2116,7 +2147,10 @@ expr_stmt|;
 comment|/* Avoid comment headers, since they are still processed in stage 3.      It is simpler to insert a space here, rather than modifying the      lexer to ignore comments in some circumstances.  Simply returning      false doesn't work, since we want to clear the PASTE_LEFT flag.  */
 if|if
 condition|(
-name|lhs
+operator|(
+operator|*
+name|plhs
+operator|)
 operator|->
 name|type
 operator|==
@@ -2181,8 +2215,7 @@ argument_list|(
 name|pfile
 argument_list|)
 expr_stmt|;
-operator|*
-name|plhs
+name|lhs
 operator|=
 name|_cpp_lex_direct
 argument_list|(
@@ -2204,6 +2237,13 @@ operator|->
 name|rlimit
 condition|)
 block|{
+name|source_location
+name|saved_loc
+init|=
+name|lhs
+operator|->
+name|src_loc
+decl_stmt|;
 name|_cpp_pop_buffer
 argument_list|(
 name|pfile
@@ -2220,6 +2260,32 @@ operator|*
 name|lhsend
 operator|=
 literal|'\0'
+expr_stmt|;
+comment|/* We have to remove the PASTE_LEFT flag from the old lhs, but 	 we want to keep the new location.  */
+operator|*
+name|lhs
+operator|=
+operator|*
+operator|*
+name|plhs
+expr_stmt|;
+operator|*
+name|plhs
+operator|=
+name|lhs
+expr_stmt|;
+name|lhs
+operator|->
+name|src_loc
+operator|=
+name|saved_loc
+expr_stmt|;
+name|lhs
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PASTE_LEFT
 expr_stmt|;
 comment|/* Mandatory error for all apart from assembler.  */
 if|if
@@ -2255,6 +2321,11 @@ return|return
 name|false
 return|;
 block|}
+operator|*
+name|plhs
+operator|=
+name|lhs
+expr_stmt|;
 name|_cpp_pop_buffer
 argument_list|(
 name|pfile
@@ -6276,7 +6347,16 @@ block|{
 name|cpp_token
 modifier|*
 name|token
+decl_stmt|,
+modifier|*
+name|saved_cur_token
 decl_stmt|;
+name|saved_cur_token
+operator|=
+name|pfile
+operator|->
+name|cur_token
+expr_stmt|;
 name|pfile
 operator|->
 name|cur_token
@@ -6294,6 +6374,12 @@ name|_cpp_lex_direct
 argument_list|(
 name|pfile
 argument_list|)
+expr_stmt|;
+name|pfile
+operator|->
+name|cur_token
+operator|=
+name|saved_cur_token
 expr_stmt|;
 comment|/* Is this a parameter?  */
 if|if
@@ -7208,14 +7294,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|cpp_token
-modifier|*
-name|saved_cur_token
-init|=
-name|pfile
-operator|->
-name|cur_token
-decl_stmt|;
 name|ok
 operator|=
 name|create_iso_definition
@@ -7225,31 +7303,7 @@ argument_list|,
 name|macro
 argument_list|)
 expr_stmt|;
-comment|/* Restore lexer position because of games lex_expansion_token() 	 plays lexing the macro.  We set the type for SEEN_EOL() in 	 directives.c.  	 Longer term we should lex the whole line before coming here, 	 and just copy the expansion.  */
-name|saved_cur_token
-index|[
-operator|-
-literal|1
-index|]
-operator|.
-name|type
-operator|=
-name|pfile
-operator|->
-name|cur_token
-index|[
-operator|-
-literal|1
-index|]
-operator|.
-name|type
-expr_stmt|;
-name|pfile
-operator|->
-name|cur_token
-operator|=
-name|saved_cur_token
-expr_stmt|;
+comment|/* We set the type for SEEN_EOL() in directives.c.  	 Longer term we should lex the whole line before coming here, 	 and just copy the expansion.  */
 comment|/* Stop the lexer accepting __VA_ARGS__.  */
 name|pfile
 operator|->

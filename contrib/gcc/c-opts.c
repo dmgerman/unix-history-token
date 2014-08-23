@@ -1501,9 +1501,10 @@ name|warn_switch
 operator|=
 name|value
 expr_stmt|;
-name|warn_strict_aliasing
-operator|=
+name|set_warn_strict_aliasing
+argument_list|(
 name|value
+argument_list|)
 expr_stmt|;
 name|warn_strict_overflow
 operator|=
@@ -1737,6 +1738,18 @@ operator|=
 name|value
 expr_stmt|;
 break|break;
+comment|/* APPLE LOCAL begin -Wnewline-eof */
+case|case
+name|OPT_Wnewline_eof
+case|:
+name|cpp_opts
+operator|->
+name|warn_newline_at_eof
+operator|=
+name|value
+expr_stmt|;
+break|break;
+comment|/* APPLE LOCAL end -Wnewline-eof */
 case|case
 name|OPT_Wnormalized_
 case|:
@@ -2094,6 +2107,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|OPT_fdirectives_only
+case|:
+name|cpp_opts
+operator|->
+name|directives_only
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 name|OPT_fdollars_in_identifiers
 case|:
 name|cpp_opts
@@ -2316,6 +2339,14 @@ case|case
 name|OPT_fimplicit_templates
 case|:
 name|flag_implicit_templates
+operator|=
+name|value
+expr_stmt|;
+break|break;
+case|case
+name|OPT_flax_vector_conversions
+case|:
+name|flag_lax_vector_conversions
 operator|=
 name|value
 expr_stmt|;
@@ -4155,6 +4186,25 @@ name|flag_no_output
 operator|=
 literal|1
 expr_stmt|;
+comment|/* By default, -fdirectives-only implies -dD.  This allows subsequent phases      to perform proper macro expansion.  */
+if|if
+condition|(
+name|cpp_opts
+operator|->
+name|directives_only
+operator|&&
+operator|!
+name|cpp_opts
+operator|->
+name|preprocessed
+operator|&&
+operator|!
+name|flag_dump_macros
+condition|)
+name|flag_dump_macros
+operator|=
+literal|'D'
+expr_stmt|;
 comment|/* Disable -dD, -dN and -dI if normal output is suppressed.  Allow      -dM since at least glibc relies on -M -dM to work.  */
 comment|/* Also, flag_no_output implies flag_no_line_commands, always.  */
 if|if
@@ -4241,6 +4291,34 @@ operator|!=
 name|DINFO_LEVEL_NONE
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|cpp_opts
+operator|->
+name|directives_only
+condition|)
+block|{
+if|if
+condition|(
+name|warn_unused_macros
+condition|)
+name|error
+argument_list|(
+literal|"-fdirectives-only is incompatible with -Wunused_macros"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpp_opts
+operator|->
+name|traditional
+condition|)
+name|error
+argument_list|(
+literal|"-fdirectives-only is incompatible with -traditional"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4618,6 +4696,18 @@ expr_stmt|;
 block|}
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|cpp_opts
+operator|->
+name|directives_only
+condition|)
+name|cpp_init_special_builtins
+argument_list|(
+name|parse_in
+argument_list|)
+expr_stmt|;
 name|include_cursor
 operator|=
 literal|0

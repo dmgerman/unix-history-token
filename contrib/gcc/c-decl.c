@@ -1264,6 +1264,18 @@ begin_comment
 comment|/* States indicating how grokdeclarator() should handle declspecs marked    with __attribute__((deprecated)).  An object declared as    __attribute__((deprecated)) suppresses warnings of uses of other    deprecated items.  */
 end_comment
 
+begin_comment
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+end_comment
+
+begin_comment
+comment|/* Also add an __attribute__((unavailable)).  An object declared as    __attribute__((unavailable)) suppresses any reports of being    declared with unavailable or deprecated items.  */
+end_comment
+
+begin_comment
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
+end_comment
+
 begin_enum
 enum|enum
 name|deprecated_states
@@ -1271,6 +1283,9 @@ block|{
 name|DEPRECATED_NORMAL
 block|,
 name|DEPRECATED_SUPPRESS
+comment|/* APPLE LOCAL "unavailable" attribute (radar 2809697) */
+block|,
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
 block|}
 enum|;
 end_enum
@@ -5847,15 +5862,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TREE_CODE
-argument_list|(
-name|olddecl
-argument_list|)
-operator|!=
-name|FUNCTION_DECL
-condition|)
-if|if
-condition|(
 name|DECL_ALIGN
 argument_list|(
 name|olddecl
@@ -5933,6 +5939,23 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+comment|/* Merge unavailableness.  */
+if|if
+condition|(
+name|TREE_UNAVAILABLE
+argument_list|(
+name|newdecl
+argument_list|)
+condition|)
+name|TREE_UNAVAILABLE
+argument_list|(
+name|olddecl
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 comment|/* Keep source location of definition rather than declaration and of      prototype rather than non-prototype unless that prototype is      built-in.  */
 if|if
 condition|(
@@ -11676,6 +11699,12 @@ name|tree
 name|tem
 decl_stmt|;
 comment|/* An object declared as __attribute__((deprecated)) suppresses      warnings of uses of other deprecated items.  */
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+comment|/* An object declared as __attribute__((unavailable)) suppresses      any reports of being declared with unavailable or deprecated      items.  An object declared as __attribute__((deprecated))      suppresses warnings of uses of other deprecated items.  */
+ifdef|#
+directive|ifdef
+name|A_LESS_INEFFICENT_WAY
+comment|/* which I really don't want to do!  */
 if|if
 condition|(
 name|lookup_attribute
@@ -11689,6 +11718,95 @@ name|deprecated_state
 operator|=
 name|DEPRECATED_SUPPRESS
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|lookup_attribute
+argument_list|(
+literal|"unavailable"
+argument_list|,
+name|attributes
+argument_list|)
+condition|)
+name|deprecated_state
+operator|=
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
+expr_stmt|;
+else|#
+directive|else
+comment|/* a more efficient way doing what lookup_attribute would do */
+name|tree
+name|a
+decl_stmt|;
+for|for
+control|(
+name|a
+operator|=
+name|attributes
+init|;
+name|a
+condition|;
+name|a
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|a
+argument_list|)
+control|)
+block|{
+name|tree
+name|name
+init|=
+name|TREE_PURPOSE
+argument_list|(
+name|a
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|name
+argument_list|)
+operator|==
+name|IDENTIFIER_NODE
+condition|)
+if|if
+condition|(
+name|is_attribute_p
+argument_list|(
+literal|"deprecated"
+argument_list|,
+name|name
+argument_list|)
+condition|)
+block|{
+name|deprecated_state
+operator|=
+name|DEPRECATED_SUPPRESS
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|is_attribute_p
+argument_list|(
+literal|"unavailable"
+argument_list|,
+name|name
+argument_list|)
+condition|)
+block|{
+name|deprecated_state
+operator|=
+name|DEPRECATED_UNAVAILABLE_SUPPRESS
+expr_stmt|;
+break|break;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 name|decl
 operator|=
 name|grokdeclarator
@@ -14948,6 +15066,22 @@ return|return
 literal|0
 return|;
 comment|/* If this looks like a function definition, make it one,      even if it occurs where parms are expected.      Then store_parm_decls will reject it and not use it as a parm.  */
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+if|if
+condition|(
+name|declspecs
+operator|->
+name|unavailable_p
+condition|)
+name|error_unavailable_use
+argument_list|(
+name|declspecs
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+elseif|else
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 if|if
 condition|(
 name|decl_context
@@ -26332,6 +26466,13 @@ name|deprecated_p
 operator|=
 name|false
 expr_stmt|;
+comment|/* APPLE LOCAL "unavailable" attribute (radar 2809697) */
+name|ret
+operator|->
+name|unavailable_p
+operator|=
+name|false
+expr_stmt|;
 name|ret
 operator|->
 name|default_int_p
@@ -26610,6 +26751,21 @@ name|deprecated_p
 operator|=
 name|true
 expr_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+if|if
+condition|(
+name|TREE_UNAVAILABLE
+argument_list|(
+name|type
+argument_list|)
+condition|)
+name|specs
+operator|->
+name|unavailable_p
+operator|=
+name|true
+expr_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 comment|/* Handle type specifier keywords.  */
 if|if
 condition|(

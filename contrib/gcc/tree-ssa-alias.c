@@ -2233,6 +2233,10 @@ name|dump_file
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Report strict aliasing violations.  */
+name|strict_aliasing_warning_backend
+argument_list|()
+expr_stmt|;
 comment|/* Deallocate memory used by aliasing data structures.  */
 name|delete_alias_info
 argument_list|(

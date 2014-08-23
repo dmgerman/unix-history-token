@@ -1369,7 +1369,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/**    *  @brief Copies the range [first,last) into result.    *  @param  first  An input iterator.    *  @param  last   An input iterator.    *  @param  result An output iterator.    *  @return   result + (first - last)    *    *  This inline function will boil down to a call to @c memmove whenever    *  possible.  Failing that, if random access iterators are passed, then the    *  loop count will be known (and therefore a candidate for compiler    *  optimizations such as unrolling).  Result may not be contained within    *  [first,last); the copy_backward function should be used instead.    *    *  Note that the end of the output range is permitted to be contained    *  within [first,last).   */
+comment|/**    *  @brief Copies the range [first,last) into result.    *  @param  first  An input iterator.    *  @param  last   An input iterator.    *  @param  result An output iterator.    *  @return   result + (last - first)    *    *  This inline function will boil down to a call to @c memmove whenever    *  possible.  Failing that, if random access iterators are passed, then the    *  loop count will be known (and therefore a candidate for compiler    *  optimizations such as unrolling).  Result may not be contained within    *  [first,last); the copy_backward function should be used instead.    *    *  Note that the end of the output range is permitted to be contained    *  within [first,last).   */
 end_comment
 
 begin_expr_stmt

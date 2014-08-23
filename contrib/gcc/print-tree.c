@@ -1526,6 +1526,22 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (Radar 2809697) */
+if|if
+condition|(
+name|TREE_UNAVAILABLE
+argument_list|(
+name|node
+argument_list|)
+condition|)
+name|fputs
+argument_list|(
+literal|" unavailable"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (Radar 2809697) */
 if|if
 condition|(
 name|TREE_VISITED
@@ -2392,16 +2408,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TREE_CODE
-argument_list|(
-name|node
-argument_list|)
-operator|!=
-name|FUNCTION_DECL
-condition|)
-block|{
-if|if
-condition|(
 name|DECL_USER_ALIGN
 argument_list|(
 name|node
@@ -2448,10 +2454,15 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
+name|TREE_CODE
+argument_list|(
+name|node
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+operator|&&
 name|DECL_BUILT_IN
 argument_list|(
 name|node

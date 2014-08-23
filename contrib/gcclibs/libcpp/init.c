@@ -653,6 +653,18 @@ argument_list|,
 name|lang
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin -Wnewline-eof 2001-08-23 --sts */
+comment|/* Suppress warnings about missing newlines at ends of files.  */
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|warn_newline_at_eof
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/* APPLE LOCAL end -Wnewline-eof 2001-08-23 --sts */
 name|CPP_OPTION
 argument_list|(
 name|pfile
@@ -1439,6 +1451,13 @@ argument_list|,
 name|BT_INCLUDE_LEVEL
 argument_list|)
 block|,
+name|B
+argument_list|(
+literal|"__COUNTER__"
+argument_list|,
+name|BT_COUNTER
+argument_list|)
+block|,
 comment|/* Keep builtins not used for -traditional-cpp at the end, and      update init_builtins() if any more are added.  */
 name|B
 argument_list|(
@@ -1634,20 +1653,13 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* Read the builtins table above and enter them, and language-specific    macros, into the hash table.  HOSTED is true if this is a hosted    environment.  */
-end_comment
-
 begin_function
 name|void
-name|cpp_init_builtins
+name|cpp_init_special_builtins
 parameter_list|(
 name|cpp_reader
 modifier|*
 name|pfile
-parameter_list|,
-name|int
-name|hosted
 parameter_list|)
 block|{
 specifier|const
@@ -1695,18 +1707,9 @@ argument_list|,
 name|std
 argument_list|)
 condition|)
-block|{
 name|n
 operator|--
 expr_stmt|;
-name|_cpp_define_builtin
-argument_list|(
-name|pfile
-argument_list|,
-literal|"__STDC__ 1"
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|b
@@ -1769,6 +1772,64 @@ operator|->
 name|value
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Read the builtins table above and enter them, and language-specific    macros, into the hash table.  HOSTED is true if this is a hosted    environment.  */
+end_comment
+
+begin_function
+name|void
+name|cpp_init_builtins
+parameter_list|(
+name|cpp_reader
+modifier|*
+name|pfile
+parameter_list|,
+name|int
+name|hosted
+parameter_list|)
+block|{
+name|cpp_init_special_builtins
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|traditional
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|stdc_0_in_system_headers
+argument_list|)
+operator|||
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|std
+argument_list|)
+operator|)
+condition|)
+name|_cpp_define_builtin
+argument_list|(
+name|pfile
+argument_list|,
+literal|"__STDC__ 1"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|CPP_OPTION
@@ -2870,6 +2931,16 @@ name|preprocessed
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|directives_only
+argument_list|)
+condition|)
 name|pfile
 operator|->
 name|state

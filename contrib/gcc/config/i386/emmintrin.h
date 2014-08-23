@@ -23,11 +23,26 @@ directive|define
 name|_EMMINTRIN_H_INCLUDED
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__SSE2__
-end_ifdef
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"SSE2 instruction set not enabled"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* We need definitions from the SSE header files*/
+end_comment
 
 begin_include
 include|#
@@ -6433,7 +6448,7 @@ parameter_list|,
 name|__B
 parameter_list|)
 define|\
-value|((__m128i)__builtin_ia32_pslldi128 ((__v8hi)(__A), __B))
+value|((__m128i)__builtin_ia32_pslldi128 ((__v4si)(__A), __B))
 end_define
 
 begin_define
@@ -6446,7 +6461,7 @@ parameter_list|,
 name|__B
 parameter_list|)
 define|\
-value|((__m128i)__builtin_ia32_psllqi128 ((__v8hi)(__A), __B))
+value|((__m128i)__builtin_ia32_psllqi128 ((__v2di)(__A), __B))
 end_define
 
 begin_endif
@@ -6489,7 +6504,7 @@ parameter_list|,
 name|__B
 parameter_list|)
 define|\
-value|((__m128i)__builtin_ia32_psradi128 ((__v8hi)(__A), __B))
+value|((__m128i)__builtin_ia32_psradi128 ((__v4si)(__A), __B))
 end_define
 
 begin_endif
@@ -6588,7 +6603,7 @@ parameter_list|,
 name|__B
 parameter_list|)
 define|\
-value|((__m128i)__builtin_ia32_psrlqi128 ((__v4si)(__A), __B))
+value|((__m128i)__builtin_ia32_psrlqi128 ((__v2di)(__A), __B))
 end_define
 
 begin_endif

@@ -2758,6 +2758,36 @@ name|gcc_unreachable
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+if|if
+condition|(
+name|LABEL_ALIGN_LOG
+argument_list|(
+name|in_rtx
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|" [log_align %u skip %u]"
+argument_list|,
+name|LABEL_ALIGN_LOG
+argument_list|(
+name|in_rtx
+argument_list|)
+argument_list|,
+name|LABEL_MAX_SKIP
+argument_list|(
+name|in_rtx
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 break|break;
 default|default:
 break|break;

@@ -8762,10 +8762,29 @@ value|TREE_OPERAND (WHILE_STMT_CHECK (NODE), 1)
 end_define
 
 begin_comment
-comment|/* DO_STMT accessors. These give access to the condition of the do    statement and the body of the do statement, respectively.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
 end_comment
 
-begin_define
+begin_expr_stmt
+unit|\
+operator|#
+name|define
+name|WHILE_ATTRIBUTES
+argument_list|(
+argument|NODE
+argument_list|)
+name|TREE_OPERAND
+argument_list|(
+name|WHILE_STMT_CHECK
+argument_list|(
+name|NODE
+argument_list|)
+argument_list|,
+literal|2
+argument_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+expr|\
+comment|/* DO_STMT accessors. These give access to the condition of the do    statement and the body of the do statement, respectively.  */
 define|#
 directive|define
 name|DO_COND
@@ -8773,9 +8792,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (DO_STMT_CHECK (NODE), 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|DO_BODY
@@ -8783,13 +8799,36 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (DO_STMT_CHECK (NODE), 1)
-end_define
-
-begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+expr|\
+operator|#
+name|define
+name|DO_ATTRIBUTES
+argument_list|(
+argument|NODE
+argument_list|)
+name|TREE_OPERAND
+argument_list|(
+name|DO_STMT_CHECK
+argument_list|(
+name|NODE
+argument_list|)
+argument_list|,
+literal|2
+argument_list|)
+comment|/* APPLE LOCAL begin C* language */
+comment|/* Used as a flag to indicate synthesized inner do-while loop of a     foreach statement.  Used for generation of break/continue statement     of the loop. */
+define|#
+directive|define
+name|DO_FOREACH
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (DO_STMT_CHECK (NODE), 3)
+comment|/* APPLE LOCAL end C* language */
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+expr|\
 comment|/* FOR_STMT accessors. These give access to the init statement,    condition, update expression, and body of the for statement,    respectively.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FOR_INIT_STMT
@@ -8797,9 +8836,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (FOR_STMT_CHECK (NODE), 0)
-end_define
-
-begin_define
 define|#
 directive|define
 name|FOR_COND
@@ -8807,9 +8843,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (FOR_STMT_CHECK (NODE), 1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|FOR_EXPR
@@ -8817,9 +8850,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (FOR_STMT_CHECK (NODE), 2)
-end_define
-
-begin_define
 define|#
 directive|define
 name|FOR_BODY
@@ -8827,19 +8857,40 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (FOR_STMT_CHECK (NODE), 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SWITCH_STMT_COND
-parameter_list|(
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+expr|\
+operator|#
+name|define
+name|FOR_ATTRIBUTES
+argument_list|(
+argument|NODE
+argument_list|)
+name|TREE_OPERAND
+argument_list|(
+name|FOR_STMT_CHECK
+argument_list|(
 name|NODE
-parameter_list|)
-value|TREE_OPERAND (SWITCH_STMT_CHECK (NODE), 0)
-end_define
-
-begin_define
+argument_list|)
+argument_list|,
+literal|4
+argument_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+expr|\
+operator|#
+name|define
+name|SWITCH_STMT_COND
+argument_list|(
+argument|NODE
+argument_list|)
+name|TREE_OPERAND
+argument_list|(
+name|SWITCH_STMT_CHECK
+argument_list|(
+name|NODE
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
 define|#
 directive|define
 name|SWITCH_STMT_BODY
@@ -8847,9 +8898,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (SWITCH_STMT_CHECK (NODE), 1)
-end_define
-
-begin_define
 define|#
 directive|define
 name|SWITCH_STMT_TYPE
@@ -8857,13 +8905,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (SWITCH_STMT_CHECK (NODE), 2)
-end_define
-
-begin_comment
 comment|/* STMT_EXPR accessor.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|STMT_EXPR_STMT
@@ -8871,13 +8913,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (STMT_EXPR_CHECK (NODE), 0)
-end_define
-
-begin_comment
 comment|/* EXPR_STMT accessor. This gives the expression associated with an    expression statement.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EXPR_STMT_EXPR
@@ -8885,13 +8921,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (EXPR_STMT_CHECK (NODE), 0)
-end_define
-
-begin_comment
 comment|/* True if this TARGET_EXPR was created by build_cplus_new, and so we can    discard it if it isn't useful.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|TARGET_EXPR_IMPLICIT_P
@@ -8900,18 +8930,12 @@ name|NODE
 parameter_list|)
 define|\
 value|TREE_LANG_FLAG_0 (TARGET_EXPR_CHECK (NODE))
-end_define
-
-begin_comment
 comment|/* An enumeration of the kind of tags that C++ accepts.  */
-end_comment
-
-begin_enum
-enum|enum
+expr|enum
 name|tag_types
 block|{
 name|none_type
-init|=
+operator|=
 literal|0
 block|,
 comment|/* Not a tag type.  */
@@ -8930,8 +8954,8 @@ comment|/* "enum" types.  */
 name|typename_type
 comment|/* "typename" types.  */
 block|}
-enum|;
-end_enum
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* The various kinds of lvalues we distinguish.  */
@@ -16127,17 +16151,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|tree
 name|begin_while_stmt
 parameter_list|(
-name|void
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|void
 name|finish_while_stmt_cond
@@ -16159,17 +16193,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|tree
 name|begin_do_stmt
 parameter_list|(
-name|void
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|void
 name|finish_do_body
@@ -16201,17 +16245,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|tree
 name|begin_for_stmt
 parameter_list|(
-name|void
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+end_comment
+
 begin_function_decl
+unit|\
 specifier|extern
 name|void
 name|finish_for_init_stmt

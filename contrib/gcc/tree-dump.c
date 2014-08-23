@@ -680,6 +680,7 @@ argument_list|,
 name|field
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|ptr

@@ -130,10 +130,12 @@ begin_comment
 comment|/// @brief  Base class for ctype.
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|class
 name|ctype_base
 block|{
+name|public
+label|:
 comment|// Non-standard typedefs.
 typedef|typedef
 specifier|const
@@ -324,8 +326,11 @@ decl_stmt|;
 endif|#
 directive|endif
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_macro
 name|_GLIBCXX_END_NAMESPACE

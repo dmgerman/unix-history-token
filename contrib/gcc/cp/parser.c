@@ -20412,7 +20412,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse an iteration-statement.     iteration-statement:      while ( condition ) statement      do statement while ( expression ) ;      for ( for-init-statement condition [opt] ; expression [opt] )        statement     Returns the new WHILE_STMT, DO_STMT, or FOR_STMT.  */
+comment|/* Parse an iteration-statement.     iteration-statement:      while ( condition ) statement      do statement while ( expression ) ;      for ( for-init-statement condition [opt] ; expression [opt] )        statement     APPLE LOCAL begin for-fsf-4_4 3274130 5295549    GNU extension:       while attributes [opt] ( condition ) statement      do attributes [opt] statement while ( expression ) ;      for attributes [opt]         ( for-init-statement condition [opt] ; expression [opt] )        statement     APPLE LOCAL end for-fsf-4_4 3274130 5295549    Returns the new WHILE_STMT, DO_STMT, or FOR_STMT.  */
 end_comment
 
 begin_function
@@ -20433,14 +20433,24 @@ name|enum
 name|rid
 name|keyword
 decl_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|tree
 name|statement
+decl_stmt|,
+name|attributes
 decl_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|unsigned
 name|char
 name|in_statement
 decl_stmt|;
-comment|/* Peek at the next token.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* Get the keyword at the start of the loop.  */
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|token
 operator|=
 name|cp_parser_require
@@ -20467,6 +20477,18 @@ name|parser
 operator|->
 name|in_statement
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+comment|/* Parse the attributes, if any.  */
+name|attributes
+operator|=
+name|cp_parser_attributes_opt
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 comment|/* See what kind of keyword it is.  */
 name|keyword
 operator|=
@@ -20487,11 +20509,17 @@ name|tree
 name|condition
 decl_stmt|;
 comment|/* Begin the while-statement.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|statement
 operator|=
 name|begin_while_stmt
-argument_list|()
+argument_list|(
+name|attributes
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 comment|/* Look for the `('.  */
 name|cp_parser_require
 argument_list|(
@@ -20561,11 +20589,17 @@ name|tree
 name|expression
 decl_stmt|;
 comment|/* Begin the do-statement.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|statement
 operator|=
 name|begin_do_stmt
-argument_list|()
+argument_list|(
+name|attributes
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 comment|/* Parse the body of the do-statement.  */
 name|parser
 operator|->
@@ -20667,11 +20701,17 @@ init|=
 name|NULL_TREE
 decl_stmt|;
 comment|/* Begin the for-statement.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|statement
 operator|=
 name|begin_for_stmt
-argument_list|()
+argument_list|(
+name|attributes
+argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 comment|/* Look for the `('.  */
 name|cp_parser_require
 argument_list|(
@@ -43410,6 +43450,40 @@ expr_stmt|;
 name|fn
 operator|=
 name|error_mark_node
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|DECL_INITIAL
+argument_list|(
+name|current_function_decl
+argument_list|)
+operator|!=
+name|error_mark_node
+condition|)
+block|{
+comment|/* Seen already, skip it.  An error message has already been output.  */
+name|cp_parser_skip_to_end_of_block_or_statement
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
+name|fn
+operator|=
+name|current_function_decl
+expr_stmt|;
+name|current_function_decl
+operator|=
+name|NULL_TREE
+expr_stmt|;
+comment|/* If this is a function from a class, pop the nested class.  */
+if|if
+condition|(
+name|current_class_name
+condition|)
+name|pop_nested_class
+argument_list|()
 expr_stmt|;
 block|}
 else|else

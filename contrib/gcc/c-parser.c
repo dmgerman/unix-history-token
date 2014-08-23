@@ -13510,7 +13510,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse a while statement (C90 6.6.5, C99 6.8.5).     while-statement:       while (expression) statement */
+comment|/* Parse a while statement (C90 6.6.5, C99 6.8.5).     while-statement:    APPLE LOCAL begin for-fsf-4_4 3274130 5295549       while attributes (expression) statement     The use of attributes is a GNU extension.    APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
 end_comment
 
 begin_function
@@ -13523,6 +13523,8 @@ modifier|*
 name|parser
 parameter_list|)
 block|{
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|tree
 name|block
 decl_stmt|,
@@ -13533,7 +13535,11 @@ decl_stmt|,
 name|save_break
 decl_stmt|,
 name|save_cont
+decl_stmt|,
+name|attrs
 decl_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|location_t
 name|loc
 decl_stmt|;
@@ -13552,6 +13558,17 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|attrs
+operator|=
+name|c_parser_attributes
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|block
 operator|=
 name|c_begin_compound_stmt
@@ -13598,6 +13615,8 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|c_finish_loop
 argument_list|(
 name|loc
@@ -13612,9 +13631,13 @@ name|c_break_label
 argument_list|,
 name|c_cont_label
 argument_list|,
+name|attrs
+argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|add_stmt
 argument_list|(
 name|c_end_compound_stmt
@@ -13637,7 +13660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse a do statement (C90 6.6.5, C99 6.8.5).     do-statement:      do statement while ( expression ) ; */
+comment|/* Parse a do statement (C90 6.6.5, C99 6.8.5).     do-statement:    APPLE LOCAL begin for-fsf-4_4 3274130 5295549      do attributes statement while ( expression ) ;     The use of attributes is a GNU extension.    APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
 end_comment
 
 begin_function
@@ -13650,6 +13673,8 @@ modifier|*
 name|parser
 parameter_list|)
 block|{
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|tree
 name|block
 decl_stmt|,
@@ -13664,7 +13689,11 @@ decl_stmt|,
 name|new_break
 decl_stmt|,
 name|new_cont
+decl_stmt|,
+name|attrs
 decl_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|location_t
 name|loc
 decl_stmt|;
@@ -13683,6 +13712,17 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|attrs
+operator|=
+name|c_parser_attributes
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|block
 operator|=
 name|c_begin_compound_stmt
@@ -13771,6 +13811,8 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|c_finish_loop
 argument_list|(
 name|loc
@@ -13785,9 +13827,13 @@ name|new_break
 argument_list|,
 name|new_cont
 argument_list|,
+name|attrs
+argument_list|,
 name|false
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|add_stmt
 argument_list|(
 name|c_end_compound_stmt
@@ -13802,7 +13848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse a for statement (C90 6.6.5, C99 6.8.5).     for-statement:      for ( expression[opt] ; expression[opt] ; expression[opt] ) statement      for ( nested-declaration expression[opt] ; expression[opt] ) statement     The form with a declaration is new in C99.     ??? In accordance with the old parser, the declaration may be a    nested function, which is then rejected in check_for_loop_decls,    but does it make any sense for this to be included in the grammar?    Note in particular that the nested function does not include a    trailing ';', whereas the "declaration" production includes one.    Also, can we reject bad declarations earlier and cheaper than    check_for_loop_decls?  */
+comment|/* Parse a for statement (C90 6.6.5, C99 6.8.5).     for-statement:    APPLE LOCAL begin for-fsf-4_4 3274130 5295549      for attributes ( expression[opt] ; expression[opt] ; expression[opt] ) \          statement      for attributes ( nested-declaration expression[opt] ; expression[opt] ) \          statement     The form with a declaration is new in C99.     The use of attributes is a GNU extension.     APPLE LOCAL end for-fsf-4_4 3274130 5295549    ??? In accordance with the old parser, the declaration may be a    nested function, which is then rejected in check_for_loop_decls,    but does it make any sense for this to be included in the grammar?    Note in particular that the nested function does not include a    trailing ';', whereas the "declaration" production includes one.    Also, can we reject bad declarations earlier and cheaper than    check_for_loop_decls?  */
 end_comment
 
 begin_function
@@ -13815,6 +13861,8 @@ modifier|*
 name|parser
 parameter_list|)
 block|{
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|tree
 name|block
 decl_stmt|,
@@ -13827,7 +13875,11 @@ decl_stmt|,
 name|save_cont
 decl_stmt|,
 name|body
+decl_stmt|,
+name|attrs
 decl_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|location_t
 name|loc
 decl_stmt|;
@@ -13855,6 +13907,17 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
+name|attrs
+operator|=
+name|c_parser_attributes
+argument_list|(
+name|parser
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|block
 operator|=
 name|c_begin_compound_stmt
@@ -14183,6 +14246,8 @@ argument_list|(
 name|parser
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+block|\
 name|c_finish_loop
 argument_list|(
 name|loc
@@ -14197,9 +14262,13 @@ name|c_break_label
 argument_list|,
 name|c_cont_label
 argument_list|,
+name|attrs
+argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+block|\
 name|add_stmt
 argument_list|(
 name|c_end_compound_stmt

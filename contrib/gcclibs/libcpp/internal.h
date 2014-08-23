@@ -745,6 +745,13 @@ name|unsigned
 name|char
 name|pragma_allow_expansion
 decl_stmt|;
+comment|/* APPLE LOCAL begin #error with unmatched quotes 5607574 */
+comment|/* Nonzero when handling #error and #warning to allow unmatched quotes.  */
+name|unsigned
+name|char
+name|in_diagnostic
+decl_stmt|;
+comment|/* APPLE LOCAL end #error with unmatched quotes 5607574 */
 block|}
 struct|;
 end_struct
@@ -1256,6 +1263,10 @@ name|struct
 name|cpp_savedstate
 modifier|*
 name|savedstate
+decl_stmt|;
+name|unsigned
+name|int
+name|nextcounter
 decl_stmt|;
 block|}
 struct|;
@@ -2188,6 +2199,59 @@ name|void
 name|_cpp_pop_buffer
 parameter_list|(
 name|cpp_reader
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In directives.c */
+end_comment
+
+begin_struct
+struct|struct
+name|_cpp_dir_only_callbacks
+block|{
+comment|/* Called to print a block of lines. */
+name|void
+function_decl|(
+modifier|*
+name|print_lines
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|maybe_print_line
+function_decl|)
+parameter_list|(
+name|source_location
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|extern
+name|void
+name|_cpp_preprocess_dir_only
+parameter_list|(
+name|cpp_reader
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|_cpp_dir_only_callbacks
 modifier|*
 parameter_list|)
 function_decl|;

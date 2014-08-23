@@ -7876,6 +7876,20 @@ argument_list|(
 name|subdatum
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+if|if
+condition|(
+name|TREE_UNAVAILABLE
+argument_list|(
+name|subdatum
+argument_list|)
+condition|)
+name|error_unavailable_use
+argument_list|(
+name|subdatum
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 name|datum
 operator|=
 name|ref
@@ -7963,6 +7977,69 @@ operator|==
 name|POINTER_TYPE
 condition|)
 block|{
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|pointer
+argument_list|)
+operator|==
+name|CONVERT_EXPR
+operator|||
+name|TREE_CODE
+argument_list|(
+name|pointer
+argument_list|)
+operator|==
+name|NOP_EXPR
+operator|||
+name|TREE_CODE
+argument_list|(
+name|pointer
+argument_list|)
+operator|==
+name|VIEW_CONVERT_EXPR
+condition|)
+block|{
+comment|/* If a warning is issued, mark it to avoid duplicates from 	     the backend.  This only needs to be done at 	     warn_strict_aliasing> 2.  */
+if|if
+condition|(
+name|warn_strict_aliasing
+operator|>
+literal|2
+condition|)
+if|if
+condition|(
+name|strict_aliasing_warning
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|TREE_OPERAND
+argument_list|(
+name|pointer
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|,
+name|type
+argument_list|,
+name|TREE_OPERAND
+argument_list|(
+name|pointer
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+condition|)
+name|TREE_NO_WARNING
+argument_list|(
+name|pointer
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|TREE_CODE
@@ -8118,9 +8195,11 @@ name|ERROR_MARK
 condition|)
 name|error
 argument_list|(
-literal|"invalid type argument of %qs"
+literal|"invalid type argument of %qs (have %qT)"
 argument_list|,
 name|errorstring
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 return|return
@@ -8809,6 +8888,20 @@ argument_list|(
 name|ref
 argument_list|)
 expr_stmt|;
+comment|/* APPLE LOCAL begin "unavailable" attribute (radar 2809697) */
+if|if
+condition|(
+name|TREE_UNAVAILABLE
+argument_list|(
+name|ref
+argument_list|)
+condition|)
+name|error_unavailable_use
+argument_list|(
+name|ref
+argument_list|)
+expr_stmt|;
+comment|/* APPLE LOCAL end "unavailable" attribute (radar 2809697) */
 if|if
 condition|(
 operator|!
@@ -10951,6 +11044,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TREE_OVERFLOW_P
+argument_list|(
+name|result
+operator|.
+name|value
+argument_list|)
+operator|&&
+operator|!
+name|TREE_OVERFLOW_P
+argument_list|(
+name|arg
+operator|.
+name|value
+argument_list|)
+condition|)
 name|overflow_warning
 argument_list|(
 name|result
@@ -11136,6 +11246,31 @@ argument_list|,
 literal|"comparison with string literal results in unspecified behaviour"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TREE_OVERFLOW_P
+argument_list|(
+name|result
+operator|.
+name|value
+argument_list|)
+operator|&&
+operator|!
+name|TREE_OVERFLOW_P
+argument_list|(
+name|arg1
+operator|.
+name|value
+argument_list|)
+operator|&&
+operator|!
+name|TREE_OVERFLOW_P
+argument_list|(
+name|arg2
+operator|.
+name|value
+argument_list|)
+condition|)
 name|overflow_warning
 argument_list|(
 name|result
@@ -14936,6 +15071,12 @@ literal|"cast to pointer from integer "
 literal|"of different size"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|warn_strict_aliasing
+operator|<=
+literal|2
+condition|)
 name|strict_aliasing_warning
 argument_list|(
 name|otype
@@ -15861,16 +16002,9 @@ argument_list|(
 name|rhstype
 argument_list|)
 condition|)
-block|{
-name|overflow_warning
-argument_list|(
-name|rhs
-argument_list|)
-expr_stmt|;
 return|return
 name|rhs
 return|;
-block|}
 if|if
 condition|(
 name|coder
@@ -16025,6 +16159,8 @@ name|TREE_TYPE
 argument_list|(
 name|rhs
 argument_list|)
+argument_list|,
+name|true
 argument_list|)
 condition|)
 return|return
@@ -18770,6 +18906,8 @@ name|inside_init
 argument_list|)
 argument_list|,
 name|type
+argument_list|,
+name|true
 argument_list|)
 operator|&&
 name|TREE_CONSTANT
@@ -28722,10 +28860,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Emit a general-purpose loop construct.  START_LOCUS is the location of    the beginning of the loop.  COND is the loop condition.  COND_IS_FIRST    is false for DO loops.  INCR is the FOR increment expression.  BODY is    the statement controlled by the loop.  BLAB is the break label.  CLAB is    the continue label.  Everything is allowed to be NULL.  */
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+end_comment
+
+begin_comment
+unit|\
+comment|/* Emit a general-purpose loop construct.  START_LOCUS is the location    of the beginning of the loop.  COND is the loop condition.    COND_IS_FIRST is false for DO loops.  INCR is the FOR increment    expression.  BODY is the statement controlled by the loop.  BLAB is    the break label.  CLAB is the continue label.  ATTRS is the    attributes associated with the loop, which at present are    associated with the topmost label.  Everything is allowed to be    NULL.  */
+end_comment
+
+begin_comment
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
 end_comment
 
 begin_function
+unit|\
 name|void
 name|c_finish_loop
 parameter_list|(
@@ -28741,15 +28889,22 @@ parameter_list|,
 name|tree
 name|body
 parameter_list|,
+comment|/* APPLE LOCAL begin for-fsf-4_4 3274130 5295549 */
+parameter_list|\
 name|tree
 name|blab
 parameter_list|,
 name|tree
 name|clab
 parameter_list|,
+name|tree
+name|attrs
+parameter_list|,
 name|bool
 name|cond_is_first
 parameter_list|)
+comment|/* APPLE LOCAL end for-fsf-4_4 3274130 5295549 */
+function|\
 block|{
 name|tree
 name|entry
@@ -32144,6 +32299,10 @@ block|{
 name|binary_op_error
 argument_list|(
 name|code
+argument_list|,
+name|type0
+argument_list|,
+name|type1
 argument_list|)
 expr_stmt|;
 return|return
@@ -33241,6 +33400,16 @@ block|{
 name|binary_op_error
 argument_list|(
 name|code
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|op0
+argument_list|)
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|op1
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
