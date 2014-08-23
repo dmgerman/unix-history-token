@@ -134,6 +134,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|autofs_softc
+modifier|*
+name|autofs_softc
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -502,11 +511,6 @@ name|autofs_mount
 modifier|*
 name|amp
 decl_stmt|;
-name|struct
-name|autofs_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -526,12 +530,6 @@ name|vp
 operator|->
 name|v_mount
 argument_list|)
-expr_stmt|;
-name|sc
-operator|=
-name|amp
-operator|->
-name|am_softc
 expr_stmt|;
 comment|/* 	 * Release the vnode lock, so that other operations, in partcular 	 * mounting a filesystem on top of it, can proceed.  Increase use 	 * count, to prevent the vnode from being deallocated and to prevent 	 * filesystem from being unmounted. 	 */
 name|lock_flags
@@ -556,7 +554,7 @@ expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
-name|sc
+name|autofs_softc
 operator|->
 name|sc_lock
 argument_list|)
@@ -595,7 +593,7 @@ label|:
 name|sx_xunlock
 argument_list|(
 operator|&
-name|sc
+name|autofs_softc
 operator|->
 name|sc_lock
 argument_list|)

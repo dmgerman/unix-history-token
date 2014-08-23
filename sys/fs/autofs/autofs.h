@@ -199,11 +199,6 @@ argument_list|)
 name|am_next
 expr_stmt|;
 name|struct
-name|autofs_softc
-modifier|*
-name|am_softc
-decl_stmt|;
-name|struct
 name|autofs_node
 modifier|*
 name|am_root
