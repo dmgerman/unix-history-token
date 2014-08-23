@@ -1320,6 +1320,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ipfw_foreach_table_tentry
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
+parameter_list|,
+name|uint16_t
+name|kidx
+parameter_list|,
+name|ta_foreach_f
+name|f
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Legacy interfaces */
 end_comment
