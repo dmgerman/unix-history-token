@@ -1139,16 +1139,27 @@ operator|.
 name|first_pindex
 argument_list|)
 expr_stmt|;
+comment|/* A busy page can be mapped for read|execute access. */
 if|if
 condition|(
 name|m
 operator|==
 name|NULL
 operator|||
+operator|(
+operator|(
+name|prot
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|!=
+literal|0
+operator|&&
 name|vm_page_busied
 argument_list|(
 name|m
 argument_list|)
+operator|)
 operator|||
 name|m
 operator|->
