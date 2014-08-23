@@ -340,18 +340,6 @@ name|ipfw_xtable_info
 modifier|*
 name|i
 parameter_list|,
-name|struct
-name|table_config
-modifier|*
-modifier|*
-name|ptc
-parameter_list|,
-name|struct
-name|table_algo
-modifier|*
-modifier|*
-name|pta
-parameter_list|,
 name|uint16_t
 modifier|*
 name|pkidx
@@ -429,12 +417,6 @@ name|table_config
 modifier|*
 modifier|*
 name|ptc
-parameter_list|,
-name|struct
-name|table_algo
-modifier|*
-modifier|*
-name|pta
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -896,7 +878,7 @@ modifier|*
 name|tei
 parameter_list|,
 name|int
-name|do_add
+name|op
 parameter_list|,
 name|int
 name|error
@@ -922,7 +904,9 @@ literal|0
 case|:
 if|if
 condition|(
-name|do_add
+name|op
+operator|==
+name|OP_ADD
 operator|&&
 name|num
 operator|!=
@@ -934,9 +918,9 @@ name|TEI_FLAGS_ADDED
 expr_stmt|;
 if|if
 condition|(
-name|do_add
+name|op
 operator|==
-literal|0
+name|OP_DEL
 condition|)
 name|flag
 operator|=
@@ -993,18 +977,6 @@ name|tid_info
 modifier|*
 name|ti
 parameter_list|,
-name|struct
-name|table_config
-modifier|*
-modifier|*
-name|ptc
-parameter_list|,
-name|struct
-name|table_algo
-modifier|*
-modifier|*
-name|pta
-parameter_list|,
 name|uint16_t
 modifier|*
 name|pkidx
@@ -1049,10 +1021,6 @@ argument_list|,
 operator|&
 name|xi
 argument_list|,
-name|ptc
-argument_list|,
-name|pta
-argument_list|,
 name|pkidx
 argument_list|,
 literal|1
@@ -1078,7 +1046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find and reference existing table optionally  * creating new one.  *  * Saves found table config/table algo into @ptc / @pta.  * Returns 0 if table was found/created and referenced  * or non-zero return code.  */
+comment|/*  * Find and reference existing table optionally  * creating new one.  *  * Saves found table config into @ptc.  * Note function may drop/acquire UH_WLOCK.  * Returns 0 if table was found/created and referenced  * or non-zero return code.  */
 end_comment
 
 begin_function
@@ -1112,12 +1080,6 @@ name|table_config
 modifier|*
 modifier|*
 name|ptc
-parameter_list|,
-name|struct
-name|table_algo
-modifier|*
-modifier|*
-name|pta
 parameter_list|)
 block|{
 name|struct
@@ -1130,15 +1092,13 @@ name|table_config
 modifier|*
 name|tc
 decl_stmt|;
-name|struct
-name|table_algo
-modifier|*
-name|ta
+name|uint16_t
+name|kidx
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|IPFW_UH_WLOCK
+name|IPFW_UH_WLOCK_ASSERT
 argument_list|(
 name|ch
 argument_list|)
@@ -1151,10 +1111,6 @@ name|ch
 argument_list|)
 expr_stmt|;
 name|tc
-operator|=
-name|NULL
-expr_stmt|;
-name|ta
 operator|=
 name|NULL
 expr_stmt|;
@@ -1187,18 +1143,11 @@ name|ti
 operator|->
 name|type
 condition|)
-block|{
-name|IPFW_UH_WUNLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|tc
@@ -1207,18 +1156,11 @@ name|locked
 operator|!=
 literal|0
 condition|)
-block|{
-name|IPFW_UH_WUNLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EACCES
 operator|)
 return|;
-block|}
 comment|/* Try to exit early on limit hit */
 if|if
 condition|(
@@ -1239,19 +1181,12 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|IPFW_UH_WUNLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EFBIG
 operator|)
 return|;
-block|}
-comment|/* Reference and unlock */
+comment|/* Reference and return */
 name|tc
 operator|->
 name|no
@@ -1259,25 +1194,17 @@ operator|.
 name|refcnt
 operator|++
 expr_stmt|;
-name|ta
+operator|*
+name|ptc
 operator|=
 name|tc
-operator|->
-name|ta
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-name|IPFW_UH_WUNLOCK
-argument_list|(
-name|ch
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tc
-operator|==
-name|NULL
-condition|)
-block|{
 if|if
 condition|(
 name|op
@@ -1307,6 +1234,11 @@ operator|(
 name|ESRCH
 operator|)
 return|;
+name|IPFW_UH_WUNLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|create_table_compat
@@ -1316,12 +1248,12 @@ argument_list|,
 name|ti
 argument_list|,
 operator|&
-name|tc
-argument_list|,
-operator|&
-name|ta
-argument_list|,
-name|NULL
+name|kidx
+argument_list|)
+expr_stmt|;
+name|IPFW_UH_WLOCK
+argument_list|(
+name|ch
 argument_list|)
 expr_stmt|;
 if|if
@@ -1335,17 +1267,38 @@ operator|(
 name|error
 operator|)
 return|;
+name|tc
+operator|=
+operator|(
+expr|struct
+name|table_config
+operator|*
+operator|)
+name|ipfw_objhash_lookup_kidx
+argument_list|(
+name|ni
+argument_list|,
+name|kidx
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|tc
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"create_table_compat returned bad idx %d"
+operator|,
+name|kidx
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* OK, now we've got referenced table. */
-block|}
 operator|*
 name|ptc
 operator|=
 name|tc
-expr_stmt|;
-operator|*
-name|pta
-operator|=
-name|ta
 expr_stmt|;
 return|return
 operator|(
@@ -1356,7 +1309,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Rolls back already @added to @tc entries using state arrat @ta_buf_m.  * Assume the following layout:  * 1) ADD state (ta_buf_m[0] ... t_buf_m[added - 1]) for handling update cases  * 2) DEL state (ta_buf_m[count[ ... t_buf_m[count + added - 1])  *   for storing deleted state  */
+comment|/*  * Rolls back already @added to @tc entries using state array @ta_buf_m.  * Assume the following layout:  * 1) ADD state (ta_buf_m[0] ... t_buf_m[added - 1]) for handling update cases  * 2) DEL state (ta_buf_m[count[ ... t_buf_m[count + added - 1])  *   for storing deleted state  */
 end_comment
 
 begin_function
@@ -1834,9 +1787,6 @@ name|uint32_t
 name|count
 parameter_list|,
 name|int
-name|do_add
-parameter_list|,
-name|int
 name|rollback
 parameter_list|,
 name|caddr_t
@@ -2037,6 +1987,11 @@ decl_stmt|,
 name|v
 decl_stmt|;
 comment|/* 	 * Find and reference existing table. 	 */
+name|IPFW_UH_WLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|find_ref_table
@@ -2053,9 +2008,6 @@ name|OP_ADD
 argument_list|,
 operator|&
 name|tc
-argument_list|,
-operator|&
-name|ta
 argument_list|)
 expr_stmt|;
 if|if
@@ -2064,11 +2016,29 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|IPFW_UH_WUNLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
+name|ta
+operator|=
+name|tc
+operator|->
+name|ta
+expr_stmt|;
+name|IPFW_UH_WUNLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 comment|/* Allocate memory and prepare record(s) */
 name|rollback
 operator|=
@@ -2296,7 +2266,7 @@ name|store_tei_result
 argument_list|(
 name|ptei
 argument_list|,
-literal|1
+name|OP_ADD
 argument_list|,
 name|error
 argument_list|,
@@ -2420,8 +2390,6 @@ name|tei
 argument_list|,
 name|count
 argument_list|,
-literal|1
-argument_list|,
 name|rollback
 argument_list|,
 name|ta_buf_m
@@ -2509,6 +2477,11 @@ decl_stmt|,
 name|v
 decl_stmt|;
 comment|/* 	 * Find and reference existing table. 	 */
+name|IPFW_UH_WLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|find_ref_table
@@ -2525,9 +2498,6 @@ name|OP_DEL
 argument_list|,
 operator|&
 name|tc
-argument_list|,
-operator|&
-name|ta
 argument_list|)
 expr_stmt|;
 if|if
@@ -2536,11 +2506,29 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|IPFW_UH_WUNLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
+name|ta
+operator|=
+name|tc
+operator|->
+name|ta
+expr_stmt|;
+name|IPFW_UH_WUNLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 comment|/* Allocate memory and prepare record(s) */
 comment|/* Pass stack buffer by default */
 name|ta_buf_m
@@ -2697,7 +2685,7 @@ name|store_tei_result
 argument_list|(
 name|ptei
 argument_list|,
-literal|0
+name|OP_DEL
 argument_list|,
 name|error
 argument_list|,
@@ -2782,8 +2770,6 @@ argument_list|,
 name|tei
 argument_list|,
 name|count
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -7363,10 +7349,6 @@ name|i
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
 literal|0
 argument_list|)
 operator|)
@@ -7375,7 +7357,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Creates new table based on @ti and @aname.  *  * Relies on table name checking inside find_name_tlv()  * Assume @aname to be checked and valid.  * Stores allocated table config, used algo and kidx  * inside @ptc, @pta and @pkidx (if non-NULL).  * Reference created table if @compat is non-zero.  *  * Returns 0 on success.  */
+comment|/*  * Creates new table based on @ti and @aname.  *  * Relies on table name checking inside find_name_tlv()  * Assume @aname to be checked and valid.  * Stores allocated table kidx inside @pkidx (if non-NULL).  * Reference created table if @compat is non-zero.  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -7400,18 +7382,6 @@ parameter_list|,
 name|ipfw_xtable_info
 modifier|*
 name|i
-parameter_list|,
-name|struct
-name|table_config
-modifier|*
-modifier|*
-name|ptc
-parameter_list|,
-name|struct
-name|table_algo
-modifier|*
-modifier|*
-name|pta
 parameter_list|,
 name|uint16_t
 modifier|*
@@ -7714,28 +7684,6 @@ name|no
 operator|.
 name|refcnt
 operator|++
-expr_stmt|;
-if|if
-condition|(
-name|ptc
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|ptc
-operator|=
-name|tc
-expr_stmt|;
-if|if
-condition|(
-name|pta
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|pta
-operator|=
-name|ta
 expr_stmt|;
 if|if
 condition|(
@@ -14034,10 +13982,6 @@ argument_list|(
 name|ch
 argument_list|,
 name|ti
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|,
 operator|&
 name|kidx
