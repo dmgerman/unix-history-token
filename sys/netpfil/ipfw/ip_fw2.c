@@ -1610,7 +1610,9 @@ name|NULL
 condition|)
 comment|/* no iface with this packet, match fails */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* Check by name or by IP address */
 if|if
@@ -11369,7 +11371,9 @@ argument_list|)
 expr_stmt|;
 comment|/* free the remaining parts */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

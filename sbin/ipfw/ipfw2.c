@@ -2639,8 +2639,10 @@ operator|->
 name|x
 return|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
