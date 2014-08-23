@@ -606,9 +606,13 @@ break|break;
 case|case
 name|CPUID_0000_0004
 case|:
-name|do_cpuid
+name|cpuid_count
 argument_list|(
-literal|4
+operator|*
+name|eax
+argument_list|,
+operator|*
+name|ecx
 argument_list|,
 name|regs
 argument_list|)
@@ -619,7 +623,7 @@ index|[
 literal|0
 index|]
 operator|&=
-literal|0xffff8000
+literal|0x3ff
 expr_stmt|;
 break|break;
 case|case
