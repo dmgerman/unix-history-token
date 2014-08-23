@@ -2783,6 +2783,7 @@ operator|->
 name|sc_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We must never block automountd(8) and its descendants, and we use 	 * session ID to determine that: we store session id of the process 	 * that opened the device, and then compare it with session ids 	 * of triggering processes.  This means running a second automountd(8) 	 * instance would break the previous one.  The check below prevents 	 * it from happening. 	 */
 if|if
 condition|(
 name|sc
