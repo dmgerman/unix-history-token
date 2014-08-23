@@ -107,6 +107,11 @@ operator|=
 name|vt_fb_bitblt_text
 block|,
 operator|.
+name|vd_bitblt_bmp
+operator|=
+name|vt_fb_bitblt_bitmap
+block|,
+operator|.
 name|vd_drawrect
 operator|=
 name|vt_fb_drawrect
@@ -1189,7 +1194,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vt_fb_bitblt_bitmap
 parameter_list|(

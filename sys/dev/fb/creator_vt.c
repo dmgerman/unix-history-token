@@ -113,6 +113,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|vd_bitblt_bmp_t
+name|creatorfb_bitblt_bitmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|vt_driver
@@ -143,6 +150,11 @@ operator|.
 name|vd_bitblt_text
 operator|=
 name|creatorfb_bitblt_text
+block|,
+operator|.
+name|vd_bitblt_bmp
+operator|=
+name|creatorfb_bitblt_bitmap
 block|,
 operator|.
 name|vd_fb_ioctl

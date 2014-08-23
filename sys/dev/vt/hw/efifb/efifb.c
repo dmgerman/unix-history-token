@@ -166,6 +166,11 @@ operator|=
 name|vt_fb_bitblt_text
 block|,
 operator|.
+name|vd_bitblt_bmp
+operator|=
+name|vt_fb_bitblt_bitmap
+block|,
+operator|.
 name|vd_fb_ioctl
 operator|=
 name|vt_fb_ioctl

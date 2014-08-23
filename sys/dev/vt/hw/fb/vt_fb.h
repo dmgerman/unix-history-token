@@ -68,6 +68,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vd_bitblt_bmp_t
+name|vt_fb_bitblt_bitmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vd_postswitch_t
 name|vt_fb_postswitch
 decl_stmt|;
