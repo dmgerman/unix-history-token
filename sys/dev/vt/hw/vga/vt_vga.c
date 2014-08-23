@@ -4274,7 +4274,10 @@ name|ch
 operator|=
 name|vga_get_cp437
 argument_list|(
+name|TCHAR_CHARACTER
+argument_list|(
 name|c
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Convert colors to VGA attributes. */
