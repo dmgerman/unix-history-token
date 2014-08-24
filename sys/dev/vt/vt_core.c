@@ -4942,9 +4942,9 @@ name|vt_logo_width
 argument_list|,
 name|vt_logo_height
 argument_list|,
-name|top
-argument_list|,
 name|left
+argument_list|,
+name|top
 argument_list|,
 name|TC_WHITE
 argument_list|,
