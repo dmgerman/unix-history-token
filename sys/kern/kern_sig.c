@@ -16543,11 +16543,15 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+name|refcount_init
+argument_list|(
+operator|&
 name|ps
 operator|->
 name|ps_refcnt
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|mtx_init
 argument_list|(
