@@ -535,7 +535,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|pmap_enter
 parameter_list|(
 name|pmap_t
@@ -544,38 +544,40 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_prot_t
-name|access
-parameter_list|,
 name|vm_page_t
 name|p
 parameter_list|,
 name|vm_prot_t
 name|prot
 parameter_list|,
-name|boolean_t
-name|wired
+name|u_int
+name|flags
+parameter_list|,
+name|int8_t
+name|psind
 parameter_list|)
 block|{
 name|CTR6
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"pmap_enter(%p, %#x, %#x, %p, %#x, %u)"
+literal|"pmap_enter(%p, %#x, %p, %#x, %x, %d)"
 argument_list|,
 name|pmap
 argument_list|,
 name|va
 argument_list|,
-name|access
-argument_list|,
 name|p
 argument_list|,
 name|prot
 argument_list|,
-name|wired
+name|flags
+argument_list|,
+name|psind
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|MMU_ENTER
 argument_list|(
 name|mmu_obj
@@ -588,9 +590,12 @@ name|p
 argument_list|,
 name|prot
 argument_list|,
-name|wired
+name|flags
+argument_list|,
+name|psind
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
