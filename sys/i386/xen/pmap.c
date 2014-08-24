@@ -5778,11 +5778,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|PMAP_LOCK_DESTROY
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAMFISTED_LOCKING
