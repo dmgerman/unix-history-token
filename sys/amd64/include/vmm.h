@@ -2720,8 +2720,8 @@ end_function_decl
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|vm_inject_ud
 parameter_list|(
 name|void
@@ -2750,8 +2750,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|vm_inject_gp
 parameter_list|(
 name|void
@@ -2780,8 +2780,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|vm_inject_ac
 parameter_list|(
 name|void
@@ -2813,8 +2813,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|vm_inject_ss
 parameter_list|(
 name|void
