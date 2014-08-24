@@ -7501,18 +7501,9 @@ argument_list|(
 literal|"struct stat {"
 argument_list|)
 expr_stmt|;
-name|strmode
-argument_list|(
-name|statp
-operator|->
-name|st_mode
-argument_list|,
-name|mode
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"dev=%ju, ino=%ju, mode=%s, nlink=%ju, "
+literal|"dev=%ju, ino=%ju, "
 argument_list|,
 operator|(
 name|uintmax_t
@@ -7527,8 +7518,48 @@ operator|)
 name|statp
 operator|->
 name|st_ino
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|resolv
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"mode=0%jo, "
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|statp
+operator|->
+name|st_mode
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|strmode
+argument_list|(
+name|statp
+operator|->
+name|st_mode
 argument_list|,
 name|mode
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"mode=%s, "
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"nlink=%ju, "
 argument_list|,
 operator|(
 name|uintmax_t
