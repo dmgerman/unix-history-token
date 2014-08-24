@@ -143,6 +143,12 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WITH_GETLINE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -863,6 +869,16 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|key
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+argument_list|)
+expr_stmt|;
 name|n
 operator|->
 name|n_key
@@ -1032,6 +1048,16 @@ argument_list|(
 name|key
 operator|!=
 name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|key
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 argument_list|)
 expr_stmt|;
 name|n
@@ -2358,6 +2384,18 @@ name|x
 operator|)
 return|;
 block|}
+name|assert
+argument_list|(
+name|n
+operator|->
+name|n_key
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+argument_list|)
+expr_stmt|;
 name|path
 operator|=
 name|separated_concat
@@ -3549,7 +3587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse output of a special map called without argument.  This is just  * a list of keys.  */
+comment|/*  * Parse output of a special map called without argument.  It is a list  * of keys, separated by newlines.  They can contain whitespace, so use  * getline(3) instead of lexer used for maps.  */
 end_comment
 
 begin_function
@@ -3570,12 +3608,20 @@ parameter_list|)
 block|{
 name|char
 modifier|*
-name|key
+name|line
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|key
 decl_stmt|;
-name|int
-name|ret
+name|size_t
+name|linecap
+init|=
+literal|0
+decl_stmt|;
+name|ssize_t
+name|linelen
 decl_stmt|;
 name|lineno
 operator|=
@@ -3587,33 +3633,56 @@ init|;
 condition|;
 control|)
 block|{
-name|ret
+name|linelen
 operator|=
-name|yylex
-argument_list|()
+name|getline
+argument_list|(
+operator|&
+name|line
+argument_list|,
+operator|&
+name|linecap
+argument_list|,
+name|yyin
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|==
-name|NEWLINE
-condition|)
-continue|continue;
-if|if
-condition|(
-name|ret
-operator|==
+name|linelen
+operator|<
 literal|0
 condition|)
 block|{
 comment|/* 			 * End of file. 			 */
 break|break;
 block|}
+if|if
+condition|(
+name|linelen
+operator|<=
+literal|1
+condition|)
+block|{
+comment|/* 			 * Empty line, consisting of just the newline. 			 */
+continue|continue;
+block|}
+comment|/* 		 * "-1" to strip the trailing newline. 		 */
 name|key
 operator|=
-name|checked_strdup
+name|strndup
 argument_list|(
-name|yytext
+name|line
+argument_list|,
+name|linelen
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|log_debugx
+argument_list|(
+literal|"adding key \"%s\""
+argument_list|,
+name|key
 argument_list|)
 expr_stmt|;
 name|node_new
@@ -3631,7 +3700,15 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
+name|lineno
+operator|++
+expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
