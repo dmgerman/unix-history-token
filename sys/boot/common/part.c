@@ -1394,6 +1394,7 @@ name|MIN
 argument_list|(
 name|MAXTBLSZ
 argument_list|,
+operator|(
 name|phdr
 operator|->
 name|hdr_entries
@@ -1401,6 +1402,13 @@ operator|*
 name|phdr
 operator|->
 name|hdr_entsz
+operator|+
+name|table
+operator|->
+name|sectorsize
+operator|-
+literal|1
+operator|)
 operator|/
 name|table
 operator|->
@@ -1619,6 +1627,7 @@ name|MIN
 argument_list|(
 name|MAXTBLSZ
 argument_list|,
+operator|(
 name|phdr
 operator|->
 name|hdr_entries
@@ -1626,6 +1635,13 @@ operator|*
 name|phdr
 operator|->
 name|hdr_entsz
+operator|+
+name|table
+operator|->
+name|sectorsize
+operator|-
+literal|1
+operator|)
 operator|/
 name|table
 operator|->
