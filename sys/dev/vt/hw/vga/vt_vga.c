@@ -2779,6 +2779,13 @@ index|]
 operator||=
 name|pattern
 expr_stmt|;
+if|if
+condition|(
+name|pattern_ncolors
+operator|==
+name|NULL
+condition|)
+continue|continue;
 comment|/* 		 * Set the same bits in the n-colors array. This one 		 * supports transparency, when a given bit is cleared in 		 * all colors. 		 */
 if|if
 condition|(
@@ -4451,8 +4458,6 @@ name|x_count
 decl_stmt|;
 name|uint8_t
 name|pattern_2colors
-decl_stmt|,
-name|pattern_ncolors
 decl_stmt|;
 comment|/* Align coordinates with the 8-pxels grid. */
 name|x1
@@ -4515,10 +4520,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|pattern_ncolors
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -4561,7 +4562,7 @@ name|x2
 condition|;
 name|i
 operator|+=
-name|VT_VGA_MEMSIZE
+name|VT_VGA_PIXELS_BLOCK
 control|)
 block|{
 name|pattern_2colors
@@ -4573,8 +4574,7 @@ argument_list|(
 operator|&
 name|pattern_2colors
 argument_list|,
-operator|&
-name|pattern_ncolors
+name|NULL
 argument_list|,
 name|pattern
 argument_list|,
@@ -4639,11 +4639,9 @@ name|x_count
 operator|=
 name|min
 argument_list|(
-name|x
-operator|+
 name|width
 operator|-
-name|i
+name|src_x
 argument_list|,
 name|VT_VGA_PIXELS_BLOCK
 argument_list|)
