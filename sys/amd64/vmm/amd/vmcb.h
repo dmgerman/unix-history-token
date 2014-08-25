@@ -559,27 +559,6 @@ begin_comment
 comment|/* Event valid */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VMCB_EVENTINJ_VECTOR_MASK
-value|0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMCB_EVENTINJ_INTR_TYPE_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMCB_EVENTINJ_ERRCODE_SHIFT
-value|32
-end_define
-
 begin_comment
 comment|/* Event types that can be injected */
 end_comment
@@ -806,7 +785,7 @@ name|VMCB_EXITINTINFO_VECTOR
 parameter_list|(
 name|x
 parameter_list|)
-value|(x& 0xFF)
+value|((x)& 0xFF)
 end_define
 
 begin_define
@@ -816,21 +795,27 @@ name|VMCB_EXITINTINFO_TYPE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x& 0x7)>> 8)
+value|(((x)>> 8)& 0x7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VMCB_EXITINTINFO_EC_VALID
-value|BIT(11)
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& BIT(11)) ? 1 : 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VMCB_EXITINTINFO_VALID
-value|BIT(31)
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& BIT(31)) ? 1 : 0)
 end_define
 
 begin_define
@@ -840,7 +825,7 @@ name|VMCB_EXITINTINFO_EC
 parameter_list|(
 name|x
 parameter_list|)
-value|((x& 0xFFFFFFFF)>> 32)
+value|(((x)>> 32)& 0xFFFFFFFF)
 end_define
 
 begin_comment
@@ -1469,7 +1454,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|vmcb_eventinject
 parameter_list|(
 name|struct
