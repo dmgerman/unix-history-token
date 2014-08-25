@@ -1228,7 +1228,9 @@ name|vf_width
 operator|+
 name|vw
 operator|->
-name|vw_offset
+name|vw_draw_area
+operator|.
+name|tr_begin
 operator|.
 name|tp_col
 expr_stmt|;
@@ -1242,7 +1244,9 @@ name|vf_height
 operator|+
 name|vw
 operator|->
-name|vw_offset
+name|vw_draw_area
+operator|.
+name|tr_begin
 operator|.
 name|tp_row
 expr_stmt|;
@@ -1353,7 +1357,9 @@ name|vf_width
 operator|+
 name|vw
 operator|->
-name|vw_offset
+name|vw_draw_area
+operator|.
+name|tr_begin
 operator|.
 name|tp_col
 expr_stmt|;
@@ -1375,7 +1381,9 @@ name|vf_height
 operator|+
 name|vw
 operator|->
-name|vw_offset
+name|vw_draw_area
+operator|.
+name|tr_begin
 operator|.
 name|tp_row
 expr_stmt|;
@@ -1397,7 +1405,9 @@ name|vf_width
 operator|+
 name|vw
 operator|->
-name|vw_offset
+name|vw_draw_area
+operator|.
+name|tr_begin
 operator|.
 name|tp_col
 expr_stmt|;
@@ -1419,7 +1429,9 @@ name|vf_height
 operator|+
 name|vw
 operator|->
-name|vw_offset
+name|vw_draw_area
+operator|.
+name|tr_begin
 operator|.
 name|tp_row
 expr_stmt|;

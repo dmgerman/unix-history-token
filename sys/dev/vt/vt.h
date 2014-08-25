@@ -1258,10 +1258,10 @@ modifier|*
 name|vw_font
 decl_stmt|;
 comment|/* (d) Graphical font. */
-name|term_pos_t
-name|vw_offset
+name|term_rect_t
+name|vw_draw_area
 decl_stmt|;
-comment|/* (?) Pixel offset. */
+comment|/* (?) Drawable area. */
 name|unsigned
 name|int
 name|vw_number
