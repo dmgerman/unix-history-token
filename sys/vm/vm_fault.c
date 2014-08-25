@@ -2346,6 +2346,11 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
+comment|/* Don't try to prefault neighboring pages. */
+name|faultcount
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 comment|/* break to PAGE HAS BEEN FOUND */
 block|}
@@ -3159,6 +3164,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|faultcount
+operator|!=
+literal|1
+operator|&&
 operator|(
 name|fault_flags
 operator|&
