@@ -3011,6 +3011,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|prot
 operator|&
 name|VM_PROT_WRITE
@@ -3024,6 +3025,19 @@ operator|&
 name|VM_FAULT_DIRTY
 operator|)
 operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|fs
+operator|.
+name|m
+operator|->
+name|oflags
+operator|&
+name|VPO_UNMANAGED
+operator|)
+operator|==
 literal|0
 condition|)
 block|{
