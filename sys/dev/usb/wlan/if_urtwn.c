@@ -803,6 +803,13 @@ block|,
 comment|/* URTWN_RTL8188E */
 name|URTWN_RTL8188E_DEV
 argument_list|(
+name|DLINK
+argument_list|,
+name|DWA125D1
+argument_list|)
+block|,
+name|URTWN_RTL8188E_DEV
+argument_list|(
 name|REALTEK
 argument_list|,
 name|RTL8188ETV
