@@ -393,6 +393,12 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|fo_kqfilter_t
+name|soo_kqfilter
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|filterops

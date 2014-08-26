@@ -148,6 +148,55 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_decl_stmt
+specifier|static
+name|fo_rdwr_t
+name|soo_read
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|fo_rdwr_t
+name|soo_write
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|fo_ioctl_t
+name|soo_ioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|fo_poll_t
+name|soo_poll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|fo_kqfilter_t
+name|soo_kqfilter
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|fo_stat_t
+name|soo_stat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|fo_close_t
+name|soo_close
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|fileops
 name|socketops
@@ -166,7 +215,7 @@ block|,
 operator|.
 name|fo_truncate
 operator|=
-name|soo_truncate
+name|invfo_truncate
 block|,
 operator|.
 name|fo_ioctl
@@ -216,11 +265,8 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|soo_read
 parameter_list|(
@@ -308,11 +354,8 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|soo_write
 parameter_list|(
@@ -450,37 +493,7 @@ block|}
 end_function
 
 begin_function
-name|int
-name|soo_truncate
-parameter_list|(
-name|struct
-name|file
-modifier|*
-name|fp
-parameter_list|,
-name|off_t
-name|length
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-name|active_cred
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-block|{
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
+specifier|static
 name|int
 name|soo_ioctl
 parameter_list|(
@@ -1025,6 +1038,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|soo_poll
 parameter_list|(
@@ -1102,6 +1116,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|soo_stat
 parameter_list|(
@@ -1320,11 +1335,8 @@ begin_comment
 comment|/*  * API socket close on file pointer.  We call soclose() to close the socket  * (including initiating closing protocols).  soclose() will sorele() the  * file reference but the actual socket will not go away until the socket's  * ref count hits 0.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|soo_close
 parameter_list|(
