@@ -846,7 +846,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (f) protected with mtx_lock(mtx_pool_find(fp))  * (d) cdevpriv_mtx  * none	not locked  */
+comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (a) f_vnode lock required (shared allows both reads and writes)  * (f) protected with mtx_lock(mtx_pool_find(fp))  * (d) cdevpriv_mtx  * none	not locked  */
 end_comment
 
 begin_struct
@@ -926,7 +926,7 @@ comment|/* 	 *  DTYPE_VNODE specific fields. 	 */
 name|int
 name|f_seqcount
 decl_stmt|;
-comment|/* Count of sequential accesses. */
+comment|/* (a) Count of sequential accesses. */
 name|off_t
 name|f_nextoff
 decl_stmt|;
