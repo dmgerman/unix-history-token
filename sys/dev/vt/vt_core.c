@@ -11172,7 +11172,6 @@ name|vw_font
 operator|==
 name|NULL
 condition|)
-block|{
 name|vw
 operator|->
 name|vw_font
@@ -11183,18 +11182,17 @@ operator|&
 name|vt_font_default
 argument_list|)
 expr_stmt|;
-name|vt_compute_drawable_area
-argument_list|(
-name|vw
-argument_list|)
-expr_stmt|;
-block|}
 name|VT_UNLOCK
 argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
 comment|/* Resize terminal windows */
+name|vt_compute_drawable_area
+argument_list|(
+name|vw
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|vt_change_font
