@@ -6,25 +6,68 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LINUX_CLOCKSOURCE_H
+name|_LINUX_KMOD_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LINUX_CLOCKSOURCE_H
+name|_LINUX_KMOD_H_
 end_define
 
-begin_comment
-comment|/* clocksource cycle base type */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
-begin_typedef
-typedef|typedef
-name|u64
-name|cycle_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<sys/syscallsubr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|request_module
+parameter_list|(
+modifier|...
+parameter_list|)
+define|\
+value|({\ 	char modname[128]; \         int fileid; \ 	snprintf(modname, sizeof(modname), __VA_ARGS__); \ 	kern_kldload(curthread, modname,&fileid); \ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|request_module_nowait
+value|request_module
+end_define
 
 begin_endif
 endif|#
@@ -32,7 +75,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LINUX_CLOCKSOURCE_H */
+comment|/* _LINUX_KMOD_H_ */
 end_comment
 
 end_unit

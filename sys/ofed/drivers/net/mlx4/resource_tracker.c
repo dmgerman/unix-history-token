@@ -6268,6 +6268,10 @@ literal|"%s: failed RES_QP, 0x%llx\n"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|r
 operator|->
 name|com
@@ -6304,6 +6308,10 @@ name|dev
 argument_list|,
 literal|"failed RES_QP, 0x%llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|r
 operator|->
 name|com
@@ -6351,6 +6359,10 @@ name|dev
 argument_list|,
 literal|"failed RES_QP, 0x%llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|r
 operator|->
 name|com
@@ -20520,6 +20532,10 @@ argument_list|(
 name|type
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|r
 operator|->
 name|res_id

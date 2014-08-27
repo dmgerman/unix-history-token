@@ -106,6 +106,10 @@ name|dev
 argument_list|,
 literal|"Sense returned illegal value: 0x%llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|out_param
 argument_list|)
 expr_stmt|;

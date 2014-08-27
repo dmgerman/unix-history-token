@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/mutex.h>
 end_include
 

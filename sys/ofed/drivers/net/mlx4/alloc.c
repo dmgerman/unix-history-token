@@ -21,14 +21,10 @@ directive|include
 file|<linux/mm.h>
 end_include
 
-begin_comment
-comment|//#include<linux/export.h>  /* XXX SK probabaly not needed in freeBSD XXX */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<linux/bitmap.h>
+file|<linux/bitops.h>
 end_include
 
 begin_include

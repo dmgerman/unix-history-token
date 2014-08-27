@@ -666,7 +666,8 @@ argument_list|,
 literal|"Unmaping buffer at dma:0x%llx\n"
 argument_list|,
 operator|(
-name|u64
+name|long
+name|long
 operator|)
 name|dma
 argument_list|)

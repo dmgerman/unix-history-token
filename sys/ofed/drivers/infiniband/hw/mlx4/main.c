@@ -29,12 +29,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/slab.h>
 end_include
 
@@ -59,12 +53,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/rtnetlink.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/if_vlan.h>
 end_include
 
@@ -78,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<linux/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/fs.h>
 end_include
 
 begin_include

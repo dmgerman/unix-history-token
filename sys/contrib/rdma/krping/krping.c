@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/slab.h>
 end_include
 
@@ -87,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<linux/sched.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<asm/system.h>
 end_include
 
 begin_include

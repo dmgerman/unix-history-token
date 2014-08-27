@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/errno.h>
 end_include
 
@@ -226,6 +220,10 @@ literal|"port: %d, guid_indexes: 0x%llx\n"
 argument_list|,
 name|port_num
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|guid_indexes
 argument_list|)
 expr_stmt|;
@@ -520,6 +518,10 @@ literal|"port: %d, guid_indexes: 0x%llx\n"
 argument_list|,
 name|port_num
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|guid_indexes
 argument_list|)
 expr_stmt|;

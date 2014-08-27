@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/fs.h>
 end_include
 
@@ -73,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<linux/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/string.h>
 end_include
 
 begin_include
@@ -6694,6 +6694,11 @@ name|struct
 name|class
 modifier|*
 name|class
+parameter_list|,
+name|struct
+name|class_attribute
+modifier|*
+name|attr
 parameter_list|,
 name|char
 modifier|*
