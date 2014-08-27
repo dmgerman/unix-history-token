@@ -7268,10 +7268,14 @@ name|vw
 operator|->
 name|vw_flags
 operator|&
+operator|(
 name|VWF_MOUSE_HIDE
+operator||
+name|VWF_GRAPHICS
+operator|)
 condition|)
+comment|/* 		 * Either the mouse is disabled, or the window is in 		 * "graphics mode". The graphics mode is usually set by 		 * an X server, using the KDSETMODE ioctl. 		 */
 return|return;
-comment|/* Mouse disabled. */
 if|if
 condition|(
 name|vf
@@ -8885,7 +8889,45 @@ block|}
 case|case
 name|KDSETMODE
 case|:
-comment|/* XXX */
+comment|/* 		 * FIXME: This implementation is incomplete compared to 		 * syscons. 		 */
+switch|switch
+condition|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+condition|)
+block|{
+case|case
+name|KD_TEXT
+case|:
+case|case
+name|KD_TEXT1
+case|:
+case|case
+name|KD_PIXEL
+case|:
+name|vw
+operator|->
+name|vw_flags
+operator|&=
+operator|~
+name|VWF_GRAPHICS
+expr_stmt|;
+break|break;
+case|case
+name|KD_GRAPHICS
+case|:
+name|vw
+operator|->
+name|vw_flags
+operator||=
+name|VWF_GRAPHICS
+expr_stmt|;
+break|break;
+block|}
 return|return
 operator|(
 literal|0

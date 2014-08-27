@@ -1322,6 +1322,11 @@ value|0x40
 comment|/* Window fully initialized. */
 define|#
 directive|define
+name|VWF_GRAPHICS
+value|0x80
+comment|/* Window in graphics mode (KDSETMODE). */
+define|#
+directive|define
 name|VWF_SWWAIT_REL
 value|0x10000
 comment|/* Program wait for VT acquire is done. */
