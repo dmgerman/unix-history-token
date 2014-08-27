@@ -6,31 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libutil.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -42,13 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<math.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<libutil.h>
 end_include
 
 begin_include
@@ -57,13 +27,35 @@ directive|include
 file|<limits.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_define
 define|#
@@ -5679,7 +5671,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"ok %lu # skip - not turned on\n"
+literal|"ok %zu # skip - not turned on\n"
 argument_list|,
 name|i
 argument_list|)
@@ -5713,20 +5705,18 @@ modifier|*
 name|scale_str
 decl_stmt|;
 name|size_t
-name|i
-decl_stmt|;
-name|size_t
+name|buflen
+decl_stmt|,
 name|errcnt
 decl_stmt|,
-name|tested
+name|i
 decl_stmt|,
 name|skipped
+decl_stmt|,
+name|tested
 decl_stmt|;
 name|int
 name|r
-decl_stmt|;
-name|size_t
-name|buflen
 decl_stmt|;
 name|int
 name|includeNegScale
@@ -5806,14 +5796,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"1..%lu\n"
+literal|"1..%zu\n"
 argument_list|,
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|test_args
-operator|/
-sizeof|sizeof
-expr|*
-name|test_args
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -5824,12 +5812,10 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|nitems
+argument_list|(
 name|test_args
-operator|/
-sizeof|sizeof
-expr|*
-name|test_args
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -5902,6 +5888,8 @@ expr_stmt|;
 name|testskipped
 argument_list|(
 name|i
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5927,6 +5915,8 @@ expr_stmt|;
 name|testskipped
 argument_list|(
 name|i
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -6007,9 +5997,10 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"wrong return value on index %lu, buflen: %zu, got: %d + \"%s\", expected %d + \"%s\"; num = %"
-name|PRId64
-literal|", scale = %s, flags= %s.\n"
+literal|"wrong return value on index %zu, "
+literal|"buflen: %zu, got: %d + \"%s\", "
+literal|"expected %d + \"%s\"; num = %jd, "
+literal|"scale = %s, flags= %s.\n"
 argument_list|,
 name|i
 argument_list|,
@@ -6033,6 +6024,9 @@ index|]
 operator|.
 name|res
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|test_args
 index|[
 name|i
@@ -6048,9 +6042,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"not ok %lu # return %d != %d\n"
+literal|"not ok %zu # return %d != %d\n"
 argument_list|,
 name|i
+operator|+
+literal|1
 argument_list|,
 name|r
 argument_list|,
@@ -6090,9 +6086,9 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"result mismatch on index %lu, got: \"%s\", expected \"%s\"; num = %"
-name|PRId64
-literal|", scale = %s, flags= %s.\n"
+literal|"result mismatch on index %zu, got: "
+literal|"\"%s\", expected \"%s\"; num = %jd, "
+literal|"scale = %s, flags= %s.\n"
 argument_list|,
 name|i
 argument_list|,
@@ -6105,6 +6101,9 @@ index|]
 operator|.
 name|res
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|test_args
 index|[
 name|i
@@ -6120,9 +6119,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"not ok %lu # buf \"%s\" != \"%s\"\n"
+literal|"not ok %zu # buf \"%s\" != \"%s\"\n"
 argument_list|,
 name|i
+operator|+
+literal|1
 argument_list|,
 name|buf
 argument_list|,
@@ -6146,9 +6147,9 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"successful result on index %lu, returned %d, got: \"%s\"; num = %"
-name|PRId64
-literal|", scale = %s, flags= %s.\n"
+literal|"successful result on index %zu, "
+literal|"returned %d, got: \"%s\"; num = %jd, "
+literal|"scale = %s, flags= %s.\n"
 argument_list|,
 name|i
 argument_list|,
@@ -6156,6 +6157,9 @@ name|r
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|test_args
 index|[
 name|i
@@ -6171,9 +6175,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"ok %lu\n"
+literal|"ok %zu\n"
 argument_list|,
 name|i
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6187,7 +6193,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"total errors: %lu/%lu tests, %lu skipped\n"
+literal|"total errors: %zu/%zu tests, %zu skipped\n"
 argument_list|,
 name|errcnt
 argument_list|,
