@@ -253,7 +253,7 @@ name|oidp
 argument_list|,
 name|default_cc
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|req
 argument_list|)
@@ -483,7 +483,7 @@ argument_list|(
 name|s
 argument_list|)
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|req
 argument_list|)
