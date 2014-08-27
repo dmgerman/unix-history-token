@@ -349,6 +349,47 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|mfi_mrsas_enable
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.mfi.mrsas_enable"
+argument_list|,
+operator|&
+name|mfi_mrsas_enable
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_mfi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mrsas_enable
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|mfi_mrsas_enable
+argument_list|,
+literal|0
+argument_list|,
+literal|"Allow mrasas to take newer cards"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|mfi_ident
@@ -390,6 +431,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Dell PERC H810 Adapter"
 block|}
@@ -406,6 +449,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Dell PERC H710 Embedded"
 block|}
@@ -422,6 +467,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Dell PERC H710P Adapter"
 block|}
@@ -438,6 +485,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Dell PERC H710P Mini (blades)"
 block|}
@@ -454,6 +503,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Dell PERC H710P Mini (monolithics)"
 block|}
@@ -470,6 +521,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Dell PERC H710 Adapter"
 block|}
@@ -486,6 +539,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Dell PERC H710 Mini (blades)"
 block|}
@@ -502,6 +557,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Dell PERC H710 Mini (monolithics)"
 block|}
@@ -518,6 +575,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Intel (R) RAID Controller RS25DB080"
 block|}
@@ -534,6 +593,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"Intel (R) RAID Controller RS25NB008"
 block|}
@@ -550,6 +611,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 block|,
 literal|"ThunderBolt"
 block|}
@@ -566,6 +629,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 operator||
 name|MFI_FLAGS_INVADER
 block|,
@@ -584,6 +649,8 @@ block|,
 name|MFI_FLAGS_SKINNY
 operator||
 name|MFI_FLAGS_TBOLT
+operator||
+name|MFI_FLAGS_MRSAS
 operator||
 name|MFI_FLAGS_FURY
 block|,
@@ -1010,6 +1077,33 @@ operator|->
 name|desc
 argument_list|)
 expr_stmt|;
+comment|/* give priority to mrsas if tunable set */
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.mfi.mrsas_enable"
+argument_list|,
+operator|&
+name|mfi_mrsas_enable
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|id
+operator|->
+name|flags
+operator|&
+name|MFI_FLAGS_MRSAS
+operator|)
+operator|&&
+name|mfi_mrsas_enable
+condition|)
+return|return
+operator|(
+name|BUS_PROBE_LOW_PRIORITY
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT

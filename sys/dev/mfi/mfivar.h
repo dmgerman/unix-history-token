@@ -529,6 +529,10 @@ name|MFI_FLAGS_TBOLT
 value|(1<<8)
 define|#
 directive|define
+name|MFI_FLAGS_MRSAS
+value|(1<<9)
+define|#
+directive|define
 name|MFI_FLAGS_INVADER
 value|(1<<10)
 define|#
