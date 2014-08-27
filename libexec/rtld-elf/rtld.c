@@ -14194,7 +14194,7 @@ name|fd
 decl_stmt|;
 name|dbg
 argument_list|(
-literal|"%s('%s', '%s', fdp)\n"
+literal|"%s('%s', '%s', fdp)"
 argument_list|,
 name|__func__
 argument_list|,
