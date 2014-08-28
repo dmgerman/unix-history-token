@@ -233,6 +233,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|vm_pageout_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|vm_pageout_clean
 parameter_list|(
@@ -273,6 +283,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|pagedaemon_init
+argument_list|,
+name|SI_SUB_KTHREAD_PAGE
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|vm_pageout_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|struct
 name|proc
@@ -305,7 +331,7 @@ name|pagedaemon
 argument_list|,
 name|SI_SUB_KTHREAD_PAGE
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_SECOND
 argument_list|,
 name|kproc_start
 argument_list|,
@@ -5892,29 +5918,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_pageout is the high level pageout daemon.  */
+comment|/*  *	vm_pageout_init initialises basic pageout daemon settings.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|vm_pageout
+name|vm_pageout_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
-name|int
-name|error
-decl_stmt|,
-name|i
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Initialize some paging parameters. 	 */
 name|vm_cnt
 operator|.
@@ -6115,6 +6129,33 @@ name|v_free_count
 operator|/
 literal|3
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *     vm_pageout is the high level pageout daemon.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|vm_pageout
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|#
+directive|if
+name|MAXMEMDOM
+operator|>
+literal|1
+name|int
+name|error
+decl_stmt|,
+name|i
+decl_stmt|;
+endif|#
+directive|endif
 name|swap_pager_swap_init
 argument_list|()
 expr_stmt|;
