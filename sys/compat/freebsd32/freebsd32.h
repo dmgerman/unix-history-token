@@ -1131,6 +1131,9 @@ name|KI_NSPARE_INT
 index|]
 decl_stmt|;
 name|int
+name|ki_tracer
+decl_stmt|;
+name|int
 name|ki_flag2
 decl_stmt|;
 name|int

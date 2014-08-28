@@ -199,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_INT
-value|7
+value|6
 end_define
 
 begin_define
@@ -710,6 +710,10 @@ name|KI_NSPARE_INT
 index|]
 decl_stmt|;
 comment|/* spare room for growth */
+name|int
+name|ki_tracer
+decl_stmt|;
+comment|/* Pid of tracing process */
 name|int
 name|ki_flag2
 decl_stmt|;
