@@ -13391,7 +13391,11 @@ name|struct
 name|ip
 modifier|*
 name|ip
-decl_stmt|,
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|ip
 name|iphdr
 decl_stmt|;
 endif|#
@@ -13406,7 +13410,11 @@ name|struct
 name|ip6_hdr
 modifier|*
 name|ip6
-decl_stmt|,
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|ip6_hdr
 name|ip6hdr
 decl_stmt|;
 endif|#
