@@ -1266,14 +1266,6 @@ decl_stmt|;
 name|bus_dmamap_t
 name|pmap
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-name|u64
-name|addr
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
