@@ -1034,7 +1034,7 @@ operator|,
 operator|(
 name|uintmax_t
 operator|)
-name|a
+name|reg
 operator|,
 operator|(
 name|uintmax_t
@@ -1096,7 +1096,7 @@ operator|,
 operator|(
 name|uintmax_t
 operator|)
-name|a
+name|reg
 operator|,
 operator|(
 name|uintmax_t

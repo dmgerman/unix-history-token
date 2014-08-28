@@ -10398,7 +10398,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_mtx
+name|mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
