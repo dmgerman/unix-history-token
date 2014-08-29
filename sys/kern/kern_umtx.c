@@ -9555,6 +9555,7 @@ name|old
 operator|==
 name|owner
 condition|)
+block|{
 name|error
 operator|=
 name|umtxq_sleep_pi
@@ -9580,6 +9581,14 @@ operator|&
 name|timo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+continue|continue;
+block|}
 else|else
 block|{
 name|umtxq_unbusy
