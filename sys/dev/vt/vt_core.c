@@ -8637,6 +8637,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* FALLTHROUGH */
 case|case
 name|GIO_KEYMAP
 case|:
