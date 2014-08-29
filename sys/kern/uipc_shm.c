@@ -414,7 +414,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|shm_dict_init
+name|shm_init
 parameter_list|(
 name|void
 modifier|*
