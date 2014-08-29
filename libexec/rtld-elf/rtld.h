@@ -1218,6 +1218,17 @@ begin_comment
 comment|/* Symlook is done during initialization. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SYMLOOK_IFUNC
+value|0x08
+end_define
+
+begin_comment
+comment|/* Allow IFUNC processing in 				   reloc_non_plt(). */
+end_comment
+
 begin_comment
 comment|/* Flags for load_object(). */
 end_comment
