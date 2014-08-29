@@ -8062,6 +8062,38 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|bootmethod
+index|[
+literal|16
+index|]
+init|=
+literal|"BIOS"
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bootmethod
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|bootmethod
+argument_list|,
+literal|0
+argument_list|,
+literal|"System firmware boot method"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Initialize 386 and configure to run kernel  */
 end_comment
