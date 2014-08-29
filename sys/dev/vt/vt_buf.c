@@ -2403,6 +2403,7 @@ name|term_pos_t
 modifier|*
 name|p
 parameter_list|,
+name|unsigned
 name|int
 name|history_size
 parameter_list|)

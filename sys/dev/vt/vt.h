@@ -659,6 +659,7 @@ directive|define
 name|VBF_HISTORY_FULL
 value|0x10
 comment|/* All rows filled. */
+name|unsigned
 name|int
 name|vb_history_size
 decl_stmt|;
@@ -788,6 +789,7 @@ specifier|const
 name|term_pos_t
 modifier|*
 parameter_list|,
+name|unsigned
 name|int
 parameter_list|)
 function_decl|;
