@@ -1809,6 +1809,43 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Structure used to request i2c data  * from interface transceivers.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifi2creq
+block|{
+name|uint8_t
+name|dev_addr
+decl_stmt|;
+comment|/* i2c address (0xA0, 0xA2) */
+name|uint8_t
+name|offset
+decl_stmt|;
+comment|/* read offset */
+name|uint8_t
+name|len
+decl_stmt|;
+comment|/* read length */
+name|uint8_t
+name|spare0
+decl_stmt|;
+name|uint32_t
+name|spare1
+decl_stmt|;
+name|uint8_t
+name|data
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* read buffer */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
