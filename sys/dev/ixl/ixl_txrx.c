@@ -2618,12 +2618,12 @@ condition|(
 name|etype
 condition|)
 block|{
-case|case
-name|ETHERTYPE_IP
-case|:
 ifdef|#
 directive|ifdef
 name|INET
+case|case
+name|ETHERTYPE_IP
+case|:
 name|ip
 operator|=
 operator|(
@@ -2685,15 +2685,15 @@ name|cmd
 operator||=
 name|I40E_TX_DESC_CMD_IIPT_IPV4
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
-break|break;
-case|case
-name|ETHERTYPE_IPV6
-case|:
 ifdef|#
 directive|ifdef
 name|INET6
+case|case
+name|ETHERTYPE_IPV6
+case|:
 name|ip6
 operator|=
 operator|(
@@ -2744,7 +2744,7 @@ name|cmd
 operator||=
 name|I40E_TX_DESC_CMD_IIPT_IPV6
 expr_stmt|;
-comment|/* Falls thru */
+break|break;
 endif|#
 directive|endif
 default|default:
@@ -3012,11 +3012,24 @@ name|ip6
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 name|struct
 name|tcphdr
 modifier|*
 name|th
 decl_stmt|;
+endif|#
+directive|endif
 name|u64
 name|type_cmd_tso_mss
 decl_stmt|;
@@ -3262,7 +3275,7 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|panic
+name|printf
 argument_list|(
 literal|"%s: CSUM_TSO but no supported IP version (0x%04x)"
 argument_list|,
@@ -3274,7 +3287,9 @@ name|etype
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|FALSE
+return|;
 block|}
 comment|/* Ensure we have at least the IP+TCP header in the first mbuf. */
 if|if
