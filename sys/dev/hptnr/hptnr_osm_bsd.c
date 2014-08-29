@@ -3058,7 +3058,7 @@ name|ccb_h
 operator|.
 name|status
 operator|=
-name|CAM_TID_INVALID
+name|CAM_SEL_TIMEOUT
 expr_stmt|;
 name|xpt_done
 argument_list|(
