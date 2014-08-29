@@ -1112,6 +1112,12 @@ literal|1
 decl_stmt|;
 comment|/* Object has references to STT_GNU_IFUNC */
 name|bool
+name|non_plt_gnu_ifunc
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object has non-plt IFUNC references */
+name|bool
 name|crt_no_init
 range|:
 literal|1

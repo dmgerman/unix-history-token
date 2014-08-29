@@ -686,7 +686,15 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|obj
+operator|->
+name|non_plt_gnu_ifunc
+operator|=
+name|true
+expr_stmt|;
 continue|continue;
+block|}
 name|symval
 operator|=
 operator|(

@@ -13290,6 +13290,10 @@ return|;
 comment|/* 	 * Process the non-PLT IFUNC relocations.  The relocations are 	 * processed in two phases, because IFUNC resolvers may 	 * reference other symbols, which must be readily processed 	 * before resolvers are called. 	 */
 if|if
 condition|(
+name|obj
+operator|->
+name|non_plt_gnu_ifunc
+operator|&&
 name|reloc_non_plt
 argument_list|(
 name|obj
