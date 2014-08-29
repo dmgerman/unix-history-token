@@ -19566,8 +19566,11 @@ name|reg
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Queue irqs = %lx\n"
+literal|"Queue irqs = %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|que
 operator|->
 name|irqs
@@ -19575,8 +19578,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"AdminQ irqs = %lx\n"
+literal|"AdminQ irqs = %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pf
 operator|->
 name|admin_irq
@@ -19593,8 +19599,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX not ready = %lx\n"
+literal|"RX not ready = %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rxr
 operator|->
 name|not_done
@@ -19602,8 +19611,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX packets = %lx\n"
+literal|"RX packets = %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rxr
 operator|->
 name|rx_packets
@@ -20469,11 +20481,21 @@ name|new_data
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-operator|>=
-literal|10
+argument_list|)
 operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1000000
+operator|)
+operator|&&
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 name|new_data
 operator|=
 name|rd64
