@@ -2621,6 +2621,9 @@ block|{
 case|case
 name|ETHERTYPE_IP
 case|:
+ifdef|#
+directive|ifdef
+name|INET
 name|ip
 operator|=
 operator|(
@@ -2682,10 +2685,15 @@ name|cmd
 operator||=
 name|I40E_TX_DESC_CMD_IIPT_IPV4
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|ETHERTYPE_IPV6
 case|:
+ifdef|#
+directive|ifdef
+name|INET6
 name|ip6
 operator|=
 operator|(
@@ -2737,6 +2745,8 @@ operator||=
 name|I40E_TX_DESC_CMD_IIPT_IPV6
 expr_stmt|;
 comment|/* Falls thru */
+endif|#
+directive|endif
 default|default:
 break|break;
 block|}
