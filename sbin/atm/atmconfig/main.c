@@ -71,11 +71,11 @@ directive|include
 file|<dirent.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RESCUE
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_BSNMP
+end_ifdef
 
 begin_include
 include|#
@@ -2166,11 +2166,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RESCUE
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_BSNMP
+end_ifdef
 
 begin_comment
 comment|/*  * Parse a server specification  *  * syntax is [trans::][community@][server][:port]  */
@@ -2632,9 +2632,9 @@ decl_stmt|,
 modifier|*
 name|tab
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|RESCUE
+ifdef|#
+directive|ifdef
+name|WITH_BSNMP
 name|snmp_client_init
 argument_list|(
 operator|&
@@ -2659,17 +2659,17 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|RESCUE
+name|WITH_BSNMP
 define|#
 directive|define
 name|OPTSTR
-value|"htv"
+value|"htvs:"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTSTR
-value|"htvs:"
+value|"htv"
 endif|#
 directive|endif
 while|while
@@ -2705,9 +2705,9 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RESCUE
+ifdef|#
+directive|ifdef
+name|WITH_BSNMP
 case|case
 literal|'s'
 case|:
@@ -2794,9 +2794,9 @@ name|static_main_tab
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RESCUE
+ifdef|#
+directive|ifdef
+name|WITH_BSNMP
 comment|/* XXX while this is compiled in */
 name|device_register
 argument_list|()
