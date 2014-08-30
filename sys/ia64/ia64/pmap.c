@@ -7482,8 +7482,8 @@ literal|"pmap_enter: toobig"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 operator|(
 name|m
 operator|->
@@ -7491,19 +7491,20 @@ name|oflags
 operator|&
 name|VPO_UNMANAGED
 operator|)
-operator|!=
+operator|==
 literal|0
-operator|||
+operator|&&
+operator|!
 name|vm_page_xbusied
 argument_list|(
 name|m
 argument_list|)
-argument_list|,
-operator|(
-literal|"pmap_enter: page %p is not busy"
-operator|,
+condition|)
+name|VM_OBJECT_ASSERT_LOCKED
+argument_list|(
 name|m
-operator|)
+operator|->
+name|object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find (or create) a pte for the given mapping. 	 */
