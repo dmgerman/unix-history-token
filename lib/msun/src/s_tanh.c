@@ -45,8 +45,8 @@ end_include
 
 begin_decl_stmt
 specifier|static
-specifier|volatile
 specifier|const
+specifier|volatile
 name|double
 name|tiny
 init|=
