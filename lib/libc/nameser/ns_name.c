@@ -2823,11 +2823,8 @@ name|src
 operator|+
 literal|1
 expr_stmt|;
-name|srcp
+name|l
 operator|=
-name|msg
-operator|+
-operator|(
 operator|(
 operator|(
 name|n
@@ -2844,17 +2841,14 @@ name|srcp
 operator|&
 literal|0xff
 operator|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
-name|srcp
-operator|<
-name|msg
-operator|||
-name|srcp
+name|l
 operator|>=
 name|eom
+operator|-
+name|msg
 condition|)
 block|{
 comment|/*%< Out of range. */
@@ -2869,6 +2863,12 @@ literal|1
 operator|)
 return|;
 block|}
+name|srcp
+operator|=
+name|msg
+operator|+
+name|l
+expr_stmt|;
 name|checked
 operator|+=
 literal|2
