@@ -18270,11 +18270,9 @@ index|]
 decl_stmt|;
 name|bzero
 argument_list|(
-name|ctp
-operator|->
-name|cfis
+name|fis
 argument_list|,
-literal|16
+literal|20
 argument_list|)
 expr_stmt|;
 name|fis
