@@ -3520,6 +3520,24 @@ operator|==
 name|CPU_MODE_PROTECTED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Calculate the %eip to store in the old TSS before modifying the 	 * 'inst_length'. 	 */
+name|eip
+operator|=
+name|vmexit
+operator|->
+name|rip
+operator|+
+name|vmexit
+operator|->
+name|inst_length
+expr_stmt|;
+comment|/* 	 * Set the 'inst_length' to '0'. 	 * 	 * If an exception is triggered during emulation of the task switch 	 * then the exception handler should return to the instruction that 	 * caused the task switch as opposed to the subsequent instruction. 	 */
+name|vmexit
+operator|->
+name|inst_length
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Section 4.6, "Access Rights" in Intel SDM Vol 3. 	 * The following page table accesses are implicitly supervisor mode: 	 * - accesses to GDT or LDT to load segment descriptors 	 * - accesses to the task state segment during task switch 	 */
 name|sup_paging
 operator|=
@@ -4071,16 +4089,6 @@ operator|)
 return|;
 block|}
 comment|/* Save processor state in old TSS */
-name|eip
-operator|=
-name|vmexit
-operator|->
-name|rip
-operator|+
-name|vmexit
-operator|->
-name|inst_length
-expr_stmt|;
 name|tss32_save
 argument_list|(
 name|ctx
@@ -4201,11 +4209,14 @@ name|newtss
 operator|.
 name|tss_eip
 expr_stmt|;
+name|assert
+argument_list|(
 name|vmexit
 operator|->
 name|inst_length
-operator|=
+operator|==
 literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Load processor state from new TSS */
 name|error
