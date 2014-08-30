@@ -1475,9 +1475,7 @@ name|ifr_mtu
 operator|+
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|>
 name|GXEMUL_ETHER_DEV_MTU
 condition|)

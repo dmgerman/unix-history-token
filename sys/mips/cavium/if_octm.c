@@ -1056,9 +1056,7 @@ name|octm_transmit
 expr_stmt|;
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1992,9 +1990,7 @@ name|ifr_mtu
 operator|+
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 argument_list|)
 expr_stmt|;
 return|return

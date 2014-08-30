@@ -14915,9 +14915,7 @@ directive|endif
 comment|/* 	 * Tell the upper layer(s) we 	 * support full VLAN capability. 	 */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(
