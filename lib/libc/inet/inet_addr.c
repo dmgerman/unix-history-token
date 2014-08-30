@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_addr.c,v 1.4.18.1 2005/04/27 05:00:52 sra Exp $"
+literal|"$Id: inet_addr.c,v 1.5 2005/04/27 04:56:19 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
