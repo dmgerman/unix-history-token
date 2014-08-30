@@ -35,6 +35,17 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
+specifier|const
+name|float
+name|tiny
+init|=
+literal|1.0e-30
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 specifier|const
 name|float
 name|one
@@ -44,10 +55,6 @@ decl_stmt|,
 name|two
 init|=
 literal|2.0
-decl_stmt|,
-name|tiny
-init|=
-literal|1.0e-30
 decl_stmt|,
 name|huge
 init|=
