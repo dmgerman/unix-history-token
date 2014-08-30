@@ -242,6 +242,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|kmem_used
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|kmem_page_count
 parameter_list|(
