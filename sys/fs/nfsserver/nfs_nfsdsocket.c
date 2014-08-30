@@ -6093,18 +6093,12 @@ name|nfsrc_tcpsavedreplies
 operator|>
 name|nfsrc_floodlevel
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"nfsd server cache flooded, try to"
+literal|"nfsd server cache flooded, try "
+literal|"increasing vfs.nfsd.tcphighwater\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" increase nfsrc_floodlevel\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|nd
 operator|->
 name|nd_repstat
