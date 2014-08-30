@@ -9589,6 +9589,12 @@ name|structsize
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -9601,6 +9607,12 @@ argument_list|,
 name|sb
 argument_list|,
 name|ELF_KERN_PROC_MASK
+argument_list|)
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 block|}
