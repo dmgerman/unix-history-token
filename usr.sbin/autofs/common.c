@@ -3011,11 +3011,18 @@ operator|==
 name|NEWLINE
 condition|)
 block|{
+comment|/* 			 * In case of executable map, the key is always 			 * non-NULL, even if the map is empty.  So, make sure 			 * we don't fail empty maps here. 			 */
 if|if
 condition|(
+operator|(
 name|key
 operator|!=
 name|NULL
+operator|&&
+name|executable_key
+operator|==
+name|NULL
+operator|)
 operator|||
 name|options
 operator|!=
