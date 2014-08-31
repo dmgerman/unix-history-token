@@ -85,6 +85,12 @@ name|ifmedia
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|netmap_adapter
+struct_decl|;
+end_struct_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -695,6 +701,12 @@ modifier|*
 name|if_label
 decl_stmt|;
 comment|/* interface MAC label */
+name|struct
+name|netmap_adapter
+modifier|*
+name|if_netmap
+decl_stmt|;
+comment|/* netmap(4) softc */
 comment|/* Various procedures of the layer2 encapsulation and drivers. */
 name|int
 function_decl|(

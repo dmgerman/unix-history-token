@@ -3873,7 +3873,7 @@ name|WNA
 parameter_list|(
 name|_ifp
 parameter_list|)
-value|(_ifp)->if_pspare[0]
+value|(_ifp)->if_netmap
 end_define
 
 begin_endif
