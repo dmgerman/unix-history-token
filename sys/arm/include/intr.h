@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|NIRQ
-value|160
+value|1020
 end_define
 
 begin_elif
