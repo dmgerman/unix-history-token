@@ -278,6 +278,40 @@ end_comment
 
 begin_typedef
 typedef|typedef
+enum|enum
+block|{
+name|IFCOUNTER_IPACKETS
+init|=
+literal|1
+block|,
+name|IFCOUNTER_IERRORS
+block|,
+name|IFCOUNTER_OPACKETS
+block|,
+name|IFCOUNTER_OERRORS
+block|,
+name|IFCOUNTER_COLLISIONS
+block|,
+name|IFCOUNTER_IBYTES
+block|,
+name|IFCOUNTER_OBYTES
+block|,
+name|IFCOUNTER_IMCASTS
+block|,
+name|IFCOUNTER_OMCASTS
+block|,
+name|IFCOUNTER_IQDROPS
+block|,
+name|IFCOUNTER_OQDROPS
+block|,
+name|IFCOUNTER_NOPROTO
+block|, }
+name|ifnet_counter
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|void
 function_decl|(
 modifier|*
@@ -354,6 +388,23 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+function_decl|(
+modifier|*
+name|if_get_counter_t
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|ifnet_counter
 parameter_list|)
 function_decl|;
 end_typedef
@@ -482,16 +533,56 @@ name|u_int
 name|if_refcount
 decl_stmt|;
 comment|/* reference count */
+comment|/* These fields are shared with struct if_data. */
+name|uint8_t
+name|if_type
+decl_stmt|;
+comment|/* ethernet, tokenring, etc */
+name|uint8_t
+name|if_addrlen
+decl_stmt|;
+comment|/* media address length */
+name|uint8_t
+name|if_hdrlen
+decl_stmt|;
+comment|/* media header length */
+name|uint8_t
+name|if_link_state
+decl_stmt|;
+comment|/* current link state */
+name|uint32_t
+name|if_spare32
+decl_stmt|;
+name|uint32_t
+name|if_mtu
+decl_stmt|;
+comment|/* maximum transmission unit */
+name|uint32_t
+name|if_metric
+decl_stmt|;
+comment|/* routing metric (external only) */
+name|uint64_t
+name|if_baudrate
+decl_stmt|;
+comment|/* linespeed */
+name|uint64_t
+name|if_hwassist
+decl_stmt|;
+comment|/* HW offload capabilities, see IFCAP */
+name|time_t
+name|if_epoch
+decl_stmt|;
+comment|/* uptime at attach or stat reset */
+name|struct
+name|timeval
+name|if_lastchange
+decl_stmt|;
+comment|/* time of last administrative change */
 name|struct
 name|ifaltq
 name|if_snd
 decl_stmt|;
 comment|/* output queue (includes altq) */
-name|struct
-name|if_data
-name|if_data
-decl_stmt|;
-comment|/* type information and statistics */
 name|struct
 name|task
 name|if_linktask
@@ -706,39 +797,65 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|if_get_counter_t
+name|if_get_counter
+decl_stmt|;
+comment|/* get counter values */
 comment|/* Stuff that's only temporary and doesn't belong here. */
 name|u_int
 name|if_hw_tsomax
 decl_stmt|;
 comment|/* tso burst length limit, the minimum 					 * is (IP_MAXPACKET / 8). 					 * XXXAO: Have to find a better place 					 * for it eventually. */
-comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
-name|char
-name|if_cspare
-index|[
-literal|3
-index|]
+comment|/* 	 * Old, racy and expensive statistics, should not be used in 	 * new drivers. 	 */
+name|uint64_t
+name|if_ipackets
 decl_stmt|;
-name|int
-name|if_ispare
-index|[
-literal|4
-index|]
+comment|/* packets received on interface */
+name|uint64_t
+name|if_ierrors
 decl_stmt|;
-name|void
-modifier|*
-name|if_unused
-index|[
-literal|2
-index|]
+comment|/* input errors on interface */
+name|uint64_t
+name|if_opackets
 decl_stmt|;
-name|void
-modifier|*
-name|if_pspare
-index|[
-literal|8
-index|]
+comment|/* packets sent on interface */
+name|uint64_t
+name|if_oerrors
 decl_stmt|;
-comment|/* 1 netmap, 7 TDB */
+comment|/* output errors on interface */
+name|uint64_t
+name|if_collisions
+decl_stmt|;
+comment|/* collisions on csma interfaces */
+name|uint64_t
+name|if_ibytes
+decl_stmt|;
+comment|/* total number of octets received */
+name|uint64_t
+name|if_obytes
+decl_stmt|;
+comment|/* total number of octets sent */
+name|uint64_t
+name|if_imcasts
+decl_stmt|;
+comment|/* packets received via multicast */
+name|uint64_t
+name|if_omcasts
+decl_stmt|;
+comment|/* packets sent via multicast */
+name|uint64_t
+name|if_iqdrops
+decl_stmt|;
+comment|/* dropped on input */
+name|uint64_t
+name|if_oqdrops
+decl_stmt|;
+comment|/* dropped on output */
+name|uint64_t
+name|if_noproto
+decl_stmt|;
+comment|/* destined for unsupported protocol */
+comment|/* 	 * Spare fields to be added before branching a stable branch, so 	 * that structure can be enhanced without changing the kernel 	 * binary interface. 	 */
 block|}
 struct|;
 end_struct
@@ -752,164 +869,6 @@ end_include
 begin_comment
 comment|/* XXXAO: temporary unconditional include */
 end_comment
-
-begin_comment
-comment|/*  * XXX These aliases are terribly dangerous because they could apply  * to anything.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|if_mtu
-value|if_data.ifi_mtu
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_type
-value|if_data.ifi_type
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_physical
-value|if_data.ifi_physical
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_addrlen
-value|if_data.ifi_addrlen
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_hdrlen
-value|if_data.ifi_hdrlen
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_metric
-value|if_data.ifi_metric
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_link_state
-value|if_data.ifi_link_state
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_baudrate
-value|if_data.ifi_baudrate
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_hwassist
-value|if_data.ifi_hwassist
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_ipackets
-value|if_data.ifi_ipackets
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_ierrors
-value|if_data.ifi_ierrors
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_opackets
-value|if_data.ifi_opackets
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_oerrors
-value|if_data.ifi_oerrors
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_collisions
-value|if_data.ifi_collisions
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_ibytes
-value|if_data.ifi_ibytes
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_obytes
-value|if_data.ifi_obytes
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_imcasts
-value|if_data.ifi_imcasts
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_omcasts
-value|if_data.ifi_omcasts
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_iqdrops
-value|if_data.ifi_iqdrops
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_oqdrops
-value|if_data.ifi_oqdrops
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_noproto
-value|if_data.ifi_noproto
-end_define
-
-begin_define
-define|#
-directive|define
-name|if_lastchange
-value|if_data.ifi_lastchange
-end_define
 
 begin_comment
 comment|/* for compatibility with other BSDs */
@@ -2766,6 +2725,34 @@ name|if_deregister_com_alloc
 parameter_list|(
 name|u_char
 name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|if_data_copy
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|if_data
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|if_get_counter_compat
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|ifnet_counter
 parameter_list|)
 function_decl|;
 end_function_decl
