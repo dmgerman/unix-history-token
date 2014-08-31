@@ -502,6 +502,10 @@ name|if_flags
 decl_stmt|;
 comment|/* up/down, broadcast, etc. */
 name|int
+name|if_drv_flags
+decl_stmt|;
+comment|/* driver-managed status flags */
+name|int
 name|if_capabilities
 decl_stmt|;
 comment|/* interface features& capabilities */
@@ -518,10 +522,6 @@ name|size_t
 name|if_linkmiblen
 decl_stmt|;
 comment|/* length of above data */
-name|int
-name|if_drv_flags
-decl_stmt|;
-comment|/* driver-managed status flags */
 name|u_int
 name|if_refcount
 decl_stmt|;
@@ -543,9 +543,6 @@ name|uint8_t
 name|if_link_state
 decl_stmt|;
 comment|/* current link state */
-name|uint32_t
-name|if_spare32
-decl_stmt|;
 name|uint32_t
 name|if_mtu
 decl_stmt|;
