@@ -3113,6 +3113,11 @@ name|int
 name|ipfw_install_state
 parameter_list|(
 name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
+name|struct
 name|ip_fw
 modifier|*
 name|rule
@@ -3264,9 +3269,13 @@ name|conn_limit
 operator|=
 name|IP_FW_ARG_TABLEARG
 argument_list|(
+name|chain
+argument_list|,
 name|cmd
 operator|->
 name|conn_limit
+argument_list|,
+name|limit
 argument_list|)
 expr_stmt|;
 name|DEB

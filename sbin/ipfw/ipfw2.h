@@ -404,13 +404,13 @@ name|TOK_ALGO
 block|,
 name|TOK_TALIST
 block|,
-name|TOK_FTYPE
-block|,
 name|TOK_ATOMIC
 block|,
 name|TOK_LOCK
 block|,
 name|TOK_UNLOCK
+block|,
+name|TOK_VLIST
 block|, }
 enum|;
 end_enum
@@ -705,7 +705,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|fill_flags
 parameter_list|(
 name|struct
@@ -717,11 +717,16 @@ name|char
 modifier|*
 name|p
 parameter_list|,
-name|uint8_t
+name|char
+modifier|*
+modifier|*
+name|e
+parameter_list|,
+name|uint32_t
 modifier|*
 name|set
 parameter_list|,
-name|uint8_t
+name|uint32_t
 modifier|*
 name|clear
 parameter_list|)
@@ -744,7 +749,7 @@ name|_s_x
 modifier|*
 name|list
 parameter_list|,
-name|uint8_t
+name|uint32_t
 name|set
 parameter_list|)
 function_decl|;
@@ -1425,6 +1430,21 @@ end_function_decl
 begin_function_decl
 name|void
 name|ipfw_list_ta
+parameter_list|(
+name|int
+name|ac
+parameter_list|,
+name|char
+modifier|*
+name|av
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipfw_list_values
 parameter_list|(
 name|int
 name|ac

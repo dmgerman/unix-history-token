@@ -384,6 +384,12 @@ name|ip
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ip_fw_chain
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|ipfw_log_bpf
@@ -397,6 +403,11 @@ begin_function_decl
 name|void
 name|ipfw_log
 parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
 name|struct
 name|ip_fw
 modifier|*
@@ -575,6 +586,11 @@ begin_function_decl
 name|int
 name|ipfw_install_state
 parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
 name|struct
 name|ip_fw
 modifier|*
@@ -992,6 +1008,11 @@ modifier|*
 name|tablestate
 decl_stmt|;
 comment|/* runtime table info */
+name|void
+modifier|*
+name|valuestate
+decl_stmt|;
+comment|/* runtime table value info */
 name|int
 modifier|*
 name|idxmap
@@ -1071,6 +1092,74 @@ decl_stmt|;
 comment|/* lock for upper half */
 endif|#
 directive|endif
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* 64-byte structure representing multi-field table value */
+end_comment
+
+begin_struct
+struct|struct
+name|table_value
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+comment|/* O_TAG/O_TAGGED */
+name|uint32_t
+name|pipe
+decl_stmt|;
+comment|/* O_PIPE/O_QUEUE */
+name|uint16_t
+name|divert
+decl_stmt|;
+comment|/* O_DIVERT/O_TEE */
+name|uint16_t
+name|skipto
+decl_stmt|;
+comment|/* skipto, CALLRET */
+name|uint32_t
+name|netgraph
+decl_stmt|;
+comment|/* O_NETGRAPH/O_NGTEE */
+name|uint32_t
+name|fib
+decl_stmt|;
+comment|/* O_SETFIB */
+name|uint32_t
+name|nat
+decl_stmt|;
+comment|/* O_NAT */
+name|uint32_t
+name|nh4
+decl_stmt|;
+name|uint8_t
+name|dscp
+decl_stmt|;
+name|uint8_t
+name|spare0
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* -- 32 bytes -- */
+name|struct
+name|in6_addr
+name|nh6
+decl_stmt|;
+name|uint32_t
+name|limit
+decl_stmt|;
+comment|/* O_LIMIT */
+name|uint32_t
+name|spare1
+decl_stmt|;
+name|uint64_t
+name|refcnt
+decl_stmt|;
+comment|/* Number of references */
 block|}
 struct|;
 end_struct
@@ -1403,11 +1492,30 @@ end_endif
 begin_define
 define|#
 directive|define
+name|TARG_VAL
+parameter_list|(
+name|ch
+parameter_list|,
+name|k
+parameter_list|,
+name|f
+parameter_list|)
+value|((struct table_value *)((ch)->valuestate))[k].f
+end_define
+
+begin_define
+define|#
+directive|define
 name|IP_FW_ARG_TABLEARG
 parameter_list|(
+name|ch
+parameter_list|,
 name|a
+parameter_list|,
+name|f
 parameter_list|)
-value|(((a) == IP_FW_TARG) ? tablearg : (a))
+define|\
+value|(((a) == IP_FW_TARG) ? TARG_VAL(ch, tablearg, f) : (a))
 end_define
 
 begin_comment

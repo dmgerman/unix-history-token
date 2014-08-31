@@ -1182,7 +1182,7 @@ name|tent
 operator|->
 name|v
 operator|.
-name|value
+name|kidx
 operator|=
 name|n
 operator|->
@@ -1242,7 +1242,7 @@ name|tent
 operator|->
 name|v
 operator|.
-name|value
+name|kidx
 operator|=
 name|xn
 operator|->
@@ -5409,7 +5409,7 @@ name|tent
 operator|->
 name|v
 operator|.
-name|value
+name|kidx
 operator|=
 name|ent
 operator|->
@@ -5460,7 +5460,7 @@ name|tent
 operator|->
 name|v
 operator|.
-name|value
+name|kidx
 operator|=
 name|ent
 operator|->
@@ -8087,6 +8087,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_IFIDX_SIZE
+value|64
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|iftable_cfg
@@ -8835,14 +8842,14 @@ name|ii
 operator|=
 name|ipfw_objhash_create
 argument_list|(
-literal|16
+name|DEFAULT_IFIDX_SIZE
 argument_list|)
 expr_stmt|;
 name|icfg
 operator|->
 name|size
 operator|=
-literal|16
+name|DEFAULT_IFIDX_SIZE
 expr_stmt|;
 name|icfg
 operator|->
@@ -10777,7 +10784,7 @@ name|tent
 operator|->
 name|v
 operator|.
-name|value
+name|kidx
 operator|=
 name|ife
 operator|->
@@ -12656,7 +12663,7 @@ name|tent
 operator|->
 name|v
 operator|.
-name|value
+name|kidx
 operator|=
 name|na
 operator|->
@@ -14525,7 +14532,7 @@ name|tent
 operator|->
 name|v
 operator|.
-name|value
+name|kidx
 operator|=
 name|ent
 operator|->
@@ -17425,7 +17432,7 @@ name|tent
 operator|->
 name|v
 operator|.
-name|value
+name|kidx
 operator|=
 literal|0
 expr_stmt|;
@@ -17534,7 +17541,7 @@ name|tent
 operator|->
 name|v
 operator|.
-name|value
+name|kidx
 operator|=
 literal|0
 expr_stmt|;

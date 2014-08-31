@@ -3844,7 +3844,11 @@ name|i
 init|=
 name|IP_FW_ARG_TABLEARG
 argument_list|(
+name|chain
+argument_list|,
 name|num
+argument_list|,
+name|skipto
 argument_list|)
 decl_stmt|;
 comment|/* make sure we do not jump backward */
@@ -3965,7 +3969,11 @@ name|num
 operator|=
 name|IP_FW_ARG_TABLEARG
 argument_list|(
+name|chain
+argument_list|,
 name|num
+argument_list|,
+name|skipto
 argument_list|)
 expr_stmt|;
 comment|/* make sure we do not jump backward */
@@ -4005,6 +4013,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|TARG
+parameter_list|(
+name|k
+parameter_list|,
+name|f
+parameter_list|)
+value|IP_FW_ARG_TABLEARG(chain, k, f)
+end_define
 
 begin_comment
 comment|/*  * The main check routine for the firewall.  *  * All arguments are in args so we can modify them and return them  * back to the caller.  *  * Parameters:  *  *	args->m	(in/out) The packet; we set to NULL when/if we nuke it.  *		Starts with the IP header.  *	args->eh (in)	Mac header if present, NULL for layer3 packet.  *	args->L3offset	Number of bytes bypassed if we came from L2.  *			e.g. often sizeof(eh)  ** NOTYET **  *	args->oif	Outgoing interface, NULL if packet is incoming.  *		The incoming interface is in the mbuf. (in)  *	args->divert_rule (in/out)  *		Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *  *	args->rule	Pointer to the last matching rule (in/out)  *	args->next_hop	Socket we are forwarding to (out).  *	args->next_hop6	IPv6 next hop we are forwarding to (out).  *	args->f_id	Addresses grabbed from the packet (out)  * 	args->rule.info	a cookie depending on rule action  *  * Return value:  *  *	IP_FW_PASS	the packet must be accepted  *	IP_FW_DENY	the packet must be dropped  *	IP_FW_DIVERT	divert packet, port in m_tag  *	IP_FW_TEE	tee packet, port in m_tag  *	IP_FW_DUMMYNET	to dummynet, pipe in args->cookie  *	IP_FW_NETGRAPH	into netgraph, cookie args->cookie  *		args->rule contains the matching rule,  *		args->rule.info has additional information.  *  */
@@ -8043,6 +8063,8 @@ name|O_LOG
 case|:
 name|ipfw_log
 argument_list|(
+name|chain
+argument_list|,
 name|f
 argument_list|,
 name|hlen
@@ -8604,11 +8626,13 @@ decl_stmt|;
 name|uint32_t
 name|tag
 init|=
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|tag
 argument_list|)
 decl_stmt|;
 comment|/* Packet is already tagged with this tag? */
@@ -8879,11 +8903,13 @@ decl_stmt|;
 name|uint32_t
 name|tag
 init|=
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|tag
 argument_list|)
 decl_stmt|;
 if|if
@@ -9022,6 +9048,8 @@ if|if
 condition|(
 name|ipfw_install_state
 argument_list|(
+name|chain
+argument_list|,
 name|f
 argument_list|,
 operator|(
@@ -9220,11 +9248,13 @@ name|rule
 operator|.
 name|info
 operator|=
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|pipe
 argument_list|)
 expr_stmt|;
 if|if
@@ -9324,11 +9354,13 @@ name|rule
 operator|.
 name|info
 operator|=
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|divert
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10167,11 +10199,13 @@ name|rule
 operator|.
 name|info
 operator|=
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|netgraph
 argument_list|)
 expr_stmt|;
 if|if
@@ -10227,11 +10261,13 @@ argument_list|)
 expr_stmt|;
 name|fib
 operator|=
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|fib
 argument_list|)
 operator|&
 literal|0x7FFFF
@@ -10277,11 +10313,13 @@ name|code
 decl_stmt|;
 name|code
 operator|=
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|dscp
 argument_list|)
 operator|&
 literal|0x3F
@@ -10507,11 +10545,13 @@ condition|)
 block|{
 name|nat_id
 operator|=
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|nat
 argument_list|)
 expr_stmt|;
 name|t

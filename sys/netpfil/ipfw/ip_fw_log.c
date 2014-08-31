@@ -1111,6 +1111,18 @@ begin_comment
 comment|/* !WITHOUT_BPF */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TARG
+parameter_list|(
+name|k
+parameter_list|,
+name|f
+parameter_list|)
+value|IP_FW_ARG_TABLEARG(chain, k, f)
+end_define
+
 begin_comment
 comment|/*  * We enter here when we have a rule with O_LOG.  * XXX this function alone takes about 2Kbytes of code!  */
 end_comment
@@ -1119,6 +1131,11 @@ begin_function
 name|void
 name|ipfw_log
 parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|chain
+parameter_list|,
 name|struct
 name|ip_fw
 modifier|*
@@ -1608,9 +1625,14 @@ argument_list|)
 argument_list|,
 literal|"Divert %d"
 argument_list|,
+name|TARG
+argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|divert
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1628,9 +1650,14 @@ argument_list|)
 argument_list|,
 literal|"Tee %d"
 argument_list|,
+name|TARG
+argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|divert
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1648,11 +1675,13 @@ argument_list|)
 argument_list|,
 literal|"SetFib %d"
 argument_list|,
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|fib
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1671,11 +1700,13 @@ argument_list|)
 argument_list|,
 literal|"SkipTo %d"
 argument_list|,
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|skipto
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1694,11 +1725,13 @@ argument_list|)
 argument_list|,
 literal|"Pipe %d"
 argument_list|,
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|pipe
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1717,11 +1750,13 @@ argument_list|)
 argument_list|,
 literal|"Queue %d"
 argument_list|,
-name|IP_FW_ARG_TABLEARG
+name|TARG
 argument_list|(
 name|cmd
 operator|->
 name|arg1
+argument_list|,
+name|pipe
 argument_list|)
 argument_list|)
 expr_stmt|;

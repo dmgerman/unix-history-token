@@ -403,6 +403,17 @@ begin_comment
 comment|/* swap two tables */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_TABLE_VLIST
+value|110
+end_define
+
+begin_comment
+comment|/* dump table value hash */
+end_comment
+
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
 end_comment
@@ -1935,38 +1946,133 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPFW_VTYPE_U32
-value|1
+name|IPFW_VTYPE_LEGACY
+value|0xFFFFFFFF
 end_define
 
 begin_comment
-comment|/* Skipto/tablearg integer */
-end_comment
-
-begin_comment
-comment|/* Value format types */
+comment|/* All data is filled in */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IPFW_VFTYPE_U32
-value|0
+name|IPFW_VTYPE_SKIPTO
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* Skipto/tablearg integer */
+comment|/* skipto/call/callreturn */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IPFW_VFTYPE_IP
-value|1
+name|IPFW_VTYPE_PIPE
+value|0x00000002
 end_define
 
 begin_comment
-comment|/* Nexthop IP address */
+comment|/* pipe/queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_FIB
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* setfib */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_NAT
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* nat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_DSCP
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* dscp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_TAG
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* tag/untag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_DIVERT
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* divert/tee */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_NETGRAPH
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* netgraph/ngtee */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_LIMIT
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* IPv6 nexthop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_NH4
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* IPv4 nexthop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_VTYPE_NH6
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* IPv6 nexthop */
 end_comment
 
 begin_typedef
@@ -2308,6 +2414,70 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_table_value
+block|{
+name|uint32_t
+name|tag
+decl_stmt|;
+comment|/* O_TAG/O_TAGGED */
+name|uint32_t
+name|pipe
+decl_stmt|;
+comment|/* O_PIPE/O_QUEUE */
+name|uint16_t
+name|divert
+decl_stmt|;
+comment|/* O_DIVERT/O_TEE */
+name|uint16_t
+name|skipto
+decl_stmt|;
+comment|/* skipto, CALLRET */
+name|uint32_t
+name|netgraph
+decl_stmt|;
+comment|/* O_NETGRAPH/O_NGTEE */
+name|uint32_t
+name|fib
+decl_stmt|;
+comment|/* O_SETFIB */
+name|uint32_t
+name|nat
+decl_stmt|;
+comment|/* O_NAT */
+name|uint32_t
+name|nh4
+decl_stmt|;
+name|uint8_t
+name|dscp
+decl_stmt|;
+name|uint8_t
+name|spare0
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|struct
+name|in6_addr
+name|nh6
+decl_stmt|;
+name|uint32_t
+name|limit
+decl_stmt|;
+comment|/* O_LIMIT */
+name|uint32_t
+name|spare1
+decl_stmt|;
+name|uint64_t
+name|reserved
+decl_stmt|;
+block|}
+name|ipfw_table_value
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Table entry TLV */
 end_comment
@@ -2376,17 +2546,14 @@ name|k
 union|;
 union|union
 block|{
-name|uint32_t
+name|ipfw_table_value
 name|value
 decl_stmt|;
-comment|/* 32-bit value */
-name|char
-name|storage
-index|[
-literal|64
-index|]
+comment|/* value data */
+name|uint32_t
+name|kidx
 decl_stmt|;
-comment|/* Future needs	*/
+comment|/* value kernel index */
 block|}
 name|v
 union|;
@@ -2779,14 +2946,6 @@ name|uint8_t
 name|tflags
 decl_stmt|;
 comment|/* type flags			*/
-name|uint8_t
-name|vtype
-decl_stmt|;
-comment|/* value type (u32)		*/
-name|uint8_t
-name|vftype
-decl_stmt|;
-comment|/* value format type (ip,number)*/
 name|uint16_t
 name|mflags
 decl_stmt|;
@@ -2795,6 +2954,16 @@ name|uint16_t
 name|flags
 decl_stmt|;
 comment|/* generic table flags		*/
+name|uint16_t
+name|spare
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|uint32_t
+name|vmask
+decl_stmt|;
+comment|/* bitmask with value types 	*/
 name|uint32_t
 name|set
 decl_stmt|;
@@ -2898,17 +3067,6 @@ end_define
 
 begin_comment
 comment|/* Table modification flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPFW_TMFLAGS_FTYPE
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Change ftype field		*/
 end_comment
 
 begin_define
