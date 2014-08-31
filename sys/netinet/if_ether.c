@@ -1191,9 +1191,7 @@ literal|2
 operator|*
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_addrlen
+name|if_addrlen
 expr_stmt|;
 name|m
 operator|->
