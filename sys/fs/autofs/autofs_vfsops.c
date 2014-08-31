@@ -108,7 +108,7 @@ specifier|extern
 name|struct
 name|autofs_softc
 modifier|*
-name|sc
+name|autofs_softc
 decl_stmt|;
 end_decl_stmt
 
@@ -305,12 +305,6 @@ operator|->
 name|am_mp
 operator|=
 name|mp
-expr_stmt|;
-name|amp
-operator|->
-name|am_softc
-operator|=
-name|sc
 expr_stmt|;
 name|strlcpy
 argument_list|(
@@ -571,7 +565,7 @@ expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
-name|sc
+name|autofs_softc
 operator|->
 name|sc_lock
 argument_list|)
@@ -580,7 +574,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|ar
 argument_list|,
-argument|&sc->sc_requests
+argument|&autofs_softc->sc_requests
 argument_list|,
 argument|ar_next
 argument_list|)
@@ -620,7 +614,7 @@ block|}
 name|sx_xunlock
 argument_list|(
 operator|&
-name|sc
+name|autofs_softc
 operator|->
 name|sc_lock
 argument_list|)
@@ -635,7 +629,7 @@ break|break;
 name|cv_broadcast
 argument_list|(
 operator|&
-name|sc
+name|autofs_softc
 operator|->
 name|sc_cv
 argument_list|)
