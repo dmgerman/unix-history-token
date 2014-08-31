@@ -170,25 +170,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"iscsi_ioctl.h"
+file|<dev/iscsi/icl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iscsi.h"
+file|<dev/iscsi/iscsi_ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"icl.h"
+file|<dev/iscsi/iscsi_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iscsi_proto.h"
+file|<dev/iscsi/iscsi.h>
 end_include
 
 begin_ifdef
