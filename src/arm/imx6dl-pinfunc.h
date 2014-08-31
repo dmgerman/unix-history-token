@@ -5209,6 +5209,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MX6QDL_PAD_GPIO_6__ENET_IRQ
+value|0x234 0x604 0x03c 0x11 0xff000609
+end_define
+
+begin_define
+define|#
+directive|define
 name|MX6QDL_PAD_GPIO_6__I2C3_SDA
 value|0x234 0x604 0x87c 0x2 0x2
 end_define
@@ -6569,6 +6576,13 @@ define|#
 directive|define
 name|MX6QDL_PAD_SD1_CLK__SD1_CLK
 value|0x2dc 0x6c4 0x928 0x0 0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MX6QDL_PAD_SD1_CLK__OSC32K_32K_OUT
+value|0x2dc 0x6c4 0x000 0x2 0x0
 end_define
 
 begin_define

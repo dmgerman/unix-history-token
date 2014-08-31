@@ -88,12 +88,9 @@ name|TEGRA124_CLK_I2C1
 value|12
 end_define
 
-begin_define
-define|#
-directive|define
-name|TEGRA124_CLK_NDFLASH
-value|13
-end_define
+begin_comment
+comment|/* 13 */
+end_comment
 
 begin_define
 define|#
@@ -131,12 +128,9 @@ begin_comment
 comment|/* 20 (register bit affects vi and vi_sensor) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TEGRA124_CLK_GR_2D
-value|21
-end_define
+begin_comment
+comment|/* 21 */
+end_comment
 
 begin_define
 define|#
@@ -152,12 +146,9 @@ name|TEGRA124_CLK_ISP
 value|23
 end_define
 
-begin_define
-define|#
-directive|define
-name|TEGRA124_CLK_GR_3D
-value|24
-end_define
+begin_comment
+comment|/* 26 */
+end_comment
 
 begin_comment
 comment|/* 25 */
@@ -404,12 +395,9 @@ name|TEGRA124_CLK_UARTD
 value|65
 end_define
 
-begin_define
-define|#
-directive|define
-name|TEGRA124_CLK_UARTE
-value|66
-end_define
+begin_comment
+comment|/* 66 */
+end_comment
 
 begin_define
 define|#
@@ -496,12 +484,9 @@ name|TEGRA124_CLK_DTV
 value|79
 end_define
 
-begin_define
-define|#
-directive|define
-name|TEGRA124_CLK_NDSPEED
-value|80
-end_define
+begin_comment
+comment|/* 80 */
+end_comment
 
 begin_define
 define|#
@@ -1872,8 +1857,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TEGRA124_CLK_CLK_MAX
+name|TEGRA124_CLK_XUSB_SS_DIV2
 value|312
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEGRA124_CLK_CLK_MAX
+value|313
 end_define
 
 begin_endif
