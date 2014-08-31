@@ -11826,11 +11826,9 @@ operator|)
 return|;
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* sun */
 else|#
 directive|else
+comment|/* sun */
 ifdef|#
 directive|ifdef
 name|__i386__
@@ -11879,6 +11877,11 @@ return|;
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* sun */
+else|#
+directive|else
 if|if
 condition|(
 name|spa_get_random
