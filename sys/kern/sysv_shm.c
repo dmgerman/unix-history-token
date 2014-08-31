@@ -2111,6 +2111,8 @@ argument_list|,
 name|prot
 argument_list|,
 name|MAP_INHERIT_SHARE
+operator||
+name|MAP_PREFAULT_PARTIAL
 argument_list|)
 expr_stmt|;
 if|if
