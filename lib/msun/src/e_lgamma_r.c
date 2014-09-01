@@ -40,7 +40,22 @@ end_include
 begin_decl_stmt
 specifier|static
 specifier|const
+specifier|volatile
 name|double
+name|vzero
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|double
+name|zero
+init|=
+literal|0.00000000000000000000e+00
+decl_stmt|,
 name|two52
 init|=
 literal|4.50359962737049600000e+15
@@ -386,16 +401,6 @@ begin_comment
 comment|/* 0xBF5AB89D, 0x0B9E43E4 */
 end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|double
-name|zero
-init|=
-literal|0.00000000000000000000e+00
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Compute sin(pi*x) without actually doing the pi*x multiplication.  * sin_pi(x) is only called for x< 0 and |x|< 2**(p-1) where p is  * the precision of x.  */
 end_comment
@@ -661,9 +666,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|lx
-decl_stmt|,
 name|ix
+decl_stmt|,
+name|lx
 decl_stmt|;
 name|EXTRACT_WORDS
 argument_list|(
@@ -710,7 +715,7 @@ condition|)
 return|return
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
 if|if
 condition|(
@@ -768,7 +773,7 @@ comment|/* |x|>=2**52, must be -integer */
 return|return
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
 name|t
 operator|=
@@ -786,7 +791,7 @@ condition|)
 return|return
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
 comment|/* -integer */
 name|nadj

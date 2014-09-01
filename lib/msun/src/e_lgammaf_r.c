@@ -36,7 +36,22 @@ end_include
 begin_decl_stmt
 specifier|static
 specifier|const
+specifier|volatile
 name|float
+name|vzero
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|float
+name|zero
+init|=
+literal|0.0000000000e+00
+decl_stmt|,
 name|two23
 init|=
 literal|8.3886080000e+06
@@ -381,16 +396,6 @@ begin_comment
 comment|/* 0xbad5c4e8 */
 end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|float
-name|zero
-init|=
-literal|0.0000000000e+00
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|float
@@ -686,7 +691,7 @@ condition|)
 return|return
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
 if|if
 condition|(
@@ -744,7 +749,7 @@ comment|/* |x|>=2**23, must be -integer */
 return|return
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
 name|t
 operator|=
@@ -762,7 +767,7 @@ condition|)
 return|return
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
 comment|/* -integer */
 name|nadj
