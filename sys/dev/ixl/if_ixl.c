@@ -1734,27 +1734,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dev/netmap/if_ixl_netmap.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEV_NETMAP */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -3452,17 +3431,6 @@ argument_list|,
 name|EVENTHANDLER_PRI_FIRST
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-name|ixl_netmap_attach
-argument_list|(
-name|pf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEV_NETMAP */
 name|INIT_DEBUGOUT
 argument_list|(
 literal|"ixl_attach: end"
@@ -3781,19 +3749,6 @@ operator|->
 name|timer
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-name|netmap_detach
-argument_list|(
-name|vsi
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEV_NETMAP */
 name|ixl_free_pci_resources
 argument_list|(
 name|pf
@@ -10713,9 +10668,7 @@ expr_stmt|;
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -12110,33 +12063,6 @@ name|lrxqthresh
 operator|=
 literal|2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-comment|/* "CRC strip in netmap is conditional" */
-if|if
-condition|(
-name|vsi
-operator|->
-name|ifp
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_NETMAP
-operator|&&
-operator|!
-name|ixl_crcstrip
-condition|)
-name|rctx
-operator|.
-name|crcstrip
-operator|=
-literal|0
-expr_stmt|;
-else|else
-endif|#
-directive|endif
-comment|/* DEV_NETMAP */
 name|rctx
 operator|.
 name|crcstrip
@@ -12259,82 +12185,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-comment|/* TODO appropriately comment 		 * Code based on netmap code in ixgbe_init_locked() 		 * Messes with what the software sets as queue 		 * descriptor tail in hardware. 		 */
-if|if
-condition|(
-name|vsi
-operator|->
-name|ifp
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_NETMAP
-condition|)
-block|{
-name|struct
-name|netmap_adapter
-modifier|*
-name|na
-init|=
-name|NA
-argument_list|(
-name|vsi
-operator|->
-name|ifp
-argument_list|)
-decl_stmt|;
-name|struct
-name|netmap_kring
-modifier|*
-name|kring
-init|=
-operator|&
-name|na
-operator|->
-name|rx_rings
-index|[
-name|que
-operator|->
-name|me
-index|]
-decl_stmt|;
-name|int
-name|t
-init|=
-name|na
-operator|->
-name|num_rx_desc
-operator|-
-literal|1
-operator|-
-name|kring
-operator|->
-name|nr_hwavail
-decl_stmt|;
-name|wr32
-argument_list|(
-name|vsi
-operator|->
-name|hw
-argument_list|,
-name|I40E_QRX_TAIL
-argument_list|(
-name|que
-operator|->
-name|me
-argument_list|)
-argument_list|,
-name|t
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-endif|#
-directive|endif
-comment|/* DEV_NETMAP */
 name|wr32
 argument_list|(
 name|vsi
@@ -19714,8 +19564,11 @@ name|reg
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Queue irqs = %lx\n"
+literal|"Queue irqs = %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|que
 operator|->
 name|irqs
@@ -19723,8 +19576,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"AdminQ irqs = %lx\n"
+literal|"AdminQ irqs = %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pf
 operator|->
 name|admin_irq
@@ -19741,8 +19597,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX not ready = %lx\n"
+literal|"RX not ready = %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rxr
 operator|->
 name|not_done
@@ -19750,8 +19609,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RX packets = %lx\n"
+literal|"RX packets = %jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rxr
 operator|->
 name|rx_packets
@@ -20617,11 +20479,21 @@ name|new_data
 decl_stmt|;
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-operator|>=
-literal|10
+argument_list|)
 operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1000000
+operator|)
+operator|&&
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 name|new_data
 operator|=
 name|rd64

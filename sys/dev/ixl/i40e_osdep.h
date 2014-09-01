@@ -778,6 +778,20 @@ directive|define
 name|le16_to_cpu
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|__inline
@@ -792,6 +806,25 @@ block|{
 asm|__asm volatile("prefetcht0 %0" :: "m" (*(unsigned long *)x));
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|prefetch
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -1034,7 +1067,7 @@ operator|,
 operator|(
 name|uintmax_t
 operator|)
-name|a
+name|reg
 operator|,
 operator|(
 name|uintmax_t
@@ -1096,7 +1129,7 @@ operator|,
 operator|(
 name|uintmax_t
 operator|)
-name|a
+name|reg
 operator|,
 operator|(
 name|uintmax_t

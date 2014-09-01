@@ -84,7 +84,7 @@ end_comment
 begin_function_decl
 name|enum
 name|i40e_status_code
-name|i40e_allocate_dma_mem
+name|i40e_allocate_dma
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -96,11 +96,7 @@ name|i40e_dma_mem
 modifier|*
 name|mem
 parameter_list|,
-name|enum
-name|i40e_memory_type
-name|type
-parameter_list|,
-name|u64
+name|bus_size_t
 name|size
 parameter_list|,
 name|u32
@@ -112,7 +108,7 @@ end_function_decl
 begin_function_decl
 name|enum
 name|i40e_status_code
-name|i40e_free_dma_mem
+name|i40e_free_dma
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -130,7 +126,7 @@ end_function_decl
 begin_function_decl
 name|enum
 name|i40e_status_code
-name|i40e_allocate_virt_mem
+name|i40e_allocate_virt
 parameter_list|(
 name|struct
 name|i40e_hw
@@ -151,7 +147,7 @@ end_function_decl
 begin_function_decl
 name|enum
 name|i40e_status_code
-name|i40e_free_virt_mem
+name|i40e_free_virt
 parameter_list|(
 name|struct
 name|i40e_hw

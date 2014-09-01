@@ -82,7 +82,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
 end_include
 
 begin_include
@@ -1254,14 +1266,6 @@ decl_stmt|;
 name|bus_dmamap_t
 name|pmap
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-name|u64
-name|addr
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
