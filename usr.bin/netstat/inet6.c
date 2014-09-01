@@ -802,7 +802,7 @@ literal|"public/temporary address"
 block|,
 literal|"alive interface"
 block|,
-literal|"preferred interface"
+literal|"better virtual status"
 block|,
 literal|"rule #10"
 block|,
