@@ -2067,7 +2067,7 @@ argument_list|)
 expr_stmt|;
 name|edma_node
 operator|=
-name|OF_xref_phandle
+name|OF_node_from_xref
 argument_list|(
 name|fdt32_to_cpu
 argument_list|(

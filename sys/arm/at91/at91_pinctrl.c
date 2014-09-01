@@ -597,7 +597,7 @@ if|if
 condition|(
 name|OF_searchencprop
 argument_list|(
-name|OF_xref_phandle
+name|OF_node_from_xref
 argument_list|(
 name|iparent
 argument_list|)
@@ -2186,7 +2186,7 @@ control|)
 block|{
 name|scratch
 operator|=
-name|OF_xref_phandle
+name|OF_node_from_xref
 argument_list|(
 name|pinctrl
 index|[

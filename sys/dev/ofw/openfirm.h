@@ -488,10 +488,20 @@ end_comment
 
 begin_function_decl
 name|phandle_t
-name|OF_xref_phandle
+name|OF_node_from_xref
 parameter_list|(
 name|phandle_t
 name|xref
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|phandle_t
+name|OF_xref_from_node
+parameter_list|(
+name|phandle_t
+name|node
 parameter_list|)
 function_decl|;
 end_function_decl
