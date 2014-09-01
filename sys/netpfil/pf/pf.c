@@ -20985,7 +20985,7 @@ argument_list|(
 operator|&
 name|reason
 argument_list|,
-name|PFRES_MAPFAILED
+name|PFRES_BADSTATE
 argument_list|)
 expr_stmt|;
 name|pf_src_tree_remove_state
