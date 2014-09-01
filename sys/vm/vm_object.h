@@ -1078,6 +1078,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vm_object_unwire
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_ooffset_t
+name|offset
+parameter_list|,
+name|vm_size_t
+name|length
+parameter_list|,
+name|uint8_t
+name|queue
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
