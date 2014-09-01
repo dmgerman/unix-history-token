@@ -3707,8 +3707,29 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Lock annotations.  *  * Clang provides support for doing basic thread-safety tests at  * compile-time, by marking which locks will/should be held when  * entering/leaving a functions.  *  * Furthermore, it is also possible to annotate variables and structure  * members to enforce that they are only accessed when certain locks are  * held.  *  * Note: These annotations have no effect on this version of FreeBSD.  * They are merely provided for forward compatibilty.  */
+comment|/*  * Lock annotations.  *  * Clang provides support for doing basic thread-safety tests at  * compile-time, by marking which locks will/should be held when  * entering/leaving a functions.  *  * Furthermore, it is also possible to annotate variables and structure  * members to enforce that they are only accessed when certain locks are  * held.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__clang__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__lock_annotate
+parameter_list|(
+name|x
+parameter_list|)
+value|__attribute__((x))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -3718,6 +3739,11 @@ parameter_list|(
 name|x
 parameter_list|)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Structure implements a lock. */
