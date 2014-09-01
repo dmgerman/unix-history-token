@@ -391,14 +391,10 @@ literal|0.0000000000e+00
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Compute sin(pi*x) without actually doing the pi*x multiplication.  * sin_pi(x) is only called for x< 0 and |x|< 2**(p-1) where p is  * the precision of x.  */
-end_comment
-
 begin_function
 specifier|static
 name|float
-name|sin_pi
+name|sin_pif
 parameter_list|(
 name|float
 name|x
@@ -442,9 +438,7 @@ operator|==
 name|y
 condition|)
 return|return
-operator|(
 name|zero
-operator|)
 return|;
 name|vz
 operator|=
@@ -754,7 +748,7 @@ name|zero
 return|;
 name|t
 operator|=
-name|sin_pi
+name|sin_pif
 argument_list|(
 name|x
 argument_list|)

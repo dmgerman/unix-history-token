@@ -447,9 +447,7 @@ operator|==
 name|y
 condition|)
 return|return
-operator|(
 name|zero
-operator|)
 return|;
 name|vz
 operator|=
