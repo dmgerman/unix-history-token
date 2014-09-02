@@ -2667,8 +2667,6 @@ name|vty_name
 index|[
 literal|16
 index|]
-init|=
-literal|""
 decl_stmt|;
 end_decl_stmt
 
