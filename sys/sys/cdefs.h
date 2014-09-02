@@ -1512,15 +1512,21 @@ name|c_thread_local
 argument_list|)
 end_if
 
-begin_comment
-comment|/* XXX: Change this to test against C++11 when clang in base supports it. */
-end_comment
-
 begin_if
 if|#
 directive|if
-comment|/* (defined(__cplusplus)&& __cplusplus>= 201103L) || */
-if|\
+operator|(
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+operator|&&
+name|__cplusplus
+operator|>=
+literal|201103L
+operator|)
+operator|||
+expr|\
 name|__has_extension
 argument_list|(
 name|cxx_thread_local
@@ -3710,11 +3716,14 @@ begin_comment
 comment|/*  * Lock annotations.  *  * Clang provides support for doing basic thread-safety tests at  * compile-time, by marking which locks will/should be held when  * entering/leaving a functions.  *  * Furthermore, it is also possible to annotate variables and structure  * members to enforce that they are only accessed when certain locks are  * held.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__clang__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__has_extension
+argument_list|(
+name|c_thread_safety_attributes
+argument_list|)
+end_if
 
 begin_define
 define|#
