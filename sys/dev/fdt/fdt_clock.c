@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -412,11 +418,9 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-name|memset
+name|bzero
 argument_list|(
 name|info
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -523,7 +527,7 @@ parameter_list|)
 block|{
 name|OF_device_register_xref
 argument_list|(
-name|OF_xref_from_node
+name|OF_xref_from_device
 argument_list|(
 name|provider
 argument_list|)
@@ -544,7 +548,7 @@ parameter_list|)
 block|{
 name|OF_device_register_xref
 argument_list|(
-name|OF_xref_from_node
+name|OF_xref_from_device
 argument_list|(
 name|provider
 argument_list|)
