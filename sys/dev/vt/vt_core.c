@@ -10230,19 +10230,6 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-literal|20
-argument_list|,
-literal|"%s: vd_keyboard = %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|vd
-operator|->
-name|vd_keyboard
-argument_list|)
-expr_stmt|;
 comment|/* Init 25 Hz timer. */
 name|callout_init_mtx
 argument_list|(
