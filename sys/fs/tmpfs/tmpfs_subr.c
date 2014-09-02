@@ -518,10 +518,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Allocates a new node of type 'type' inside the 'tmp' mount point, with  * its owner set to 'uid', its group to 'gid' and its mode set to 'mode',  * using the credentials of the process 'p'.  *  * If the node type is set to 'VDIR', then the parent parameter must point  * to the parent directory of the node being created.  It may only be NULL  * while allocating the root node.  *  * If the node type is set to 'VBLK' or 'VCHR', then the rdev parameter  * specifies the device the node represents.  *  * If the node type is set to 'VLNK', then the parameter target specifies  * the file name of the target file for the symbolic link that is being  * created.  *  * Note that new nodes are retrieved from the available list if it has  * items or, if it is empty, from the node pool as long as there is enough  * space to create them.  *  * Returns zero on success or an appropriate error code on failure.  */
 end_comment
 
@@ -529,6 +525,11 @@ begin_function
 name|int
 name|tmpfs_alloc_node
 parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|,
 name|struct
 name|tmpfs_mount
 modifier|*
@@ -595,6 +596,25 @@ name|VDIR
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|tmp
+operator|->
+name|tm_root
+operator|==
+name|NULL
+operator|||
+name|mp
+operator|->
+name|mnt_writeopcount
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"creating node not under vn_start_write"
+operator|)
+argument_list|)
+expr_stmt|;
 name|MPASS
 argument_list|(
 name|IFF
@@ -658,6 +678,26 @@ operator|(
 name|ENOSPC
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNT
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * When a new tmpfs node is created for fully 		 * constructed mount point, there must be a parent 		 * node, which vnode is locked exclusively.  As 		 * consequence, if the unmount is executing in 		 * parallel, vflush() cannot reclaim the parent vnode. 		 * Due to this, the check for MNTK_UNMOUNT flag is not 		 * racy: if we did not see MNTK_UNMOUNT flag, then tmp 		 * cannot be destroyed until node construction is 		 * finished and the parent vnode unlocked. 		 * 		 * Tmpfs does not need to instantiate new nodes during 		 * unmount. 		 */
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+block|}
 name|nnode
 operator|=
 operator|(
@@ -965,6 +1005,8 @@ argument_list|(
 name|obj
 argument_list|,
 name|OBJ_NOSPLIT
+operator||
+name|OBJ_TMPFS_NODE
 argument_list|)
 expr_stmt|;
 name|vm_object_clear_flag
@@ -1033,10 +1075,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Destroys the node pointed to by node from the file system 'tmp'.  * If the node does not belong to the given mount point, the results are  * unpredicted.  *  * If the node references a directory; no entries are allowed because  * their removal could need a recursive algorithm, something forbidden in  * kernel space.  Furthermore, there is not need to provide such  * functionality (recursive removal) because the only primitives offered  * to the user are the removal of empty directories and the deletion of  * individual files.  *  * Note that nodes are not really deleted; in fact, when a node has been  * allocated, it cannot be deleted during the whole life of the file  * system.  Instead, they are moved to the available list and remain there  * until reused.  */
@@ -1266,10 +1304,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -1601,10 +1635,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Frees a directory entry.  It is the caller's responsibility to destroy  * the node referenced by it if needed.  *  * The link count of node is decreased by one to reflect the removal of an  * object that referenced it.  This only happens if 'node_exists' is true;  * otherwise the function will not access the node referred to by the  * directory entry, as it may already have been released from the outside.  */
 end_comment
 
@@ -1695,10 +1725,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 name|void
 name|tmpfs_destroy_vobject
@@ -1712,6 +1738,13 @@ name|vm_object_t
 name|obj
 parameter_list|)
 block|{
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"tmpfs_destroy_vobject"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -2242,6 +2275,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* lkflag is ignored, the lock is exclusive */
 operator|(
 name|void
 operator|)
@@ -2418,6 +2452,19 @@ name|tn_type
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VFIFO
+condition|)
+name|VN_LOCK_ASHARE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|insmntque1
@@ -2568,10 +2615,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Destroys the association between the vnode vp and the node it  * references.  */
 end_comment
 
@@ -2597,14 +2640,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|mtx_assert
-argument_list|(
-name|TMPFS_NODE_MTX
+name|TMPFS_NODE_ASSERT_LOCKED
 argument_list|(
 name|node
-argument_list|)
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|node
@@ -2648,10 +2686,6 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Allocates a new file of type 'type' and adds it to the parent directory  * 'dvp'; this addition is done using the component name given in 'cnp'.  * The ownership of the new file is automatically assigned based on the  * credentials of the caller (through 'cnp'), the group is set based on  * the parent directory and the mode is determined from the 'vap' argument.  * If successful, *vpp holds a vnode to the newly created file and zero  * is returned.  Otherwise *vpp is NULL and the function returns an  * appropriate error code.  */
@@ -2782,13 +2816,11 @@ operator|==
 name|LINK_MAX
 condition|)
 block|{
-name|error
-operator|=
+return|return
+operator|(
 name|EMLINK
-expr_stmt|;
-goto|goto
-name|out
-goto|;
+operator|)
+return|;
 block|}
 name|parent
 operator|=
@@ -2812,6 +2844,10 @@ name|error
 operator|=
 name|tmpfs_alloc_node
 argument_list|(
+name|dvp
+operator|->
+name|v_mount
+argument_list|,
 name|tmp
 argument_list|,
 name|vap
@@ -2850,9 +2886,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* Allocate a directory entry that points to the new file. */
 name|error
 operator|=
@@ -2888,9 +2926,11 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 comment|/* Allocate a vnode for the new file. */
 name|error
@@ -2929,9 +2969,11 @@ argument_list|,
 name|node
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 comment|/* Now that all required items are allocated, we can proceed to 	 * insert the new node into the directory, an operation that 	 * cannot fail. */
 if|if
@@ -2956,17 +2998,13 @@ argument_list|,
 name|de
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 return|return
-name|error
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 specifier|static
@@ -4380,10 +4418,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Detaches the directory entry de from the directory represented by vp.  * Note that this does not change the link count of the node pointed by  * the directory entry, as this is done by tmpfs_free_dirent.  */
 end_comment
 
@@ -4747,10 +4781,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Helper function for tmpfs_readdir.  Creates a '.' entry for the given  * directory and returns it in the uio space.  The function returns 0  * on success, -1 if there was not enough space in the uio structure to  * hold the directory entry or an appropriate error code if another  * error happens.  */
 end_comment
 
@@ -4879,10 +4909,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Helper function for tmpfs_readdir.  Creates a '..' entry for the given  * directory and returns it in the uio space.  The function returns 0  * on success, -1 if there was not enough space in the uio structure to  * hold the directory entry or an appropriate error code if another  * error happens.  */
@@ -5067,10 +5093,6 @@ name|error
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Helper function for tmpfs_readdir.  Returns as much directory entries  * as can fit in the uio space.  The read starts at uio->uio_offset.  * The function returns 0 on success, -1 if there was not enough space  * in the uio structure to hold the directory entry or an appropriate  * error code if another error happens.  */
@@ -5810,10 +5832,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Resizes the aobj associated with the regular file pointed to by 'vp' to the  * size 'newsize'.  'vp' must point to a vnode that represents a regular file.  * 'newsize' must be positive.  *  * Returns zero on success or an appropriate error code on failure.  */
 end_comment
 
@@ -6304,10 +6322,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Change flags of the given vnode.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
 end_comment
 
@@ -6552,10 +6566,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Change access mode on the given vnode.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
 end_comment
 
@@ -6765,10 +6775,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/*  * Change ownership of the given vnode.  At least one of uid or gid must  * be different than VNOVAL.  If one is set to that value, the attribute  * is unchanged.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
@@ -7067,10 +7073,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Change size of the given vnode.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
 end_comment
 
@@ -7217,10 +7219,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
-begin_comment
 comment|/*  * Change access and modification times of the given vnode.  * Caller should execute tmpfs_update on vp after a successful execution.  * The vnode must be locked on entry and remain locked on exit.  */
 end_comment
 
@@ -7234,22 +7232,9 @@ modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|timespec
+name|vattr
 modifier|*
-name|atime
-parameter_list|,
-name|struct
-name|timespec
-modifier|*
-name|mtime
-parameter_list|,
-name|struct
-name|timespec
-modifier|*
-name|birthtime
-parameter_list|,
-name|int
-name|vaflags
+name|vap
 parameter_list|,
 name|struct
 name|ucred
@@ -7315,21 +7300,13 @@ condition|)
 return|return
 name|EPERM
 return|;
-comment|/* Determine if the user have proper privilege to update time. */
-if|if
-condition|(
-name|vaflags
-operator|&
-name|VA_UTIMES_NULL
-condition|)
-block|{
 name|error
 operator|=
-name|VOP_ACCESS
+name|vn_utimes_perm
 argument_list|(
 name|vp
 argument_list|,
-name|VADMIN
+name|vap
 argument_list|,
 name|cred
 argument_list|,
@@ -7339,38 +7316,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-condition|)
-name|error
-operator|=
-name|VOP_ACCESS
-argument_list|(
-name|vp
-argument_list|,
-name|VWRITE
-argument_list|,
-name|cred
-argument_list|,
-name|l
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|error
-operator|=
-name|VOP_ACCESS
-argument_list|(
-name|vp
-argument_list|,
-name|VADMIN
-argument_list|,
-name|cred
-argument_list|,
-name|l
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -7379,14 +7326,18 @@ operator|)
 return|;
 if|if
 condition|(
-name|atime
+name|vap
 operator|->
+name|va_atime
+operator|.
 name|tv_sec
 operator|!=
 name|VNOVAL
 operator|&&
-name|atime
+name|vap
 operator|->
+name|va_atime
+operator|.
 name|tv_nsec
 operator|!=
 name|VNOVAL
@@ -7399,14 +7350,18 @@ name|TMPFS_NODE_ACCESSED
 expr_stmt|;
 if|if
 condition|(
-name|mtime
+name|vap
 operator|->
+name|va_mtime
+operator|.
 name|tv_sec
 operator|!=
 name|VNOVAL
 operator|&&
-name|mtime
+name|vap
 operator|->
+name|va_mtime
+operator|.
 name|tv_nsec
 operator|!=
 name|VNOVAL
@@ -7419,14 +7374,18 @@ name|TMPFS_NODE_MODIFIED
 expr_stmt|;
 if|if
 condition|(
-name|birthtime
+name|vap
 operator|->
+name|va_birthtime
+operator|.
 name|tv_nsec
 operator|!=
 name|VNOVAL
 operator|&&
-name|birthtime
+name|vap
 operator|->
+name|va_birthtime
+operator|.
 name|tv_nsec
 operator|!=
 name|VNOVAL
@@ -7441,21 +7400,31 @@ name|tmpfs_itimes
 argument_list|(
 name|vp
 argument_list|,
-name|atime
+operator|&
+name|vap
+operator|->
+name|va_atime
 argument_list|,
-name|mtime
+operator|&
+name|vap
+operator|->
+name|va_mtime
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|birthtime
+name|vap
 operator|->
+name|va_birthtime
+operator|.
 name|tv_nsec
 operator|!=
 name|VNOVAL
 operator|&&
-name|birthtime
+name|vap
 operator|->
+name|va_birthtime
+operator|.
 name|tv_nsec
 operator|!=
 name|VNOVAL
@@ -7464,8 +7433,9 @@ name|node
 operator|->
 name|tn_birthtime
 operator|=
-operator|*
-name|birthtime
+name|vap
+operator|->
+name|va_birthtime
 expr_stmt|;
 name|MPASS
 argument_list|(
@@ -7480,10 +7450,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_comment
 comment|/* Sync timestamps */
@@ -7640,10 +7606,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
-
 begin_function
 name|void
 name|tmpfs_update
@@ -7665,10 +7627,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* --------------------------------------------------------------------- */
-end_comment
 
 begin_function
 name|int

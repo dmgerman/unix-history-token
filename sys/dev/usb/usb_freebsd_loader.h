@@ -87,6 +87,13 @@ begin_define
 define|#
 directive|define
 name|USB_HAVE_MSCTEST
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_HAVE_MSCTEST_DETACH
 value|0
 end_define
 

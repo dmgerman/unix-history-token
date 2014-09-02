@@ -207,17 +207,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.x86bios.call"
-argument_list|,
-operator|&
-name|x86bios_trace_call
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_x86bios
@@ -226,7 +215,7 @@ name|OID_AUTO
 argument_list|,
 name|call
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|x86bios_trace_call
@@ -246,17 +235,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.x86bios.int"
-argument_list|,
-operator|&
-name|x86bios_trace_int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_x86bios
@@ -265,7 +243,7 @@ name|OID_AUTO
 argument_list|,
 name|int
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|x86bios_trace_int

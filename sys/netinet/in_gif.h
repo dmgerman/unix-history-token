@@ -37,11 +37,15 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|void
+name|int
 name|in_gif_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int

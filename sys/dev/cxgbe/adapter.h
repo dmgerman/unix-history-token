@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"common/t4_msg.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"firmware/t4fw_interface.h"
 end_include
 
@@ -514,34 +520,34 @@ end_typedef
 begin_enum
 enum|enum
 block|{
+comment|/* 	 * All ingress queues use this entry size.  Note that the firmware event 	 * queue and any iq expecting CPL_RX_PKT in the descriptor needs this to 	 * be at least 64. 	 */
+name|IQ_ESIZE
+init|=
+literal|64
+block|,
+comment|/* Default queue sizes for all kinds of ingress queues */
 name|FW_IQ_QSIZE
 init|=
 literal|256
 block|,
-name|FW_IQ_ESIZE
-init|=
-literal|64
-block|,
-comment|/* At least 64 mandated by the firmware spec */
 name|RX_IQ_QSIZE
 init|=
 literal|1024
 block|,
-name|RX_IQ_ESIZE
-init|=
-literal|64
-block|,
-comment|/* At least 64 so CPL_RX_PKT will fit */
-name|EQ_ESIZE
-init|=
-literal|64
-block|,
 comment|/* All egress queues use this entry size */
-name|RX_FL_ESIZE
-init|=
 name|EQ_ESIZE
+init|=
+literal|64
 block|,
-comment|/* 8 64bit addresses */
+comment|/* Default queue sizes for all kinds of egress queues */
+name|CTRL_EQ_QSIZE
+init|=
+literal|128
+block|,
+name|TX_EQ_QSIZE
+init|=
+literal|1024
+block|,
 if|#
 directive|if
 name|MJUMPAGESIZE
@@ -565,14 +571,13 @@ name|CL_METADATA_SIZE
 init|=
 name|CACHE_LINE_SIZE
 block|,
-name|CTRL_EQ_QSIZE
+name|SGE_MAX_WR_NDESC
 init|=
-literal|128
+name|SGE_MAX_WR_LEN
+operator|/
+name|EQ_ESIZE
 block|,
-name|TX_EQ_QSIZE
-init|=
-literal|1024
-block|,
+comment|/* max WR size in desc */
 name|TX_SGL_SEGS
 init|=
 literal|36
@@ -613,6 +618,64 @@ literal|1
 operator|<<
 literal|2
 operator|)
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|XGMAC_MTU
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+name|XGMAC_PROMISC
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+name|XGMAC_ALLMULTI
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+name|XGMAC_VLANEX
+init|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
+name|XGMAC_UCADDR
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+block|,
+name|XGMAC_MCADDRS
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+block|,
+name|XGMAC_ALL
+init|=
+literal|0xffff
 block|}
 enum|;
 end_enum
@@ -673,15 +736,7 @@ operator|<<
 literal|1
 operator|)
 block|,
-name|INTR_DIRECT
-init|=
-operator|(
-literal|1
-operator|<<
-literal|2
-operator|)
-block|,
-comment|/* direct interrupts for everything */
+comment|/* INTR_DIRECT	= (1<< 2),	No longer used. */
 name|MASTER_PF
 init|=
 operator|(
@@ -753,6 +808,43 @@ operator|(
 literal|1
 operator|<<
 literal|3
+operator|)
+block|,
+name|INTR_RXQ
+init|=
+operator|(
+literal|1
+operator|<<
+literal|4
+operator|)
+block|,
+comment|/* All NIC rxq's take interrupts */
+name|INTR_OFLD_RXQ
+init|=
+operator|(
+literal|1
+operator|<<
+literal|5
+operator|)
+block|,
+comment|/* All TOE rxq's take interrupts */
+name|INTR_NM_RXQ
+init|=
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+block|,
+comment|/* All netmap rxq's take interrupts */
+name|INTR_ALL
+init|=
+operator|(
+name|INTR_RXQ
+operator||
+name|INTR_OFLD_RXQ
+operator||
+name|INTR_NM_RXQ
 operator|)
 block|, }
 enum|;
@@ -926,6 +1018,49 @@ decl_stmt|;
 comment|/* index of first offload rx queue */
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|int
+name|nnmtxq
+decl_stmt|;
+comment|/* # of netmap tx queues */
+name|int
+name|first_nm_txq
+decl_stmt|;
+comment|/* index of first netmap tx queue */
+name|int
+name|nnmrxq
+decl_stmt|;
+comment|/* # of netmap rx queues */
+name|int
+name|first_nm_rxq
+decl_stmt|;
+comment|/* index of first netmap rx queue */
+name|struct
+name|ifnet
+modifier|*
+name|nm_ifp
+decl_stmt|;
+name|struct
+name|ifmedia
+name|nm_media
+decl_stmt|;
+name|int
+name|nmif_flags
+decl_stmt|;
+name|uint16_t
+name|nm_viid
+decl_stmt|;
+name|int16_t
+name|nm_xact_addr_filt
+decl_stmt|;
+name|uint16_t
+name|nm_rss_size
+decl_stmt|;
+comment|/* size of netmap VI's RSS table slice */
+endif|#
+directive|endif
 name|int
 name|tmr_idx
 decl_stmt|;
@@ -1028,9 +1163,10 @@ block|{
 name|caddr_t
 name|cl
 decl_stmt|;
-name|uint8_t
+name|uint16_t
 name|nmbuf
 decl_stmt|;
+comment|/* # of driver originated mbufs with ref on cluster */
 name|struct
 name|cluster_layout
 name|cll
@@ -1118,6 +1254,55 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IQ_PAD
+value|(IQ_ESIZE - sizeof(struct rsp_ctrl) - sizeof(struct rss_header))
+end_define
+
+begin_struct
+struct|struct
+name|iq_desc
+block|{
+name|struct
+name|rss_header
+name|rss
+decl_stmt|;
+name|uint8_t
+name|cpl
+index|[
+name|IQ_PAD
+index|]
+decl_stmt|;
+name|struct
+name|rsp_ctrl
+name|rsp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_undef
+undef|#
+directive|undef
+name|IQ_PAD
+end_undef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|iq_desc
+argument_list|)
+operator|==
+name|IQ_ESIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_enum
 enum|enum
 block|{
@@ -1182,35 +1367,9 @@ begin_struct
 struct|struct
 name|sge_iq
 block|{
-name|bus_dma_tag_t
-name|desc_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|desc_map
-decl_stmt|;
-name|bus_addr_t
-name|ba
-decl_stmt|;
-comment|/* bus address of descriptor ring */
 name|uint32_t
 name|flags
 decl_stmt|;
-name|uint16_t
-name|abs_id
-decl_stmt|;
-comment|/* absolute SGE id for the iq */
-name|int8_t
-name|intr_pktc_idx
-decl_stmt|;
-comment|/* packet count threshold index */
-name|int8_t
-name|pad0
-decl_stmt|;
-name|__be64
-modifier|*
-name|desc
-decl_stmt|;
-comment|/* KVA of descriptor ring */
 specifier|volatile
 name|int
 name|state
@@ -1220,12 +1379,16 @@ name|adapter
 modifier|*
 name|adapter
 decl_stmt|;
-specifier|const
-name|__be64
+name|struct
+name|iq_desc
 modifier|*
-name|cdesc
+name|desc
 decl_stmt|;
-comment|/* current descriptor */
+comment|/* KVA of descriptor ring */
+name|int8_t
+name|intr_pktc_idx
+decl_stmt|;
+comment|/* packet count threshold index */
 name|uint8_t
 name|gen
 decl_stmt|;
@@ -1238,14 +1401,14 @@ name|uint8_t
 name|intr_next
 decl_stmt|;
 comment|/* XXX: holdoff for next interrupt */
-name|uint8_t
-name|esize
-decl_stmt|;
-comment|/* size (bytes) of each entry in the queue */
 name|uint16_t
 name|qsize
 decl_stmt|;
 comment|/* size (# of entries) of the queue */
+name|uint16_t
+name|sidx
+decl_stmt|;
+comment|/* index of the entry with the status page */
 name|uint16_t
 name|cidx
 decl_stmt|;
@@ -1254,12 +1417,26 @@ name|uint16_t
 name|cntxt_id
 decl_stmt|;
 comment|/* SGE context id for the iq */
+name|uint16_t
+name|abs_id
+decl_stmt|;
+comment|/* absolute SGE id for the iq */
 name|STAILQ_ENTRY
 argument_list|(
 argument|sge_iq
 argument_list|)
 name|link
 expr_stmt|;
+name|bus_dma_tag_t
+name|desc_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|desc_map
+decl_stmt|;
+name|bus_addr_t
+name|ba
+decl_stmt|;
+comment|/* bus address of descriptor ring */
 block|}
 struct|;
 end_struct
@@ -1398,7 +1575,7 @@ modifier|*
 name|spg
 decl_stmt|;
 comment|/* status page, for convenience */
-name|int
+name|uint16_t
 name|doorbells
 decl_stmt|;
 specifier|volatile
@@ -1539,6 +1716,15 @@ literal|2
 operator|)
 block|,
 comment|/* buffer packing enabled */
+name|FL_BUF_RESUME
+init|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+block|,
+comment|/* resume from the middle of the frame */
 block|}
 enum|;
 end_enum
@@ -1550,7 +1736,8 @@ name|FL_RUNNING_LOW
 parameter_list|(
 name|fl
 parameter_list|)
-value|(fl->cap - fl->needed<= fl->lowat)
+define|\
+value|(IDXDIFF(fl->dbidx * 8, fl->cidx, fl->sidx * 8)<= fl->lowat)
 end_define
 
 begin_define
@@ -1560,113 +1747,77 @@ name|FL_NOT_RUNNING_LOW
 parameter_list|(
 name|fl
 parameter_list|)
-value|(fl->cap - fl->needed>= 2 * fl->lowat)
+define|\
+value|(IDXDIFF(fl->dbidx * 8, fl->cidx, fl->sidx * 8)>= 2 * fl->lowat)
 end_define
 
 begin_struct
 struct|struct
 name|sge_fl
 block|{
-name|bus_dma_tag_t
-name|desc_tag
-decl_stmt|;
-name|bus_dmamap_t
-name|desc_map
-decl_stmt|;
-name|struct
-name|cluster_layout
-name|cll_def
-decl_stmt|;
-comment|/* default refill zone, layout */
-name|struct
-name|cluster_layout
-name|cll_alt
-decl_stmt|;
-comment|/* alternate refill zone, layout */
 name|struct
 name|mtx
 name|fl_lock
-decl_stmt|;
-name|char
-name|lockname
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|int
-name|flags
 decl_stmt|;
 name|__be64
 modifier|*
 name|desc
 decl_stmt|;
 comment|/* KVA of descriptor ring, ptr to addresses */
-name|bus_addr_t
-name|ba
-decl_stmt|;
-comment|/* bus address of descriptor ring */
 name|struct
 name|fl_sdesc
 modifier|*
 name|sdesc
 decl_stmt|;
 comment|/* KVA of software descriptor ring */
-name|uint32_t
-name|cap
+name|struct
+name|cluster_layout
+name|cll_def
 decl_stmt|;
-comment|/* max # of buffers, for convenience */
+comment|/* default refill zone, layout */
 name|uint16_t
-name|qsize
-decl_stmt|;
-comment|/* size (# of entries) of the queue */
-name|uint16_t
-name|cntxt_id
-decl_stmt|;
-comment|/* SGE context id for the freelist */
-name|uint32_t
-name|cidx
-decl_stmt|;
-comment|/* consumer idx (buffer idx, NOT hw desc idx) */
-name|uint32_t
-name|rx_offset
-decl_stmt|;
-comment|/* offset in fl buf (when buffer packing) */
-name|uint32_t
-name|pidx
-decl_stmt|;
-comment|/* producer idx (buffer idx, NOT hw desc idx) */
-name|uint32_t
-name|needed
-decl_stmt|;
-comment|/* # of buffers needed to fill up fl. */
-name|uint32_t
 name|lowat
 decl_stmt|;
 comment|/* # of buffers<= this means fl needs help */
+name|int
+name|flags
+decl_stmt|;
+name|uint16_t
+name|buf_boundary
+decl_stmt|;
+comment|/* The 16b idx all deal with hw descriptors */
+name|uint16_t
+name|dbidx
+decl_stmt|;
+comment|/* hw pidx after last doorbell */
+name|uint16_t
+name|sidx
+decl_stmt|;
+comment|/* index of status page */
+specifier|volatile
+name|uint16_t
+name|hw_cidx
+decl_stmt|;
+comment|/* The 32b idx are all buffer idx, not hardware descriptor idx */
 name|uint32_t
-name|pending
+name|cidx
 decl_stmt|;
-comment|/* # of bufs allocated since last doorbell */
-name|TAILQ_ENTRY
-argument_list|(
-argument|sge_fl
-argument_list|)
-name|link
-expr_stmt|;
-comment|/* All starving freelists */
-name|struct
-name|mbuf
-modifier|*
-name|m0
+comment|/* consumer index */
+name|uint32_t
+name|pidx
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|pnext
+comment|/* producer index */
+name|uint32_t
+name|dbval
 decl_stmt|;
 name|u_int
-name|remaining
+name|rx_offset
+decl_stmt|;
+comment|/* offset in fl buf (when buffer packing) */
+specifier|volatile
+name|uint32_t
+modifier|*
+name|udb
 decl_stmt|;
 name|uint64_t
 name|mbuf_allocated
@@ -1688,6 +1839,57 @@ name|uint64_t
 name|cl_fast_recycled
 decl_stmt|;
 comment|/* # of clusters recycled (fast) */
+comment|/* These 3 are valid when FL_BUF_RESUME is set, stale otherwise. */
+name|struct
+name|mbuf
+modifier|*
+name|m0
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|pnext
+decl_stmt|;
+name|u_int
+name|remaining
+decl_stmt|;
+name|uint16_t
+name|qsize
+decl_stmt|;
+comment|/* # of hw descriptors (status page included) */
+name|uint16_t
+name|cntxt_id
+decl_stmt|;
+comment|/* SGE context id for the freelist */
+name|TAILQ_ENTRY
+argument_list|(
+argument|sge_fl
+argument_list|)
+name|link
+expr_stmt|;
+comment|/* All starving freelists */
+name|bus_dma_tag_t
+name|desc_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|desc_map
+decl_stmt|;
+name|char
+name|lockname
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|bus_addr_t
+name|ba
+decl_stmt|;
+comment|/* bus address of descriptor ring */
+name|struct
+name|cluster_layout
+name|cll_alt
+decl_stmt|;
+comment|/* alternate refill zone, layout */
 block|}
 struct|;
 end_struct
@@ -2018,6 +2220,177 @@ argument_list|)
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+end_ifdef
+
+begin_struct
+struct|struct
+name|sge_nm_rxq
+block|{
+name|struct
+name|port_info
+modifier|*
+name|pi
+decl_stmt|;
+name|struct
+name|iq_desc
+modifier|*
+name|iq_desc
+decl_stmt|;
+name|uint16_t
+name|iq_abs_id
+decl_stmt|;
+name|uint16_t
+name|iq_cntxt_id
+decl_stmt|;
+name|uint16_t
+name|iq_cidx
+decl_stmt|;
+name|uint16_t
+name|iq_sidx
+decl_stmt|;
+name|uint8_t
+name|iq_gen
+decl_stmt|;
+name|__be64
+modifier|*
+name|fl_desc
+decl_stmt|;
+name|uint16_t
+name|fl_cntxt_id
+decl_stmt|;
+name|uint32_t
+name|fl_cidx
+decl_stmt|;
+name|uint32_t
+name|fl_pidx
+decl_stmt|;
+name|uint32_t
+name|fl_sidx
+decl_stmt|;
+name|uint32_t
+name|fl_db_val
+decl_stmt|;
+name|u_int
+name|fl_hwidx
+range|:
+literal|4
+decl_stmt|;
+name|u_int
+name|nid
+decl_stmt|;
+comment|/* netmap ring # for this queue */
+comment|/* infrequently used items after this */
+name|bus_dma_tag_t
+name|iq_desc_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|iq_desc_map
+decl_stmt|;
+name|bus_addr_t
+name|iq_ba
+decl_stmt|;
+name|int
+name|intr_idx
+decl_stmt|;
+name|bus_dma_tag_t
+name|fl_desc_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|fl_desc_map
+decl_stmt|;
+name|bus_addr_t
+name|fl_ba
+decl_stmt|;
+block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sge_nm_txq
+block|{
+name|struct
+name|tx_desc
+modifier|*
+name|desc
+decl_stmt|;
+name|uint16_t
+name|cidx
+decl_stmt|;
+name|uint16_t
+name|pidx
+decl_stmt|;
+name|uint16_t
+name|sidx
+decl_stmt|;
+name|uint16_t
+name|equiqidx
+decl_stmt|;
+comment|/* EQUIQ last requested at this pidx */
+name|uint16_t
+name|equeqidx
+decl_stmt|;
+comment|/* EQUEQ last requested at this pidx */
+name|uint16_t
+name|dbidx
+decl_stmt|;
+comment|/* pidx of the most recent doorbell */
+name|uint16_t
+name|doorbells
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+modifier|*
+name|udb
+decl_stmt|;
+name|u_int
+name|udb_qid
+decl_stmt|;
+name|u_int
+name|cntxt_id
+decl_stmt|;
+name|__be32
+name|cpl_ctrl0
+decl_stmt|;
+comment|/* for convenience */
+name|u_int
+name|nid
+decl_stmt|;
+comment|/* netmap ring # for this queue */
+comment|/* infrequently used items after this */
+name|bus_dma_tag_t
+name|desc_tag
+decl_stmt|;
+name|bus_dmamap_t
+name|desc_map
+decl_stmt|;
+name|bus_addr_t
+name|ba
+decl_stmt|;
+name|int
+name|iqidx
+decl_stmt|;
+block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|sge
@@ -2065,6 +2438,19 @@ name|int
 name|nofldtxq
 decl_stmt|;
 comment|/* total # of TOE tx queues */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|int
+name|nnmrxq
+decl_stmt|;
+comment|/* total # of netmap rx queues */
+name|int
+name|nnmtxq
+decl_stmt|;
+comment|/* total # of netmap tx queues */
 endif|#
 directive|endif
 name|int
@@ -2118,6 +2504,23 @@ modifier|*
 name|ofld_rxq
 decl_stmt|;
 comment|/* TOE rx queues */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|struct
+name|sge_nm_txq
+modifier|*
+name|nm_txq
+decl_stmt|;
+comment|/* netmap tx queues */
+name|struct
+name|sge_nm_rxq
+modifier|*
+name|nm_rxq
+decl_stmt|;
+comment|/* netmap rx queues */
 endif|#
 directive|endif
 name|uint16_t
@@ -2380,6 +2783,10 @@ modifier|*
 name|iwarp_softc
 decl_stmt|;
 comment|/* (struct c4iw_dev *) */
+name|void
+modifier|*
+name|iscsi_softc
+decl_stmt|;
 endif|#
 directive|endif
 name|struct
@@ -2392,7 +2799,7 @@ name|struct
 name|tid_info
 name|tids
 decl_stmt|;
-name|int
+name|uint16_t
 name|doorbells
 decl_stmt|;
 name|int
@@ -2900,6 +3307,65 @@ name|q
 parameter_list|)
 define|\
 value|for (q =&pi->adapter->sge.ofld_rxq[pi->first_ofld_rxq], iter = 0; \ 	    iter< pi->nofldrxq; ++iter, ++q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|for_each_nm_txq
+parameter_list|(
+name|pi
+parameter_list|,
+name|iter
+parameter_list|,
+name|q
+parameter_list|)
+define|\
+value|for (q =&pi->adapter->sge.nm_txq[pi->first_nm_txq], iter = 0; \ 	    iter< pi->nnmtxq; ++iter, ++q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|for_each_nm_rxq
+parameter_list|(
+name|pi
+parameter_list|,
+name|iter
+parameter_list|,
+name|q
+parameter_list|)
+define|\
+value|for (q =&pi->adapter->sge.nm_rxq[pi->first_nm_rxq], iter = 0; \ 	    iter< pi->nnmrxq; ++iter, ++q)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDXINCR
+parameter_list|(
+name|idx
+parameter_list|,
+name|incr
+parameter_list|,
+name|wrap
+parameter_list|)
+value|do { \ 	idx = wrap - idx> incr ? idx + incr : incr - (wrap - idx); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDXDIFF
+parameter_list|(
+name|head
+parameter_list|,
+name|tail
+parameter_list|,
+name|wrap
+parameter_list|)
+define|\
+value|((head)>= (tail) ? (head) - (tail) : (wrap) - (tail) + (head))
 end_define
 
 begin_comment
@@ -3624,6 +4090,110 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|update_mac_settings
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|adapter_full_init
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|adapter_full_uninit
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|port_full_init
+parameter_list|(
+name|struct
+name|port_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|port_full_uninit
+parameter_list|(
+name|struct
+name|port_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+end_ifdef
+
+begin_comment
+comment|/* t4_netmap.c */
+end_comment
+
+begin_function_decl
+name|int
+name|create_netmap_ifnet
+parameter_list|(
+name|struct
+name|port_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|destroy_netmap_ifnet
+parameter_list|(
+name|struct
+name|port_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_nm_intr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* t4_sge.c */
 end_comment
@@ -3631,6 +4201,24 @@ end_comment
 begin_function_decl
 name|void
 name|t4_sge_modload
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_sge_modunload
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|t4_sge_extfree_refs
 parameter_list|(
 name|void
 parameter_list|)

@@ -284,7 +284,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|octusbdebug
@@ -292,17 +292,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"OCTUSB debug level"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.octusb.debug"
-argument_list|,
-operator|&
-name|octusbdebug
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -234,7 +234,7 @@ comment|/* max_ll_items */
 operator|.
 name|shadow_ram_support
 operator|=
-name|true
+name|false
 block|,
 comment|/* shadow_ram_support */
 operator|.

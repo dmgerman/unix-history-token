@@ -2657,11 +2657,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|periph
 operator|->
 name|flags
 operator|&
 name|CAM_PERIPH_ANNOUNCED
+operator|)
+operator|&&
+operator|!
+name|rebooting
 condition|)
 name|xpt_denounce_periph
 argument_list|(
@@ -2863,13 +2868,17 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|periph
 operator|->
 name|flags
 operator|&
 name|CAM_PERIPH_ANNOUNCED
+operator|)
+operator|&&
+operator|!
+name|rebooting
 condition|)
-block|{
 name|xpt_print
 argument_list|(
 name|periph
@@ -2879,7 +2888,6 @@ argument_list|,
 literal|"Periph destroyed\n"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|CAM_DEBUG
 argument_list|(

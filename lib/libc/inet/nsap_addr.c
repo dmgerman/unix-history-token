@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsap_addr.c,v 1.3.18.2 2005/07/28 07:38:08 marka Exp $"
+literal|"$Id: nsap_addr.c,v 1.5 2005/07/28 06:51:48 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 

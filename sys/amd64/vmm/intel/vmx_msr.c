@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/specialreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmx_msr.h"
 end_include
 

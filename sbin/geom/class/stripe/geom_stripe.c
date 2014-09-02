@@ -215,7 +215,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-hv] [-s stripesize] name prov prov ..."
+literal|"[-v] [-s stripesize] name prov prov ..."
 block|}
 block|,
 block|{

@@ -772,6 +772,14 @@ operator|=
 literal|32
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|ld_disk
+operator|->
+name|d_flags
+operator|=
+name|DISKFLAG_UNMAPPED_BIO
+expr_stmt|;
 name|disk_create
 argument_list|(
 name|sc

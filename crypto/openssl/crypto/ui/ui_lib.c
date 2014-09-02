@@ -4033,9 +4033,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+block|}
 default|default:
 break|break;
-block|}
 block|}
 return|return
 literal|0

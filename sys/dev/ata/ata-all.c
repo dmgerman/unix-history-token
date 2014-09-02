@@ -446,17 +446,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.ata.ata_dma_check_80pin"
-argument_list|,
-operator|&
-name|ata_dma_check_80pin
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_ata
@@ -465,12 +454,12 @@ name|OID_AUTO
 argument_list|,
 name|ata_dma_check_80pin
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ata_dma_check_80pin
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Check for 80pin cable before setting ATA DMA mode"
 argument_list|)

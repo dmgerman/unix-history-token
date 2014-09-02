@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ath/ath_hal/ar9300/ar9300desc.h>
+file|<ar9300/ar9300desc.h>
 end_include
 
 begin_include

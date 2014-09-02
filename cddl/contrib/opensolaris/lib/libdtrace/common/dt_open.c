@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -378,15 +378,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_10
+value|DT_VERSION_NUMBER(1, 10, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_11
+value|DT_VERSION_NUMBER(1, 11, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_12
+value|DT_VERSION_NUMBER(1, 12, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS_1_12_1
+value|DT_VERSION_NUMBER(1, 12, 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_9_1
+value|DT_VERS_1_12_1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.9.1"
+value|"Sun D 1.12.1"
 end_define
 
 begin_decl_stmt
@@ -453,6 +481,18 @@ comment|/* D API 1.9 */
 name|DT_VERS_1_9_1
 block|,
 comment|/* D API 1.9.1 */
+name|DT_VERS_1_10
+block|,
+comment|/* D API 1.10 */
+name|DT_VERS_1_11
+block|,
+comment|/* D API 1.11 */
+name|DT_VERS_1_12
+block|,
+comment|/* D API 1.12 */
+name|DT_VERS_1_12_1
+block|,
+comment|/* D API 1.12.1 */
 literal|0
 block|}
 decl_stmt|;
@@ -1519,6 +1559,31 @@ end_operator
 
 begin_block
 block|{
+literal|"getf"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_GETF
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_10
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"file_t *(int)"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
 literal|"gid"
 operator|,
 name|DT_IDENT_SCALAR
@@ -1737,6 +1802,31 @@ operator|&
 name|dt_idops_type
 operator|,
 literal|"uint_t"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"json"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_JSON
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_11
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"string(const char *, const char *)"
 block|}
 end_block
 
@@ -3290,6 +3380,31 @@ operator|&
 name|dt_idops_func
 operator|,
 literal|"string(const char *, const char *)"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+block|{
+literal|"strtoll"
+operator|,
+name|DT_IDENT_FUNC
+operator|,
+literal|0
+operator|,
+name|DIF_SUBR_STRTOLL
+operator|,
+name|DT_ATTR_STABCMN
+operator|,
+name|DT_VERS_1_11
+operator|,
+operator|&
+name|dt_idops_func
+operator|,
+literal|"int64_t(const char *, [int])"
 block|}
 end_block
 
@@ -7680,6 +7795,12 @@ operator|->
 name|dt_stdcmode
 operator|=
 name|DT_STDC_XA
+expr_stmt|;
+name|dtp
+operator|->
+name|dt_encoding
+operator|=
+name|DT_ENCODING_UNSET
 expr_stmt|;
 name|dtp
 operator|->

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Copyright (c) 2006-2010 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  *  * Portions Copyright 2010 Robert Milkowski  *  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Copyright (c) 2006-2010 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Portions Copyright 2010 Robert Milkowski  *  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -365,17 +365,6 @@ init|=
 name|ZFS_VOLMODE_GEOM
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.vol.mode"
-argument_list|,
-operator|&
-name|volmode
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1294,7 +1283,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|const
-name|zbookmark_t
+name|zbookmark_phys_t
 modifier|*
 name|zb
 parameter_list|,
@@ -1352,6 +1341,15 @@ operator|(
 literal|0
 operator|)
 return|;
+name|VERIFY
+argument_list|(
+operator|!
+name|BP_IS_EMBEDDED
+argument_list|(
+name|bp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|VERIFY3U
 argument_list|(
 name|ma
@@ -4117,6 +4115,11 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|dmu_tx_mark_netfree
+argument_list|(
+name|tx
 argument_list|)
 expr_stmt|;
 name|error
@@ -7799,6 +7802,9 @@ return|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|sun
 name|sync
 operator|=
 operator|!
@@ -7810,6 +7816,12 @@ operator|&
 name|ZVOL_WCE
 operator|)
 operator|||
+else|#
+directive|else
+name|sync
+operator|=
+endif|#
+directive|endif
 operator|(
 name|zv
 operator|->
@@ -9612,6 +9624,11 @@ operator|->
 name|zv_objset
 argument_list|)
 expr_stmt|;
+name|dmu_tx_mark_netfree
+argument_list|(
+name|tx
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|dmu_tx_assign
@@ -10082,6 +10099,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|2
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 expr_stmt|;
 block|}

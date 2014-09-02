@@ -147,17 +147,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.minidump"
-argument_list|,
-operator|&
-name|do_minidump
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug
@@ -166,7 +155,7 @@ name|OID_AUTO
 argument_list|,
 name|minidump
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|do_minidump
@@ -1219,7 +1208,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|dumpsys
 parameter_list|(
 name|struct
@@ -1253,7 +1242,11 @@ argument_list|(
 name|di
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|bzero
 argument_list|(
@@ -1701,7 +1694,11 @@ argument_list|(
 literal|"\nDump complete\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|fail
 label|:
 if|if
@@ -1746,6 +1743,11 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 

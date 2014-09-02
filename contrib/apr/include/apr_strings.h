@@ -124,7 +124,7 @@ operator|*
 name|b
 argument_list|)
 expr_stmt|;
-comment|/**  * duplicate a string into memory allocated out of a pool  * @param p The pool to allocate out of  * @param s The string to duplicate  * @return The new string  */
+comment|/**  * duplicate a string into memory allocated out of a pool  * @param p The pool to allocate out of  * @param s The string to duplicate  * @return The new string or NULL if s == NULL  */
 name|APR_DECLARE
 argument_list|(
 argument|char *
@@ -141,7 +141,7 @@ operator|*
 name|s
 argument_list|)
 expr_stmt|;
-comment|/**  * Create a null-terminated string by making a copy of a sequence  * of characters and appending a null byte  * @param p The pool to allocate out of  * @param s The block of characters to duplicate  * @param n The number of characters to duplicate  * @return The new string  * @remark This is a faster alternative to apr_pstrndup, for use  *         when you know that the string being duplicated really  *         has 'n' or more characters.  If the string might contain  *         fewer characters, use apr_pstrndup.  */
+comment|/**  * Create a null-terminated string by making a copy of a sequence  * of characters and appending a null byte  * @param p The pool to allocate out of  * @param s The block of characters to duplicate  * @param n The number of characters to duplicate  * @return The new string or NULL if s == NULL  * @remark This is a faster alternative to apr_pstrndup, for use  *         when you know that the string being duplicated really  *         has 'n' or more characters.  If the string might contain  *         fewer characters, use apr_pstrndup.  */
 name|APR_DECLARE
 argument_list|(
 argument|char *
@@ -188,7 +188,7 @@ argument_list|)
 endif|#
 directive|endif
 expr_stmt|;
-comment|/**  * Duplicate at most n characters of a string into memory allocated   * out of a pool; the new string will be NUL-terminated  * @param p The pool to allocate out of  * @param s The string to duplicate  * @param n The maximum number of characters to duplicate  * @return The new string  * @remark The amount of memory allocated from the pool is the length  *         of the returned string including the NUL terminator  */
+comment|/**  * Duplicate at most n characters of a string into memory allocated   * out of a pool; the new string will be NUL-terminated  * @param p The pool to allocate out of  * @param s The string to duplicate  * @param n The maximum number of characters to duplicate  * @return The new string or NULL if s == NULL  * @remark The amount of memory allocated from the pool is the length  *         of the returned string including the NUL terminator  */
 name|APR_DECLARE
 argument_list|(
 argument|char *
@@ -202,7 +202,7 @@ argument_list|,
 argument|apr_size_t n
 argument_list|)
 empty_stmt|;
-comment|/**  * Duplicate a block of memory.  *  * @param p The pool to allocate from  * @param m The memory to duplicate  * @param n The number of bytes to duplicate  * @return The new block of memory  */
+comment|/**  * Duplicate a block of memory.  *  * @param p The pool to allocate from  * @param m The memory to duplicate  * @param n The number of bytes to duplicate  * @return The new block of memory or NULL if m == NULL  */
 name|APR_DECLARE
 argument_list|(
 argument|void *
@@ -390,7 +390,7 @@ operator|*
 name|token_context
 argument_list|)
 expr_stmt|;
-comment|/**  * Split a string into separate null-terminated tokens.  The tokens are   * delimited in the string by one or more characters from the sep  * argument.  * @param str The string to separate; this should be specified on the  *            first call to apr_strtok() for a given string, and NULL  *            on subsequent calls.  * @param sep The set of delimiters  * @param last Internal state saved by apr_strtok() between calls.  * @return The next token from the string  */
+comment|/**  * Split a string into separate null-terminated tokens.  The tokens are   * delimited in the string by one or more characters from the sep  * argument.  * @param str The string to separate; this should be specified on the  *            first call to apr_strtok() for a given string, and NULL  *            on subsequent calls.  * @param sep The set of delimiters  * @param last State saved by apr_strtok() between calls.  * @return The next token from the string  * @note the 'last' state points to the trailing NUL char of the final  * token, otherwise it points to the character following the current  * token (all successive or empty occurances of sep are skiped on the  * subsequent call to apr_strtok).  Therefore it is possible to avoid  * a strlen() determination, with the following logic;  * toklen = last - retval; if (*last) --toklen;  */
 name|APR_DECLARE
 argument_list|(
 argument|char *

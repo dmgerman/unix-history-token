@@ -33,6 +33,15 @@ directive|include
 file|"lib.h"
 end_include
 
+begin_function_decl
+name|int
+name|main
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * .KB_C_FN_DEFINITION_START  * int main(void)  *  This global function waits at least one second, but not more than two   * seconds, for input from the serial port.  If no response is recognized,  * it acts according to the parameters specified by the environment.  For   * example, the function might boot an operating system.  Do not return  * from this function.  * .KB_C_FN_DEFINITION_END  */
 end_comment

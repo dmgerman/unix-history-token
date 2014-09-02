@@ -1923,8 +1923,6 @@ literal|0
 argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
-name|VM_ALLOC_WIRED
-operator||
 name|VM_ALLOC_NOOBJ
 argument_list|)
 expr_stmt|;
@@ -1961,13 +1959,6 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|vm_page_unwire
-argument_list|(
-name|m
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m

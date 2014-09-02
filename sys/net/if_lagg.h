@@ -681,6 +681,10 @@ struct|struct
 name|lagg_mc
 block|{
 name|struct
+name|sockaddr_dl
+name|mc_addr
+decl_stmt|;
+name|struct
 name|ifmultiaddr
 modifier|*
 name|mc_ifma

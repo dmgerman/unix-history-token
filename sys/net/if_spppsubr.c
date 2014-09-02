@@ -23728,7 +23728,7 @@ name|n
 operator|=
 name|m
 operator|->
-name|m_act
+name|m_nextpkt
 expr_stmt|;
 name|m_freem
 argument_list|(

@@ -134,13 +134,13 @@ operator|*
 operator|)
 name|s
 expr_stmt|;
-name|iov
-operator|.
-name|iov_len
-operator|=
 name|uio
 operator|.
 name|uio_resid
+operator|=
+name|iov
+operator|.
+name|iov_len
 operator|=
 name|strlen
 argument_list|(

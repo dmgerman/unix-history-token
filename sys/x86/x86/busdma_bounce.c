@@ -185,19 +185,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
 name|BUS_DMA_COULD_BOUNCE
-value|BUS_DMA_BUS3
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|0x01
+block|,
 name|BUS_DMA_MIN_ALLOC_COMP
-value|BUS_DMA_BUS4
-end_define
+init|=
+literal|0x02
+block|,
+name|BUS_DMA_KMEM_ALLOC
+init|=
+literal|0x04
+block|, }
+enum|;
+end_enum
 
 begin_struct_decl
 struct_decl|struct
@@ -215,6 +219,9 @@ name|common
 decl_stmt|;
 name|int
 name|map_count
+decl_stmt|;
+name|int
+name|bounce_flags
 decl_stmt|;
 name|bus_dma_segment_t
 modifier|*
@@ -478,8 +485,6 @@ specifier|static
 name|struct
 name|bus_dmamap
 name|nobounce_dmamap
-decl_stmt|,
-name|contig_dmamap
 decl_stmt|;
 end_decl_stmt
 
@@ -834,7 +839,6 @@ name|segments
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Bouncing might be needed if there's a filter. 	 * XXX Filters are likely broken as there's no way to 	 *     guarantee that bounce pages will also satisfy the 	 *     filter requirement. 	 */
 if|if
 condition|(
 name|parent
@@ -856,9 +860,7 @@ operator|(
 operator|(
 name|parent
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -869,13 +871,10 @@ operator|)
 condition|)
 name|newtag
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator||=
 name|BUS_DMA_COULD_BOUNCE
 expr_stmt|;
-comment|/* 	 * Bouncing might be needed if there's an upper memory 	 * restriction. 	 */
 if|if
 condition|(
 name|newtag
@@ -891,29 +890,7 @@ name|vm_paddr_t
 operator|)
 name|Maxmem
 argument_list|)
-condition|)
-name|newtag
-operator|->
-name|common
-operator|.
-name|flags
-operator||=
-name|BUS_DMA_COULD_BOUNCE
-expr_stmt|;
-comment|/* 	 * Bouncing might be needed if there's an alignment 	 * restriction that can't be satisfied by breaking up 	 * the segment. 	 * XXX Need to consider non-natural alignment. 	 * XXX Static allocations that tie to bus_dmamem_alloc() 	 *     will likely pass this test and be penalized with 	 *     the COULD_BOUNCE flag.  Should probably have 	 *     bus_dmamem_alloc() clear this flag. 	 */
-if|if
-condition|(
-operator|(
-name|newtag
-operator|->
-name|common
-operator|.
-name|nsegments
-operator|<=
-literal|1
-operator|)
-operator|&&
-operator|(
+operator|||
 name|newtag
 operator|->
 name|common
@@ -921,13 +898,10 @@ operator|.
 name|alignment
 operator|>
 literal|1
-operator|)
 condition|)
 name|newtag
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator||=
 name|BUS_DMA_COULD_BOUNCE
 expr_stmt|;
@@ -937,9 +911,7 @@ operator|(
 operator|(
 name|newtag
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -1041,9 +1013,7 @@ block|}
 comment|/* Performed initial allocation */
 name|newtag
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator||=
 name|BUS_DMA_MIN_ALLOC_COMP
 expr_stmt|;
@@ -1362,9 +1332,7 @@ if|if
 condition|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 condition|)
@@ -1506,9 +1474,7 @@ condition|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_MIN_ALLOC_COMP
 operator|)
@@ -1588,9 +1554,7 @@ condition|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_MIN_ALLOC_COMP
 operator|)
@@ -1607,9 +1571,7 @@ condition|)
 block|{
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator||=
 name|BUS_DMA_MIN_ALLOC_COMP
 expr_stmt|;
@@ -1699,11 +1661,6 @@ name|map
 operator|!=
 operator|&
 name|nobounce_dmamap
-operator|&&
-name|map
-operator|!=
-operator|&
-name|contig_dmamap
 condition|)
 block|{
 if|if
@@ -2073,11 +2030,11 @@ argument_list|,
 name|attr
 argument_list|)
 expr_stmt|;
-operator|*
-name|mapp
-operator|=
-operator|&
-name|contig_dmamap
+name|dmat
+operator|->
+name|bounce_flags
+operator||=
+name|BUS_DMA_KMEM_ALLOC
 expr_stmt|;
 block|}
 else|else
@@ -2134,11 +2091,11 @@ argument_list|,
 name|attr
 argument_list|)
 expr_stmt|;
-operator|*
-name|mapp
-operator|=
-operator|&
-name|contig_dmamap
+name|dmat
+operator|->
+name|bounce_flags
+operator||=
+name|BUS_DMA_KMEM_ALLOC
 expr_stmt|;
 block|}
 if|if
@@ -2247,20 +2204,12 @@ name|bus_dmamap_t
 name|map
 parameter_list|)
 block|{
-comment|/* 	 * dmamem does not need to be bounced, so the map should be 	 * NULL if malloc() was used and contig_dmamap if 	 * kmem_alloc_contig() was used. 	 */
+comment|/* 	 * dmamem does not need to be bounced, so the map should be 	 * NULL and the BUS_DMA_KMEM_ALLOC flag cleared if malloc() 	 * was used and set if kmem_alloc_contig() was used. 	 */
 if|if
 condition|(
-operator|!
-operator|(
 name|map
-operator|==
+operator|!=
 name|NULL
-operator|||
-name|map
-operator|==
-operator|&
-name|contig_dmamap
-operator|)
 condition|)
 name|panic
 argument_list|(
@@ -2269,9 +2218,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|map
+operator|(
+name|dmat
+operator|->
+name|bounce_flags
+operator|&
+name|BUS_DMA_KMEM_ALLOC
+operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 name|free
 argument_list|(
@@ -2309,9 +2264,7 @@ name|dmat
 argument_list|,
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -3068,11 +3021,6 @@ condition|(
 name|map
 operator|==
 name|NULL
-operator|||
-name|map
-operator|==
-operator|&
-name|contig_dmamap
 condition|)
 name|map
 operator|=
@@ -3096,9 +3044,7 @@ condition|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -3180,9 +3126,7 @@ operator|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -3337,11 +3281,6 @@ condition|(
 name|map
 operator|==
 name|NULL
-operator|||
-name|map
-operator|==
-operator|&
-name|contig_dmamap
 condition|)
 name|map
 operator|=
@@ -3365,9 +3304,7 @@ condition|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -3492,9 +3429,7 @@ operator|(
 operator|(
 name|dmat
 operator|->
-name|common
-operator|.
-name|flags
+name|bounce_flags
 operator|&
 name|BUS_DMA_COULD_BOUNCE
 operator|)
@@ -5062,11 +4997,6 @@ name|map
 operator|!=
 operator|&
 name|nobounce_dmamap
-operator|&&
-name|map
-operator|!=
-operator|&
-name|contig_dmamap
 argument_list|,
 operator|(
 literal|"add_bounce_page: bad map %p"

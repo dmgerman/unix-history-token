@@ -633,7 +633,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|repos_root
+name|base_uri
 parameter_list|,
 specifier|const
 name|apr_array_header_t
@@ -767,7 +767,7 @@ name|url
 operator|=
 name|svn_path_url_add_component2
 argument_list|(
-name|repos_root
+name|base_uri
 argument_list|,
 name|relpath
 argument_list|,
@@ -1385,16 +1385,6 @@ name|hi
 argument_list|)
 control|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|repos_root
-init|=
-name|svn__apr_hash_index_key
-argument_list|(
-name|hi
-argument_list|)
-decl_stmt|;
 name|struct
 name|repos_deletables_t
 modifier|*
@@ -1572,7 +1562,7 @@ name|repos_deletables
 operator|->
 name|ra_session
 argument_list|,
-name|repos_root
+name|base_uri
 argument_list|,
 name|target_relpaths
 argument_list|,

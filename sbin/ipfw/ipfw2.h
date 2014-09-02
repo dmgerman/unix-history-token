@@ -293,6 +293,8 @@ name|TOK_RED
 block|,
 name|TOK_GRED
 block|,
+name|TOK_ECN
+block|,
 name|TOK_DROPTAIL
 block|,
 name|TOK_PROTO

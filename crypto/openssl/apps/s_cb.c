@@ -2231,6 +2231,14 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+name|TLSEXT_TYPE_padding
+case|:
+name|extname
+operator|=
+literal|"TLS padding"
+expr_stmt|;
+break|break;
 default|default:
 name|extname
 operator|=

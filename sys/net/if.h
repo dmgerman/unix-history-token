@@ -1131,7 +1131,7 @@ comment|/* index for associated ifp */
 name|int
 name|ifam_metric
 decl_stmt|;
-comment|/* value of ifa_metric */
+comment|/* value of ifa_ifp->if_metric */
 block|}
 struct|;
 end_struct
@@ -1205,7 +1205,7 @@ comment|/* offset of if_data from beginning */
 name|int
 name|ifam_metric
 decl_stmt|;
-comment|/* value of ifa_metric */
+comment|/* value of ifa_ifp->if_metric */
 name|struct
 name|if_data
 name|ifam_data

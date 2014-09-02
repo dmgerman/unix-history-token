@@ -7,13 +7,6 @@ begin_comment
 comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_comment
 comment|/*  * UTF-8 text preparation functions (PSARC/2007/149, PSARC/2007/458).  *  * Man pages: u8_textprep_open(9F), u8_textprep_buf(9F), u8_textprep_close(9F),  * u8_textprep_str(9F), u8_strcmp(9F), and u8_validate(9F). See also  * the section 3C man pages.  * Interface stability: Committed.  */
 end_comment
@@ -407,7 +400,7 @@ parameter_list|,
 name|b3
 parameter_list|)
 define|\
-value|(u) = ((uint32_t)(b1)& 0x0F)<< 12 | ((uint32_t)(b2)& 0x3F)<< 6 | \ 		(uint32_t)(b3)& 0x3F;
+value|(u) = ((((uint32_t)(b1)& 0x0F)<< 12) | \ 		(((uint32_t)(b2)& 0x3F)<< 6)  | \ 		((uint32_t)(b3)& 0x3F));
 end_define
 
 begin_define
@@ -840,7 +833,7 @@ name|I_
 block|,
 name|I_
 block|,
-comment|/*  	90  91  92  93  94  95  96  97  98  99  9A  9B  9C  9D  9E  9F  */
+comment|/*	90  91  92  93  94  95  96  97  98  99  9A  9B  9C  9D  9E  9F  */
 name|I_
 block|,
 name|I_
@@ -873,7 +866,7 @@ name|I_
 block|,
 name|I_
 block|,
-comment|/*  	A0  A1  A2  A3  A4  A5  A6  A7  A8  A9  AA  AB  AC  AD  AE  AF  */
+comment|/*	A0  A1  A2  A3  A4  A5  A6  A7  A8  A9  AA  AB  AC  AD  AE  AF  */
 name|I_
 block|,
 name|I_

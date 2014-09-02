@@ -717,9 +717,6 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
-literal|'d'
-case|:
-case|case
 literal|'f'
 case|:
 name|exit
@@ -734,6 +731,9 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
+case|case
+literal|'d'
+case|:
 case|case
 literal|'i'
 case|:

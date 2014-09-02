@@ -1059,6 +1059,7 @@ name|limit
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|strncmp
 argument_list|(
 name|name
@@ -1080,9 +1081,19 @@ literal|12
 argument_list|)
 operator|!=
 literal|0
+operator|)
+operator|||
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"trap_check"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* 		 * Anything beginning with "dtrace_" may be called 		 * from probe context unless it explicitly indicates 		 * that it won't be called from probe context by 		 * using the prefix "dtrace_safe_". 		 */
+comment|/* 		 * Anything beginning with "dtrace_" may be called 		 * from probe context unless it explicitly indicates 		 * that it won't be called from probe context by 		 * using the prefix "dtrace_safe_". 		 * 		 * Additionally, we avoid instrumenting trap_check() to avoid 		 * the possibility of generating a fault in probe context before 		 * DTrace's fault handler is called. 		 */
 return|return
 operator|(
 literal|0

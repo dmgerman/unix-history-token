@@ -209,12 +209,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VIRTIO_PCI_CONFIG
+name|VIRTIO_PCI_CONFIG_OFF
 parameter_list|(
-name|sc
+name|msix_enabled
 parameter_list|)
-define|\
-value|(((sc)->vtpci_flags& VTPCI_FLAG_MSIX) ? 24 : 20)
+value|((msix_enabled) ? 24 : 20)
 end_define
 
 begin_comment

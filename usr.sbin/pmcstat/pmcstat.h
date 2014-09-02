@@ -288,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_CALLGRAPH_DEPTH
-value|4
+value|16
 end_define
 
 begin_define

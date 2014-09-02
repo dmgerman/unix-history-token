@@ -3506,8 +3506,6 @@ name|RTAX_DST
 index|]
 argument_list|,
 literal|1
-argument_list|,
-name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if
@@ -6172,7 +6170,9 @@ name|ifam_metric
 operator|=
 name|ifa
 operator|->
-name|ifa_metric
+name|ifa_ifp
+operator|->
+name|if_metric
 expr_stmt|;
 name|ifam
 operator|->
@@ -8097,7 +8097,9 @@ name|ifam_metric
 operator|=
 name|ifa
 operator|->
-name|ifa_metric
+name|ifa_ifp
+operator|->
+name|if_metric
 expr_stmt|;
 name|ifd
 operator|=
@@ -8171,7 +8173,9 @@ name|ifam_metric
 operator|=
 name|ifa
 operator|->
-name|ifa_metric
+name|ifa_ifp
+operator|->
+name|if_metric
 expr_stmt|;
 name|ifd
 operator|=
@@ -8356,7 +8360,9 @@ name|ifam_metric
 operator|=
 name|ifa
 operator|->
-name|ifa_metric
+name|ifa_ifp
+operator|->
+name|if_metric
 expr_stmt|;
 return|return
 operator|(

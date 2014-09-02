@@ -1741,7 +1741,7 @@ name|BIO_puts
 argument_list|(
 name|bp
 argument_list|,
-literal|"0x14 (default)"
+literal|"14 (default)"
 argument_list|)
 operator|<=
 literal|0

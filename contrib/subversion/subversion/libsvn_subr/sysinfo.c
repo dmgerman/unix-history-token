@@ -4701,6 +4701,12 @@ case|:
 return|return
 literal|"Mountain Lion"
 return|;
+case|case
+literal|9
+case|:
+return|return
+literal|"Mavericks"
+return|;
 block|}
 return|return
 name|NULL

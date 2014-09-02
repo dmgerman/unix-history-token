@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  */
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ struct_decl|struct
 name|drr_end
 struct_decl|;
 struct_decl|struct
-name|zbookmark
+name|zbookmark_phys
 struct_decl|;
 struct_decl|struct
 name|spa
@@ -213,6 +213,15 @@ parameter_list|(
 name|ot
 parameter_list|)
 value|(((ot)& DMU_OT_NEWTYPE) ? \ 	((ot)& DMU_OT_METADATA) : \ 	dmu_ot[(ot)].ot_metadata)
+comment|/*  * These object types use bp_fill != 1 for their L0 bp's. Therefore they can't  * have their data embedded (i.e. use a BP_IS_EMBEDDED() bp), because bp_fill  * is repurposed for embedded BPs.  */
+define|#
+directive|define
+name|DMU_OT_HAS_FILL
+parameter_list|(
+name|ot
+parameter_list|)
+define|\
+value|((ot) == DMU_OT_DNODE || (ot) == DMU_OT_OBJSET)
 define|#
 directive|define
 name|DMU_OT_BYTESWAP
@@ -619,10 +628,6 @@ define|#
 directive|define
 name|DMU_GROUPUSED_OBJECT
 value|(-2ULL)
-define|#
-directive|define
-name|DMU_DEADLIST_OBJECT
-value|(-3ULL)
 comment|/*  * artificial blkids for bonus buffer and spill blocks  */
 define|#
 directive|define
@@ -1200,6 +1205,43 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|void
+name|dmu_write_embedded
+parameter_list|(
+name|objset_t
+modifier|*
+name|os
+parameter_list|,
+name|uint64_t
+name|object
+parameter_list|,
+name|uint64_t
+name|offset
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|uint8_t
+name|etype
+parameter_list|,
+name|uint8_t
+name|comp
+parameter_list|,
+name|int
+name|uncompressed_size
+parameter_list|,
+name|int
+name|compressed_size
+parameter_list|,
+name|int
+name|byteorder
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
 comment|/*  * Decide how to write a block: checksum, compression, number of copies, etc.  */
 define|#
 directive|define
@@ -1740,6 +1782,14 @@ parameter_list|)
 function_decl|;
 name|void
 name|dmu_tx_commit
+parameter_list|(
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|dmu_tx_mark_netfree
 parameter_list|(
 name|dmu_tx_t
 modifier|*
@@ -2538,7 +2588,7 @@ name|os
 parameter_list|)
 function_decl|;
 specifier|extern
-name|uint64_t
+name|zfs_sync_type_t
 name|dmu_objset_syncprop
 parameter_list|(
 name|objset_t
@@ -2547,7 +2597,7 @@ name|os
 parameter_list|)
 function_decl|;
 specifier|extern
-name|uint64_t
+name|zfs_logbias_op_t
 name|dmu_objset_logbias
 parameter_list|(
 name|objset_t

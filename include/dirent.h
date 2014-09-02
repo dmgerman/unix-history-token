@@ -142,6 +142,17 @@ begin_comment
 comment|/* everything has been read */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__DTF_SKIPREAD
+value|0x0010
+end_define
+
+begin_comment
+comment|/* assume internal buffer is populated */
+end_comment
+
 begin_else
 else|#
 directive|else

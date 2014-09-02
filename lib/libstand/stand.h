@@ -438,6 +438,14 @@ name|splitfs_fsops
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fs_ops
+name|pkgfs_fsops
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* where values for lseek(2) */
 end_comment
@@ -1169,6 +1177,37 @@ parameter_list|(
 function_decl|2
 operator|,
 function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|snprintf
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cfmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
 
 begin_empty_stmt
@@ -2426,6 +2465,15 @@ name|fs_ops
 modifier|*
 name|file_system
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fs_ops
+modifier|*
+name|exclusive_file_system
 decl_stmt|;
 end_decl_stmt
 

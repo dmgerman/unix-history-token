@@ -1291,6 +1291,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|closesocket
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 literal|"keepalive"
@@ -2190,6 +2195,11 @@ argument_list|(
 literal|"OPENSSL_malloc"
 argument_list|)
 expr_stmt|;
+name|closesocket
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2237,6 +2247,11 @@ argument_list|,
 literal|"gethostbyname failure\n"
 argument_list|)
 expr_stmt|;
+name|closesocket
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2257,6 +2272,11 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"gethostbyname addr is not AF_INET\n"
+argument_list|)
+expr_stmt|;
+name|closesocket
+argument_list|(
+name|ret
 argument_list|)
 expr_stmt|;
 return|return

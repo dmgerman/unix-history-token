@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -1281,6 +1287,11 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1345,6 +1356,11 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1449,7 +1465,9 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Execute at 0x%llx\n"
+literal|"Execute at 0x%"
+name|PRIu64
+literal|"\n"
 argument_list|,
 name|pc
 argument_list|)
@@ -1723,7 +1741,7 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"usage: %s [-d<disk image path>] [-h<host filesystem path>\n"
+literal|"usage: [-d<disk image path>] [-h<host filesystem path>\n"
 argument_list|)
 expr_stmt|;
 name|exit

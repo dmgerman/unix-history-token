@@ -2295,6 +2295,16 @@ literal|'d'
 block|}
 block|,
 block|{
+literal|"dry-run"
+block|,
+name|no_argument
+block|,
+literal|0
+block|,
+literal|'C'
+block|}
+block|,
+block|{
 literal|"ed"
 block|,
 name|no_argument
@@ -3615,7 +3625,8 @@ name|LINENUM
 name|i
 parameter_list|)
 block|{
-name|size_t
+name|unsigned
+name|short
 name|len
 decl_stmt|;
 specifier|const
@@ -3630,9 +3641,11 @@ argument_list|)
 decl_stmt|;
 name|len
 operator|=
-name|strlen
+name|strnlen
 argument_list|(
 name|line
+argument_list|,
+name|USHRT_MAX
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3661,13 +3674,29 @@ index|]
 operator|!=
 literal|'\n'
 condition|)
+block|{
+if|if
+condition|(
+name|len
+operator|>=
+name|USHRT_MAX
+condition|)
 name|fprintf
 argument_list|(
 name|rejfp
 argument_list|,
-literal|"\n\\ No newline at end of file\n"
+literal|"\n\\ Line too long\n"
 argument_list|)
 expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|rejfp
+argument_list|,
+literal|"\n\\ No newline at end of line\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -4980,6 +5009,7 @@ name|char
 modifier|*
 name|plineptr
 decl_stmt|;
+name|unsigned
 name|short
 name|plinelen
 decl_stmt|;

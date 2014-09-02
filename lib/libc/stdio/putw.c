@@ -111,13 +111,13 @@ operator|=
 operator|&
 name|w
 expr_stmt|;
-name|iov
-operator|.
-name|iov_len
-operator|=
 name|uio
 operator|.
 name|uio_resid
+operator|=
+name|iov
+operator|.
+name|iov_len
 operator|=
 sizeof|sizeof
 argument_list|(

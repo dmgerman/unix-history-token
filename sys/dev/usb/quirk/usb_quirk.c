@@ -4353,6 +4353,12 @@ operator|=
 literal|"UQ_MSC_EJECT_HUAWEISCSI"
 block|,
 index|[
+name|UQ_MSC_EJECT_HUAWEISCSI2
+index|]
+operator|=
+literal|"UQ_MSC_EJECT_HUAWEISCSI2"
+block|,
+index|[
 name|UQ_MSC_EJECT_TCT
 index|]
 operator|=

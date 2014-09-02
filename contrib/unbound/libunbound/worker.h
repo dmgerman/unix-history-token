@@ -261,6 +261,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/** mesh callback with event results */
+end_comment
+
+begin_function_decl
+name|void
+name|libworker_event_done_cb
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|rcode
+parameter_list|,
+name|struct
+name|sldns_buffer
+modifier|*
+name|buf
+parameter_list|,
+name|enum
+name|sec_status
+name|s
+parameter_list|,
+name|char
+modifier|*
+name|why_bogus
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Worker signal handler function. User argument is the worker itself.  * @param sig: signal number.  * @param arg: the worker (main worker) that handles signals.  */
 end_comment
 

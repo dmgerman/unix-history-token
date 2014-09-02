@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_include
@@ -264,17 +264,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_QUAD
-argument_list|(
-literal|"vfs.zfs.dirty_data_max"
-argument_list|,
-operator|&
-name|zfs_dirty_data_max
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
@@ -292,17 +281,6 @@ literal|0
 argument_list|,
 literal|"The maximum amount of dirty data in bytes after which new writes are "
 literal|"halted until space becomes available"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_QUAD
-argument_list|(
-literal|"vfs.zfs.dirty_data_max_max"
-argument_list|,
-operator|&
-name|zfs_dirty_data_max_max
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -329,17 +307,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vfs.zfs.dirty_data_max_percent"
-argument_list|,
-operator|&
-name|zfs_dirty_data_max_percent
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_zfs
@@ -356,17 +323,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"The percent of physical memory used to auto calculate dirty_data_max"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_QUAD
-argument_list|(
-literal|"vfs.zfs.dirty_data_sync"
-argument_list|,
-operator|&
-name|zfs_dirty_data_sync
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1290,6 +1246,22 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Note: errors ignored, because the leak dir will not exist if we 	 * have not encountered a leak yet. 	 */
+operator|(
+name|void
+operator|)
+name|dsl_pool_open_special_dir
+argument_list|(
+name|dp
+argument_list|,
+name|LEAK_DIR_NAME
+argument_list|,
+operator|&
+name|dp
+operator|->
+name|dp_leak_dir
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|spa_feature_is_active
@@ -1510,6 +1482,21 @@ argument_list|(
 name|dp
 operator|->
 name|dp_free_dir
+argument_list|,
+name|dp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|dp_leak_dir
+condition|)
+name|dsl_dir_rele
+argument_list|(
+name|dp
+operator|->
+name|dp_leak_dir
 argument_list|,
 name|dp
 argument_list|)
@@ -2999,7 +2986,7 @@ name|space
 decl_stmt|,
 name|resv
 decl_stmt|;
-comment|/* 	 * Reserve about 1.6% (1/64), or at least 32MB, for allocation 	 * efficiency. 	 * XXX The intent log is not accounted for, so it must fit 	 * within this slop. 	 * 	 * If we're trying to assess whether it's OK to do a free, 	 * cut the reservation in half to allow forward progress 	 * (e.g. make it possible to rm(1) files from a full pool). 	 */
+comment|/* 	 * If we're trying to assess whether it's OK to do a free, 	 * cut the reservation in half to allow forward progress 	 * (e.g. make it possible to rm(1) files from a full pool). 	 */
 name|space
 operator|=
 name|spa_get_dspace
@@ -3011,15 +2998,11 @@ argument_list|)
 expr_stmt|;
 name|resv
 operator|=
-name|MAX
+name|spa_get_slop_space
 argument_list|(
-name|space
-operator|>>
-literal|6
-argument_list|,
-name|SPA_MINDEVSIZE
-operator|>>
-literal|1
+name|dp
+operator|->
+name|dp_spa
 argument_list|)
 expr_stmt|;
 if|if

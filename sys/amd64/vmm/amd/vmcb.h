@@ -873,6 +873,32 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Code segment descriptor attribute in 12 bit format as saved by VMCB. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMCB_CS_ATTRIB_L
+value|BIT(9)
+end_define
+
+begin_comment
+comment|/* Long mode. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMCB_CS_ATTRIB_D
+value|BIT(10)
+end_define
+
+begin_comment
+comment|/* OPerand size bit. */
+end_comment
+
+begin_comment
 comment|/*  * The VMCB is divided into two areas - the first one contains various  * control bits including the intercept vector and the second one contains  * the guest state.  */
 end_comment
 

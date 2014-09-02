@@ -8,7 +8,7 @@ comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1454,6 +1454,27 @@ name|DTRACE_A_ANONYMOUS
 value|0x0004
 define|#
 directive|define
+name|DTRACE_A_TOTAL
+value|0x0008
+define|#
+directive|define
+name|DTRACE_A_MINMAXBIN
+value|0x0010
+define|#
+directive|define
+name|DTRACE_A_HASNEGATIVES
+value|0x0020
+define|#
+directive|define
+name|DTRACE_A_HASPOSITIVES
+value|0x0040
+define|#
+directive|define
+name|DTRACE_AGGZOOM_MAX
+value|0.95
+comment|/* height of max bar */
+define|#
+directive|define
 name|DTRACE_AGGWALK_ERROR
 value|-1
 comment|/* error while processing */
@@ -1536,6 +1557,22 @@ modifier|*
 name|dtada_percpu_delta
 decl_stmt|;
 comment|/* per CPU delta, if avail */
+name|int64_t
+name|dtada_total
+decl_stmt|;
+comment|/* per agg total, if avail */
+name|uint16_t
+name|dtada_minbin
+decl_stmt|;
+comment|/* minimum bin, if avail */
+name|uint16_t
+name|dtada_maxbin
+decl_stmt|;
+comment|/* maximum bin, if avail */
+name|uint32_t
+name|dtada_flags
+decl_stmt|;
+comment|/* flags */
 block|}
 struct|;
 typedef|typedef
@@ -2060,9 +2097,18 @@ name|ctf_id_t
 name|dtt_type
 decl_stmt|;
 comment|/* CTF type identifier */
+name|uint_t
+name|dtt_flags
+decl_stmt|;
+comment|/* Misc. flags */
 block|}
 name|dtrace_typeinfo_t
 typedef|;
+define|#
+directive|define
+name|DTT_FL_USER
+value|0x1
+comment|/* user type */
 specifier|extern
 name|int
 name|dtrace_lookup_by_type

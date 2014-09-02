@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_netfpga.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -421,6 +427,31 @@ name|NF10BMAC_DATA_LAST
 value|0x00008000
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NF10BMAC_64BIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NF10BMAC_DATA_STRB
+value|0x000000ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGWTYPE
+value|uint64_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -428,22 +459,34 @@ name|NF10BMAC_DATA_STRB
 value|0x0000000f
 end_define
 
+begin_define
+define|#
+directive|define
+name|REGWTYPE
+value|uint32_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
 name|void
-name|nf10bmac_write_4
+name|nf10bmac_write
 parameter_list|(
 name|struct
 name|resource
 modifier|*
 name|res
 parameter_list|,
-name|uint32_t
+name|REGWTYPE
 name|reg
 parameter_list|,
-name|uint32_t
-name|val4
+name|REGWTYPE
+name|val
 parameter_list|,
 specifier|const
 name|char
@@ -457,6 +500,23 @@ name|l
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|NF10BMAC_64BIT
+name|bus_write_8
+argument_list|(
+name|res
+argument_list|,
+name|reg
+argument_list|,
+name|htole64
+argument_list|(
+name|val
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|bus_write_4
 argument_list|(
 name|res
@@ -465,25 +525,27 @@ name|reg
 argument_list|,
 name|htole32
 argument_list|(
-name|val4
+name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_function
 specifier|static
 specifier|inline
-name|uint32_t
-name|nf10bmac_read_4
+name|REGWTYPE
+name|nf10bmac_read
 parameter_list|(
 name|struct
 name|resource
 modifier|*
 name|res
 parameter_list|,
-name|uint32_t
+name|REGWTYPE
 name|reg
 parameter_list|,
 specifier|const
@@ -498,6 +560,24 @@ name|l
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|NF10BMAC_64BIT
+return|return
+operator|(
+name|le64toh
+argument_list|(
+name|bus_read_8
+argument_list|(
+name|res
+argument_list|,
+name|reg
+argument_list|)
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|le32toh
@@ -511,6 +591,8 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -518,18 +600,18 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|nf10bmac_write_4_be
+name|nf10bmac_write_be
 parameter_list|(
 name|struct
 name|resource
 modifier|*
 name|res
 parameter_list|,
-name|uint32_t
+name|REGWTYPE
 name|reg
 parameter_list|,
-name|uint32_t
-name|val4
+name|REGWTYPE
+name|val
 parameter_list|,
 specifier|const
 name|char
@@ -543,6 +625,23 @@ name|l
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|NF10BMAC_64BIT
+name|bus_write_8
+argument_list|(
+name|res
+argument_list|,
+name|reg
+argument_list|,
+name|htobe64
+argument_list|(
+name|val
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|bus_write_4
 argument_list|(
 name|res
@@ -551,25 +650,27 @@ name|reg
 argument_list|,
 name|htobe32
 argument_list|(
-name|val4
+name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_function
 specifier|static
 specifier|inline
-name|uint32_t
-name|nf10bmac_read_4_be
+name|REGWTYPE
+name|nf10bmac_read_be
 parameter_list|(
 name|struct
 name|resource
 modifier|*
 name|res
 parameter_list|,
-name|uint32_t
+name|REGWTYPE
 name|reg
 parameter_list|,
 specifier|const
@@ -584,6 +685,24 @@ name|l
 name|__unused
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|NF10BMAC_64BIT
+return|return
+operator|(
+name|be64toh
+argument_list|(
+name|bus_read_8
+argument_list|(
+name|res
+argument_list|,
+name|reg
+argument_list|)
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|be32toh
@@ -597,13 +716,15 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_define
 define|#
 directive|define
-name|NF10BMAC_WRITE_CTRL_4
+name|NF10BMAC_WRITE_CTRL
 parameter_list|(
 name|sc
 parameter_list|,
@@ -612,13 +733,13 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|nf10bmac_write_4((sc)->nf10bmac_ctrl_res, (reg), (val),		\ 	    __func__, __LINE__)
+value|nf10bmac_write((sc)->nf10bmac_ctrl_res, (reg), (val),		\ 	    __func__, __LINE__)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NF10BMAC_WRITE_4
+name|NF10BMAC_WRITE
 parameter_list|(
 name|sc
 parameter_list|,
@@ -627,26 +748,26 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|nf10bmac_write_4((sc)->nf10bmac_tx_mem_res, (reg), (val),	\ 	    __func__, __LINE__)
+value|nf10bmac_write((sc)->nf10bmac_tx_mem_res, (reg), (val),		\ 	    __func__, __LINE__)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NF10BMAC_READ_4
+name|NF10BMAC_READ
 parameter_list|(
 name|sc
 parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|nf10bmac_read_4((sc)->nf10bmac_rx_mem_res, (reg),		\ 	    __func__, __LINE__)
+value|nf10bmac_read((sc)->nf10bmac_rx_mem_res, (reg),			\ 	    __func__, __LINE__)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NF10BMAC_WRITE_4_BE
+name|NF10BMAC_WRITE_BE
 parameter_list|(
 name|sc
 parameter_list|,
@@ -655,26 +776,26 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|nf10bmac_write_4_be((sc)->nf10bmac_tx_mem_res, (reg), (val),	\ 	    __func__, __LINE__)
+value|nf10bmac_write_be((sc)->nf10bmac_tx_mem_res, (reg), (val),	\ 	    __func__, __LINE__)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NF10BMAC_READ_4_BE
+name|NF10BMAC_READ_BE
 parameter_list|(
 name|sc
 parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|nf10bmac_read_4_be((sc)->nf10bmac_rx_mem_res, (reg),		\ 	    __func__, __LINE__)
+value|nf10bmac_read_be((sc)->nf10bmac_rx_mem_res, (reg),		\ 	    __func__, __LINE__)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NF10BMAC_WRITE_INTR_4
+name|NF10BMAC_WRITE_INTR
 parameter_list|(
 name|sc
 parameter_list|,
@@ -687,7 +808,7 @@ parameter_list|,
 name|_l
 parameter_list|)
 define|\
-value|nf10bmac_write_4((sc)->nf10bmac_intr_res, (reg), (val),		\ 	    (_f), (_l))
+value|nf10bmac_write((sc)->nf10bmac_intr_res, (reg), (val),		\ 	    (_f), (_l))
 end_define
 
 begin_define
@@ -698,7 +819,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|NF10BMAC_WRITE_INTR_4((sc), NF10BMAC_INTR_CLEAR_DIS, 1,		\ 	__func__, __LINE__)
+value|NF10BMAC_WRITE_INTR((sc), NF10BMAC_INTR_CLEAR_DIS, 1,		\ 	__func__, __LINE__)
 end_define
 
 begin_define
@@ -709,7 +830,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|NF10BMAC_WRITE_INTR_4((sc), NF10BMAC_INTR_CTRL, 1,		\ 	__func__, __LINE__)
+value|NF10BMAC_WRITE_INTR((sc), NF10BMAC_INTR_CTRL, 1,		\ 	__func__, __LINE__)
 end_define
 
 begin_define
@@ -720,7 +841,7 @@ parameter_list|(
 name|sc
 parameter_list|)
 define|\
-value|NF10BMAC_WRITE_INTR_4((sc), NF10BMAC_INTR_CTRL, 0,		\ 	__func__, __LINE__)
+value|NF10BMAC_WRITE_INTR((sc), NF10BMAC_INTR_CTRL, 0,		\ 	__func__, __LINE__)
 end_define
 
 begin_ifdef
@@ -784,10 +905,10 @@ name|l
 decl_stmt|,
 name|ml
 decl_stmt|;
-name|uint32_t
-name|m4
+name|REGWTYPE
+name|md
 decl_stmt|,
-name|val4
+name|val
 decl_stmt|;
 name|NF10BMAC_LOCK_ASSERT
 argument_list|(
@@ -853,7 +974,7 @@ operator|.
 name|len
 expr_stmt|;
 comment|/* Write the length at start of packet. */
-name|NF10BMAC_WRITE_4
+name|NF10BMAC_WRITE
 argument_list|(
 name|sc
 argument_list|,
@@ -869,7 +990,7 @@ name|len
 operator|/
 sizeof|sizeof
 argument_list|(
-name|val4
+name|val
 argument_list|)
 expr_stmt|;
 name|len
@@ -879,7 +1000,7 @@ name|ml
 operator|*
 sizeof|sizeof
 argument_list|(
-name|val4
+name|val
 argument_list|)
 operator|)
 expr_stmt|;
@@ -904,10 +1025,10 @@ name|cl
 operator|=
 sizeof|sizeof
 argument_list|(
-name|val4
+name|val
 argument_list|)
 expr_stmt|;
-name|m4
+name|md
 operator|=
 operator|(
 name|NF10BMAC_TUSER_CPU0
@@ -969,7 +1090,10 @@ operator|)
 condition|)
 name|len
 operator|=
-literal|4
+sizeof|sizeof
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 name|cl
 operator|=
@@ -1004,7 +1128,7 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-name|m4
+name|md
 operator||=
 operator|(
 name|s
@@ -1012,7 +1136,7 @@ operator|&
 name|NF10BMAC_DATA_STRB
 operator|)
 expr_stmt|;
-name|m4
+name|md
 operator||=
 name|NF10BMAC_DATA_LAST
 expr_stmt|;
@@ -1020,18 +1144,18 @@ block|}
 block|}
 else|else
 block|{
-name|m4
+name|md
 operator||=
 name|NF10BMAC_DATA_STRB
 expr_stmt|;
 block|}
-name|NF10BMAC_WRITE_4
+name|NF10BMAC_WRITE
 argument_list|(
 name|sc
 argument_list|,
 name|NF10BMAC_TX_META
 argument_list|,
-name|m4
+name|md
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1045,23 +1169,23 @@ name|l
 operator|*
 sizeof|sizeof
 argument_list|(
-name|val4
+name|val
 argument_list|)
 index|]
 argument_list|,
 operator|&
-name|val4
+name|val
 argument_list|,
 name|cl
 argument_list|)
 expr_stmt|;
-name|NF10BMAC_WRITE_4_BE
+name|NF10BMAC_WRITE_BE
 argument_list|(
 name|sc
 argument_list|,
 name|NF10BMAC_TX_DATA
 argument_list|,
-name|val4
+name|val
 argument_list|)
 expr_stmt|;
 block|}
@@ -1297,16 +1421,16 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|uint32_t
-name|m4
+name|REGWTYPE
+name|md
 decl_stmt|,
-name|val4
+name|val
 decl_stmt|;
 do|do
 block|{
-name|m4
+name|md
 operator|=
-name|NF10BMAC_READ_4_BE
+name|NF10BMAC_READ_BE
 argument_list|(
 name|sc
 argument_list|,
@@ -1316,16 +1440,16 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_STRB
 operator|)
 operator|!=
 literal|0
 condition|)
-name|val4
+name|val
 operator|=
-name|NF10BMAC_READ_4_BE
+name|NF10BMAC_READ_BE
 argument_list|(
 name|sc
 argument_list|,
@@ -1336,7 +1460,7 @@ block|}
 do|while
 condition|(
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_STRB
 operator|)
@@ -1344,7 +1468,7 @@ operator|!=
 literal|0
 operator|&&
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_LAST
 operator|)
@@ -1376,10 +1500,10 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|uint32_t
-name|m4
+name|REGWTYPE
+name|md
 decl_stmt|,
-name|val4
+name|val
 decl_stmt|;
 name|int32_t
 name|len
@@ -1389,7 +1513,7 @@ decl_stmt|;
 comment|/* 	 * General problem here in case we need to sync ourselves to the 	 * beginning of a packet.  Length will only be set for the first 	 * read, and together with strb we can detect the begining (or 	 * skip to tlast). 	 */
 name|len
 operator|=
-name|NF10BMAC_READ_4
+name|NF10BMAC_READ
 argument_list|(
 name|sc
 argument_list|,
@@ -1420,9 +1544,9 @@ literal|0
 operator|)
 return|;
 block|}
-name|m4
+name|md
 operator|=
-name|NF10BMAC_READ_4
+name|NF10BMAC_READ
 argument_list|(
 name|sc
 argument_list|,
@@ -1436,7 +1560,7 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_STRB
 operator|)
@@ -1459,7 +1583,7 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_STRB
 operator|)
@@ -1483,7 +1607,7 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_STRB
 operator|)
@@ -1611,7 +1735,7 @@ name|l
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	while ((m4& NF10BMAC_DATA_STRB) != 0&& l< len) { */
+comment|/* 	while ((md& NF10BMAC_DATA_STRB) != 0&& l< len) { */
 while|while
 condition|(
 name|l
@@ -1625,7 +1749,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_LAST
 operator|)
@@ -1640,7 +1764,7 @@ operator|)
 operator|<
 sizeof|sizeof
 argument_list|(
-name|val4
+name|val
 argument_list|)
 condition|)
 block|{
@@ -1677,7 +1801,7 @@ operator|)
 operator|<=
 sizeof|sizeof
 argument_list|(
-name|val4
+name|val
 argument_list|)
 condition|)
 block|{
@@ -1694,14 +1818,14 @@ name|cl
 operator|=
 sizeof|sizeof
 argument_list|(
-name|val4
+name|val
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* Read the first bytes of data as well. */
-name|val4
+name|val
 operator|=
-name|NF10BMAC_READ_4_BE
+name|NF10BMAC_READ_BE
 argument_list|(
 name|sc
 argument_list|,
@@ -1711,7 +1835,7 @@ expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
-name|val4
+name|val
 argument_list|,
 operator|(
 name|uint8_t
@@ -1735,7 +1859,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_LAST
 operator|)
@@ -1754,9 +1878,9 @@ argument_list|(
 literal|50
 argument_list|)
 expr_stmt|;
-name|m4
+name|md
 operator|=
-name|NF10BMAC_READ_4
+name|NF10BMAC_READ
 argument_list|(
 name|sc
 argument_list|,
@@ -1771,7 +1895,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_STRB
 operator|)
@@ -1789,9 +1913,9 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-name|m4
+name|md
 operator|=
-name|NF10BMAC_READ_4
+name|NF10BMAC_READ
 argument_list|(
 name|sc
 argument_list|,
@@ -1804,7 +1928,7 @@ comment|/* We should get out of this loop with tlast and tsrb. */
 if|if
 condition|(
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_LAST
 operator|)
@@ -1812,7 +1936,7 @@ operator|==
 literal|0
 operator|||
 operator|(
-name|m4
+name|md
 operator|&
 name|NF10BMAC_DATA_STRB
 operator|)
@@ -1827,9 +1951,12 @@ operator|->
 name|nf10bmac_dev
 argument_list|,
 literal|"Unexpected rx loop end state: "
-literal|"m4=0x%08x len=%d l=%d\n"
+literal|"md=0x%08jx len=%d l=%d\n"
 argument_list|,
-name|m4
+operator|(
+name|uintmax_t
+operator|)
+name|md
 argument_list|,
 name|len
 argument_list|,

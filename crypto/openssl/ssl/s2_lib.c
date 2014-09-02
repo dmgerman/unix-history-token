@@ -287,7 +287,7 @@ name|SSL_HIGH
 block|,
 literal|0
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}

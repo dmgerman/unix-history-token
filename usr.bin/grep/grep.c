@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: grep.c,v 1.4 2011/02/16 01:31:33 joerg Exp $	*/
+comment|/*	$NetBSD: grep.c,v 1.6 2011/04/18 03:48:23 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -94,6 +94,12 @@ include|#
 directive|include
 file|<stdbool.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|_WITH_GETLINE
+end_define
 
 begin_include
 include|#
@@ -1702,6 +1708,9 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|ssize_t
+name|rlen
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1761,21 +1770,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|len
+operator|=
+literal|0
+expr_stmt|;
+name|line
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
-name|line
+name|rlen
 operator|=
-name|fgetln
+name|getline
 argument_list|(
-name|f
+operator|&
+name|line
 argument_list|,
 operator|&
 name|len
+argument_list|,
+name|f
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+operator|-
+literal|1
 condition|)
 name|add_pattern
 argument_list|(
@@ -1791,6 +1812,11 @@ condition|?
 literal|0
 else|:
 name|len
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|line
 argument_list|)
 expr_stmt|;
 if|if

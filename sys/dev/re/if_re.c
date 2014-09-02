@@ -8756,7 +8756,7 @@ name|sc
 operator|->
 name|rl_ldata
 operator|.
-name|rl_rx_list_map
+name|rl_rx_list_addr
 condition|)
 name|bus_dmamap_unload
 argument_list|(
@@ -8775,12 +8775,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_rx_list_map
-operator|&&
 name|sc
 operator|->
 name|rl_ldata
@@ -8834,7 +8828,7 @@ name|sc
 operator|->
 name|rl_ldata
 operator|.
-name|rl_tx_list_map
+name|rl_tx_list_addr
 condition|)
 name|bus_dmamap_unload
 argument_list|(
@@ -8853,12 +8847,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_tx_list_map
-operator|&&
 name|sc
 operator|->
 name|rl_ldata
@@ -9172,7 +9160,7 @@ name|sc
 operator|->
 name|rl_ldata
 operator|.
-name|rl_smap
+name|rl_stats_addr
 condition|)
 name|bus_dmamap_unload
 argument_list|(
@@ -9191,12 +9179,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_smap
-operator|&&
 name|sc
 operator|->
 name|rl_ldata

@@ -41,7 +41,18 @@ begin_if
 if|#
 directive|if
 operator|!
+name|defined
+argument_list|(
 name|BEOS_R5
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OS2
+argument_list|)
+operator|&&
+name|APR_FILES_AS_SOCKETS
 end_if
 
 begin_define

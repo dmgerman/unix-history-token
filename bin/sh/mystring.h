@@ -11,21 +11,6 @@ end_include
 
 begin_function_decl
 name|int
-name|prefix
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|number
 parameter_list|(
 specifier|const

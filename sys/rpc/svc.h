@@ -427,6 +427,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|__rpc_svcgroup
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|__rpc_svcthread
 struct_decl|;
 end_struct_decl
@@ -437,7 +443,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Server side transport handle. In the kernel, transports have a  * reference count which tracks the number of currently assigned  * worker threads plus one for the service pool's reference.  */
+comment|/*  * Server side transport handle. In the kernel, transports have a  * reference count which tracks the number of currently assigned  * worker threads plus one for the service pool's reference.  * For NFSv4.1 sessions, a reference is also held for a backchannel.  */
 end_comment
 
 begin_typedef
@@ -462,6 +468,12 @@ modifier|*
 name|xp_pool
 decl_stmt|;
 comment|/* owning pool (see below) */
+name|struct
+name|__rpc_svcgroup
+modifier|*
+name|xp_group
+decl_stmt|;
+comment|/* owning group (see below) */
 name|TAILQ_ENTRY
 argument_list|(
 argument|__rpc_svcxprt
@@ -868,12 +880,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|__rpc_svcthread
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * Service request  */
 end_comment
@@ -1011,6 +1017,11 @@ struct|struct
 name|__rpc_svcthread
 block|{
 name|struct
+name|mtx_padalign
+name|st_lock
+decl_stmt|;
+comment|/* protects st_reqs field */
+name|struct
 name|__rpc_svcpool
 modifier|*
 name|st_pool
@@ -1025,22 +1036,11 @@ name|svc_reqlist
 name|st_reqs
 decl_stmt|;
 comment|/* RPC requests to execute */
-name|int
-name|st_idle
-decl_stmt|;
-comment|/* thread is on idle list */
 name|struct
 name|cv
 name|st_cond
 decl_stmt|;
 comment|/* sleeping for work */
-name|LIST_ENTRY
-argument_list|(
-argument|__rpc_svcthread
-argument_list|)
-name|st_link
-expr_stmt|;
-comment|/* all threads list */
 name|LIST_ENTRY
 argument_list|(
 argument|__rpc_svcthread
@@ -1079,7 +1079,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * In the kernel, we can't use global variables to store lists of  * transports etc. since otherwise we could not have two unrelated RPC  * services running, each on its own thread. We solve this by  * importing a tiny part of a Solaris kernel concept, SVCPOOL.  *  * A service pool contains a set of transports and service callbacks  * for a set of related RPC services. The pool handle should be passed  * when creating new transports etc. Future work may include extending  * this to support something similar to the Solaris multi-threaded RPC  * server.  */
+comment|/*  * A thread group contain all information needed to assign subset of  * transports to subset of threads.  On systems with many CPUs and many  * threads that allows to reduce lock congestion and improve performance.  * Hundreds of threads on dozens of CPUs sharing the single pool lock do  * not scale well otherwise.  */
 end_comment
 
 begin_expr_stmt
@@ -1116,6 +1116,70 @@ end_enum
 
 begin_typedef
 typedef|typedef
+struct|struct
+name|__rpc_svcgroup
+block|{
+name|struct
+name|mtx_padalign
+name|sg_lock
+decl_stmt|;
+comment|/* protect the thread/req lists */
+name|struct
+name|__rpc_svcpool
+modifier|*
+name|sg_pool
+decl_stmt|;
+name|enum
+name|svcpool_state
+name|sg_state
+decl_stmt|;
+comment|/* current pool state */
+name|struct
+name|svcxprt_list
+name|sg_xlist
+decl_stmt|;
+comment|/* all transports in the group */
+name|struct
+name|svcxprt_list
+name|sg_active
+decl_stmt|;
+comment|/* transports needing service */
+name|struct
+name|svcthread_list
+name|sg_idlethreads
+decl_stmt|;
+comment|/* idle service threads */
+name|int
+name|sg_minthreads
+decl_stmt|;
+comment|/* minimum service thread count */
+name|int
+name|sg_maxthreads
+decl_stmt|;
+comment|/* maximum service thread count */
+name|int
+name|sg_threadcount
+decl_stmt|;
+comment|/* current service thread count */
+name|time_t
+name|sg_lastcreatetime
+decl_stmt|;
+comment|/* when we last started a thread */
+name|time_t
+name|sg_lastidlecheck
+decl_stmt|;
+comment|/* when we last checked idle transports */
+block|}
+name|SVCGROUP
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * In the kernel, we can't use global variables to store lists of  * transports etc. since otherwise we could not have two unrelated RPC  * services running, each on its own thread. We solve this by  * importing a tiny part of a Solaris kernel concept, SVCPOOL.  *  * A service pool contains a set of transports and service callbacks  * for a set of related RPC services. The pool handle should be passed  * when creating new transports etc. Future work may include extending  * this to support something similar to the Solaris multi-threaded RPC  * server.  */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|SVCTHREAD
 modifier|*
 name|pool_assign_fn
@@ -1145,6 +1209,13 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|SVC_MAXGROUPS
+value|16
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1173,16 +1244,6 @@ name|sp_proc
 decl_stmt|;
 comment|/* process which is in svc_run */
 name|struct
-name|svcxprt_list
-name|sp_xlist
-decl_stmt|;
-comment|/* all transports in the pool */
-name|struct
-name|svcxprt_list
-name|sp_active
-decl_stmt|;
-comment|/* transports needing service */
-name|struct
 name|svc_callout_list
 name|sp_callouts
 decl_stmt|;
@@ -1192,16 +1253,6 @@ name|svc_loss_callout_list
 name|sp_lcallouts
 decl_stmt|;
 comment|/* loss->dispatch list */
-name|struct
-name|svcthread_list
-name|sp_threads
-decl_stmt|;
-comment|/* service threads */
-name|struct
-name|svcthread_list
-name|sp_idlethreads
-decl_stmt|;
-comment|/* idle service threads */
 name|int
 name|sp_minthreads
 decl_stmt|;
@@ -1210,18 +1261,6 @@ name|int
 name|sp_maxthreads
 decl_stmt|;
 comment|/* maximum service thread count */
-name|int
-name|sp_threadcount
-decl_stmt|;
-comment|/* current service thread count */
-name|time_t
-name|sp_lastcreatetime
-decl_stmt|;
-comment|/* when we last started a thread */
-name|time_t
-name|sp_lastidlecheck
-decl_stmt|;
-comment|/* when we last checked idle transports */
 comment|/* 	 * Hooks to allow an application to control request to thread 	 * placement. 	 */
 name|pool_assign_fn
 modifier|*
@@ -1264,6 +1303,21 @@ name|struct
 name|sysctl_ctx_list
 name|sp_sysctl
 decl_stmt|;
+name|int
+name|sp_groupcount
+decl_stmt|;
+comment|/* Number of groups in the pool. */
+name|int
+name|sp_nextgroup
+decl_stmt|;
+comment|/* Next group to assign port. */
+name|SVCGROUP
+name|sp_groups
+index|[
+name|SVC_MAXGROUPS
+index|]
+decl_stmt|;
+comment|/* Thread/port groups. */
 block|}
 name|SVCPOOL
 typedef|;
@@ -2706,6 +2760,29 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|clnt_bck_create
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
+specifier|const
+name|rpcprog_t
+parameter_list|,
+specifier|const
+name|rpcvers_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* 	 * struct socket *;			-- server transport socket 	 * const rpcprog_t prog;		-- RPC program number 	 * const rpcvers_t vers;		-- RPC program version 	 */
+end_comment
 
 begin_comment
 comment|/*  * Generic TLI create routine  */

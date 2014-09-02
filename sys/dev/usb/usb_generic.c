@@ -715,9 +715,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_TUN
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ugen_debug
@@ -725,17 +723,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Debug level"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.usb.ugen.debug"
-argument_list|,
-operator|&
-name|ugen_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3127,24 +3114,6 @@ name|ENOTTY
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|f
-operator|->
-name|udev
-operator|->
-name|curr_config_index
-operator|==
-name|index
-condition|)
-block|{
-comment|/* no change needed */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* make sure all FIFO's are gone */
 comment|/* else there can be a deadlock */
 if|if
@@ -3164,10 +3133,9 @@ literal|"no FIFOs\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* change setting - will free generic FIFOs, if any */
 if|if
 condition|(
-name|usbd_set_config_index
+name|usbd_start_set_config
 argument_list|(
 name|f
 operator|->
@@ -3175,33 +3143,14 @@ name|udev
 argument_list|,
 name|index
 argument_list|)
+operator|!=
+literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|EIO
 operator|)
 return|;
-block|}
-comment|/* probe and attach */
-if|if
-condition|(
-name|usb_probe_and_attach
-argument_list|(
-name|f
-operator|->
-name|udev
-argument_list|,
-name|USB_IFACE_INDEX_ANY
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-block|}
 return|return
 operator|(
 literal|0
@@ -4722,29 +4671,6 @@ expr_stmt|;
 return|return
 operator|(
 name|ENOTTY
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|udev
-operator|->
-name|parent_hub
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* the root HUB cannot be re-enumerated */
-name|DPRINTFN
-argument_list|(
-literal|6
-argument_list|,
-literal|"cannot reset root HUB\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
 operator|)
 return|;
 block|}

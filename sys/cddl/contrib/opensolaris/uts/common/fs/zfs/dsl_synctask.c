@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -103,6 +103,9 @@ name|arg
 parameter_list|,
 name|int
 name|blocks_modified
+parameter_list|,
+name|zfs_space_check_t
+name|space_check
 parameter_list|)
 block|{
 name|spa_t
@@ -200,6 +203,12 @@ operator|=
 name|blocks_modified
 operator|<<
 name|DST_AVG_BLKSHIFT
+expr_stmt|;
+name|dst
+operator|.
+name|dst_space_check
+operator|=
+name|space_check
 expr_stmt|;
 name|dst
 operator|.
@@ -379,6 +388,9 @@ parameter_list|,
 name|int
 name|blocks_modified
 parameter_list|,
+name|zfs_space_check_t
+name|space_check
+parameter_list|,
 name|dmu_tx_t
 modifier|*
 name|tx
@@ -421,6 +433,12 @@ operator|=
 name|blocks_modified
 operator|<<
 name|DST_AVG_BLKSHIFT
+expr_stmt|;
+name|dst
+operator|->
+name|dst_space_check
+operator|=
+name|space_check
 expr_stmt|;
 name|dst
 operator|->
@@ -497,11 +515,6 @@ name|dst
 operator|->
 name|dst_pool
 decl_stmt|;
-name|uint64_t
-name|quota
-decl_stmt|,
-name|used
-decl_stmt|;
 name|ASSERT0
 argument_list|(
 name|dst
@@ -509,14 +522,28 @@ operator|->
 name|dst_error
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for sufficient space.  We just check against what's 	 * on-disk; we don't want any in-flight accounting to get in our 	 * way, because open context may have already used up various 	 * in-core limits (arc_tempreserve, dsl_pool_tempreserve). 	 */
+comment|/* 	 * Check for sufficient space. 	 * 	 * When the sync task was created, the caller specified the 	 * type of space checking required.  See the comment in 	 * zfs_space_check_t for details on the semantics of each 	 * type of space checking. 	 * 	 * We just check against what's on-disk; we don't want any 	 * in-flight accounting to get in our way, because open context 	 * may have already used up various in-core limits 	 * (arc_tempreserve, dsl_pool_tempreserve). 	 */
+if|if
+condition|(
+name|dst
+operator|->
+name|dst_space_check
+operator|!=
+name|ZFS_SPACE_CHECK_NONE
+condition|)
+block|{
+name|uint64_t
 name|quota
-operator|=
+init|=
 name|dsl_pool_adjustedsize
 argument_list|(
 name|dp
 argument_list|,
-name|B_FALSE
+name|dst
+operator|->
+name|dst_space_check
+operator|==
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 operator|-
 name|metaslab_class_get_deferred
@@ -528,9 +555,10 @@ operator|->
 name|dp_spa
 argument_list|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+name|uint64_t
 name|used
-operator|=
+init|=
 name|dp
 operator|->
 name|dp_root_dir
@@ -538,7 +566,7 @@ operator|->
 name|dd_phys
 operator|->
 name|dd_used_bytes
-expr_stmt|;
+decl_stmt|;
 comment|/* MOS space is triple-dittoed, so we multiply by 3. */
 if|if
 condition|(
@@ -586,6 +614,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* 	 * Check for errors by calling checkfunc. 	 */
 name|rrw_enter

@@ -1382,41 +1382,41 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_MD5_OPENSSL
+name|ARCHIVE_CRYPTO_MD5_OPENSSL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_RMD160_OPENSSL
+name|ARCHIVE_CRYPTO_RMD160_OPENSSL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA1_OPENSSL
+name|ARCHIVE_CRYPTO_SHA1_OPENSSL
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA256_OPENSSL
+name|ARCHIVE_CRYPTO_SHA256_OPENSSL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA384_OPENSSL
+name|ARCHIVE_CRYPTO_SHA384_OPENSSL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA512_OPENSSL
+name|ARCHIVE_CRYPTO_SHA512_OPENSSL
 value|1
 end_define
 
@@ -1428,28 +1428,28 @@ end_else
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_MD5_LIBMD
+name|ARCHIVE_CRYPTO_MD5_LIBMD
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA1_LIBMD
+name|ARCHIVE_CRYPTO_SHA1_LIBMD
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA256_LIBMD
+name|ARCHIVE_CRYPTO_SHA256_LIBMD
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA512_LIBMD
+name|ARCHIVE_CRYPTO_SHA512_LIBMD
 value|1
 end_define
 

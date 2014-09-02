@@ -149,6 +149,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_AIO_H
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_AIO_MSGQ
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_AIO_OS390
+end_define
+
+begin_comment
+comment|/* enable a bunch of z/OS aio.h definitions */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<aio.h>
+end_include
+
+begin_comment
+comment|/* aiocb	*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Choose the best method platform specific to use in apr_pollset */
 end_comment
@@ -214,6 +253,28 @@ define|#
 directive|define
 name|POLLSET_DEFAULT_METHOD
 value|APR_POLLSET_EPOLL
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_AIO_MSGQ
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|POLLSET_USES_AIO_MSGQ
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLLSET_DEFAULT_METHOD
+value|APR_POLLSET_AIO_MSGQ
 end_define
 
 begin_elif
@@ -340,6 +401,11 @@ operator|||
 name|defined
 argument_list|(
 name|POLLSET_USES_PORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|POLLSET_USES_AIO_MSGQ
 argument_list|)
 end_if
 

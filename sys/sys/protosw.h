@@ -63,26 +63,12 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 name|pr_input_t
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|pr_input6_t
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
 modifier|*
 parameter_list|,
 name|int
@@ -92,10 +78,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/* XXX FIX THIS */
-end_comment
 
 begin_typedef
 typedef|typedef

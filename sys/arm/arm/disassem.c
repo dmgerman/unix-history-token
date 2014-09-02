@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ddb/ddb.h>
 end_include
 
@@ -291,21 +297,9 @@ block|}
 block|,
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__FreeBSD_ARCH_armv6__
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__ARM_ARCH
-argument_list|)
-operator|&&
 name|__ARM_ARCH
 operator|>=
 literal|6
-operator|)
 block|{
 literal|0xffffffff
 block|,

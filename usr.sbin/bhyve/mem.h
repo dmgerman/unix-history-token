@@ -119,6 +119,17 @@ name|MEM_F_RW
 value|0x3
 end_define
 
+begin_define
+define|#
+directive|define
+name|MEM_F_IMMUTABLE
+value|0x4
+end_define
+
+begin_comment
+comment|/* mem_range cannot be unregistered */
+end_comment
+
 begin_function_decl
 name|void
 name|init_mem
@@ -146,6 +157,11 @@ name|struct
 name|vie
 modifier|*
 name|vie
+parameter_list|,
+name|struct
+name|vm_guest_paging
+modifier|*
+name|paging
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -968,6 +968,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|dosDirEntry
 modifier|*
@@ -2092,8 +2093,8 @@ name|cl
 decl_stmt|;
 name|u_int32_t
 name|sz
-init|=
-literal|0
+decl_stmt|,
+name|len
 decl_stmt|;
 for|for
 control|(
@@ -2102,6 +2103,12 @@ operator|=
 name|dir
 operator|->
 name|head
+operator|,
+name|len
+operator|=
+name|sz
+operator|=
+literal|0
 init|;
 operator|(
 name|sz
@@ -2115,6 +2122,8 @@ name|dir
 operator|->
 name|size
 condition|;
+name|len
+operator|++
 control|)
 name|cl
 operator|=
@@ -2147,6 +2156,17 @@ operator|.
 name|next
 operator|=
 name|CLUST_EOF
+expr_stmt|;
+name|fat
+index|[
+name|dir
+operator|->
+name|head
+index|]
+operator|.
+name|length
+operator|=
+name|len
 expr_stmt|;
 return|return
 name|FSFATMOD

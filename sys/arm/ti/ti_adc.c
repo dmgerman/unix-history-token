@@ -126,7 +126,7 @@ file|<arm/ti/ti_adcvar.h>
 end_include
 
 begin_comment
-comment|/* Define our 7 steps, one for each input channel. */
+comment|/* Define our 8 steps, one for each input channel. */
 end_comment
 
 begin_decl_stmt
@@ -221,6 +221,18 @@ operator|.
 name|stepdelay
 operator|=
 name|ADC_STEPDLY7
+block|}
+block|,
+block|{
+operator|.
+name|stepconfig
+operator|=
+name|ADC_STEPCFG8
+block|,
+operator|.
+name|stepdelay
+operator|=
+name|ADC_STEPDLY8
 block|}
 block|, }
 decl_stmt|;

@@ -544,7 +544,7 @@ name|OID_AUTO
 argument_list|,
 name|retry_count
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pmp_retry_count
@@ -552,17 +552,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Normal I/O retry count"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.pmp.retry_count"
-argument_list|,
-operator|&
-name|pmp_retry_count
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -576,7 +565,7 @@ name|OID_AUTO
 argument_list|,
 name|default_timeout
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pmp_default_timeout
@@ -584,17 +573,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Normal I/O timeout (in seconds)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.pmp.default_timeout"
-argument_list|,
-operator|&
-name|pmp_default_timeout
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -608,7 +586,7 @@ name|OID_AUTO
 argument_list|,
 name|hide_special
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|pmp_hide_special
@@ -616,17 +594,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Hide extra ports"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.cam.pmp.hide_special"
-argument_list|,
-operator|&
-name|pmp_hide_special
 argument_list|)
 expr_stmt|;
 end_expr_stmt

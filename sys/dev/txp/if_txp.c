@@ -268,7 +268,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * XXX Known Typhoon firmware issues.  *  * 1. It seems that firmware has Tx TCP/UDP checksum offloading bug.  *    The firmware hangs when it's told to compute TCP/UDP checksum.  *    I'm not sure whether the firmware requires special alignment to  *    do checksum offloading but datasheet says nothing about that.  * 2. Datasheet says nothing for maximum number of fragmented  *    descriptors supported. Experimentation shows up to 16 fragment  *    descriptors are supported in the firmware. For TSO case, upper  *    stack can send 64KB sized IP datagram plus link header size(  *    ethernet header + VLAN tag)  frame but controller can handle up  *    to 64KB frame given that PAGE_SIZE is 4KB(i.e. 16 * PAGE_SIZE).  *    Because frames that need TSO operation of hardware can be  *    larger than 64KB I disabled TSO capability. TSO operation for  *    less than or equal to 16 fragment descriptors works without  *    problems, though.  * 3. VLAN hardware tag stripping is always enabled in the firmware  *    even if it's explicitly told to not strip the tag. It's  *    possible to add the tag back in Rx handler if VLAN hardware  *    tag is not active but I didn't try that as it would be  *    layering violation.  * 4. TXP_CMD_RECV_BUFFER_CONTROL does not work as expected in  *    datasheet such that driver should handle the alignment  *    restriction by copying received frame to align the frame on  *    32bit boundary on strict-alignment architectures. This adds a  *    lot of CPU burden and it effectively reduce Rx performance on  *    strict-alignment architectures(e.g. sparc64, arm, mips and ia64).  *  * Unfortunately it seems that 3Com have no longer interests in  * releasing fixed firmware so we may have to live with these bugs.  */
+comment|/*  * XXX Known Typhoon firmware issues.  *  * 1. It seems that firmware has Tx TCP/UDP checksum offloading bug.  *    The firmware hangs when it's told to compute TCP/UDP checksum.  *    I'm not sure whether the firmware requires special alignment to  *    do checksum offloading but datasheet says nothing about that.  * 2. Datasheet says nothing for maximum number of fragmented  *    descriptors supported. Experimentation shows up to 16 fragment  *    descriptors are supported in the firmware. For TSO case, upper  *    stack can send 64KB sized IP datagram plus link header size(  *    ethernet header + VLAN tag)  frame but controller can handle up  *    to 64KB frame given that PAGE_SIZE is 4KB(i.e. 16 * PAGE_SIZE).  *    Because frames that need TSO operation of hardware can be  *    larger than 64KB I disabled TSO capability. TSO operation for  *    less than or equal to 16 fragment descriptors works without  *    problems, though.  * 3. VLAN hardware tag stripping is always enabled in the firmware  *    even if it's explicitly told to not strip the tag. It's  *    possible to add the tag back in Rx handler if VLAN hardware  *    tag is not active but I didn't try that as it would be  *    layering violation.  * 4. TXP_CMD_RECV_BUFFER_CONTROL does not work as expected in  *    datasheet such that driver should handle the alignment  *    restriction by copying received frame to align the frame on  *    32bit boundary on strict-alignment architectures. This adds a  *    lot of CPU burden and it effectively reduce Rx performance on  *    strict-alignment architectures(e.g. sparc64, arm and mips).  *  * Unfortunately it seems that 3Com have no longer interests in  * releasing fixed firmware so we may have to live with these bugs.  */
 end_comment
 
 begin_define
@@ -719,10 +719,12 @@ name|bus_dma_tag_t
 modifier|*
 parameter_list|,
 name|bus_dmamap_t
-modifier|*
 parameter_list|,
 name|void
 modifier|*
+modifier|*
+parameter_list|,
+name|bus_addr_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4460,7 +4462,6 @@ argument_list|,
 operator|&
 name|sec_tag
 argument_list|,
-operator|&
 name|sec_map
 argument_list|,
 operator|(
@@ -4470,6 +4471,9 @@ operator|*
 operator|)
 operator|&
 name|sec_buf
+argument_list|,
+operator|&
+name|sec_paddr
 argument_list|)
 expr_stmt|;
 return|return
@@ -7198,13 +7202,16 @@ modifier|*
 name|tag
 parameter_list|,
 name|bus_dmamap_t
-modifier|*
 name|map
 parameter_list|,
 name|void
 modifier|*
 modifier|*
 name|buf
+parameter_list|,
+name|bus_addr_t
+modifier|*
+name|paddr
 parameter_list|)
 block|{
 if|if
@@ -7218,26 +7225,20 @@ block|{
 if|if
 condition|(
 operator|*
-name|map
+name|paddr
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|bus_dmamap_unload
 argument_list|(
 operator|*
 name|tag
 argument_list|,
-operator|*
 name|map
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|map
-operator|!=
-name|NULL
-operator|&&
 name|buf
 operator|!=
 name|NULL
@@ -7255,7 +7256,6 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-operator|*
 name|map
 argument_list|)
 expr_stmt|;
@@ -7270,9 +7270,9 @@ operator|=
 name|NULL
 expr_stmt|;
 operator|*
-name|map
+name|paddr
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|bus_dma_tag_destroy
 argument_list|(
@@ -9738,7 +9738,6 @@ name|sc_cdata
 operator|.
 name|txp_txhiring_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -9756,6 +9755,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_txhiring
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_txhiring_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Low priority Tx ring. */
@@ -9770,7 +9776,6 @@ name|sc_cdata
 operator|.
 name|txp_txloring_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -9788,6 +9793,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_txloring
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_txloring_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Hi priority Rx ring. */
@@ -9802,7 +9814,6 @@ name|sc_cdata
 operator|.
 name|txp_rxhiring_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -9820,6 +9831,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_rxhiring
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_rxhiring_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Low priority Rx ring. */
@@ -9834,7 +9852,6 @@ name|sc_cdata
 operator|.
 name|txp_rxloring_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -9852,6 +9869,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_rxloring
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_rxloring_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Receive buffer ring. */
@@ -9866,7 +9890,6 @@ name|sc_cdata
 operator|.
 name|txp_rxbufs_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -9884,6 +9907,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_rxbufs
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_rxbufs_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Command ring. */
@@ -9898,7 +9928,6 @@ name|sc_cdata
 operator|.
 name|txp_cmdring_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -9916,6 +9945,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_cmdring
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_cmdring_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Response ring. */
@@ -9930,7 +9966,6 @@ name|sc_cdata
 operator|.
 name|txp_rspring_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -9948,6 +9983,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_rspring
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_rspring_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Zero ring. */
@@ -9962,7 +10004,6 @@ name|sc_cdata
 operator|.
 name|txp_zero_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -9980,6 +10021,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_zero
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_zero_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Host variables. */
@@ -9994,7 +10042,6 @@ name|sc_cdata
 operator|.
 name|txp_hostvar_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -10012,6 +10059,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_hostvar
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_hostvar_paddr
 argument_list|)
 expr_stmt|;
 comment|/* Boot record. */
@@ -10026,7 +10080,6 @@ name|sc_cdata
 operator|.
 name|txp_boot_tag
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|sc_cdata
@@ -10044,6 +10097,13 @@ operator|->
 name|sc_ldata
 operator|.
 name|txp_boot
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ldata
+operator|.
+name|txp_boot_paddr
 argument_list|)
 expr_stmt|;
 if|if

@@ -345,7 +345,9 @@ argument_list|(
 name|_KERNEL
 argument_list|)
 operator|&&
-name|__BSD_VISIBLE
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
 end_if
 
 begin_ifndef
@@ -469,7 +471,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_KERNEL&& __BSD_VISIBLE */
+comment|/* !_KERNEL&& __POSIX_VISIBLE>= 200112 */
 end_comment
 
 begin_if
@@ -2551,6 +2553,28 @@ begin_comment
 comment|/* bool: allow bind to any address */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_BINDMULTI
+value|25
+end_define
+
+begin_comment
+comment|/* bool: allow multiple listeners on a tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RSS_LISTEN_BUCKET
+value|26
+end_define
+
+begin_comment
+comment|/* int; set RSS listen bucket */
+end_comment
+
 begin_comment
 comment|/*  * Options for controlling the firewall and dummynet.  * Historical options (from 40 to 64) will eventually be  * replaced by only two options, IP_FW3 and IP_DUMMYNET3.  */
 end_comment
@@ -2830,39 +2854,6 @@ begin_comment
 comment|/* bool; receive IP TOS w/dgram */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_FLOWID
-value|69
-end_define
-
-begin_comment
-comment|/* flow id for the given socket/inp */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FLOWTYPE
-value|70
-end_define
-
-begin_comment
-comment|/* flow type (M_HASHTYPE) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_RSSCPUID
-value|71
-end_define
-
-begin_comment
-comment|/* RSS flowid -> CPU id mapping */
-end_comment
-
 begin_comment
 comment|/* IPv4 Source Filter Multicast API [RFC3678] */
 end_comment
@@ -2994,6 +2985,43 @@ end_define
 
 begin_comment
 comment|/* unblock a source */
+end_comment
+
+begin_comment
+comment|/* Flow and RSS definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FLOWID
+value|90
+end_define
+
+begin_comment
+comment|/* get flow id for the given socket/inp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FLOWTYPE
+value|91
+end_define
+
+begin_comment
+comment|/* get flow type (M_HASHTYPE) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RSSBUCKETID
+value|92
+end_define
+
+begin_comment
+comment|/* get RSS flowid -> bucket mapping */
 end_comment
 
 begin_comment

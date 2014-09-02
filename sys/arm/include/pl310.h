@@ -743,6 +743,12 @@ name|POWER_CTRL_ENABLE_STANDBY
 value|(1<< 1)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|intr_config_hook
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|pl310_softc
@@ -773,6 +779,11 @@ name|sc_mtx
 decl_stmt|;
 name|u_int
 name|sc_rtl_revision
+decl_stmt|;
+name|struct
+name|intr_config_hook
+modifier|*
+name|sc_ich
 decl_stmt|;
 block|}
 struct|;

@@ -103,15 +103,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BUFFER_SIZE_MCI_DEVICE
+name|SD_BLOCK_SIZE
 value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|MASTER_CLOCK
-value|60000000
 end_define
 
 begin_comment
@@ -119,17 +112,9 @@ comment|//* Global Variables
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|AT91S_MciDevice
 name|MCI_Device
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|Buffer
-index|[
-name|BUFFER_SIZE_MCI_DEVICE
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +154,8 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|unsigned
+name|int
 name|MCIDeviceWaitReady
 parameter_list|(
 name|unsigned
@@ -178,9 +164,30 @@ name|timeout
 parameter_list|)
 block|{
 specifier|volatile
+name|unsigned
 name|int
 name|status
 decl_stmt|;
+name|int
+name|waitfor
+decl_stmt|;
+if|if
+condition|(
+name|MCI_Device
+operator|.
+name|state
+operator|==
+name|AT91C_MCI_RX_SINGLE_BLOCK
+condition|)
+name|waitfor
+operator|=
+name|AT91C_MCI_RXBUFF
+expr_stmt|;
+else|else
+name|waitfor
+operator|=
+name|AT91C_MCI_NOTBUSY
+expr_stmt|;
 do|do
 block|{
 name|status
@@ -199,7 +206,7 @@ operator|!
 operator|(
 name|status
 operator|&
-name|AT91C_MCI_NOTBUSY
+name|waitfor
 operator|)
 operator|&&
 operator|(
@@ -283,6 +290,10 @@ name|AT91C_MCI_IDLE
 expr_stmt|;
 block|}
 comment|// End of if AT91C_MCI_RXBUFF
+comment|//printf("WaitReady returning status %x\n", status);
+return|return
+name|status
+return|;
 block|}
 end_function
 
@@ -295,64 +306,54 @@ name|swap
 parameter_list|(
 name|unsigned
 name|int
-name|a
+name|v
 parameter_list|)
 block|{
-return|return
+name|unsigned
+name|int
+name|t1
+decl_stmt|;
+asm|__asm __volatile("eor %1, %0, %0, ror #16\n"
+literal|"bic %1, %1, #0x00ff0000\n"
+literal|"mov %0, %0, ror #8\n"
+literal|"eor %0, %0, %1, lsr #8\n"
+operator|:
+literal|"+r"
 operator|(
+name|v
+operator|)
+operator|,
+literal|"=r"
 operator|(
-operator|(
-name|a
-operator|&
-literal|0xff
+name|t1
 operator|)
-operator|<<
-literal|24
-operator|)
-operator||
-operator|(
-operator|(
-name|a
-operator|&
-literal|0xff00
-operator|)
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-operator|(
-name|a
-operator|&
-literal|0xff0000
-operator|)
-operator|>>
-literal|8
-operator|)
-operator||
-operator|(
-operator|(
-name|a
-operator|&
-literal|0xff000000
-operator|)
-operator|>>
-literal|24
-operator|)
-operator|)
-return|;
-block|}
+block|)
+function|;
 end_function
 
+begin_return
+return|return
+operator|(
+name|v
+operator|)
+return|;
+end_return
+
 begin_function
+unit|}  inline
 specifier|static
-specifier|inline
-name|void
+name|unsigned
+name|int
 name|wait_ready
 parameter_list|()
 block|{
 name|int
 name|status
+decl_stmt|;
+name|int
+name|timeout
+init|=
+name|AT91C_MCI_TIMEOUT
 decl_stmt|;
 comment|// wait for CMDRDY Status flag to read the response
 do|do
@@ -372,8 +373,18 @@ name|status
 operator|&
 name|AT91C_MCI_CMDRDY
 operator|)
+operator|&&
+operator|(
+operator|--
+name|timeout
+operator|>
+literal|0
+operator|)
 condition|)
 do|;
+return|return
+name|status
+return|;
 block|}
 end_function
 
@@ -411,6 +422,33 @@ name|unsigned
 name|int
 name|error
 decl_stmt|;
+name|unsigned
+name|int
+name|errorMask
+init|=
+name|AT91C_MCI_SR_ERROR
+decl_stmt|;
+name|unsigned
+name|int
+name|opcode
+init|=
+name|Cmd
+operator|&
+literal|0x3F
+decl_stmt|;
+comment|//printf("SendCmd %d (%x) arg %x\n", opcode, Cmd, Arg);
+comment|// Don't check response CRC on ACMD41 (R3 response type).
+if|if
+condition|(
+name|opcode
+operator|==
+literal|41
+condition|)
+name|errorMask
+operator|&=
+operator|~
+name|AT91C_MCI_RCRCE
+expr_stmt|;
 name|AT91C_BASE_MCI
 operator|->
 name|MCI_ARGR
@@ -423,34 +461,22 @@ name|MCI_CMDR
 operator|=
 name|Cmd
 expr_stmt|;
-comment|//	printf("CMDR %x ARG %x\n", Cmd, Arg);
+name|error
+operator|=
 name|wait_ready
 argument_list|()
 expr_stmt|;
-comment|// Test error  ==> if crc error and response R3 ==> don't check error
-name|error
-operator|=
-operator|(
-name|AT91C_BASE_MCI
-operator|->
-name|MCI_SR
-operator|)
-operator|&
-name|AT91C_MCI_SR_ERROR
-expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
+operator|&
+name|errorMask
+operator|)
 operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|error
-operator|!=
-name|AT91C_MCI_RCRCE
-condition|)
 return|return
 operator|(
 literal|1
@@ -500,7 +526,7 @@ literal|16
 argument_list|)
 condition|)
 return|return
-name|AT91C_CMD_SEND_ERROR
+literal|0
 return|;
 return|return
 operator|(
@@ -524,7 +550,7 @@ comment|//* \fn    MCI_ReadBlock
 end_comment
 
 begin_comment
-comment|//* \brief Read an ENTIRE block or PARTIAL block
+comment|//* \brief Start the read for a single 512-byte block
 end_comment
 
 begin_comment
@@ -534,54 +560,16 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|MCI_ReadBlock
+name|MCI_StartReadBlock
 parameter_list|(
-name|int
-name|src
-parameter_list|,
 name|unsigned
-name|int
+name|blknum
+parameter_list|,
+name|void
 modifier|*
 name|dataBuffer
-parameter_list|,
-name|int
-name|sizeToRead
 parameter_list|)
 block|{
-comment|//	unsigned log2sl = MCI_Device.READ_BL_LEN;
-comment|//	unsigned sectorLength = 1<< log2sl;
-name|unsigned
-name|sectorLength
-init|=
-literal|512
-decl_stmt|;
-comment|///////////////////////////////////////////////////////////////////////
-if|if
-condition|(
-name|MCI_Device
-operator|.
-name|state
-operator|!=
-name|AT91C_MCI_IDLE
-condition|)
-return|return
-literal|1
-return|;
-if|if
-condition|(
-operator|(
-name|MCI_GetStatus
-argument_list|()
-operator|&
-name|AT91C_SR_READY_FOR_DATA
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-literal|1
-return|;
-comment|///////////////////////////////////////////////////////////////////////
 comment|// Init Mode Register
 name|AT91C_BASE_MCI
 operator|->
@@ -589,7 +577,7 @@ name|MCI_MR
 operator||=
 operator|(
 operator|(
-name|sectorLength
+name|SD_BLOCK_SIZE
 operator|<<
 literal|16
 operator|)
@@ -597,12 +585,7 @@ operator||
 name|AT91C_MCI_PDCMODE
 operator|)
 expr_stmt|;
-name|sizeToRead
-operator|=
-name|sizeToRead
-operator|/
-literal|4
-expr_stmt|;
+comment|// (PDC) Receiver Transfer Enable
 name|AT91C_BASE_PDC_MCI
 operator|->
 name|PDC_PTCR
@@ -627,7 +610,28 @@ name|AT91C_BASE_PDC_MCI
 operator|->
 name|PDC_RCR
 operator|=
-name|sizeToRead
+name|SD_BLOCK_SIZE
+operator|/
+literal|4
+expr_stmt|;
+empty_stmt|;
+name|AT91C_BASE_PDC_MCI
+operator|->
+name|PDC_PTCR
+operator|=
+name|AT91C_PDC_RXTEN
+expr_stmt|;
+comment|// SDHC wants block offset, non-HC wants byte offset.
+if|if
+condition|(
+operator|!
+name|MCI_Device
+operator|.
+name|IsSDHC
+condition|)
+name|blknum
+operator|*=
+name|SD_BLOCK_SIZE
 expr_stmt|;
 comment|// Send the Read single block command
 if|if
@@ -636,31 +640,19 @@ name|MCI_SendCommand
 argument_list|(
 name|READ_SINGLE_BLOCK_CMD
 argument_list|,
-name|src
+name|blknum
 argument_list|)
 condition|)
+block|{
 return|return
 name|AT91C_READ_ERROR
 return|;
+block|}
 name|MCI_Device
 operator|.
 name|state
 operator|=
 name|AT91C_MCI_RX_SINGLE_BLOCK
-expr_stmt|;
-comment|// Enable AT91C_MCI_RXBUFF Interrupt
-name|AT91C_BASE_MCI
-operator|->
-name|MCI_IER
-operator|=
-name|AT91C_MCI_RXBUFF
-expr_stmt|;
-comment|// (PDC) Receiver Transfer Enable
-name|AT91C_BASE_PDC_MCI
-operator|->
-name|PDC_PTCR
-operator|=
-name|AT91C_PDC_RXTEN
 expr_stmt|;
 return|return
 literal|0
@@ -668,90 +660,113 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|//*----------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|//* \fn    MCI_readblocks
+end_comment
+
+begin_comment
+comment|//* \brief Read one or more blocks
+end_comment
+
+begin_comment
+comment|//*----------------------------------------------------------------------------
+end_comment
+
 begin_function
 name|int
-name|MCI_read
+name|MCI_readblocks
 parameter_list|(
 name|char
 modifier|*
 name|dest
 parameter_list|,
 name|unsigned
-name|source
+name|blknum
 parameter_list|,
 name|unsigned
-name|length
+name|blkcount
 parameter_list|)
 block|{
-comment|//	unsigned log2sl = MCI_Device.READ_BL_LEN;
-comment|//	unsigned sectorLength = 1<< log2sl;
 name|unsigned
-name|sectorLength
-init|=
-literal|512
-decl_stmt|;
 name|int
-name|sizeToRead
+name|status
 decl_stmt|;
 name|unsigned
 name|int
 modifier|*
 name|walker
 decl_stmt|;
-comment|//As long as there is data to read
-while|while
-condition|(
-name|length
-condition|)
-block|{
 if|if
 condition|(
-name|length
-operator|>
-name|sectorLength
+name|MCI_Device
+operator|.
+name|state
+operator|!=
+name|AT91C_MCI_IDLE
 condition|)
-name|sizeToRead
-operator|=
-name|sectorLength
-expr_stmt|;
-else|else
-name|sizeToRead
-operator|=
-name|length
-expr_stmt|;
-name|MCIDeviceWaitReady
-argument_list|(
-name|AT91C_MCI_TIMEOUT
-argument_list|)
-expr_stmt|;
+block|{
+return|return
+literal|1
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|MCI_GetStatus
+argument_list|()
+operator|&
+name|AT91C_SR_READY_FOR_DATA
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+comment|// As long as there is data to read
+while|while
+condition|(
+name|blkcount
+condition|)
+block|{
 comment|//Do the reading
 if|if
 condition|(
-name|MCI_ReadBlock
+name|MCI_StartReadBlock
 argument_list|(
-name|source
+name|blknum
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|*
-operator|)
 name|dest
-argument_list|,
-name|sizeToRead
 argument_list|)
 condition|)
 return|return
 operator|-
 literal|1
 return|;
-comment|//* Wait MCI Device Ready
+comment|// Wait MCI Device Ready
+name|status
+operator|=
 name|MCIDeviceWaitReady
 argument_list|(
 name|AT91C_MCI_TIMEOUT
 argument_list|)
 expr_stmt|;
-comment|// Fix erratum in MCI part
+if|if
+condition|(
+name|status
+operator|&
+name|AT91C_MCI_SR_ERROR
+condition|)
+return|return
+literal|1
+return|;
+comment|// Fix erratum in MCI part - endian-swap all data.
 for|for
 control|(
 name|walker
@@ -773,7 +788,7 @@ operator|)
 operator|(
 name|dest
 operator|+
-name|sizeToRead
+name|SD_BLOCK_SIZE
 operator|)
 condition|;
 name|walker
@@ -788,22 +803,72 @@ operator|*
 name|walker
 argument_list|)
 expr_stmt|;
-comment|//Update counters& pointers
-name|length
-operator|-=
-name|sizeToRead
+comment|// Update counters& pointers
+operator|++
+name|blknum
+expr_stmt|;
+operator|--
+name|blkcount
 expr_stmt|;
 name|dest
 operator|+=
-name|sizeToRead
-expr_stmt|;
-name|source
-operator|+=
-name|sizeToRead
+name|SD_BLOCK_SIZE
 expr_stmt|;
 block|}
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|//*----------------------------------------------------------------------------
+end_comment
+
+begin_comment
+comment|//* \fn    MCI_read
+end_comment
+
+begin_comment
+comment|//* \brief Legacy read function, takes byte offset and length but was always
+end_comment
+
+begin_comment
+comment|//*  used to read full blocks; interface preserved for existing boot code.
+end_comment
+
+begin_comment
+comment|//*----------------------------------------------------------------------------
+end_comment
+
+begin_function
+name|int
+name|MCI_read
+parameter_list|(
+name|char
+modifier|*
+name|dest
+parameter_list|,
+name|unsigned
+name|byteoffset
+parameter_list|,
+name|unsigned
+name|length
+parameter_list|)
+block|{
+return|return
+name|MCI_readblocks
+argument_list|(
+name|dest
+argument_list|,
+name|byteoffset
+operator|/
+name|SD_BLOCK_SIZE
+argument_list|,
+name|length
+operator|/
+name|SD_BLOCK_SIZE
+argument_list|)
 return|;
 block|}
 end_function
@@ -838,11 +903,18 @@ name|int
 name|Arg
 parameter_list|)
 block|{
-comment|// Send the CMD55 for application specific command
-name|AT91C_BASE_MCI
-operator|->
-name|MCI_ARGR
+name|int
+name|status
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|status
 operator|=
+name|MCI_SendCommand
+argument_list|(
+name|APP_CMD
+argument_list|,
 operator|(
 name|MCI_Device
 operator|.
@@ -850,39 +922,22 @@ name|RCA
 operator|<<
 literal|16
 operator|)
-expr_stmt|;
-name|AT91C_BASE_MCI
-operator|->
-name|MCI_CMDR
-operator|=
-name|APP_CMD
-expr_stmt|;
-name|wait_ready
-argument_list|()
-expr_stmt|;
-comment|// if an error occurs
-if|if
-condition|(
-name|AT91C_BASE_MCI
-operator|->
-name|MCI_SR
-operator|&
-name|AT91C_MCI_SR_ERROR
-condition|)
-return|return
-operator|(
-literal|1
+argument_list|)
 operator|)
-return|;
-return|return
-operator|(
+operator|==
+literal|0
+condition|)
+name|status
+operator|=
 name|MCI_SendCommand
 argument_list|(
 name|Cmd_App
 argument_list|,
 name|Arg
 argument_list|)
-operator|)
+expr_stmt|;
+return|return
+name|status
 return|;
 block|}
 end_function
@@ -997,7 +1052,7 @@ comment|//* \fn    MCI_SDCard_GetOCR
 end_comment
 
 begin_comment
-comment|//* \brief Asks to all cards to send their operations conditions
+comment|//* \brief Wait for card to power up and determine whether it's SDHC or not.
 end_comment
 
 begin_comment
@@ -1013,26 +1068,91 @@ block|{
 name|unsigned
 name|int
 name|response
-init|=
-literal|0x0
 decl_stmt|;
-comment|// The RCA to be used for CMD55 in Idle state shall be the card's default RCA=0x0000.
+name|unsigned
+name|int
+name|arg
+init|=
+name|AT91C_MMC_HOST_VOLTAGE_RANGE
+decl_stmt|;
+name|int
+name|timeout
+init|=
+name|AT91C_MCI_TIMEOUT
+decl_stmt|;
+comment|// Force card to idle state.
+name|MCI_SendCommand
+argument_list|(
+name|GO_IDLE_STATE_CMD
+argument_list|,
+name|AT91C_NO_ARGUMENT
+argument_list|)
+expr_stmt|;
+comment|// Begin probe for SDHC by sending CMD8; only v2.0 cards respond to it.
+comment|//
+comment|// Arg is vvpp where vv is voltage range and pp is an arbitrary bit
+comment|// pattern that gets echoed back in the response. The only voltage
+comment|// ranges defined are:
+comment|//   0x01 = 2.7 - 3.6
+comment|//   0x02 = "reserved for low voltage" whatever that means.
+comment|//
+comment|// If the card fails to respond then it's not v2.0. If it responds by
+comment|// echoing back exactly the arg we sent, then it's a v2.0 card and can
+comment|// run at our voltage.  That means that when we send the ACMD41 (in
+comment|// MCI_SDCard_GetOCR) we can include the HCS bit to inquire about SDHC.
+if|if
+condition|(
+name|MCI_SendCommand
+argument_list|(
+name|SD_SEND_IF_COND_CMD
+argument_list|,
+literal|0x01AA
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|MCI_Device
+operator|.
+name|IsSDv2
+operator|=
+operator|(
+name|AT91C_BASE_MCI
+operator|->
+name|MCI_RSPR
+index|[
+literal|0
+index|]
+operator|==
+literal|0x01AA
+operator|)
+expr_stmt|;
+block|}
+comment|// If we've determined the card supports v2.0 functionality, set the
+comment|// HCS/CCS bit to indicate that we support SDHC.  This will cause a
+comment|// v2.0 card to report whether it is SDHC in the ACMD41 response.
+if|if
+condition|(
+name|MCI_Device
+operator|.
+name|IsSDv2
+condition|)
+block|{
+name|arg
+operator||=
+name|AT91C_CCS
+expr_stmt|;
+block|}
+comment|// The RCA to be used for CMD55 in Idle state shall be the card's
+comment|// default RCA=0x0000.
 name|MCI_Device
 operator|.
 name|RCA
 operator|=
 literal|0x0
 expr_stmt|;
-while|while
-condition|(
-operator|(
-name|response
-operator|&
-name|AT91C_CARD_POWER_UP_BUSY
-operator|)
-operator|!=
-name|AT91C_CARD_POWER_UP_BUSY
-condition|)
+comment|// Repeat ACMD41 until the card comes out of power-up-busy state.
+do|do
 block|{
 if|if
 condition|(
@@ -1040,12 +1160,14 @@ name|MCI_SDCard_SendAppCommand
 argument_list|(
 name|SDCARD_APP_OP_COND_CMD
 argument_list|,
-name|AT91C_MMC_HOST_VOLTAGE_RANGE
+name|arg
 argument_list|)
 condition|)
+block|{
 return|return
 literal|1
 return|;
+block|}
 name|response
 operator|=
 name|AT91C_BASE_MCI
@@ -1054,6 +1176,46 @@ name|MCI_RSPR
 index|[
 literal|0
 index|]
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|!
+operator|(
+name|response
+operator|&
+name|AT91C_CARD_POWER_UP_DONE
+operator|)
+operator|&&
+operator|(
+operator|--
+name|timeout
+operator|>
+literal|0
+operator|)
+condition|)
+do|;
+comment|// A v2.0 card sets CCS (card capacity status) in the response if it's SDHC.
+if|if
+condition|(
+name|MCI_Device
+operator|.
+name|IsSDv2
+condition|)
+block|{
+name|MCI_Device
+operator|.
+name|IsSDHC
+operator|=
+operator|(
+operator|(
+name|response
+operator|&
+name|AT91C_CCS
+operator|)
+operator|==
+name|AT91C_CCS
+operator|)
 expr_stmt|;
 block|}
 return|return
@@ -1162,11 +1324,23 @@ comment|//*---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//* \fn    MCI_SDCard_SetBusWidth
+comment|//* \fn    sdcard_4wire
 end_comment
 
 begin_comment
-comment|//* \brief  Set bus width for SDCard
+comment|//* \brief  Set bus width to 1-bit or 4-bit according to the parm.
+end_comment
+
+begin_comment
+comment|//*
+end_comment
+
+begin_comment
+comment|//* Unlike most functions in this file, the return value from this one is
+end_comment
+
+begin_comment
+comment|//* bool-ish; returns 0 on failure, 1 on success.
 end_comment
 
 begin_comment
@@ -1174,17 +1348,16 @@ comment|//*---------------------------------------------------------------------
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|MCI_SDCard_SetBusWidth
-parameter_list|()
+name|sdcard_use4wire
+parameter_list|(
+name|int
+name|use4wire
+parameter_list|)
 block|{
 specifier|volatile
 name|int
 name|ret_value
-decl_stmt|;
-name|char
-name|bus_width
 decl_stmt|;
 do|do
 block|{
@@ -1213,54 +1386,90 @@ literal|0
 operator|)
 condition|)
 do|;
-comment|// Select Card
-name|MCI_SendCommand
-argument_list|(
-name|SEL_DESEL_CARD_CMD
-argument_list|,
-operator|(
-name|MCI_Device
-operator|.
-name|RCA
-operator|)
-operator|<<
-literal|16
-argument_list|)
-expr_stmt|;
-comment|// Set bus width for Sdcard
-if|if
-condition|(
-name|MCI_Device
-operator|.
-name|SDCard_bus_width
-operator|==
-name|AT91C_MCI_SCDBUS
-condition|)
-name|bus_width
+comment|// If going to 4-wire mode, ask the card to turn off the DAT3 card detect
+comment|// pullup resistor, if going to 1-wire ask it to turn it back on.
+name|ret_value
 operator|=
-name|AT91C_BUS_WIDTH_4BITS
-expr_stmt|;
-else|else
-name|bus_width
-operator|=
-name|AT91C_BUS_WIDTH_1BIT
-expr_stmt|;
-if|if
-condition|(
 name|MCI_SDCard_SendAppCommand
 argument_list|(
-name|SDCARD_SET_BUS_WIDTH_CMD
+name|SDCARD_SET_CLR_CARD_DETECT_CMD
 argument_list|,
-name|bus_width
+name|use4wire
+condition|?
+literal|0
+else|:
+literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_value
 operator|!=
 name|AT91C_CMD_SEND_OK
 condition|)
 return|return
-literal|1
+literal|0
 return|;
+comment|// Ask the card to go into the requested mode.
+name|ret_value
+operator|=
+name|MCI_SDCard_SendAppCommand
+argument_list|(
+name|SDCARD_SET_BUS_WIDTH_CMD
+argument_list|,
+name|use4wire
+condition|?
+name|AT91C_BUS_WIDTH_4BITS
+else|:
+name|AT91C_BUS_WIDTH_1BIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret_value
+operator|!=
+name|AT91C_CMD_SEND_OK
+condition|)
 return|return
 literal|0
+return|;
+comment|// Set the MCI device to match the mode we set in the card.
+if|if
+condition|(
+name|use4wire
+condition|)
+block|{
+name|MCI_Device
+operator|.
+name|SDCard_bus_width
+operator|=
+name|AT91C_BUS_WIDTH_4BITS
+expr_stmt|;
+name|AT91C_BASE_MCI
+operator|->
+name|MCI_SDCR
+operator||=
+name|AT91C_MCI_SCDBUS
+expr_stmt|;
+block|}
+else|else
+block|{
+name|MCI_Device
+operator|.
+name|SDCard_bus_width
+operator|=
+name|AT91C_BUS_WIDTH_1BIT
+expr_stmt|;
+name|AT91C_BASE_MCI
+operator|->
+name|MCI_SDCR
+operator|&=
+operator|~
+name|AT91C_MCI_SCDBUS
+expr_stmt|;
+block|}
+return|return
+literal|1
 return|;
 block|}
 end_function
@@ -1270,11 +1479,23 @@ comment|//*---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//* \fn    main
+comment|//* \fn    sdcard_init
 end_comment
 
 begin_comment
-comment|//* \brief main function
+comment|//* \brief get the mci device ready to read from an SD or SDHC card.
+end_comment
+
+begin_comment
+comment|//*
+end_comment
+
+begin_comment
+comment|//* Unlike most functions in this file, the return value from this one is
+end_comment
+
+begin_comment
+comment|//* bool-ish; returns 0 on failure, 1 on success.
 end_comment
 
 begin_comment
@@ -1295,17 +1516,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|REPORT_SIZE
-name|unsigned
-name|int
-name|mult
-decl_stmt|,
-name|blocknr
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|i
 decl_stmt|;
@@ -1332,16 +1542,30 @@ name|MCI_Device
 operator|.
 name|SDCard_bus_width
 operator|=
-name|AT91C_MCI_SCDBUS
+literal|0
 expr_stmt|;
-comment|//* Reset the MCI
+name|MCI_Device
+operator|.
+name|IsSDv2
+operator|=
+literal|0
+expr_stmt|;
+name|MCI_Device
+operator|.
+name|IsSDHC
+operator|=
+literal|0
+expr_stmt|;
+comment|// Reset the MCI and set the bus speed.
+comment|// Using MCK/230 gives a legal (under 400khz) bus speed for the card id
+comment|// sequence for all reasonable master clock speeds.
 name|AT91C_BASE_MCI
 operator|->
 name|MCI_CR
 operator|=
-name|AT91C_MCI_MCIEN
+name|AT91C_MCI_MCIDIS
 operator||
-name|AT91C_MCI_PWSEN
+literal|0x80
 expr_stmt|;
 name|AT91C_BASE_MCI
 operator|->
@@ -1360,20 +1584,26 @@ operator|->
 name|MCI_MR
 operator|=
 name|AT91C_MCI_PDCMODE
+operator||
+literal|114
 expr_stmt|;
+comment|/* clkdiv 114 = MCK/230 */
 name|AT91C_BASE_MCI
 operator|->
 name|MCI_SDCR
 operator|=
-name|AT91C_MCI_SDCARD_4BITS_SLOTA
+name|AT91C_MCI_MMC_SLOTA
 expr_stmt|;
-name|MCI_SendCommand
-argument_list|(
-name|GO_IDLE_STATE_CMD
-argument_list|,
-name|AT91C_NO_ARGUMENT
-argument_list|)
+name|AT91C_BASE_MCI
+operator|->
+name|MCI_CR
+operator|=
+name|AT91C_MCI_MCIEN
+operator||
+name|AT91C_MCI_PWSEN
 expr_stmt|;
+comment|// Wait for the card to come out of power-up-busy state by repeatedly
+comment|// sending ACMD41.  This also probes for SDHC versus standard cards.
 for|for
 control|(
 name|i
@@ -1390,19 +1620,29 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 name|MCI_SDCard_GetOCR
-argument_list|(
-operator|&
-name|MCI_Device
-argument_list|)
+argument_list|()
+operator|==
+literal|0
 condition|)
 break|break;
+if|if
+condition|(
+operator|(
+name|i
+operator|&
+literal|0x01
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"."
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1423,6 +1663,7 @@ condition|)
 return|return
 literal|0
 return|;
+comment|// Tell the card to set its address, and remember the result.
 if|if
 condition|(
 name|MCI_SendCommand
@@ -1450,6 +1691,18 @@ operator|>>
 literal|16
 operator|)
 expr_stmt|;
+comment|// After sending CMD3 (set addr) we can increase the clock to full speed.
+comment|// Using MCK/4 gives a legal (under 25mhz) bus speed for all reasonable
+comment|// master clock speeds.
+name|AT91C_BASE_MCI
+operator|->
+name|MCI_MR
+operator|=
+name|AT91C_MCI_PDCMODE
+operator||
+literal|1
+expr_stmt|;
+comment|/* clkdiv 1 = MCK/4 */
 if|if
 condition|(
 name|MCI_GetCSD
@@ -1482,6 +1735,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|REPORT_SIZE
+block|{
+name|unsigned
+name|int
+name|mult
+decl_stmt|,
+name|blocknr
+decl_stmt|;
 comment|// compute MULT
 name|mult
 operator|=
@@ -1562,12 +1822,33 @@ operator|)
 operator|*
 name|blocknr
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Found SD card %u bytes\n"
+argument_list|,
+name|MCI_Device
+operator|.
+name|Memory_Capacity
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
+comment|// Select card and set block length for following transfers.
 if|if
 condition|(
-name|MCI_SDCard_SetBusWidth
-argument_list|()
+name|MCI_SendCommand
+argument_list|(
+name|SEL_DESEL_CARD_CMD
+argument_list|,
+operator|(
+name|MCI_Device
+operator|.
+name|RCA
+operator|)
+operator|<<
+literal|16
+argument_list|)
 condition|)
 return|return
 literal|0
@@ -1578,30 +1859,12 @@ name|MCI_SendCommand
 argument_list|(
 name|SET_BLOCKLEN_CMD
 argument_list|,
-literal|1
-operator|<<
-name|MCI_Device
-operator|.
-name|READ_BL_LEN
+name|SD_BLOCK_SIZE
 argument_list|)
 condition|)
 return|return
 literal|0
 return|;
-ifdef|#
-directive|ifdef
-name|REPORT_SIZE
-name|printf
-argument_list|(
-literal|"Found SD card %u bytes\n"
-argument_list|,
-name|MCI_Device
-operator|.
-name|Memory_Capacity
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;

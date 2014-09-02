@@ -259,6 +259,14 @@ name|char
 name|SDCard_bus_width
 decl_stmt|;
 name|unsigned
+name|char
+name|IsSDv2
+decl_stmt|;
+name|unsigned
+name|char
+name|IsSDHC
+decl_stmt|;
+name|unsigned
 name|int
 name|RCA
 decl_stmt|;
@@ -844,6 +852,14 @@ define|\
 value|(15 | MMC_RSPTYP_NO)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SD_SEND_IF_COND_CMD
+define|\
+value|(8 | MMC_TRCMD_NO | MMC_SPCMD_NONE | MMC_RSPTYP_48 | \      MMC_MAXLAT)
+end_define
+
 begin_comment
 comment|//*------------------------------------------------
 end_comment
@@ -1112,7 +1128,7 @@ begin_define
 define|#
 directive|define
 name|SDCARD_APP_OP_COND_CMD
-value|(41 | MMC_SPCMD_NONE	| MMC_RSPTYP_48	| MMC_TRCMD_NO )
+value|(41 | MMC_SPCMD_NONE	| MMC_RSPTYP_48	| MMC_TRCMD_NO | MMC_MAXLAT)
 end_define
 
 begin_define
@@ -1317,7 +1333,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91C_CARD_POWER_UP_BUSY
+name|AT91C_CCS
+value|(1<< 30)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91C_CARD_POWER_UP_DONE
 value|(1U<< 31)
 end_define
 

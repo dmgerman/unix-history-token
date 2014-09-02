@@ -1454,8 +1454,6 @@ name|RFFDG
 condition|)
 name|fdunshare
 argument_list|(
-name|p1
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;

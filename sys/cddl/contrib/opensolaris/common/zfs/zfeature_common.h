@@ -71,6 +71,8 @@ name|SPA_FEATURE_HOLE_BIRTH
 block|,
 name|SPA_FEATURE_EXTENSIBLE_DATASET
 block|,
+name|SPA_FEATURE_EMBEDDED_DATA
+block|,
 name|SPA_FEATURE_BOOKMARKS
 block|,
 name|SPA_FEATURE_FS_SS_LIMIT
@@ -137,11 +139,9 @@ function_decl|)
 parameter_list|(
 name|zfeature_info_t
 modifier|*
-name|fi
 parameter_list|,
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 define|#
@@ -179,11 +179,9 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|,
 name|spa_feature_t
 modifier|*
-name|res
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -191,10 +189,8 @@ name|boolean_t
 name|zfeature_depends_on
 parameter_list|(
 name|spa_feature_t
-name|fid
 parameter_list|,
 name|spa_feature_t
-name|check
 parameter_list|)
 function_decl|;
 specifier|extern

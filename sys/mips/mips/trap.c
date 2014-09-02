@@ -311,48 +311,6 @@ directive|include
 file|<sys/dtrace_bsd.h>
 end_include
 
-begin_comment
-comment|/*  * This is a hook which is initialised by the dtrace module  * to handle traps which might occur during DTrace probe  * execution.  */
-end_comment
-
-begin_decl_stmt
-name|dtrace_trap_func_t
-name|dtrace_trap_func
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dtrace_doubletrap_func_t
-name|dtrace_doubletrap_func
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * This is a hook which is initialised by the systrace module  * when it is loaded. This keeps the DTrace syscall provider  * implementation opaque.   */
-end_comment
-
-begin_decl_stmt
-name|systrace_probe_func_t
-name|systrace_probe_func
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * These hooks are necessary for the pid and usdt providers.  */
-end_comment
-
-begin_decl_stmt
-name|dtrace_pid_probe_ptr_t
-name|dtrace_pid_probe_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dtrace_return_probe_ptr_t
-name|dtrace_return_probe_ptr
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -2571,7 +2529,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
-comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in it's per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * If the DTrace kernel module has registered a trap handler, 	 * call it and if it returns non-zero, assume that it has 	 * handled the trap and modified the trap frame so that this 	 * function can return normally. 	 */
+comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in its per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * If the DTrace kernel module has registered a trap handler, 	 * call it and if it returns non-zero, assume that it has 	 * handled the trap and modified the trap frame so that this 	 * function can return normally. 	 */
 comment|/* 	 * XXXDTRACE: add pid probe handler here (if ever) 	 */
 if|if
 condition|(
@@ -2591,8 +2549,6 @@ name|dtrace_trap_func
 call|)
 argument_list|(
 name|trapframe
-argument_list|,
-name|type
 argument_list|)
 condition|)
 return|return

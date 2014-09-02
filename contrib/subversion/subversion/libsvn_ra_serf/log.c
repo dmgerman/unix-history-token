@@ -2188,6 +2188,10 @@ name|peg_rev
 operator|=
 operator|(
 name|start
+operator|==
+name|SVN_INVALID_REVNUM
+operator|||
+name|start
 operator|>
 name|end
 operator|)

@@ -430,6 +430,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<netinet/in_pcb.h>
+end_include
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -581,7 +587,7 @@ name|inpcbinfo
 operator|*
 name|get_inpcbinfo
 argument_list|(
-argument|uint8_t protocol
+argument|int protocol
 argument_list|)
 block|{
 return|return
@@ -608,7 +614,7 @@ name|inpcbhead
 operator|*
 name|get_pcblist
 argument_list|(
-argument|uint8_t protocol
+argument|int protocol
 argument_list|)
 block|{
 return|return
@@ -744,11 +750,15 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|void
+name|int
 name|udp_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int

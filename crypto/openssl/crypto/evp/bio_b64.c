@@ -892,6 +892,10 @@ name|ctx
 operator|->
 name|tmp
 expr_stmt|;
+name|num
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|j

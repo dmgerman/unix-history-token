@@ -182,10 +182,6 @@ name|KERNELDUMP_I386_VERSION
 value|2
 define|#
 directive|define
-name|KERNELDUMP_IA64_VERSION
-value|1
-define|#
-directive|define
 name|KERNELDUMP_MIPS_VERSION
 value|1
 define|#

@@ -209,7 +209,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ext_free
 parameter_list|(
 name|struct
@@ -272,11 +272,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|EXT_FREE_OK
-operator|)
-return|;
 block|}
 end_function
 
@@ -644,7 +639,7 @@ name|md
 operator|->
 name|m_ext
 operator|.
-name|ref_cnt
+name|ext_cnt
 operator|=
 operator|&
 name|ou_refcnt

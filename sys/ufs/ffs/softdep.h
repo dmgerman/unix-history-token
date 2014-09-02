@@ -2929,7 +2929,6 @@ name|mount_softdeps
 block|{
 name|struct
 name|rwlock
-modifier|*
 name|sd_fslock
 decl_stmt|;
 comment|/* softdep lock */
@@ -3034,10 +3033,6 @@ name|u_long
 name|sd_indirhashsize
 decl_stmt|;
 comment|/* indir hash table size-1 */
-name|long
-name|sd_numindirdeps
-decl_stmt|;
-comment|/* outstanding indirdeps */
 name|int
 name|sd_on_journal
 decl_stmt|;
@@ -3058,6 +3053,33 @@ name|int
 name|sd_req
 decl_stmt|;
 comment|/* Wakeup when deps hits 0. */
+name|int
+name|sd_flags
+decl_stmt|;
+comment|/* comm with flushing thread */
+name|int
+name|sd_cleanups
+decl_stmt|;
+comment|/* Calls to cleanup */
+name|struct
+name|thread
+modifier|*
+name|sd_flushtd
+decl_stmt|;
+comment|/* thread handling flushing */
+name|TAILQ_ENTRY
+argument_list|(
+argument|mount_softdeps
+argument_list|)
+name|sd_next
+expr_stmt|;
+comment|/* List of softdep filesystem */
+name|struct
+name|ufsmount
+modifier|*
+name|sd_ump
+decl_stmt|;
+comment|/* our ufsmount structure */
 name|u_long
 name|sd_curdeps
 index|[
@@ -3070,6 +3092,32 @@ comment|/* count of current deps */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Flags for communicating with the syncer thread.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLUSH_EXIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* time to exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLUSH_CLEANUP
+value|0x0002
+end_define
+
+begin_comment
+comment|/* need to clear out softdep structures */
+end_comment
 
 begin_comment
 comment|/*  * Keep the old names from when these were in the ufsmount structure.  */
@@ -3218,13 +3266,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|softdep_numindirdeps
-value|um_softdep->sd_numindirdeps
-end_define
-
-begin_define
-define|#
-directive|define
 name|softdep_on_journal
 value|um_softdep->sd_on_journal
 end_define
@@ -3255,6 +3296,20 @@ define|#
 directive|define
 name|softdep_req
 value|um_softdep->sd_req
+end_define
+
+begin_define
+define|#
+directive|define
+name|softdep_flags
+value|um_softdep->sd_flags
+end_define
+
+begin_define
+define|#
+directive|define
+name|softdep_flushtd
+value|um_softdep->sd_flushtd
 end_define
 
 begin_define

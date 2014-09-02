@@ -1961,6 +1961,61 @@ begin_comment
 comment|/* bool: allow bind to any address */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPV6_BINDMULTI
+value|65
+end_define
+
+begin_comment
+comment|/* bool; allow multibind to same addr/port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RSS_LISTEN_BUCKET
+value|66
+end_define
+
+begin_comment
+comment|/* int; set RSS listen bucket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_FLOWID
+value|67
+end_define
+
+begin_comment
+comment|/* int; flowid of given socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_FLOWTYPE
+value|68
+end_define
+
+begin_comment
+comment|/* int; flowtype of given socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_RSSBUCKETID
+value|69
+end_define
+
+begin_comment
+comment|/* int; RSS bucket ID of given socket */
+end_comment
+
 begin_comment
 comment|/*  * The following option is private; do not use it from user applications.  * It is deliberately defined to the same value as IP_MSFILTER.  */
 end_comment

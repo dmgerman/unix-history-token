@@ -1622,7 +1622,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function to handle DTrace traps during probes. See amd64/amd64/trap.c */
+comment|/* Function to handle DTrace traps during probes. See amd64/amd64/trap.c. */
 end_comment
 
 begin_function
@@ -1633,12 +1633,9 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
-parameter_list|,
-name|u_int
-name|type
 parameter_list|)
 block|{
-comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in it's per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * Check if DTrace has enabled 'no-fault' mode: 	 * 	 */
+comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in its per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * Check if DTrace has enabled 'no-fault' mode: 	 */
 if|if
 condition|(
 operator|(
@@ -1658,14 +1655,11 @@ block|{
 comment|/* 		 * There are only a couple of trap types that are expected. 		 * All the rest will be handled in the usual way. 		 */
 switch|switch
 condition|(
-name|type
+name|frame
+operator|->
+name|tf_trapno
 condition|)
 block|{
-comment|/* Privilieged instruction fault. */
-case|case
-name|T_PRIVINFLT
-case|:
-break|break;
 comment|/* General protection fault. */
 case|case
 name|T_PROTFLT

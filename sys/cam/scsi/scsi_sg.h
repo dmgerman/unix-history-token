@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|SG_SET_TIMEOUT
-value|_IO(SGIOC, 0x01)
+value|_IOW(SGIOC, 0x01, u_int)
 end_define
 
 begin_define
@@ -40,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|SG_EMULATED_HOST
-value|_IO(SGIOC, 0x03)
+value|_IOR(SGIOC, 0x03, int)
 end_define
 
 begin_define
@@ -61,112 +61,112 @@ begin_define
 define|#
 directive|define
 name|SG_GET_COMMAND_Q
-value|_IO(SGIOC, 0x70)
+value|_IOW(SGIOC, 0x70, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_SET_COMMAND_Q
-value|_IO(SGIOC, 0x71)
+value|_IOR(SGIOC, 0x71, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_GET_RESERVED_SIZE
-value|_IO(SGIOC, 0x72)
+value|_IOR(SGIOC, 0x72, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_SET_RESERVED_SIZE
-value|_IO(SGIOC, 0x75)
+value|_IOW(SGIOC, 0x75, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_GET_SCSI_ID
-value|_IO(SGIOC, 0x76)
+value|_IOR(SGIOC, 0x76, struct sg_scsi_id)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_SET_FORCE_LOW_DMA
-value|_IO(SGIOC, 0x79)
+value|_IOW(SGIOC, 0x79, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_GET_LOW_DMA
-value|_IO(SGIOC, 0x7a)
+value|_IOR(SGIOC, 0x7a, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_SET_FORCE_PACK_ID
-value|_IO(SGIOC, 0x7b)
+value|_IOW(SGIOC, 0x7b, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_GET_PACK_ID
-value|_IO(SGIOC, 0x7c)
+value|_IOR(SGIOC, 0x7c, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_GET_NUM_WAITING
-value|_IO(SGIOC, 0x7d)
+value|_IOR(SGIOC, 0x7d, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_SET_DEBUG
-value|_IO(SGIOC, 0x7e)
+value|_IOW(SGIOC, 0x7e, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_GET_SG_TABLESIZE
-value|_IO(SGIOC, 0x7f)
+value|_IOR(SGIOC, 0x7f, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_GET_VERSION_NUM
-value|_IO(SGIOC, 0x82)
+value|_IOR(SGIOC, 0x82, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_NEXT_CMD_LEN
-value|_IO(SGIOC, 0x83)
+value|_IOW(SGIOC, 0x83, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_SCSI_RESET
-value|_IO(SGIOC, 0x84)
+value|_IOW(SGIOC, 0x84, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_IO
-value|_IO(SGIOC, 0x85)
+value|_IOWR(SGIOC, 0x85, struct sg_io_hdr)
 end_define
 
 begin_define
@@ -180,21 +180,21 @@ begin_define
 define|#
 directive|define
 name|SG_SET_KEEP_ORPHAN
-value|_IO(SGIOC, 0x87)
+value|_IOW(SGIOC, 0x87, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_GET_KEEP_ORPHAN
-value|_IO(SGIOC, 0x88)
+value|_IOR(SGIOC, 0x88, int)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_GET_ACCESS_COUNT
-value|_IO(SGIOC, 0x89)
+value|_IOR(SGIOC, 0x89, int)
 end_define
 
 begin_struct
@@ -242,6 +242,80 @@ name|pack_id
 decl_stmt|;
 name|void
 modifier|*
+name|usr_ptr
+decl_stmt|;
+name|u_char
+name|status
+decl_stmt|;
+name|u_char
+name|masked_status
+decl_stmt|;
+name|u_char
+name|msg_status
+decl_stmt|;
+name|u_char
+name|sb_len_wr
+decl_stmt|;
+name|u_short
+name|host_status
+decl_stmt|;
+name|u_short
+name|driver_status
+decl_stmt|;
+name|int
+name|resid
+decl_stmt|;
+name|u_int
+name|duration
+decl_stmt|;
+name|u_int
+name|info
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sg_io_hdr32
+block|{
+name|int
+name|interface_id
+decl_stmt|;
+name|int
+name|dxfer_direction
+decl_stmt|;
+name|u_char
+name|cmd_len
+decl_stmt|;
+name|u_char
+name|mx_sb_len
+decl_stmt|;
+name|u_short
+name|iovec_count
+decl_stmt|;
+name|u_int
+name|dxfer_len
+decl_stmt|;
+name|uint32_t
+name|dxferp
+decl_stmt|;
+name|uint32_t
+name|cmdp
+decl_stmt|;
+name|uint32_t
+name|sbp
+decl_stmt|;
+name|u_int
+name|timeout
+decl_stmt|;
+name|u_int
+name|flags
+decl_stmt|;
+name|int
+name|pack_id
+decl_stmt|;
+name|uint32_t
 name|usr_ptr
 decl_stmt|;
 name|u_char

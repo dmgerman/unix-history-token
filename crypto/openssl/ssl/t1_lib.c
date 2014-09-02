@@ -947,7 +947,7 @@ parameter_list|,
 name|unsigned
 name|char
 modifier|*
-name|p
+name|buf
 parameter_list|,
 name|unsigned
 name|char
@@ -963,9 +963,16 @@ decl_stmt|;
 name|unsigned
 name|char
 modifier|*
+name|orig
+init|=
+name|buf
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
 name|ret
 init|=
-name|p
+name|buf
 decl_stmt|;
 comment|/* don't add extensions for SSLv3 unless doing secure renegotiation */
 if|if
@@ -984,7 +991,7 @@ operator|->
 name|send_connection_binding
 condition|)
 return|return
-name|p
+name|orig
 return|;
 name|ret
 operator|+=
@@ -1158,7 +1165,7 @@ condition|(
 operator|(
 name|limit
 operator|-
-name|p
+name|ret
 operator|-
 literal|4
 operator|-
@@ -1343,12 +1350,6 @@ operator|->
 name|tlsext_ecpointformatlist
 operator|!=
 name|NULL
-operator|&&
-name|s
-operator|->
-name|version
-operator|!=
-name|DTLS1_VERSION
 condition|)
 block|{
 comment|/* Add TLS extension ECPointFormats to the ClientHello message */
@@ -1466,12 +1467,6 @@ operator|->
 name|tlsext_ellipticcurvelist
 operator|!=
 name|NULL
-operator|&&
-name|s
-operator|->
-name|version
-operator|!=
-name|DTLS1_VERSION
 condition|)
 block|{
 comment|/* Add TLS extension EllipticCurves to the ClientHello message */
@@ -2243,6 +2238,23 @@ ifndef|#
 directive|ifndef
 name|OPENSSL_NO_HEARTBEATS
 comment|/* Add Heartbeat extension */
+if|if
+condition|(
+operator|(
+name|limit
+operator|-
+name|ret
+operator|-
+literal|4
+operator|-
+literal|1
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
 name|s2n
 argument_list|(
 name|TLSEXT_TYPE_heartbeat
@@ -2368,7 +2380,7 @@ condition|(
 operator|(
 name|limit
 operator|-
-name|p
+name|ret
 operator|-
 literal|4
 operator|-
@@ -2427,10 +2439,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|TLSEXT_TYPE_padding
 comment|/* Add padding to workaround bugs in F5 terminators. 	 * See https://tools.ietf.org/html/draft-agl-tls-padding-03 	 * 	 * NB: because this code works out the length of all existing 	 * extensions it MUST always appear last. 	 */
+if|if
+condition|(
+name|s
+operator|->
+name|options
+operator|&
+name|SSL_OP_TLSEXT_PADDING
+condition|)
 block|{
 name|int
 name|hlen
@@ -2448,7 +2465,7 @@ name|init_buf
 operator|->
 name|data
 decl_stmt|;
-comment|/* The code in s23_clnt.c to build ClientHello messages includes the 	 * 5-byte record header in the buffer, while the code in s3_clnt.c does 	 * not. */
+comment|/* The code in s23_clnt.c to build ClientHello messages 		 * includes the 5-byte record header in the buffer, while 		 * the code in s3_clnt.c does not. 		 */
 if|if
 condition|(
 name|s
@@ -2522,8 +2539,6 @@ name|hlen
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -2531,7 +2546,7 @@ name|extdatalen
 operator|=
 name|ret
 operator|-
-name|p
+name|orig
 operator|-
 literal|2
 operator|)
@@ -2539,13 +2554,13 @@ operator|==
 literal|0
 condition|)
 return|return
-name|p
+name|orig
 return|;
 name|s2n
 argument_list|(
 name|extdatalen
 argument_list|,
-name|p
+name|orig
 argument_list|)
 expr_stmt|;
 return|return
@@ -2567,7 +2582,7 @@ parameter_list|,
 name|unsigned
 name|char
 modifier|*
-name|p
+name|buf
 parameter_list|,
 name|unsigned
 name|char
@@ -2583,9 +2598,16 @@ decl_stmt|;
 name|unsigned
 name|char
 modifier|*
+name|orig
+init|=
+name|buf
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
 name|ret
 init|=
-name|p
+name|buf
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -2612,7 +2634,7 @@ operator|->
 name|send_connection_binding
 condition|)
 return|return
-name|p
+name|orig
 return|;
 name|ret
 operator|+=
@@ -2727,7 +2749,7 @@ condition|(
 operator|(
 name|limit
 operator|-
-name|p
+name|ret
 operator|-
 literal|4
 operator|-
@@ -2795,12 +2817,6 @@ operator|->
 name|tlsext_ecpointformatlist
 operator|!=
 name|NULL
-operator|&&
-name|s
-operator|->
-name|version
-operator|!=
-name|DTLS1_VERSION
 condition|)
 block|{
 comment|/* Add TLS extension ECPointFormats to the ServerHello message */
@@ -3137,7 +3153,7 @@ condition|(
 operator|(
 name|limit
 operator|-
-name|p
+name|ret
 operator|-
 literal|4
 operator|-
@@ -3364,6 +3380,23 @@ operator|&
 name|SSL_TLSEXT_HB_ENABLED
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|limit
+operator|-
+name|ret
+operator|-
+literal|4
+operator|-
+literal|1
+operator|)
+operator|<
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
 name|s2n
 argument_list|(
 name|TLSEXT_TYPE_heartbeat
@@ -3546,7 +3579,7 @@ name|extdatalen
 operator|=
 name|ret
 operator|-
-name|p
+name|orig
 operator|-
 literal|2
 operator|)
@@ -3554,13 +3587,13 @@ operator|==
 literal|0
 condition|)
 return|return
-name|p
+name|orig
 return|;
 name|s2n
 argument_list|(
 name|extdatalen
 argument_list|,
-name|p
+name|orig
 argument_list|)
 expr_stmt|;
 return|return
@@ -4629,12 +4662,6 @@ condition|(
 name|type
 operator|==
 name|TLSEXT_TYPE_ec_point_formats
-operator|&&
-name|s
-operator|->
-name|version
-operator|!=
-name|DTLS1_VERSION
 condition|)
 block|{
 name|unsigned
@@ -4776,12 +4803,6 @@ condition|(
 name|type
 operator|==
 name|TLSEXT_TYPE_elliptic_curves
-operator|&&
-name|s
-operator|->
-name|version
-operator|!=
-name|DTLS1_VERSION
 condition|)
 block|{
 name|unsigned
@@ -6123,12 +6144,6 @@ condition|(
 name|type
 operator|==
 name|TLSEXT_TYPE_ec_point_formats
-operator|&&
-name|s
-operator|->
-name|version
-operator|!=
-name|DTLS1_VERSION
 condition|)
 block|{
 name|unsigned
@@ -6169,6 +6184,14 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|hit
+condition|)
+block|{
 name|s
 operator|->
 name|session
@@ -6244,6 +6267,7 @@ argument_list|,
 name|ecpointformatlist_length
 argument_list|)
 expr_stmt|;
+block|}
 if|#
 directive|if
 literal|0
@@ -9483,9 +9507,22 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
+block|{
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|ctx
+argument_list|)
+expr_stmt|;
+name|OPENSSL_free
+argument_list|(
+name|sdec
+argument_list|)
+expr_stmt|;
 return|return
 literal|2
 return|;
+block|}
 name|slen
 operator|+=
 name|mlen

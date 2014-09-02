@@ -2371,6 +2371,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_SRP_PARAMETERS
+argument_list|)
+block|,
+literal|"bad srp parameters"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_SRP_S_LENGTH
 argument_list|)
 block|,
@@ -4282,7 +4291,7 @@ argument_list|(
 name|SSL_R_TLS_HEARTBEAT_PEER_DOESNT_ACCEPT
 argument_list|)
 block|,
-literal|"peer does not accept heartbearts"
+literal|"peer does not accept heartbeats"
 block|}
 block|,
 block|{

@@ -2678,7 +2678,9 @@ name|ip6
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 if|if
@@ -2693,16 +2695,17 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|tcp_input
 argument_list|(
-name|m
+name|mp
 argument_list|,
-operator|*
 name|offp
+argument_list|,
+name|proto
 argument_list|)
-expr_stmt|;
-return|return
-name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 end_function
@@ -2717,18 +2720,31 @@ comment|/* INET6 */
 end_comment
 
 begin_function
-name|void
+name|int
 name|tcp_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|off0
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+operator|*
+name|mp
+decl_stmt|;
 name|struct
 name|tcphdr
 modifier|*
@@ -2769,6 +2785,9 @@ modifier|*
 name|optp
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|off0
 decl_stmt|;
 name|int
 name|optlen
@@ -2919,6 +2938,21 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|off0
+operator|=
+operator|*
+name|offp
+expr_stmt|;
+name|m
+operator|=
+operator|*
+name|mp
+expr_stmt|;
+operator|*
+name|mp
+operator|=
+name|NULL
+expr_stmt|;
 name|to
 operator|.
 name|to_flags
@@ -2991,7 +3025,11 @@ argument_list|(
 name|tcps_rcvshort
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 block|}
 name|ip6
@@ -3230,7 +3268,11 @@ argument_list|(
 name|tcps_rcvshort
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 block|}
 name|ip
@@ -3550,7 +3592,9 @@ argument_list|,
 name|off0
 argument_list|,
 name|off
-argument_list|, )
+argument_list|,
+name|IPPROTO_DONE
+argument_list|)
 expr_stmt|;
 name|ip6
 operator|=
@@ -3642,7 +3686,11 @@ argument_list|(
 name|tcps_rcvshort
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 name|ip
 operator|=
@@ -4592,7 +4640,11 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* 	 * The TCPCB may no longer exist if the connection is winding 	 * down or it is in the CLOSED state.  Either way we drop the 	 * segment and send an appropriate response. 	 */
 name|tp
@@ -5289,7 +5341,11 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* 		 * Segment flag validation for new connection attempts: 		 * 		 * Our (SYN|ACK) response was rejected. 		 * Check with syncache and remove entry to prevent 		 * retransmits. 		 * 		 * NB: syncache_chkrst does its own logging of failure 		 * causes. 		 */
 if|if
@@ -6024,7 +6080,11 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -6175,7 +6235,11 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 name|dropwithreset
 label|:
 name|TCP_PROBE5
@@ -6417,6 +6481,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 end_function
 
@@ -7877,7 +7946,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * Automatic sizing of receive socket buffer.  Often the send 		 * buffer size is not optimally adjusted to the actual network 		 * conditions at hand (delay bandwidth product).  Setting the 		 * buffer size too small limits throughput on links with high 		 * bandwidth and high delay (eg. trans-continental/oceanic links). 		 * 		 * On the receive side the socket buffer memory is only rarely 		 * used to any significant extent.  This allows us to be much 		 * more aggressive in scaling the receive socket buffer.  For 		 * the case that the buffer space is actually used to a large 		 * extent and we run out of kernel memory we can simply drop 		 * the new segments; TCP on the sender will just retransmit it 		 * later.  Setting the buffer size too big may only consume too 		 * much kernel memory if the application doesn't read() from 		 * the socket or packet loss or reordering makes use of the 		 * reassembly queue. 		 * 		 * The criteria to step up the receive buffer one notch are: 		 *  1. the number of bytes received during the time it takes 		 *     one timestamp to be reflected back to us (the RTT); 		 *  2. received bytes per RTT is within seven eighth of the 		 *     current socket buffer size; 		 *  3. receive buffer size has not hit maximal automatic size; 		 * 		 * This algorithm does one step per RTT at most and only if 		 * we receive a bulk stream w/o packet losses or reorderings. 		 * Shrinking the buffer during idle times is not necessary as 		 * it doesn't consume any memory when idle. 		 * 		 * TODO: Only step up if the application is actually serving 		 * the buffer to better manage the socket buffer resources. 		 */
+comment|/* 		 * Automatic sizing of receive socket buffer.  Often the send 		 * buffer size is not optimally adjusted to the actual network 		 * conditions at hand (delay bandwidth product).  Setting the 		 * buffer size too small limits throughput on links with high 		 * bandwidth and high delay (eg. trans-continental/oceanic links). 		 * 		 * On the receive side the socket buffer memory is only rarely 		 * used to any significant extent.  This allows us to be much 		 * more aggressive in scaling the receive socket buffer.  For 		 * the case that the buffer space is actually used to a large 		 * extent and we run out of kernel memory we can simply drop 		 * the new segments; TCP on the sender will just retransmit it 		 * later.  Setting the buffer size too big may only consume too 		 * much kernel memory if the application doesn't read() from 		 * the socket or packet loss or reordering makes use of the 		 * reassembly queue. 		 * 		 * The criteria to step up the receive buffer one notch are: 		 *  1. Application has not set receive buffer size with 		 *     SO_RCVBUF. Setting SO_RCVBUF clears SB_AUTOSIZE. 		 *  2. the number of bytes received during the time it takes 		 *     one timestamp to be reflected back to us (the RTT); 		 *  3. received bytes per RTT is within seven eighth of the 		 *     current socket buffer size; 		 *  4. receive buffer size has not hit maximal automatic size; 		 * 		 * This algorithm does one step per RTT at most and only if 		 * we receive a bulk stream w/o packet losses or reorderings. 		 * Shrinking the buffer during idle times is not necessary as 		 * it doesn't consume any memory when idle. 		 * 		 * TODO: Only step up if the application is actually serving 		 * the buffer to better manage the socket buffer resources. 		 */
 if|if
 condition|(
 name|V_tcp_do_autorcvbuf
@@ -14006,7 +14075,7 @@ name|hc_metrics_lite
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there's a discovered mtu int tcp hostcache, use it 	 * else, use the link mtu. 	 */
+comment|/* 	 * If there's a discovered mtu in tcp hostcache, use it. 	 * Else, use the link mtu. 	 */
 if|if
 condition|(
 name|metrics

@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -86,6 +92,14 @@ include|#
 directive|include
 file|<common/jhash.h>
 end_include
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_cxgb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

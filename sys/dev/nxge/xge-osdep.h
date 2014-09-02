@@ -1459,12 +1459,6 @@ argument_list|)
 expr_stmt|;
 name|p_dmah
 operator|->
-name|dma_map
-operator|=
-name|NULL
-expr_stmt|;
-name|p_dmah
-operator|->
 name|dma_tag
 operator|=
 name|NULL

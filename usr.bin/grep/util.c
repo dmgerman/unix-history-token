@@ -1413,7 +1413,7 @@ name|word
 operator|)
 condition|)
 block|{
-name|wint_t
+name|wchar_t
 name|wbegin
 decl_stmt|,
 name|wend
@@ -1579,6 +1579,10 @@ block|}
 comment|/* One pass if we are not recording matches */
 if|if
 condition|(
+operator|!
+name|wflag
+operator|&&
+operator|(
 operator|(
 name|color
 operator|==
@@ -1591,6 +1595,7 @@ operator|||
 name|qflag
 operator|||
 name|lflag
+operator|)
 condition|)
 break|break;
 if|if

@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -121,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/fdt.h>
 end_include
 
 begin_include
@@ -1638,6 +1626,42 @@ name|mutex
 argument_list|)
 expr_stmt|;
 comment|/* dummy read */
+name|clear_ipend
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|wait_for_iif
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"cant i2c read: iif error\n"
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mutex
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|READ1
 argument_list|(
 name|sc

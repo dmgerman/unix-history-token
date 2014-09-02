@@ -111,6 +111,17 @@ value|((x) == EM_ARM)
 end_define
 
 begin_comment
+comment|/* Unwind info section type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_ARM_EXIDX
+value|(PT_LOPROC + 1)
+end_define
+
+begin_comment
 comment|/*  * Relocation types.  */
 end_comment
 

@@ -25,6 +25,16 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
+begin_comment
+comment|/* XXX driver API temporary */
+end_comment
+
 begin_comment
 comment|/*  * Media Independent Interface data structure defintions  */
 end_comment
@@ -107,9 +117,7 @@ name|ifmedia
 name|mii_media
 decl_stmt|;
 comment|/* media information */
-name|struct
-name|ifnet
-modifier|*
+name|if_t
 name|mii_ifp
 decl_stmt|;
 comment|/* pointer back to network interface */
@@ -934,9 +942,7 @@ parameter_list|,
 name|device_t
 modifier|*
 parameter_list|,
-name|struct
-name|ifnet
-modifier|*
+name|if_t
 parameter_list|,
 name|ifm_change_cb_t
 parameter_list|,

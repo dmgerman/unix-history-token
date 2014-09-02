@@ -26,7 +26,7 @@ comment|/*  * Macros for reading/writing PCM sample / int values from bytes arra
 end_comment
 
 begin_comment
-comment|/*  * Automatically turn on 64bit arithmetic on suitable archs  * (amd64 64bit, ia64, etc..) for wider 32bit samples / integer processing.  */
+comment|/*  * Automatically turn on 64bit arithmetic on suitable archs  * (amd64 64bit, etc..) for wider 32bit samples / integer processing.  */
 end_comment
 
 begin_if

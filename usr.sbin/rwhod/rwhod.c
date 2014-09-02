@@ -2493,9 +2493,6 @@ operator|.
 name|st_atime
 argument_list|)
 expr_stmt|;
-name|we
-operator|++
-expr_stmt|;
 block|}
 operator|(
 name|void

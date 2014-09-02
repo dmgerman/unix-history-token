@@ -234,6 +234,11 @@ modifier|*
 name|dp_free_dir
 decl_stmt|;
 name|struct
+name|dsl_dir
+modifier|*
+name|dp_leak_dir
+decl_stmt|;
+name|struct
 name|dsl_dataset
 modifier|*
 name|dp_origin_snap

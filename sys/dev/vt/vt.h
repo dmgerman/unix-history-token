@@ -93,23 +93,6 @@ directive|include
 file|"opt_splash.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_SC
-end_ifdef
-
-begin_error
-error|#
-directive|error
-literal|"Build with both syscons and vt is not supported. Please enable only \ one 'device sc' or 'device vt'"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -329,7 +312,39 @@ parameter_list|,
 name|_descr
 parameter_list|)
 define|\
-value|static int vt_##_name = _default;					\ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RW,&vt_##_name, _default,\ 		_descr);						\ TUNABLE_INT("kern.vt." #_name,&vt_##_name);
+value|static int vt_##_name = _default;					\ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RWTUN,&vt_##_name, _default,\ 		_descr);
+end_define
+
+begin_comment
+comment|/* Allow to disable some special keys by users. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VT_DEBUG_KEY_ENABLED
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_REBOOT_KEY_ENABLED
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_HALT_KEY_ENABLED
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VT_POWEROFF_KEY_ENABLED
+value|(1<< 3)
 end_define
 
 begin_struct_decl
@@ -1093,7 +1108,10 @@ begin_define
 define|#
 directive|define
 name|VTBUF_SPACE_CHAR
-value|(' ' | TC_WHITE<< 26 | TC_BLACK<< 29)
+parameter_list|(
+name|attr
+parameter_list|)
+value|(' ' | (attr))
 end_define
 
 begin_define
@@ -1250,6 +1268,11 @@ directive|define
 name|VWF_MOUSE_HIDE
 value|0x20
 comment|/* Disable mouse events processing. */
+define|#
+directive|define
+name|VWF_READY
+value|0x40
+comment|/* Window fully initialized. */
 define|#
 directive|define
 name|VWF_SWWAIT_REL
@@ -1438,52 +1461,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
-name|vd_maskbitbltchr_t
-parameter_list|(
-name|struct
-name|vt_device
-modifier|*
-name|vd
-parameter_list|,
-specifier|const
-name|uint8_t
-modifier|*
-name|src
-parameter_list|,
-specifier|const
-name|uint8_t
-modifier|*
-name|mask
-parameter_list|,
-name|int
-name|bpl
-parameter_list|,
-name|vt_axis_t
-name|top
-parameter_list|,
-name|vt_axis_t
-name|left
-parameter_list|,
-name|unsigned
-name|int
-name|width
-parameter_list|,
-name|unsigned
-name|int
-name|height
-parameter_list|,
-name|term_color_t
-name|fg
-parameter_list|,
-name|term_color_t
-name|bg
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
 name|vd_putchar_t
 parameter_list|(
 name|struct
@@ -1620,10 +1597,6 @@ name|vd_bitbltchr_t
 modifier|*
 name|vd_bitbltchr
 decl_stmt|;
-name|vd_maskbitbltchr_t
-modifier|*
-name|vd_maskbitbltchr
-decl_stmt|;
 name|vd_drawrect_t
 modifier|*
 name|vd_drawrect
@@ -1752,23 +1725,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|VT_CONSDEV_DECLARE
-parameter_list|(
-name|driver
-parameter_list|,
-name|width
-parameter_list|,
-name|height
-parameter_list|,
-name|softc
-parameter_list|)
-define|\
-value|static struct terminal	driver ## _consterm;				\ static struct vt_window	driver ## _conswindow;				\ static struct vt_device	driver ## _consdev = {				\ 	.vd_driver =&driver,						\ 	.vd_softc = (softc),						\ 	.vd_flags = VDF_INVALID,					\ 	.vd_windows = { [VT_CONSWINDOW] =&driver ## _conswindow, },	\ 	.vd_curwindow =&driver ## _conswindow,				\ 	.vd_markedwin = NULL,						\ 	.vd_kbstate = 0,						\ };									\ static term_char_t	driver ## _constextbuf[(width) * 		\ 	    (VBF_DEFAULT_HISTORY_SIZE)];				\ static term_char_t	*driver ## _constextbufrows[			\ 	    VBF_DEFAULT_HISTORY_SIZE];					\ static struct vt_window	driver ## _conswindow = {			\ 	.vw_number = VT_CONSWINDOW,					\ 	.vw_flags = VWF_CONSOLE,					\ 	.vw_buf = {							\ 		.vb_buffer = driver ## _constextbuf,			\ 		.vb_rows = driver ## _constextbufrows,			\ 		.vb_history_size = VBF_DEFAULT_HISTORY_SIZE,		\ 		.vb_curroffset = 0,					\ 		.vb_roffset = 0,					\ 		.vb_flags = VBF_STATIC,					\ 		.vb_mark_start = {					\ 			.tp_row = 0,					\ 			.tp_col = 0,					\ 		},							\ 		.vb_mark_end = {					\ 			.tp_row = 0,					\ 			.tp_col = 0,					\ 		},							\ 		.vb_scr_size = {					\ 			.tp_row = height,				\ 			.tp_col = width,				\ 		},							\ 	},								\ 	.vw_device =&driver ## _consdev,				\ 	.vw_terminal =&driver ## _consterm,				\ 	.vw_kbdmode = K_XLATE,						\ };									\ TERMINAL_DECLARE_EARLY(driver ## _consterm, vt_termclass,		\&driver ## _conswindow);						\ SYSINIT(vt_early_cons, SI_SUB_INT_CONFIG_HOOKS, SI_ORDER_ANY,		\     vt_upgrade,&driver ## _consdev)
-end_define
 
 begin_comment
 comment|/* name argument is not used yet. */

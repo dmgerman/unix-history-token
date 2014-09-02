@@ -194,9 +194,6 @@ name|sc_stat_flags
 decl_stmt|;
 comment|/* contains the status flags last IRQ */
 name|uint16_t
-name|sc_i2c_addr
-decl_stmt|;
-name|uint16_t
 name|sc_rev
 decl_stmt|;
 block|}
@@ -953,23 +950,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|oldaddr
-condition|)
-operator|*
-name|oldaddr
-operator|=
-name|sc
-operator|->
-name|sc_i2c_addr
-expr_stmt|;
-name|sc
-operator|->
-name|sc_i2c_addr
-operator|=
-name|addr
-expr_stmt|;
 comment|/* First disable the controller while changing the clocks */
 name|con_reg
 operator|=
@@ -1040,16 +1020,6 @@ literal|8
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Set the remote slave address */
-name|ti_i2c_write_reg
-argument_list|(
-name|sc
-argument_list|,
-name|I2C_REG_SA
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
 comment|/* Check if we are dealing with high speed mode */
 if|if
 condition|(
@@ -1092,7 +1062,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|IIC_ENOADDR
+operator|)
 return|;
 block|}
 end_function
@@ -2368,6 +2340,8 @@ name|i
 index|]
 operator|.
 name|slave
+operator|>>
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* perform the read or write */

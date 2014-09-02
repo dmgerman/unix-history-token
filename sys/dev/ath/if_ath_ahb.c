@@ -589,16 +589,12 @@ goto|goto
 name|bad0
 goto|;
 block|}
-comment|/* XXX uintptr_t is a bandaid for ia64; to be fixed */
 name|sc
 operator|->
 name|sc_st
 operator|=
 operator|(
 name|HAL_BUS_TAG
-operator|)
-operator|(
-name|uintptr_t
 operator|)
 name|rman_get_bustag
 argument_list|(

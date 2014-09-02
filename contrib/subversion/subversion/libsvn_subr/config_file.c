@@ -165,7 +165,7 @@ comment|/* Parser buffer for getc() to avoid call overhead into several librarie
 name|char
 name|parser_buffer
 index|[
-name|SVN_STREAM_CHUNK_SIZE
+name|SVN__STREAM_CHUNK_SIZE
 index|]
 decl_stmt|;
 comment|/* Larger than most config files */

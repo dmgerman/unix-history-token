@@ -130,17 +130,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.raid1.rebuild_slab_size"
-argument_list|,
-operator|&
-name|g_raid1_rebuild_slab
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid_raid1
@@ -149,7 +138,7 @@ name|OID_AUTO
 argument_list|,
 name|rebuild_slab_size
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid1_rebuild_slab
@@ -182,17 +171,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.raid1.rebuild_fair_io"
-argument_list|,
-operator|&
-name|g_raid1_rebuild_fair_io
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid_raid1
@@ -201,7 +179,7 @@ name|OID_AUTO
 argument_list|,
 name|rebuild_fair_io
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid1_rebuild_fair_io
@@ -230,17 +208,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.raid1.rebuild_cluster_idle"
-argument_list|,
-operator|&
-name|g_raid1_rebuild_cluster_idle
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid_raid1
@@ -249,7 +216,7 @@ name|OID_AUTO
 argument_list|,
 name|rebuild_cluster_idle
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid1_rebuild_cluster_idle
@@ -282,17 +249,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.geom.raid.raid1.rebuild_meta_update"
-argument_list|,
-operator|&
-name|g_raid1_rebuild_meta_update
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_geom_raid_raid1
@@ -301,7 +257,7 @@ name|OID_AUTO
 argument_list|,
 name|rebuild_meta_update
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|g_raid1_rebuild_meta_update

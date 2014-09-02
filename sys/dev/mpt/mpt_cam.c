@@ -11424,12 +11424,17 @@ operator|->
 name|CurrentDepth
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|mpt_prt
 argument_list|(
 name|mpt
 argument_list|,
-literal|"QUEUE FULL EVENT: Bus 0x%02x Target 0x%02x Depth "
-literal|"%d\n"
+literal|"QUEUE FULL EVENT: Bus 0x%02x Target 0x%02x "
+literal|"Depth %d\n"
 argument_list|,
 name|pqf
 operator|->
@@ -11444,6 +11449,7 @@ operator|->
 name|CurrentDepth
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mpt

@@ -2856,6 +2856,10 @@ condition|(
 name|window
 operator|==
 literal|5
+operator|&&
+name|top
+operator|>
+literal|1
 condition|)
 block|{
 name|void

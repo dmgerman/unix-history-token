@@ -701,6 +701,12 @@ name|at91dci_td
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|at91dci_softc
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|uint8_t
@@ -708,6 +714,11 @@ function_decl|(
 name|at91dci_cmd_t
 function_decl|)
 parameter_list|(
+name|struct
+name|at91dci_softc
+modifier|*
+name|sc
+parameter_list|,
 name|struct
 name|at91dci_td
 modifier|*
@@ -720,12 +731,6 @@ begin_struct
 struct|struct
 name|at91dci_td
 block|{
-name|bus_space_tag_t
-name|io_tag
-decl_stmt|;
-name|bus_space_handle_t
-name|io_hdl
-decl_stmt|;
 name|struct
 name|at91dci_td
 modifier|*
@@ -1046,6 +1051,9 @@ name|void
 modifier|*
 name|sc_pull_arg
 decl_stmt|;
+name|uint32_t
+name|sc_xfer_complete
+decl_stmt|;
 name|uint8_t
 name|sc_rt_addr
 decl_stmt|;
@@ -1107,17 +1115,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|driver_filter_t
+name|at91dci_filter_interrupt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|driver_intr_t
 name|at91dci_interrupt
-parameter_list|(
-name|struct
-name|at91dci_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

@@ -187,6 +187,8 @@ argument_list|,
 name|divisor
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|vm_memguard_divisor
@@ -635,17 +637,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vm.memguard.options"
-argument_list|,
-operator|&
-name|memguard_options
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vm_memguard
@@ -654,7 +645,7 @@ name|OID_AUTO
 argument_list|,
 name|options
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|memguard_options
@@ -740,17 +731,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vm.memguard.frequency"
-argument_list|,
-operator|&
-name|memguard_frequency
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_vm_memguard
@@ -759,7 +739,7 @@ name|OID_AUTO
 argument_list|,
 name|frequency
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|memguard_frequency

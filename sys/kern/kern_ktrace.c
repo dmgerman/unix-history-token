@@ -288,9 +288,10 @@ name|data_lengths
 index|[]
 init|=
 block|{
-literal|0
-block|,
-comment|/* none */
+index|[
+name|KTR_SYSCALL
+index|]
+operator|=
 name|offsetof
 argument_list|(
 expr|struct
@@ -299,79 +300,116 @@ argument_list|,
 name|ktr_args
 argument_list|)
 block|,
-comment|/* KTR_SYSCALL */
+index|[
+name|KTR_SYSRET
+index|]
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ktr_sysret
 argument_list|)
 block|,
-comment|/* KTR_SYSRET */
+index|[
+name|KTR_NAMEI
+index|]
+operator|=
 literal|0
 block|,
-comment|/* KTR_NAMEI */
+index|[
+name|KTR_GENIO
+index|]
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ktr_genio
 argument_list|)
 block|,
-comment|/* KTR_GENIO */
+index|[
+name|KTR_PSIG
+index|]
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ktr_psig
 argument_list|)
 block|,
-comment|/* KTR_PSIG */
+index|[
+name|KTR_CSW
+index|]
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ktr_csw
 argument_list|)
 block|,
-comment|/* KTR_CSW */
+index|[
+name|KTR_USER
+index|]
+operator|=
 literal|0
 block|,
-comment|/* KTR_USER */
+index|[
+name|KTR_STRUCT
+index|]
+operator|=
 literal|0
 block|,
-comment|/* KTR_STRUCT */
+index|[
+name|KTR_SYSCTL
+index|]
+operator|=
 literal|0
 block|,
-comment|/* KTR_SYSCTL */
+index|[
+name|KTR_PROCCTOR
+index|]
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ktr_proc_ctor
 argument_list|)
 block|,
-comment|/* KTR_PROCCTOR */
+index|[
+name|KTR_PROCDTOR
+index|]
+operator|=
 literal|0
 block|,
-comment|/* KTR_PROCDTOR */
+index|[
+name|KTR_CAPFAIL
+index|]
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ktr_cap_fail
 argument_list|)
 block|,
-comment|/* KTR_CAPFAIL */
+index|[
+name|KTR_FAULT
+index|]
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ktr_fault
 argument_list|)
 block|,
-comment|/* KTR_FAULT */
+index|[
+name|KTR_FAULTEND
+index|]
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ktr_faultend
 argument_list|)
-block|,
-comment|/* KTR_FAULTEND */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -435,17 +473,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.ktrace.genio_size"
-argument_list|,
-operator|&
-name|ktr_geniosize
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
 name|_kern_ktrace
@@ -454,7 +481,7 @@ name|OID_AUTO
 argument_list|,
 name|genio_size
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|ktr_geniosize

@@ -7342,6 +7342,16 @@ name|wants_inherited_props
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wants_inherited_props
+operator|==
+name|SVN_RA_SVN_UNSPECIFIED_NUMBER
+condition|)
+name|wants_inherited_props
+operator|=
+name|FALSE
+expr_stmt|;
 name|full_path
 operator|=
 name|svn_fspath__join
@@ -7477,6 +7487,7 @@ argument_list|,
 name|pool
 argument_list|)
 expr_stmt|;
+comment|/* Fetch the file's explicit and/or inherited properties if      requested.  Although the wants-iprops boolean was added to the      protocol in 1.8 a standard 1.8 client never requests iprops. */
 if|if
 condition|(
 name|want_props
@@ -7487,11 +7498,19 @@ name|SVN_CMD_ERR
 argument_list|(
 name|get_props
 argument_list|(
+name|want_props
+condition|?
 operator|&
 name|props
+else|:
+name|NULL
 argument_list|,
+name|wants_inherited_props
+condition|?
 operator|&
 name|inherited_props
+else|:
+name|NULL
 argument_list|,
 operator|&
 name|ab
@@ -7957,6 +7976,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|wants_inherited_props
+operator|==
+name|SVN_RA_SVN_UNSPECIFIED_NUMBER
+condition|)
+name|wants_inherited_props
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|dirent_fields_list
 condition|)
@@ -8248,7 +8277,7 @@ name|pool
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Fetch the directory's explicit and/or inherited properties      if requested. */
+comment|/* Fetch the directory's explicit and/or inherited properties if      requested.  Although the wants-iprops boolean was added to the      protocol in 1.8 a standard 1.8 client never requests iprops. */
 if|if
 condition|(
 name|want_props
@@ -8259,11 +8288,19 @@ name|SVN_CMD_ERR
 argument_list|(
 name|get_props
 argument_list|(
+name|want_props
+condition|?
 operator|&
 name|props
+else|:
+name|NULL
 argument_list|,
+name|wants_inherited_props
+condition|?
 operator|&
 name|inherited_props
+else|:
+name|NULL
 argument_list|,
 operator|&
 name|ab

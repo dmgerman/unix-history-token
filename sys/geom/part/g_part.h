@@ -167,6 +167,36 @@ comment|/* A VMware reserved partition entry */
 name|G_PART_ALIAS_VMVSANHDR
 block|,
 comment|/* A VMware vSAN header partition entry */
+name|G_PART_ALIAS_DFBSD
+block|,
+comment|/* A DfBSD label32 partition entry */
+name|G_PART_ALIAS_DFBSD64
+block|,
+comment|/* A DfBSD label64 partition entry */
+name|G_PART_ALIAS_DFBSD_SWAP
+block|,
+comment|/* A DfBSD swap partition entry */
+name|G_PART_ALIAS_DFBSD_UFS
+block|,
+comment|/* A DfBSD UFS partition entry */
+name|G_PART_ALIAS_DFBSD_VINUM
+block|,
+comment|/* A DfBSD Vinum partition entry */
+name|G_PART_ALIAS_DFBSD_CCD
+block|,
+comment|/* A DfBSD CCD partition entry */
+name|G_PART_ALIAS_DFBSD_LEGACY
+block|,
+comment|/* A DfBSD legacy partition entry */
+name|G_PART_ALIAS_DFBSD_HAMMER
+block|,
+comment|/* A DfBSD HAMMER FS partition entry */
+name|G_PART_ALIAS_DFBSD_HAMMER2
+block|,
+comment|/* A DfBSD HAMMER2 FS partition entry */
+name|G_PART_ALIAS_PREP_BOOT
+block|,
+comment|/* A PREP/CHRP boot partition entry. */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}

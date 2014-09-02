@@ -195,24 +195,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ECN parameter */
-end_comment
-
-begin_struct
-struct|struct
-name|sctp_ecn_supported_param
-block|{
-name|struct
-name|sctp_paramhdr
-name|ph
-decl_stmt|;
-comment|/* type=SCTP_ECN_CAPABLE */
-block|}
-name|SCTP_PACKED
-struct|;
-end_struct
-
-begin_comment
 comment|/* heartbeat info parameter */
 end_comment
 

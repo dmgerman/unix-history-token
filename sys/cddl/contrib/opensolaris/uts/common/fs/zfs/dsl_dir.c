@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2014 Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1966,7 +1966,7 @@ name|ds
 decl_stmt|;
 name|ASSERT
 argument_list|(
-name|spa_feature_is_enabled
+name|spa_feature_is_active
 argument_list|(
 name|dp
 operator|->
@@ -2276,6 +2276,11 @@ name|my_ss_cnt
 operator|++
 expr_stmt|;
 block|}
+name|zap_cursor_fini
+argument_list|(
+name|zc
+argument_list|)
+expr_stmt|;
 name|dsl_dataset_rele
 argument_list|(
 name|ds
@@ -2674,6 +2679,8 @@ operator|)
 name|ddname
 argument_list|,
 literal|0
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 expr_stmt|;
 if|if
@@ -6655,6 +6662,8 @@ operator|&
 name|ddsqra
 argument_list|,
 literal|0
+argument_list|,
+name|ZFS_SPACE_CHECK_NONE
 argument_list|)
 operator|)
 return|;
@@ -7288,6 +7297,8 @@ operator|&
 name|ddsqra
 argument_list|,
 literal|0
+argument_list|,
+name|ZFS_SPACE_CHECK_NONE
 argument_list|)
 operator|)
 return|;
@@ -7797,7 +7808,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|spa_feature_is_enabled
+name|spa_feature_is_active
 argument_list|(
 name|dp
 operator|->
@@ -7909,11 +7920,27 @@ name|err
 operator|!=
 literal|0
 condition|)
+block|{
+name|dsl_dir_rele
+argument_list|(
+name|newparent
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
+name|dsl_dir_rele
+argument_list|(
+name|dd
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
 operator|)
 return|;
+block|}
 comment|/* 			 * have to add 1 for the filesystem itself that we're 			 * moving 			 */
 name|fs_cnt
 operator|++
@@ -7951,11 +7978,27 @@ name|err
 operator|!=
 literal|0
 condition|)
+block|{
+name|dsl_dir_rele
+argument_list|(
+name|newparent
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
+name|dsl_dir_rele
+argument_list|(
+name|dd
+argument_list|,
+name|FTAG
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
 operator|)
 return|;
+block|}
 block|}
 comment|/* no rename into our descendant */
 if|if
@@ -8203,7 +8246,7 @@ decl_stmt|;
 comment|/* 		 * We already made sure the dd counts were initialized in the 		 * check function. 		 */
 if|if
 condition|(
-name|spa_feature_is_enabled
+name|spa_feature_is_active
 argument_list|(
 name|dp
 operator|->
@@ -8663,6 +8706,8 @@ operator|&
 name|ddra
 argument_list|,
 literal|3
+argument_list|,
+name|ZFS_SPACE_CHECK_RESERVED
 argument_list|)
 operator|)
 return|;

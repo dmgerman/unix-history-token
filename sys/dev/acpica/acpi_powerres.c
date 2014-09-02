@@ -118,13 +118,6 @@ name|ACPI_PWR_ON
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_PWR_UNK
-value|(-1)
-end_define
-
 begin_comment
 comment|/* A relationship between a power resource and a consumer. */
 end_comment
@@ -223,9 +216,6 @@ decl_stmt|;
 name|UINT64
 name|ap_order
 decl_stmt|;
-name|int
-name|ap_state
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -239,6 +229,11 @@ argument_list|,
 argument|acpi_powerresource
 argument_list|)
 name|acpi_powerresources
+operator|=
+name|TAILQ_HEAD_INITIALIZER
+argument_list|(
+name|acpi_powerresources
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -251,6 +246,11 @@ argument_list|,
 argument|acpi_powerconsumer
 argument_list|)
 name|acpi_powerconsumers
+operator|=
+name|TAILQ_HEAD_INITIALIZER
+argument_list|(
+name|acpi_powerconsumers
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -402,51 +402,6 @@ name|consumer
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Initialise our lists. */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|acpi_pwr_init
-parameter_list|(
-name|void
-modifier|*
-name|junk
-parameter_list|)
-block|{
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|acpi_powerresources
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|acpi_powerconsumers
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|acpi_powerresource
-argument_list|,
-name|SI_SUB_TUNABLES
-argument_list|,
-name|SI_ORDER_ANY
-argument_list|,
-name|acpi_pwr_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Register a power resource.  *  * It's OK to call this if we already know about the resource.  */
@@ -665,12 +620,6 @@ operator|->
 name|PowerResource
 operator|.
 name|ResourceOrder
-expr_stmt|;
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|ACPI_PWR_UNK
 expr_stmt|;
 comment|/* Sort the resource into the list */
 name|status
@@ -2591,7 +2540,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* We could cache this if we trusted it not to change under us */
 name|status
 operator|=
 name|acpi_GetInteger
@@ -2635,27 +2583,10 @@ expr_stmt|;
 comment|/* XXX is this correct?  Always switch if in doubt? */
 continue|continue;
 block|}
-elseif|else
-if|if
-condition|(
-name|rp
-operator|->
-name|ap_state
-operator|==
-name|ACPI_PWR_UNK
-condition|)
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|cur
-expr_stmt|;
 comment|/* 	 * Switch if required.  Note that we ignore the result of the switch 	 * effort; we don't know what to do if it fails, so checking wouldn't 	 * help much. 	 */
 if|if
 condition|(
-name|rp
-operator|->
-name|ap_state
+name|cur
 operator|!=
 name|ACPI_PWR_ON
 condition|)
@@ -2707,12 +2638,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|ACPI_PWR_ON
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -2794,7 +2719,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* We could cache this if we trusted it not to change under us */
 name|status
 operator|=
 name|acpi_GetInteger
@@ -2838,27 +2762,10 @@ expr_stmt|;
 comment|/* XXX is this correct?  Always switch if in doubt? */
 continue|continue;
 block|}
-elseif|else
-if|if
-condition|(
-name|rp
-operator|->
-name|ap_state
-operator|==
-name|ACPI_PWR_UNK
-condition|)
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|cur
-expr_stmt|;
 comment|/* 	 * Switch if required.  Note that we ignore the result of the switch 	 * effort; we don't know what to do if it fails, so checking wouldn't 	 * help much. 	 */
 if|if
 condition|(
-name|rp
-operator|->
-name|ap_state
+name|cur
 operator|!=
 name|ACPI_PWR_OFF
 condition|)
@@ -2910,12 +2817,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|rp
-operator|->
-name|ap_state
-operator|=
-name|ACPI_PWR_OFF
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(

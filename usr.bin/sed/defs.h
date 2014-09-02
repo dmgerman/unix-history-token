@@ -341,6 +341,10 @@ name|int
 name|deleted
 decl_stmt|;
 comment|/* If deleted. */
+name|int
+name|append_newline
+decl_stmt|;
+comment|/* If originally terminated by \n. */
 name|char
 modifier|*
 name|back

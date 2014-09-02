@@ -381,13 +381,14 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
+name|if_getdname
+argument_list|(
 name|ma
 operator|->
 name|mii_data
 operator|->
 name|mii_ifp
-operator|->
-name|if_dname
+argument_list|)
 argument_list|,
 literal|"jme"
 argument_list|)

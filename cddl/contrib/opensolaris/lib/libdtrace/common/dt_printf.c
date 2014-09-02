@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, Joyent, Inc. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_if
@@ -6410,6 +6410,8 @@ argument_list|,
 name|dtt
 operator|.
 name|dtt_type
+argument_list|,
+name|B_FALSE
 argument_list|)
 expr_stmt|;
 for|for

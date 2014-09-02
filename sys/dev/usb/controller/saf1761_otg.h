@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|SOTG_MAX_DEVICES
-value|(USB_MIN_DEVICES + 1)
+value|MIN(USB_MAX_DEVICES, 32)
 end_define
 
 begin_define
@@ -73,38 +73,13 @@ value|(3 * 32)
 end_define
 
 begin_comment
-comment|/* Macros used for reading and writing registers */
+comment|/* Macros used for reading and writing little endian registers */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SAF1761_READ_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|bus_space_read_1((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAF1761_READ_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|)
-value|({ uint16_t _temp; \   _temp = bus_space_read_2((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg)); \   le16toh(_temp); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAF1761_READ_4
+name|SAF1761_READ_LE_4
 parameter_list|(
 name|sc
 parameter_list|,
@@ -116,36 +91,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SAF1761_WRITE_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|data
-parameter_list|)
-define|\
-value|bus_space_write_1((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg), data)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAF1761_WRITE_2
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|data
-parameter_list|)
-value|do { \   uint16_t _temp = (data); \   bus_space_write_2((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg), htole16(_temp)); \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAF1761_WRITE_4
+name|SAF1761_WRITE_LE_4
 parameter_list|(
 name|sc
 parameter_list|,
@@ -154,6 +100,20 @@ parameter_list|,
 name|data
 parameter_list|)
 value|do { \   uint32_t _temp = (data); \   bus_space_write_4((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg), htole32(_temp)); \ } while (0)
+end_define
+
+begin_comment
+comment|/* 90ns delay macro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAF1761_90NS_DELAY
+parameter_list|(
+name|sc
+parameter_list|)
+value|do { \ 	(void) SAF1761_READ_LE_4(sc, SOTG_VEND_PROD_ID); \ 	(void) SAF1761_READ_LE_4(sc, SOTG_VEND_PROD_ID); \ 	(void) SAF1761_READ_LE_4(sc, SOTG_VEND_PROD_ID); \ 	(void) SAF1761_READ_LE_4(sc, SOTG_VEND_PROD_ID); \ } while (0)
 end_define
 
 begin_struct_decl
@@ -456,10 +416,19 @@ name|uint32_t
 name|sc_host_async_map
 decl_stmt|;
 name|uint32_t
+name|sc_host_async_suspend_map
+decl_stmt|;
+name|uint32_t
 name|sc_host_intr_map
 decl_stmt|;
 name|uint32_t
+name|sc_host_intr_suspend_map
+decl_stmt|;
+name|uint32_t
 name|sc_host_isoc_map
+decl_stmt|;
+name|uint32_t
+name|sc_host_isoc_suspend_map
 decl_stmt|;
 name|uint32_t
 name|sc_intr_enable
@@ -469,15 +438,20 @@ name|uint32_t
 name|sc_hw_mode
 decl_stmt|;
 comment|/* hardware mode */
-name|uint8_t
+name|uint32_t
+name|sc_interrupt_cfg
+decl_stmt|;
+comment|/* interrupt configuration */
+name|uint32_t
+name|sc_xfer_complete
+decl_stmt|;
+name|uint32_t
 name|sc_bounce_buffer
 index|[
 literal|1024
-index|]
-name|__aligned
-argument_list|(
+operator|/
 literal|4
-argument_list|)
+index|]
 decl_stmt|;
 name|uint8_t
 name|sc_rt_addr
@@ -537,17 +511,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|driver_filter_t
+name|saf1761_otg_filter_interrupt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|driver_intr_t
 name|saf1761_otg_interrupt
-parameter_list|(
-name|struct
-name|saf1761_otg_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

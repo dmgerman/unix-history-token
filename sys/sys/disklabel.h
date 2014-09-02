@@ -78,11 +78,6 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__powerpc__
 argument_list|)
 operator|||
@@ -946,6 +941,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FS_HAMMER
+value|22
+end_define
+
+begin_comment
+comment|/* DragonFlyBSD Hammer FS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_HAMMER2
+value|23
+end_define
+
+begin_comment
+comment|/* DragonFlyBSD Hammer2 FS */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FS_UDF
 value|24
 end_define
@@ -1046,9 +1063,9 @@ literal|"ccd"
 block|,
 literal|"jfs"
 block|,
-literal|"?"
+literal|"HAMMER"
 block|,
-literal|"?"
+literal|"HAMMER2"
 block|,
 literal|"UDF"
 block|,

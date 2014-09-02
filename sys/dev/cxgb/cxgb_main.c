@@ -1157,17 +1157,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.msi_allowed"
-argument_list|,
-operator|&
-name|msi_allowed
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -1220,17 +1209,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.multiq"
-argument_list|,
-operator|&
-name|multiq
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
@@ -1265,17 +1243,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.force_fw_update"
-argument_list|,
-operator|&
-name|force_fw_update
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
@@ -1304,17 +1271,6 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.use_16k_clusters"
-argument_list|,
-operator|&
-name|cxgb_use_16k_clusters
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -1346,17 +1302,6 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.cxgb.nfilters"
-argument_list|,
-operator|&
-name|nfilters
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT

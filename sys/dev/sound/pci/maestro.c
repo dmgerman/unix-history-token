@@ -249,6 +249,9 @@ modifier|*
 name|buffer
 decl_stmt|;
 comment|/* OS independent */
+name|bus_dmamap_t
+name|map
+decl_stmt|;
 name|bus_addr_t
 name|phys
 decl_stmt|;
@@ -316,6 +319,9 @@ modifier|*
 name|buffer
 decl_stmt|;
 comment|/* OS independent */
+name|bus_dmamap_t
+name|map
+decl_stmt|;
 name|bus_addr_t
 name|phys
 decl_stmt|;
@@ -420,6 +426,9 @@ modifier|*
 name|codec
 decl_stmt|;
 comment|/* OS independent */
+name|bus_dmamap_t
+name|stat_map
+decl_stmt|;
 name|u_int8_t
 modifier|*
 name|stat
@@ -1105,6 +1114,9 @@ name|u_int32_t
 parameter_list|,
 name|bus_addr_t
 modifier|*
+parameter_list|,
+name|bus_dmamap_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1118,6 +1130,8 @@ name|bus_dma_tag_t
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|bus_dmamap_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6495,6 +6509,11 @@ name|bufsz
 argument_list|,
 operator|&
 name|physaddr
+argument_list|,
+operator|&
+name|ch
+operator|->
+name|map
 argument_list|)
 expr_stmt|;
 if|if
@@ -6884,6 +6903,10 @@ name|ch
 operator|->
 name|buffer
 argument_list|)
+argument_list|,
+name|ch
+operator|->
+name|map
 argument_list|)
 expr_stmt|;
 comment|/* return 0 if ok */
@@ -8714,14 +8737,15 @@ parameter_list|,
 name|bus_addr_t
 modifier|*
 name|phys
+parameter_list|,
+name|bus_dmamap_t
+modifier|*
+name|map
 parameter_list|)
 block|{
 name|void
 modifier|*
 name|buf
-decl_stmt|;
-name|bus_dmamap_t
-name|map
 decl_stmt|;
 if|if
 condition|(
@@ -8734,7 +8758,6 @@ name|buf
 argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|,
-operator|&
 name|map
 argument_list|)
 condition|)
@@ -8747,6 +8770,7 @@ name|bus_dmamap_load
 argument_list|(
 name|dmat
 argument_list|,
+operator|*
 name|map
 argument_list|,
 name|buf
@@ -8759,12 +8783,13 @@ name|phys
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
 operator|||
-operator|!
 operator|*
 name|phys
-operator|||
-name|map
+operator|==
+literal|0
 condition|)
 block|{
 name|bus_dmamem_free
@@ -8773,6 +8798,7 @@ name|dmat
 argument_list|,
 name|buf
 argument_list|,
+operator|*
 name|map
 argument_list|)
 expr_stmt|;
@@ -8797,15 +8823,25 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
+parameter_list|,
+name|bus_dmamap_t
+name|map
 parameter_list|)
 block|{
+name|bus_dmamap_unload
+argument_list|(
+name|dmat
+argument_list|,
+name|map
+argument_list|)
+expr_stmt|;
 name|bus_dmamem_free
 argument_list|(
 name|dmat
 argument_list|,
 name|buf
 argument_list|,
-name|NULL
+name|map
 argument_list|)
 expr_stmt|;
 block|}
@@ -9281,6 +9317,11 @@ operator|&
 name|ess
 operator|->
 name|phys
+argument_list|,
+operator|&
+name|ess
+operator|->
+name|stat_map
 argument_list|)
 expr_stmt|;
 if|if
@@ -9860,6 +9901,10 @@ argument_list|,
 name|ess
 operator|->
 name|stat
+argument_list|,
+name|ess
+operator|->
+name|stat_map
 argument_list|)
 expr_stmt|;
 if|if
@@ -10104,6 +10149,10 @@ argument_list|,
 name|ess
 operator|->
 name|stat
+argument_list|,
+name|ess
+operator|->
+name|stat_map
 argument_list|)
 expr_stmt|;
 name|bus_dma_tag_destroy

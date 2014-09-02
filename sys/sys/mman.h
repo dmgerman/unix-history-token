@@ -316,6 +316,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAP_EXCL
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* for MAP_FIXED, fail if address is used */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAP_NOCORE
 value|0x00020000
 end_define

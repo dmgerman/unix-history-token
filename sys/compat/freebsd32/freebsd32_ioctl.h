@@ -15,6 +15,12 @@ directive|define
 name|_COMPAT_FREEBSD32_IOCTL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<cam/scsi/scsi_sg.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|__uint32_t
@@ -370,6 +376,13 @@ define|#
 directive|define
 name|PCIOCGETCONF_32
 value|_IOWR('p', 5, struct pci_conf_io32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SG_IO_32
+value|_IOWR(SGIOC, 0x85, struct sg_io_hdr32)
 end_define
 
 begin_endif

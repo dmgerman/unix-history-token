@@ -1369,7 +1369,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unable to allocate memory for cmd buffer, "
+literal|"unable to allocate memory for cmd tag, "
 literal|"error %u\n"
 argument_list|,
 name|error
@@ -1380,43 +1380,6 @@ name|fail0
 goto|;
 block|}
 comment|/* allocate descriptors */
-name|error
-operator|=
-name|bus_dmamap_create
-argument_list|(
-name|mh
-operator|->
-name|mh_dmat
-argument_list|,
-name|BUS_DMA_NOWAIT
-argument_list|,
-operator|&
-name|mh
-operator|->
-name|mh_dmamap
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"unable to create dmamap for cmd buffers, "
-literal|"error %u\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail0
-goto|;
-block|}
 name|error
 operator|=
 name|bus_dmamem_alloc
@@ -1587,19 +1550,6 @@ argument_list|)
 expr_stmt|;
 name|fail1
 label|:
-name|bus_dmamap_destroy
-argument_list|(
-name|mh
-operator|->
-name|mh_dmat
-argument_list|,
-name|mh
-operator|->
-name|mh_dmamap
-argument_list|)
-expr_stmt|;
-name|fail0
-label|:
 name|bus_dma_tag_destroy
 argument_list|(
 name|mh
@@ -1607,6 +1557,8 @@ operator|->
 name|mh_dmat
 argument_list|)
 expr_stmt|;
+name|fail0
+label|:
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -1657,17 +1609,6 @@ argument_list|,
 name|mh
 operator|->
 name|mh_cmdbuf
-argument_list|,
-name|mh
-operator|->
-name|mh_dmamap
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_destroy
-argument_list|(
-name|mh
-operator|->
-name|mh_dmat
 argument_list|,
 name|mh
 operator|->

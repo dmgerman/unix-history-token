@@ -163,17 +163,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"vm.exec_map_entries"
-argument_list|,
-operator|&
-name|exec_map_entries
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vm
@@ -182,7 +171,7 @@ name|OID_AUTO
 argument_list|,
 name|exec_map_entries
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|exec_map_entries

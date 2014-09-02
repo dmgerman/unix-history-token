@@ -4270,7 +4270,9 @@ argument_list|)
 expr_stmt|;
 comment|/* Give control to the machine independent loader code. */
 name|interact
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

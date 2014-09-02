@@ -1,49 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2013 Kevin Lo  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2013-2014 Kevin Lo  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|AX88179_PHY_ID
-value|0x03
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_MCAST_FILTER_SIZE
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_MAXGE_MCAST
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_EEPROM_LEN
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_CHECKSUM
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_TX_CHECKSUM
-value|2
-end_define
 
 begin_define
 define|#
@@ -108,397 +66,345 @@ name|AXGE_ACCESS_MFAB
 value|0x10
 end_define
 
+begin_comment
+comment|/* Physical link status register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|AXGE_LINK_STATUS
+name|AXGE_PLSR
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_LINK_STATUS_USB_FS
+name|PLSR_USB_FS
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_LINK_STATUS_USB_HS
+name|PLSR_USB_HS
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_LINK_STATUS_USB_SS
+name|PLSR_USB_SS
 value|0x04
 end_define
+
+begin_comment
+comment|/* EEPROM address register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AXGE_SROM_ADDR
+name|AXGE_EAR
 value|0x07
 end_define
 
-begin_define
-define|#
-directive|define
-name|AXGE_SROM_DATA_LOW
-value|0x08
-end_define
+begin_comment
+comment|/* EEPROM data low register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AXGE_SROM_DATA_HIGH
+name|AXGE_EDLR
+value|0x08
+end_define
+
+begin_comment
+comment|/* EEPROM data high register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AXGE_EDHR
 value|0x09
 end_define
 
+begin_comment
+comment|/* EEPROM command register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|AXGE_SROM_CMD
+name|AXGE_ECR
 value|0x0a
 end_define
 
-begin_define
-define|#
-directive|define
-name|AXGE_SROM_CMD_RD
-value|0x04
-end_define
-
 begin_comment
-comment|/* EEprom read command */
+comment|/* Rx control register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AXGE_SROM_CMD_WR
-value|0x08
-end_define
-
-begin_comment
-comment|/* EEprom write command */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXGE_SROM_CMD_BUSY
-value|0x10
-end_define
-
-begin_comment
-comment|/* EEprom access module busy */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_CTL
+name|AXGE_RCR
 value|0x0b
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RX_CTL_DROPCRCERR
-value|0x0100
-end_define
-
-begin_comment
-comment|/* Drop CRC error packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_CTL_IPE
-value|0x0200
-end_define
-
-begin_comment
-comment|/* 4-byte IP header alignment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_CTL_TXPADCRC
-value|0x0400
-end_define
-
-begin_comment
-comment|/* Csum value in rx header 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_CTL_START
-value|0x0080
-end_define
-
-begin_comment
-comment|/* Ethernet MAC start */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_CTL_AP
-value|0x0020
-end_define
-
-begin_comment
-comment|/* Accept physical address from 						  multicast array */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_CTL_AM
-value|0x0010
+name|RCR_STOP
+value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RX_CTL_AB
+name|RCR_PRO
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|RCR_AMALL
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|RCR_AB
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RX_CTL_HA8B
-value|0x0004
+name|RCR_AM
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RX_CTL_AMALL
-value|0x0002
+name|RCR_AP
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|RCR_SO
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|RCR_DROP_CRCE
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|RCR_IPE
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|RCR_TX_CRC_PAD
+value|0x0400
 end_define
 
 begin_comment
-comment|/* Accept all multicast frames */
+comment|/* Node id register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AXGE_RX_CTL_PRO
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Promiscuous Mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_CTL_STOP
-value|0x0000
-end_define
-
-begin_comment
-comment|/* Stop MAC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AXGE_NODE_ID
+name|AXGE_NIDR
 value|0x10
 end_define
 
-begin_define
-define|#
-directive|define
-name|AXGE_MULTI_FILTER_ARRY
-value|0x16
-end_define
+begin_comment
+comment|/* Multicast filter array */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AXGE_MEDIUM_STATUS_MODE
+name|AXGE_MFA
+value|0x16
+end_define
+
+begin_comment
+comment|/* Medium status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AXGE_MSR
 value|0x22
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MEDIUM_GIGAMODE
+name|MSR_GM
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MEDIUM_FULL_DUPLEX
+name|MSR_FD
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MEDIUM_ALWAYS_ONE
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_MEDIUM_EN_125MHZ
+name|MSR_EN_125MHZ
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MEDIUM_RXFLOW_CTRLEN
+name|MSR_RFC
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MEDIUM_TXFLOW_CTRLEN
+name|MSR_TFC
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MEDIUM_RECEIVE_EN
+name|MSR_RE
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MEDIUM_PS
+name|MSR_PS
 value|0x0200
 end_define
 
-begin_define
-define|#
-directive|define
-name|AXGE_MEDIUM_JUMBO_EN
-value|0x8040
-end_define
+begin_comment
+comment|/* Monitor mode status register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AXGE_MONITOR_MODE
+name|AXGE_MMSR
 value|0x24
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MONITOR_MODE_RWLC
+name|MMSR_RWLC
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MONITOR_MODE_RWMP
+name|MMSR_RWMP
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MONITOR_MODE_RWWF
+name|MMSR_RWWF
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MONITOR_MODE_RW_FLAG
+name|MMSR_RW_FLAG
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MONITOR_MODE_PMEPOL
+name|MMSR_PME_POL
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_MONITOR_MODE_PMETYPE
+name|MMSR_PME_TYPE
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_GPIO_CTRL
-value|0x25
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_GPIO_CTRL_GPIO3EN
+name|MMSR_PME_IND
 value|0x80
 end_define
 
-begin_define
-define|#
-directive|define
-name|AXGE_GPIO_CTRL_GPIO2EN
-value|0x40
-end_define
+begin_comment
+comment|/* GPIO control/status register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AXGE_GPIO_CTRL_GPIO1EN
-value|0x20
+name|AXGE_GPIOCR
+value|0x25
 end_define
+
+begin_comment
+comment|/* Ethernet PHY power& reset control register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AXGE_PHYPWR_RSTCTL
+name|AXGE_EPPRCR
 value|0x26
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_PHYPWR_RSTCTL_BZ
+name|EPPRCR_BZ
 value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_PHYPWR_RSTCTL_IPRL
+name|EPPRCR_IPRL
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_PHYPWR_RSTCTL_AUTODETACH
+name|EPPRCR_AUTODETACH
 value|0x1000
 end_define
 
@@ -507,55 +413,6 @@ define|#
 directive|define
 name|AXGE_RX_BULKIN_QCTRL
 value|0x2e
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_BULKIN_QCTRL_TIME
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_BULKIN_QCTRL_IFG
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_BULKIN_QCTRL_SIZE
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_BULKIN_QTIMR_LOW
-value|0x2f
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_BULKIN_QTIMR_HIGH
-value|0x30
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_BULKIN_QSIZE
-value|0x31
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RX_BULKIN_QIFG
-value|0x32
 end_define
 
 begin_define
@@ -593,158 +450,160 @@ name|AXGE_CLK_SELECT_ULR
 value|0x08
 end_define
 
+begin_comment
+comment|/* COE Rx control register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|AXGE_RXCOE_CTL
+name|AXGE_CRCR
 value|0x34
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXCOE_IP
+name|CRCR_IP
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXCOE_TCP
+name|CRCR_TCP
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXCOE_UDP
+name|CRCR_UDP
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXCOE_ICMP
+name|CRCR_ICMP
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXCOE_IGMP
+name|CRCR_IGMP
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXCOE_TCPV6
+name|CRCR_TCPV6
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXCOE_UDPV6
+name|CRCR_UDPV6
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXCOE_ICMV6
+name|CRCR_ICMPV6
 value|0x80
 end_define
+
+begin_comment
+comment|/* COE Tx control register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|AXGE_TXCOE_CTL
+name|AXGE_CTCR
 value|0x35
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_TXCOE_IP
+name|CTCR_IP
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_TXCOE_TCP
+name|CTCR_TCP
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_TXCOE_UDP
+name|CTCR_UDP
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_TXCOE_ICMP
+name|CTCR_ICMP
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_TXCOE_IGMP
+name|CTCR_IGMP
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_TXCOE_TCPV6
+name|CTCR_TCPV6
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_TXCOE_UDPV6
+name|CTCR_UDPV6
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_TXCOE_ICMV6
+name|CTCR_ICMPV6
 value|0x80
 end_define
 
+begin_comment
+comment|/* Pause water level high register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|AXGE_PAUSE_WATERLVL_HIGH
+name|AXGE_PWLHR
 value|0x54
 end_define
 
+begin_comment
+comment|/* Pause water level low register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|AXGE_PAUSE_WATERLVL_LOW
+name|AXGE_PWLLR
 value|0x55
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_EEP_EFUSE_CORRECT
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|AX88179_EEPROM_MAGIC
-value|0x17900b95
 end_define
 
 begin_define
@@ -768,64 +627,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|AXGE_RXHDR_CRC_ERR
-value|0x80000000
+name|AXGE_RXHDR_L4_TYPE_MASK
+value|0x1c
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXHDR_L4_ERR
-value|(1<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RXHDR_L3_ERR
-value|(1<< 9)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RXHDR_L4_TYPE_ICMP
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RXHDR_L4_TYPE_IGMP
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RXHDR_L4_TYPE_TCMPV6
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RXHDR_L3_TYPE_IP
+name|AXGE_RXHDR_L4CSUM_ERR
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|AXGE_RXHDR_L3_TYPE_IPV6
+name|AXGE_RXHDR_L3CSUM_ERR
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RXHDR_L4_TYPE_MASK
-value|0x1c
 end_define
 
 begin_define
@@ -845,114 +662,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|AXGE_RXHDR_L3CSUM_ERR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|AXGE_RXHDR_L4CSUM_ERR
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|AXGE_RXHDR_CRC_ERR
-value|0x80000000
+value|0x20000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AXGE_RXHDR_DROP_ERR
-value|0x40000000
-end_define
-
-begin_struct
-struct|struct
-name|axge_csum_hdr
-block|{
-name|uint16_t
-name|cstatus
-decl_stmt|;
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L4_CSUM_ERR
-value|0x0001
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L3_CSUM_ERR
-value|0x0002
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L4_TYPE_UDP
-value|0x0004
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L4_TYPE_ICMP
-value|0x0008
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L4_TYPE_IGMP
-value|0x000C
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L4_TYPE_TCP
-value|0x0010
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L4_TYPE_TCPV6
-value|0x0014
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L4_TYPE_MASK
-value|0x001C
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L3_TYPE_IPV4
-value|0x0020
-define|#
-directive|define
-name|AXGE_CSUM_HDR_L3_TYPE_IPV6
-value|0x0040
-define|#
-directive|define
-name|AXGE_CSUM_HDR_VLAN_MASK
-value|0x0700
-name|uint16_t
-name|len
-decl_stmt|;
-define|#
-directive|define
-name|AXGE_CSUM_HDR_LEN_MASK
-value|0x1FFF
-define|#
-directive|define
-name|AXGE_CSUM_HDR_CRC_ERR
-value|0x2000
-define|#
-directive|define
-name|AXGE_CSUM_HDR_MII_ERR
-value|0x4000
-define|#
-directive|define
-name|AXGE_CSUM_HDR_DROP
-value|0x8000
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|AXGE_CSUM_RXBYTES
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& AXGE_CSUM_HDR_LEN_MASK)
+value|0x80000000
 end_define
 
 begin_define

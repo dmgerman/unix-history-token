@@ -1120,7 +1120,7 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* major version (= SSL3_VERSION_MAJOR) */
-comment|/* We must look at client_version inside the Client Hello message 			 * to get the correct minor version. 			 * However if we have only a pathologically small fragment of the 			 * Client Hello message, this would be difficult, and we'd have 			 * to read more records to find out. 			 * No known SSL 3.0 client fragments ClientHello like this, 			 * so we simply assume TLS 1.0 to avoid protocol version downgrade 			 * attacks. */
+comment|/* We must look at client_version inside the Client Hello message 			 * to get the correct minor version. 			 * However if we have only a pathologically small fragment of the 			 * Client Hello message, this would be difficult, and we'd have 			 * to read more records to find out. 			 * No known SSL 3.0 client fragments ClientHello like this, 			 * so we simply reject such connections to avoid 			 * protocol version downgrade attacks. */
 if|if
 condition|(
 name|p
@@ -1138,24 +1138,18 @@ operator|<
 literal|6
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|SSLerr(SSL_F_SSL23_GET_CLIENT_HELLO,SSL_R_RECORD_TOO_SMALL); 				goto err;
-else|#
-directive|else
-name|v
-index|[
-literal|1
-index|]
-operator|=
-name|TLS1_VERSION_MINOR
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL23_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_RECORD_TOO_SMALL
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+goto|goto
+name|err
+goto|;
 block|}
 comment|/* if major version number> 3 set minor to a value 			 * which will use the highest version 3 we support. 			 * If TLS 2.0 ever appears we will need to revise 			 * this.... 			 */
-elseif|else
 if|if
 condition|(
 name|p
@@ -1542,6 +1536,7 @@ index|[
 literal|4
 index|]
 expr_stmt|;
+comment|/* An SSLv3/TLSv1 backwards-compatible CLIENT-HELLO in an SSLv2 		 * header is sent directly on the wire, not wrapped as a TLS 		 * record. It's format is: 		 * Byte  Content 		 * 0-1   msg_length 		 * 2     msg_type 		 * 3-4   version 		 * 5-6   cipher_spec_length 		 * 7-8   session_id_length 		 * 9-10  challenge_length 		 * ...   ... 		 */
 name|n
 operator|=
 operator|(
@@ -1584,6 +1579,24 @@ goto|goto
 name|err
 goto|;
 block|}
+if|if
+condition|(
+name|n
+operator|<
+literal|9
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL23_GET_CLIENT_HELLO
+argument_list|,
+name|SSL_R_RECORD_LENGTH_MISMATCH
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|j
 operator|=
 name|ssl23_read_bytes
@@ -1595,6 +1608,7 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* We previously read 11 bytes, so if j> 0, we must have 		 * j == n+2 == s->packet_length. We have at least 11 valid 		 * packet bytes. */
 if|if
 condition|(
 name|j

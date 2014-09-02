@@ -500,17 +500,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.acpi.cpu_unordered"
-argument_list|,
-operator|&
-name|cpu_unordered
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_debug_acpi
@@ -530,6 +519,18 @@ literal|"Do not use the MADT to match ACPI Processor objects to CPUs."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Knob to disable acpi_cpu devices */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|acpi_cpu_disabled
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Platform hardware resource information. */
@@ -1173,6 +1174,8 @@ name|dev
 argument_list|)
 operator|!=
 name|ACPI_TYPE_PROCESSOR
+operator|||
+name|acpi_cpu_disabled
 condition|)
 return|return
 operator|(

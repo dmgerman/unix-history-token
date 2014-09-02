@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -150,20 +150,29 @@ comment|/*  * Feature flags for zfs send streams (flags in drr_versioninfo)  */
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_DEDUP
-value|(0x1)
+value|(1<<0)
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_DEDUPPROPS
-value|(0x2)
+value|(1<<1)
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_SA_SPILL
-value|(0x4)
+value|(1<<2)
+comment|/* flags #3 - #15 are reserved for incompatible closed-source implementations */
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_EMBED_DATA
+value|(1<<16)
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_EMBED_DATA_LZ4
+value|(1<<17)
 comment|/*  * Mask of all supported backup features  */
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_MASK
-value|(DMU_BACKUP_FEATURE_DEDUP | \ 		DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL)
+value|(DMU_BACKUP_FEATURE_DEDUP | \     DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL | \     DMU_BACKUP_FEATURE_EMBED_DATA | DMU_BACKUP_FEATURE_EMBED_DATA_LZ4)
 comment|/* Are all features in the given flag word currently supported? */
 define|#
 directive|define
@@ -438,6 +447,8 @@ name|DRR_WRITE_BYREF
 block|,
 name|DRR_SPILL
 block|,
+name|DRR_WRITE_EMBEDDED
+block|,
 name|DRR_NUMTYPES
 block|}
 name|drr_type
@@ -479,6 +490,46 @@ name|struct
 name|drr_spill
 name|drr_spill
 decl_stmt|;
+struct|struct
+name|drr_write_embedded
+block|{
+name|uint64_t
+name|drr_object
+decl_stmt|;
+name|uint64_t
+name|drr_offset
+decl_stmt|;
+comment|/* logical length, should equal blocksize */
+name|uint64_t
+name|drr_length
+decl_stmt|;
+name|uint64_t
+name|drr_toguid
+decl_stmt|;
+name|uint8_t
+name|drr_compression
+decl_stmt|;
+name|uint8_t
+name|drr_etype
+decl_stmt|;
+name|uint8_t
+name|drr_pad
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|uint32_t
+name|drr_lsize
+decl_stmt|;
+comment|/* uncompressed size of payload */
+name|uint32_t
+name|drr_psize
+decl_stmt|;
+comment|/* compr. (real) size of payload */
+comment|/* (possibly compressed) content follows */
+block|}
+name|drr_write_embedded
+struct|;
 block|}
 name|drr_u
 union|;
@@ -744,11 +795,11 @@ decl_stmt|;
 name|zinject_record_t
 name|zc_inject_record
 decl_stmt|;
-name|boolean_t
+name|uint32_t
 name|zc_defer_destroy
 decl_stmt|;
-name|boolean_t
-name|zc_temphold
+name|uint32_t
+name|zc_flags
 decl_stmt|;
 name|uint64_t
 name|zc_action_handle

@@ -625,7 +625,7 @@ name|fdtbus_bs_tag
 argument_list|,
 name|src
 argument_list|,
-literal|0
+name|SRC_CONTROL_REG
 argument_list|,
 name|val
 argument_list|)

@@ -921,7 +921,7 @@ name|OID_AUTO
 argument_list|,
 name|v1enable
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|mld_v1enable
@@ -929,17 +929,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable fallback to MLDv1"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.inet6.mld.v1enable"
-argument_list|,
-operator|&
-name|mld_v1enable
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -962,7 +951,7 @@ name|OID_AUTO
 argument_list|,
 name|use_allow
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|mld_use_allow
@@ -970,17 +959,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Use ALLOW/BLOCK for RFC 4604 SSM joins/leaves"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.inet6.mld.use_allow"
-argument_list|,
-operator|&
-name|mld_use_allow
 argument_list|)
 expr_stmt|;
 end_expr_stmt

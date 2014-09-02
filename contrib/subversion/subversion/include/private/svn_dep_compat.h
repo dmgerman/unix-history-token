@@ -128,6 +128,15 @@ define|#
 directive|define
 name|APR_FPROT_OS_DEFAULT
 value|APR_OS_DEFAULT
+define|#
+directive|define
+name|apr_hash_make_custom
+parameter_list|(
+name|pool
+parameter_list|,
+name|hash_func
+parameter_list|)
+value|apr_hash_make(pool)
 endif|#
 directive|endif
 if|#
@@ -222,6 +231,31 @@ parameter_list|(
 name|x
 parameter_list|)
 value|APR_STATUS_IS_EBUSY(x)
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|APR_VERSION_AT_LEAST
+argument_list|(
+literal|1
+operator|,
+literal|4
+operator|,
+literal|0
+argument_list|)
+ifndef|#
+directive|ifndef
+name|apr_time_from_msec
+define|#
+directive|define
+name|apr_time_from_msec
+parameter_list|(
+name|msec
+parameter_list|)
+value|((apr_time_t)(msec) * 1000)
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/**  * Check at compile time if the Serf version is at least a certain  * level.  * @param major The major version component of the version checked  * for (e.g., the "1" of "1.3.0").  * @param minor The minor version component of the version checked  * for (e.g., the "3" of "1.3.0").  * @param patch The patch level component of the version checked  * for (e.g., the "0" of "1.3.0").  *  * @since New in 1.5.  */

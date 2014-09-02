@@ -49,10 +49,6 @@ begin_comment
 comment|/* TODO: Generate these values on a LE machine */
 end_comment
 
-begin_comment
-comment|/* Current values were stolen from ia64 except the  * Xpointer define.  */
-end_comment
-
 begin_define
 define|#
 directive|define

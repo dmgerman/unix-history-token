@@ -19,43 +19,16 @@ directive|define
 name|_I40E_REGISTER_H_
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|EXTERNAL_RELEASE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SV_SUPPORT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|FORTVILLE_A0_SUPPORT
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"i40e_register_x710_int.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|I40E_GL_ARQBAH
 value|0x000801C0
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -78,6 +51,10 @@ name|I40E_GL_ARQBAL
 value|0x000800C0
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -98,6 +75,10 @@ directive|define
 name|I40E_GL_ARQH
 value|0x000803C0
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -120,6 +101,10 @@ name|I40E_GL_ARQT
 value|0x000804C0
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -140,6 +125,10 @@ directive|define
 name|I40E_GL_ATQBAH
 value|0x00080140
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -162,6 +151,10 @@ name|I40E_GL_ATQBAL
 value|0x00080040
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -183,6 +176,10 @@ name|I40E_GL_ATQH
 value|0x00080340
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -203,6 +200,10 @@ directive|define
 name|I40E_GL_ATQLEN
 value|0x00080240
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -281,6 +282,10 @@ name|I40E_GL_ATQT
 value|0x00080440
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -301,6 +306,10 @@ directive|define
 name|I40E_PF_ARQBAH
 value|0x00080180
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -323,6 +332,10 @@ name|I40E_PF_ARQBAL
 value|0x00080080
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -344,6 +357,10 @@ name|I40E_PF_ARQH
 value|0x00080380
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -364,6 +381,10 @@ directive|define
 name|I40E_PF_ARQLEN
 value|0x00080280
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -442,6 +463,10 @@ name|I40E_PF_ARQT
 value|0x00080480
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -462,6 +487,10 @@ directive|define
 name|I40E_PF_ATQBAH
 value|0x00080100
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -484,6 +513,10 @@ name|I40E_PF_ATQBAL
 value|0x00080000
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -505,6 +538,10 @@ name|I40E_PF_ATQH
 value|0x00080300
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -525,6 +562,10 @@ directive|define
 name|I40E_PF_ATQLEN
 value|0x00080200
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -603,6 +644,10 @@ name|I40E_PF_ATQT
 value|0x00080400
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -629,6 +674,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: EMPR */
 end_comment
 
 begin_define
@@ -666,6 +715,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -701,6 +754,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -734,6 +791,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: EMPR */
 end_comment
 
 begin_define
@@ -827,6 +888,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -860,6 +925,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: EMPR */
 end_comment
 
 begin_define
@@ -897,6 +966,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -932,6 +1005,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -965,6 +1042,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: EMPR */
 end_comment
 
 begin_define
@@ -1058,6 +1139,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1086,6 +1171,10 @@ name|I40E_PRT_L2TAGSEN
 value|0x001C0B20
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1106,6 +1195,10 @@ directive|define
 name|I40E_PFCM_LAN_ERRDATA
 value|0x0010C080
 end_define
+
+begin_comment
+comment|/* Reset: PFR */
+end_comment
 
 begin_define
 define|#
@@ -1155,6 +1248,10 @@ directive|define
 name|I40E_PFCM_LAN_ERRINFO
 value|0x0010C000
 end_define
+
+begin_comment
+comment|/* Reset: PFR */
+end_comment
 
 begin_define
 define|#
@@ -1233,6 +1330,10 @@ name|I40E_PFCM_LANCTXCTL
 value|0x0010C300
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1303,6 +1404,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1330,6 +1435,10 @@ directive|define
 name|I40E_PFCM_LANCTXSTAT
 value|0x0010C380
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -1371,6 +1480,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFR */
 end_comment
 
 begin_define
@@ -1434,6 +1547,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFR */
 end_comment
 
 begin_define
@@ -1520,6 +1637,10 @@ name|I40E_GLDCB_GENC
 value|0x00083044
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1540,6 +1661,10 @@ directive|define
 name|I40E_GLDCB_RUPTI
 value|0x00122618
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -1562,6 +1687,10 @@ name|I40E_PRTDCB_FCCFG
 value|0x001E4640
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1582,6 +1711,10 @@ directive|define
 name|I40E_PRTDCB_FCRTV
 value|0x001E4600
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -1609,6 +1742,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: GLOBR */
 end_comment
 
 begin_define
@@ -1652,6 +1789,10 @@ directive|define
 name|I40E_PRTDCB_GENC
 value|0x00083000
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -1730,6 +1871,10 @@ name|I40E_PRTDCB_GENS
 value|0x00083020
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1750,6 +1895,10 @@ directive|define
 name|I40E_PRTDCB_MFLCN
 value|0x001E2400
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -1828,6 +1977,10 @@ name|I40E_PRTDCB_RETSC
 value|0x001223E0
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1898,6 +2051,10 @@ begin_comment
 comment|/* _i=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1954,6 +2111,10 @@ name|I40E_PRTDCB_RPPMC
 value|0x001223A0
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2003,6 +2164,10 @@ name|I40E_PRTDCB_RUP
 value|0x001C0B00
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2023,6 +2188,10 @@ directive|define
 name|I40E_PRTDCB_RUP2TC
 value|0x001C09A0
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -2143,6 +2312,10 @@ name|I40E_PRTDCB_TC2PFC
 value|0x001C0980
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2160,9 +2333,52 @@ end_define
 begin_define
 define|#
 directive|define
+name|I40E_PRTDCB_TCMSTC
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x000A0040 + ((_i) * 32))
+end_define
+
+begin_comment
+comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTDCB_TCMSTC_MAX_INDEX
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTDCB_TCMSTC_MSTC_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_PRTDCB_TCMSTC_MSTC_MASK
+value|I40E_MASK(0xFFFFF, I40E_PRTDCB_TCMSTC_MSTC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|I40E_PRTDCB_TCPMC
 value|0x000A21A0
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -2220,6 +2436,10 @@ begin_comment
 comment|/* _i=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2247,6 +2467,10 @@ directive|define
 name|I40E_PRTDCB_TDPMC
 value|0x000A0180
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -2283,6 +2507,10 @@ name|I40E_PRTDCB_TETSC_TCB
 value|0x000AE060
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2318,6 +2546,10 @@ name|I40E_PRTDCB_TETSC_TPB
 value|0x00098060
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2352,6 +2584,10 @@ directive|define
 name|I40E_PRTDCB_TFCS
 value|0x001E4560
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -2482,41 +2718,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_PRTDCB_TFWSTC
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x000A0040 + ((_i) * 32))
-end_define
-
-begin_comment
-comment|/* _i=0...7 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_PRTDCB_TFWSTC_MAX_INDEX
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PRTDCB_TFWSTC_MSTC_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PRTDCB_TFWSTC_MSTC_MASK
-value|I40E_MASK(0xFFFFF, I40E_PRTDCB_TFWSTC_MSTC_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|I40E_PRTDCB_TPFCTS
 parameter_list|(
 name|_i
@@ -2526,6 +2727,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: GLOBR */
 end_comment
 
 begin_define
@@ -2555,6 +2760,10 @@ directive|define
 name|I40E_GLFCOE_RCTL
 value|0x00269B94
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -2619,6 +2828,10 @@ name|I40E_GL_FWSTS
 value|0x00083048
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2667,6 +2880,10 @@ directive|define
 name|I40E_GLGEN_CLKSTAT
 value|0x000B8184
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -2764,6 +2981,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...29 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -2896,7 +3117,7 @@ begin_define
 define|#
 directive|define
 name|I40E_GLGEN_GPIO_CTL_LED_MODE_MASK
-value|I40E_MASK(0xF, I40E_GLGEN_GPIO_CTL_LED_MODE_SHIFT)
+value|I40E_MASK(0x1F, I40E_GLGEN_GPIO_CTL_LED_MODE_SHIFT)
 end_define
 
 begin_define
@@ -2948,6 +3169,10 @@ name|I40E_GLGEN_GPIO_SET
 value|0x00088184
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2997,6 +3222,10 @@ name|I40E_GLGEN_GPIO_STAT
 value|0x0008817C
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3017,6 +3246,10 @@ directive|define
 name|I40E_GLGEN_GPIO_TRANSIT
 value|0x00088180
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -3044,6 +3277,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -3163,6 +3400,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -3333,6 +3574,10 @@ name|I40E_GLGEN_LED_CTL
 value|0x00088178
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3359,6 +3604,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -3422,6 +3671,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -3557,6 +3810,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3676,6 +3933,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3718,6 +3979,10 @@ name|I40E_GLGEN_PCIFCNCNT
 value|0x001C0AB4
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3752,6 +4017,10 @@ directive|define
 name|I40E_GLGEN_RSTAT
 value|0x000B8188
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -3844,6 +4113,10 @@ name|I40E_GLGEN_RSTCTL
 value|0x000B8180
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3879,6 +4152,10 @@ name|I40E_GLGEN_RSTENA_EMP
 value|0x000B818C
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3899,6 +4176,10 @@ directive|define
 name|I40E_GLGEN_RTRIG
 value|0x000B8190
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -3948,6 +4229,10 @@ directive|define
 name|I40E_GLGEN_STAT
 value|0x000B612C
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -4047,6 +4332,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4075,6 +4364,10 @@ name|I40E_GLVFGEN_TIMER
 value|0x000881BC
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4095,6 +4388,10 @@ directive|define
 name|I40E_PFGEN_CTRL
 value|0x00092400
 end_define
+
+begin_comment
+comment|/* Reset: PFR */
+end_comment
 
 begin_define
 define|#
@@ -4117,6 +4414,10 @@ name|I40E_PFGEN_DRUN
 value|0x00092500
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4138,6 +4439,10 @@ name|I40E_PFGEN_PORTNUM
 value|0x001C0480
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4158,6 +4463,10 @@ directive|define
 name|I40E_PFGEN_STATE
 value|0x00088000
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -4222,6 +4531,10 @@ name|I40E_PRTGEN_CNF
 value|0x000B8120
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4271,6 +4584,10 @@ name|I40E_PRTGEN_CNF2
 value|0x000B8160
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4291,6 +4608,10 @@ directive|define
 name|I40E_PRTGEN_STATUS
 value|0x000B8100
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -4334,6 +4655,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4367,6 +4692,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -4404,6 +4733,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4437,6 +4770,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -4474,6 +4811,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4507,6 +4848,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -4544,6 +4889,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4572,6 +4921,10 @@ name|I40E_GLHMC_FCOEDDPOBJSZ
 value|0x000C2010
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4598,6 +4951,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -4635,6 +4992,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4663,6 +5024,10 @@ name|I40E_GLHMC_FCOEFMAX
 value|0x000C20D0
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4684,6 +5049,10 @@ name|I40E_GLHMC_FCOEFOBJSZ
 value|0x000C2018
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4704,6 +5073,10 @@ directive|define
 name|I40E_GLHMC_FCOEMAX
 value|0x000C2014
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -4731,6 +5104,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -4766,6 +5143,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -4810,6 +5191,10 @@ name|I40E_GLHMC_FSIAVMAX
 value|0x000C2068
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4830,6 +5215,10 @@ directive|define
 name|I40E_GLHMC_FSIAVOBJSZ
 value|0x000C2064
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -4857,6 +5246,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -4894,6 +5287,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4922,6 +5319,10 @@ name|I40E_GLHMC_FSIMCMAX
 value|0x000C2060
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4943,6 +5344,10 @@ name|I40E_GLHMC_FSIMCOBJSZ
 value|0x000C205c
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4963,6 +5368,10 @@ directive|define
 name|I40E_GLHMC_LANQMAX
 value|0x000C2008
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -4990,6 +5399,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -5027,6 +5440,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5055,6 +5472,10 @@ name|I40E_GLHMC_LANRXOBJSZ
 value|0x000C200c
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5081,6 +5502,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -5132,6 +5557,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5160,6 +5589,10 @@ name|I40E_GLHMC_LANTXOBJSZ
 value|0x000C2004
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5186,6 +5619,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -5221,6 +5658,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -5265,6 +5706,10 @@ name|I40E_PFHMC_ERRORDATA
 value|0x000C0500
 end_define
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5285,6 +5730,10 @@ directive|define
 name|I40E_PFHMC_ERRORINFO
 value|0x000C0400
 end_define
+
+begin_comment
+comment|/* Reset: PFR */
+end_comment
 
 begin_define
 define|#
@@ -5363,6 +5812,10 @@ name|I40E_PFHMC_PDINV
 value|0x000C0300
 end_define
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5397,6 +5850,10 @@ directive|define
 name|I40E_PFHMC_SDCMD
 value|0x000C0000
 end_define
+
+begin_comment
+comment|/* Reset: PFR */
+end_comment
 
 begin_define
 define|#
@@ -5433,6 +5890,10 @@ name|I40E_PFHMC_SDDATAHIGH
 value|0x000C0200
 end_define
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5453,6 +5914,10 @@ directive|define
 name|I40E_PFHMC_SDDATALOW
 value|0x000C0100
 end_define
+
+begin_comment
+comment|/* Reset: PFR */
+end_comment
 
 begin_define
 define|#
@@ -5513,1546 +5978,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_GL_DBG_DATA
-value|0x0026998C
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GL_DBG_DATA_GL_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GL_DBG_DATA_GL_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GL_DBG_DATA_GL_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_ABORT_MASK
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x0026CCC8 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_ABORT_MASK_MAX_INDEX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_ABORT_MASK_GLQF_ABORT_MASK_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_ABORT_MASK_GLQF_ABORT_MASK_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLQF_ABORT_MASK_GLQF_ABORT_MASK_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_L2_MAP
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x0026CBF8 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_L2_MAP_MAX_INDEX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_L2_MAP_GLQF_L2_MAP_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_L2_MAP_GLQF_L2_MAP_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLQF_L2_MAP_GLQF_L2_MAP_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_OPT_MAP
-value|0x0026CBDC
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_OPT_MAP_FRAG_IDX_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_OPT_MAP_FRAG_IDX_MASK
-value|I40E_MASK(0x3F, I40E_GLQF_OPT_MAP_FRAG_IDX_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_OPT_MAP_IP_OPT_IDX_SHIFT
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_OPT_MAP_IP_OPT_IDX_MASK
-value|I40E_MASK(0x3F, I40E_GLQF_OPT_MAP_IP_OPT_IDX_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_OPT_MAP_TCP_OPT_IDX_SHIFT
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLQF_OPT_MAP_TCP_OPT_IDX_MASK
-value|I40E_MASK(0x3F, I40E_GLQF_OPT_MAP_TCP_OPT_IDX_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA0
-value|0x00122628
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA0_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA0_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRCB_DBG_DATA0_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA1
-value|0x0012262C
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA1_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA1_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRCB_DBG_DATA1_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA2
-value|0x00122630
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA2_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA2_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRCB_DBG_DATA2_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA3
-value|0x00122634
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA3_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA3_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRCB_DBG_DATA3_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA4
-value|0x00122638
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA4_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA4_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRCB_DBG_DATA4_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA5
-value|0x0012263C
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA5_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRCB_DBG_DATA5_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRCB_DBG_DATA5_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA0
-value|0x0012A598
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA0_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA0_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRLAN_DBG_DATA0_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA1
-value|0x0012A59C
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA1_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA1_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRLAN_DBG_DATA1_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA2
-value|0x0012A5A0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA2_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA2_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRLAN_DBG_DATA2_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA3
-value|0x0012A5A4
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA3_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA3_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRLAN_DBG_DATA3_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA4
-value|0x0012A5A8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA4_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA4_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRLAN_DBG_DATA4_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA5
-value|0x0012A5AC
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA5_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA5_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRLAN_DBG_DATA5_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA6
-value|0x0012A5B0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA6_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA6_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRLAN_DBG_DATA6_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA7
-value|0x0012A5B4
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA7_DBG_DATA_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_DBG_DATA7_DBG_DATA_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRLAN_DBG_DATA7_DBG_DATA_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_SPARE
-value|0x0012A5B8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_SPARE_SPARE_BITS_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GLRLAN_SPARE_SPARE_BITS_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_GLRLAN_SPARE_SPARE_BITS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PRT_SWR_PM_THR
-value|0x0026CD00
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PRT_SWR_PM_THR_THRESHOLD_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PRT_SWR_PM_THR_THRESHOLD_MASK
-value|I40E_MASK(0xFF, I40E_PRT_SWR_PM_THR_THRESHOLD_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL
-value|0x0026CC24
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_FLR_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_FLR_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_IGNORE_FLR_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_VFLR_SHIFT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_VFLR_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_IGNORE_VFLR_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_VMLR_SHIFT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_VMLR_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_IGNORE_VMLR_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_USE_PCTYPE_FCOE_SHIFT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_USE_PCTYPE_FCOE_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_USE_PCTYPE_FCOE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_ETH_HIT_SHIFT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_ETH_HIT_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_IGNORE_ETH_HIT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_MAC_VLAN_HIT_SHIFT
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_MAC_VLAN_HIT_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_IGNORE_MAC_VLAN_HIT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_SWR_DROP_SHIFT
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_IGNORE_SWR_DROP_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_IGNORE_SWR_DROP_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_HOLD_FLU_JOBS_SHIFT
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_HOLD_FLU_JOBS_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_HOLD_FLU_JOBS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_FC_HASH_BASE_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_FC_HASH_BASE_MASK
-value|I40E_MASK(0xF, I40E_RCU_PST_DBG_CTL_FC_HASH_BASE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_PE_HASH_BASE_SHIFT
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_PE_HASH_BASE_MASK
-value|I40E_MASK(0xF, I40E_RCU_PST_DBG_CTL_PE_HASH_BASE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_FD_HASH_BASE_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_FD_HASH_BASE_MASK
-value|I40E_MASK(0xF, I40E_RCU_PST_DBG_CTL_FD_HASH_BASE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_FOC_CNTX_LIMIT_BASE_SHIFT
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_FOC_CNTX_LIMIT_BASE_MASK
-value|I40E_MASK(0xF, I40E_RCU_PST_DBG_CTL_FOC_CNTX_LIMIT_BASE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_ERR_COMP_DIS_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_ERR_COMP_DIS_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_ERR_COMP_DIS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_REM_COMP_DIS_SHIFT
-value|25
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_REM_COMP_DIS_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_REM_COMP_DIS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_HOLD_PST_INPUT_SHIFT
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_HOLD_PST_INPUT_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_HOLD_PST_INPUT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_INC_INPUT_CMD_SHIFT
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_CTL_INC_INPUT_CMD_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_DBG_CTL_INC_INPUT_CMD_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_DROP_CNT
-value|0x0026CBEC
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_DROP_CNT_FD_DROP_CNT_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_DROP_CNT_FD_DROP_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_DROP_CNT_FD_DROP_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_DROP_CNT_FLR_DROP_CNT_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_DROP_CNT_FLR_DROP_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_DROP_CNT_FLR_DROP_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_DROP_CNT_PF_BOUND_DROP_CNT_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_DROP_CNT_PF_BOUND_DROP_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_DROP_CNT_PF_BOUND_DROP_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_DROP_CNT_SWR_DROP_CNT_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_DROP_CNT_SWR_DROP_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_DROP_CNT_SWR_DROP_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x0026CB80 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...15 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE_MAX_INDEX
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE_FLU_STATE_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE_FLU_STATE_MASK
-value|I40E_MASK(0x1F, I40E_RCU_PST_DBG_FLU_STATE_FLU_STATE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE_FLU_HASH_SHIFT
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE_FLU_HASH_MASK
-value|I40E_MASK(0xFFFFF, I40E_RCU_PST_DBG_FLU_STATE_FLU_HASH_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE_FLU_OBJ_SHIFT
-value|25
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE_FLU_OBJ_MASK
-value|I40E_MASK(0x7, I40E_RCU_PST_DBG_FLU_STATE_FLU_OBJ_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE_FLU_CMD_SHIFT
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_FLU_STATE_FLU_CMD_MASK
-value|I40E_MASK(0xF, I40E_RCU_PST_DBG_FLU_STATE_FLU_CMD_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_0
-value|0x0026CC14
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_0_CONF_FAIL_CNT_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_0_CONF_FAIL_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_Q_SRC_CNT_0_CONF_FAIL_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_0_QUAD_HIT_CNT_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_0_QUAD_HIT_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_Q_SRC_CNT_0_QUAD_HIT_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_0_ETH_HIT_CNT_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_0_ETH_HIT_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_Q_SRC_CNT_0_ETH_HIT_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_0_FCOE_CNT_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_0_FCOE_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_Q_SRC_CNT_0_FCOE_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_1
-value|0x0026CC1C
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_1_FD_HIT_CNT_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_1_FD_HIT_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_Q_SRC_CNT_1_FD_HIT_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_1_MAC_VLAN_CNT_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_1_MAC_VLAN_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_Q_SRC_CNT_1_MAC_VLAN_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_1_RSS_CNT_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_1_RSS_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_Q_SRC_CNT_1_RSS_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_1_DEFAULT_CNT_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_Q_SRC_CNT_1_DEFAULT_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_DBG_Q_SRC_CNT_1_DEFAULT_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_0
-value|0x0026CC04
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_0_PST_FLR_STAT_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_0_PST_FLR_STAT_MASK
-value|I40E_MASK(0xFFFF, I40E_RCU_PST_DBG_STATUS_0_PST_FLR_STAT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_0_INPUT_FIFO_OCC_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_0_INPUT_FIFO_OCC_MASK
-value|I40E_MASK(0x3, I40E_RCU_PST_DBG_STATUS_0_INPUT_FIFO_OCC_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_1
-value|0x0026CC0C
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_1_FLR_FLOW_START_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_1_FLR_FLOW_START_MASK
-value|I40E_MASK(0xFFFF, I40E_RCU_PST_DBG_STATUS_1_FLR_FLOW_START_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_1_FLR_FLOW_DONE_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_DBG_STATUS_1_FLR_FLOW_DONE_MASK
-value|I40E_MASK(0xFFFF, I40E_RCU_PST_DBG_STATUS_1_FLR_FLOW_DONE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_FOC_ACCESS_STATUS
-value|0x00270110
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_FOC_ACCESS_STATUS_WR_ACCESS_CNT_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_FOC_ACCESS_STATUS_WR_ACCESS_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_FOC_ACCESS_STATUS_WR_ACCESS_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_FOC_ACCESS_STATUS_RD_ACCESS_CNT_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_FOC_ACCESS_STATUS_RD_ACCESS_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_FOC_ACCESS_STATUS_RD_ACCESS_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_FOC_ACCESS_STATUS_ERR_CNT_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_FOC_ACCESS_STATUS_ERR_CNT_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_FOC_ACCESS_STATUS_ERR_CNT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_FOC_ACCESS_STATUS_LAST_ERR_CODE_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_FOC_ACCESS_STATUS_LAST_ERR_CODE_MASK
-value|I40E_MASK(0x7, I40E_RCU_PST_FOC_ACCESS_STATUS_LAST_ERR_CODE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_ACL_STATUS
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x00270100 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_ACL_STATUS_MAX_INDEX
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_ACL_STATUS_RCU_PST_INPUT_ACL_STATUS_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_ACL_STATUS_RCU_PST_INPUT_ACL_STATUS_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_RCU_PST_INPUT_ACL_STATUS_RCU_PST_INPUT_ACL_STATUS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_MTG_FIELDS
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x00270080 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...31 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_MTG_FIELDS_MAX_INDEX
-value|31
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_MTG_FIELDS_RCU_PST_INPUT_MTG_FIELDS_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_MTG_FIELDS_RCU_PST_INPUT_MTG_FIELDS_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_RCU_PST_INPUT_MTG_FIELDS_RCU_PST_INPUT_MTG_FIELDS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_MTG_STATUS
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x00270060 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...7 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_MTG_STATUS_MAX_INDEX
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_MTG_STATUS_RCU_PST_INPUT_MTG_STATUS_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_INPUT_MTG_STATUS_RCU_PST_INPUT_MTG_STATUS_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_RCU_PST_INPUT_MTG_STATUS_RCU_PST_INPUT_MTG_STATUS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x0026CFE0 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...7 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC_MAX_INDEX
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC_UP_1_OCC_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC_UP_1_OCC_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_OUTFIFO_OCC_UP_1_OCC_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC_UP_2_OCC_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC_UP_2_OCC_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_OUTFIFO_OCC_UP_2_OCC_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC_UP_3_OCC_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC_UP_3_OCC_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_OUTFIFO_OCC_UP_3_OCC_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC_UP_4_OCC_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_OUTFIFO_OCC_UP_4_OCC_MASK
-value|I40E_MASK(0xFF, I40E_RCU_PST_OUTFIFO_OCC_UP_4_OCC_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_ACL_STATUS
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x00270030 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_ACL_STATUS_MAX_INDEX
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_ACL_STATUS_RCU_PST_RCB_ACL_STATUS_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_ACL_STATUS_RCU_PST_RCB_ACL_STATUS_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_RCU_PST_RCB_ACL_STATUS_RCU_PST_RCB_ACL_STATUS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_FIFO_FIELDS
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x00270000 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...5 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_FIFO_FIELDS_MAX_INDEX
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_FIFO_FIELDS_RCU_PST_RCB_FIFO_FIELDS_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_FIFO_FIELDS_RCU_PST_RCB_FIFO_FIELDS_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_RCU_PST_RCB_FIFO_FIELDS_RCU_PST_RCB_FIFO_FIELDS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_FIFO_Q_STATUS
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x00270020 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_FIFO_Q_STATUS_MAX_INDEX
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_FIFO_Q_STATUS_RCU_PST_RCB_FIFO_Q_STATUS_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_FIFO_Q_STATUS_RCU_PST_RCB_FIFO_Q_STATUS_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_RCU_PST_RCB_FIFO_Q_STATUS_RCU_PST_RCB_FIFO_Q_STATUS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_MTG_STATUS
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x00270040 + ((_i) * 4))
-end_define
-
-begin_comment
-comment|/* _i=0...7 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_MTG_STATUS_MAX_INDEX
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_MTG_STATUS_RCU_PST_RCB_MTG_STATUS_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_MTG_STATUS_RCU_PST_RCB_MTG_STATUS_MASK
-value|I40E_MASK(0xFFFFFFFF, I40E_RCU_PST_RCB_MTG_STATUS_RCU_PST_RCB_MTG_STATUS_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_CTL
-value|0x0026CDA8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_CTL_BLOCK_RCB_OUT_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_CTL_BLOCK_RCB_OUT_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_RCB_OUT_CTL_BLOCK_RCB_OUT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_CTL_STEP_ONE_CMD_SHIFT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_CTL_STEP_ONE_CMD_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_RCB_OUT_CTL_STEP_ONE_CMD_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT
-value|0x0026CC18
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_RCB_FIFO_OCC_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_RCB_FIFO_OCC_MASK
-value|I40E_MASK(0xF, I40E_RCU_PST_RCB_OUT_STAT_RCB_FIFO_OCC_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_NEXT_IPLEN_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_NEXT_IPLEN_MASK
-value|I40E_MASK(0xFFFF, I40E_RCU_PST_RCB_OUT_STAT_NEXT_IPLEN_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_NEXT_TYPE_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_NEXT_TYPE_MASK
-value|I40E_MASK(0x7, I40E_RCU_PST_RCB_OUT_STAT_NEXT_TYPE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_NEXT_CFG_ERR_SHIFT
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_NEXT_CFG_ERR_MASK
-value|I40E_MASK(0x1, I40E_RCU_PST_RCB_OUT_STAT_NEXT_CFG_ERR_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_RSV3_SHIFT
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_RCU_PST_RCB_OUT_STAT_RSV3_MASK
-value|I40E_MASK(0x7, I40E_RCU_PST_RCB_OUT_STAT_RSV3_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|I40E_GL_GP_FUSE
 parameter_list|(
 name|_i
@@ -7062,6 +5987,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...28 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -7091,6 +6020,10 @@ directive|define
 name|I40E_GL_UFUSE
 value|0x00094008
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -7154,6 +6087,10 @@ directive|define
 name|I40E_EMPINT_GPIO_ENA
 value|0x00088188
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -7582,6 +6519,10 @@ name|I40E_PFGEN_PORTMDIO_NUM
 value|0x0003F100
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -7616,6 +6557,10 @@ directive|define
 name|I40E_PFINT_AEQCTL
 value|0x00038700
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -7699,6 +6644,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...511 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -7812,6 +6761,10 @@ directive|define
 name|I40E_PFINT_DYN_CTL0
 value|0x00038480
 end_define
+
+begin_comment
+comment|/* Reset: PFR */
+end_comment
 
 begin_define
 define|#
@@ -7939,6 +6892,10 @@ begin_comment
 comment|/* _i=0...511 */
 end_comment
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -8064,6 +7021,10 @@ directive|define
 name|I40E_PFINT_GPIO_ENA
 value|0x00088080
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -8492,6 +7453,10 @@ name|I40E_PFINT_ICR0
 value|0x00038780
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -8807,6 +7772,10 @@ name|I40E_PFINT_ICR0_ENA
 value|0x00038800
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9003,6 +7972,10 @@ begin_comment
 comment|/* _i=0...2 */
 end_comment
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9040,6 +8013,10 @@ begin_comment
 comment|/* _i=0...2, _INTPF=0...511 */
 end_comment
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9067,6 +8044,10 @@ directive|define
 name|I40E_PFINT_LNKLST0
 value|0x00038500
 end_define
+
+begin_comment
+comment|/* Reset: PFR */
+end_comment
 
 begin_define
 define|#
@@ -9108,6 +8089,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...511 */
+end_comment
+
+begin_comment
+comment|/* Reset: PFR */
 end_comment
 
 begin_define
@@ -9152,6 +8137,10 @@ name|I40E_PFINT_RATE0
 value|0x00038580
 end_define
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9192,6 +8181,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...511 */
+end_comment
+
+begin_comment
+comment|/* Reset: PFR */
 end_comment
 
 begin_define
@@ -9236,6 +8229,10 @@ name|I40E_PFINT_STAT_CTL0
 value|0x00038400
 end_define
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9262,6 +8259,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...1535 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -9383,6 +8384,10 @@ begin_comment
 comment|/* _i=0...1535 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9500,6 +8505,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFR */
 end_comment
 
 begin_define
@@ -9635,6 +8644,10 @@ begin_comment
 comment|/* _i=0...511 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9766,6 +8779,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -9901,6 +8918,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -9966,6 +8987,10 @@ begin_comment
 comment|/* _i=0...2, _VF=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10003,6 +9028,10 @@ begin_comment
 comment|/* _i=0...2, _INTVF=0...511 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10038,6 +9067,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10071,6 +9104,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -10162,6 +9199,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...511 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -10283,6 +9324,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10330,6 +9375,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...511 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFR */
 end_comment
 
 begin_define
@@ -10381,6 +9430,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10430,6 +9483,10 @@ begin_comment
 comment|/* _i=0...511 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10472,6 +9529,10 @@ name|I40E_GL_RDPU_CNTRL
 value|0x00051060
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10507,6 +9568,10 @@ name|I40E_GLLAN_RCTL_0
 value|0x0012A500
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10527,6 +9592,10 @@ directive|define
 name|I40E_GLLAN_TSOMSK_F
 value|0x000442D8
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -10549,6 +9618,10 @@ name|I40E_GLLAN_TSOMSK_L
 value|0x000442E0
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10569,6 +9642,10 @@ directive|define
 name|I40E_GLLAN_TSOMSK_M
 value|0x000442DC
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -10596,6 +9673,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...11 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -10668,6 +9749,10 @@ name|I40E_PFLAN_QALLOC
 value|0x001C0400
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10722,6 +9807,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...1535 */
+end_comment
+
+begin_comment
+comment|/* Reset: PFR */
 end_comment
 
 begin_define
@@ -10787,6 +9876,10 @@ begin_comment
 comment|/* _i=0...1535 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10820,6 +9913,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...1535 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -10885,6 +9982,10 @@ begin_comment
 comment|/* _i=0...1535 */
 end_comment
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10948,6 +10049,10 @@ begin_comment
 comment|/* _i=0...1535 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -10997,6 +10102,10 @@ begin_comment
 comment|/* _i=0...1535 */
 end_comment
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11030,6 +10139,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFR */
 end_comment
 
 begin_define
@@ -11069,6 +10182,10 @@ begin_comment
 comment|/* _i=0...15, _VF=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11102,6 +10219,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: PFR */
 end_comment
 
 begin_define
@@ -11155,6 +10276,10 @@ begin_comment
 comment|/* _i=0...7, _VSI=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11197,6 +10322,10 @@ name|I40E_PRTGL_SAH
 value|0x001E2140
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11232,6 +10361,10 @@ name|I40E_PRTGL_SAL
 value|0x001E2120
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11252,6 +10385,10 @@ directive|define
 name|I40E_PRTMAC_HSEC_CTL_RX_ENABLE_GCP
 value|0x001E30E0
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -11274,6 +10411,10 @@ name|I40E_PRTMAC_HSEC_CTL_RX_ENABLE_GPP
 value|0x001E3260
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11294,6 +10435,10 @@ directive|define
 name|I40E_PRTMAC_HSEC_CTL_RX_ENABLE_PPP
 value|0x001E32E0
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -11316,6 +10461,10 @@ name|I40E_PRTMAC_HSEC_CTL_RX_FORWARD_CONTROL
 value|0x001E3360
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11336,6 +10485,10 @@ directive|define
 name|I40E_PRTMAC_HSEC_CTL_RX_PAUSE_DA_UCAST_PART1
 value|0x001E3110
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -11358,6 +10511,10 @@ name|I40E_PRTMAC_HSEC_CTL_RX_PAUSE_DA_UCAST_PART2
 value|0x001E3120
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11378,6 +10535,10 @@ directive|define
 name|I40E_PRTMAC_HSEC_CTL_RX_PAUSE_ENABLE
 value|0x001E30C0
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -11400,6 +10561,10 @@ name|I40E_PRTMAC_HSEC_CTL_RX_PAUSE_SA_PART1
 value|0x001E3140
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11421,6 +10586,10 @@ name|I40E_PRTMAC_HSEC_CTL_RX_PAUSE_SA_PART2
 value|0x001E3150
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11441,6 +10610,10 @@ directive|define
 name|I40E_PRTMAC_HSEC_CTL_TX_PAUSE_ENABLE
 value|0x001E30D0
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -11468,6 +10641,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...8 */
+end_comment
+
+begin_comment
+comment|/* Reset: GLOBR */
 end_comment
 
 begin_define
@@ -11505,6 +10682,10 @@ begin_comment
 comment|/* _i=0...8 */
 end_comment
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11533,6 +10714,10 @@ name|I40E_PRTMAC_HSEC_CTL_TX_SA_PART1
 value|0x001E34B0
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11554,6 +10739,10 @@ name|I40E_PRTMAC_HSEC_CTL_TX_SA_PART2
 value|0x001E34C0
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11574,6 +10763,10 @@ directive|define
 name|I40E_PRTMAC_PCS_XAUI_SWAP_A
 value|0x0008C480
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -11694,6 +10887,10 @@ name|I40E_PRTMAC_PCS_XAUI_SWAP_B
 value|0x0008C484
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11813,6 +11010,10 @@ name|I40E_GL_FWRESETCNT
 value|0x00083100
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11833,6 +11034,10 @@ directive|define
 name|I40E_GL_MNG_FWSM
 value|0x000B6134
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -11981,6 +11186,10 @@ name|I40E_GL_MNG_HWARB_CTRL
 value|0x000B6130
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12007,6 +11216,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...31 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -12037,6 +11250,10 @@ name|I40E_PRT_MNG_FTFT_LENGTH
 value|0x00085260
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12063,6 +11280,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -12092,6 +11313,10 @@ directive|define
 name|I40E_PRT_MNG_MANC
 value|0x00256A20
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -12219,6 +11444,10 @@ begin_comment
 comment|/* _i=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12252,6 +11481,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -12457,6 +11690,10 @@ begin_comment
 comment|/* _i=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12632,6 +11869,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12681,6 +11922,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12728,6 +11973,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -12807,6 +12056,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12840,6 +12093,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -12877,6 +12134,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12912,6 +12173,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12940,6 +12205,10 @@ name|I40E_PRT_MNG_MNGONLY
 value|0x00256A60
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -12960,6 +12229,10 @@ directive|define
 name|I40E_PRT_MNG_MSFM
 value|0x00256AA0
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -13087,6 +12360,10 @@ begin_comment
 comment|/* _i=0...5 */
 end_comment
 
+begin_comment
+comment|/* Reset: FLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13120,6 +12397,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...128 */
+end_comment
+
+begin_comment
+comment|/* Reset: FLR */
 end_comment
 
 begin_define
@@ -13171,6 +12452,10 @@ begin_comment
 comment|/* _i=0...128 */
 end_comment
 
+begin_comment
+comment|/* Reset: FLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13204,6 +12489,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...128 */
+end_comment
+
+begin_comment
+comment|/* Reset: FLR */
 end_comment
 
 begin_define
@@ -13241,6 +12530,10 @@ begin_comment
 comment|/* _i=0...128 */
 end_comment
 
+begin_comment
+comment|/* Reset: FLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13276,6 +12569,10 @@ begin_comment
 comment|/* _i=0...19 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13309,6 +12606,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...639 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFLR */
 end_comment
 
 begin_define
@@ -13360,6 +12661,10 @@ begin_comment
 comment|/* _i=0...639 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13393,6 +12698,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...639 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFLR */
 end_comment
 
 begin_define
@@ -13430,6 +12739,10 @@ begin_comment
 comment|/* _i=0...639 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13457,6 +12770,10 @@ directive|define
 name|I40E_GLNVM_FLA
 value|0x000B6108
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -13605,6 +12922,10 @@ name|I40E_GLNVM_FLASHID
 value|0x000B6104
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13639,6 +12960,10 @@ directive|define
 name|I40E_GLNVM_GENS
 value|0x000B6100
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -13724,6 +13049,10 @@ begin_comment
 comment|/* _i=0...59 */
 end_comment
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13751,6 +13080,10 @@ directive|define
 name|I40E_GLNVM_SRCTL
 value|0x000B6110
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -13829,6 +13162,10 @@ name|I40E_GLNVM_SRDATA
 value|0x000B6114
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -13863,6 +13200,10 @@ directive|define
 name|I40E_GLNVM_ULD
 value|0x000B6008
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -14011,6 +13352,10 @@ name|I40E_GLPCI_BYTCTH
 value|0x0009C484
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14031,6 +13376,10 @@ directive|define
 name|I40E_GLPCI_BYTCTL
 value|0x0009C488
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -14053,6 +13402,10 @@ name|I40E_GLPCI_CAPCTRL
 value|0x000BE4A4
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14073,6 +13426,10 @@ directive|define
 name|I40E_GLPCI_CAPSUP
 value|0x000BE4A8
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -14277,6 +13634,10 @@ name|I40E_GLPCI_CNF
 value|0x000BE4C0
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14311,6 +13672,10 @@ directive|define
 name|I40E_GLPCI_CNF2
 value|0x000BE494
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -14375,6 +13740,10 @@ name|I40E_GLPCI_DREVID
 value|0x0009C480
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14395,6 +13764,10 @@ directive|define
 name|I40E_GLPCI_GSCL_1
 value|0x0009C48C
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -14627,6 +14000,10 @@ name|I40E_GLPCI_GSCL_2
 value|0x0009C490
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14697,6 +14074,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14746,6 +14127,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14774,6 +14159,10 @@ name|I40E_GLPCI_LATCT
 value|0x0009C4B4
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14794,6 +14183,10 @@ directive|define
 name|I40E_GLPCI_LBARCTRL
 value|0x000BE484
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -14900,6 +14293,10 @@ name|I40E_GLPCI_LINKCAP
 value|0x000BE4AC
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14949,6 +14346,10 @@ name|I40E_GLPCI_PCIERR
 value|0x000BE4FC
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14970,6 +14371,10 @@ name|I40E_GLPCI_PKTCT
 value|0x0009C4BC
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -14990,6 +14395,10 @@ directive|define
 name|I40E_GLPCI_PM_MUX_NPQ
 value|0x0009C4F4
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15026,6 +14435,10 @@ name|I40E_GLPCI_PM_MUX_PFB
 value|0x0009C4F0
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15060,6 +14473,10 @@ directive|define
 name|I40E_GLPCI_PMSUP
 value|0x000BE4B0
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15166,6 +14583,10 @@ name|I40E_GLPCI_PQ_MAX_USED_SPC
 value|0x0009C4EC
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15200,6 +14621,10 @@ directive|define
 name|I40E_GLPCI_PWRDATA
 value|0x000BE490
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15264,6 +14689,10 @@ name|I40E_GLPCI_REVID
 value|0x000BE4B4
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15284,6 +14713,10 @@ directive|define
 name|I40E_GLPCI_SERH
 value|0x000BE49C
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15306,6 +14739,10 @@ name|I40E_GLPCI_SERL
 value|0x000BE498
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15326,6 +14763,10 @@ directive|define
 name|I40E_GLPCI_SPARE_BITS_0
 value|0x0009C4F8
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15348,6 +14789,10 @@ name|I40E_GLPCI_SPARE_BITS_1
 value|0x0009C4FC
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15368,6 +14813,10 @@ directive|define
 name|I40E_GLPCI_SUBVENID
 value|0x000BE48C
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15390,6 +14839,10 @@ name|I40E_GLPCI_UPADD
 value|0x000BE4F8
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15411,6 +14864,10 @@ name|I40E_GLPCI_VENDORID
 value|0x000BE518
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15431,6 +14888,10 @@ directive|define
 name|I40E_GLPCI_VFSUP
 value|0x000BE4B8
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15466,6 +14927,10 @@ directive|define
 name|I40E_PF_FUNC_RID
 value|0x0009C000
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15516,6 +14981,10 @@ name|I40E_PF_PCI_CIAA
 value|0x0009C080
 end_define
 
+begin_comment
+comment|/* Reset: FLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15551,6 +15020,10 @@ name|I40E_PF_PCI_CIAD
 value|0x0009C100
 end_define
 
+begin_comment
+comment|/* Reset: FLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15571,6 +15044,10 @@ directive|define
 name|I40E_PFPCI_CLASS
 value|0x000BE400
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15620,6 +15097,10 @@ directive|define
 name|I40E_PFPCI_CNF
 value|0x000BE000
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15684,6 +15165,10 @@ name|I40E_PFPCI_DEVID
 value|0x000BE080
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15719,6 +15204,10 @@ name|I40E_PFPCI_FACTPS
 value|0x0009C180
 end_define
 
+begin_comment
+comment|/* Reset: FLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15753,6 +15242,10 @@ directive|define
 name|I40E_PFPCI_FUNC
 value|0x000BE200
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -15803,6 +15296,10 @@ name|I40E_PFPCI_FUNC2
 value|0x000BE180
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15823,6 +15320,10 @@ directive|define
 name|I40E_PFPCI_ICAUSE
 value|0x0009C200
 end_define
+
+begin_comment
+comment|/* Reset: PFR */
+end_comment
 
 begin_define
 define|#
@@ -15845,6 +15346,10 @@ name|I40E_PFPCI_IENA
 value|0x0009C280
 end_define
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15865,6 +15370,10 @@ directive|define
 name|I40E_PFPCI_PF_FLUSH_DONE
 value|0x0009C800
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15887,6 +15396,10 @@ name|I40E_PFPCI_PM
 value|0x000BE300
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15908,6 +15421,10 @@ name|I40E_PFPCI_STATUS1
 value|0x000BE280
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15928,6 +15445,10 @@ directive|define
 name|I40E_PFPCI_SUBSYSID
 value|0x000BE100
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -15964,6 +15485,10 @@ name|I40E_PFPCI_VF_FLUSH_DONE
 value|0x0000E400
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -15990,6 +15515,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: PCIR */
 end_comment
 
 begin_define
@@ -16020,6 +15549,10 @@ name|I40E_PFPCI_VM_FLUSH_DONE
 value|0x0009C880
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16040,6 +15573,10 @@ directive|define
 name|I40E_PFPCI_VMINDEX
 value|0x0009C300
 end_define
+
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
 
 begin_define
 define|#
@@ -16062,6 +15599,10 @@ name|I40E_PFPCI_VMPEND
 value|0x0009C380
 end_define
 
+begin_comment
+comment|/* Reset: PCIR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16082,6 +15623,10 @@ directive|define
 name|I40E_PRTPM_EEE_STAT
 value|0x001E4320
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -16132,6 +15677,10 @@ name|I40E_PRTPM_EEEC
 value|0x001E4380
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16181,6 +15730,10 @@ name|I40E_PRTPM_EEEFWD
 value|0x001E4400
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16201,6 +15754,10 @@ directive|define
 name|I40E_PRTPM_EEER
 value|0x001E4360
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -16237,6 +15794,10 @@ name|I40E_PRTPM_EEETXC
 value|0x001E43E0
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16257,6 +15818,10 @@ directive|define
 name|I40E_PRTPM_GC
 value|0x000B8140
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -16335,6 +15900,10 @@ name|I40E_PRTPM_RLPIC
 value|0x001E43A0
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16355,6 +15924,10 @@ directive|define
 name|I40E_PRTPM_TLPIC
 value|0x001E43C0
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -16377,6 +15950,10 @@ name|I40E_GLRPB_DPSS
 value|0x000AC828
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16397,6 +15974,10 @@ directive|define
 name|I40E_GLRPB_GHW
 value|0x000AC830
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -16419,6 +16000,10 @@ name|I40E_GLRPB_GLW
 value|0x000AC834
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16440,6 +16025,10 @@ name|I40E_GLRPB_PHW
 value|0x000AC844
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16460,6 +16049,10 @@ directive|define
 name|I40E_GLRPB_PLW
 value|0x000AC848
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -16487,6 +16080,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -16524,6 +16121,10 @@ begin_comment
 comment|/* _i=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16557,6 +16158,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -16594,6 +16199,10 @@ begin_comment
 comment|/* _i=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16622,6 +16231,10 @@ name|I40E_PRTRPB_SHW
 value|0x000AC580
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16648,6 +16261,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -16678,6 +16295,10 @@ name|I40E_PRTRPB_SLW
 value|0x000AC6A0
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16699,6 +16320,10 @@ name|I40E_PRTRPB_SPS
 value|0x000AC7C0
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16719,6 +16344,10 @@ directive|define
 name|I40E_GLQF_CTL
 value|0x00269BA4
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -16895,6 +16524,10 @@ name|I40E_GLQF_FDCNT_0
 value|0x00269BAC
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -16935,6 +16568,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...12 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -17014,6 +16651,10 @@ begin_comment
 comment|/* _i=0...63 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -17047,6 +16688,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...511 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -17084,6 +16729,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...1, _j=0...63 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -17183,6 +16832,10 @@ directive|define
 name|I40E_PFQF_CTL_0
 value|0x001C0AC0
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -17331,6 +16984,10 @@ name|I40E_PFQF_CTL_1
 value|0x00245D80
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -17351,6 +17008,10 @@ directive|define
 name|I40E_PFQF_FDALLOC
 value|0x00246280
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -17386,6 +17047,10 @@ directive|define
 name|I40E_PFQF_FDSTAT
 value|0x00246380
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -17429,6 +17094,10 @@ begin_comment
 comment|/* _i=0...1 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -17462,6 +17131,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...12 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -17541,6 +17214,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -17607,254 +17284,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|I40E_PFQF_HREGION
-parameter_list|(
-name|_i
-parameter_list|)
-value|(0x00245400 + ((_i) * 128))
-end_define
-
-begin_comment
-comment|/* _i=0...7 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_MAX_INDEX
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_0_SHIFT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_0_MASK
-value|I40E_MASK(0x1, I40E_PFQF_HREGION_OVERRIDE_ENA_0_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_0_SHIFT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_0_MASK
-value|I40E_MASK(0x7, I40E_PFQF_HREGION_REGION_0_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_1_SHIFT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_1_MASK
-value|I40E_MASK(0x1, I40E_PFQF_HREGION_OVERRIDE_ENA_1_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_1_SHIFT
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_1_MASK
-value|I40E_MASK(0x7, I40E_PFQF_HREGION_REGION_1_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_2_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_2_MASK
-value|I40E_MASK(0x1, I40E_PFQF_HREGION_OVERRIDE_ENA_2_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_2_SHIFT
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_2_MASK
-value|I40E_MASK(0x7, I40E_PFQF_HREGION_REGION_2_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_3_SHIFT
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_3_MASK
-value|I40E_MASK(0x1, I40E_PFQF_HREGION_OVERRIDE_ENA_3_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_3_SHIFT
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_3_MASK
-value|I40E_MASK(0x7, I40E_PFQF_HREGION_REGION_3_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_4_SHIFT
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_4_MASK
-value|I40E_MASK(0x1, I40E_PFQF_HREGION_OVERRIDE_ENA_4_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_4_SHIFT
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_4_MASK
-value|I40E_MASK(0x7, I40E_PFQF_HREGION_REGION_4_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_5_SHIFT
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_5_MASK
-value|I40E_MASK(0x1, I40E_PFQF_HREGION_OVERRIDE_ENA_5_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_5_SHIFT
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_5_MASK
-value|I40E_MASK(0x7, I40E_PFQF_HREGION_REGION_5_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_6_SHIFT
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_6_MASK
-value|I40E_MASK(0x1, I40E_PFQF_HREGION_OVERRIDE_ENA_6_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_6_SHIFT
-value|25
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_6_MASK
-value|I40E_MASK(0x7, I40E_PFQF_HREGION_REGION_6_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_7_SHIFT
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_OVERRIDE_ENA_7_MASK
-value|I40E_MASK(0x1, I40E_PFQF_HREGION_OVERRIDE_ENA_7_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_7_SHIFT
-value|29
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_PFQF_HREGION_REGION_7_MASK
-value|I40E_MASK(0x7, I40E_PFQF_HREGION_REGION_7_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|I40E_PRTQF_CTL_0
 value|0x00256E60
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -17882,6 +17318,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...63 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -17919,6 +17359,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...63, _j=0...1 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -17968,6 +17412,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...8 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -18035,6 +17483,10 @@ begin_comment
 comment|/* _i=0...1, _VF=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -18070,6 +17522,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...12, _VF=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -18151,6 +17607,10 @@ begin_comment
 comment|/* _i=0...15, _VF=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -18228,6 +17688,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7, _VF=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -18475,6 +17939,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -18550,6 +18018,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: PFR */
 end_comment
 
 begin_define
@@ -18659,6 +18131,10 @@ begin_comment
 comment|/* _i=0...3, _VSI=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -18736,6 +18212,10 @@ begin_comment
 comment|/* _i=0...143 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -18769,6 +18249,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...143 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -18806,6 +18290,10 @@ begin_comment
 comment|/* _i=0...143 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -18839,6 +18327,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...143 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -18876,6 +18368,10 @@ begin_comment
 comment|/* _i=0...143 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -18909,6 +18405,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...143 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -18946,6 +18446,10 @@ begin_comment
 comment|/* _i=0...143 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -18979,6 +18483,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...143 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19016,6 +18524,10 @@ begin_comment
 comment|/* _i=0...143 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19049,6 +18561,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...143 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19086,6 +18602,10 @@ begin_comment
 comment|/* _i=0...143 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19119,6 +18639,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...143 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19156,6 +18680,10 @@ begin_comment
 comment|/* _i=0...143 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19189,6 +18717,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...143 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19226,6 +18758,10 @@ begin_comment
 comment|/* _i=0...143 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19259,6 +18795,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...143 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19296,6 +18836,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19329,6 +18873,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19366,6 +18914,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19399,6 +18951,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19436,6 +18992,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19469,6 +19029,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19506,6 +19070,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19539,6 +19107,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19576,6 +19148,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19609,6 +19185,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19646,6 +19226,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19679,6 +19263,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19716,6 +19304,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19749,6 +19341,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19786,6 +19382,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19819,6 +19419,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19856,6 +19460,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19889,6 +19497,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19926,6 +19538,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -19959,6 +19575,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -19996,6 +19616,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20029,6 +19653,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20066,6 +19694,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20099,6 +19731,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20136,6 +19772,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20169,6 +19809,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20206,6 +19850,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20239,6 +19887,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20276,6 +19928,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20309,6 +19965,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20346,6 +20006,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20379,6 +20043,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20416,6 +20084,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20449,6 +20121,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20486,6 +20162,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20519,6 +20199,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20556,6 +20240,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20589,6 +20277,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20626,6 +20318,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20659,6 +20355,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20696,6 +20396,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20729,6 +20433,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20766,6 +20474,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20799,6 +20511,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20836,6 +20552,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20869,6 +20589,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -20906,6 +20630,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20941,6 +20669,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -20974,6 +20706,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21013,6 +20749,10 @@ begin_comment
 comment|/* _i=0...3, _j=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21048,6 +20788,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3, _j=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21087,6 +20831,10 @@ begin_comment
 comment|/* _i=0...3, _j=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21124,6 +20872,10 @@ begin_comment
 comment|/* _i=0...3, _j=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21157,6 +20909,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21194,6 +20950,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21227,6 +20987,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21264,6 +21028,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21297,6 +21065,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21334,6 +21106,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21367,6 +21143,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21406,6 +21186,10 @@ begin_comment
 comment|/* _i=0...3, _j=0...7 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21439,6 +21223,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21476,6 +21264,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21509,6 +21301,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21546,6 +21342,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21579,6 +21379,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21616,6 +21420,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21649,6 +21457,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21686,6 +21498,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21719,6 +21535,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21756,6 +21576,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21789,6 +21613,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21826,6 +21654,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21859,6 +21691,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21896,6 +21732,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21929,6 +21769,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -21966,6 +21810,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -21999,6 +21847,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22036,6 +21888,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22069,6 +21925,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22106,6 +21966,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22139,6 +22003,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22176,6 +22044,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22209,6 +22081,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22246,6 +22122,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22279,6 +22159,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22316,6 +22200,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22349,6 +22237,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22386,6 +22278,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22419,6 +22315,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22456,6 +22356,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22489,6 +22393,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22526,6 +22434,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22559,6 +22471,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22596,6 +22512,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22629,6 +22549,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22666,6 +22590,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22699,6 +22627,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22736,6 +22668,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22769,6 +22705,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22806,6 +22746,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22839,6 +22783,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22876,6 +22824,10 @@ begin_comment
 comment|/* _i=0...383 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22909,6 +22861,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...383 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -22948,6 +22904,10 @@ begin_comment
 comment|/* _i=0...7, _j=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -22983,6 +22943,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7, _j=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -23022,6 +22986,10 @@ begin_comment
 comment|/* _i=0...7, _j=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23057,6 +23025,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7, _j=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -23096,6 +23068,10 @@ begin_comment
 comment|/* _i=0...7, _j=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23131,6 +23107,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7, _j=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -23170,6 +23150,10 @@ begin_comment
 comment|/* _i=0...7, _j=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23207,6 +23191,10 @@ begin_comment
 comment|/* _i=0...7, _j=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23240,6 +23228,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -23277,6 +23269,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23310,6 +23306,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -23347,6 +23347,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23380,6 +23384,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -23417,6 +23425,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23450,6 +23462,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -23487,6 +23503,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23520,6 +23540,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...127 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -23557,6 +23581,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23585,6 +23613,10 @@ name|I40E_GL_MTG_FLU_MSK_H
 value|0x00269F4C
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23611,6 +23643,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...35 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -23648,6 +23684,10 @@ begin_comment
 comment|/* _i=0...1 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23675,6 +23715,10 @@ directive|define
 name|I40E_PRTTSYN_ADJ
 value|0x001E4280
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -23716,6 +23760,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...1 */
+end_comment
+
+begin_comment
+comment|/* Reset: GLOBR */
 end_comment
 
 begin_define
@@ -23809,6 +23857,10 @@ begin_comment
 comment|/* _i=0...1 */
 end_comment
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23858,6 +23910,10 @@ begin_comment
 comment|/* _i=0...1 */
 end_comment
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -23885,6 +23941,10 @@ directive|define
 name|I40E_PRTTSYN_CTL0
 value|0x001E4200
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -23990,6 +24050,10 @@ directive|define
 name|I40E_PRTTSYN_CTL1
 value|0x00085020
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -24103,6 +24167,10 @@ begin_comment
 comment|/* _i=0...1 */
 end_comment
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24138,6 +24206,10 @@ begin_comment
 comment|/* _i=0...1 */
 end_comment
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24166,6 +24238,10 @@ name|I40E_PRTTSYN_INC_H
 value|0x001E4060
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24186,6 +24262,10 @@ directive|define
 name|I40E_PRTTSYN_INC_L
 value|0x001E4040
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -24213,6 +24293,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -24250,6 +24334,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24277,6 +24365,10 @@ directive|define
 name|I40E_PRTTSYN_STAT_0
 value|0x001E4220
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -24355,6 +24447,10 @@ name|I40E_PRTTSYN_STAT_1
 value|0x00085140
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24425,6 +24521,10 @@ begin_comment
 comment|/* _i=0...1 */
 end_comment
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24460,6 +24560,10 @@ begin_comment
 comment|/* _i=0...1 */
 end_comment
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24488,6 +24592,10 @@ name|I40E_PRTTSYN_TIME_H
 value|0x001E4120
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24508,6 +24616,10 @@ directive|define
 name|I40E_PRTTSYN_TIME_L
 value|0x001E4100
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -24530,6 +24642,10 @@ name|I40E_PRTTSYN_TXTIME_H
 value|0x001E41E0
 end_define
 
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24550,6 +24666,10 @@ directive|define
 name|I40E_PRTTSYN_TXTIME_L
 value|0x001E41C0
 end_define
+
+begin_comment
+comment|/* Reset: GLOBR */
+end_comment
 
 begin_define
 define|#
@@ -24572,6 +24692,10 @@ name|I40E_GLSCD_QUANTA
 value|0x000B2080
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24592,6 +24716,10 @@ directive|define
 name|I40E_GL_MDET_RX
 value|0x0012A510
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -24656,46 +24784,64 @@ name|I40E_GL_MDET_TX
 value|0x000E6480
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|I40E_GL_MDET_TX_FUNCTION_SHIFT
+name|I40E_GL_MDET_TX_QUEUE_SHIFT
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|I40E_GL_MDET_TX_FUNCTION_MASK
-value|I40E_MASK(0xFF, I40E_GL_MDET_TX_FUNCTION_SHIFT)
+name|I40E_GL_MDET_TX_QUEUE_MASK
+value|I40E_MASK(0xFFF, I40E_GL_MDET_TX_QUEUE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_MDET_TX_VF_NUM_SHIFT
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_MDET_TX_VF_NUM_MASK
+value|I40E_MASK(0x1FF, I40E_GL_MDET_TX_VF_NUM_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_MDET_TX_PF_NUM_SHIFT
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|I40E_GL_MDET_TX_PF_NUM_MASK
+value|I40E_MASK(0xF, I40E_GL_MDET_TX_PF_NUM_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|I40E_GL_MDET_TX_EVENT_SHIFT
-value|8
+value|25
 end_define
 
 begin_define
 define|#
 directive|define
 name|I40E_GL_MDET_TX_EVENT_MASK
-value|I40E_MASK(0x1FF, I40E_GL_MDET_TX_EVENT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GL_MDET_TX_QUEUE_SHIFT
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|I40E_GL_MDET_TX_QUEUE_MASK
-value|I40E_MASK(0x3FFF, I40E_GL_MDET_TX_QUEUE_SHIFT)
+value|I40E_MASK(0x1F, I40E_GL_MDET_TX_EVENT_SHIFT)
 end_define
 
 begin_define
@@ -24719,6 +24865,10 @@ name|I40E_PF_MDET_RX
 value|0x0012A400
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24740,6 +24890,10 @@ name|I40E_PF_MDET_TX
 value|0x000E6400
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24760,6 +24914,10 @@ directive|define
 name|I40E_PF_VT_PFALLOC
 value|0x001C0500
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -24817,6 +24975,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24852,6 +25014,10 @@ begin_comment
 comment|/* _i=0...127 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24879,6 +25045,10 @@ directive|define
 name|I40E_GLPM_WUMC
 value|0x0006C800
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -24957,6 +25127,10 @@ name|I40E_PFPM_APM
 value|0x000B8080
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -24983,6 +25157,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: POR */
 end_comment
 
 begin_define
@@ -25013,6 +25191,10 @@ name|I40E_PFPM_WUC
 value|0x0006B200
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25033,6 +25215,10 @@ directive|define
 name|I40E_PFPM_WUFC
 value|0x0006B400
 end_define
+
+begin_comment
+comment|/* Reset: POR */
+end_comment
 
 begin_define
 define|#
@@ -25321,6 +25507,10 @@ name|I40E_PFPM_WUS
 value|0x0006B600
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25510,6 +25700,10 @@ name|I40E_PRTPM_FHFHR
 value|0x0006C000
 end_define
 
+begin_comment
+comment|/* Reset: POR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25550,6 +25744,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...3 */
+end_comment
+
+begin_comment
+comment|/* Reset: PFR */
 end_comment
 
 begin_define
@@ -25629,6 +25827,10 @@ begin_comment
 comment|/* _i=0...3 */
 end_comment
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25657,6 +25859,10 @@ name|I40E_VF_ARQBAH1
 value|0x00006000
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25677,6 +25883,10 @@ directive|define
 name|I40E_VF_ARQBAL1
 value|0x00006C00
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -25699,6 +25909,10 @@ name|I40E_VF_ARQH1
 value|0x00007400
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25719,6 +25933,10 @@ directive|define
 name|I40E_VF_ARQLEN1
 value|0x00008000
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -25797,6 +26015,10 @@ name|I40E_VF_ARQT1
 value|0x00007000
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25817,6 +26039,10 @@ directive|define
 name|I40E_VF_ATQBAH1
 value|0x00007800
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -25839,6 +26065,10 @@ name|I40E_VF_ATQBAL1
 value|0x00007C00
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25860,6 +26090,10 @@ name|I40E_VF_ATQH1
 value|0x00006400
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25880,6 +26114,10 @@ directive|define
 name|I40E_VF_ATQLEN1
 value|0x00006800
 end_define
+
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
 
 begin_define
 define|#
@@ -25958,6 +26196,10 @@ name|I40E_VF_ATQT1
 value|0x00008400
 end_define
 
+begin_comment
+comment|/* Reset: EMPR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25979,6 +26221,10 @@ name|I40E_VFGEN_RSTAT
 value|0x00008800
 end_define
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25999,6 +26245,10 @@ directive|define
 name|I40E_VFINT_DYN_CTL01
 value|0x00005C00
 end_define
+
+begin_comment
+comment|/* Reset: VFR */
+end_comment
 
 begin_define
 define|#
@@ -26124,6 +26374,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFR */
 end_comment
 
 begin_define
@@ -26252,6 +26506,10 @@ name|I40E_VFINT_ICR0_ENA1
 value|0x00005000
 end_define
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26300,6 +26558,10 @@ directive|define
 name|I40E_VFINT_ICR01
 value|0x00004800
 end_define
+
+begin_comment
+comment|/* Reset: CORER */
+end_comment
 
 begin_define
 define|#
@@ -26427,6 +26689,10 @@ begin_comment
 comment|/* _i=0...2 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26464,6 +26730,10 @@ begin_comment
 comment|/* _i=0...2, _INTVF=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26492,6 +26762,10 @@ name|I40E_VFINT_STAT_CTL01
 value|0x00005400
 end_define
 
+begin_comment
+comment|/* Reset: VFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26518,6 +26792,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...15 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -26555,6 +26833,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: PFR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26583,6 +26865,10 @@ name|I40E_VFMSIX_PBA
 value|0x00002000
 end_define
 
+begin_comment
+comment|/* Reset: VFLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26609,6 +26895,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...16 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFLR */
 end_comment
 
 begin_define
@@ -26660,6 +26950,10 @@ begin_comment
 comment|/* _i=0...16 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26693,6 +26987,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...16 */
+end_comment
+
+begin_comment
+comment|/* Reset: VFLR */
 end_comment
 
 begin_define
@@ -26730,6 +27028,10 @@ begin_comment
 comment|/* _i=0...16 */
 end_comment
 
+begin_comment
+comment|/* Reset: VFLR */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26757,6 +27059,10 @@ directive|define
 name|I40E_VFCM_PE_ERRDATA
 value|0x0000DC00
 end_define
+
+begin_comment
+comment|/* Reset: VFR */
+end_comment
 
 begin_define
 define|#
@@ -26806,6 +27112,10 @@ directive|define
 name|I40E_VFCM_PE_ERRINFO
 value|0x0000D800
 end_define
+
+begin_comment
+comment|/* Reset: VFR */
+end_comment
 
 begin_define
 define|#
@@ -26891,6 +27201,10 @@ begin_comment
 comment|/* _i=0...1 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -26924,6 +27238,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...12 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define
@@ -27003,6 +27321,10 @@ begin_comment
 comment|/* _i=0...15 */
 end_comment
 
+begin_comment
+comment|/* Reset: CORER */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -27078,6 +27400,10 @@ end_define
 
 begin_comment
 comment|/* _i=0...7 */
+end_comment
+
+begin_comment
+comment|/* Reset: CORER */
 end_comment
 
 begin_define

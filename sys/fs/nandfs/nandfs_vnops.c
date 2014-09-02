@@ -3819,7 +3819,6 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
 name|inode
 operator|->
 name|i_mode
@@ -3831,7 +3830,6 @@ operator||
 name|ISGID
 operator|)
 expr_stmt|;
-block|}
 block|}
 name|DPRINTF
 argument_list|(
@@ -4981,7 +4979,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-name|VWRITE
+name|VMODIFY_PERMS
 operator|)
 operator|&&
 operator|(
@@ -5022,7 +5020,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* Noone may write immutable files */
+comment|/* No one may write immutable files */
 if|if
 condition|(
 operator|(
@@ -5263,13 +5261,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|error
 operator|=
 name|nandfs_check_permitted
@@ -6731,21 +6727,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
-name|tdvp
-operator|->
-name|v_mount
-operator|!=
-name|vp
-operator|->
-name|v_mount
-condition|)
-return|return
-operator|(
-name|EXDEV
-operator|)
-return|;
 if|if
 condition|(
 name|inode

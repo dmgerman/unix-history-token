@@ -492,7 +492,7 @@ name|OID_AUTO
 argument_list|,
 name|devfs_cloning
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|tundclone
@@ -500,17 +500,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable legacy devfs interface creation."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"net.link.tun.devfs_cloning"
-argument_list|,
-operator|&
-name|tundclone
 argument_list|)
 expr_stmt|;
 end_expr_stmt

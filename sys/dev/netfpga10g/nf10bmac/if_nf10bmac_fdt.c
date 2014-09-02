@@ -218,7 +218,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * FDT lists our resources.  For convenience we use three different 	 * mappings.  We need to attach them in the oder specified in .dts: 	 * LOOP (size 0x1f), TX (0x2f), RX (0x2f), INTR (0xf). 	 */
-comment|/* 	 * LOOP memory region (this could be a general control region). 	 * 0x00: 32bit register to enable a Y-"lopback". 	 */
+comment|/* 	 * LOOP memory region (this could be a general control region). 	 * 0x00: 32/64bit register to enable a Y-"lopback". 	 */
 name|sc
 operator|->
 name|nf10bmac_ctrl_rid
@@ -311,7 +311,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * TX and TX metadata FIFO memory region.          * 0x00: 32bit FIFO data, 	 * 0x08: 32bit FIFO metadata,          * 0x10: 32bit packet length.          */
+comment|/* 	 * TX and TX metadata FIFO memory region. 	 * 0x00: 32/64bit FIFO data, 	 * 0x08: 32/64bit FIFO metadata, 	 * 0x10: 32/64bit packet length. 	 */
 name|sc
 operator|->
 name|nf10bmac_tx_mem_rid
@@ -404,7 +404,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * RX and RXC metadata FIFO memory region.          * 0x00: 32bit FIFO data, 	 * 0x08: 32bit FIFO metadata,          * 0x10: 32bit packet length.          */
+comment|/* 	 * RX and RXC metadata FIFO memory region. 	 * 0x00: 32/64bit FIFO data, 	 * 0x08: 32/64bit FIFO metadata, 	 * 0x10: 32/64bit packet length. 	 */
 name|sc
 operator|->
 name|nf10bmac_rx_mem_rid
@@ -497,7 +497,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Interrupt handling registers. 	 * 0x00: 32bit register to clear (and disable) the RX interrupt. 	 * 0x08: 32bit register to enable or disable the RX interrupt. 	 */
+comment|/* 	 * Interrupt handling registers. 	 * 0x00: 32/64bit register to clear (and disable) the RX interrupt. 	 * 0x08: 32/64bit register to enable or disable the RX interrupt. 	 */
 name|sc
 operator|->
 name|nf10bmac_intr_rid

@@ -100,6 +100,11 @@ name|char
 modifier|*
 name|d
 decl_stmt|;
+name|void
+modifier|*
+modifier|*
+name|pd
+decl_stmt|;
 name|size_t
 name|n
 decl_stmt|;
@@ -123,7 +128,7 @@ parameter_list|,
 name|amt
 parameter_list|)
 define|\
-value|do {                                                       \   if (((s)->n - (s)->i)< (size_t)(amt)) {                 \      (s)->d = (char*)realloc((s)->d, (s)->n + amt);        \      if ((s)->d == NULL) oom();                            \      (s)->n += amt;                                        \   }                                                        \ } while(0)
+value|do {                                                       \   if (((s)->n - (s)->i)< (size_t)(amt)) {                 \      (s)->d = (char*)realloc((s)->d, (s)->n + amt);        \      if ((s)->d == NULL) oom();                            \      (s)->n += amt;                                        \      if ((s)->pd) *((s)->pd) = (s)->d;                     \   }                                                        \ } while(0)
 end_define
 
 begin_define
@@ -167,7 +172,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|do {                                                       \    s = (UT_string*)calloc(sizeof(UT_string),1);            \    if (!s) oom();                                          \    utstring_init(s);                                       \ } while(0)
+value|do {                                                       \    s = (UT_string*)calloc(1, sizeof(UT_string));          \    if (!s) oom();                                          \    utstring_init(s);                                       \ } while(0)
 end_define
 
 begin_define

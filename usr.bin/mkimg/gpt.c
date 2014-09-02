@@ -1368,12 +1368,10 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|uuidgen
+name|mkimg_uuid
 argument_list|(
 operator|&
 name|uuid
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|gpt_uuid_enc
@@ -1790,12 +1788,10 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
-name|uuidgen
+name|mkimg_uuid
 argument_list|(
 operator|&
 name|uuid
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|gpt_uuid_enc

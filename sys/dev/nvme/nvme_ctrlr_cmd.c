@@ -747,7 +747,7 @@ operator|)
 operator|<<
 literal|16
 operator|)
-operator|||
+operator||
 operator|(
 name|num_queues
 operator|-

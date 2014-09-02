@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readpassphrase.c,v 1.23 2010/05/14 13:30:34 millert Exp $	*/
+comment|/*	$OpenBSD: readpassphrase.c,v 1.24 2013/11/24 23:51:29 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -658,6 +658,10 @@ if|if
 condition|(
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 condition|)
@@ -677,6 +681,10 @@ name|char
 operator|)
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 expr_stmt|;
@@ -695,6 +703,10 @@ name|char
 operator|)
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 expr_stmt|;

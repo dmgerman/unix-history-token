@@ -4768,7 +4768,7 @@ name|num
 operator|=
 name|v
 expr_stmt|;
-comment|/* for each pipe we only need the buffers for the 4 "real" rings.          * On the other end, the pipe ring dimension may be different from           * the parent port ring dimension. As a compromise, we allocate twice the          * space actually needed if the pipe rings were the same size as the parent rings          */
+comment|/* for each pipe we only need the buffers for the 4 "real" rings.          * On the other end, the pipe ring dimension may be different from          * the parent port ring dimension. As a compromise, we allocate twice the          * space actually needed if the pipe rings were the same size as the parent rings          */
 name|v
 operator|=
 operator|(

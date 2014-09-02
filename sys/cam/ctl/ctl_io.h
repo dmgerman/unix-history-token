@@ -230,6 +230,11 @@ init|=
 literal|0x00000200
 block|,
 comment|/* on the blocked queue */
+name|CTL_FLAG_ABORT_STATUS
+init|=
+literal|0x00000400
+block|,
+comment|/* return TASK ABORTED status */
 name|CTL_FLAG_ABORT
 init|=
 literal|0x00000800
@@ -361,6 +366,22 @@ decl_stmt|;
 name|uint32_t
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|CTL_LLF_READ
+value|0x10000000
+define|#
+directive|define
+name|CTL_LLF_WRITE
+value|0x20000000
+define|#
+directive|define
+name|CTL_LLF_VERIFY
+value|0x40000000
+define|#
+directive|define
+name|CTL_LLF_COMPARE
+value|0x80000000
 block|}
 struct|;
 end_struct
@@ -595,23 +616,9 @@ name|targ_lun
 decl_stmt|;
 comment|/* Destination lun */
 name|uint32_t
-function_decl|(
-modifier|*
-name|lun_map_fn
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|uint32_t
-name|lun
-parameter_list|)
-function_decl|;
-name|void
-modifier|*
-name|lun_map_arg
+name|targ_mapped_lun
 decl_stmt|;
+comment|/* Destination lun CTL-wide */
 block|}
 struct|;
 end_struct
@@ -990,6 +997,8 @@ name|CTL_TASK_CLEAR_ACA
 block|,
 name|CTL_TASK_CLEAR_TASK_SET
 block|,
+name|CTL_TASK_I_T_NEXUS_RESET
+block|,
 name|CTL_TASK_LUN_RESET
 block|,
 name|CTL_TASK_TARGET_RESET
@@ -1073,7 +1082,7 @@ decl_stmt|;
 name|uint8_t
 name|res_type
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|residx
 decl_stmt|;
 block|}

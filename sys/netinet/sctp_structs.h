@@ -1597,6 +1597,45 @@ decl_stmt|;
 name|uint32_t
 name|chunks_on_queues
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCTP_DETAILED_STR_STATS
+argument_list|)
+name|uint32_t
+name|abandoned_unsent
+index|[
+name|SCTP_PR_SCTP_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|uint32_t
+name|abandoned_sent
+index|[
+name|SCTP_PR_SCTP_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+else|#
+directive|else
+comment|/* Only the aggregation */
+name|uint32_t
+name|abandoned_unsent
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|uint32_t
+name|abandoned_sent
+index|[
+literal|1
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|uint16_t
 name|stream_no
 decl_stmt|;
@@ -3231,43 +3270,37 @@ name|asconf_del_pending
 decl_stmt|;
 comment|/* asconf delete last addr pending */
 comment|/* 	 * This value, plus all other ack'd but above cum-ack is added 	 * together to cross check against the bit that we have yet to 	 * define (probably in the SACK). When the cum-ack is updated, this 	 * sum is updated as well. 	 */
-comment|/* Flag to tell if ECN is allowed */
+comment|/* Flags whether an extension is supported or not */
 name|uint8_t
-name|ecn_allowed
+name|ecn_supported
+decl_stmt|;
+name|uint8_t
+name|prsctp_supported
+decl_stmt|;
+name|uint8_t
+name|auth_supported
+decl_stmt|;
+name|uint8_t
+name|asconf_supported
+decl_stmt|;
+name|uint8_t
+name|reconfig_supported
+decl_stmt|;
+name|uint8_t
+name|nrsack_supported
+decl_stmt|;
+name|uint8_t
+name|pktdrop_supported
 decl_stmt|;
 comment|/* Did the peer make the stream config (add out) request */
 name|uint8_t
 name|peer_req_out
-decl_stmt|;
-comment|/* flag to indicate if peer can do asconf */
-name|uint8_t
-name|peer_supports_asconf
-decl_stmt|;
-comment|/* EY - flag to indicate if peer can do nr_sack */
-name|uint8_t
-name|peer_supports_nr_sack
-decl_stmt|;
-comment|/* pr-sctp support flag */
-name|uint8_t
-name|peer_supports_prsctp
-decl_stmt|;
-comment|/* peer authentication support flag */
-name|uint8_t
-name|peer_supports_auth
-decl_stmt|;
-comment|/* stream resets are supported by the peer */
-name|uint8_t
-name|peer_supports_strreset
 decl_stmt|;
 name|uint8_t
 name|local_strreset_support
 decl_stmt|;
 name|uint8_t
 name|peer_supports_nat
-decl_stmt|;
-comment|/* 	 * packet drop's are supported by the peer, we don't really care 	 * about this but we bookkeep it anyway. 	 */
-name|uint8_t
-name|peer_supports_pktdrop
 decl_stmt|;
 name|struct
 name|sctp_scoping
@@ -3338,10 +3371,6 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* EY 05/05/08 - NR_SACK variable */
-name|uint8_t
-name|sctp_nr_sack_on_off
-decl_stmt|;
 comment|/* JRS 5/21/07 - CMT PF variable */
 name|uint8_t
 name|sctp_cmt_pf
@@ -3388,6 +3417,22 @@ decl_stmt|;
 name|struct
 name|timeval
 name|discontinuity_time
+decl_stmt|;
+name|uint64_t
+name|abandoned_unsent
+index|[
+name|SCTP_PR_SCTP_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|uint64_t
+name|abandoned_sent
+index|[
+name|SCTP_PR_SCTP_MAX
+operator|+
+literal|1
+index|]
 decl_stmt|;
 block|}
 struct|;

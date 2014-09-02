@@ -2912,6 +2912,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|usb_error_t
+name|usbd_start_set_config
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|usb_fifo_attach
 parameter_list|(
