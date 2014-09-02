@@ -1691,6 +1691,17 @@ begin_comment
 comment|/* Microprocessor series from PKU-Unity Ltd. 				   and MPRC of Peking University */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EM_AARCH64
+value|183
+end_define
+
+begin_comment
+comment|/* AArch64 (64-bit ARM) */
+end_comment
+
 begin_comment
 comment|/* Non-standard or deprecated. */
 end_comment
@@ -3284,7 +3295,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DT_FEATURE_1
+name|DT_FEATURE
 value|0x6ffffdfc
 end_define
 
