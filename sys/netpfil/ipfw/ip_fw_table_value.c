@@ -2092,9 +2092,6 @@ operator|->
 name|refcnt
 operator|++
 expr_stmt|;
-name|found
-operator|++
-expr_stmt|;
 name|ptei
 operator|->
 name|value
@@ -2104,6 +2101,9 @@ operator|->
 name|no
 operator|.
 name|kidx
+expr_stmt|;
+name|found
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -2321,6 +2321,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|ptv
+operator|->
+name|pval
+operator|->
+name|refcnt
+operator|++
+expr_stmt|;
 name|ptei
 operator|->
 name|value
