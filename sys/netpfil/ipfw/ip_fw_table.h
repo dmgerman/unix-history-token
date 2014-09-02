@@ -1365,7 +1365,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ipfw_finalize_table_values
+name|ipfw_garbage_table_values
 parameter_list|(
 name|struct
 name|ip_fw_chain
@@ -1445,6 +1445,18 @@ name|struct
 name|table_info
 modifier|*
 name|ti
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rollback_table_values
+parameter_list|(
+name|struct
+name|tableop_state
+modifier|*
+name|ts
 parameter_list|)
 function_decl|;
 end_function_decl

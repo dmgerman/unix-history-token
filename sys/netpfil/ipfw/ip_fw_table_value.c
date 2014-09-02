@@ -677,6 +677,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Update pointers to real vaues after @pval change.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -754,7 +758,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Grows value storage shared among all tables.  * Drops/reacquires UH locks.  *  * Returns 0 on success.  * Note caller has to check @ts "modified" field.  */
+comment|/*  * Grows value storage shared among all tables.  * Drops/reacquires UH locks.  * Notifies other running adds on @ch shared storage resize.  * Note function does not guarantee that free space  * will be available after invocation, so one caller needs  * to roll cycle himself.  *  * Returns 0 if case of no errors.  */
 end_comment
 
 begin_function
@@ -1090,6 +1094,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Drops reference for table value with index @kidx, stored in @pval and  * @vi. Frees value if it has no references.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1460,29 +1468,19 @@ comment|/*  * Table operation state handler.  * Called when we are going to chan
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|rollback_table_values
 parameter_list|(
-name|void
-modifier|*
-name|object
-parameter_list|,
 name|struct
-name|op_state
+name|tableop_state
 modifier|*
-name|_state
+name|ts
 parameter_list|)
 block|{
 name|struct
 name|ip_fw_chain
 modifier|*
 name|ch
-decl_stmt|;
-name|struct
-name|tableop_state
-modifier|*
-name|ts
 decl_stmt|;
 name|struct
 name|table_value
@@ -1502,30 +1500,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|ts
-operator|=
-operator|(
-expr|struct
-name|tableop_state
-operator|*
-operator|)
-name|_state
-expr_stmt|;
-if|if
-condition|(
-name|ts
-operator|->
-name|tc
-operator|!=
-name|object
-operator|&&
-name|ts
-operator|->
-name|ch
-operator|!=
-name|object
-condition|)
-return|return;
 name|ch
 operator|=
 name|ts
@@ -1604,17 +1578,11 @@ name|value
 argument_list|)
 expr_stmt|;
 block|}
-name|ts
-operator|->
-name|modified
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate new value index in either shared or per-table array.  * Function may drop/reacquire UH lock.  *  * Returns 0 on success.  * Note that called has to check @ts "modified" value.  */
+comment|/*  * Allocate new value index in either shared or per-table array.  * Function may drop/reacquire UH lock.  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -1673,7 +1641,11 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * We need to resize array. This involves 		 * lock/unlock, so we need to check "modified" 		 * state. 		 */
-name|rollback_table_values
+name|ts
+operator|->
+name|opstate
+operator|.
+name|func
 argument_list|(
 name|ts
 operator|->
@@ -1758,12 +1730,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drops value reference for unused values (updates, partially  * successful adds or rollbacks).  */
+comment|/*  * Drops value reference for unused values (updates, deletes, partially  * successful adds or rollbacks).  */
 end_comment
 
 begin_function
 name|void
-name|ipfw_finalize_table_values
+name|ipfw_garbage_table_values
 parameter_list|(
 name|struct
 name|ip_fw_chain
@@ -1805,7 +1777,7 @@ name|namedobj_instance
 modifier|*
 name|vi
 decl_stmt|;
-comment|/* 	 * We have two slightly different cases here: 	 * either (1) we are successful / partially successful, 	 * in that case we need 	 * * to ignore ADDED entries values 	 * * rollback every other values (either UPDATED since 	 *   old value has been stored there, or some failure like 	 *   EXISTS or LIMIT or simply "ignored" case. 	 * 	 * (2): atomic rollback of partially successful operation 	 * in that case we simply need to unref all entries. 	 * 	 */
+comment|/* 	 * We have two slightly different ADD cases here: 	 * either (1) we are successful / partially successful, 	 * in that case we need 	 * * to ignore ADDED entries values 	 * * rollback every other values (either UPDATED since 	 *   old value has been stored there, or some failure like 	 *   EXISTS or LIMIT or simply "ignored" case. 	 * 	 * (2): atomic rollback of partially successful operation 	 * in that case we simply need to unref all entries. 	 * 	 * DELETE case is simpler: no atomic support there, so 	 * we simply unref all non-zero values. 	 */
 comment|/* 	 * Get current table value pointers. 	 * XXX: Properly read vshared 	 */
 name|get_value_ptrs
 argument_list|(
@@ -1902,6 +1874,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Main function used to link values of entries going to be added,  * to the index. Since we may perform many UH locks drops/acquires,  * handle changes by checking tablestate "modified" field.  *  * Success: return 0.  */
+end_comment
+
 begin_function
 name|int
 name|ipfw_link_table_values
@@ -1962,7 +1938,7 @@ decl_stmt|,
 modifier|*
 name|pval
 decl_stmt|;
-comment|/* 	 * Stage 1: reference all existing values and 	 * save them inside the bitmask. 	 */
+comment|/* 	 * Stage 1: reference all existing values and 	 * save their indices. 	 */
 name|IPFW_UH_WLOCK_ASSERT
 argument_list|(
 name|ch
@@ -2379,8 +2355,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|rollback_table_values
+name|ts
+operator|->
+name|opstate
+operator|.
+name|func
 argument_list|(
+name|ts
+operator|->
 name|tc
 argument_list|,
 operator|&
@@ -2395,6 +2377,7 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* value storage resize has happened, return */
 if|if
 condition|(
 name|ts
@@ -2604,6 +2587,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Export data to legacy table dumps opcodes.  */
+end_comment
+
 begin_function
 name|uint32_t
 name|ipfw_export_table_value_legacy
@@ -2624,6 +2611,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Imports table value from current userland format.  * Saves value in kernel format to the same place.  */
+end_comment
 
 begin_function
 name|void
@@ -2754,6 +2745,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Export real table value @v to current userland format.  * Note that @v and @piv may point to the same memory.  */
+end_comment
 
 begin_function
 name|void
@@ -2888,6 +2883,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Exports real value data into ipfw_table_value structure.  * Utilizes "spare1" field to store kernel index.  */
+end_comment
 
 begin_function
 specifier|static
