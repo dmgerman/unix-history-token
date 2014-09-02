@@ -521,6 +521,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|phandle_t
+name|OF_xref_from_device
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|OF_device_register_xref
 parameter_list|(
