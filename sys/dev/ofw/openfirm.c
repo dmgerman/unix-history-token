@@ -216,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|FIND_BY_DEV
-value|1
+value|2
 end_define
 
 begin_comment
