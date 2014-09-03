@@ -50,6 +50,13 @@ name|__has_extension
 argument_list|(
 name|c_generic_selections
 argument_list|)
+operator|||
+name|__GNUC_PREREQ__
+argument_list|(
+literal|4
+operator|,
+literal|9
+argument_list|)
 end_if
 
 begin_define
