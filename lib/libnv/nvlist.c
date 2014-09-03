@@ -3264,6 +3264,8 @@ decl_stmt|;
 name|int
 name|serrno
 decl_stmt|,
+name|i
+decl_stmt|,
 modifier|*
 name|fds
 decl_stmt|;
