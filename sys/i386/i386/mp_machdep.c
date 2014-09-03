@@ -6232,13 +6232,10 @@ index|]
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 name|npxsuspend
 argument_list|(
 operator|&
-name|suspcbs
+name|susppcbs
 index|[
 name|cpu
 index|]
@@ -6246,8 +6243,6 @@ operator|->
 name|pcb_fpususpend
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|wbinvd
 argument_list|()
 expr_stmt|;
@@ -6262,13 +6257,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|DEV_NPX
 name|npxresume
 argument_list|(
 operator|&
-name|suspcbs
+name|susppcbs
 index|[
 name|cpu
 index|]
@@ -6276,8 +6268,6 @@ operator|->
 name|pcb_fpususpend
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pmap_init_pat
 argument_list|()
 expr_stmt|;
