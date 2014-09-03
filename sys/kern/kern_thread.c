@@ -2118,54 +2118,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a process with one thread to an unthreaded process.  */
-end_comment
-
-begin_function
-name|void
-name|thread_unthread
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|p
-operator|->
-name|p_numthreads
-operator|==
-literal|1
-operator|)
-argument_list|,
-operator|(
-literal|"Unthreading with>1 threads"
-operator|)
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_flag
-operator|&=
-operator|~
-name|P_HADTHREADS
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Called from:  *  thread_exit()  */
 end_comment
 
@@ -2771,7 +2723,20 @@ operator|==
 name|SINGLE_EXIT
 condition|)
 block|{
-comment|/* 		 * We have gotten rid of all the other threads and we 		 * are about to either exit or exec. In either case, 		 * we try our utmost to revert to being a non-threaded 		 * process. 		 */
+comment|/* 		 * Convert the process to an unthreaded process.  The 		 * SINGLE_EXIT is called by exit1() or execve(), in 		 * both cases other threads must be retired. 		 */
+name|KASSERT
+argument_list|(
+name|p
+operator|->
+name|p_numthreads
+operator|==
+literal|1
+argument_list|,
+operator|(
+literal|"Unthreading with>1 threads"
+operator|)
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_singlethread
@@ -2787,12 +2752,9 @@ operator|(
 name|P_STOPPED_SINGLE
 operator||
 name|P_SINGLE_EXIT
+operator||
+name|P_HADTHREADS
 operator|)
-expr_stmt|;
-name|thread_unthread
-argument_list|(
-name|td
-argument_list|)
 expr_stmt|;
 comment|/* 		 * Wait for any remaining threads to exit cpu_throw(). 		 */
 while|while
