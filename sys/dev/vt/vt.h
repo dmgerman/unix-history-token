@@ -459,6 +459,12 @@ name|callout
 name|vd_timer
 decl_stmt|;
 comment|/* (d) Display timer. */
+specifier|volatile
+name|unsigned
+name|int
+name|vd_timer_armed
+decl_stmt|;
+comment|/* (?) Display timer started.*/
 name|int
 name|vd_flags
 decl_stmt|;
