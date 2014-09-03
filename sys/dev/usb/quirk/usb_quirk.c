@@ -897,7 +897,7 @@ argument_list|,
 name|UQ_KBD_BOOTPROTO
 argument_list|)
 block|,
-comment|/* Quirk for Corsair Vengeance K60 keyboard */
+comment|/* Quirk for Corsair Vengeance K70 keyboard */
 name|USB_QUIRK
 argument_list|(
 name|CORSAIR
