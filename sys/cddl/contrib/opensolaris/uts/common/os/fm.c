@@ -2106,7 +2106,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -2116,8 +2116,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2142,7 +2140,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -2152,8 +2150,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2180,7 +2176,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -2190,8 +2186,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3388,7 +3382,7 @@ if|if
 condition|(
 name|ret
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3398,8 +3392,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3460,7 +3452,7 @@ operator|!=
 name|FM_EREPORT_VERS0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3470,8 +3462,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3506,7 +3496,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3516,8 +3506,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3534,7 +3522,7 @@ name|ena
 argument_list|)
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3544,8 +3532,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3567,7 +3553,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3577,8 +3563,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3620,7 +3604,7 @@ if|if
 condition|(
 name|ret
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3630,8 +3614,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3680,7 +3662,7 @@ operator|!=
 name|FM_HC_SCHEME_VERSION
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3690,8 +3672,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3725,7 +3705,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3735,8 +3715,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3767,7 +3745,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3777,8 +3755,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3974,7 +3950,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -3984,8 +3960,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4010,7 +3984,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4020,8 +3994,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 for|for
@@ -4068,7 +4040,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4078,8 +4050,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4135,7 +4105,7 @@ operator|!=
 name|DEV_SCHEME_VERSION0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4145,8 +4115,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4245,7 +4213,7 @@ if|if
 condition|(
 name|err
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4255,8 +4223,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4315,11 +4281,9 @@ operator|<
 name|CPU_SCHEME_VERSION1
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|failedp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4338,11 +4302,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|failedp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4361,11 +4323,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|failedp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4391,11 +4351,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|failedp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4411,11 +4369,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|failedp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4436,11 +4392,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|failedp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4464,11 +4418,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|failedp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4515,7 +4467,7 @@ operator|!=
 name|MEM_SCHEME_VERSION0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4525,8 +4477,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4547,7 +4497,7 @@ literal|1
 operator|)
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4557,8 +4507,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4577,7 +4525,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4587,8 +4535,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4607,7 +4553,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4617,8 +4563,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4648,7 +4592,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4658,8 +4602,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4678,7 +4620,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4688,8 +4630,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4722,7 +4662,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4732,8 +4672,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4746,10 +4684,7 @@ name|uint64_t
 operator|)
 operator|-
 literal|1
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|nvlist_add_uint64
 argument_list|(
 name|fmri
@@ -4762,7 +4697,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4772,11 +4707,8 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
@@ -4807,7 +4739,7 @@ operator|!=
 name|ZFS_SCHEME_VERSION0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4817,8 +4749,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4837,7 +4767,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4847,8 +4777,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4867,7 +4795,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4877,8 +4805,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4897,7 +4823,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4907,8 +4833,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4933,7 +4857,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -4943,8 +4867,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -5699,7 +5621,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -5709,8 +5631,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5747,7 +5667,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -5757,8 +5677,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5781,7 +5699,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -5791,8 +5709,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5872,7 +5788,7 @@ name|FM_NVA_RETAIN
 argument_list|)
 expr_stmt|;
 block|}
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -5882,8 +5798,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6044,7 +5958,7 @@ name|FM_NVA_RETAIN
 argument_list|)
 expr_stmt|;
 block|}
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -6054,8 +5968,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6085,7 +5997,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -6095,8 +6007,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6149,7 +6059,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|erpt_kstat_data
@@ -6159,8 +6069,6 @@ operator|.
 name|value
 operator|.
 name|ui64
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return;
