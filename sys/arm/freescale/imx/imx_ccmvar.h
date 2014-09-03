@@ -56,6 +56,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint32_t
+name|imx_ccm_ahb_hz
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|imx_ccm_usb_enable
 parameter_list|(
