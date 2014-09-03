@@ -4825,11 +4825,11 @@ literal|0
 operator|&&
 name|page_shortage
 operator|>
-name|vm_cnt
+name|cnt
 operator|.
 name|v_free_target
 operator|-
-name|vm_cnt
+name|cnt
 operator|.
 name|v_free_min
 condition|)
