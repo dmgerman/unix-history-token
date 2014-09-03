@@ -606,6 +606,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASMC_MM31_TEMPS
+value|{ "TC0D", "TC0H", \ 				  "TC0P", "TH0P", \ 				  "TN0D", "TN0P", \ 				  "TW0P", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MM31_TEMPNAMES
+value|{ "cpu0_die", "cpu0_heatsink", \ 				  "cpu0_proximity", "hdd_bay", \ 				  "northbridge_die", \ 				  "northbridge_proximity", \ 				  "wireless_module", }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMC_MM31_TEMPDESCS
+value|{ "CPU0 Die Core Temperature", \ 				  "CPU0 Heatsink Temperature", \ 				  "CPU0 Proximity Temperature", \ 				  "HDD Bay Temperature", \ 				  "Northbridge Die Core Temperature", \ 				  "Northbridge Proximity Temperature", \ 				  "Wireless Module Temperature", }
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASMC_MP_TEMPS
 value|{ "TA0P", "TCAG", "TCAH", "TCBG", "TCBH", \ 				  "TC0C", "TC0D", "TC0P", "TC1C", "TC1D", \ 				  "TC2C", "TC2D", "TC3C", "TC3D", "THTG", \ 				  "TH0P", "TH1P", "TH2P", "TH3P", "TMAP", \ 				  "TMAS", "TMBS", "TM0P", "TM0S", "TM1P", \ 				  "TM1S", "TM2P", "TM2S", "TM3S", "TM8P", \ 				  "TM8S", "TM9P", "TM9S", "TN0H", "TS0C", \ 				  NULL }
 end_define
