@@ -2023,6 +2023,10 @@ name|ip_fw_chain
 modifier|*
 name|ch
 parameter_list|,
+name|ip_fw3_opheader
+modifier|*
+name|op3
+parameter_list|,
 name|struct
 name|sockopt_data
 modifier|*
