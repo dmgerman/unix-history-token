@@ -1926,13 +1926,11 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
 name|p
 operator|->
 name|p_numthreads
 operator|==
 literal|1
-operator|)
 argument_list|,
 operator|(
 literal|"multiple threads in thread_wait()"
@@ -1941,13 +1939,11 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
 name|p
 operator|->
 name|p_exitthreads
 operator|==
 literal|0
-operator|)
 argument_list|,
 operator|(
 literal|"p_exitthreads leaking"
