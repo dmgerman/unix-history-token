@@ -1512,21 +1512,15 @@ name|c_thread_local
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * XXX: Some compilers (Clang 3.3, GCC 4.7) falsely announce C++11 mode  * without actually supporting the thread_local keyword. Don't check for  * the presence of C++11 when defining _Thread_local.  */
+end_comment
+
 begin_if
 if|#
 directive|if
-operator|(
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-operator|&&
-name|__cplusplus
-operator|>=
-literal|201103L
-operator|)
-operator|||
-expr|\
+comment|/* (defined(__cplusplus)&& __cplusplus>= 201103L) || */
+if|\
 name|__has_extension
 argument_list|(
 name|cxx_thread_local
