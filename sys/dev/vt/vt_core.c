@@ -803,12 +803,20 @@ block|{
 operator|.
 name|vb_buffer
 operator|=
+operator|&
 name|vt_constextbuf
+index|[
+literal|0
+index|]
 block|,
 operator|.
 name|vb_rows
 operator|=
+operator|&
 name|vt_constextbufrows
+index|[
+literal|0
+index|]
 block|,
 operator|.
 name|vb_history_size
@@ -5011,7 +5019,6 @@ expr_stmt|;
 comment|/* Attach default font if not in TEXTMODE. */
 if|if
 condition|(
-operator|!
 operator|(
 name|vd
 operator|->
@@ -5019,6 +5026,8 @@ name|vd_flags
 operator|&
 name|VDF_TEXTMODE
 operator|)
+operator|==
+literal|0
 condition|)
 name|vw
 operator|->
@@ -5689,11 +5698,11 @@ return|;
 block|}
 if|if
 condition|(
-name|vw
+name|vd
 operator|->
-name|vw_font
-operator|==
-name|NULL
+name|vd_flags
+operator|&
+name|VDF_TEXTMODE
 condition|)
 block|{
 comment|/* Our device doesn't need fonts. */
@@ -5826,6 +5835,16 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vw
+operator|->
+name|vw_font
+operator|!=
+name|vf
+condition|)
+block|{
+comment|/* 		 * In case vt_change_font called to update size we don't need 		 * to update font link. 		 */
 name|vtfont_unref
 argument_list|(
 name|vw
@@ -5842,6 +5861,7 @@ argument_list|(
 name|vf
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Force a full redraw the next timer tick. */
 if|if
 condition|(
@@ -9950,7 +9970,6 @@ name|K_XLATE
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|vd
 operator|->
@@ -9958,6 +9977,8 @@ name|vd_flags
 operator|&
 name|VDF_TEXTMODE
 operator|)
+operator|==
+literal|0
 condition|)
 name|vw
 operator|->
@@ -10365,6 +10386,8 @@ name|vd
 argument_list|)
 expr_stmt|;
 comment|/* Resize terminal windows */
+while|while
+condition|(
 name|vt_change_font
 argument_list|(
 name|vw
@@ -10373,7 +10396,23 @@ name|vw
 operator|->
 name|vw_font
 argument_list|)
+operator|==
+name|EBUSY
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|100
+argument_list|,
+literal|"%s: vt_change_font() is busy, "
+literal|"window %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -10396,10 +10435,6 @@ name|struct
 name|vt_device
 modifier|*
 name|vd
-decl_stmt|;
-name|struct
-name|winsize
-name|wsz
 decl_stmt|;
 if|if
 condition|(
@@ -10574,6 +10609,7 @@ argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
+comment|/* Update windows sizes and initialize last items. */
 name|vt_upgrade
 argument_list|(
 name|vd
@@ -10606,6 +10642,7 @@ operator|&
 name|VDF_ASYNC
 condition|)
 block|{
+comment|/* Allow to put chars now. */
 name|terminal_mute
 argument_list|(
 name|vd
@@ -10617,6 +10654,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Rerun timer for screen updates. */
 name|callout_schedule
 argument_list|(
 operator|&
@@ -10630,6 +10668,7 @@ name|VT_TIMERFREQ
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Register as console. If it already registered, cnadd() will ignore 	 * it. 	 */
 name|termcn_cnregister
 argument_list|(
 name|vd
@@ -10640,43 +10679,6 @@ name|VT_CONSWINDOW
 index|]
 operator|->
 name|vw_terminal
-argument_list|)
-expr_stmt|;
-comment|/* Update console window sizes to actual. */
-name|vt_winsize
-argument_list|(
-name|vd
-argument_list|,
-name|vd
-operator|->
-name|vd_windows
-index|[
-name|VT_CONSWINDOW
-index|]
-operator|->
-name|vw_font
-argument_list|,
-operator|&
-name|wsz
-argument_list|)
-expr_stmt|;
-name|terminal_set_winsize_blank
-argument_list|(
-name|vd
-operator|->
-name|vd_windows
-index|[
-name|VT_CONSWINDOW
-index|]
-operator|->
-name|vw_terminal
-argument_list|,
-operator|&
-name|wsz
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
