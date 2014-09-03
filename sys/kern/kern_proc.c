@@ -4713,6 +4713,7 @@ name|p
 operator|->
 name|p_pptr
 condition|)
+block|{
 name|kp
 operator|->
 name|ki_ppid
@@ -4742,6 +4743,7 @@ name|p_pptr
 operator|->
 name|p_pid
 expr_stmt|;
+block|}
 block|}
 end_function
 
