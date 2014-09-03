@@ -1993,17 +1993,6 @@ name|CSUM_SCTP_IPV6
 value|CSUM_IP6_SCTP
 end_define
 
-begin_define
-define|#
-directive|define
-name|CSUM_FRAGMENT
-value|0x0
-end_define
-
-begin_comment
-comment|/* Unused */
-end_comment
-
 begin_comment
 comment|/*  * mbuf types describing the content of the mbuf (including external storage).  */
 end_comment
