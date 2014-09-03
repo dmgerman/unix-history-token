@@ -806,6 +806,7 @@ begin_function_decl
 name|int
 name|vtbuf_iscursor
 parameter_list|(
+specifier|const
 name|struct
 name|vt_buf
 modifier|*
