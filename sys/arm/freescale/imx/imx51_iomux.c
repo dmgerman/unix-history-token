@@ -754,7 +754,7 @@ name|regnum
 operator|>=
 literal|0
 operator|&&
-name|renum
+name|regnum
 operator|<=
 literal|1
 argument_list|,
@@ -808,7 +808,7 @@ name|regnum
 operator|>=
 literal|0
 operator|&&
-name|renum
+name|regnum
 operator|<=
 literal|1
 argument_list|,
@@ -867,7 +867,7 @@ name|regnum
 operator|>=
 literal|0
 operator|&&
-name|renum
+name|regnum
 operator|<=
 literal|1
 argument_list|,
