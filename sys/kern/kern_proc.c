@@ -13304,6 +13304,11 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -13341,14 +13346,6 @@ operator|->
 name|p_ucred
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|pidp
-operator|!=
-operator|-
-literal|1
-condition|)
 name|PROC_UNLOCK
 argument_list|(
 name|p
