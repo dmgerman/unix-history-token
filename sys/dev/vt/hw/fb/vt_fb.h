@@ -68,12 +68,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vd_maskbitbltchr_t
-name|vt_fb_maskbitbltchr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vd_postswitch_t
 name|vt_fb_postswitch
 decl_stmt|;
