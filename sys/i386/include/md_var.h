@@ -110,6 +110,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
+name|cpu_stdext_feature
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
 name|cpu_fxsr
 decl_stmt|;
 end_decl_stmt
