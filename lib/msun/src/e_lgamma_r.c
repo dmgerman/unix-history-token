@@ -56,11 +56,6 @@ name|zero
 init|=
 literal|0.00000000000000000000e+00
 decl_stmt|,
-name|two52
-init|=
-literal|4.50359962737049600000e+15
-decl_stmt|,
-comment|/* 0x43300000, 0x00000000 */
 name|half
 init|=
 literal|5.00000000000000000000e-01
