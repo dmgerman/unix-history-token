@@ -621,8 +621,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Missing #interrupt-cells property, "
-literal|"assuming<1>\n"
+literal|"Missing #interrupt-cells property,"
+literal|" assuming<1>\n"
 argument_list|)
 expr_stmt|;
 name|icells
@@ -2127,7 +2127,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|//			printf("pinctrl: omitting node %s since it isn't active\n", name);
+comment|//			printf("pinctrl: skipping node %s status %s\n", name,
+comment|//			    status);
 continue|continue;
 block|}
 name|len
@@ -2153,7 +2154,8 @@ operator|<=
 literal|0
 condition|)
 block|{
-comment|//			printf("pinctrl: no pinctrl-0 property for node %s, omitting\n", name);
+comment|//			printf("pinctrl: skipping node %s no pinctrl-0\n",
+comment|//			    name, status);
 continue|continue;
 block|}
 name|len
@@ -2331,7 +2333,9 @@ index|]
 decl_stmt|;
 name|uint32_t
 name|pio
-init|=
+decl_stmt|;
+name|pio
+operator|=
 operator|(
 literal|0xfffffff
 operator|&
@@ -2348,7 +2352,7 @@ operator|+
 literal|0x200
 operator|*
 name|unit
-decl_stmt|;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"P%c%d %s %#x\n"
@@ -2435,8 +2439,10 @@ literal|4
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// at91_pio_gpio_pulldown(pio, 1u<< pin, !!(flags& 8));
-comment|// at91_pio_gpio_dis_schmidt(pio, 1u<< pin, !!(flags& 16));
+comment|//					at91_pio_gpio_pulldown(pio, 1u<< pin,
+comment|//					    !!(flags& 8));
+comment|//					at91_pio_gpio_dis_schmidt(pio,
+comment|//					    1u<< pin, !!(flags& 16));
 break|break;
 case|case
 literal|1
