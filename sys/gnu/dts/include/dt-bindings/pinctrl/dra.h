@@ -135,6 +135,13 @@ begin_define
 define|#
 directive|define
 name|PULL_ENA
+value|(0<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PULL_DIS
 value|(1<< 16)
 end_define
 
@@ -181,7 +188,7 @@ begin_define
 define|#
 directive|define
 name|PIN_OUTPUT
-value|0
+value|(0 | PULL_DIS)
 end_define
 
 begin_define
@@ -202,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|PIN_INPUT
-value|INPUT_EN
+value|(INPUT_EN | PULL_DIS)
 end_define
 
 begin_define
