@@ -49,18 +49,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|fb_probe
-parameter_list|(
-name|struct
-name|fb_info
-modifier|*
-name|info
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|vd_init_t
 name|vt_fb_init

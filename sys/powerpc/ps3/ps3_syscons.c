@@ -775,12 +775,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fb_probe
+name|vt_fb_init
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|fb_info
+name|vd
 argument_list|)
 expr_stmt|;
 name|sc
@@ -792,20 +789,7 @@ operator|&=
 operator|~
 name|FB_FLAG_NOMMAP
 expr_stmt|;
-comment|/* Set wrongly by fb_probe */
-name|vt_fb_init
-argument_list|(
-name|vd
-argument_list|)
-expr_stmt|;
-comment|/* Clear the screen. */
-name|vt_fb_blank
-argument_list|(
-name|vd
-argument_list|,
-name|TC_BLACK
-argument_list|)
-expr_stmt|;
+comment|/* Set wrongly by vt_fb_init */
 return|return
 operator|(
 name|CN_INTERNAL

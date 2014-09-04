@@ -651,22 +651,9 @@ argument_list|,
 name|VT_FB_DEFAULT_HEIGHT
 argument_list|)
 expr_stmt|;
-name|fb_probe
-argument_list|(
-name|info
-argument_list|)
-expr_stmt|;
 name|vt_fb_init
 argument_list|(
 name|vd
-argument_list|)
-expr_stmt|;
-comment|/* Clear the screen. */
-name|vt_fb_blank
-argument_list|(
-name|vd
-argument_list|,
-name|TC_BLACK
 argument_list|)
 expr_stmt|;
 return|return
