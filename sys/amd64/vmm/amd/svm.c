@@ -4841,14 +4841,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Restore host Task Register selector type after every vcpu exit.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
-name|setup_tss_type
+name|restore_host_tss
 parameter_list|(
 name|void
 parameter_list|)
@@ -4856,31 +4852,31 @@ block|{
 name|struct
 name|system_segment_descriptor
 modifier|*
-name|desc
+name|tss_sd
 decl_stmt|;
-name|desc
+comment|/* 	 * The TSS descriptor was in use prior to launching the guest so it 	 * has been marked busy. 	 * 	 * 'ltr' requires the descriptor to be marked available so change the 	 * type to "64-bit available TSS". 	 */
+name|tss_sd
 operator|=
-operator|(
-expr|struct
-name|system_segment_descriptor
-operator|*
-operator|)
-operator|&
-name|gdt
-index|[
-name|curcpu
-operator|*
-name|NGDT
-operator|+
-name|GPROC0_SEL
-index|]
+name|PCPU_GET
+argument_list|(
+name|tss
+argument_list|)
 expr_stmt|;
-comment|/* 	 * Task selector that should be restored in host is 	 * 64-bit available(9), not what is read(0xb), see 	 * APMvol2 Rev3.21 4.8.3 System Descriptors table. 	 */
-name|desc
+name|tss_sd
 operator|->
 name|sd_type
 operator|=
-literal|9
+name|SDT_SYSTSS
+expr_stmt|;
+name|ltr
+argument_list|(
+name|GSEL
+argument_list|(
+name|GPROC0_SEL
+argument_list|,
+name|SEL_KPL
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5319,10 +5315,6 @@ argument_list|,
 name|vlapic
 argument_list|)
 expr_stmt|;
-comment|/* Change TSS type to available.*/
-name|setup_tss_type
-argument_list|()
-expr_stmt|;
 comment|/* Launch Virtual Machine. */
 name|svm_launch
 argument_list|(
@@ -5333,18 +5325,7 @@ argument_list|,
 name|hctx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Only GDTR and IDTR of host is saved and restore by SVM, 		 * LDTR and TR need to be restored by VMM. 		 * XXX: kernel doesn't use LDT, only user space. 		 */
-name|ltr
-argument_list|(
-name|GSEL
-argument_list|(
-name|GPROC0_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Guest FS and GS selector are stashed by vmload and vmsave. 		 * Host FS and GS selector are stashed by svm_launch(). 		 * Host GS base that holds per-cpu need to be restored before 		 * enabling global interrupt. 		 * FS is not used by FreeBSD kernel and kernel does restore 		 * back FS selector and base of user before returning to 		 * userland. 		 * 		 * Note: You can't use 'curcpu' which uses pcpu. 		 */
+comment|/* 		 * Restore MSR_GSBASE to point to the pcpu data area. 		 * 		 * Note that accesses done via PCPU_GET/PCPU_SET will work 		 * only after MSR_GSBASE is restored. 		 * 		 * Also note that we don't bother restoring MSR_KGSBASE 		 * since it is not used in the kernel and will be restored 		 * when the VMRUN ioctl returns to userspace. 		 */
 name|wrmsr
 argument_list|(
 name|MSR_GSBASE
@@ -5361,21 +5342,9 @@ name|lastcpu
 index|]
 argument_list|)
 expr_stmt|;
-name|wrmsr
-argument_list|(
-name|MSR_KGSBASE
-argument_list|,
-operator|(
-name|uint64_t
-operator|)
-operator|&
-name|__pcpu
-index|[
-name|vcpustate
-operator|->
-name|lastcpu
-index|]
-argument_list|)
+comment|/* 		 * The host GDTR and IDTR is saved by VMRUN and restored 		 * automatically on #VMEXIT. However, the host TSS needs 		 * to be restored explicitly. 		 */
+name|restore_host_tss
+argument_list|()
 expr_stmt|;
 comment|/* #VMEXIT disables interrupts so re-enable them here. */
 name|enable_gintr
