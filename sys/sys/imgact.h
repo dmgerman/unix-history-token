@@ -142,10 +142,19 @@ name|char
 name|vmspace_destroyed
 decl_stmt|;
 comment|/* flag - we've blown away original vm space */
+define|#
+directive|define
+name|IMGACT_SHELL
+value|0x1
+define|#
+directive|define
+name|IMGACT_BINMISC
+value|0x2
+name|unsigned
 name|char
 name|interpreted
 decl_stmt|;
-comment|/* flag - this executable is interpreted */
+comment|/* mask of interpreters that have run */
 name|char
 name|opened
 decl_stmt|;
