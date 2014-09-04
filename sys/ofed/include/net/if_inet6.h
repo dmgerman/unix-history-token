@@ -6,25 +6,69 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LINUX_CLOCKSOURCE_H
+name|_NET_IF_INET6_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LINUX_CLOCKSOURCE_H
+name|_NET_IF_INET6_H_
 end_define
 
-begin_comment
-comment|/* clocksource cycle base type */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u64
-name|cycle_t
-typedef|;
-end_typedef
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ipv6_eth_mc_map
+parameter_list|(
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+name|addr
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|)
+block|{
+comment|/*  *      +-------+-------+-------+-------+-------+-------+  *      |   33  |   33  | DST13 | DST14 | DST15 | DST16 |  *      +-------+-------+-------+-------+-------+-------+  */
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0x33
+expr_stmt|;
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|0x33
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|buf
+operator|+
+literal|2
+argument_list|,
+operator|&
+name|addr
+operator|->
+name|s6_addr32
+index|[
+literal|3
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|__u32
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#
@@ -32,7 +76,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LINUX_CLOCKSOURCE_H */
+comment|/* _NET_IF_INET6_H_ */
 end_comment
 
 end_unit

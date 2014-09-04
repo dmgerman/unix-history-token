@@ -78,6 +78,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/atomic-long.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rdma/ib_cache.h>
 end_include
 
@@ -20812,9 +20824,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|module_exit
+name|module_exit_order
 argument_list|(
 name|ib_cm_cleanup
+argument_list|,
+name|SI_ORDER_FIRST
 argument_list|)
 expr_stmt|;
 end_expr_stmt

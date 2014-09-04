@@ -9581,6 +9581,10 @@ argument_list|(
 literal|"Failed reposting tunnel "
 literal|"buf:%lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -9595,6 +9599,10 @@ argument_list|(
 literal|"received tunnel send completion:"
 literal|"wrid=0x%llx, status=0x%x\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -9684,6 +9692,10 @@ name|wc
 operator|.
 name|status
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -10662,6 +10674,10 @@ argument_list|(
 literal|"Failed reposting SQP "
 literal|"buf:%lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -10692,6 +10708,10 @@ name|wc
 operator|.
 name|status
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id

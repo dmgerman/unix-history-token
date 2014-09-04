@@ -358,13 +358,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|__read_mostly
-value|__attribute__((__section__(".data.read_mostly")))
-end_define
-
 begin_comment
 comment|/*  * Workaround for weird Chelsio issue  */
 end_comment

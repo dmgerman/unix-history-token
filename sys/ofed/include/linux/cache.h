@@ -6,25 +6,22 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LINUX_CLOCKSOURCE_H
+name|_LINUX_CACHE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LINUX_CLOCKSOURCE_H
+name|_LINUX_CACHE_H_
 end_define
 
-begin_comment
-comment|/* clocksource cycle base type */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u64
-name|cycle_t
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|cache_line_size
+parameter_list|()
+value|CACHE_LINE_SIZE
+end_define
 
 begin_endif
 endif|#
@@ -32,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LINUX_CLOCKSOURCE_H */
+comment|/* _LINUX_CACHE_H_ */
 end_comment
 
 end_unit

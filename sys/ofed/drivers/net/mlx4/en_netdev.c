@@ -8968,6 +8968,10 @@ name|priv
 operator|->
 name|port
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|priv
 operator|->
 name|mac
