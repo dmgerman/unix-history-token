@@ -369,6 +369,23 @@ begin_comment
 comment|/*  * Per-device datastructure.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+end_ifndef
+
+begin_struct_decl
+struct_decl|struct
+name|vt_mouse_cursor
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|vt_device
@@ -412,6 +429,38 @@ modifier|*
 name|vd_softc
 decl_stmt|;
 comment|/* (u) Driver data. */
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+name|struct
+name|vt_mouse_cursor
+modifier|*
+name|vd_mcursor
+decl_stmt|;
+comment|/* (?) Cursor bitmap. */
+name|term_color_t
+name|vd_mcursor_fg
+decl_stmt|;
+comment|/* (?) Cursor fg color. */
+name|term_color_t
+name|vd_mcursor_bg
+decl_stmt|;
+comment|/* (?) Cursor bg color. */
+name|vt_axis_t
+name|vd_mx_drawn
+decl_stmt|;
+comment|/* (?) Mouse X and Y      */
+name|vt_axis_t
+name|vd_my_drawn
+decl_stmt|;
+comment|/*     as of last redraw. */
+name|int
+name|vd_mshown
+decl_stmt|;
+comment|/* (?) Mouse shown during */
+endif|#
+directive|endif
+comment|/*     last redrawn.      */
 name|uint16_t
 name|vd_mx
 decl_stmt|;
@@ -420,22 +469,10 @@ name|uint16_t
 name|vd_my
 decl_stmt|;
 comment|/* (?) current mouse Y. */
-name|vt_axis_t
-name|vd_moldx
-decl_stmt|;
-comment|/* (?) Mouse X as of last redraw. */
-name|vt_axis_t
-name|vd_moldy
-decl_stmt|;
-comment|/* (?) Mouse Y as of last redraw. */
 name|uint32_t
 name|vd_mstate
 decl_stmt|;
 comment|/* (?) Mouse state. */
-name|term_pos_t
-name|vd_offset
-decl_stmt|;
-comment|/* (?) Pixel offset. */
 name|vt_axis_t
 name|vd_width
 decl_stmt|;
@@ -590,6 +627,7 @@ directive|define
 name|VBF_HISTORY_FULL
 value|0x10
 comment|/* All rows filled. */
+name|unsigned
 name|int
 name|vb_history_size
 decl_stmt|;
@@ -719,6 +757,7 @@ specifier|const
 name|term_pos_t
 modifier|*
 parameter_list|,
+name|unsigned
 name|int
 parameter_list|)
 function_decl|;
@@ -767,6 +806,23 @@ name|vb
 parameter_list|,
 name|int
 name|yes
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vtbuf_dirty
+parameter_list|(
+name|struct
+name|vt_buf
+modifier|*
+name|vb
+parameter_list|,
+specifier|const
+name|term_rect_t
+modifier|*
+name|area
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -839,24 +895,6 @@ ifndef|#
 directive|ifndef
 name|SC_NO_CUTPASTE
 end_ifndef
-
-begin_function_decl
-name|void
-name|vtbuf_mouse_cursor_position
-parameter_list|(
-name|struct
-name|vt_buf
-modifier|*
-name|vb
-parameter_list|,
-name|int
-name|col
-parameter_list|,
-name|int
-name|row
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -1190,6 +1228,10 @@ modifier|*
 name|vw_font
 decl_stmt|;
 comment|/* (d) Graphical font. */
+name|term_rect_t
+name|vw_draw_area
+decl_stmt|;
+comment|/* (?) Drawable area. */
 name|unsigned
 name|int
 name|vw_number
@@ -1248,6 +1290,11 @@ directive|define
 name|VWF_READY
 value|0x40
 comment|/* Window fully initialized. */
+define|#
+directive|define
+name|VWF_GRAPHICS
+value|0x80
+comment|/* Window in graphics mode (KDSETMODE). */
 define|#
 directive|define
 name|VWF_SWWAIT_REL
@@ -1329,7 +1376,7 @@ value|((vw)->vw_smode.mode == VT_PROCESS)
 end_define
 
 begin_comment
-comment|/*  * Per-device driver routines.  *  * vd_bitbltchr is used when the driver operates in graphics mode, while  * vd_putchar is used when the driver operates in text mode  * (VDF_TEXTMODE).  */
+comment|/*  * Per-device driver routines.  */
 end_comment
 
 begin_typedef
@@ -1390,7 +1437,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
-name|vd_bitbltchr_t
+name|vd_bitblt_text_t
 parameter_list|(
 name|struct
 name|vt_device
@@ -1398,23 +1445,44 @@ modifier|*
 name|vd
 parameter_list|,
 specifier|const
+name|struct
+name|vt_window
+modifier|*
+name|vw
+parameter_list|,
+specifier|const
+name|term_rect_t
+modifier|*
+name|area
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|vd_bitblt_bmp_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|,
+specifier|const
+name|struct
+name|vt_window
+modifier|*
+name|vw
+parameter_list|,
+specifier|const
 name|uint8_t
 modifier|*
-name|src
+name|pattern
 parameter_list|,
 specifier|const
 name|uint8_t
 modifier|*
 name|mask
-parameter_list|,
-name|int
-name|bpl
-parameter_list|,
-name|vt_axis_t
-name|top
-parameter_list|,
-name|vt_axis_t
-name|left
 parameter_list|,
 name|unsigned
 name|int
@@ -1424,32 +1492,13 @@ name|unsigned
 name|int
 name|height
 parameter_list|,
-name|term_color_t
-name|fg
+name|unsigned
+name|int
+name|x
 parameter_list|,
-name|term_color_t
-name|bg
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-name|vd_putchar_t
-parameter_list|(
-name|struct
-name|vt_device
-modifier|*
-name|vd
-parameter_list|,
-name|term_char_t
-parameter_list|,
-name|vt_axis_t
-name|top
-parameter_list|,
-name|vt_axis_t
-name|left
+name|unsigned
+name|int
+name|y
 parameter_list|,
 name|term_color_t
 name|fg
@@ -1568,10 +1617,6 @@ name|vd_blank_t
 modifier|*
 name|vd_blank
 decl_stmt|;
-name|vd_bitbltchr_t
-modifier|*
-name|vd_bitbltchr
-decl_stmt|;
 name|vd_drawrect_t
 modifier|*
 name|vd_drawrect
@@ -1579,6 +1624,14 @@ decl_stmt|;
 name|vd_setpixel_t
 modifier|*
 name|vd_setpixel
+decl_stmt|;
+name|vd_bitblt_text_t
+modifier|*
+name|vd_bitblt_text
+decl_stmt|;
+name|vd_bitblt_bmp_t
+modifier|*
+name|vd_bitblt_bmp
 decl_stmt|;
 comment|/* Framebuffer ioctls, if present. */
 name|vd_fb_ioctl_t
@@ -1589,11 +1642,6 @@ comment|/* Framebuffer mmap, if present. */
 name|vd_fb_mmap_t
 modifier|*
 name|vd_fb_mmap
-decl_stmt|;
-comment|/* Text mode operation. */
-name|vd_putchar_t
-modifier|*
-name|vd_putchar
 decl_stmt|;
 comment|/* Update display setting on vt switch. */
 name|vd_postswitch_t
@@ -1783,7 +1831,7 @@ end_ifndef
 
 begin_struct
 struct|struct
-name|mouse_cursor
+name|vt_mouse_cursor
 block|{
 name|uint8_t
 name|map
@@ -1806,10 +1854,10 @@ literal|8
 index|]
 decl_stmt|;
 name|uint8_t
-name|w
+name|width
 decl_stmt|;
 name|uint8_t
-name|h
+name|height
 decl_stmt|;
 block|}
 struct|;
@@ -1955,6 +2003,49 @@ directive|define
 name|VT_MOUSE_HIDE
 value|0
 end_define
+
+begin_comment
+comment|/* Utilities. */
+end_comment
+
+begin_function_decl
+name|void
+name|vt_determine_colors
+parameter_list|(
+name|term_char_t
+name|c
+parameter_list|,
+name|int
+name|cursor
+parameter_list|,
+name|term_color_t
+modifier|*
+name|fg
+parameter_list|,
+name|term_color_t
+modifier|*
+name|bg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vt_is_cursor_in_area
+parameter_list|(
+specifier|const
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|,
+specifier|const
+name|term_rect_t
+modifier|*
+name|area
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
