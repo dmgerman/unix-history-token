@@ -896,6 +896,12 @@ name|mq
 operator|->
 name|m_nextpkt
 expr_stmt|;
+name|mq
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
+expr_stmt|;
 name|m_catpkt
 argument_list|(
 name|m
