@@ -3836,6 +3836,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|m_catpkt
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|m_extadd
 parameter_list|(
