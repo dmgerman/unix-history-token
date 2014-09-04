@@ -5180,12 +5180,6 @@ name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
@@ -5338,12 +5332,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -5361,12 +5349,6 @@ directive|endif
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remember the IP options, if any. 	 */
