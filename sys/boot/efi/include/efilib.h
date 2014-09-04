@@ -101,6 +101,9 @@ parameter_list|,
 name|EFI_HANDLE
 modifier|*
 parameter_list|,
+name|EFI_HANDLE
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;

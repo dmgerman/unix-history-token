@@ -56,7 +56,7 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|i386_parsedev
+name|x86_efi_parsedev
 parameter_list|(
 name|struct
 name|devdesc
@@ -81,7 +81,7 @@ end_comment
 
 begin_function
 name|int
-name|i386_getdev
+name|x86_efi_getdev
 parameter_list|(
 name|void
 modifier|*
@@ -140,7 +140,7 @@ condition|)
 block|{
 name|rv
 operator|=
-name|i386_parsedev
+name|x86_efi_parsedev
 argument_list|(
 name|dev
 argument_list|,
@@ -176,7 +176,7 @@ block|}
 comment|/* Parse the device name off the beginning of the devspec. */
 return|return
 operator|(
-name|i386_parsedev
+name|x86_efi_parsedev
 argument_list|(
 name|dev
 argument_list|,
@@ -196,7 +196,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|i386_parsedev
+name|x86_efi_parsedev
 parameter_list|(
 name|struct
 name|devdesc
@@ -500,7 +500,7 @@ end_function
 begin_function
 name|char
 modifier|*
-name|i386_fmtdev
+name|x86_efi_fmtdev
 parameter_list|(
 name|void
 modifier|*
@@ -579,7 +579,7 @@ end_comment
 
 begin_function
 name|int
-name|i386_setcurrdev
+name|x86_efi_setcurrdev
 parameter_list|(
 name|struct
 name|env_var
@@ -605,7 +605,7 @@ name|rv
 decl_stmt|;
 name|rv
 operator|=
-name|i386_parsedev
+name|x86_efi_parsedev
 argument_list|(
 operator|&
 name|ncurr

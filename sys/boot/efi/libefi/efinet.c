@@ -1344,6 +1344,8 @@ name|efinet_dev
 argument_list|,
 name|handles
 argument_list|,
+name|NULL
+argument_list|,
 name|nifs
 argument_list|)
 expr_stmt|;

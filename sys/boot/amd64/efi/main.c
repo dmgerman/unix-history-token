@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../libi386/libi386.h"
+file|"x86_efi.h"
 end_include
 
 begin_decl_stmt
@@ -195,10 +195,27 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*  	 * XXX Chicken-and-egg problem; we want to have console output 	 * early, but some console attributes may depend on reading from 	 * eg. the boot device, which we can't do yet.  We can use 	 * printf() etc. once this is done. 	 */
+comment|/* 	 * XXX Chicken-and-egg problem; we want to have console output 	 * early, but some console attributes may depend on reading from 	 * eg. the boot device, which we can't do yet.  We can use 	 * printf() etc. once this is done. 	 */
 name|cons_probe
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|x86_efi_copy_init
+argument_list|()
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"failed to allocate staging area\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EFI_BUFFER_TOO_SMALL
+operator|)
+return|;
+block|}
 comment|/* 	 * March through the device switch probing for things. 	 */
 for|for
 control|(
@@ -398,13 +415,13 @@ literal|"currdev"
 argument_list|,
 name|EV_VOLATILE
 argument_list|,
-name|i386_fmtdev
+name|x86_efi_fmtdev
 argument_list|(
 operator|&
 name|currdev
 argument_list|)
 argument_list|,
-name|i386_setcurrdev
+name|x86_efi_setcurrdev
 argument_list|,
 name|env_nounset
 argument_list|)
@@ -415,7 +432,7 @@ literal|"loaddev"
 argument_list|,
 name|EV_VOLATILE
 argument_list|,
-name|i386_fmtdev
+name|x86_efi_fmtdev
 argument_list|(
 operator|&
 name|currdev
@@ -440,31 +457,31 @@ name|archsw
 operator|.
 name|arch_autoload
 operator|=
-name|i386_autoload
+name|x86_efi_autoload
 expr_stmt|;
 name|archsw
 operator|.
 name|arch_getdev
 operator|=
-name|i386_getdev
+name|x86_efi_getdev
 expr_stmt|;
 name|archsw
 operator|.
 name|arch_copyin
 operator|=
-name|i386_copyin
+name|x86_efi_copyin
 expr_stmt|;
 name|archsw
 operator|.
 name|arch_copyout
 operator|=
-name|i386_copyout
+name|x86_efi_copyout
 expr_stmt|;
 name|archsw
 operator|.
 name|arch_readin
 operator|=
-name|i386_readin
+name|x86_efi_readin
 expr_stmt|;
 name|interact
 argument_list|()
@@ -1305,12 +1322,13 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|UINTN
 name|cols
 decl_stmt|,
 name|rows
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|mode
 decl_stmt|;
 name|int
@@ -1456,8 +1474,11 @@ name|sprintf
 argument_list|(
 name|rowenv
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|rows
 argument_list|)
 expr_stmt|;
@@ -1514,12 +1535,18 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"Mode %d: %d columns, %d rows\n"
+literal|"Mode %d: %u columns, %u rows\n"
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cols
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|rows
 argument_list|)
 expr_stmt|;
@@ -1613,12 +1640,9 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-name|unsigned
-name|int
+name|UINTN
 name|varsz
-decl_stmt|;
-name|unsigned
-name|int
+decl_stmt|,
 name|datasz
 decl_stmt|;
 name|SIMPLE_TEXT_OUTPUT_INTERFACE
