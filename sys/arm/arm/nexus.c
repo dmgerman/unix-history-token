@@ -1558,7 +1558,7 @@ name|pol
 decl_stmt|;
 name|intr_offset
 operator|=
-name|OF_xref_phandle
+name|OF_node_from_xref
 argument_list|(
 name|iparent
 argument_list|)

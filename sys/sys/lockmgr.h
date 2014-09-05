@@ -343,6 +343,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|lockdisableshare
+parameter_list|(
+name|struct
+name|lock
+modifier|*
+name|lk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|lockinit
 parameter_list|(
 name|struct

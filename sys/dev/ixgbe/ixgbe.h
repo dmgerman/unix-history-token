@@ -718,17 +718,6 @@ value|32
 end_define
 
 begin_comment
-comment|/* IOCTL define to gather SFP+ Diagnostic data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGI2C
-value|SIOCGIFGENERIC
-end_define
-
-begin_comment
 comment|/* Offload bits in mbuf flag */
 end_comment
 
@@ -829,33 +818,6 @@ block|}
 name|ixgbe_vendor_info_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* This is used to get SFP+ module data */
-end_comment
-
-begin_struct
-struct|struct
-name|ixgbe_i2c_req
-block|{
-name|u8
-name|dev_addr
-decl_stmt|;
-name|u8
-name|offset
-decl_stmt|;
-name|u8
-name|len
-decl_stmt|;
-name|u8
-name|data
-index|[
-literal|8
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct

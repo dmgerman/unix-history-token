@@ -1398,7 +1398,7 @@ name|link_state
 operator|=
 name|LINK_STATE_UNKNOWN
 expr_stmt|;
-name|if_linkstate_change_drv
+name|if_link_state_change
 argument_list|(
 name|mii
 operator|->
@@ -1505,8 +1505,7 @@ name|device_t
 modifier|*
 name|miibus
 parameter_list|,
-name|void
-modifier|*
+name|if_t
 name|ifp
 parameter_list|,
 name|ifm_change_cb_t

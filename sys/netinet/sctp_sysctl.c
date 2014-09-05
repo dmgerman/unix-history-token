@@ -65,6 +65,22 @@ directive|include
 file|<sys/smp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|sctp
+argument_list|,
+literal|"Stream Control Transmission Protocol"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * sysctl tunable variables  */
 end_comment

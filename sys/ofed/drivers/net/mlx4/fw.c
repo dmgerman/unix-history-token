@@ -5995,6 +5995,10 @@ name|fw
 operator|->
 name|comm_bar
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|fw
 operator|->
 name|comm_base
@@ -6059,6 +6063,10 @@ name|fw
 operator|->
 name|comm_bar
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|fw
 operator|->
 name|comm_base

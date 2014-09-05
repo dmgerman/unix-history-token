@@ -536,7 +536,10 @@ condition|(
 name|rdl
 operator|==
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|objname
@@ -564,6 +567,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(

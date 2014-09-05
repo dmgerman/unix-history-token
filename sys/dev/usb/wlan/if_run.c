@@ -31898,7 +31898,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|mac_rev
+name|mac_ver
 operator|==
 literal|0x3071
 condition|)

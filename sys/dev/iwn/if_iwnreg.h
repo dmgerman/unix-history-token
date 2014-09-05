@@ -2436,6 +2436,10 @@ name|IWN5000_CMD_TX_ANT_CONFIG
 value|152
 define|#
 directive|define
+name|IWN_CMD_TXPOWER_DBM_V1
+value|152
+define|#
+directive|define
 name|IWN_CMD_BT_COEX
 value|155
 define|#

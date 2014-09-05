@@ -543,14 +543,14 @@ name|fbt
 operator|->
 name|fbtp_next
 control|)
-operator|*
+name|fbt_patch_tracepoint
+argument_list|(
 name|fbt
-operator|->
-name|fbtp_patchpoint
-operator|=
+argument_list|,
 name|fbt
 operator|->
 name|fbtp_savedval
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1046,7 +1046,7 @@ name|fbt
 argument_list|,
 name|fbt
 operator|->
-name|fbtp_patchval
+name|fbtp_savedval
 argument_list|)
 expr_stmt|;
 block|}
@@ -1124,7 +1124,7 @@ name|fbt
 argument_list|,
 name|fbt
 operator|->
-name|fbtp_patchval
+name|fbtp_savedval
 argument_list|)
 expr_stmt|;
 block|}

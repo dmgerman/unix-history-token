@@ -3765,15 +3765,13 @@ name|off0
 operator|+
 name|off
 expr_stmt|;
-comment|/* 	 * Locate pcb for segment; if we're likely to add or remove a 	 * connection then first acquire pcbinfo lock.  There are two cases 	 * where we might discover later we need a write lock despite the 	 * flags: ACKs moving a connection out of the syncache, and ACKs for 	 * a connection in TIMEWAIT. 	 */
+comment|/* 	 * Locate pcb for segment; if we're likely to add or remove a 	 * connection then first acquire pcbinfo lock.  There are three cases 	 * where we might discover later we need a write lock despite the 	 * flags: ACKs moving a connection out of the syncache, ACKs for a 	 * connection in TIMEWAIT and SYNs not targeting a listening socket. 	 */
 if|if
 condition|(
 operator|(
 name|thflags
 operator|&
 operator|(
-name|TH_SYN
-operator||
 name|TH_FIN
 operator||
 name|TH_RST
@@ -4715,8 +4713,6 @@ operator|(
 name|thflags
 operator|&
 operator|(
-name|TH_SYN
-operator||
 name|TH_FIN
 operator||
 name|TH_RST
@@ -4735,11 +4731,38 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|!
+operator|(
+operator|(
 name|tp
 operator|->
 name|t_state
-operator|!=
+operator|==
 name|TCPS_ESTABLISHED
+operator|&&
+operator|(
+name|thflags
+operator|&
+name|TH_SYN
+operator|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_LISTEN
+operator|&&
+operator|(
+name|thflags
+operator|&
+name|TH_SYN
+operator|)
+operator|)
+operator|)
 condition|)
 block|{
 if|if
@@ -4940,7 +4963,7 @@ block|}
 endif|#
 directive|endif
 comment|/* TCPDEBUG */
-comment|/* 	 * When the socket is accepting connections (the INPCB is in LISTEN 	 * state) we look into the SYN cache if this is a new connection 	 * attempt or the completion of a previous one.  Because listen 	 * sockets are never in TCPS_ESTABLISHED, the V_tcbinfo lock will be 	 * held in this case. 	 */
+comment|/* 	 * When the socket is accepting connections (the INPCB is in LISTEN 	 * state) we look into the SYN cache if this is a new connection 	 * attempt or the completion of a previous one. 	 */
 if|if
 condition|(
 name|so
@@ -4968,12 +4991,6 @@ literal|"tp not listening"
 operator|,
 name|__func__
 operator|)
-argument_list|)
-expr_stmt|;
-name|INP_INFO_WLOCK_ASSERT
-argument_list|(
-operator|&
-name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -5081,6 +5098,12 @@ operator|==
 name|TH_ACK
 condition|)
 block|{
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Parse the TCP options here because 			 * syncookies need access to the reflected 			 * timestamp. 			 */
 name|tcp_dooptions
 argument_list|(
@@ -6073,7 +6096,25 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Entry added to syncache and mbuf consumed. 		 * Everything already unlocked by syncache_add(). 		 */
+comment|/* 		 * Entry added to syncache and mbuf consumed. 		 * Only the listen socket is unlocked by syncache_add(). 		 */
+if|if
+condition|(
+name|ti_locked
+operator|==
+name|TI_WLOCKED
+condition|)
+block|{
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
+name|ti_locked
+operator|=
+name|TI_UNLOCKED
+expr_stmt|;
+block|}
 name|INP_INFO_UNLOCK_ASSERT
 argument_list|(
 operator|&

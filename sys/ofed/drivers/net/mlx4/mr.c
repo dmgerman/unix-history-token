@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/errno.h>
 end_include
 

@@ -921,9 +921,7 @@ expr_stmt|;
 comment|/* 	 * Tell upper layers that we support full VLAN capability. 	 */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(

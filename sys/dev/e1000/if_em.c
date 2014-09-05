@@ -4257,7 +4257,7 @@ operator|*
 operator|)
 name|NULL
 condition|)
-name|if_free_drv
+name|if_free
 argument_list|(
 name|adapter
 operator|->
@@ -4463,7 +4463,7 @@ operator|->
 name|vlan_detach
 argument_list|)
 expr_stmt|;
-name|ether_ifdetach_drv
+name|ether_ifdetach
 argument_list|(
 name|adapter
 operator|->
@@ -4499,7 +4499,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|if_free_drv
+name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -5730,7 +5730,7 @@ operator|&
 name|IFF_NOARP
 operator|)
 condition|)
-name|arp_ifinit_drv
+name|arp_ifinit
 argument_list|(
 name|ifp
 argument_list|,
@@ -5743,7 +5743,7 @@ block|}
 else|else
 name|error
 operator|=
-name|ether_ioctl_drv
+name|ether_ioctl
 argument_list|(
 name|ifp
 argument_list|,
@@ -6119,7 +6119,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ifmedia_ioctl_drv
+name|ifmedia_ioctl
 argument_list|(
 name|ifp
 argument_list|,
@@ -6433,7 +6433,7 @@ block|}
 default|default:
 name|error
 operator|=
-name|ether_ioctl_drv
+name|ether_ioctl
 argument_list|(
 name|ifp
 argument_list|,
@@ -11365,7 +11365,7 @@ operator|*
 literal|1000000
 argument_list|)
 expr_stmt|;
-name|if_linkstate_change_drv
+name|if_link_state_change
 argument_list|(
 name|ifp
 argument_list|,
@@ -11450,7 +11450,7 @@ name|queue_status
 operator|=
 name|EM_QUEUE_IDLE
 expr_stmt|;
-name|if_linkstate_change_drv
+name|if_link_state_change
 argument_list|(
 name|ifp
 argument_list|,
@@ -14166,7 +14166,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|if_initname_drv
+name|if_initname
 argument_list|(
 name|ifp
 argument_list|,
@@ -14265,7 +14265,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ether_ifattach_drv
+name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
@@ -14392,7 +14392,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
-name|ifmedia_init_drv
+name|ifmedia_init
 argument_list|(
 operator|&
 name|adapter

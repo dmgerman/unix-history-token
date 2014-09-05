@@ -36,7 +36,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AS3722_EXT_CONTROL_PIN_ENABLE2
+name|AS3722_EXT_CONTROL_PIN_ENABLE3
 value|3
 end_define
 

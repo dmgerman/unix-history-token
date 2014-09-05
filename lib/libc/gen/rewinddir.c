@@ -143,15 +143,7 @@ argument_list|,
 name|false
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|dirp
-operator|->
-name|dd_seek
-operator|!=
-literal|0
-condition|)
+else|else
 block|{
 operator|(
 name|void

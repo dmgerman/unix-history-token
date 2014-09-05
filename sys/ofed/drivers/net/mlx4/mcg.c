@@ -4357,6 +4357,10 @@ name|dev
 argument_list|,
 literal|"Fail to detach network rule. registration id = 0x%llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|reg_id
 argument_list|)
 expr_stmt|;

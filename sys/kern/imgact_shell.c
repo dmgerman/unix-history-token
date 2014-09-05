@@ -244,6 +244,8 @@ condition|(
 name|imgp
 operator|->
 name|interpreted
+operator|&
+name|IMGACT_SHELL
 condition|)
 return|return
 operator|(
@@ -253,8 +255,8 @@ return|;
 name|imgp
 operator|->
 name|interpreted
-operator|=
-literal|1
+operator||=
+name|IMGACT_SHELL
 expr_stmt|;
 comment|/* 	 * At this point we have the first page of the file mapped. 	 * However, we don't know how far into the page the contents are 	 * valid -- the actual file might be much shorter than the page. 	 * So find out the file size.  	 */
 name|error

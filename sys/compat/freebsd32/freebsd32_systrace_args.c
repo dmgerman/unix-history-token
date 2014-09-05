@@ -2792,13 +2792,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* fcntl */
+comment|/* freebsd32_fcntl */
 case|case
 literal|92
 case|:
 block|{
 name|struct
-name|fcntl_args
+name|freebsd32_fcntl_args
 modifier|*
 name|p
 init|=
@@ -2833,7 +2833,7 @@ name|p
 operator|->
 name|arg
 expr_stmt|;
-comment|/* long */
+comment|/* int */
 operator|*
 name|n_args
 operator|=
@@ -20178,7 +20178,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* fcntl */
+comment|/* freebsd32_fcntl */
 case|case
 literal|92
 case|:
@@ -20208,7 +20208,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"long"
+literal|"int"
 expr_stmt|;
 break|break;
 default|default:
@@ -32481,7 +32481,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* fcntl */
+comment|/* freebsd32_fcntl */
 case|case
 literal|92
 case|:

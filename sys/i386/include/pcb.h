@@ -197,6 +197,10 @@ decl_stmt|;
 name|uint16_t
 name|pcb_tr
 decl_stmt|;
+name|union
+name|savefpu
+name|pcb_fpususpend
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/device.h>
 end_include
 
@@ -2772,6 +2766,9 @@ name|err
 goto|;
 block|}
 comment|/* 	 * fops_get() can't fail here, because we're coming from a 	 * system call on a uverbs file, which will already have a 	 * module reference. 	 */
+ifdef|#
+directive|ifdef
+name|__linux__
 name|filp
 operator|=
 name|alloc_file
@@ -2794,6 +2791,23 @@ name|uverbs_event_fops
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|filp
+operator|=
+name|alloc_file
+argument_list|(
+name|FMODE_READ
+argument_list|,
+name|fops_get
+argument_list|(
+operator|&
+name|uverbs_event_fops
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3671,6 +3685,11 @@ name|struct
 name|class
 modifier|*
 name|class
+parameter_list|,
+name|struct
+name|class_attribute
+modifier|*
+name|attr
 parameter_list|,
 name|char
 modifier|*

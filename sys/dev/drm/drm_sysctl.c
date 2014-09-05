@@ -787,12 +787,6 @@ condition|(
 name|map
 operator|->
 name|type
-operator|<
-literal|0
-operator|||
-name|map
-operator|->
-name|type
 operator|>
 literal|4
 condition|)

@@ -41,6 +41,12 @@ directive|include
 file|<dev/drm2/drm_crtc_helper.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
+end_include
+
 begin_struct
 struct|struct
 name|vt_kms_softc
@@ -176,6 +182,15 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|kdb_active
+operator|&&
+name|panicstr
+operator|==
+name|NULL
+condition|)
 name|taskqueue_enqueue_fast
 argument_list|(
 name|taskqueue_thread
@@ -184,6 +199,14 @@ operator|&
 name|sc
 operator|->
 name|fb_mode_task
+argument_list|)
+expr_stmt|;
+else|else
+name|drm_fb_helper_restore_fbdev_mode
+argument_list|(
+name|sc
+operator|->
+name|fb_helper
 argument_list|)
 expr_stmt|;
 return|return

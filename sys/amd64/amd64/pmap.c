@@ -10888,7 +10888,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Return if "addr" is within the range of kernel page table pages 	 * that were preallocated during pmap bootstrap.  Moreover, leave 	 * "kernel_vm_end" and the kernel page table as they were. 	 * 	 * The correctness of this action is based on the following 	 * argument: vm_map_findspace() allocates contiguous ranges of the 	 * kernel virtual address space.  It calls this function if a range 	 * ends after "kernel_vm_end".  If the kernel is mapped between 	 * "kernel_vm_end" and "addr", then the range cannot begin at 	 * "kernel_vm_end".  In fact, its beginning address cannot be less 	 * than the kernel.  Thus, there is no immediate need to allocate 	 * any new kernel page table pages between "kernel_vm_end" and 	 * "KERNBASE". 	 */
+comment|/* 	 * Return if "addr" is within the range of kernel page table pages 	 * that were preallocated during pmap bootstrap.  Moreover, leave 	 * "kernel_vm_end" and the kernel page table as they were. 	 * 	 * The correctness of this action is based on the following 	 * argument: vm_map_insert() allocates contiguous ranges of the 	 * kernel virtual address space.  It calls this function if a range 	 * ends after "kernel_vm_end".  If the kernel is mapped between 	 * "kernel_vm_end" and "addr", then the range cannot begin at 	 * "kernel_vm_end".  In fact, its beginning address cannot be less 	 * than the kernel.  Thus, there is no immediate need to allocate 	 * any new kernel page table pages between "kernel_vm_end" and 	 * "KERNBASE". 	 */
 if|if
 condition|(
 name|KERNBASE

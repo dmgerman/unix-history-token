@@ -2019,9 +2019,7 @@ expr_stmt|;
 comment|/* 	 * Tell the upper layer(s) we support long frames/checksum offloads. 	 */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(

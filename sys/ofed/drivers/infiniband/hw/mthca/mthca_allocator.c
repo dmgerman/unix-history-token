@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/bitmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mthca_dev.h"
 end_include
 

@@ -574,11 +574,16 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-specifier|extern
 name|int
 name|has_f00f_bug
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Initialized so that it can be patched. */
+end_comment
 
 begin_endif
 endif|#

@@ -2982,7 +2982,7 @@ block|{
 comment|/* 				 * First cell of 'gpios' property should 				 * contain a ref. to a node defining GPIO 				 * controller. 				 */
 name|ctrl
 operator|=
-name|OF_xref_phandle
+name|OF_node_from_xref
 argument_list|(
 name|fdt32_to_cpu
 argument_list|(

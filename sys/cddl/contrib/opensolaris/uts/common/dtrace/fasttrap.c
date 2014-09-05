@@ -9002,6 +9002,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 			 * Report an error if the process doesn't exist 			 * or is actively being birthed. 			 */
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|pfind
@@ -9019,6 +9025,12 @@ name|p
 argument_list|,
 operator|&
 name|kp
+argument_list|)
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -9296,6 +9308,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 			 * Report an error if the process doesn't exist 			 * or is actively being birthed. 			 */
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|pfind
@@ -9313,6 +9331,12 @@ name|p
 argument_list|,
 operator|&
 name|kp
+argument_list|)
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 if|if

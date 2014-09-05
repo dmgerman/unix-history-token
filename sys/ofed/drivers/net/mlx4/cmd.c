@@ -3062,8 +3062,16 @@ argument_list|,
 literal|"Bad access mem params - slave_addr:0x%llx "
 literal|"master_addr:0x%llx slave_id:%d size:%d\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|slave_addr
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|master_addr
 argument_list|,
 name|slave
@@ -7522,6 +7530,10 @@ operator|)
 argument_list|,
 literal|"alloc mac %llx idx  %d slave %d port %d\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vp_oper
 operator|->
 name|state
@@ -10950,6 +10962,10 @@ name|vf
 argument_list|,
 name|port
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|s_info
 operator|->
 name|mac

@@ -2565,6 +2565,8 @@ condition|(
 name|imgp
 operator|->
 name|interpreted
+operator|&
+name|IMGACT_BINMISC
 condition|)
 block|{
 name|mtx_unlock
@@ -2582,8 +2584,8 @@ block|}
 name|imgp
 operator|->
 name|interpreted
-operator|=
-literal|1
+operator||=
+name|IMGACT_BINMISC
 expr_stmt|;
 if|if
 condition|(
