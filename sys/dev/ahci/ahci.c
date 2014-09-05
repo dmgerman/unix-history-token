@@ -1245,14 +1245,6 @@ name|ctlr
 operator|->
 name|quirks
 operator|&
-name|AHCI_Q_NOBSYRES
-operator|)
-operator|&&
-operator|(
-name|ctlr
-operator|->
-name|quirks
-operator|&
 name|AHCI_Q_ALTSIG
 operator|)
 operator|&&
@@ -1269,8 +1261,7 @@ condition|)
 name|ctlr
 operator|->
 name|quirks
-operator|&=
-operator|~
+operator||=
 name|AHCI_Q_NOBSYRES
 expr_stmt|;
 if|if
@@ -9843,7 +9834,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* Marvell controllers do not wait for readyness. */
+comment|/* 		 * Marvell HBAs with non-RAID firmware do not wait for 		 * readiness after soft reset, so we have to wait here. 		 * Marvell RAIDs have no this problem, but instead sometimes 		 * forget to update FIS receive area, breaking this wait. 		 */
 if|if
 condition|(
 operator|(
@@ -9853,6 +9844,18 @@ name|quirks
 operator|&
 name|AHCI_Q_NOBSYRES
 operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|ch
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_ATI_PMP_BUG
+operator|)
+operator|==
+literal|0
 operator|&&
 name|softreset
 operator|==
