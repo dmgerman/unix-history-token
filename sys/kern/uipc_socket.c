@@ -14800,6 +14800,13 @@ return|return
 literal|1
 return|;
 block|}
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|V_socket_hhh
@@ -14824,6 +14831,9 @@ name|HHOOK_FILT_SOREAD
 argument_list|)
 operator|)
 return|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -14954,6 +14964,13 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|V_socket_hhh
@@ -14973,6 +14990,9 @@ name|kn
 argument_list|,
 name|HHOOK_FILT_SOWRITE
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
