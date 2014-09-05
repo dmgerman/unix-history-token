@@ -2548,9 +2548,6 @@ name|uintptr_t
 name|optlen
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|co
@@ -2599,8 +2596,8 @@ name|opcode
 operator|=
 name|optname
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|setsockopt
 argument_list|(
 name|ipfw_socket
@@ -2613,10 +2610,6 @@ name|op3
 argument_list|,
 name|optlen
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
