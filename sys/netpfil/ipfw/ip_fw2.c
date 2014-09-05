@@ -11234,6 +11234,9 @@ name|default_fw_tables
 operator|=
 name|IPFW_TABLES_MAX
 expr_stmt|;
+name|ipfw_init_sopt_handler
+argument_list|()
+expr_stmt|;
 name|ipfw_log_bpf
 argument_list|(
 literal|1
@@ -11272,6 +11275,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* uninit */
+name|ipfw_destroy_sopt_handler
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"IP firewall unloaded\n"
@@ -11297,6 +11303,8 @@ parameter_list|)
 block|{
 name|int
 name|error
+decl_stmt|,
+name|first
 decl_stmt|;
 name|struct
 name|ip_fw
@@ -11314,6 +11322,17 @@ name|chain
 operator|=
 operator|&
 name|V_layer3_chain
+expr_stmt|;
+name|first
+operator|=
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 comment|/* First set up some values that are compile time options */
 name|V_autoinc_step
@@ -11409,6 +11428,8 @@ operator|=
 name|ipfw_init_tables
 argument_list|(
 name|chain
+argument_list|,
+name|first
 argument_list|)
 expr_stmt|;
 if|if
@@ -11599,6 +11620,8 @@ name|V_layer3_chain
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|last
 decl_stmt|;
 name|V_ipfw_vnet_ready
 operator|=
@@ -11618,6 +11641,17 @@ expr_stmt|;
 name|V_ip_fw_ctl_ptr
 operator|=
 name|NULL
+expr_stmt|;
+name|last
+operator|=
+name|IS_DEFAULT_VNET
+argument_list|(
+name|curvnet
+argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 name|IPFW_UH_WLOCK
 argument_list|(
@@ -11716,6 +11750,8 @@ expr_stmt|;
 name|ipfw_destroy_tables
 argument_list|(
 name|chain
+argument_list|,
+name|last
 argument_list|)
 expr_stmt|;
 if|if
