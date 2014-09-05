@@ -3507,7 +3507,8 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"capping MaxDataSegmentLength from %d to %d"
+literal|"capping MaxRecvDataSegmentLength "
+literal|"from %d to %d"
 argument_list|,
 name|tmp
 argument_list|,
