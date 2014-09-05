@@ -3000,7 +3000,7 @@ name|M_EXT
 condition|)
 name|printf
 argument_list|(
-literal|"%s: %p mbuf already has cluster\n"
+literal|"%s: %p mbuf already has external storage\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3104,7 +3104,7 @@ name|M_EXT
 condition|)
 name|printf
 argument_list|(
-literal|"%s: %p mbuf already has cluster\n"
+literal|"%s: %p mbuf already has external storage\n"
 argument_list|,
 name|__func__
 argument_list|,
