@@ -1210,14 +1210,6 @@ name|__has_extension
 argument_list|(
 name|c_alignas
 argument_list|)
-operator|&&
-operator|!
-name|__GNUC_PREREQ__
-argument_list|(
-literal|4
-operator|,
-literal|7
-argument_list|)
 end_if
 
 begin_if
@@ -1283,18 +1275,6 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
-name|__GNUC_PREREQ__
-argument_list|(
-literal|4
-operator|,
-literal|7
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
 name|defined
 argument_list|(
 name|__cplusplus
@@ -1329,11 +1309,6 @@ name|x
 parameter_list|)
 value|__alignof(x)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1419,14 +1394,6 @@ operator|!
 name|__has_extension
 argument_list|(
 name|c_static_assert
-argument_list|)
-operator|&&
-operator|!
-name|__GNUC_PREREQ__
-argument_list|(
-literal|4
-operator|,
-literal|7
 argument_list|)
 end_if
 
@@ -1620,13 +1587,6 @@ expr|\
 name|__has_extension
 argument_list|(
 name|c_generic_selections
-argument_list|)
-operator|||
-name|__GNUC_PREREQ__
-argument_list|(
-literal|4
-operator|,
-literal|9
 argument_list|)
 end_if
 
