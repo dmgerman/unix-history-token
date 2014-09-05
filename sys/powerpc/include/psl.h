@@ -421,6 +421,17 @@ name|PSL_KERNSET
 value|(PSL_CE | PSL_ME | PSL_EE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PSL_SRR1_MASK
+value|0x00000000UL
+end_define
+
+begin_comment
+comment|/* No mask on Book-E */
+end_comment
+
 begin_elif
 elif|#
 directive|elif
@@ -436,6 +447,17 @@ directive|define
 name|PSL_KERNSET
 value|(PSL_CE | PSL_ME | PSL_EE | PSL_FP)
 end_define
+
+begin_define
+define|#
+directive|define
+name|PSL_SRR1_MASK
+value|0x00000000UL
+end_define
+
+begin_comment
+comment|/* No mask on Book-E */
+end_comment
 
 begin_elif
 elif|#
@@ -476,6 +498,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|PSL_SRR1_MASK
+value|0x783f0000UL
+end_define
+
+begin_comment
+comment|/* Bits 1-4, 10-15 (ppc32), 33-36, 42-47 (ppc64) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -492,7 +525,7 @@ begin_define
 define|#
 directive|define
 name|PSL_USERSTATIC
-value|~(PSL_VEC | PSL_FP | PSL_FE0 | PSL_FE1)
+value|(~(PSL_VEC | PSL_FP | PSL_FE0 | PSL_FE1)& ~PSL_SRR1_MASK)
 end_define
 
 begin_endif
