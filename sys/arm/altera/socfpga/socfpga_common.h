@@ -12,8 +12,31 @@ name|_sc
 parameter_list|,
 name|_reg
 parameter_list|)
-define|\
-value|bus_space_read_4(_sc->bst, _sc->bsh, _reg)
+value|bus_read_4((_sc)->res[0], _reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ2
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_reg
+parameter_list|)
+value|bus_read_2((_sc)->res[0], _reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|READ1
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_reg
+parameter_list|)
+value|bus_read_1((_sc)->res[0], _reg)
 end_define
 
 begin_define
@@ -27,21 +50,7 @@ name|_reg
 parameter_list|,
 name|_val
 parameter_list|)
-define|\
-value|bus_space_write_4(_sc->bst, _sc->bsh, _reg, _val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|READ2
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_reg
-parameter_list|)
-define|\
-value|bus_space_read_2(_sc->bst, _sc->bsh, _reg)
+value|bus_write_4((_sc)->res[0], _reg, _val)
 end_define
 
 begin_define
@@ -55,21 +64,7 @@ name|_reg
 parameter_list|,
 name|_val
 parameter_list|)
-define|\
-value|bus_space_write_2(_sc->bst, _sc->bsh, _reg, _val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|READ1
-parameter_list|(
-name|_sc
-parameter_list|,
-name|_reg
-parameter_list|)
-define|\
-value|bus_space_read_1(_sc->bst, _sc->bsh, _reg)
+value|bus_write_2((_sc)->res[0], _reg, _val)
 end_define
 
 begin_define
@@ -83,8 +78,7 @@ name|_reg
 parameter_list|,
 name|_val
 parameter_list|)
-define|\
-value|bus_space_write_1(_sc->bst, _sc->bsh, _reg, _val)
+value|bus_write_1((_sc)->res[0], _reg, _val)
 end_define
 
 end_unit
