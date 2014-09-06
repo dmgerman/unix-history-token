@@ -665,13 +665,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP_BASE_STATS_SYSCTL
-value|VNET_NAME(system_base_info.sctpstat)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCTP_BASE_STAT
 parameter_list|(
 name|__m
@@ -686,7 +679,7 @@ name|SCTP_BASE_SYSCTL
 parameter_list|(
 name|__m
 parameter_list|)
-value|VNET_NAME(system_base_info.sctpsysctl.__m)
+value|V_system_base_info.sctpsysctl.__m
 end_define
 
 begin_define
@@ -698,21 +691,6 @@ name|__m
 parameter_list|)
 value|V_system_base_info.__m
 end_define
-
-begin_comment
-comment|/*  *  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USER_ADDR_NULL
-value|(NULL)
-end_define
-
-begin_comment
-comment|/* FIX ME: temp */
-end_comment
 
 begin_define
 define|#
@@ -758,7 +736,7 @@ parameter_list|,
 name|addr
 parameter_list|)
 define|\
-value|{									\ 	do {								\ 	if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {			\ 		sctp_print_address(addr);				\ 	}								\ 	} while (0);							\ }
+value|{									\ 	do {								\ 		if (SCTP_BASE_SYSCTL(sctp_debug_on)& level ) {		\ 			sctp_print_address(addr);			\ 		}							\ 	} while (0);							\ }
 end_define
 
 begin_else
