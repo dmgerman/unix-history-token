@@ -483,7 +483,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Some OF implementations (IBM, FDT) have a concept of effective phandles  * used for device-tree cross-references. Given one of these, returns the  * real phandle. If one can't be found (or running on OF implementations  * without this property), returns its input.  */
+comment|/*  * Some OF implementations (IBM, FDT) have a concept of effective phandles  * used for device-tree cross-references. Given one of these, returns the  * real phandle. If one can't be found (or running on OF implementations  * without this property), OF_xref_from_node() returns its input, while the  * strict version returns -1.  */
 end_comment
 
 begin_function_decl
@@ -499,6 +499,16 @@ end_function_decl
 begin_function_decl
 name|phandle_t
 name|OF_xref_from_node
+parameter_list|(
+name|phandle_t
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|phandle_t
+name|OF_xref_from_node_strict
 parameter_list|(
 name|phandle_t
 name|node
