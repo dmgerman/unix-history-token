@@ -9834,7 +9834,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 		 * Marvell HBAs with non-RAID firmware do not wait for 		 * readiness after soft reset, so we have to wait here. 		 * Marvell RAIDs have no this problem, but instead sometimes 		 * forget to update FIS receive area, breaking this wait. 		 */
+comment|/* 		 * Marvell HBAs with non-RAID firmware do not wait for 		 * readiness after soft reset, so we have to wait here. 		 * Marvell RAIDs do not have this problem, but instead 		 * sometimes forget to update FIS receive area, breaking 		 * this wait. 		 */
 if|if
 condition|(
 operator|(
