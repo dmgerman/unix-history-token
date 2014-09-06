@@ -1390,7 +1390,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|int
+name|void
 name|svm_init_vmcb
 parameter_list|(
 name|struct
@@ -1406,9 +1406,6 @@ name|msrpm_base_pa
 parameter_list|,
 name|uint64_t
 name|np_pml4
-parameter_list|,
-name|uint32_t
-name|asid
 parameter_list|)
 function_decl|;
 end_function_decl

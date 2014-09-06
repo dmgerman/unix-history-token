@@ -74,7 +74,7 @@ comment|/*  * Initialize SVM h/w context i.e. the VMCB control and saved state a
 end_comment
 
 begin_function
-name|int
+name|void
 name|svm_init_vmcb
 parameter_list|(
 name|struct
@@ -90,9 +90,6 @@ name|msrpm_base_pa
 parameter_list|,
 name|uint64_t
 name|np_pml4
-parameter_list|,
-name|uint32_t
-name|asid
 parameter_list|)
 block|{
 name|struct
@@ -230,11 +227,12 @@ name|ctrl2
 operator|=
 name|VMCB_INTCPT_VMRUN
 expr_stmt|;
+comment|/* 	 * The ASID will be set to a non-zero value just before VMRUN. 	 */
 name|ctrl
 operator|->
 name|asid
 operator|=
-name|asid
+literal|0
 expr_stmt|;
 comment|/* 	 * Section 15.21.1, Interrupt Masking in EFLAGS 	 * Section 15.21.2, Virtualizing APIC.TPR 	 * 	 * This must be set for %rflag and %cr8 isolation of guest and host. 	 */
 name|ctrl
@@ -327,11 +325,6 @@ argument_list|,
 name|PAT_UNCACHEABLE
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

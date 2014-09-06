@@ -29,6 +29,22 @@ name|SVM_MSR_BITMAP_SIZE
 value|(2 * PAGE_SIZE)
 end_define
 
+begin_struct
+struct|struct
+name|asid
+block|{
+name|uint64_t
+name|gen
+decl_stmt|;
+comment|/* range is [1, ~0UL] */
+name|uint32_t
+name|num
+decl_stmt|;
+comment|/* range is [1, nasid - 1] */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * svm_vpcu contains SVM VMCB state and vcpu register state.  */
 end_comment
@@ -59,6 +75,18 @@ name|int
 name|lastcpu
 decl_stmt|;
 comment|/* host cpu that the vcpu last ran on */
+name|uint32_t
+name|dirty
+decl_stmt|;
+comment|/* state cache bits that must be cleared */
+name|long
+name|eptgen
+decl_stmt|;
+comment|/* pmap->pm_eptgen when the vcpu last ran */
+name|struct
+name|asid
+name|asid
+decl_stmt|;
 block|}
 name|__aligned
 argument_list|(
@@ -120,10 +148,6 @@ name|uint32_t
 name|svm_feature
 decl_stmt|;
 comment|/* SVM features from CPUID.*/
-name|int
-name|asid
-decl_stmt|;
-comment|/* Guest Address Space Identifier */
 name|int
 name|vcpu_cnt
 decl_stmt|;
