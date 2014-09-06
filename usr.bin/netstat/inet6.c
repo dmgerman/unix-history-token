@@ -1757,15 +1757,6 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ip6 on %s:\n"
-argument_list|,
-name|ifr
-operator|.
-name|ifr_name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -1785,6 +1776,12 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EPFNOSUPPORT
+condition|)
 name|perror
 argument_list|(
 literal|"Warning: ioctl(SIOCGIFSTAT_IN6)"
@@ -1794,6 +1791,15 @@ goto|goto
 name|end
 goto|;
 block|}
+name|printf
+argument_list|(
+literal|"ip6 on %s:\n"
+argument_list|,
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_receive
@@ -3059,15 +3065,6 @@ argument_list|,
 name|ifname
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"icmp6 on %s:\n"
-argument_list|,
-name|ifr
-operator|.
-name|ifr_name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -3087,6 +3084,12 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EPFNOSUPPORT
+condition|)
 name|perror
 argument_list|(
 literal|"Warning: ioctl(SIOCGIFSTAT_ICMP6)"
@@ -3096,6 +3099,15 @@ goto|goto
 name|end
 goto|;
 block|}
+name|printf
+argument_list|(
+literal|"icmp6 on %s:\n"
+argument_list|,
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|ifs6_in_msg
