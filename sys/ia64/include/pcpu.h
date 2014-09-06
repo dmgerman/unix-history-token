@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -219,27 +225,45 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCPU_GET
+name|__pcpu_offset
 parameter_list|(
-name|member
+name|name
 parameter_list|)
-value|(pcpup->pc_ ## member)
+value|__offsetof(struct pcpu, name)
 end_define
 
-begin_comment
-comment|/*  * XXX The implementation of this operation should be made atomic  * with respect to preemption.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|__pcpu_type
+parameter_list|(
+name|name
+parameter_list|)
+value|__typeof(((struct pcpu *)0)->name)
+end_define
 
 begin_define
 define|#
 directive|define
 name|PCPU_ADD
 parameter_list|(
-name|member
+name|name
 parameter_list|,
-name|value
+name|val
 parameter_list|)
-value|(pcpup->pc_ ## member += (value))
+define|\
+value|do {							\ 	__pcpu_type(pc_ ## name) *nmp;				\ 	critical_enter();					\ 	__asm __volatile("add %0=%1,r13;;" :			\ 	    "=r"(nmp) : "i"(__pcpu_offset(pc_ ## name)));	\ 	*nmp += val;						\ 	critical_exit();					\     } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_GET
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|({	__pcpu_type(pc_ ## name) *nmp;				\ 	__pcpu_type(pc_ ## name) res;				\ 	critical_enter();					\ 	__asm __volatile("add %0=%1,r13;;" :			\ 	    "=r"(nmp) : "i"(__pcpu_offset(pc_ ## name)));	\ 	res = *nmp;						\ 	critical_exit();					\ 	res;							\     })
 end_define
 
 begin_define
@@ -257,9 +281,10 @@ define|#
 directive|define
 name|PCPU_PTR
 parameter_list|(
-name|member
+name|name
 parameter_list|)
-value|(&pcpup->pc_ ## member)
+define|\
+value|({	__pcpu_type(pc_ ## name) *nmp;				\ 	__asm __volatile("add %0=%1,r13;;" :			\ 	    "=r"(nmp) : "i"(__pcpu_offset(pc_ ## name)));	\ 	nmp;							\     })
 end_define
 
 begin_define
@@ -267,11 +292,12 @@ define|#
 directive|define
 name|PCPU_SET
 parameter_list|(
-name|member
+name|name
 parameter_list|,
-name|value
+name|val
 parameter_list|)
-value|(pcpup->pc_ ## member = (value))
+define|\
+value|do {							\ 	__pcpu_type(pc_ ## name) *nmp;				\ 	critical_enter();					\ 	__asm __volatile("add %0=%1,r13;;" :			\ 	    "=r"(nmp) : "i"(__pcpu_offset(pc_ ## name)));	\ 	*nmp = val;						\ 	critical_exit();					\     } while (0)
 end_define
 
 begin_endif

@@ -282,14 +282,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|PCPU_SET
-argument_list|(
-name|md
+name|pcpup
+operator|->
+name|pc_md
 operator|.
 name|xtrace_tail
-argument_list|,
+operator|=
 name|ia64_xtrace_base
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -383,14 +382,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|PCPU_SET
-argument_list|(
-name|md
+name|pcpup
+operator|->
+name|pc_md
 operator|.
 name|xtrace_buffer
-argument_list|,
+operator|=
 name|buf
-argument_list|)
 expr_stmt|;
 name|pa
 operator|=
@@ -471,14 +469,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|PCPU_SET
-argument_list|(
-name|md
+name|pcpup
+operator|->
+name|pc_md
 operator|.
 name|xtrace_buffer
-argument_list|,
+operator|=
 name|buf
-argument_list|)
 expr_stmt|;
 name|pa
 operator|=
