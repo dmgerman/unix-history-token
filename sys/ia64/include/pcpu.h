@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -169,6 +163,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
 
 begin_struct_decl
 struct_decl|struct
