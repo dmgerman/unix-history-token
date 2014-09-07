@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -4085,8 +4085,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
-name|check_in_use
+name|boolean_t
+name|is_device_in_use
 parameter_list|(
 name|nvlist_t
 modifier|*
@@ -4134,6 +4134,11 @@ index|]
 decl_stmt|;
 name|uint64_t
 name|wholedisk
+decl_stmt|;
+name|boolean_t
+name|anyinuse
+init|=
+name|B_FALSE
 decl_stmt|;
 name|verify
 argument_list|(
@@ -4254,7 +4259,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|B_FALSE
 operator|)
 return|;
 block|}
@@ -4280,6 +4285,7 @@ argument_list|,
 name|isspare
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|strcmp
@@ -4305,6 +4311,8 @@ expr_stmt|;
 return|return
 operator|(
 name|ret
+operator|!=
+literal|0
 operator|)
 return|;
 block|}
@@ -4323,10 +4331,7 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
-name|ret
-operator|=
-name|check_in_use
+name|is_device_in_use
 argument_list|(
 name|config
 argument_list|,
@@ -4341,15 +4346,11 @@ name|replacing
 argument_list|,
 name|B_FALSE
 argument_list|)
-operator|)
-operator|!=
-literal|0
 condition|)
-return|return
-operator|(
-name|ret
-operator|)
-return|;
+name|anyinuse
+operator|=
+name|B_TRUE
+expr_stmt|;
 if|if
 condition|(
 name|nvlist_lookup_nvlist_array
@@ -4382,10 +4383,7 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
-name|ret
-operator|=
-name|check_in_use
+name|is_device_in_use
 argument_list|(
 name|config
 argument_list|,
@@ -4400,15 +4398,11 @@ name|replacing
 argument_list|,
 name|B_TRUE
 argument_list|)
-operator|)
-operator|!=
-literal|0
 condition|)
-return|return
-operator|(
-name|ret
-operator|)
-return|;
+name|anyinuse
+operator|=
+name|B_TRUE
+expr_stmt|;
 if|if
 condition|(
 name|nvlist_lookup_nvlist_array
@@ -4441,10 +4435,7 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
-name|ret
-operator|=
-name|check_in_use
+name|is_device_in_use
 argument_list|(
 name|config
 argument_list|,
@@ -4459,18 +4450,14 @@ name|replacing
 argument_list|,
 name|B_FALSE
 argument_list|)
-operator|)
-operator|!=
-literal|0
 condition|)
+name|anyinuse
+operator|=
+name|B_TRUE
+expr_stmt|;
 return|return
 operator|(
-name|ret
-operator|)
-return|;
-return|return
-operator|(
-literal|0
+name|anyinuse
 operator|)
 return|;
 block|}
@@ -6133,7 +6120,7 @@ return|;
 comment|/* 	 * Validate each device to make sure that its not shared with another 	 * subsystem.  We do this even if 'force' is set, because there are some 	 * uses (such as a dedicated dump device) that even '-f' cannot 	 * override. 	 */
 if|if
 condition|(
-name|check_in_use
+name|is_device_in_use
 argument_list|(
 name|poolconfig
 argument_list|,
@@ -6145,8 +6132,6 @@ name|replacing
 argument_list|,
 name|B_FALSE
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|nvlist_free
