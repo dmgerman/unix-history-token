@@ -3007,11 +3007,8 @@ name|address
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|store
-operator|.
-name|sin6
-operator|.
-name|sin6_addr
+expr|struct
+name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11298,11 +11295,8 @@ name|laddress
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|store
-operator|.
-name|sin6
-operator|.
-name|sin6_addr
+expr|struct
+name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
