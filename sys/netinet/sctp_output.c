@@ -30198,20 +30198,12 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_paramhdr
-argument_list|)
+name|parameter_len
 argument_list|)
 expr_stmt|;
 name|chunk_len
 operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_paramhdr
-argument_list|)
+name|parameter_len
 expr_stmt|;
 block|}
 comment|/* And now tell the peer which extensions we support */

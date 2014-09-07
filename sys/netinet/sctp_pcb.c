@@ -27703,10 +27703,6 @@ name|peer_supports_asconf
 operator|=
 literal|0
 expr_stmt|;
-name|peer_supports_asconf
-operator|=
-literal|0
-expr_stmt|;
 name|peer_supports_reconfig
 operator|=
 literal|0
