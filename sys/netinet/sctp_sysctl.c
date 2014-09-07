@@ -4745,7 +4745,7 @@ parameter_list|,
 name|prefix
 parameter_list|)
 define|\
-value|static int							\ 	sctp_sysctl_handle_##mib_name(SYSCTL_HANDLER_ARGS)		\ 	{								\ 		int error;						\ 		uint32_t new;						\ 									\ 		new = SCTP_BASE_SYSCTL(var_name);			\ 		error = sysctl_handle_int(oidp,&new, 0, req);		\ 		if ((error == 0)&& (req->newptr != NULL)) {		\ 			if ((new< prefix##_MIN) ||			\ 			    (new> prefix##_MAX)) {			\ 				error = EINVAL;				\ 			} else {					\ 				SCTP_BASE_SYSCTL(var_name) = new;	\ 			}						\ 		}							\ 		return (error);						\ 	}								\ 	SYSCTL_VNET_PROC(_net_inet_sctp, OID_AUTO, mib_name,		\ 	                 CTLTYPE_UINT | CTLFLAG_RW, NULL, 0,		\ 	                 sctp_sysctl_handle_##mib_name, "UI", prefix##_DESC);
+value|static int							\ 	sctp_sysctl_handle_##mib_name(SYSCTL_HANDLER_ARGS)		\ 	{								\ 		int error;						\ 		uint32_t new;						\ 									\ 		new = SCTP_BASE_SYSCTL(var_name);			\ 		error = sysctl_handle_int(oidp,&new, 0, req);		\ 		if ((error == 0)&& (req->newptr != NULL)) {		\ 			if ((new< prefix##_MIN) ||			\ 			    (new> prefix##_MAX)) {			\ 				error = EINVAL;				\ 			} else {					\ 				SCTP_BASE_SYSCTL(var_name) = new;	\ 			}						\ 		}							\ 		return (error);						\ 	}								\ 	SYSCTL_PROC(_net_inet_sctp, OID_AUTO, mib_name,			\ 	                 CTLFLAG_VNET|CTLTYPE_UINT|CTLFLAG_RW, NULL, 0,	\ 	                 sctp_sysctl_handle_##mib_name, "UI", prefix##_DESC);
 end_define
 
 begin_comment
@@ -4808,7 +4808,7 @@ argument_list|)
 end_macro
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -4816,6 +4816,8 @@ name|OID_AUTO
 argument_list|,
 name|auth_enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -4834,7 +4836,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -4842,6 +4844,8 @@ name|OID_AUTO
 argument_list|,
 name|asconf_enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -5419,7 +5423,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5427,6 +5431,8 @@ name|OID_AUTO
 argument_list|,
 name|log
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_STRUCT
 operator||
 name|CTLFLAG_RD
@@ -5445,7 +5451,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5453,6 +5459,8 @@ name|OID_AUTO
 argument_list|,
 name|clear_trace
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -5476,7 +5484,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5484,6 +5492,8 @@ name|OID_AUTO
 argument_list|,
 name|udp_tunneling_port
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -5686,7 +5696,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5694,6 +5704,8 @@ name|OID_AUTO
 argument_list|,
 name|stats
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_STRUCT
 operator||
 name|CTLFLAG_RW
@@ -5712,7 +5724,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5720,6 +5732,8 @@ name|OID_AUTO
 argument_list|,
 name|assoclist
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_OPAQUE
 operator||
 name|CTLFLAG_RD
