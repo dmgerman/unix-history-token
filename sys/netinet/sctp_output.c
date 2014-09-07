@@ -9756,11 +9756,6 @@ name|sin
 decl_stmt|;
 name|sin
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 operator|&
 name|ifa
 operator|->
@@ -9874,11 +9869,6 @@ block|}
 comment|/* ok to use deprecated addresses? */
 name|sin6
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
 operator|&
 name|ifa
 operator|->
@@ -10240,11 +10230,6 @@ name|sin
 decl_stmt|;
 name|sin
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 operator|&
 name|ifa
 operator|->
@@ -10319,11 +10304,6 @@ name|sin6
 decl_stmt|;
 name|sin6
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
 operator|&
 name|ifa
 operator|->
@@ -68780,11 +68760,6 @@ operator|)
 expr_stmt|;
 name|sin
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 operator|&
 name|sifa
 operator|->
