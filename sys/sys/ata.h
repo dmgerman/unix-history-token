@@ -941,6 +941,14 @@ comment|/*217*/
 name|u_int16_t
 name|media_rotation_rate
 decl_stmt|;
+define|#
+directive|define
+name|ATA_RATE_NOT_REPORTED
+value|0x0000
+define|#
+directive|define
+name|ATA_RATE_NON_ROTATING
+value|0x0001
 name|u_int16_t
 name|reserved218
 decl_stmt|;

@@ -5365,7 +5365,7 @@ name|ident_data
 operator|.
 name|media_rotation_rate
 operator|==
-literal|1
+name|ATA_RATE_NON_ROTATING
 condition|)
 name|softc
 operator|->
@@ -5394,6 +5394,18 @@ name|disk
 operator|=
 name|disk_alloc
 argument_list|()
+expr_stmt|;
+name|softc
+operator|->
+name|disk
+operator|->
+name|d_rotation_rate
+operator|=
+name|cgd
+operator|->
+name|ident_data
+operator|.
+name|media_rotation_rate
 expr_stmt|;
 name|softc
 operator|->

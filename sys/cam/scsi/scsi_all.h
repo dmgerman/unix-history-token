@@ -8186,7 +8186,7 @@ name|SVPD_BDC_RATE_NOT_REPORTED
 value|0x00
 define|#
 directive|define
-name|SVPD_BDC_RATE_NONE_ROTATING
+name|SVPD_BDC_RATE_NON_ROTATING
 value|0x01
 name|u_int8_t
 name|reserved1

@@ -1436,6 +1436,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|g_handleattr_uint16_t
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|attribute
+parameter_list|,
+name|uint16_t
+name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|g_handleattr_str
 parameter_list|(
 name|struct

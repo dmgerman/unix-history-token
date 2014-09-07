@@ -286,6 +286,10 @@ name|void
 modifier|*
 name|d_drv1
 decl_stmt|;
+comment|/* New field - don't use if DISKFLAG_LACKS_ROTRATE is set */
+name|uint16_t
+name|d_rotation_rate
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -330,6 +334,13 @@ define|#
 directive|define
 name|DISKFLAG_DIRECT_COMPLETION
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISKFLAG_LACKS_ROTRATE
+value|0x40
 end_define
 
 begin_function_decl
@@ -478,8 +489,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|DISK_VERSION_04
+value|0x5856105d
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISK_VERSION
-value|DISK_VERSION_03
+value|DISK_VERSION_04
 end_define
 
 begin_endif
