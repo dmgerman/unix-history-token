@@ -7946,23 +7946,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|IN6_IS_ADDR_MULTICAST
-argument_list|(
-operator|&
-name|gsin6
-operator|->
-name|sin6_addr
-argument_list|)
-argument_list|,
-operator|(
-literal|"%s: not multicast"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|NULL
