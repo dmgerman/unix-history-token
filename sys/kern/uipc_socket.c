@@ -14681,6 +14681,9 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|so
 operator|=
 name|kn
@@ -14818,9 +14821,8 @@ name|hhh_nhooks
 operator|>
 literal|0
 condition|)
-comment|/* This hook returning non-zero indicates an event, not error */
-return|return
-operator|(
+name|ret
+operator|=
 name|hhook_run_socket
 argument_list|(
 name|so
@@ -14829,14 +14831,18 @@ name|NULL
 argument_list|,
 name|HHOOK_FILT_SOREAD
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+else|else
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ret
 operator|)
 return|;
 block|}
