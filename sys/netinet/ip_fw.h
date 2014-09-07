@@ -414,6 +414,61 @@ begin_comment
 comment|/* dump table value hash */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT44_XCONFIG
+value|111
+end_define
+
+begin_comment
+comment|/* Create/modify NAT44 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT44_DESTROY
+value|112
+end_define
+
+begin_comment
+comment|/* Destroys NAT44 instance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT44_XGETCONFIG
+value|113
+end_define
+
+begin_comment
+comment|/* Get NAT44 instance config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT44_LIST_NAT
+value|114
+end_define
+
+begin_comment
+comment|/* List all NAT44 instances */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_NAT44_XGETLOG
+value|115
+end_define
+
+begin_comment
+comment|/* Get log from NAT44 instance */
+end_comment
+
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
 end_comment
@@ -1087,6 +1142,16 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Legacy NAT structures, compat only */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_comment
 comment|/*  * Data structures required by both ipfw(8) and ipfw(4) but not part of the  * management API are protected by IPFW_INTERNAL.  */
 end_comment
 
@@ -1333,6 +1398,159 @@ directive|define
 name|SOF_SPOOL
 value|sizeof(struct cfg_spool)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ifndef _KERNEL */
+end_comment
+
+begin_struct
+struct|struct
+name|nat44_cfg_spool
+block|{
+name|struct
+name|in_addr
+name|addr
+decl_stmt|;
+name|uint16_t
+name|port
+decl_stmt|;
+name|uint16_t
+name|spare
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NAT44_REDIR_ADDR
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAT44_REDIR_PORT
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAT44_REDIR_PROTO
+value|0x04
+end_define
+
+begin_comment
+comment|/* Nat redirect configuration. */
+end_comment
+
+begin_struct
+struct|struct
+name|nat44_cfg_redir
+block|{
+name|struct
+name|in_addr
+name|laddr
+decl_stmt|;
+comment|/* local ip address */
+name|struct
+name|in_addr
+name|paddr
+decl_stmt|;
+comment|/* public ip address */
+name|struct
+name|in_addr
+name|raddr
+decl_stmt|;
+comment|/* remote ip address */
+name|uint16_t
+name|lport
+decl_stmt|;
+comment|/* local port */
+name|uint16_t
+name|pport
+decl_stmt|;
+comment|/* public port */
+name|uint16_t
+name|rport
+decl_stmt|;
+comment|/* remote port  */
+name|uint16_t
+name|pport_cnt
+decl_stmt|;
+comment|/* number of public ports */
+name|uint16_t
+name|rport_cnt
+decl_stmt|;
+comment|/* number of remote ports */
+name|uint16_t
+name|mode
+decl_stmt|;
+comment|/* type of redirect mode */
+name|uint16_t
+name|spool_cnt
+decl_stmt|;
+comment|/* num of entry in spool chain */
+name|uint16_t
+name|spare
+decl_stmt|;
+name|uint32_t
+name|proto
+decl_stmt|;
+comment|/* protocol: tcp/udp */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Nat configuration data struct. */
+end_comment
+
+begin_struct
+struct|struct
+name|nat44_cfg_nat
+block|{
+name|char
+name|name
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* nat name */
+name|char
+name|if_name
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* interface name */
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* structure size incl. redirs */
+name|struct
+name|in_addr
+name|ip
+decl_stmt|;
+comment|/* nat IPv4 address */
+name|uint32_t
+name|mode
+decl_stmt|;
+comment|/* aliasing mode */
+name|uint32_t
+name|redir_cnt
+decl_stmt|;
+comment|/* number of entry in spool chain */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* Nat command. */
