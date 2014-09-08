@@ -1932,6 +1932,26 @@ argument_list|(
 literal|9
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifa_preferred
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
+argument_list|,
+operator|&
+name|ia_best
+operator|->
+name|ia_ifa
+argument_list|)
+condition|)
+name|NEXT
+argument_list|(
+literal|9
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Rule 14: Use longest matching prefix. 		 * Note: in the address selection draft, this rule is 		 * documented as "Rule 8".  However, since it is also 		 * documented that this rule can be overridden, we assign 		 * a large number so that it is easy to assign smaller numbers 		 * to more preferred rules. 		 */
 name|new_matchlen
 operator|=
