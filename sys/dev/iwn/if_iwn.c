@@ -22084,7 +22084,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * If it's an 11n rate, then for now we enable 	 * protection. 	 */
+comment|/* 	 * If it's an 11n rate - no protection. 	 * We'll do it via a specific 11n check. 	 */
 if|if
 condition|(
 name|rate
@@ -22094,7 +22094,7 @@ condition|)
 block|{
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -23133,6 +23133,29 @@ name|ic_protmode
 operator|==
 name|IEEE80211_PROT_RTSCTS
 condition|)
+name|flags
+operator||=
+name|IWN_TX_NEED_RTS
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|rate
+operator|&
+name|IEEE80211_RATE_MCS
+operator|)
+operator|&&
+operator|(
+name|ic
+operator|->
+name|ic_htprotmode
+operator|==
+name|IEEE80211_PROT_RTSCTS
+operator|)
+condition|)
+block|{
 name|flags
 operator||=
 name|IWN_TX_NEED_RTS
