@@ -2122,9 +2122,6 @@ specifier|static
 name|int
 name|ahci_check_ids
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
 name|union
 name|ccb
 modifier|*
@@ -3618,8 +3615,6 @@ if|if
 condition|(
 name|ahci_check_ids
 argument_list|(
-name|dev
-argument_list|,
 name|ccb
 argument_list|)
 condition|)

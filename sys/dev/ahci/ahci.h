@@ -2177,10 +2177,12 @@ begin_struct
 struct|struct
 name|ahci_slot
 block|{
-name|device_t
-name|dev
+name|struct
+name|ahci_channel
+modifier|*
+name|ch
 decl_stmt|;
-comment|/* Device handle */
+comment|/* Channel */
 name|u_int8_t
 name|slot
 decl_stmt|;
@@ -2359,38 +2361,6 @@ name|int
 name|pm_level
 decl_stmt|;
 comment|/* power management level */
-name|struct
-name|ahci_slot
-name|slot
-index|[
-name|AHCI_MAX_SLOTS
-index|]
-decl_stmt|;
-name|union
-name|ccb
-modifier|*
-name|hold
-index|[
-name|AHCI_MAX_SLOTS
-index|]
-decl_stmt|;
-name|struct
-name|mtx
-name|mtx
-decl_stmt|;
-comment|/* state lock */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ccb_hdr
-argument_list|)
-name|doneq
-expr_stmt|;
-comment|/* queue of completed CCBs */
-name|int
-name|batch
-decl_stmt|;
-comment|/* doneq is in use */
 name|int
 name|devices
 decl_stmt|;
@@ -2403,6 +2373,21 @@ name|int
 name|fbs_enabled
 decl_stmt|;
 comment|/* FIS-based switching enabled */
+name|union
+name|ccb
+modifier|*
+name|hold
+index|[
+name|AHCI_MAX_SLOTS
+index|]
+decl_stmt|;
+name|struct
+name|ahci_slot
+name|slot
+index|[
+name|AHCI_MAX_SLOTS
+index|]
+decl_stmt|;
 name|uint32_t
 name|oslots
 decl_stmt|;
@@ -2423,6 +2408,14 @@ name|uint32_t
 name|toslots
 decl_stmt|;
 comment|/* Slots in timeout */
+name|int
+name|lastslot
+decl_stmt|;
+comment|/* Last used slot */
+name|int
+name|taggedtarget
+decl_stmt|;
+comment|/* Last tagged target */
 name|int
 name|numrslots
 decl_stmt|;
@@ -2457,14 +2450,6 @@ name|int
 name|fatalerr
 decl_stmt|;
 comment|/* Fatal error happend */
-name|int
-name|lastslot
-decl_stmt|;
-comment|/* Last used slot */
-name|int
-name|taggedtarget
-decl_stmt|;
-comment|/* Last tagged target */
 name|int
 name|resetting
 decl_stmt|;
@@ -2513,6 +2498,23 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* Current settings */
+name|struct
+name|mtx_padalign
+name|mtx
+decl_stmt|;
+comment|/* state lock */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ccb_hdr
+argument_list|)
+name|doneq
+expr_stmt|;
+comment|/* queue of completed CCBs */
+name|int
+name|batch
+decl_stmt|;
+comment|/* doneq is in use */
 block|}
 struct|;
 end_struct
