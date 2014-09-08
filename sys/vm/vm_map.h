@@ -1090,7 +1090,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/* XXX: number of kernel maps and entries to statically allocate */
+comment|/* XXX: number of kernel maps to statically allocate */
 end_comment
 
 begin_define
@@ -1098,13 +1098,6 @@ define|#
 directive|define
 name|MAX_KMAP
 value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_KMAPENT
-value|128
 end_define
 
 begin_comment
@@ -1647,34 +1640,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vm_map_pmap_enter
-parameter_list|(
-name|vm_map_t
-name|map
-parameter_list|,
-name|vm_offset_t
-name|addr
-parameter_list|,
-name|vm_prot_t
-name|prot
-parameter_list|,
-name|vm_object_t
-name|object
-parameter_list|,
-name|vm_pindex_t
-name|pindex
-parameter_list|,
-name|vm_size_t
-name|size
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vm_map_protect
 parameter_list|(
@@ -1756,17 +1721,6 @@ parameter_list|,
 name|vm_offset_t
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_map_simplify_entry
-parameter_list|(
-name|vm_map_t
-parameter_list|,
-name|vm_map_entry_t
 parameter_list|)
 function_decl|;
 end_function_decl
