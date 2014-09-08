@@ -131,11 +131,13 @@ return|;
 comment|/* the last position where its possible to find "s" in "l" */
 name|last
 operator|=
-operator|(
+name|__DECONST
+argument_list|(
 name|char
 operator|*
-operator|)
+argument_list|,
 name|cl
+argument_list|)
 operator|+
 name|l_len
 operator|-
@@ -145,11 +147,13 @@ for|for
 control|(
 name|cur
 operator|=
-operator|(
+name|__DECONST
+argument_list|(
 name|char
 operator|*
-operator|)
+argument_list|,
 name|cl
+argument_list|)
 init|;
 name|cur
 operator|<=
