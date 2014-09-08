@@ -7069,6 +7069,38 @@ block|}
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|char
+name|bootmethod
+index|[
+literal|16
+index|]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bootmethod
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|bootmethod
+argument_list|,
+literal|0
+argument_list|,
+literal|"System firmware boot method"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  *  * XXX first should be vm_paddr_t.  */
 end_comment
@@ -7184,6 +7216,7 @@ name|efihdr
 operator|!=
 name|NULL
 condition|)
+block|{
 name|add_efi_map_entries
 argument_list|(
 name|efihdr
@@ -7194,6 +7227,19 @@ operator|&
 name|physmap_idx
 argument_list|)
 expr_stmt|;
+name|strlcpy
+argument_list|(
+name|bootmethod
+argument_list|,
+literal|"UEFI"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bootmethod
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -7201,6 +7247,7 @@ name|smapbase
 operator|!=
 name|NULL
 condition|)
+block|{
 name|add_smap_entries
 argument_list|(
 name|smapbase
@@ -7211,12 +7258,27 @@ operator|&
 name|physmap_idx
 argument_list|)
 expr_stmt|;
+name|strlcpy
+argument_list|(
+name|bootmethod
+argument_list|,
+literal|"BIOS"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bootmethod
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|panic
 argument_list|(
 literal|"No BIOS smap or EFI map info from loader!"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Find the 'base memory' segment for SMP 	 */
 name|basemem
 operator|=
