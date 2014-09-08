@@ -362,20 +362,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|vm_map_simplify_entry
-parameter_list|(
-name|vm_map_t
-name|map
-parameter_list|,
-name|vm_map_entry_t
-name|entry
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -6125,7 +6111,6 @@ comment|/*  *	vm_map_simplify_entry:  *  *	Simplify the given map entry by mergi
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vm_map_simplify_entry
 parameter_list|(
