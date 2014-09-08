@@ -16633,6 +16633,19 @@ literal|"no mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: freeing m=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|ieee80211_tx_complete
 argument_list|(
 name|ni
@@ -16784,7 +16797,7 @@ name|shift
 operator|)
 condition|)
 return|return;
-comment|/* 	 * XXX does this correctly process an almost empty bitmap? 	 * (since it bails out when it sees an empty bitmap, but there 	 * may be failed bits there..) 	 */
+comment|/* 	 * Walk the bitmap and calculate how many successful and failed 	 * attempts are made. 	 * 	 * Yes, the rate control code doesn't know these are A-MPDU 	 * subframes and that it's okay to fail some of these. 	 */
 name|ni
 operator|=
 name|tap
@@ -18156,7 +18169,7 @@ argument_list|,
 name|IWN_DEBUG_XMIT
 argument_list|,
 literal|"%s: "
-literal|"qid %d idx %d retries %d nkill %d rate %x duration %d status %x\n"
+literal|"qid %d idx %d RTS retries %d ACK retries %d nkill %d rate %x duration %d status %x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -18167,6 +18180,10 @@ argument_list|,
 name|desc
 operator|->
 name|idx
+argument_list|,
+name|stat
+operator|->
+name|rtsfailcnt
 argument_list|,
 name|stat
 operator|->
@@ -18338,7 +18355,7 @@ argument_list|,
 name|IWN_DEBUG_XMIT
 argument_list|,
 literal|"%s: "
-literal|"qid %d idx %d retries %d nkill %d rate %x duration %d status %x\n"
+literal|"qid %d idx %d RTS retries %d ACK retries %d nkill %d rate %x duration %d status %x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -18349,6 +18366,10 @@ argument_list|,
 name|desc
 operator|->
 name|idx
+argument_list|,
+name|stat
+operator|->
+name|rtsfailcnt
 argument_list|,
 name|stat
 operator|->
@@ -19067,6 +19088,7 @@ name|shift
 decl_stmt|,
 name|start
 decl_stmt|;
+comment|/* XXX TODO: status is le16 field! Grr */
 name|DPRINTF
 argument_list|(
 name|sc
@@ -19125,6 +19147,8 @@ name|tap
 operator|->
 name|txa_ni
 expr_stmt|;
+comment|/* 	 * XXX TODO: ACK and RTS failures would be nice here! 	 */
+comment|/* 	 * A-MPDU single frame status - if we failed to transmit it 	 * in A-MPDU, then it may be a permanent failure. 	 * 	 * XXX TODO: check what the Linux iwlwifi driver does here; 	 * there's some permanent and temporary failures that may be 	 * handled differently. 	 */
 if|if
 condition|(
 name|nframes
@@ -19175,14 +19199,15 @@ argument_list|,
 name|IEEE80211_RATECTL_TX_FAILURE
 argument_list|,
 operator|&
-name|nframes
+name|ackfailcnt
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * We succeeded with some frames, so let's update how many 	 * retries were needed for this frame. 	 * 	 * XXX we can't yet pass tx_complete tx_cnt and success_cnt, 	 * le sigh. 	 */
+else|else
+block|{
+comment|/* 			 * If nframes=1, then we won't be getting a BA for 			 * this frame.  Ensure that we correctly update the 			 * rate control code with how many retries were 			 * needed to send it. 			 */
 name|ieee80211_ratectl_tx_complete
 argument_list|(
 name|ni
@@ -19199,6 +19224,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|bitmap
 operator|=
 literal|0
@@ -19428,6 +19455,7 @@ operator|&
 literal|0xfff
 expr_stmt|;
 block|}
+comment|/* This is going nframes DWORDS into the descriptor? */
 name|seqno
 operator|=
 name|le32toh
@@ -19541,6 +19569,19 @@ argument_list|,
 operator|(
 literal|"no mbuf"
 operator|)
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: freeing m=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 name|ieee80211_tx_complete
