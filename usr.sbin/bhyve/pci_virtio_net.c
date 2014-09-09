@@ -650,6 +650,9 @@ comment|/* read PCI config */
 name|pci_vtnet_cfgwrite
 block|,
 comment|/* write PCI config */
+name|NULL
+block|,
+comment|/* apply negotiated features */
 name|VTNET_S_HOSTCAPS
 block|,
 comment|/* our capabilities */
