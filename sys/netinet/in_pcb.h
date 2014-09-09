@@ -2133,6 +2133,28 @@ begin_comment
 comment|/* IP_RSS_LISTEN_BUCKET is set */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INP_RECVFLOWID
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* populate recv datagram with flow info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RECVRSSBUCKETID
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* populate recv datagram with bucket id */
+end_comment
+
 begin_comment
 comment|/*  * Flags passed to in_pcblookup*() functions.  */
 end_comment

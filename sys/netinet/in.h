@@ -3024,6 +3024,28 @@ begin_comment
 comment|/* get RSS flowid -> bucket mapping */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_RECVFLOWID
+value|93
+end_define
+
+begin_comment
+comment|/* bool; receive IP flowid/flowtype w/ datagram */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RECVRSSBUCKETID
+value|94
+end_define
+
+begin_comment
+comment|/* bool; receive IP RSS bucket id w/ datagram */
+end_comment
+
 begin_comment
 comment|/*  * Defaults and limits for options  */
 end_comment
