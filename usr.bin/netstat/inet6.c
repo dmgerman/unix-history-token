@@ -804,7 +804,7 @@ literal|"alive interface"
 block|,
 literal|"better virtual status"
 block|,
-literal|"rule #10"
+literal|"preferred source"
 block|,
 literal|"rule #11"
 block|,
