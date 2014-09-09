@@ -4524,7 +4524,7 @@ name|TLS1_CK_SRP_SHA_WITH_3DES_EDE_CBC_SHA
 block|,
 name|SSL_kSRP
 block|,
-name|SSL_aNULL
+name|SSL_aSRP
 block|,
 name|SSL_3DES
 block|,
@@ -4617,7 +4617,7 @@ name|TLS1_CK_SRP_SHA_WITH_AES_128_CBC_SHA
 block|,
 name|SSL_kSRP
 block|,
-name|SSL_aNULL
+name|SSL_aSRP
 block|,
 name|SSL_AES128
 block|,
@@ -4710,7 +4710,7 @@ name|TLS1_CK_SRP_SHA_WITH_AES_256_CBC_SHA
 block|,
 name|SSL_kSRP
 block|,
-name|SSL_aNULL
+name|SSL_aSRP
 block|,
 name|SSL_AES256
 block|,

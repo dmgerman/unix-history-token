@@ -466,6 +466,10 @@ name|SSL_TXT_aGOST
 value|"aGOST"
 define|#
 directive|define
+name|SSL_TXT_aSRP
+value|"aSRP"
+define|#
+directive|define
 name|SSL_TXT_DSS
 value|"DSS"
 define|#
@@ -9878,6 +9882,10 @@ define|#
 directive|define
 name|SSL_R_BAD_SRP_N_LENGTH
 value|350
+define|#
+directive|define
+name|SSL_R_BAD_SRP_PARAMETERS
+value|371
 define|#
 directive|define
 name|SSL_R_BAD_SRP_S_LENGTH

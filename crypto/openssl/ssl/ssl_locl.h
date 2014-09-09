@@ -682,6 +682,17 @@ begin_comment
 comment|/* GOST R 34.10-2001 signature auth */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SSL_aSRP
+value|0x00000400L
+end_define
+
+begin_comment
+comment|/* SRP auth */
+end_comment
+
 begin_comment
 comment|/* Bits for algorithm_enc (symmetric encryption) */
 end_comment
@@ -6277,6 +6288,21 @@ name|data_len
 parameter_list|,
 name|size_t
 name|orig_len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|srp_verify_server_param
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+modifier|*
+name|al
 parameter_list|)
 function_decl|;
 end_function_decl

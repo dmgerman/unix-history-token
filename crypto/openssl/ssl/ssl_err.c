@@ -2371,6 +2371,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_BAD_SRP_PARAMETERS
+argument_list|)
+block|,
+literal|"bad srp parameters"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_BAD_SRP_S_LENGTH
 argument_list|)
 block|,

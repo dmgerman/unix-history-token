@@ -5734,6 +5734,14 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|s
+operator|->
+name|hit
+condition|)
+block|{
 name|s
 operator|->
 name|session
@@ -5809,6 +5817,7 @@ argument_list|,
 name|ecpointformatlist_length
 argument_list|)
 expr_stmt|;
+block|}
 if|#
 directive|if
 literal|0
