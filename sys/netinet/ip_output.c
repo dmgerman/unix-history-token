@@ -573,6 +573,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|(
+name|flags
+operator|&
+name|IP_NODEFAULTFLOWID
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
 name|inp
 operator|->
 name|inp_flags
