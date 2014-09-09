@@ -7820,6 +7820,12 @@ else|#
 directive|else
 name|sync
 operator|=
+operator|(
+name|ioflag
+operator|&
+name|IO_SYNC
+operator|)
+operator|||
 endif|#
 directive|endif
 operator|(
