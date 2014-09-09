@@ -460,27 +460,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VT_SYSCTL_INT
-argument_list|(
-name|spclkeys
-argument_list|,
-operator|(
-name|VT_DEBUG_KEY_ENABLED
-operator||
-name|VT_REBOOT_KEY_ENABLED
-operator||
-name|VT_HALT_KEY_ENABLED
-operator||
-name|VT_POWEROFF_KEY_ENABLED
-operator|)
-argument_list|,
-literal|"Enabled special keys "
-literal|"handled by vt(4)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2314,12 +2293,6 @@ name|SPCLKEY
 operator||
 name|DBG
 case|:
-if|if
-condition|(
-name|vt_spclkeys
-operator|&
-name|VT_DEBUG_KEY_ENABLED
-condition|)
 name|kdb_enter
 argument_list|(
 name|KDB_WHY_BREAK
@@ -2337,12 +2310,6 @@ name|SPCLKEY
 operator||
 name|RBT
 case|:
-if|if
-condition|(
-name|vt_spclkeys
-operator|&
-name|VT_REBOOT_KEY_ENABLED
-condition|)
 comment|/* XXX: Make this configurable! */
 name|shutdown_nice
 argument_list|(
@@ -2359,12 +2326,6 @@ name|SPCLKEY
 operator||
 name|HALT
 case|:
-if|if
-condition|(
-name|vt_spclkeys
-operator|&
-name|VT_HALT_KEY_ENABLED
-condition|)
 name|shutdown_nice
 argument_list|(
 name|RB_HALT
@@ -2380,12 +2341,6 @@ name|SPCLKEY
 operator||
 name|PDWN
 case|:
-if|if
-condition|(
-name|vt_spclkeys
-operator|&
-name|VT_POWEROFF_KEY_ENABLED
-condition|)
 name|shutdown_nice
 argument_list|(
 name|RB_HALT
