@@ -841,12 +841,12 @@ decl_stmt|;
 asm|__asm __volatile(
 literal|"1:          \n"
 literal|"   ldrexd   %[tmp], [%[ptr]]\n"
-literal|"   teq      %Q[tmp], %Q[cmp]\n"
+literal|"   teq      %Q[tmp], %Q[cmpval]\n"
 literal|"   itee eq  \n"
-literal|"   teqeq    %R[tmp], %R[cmp]\n"
+literal|"   teqeq    %R[tmp], %R[cmpval]\n"
 literal|"   movne    %[ret], #0\n"
 literal|"   bne      2f\n"
-literal|"   strexd   %[ret], %[new], [%[ptr]]\n"
+literal|"   strexd   %[ret], %[newval], [%[ptr]]\n"
 literal|"   teq      %[ret], #0\n"
 literal|"   it ne    \n"
 literal|"   bne      1b\n"
@@ -878,7 +878,7 @@ name|p
 operator|)
 operator|,
 index|[
-name|cmp
+name|cmpval
 index|]
 literal|"r"
 operator|(
@@ -886,7 +886,7 @@ name|cmpval
 operator|)
 operator|,
 index|[
-name|new
+name|newval
 index|]
 literal|"r"
 operator|(
