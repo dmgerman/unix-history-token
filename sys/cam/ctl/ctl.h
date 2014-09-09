@@ -502,6 +502,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ctl_caching_sp_handler
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|,
+name|struct
+name|ctl_page_index
+modifier|*
+name|page_index
+parameter_list|,
+name|uint8_t
+modifier|*
+name|page_ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ctl_control_page_handler
 parameter_list|(
 name|struct
