@@ -13807,6 +13807,13 @@ operator|->
 name|ctl_lock
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|new_err_desc
+argument_list|,
+name|M_CTL
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: CTL_ERROR_INJECT: invalid LUN %ju\n"
