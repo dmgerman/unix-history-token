@@ -14482,6 +14482,8 @@ argument_list|,
 name|chy
 operator|+
 literal|1
+operator|+
+literal|8
 argument_list|)
 expr_stmt|;
 name|MIX
@@ -14556,8 +14558,6 @@ argument_list|,
 name|chy
 operator|+
 literal|1
-operator|+
-literal|8
 argument_list|)
 expr_stmt|;
 name|uaudio_mixer_add_ctl
