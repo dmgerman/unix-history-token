@@ -20,7 +20,46 @@ comment|/*  * Secure Virtual Machine: AMD64 Programmer's Manual Vol2, Chapter 15
 end_comment
 
 begin_comment
-comment|/* VMCB Control offset 0xC */
+comment|/* vmcb_ctrl->intercept[] array indices */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMCB_CR_INTCPT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCB_DR_INTCPT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCB_EXC_INTCPT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCB_CTRL1_INTCPT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMCB_CTRL2_INTCPT
+value|4
+end_define
+
+begin_comment
+comment|/* intercept[VMCB_CTRL1_INTCPT] fields */
 end_comment
 
 begin_define
@@ -248,7 +287,7 @@ value|BIT(31)
 end_define
 
 begin_comment
-comment|/* VMCB Control offset 0x10 */
+comment|/* intercept[VMCB_CTRL2_INTCPT] fields */
 end_comment
 
 begin_define
@@ -420,7 +459,7 @@ value|BIT(0)
 end_define
 
 begin_comment
-comment|/* Cache vectors, TSC offset */
+comment|/* Intercept, TSC off, Pause filter */
 end_comment
 
 begin_define
@@ -917,32 +956,13 @@ begin_struct
 struct|struct
 name|vmcb_ctrl
 block|{
-name|uint16_t
-name|cr_read
-decl_stmt|;
-comment|/* Offset 0, CR0-15 read/write */
-name|uint16_t
-name|cr_write
-decl_stmt|;
-name|uint16_t
-name|dr_read
-decl_stmt|;
-comment|/* Offset 4, DR0-DR15 */
-name|uint16_t
-name|dr_write
-decl_stmt|;
 name|uint32_t
-name|exception
+name|intercept
+index|[
+literal|5
+index|]
 decl_stmt|;
-comment|/* Offset 8, bit mask for exceptions. */
-name|uint32_t
-name|ctrl1
-decl_stmt|;
-comment|/* Offset 0xC, intercept events1 */
-name|uint32_t
-name|ctrl2
-decl_stmt|;
-comment|/* Offset 0x10, intercept event2 */
+comment|/* all intercepts */
 name|uint8_t
 name|pad1
 index|[
