@@ -9074,15 +9074,13 @@ name|INP_IPV6
 condition|)
 name|hashkey_faddr
 operator|=
+name|INP6_PCBHASHKEY
+argument_list|(
+operator|&
 name|inp
 operator|->
 name|in6p_faddr
-operator|.
-name|s6_addr32
-index|[
-literal|3
-index|]
-comment|/* XXX */
+argument_list|)
 expr_stmt|;
 else|else
 endif|#
@@ -9401,15 +9399,13 @@ name|INP_IPV6
 condition|)
 name|hashkey_faddr
 operator|=
+name|INP6_PCBHASHKEY
+argument_list|(
+operator|&
 name|inp
 operator|->
 name|in6p_faddr
-operator|.
-name|s6_addr32
-index|[
-literal|3
-index|]
-comment|/* XXX */
+argument_list|)
 expr_stmt|;
 else|else
 endif|#

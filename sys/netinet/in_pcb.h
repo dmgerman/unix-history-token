@@ -1649,6 +1649,16 @@ define|\
 value|(ntohs((lport))& (mask))
 end_define
 
+begin_define
+define|#
+directive|define
+name|INP6_PCBHASHKEY
+parameter_list|(
+name|faddr
+parameter_list|)
+value|((faddr)->s6_addr32[3])
+end_define
+
 begin_comment
 comment|/*  * Flags for inp_vflags -- historically version flags only  */
 end_comment

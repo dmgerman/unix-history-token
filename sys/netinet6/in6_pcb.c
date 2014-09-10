@@ -3124,7 +3124,11 @@ name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
-name|INADDR_ANY
+name|INP6_PCBHASHKEY
+argument_list|(
+operator|&
+name|in6addr_any
+argument_list|)
 argument_list|,
 name|lport
 argument_list|,
@@ -3777,13 +3781,10 @@ name|ipg_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
+name|INP6_PCBHASHKEY
+argument_list|(
 name|faddr
-operator|->
-name|s6_addr32
-index|[
-literal|3
-index|]
-comment|/* XXX */
+argument_list|)
 argument_list|,
 name|lport
 argument_list|,
@@ -4193,7 +4194,11 @@ name|ipi_wildbase
 index|[
 name|INP_PCBHASH
 argument_list|(
-name|INADDR_ANY
+name|INP6_PCBHASHKEY
+argument_list|(
+operator|&
+name|in6addr_any
+argument_list|)
 argument_list|,
 name|lport
 argument_list|,
@@ -4629,13 +4634,10 @@ name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
+name|INP6_PCBHASHKEY
+argument_list|(
 name|faddr
-operator|->
-name|s6_addr32
-index|[
-literal|3
-index|]
-comment|/* XXX */
+argument_list|)
 argument_list|,
 name|lport
 argument_list|,
@@ -4789,7 +4791,11 @@ name|ipi_hashbase
 index|[
 name|INP_PCBHASH
 argument_list|(
-name|INADDR_ANY
+name|INP6_PCBHASHKEY
+argument_list|(
+operator|&
+name|in6addr_any
+argument_list|)
 argument_list|,
 name|lport
 argument_list|,
