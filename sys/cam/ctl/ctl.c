@@ -53718,7 +53718,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ctl_abort_tasks_lun
 parameter_list|(
 name|struct
@@ -53740,9 +53740,6 @@ name|union
 name|ctl_io
 modifier|*
 name|xio
-decl_stmt|;
-name|int
-name|found
 decl_stmt|;
 name|mtx_assert
 argument_list|(
@@ -53871,10 +53868,6 @@ name|flags
 operator||=
 name|CTL_FLAG_ABORT
 expr_stmt|;
-name|found
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -53984,11 +53977,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-return|return
-operator|(
-name|found
-operator|)
-return|;
 block|}
 end_function
 
