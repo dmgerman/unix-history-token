@@ -2501,7 +2501,7 @@ operator||
 name|STBY
 case|:
 comment|/* XXX Not present in kbdcontrol parser. */
-comment|/* Put machine into Stend-By mode. */
+comment|/* Put machine into Stand-By mode. */
 name|power_pm_suspend
 argument_list|(
 name|POWER_SLEEP_STATE_STANDBY
