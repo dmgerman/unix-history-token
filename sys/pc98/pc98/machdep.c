@@ -11515,6 +11515,9 @@ name|initializecpu
 argument_list|()
 expr_stmt|;
 comment|/* Initialize CPU registers */
+name|initializecpucache
+argument_list|()
+expr_stmt|;
 comment|/* make an initial tss so cpu can get interrupt stack on syscall! */
 comment|/* Note: -16 is so we can grow the trapframe if we came from vm86 */
 name|PCPU_SET

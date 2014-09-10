@@ -3051,14 +3051,14 @@ comment|/* set up CPU registers and state */
 name|cpu_setregs
 argument_list|()
 expr_stmt|;
+comment|/* set up SSE/NX */
+name|initializecpu
+argument_list|()
+expr_stmt|;
 comment|/* set up FPU state on the AP */
 name|npxinit
 argument_list|()
 expr_stmt|;
-comment|/* set up SSE registers */
-name|enable_sse
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|cpu_ops
@@ -3070,43 +3070,6 @@ operator|.
 name|cpu_init
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PAE
-comment|/* Enable the PTE no-execute bit. */
-if|if
-condition|(
-operator|(
-name|amd_feature
-operator|&
-name|AMDID_NX
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|uint64_t
-name|msr
-decl_stmt|;
-name|msr
-operator|=
-name|rdmsr
-argument_list|(
-name|MSR_EFER
-argument_list|)
-operator||
-name|EFER_NXE
-expr_stmt|;
-name|wrmsr
-argument_list|(
-name|MSR_EFER
-argument_list|,
-name|msr
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* A quick check from sanity claus */
 name|cpuid
 operator|=
@@ -6270,6 +6233,9 @@ name|sp_fpususpend
 argument_list|)
 expr_stmt|;
 name|pmap_init_pat
+argument_list|()
+expr_stmt|;
+name|initializecpu
 argument_list|()
 expr_stmt|;
 name|PCPU_SET
