@@ -25953,7 +25953,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getpages_args
-comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_reqpage; 		vm_ooffset_t a_offset; 	} */
+comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_reqpage; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -26848,7 +26848,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_putpages_args
-comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_sync; 		int *a_rtvals; 		vm_ooffset_t a_offset; 	} */
+comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_sync; 		int *a_rtvals; 	} */
 modifier|*
 name|ap
 decl_stmt|;

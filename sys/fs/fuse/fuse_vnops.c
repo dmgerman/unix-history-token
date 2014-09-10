@@ -7018,7 +7018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*     struct vnop_getpages_args {         struct vnode *a_vp;         vm_page_t *a_m;         int a_count;         int a_reqpage;         vm_ooffset_t a_offset;     }; */
+comment|/*     struct vnop_getpages_args {         struct vnode *a_vp;         vm_page_t *a_m;         int a_count;         int a_reqpage;     }; */
 end_comment
 
 begin_function

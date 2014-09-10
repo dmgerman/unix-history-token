@@ -2718,8 +2718,6 @@ argument_list|,
 name|bytes
 argument_list|,
 name|reqpage
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -4593,8 +4591,6 @@ argument_list|,
 name|sync
 argument_list|,
 name|rtvals
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|KASSERT
