@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/power.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/priv.h>
 end_include
 
@@ -456,6 +462,75 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"Switch to VT0 before suspend"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Allow to disable some keyboard combinations. */
+end_comment
+
+begin_expr_stmt
+name|VT_SYSCTL_INT
+argument_list|(
+name|kbd_halt
+argument_list|,
+literal|1
+argument_list|,
+literal|"Enable halt keyboard combination.  "
+literal|"See kbdmap(5) to configure."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VT_SYSCTL_INT
+argument_list|(
+name|kbd_poweroff
+argument_list|,
+literal|1
+argument_list|,
+literal|"Enable Power Off keyboard combination.  "
+literal|"See kbdmap(5) to configure."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VT_SYSCTL_INT
+argument_list|(
+name|kbd_reboot
+argument_list|,
+literal|1
+argument_list|,
+literal|"Enable reboot keyboard combination.  "
+literal|"See kbdmap(5) to configure (typically Ctrl-Alt-Delete)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VT_SYSCTL_INT
+argument_list|(
+name|kbd_debug
+argument_list|,
+literal|1
+argument_list|,
+literal|"Enable key combination to enter debugger.  "
+literal|"See kbdmap(5) to configure (typically Ctrl-Alt-Esc)."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VT_SYSCTL_INT
+argument_list|(
+name|kbd_panic
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable request to panic.  "
+literal|"See kbdmap(5) to configure."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2293,6 +2368,11 @@ name|SPCLKEY
 operator||
 name|DBG
 case|:
+comment|/* kbdmap(5) keyword `debug`. */
+if|if
+condition|(
+name|vt_kbd_debug
+condition|)
 name|kdb_enter
 argument_list|(
 name|KDB_WHY_BREAK
@@ -2308,24 +2388,13 @@ return|;
 case|case
 name|SPCLKEY
 operator||
-name|RBT
-case|:
-comment|/* XXX: Make this configurable! */
-name|shutdown_nice
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-case|case
-name|SPCLKEY
-operator||
 name|HALT
 case|:
+comment|/* kbdmap(5) keyword `halt`. */
+if|if
+condition|(
+name|vt_kbd_halt
+condition|)
 name|shutdown_nice
 argument_list|(
 name|RB_HALT
@@ -2336,16 +2405,123 @@ operator|(
 literal|1
 operator|)
 return|;
+case|case
+name|SPCLKEY
+operator||
+name|PASTE
+case|:
+comment|/* kbdmap(5) keyword `paste`. */
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+comment|/* Insert text from cut-paste buffer. */
+comment|/* TODO */
+endif|#
+directive|endif
+break|break;
 case|case
 name|SPCLKEY
 operator||
 name|PDWN
 case|:
+comment|/* kbdmap(5) keyword `pdwn`. */
+if|if
+condition|(
+name|vt_kbd_poweroff
+condition|)
 name|shutdown_nice
 argument_list|(
 name|RB_HALT
 operator||
 name|RB_POWEROFF
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|SPCLKEY
+operator||
+name|PNC
+case|:
+comment|/* kbdmap(5) keyword `panic`. */
+comment|/* 		 * Request to immediate panic if sysctl 		 * kern.vt.enable_panic_key allow it. 		 */
+if|if
+condition|(
+name|vt_kbd_panic
+condition|)
+name|panic
+argument_list|(
+literal|"Forced by the panic key"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|SPCLKEY
+operator||
+name|RBT
+case|:
+comment|/* kbdmap(5) keyword `boot`. */
+if|if
+condition|(
+name|vt_kbd_reboot
+condition|)
+name|shutdown_nice
+argument_list|(
+name|RB_AUTOBOOT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|SPCLKEY
+operator||
+name|SPSC
+case|:
+comment|/* kbdmap(5) keyword `spsc`. */
+comment|/* Force activatation/deactivation of the screen saver. */
+comment|/* TODO */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|SPCLKEY
+operator||
+name|STBY
+case|:
+comment|/* XXX Not present in kbdcontrol parser. */
+comment|/* Put machine into Stend-By mode. */
+name|power_pm_suspend
+argument_list|(
+name|POWER_SLEEP_STATE_STANDBY
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
+name|SPCLKEY
+operator||
+name|SUSP
+case|:
+comment|/* kbdmap(5) keyword `susp`. */
+comment|/* Suspend machine. */
+name|power_pm_suspend
+argument_list|(
+name|POWER_SLEEP_STATE_SUSPEND
 argument_list|)
 expr_stmt|;
 return|return
@@ -2907,6 +3083,88 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+name|NEXT
+case|:
+comment|/* Switch to next VT. */
+name|c
+operator|=
+operator|(
+name|vw
+operator|->
+name|vw_number
+operator|+
+literal|1
+operator|)
+operator|%
+name|VT_MAXWINDOWS
+expr_stmt|;
+name|vw
+operator|=
+name|vd
+operator|->
+name|vd_windows
+index|[
+name|c
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|vw
+operator|!=
+name|NULL
+condition|)
+name|vt_proc_window_switch
+argument_list|(
+name|vw
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|PREV
+case|:
+comment|/* Switch to previous VT. */
+name|c
+operator|=
+operator|(
+name|vw
+operator|->
+name|vw_number
+operator|-
+literal|1
+operator|)
+operator|%
+name|VT_MAXWINDOWS
+expr_stmt|;
+name|vw
+operator|=
+name|vd
+operator|->
+name|vd_windows
+index|[
+name|c
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|vw
+operator|!=
+name|NULL
+condition|)
+name|vt_proc_window_switch
+argument_list|(
+name|vw
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SLK
 case|:
