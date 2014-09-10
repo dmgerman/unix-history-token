@@ -67,10 +67,6 @@ name|uint64_t
 name|vmcb_pa
 decl_stmt|;
 comment|/* VMCB physical address */
-name|uint64_t
-name|loop
-decl_stmt|;
-comment|/* loop count for vcpu */
 name|int
 name|lastcpu
 decl_stmt|;
