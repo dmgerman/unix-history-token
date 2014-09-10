@@ -4399,6 +4399,22 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|ping_timeout
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* 		 * Pings are disabled.  Don't send NOP-In in this case; 		 * user might have disabled pings to work around problems 		 * with certain initiators that can't properly handle 		 * NOP-In, such as iPXE.  Reset the timeout, to avoid 		 * triggering reconnection, should the user decide to 		 * reenable them. 		 */
+name|cs
+operator|->
+name|cs_timeout
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|cs
 operator|->
 name|cs_timeout
