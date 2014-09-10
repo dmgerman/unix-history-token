@@ -806,6 +806,11 @@ argument_list|,
 name|target_address
 argument_list|)
 expr_stmt|;
+name|keys_delete
+argument_list|(
+name|response_keys
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
