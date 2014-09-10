@@ -1397,27 +1397,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
-name|void
-name|svm_init_vmcb
-parameter_list|(
-name|struct
-name|vmcb
-modifier|*
-name|vmcb
-parameter_list|,
-name|uint64_t
-name|iopm_base_pa
-parameter_list|,
-name|uint64_t
-name|msrpm_base_pa
-parameter_list|,
-name|uint64_t
-name|np_pml4
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vmcb_read
 parameter_list|(
