@@ -1342,7 +1342,7 @@ name|regs
 operator|.
 name|r_cpsr
 operator|&
-name|PSR_C_bit
+name|PSR_C
 operator|)
 expr_stmt|;
 comment|/* 	 * This code, while simpler than the initial versions I used, could 	 * stand some significant cleaning. 	 */

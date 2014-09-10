@@ -261,13 +261,6 @@ begin_comment
 comment|/* Flags mask. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PSR_C_bit
-value|PSR_C
-end_define
-
 begin_comment
 comment|/* The high-order byte is always the implementor */
 end_comment

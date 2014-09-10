@@ -25,6 +25,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/armreg.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -208,50 +214,6 @@ name|rmb
 parameter_list|()
 value|dmb()
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|I32_bit
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|I32_bit
-value|(1<< 7)
-end_define
-
-begin_comment
-comment|/* IRQ disable */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|F32_bit
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|F32_bit
-value|(1<< 6)
-end_define
-
-begin_comment
-comment|/* FIQ disable */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * It would be nice to use _HAVE_ARMv6_INSTRUCTIONS from machine/asm.h  * here, but that header can't be included here because this is C  * code.  I would like to move the _HAVE_ARMv6_INSTRUCTIONS definition  * out of asm.h so it can be used in both asm and C code. - kientzle@  */
@@ -2426,7 +2388,7 @@ parameter_list|(
 name|expr
 parameter_list|)
 define|\
-value|do {						\ 		u_int cpsr_save, tmp;			\ 							\ 		__asm __volatile(			\ 			"mrs  %0, cpsr;"		\ 			"orr  %1, %0, %2;"		\ 			"msr  cpsr_fsxc, %1;"		\ 			: "=r" (cpsr_save), "=r" (tmp)	\ 			: "I" (I32_bit | F32_bit)		\ 		        : "cc" );		\ 		(expr);				\ 		 __asm __volatile(		\ 			"msr  cpsr_fsxc, %0"	\ 			:
+value|do {						\ 		u_int cpsr_save, tmp;			\ 							\ 		__asm __volatile(			\ 			"mrs  %0, cpsr;"		\ 			"orr  %1, %0, %2;"		\ 			"msr  cpsr_fsxc, %1;"		\ 			: "=r" (cpsr_save), "=r" (tmp)	\ 			: "I" (PSR_I | PSR_F)		\ 		        : "cc" );		\ 		(expr);				\ 		 __asm __volatile(		\ 			"msr  cpsr_fsxc, %0"	\ 			:
 comment|/* no output */
 value|\ 			: "r" (cpsr_save)	\ 			: "cc" );		\ 	} while(0)
 end_define

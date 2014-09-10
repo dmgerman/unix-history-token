@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -185,7 +191,7 @@ name|PCI_CONF_LOCK
 parameter_list|(
 name|s
 parameter_list|)
-value|(s) = disable_interrupts(I32_bit)
+value|(s) = disable_interrupts(PSR_I)
 end_define
 
 begin_define

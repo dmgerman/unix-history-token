@@ -45,28 +45,6 @@ parameter_list|)
 value|x
 end_define
 
-begin_define
-define|#
-directive|define
-name|I32_bit
-value|(1<< 7)
-end_define
-
-begin_comment
-comment|/* IRQ disable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F32_bit
-value|(1<< 6)
-end_define
-
-begin_comment
-comment|/* FIQ disable */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef

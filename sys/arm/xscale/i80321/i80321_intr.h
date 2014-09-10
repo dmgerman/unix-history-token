@@ -170,7 +170,7 @@ comment|/* Don't let the compiler re-order this code with preceding code */
 end_comment
 
 begin_comment
-unit|__insn_barrier();  	current_spl_level = new;  	hwpend = (i80321_ipending& ICU_INT_HWMASK)& ~new; 	if (hwpend != 0) { 		oldirqstate = disable_interrupts(I32_bit); 		intr_enabled |= hwpend; 		i80321_set_intrmask(); 		restore_interrupts(oldirqstate); 	}  	if ((i80321_ipending& INT_SWMASK)& ~new) 		i80321_do_pending(); }  static __inline int __attribute__((__unused__)) i80321_splraise(int ipl) { 	extern __volatile int current_spl_level; 	extern int i80321_imask[]; 	int	old;  	old = current_spl_level; 	current_spl_level |= i80321_imask[ipl];
+unit|__insn_barrier();  	current_spl_level = new;  	hwpend = (i80321_ipending& ICU_INT_HWMASK)& ~new; 	if (hwpend != 0) { 		oldirqstate = disable_interrupts(PSR_I); 		intr_enabled |= hwpend; 		i80321_set_intrmask(); 		restore_interrupts(oldirqstate); 	}  	if ((i80321_ipending& INT_SWMASK)& ~new) 		i80321_do_pending(); }  static __inline int __attribute__((__unused__)) i80321_splraise(int ipl) { 	extern __volatile int current_spl_level; 	extern int i80321_imask[]; 	int	old;  	old = current_spl_level; 	current_spl_level |= i80321_imask[ipl];
 comment|/* Don't let the compiler re-order this code with subsequent code */
 end_comment
 
