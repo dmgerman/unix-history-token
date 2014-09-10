@@ -231,6 +231,38 @@ directive|include
 file|<netinet6/scope6_var.h>
 end_include
 
+begin_function_decl
+specifier|static
+name|struct
+name|inpcb
+modifier|*
+name|in6_pcblookup_hash_locked
+parameter_list|(
+name|struct
+name|inpcbinfo
+modifier|*
+parameter_list|,
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|in6_pcbbind
@@ -1368,6 +1400,7 @@ comment|/*  *   Transform old in6_pcbconnect() into an inner subroutine for new 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|in6_pcbladdr
 parameter_list|(
@@ -4512,6 +4545,7 @@ comment|/*  * Lookup PCB in hash list.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|inpcb
 modifier|*
