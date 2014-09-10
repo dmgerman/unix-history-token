@@ -688,10 +688,7 @@ operator|)
 operator|(
 name|regs
 operator|.
-name|r
-index|[
-name|_REG_SP
-index|]
+name|r_sp
 operator|+
 literal|4
 operator|*
