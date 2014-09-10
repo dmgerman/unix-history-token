@@ -75,6 +75,10 @@ name|in6_addr
 name|ip6
 decl_stmt|;
 comment|/* IP6 address */
+name|uint32_t
+name|ip6_zoneid
+decl_stmt|;
+comment|/* IPv6 scope zone id */
 comment|/* endpoint specific values for tcp */
 name|u_long
 name|rmx_mtu

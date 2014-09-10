@@ -200,6 +200,10 @@ decl_stmt|;
 block|}
 name|ie_dependladdr
 union|;
+name|u_int32_t
+name|ie6_zoneid
+decl_stmt|;
+comment|/* scope zone id */
 block|}
 struct|;
 end_struct
@@ -321,6 +325,13 @@ define|#
 directive|define
 name|inc6_laddr
 value|inc_ie.ie6_laddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|inc6_zoneid
+value|inc_ie.ie6_zoneid
 end_define
 
 begin_struct_decl
@@ -632,6 +643,13 @@ define|#
 directive|define
 name|in6p_laddr
 value|inp_inc.inc6_laddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|in6p_zoneid
+value|inp_inc.inc6_zoneid
 end_define
 
 begin_define
