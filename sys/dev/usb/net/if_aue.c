@@ -3781,7 +3781,7 @@ name|aue_txstat0
 operator|&
 operator|(
 name|AUE_TXSTAT0_LATECOLL
-operator|&
+operator||
 name|AUE_TXSTAT0_EXCESSCOLL
 operator|)
 condition|)
