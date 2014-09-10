@@ -1602,7 +1602,7 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-comment|/* Ask current process permitions to switch away. */
+comment|/* Ask current process permission to switch away. */
 if|if
 condition|(
 name|curvw
@@ -8311,7 +8311,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* Request cupy/paste buffer data, no more than `len' */
+comment|/* Request copy/paste buffer data, no more than `len' */
 name|vtbuf_extract_marked
 argument_list|(
 operator|&

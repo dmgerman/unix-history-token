@@ -1524,7 +1524,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* Only forward dirrection. Do not eat history. */
+comment|/* Only forward direction. Do not eat history. */
 name|vthistory_addlines
 argument_list|(
 name|vb
