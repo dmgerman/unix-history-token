@@ -35575,9 +35575,12 @@ name|softc
 operator|->
 name|ctl_ports
 index|[
+name|ctl_port_idx
+argument_list|(
 name|i
 operator|/
 name|CTL_MAX_INIT_PER_PORT
+argument_list|)
 index|]
 expr_stmt|;
 if|if
