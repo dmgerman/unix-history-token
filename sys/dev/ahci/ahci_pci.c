@@ -2330,6 +2330,16 @@ name|AHCI_Q_NOAA
 block|}
 block|,
 block|{
+literal|0x3781105a
+block|,
+literal|0x00
+block|,
+literal|"Promise TX8660"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x33491106
 block|,
 literal|0x00
