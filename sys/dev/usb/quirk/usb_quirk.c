@@ -857,6 +857,34 @@ argument_list|,
 name|UQ_MS_LEADING_BYTE
 argument_list|)
 block|,
+comment|/* Quirk for Corsair Vengeance K60 keyboard */
+name|USB_QUIRK
+argument_list|(
+name|CORSAIR
+argument_list|,
+name|K60
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_KBD_BOOTPROTO
+argument_list|)
+block|,
+comment|/* Quirk for Corsair Vengeance K70 keyboard */
+name|USB_QUIRK
+argument_list|(
+name|CORSAIR
+argument_list|,
+name|K70
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_KBD_BOOTPROTO
+argument_list|)
+block|,
 comment|/* umodem(4) device quirks */
 name|USB_QUIRK
 argument_list|(
