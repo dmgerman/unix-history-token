@@ -8536,7 +8536,7 @@ name|DTL_OUTAGE
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the vdev was resilvering and no longer has any 		 * DTLs then reset its resilvering flag. 		 */
+comment|/* 		 * If the vdev was resilvering and no longer has any 		 * DTLs then reset its resilvering flag and dirty 		 * the top level so that we persist the change. 		 */
 if|if
 condition|(
 name|vd
@@ -8569,12 +8569,21 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|vd
 operator|->
 name|vdev_resilver_txg
 operator|=
 literal|0
 expr_stmt|;
+name|vdev_config_dirty
+argument_list|(
+name|vd
+operator|->
+name|vdev_top
+argument_list|)
+expr_stmt|;
+block|}
 name|mutex_exit
 argument_list|(
 operator|&
