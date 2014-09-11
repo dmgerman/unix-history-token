@@ -6343,7 +6343,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_SIZE
+name|CXGBE_M_SIZE
 value|0xfffffffU
 end_define
 
@@ -6364,7 +6364,7 @@ name|G_SIZE
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)>> S_SIZE)& M_SIZE)
+value|(((x)>> S_SIZE)& CXGBE_M_SIZE)
 end_define
 
 begin_define

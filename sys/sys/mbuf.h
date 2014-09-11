@@ -3594,7 +3594,37 @@ value|do {						\ 	KASSERT((m)->m_flags& M_EXT,					\ 		("%s: MEXT_ALIGN not an 
 end_define
 
 begin_comment
-comment|/*  * Compute the amount of space available before the current start of data in  * an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  */
+comment|/*  * Return the address of the start of the buffer associated with an mbuf,  * handling external storage, packet-header mbufs, and regular data mbufs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_START
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|(((m)->m_flags& M_EXT) ? (m)->m_ext.ext_buf :			\ 	 ((m)->m_flags& M_PKTHDR) ?&(m)->m_pktdat[0] :		\&(m)->m_dat[0])
+end_define
+
+begin_comment
+comment|/*  * Return the size of the buffer associated with an mbuf, handling external  * storage, packet-header mbufs, and regular data mbufs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SIZE
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|(((m)->m_flags& M_EXT) ? (m)->m_ext.ext_size :			\ 	 ((m)->m_flags& M_PKTHDR) ? MHLEN :				\ 	 MLEN)
+end_define
+
+begin_comment
+comment|/*  * Compute the amount of space available before the current start of data in  * an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  *  * NB: In previous versions, M_LEADINGSPACE() would only check M_WRITABLE()  * for mbufs with external storage.  We now allow mbuf-embedded data to be  * read-only as well.  */
 end_comment
 
 begin_define
@@ -3605,11 +3635,11 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|((m)->m_flags& M_EXT ?						\ 	    (M_WRITABLE(m) ? (m)->m_data - (m)->m_ext.ext_buf : 0):	\ 	    (m)->m_flags& M_PKTHDR ? (m)->m_data - (m)->m_pktdat :	\ 	    (m)->m_data - (m)->m_dat)
+value|(M_WRITABLE(m) ? ((m)->m_data - M_START(m)) : 0)
 end_define
 
 begin_comment
-comment|/*  * Compute the amount of space available after the end of data in an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  */
+comment|/*  * Compute the amount of space available after the end of data in an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  *  * NB: In previous versions, M_TRAILINGSPACE() would only check M_WRITABLE()  * for mbufs with external storage.  We now allow mbuf-embedded data to be  * read-only as well.  */
 end_comment
 
 begin_define
@@ -3620,7 +3650,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|((m)->m_flags& M_EXT ?						\ 	    (M_WRITABLE(m) ? (m)->m_ext.ext_buf + (m)->m_ext.ext_size	\ 		- ((m)->m_data + (m)->m_len) : 0) :			\&(m)->m_dat[MLEN] - ((m)->m_data + (m)->m_len))
+value|(M_WRITABLE(m) ?						\ 	    ((M_START(m) + M_SIZE(m)) - ((m)->m_data + (m)->m_len)) : 0)
 end_define
 
 begin_comment
