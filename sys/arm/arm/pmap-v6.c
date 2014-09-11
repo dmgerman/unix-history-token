@@ -9295,7 +9295,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|pmap_kenter_temp
+name|pmap_kenter_temporary
 parameter_list|(
 name|vm_paddr_t
 name|pa

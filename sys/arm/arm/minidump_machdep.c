@@ -629,7 +629,7 @@ name|PAGE_SIZE
 control|)
 name|dump_va
 operator|=
-name|pmap_kenter_temp
+name|pmap_kenter_temporary
 argument_list|(
 name|pa
 operator|+
@@ -993,7 +993,7 @@ block|{
 comment|/* Set bit for each valid page in this 1MB block */
 name|addr
 operator|=
-name|pmap_kenter_temp
+name|pmap_kenter_temporary
 argument_list|(
 operator|*
 name|pdp
