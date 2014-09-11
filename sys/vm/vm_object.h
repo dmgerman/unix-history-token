@@ -441,7 +441,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* skip if PG_NOSYNC */
+comment|/* skip if VPO_NOSYNC */
 end_comment
 
 begin_comment
