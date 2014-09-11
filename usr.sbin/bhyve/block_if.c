@@ -1119,6 +1119,12 @@ name|fd
 expr_stmt|;
 name|bc
 operator|->
+name|bc_rdonly
+operator|=
+name|ro
+expr_stmt|;
+name|bc
+operator|->
 name|bc_size
 operator|=
 name|size
