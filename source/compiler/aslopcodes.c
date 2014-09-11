@@ -1498,7 +1498,7 @@ operator|<<
 literal|16
 operator||
 operator|(
-name|UtHexCharToValue
+name|AcpiUtAsciiCharToHex
 argument_list|(
 name|InString
 index|[
@@ -1510,7 +1510,7 @@ operator|<<
 literal|12
 operator||
 operator|(
-name|UtHexCharToValue
+name|AcpiUtAsciiCharToHex
 argument_list|(
 name|InString
 index|[
@@ -1522,7 +1522,7 @@ operator|<<
 literal|8
 operator||
 operator|(
-name|UtHexCharToValue
+name|AcpiUtAsciiCharToHex
 argument_list|(
 name|InString
 index|[
@@ -1533,7 +1533,7 @@ operator|)
 operator|<<
 literal|4
 operator||
-name|UtHexCharToValue
+name|AcpiUtAsciiCharToHex
 argument_list|(
 name|InString
 index|[
@@ -1613,7 +1613,7 @@ name|char
 modifier|*
 name|InString
 decl_stmt|;
-name|char
+name|UINT8
 modifier|*
 name|Buffer
 decl_stmt|;
@@ -1682,10 +1682,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|AuConvertStringToUuid
+name|AcpiUtConvertStringToUuid
 argument_list|(
 name|InString
 argument_list|,

@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"aslcompiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acpi.h"
 end_include
 
@@ -405,7 +411,7 @@ decl_stmt|;
 comment|/*      * Copy the original filename to a new buffer. Leave room for the worst      * case where we append the suffix, an added dot and the null terminator.      */
 name|NewFilename
 operator|=
-name|ACPI_ALLOCATE_ZEROED
+name|UtStringCacheCalloc
 argument_list|(
 operator|(
 name|ACPI_SIZE
@@ -536,7 +542,7 @@ name|NewString
 decl_stmt|;
 name|NewString
 operator|=
-name|ACPI_ALLOCATE
+name|UtStringCacheCalloc
 argument_list|(
 operator|(
 name|ACPI_SIZE
@@ -729,11 +735,6 @@ operator|!
 name|Filename
 condition|)
 block|{
-name|ACPI_FREE
-argument_list|(
-name|DirectoryPath
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|AE_NO_MEMORY
@@ -761,11 +762,6 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|ACPI_FREE
-argument_list|(
-name|Filename
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|AE_OK

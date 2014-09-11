@@ -2135,7 +2135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              Register            - Device Register  *              Value               - Buffer where value is placed  *              Width               - Number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Read data from PCI configuration space  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              PciRegister         - Device Register  *              Value               - Buffer where value is placed  *              Width               - Number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Read data from PCI configuration space  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -2147,7 +2147,7 @@ modifier|*
 name|PciId
 parameter_list|,
 name|UINT32
-name|Register
+name|PciRegister
 parameter_list|,
 name|UINT64
 modifier|*
@@ -2171,7 +2171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWritePciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              Register            - Device Register  *              Value               - Value to be written  *              Width               - Number of bits  *  * RETURN:      Status.  *  * DESCRIPTION: Write data to PCI configuration space  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWritePciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              PciRegister         - Device Register  *              Value               - Value to be written  *              Width               - Number of bits  *  * RETURN:      Status.  *  * DESCRIPTION: Write data to PCI configuration space  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -2183,7 +2183,7 @@ modifier|*
 name|PciId
 parameter_list|,
 name|UINT32
-name|Register
+name|PciRegister
 parameter_list|,
 name|UINT64
 name|Value

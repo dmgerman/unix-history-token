@@ -830,7 +830,9 @@ condition|(
 operator|!
 name|Token
 condition|)
+block|{
 continue|continue;
+block|}
 if|if
 condition|(
 name|strcmp
@@ -840,7 +842,9 @@ argument_list|,
 literal|"External"
 argument_list|)
 condition|)
+block|{
 continue|continue;
+block|}
 name|MethodName
 operator|=
 name|strtok
@@ -856,7 +860,9 @@ condition|(
 operator|!
 name|MethodName
 condition|)
+block|{
 continue|continue;
+block|}
 name|Token
 operator|=
 name|strtok
@@ -872,7 +878,9 @@ condition|(
 operator|!
 name|Token
 condition|)
+block|{
 continue|continue;
+block|}
 if|if
 condition|(
 name|strcmp
@@ -882,7 +890,9 @@ argument_list|,
 literal|"MethodObj"
 argument_list|)
 condition|)
+block|{
 continue|continue;
+block|}
 name|Token
 operator|=
 name|strtok
@@ -898,7 +908,9 @@ condition|(
 operator|!
 name|Token
 condition|)
+block|{
 continue|continue;
+block|}
 comment|/* Convert arg count string to an integer */
 name|errno
 operator|=

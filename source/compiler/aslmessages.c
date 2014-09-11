@@ -523,7 +523,16 @@ literal|"Constant out of range"
 block|,
 comment|/*    ASL_MSG_BUFFER_ALLOCATION */
 literal|"Could not allocate line buffer"
-block|, }
+block|,
+comment|/*    ASL_MSG_MISSING_DEPENDENCY */
+literal|"Missing dependency"
+block|,
+comment|/*    ASL_MSG_ILLEGAL_FORWARD_REF */
+literal|"Illegal forward reference within a method"
+block|,
+comment|/*    ASL_MSG_ILLEGAL_METHOD_REF */
+literal|"Illegal reference across two methods"
+block|}
 decl_stmt|;
 end_decl_stmt
 

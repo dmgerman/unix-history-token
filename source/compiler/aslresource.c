@@ -128,42 +128,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* Special case for Memory24, values are compressed */
-if|if
-condition|(
-name|Type
-operator|==
-name|ACPI_RESOURCE_NAME_MEMORY24
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|Alignment
-condition|)
-comment|/* Alignment==0 means 64K - no invalid alignment */
-block|{
-name|Alignment
-operator|=
-name|ACPI_UINT16_MAX
-operator|+
-literal|1
-expr_stmt|;
-block|}
-name|Minimum
-operator|<<=
-literal|8
-expr_stmt|;
-name|Maximum
-operator|<<=
-literal|8
-expr_stmt|;
-name|Length
-operator|*=
-literal|256
-expr_stmt|;
-block|}
-comment|/* IO descriptor has different definition of min/max, don't check */
+comment|/*      * Range checks for Memory24 and Memory32.      * IO descriptor has different definition of min/max, don't check.      */
 if|if
 condition|(
 name|Type
@@ -215,6 +180,37 @@ name|LengthOp
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* Special case for Memory24, min/max values are compressed */
+if|if
+condition|(
+name|Type
+operator|==
+name|ACPI_RESOURCE_NAME_MEMORY24
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|Alignment
+condition|)
+comment|/* Alignment==0 means 64K alignment */
+block|{
+name|Alignment
+operator|=
+name|ACPI_UINT16_MAX
+operator|+
+literal|1
+expr_stmt|;
+block|}
+name|Minimum
+operator|<<=
+literal|8
+expr_stmt|;
+name|Maximum
+operator|<<=
+literal|8
 expr_stmt|;
 block|}
 block|}

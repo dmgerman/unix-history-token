@@ -1572,7 +1572,7 @@ name|d
 parameter_list|,
 name|f
 parameter_list|)
-value|(ACPI_SIZE) ACPI_PTR_DIFF (&(((d *)0)->f), (void *) NULL)
+value|ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) NULL)
 end_define
 
 begin_define
@@ -2036,8 +2036,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_NOTIFY_AFFINITY_UPDATE
+value|(UINT8) 0x0D
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_NOTIFY_MAX
-value|0x0C
+value|0x0D
 end_define
 
 begin_comment

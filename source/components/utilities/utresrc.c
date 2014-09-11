@@ -173,6 +173,10 @@ block|{
 literal|"ActiveHigh"
 block|,
 literal|"ActiveLow"
+block|,
+literal|"ActiveBoth"
+block|,
+literal|"Reserved"
 block|}
 decl_stmt|;
 end_decl_stmt

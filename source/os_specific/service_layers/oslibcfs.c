@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: oslibcfs - C library OSL for file IO  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: oslibcfs - C library OSL for file I/O  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,16 +59,16 @@ block|{
 name|ACPI_FILE
 name|File
 decl_stmt|;
+name|UINT32
+name|i
+init|=
+literal|0
+decl_stmt|;
 name|char
 name|ModesStr
 index|[
 literal|4
 index|]
-decl_stmt|;
-name|UINT32
-name|i
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -156,7 +156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsCloseFile  *  * PARAMETERS:  File                - File descriptor  *  * RETURN:      None.  *  * DESCRIPTION: Close a file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsCloseFile  *  * PARAMETERS:  File                - An open file descriptor  *  * RETURN:      None.  *  * DESCRIPTION: Close a file opened via AcpiOsOpenFile.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -176,7 +176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsReadFile  *  * PARAMETERS:  File                - File descriptor  *              Buffer              - Data buffer  *              Size                - Data block size  *              Count               - Number of data blocks  *  * RETURN:      Size of successfully read buffer.  *  * DESCRIPTION: Read a file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsReadFile  *  * PARAMETERS:  File                - An open file descriptor  *              Buffer              - Data buffer  *              Size                - Data block size  *              Count               - Number of data blocks  *  * RETURN:      Number of bytes actually read.  *  * DESCRIPTION: Read from a file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -235,7 +235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsWriteFile  *  * PARAMETERS:  File                - File descriptor  *              Buffer              - Data buffer  *              Size                - Data block size  *              Count               - Number of data blocks  *  * RETURN:      Size of successfully written buffer.  *  * DESCRIPTION: Write a file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsWriteFile  *  * PARAMETERS:  File                - An open file descriptor  *              Buffer              - Data buffer  *              Size                - Data block size  *              Count               - Number of data blocks  *  * RETURN:      Number of bytes actually written.  *  * DESCRIPTION: Write to a file.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -294,7 +294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsGetFileOffset  *  * PARAMETERS:  File                - File descriptor  *  * RETURN:      Size of current position.  *  * DESCRIPTION: Get current file offset.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsGetFileOffset  *  * PARAMETERS:  File                - An open file descriptor  *  * RETURN:      Current file pointer position.  *  * DESCRIPTION: Get current file offset.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -324,7 +324,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsSetFileOffset  *  * PARAMETERS:  File                - File descriptor  *              Offset              - File offset  *              From                - From begin/end of file  *  * RETURN:      Status  *  * DESCRIPTION: Set current file offset.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsSetFileOffset  *  * PARAMETERS:  File                - An open file descriptor  *              Offset              - New file offset  *              From                - From begin/end of file  *  * RETURN:      Status  *  * DESCRIPTION: Set current file offset.  *  ******************************************************************************/
 end_comment
 
 begin_function

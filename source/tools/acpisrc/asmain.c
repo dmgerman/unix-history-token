@@ -655,14 +655,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8u Missing if/else braces\n"
+literal|"%8u Missing if/else/while braces\n"
 argument_list|,
 name|Gbl_MissingBraces
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8u Non-ANSI comments found\n"
+literal|"%8u Non-ANSI // comments found\n"
 argument_list|,
 name|Gbl_NonAnsiComments
 argument_list|)

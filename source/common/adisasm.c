@@ -10,13 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"accommon.h"
+file|"aslcompiler.h"
 end_include
 
 begin_include
@@ -29,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdebug.h"
 end_include
 
 begin_include
@@ -92,48 +80,6 @@ argument_list|(
 literal|"adisasm"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/*  * Older versions of Bison won't emit this external in the generated header.  * Newer versions do emit the external, so we don't need to do it.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASLCOMPILER_ASLCOMPILERPARSE_H
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|AslCompilerdebug
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-name|ACPI_STATUS
-name|NsDisplayNamespace
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|NsSetupNamespaceListing
-parameter_list|(
-name|void
-modifier|*
-name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* Local prototypes */
@@ -1633,7 +1579,7 @@ else|else
 block|{
 name|NewFilename
 operator|=
-name|ACPI_ALLOCATE_ZEROED
+name|UtStringCacheCalloc
 argument_list|(
 literal|9
 argument_list|)
@@ -1702,11 +1648,6 @@ argument_list|,
 name|Table
 operator|->
 name|OemRevision
-argument_list|)
-expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|NewFilename
 argument_list|)
 expr_stmt|;
 block|}

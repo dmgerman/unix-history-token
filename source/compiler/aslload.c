@@ -236,6 +236,11 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|WalkState
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK

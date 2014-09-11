@@ -771,9 +771,33 @@ literal|"Memory Device"
 block|}
 block|,
 block|{
+literal|"PNP0D10"
+block|,
+literal|"XHCI USB Controller with debug"
+block|}
+block|,
+block|{
+literal|"PNP0D15"
+block|,
+literal|"XHCI USB Controller without debug"
+block|}
+block|,
+block|{
+literal|"PNP0D20"
+block|,
+literal|"EHCI USB Controller without debug"
+block|}
+block|,
+block|{
+literal|"PNP0D25"
+block|,
+literal|"EHCI USB Controller with debug"
+block|}
+block|,
+block|{
 literal|"PNP0D40"
 block|,
-literal|"Standard Compliant SD Host Controller"
+literal|"SDA Standard Compliant SD Host Controller"
 block|}
 block|,
 block|{

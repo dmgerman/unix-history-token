@@ -497,16 +497,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|Status
-operator|=
-name|AuConvertStringToUuid
+name|AcpiUtConvertStringToUuid
 argument_list|(
 name|InString
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|Buffer
 argument_list|)
 expr_stmt|;

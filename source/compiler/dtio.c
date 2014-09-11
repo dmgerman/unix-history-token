@@ -284,7 +284,7 @@ condition|)
 block|{
 name|ReturnString
 operator|=
-name|UtLocalCalloc
+name|UtStringCacheCalloc
 argument_list|(
 literal|1
 argument_list|)
@@ -420,7 +420,7 @@ literal|1
 expr_stmt|;
 name|ReturnString
 operator|=
-name|UtLocalCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|Length
 operator|+
@@ -896,13 +896,8 @@ condition|)
 block|{
 name|Field
 operator|=
-name|UtLocalCalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|DT_FIELD
-argument_list|)
-argument_list|)
+name|UtFieldCacheCalloc
+argument_list|()
 expr_stmt|;
 name|Field
 operator|->
@@ -946,20 +941,7 @@ name|Field
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-comment|/* Ignore this field, it has no valid data */
-block|{
-name|ACPI_FREE
-argument_list|(
-name|Name
-argument_list|)
-expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|Value
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* Else -- Ignore this field, it has no valid data */
 return|return
 operator|(
 name|AE_OK
@@ -2299,6 +2281,13 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

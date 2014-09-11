@@ -418,6 +418,28 @@ directive|ifdef
 name|_DEBUG
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_CRTDBG_MAP_ALLOC
+end_define
+
+begin_comment
+comment|/* Enables specific file/lineno for leaks */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<malloc.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -434,8 +456,24 @@ directive|define
 name|ACPI_DEBUG_INITIALIZE
 parameter_list|()
 define|\
-value|_CrtSetDbgFlag (_CRTDBG_CHECK_ALWAYS_DF | \         _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_CRT_DF | \         _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG))
+value|_CrtSetDbgFlag (\         _CRTDBG_CHECK_ALWAYS_DF | \         _CRTDBG_ALLOC_MEM_DF | \         _CRTDBG_DELAY_FREE_MEM_DF | \         _CRTDBG_LEAK_CHECK_DF | \         _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG));
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*  * _CrtSetBreakAlloc can be used to set a breakpoint at a particular  * memory leak, add to the macro above.  */
+end_comment
+
+begin_endif
+unit|Detected memory leaks! Dumping objects -> ..\..\source\os_specific\service_layers\oswinxf.c(701) : {937} normal block at 0x002E9190, 40 bytes long.  Data:<> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  _CrtSetBreakAlloc (937);
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

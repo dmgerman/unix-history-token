@@ -73,6 +73,9 @@ block|{
 name|UINT32
 name|i
 decl_stmt|;
+name|UINT32
+name|Timer
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 name|ExDoDebugObject
@@ -97,6 +100,24 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
+comment|/*      * We will emit the current timer value (in microseconds) with each      * debug output. Only need the lower 26 bits. This allows for 67      * million microseconds or 67 seconds before rollover.      */
+name|Timer
+operator|=
+operator|(
+operator|(
+name|UINT32
+operator|)
+name|AcpiOsGetTimer
+argument_list|()
+operator|/
+literal|10
+operator|)
+expr_stmt|;
+comment|/* (100 nanoseconds to microseconds) */
+name|Timer
+operator|&=
+literal|0x03FFFFFF
+expr_stmt|;
 comment|/*      * Print line header as long as we are not in the middle of an      * object display      */
 if|if
 condition|(
@@ -116,7 +137,9 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[ACPI Debug] %*s"
+literal|"[ACPI Debug %.8u] %*s"
+argument_list|,
+name|Timer
 argument_list|,
 name|Level
 argument_list|,

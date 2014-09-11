@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|AH_SUPPORTED_OPTIONS
-value|"aehikmopsv"
+value|"aehikmopsuv"
 end_define
 
 begin_comment
@@ -127,6 +127,13 @@ argument_list|(
 literal|"-i [Name/Prefix]"
 argument_list|,
 literal|"Find/Display ACPI/PNP Hardware ID(s)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-u"
+argument_list|,
+literal|"Display ACPI-related UUIDs"
 argument_list|)
 expr_stmt|;
 name|ACPI_USAGE_TEXT
@@ -322,6 +329,14 @@ name|AH_DECODE_ASL
 expr_stmt|;
 break|break;
 case|case
+literal|'u'
+case|:
+name|DecodeType
+operator|=
+name|AH_DISPLAY_UUIDS
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 comment|/* -v: (Version): signon already emitted, just exit */
@@ -427,6 +442,13 @@ name|AhDecodeException
 argument_list|(
 name|Name
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AH_DISPLAY_UUIDS
+case|:
+name|AhDisplayUuids
+argument_list|()
 expr_stmt|;
 break|break;
 default|default:

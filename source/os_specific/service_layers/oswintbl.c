@@ -701,7 +701,7 @@ expr_stmt|;
 if|if
 condition|(
 name|WinStatus
-operator|=
+operator|!=
 name|ERROR_SUCCESS
 condition|)
 block|{
@@ -775,7 +775,7 @@ expr_stmt|;
 if|if
 condition|(
 name|WinStatus
-operator|=
+operator|!=
 name|ERROR_SUCCESS
 condition|)
 block|{

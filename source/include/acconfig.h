@@ -484,6 +484,68 @@ value|5
 end_define
 
 begin_comment
+comment|/******************************************************************************  *  * Miscellaneous constants  *  *****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* UUID constants */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UUID_BUFFER_LENGTH
+value|16
+end_define
+
+begin_comment
+comment|/* Length of UUID in memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UUID_STRING_LENGTH
+value|36
+end_define
+
+begin_comment
+comment|/* Total length of a UUID string */
+end_comment
+
+begin_comment
+comment|/* Positions for required hyphens (dashes) in UUID strings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UUID_HYPHEN1_OFFSET
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|UUID_HYPHEN2_OFFSET
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|UUID_HYPHEN3_OFFSET
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|UUID_HYPHEN4_OFFSET
+value|23
+end_define
+
+begin_comment
 comment|/******************************************************************************  *  * ACPI AML Debugger  *  *****************************************************************************/
 end_comment
 

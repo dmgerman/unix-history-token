@@ -835,6 +835,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|UINT8
+name|AcpiUtAsciiCharToHex
+parameter_list|(
+name|int
+name|HexChar
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|BOOLEAN
 name|AcpiUtValidObjectType
 parameter_list|(
@@ -3537,6 +3547,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|AcpiAhMatchUuid
+parameter_list|(
+name|UINT8
+modifier|*
+name|Data
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * utprint - printf/vprintf output functions  */
 end_comment
@@ -3663,6 +3686,25 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * utuuid -- UUID support functions  */
+end_comment
+
+begin_function_decl
+name|void
+name|AcpiUtConvertStringToUuid
+parameter_list|(
+name|char
+modifier|*
+name|InString
+parameter_list|,
+name|UINT8
+modifier|*
+name|UuidBuffer
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

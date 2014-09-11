@@ -520,8 +520,7 @@ operator|.
 name|NextObject
 expr_stmt|;
 block|}
-block|}
-comment|/*      * Detach the object from any data objects (which are still held by      * the namespace node)      */
+comment|/*          * Detach the object from any data objects (which are still held by          * the namespace node)          */
 if|if
 condition|(
 name|ObjDesc
@@ -555,6 +554,7 @@ name|NextObject
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 comment|/* Reset the node type to untyped */
 name|Node

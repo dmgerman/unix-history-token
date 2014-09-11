@@ -1200,7 +1200,7 @@ block|{
 comment|/* Allocate a buffer for the message and a new error node */
 name|MessageBuffer
 operator|=
-name|UtLocalCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1418,7 +1418,7 @@ block|{
 comment|/* Allocate a buffer for the message and a new error node */
 name|MessageBuffer
 operator|=
-name|UtLocalCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(

@@ -455,12 +455,6 @@ block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"File appears to be ASCII only, must be binary\n"
-argument_list|,
-name|TableHeader
-operator|.
-name|Length
-argument_list|,
-name|FileSize
 argument_list|)
 expr_stmt|;
 block|}

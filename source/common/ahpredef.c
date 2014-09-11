@@ -400,6 +400,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_CCA"
+argument_list|,
+literal|"Cache Coherency Attribute"
+argument_list|,
+literal|"Returns a device's support level for cache coherency"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_CDM"
 argument_list|,
 literal|"Clock Domain"
@@ -612,6 +621,15 @@ argument_list|,
 literal|"Drive Strength"
 argument_list|,
 literal|"Drive Strength setting for GPIO connection, Resource Descriptor field"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_DSD"
+argument_list|,
+literal|"Device-Specific Data"
+argument_list|,
+literal|"Returns a list of device property information"
 argument_list|)
 block|,
 name|AH_PREDEF

@@ -234,6 +234,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|AslParserCleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * aslstartup - entered from main()  */
 end_comment
@@ -331,6 +340,19 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|CmDeleteCaches
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * aslascii - ascii support  */
+end_comment
 
 begin_function_decl
 name|ACPI_STATUS
@@ -648,6 +670,21 @@ begin_function_decl
 name|void
 name|ApCheckRegMethod
 parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|ApFindNameInScope
+parameter_list|(
+name|char
+modifier|*
+name|Name
+parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
@@ -2199,16 +2236,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|UINT8
-name|UtHexCharToValue
-parameter_list|(
-name|int
-name|HexChar
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|UtConvertByteToHex
 parameter_list|(
@@ -2261,7 +2288,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|UtGetStringBuffer
+name|UtStringCacheCalloc
 parameter_list|(
 name|UINT32
 name|Length
@@ -2272,6 +2299,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|UtExpandLineBuffers
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|UtFreeLineBuffers
 parameter_list|(
 name|void
 parameter_list|)
@@ -2367,21 +2403,6 @@ parameter_list|(
 name|char
 modifier|*
 name|InString
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AuConvertStringToUuid
-parameter_list|(
-name|char
-modifier|*
-name|InString
-parameter_list|,
-name|char
-modifier|*
-name|UuIdBuffer
 parameter_list|)
 function_decl|;
 end_function_decl

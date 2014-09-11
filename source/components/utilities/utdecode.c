@@ -159,85 +159,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtHexToAsciiChar  *  * PARAMETERS:  Integer             - Contains the hex digit  *              Position            - bit position of the digit within the  *                                    integer (multiple of 4)  *  * RETURN:      The converted Ascii character  *  * DESCRIPTION: Convert a hex digit to an Ascii character  *  ******************************************************************************/
-end_comment
-
-begin_comment
-comment|/* Hex to ASCII conversion table */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|AcpiGbl_HexToAscii
-index|[]
-init|=
-block|{
-literal|'0'
-block|,
-literal|'1'
-block|,
-literal|'2'
-block|,
-literal|'3'
-block|,
-literal|'4'
-block|,
-literal|'5'
-block|,
-literal|'6'
-block|,
-literal|'7'
-block|,
-literal|'8'
-block|,
-literal|'9'
-block|,
-literal|'A'
-block|,
-literal|'B'
-block|,
-literal|'C'
-block|,
-literal|'D'
-block|,
-literal|'E'
-block|,
-literal|'F'
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|char
-name|AcpiUtHexToAsciiChar
-parameter_list|(
-name|UINT64
-name|Integer
-parameter_list|,
-name|UINT32
-name|Position
-parameter_list|)
-block|{
-return|return
-operator|(
-name|AcpiGbl_HexToAscii
-index|[
-operator|(
-name|Integer
-operator|>>
-name|Position
-operator|)
-operator|&
-literal|0xF
-index|]
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetRegionName  *  * PARAMETERS:  Space ID            - ID for the region  *  * RETURN:      Decoded region SpaceId name  *  * DESCRIPTION: Translate a Space ID into a name string (Debug only)  *  ******************************************************************************/
 end_comment
 
@@ -1149,6 +1070,9 @@ literal|"System Locality Update"
 block|,
 comment|/* 0C */
 literal|"Shutdown Request"
+block|,
+comment|/* 0D */
+literal|"System Resource Affinity Update"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1244,7 +1168,7 @@ name|ACPI_OBJECT_TYPE
 name|Type
 parameter_list|)
 block|{
-comment|/* 00 - 0C are common to all object types */
+comment|/* 00 - 0D are common to all object types */
 if|if
 condition|(
 name|NotifyValue

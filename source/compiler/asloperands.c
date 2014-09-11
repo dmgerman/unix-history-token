@@ -2224,7 +2224,7 @@ block|{
 comment|/*          * We will use the AML filename that is embedded in the source file          * for the output filename.          */
 name|Filename
 operator|=
-name|ACPI_ALLOCATE
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -2473,7 +2473,7 @@ argument_list|)
 expr_stmt|;
 name|Gbl_TableId
 operator|=
-name|AcpiOsAllocate
+name|UtStringCacheCalloc
 argument_list|(
 name|Length
 operator|+

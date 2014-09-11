@@ -1075,7 +1075,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * DMAR - DMA Remapping table  *        Version 1  *  * Conforms to "Intel Virtualization Technology for Directed I/O",  * Version 1.2, Sept. 2008  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * DMAR - DMA Remapping table  *        Version 1  *  * Conforms to "Intel Virtualization Technology for Directed I/O",  * Version 2.2, Sept. 2013  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -1152,18 +1152,22 @@ name|ACPI_DMAR_TYPE_RESERVED_MEMORY
 init|=
 literal|1
 block|,
-name|ACPI_DMAR_TYPE_ATSR
+name|ACPI_DMAR_TYPE_ROOT_ATS
 init|=
 literal|2
 block|,
-name|ACPI_DMAR_HARDWARE_AFFINITY
+name|ACPI_DMAR_TYPE_HARDWARE_AFFINITY
 init|=
 literal|3
 block|,
-name|ACPI_DMAR_TYPE_RESERVED
+name|ACPI_DMAR_TYPE_NAMESPACE
 init|=
 literal|4
-comment|/* 4 and greater are reserved */
+block|,
+name|ACPI_DMAR_TYPE_RESERVED
+init|=
+literal|5
+comment|/* 5 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1198,7 +1202,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Values for EntryType in ACPI_DMAR_DEVICE_SCOPE */
+comment|/* Values for EntryType in ACPI_DMAR_DEVICE_SCOPE - device types */
 end_comment
 
 begin_enum
@@ -1225,10 +1229,14 @@ name|ACPI_DMAR_SCOPE_TYPE_HPET
 init|=
 literal|4
 block|,
-name|ACPI_DMAR_SCOPE_TYPE_RESERVED
+name|ACPI_DMAR_SCOPE_TYPE_NAMESPACE
 init|=
 literal|5
-comment|/* 5 and greater are reserved */
+block|,
+name|ACPI_DMAR_SCOPE_TYPE_RESERVED
+init|=
+literal|6
+comment|/* 6 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1396,6 +1404,38 @@ name|ProximityDomain
 decl_stmt|;
 block|}
 name|ACPI_DMAR_RHSA
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 4: ACPI Namespace Device Declaration Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_dmar_andd
+block|{
+name|ACPI_DMAR_HEADER
+name|Header
+decl_stmt|;
+name|UINT8
+name|Reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|UINT8
+name|DeviceNumber
+decl_stmt|;
+name|char
+name|DeviceName
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|ACPI_DMAR_ANDD
 typedef|;
 end_typedef
 

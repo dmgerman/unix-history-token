@@ -168,6 +168,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AH_DISPLAY_UUIDS
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
 name|AH_MAX_ASL_LINE_LENGTH
 value|70
 end_define
@@ -292,6 +299,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
+name|AH_UUID
+name|AcpiUuids
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|BOOLEAN
 name|AhDisplayAll
 decl_stmt|;
@@ -392,6 +408,15 @@ parameter_list|(
 name|char
 modifier|*
 name|Name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AhDisplayUuids
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

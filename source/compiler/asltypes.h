@@ -408,6 +408,30 @@ name|ASL_NUM_FILES
 value|(ASL_MAX_FILE_TYPE + 1)
 end_define
 
+begin_comment
+comment|/* Cache block structure for ParseOps and Strings */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|asl_cache_info
+block|{
+name|void
+modifier|*
+name|Next
+decl_stmt|;
+name|char
+name|Buffer
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|ASL_CACHE_INFO
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 struct|struct

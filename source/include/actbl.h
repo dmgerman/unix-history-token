@@ -732,13 +732,14 @@ name|UINT8
 name|ResetValue
 decl_stmt|;
 comment|/* Value to write to the ResetRegister port to reset the system */
-name|UINT8
-name|Reserved4
-index|[
-literal|3
-index|]
+name|UINT16
+name|ArmBootFlags
 decl_stmt|;
-comment|/* Reserved, must be zero */
+comment|/* ARM-Specific Boot Flags (see below for individual flags) (ACPI 5.1) */
+name|UINT8
+name|MinorRevision
+decl_stmt|;
+comment|/* FADT Minor Revision (ACPI 5.1) */
 name|UINT64
 name|XFacs
 decl_stmt|;
@@ -793,7 +794,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Masks for FADT Boot Architecture Flags (BootFlags) [Vx]=Introduced in this FADT revision */
+comment|/* Masks for FADT IA-PC Boot Architecture Flags (boot_flags) [Vx]=Introduced in this FADT revision */
 end_comment
 
 begin_define
@@ -860,6 +861,32 @@ end_define
 
 begin_comment
 comment|/* 05: [V5] No CMOS real-time clock present */
+end_comment
+
+begin_comment
+comment|/* Masks for FADT ARM Boot Architecture Flags (arm_boot_flags) ACPI 5.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_PSCI_COMPLIANT
+value|(1)
+end_define
+
+begin_comment
+comment|/* 00: [V5+] PSCI 0.2+ is implemented */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_PSCI_USE_HVC
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* 01: [V5+] HVC must be used instead of SMC as the PSCI conduit */
 end_comment
 
 begin_comment
@@ -1358,7 +1385,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_FADT_V2_SIZE
-value|(UINT32) (ACPI_FADT_OFFSET (Reserved4[0]) + 3)
+value|(UINT32) (ACPI_FADT_OFFSET (MinorRevision) + 1)
 end_define
 
 begin_define

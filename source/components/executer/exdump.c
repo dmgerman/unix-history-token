@@ -2591,8 +2591,6 @@ block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
-argument_list|,
-name|Next
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2727,8 +2725,6 @@ block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
-argument_list|,
-name|Next
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2863,8 +2859,6 @@ block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
-argument_list|,
-name|Next
 argument_list|)
 expr_stmt|;
 break|break;

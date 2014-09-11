@@ -20,7 +20,7 @@ name|__ACPREDEF_H__
 end_define
 
 begin_comment
-comment|/******************************************************************************  *  * Return Package types  *  * 1) PTYPE1 packages do not contain subpackages.  *  * ACPI_PTYPE1_FIXED: Fixed-length length, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *  * ACPI_PTYPE1_VAR: Variable-length length. Zero-length package is allowed:  *      object type (Int/Buf/Ref)  *  * ACPI_PTYPE1_OPTION: Package has some required and some optional elements  *      (Used for _PRW)  *  *  * 2) PTYPE2 packages contain a Variable-length number of subpackages. Each  *    of the different types describe the contents of each of the subpackages.  *  * ACPI_PTYPE2: Each subpackage contains 1 or 2 object types. Zero-length  *      parent package is allowed:  *      object type  *      count  *      object type  *      count  *      (Used for _ALR,_MLS,_PSS,_TRT,_TSS)  *  * ACPI_PTYPE2_COUNT: Each subpackage has a count as first element.  *      Zero-length parent package is allowed:  *      object type  *      (Used for _CSD,_PSD,_TSD)  *  * ACPI_PTYPE2_PKG_COUNT: Count of subpackages at start, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *      (Used for _CST)  *  * ACPI_PTYPE2_FIXED: Each subpackage is of Fixed-length. Zero-length  *      parent package is allowed.  *      (Used for _PRT)  *  * ACPI_PTYPE2_MIN: Each subpackage has a Variable-length but minimum length.  *      Zero-length parent package is allowed:  *      (Used for _HPX)  *  * ACPI_PTYPE2_REV_FIXED: Revision at start, each subpackage is Fixed-length  *      (Used for _ART, _FPS)  *  * ACPI_PTYPE2_FIX_VAR: Each subpackage consists of some fixed-length elements  *      followed by an optional element. Zero-length parent package is allowed.  *      object type  *      count  *      object type  *      count = 0 (optional)  *      (Used for _DLM)  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Return Package types  *  * 1) PTYPE1 packages do not contain subpackages.  *  * ACPI_PTYPE1_FIXED: Fixed-length length, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *  * ACPI_PTYPE1_VAR: Variable-length length. Zero-length package is allowed:  *      object type (Int/Buf/Ref)  *  * ACPI_PTYPE1_OPTION: Package has some required and some optional elements  *      (Used for _PRW)  *  *  * 2) PTYPE2 packages contain a Variable-length number of subpackages. Each  *    of the different types describe the contents of each of the subpackages.  *  * ACPI_PTYPE2: Each subpackage contains 1 or 2 object types. Zero-length  *      parent package is allowed:  *      object type  *      count  *      object type  *      count  *      (Used for _ALR,_MLS,_PSS,_TRT,_TSS)  *  * ACPI_PTYPE2_COUNT: Each subpackage has a count as first element.  *      Zero-length parent package is allowed:  *      object type  *      (Used for _CSD,_PSD,_TSD)  *  * ACPI_PTYPE2_PKG_COUNT: Count of subpackages at start, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *      (Used for _CST)  *  * ACPI_PTYPE2_FIXED: Each subpackage is of Fixed-length. Zero-length  *      parent package is allowed.  *      (Used for _PRT)  *  * ACPI_PTYPE2_MIN: Each subpackage has a Variable-length but minimum length.  *      Zero-length parent package is allowed:  *      (Used for _HPX)  *  * ACPI_PTYPE2_REV_FIXED: Revision at start, each subpackage is Fixed-length  *      (Used for _ART, _FPS)  *  * ACPI_PTYPE2_FIX_VAR: Each subpackage consists of some fixed-length elements  *      followed by an optional element. Zero-length parent package is allowed.  *      object type  *      count  *      object type  *      count = 0 (optional)  *      (Used for _DLM)  *  * ACPI_PTYPE2_UUID_PAIR: Each subpackage is preceded by a UUID Buffer. The UUID  *      defines the format of the package. Zero-length parent package is  *      allowed.  *      (Used for _DSD)  *  *****************************************************************************/
 end_comment
 
 begin_enum
@@ -66,6 +66,10 @@ block|,
 name|ACPI_PTYPE2_FIX_VAR
 init|=
 literal|10
+block|,
+name|ACPI_PTYPE2_UUID_PAIR
+init|=
+literal|11
 block|}
 enum|;
 end_enum
@@ -1209,6 +1213,20 @@ block|,
 comment|/* See PCI firmware spec 3.0 */
 block|{
 block|{
+literal|"_CCA"
+block|,
+name|METHOD_0ARGS
+block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_INTEGER
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* ACPI 5.1 */
+block|{
+block|{
 literal|"_CDM"
 block|,
 name|METHOD_0ARGS
@@ -1606,6 +1624,35 @@ block|,
 name|METHOD_NO_RETURN_VALUE
 block|}
 block|}
+block|,
+block|{
+block|{
+literal|"_DSD"
+block|,
+name|METHOD_0ARGS
+block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_PACKAGE
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* Variable-length (Pkgs) each: 1 Buf, 1 Pkg */
+name|PACKAGE_INFO
+argument_list|(
+name|ACPI_PTYPE2_UUID_PAIR
+argument_list|,
+name|ACPI_RTYPE_BUFFER
+argument_list|,
+literal|1
+argument_list|,
+name|ACPI_RTYPE_PACKAGE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
 block|{
 block|{

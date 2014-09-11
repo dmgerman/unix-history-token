@@ -375,6 +375,16 @@ argument_list|,
 name|TableData
 argument_list|)
 expr_stmt|;
+comment|/* Shutdown ACPICA subsystem */
+operator|(
+name|void
+operator|)
+name|AcpiTerminate
+argument_list|()
+expr_stmt|;
+name|CmDeleteCaches
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -958,11 +968,6 @@ expr_stmt|;
 name|AcpiOsRedirectOutput
 argument_list|(
 name|stdout
-argument_list|)
-expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|DisasmFilename
 argument_list|)
 expr_stmt|;
 return|return

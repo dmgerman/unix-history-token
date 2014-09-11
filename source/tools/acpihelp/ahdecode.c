@@ -2006,6 +2006,58 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AhDisplayUuids  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display all known UUIDs.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AhDisplayUuids
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|const
+name|AH_UUID
+modifier|*
+name|Info
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"ACPI-related UUIDs:\n\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|Info
+operator|=
+name|AcpiUuids
+init|;
+name|Info
+operator|->
+name|Description
+condition|;
+name|Info
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|"%32s : %s\n"
+argument_list|,
+name|Info
+operator|->
+name|Description
+argument_list|,
+name|Info
+operator|->
+name|String
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AhDecodeException  *  * PARAMETERS:  HexString           - ACPI status string from command line, in  *                                    hex. If null, display all exceptions.  *  * RETURN:      None  *  * DESCRIPTION: Decode and display an ACPI_STATUS exception code.  *  ******************************************************************************/
 end_comment
 

@@ -138,6 +138,7 @@ operator|.
 name|Filename
 argument_list|)
 expr_stmt|;
+comment|/* No need to free any existing filename */
 name|Gbl_Files
 index|[
 name|ASL_FILE_INPUT
@@ -394,7 +395,7 @@ condition|)
 block|{
 name|Pathname
 operator|=
-name|ACPI_ALLOCATE
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -418,7 +419,7 @@ block|}
 comment|/* Need a local copy of the prefix directory path */
 name|CommonPath
 operator|=
-name|ACPI_ALLOCATE
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -512,7 +513,7 @@ name|ConcatenatePaths
 label|:
 name|Pathname
 operator|=
-name|ACPI_ALLOCATE_ZEROED
+name|UtStringCacheCalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -555,11 +556,6 @@ argument_list|(
 name|Pathname
 argument_list|,
 name|FilePathname
-argument_list|)
-expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|CommonPath
 argument_list|)
 expr_stmt|;
 comment|/* Convert all backslashes to normal slashes */

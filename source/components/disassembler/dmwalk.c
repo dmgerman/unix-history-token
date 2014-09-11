@@ -561,6 +561,7 @@ name|AML_BUFFER_OP
 case|:
 if|if
 condition|(
+operator|(
 name|Op
 operator|->
 name|Common
@@ -568,6 +569,17 @@ operator|.
 name|DisasmOpcode
 operator|==
 name|ACPI_DASM_UNICODE
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|==
+name|ACPI_DASM_UUID
+operator|)
 condition|)
 block|{
 return|return

@@ -3422,14 +3422,11 @@ case|:
 case|case
 name|AML_FIELD_ATTRIB_RAW_PROCESS
 case|:
-comment|/* (-2) for status/length */
 name|Length
 operator|=
 name|MyContext
 operator|->
 name|AccessLength
-operator|-
-literal|2
 expr_stmt|;
 break|break;
 default|default:
@@ -3491,14 +3488,11 @@ case|:
 case|case
 name|AML_FIELD_ATTRIB_RAW_PROCESS
 case|:
-comment|/* (-2) for status/length */
 name|Length
 operator|=
 name|MyContext
 operator|->
 name|AccessLength
-operator|-
-literal|2
 expr_stmt|;
 break|break;
 default|default:

@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|ASL_COMPLIANCE
-value|"Supports ACPI Specification Revision 5.0A"
+value|"Supports ACPI Specification Revision 5.1"
 end_define
 
 begin_comment
@@ -79,15 +79,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASL_NODE_CACHE_SIZE
-value|1024
+name|ASL_PARSEOP_CACHE_SIZE
+value|(1024 * 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ASL_STRING_CACHE_SIZE
-value|32768
+value|(1024 * 64)
 end_define
 
 begin_define

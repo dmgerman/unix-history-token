@@ -769,6 +769,12 @@ case|case
 literal|'^'
 case|:
 comment|/* -v: (Version): signon already emitted, just exit */
+operator|(
+name|void
+operator|)
+name|AcpiOsTerminate
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -949,6 +955,12 @@ literal|2
 condition|)
 block|{
 name|usage
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiOsTerminate
 argument_list|()
 expr_stmt|;
 return|return

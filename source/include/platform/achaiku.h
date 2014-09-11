@@ -74,7 +74,7 @@ name|ACPI_USE_NATIVE_DIVIDE
 end_define
 
 begin_comment
-comment|// #define ACPI_THREAD_ID               thread_id
+comment|/* #define ACPI_THREAD_ID               thread_id */
 end_comment
 
 begin_define

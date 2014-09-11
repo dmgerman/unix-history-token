@@ -668,7 +668,7 @@ index|]
 argument_list|,
 name|AcpiGbl_LlDecode
 index|[
-name|ACPI_EXTRACT_1BIT_FLAG
+name|ACPI_EXTRACT_2BIT_FLAG
 argument_list|(
 name|Resource
 operator|->

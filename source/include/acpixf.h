@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20140627
+value|0x20140828
 end_define
 
 begin_include
@@ -1393,6 +1393,13 @@ begin_macro
 name|ACPI_HW_DEPENDENT_RETURN_STATUS
 argument_list|(
 argument|ACPI_STATUS AcpiFinishGpe (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiMarkGpeForWake (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber)
 argument_list|)
 end_macro
 

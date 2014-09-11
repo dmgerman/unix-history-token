@@ -178,7 +178,33 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtBoundStringLength  *  * PARAMETERS:  String              - String with boundary  *              Count               - Boundary of the string  *  * RETURN:      Length of the string.  *  * DESCRIPTION: Calculate the length of a string with boundary.  *  ******************************************************************************/
+comment|/* Module globals */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|AcpiGbl_LowerHexDigits
+index|[]
+init|=
+literal|"0123456789abcdef"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|AcpiGbl_UpperHexDigits
+index|[]
+init|=
+literal|"0123456789ABCDEF"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtBoundStringLength  *  * PARAMETERS:  String              - String with boundary  *              Count               - Boundary of the string  *  * RETURN:      Length of the string. Less than or equal to Count.  *  * DESCRIPTION: Calculate the length of a string with boundary.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -299,20 +325,6 @@ parameter_list|)
 block|{
 specifier|const
 name|char
-name|LowerDigits
-index|[]
-init|=
-literal|"0123456789abcdef"
-decl_stmt|;
-specifier|const
-name|char
-name|UpperDigits
-index|[]
-init|=
-literal|"0123456789ABCDEF"
-decl_stmt|;
-specifier|const
-name|char
 modifier|*
 name|Digits
 decl_stmt|;
@@ -331,9 +343,9 @@ name|Digits
 operator|=
 name|Upper
 condition|?
-name|UpperDigits
+name|AcpiGbl_UpperHexDigits
 else|:
-name|LowerDigits
+name|AcpiGbl_LowerHexDigits
 expr_stmt|;
 if|if
 condition|(
@@ -576,6 +588,10 @@ name|Type
 parameter_list|)
 block|{
 name|char
+modifier|*
+name|Pos
+decl_stmt|;
+name|char
 name|Sign
 decl_stmt|;
 name|char
@@ -596,7 +612,7 @@ index|[
 literal|66
 index|]
 decl_stmt|;
-comment|/* Perform sanity checks */
+comment|/* Parameter validation */
 if|if
 condition|(
 name|Base
@@ -609,7 +625,9 @@ literal|16
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -759,10 +777,8 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Generate full string in reverse order */
-name|i
+name|Pos
 operator|=
-name|ACPI_PTR_DIFF
-argument_list|(
 name|AcpiUtPutNumber
 argument_list|(
 name|ReversedString
@@ -773,6 +789,12 @@ name|Base
 argument_list|,
 name|Upper
 argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|ACPI_PTR_DIFF
+argument_list|(
+name|Pos
 argument_list|,
 name|ReversedString
 argument_list|)
@@ -990,7 +1012,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtVsnprintf  *  * PARAMETERS:  String              - String with boundary  *              Size                - Boundary of the string  *              Format              - Standard printf format  *              Args                - Argument list  *  * RETURN:      Size of successfully output bytes  *  * DESCRIPTION: Formatted output to a string using argument list pointer.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtVsnprintf  *  * PARAMETERS:  String              - String with boundary  *              Size                - Boundary of the string  *              Format              - Standard printf format  *              Args                - Argument list  *  * RETURN:      Number of bytes actually written.  *  * DESCRIPTION: Formatted output to a string using argument list pointer.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1198,6 +1220,11 @@ literal|1
 condition|)
 do|;
 comment|/* Process width */
+name|Width
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|ACPI_IS_DIGIT
@@ -1265,6 +1292,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Process precision */
+name|Precision
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1339,6 +1371,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Process qualifier */
+name|Qualifier
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1930,7 +1967,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSnprintf  *  * PARAMETERS:  String              - String with boundary  *              Size                - Boundary of the string  *              Format, ...         - Standard printf format  *  * RETURN:      Size of successfully output bytes  *  * DESCRIPTION: Formatted output to a string.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSnprintf  *  * PARAMETERS:  String              - String with boundary  *              Size                - Boundary of the string  *              Format, ...         - Standard printf format  *  * RETURN:      Number of bytes actually written.  *  * DESCRIPTION: Formatted output to a string.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1998,7 +2035,7 @@ name|ACPI_APPLICATION
 end_ifdef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFileVprintf  *  * PARAMETERS:  File                - File descriptor  *              Format              - Standard printf format  *              Args                - Argument list  *  * RETURN:      Size of successfully output bytes  *  * DESCRIPTION: Formatted output to a file using argument list pointer.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFileVprintf  *  * PARAMETERS:  File                - File descriptor  *              Format              - Standard printf format  *              Args                - Argument list  *  * RETURN:      Number of bytes actually written.  *  * DESCRIPTION: Formatted output to a file using argument list pointer.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2076,7 +2113,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFilePrintf  *  * PARAMETERS:  File                - File descriptor  *              Format, ...         - Standard printf format  *  * RETURN:      Size of successfully output bytes  *  * DESCRIPTION: Formatted output to a file.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFilePrintf  *  * PARAMETERS:  File                - File descriptor  *              Format, ...         - Standard printf format  *  * RETURN:      Number of bytes actually written.  *  * DESCRIPTION: Formatted output to a file.  *  ******************************************************************************/
 end_comment
 
 begin_function

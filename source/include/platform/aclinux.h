@@ -19,6 +19,48 @@ directive|define
 name|__ACLINUX_H__
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__KERNEL__
+end_ifdef
+
+begin_comment
+comment|/* ACPICA external files should not include ACPICA headers directly. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BUILDING_ACPICA
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LINUX_ACPI_H
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Please don't include<acpi/acpi.h> directly, include<linux/acpi.h> instead."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Common (in-kernel/user-space) ACPICA configuration */
 end_comment
@@ -134,11 +176,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_ACPI
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<asm/acenv.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -379,18 +432,6 @@ directive|define
 name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsCreateLock
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsMapMemory
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsUnmapMemory
-end_define
-
 begin_comment
 comment|/*  * OSL interfaces used by debugger/disassembler  */
 end_comment
@@ -512,23 +553,6 @@ begin_define
 define|#
 directive|define
 name|__init
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__iomem
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__iomem
 end_define
 
 begin_endif

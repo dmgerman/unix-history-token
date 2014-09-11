@@ -542,6 +542,7 @@ name|AslAbort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Do not clear/free the filename string */
 name|Gbl_Files
 index|[
 name|FileId

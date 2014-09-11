@@ -2425,8 +2425,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_DASM_EISAID
+name|ACPI_DASM_UUID
 value|0x05
+end_define
+
+begin_comment
+comment|/* Buffer is a UUID/GUID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_EISAID
+value|0x06
 end_define
 
 begin_comment
@@ -2437,7 +2448,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_MATCHOP
-value|0x06
+value|0x07
 end_define
 
 begin_comment
@@ -2448,7 +2459,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_PREFIX
-value|0x07
+value|0x08
 end_define
 
 begin_comment
@@ -2459,7 +2470,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_SUFFIX
-value|0x08
+value|0x09
 end_define
 
 begin_comment
@@ -2470,7 +2481,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_HID_STRING
-value|0x09
+value|0x0A
 end_define
 
 begin_comment
@@ -2481,7 +2492,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_IGNORE
-value|0x0A
+value|0x0B
 end_define
 
 begin_comment
@@ -4043,6 +4054,24 @@ name|Description
 decl_stmt|;
 block|}
 name|AH_DEVICE_ID
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ah_uuid
+block|{
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+name|char
+modifier|*
+name|String
+decl_stmt|;
+block|}
+name|AH_UUID
 typedef|;
 end_typedef
 

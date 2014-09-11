@@ -408,6 +408,12 @@ name|ASL_MSG_RANGE
 block|,
 name|ASL_MSG_BUFFER_ALLOCATION
 block|,
+name|ASL_MSG_MISSING_DEPENDENCY
+block|,
+name|ASL_MSG_ILLEGAL_FORWARD_REF
+block|,
+name|ASL_MSG_ILLEGAL_METHOD_REF
+block|,
 comment|/* These messages are used by the Data Table compiler only */
 name|ASL_MSG_BUFFER_ELEMENT
 init|=

@@ -162,7 +162,36 @@ literal|"Root Port ATS Capability"
 block|,
 literal|"Remapping Hardware Static Affinity"
 block|,
+literal|"ACPI Namespace Device Declaration"
+block|,
 literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmDmarScope
+index|[]
+init|=
+block|{
+literal|"Reserved value"
+block|,
+literal|"PCI Endpoint Device"
+block|,
+literal|"PCI Bridge Device"
+block|,
+literal|"IOAPIC Device"
+block|,
+literal|"Message-capable HPET Device"
+block|,
+literal|"Namespace Device"
+block|,
+literal|"Unknown Scope Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -329,6 +358,25 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+name|AcpiDmGtdtSubnames
+index|[]
+init|=
+block|{
+literal|"Generic Timer Block"
+block|,
+literal|"Generic Watchdog Timer"
+block|,
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
 name|AcpiDmHestSubnames
 index|[]
 init|=
@@ -441,6 +489,12 @@ comment|/* ACPI_MADT_GENERIC_INTERRUPT */
 literal|"Generic Interrupt Distributor"
 block|,
 comment|/* ACPI_MADT_GENERIC_DISTRIBUTOR */
+literal|"Generic MSI Frame"
+block|,
+comment|/* ACPI_MADT_GENERIC_MSI_FRAME */
+literal|"Generic Interrupt Redistributor"
+block|,
+comment|/* ACPI_MADT_GENERIC_REDISTRIBUTOR */
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
 block|}
@@ -459,6 +513,8 @@ block|{
 literal|"Generic Communications Subspace"
 block|,
 comment|/* ACPI_PCCT_TYPE_GENERIC_SUBSPACE */
+literal|"HW-Reduced Communications Subspace"
+block|,
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
 block|}
@@ -522,6 +578,8 @@ block|,
 literal|"Memory Affinity"
 block|,
 literal|"Processor Local x2APIC Affinity"
+block|,
+literal|"GICC Affinity"
 block|,
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
@@ -846,11 +904,11 @@ block|,
 block|{
 name|ACPI_SIG_GTDT
 block|,
-name|AcpiDmTableInfoGtdt
-block|,
 name|NULL
 block|,
-name|NULL
+name|AcpiDmDumpGtdt
+block|,
+name|DtCompileGtdt
 block|,
 name|TemplateGtdt
 block|,
@@ -2156,6 +2214,9 @@ case|case
 name|ACPI_DMT_IVRS
 case|:
 case|case
+name|ACPI_DMT_GTDT
+case|:
+case|case
 name|ACPI_DMT_MADT
 case|:
 case|case
@@ -2187,6 +2248,9 @@ name|ACPI_DMT_ERSTACT
 case|:
 case|case
 name|ACPI_DMT_ERSTINST
+case|:
+case|case
+name|ACPI_DMT_DMAR_SCOPE
 case|:
 name|ByteLength
 operator|=
@@ -3155,6 +3219,41 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_DMAR_SCOPE
+case|:
+comment|/* DMAR device scope types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_DMAR_SCOPE_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_DMAR_SCOPE_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmDmarScope
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_EINJACT
 case|:
 comment|/* EINJ Action types */
@@ -3288,6 +3387,41 @@ operator|*
 name|Target
 argument_list|,
 name|AcpiDmErstInstructions
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_GTDT
+case|:
+comment|/* GTDT subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_GTDT_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_GTDT_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmGtdtSubnames
 index|[
 name|Temp8
 index|]
