@@ -3679,6 +3679,8 @@ name|sockaddr
 operator|*
 operator|)
 name|addr
+argument_list|,
+name|RT_ALL_FIBS
 argument_list|)
 expr_stmt|;
 if|if

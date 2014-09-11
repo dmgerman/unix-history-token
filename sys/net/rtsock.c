@@ -3510,6 +3510,8 @@ name|RTAX_DST
 index|]
 argument_list|,
 literal|1
+argument_list|,
+name|RT_ALL_FIBS
 argument_list|)
 expr_stmt|;
 if|if

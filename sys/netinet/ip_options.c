@@ -884,9 +884,6 @@ define|#
 directive|define
 name|SA
 value|struct sockaddr *
-if|if
-condition|(
-operator|(
 name|ia
 operator|=
 operator|(
@@ -899,8 +896,13 @@ name|SA
 operator|)
 operator|&
 name|ipaddr
+argument_list|,
+name|RT_ALL_FIBS
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ia
 operator|==
 name|NULL
 condition|)
@@ -918,6 +920,8 @@ operator|&
 name|ipaddr
 argument_list|,
 literal|0
+argument_list|,
+name|RT_ALL_FIBS
 argument_list|)
 expr_stmt|;
 block|}
