@@ -4933,12 +4933,10 @@ operator|&
 name|retu
 argument_list|)
 condition|)
-block|{
 name|loop
 operator|=
 name|false
 expr_stmt|;
-block|}
 else|else
 name|loop
 operator|=
@@ -4979,7 +4977,7 @@ define|#
 directive|define
 name|MSR_AMDK8_IPM
 value|0xc0010055
-comment|/* 			 * We can't hide AMD C1E idle capability since its 			 * based on CPU generation, for now ignore access to 			 * this MSR by vcpus 			 * XXX: special handling of AMD C1E - Ignore. 			 */
+comment|/* 		 * We can't hide AMD C1E idle capability since its 		 * based on CPU generation, for now ignore access to 		 * this MSR by vcpus 		 * XXX: special handling of AMD C1E - Ignore. 		 */
 if|if
 condition|(
 name|ecx
@@ -4994,7 +4992,7 @@ break|break;
 case|case
 name|VMCB_EXIT_INTR
 case|:
-comment|/* 			 * Exit on External Interrupt. 			 * Give host interrupt handler to run and if its guest 			 * interrupt, local APIC will inject event in guest. 			 */
+comment|/* 		 * Exit on External Interrupt. 		 * Give host interrupt handler to run and if its guest 		 * interrupt, local APIC will inject event in guest. 		 */
 name|update_rip
 operator|=
 name|false
@@ -5057,9 +5055,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|loop
+operator|=
 name|x86_emulate_cpuid
 argument_list|(
 name|svm_sc
@@ -5171,6 +5168,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|loop
+operator|=
+name|false
+expr_stmt|;
 break|break;
 case|case
 name|VMCB_EXIT_NPF
@@ -5198,9 +5199,8 @@ name|vm
 argument_list|,
 name|vcpu
 argument_list|,
-literal|"SVM_ERR:NPT"
-literal|" reserved bit is set,"
-literal|"INFO1:0x%lx INFO2:0x%lx .\n"
+literal|"nested page fault with "
+literal|"reserved bits set: info1(%#lx) info2(%#lx)"
 argument_list|,
 name|info1
 argument_list|,
