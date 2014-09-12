@@ -124,6 +124,8 @@ name|VM_REG_GUEST_PDPTE2
 block|,
 name|VM_REG_GUEST_PDPTE3
 block|,
+name|VM_REG_GUEST_INTR_SHADOW
+block|,
 name|VM_REG_LAST
 block|}
 enum|;
