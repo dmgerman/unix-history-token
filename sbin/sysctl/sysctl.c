@@ -2179,7 +2179,7 @@ specifier|static
 name|int
 name|S_clockinfo
 parameter_list|(
-name|int
+name|size_t
 name|l2
 parameter_list|,
 name|void
@@ -2212,7 +2212,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_clockinfo %d != %zu"
+literal|"S_clockinfo %zu != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -2267,7 +2267,7 @@ specifier|static
 name|int
 name|S_loadavg
 parameter_list|(
-name|int
+name|size_t
 name|l2
 parameter_list|,
 name|void
@@ -2300,7 +2300,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_loadavg %d != %zu"
+literal|"S_loadavg %zu != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -2390,7 +2390,7 @@ specifier|static
 name|int
 name|S_timeval
 parameter_list|(
-name|int
+name|size_t
 name|l2
 parameter_list|,
 name|void
@@ -2433,7 +2433,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_timeval %d != %zu"
+literal|"S_timeval %zu != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -2536,7 +2536,7 @@ specifier|static
 name|int
 name|S_vmtotal
 parameter_list|(
-name|int
+name|size_t
 name|l2
 parameter_list|,
 name|void
@@ -2577,7 +2577,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_vmtotal %d != %zu"
+literal|"S_vmtotal %zu != %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -2697,7 +2697,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Free Memory:\t%dK\n"
+literal|"Free Memory:\t%dK"
 argument_list|,
 name|v
 operator|->
@@ -2733,7 +2733,7 @@ specifier|static
 name|int
 name|S_bios_smap_xattr
 parameter_list|(
-name|int
+name|size_t
 name|l2
 parameter_list|,
 name|void
@@ -2764,7 +2764,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"S_bios_smap_xattr %d is not a multiple of %zu"
+literal|"S_bios_smap_xattr %zu is not a multiple of %zu"
 argument_list|,
 name|l2
 argument_list|,
@@ -3474,7 +3474,7 @@ modifier|*
 name|func
 function_decl|)
 parameter_list|(
-name|int
+name|size_t
 parameter_list|,
 name|void
 modifier|*
