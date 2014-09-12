@@ -16667,10 +16667,6 @@ name|KF_VTYPE_VSOCK
 block|}
 block|}
 struct|;
-define|#
-directive|define
-name|NVTYPES
-value|(sizeof(vtypes_table) / sizeof(*vtypes_table))
 name|unsigned
 name|int
 name|i
@@ -16684,7 +16680,10 @@ literal|0
 init|;
 name|i
 operator|<
-name|NVTYPES
+name|nitems
+argument_list|(
+name|vtypes_table
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -16699,13 +16698,6 @@ operator|.
 name|vtype
 operator|==
 name|vtype
-condition|)
-break|break;
-if|if
-condition|(
-name|i
-operator|<
-name|NVTYPES
 condition|)
 return|return
 operator|(
