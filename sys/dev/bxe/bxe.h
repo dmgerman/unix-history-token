@@ -9015,6 +9015,12 @@ define|\
 value|do {                                              \         if (__predict_false(sc->debug)) {             \             device_printf((sc)->dev,                  \                           "%s(%s:%d) ERROR: " format, \                           __FUNCTION__,               \                           __FILE__,                   \                           __LINE__,                   \                           ## args);                   \         } else {                                      \             device_printf((sc)->dev,                  \                           "ERROR: " format,           \                           ## args);                   \         }                                             \     } while(0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ECORE_STOP_ON_ERROR
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -9027,6 +9033,29 @@ parameter_list|)
 define|\
 value|do {                   \         panic msg;         \     } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|bxe_panic
+parameter_list|(
+name|sc
+parameter_list|,
+name|msg
+parameter_list|)
+define|\
+value|device_printf((sc)->dev, "%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
