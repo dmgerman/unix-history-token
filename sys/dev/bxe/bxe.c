@@ -49340,6 +49340,24 @@ expr_stmt|;
 name|mb
 argument_list|()
 expr_stmt|;
+comment|/* clear errors in PGB */
+if|if
+condition|(
+operator|!
+name|CHIP_IS_E1
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|REG_WR
+argument_list|(
+name|sc
+argument_list|,
+name|PGLUE_B_REG_LATCHED_ERRORS_CLR
+argument_list|,
+literal|0x7f
+argument_list|)
+expr_stmt|;
 comment|/* Recover after reset: */
 comment|/* MCP */
 if|if
