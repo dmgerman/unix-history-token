@@ -4064,6 +4064,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|PGLUE_B_REG_LATCHED_ERRORS_CLR
+define|\
+value|0x943CUL
+end_define
+
+begin_define
+define|#
+directive|define
 name|PGLUE_B_REG_PGLUE_B_INT_STS
 define|\
 value|0x9298UL

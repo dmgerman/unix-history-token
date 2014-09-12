@@ -1113,6 +1113,12 @@ define|\
 value|bxe_sp_post(_sc, _a, _b, U64_HI(_c), U64_LO(_c), _d)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ECORE_STOP_ON_ERROR
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1143,6 +1149,53 @@ parameter_list|)
 define|\
 value|do {                                                 \         if (__predict_true(exp)) {                       \             panic("BUG_ON (%s:%d)", __FILE__, __LINE__); \         }                                                \     } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ECORE_DBG_BREAK_IF
+parameter_list|(
+name|exp
+parameter_list|)
+define|\
+value|printf("%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECORE_BUG
+parameter_list|(
+name|exp
+parameter_list|)
+define|\
+value|printf("%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECORE_BUG_ON
+parameter_list|(
+name|exp
+parameter_list|)
+define|\
+value|printf("%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #ifdef ECORE_STOP_ON_ERROR */
+end_comment
 
 begin_define
 define|#
