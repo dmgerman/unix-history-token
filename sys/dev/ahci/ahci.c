@@ -1024,6 +1024,12 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+name|ctlr
+operator|->
+name|ccc
+operator|=
+literal|0
+expr_stmt|;
 name|resource_int_value
 argument_list|(
 name|device_get_name
@@ -4147,6 +4153,12 @@ name|NULL
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|ch
+operator|->
+name|pm_level
+operator|=
+literal|0
 expr_stmt|;
 name|resource_int_value
 argument_list|(
