@@ -3330,8 +3330,6 @@ operator|)
 operator|*
 literal|2
 operator|)
-operator|+
-literal|1
 expr_stmt|;
 return|return
 operator|(
