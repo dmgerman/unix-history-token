@@ -1331,6 +1331,22 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|SYMLOOK_IFUNC
+operator|)
+operator|!=
+literal|0
+condition|)
+comment|/* XXX not implemented */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * The dynamic loader may be called from a thread, we have 	 * limited amounts of stack available so we cannot use alloca(). 	 */
 name|cache
 operator|=

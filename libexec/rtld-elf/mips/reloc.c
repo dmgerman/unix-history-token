@@ -1307,6 +1307,22 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|SYMLOOK_IFUNC
+operator|)
+operator|!=
+literal|0
+condition|)
+comment|/* XXX not implemented */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|SUPPORT_OLD_BROKEN_LD
