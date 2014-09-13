@@ -75,6 +75,15 @@ comment|/* read from i2c addressible device */
 name|T4_CLEAR_STATS
 block|,
 comment|/* clear a port's MAC statistics */
+name|T4_SET_OFLD_POLICY
+block|,
+comment|/* Set offload policy */
+name|T4_SET_SCHED_CLASS
+block|,
+comment|/* set sched class */
+name|T4_SET_SCHED_QUEUE
+block|,
+comment|/* set queue class */
 block|}
 enum|;
 end_enum
@@ -101,6 +110,13 @@ define|#
 directive|define
 name|T4_REGDUMP_SIZE
 value|(160 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|T5_REGDUMP_SIZE
+value|(332 * 1024)
 end_define
 
 begin_struct
@@ -684,6 +700,196 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Support for "sched-class" command to allow a TX Scheduling Class to be  * programmed with various parameters.  */
+end_comment
+
+begin_struct
+struct|struct
+name|t4_sched_params
+block|{
+name|int8_t
+name|subcmd
+decl_stmt|;
+comment|/* sub-command */
+name|int8_t
+name|type
+decl_stmt|;
+comment|/* packet or flow */
+union|union
+block|{
+struct|struct
+block|{
+comment|/* sub-command SCHED_CLASS_CONFIG */
+name|int8_t
+name|minmax
+decl_stmt|;
+comment|/* minmax enable */
+block|}
+name|config
+struct|;
+struct|struct
+block|{
+comment|/* sub-command SCHED_CLASS_PARAMS */
+name|int8_t
+name|level
+decl_stmt|;
+comment|/* scheduler hierarchy level */
+name|int8_t
+name|mode
+decl_stmt|;
+comment|/* per-class or per-flow */
+name|int8_t
+name|rateunit
+decl_stmt|;
+comment|/* bit or packet rate */
+name|int8_t
+name|ratemode
+decl_stmt|;
+comment|/* %port relative or kbps 						   absolute */
+name|int8_t
+name|channel
+decl_stmt|;
+comment|/* scheduler channel [0..N] */
+name|int8_t
+name|cl
+decl_stmt|;
+comment|/* scheduler class [0..N] */
+name|int32_t
+name|minrate
+decl_stmt|;
+comment|/* minimum rate */
+name|int32_t
+name|maxrate
+decl_stmt|;
+comment|/* maximum rate */
+name|int16_t
+name|weight
+decl_stmt|;
+comment|/* percent weight */
+name|int16_t
+name|pktsize
+decl_stmt|;
+comment|/* average packet size */
+block|}
+name|params
+struct|;
+name|uint8_t
+name|reserved
+index|[
+literal|6
+operator|+
+literal|8
+operator|*
+literal|8
+index|]
+decl_stmt|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+block|{
+name|SCHED_CLASS_SUBCMD_CONFIG
+block|,
+comment|/* config sub-command */
+name|SCHED_CLASS_SUBCMD_PARAMS
+block|,
+comment|/* params sub-command */
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|SCHED_CLASS_TYPE_PACKET
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|SCHED_CLASS_LEVEL_CL_RL
+block|,
+comment|/* class rate limiter */
+name|SCHED_CLASS_LEVEL_CL_WRR
+block|,
+comment|/* class weighted round robin */
+name|SCHED_CLASS_LEVEL_CH_RL
+block|,
+comment|/* channel rate limiter */
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|SCHED_CLASS_MODE_CLASS
+block|,
+comment|/* per-class scheduling */
+name|SCHED_CLASS_MODE_FLOW
+block|,
+comment|/* per-flow scheduling */
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|SCHED_CLASS_RATEUNIT_BITS
+block|,
+comment|/* bit rate scheduling */
+name|SCHED_CLASS_RATEUNIT_PKTS
+block|,
+comment|/* packet rate scheduling */
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
+name|SCHED_CLASS_RATEMODE_REL
+block|,
+comment|/* percent of port bandwidth */
+name|SCHED_CLASS_RATEMODE_ABS
+block|,
+comment|/* Kb/s */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Support for "sched_queue" command to allow one or more NIC TX Queues to be  * bound to a TX Scheduling Class.  */
+end_comment
+
+begin_struct
+struct|struct
+name|t4_sched_queue
+block|{
+name|uint8_t
+name|port
+decl_stmt|;
+name|int8_t
+name|queue
+decl_stmt|;
+comment|/* queue index; -1 => all queues */
+name|int8_t
+name|cl
+decl_stmt|;
+comment|/* class index; -1 => unbind */
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -834,6 +1040,20 @@ define|#
 directive|define
 name|CHELSIO_T4_CLEAR_STATS
 value|_IOW('f', T4_CLEAR_STATS, uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_SCHED_CLASS
+value|_IOW('f', T4_SET_SCHED_CLASS, \     struct t4_sched_params)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_SCHED_QUEUE
+value|_IOW('f', T4_SET_SCHED_QUEUE, \     struct t4_sched_queue)
 end_define
 
 begin_endif

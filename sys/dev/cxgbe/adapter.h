@@ -117,20 +117,6 @@ directive|include
 file|"firmware/t4fw_interface.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|T4_CFGNAME
-value|"t4fw_cfg"
-end_define
-
-begin_define
-define|#
-directive|define
-name|T4_FWNAME
-value|"t4fw"
-end_define
-
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -588,25 +574,24 @@ directive|if
 name|MJUMPAGESIZE
 operator|!=
 name|MCLBYTES
-name|FL_BUF_SIZES
+name|SW_ZONE_SIZES
 init|=
 literal|4
 block|,
 comment|/* cluster, jumbop, jumbo9k, jumbo16k */
 else|#
 directive|else
-name|FL_BUF_SIZES
+name|SW_ZONE_SIZES
 init|=
 literal|3
 block|,
 comment|/* cluster, jumbo9k, jumbo16k */
 endif|#
 directive|endif
-name|OFLD_BUF_SIZE
+name|CL_METADATA_SIZE
 init|=
-name|MJUM16BYTES
+name|CACHE_LINE_SIZE
 block|,
-comment|/* size of fl buffer for TOE rxq */
 name|CTRL_EQ_QSIZE
 init|=
 literal|128
@@ -627,36 +612,6 @@ literal|8
 block|}
 enum|;
 end_enum
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|T4_PKT_TIMESTAMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RX_COPY_THRESHOLD
-value|(MINCLSIZE - 8)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RX_COPY_THRESHOLD
-value|MINCLSIZE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_enum
 enum|enum
@@ -776,6 +731,14 @@ operator|(
 literal|1
 operator|<<
 literal|5
+operator|)
+block|,
+name|BUF_PACKING_OK
+init|=
+operator|(
+literal|1
+operator|<<
+literal|6
 operator|)
 block|,
 name|CXGBE_BUSY
@@ -903,6 +866,10 @@ name|int
 name|if_flags
 decl_stmt|;
 name|uint16_t
+modifier|*
+name|rss
+decl_stmt|;
+name|uint16_t
 name|viid
 decl_stmt|;
 name|int16_t
@@ -932,6 +899,10 @@ decl_stmt|;
 name|uint8_t
 name|tx_chan
 decl_stmt|;
+name|uint8_t
+name|rx_chan_map
+decl_stmt|;
+comment|/* rx MPS channel bitmap */
 comment|/* These need to be int as they are used in sysctl */
 name|int
 name|ntxq
@@ -941,6 +912,10 @@ name|int
 name|first_txq
 decl_stmt|;
 comment|/* index of first tx queue */
+name|int
+name|rsrv_noflowq
+decl_stmt|;
+comment|/* Reserve queue 0 for non-flowid packets */
 name|int
 name|nrxq
 decl_stmt|;
@@ -982,6 +957,9 @@ decl_stmt|;
 name|int
 name|qsize_txq
 decl_stmt|;
+name|int
+name|linkdnrc
+decl_stmt|;
 name|struct
 name|link_config
 name|link_cfg
@@ -1010,33 +988,70 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Where the cluster came from, how it has been carved up. */
+end_comment
+
+begin_struct
+struct|struct
+name|cluster_layout
+block|{
+name|int8_t
+name|zidx
+decl_stmt|;
+name|int8_t
+name|hwidx
+decl_stmt|;
+name|uint16_t
+name|region1
+decl_stmt|;
+comment|/* mbufs laid out within this region */
+comment|/* region2 is the DMA region */
+name|uint16_t
+name|region3
+decl_stmt|;
+comment|/* cluster_metadata within this region */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cluster_metadata
+block|{
+name|u_int
+name|refcount
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|struct
+name|fl_sdesc
+modifier|*
+name|sd
+decl_stmt|;
+comment|/* For debug only.  Could easily be stale */
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|fl_sdesc
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-name|bus_dmamap_t
-name|map
-decl_stmt|;
 name|caddr_t
 name|cl
 decl_stmt|;
-name|uint8_t
-name|tag_idx
+name|uint16_t
+name|nmbuf
 decl_stmt|;
-comment|/* the sc->fl_tag this map comes from */
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|__be64
-name|ba_tag
+comment|/* # of driver originated mbufs with ref on cluster */
+name|struct
+name|cluster_layout
+name|cll
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1333,6 +1348,24 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* Listed in order of preference.  Update t4_sysctls too if you change these */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|DOORBELL_UDB
+block|,
+name|DOORBELL_WCWR
+block|,
+name|DOORBELL_UDBWC
+block|,
+name|DOORBELL_KDB
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Egress Queue: driver is producer, T4 is consumer.  *  * Note: A free list is an egress queue (driver produces the buffers and T4  * consumes them) but it's special enough to have its own struct (see sge_fl).  */
 end_comment
 
@@ -1382,6 +1415,19 @@ modifier|*
 name|spg
 decl_stmt|;
 comment|/* status page, for convenience */
+name|int
+name|doorbells
+decl_stmt|;
+specifier|volatile
+name|uint32_t
+modifier|*
+name|udb
+decl_stmt|;
+comment|/* KVA of doorbell (lies within BAR2) */
+name|u_int
+name|udb_qid
+decl_stmt|;
+comment|/* relative qid within the doorbell page */
 name|uint16_t
 name|cap
 decl_stmt|;
@@ -1435,6 +1481,51 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|sw_zone_info
+block|{
+name|uma_zone_t
+name|zone
+decl_stmt|;
+comment|/* zone that this cluster comes from */
+name|int
+name|size
+decl_stmt|;
+comment|/* size of cluster: 2K, 4K, 9K, 16K, etc. */
+name|int
+name|type
+decl_stmt|;
+comment|/* EXT_xxx type of the cluster */
+name|int8_t
+name|head_hwidx
+decl_stmt|;
+name|int8_t
+name|tail_hwidx
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|hw_buf_info
+block|{
+name|int8_t
+name|zidx
+decl_stmt|;
+comment|/* backpointer to zone; -ve means unused */
+name|int8_t
+name|next
+decl_stmt|;
+comment|/* next hwidx for this zone; -1 means no more */
+name|int
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -1456,6 +1547,15 @@ literal|1
 operator|)
 block|,
 comment|/* about to be destroyed */
+name|FL_BUF_PACKING
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|/* buffer packing enabled */
 block|}
 enum|;
 end_enum
@@ -1490,15 +1590,16 @@ decl_stmt|;
 name|bus_dmamap_t
 name|desc_map
 decl_stmt|;
-name|bus_dma_tag_t
-name|tag
-index|[
-name|FL_BUF_SIZES
-index|]
+name|struct
+name|cluster_layout
+name|cll_def
 decl_stmt|;
-name|uint8_t
-name|tag_idx
+comment|/* default refill zone, layout */
+name|struct
+name|cluster_layout
+name|cll_alt
 decl_stmt|;
+comment|/* alternate refill zone, layout */
 name|struct
 name|mtx
 name|fl_lock
@@ -1544,6 +1645,10 @@ name|cidx
 decl_stmt|;
 comment|/* consumer idx (buffer idx, NOT hw desc idx) */
 name|uint32_t
+name|rx_offset
+decl_stmt|;
+comment|/* offset in fl buf (when buffer packing) */
+name|uint32_t
 name|pidx
 decl_stmt|;
 comment|/* producer idx (buffer idx, NOT hw desc idx) */
@@ -1559,10 +1664,6 @@ name|uint32_t
 name|pending
 decl_stmt|;
 comment|/* # of bufs allocated since last doorbell */
-name|unsigned
-name|int
-name|dmamap_failed
-decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|sge_fl
@@ -1570,6 +1671,40 @@ argument_list|)
 name|link
 expr_stmt|;
 comment|/* All starving freelists */
+name|struct
+name|mbuf
+modifier|*
+name|m0
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|pnext
+decl_stmt|;
+name|u_int
+name|remaining
+decl_stmt|;
+name|uint64_t
+name|mbuf_allocated
+decl_stmt|;
+comment|/* # of mbuf allocated from zone_mbuf */
+name|uint64_t
+name|mbuf_inlined
+decl_stmt|;
+comment|/* # of mbuf created within clusters */
+name|uint64_t
+name|cl_allocated
+decl_stmt|;
+comment|/* # of clusters allocated */
+name|uint64_t
+name|cl_recycled
+decl_stmt|;
+comment|/* # of clusters recycled */
+name|uint64_t
+name|cl_fast_recycled
+decl_stmt|;
+comment|/* # of clusters recycled (fast) */
 block|}
 struct|;
 end_struct
@@ -1918,6 +2053,15 @@ name|int
 name|fl_starve_threshold
 decl_stmt|;
 name|int
+name|fl_starve_threshold2
+decl_stmt|;
+name|int
+name|eq_s_qpp
+decl_stmt|;
+name|int
+name|iq_s_qpp
+decl_stmt|;
+name|int
 name|nrxq
 decl_stmt|;
 comment|/* total # of Ethernet rx queues */
@@ -2011,6 +2155,31 @@ modifier|*
 name|eqmap
 decl_stmt|;
 comment|/* eq->cntxt_id to eq mapping */
+name|int
+name|pack_boundary
+decl_stmt|;
+name|int8_t
+name|safe_hwidx1
+decl_stmt|;
+comment|/* may not have room for metadata */
+name|int8_t
+name|safe_hwidx2
+decl_stmt|;
+comment|/* with room for metadata and maybe more */
+name|struct
+name|sw_zone_info
+name|sw_zone_info
+index|[
+name|SW_ZONE_SIZES
+index|]
+decl_stmt|;
+name|struct
+name|hw_buf_info
+name|hw_buf_info
+index|[
+name|SGE_FLBUF_SIZES
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2128,6 +2297,19 @@ decl_stmt|;
 name|bus_size_t
 name|mmio_len
 decl_stmt|;
+name|int
+name|udbs_rid
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|udbs_res
+decl_stmt|;
+specifier|volatile
+name|uint8_t
+modifier|*
+name|udbs_base
+decl_stmt|;
 name|unsigned
 name|int
 name|pf
@@ -2193,9 +2375,6 @@ index|[
 name|NCHAN
 index|]
 decl_stmt|;
-name|uint32_t
-name|filter_mode
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_OFFLOAD
@@ -2219,6 +2398,9 @@ comment|/* L2 table */
 name|struct
 name|tid_info
 name|tids
+decl_stmt|;
+name|int
+name|doorbells
 decl_stmt|;
 name|int
 name|open_device_map
@@ -2343,6 +2525,9 @@ name|last_op_thr
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|sc_do_rxcopy
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3151,6 +3336,37 @@ end_function
 begin_function
 specifier|static
 specifier|inline
+name|bool
+name|is_40G_port
+parameter_list|(
+specifier|const
+name|struct
+name|port_info
+modifier|*
+name|pi
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|pi
+operator|->
+name|link_cfg
+operator|.
+name|supported
+operator|&
+name|FW_PORT_CAP_SPEED_40G
+operator|)
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
 name|int
 name|tx_resume_threshold
 parameter_list|(
@@ -3254,6 +3470,8 @@ parameter_list|(
 name|struct
 name|adapter
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -3395,8 +3613,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|t4_init_sge_cpl_handlers
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_tweak_chip_settings
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
-name|t4_sge_init
+name|t4_read_chip_settings
 parameter_list|(
 name|struct
 name|adapter
@@ -3411,6 +3651,25 @@ name|t4_create_dma_tag
 parameter_list|(
 name|struct
 name|adapter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|t4_sge_sysctls
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|struct
+name|sysctl_ctx_list
+modifier|*
+parameter_list|,
+name|struct
+name|sysctl_oid_list
 modifier|*
 parameter_list|)
 function_decl|;

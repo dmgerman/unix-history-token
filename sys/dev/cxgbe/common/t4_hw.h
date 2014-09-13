@@ -93,7 +93,7 @@ name|FILTER_OPT_LEN
 init|=
 literal|36
 block|,
-comment|/* filter tuple width for optional components */
+comment|/* filter tuple width of optional components */
 name|NWOL_PAT
 init|=
 literal|8
@@ -104,6 +104,26 @@ init|=
 literal|128
 block|,
 comment|/* length of WoL patterns */
+name|UDBS_SEG_SIZE
+init|=
+literal|128
+block|,
+comment|/* Segment size of BAR2 doorbells */
+name|UDBS_SEG_SHIFT
+init|=
+literal|7
+block|,
+comment|/* log2(UDBS_SEG_SIZE) */
+name|UDBS_DB_OFFSET
+init|=
+literal|8
+block|,
+comment|/* offset of the 4B doorbell in a segment */
+name|UDBS_WR_OFFSET
+init|=
+literal|64
+block|,
+comment|/* offset of the work request in a segment */
 block|}
 enum|;
 end_enum
@@ -121,6 +141,11 @@ init|=
 literal|6
 block|,
 comment|/* # of CIM OBQs */
+name|CIM_NUM_OBQ_T5
+init|=
+literal|8
+block|,
+comment|/* # of CIM OBQs for T5 adapter */
 name|CIMLA_SIZE
 init|=
 literal|2048
@@ -253,7 +278,14 @@ init|=
 literal|4
 block|,
 comment|/* # of interrupt packet counter values */
-block|}
+name|SGE_MAX_IQ_SIZE
+init|=
+literal|65520
+block|,
+name|SGE_FLBUF_SIZES
+init|=
+literal|16
+block|, }
 enum|;
 end_enum
 
@@ -918,7 +950,7 @@ literal|8
 block|,
 name|FLASH_FW_NSECS
 init|=
-literal|8
+literal|16
 block|,
 name|FLASH_FW_START
 init|=
@@ -932,6 +964,29 @@ init|=
 name|FLASH_MAX_SIZE
 argument_list|(
 name|FLASH_FW_NSECS
+argument_list|)
+block|,
+comment|/* 	 * Location of bootstrap firmware image in FLASH. 	 */
+name|FLASH_FWBOOTSTRAP_START_SEC
+init|=
+literal|27
+block|,
+name|FLASH_FWBOOTSTRAP_NSECS
+init|=
+literal|1
+block|,
+name|FLASH_FWBOOTSTRAP_START
+init|=
+name|FLASH_START
+argument_list|(
+name|FLASH_FWBOOTSTRAP_START_SEC
+argument_list|)
+block|,
+name|FLASH_FWBOOTSTRAP_MAX_SIZE
+init|=
+name|FLASH_MAX_SIZE
+argument_list|(
+name|FLASH_FWBOOTSTRAP_NSECS
 argument_list|)
 block|,
 comment|/* 	 * iSCSI persistent/crash information. 	 */
@@ -980,7 +1035,7 @@ argument_list|(
 name|FLASH_FCOE_CRASH_NSECS
 argument_list|)
 block|,
-comment|/* 	 * Location of Firmware Configuration File in FLASH.  Since the FPGA 	 * "FLASH" is smaller we need to store the Configuration File in a 	 * different location -- which will overlap the end of the firmware 	 * image if firmware ever gets that large ... 	 */
+comment|/* 	 * Location of Firmware Configuration File in FLASH. 	 */
 name|FLASH_CFG_START_SEC
 init|=
 literal|31
@@ -1001,17 +1056,6 @@ init|=
 name|FLASH_MAX_SIZE
 argument_list|(
 name|FLASH_CFG_NSECS
-argument_list|)
-block|,
-name|FLASH_FPGA_CFG_START_SEC
-init|=
-literal|15
-block|,
-name|FLASH_FPGA_CFG_START
-init|=
-name|FLASH_START
-argument_list|(
-name|FLASH_FPGA_CFG_START_SEC
 argument_list|)
 block|,
 comment|/* 	 * Sectors 32-63 are reserved for FLASH failover. 	 */

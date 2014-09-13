@@ -100,11 +100,11 @@ argument|stid_region
 argument_list|)
 name|link
 expr_stmt|;
-name|int
+name|u_int
 name|used
 decl_stmt|;
 comment|/* # of stids used by this region */
-name|int
+name|u_int
 name|free
 decl_stmt|;
 comment|/* # of contiguous stids free right after this region */
@@ -235,6 +235,25 @@ name|ftid_base
 decl_stmt|;
 name|u_int
 name|ftids_in_use
+decl_stmt|;
+name|struct
+name|mtx
+name|etid_lock
+name|__aligned
+parameter_list|(
+name|CACHE_LINE_SIZE
+parameter_list|)
+function_decl|;
+name|struct
+name|etid_entry
+modifier|*
+name|etid_tab
+decl_stmt|;
+name|u_int
+name|netids
+decl_stmt|;
+name|u_int
+name|etid_base
 decl_stmt|;
 block|}
 struct|;
@@ -384,6 +403,9 @@ name|indsz
 decl_stmt|;
 name|int
 name|ddp_thres
+decl_stmt|;
+name|int
+name|rx_coalesce
 decl_stmt|;
 block|}
 struct|;
