@@ -8845,23 +8845,7 @@ name|ifp
 operator|->
 name|if_hw_tsomax
 operator|=
-name|IF_HW_TSOMAX_BUILD_VALUE
-argument_list|(
-literal|65535
-operator|-
-operator|(
-name|ETHER_HDR_LEN
-operator|+
-name|ETHER_VLAN_ENCAP_LEN
-operator|)
-comment|/* bytes */
-argument_list|,
-name|OCE_MAX_TX_ELEMENTS
-comment|/* maximum frag count */
-argument_list|,
-literal|12
-comment|/* 4K frag size */
-argument_list|)
+name|OCE_MAX_TSO_SIZE
 expr_stmt|;
 endif|#
 directive|endif

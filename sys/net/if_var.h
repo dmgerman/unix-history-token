@@ -415,104 +415,6 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Macros defining how to decode the "if_hw_tsomax" field:  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IF_HW_TSOMAX_GET_BYTES
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((uint16_t)(x))
-end_define
-
-begin_comment
-comment|/* 32..65535 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IF_HW_TSOMAX_GET_FRAG_COUNT
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((uint8_t)((x)>> 16))
-end_define
-
-begin_comment
-comment|/* 1..255 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IF_HW_TSOMAX_GET_FRAG_SIZE
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((uint8_t)((x)>> 24))
-end_define
-
-begin_comment
-comment|/* 12..16 */
-end_comment
-
-begin_comment
-comment|/*  * The following macro defines how to build the "if_hw_tsomax"  * field. The "bytes" field has unit 1 bytes and declares the maximum  * number of bytes which can be transferred by a single transmit  * offload, TSO, job. The "bytes" field is rounded down to the neares  * 4 bytes to avoid having the hardware do unaligned memory  * accesses. The "frag_count" field has unit 1 fragment and declares  * the maximum number of fragments a TSO job can contain. The  * "frag_size" field has unit logarithm in base 2 of the actual value  * in bytes and declares the maximum size of a fragment.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IF_HW_TSOMAX_BUILD_VALUE
-parameter_list|(
-name|bytes
-parameter_list|,
-name|frag_count
-parameter_list|,
-name|frag_size
-parameter_list|)
-define|\
-value|(((bytes)& 0xFFFC) | (((frag_count)& 0xFF)<< 16) |	\     (((frag_size)& 0xFF)<< 24))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IF_HW_TSOMAX_DEFAULT_BYTES
-value|(65536 - 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IF_HW_TSOMAX_DEFAULT_FRAG_COUNT
-value|255
-end_define
-
-begin_define
-define|#
-directive|define
-name|IF_HW_TSOMAX_DEFAULT_FRAG_SIZE
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|IF_HW_TSOMAX_DEFAULT_VALUE
-parameter_list|()
-define|\
-value|IF_HW_TSOMAX_BUILD_VALUE(			\     IF_HW_TSOMAX_DEFAULT_BYTES,			\     IF_HW_TSOMAX_DEFAULT_FRAG_COUNT,		\     IF_HW_TSOMAX_DEFAULT_FRAG_SIZE)
-end_define
-
-begin_comment
 comment|/*  * Structure defining a network interface.  *  * Size ILP32:  592 (approx)  *	 LP64: 1048 (approx)  */
 end_comment
 
@@ -899,7 +801,7 @@ comment|/* Stuff that's only temporary and doesn't belong here. */
 name|u_int
 name|if_hw_tsomax
 decl_stmt|;
-comment|/* TSO burst length limits. 					 * XXXAO: Have to find a better place 					 * for it eventually. */
+comment|/* tso burst length limit, the minimum 					 * is (IP_MAXPACKET / 8). 					 * XXXAO: Have to find a better place 					 * for it eventually. */
 comment|/* 	 * Old, racy and expensive statistics, should not be used in 	 * new drivers. 	 */
 name|uint64_t
 name|if_ipackets
@@ -3727,30 +3629,6 @@ name|if_t
 name|ifp
 parameter_list|,
 name|if_qflush_fn_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* "if_hw_tsomax" related functions */
-end_comment
-
-begin_function_decl
-name|u_int
-name|if_hw_tsomax_common
-parameter_list|(
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_int
-name|if_hw_tsomax_range_check
-parameter_list|(
-name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

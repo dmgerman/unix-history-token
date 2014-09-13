@@ -9096,23 +9096,7 @@ name|ifp
 operator|->
 name|if_hw_tsomax
 operator|=
-name|IF_HW_TSOMAX_BUILD_VALUE
-argument_list|(
-literal|65535
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_vlan_header
-argument_list|)
-comment|/* bytes */
-argument_list|,
-name|VMXNET3_TX_MAXSEGS
-comment|/* maximum frag count */
-argument_list|,
-name|VMXNET3_TX_MAXSEGSHIFT
-comment|/* frag size */
-argument_list|)
+name|VMXNET3_TSO_MAXSIZE
 expr_stmt|;
 ifdef|#
 directive|ifdef
