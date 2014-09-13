@@ -198,7 +198,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This controls how quickly the delay approaches infinity.  * Larger values cause it to delay less for a given amount of dirty data.  * Therefore larger values will cause there to be more dirty data for a  * given throughput.  *  * For the smoothest delay, this value should be about 1 billion divided  * by the maximum number of operations per second.  This will smoothly  * handle between 10x and 1/10th this number.  *  * Note: zfs_delay_scale * zfs_dirty_data_max must be< 2^64, due to the  * multiply in dmu_tx_delay().  */
+comment|/*  * This controls how quickly the delay approaches infinity.  * Larger values cause it to delay more for a given amount of dirty data.  * Therefore larger values will cause there to be less dirty data for a  * given throughput.  *  * For the smoothest delay, this value should be about 1 billion divided  * by the maximum number of operations per second.  This will smoothly  * handle between 10x and 1/10th this number.  *  * Note: zfs_delay_scale * zfs_dirty_data_max must be< 2^64, due to the  * multiply in dmu_tx_delay().  */
 end_comment
 
 begin_decl_stmt
@@ -214,10 +214,6 @@ operator|/
 literal|2000
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * XXX someday maybe turn these into #defines, and you have to tune it on a  * per-pool basis using zfs.conf.  */
-end_comment
 
 begin_decl_stmt
 name|hrtime_t
