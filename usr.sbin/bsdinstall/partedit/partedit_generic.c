@@ -52,6 +52,29 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|is_fs_bootable
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|part_type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fs
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* No clue => no boot partition, bootcode, or partcode */
 end_comment
@@ -124,6 +147,11 @@ specifier|const
 name|char
 modifier|*
 name|part_type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fs_type
 parameter_list|)
 block|{
 return|return
