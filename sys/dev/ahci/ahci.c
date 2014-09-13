@@ -2031,8 +2031,6 @@ block|,
 literal|"Marvell 88SE912x"
 block|,
 name|AHCI_Q_EDGEIS
-operator||
-name|AHCI_Q_NOBSYRES
 block|}
 block|,
 block|{
@@ -2042,8 +2040,6 @@ literal|0x11
 block|,
 literal|"Marvell 88SE912x"
 block|,
-name|AHCI_Q_NOBSYRES
-operator||
 name|AHCI_Q_ALTSIG
 block|}
 block|,
@@ -2057,8 +2053,6 @@ block|,
 name|AHCI_Q_EDGEIS
 operator||
 name|AHCI_Q_SATA2
-operator||
-name|AHCI_Q_NOBSYRES
 block|}
 block|,
 block|{
@@ -2068,7 +2062,7 @@ literal|0x00
 block|,
 literal|"Marvell 88SE9125"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2078,8 +2072,6 @@ literal|0x00
 block|,
 literal|"Marvell 88SE9128"
 block|,
-name|AHCI_Q_NOBSYRES
-operator||
 name|AHCI_Q_ALTSIG
 block|}
 block|,
@@ -2090,8 +2082,6 @@ literal|0x00
 block|,
 literal|"Marvell 88SE9130"
 block|,
-name|AHCI_Q_NOBSYRES
-operator||
 name|AHCI_Q_ALTSIG
 block|}
 block|,
@@ -2102,7 +2092,7 @@ literal|0x00
 block|,
 literal|"Marvell 88SE9172"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2112,7 +2102,7 @@ literal|0x00
 block|,
 literal|"Marvell 88SE9182"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2122,7 +2112,7 @@ literal|0x00
 block|,
 literal|"Marvell 88SS9183"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2132,7 +2122,7 @@ literal|0x00
 block|,
 literal|"Marvell 88SE91Ax"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2142,7 +2132,7 @@ literal|0x00
 block|,
 literal|"Marvell 88SE9215"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2152,8 +2142,6 @@ literal|0x00
 block|,
 literal|"Marvell 88SE9220"
 block|,
-name|AHCI_Q_NOBSYRES
-operator||
 name|AHCI_Q_ALTSIG
 block|}
 block|,
@@ -2164,8 +2152,6 @@ literal|0x00
 block|,
 literal|"Marvell 88SE9230"
 block|,
-name|AHCI_Q_NOBSYRES
-operator||
 name|AHCI_Q_ALTSIG
 block|}
 block|,
@@ -2176,7 +2162,7 @@ literal|0x00
 block|,
 literal|"Marvell 88SE9235"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2186,7 +2172,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 620"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2196,7 +2182,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 620"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2206,7 +2192,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 622"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2216,7 +2202,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 622"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2226,7 +2212,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 640"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2236,7 +2222,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 640"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2246,7 +2232,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 644"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2256,7 +2242,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 644"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2266,7 +2252,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 640L"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2276,7 +2262,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 642L"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -2286,7 +2272,7 @@ literal|0x00
 block|,
 literal|"HighPoint RocketRAID 644L"
 block|,
-name|AHCI_Q_NOBSYRES
+literal|0
 block|}
 block|,
 block|{
@@ -3898,14 +3884,6 @@ name|ctlr
 operator|->
 name|quirks
 operator|&
-name|AHCI_Q_NOBSYRES
-operator|)
-operator|&&
-operator|(
-name|ctlr
-operator|->
-name|quirks
-operator|&
 name|AHCI_Q_ALTSIG
 operator|)
 operator|&&
@@ -3922,8 +3900,7 @@ condition|)
 name|ctlr
 operator|->
 name|quirks
-operator|&=
-operator|~
+operator||=
 name|AHCI_Q_NOBSYRES
 expr_stmt|;
 if|if
@@ -13486,7 +13463,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* Marvell controllers do not wait for readyness. */
+comment|/* 		 * Marvell HBAs with non-RAID firmware do not wait for 		 * readiness after soft reset, so we have to wait here. 		 * Marvell RAIDs do not have this problem, but instead 		 * sometimes forget to update FIS receive area, breaking 		 * this wait. 		 */
 if|if
 condition|(
 operator|(
@@ -13496,6 +13473,8 @@ name|quirks
 operator|&
 name|AHCI_Q_NOBSYRES
 operator|)
+operator|==
+literal|0
 operator|&&
 name|softreset
 operator|==
