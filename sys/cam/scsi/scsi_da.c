@@ -1101,7 +1101,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * The STEC 842 sometimes hang on UNMAP. 		 */
+comment|/* 		 * The STEC SSDs sometimes hang on UNMAP. 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -1109,7 +1109,7 @@ name|SIP_MEDIA_FIXED
 block|,
 literal|"STEC"
 block|,
-literal|"S842E800M2"
+literal|"*"
 block|,
 literal|"*"
 block|}
