@@ -86,7 +86,7 @@ value|CTL_SER_PASS
 end_define
 
 begin_comment
-comment|/* pS */
+comment|/* Pass */
 end_comment
 
 begin_define
@@ -103,12 +103,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|bO
+value|CTL_SER_BLOCKOPT
+end_define
+
+begin_comment
+comment|/* Optional block */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|xT
 value|CTL_SER_EXTENT
 end_define
 
 begin_comment
 comment|/* Extent check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|xO
+value|CTL_SER_EXTENTOPT
+end_define
+
+begin_comment
+comment|/* Optional extent check */
 end_comment
 
 begin_decl_stmt
@@ -161,7 +183,7 @@ name|pS
 block|,
 name|xT
 block|,
-name|bK
+name|bO
 block|,
 name|bK
 block|,
@@ -190,7 +212,7 @@ name|xT
 block|,
 name|xT
 block|,
-name|bK
+name|bO
 block|,
 name|bK
 block|,
@@ -215,9 +237,9 @@ comment|/*UNMAP   */
 block|{
 name|pS
 block|,
-name|xT
+name|xO
 block|,
-name|xT
+name|xO
 block|,
 name|pS
 block|,
