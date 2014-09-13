@@ -2900,6 +2900,10 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|cs_id
+operator|=
+name|CPUSET_INVALID
+expr_stmt|;
 name|CPU_ZERO
 argument_list|(
 operator|&
@@ -2949,6 +2953,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|!=
+literal|0
+operator|||
 operator|(
 operator|(
 name|cs_id
@@ -2961,19 +2969,11 @@ operator|)
 operator|==
 name|CPUSET_INVALID
 operator|)
-operator|||
-name|error
-operator|!=
-literal|0
 condition|)
 goto|goto
 name|out
 goto|;
-name|thread_lock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
+comment|/* cpuset_which() returns with PROC_LOCK held. */
 name|old_set
 operator|=
 name|td
@@ -3031,7 +3031,7 @@ literal|1
 operator|)
 condition|)
 block|{
-comment|/* Default mask, we need to use new root set */
+comment|/* 		 * Current set is either default (1) or 		 * shadowed version of default set. 		 * 		 * Allocate new root set to be able to shadow it 		 * with any mask. 		 */
 name|error
 operator|=
 name|_cpuset_create
@@ -3088,9 +3088,7 @@ block|{
 comment|/* Assume existing set was already allocated by previous call */
 name|parent
 operator|=
-name|td
-operator|->
-name|td_cpuset
+name|old_set
 expr_stmt|;
 name|old_set
 operator|=
@@ -3118,6 +3116,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_cpuset
@@ -3129,15 +3132,20 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|nset
 operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|thread_unlock
-argument_list|(
-name|td
-argument_list|)
+else|else
+name|old_set
+operator|=
+name|NULL
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
