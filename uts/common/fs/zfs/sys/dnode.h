@@ -110,8 +110,8 @@ comment|/* 512 bytes */
 define|#
 directive|define
 name|DN_MIN_INDBLKSHIFT
-value|10
-comment|/* 1k */
+value|12
+comment|/* 4k */
 define|#
 directive|define
 name|DN_MAX_INDBLKSHIFT
