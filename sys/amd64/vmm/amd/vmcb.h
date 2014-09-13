@@ -651,6 +651,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VMCB_EXIT_NMI
+value|0x61
+end_define
+
+begin_define
+define|#
+directive|define
 name|VMCB_EXIT_VINTR
 value|0x64
 end_define
