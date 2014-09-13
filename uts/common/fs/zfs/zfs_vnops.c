@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -808,39 +808,12 @@ operator|&
 name|noff
 argument_list|)
 expr_stmt|;
-comment|/* end of file? */
 if|if
 condition|(
-operator|(
 name|error
 operator|==
 name|ESRCH
-operator|)
-operator|||
-operator|(
-name|noff
-operator|>
-name|file_sz
-operator|)
 condition|)
-block|{
-comment|/* 		 * Handle the virtual hole at the end of file. 		 */
-if|if
-condition|(
-name|hole
-condition|)
-block|{
-operator|*
-name|off
-operator|=
-name|file_sz
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 return|return
 operator|(
 name|SET_ERROR
@@ -849,6 +822,23 @@ name|ENXIO
 argument_list|)
 operator|)
 return|;
+comment|/* 	 * We could find a hole that begins after the logical end-of-file, 	 * because dmu_offset_next() only works on whole blocks.  If the 	 * EOF falls mid-block, then indicate that the "virtual hole" 	 * at the end of the file begins at the logical EOF, rather than 	 * at the end of the last block. 	 */
+if|if
+condition|(
+name|noff
+operator|>
+name|file_sz
+condition|)
+block|{
+name|ASSERT
+argument_list|(
+name|hole
+argument_list|)
+expr_stmt|;
+name|noff
+operator|=
+name|file_sz
+expr_stmt|;
 block|}
 if|if
 condition|(
