@@ -3597,17 +3597,6 @@ decl_stmt|;
 name|int
 name|pcount
 decl_stmt|;
-name|pcount
-operator|=
-name|round_page
-argument_list|(
-name|ap
-operator|->
-name|a_count
-argument_list|)
-operator|/
-name|PAGE_SIZE
-expr_stmt|;
 name|mreq
 operator|=
 name|ap
@@ -3619,14 +3608,13 @@ operator|->
 name|a_reqpage
 index|]
 expr_stmt|;
-comment|/* 	 * if ANY DEV_BSIZE blocks are valid on a large filesystem block, 	 * then the entire page is valid.  Since the page may be mapped, 	 * user programs might reference data beyond the actual end of file 	 * occuring within the page.  We have to zero that data. 	 */
-name|VM_OBJECT_WLOCK
+comment|/* 	 * Since the caller has busied the requested page, that page's valid 	 * field will not be changed by other threads. 	 */
+name|vm_page_assert_xbusied
 argument_list|(
 name|mreq
-operator|->
-name|object
 argument_list|)
 expr_stmt|;
+comment|/* 	 * if ANY DEV_BSIZE blocks are valid on a large filesystem block, 	 * then the entire page is valid.  Since the page may be mapped, 	 * user programs might reference data beyond the actual end of file 	 * occuring within the page.  We have to zero that data. 	 */
 if|if
 condition|(
 name|mreq
@@ -3634,6 +3622,13 @@ operator|->
 name|valid
 condition|)
 block|{
+name|VM_OBJECT_WLOCK
+argument_list|(
+name|mreq
+operator|->
+name|object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mreq
@@ -3648,6 +3643,17 @@ name|mreq
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+name|pcount
+operator|=
+name|round_page
+argument_list|(
+name|ap
+operator|->
+name|a_count
+argument_list|)
+operator|/
+name|PAGE_SIZE
 expr_stmt|;
 for|for
 control|(
@@ -3715,13 +3721,6 @@ return|return
 name|VM_PAGER_OK
 return|;
 block|}
-name|VM_OBJECT_WUNLOCK
-argument_list|(
-name|mreq
-operator|->
-name|object
-argument_list|)
-expr_stmt|;
 return|return
 name|vnode_pager_generic_getpages
 argument_list|(
