@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rwlock.h>
+file|<sys/rmlock.h>
 end_include
 
 begin_include
@@ -240,8 +240,8 @@ name|parent
 decl_stmt|;
 comment|/* parent interface of this trunk */
 name|struct
-name|rwlock
-name|rw
+name|rmlock
+name|lock
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -657,7 +657,7 @@ name|TRUNK_LOCK_INIT
 parameter_list|(
 name|trunk
 parameter_list|)
-value|rw_init(&(trunk)->rw, vlanname)
+value|rm_init(&(trunk)->lock, vlanname)
 end_define
 
 begin_define
@@ -667,7 +667,7 @@ name|TRUNK_LOCK_DESTROY
 parameter_list|(
 name|trunk
 parameter_list|)
-value|rw_destroy(&(trunk)->rw)
+value|rm_destroy(&(trunk)->lock)
 end_define
 
 begin_define
@@ -677,7 +677,7 @@ name|TRUNK_LOCK
 parameter_list|(
 name|trunk
 parameter_list|)
-value|rw_wlock(&(trunk)->rw)
+value|rm_wlock(&(trunk)->lock)
 end_define
 
 begin_define
@@ -687,7 +687,7 @@ name|TRUNK_UNLOCK
 parameter_list|(
 name|trunk
 parameter_list|)
-value|rw_wunlock(&(trunk)->rw)
+value|rm_wunlock(&(trunk)->lock)
 end_define
 
 begin_define
@@ -697,7 +697,7 @@ name|TRUNK_LOCK_ASSERT
 parameter_list|(
 name|trunk
 parameter_list|)
-value|rw_assert(&(trunk)->rw, RA_WLOCKED)
+value|rm_assert(&(trunk)->lock, RA_WLOCKED)
 end_define
 
 begin_define
@@ -707,7 +707,7 @@ name|TRUNK_RLOCK
 parameter_list|(
 name|trunk
 parameter_list|)
-value|rw_rlock(&(trunk)->rw)
+value|rm_rlock(&(trunk)->lock,&tracker)
 end_define
 
 begin_define
@@ -717,7 +717,7 @@ name|TRUNK_RUNLOCK
 parameter_list|(
 name|trunk
 parameter_list|)
-value|rw_runlock(&(trunk)->rw)
+value|rm_runlock(&(trunk)->lock,&tracker)
 end_define
 
 begin_define
@@ -727,7 +727,14 @@ name|TRUNK_LOCK_RASSERT
 parameter_list|(
 name|trunk
 parameter_list|)
-value|rw_assert(&(trunk)->rw, RA_RLOCKED)
+value|rm_assert(&(trunk)->lock, RA_RLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRUNK_LOCK_READER
+value|struct rm_priotracker tracker
 end_define
 
 begin_ifndef
@@ -3183,6 +3190,8 @@ name|ifvlan
 modifier|*
 name|ifv
 decl_stmt|;
+name|TRUNK_LOCK_READER
+expr_stmt|;
 name|trunk
 operator|=
 name|ifp
@@ -5147,6 +5156,8 @@ name|ifvlan
 modifier|*
 name|ifv
 decl_stmt|;
+name|TRUNK_LOCK_READER
+expr_stmt|;
 name|uint16_t
 name|vid
 decl_stmt|;
