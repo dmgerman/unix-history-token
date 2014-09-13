@@ -348,6 +348,18 @@ begin_comment
 comment|/* set to delay scan completion */
 end_comment
 
+begin_comment
+comment|/* max number of blocks to free in a single TXG */
+end_comment
+
+begin_decl_stmt
+name|uint64_t
+name|zfs_free_max_blocks
+init|=
+name|UINT64_MAX
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -6734,6 +6746,19 @@ condition|)
 return|return
 operator|(
 name|B_FALSE
+operator|)
+return|;
+if|if
+condition|(
+name|scn
+operator|->
+name|scn_visited_this_txg
+operator|>=
+name|zfs_free_max_blocks
+condition|)
+return|return
+operator|(
+name|B_TRUE
 operator|)
 return|;
 name|elapsed_nanosecs
