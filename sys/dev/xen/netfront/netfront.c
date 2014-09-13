@@ -519,13 +519,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NF_TSO_MAXBURST
-value|((IP_MAXPACKET / PAGE_SIZE) * MCLBYTES)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RX_COPY_THRESHOLD
 value|256
 end_define
@@ -9101,7 +9094,23 @@ name|ifp
 operator|->
 name|if_hw_tsomax
 operator|=
-name|NF_TSO_MAXBURST
+name|IF_HW_TSOMAX_BUILD_VALUE
+argument_list|(
+literal|65535
+operator|-
+operator|(
+name|ETHER_HDR_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
+operator|)
+comment|/* bytes */
+argument_list|,
+name|MAX_TX_REQ_FRAGS
+comment|/* maximum frag count */
+argument_list|,
+name|PAGE_SHIFT
+comment|/* PAGE_SIZE frag size */
+argument_list|)
 expr_stmt|;
 name|ether_ifattach
 argument_list|(
