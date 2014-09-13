@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009-2012 Microsoft Corp.  * Copyright (c) 2012 NetApp Inc.  * Copyright (c) 2012 Citrix Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2014 Microsoft Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/**  * A common driver for all hyper-V util services.  */
+comment|/*  * A common driver for all hyper-V util services.  */
 end_comment
 
 begin_include
@@ -132,7 +132,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Note: GUID codes below are predefined by the host hypervisor  * (Hyper-V and Azure)interface and required for correct operation.  */
+comment|/*  * Note: GUID codes below are predefined by the host hypervisor  * (Hyper-V and Azure)interface and required for correct operation.  */
 end_comment
 
 begin_decl_stmt
@@ -316,6 +316,68 @@ name|callback
 operator|=
 name|hv_heartbeat_cb
 block|, 	}
+block|,
+comment|/* KVP (Key Value Pair) Service */
+block|{
+operator|.
+name|guid
+operator|.
+name|data
+operator|=
+block|{
+literal|0xe7
+block|,
+literal|0xf4
+block|,
+literal|0xa0
+block|,
+literal|0xa9
+block|,
+literal|0x45
+block|,
+literal|0x5a
+block|,
+literal|0x96
+block|,
+literal|0x4d
+block|,
+literal|0xb8
+block|,
+literal|0x27
+block|,
+literal|0x8a
+block|,
+literal|0x84
+block|,
+literal|0x1e
+block|,
+literal|0x8c
+block|,
+literal|0x3
+block|,
+literal|0xe6
+block|}
+block|,
+operator|.
+name|name
+operator|=
+literal|"Hyper-V KVP Service\n"
+block|,
+operator|.
+name|enabled
+operator|=
+name|TRUE
+block|,
+operator|.
+name|init
+operator|=
+name|hv_kvp_init
+block|,
+operator|.
+name|callback
+operator|=
+name|hv_kvp_callback
+block|, 	}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -331,6 +393,15 @@ name|receive_buffer
 index|[
 name|HV_MAX_UTIL_SERVICES
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean_t
+name|destroyed_kvp
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -589,6 +660,10 @@ name|time_sync_data
 modifier|*
 name|time_msg
 init|=
+operator|(
+name|time_sync_data
+operator|*
+operator|)
 name|context
 decl_stmt|;
 name|uint64_t
@@ -1709,6 +1784,20 @@ decl_stmt|;
 name|size_t
 name|receive_buffer_offset
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|destroyed_kvp
+condition|)
+block|{
+name|hv_kvp_deinit
+argument_list|()
+expr_stmt|;
+name|destroyed_kvp
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|hv_dev
 operator|=
 name|vmbus_get_devctx
