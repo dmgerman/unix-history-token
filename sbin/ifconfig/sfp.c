@@ -4166,7 +4166,7 @@ name|f
 operator|=
 name|read_i2c_generic
 expr_stmt|;
-comment|/* 	 * Try to read byte 0 from i2c: 	 * Both SFF-8472 and SFF-8436 use it as 	 * 'identification byte' 	 */
+comment|/* 	 * Try to read byte 0 from i2c: 	 * Both SFF-8472 and SFF-8436 use it as 	 * 'identification byte'. 	 * Stop reading status on zero as value -  	 * this might happen in case of empty transceiver slot. 	 */
 name|id_byte
 operator|=
 literal|0
@@ -4197,6 +4197,10 @@ name|ii
 operator|.
 name|error
 operator|!=
+literal|0
+operator|||
+name|id_byte
+operator|==
 literal|0
 condition|)
 return|return;
