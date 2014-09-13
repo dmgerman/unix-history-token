@@ -757,6 +757,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -766,6 +772,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SET_DECLARE
