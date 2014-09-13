@@ -1131,11 +1131,11 @@ name|nrip
 decl_stmt|;
 comment|/* 0xC8: Guest next nRIP. */
 name|uint8_t
-name|inst_decode_size
+name|inst_len
 decl_stmt|;
-comment|/* 0xD0: Instruction decode */
+comment|/* 0xD0: #NPF decode assist */
 name|uint8_t
-name|inst_decode_bytes
+name|inst_bytes
 index|[
 literal|15
 index|]

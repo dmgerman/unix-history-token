@@ -7499,6 +7499,22 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+name|vie_init
+argument_list|(
+operator|&
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|vie
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
