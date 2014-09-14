@@ -1635,7 +1635,7 @@ name|fdt_pic_decode_t
 name|intr_decode
 decl_stmt|;
 name|phandle_t
-name|intr_offset
+name|intr_parent
 decl_stmt|;
 name|int
 name|i
@@ -1648,7 +1648,7 @@ name|trig
 decl_stmt|,
 name|pol
 decl_stmt|;
-name|intr_offset
+name|intr_parent
 operator|=
 name|OF_node_from_xref
 argument_list|(
@@ -1709,7 +1709,7 @@ name|rv
 operator|=
 name|intr_decode
 argument_list|(
-name|intr_offset
+name|intr_parent
 argument_list|,
 name|intr
 argument_list|,
