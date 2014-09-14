@@ -48327,16 +48327,7 @@ operator|->
 name|spc3_flags
 operator|=
 name|SPC3_SID_3PC
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ctl_is_single
-condition|)
-name|inq_ptr
-operator|->
-name|spc3_flags
-operator||=
+operator||
 name|SPC3_SID_TPGS_IMPLICIT
 expr_stmt|;
 comment|/* 16 bit addressing */
