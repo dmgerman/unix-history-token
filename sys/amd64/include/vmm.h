@@ -2419,6 +2419,8 @@ name|VM_EXITCODE_INOUT_STR
 block|,
 name|VM_EXITCODE_TASK_SWITCH
 block|,
+name|VM_EXITCODE_SVM
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
@@ -2631,6 +2633,21 @@ name|inst_error
 decl_stmt|;
 block|}
 name|vmx
+struct|;
+comment|/* 		 * SVM specific payload. 		 */
+struct|struct
+block|{
+name|uint64_t
+name|exitcode
+decl_stmt|;
+name|uint64_t
+name|exitinfo1
+decl_stmt|;
+name|uint64_t
+name|exitinfo2
+decl_stmt|;
+block|}
+name|svm
 struct|;
 struct|struct
 block|{
