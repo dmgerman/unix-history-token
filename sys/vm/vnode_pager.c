@@ -242,7 +242,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|boolean_t
+name|int
 parameter_list|,
 name|int
 modifier|*
@@ -4522,8 +4522,8 @@ parameter_list|,
 name|int
 name|count
 parameter_list|,
-name|boolean_t
-name|sync
+name|int
+name|flags
 parameter_list|,
 name|int
 modifier|*
@@ -4548,7 +4548,6 @@ decl_stmt|;
 comment|/* 	 * Force synchronous operation if we are extremely low on memory 	 * to prevent a low-memory deadlock.  VOP operations often need to 	 * allocate more memory to initiate the I/O ( i.e. do a BMAP  	 * operation ).  The swapper handles the case by limiting the amount 	 * of asynchronous I/O, but that sort of solution doesn't scale well 	 * for the vnode pager without a lot of work. 	 * 	 * Also, the backing vnode's iodone routine may not wake the pageout 	 * daemon up.  This should be probably be addressed XXX. 	 */
 if|if
 condition|(
-operator|(
 name|vm_cnt
 operator|.
 name|v_free_count
@@ -4556,15 +4555,14 @@ operator|+
 name|vm_cnt
 operator|.
 name|v_cache_count
-operator|)
 operator|<
 name|vm_cnt
 operator|.
 name|v_pageout_free_min
 condition|)
-name|sync
+name|flags
 operator||=
-name|OBJPC_SYNC
+name|VM_PAGER_PUT_SYNC
 expr_stmt|;
 comment|/* 	 * Call device-specific putpages function 	 */
 name|vp
@@ -4588,7 +4586,7 @@ name|m
 argument_list|,
 name|bytes
 argument_list|,
-name|sync
+name|flags
 argument_list|,
 name|rtvals
 argument_list|)
