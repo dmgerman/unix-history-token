@@ -9017,6 +9017,7 @@ index|[
 name|PROMPTLEN
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt

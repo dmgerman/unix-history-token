@@ -1191,6 +1191,7 @@ begin_function
 name|void
 name|pushstring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
