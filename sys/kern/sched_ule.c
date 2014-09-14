@@ -4852,6 +4852,9 @@ literal|1
 argument_list|)
 condition|)
 return|return;
+name|mb
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|TD_IS_IDLETHREAD
@@ -11453,6 +11456,9 @@ operator|->
 name|tdq_cpu_idle
 operator|=
 literal|1
+expr_stmt|;
+name|mb
+argument_list|()
 expr_stmt|;
 name|cpu_idle
 argument_list|(
