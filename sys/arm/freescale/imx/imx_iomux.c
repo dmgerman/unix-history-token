@@ -3,6 +3,10 @@ begin_comment
 comment|/*-  * Copyright (c) 2014 Ian Lepore  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_comment
+comment|/*  * Pin mux and pad control driver for imx5 and imx6.  *  * This driver implements the fdt_pinctrl interface for configuring the gpio and  * peripheral pins based on fdt configuration data.  *  * When the driver attaches, it walks the entire fdt tree and automatically  * configures the pins for each device which has a pinctrl-0 property and whose  * status is "okay".  In addition it implements the fdt_pinctrl_configure()  * method which any other driver can call at any time to reconfigure its pins.  *  * The nature of the fsl,pins property in fdt data makes this driver's job very  * easy.  Instead of representing each pin and pad configuration using symbolic  * properties such as pullup-enable="true" and so on, the data simply contains  * the addresses of the registers that control the pins, and the raw values to  * store in those registers.  *  * The imx5 and imx6 SoCs also have a small number of "general purpose  * registers" in the iomuxc device which are used to control an assortment  * of completely unrelated aspects of SoC behavior.  This driver provides other  * drivers with direct access to those registers via simple accessor functions.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -342,43 +346,6 @@ operator|&
 name|cfgtuples
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-block|{
-name|char
-name|name
-index|[
-literal|32
-index|]
-decl_stmt|;
-name|OF_getprop
-argument_list|(
-name|cfgnode
-argument_list|,
-literal|"name"
-argument_list|,
-operator|&
-name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"found %d tuples in fsl,pins for %s\n"
-argument_list|,
-name|ntuples
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|ntuples
