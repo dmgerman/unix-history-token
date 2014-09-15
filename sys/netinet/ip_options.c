@@ -185,17 +185,19 @@ directive|include
 file|<sys/socketvar.h>
 end_include
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip_dosourceroute
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -206,7 +208,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|ip_dosourceroute
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -215,17 +220,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ip_acceptsourceroute
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|V_ip_dosourceroute
+value|VNET(ip_dosourceroute)
+end_define
 
 begin_expr_stmt
-name|SYSCTL_INT
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|int
+argument_list|,
+name|ip_acceptsourceroute
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -236,7 +250,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|ip_acceptsourceroute
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -245,20 +262,31 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_define
+define|#
+directive|define
+name|V_ip_acceptsourceroute
+value|VNET(ip_acceptsourceroute)
+end_define
+
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|ip_doopts
-init|=
+argument_list|)
+operator|=
 literal|1
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 0 = ignore, 1 = process, 2 = reject */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_VNET_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -269,7 +297,10 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|ip_doopts
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -382,7 +413,7 @@ decl_stmt|;
 comment|/* Ignore or reject packets with IP options. */
 if|if
 condition|(
-name|ip_doopts
+name|V_ip_doopts
 operator|==
 literal|0
 condition|)
@@ -392,7 +423,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|ip_doopts
+name|V_ip_doopts
 operator|==
 literal|2
 condition|)
@@ -696,7 +727,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|ip_dosourceroute
+name|V_ip_dosourceroute
 condition|)
 goto|goto
 name|nosourcerouting
@@ -728,7 +759,7 @@ comment|/* 				 * End of source route.  Should be for us. 				 */
 if|if
 condition|(
 operator|!
-name|ip_acceptsourceroute
+name|V_ip_acceptsourceroute
 condition|)
 goto|goto
 name|nosourcerouting
@@ -761,7 +792,7 @@ directive|endif
 if|if
 condition|(
 operator|!
-name|ip_dosourceroute
+name|V_ip_dosourceroute
 condition|)
 block|{
 if|if
