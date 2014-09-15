@@ -284,7 +284,7 @@ condition|(
 name|tty
 operator|!=
 name|NULL
-operator|||
+operator|&&
 operator|*
 operator|(
 specifier|const
