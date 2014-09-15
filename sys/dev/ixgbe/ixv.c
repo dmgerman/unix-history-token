@@ -1842,11 +1842,11 @@ literal|0
 operator|||
 name|ixv_rxd
 operator|<
-name|MIN_TXD
+name|MIN_RXD
 operator|||
 name|ixv_rxd
 operator|>
-name|MAX_TXD
+name|MAX_RXD
 condition|)
 block|{
 name|device_printf
