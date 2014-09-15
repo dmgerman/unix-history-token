@@ -418,12 +418,52 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GIC_FIRST_IPI
+value|0
+end_define
+
+begin_comment
+comment|/* Irqs 0-15 are SGIs/IPIs. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GIC_LAST_IPI
 value|15
 end_define
 
+begin_define
+define|#
+directive|define
+name|GIC_FIRST_PPI
+value|16
+end_define
+
 begin_comment
-comment|/* Irqs 0-15 are IPIs. */
+comment|/* Irqs 16-31 are private (per */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIC_LAST_PPI
+value|31
+end_define
+
+begin_comment
+comment|/* core) peripheral interrupts. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIC_FIRST_SPI
+value|32
+end_define
+
+begin_comment
+comment|/* Irqs 32+ are shared peripherals. */
 end_comment
 
 begin_comment
@@ -1049,7 +1089,7 @@ literal|1
 index|]
 argument_list|)
 operator|+
-literal|32
+name|GIC_FIRST_SPI
 expr_stmt|;
 else|else
 operator|*
@@ -1062,6 +1102,8 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|+
+name|GIC_FIRST_PPI
 expr_stmt|;
 comment|/* 		 * In intr[2], bits[3:0] are trigger type and level flags. 		 *   1 = low-to-high edge triggered 		 *   2 = high-to-low edge triggered 		 *   4 = active high level-sensitive 		 *   8 = active low level-sensitive 		 * The hardware only supports active-high-level or rising-edge. 		 */
 if|if
