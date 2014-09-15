@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2012 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_configure.c 667 2013-03-17 14:24:00Z des $  */
+comment|/*-  * Copyright (c) 2001-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2014 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_configure.c 796 2014-06-03 21:30:08Z des $  */
 end_comment
 
 begin_ifdef
@@ -656,6 +656,10 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -737,6 +741,10 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -761,6 +769,10 @@ name|filename
 argument_list|,
 name|lineno
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|fail
@@ -790,9 +802,22 @@ name|ret
 operator|<
 literal|0
 condition|)
+block|{
+comment|/* 				 * Bogus errno, but this ensures that the 				 * outer loop does not just ignore the 				 * error and keep searching. 				 */
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 continue|continue;
 block|}
 comment|/* get control flag */
@@ -830,6 +855,10 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -866,6 +895,10 @@ name|filename
 argument_list|,
 name|lineno
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|fail
@@ -914,9 +947,21 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+name|errno
+operator|=
+name|ENOEXEC
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 comment|/* 		 * The remaining items in wordv are the module's 		 * arguments.  We could set this->optv = wordv + i, but 		 * then free(this->optv) wouldn't work.  Instead, we free 		 * the words we've already consumed, shift the rest up, 		 * and clear the tail end of the array. 		 */
 name|this
 operator|->
@@ -1056,7 +1101,7 @@ operator|++
 name|count
 expr_stmt|;
 block|}
-comment|/* 	 * The loop ended because openpam_readword() returned NULL, which 	 * can happen for four different reasons: an I/O error (ferror(f) 	 * is true), a memory allocation failure (ferror(f) is false, 	 * errno is non-zero) 	 */
+comment|/* 	 * The loop ended because openpam_readword() returned NULL, which 	 * can happen for four different reasons: an I/O error (ferror(f) 	 * is true), a memory allocation failure (ferror(f) is false, 	 * feof(f) is false, errno is non-zero), the file ended with an 	 * unterminated quote or backslash escape (ferror(f) is false, 	 * feof(f) is true, errno is non-zero), or the end of the file was 	 * reached without error (ferror(f) is false, feof(f) is true, 	 * errno is zero). 	 */
 if|if
 condition|(
 name|ferror
@@ -1574,6 +1619,18 @@ argument_list|,
 name|style
 argument_list|)
 expr_stmt|;
+comment|/* success */
+if|if
+condition|(
+name|ret
+operator|>
+literal|0
+condition|)
+name|RETURNN
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 comment|/* the file exists, but an error occurred */
 if|if
 condition|(
@@ -1609,9 +1666,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* no hit */
+name|errno
+operator|=
+name|ENOENT
+expr_stmt|;
 name|RETURNN
 argument_list|(
-literal|0
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1681,9 +1743,17 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
 goto|goto
 name|load_err
 goto|;
+block|}
 for|for
 control|(
 name|fclt
