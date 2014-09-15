@@ -70,12 +70,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct_decl
-struct_decl|struct
-name|vop_getpages_args
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|int
 name|vnode_pager_local_getpages
