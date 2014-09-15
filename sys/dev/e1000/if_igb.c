@@ -21653,6 +21653,37 @@ operator||=
 name|E1000_RCTL_SZ_2048
 expr_stmt|;
 block|}
+comment|/* 	 * If TX flow control is disabled and there's>1 queue defined, 	 * enable DROP. 	 * 	 * This drops frames rather than hanging the RX MAC for all queues. 	 */
+if|if
+condition|(
+operator|(
+name|adapter
+operator|->
+name|num_queues
+operator|>
+literal|1
+operator|)
+operator|&&
+operator|(
+name|adapter
+operator|->
+name|fc
+operator|==
+name|e1000_fc_none
+operator|||
+name|adapter
+operator|->
+name|fc
+operator|==
+name|e1000_fc_rx_pause
+operator|)
+condition|)
+block|{
+name|srrctl
+operator||=
+name|E1000_SRRCTL_DROP_EN
+expr_stmt|;
+block|}
 comment|/* Setup the Base and Length of the Rx Descriptor Rings */
 for|for
 control|(
@@ -29567,6 +29598,7 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
+comment|/* XXX TODO: update DROP_EN on each RX queue if appropriate */
 return|return
 operator|(
 name|error
