@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -1088,9 +1094,9 @@ operator|+=
 operator|(
 name|p
 operator|-
-literal|0.5
-operator|*
 name|y
+operator|/
+literal|2
 operator|)
 expr_stmt|;
 break|break;
@@ -1436,7 +1442,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|6.0
+literal|6
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1448,7 +1454,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|5.0
+literal|5
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1460,7 +1466,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|4.0
+literal|4
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1472,7 +1478,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|3.0
+literal|3
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1484,7 +1490,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-literal|2.0
+literal|2
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1613,6 +1619,31 @@ name|r
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|lgamma_r
+argument_list|,
+name|lgammal_r
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

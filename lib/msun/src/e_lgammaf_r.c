@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* e_lgammaf_r.c -- float version of e_lgamma_r.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  */
+comment|/* e_lgammaf_r.c -- float version of e_lgamma_r.c.  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.  * Conversion to float fixed By Steven G. Kargl.  */
 end_comment
 
 begin_comment
@@ -50,345 +50,199 @@ specifier|const
 name|float
 name|zero
 init|=
-literal|0.0000000000e+00
+literal|0
 decl_stmt|,
 name|half
 init|=
-literal|5.0000000000e-01
+literal|0.5
 decl_stmt|,
-comment|/* 0x3f000000 */
 name|one
 init|=
-literal|1.0000000000e+00
+literal|1
 decl_stmt|,
-comment|/* 0x3f800000 */
 name|pi
 init|=
 literal|3.1415927410e+00
 decl_stmt|,
 comment|/* 0x40490fdb */
+comment|/*  * Domain y in [0x1p-27, 0.27], range ~[-3.4599e-10, 3.4590e-10]:  * |(lgamma(2 - y) + 0.5 * y) / y - a(y)|< 2**-31.4  */
 name|a0
 init|=
-literal|7.7215664089e-02
+literal|7.72156641e-02
 decl_stmt|,
 comment|/* 0x3d9e233f */
 name|a1
 init|=
-literal|3.2246702909e-01
+literal|3.22467119e-01
 decl_stmt|,
-comment|/* 0x3ea51a66 */
+comment|/* 0x3ea51a69 */
 name|a2
 init|=
-literal|6.7352302372e-02
+literal|6.73484802e-02
 decl_stmt|,
-comment|/* 0x3d89f001 */
+comment|/* 0x3d89ee00 */
 name|a3
 init|=
-literal|2.0580807701e-02
+literal|2.06395667e-02
 decl_stmt|,
-comment|/* 0x3ca89915 */
+comment|/* 0x3ca9144f */
 name|a4
 init|=
-literal|7.3855509982e-03
+literal|6.98275631e-03
 decl_stmt|,
-comment|/* 0x3bf2027e */
+comment|/* 0x3be4cf9b */
 name|a5
 init|=
-literal|2.8905137442e-03
+literal|4.11768444e-03
 decl_stmt|,
-comment|/* 0x3b3d6ec6 */
-name|a6
-init|=
-literal|1.1927076848e-03
-decl_stmt|,
-comment|/* 0x3a9c54a1 */
-name|a7
-init|=
-literal|5.1006977446e-04
-decl_stmt|,
-comment|/* 0x3a05b634 */
-name|a8
-init|=
-literal|2.2086278477e-04
-decl_stmt|,
-comment|/* 0x39679767 */
-name|a9
-init|=
-literal|1.0801156895e-04
-decl_stmt|,
-comment|/* 0x38e28445 */
-name|a10
-init|=
-literal|2.5214456400e-05
-decl_stmt|,
-comment|/* 0x37d383a2 */
-name|a11
-init|=
-literal|4.4864096708e-05
-decl_stmt|,
-comment|/* 0x383c2c75 */
+comment|/* 0x3b86eda4 */
+comment|/*  * Domain x in [tc-0.24, tc+0.28], range ~[-5.6577e-10, 5.5677e-10]:  * |(lgamma(x) - tf) - t(x - tc)|< 2**-30.8.  */
 name|tc
 init|=
-literal|1.4616321325e+00
+literal|1.46163213e+00
 decl_stmt|,
 comment|/* 0x3fbb16c3 */
 name|tf
 init|=
 operator|-
-literal|1.2148628384e-01
+literal|1.21486291e-01
 decl_stmt|,
-comment|/* 0xbdf8cdcd */
-comment|/* tt = -(tail of tf) */
-name|tt
-init|=
-literal|6.6971006518e-09
-decl_stmt|,
-comment|/* 0x31e61c52 */
+comment|/* 0xbdf8cdce */
 name|t0
 init|=
-literal|4.8383611441e-01
+operator|-
+literal|2.94064460e-11
 decl_stmt|,
-comment|/* 0x3ef7b95e */
+comment|/* 0xae0154b7 */
 name|t1
 init|=
 operator|-
-literal|1.4758771658e-01
+literal|2.35939837e-08
 decl_stmt|,
-comment|/* 0xbe17213c */
+comment|/* 0xb2caabb8 */
 name|t2
 init|=
-literal|6.4624942839e-02
+literal|4.83836412e-01
 decl_stmt|,
-comment|/* 0x3d845a15 */
+comment|/* 0x3ef7b968 */
 name|t3
 init|=
 operator|-
-literal|3.2788541168e-02
+literal|1.47586212e-01
 decl_stmt|,
-comment|/* 0xbd064d47 */
+comment|/* 0xbe1720d7 */
 name|t4
 init|=
-literal|1.7970675603e-02
+literal|6.46013096e-02
 decl_stmt|,
-comment|/* 0x3c93373d */
+comment|/* 0x3d844db1 */
 name|t5
 init|=
 operator|-
-literal|1.0314224288e-02
+literal|3.28450352e-02
 decl_stmt|,
-comment|/* 0xbc28fcfe */
+comment|/* 0xbd068884 */
 name|t6
 init|=
-literal|6.1005386524e-03
+literal|1.86483748e-02
 decl_stmt|,
-comment|/* 0x3bc7e707 */
+comment|/* 0x3c98c47a */
 name|t7
 init|=
 operator|-
-literal|3.6845202558e-03
+literal|9.89206228e-03
 decl_stmt|,
-comment|/* 0xbb7177fe */
-name|t8
-init|=
-literal|2.2596477065e-03
-decl_stmt|,
-comment|/* 0x3b141699 */
-name|t9
-init|=
-operator|-
-literal|1.4034647029e-03
-decl_stmt|,
-comment|/* 0xbab7f476 */
-name|t10
-init|=
-literal|8.8108185446e-04
-decl_stmt|,
-comment|/* 0x3a66f867 */
-name|t11
-init|=
-operator|-
-literal|5.3859531181e-04
-decl_stmt|,
-comment|/* 0xba0d3085 */
-name|t12
-init|=
-literal|3.1563205994e-04
-decl_stmt|,
-comment|/* 0x39a57b6b */
-name|t13
-init|=
-operator|-
-literal|3.1275415677e-04
-decl_stmt|,
-comment|/* 0xb9a3f927 */
-name|t14
-init|=
-literal|3.3552918467e-04
-decl_stmt|,
-comment|/* 0x39afe9f7 */
+comment|/* 0xbc221251 */
+comment|/*  * Domain y in [-0.1, 0.232], range ~[-8.4931e-10, 8.7794e-10]:  * |(lgamma(1 + y) + 0.5 * y) / y - u(y) / v(y)|< 2**-31.2  */
 name|u0
 init|=
 operator|-
-literal|7.7215664089e-02
+literal|7.72156641e-02
 decl_stmt|,
 comment|/* 0xbd9e233f */
 name|u1
 init|=
-literal|6.3282704353e-01
+literal|7.36789703e-01
 decl_stmt|,
-comment|/* 0x3f2200f4 */
+comment|/* 0x3f3c9e40 */
 name|u2
 init|=
-literal|1.4549225569e+00
+literal|4.95649040e-01
 decl_stmt|,
-comment|/* 0x3fba3ae7 */
-name|u3
-init|=
-literal|9.7771751881e-01
-decl_stmt|,
-comment|/* 0x3f7a4bb2 */
-name|u4
-init|=
-literal|2.2896373272e-01
-decl_stmt|,
-comment|/* 0x3e6a7578 */
-name|u5
-init|=
-literal|1.3381091878e-02
-decl_stmt|,
-comment|/* 0x3c5b3c5e */
+comment|/* 0x3efdc5b6 */
 name|v1
 init|=
-literal|2.4559779167e+00
+literal|1.10958421e+00
 decl_stmt|,
-comment|/* 0x401d2ebe */
+comment|/* 0x3f8e06db */
 name|v2
 init|=
-literal|2.1284897327e+00
+literal|2.10598111e-01
 decl_stmt|,
-comment|/* 0x4008392d */
+comment|/* 0x3e57a708 */
 name|v3
 init|=
-literal|7.6928514242e-01
+operator|-
+literal|1.02995494e-02
 decl_stmt|,
-comment|/* 0x3f44efdf */
-name|v4
-init|=
-literal|1.0422264785e-01
-decl_stmt|,
-comment|/* 0x3dd572af */
-name|v5
-init|=
-literal|3.2170924824e-03
-decl_stmt|,
-comment|/* 0x3b52d5db */
+comment|/* 0xbc28bf71 */
+comment|/*  * Domain x in (2, 3], range ~[-5.5189e-11, 5.2317e-11]:  * |(lgamma(y+2) - 0.5 * y) / y - s(y)/r(y)|< 2**-35.0  * with y = x - 2.  */
 name|s0
 init|=
 operator|-
-literal|7.7215664089e-02
+literal|7.72156641e-02
 decl_stmt|,
 comment|/* 0xbd9e233f */
 name|s1
 init|=
-literal|2.1498242021e-01
+literal|2.69987404e-01
 decl_stmt|,
-comment|/* 0x3e5c245a */
+comment|/* 0x3e8a3bca */
 name|s2
 init|=
-literal|3.2577878237e-01
+literal|1.42851010e-01
 decl_stmt|,
-comment|/* 0x3ea6cc7a */
+comment|/* 0x3e124789 */
 name|s3
 init|=
-literal|1.4635047317e-01
+literal|1.19389519e-02
 decl_stmt|,
-comment|/* 0x3e15dce6 */
-name|s4
-init|=
-literal|2.6642270386e-02
-decl_stmt|,
-comment|/* 0x3cda40e4 */
-name|s5
-init|=
-literal|1.8402845599e-03
-decl_stmt|,
-comment|/* 0x3af135b4 */
-name|s6
-init|=
-literal|3.1947532989e-05
-decl_stmt|,
-comment|/* 0x3805ff67 */
+comment|/* 0x3c439b98 */
 name|r1
 init|=
-literal|1.3920053244e+00
+literal|6.79650068e-01
 decl_stmt|,
-comment|/* 0x3fb22d3b */
+comment|/* 0x3f2dfd8c */
 name|r2
 init|=
-literal|7.2193557024e-01
+literal|1.16058730e-01
 decl_stmt|,
-comment|/* 0x3f38d0c5 */
+comment|/* 0x3dedb033 */
 name|r3
 init|=
-literal|1.7193385959e-01
+literal|3.75673687e-03
 decl_stmt|,
-comment|/* 0x3e300f6e */
-name|r4
-init|=
-literal|1.8645919859e-02
-decl_stmt|,
-comment|/* 0x3c98bf54 */
-name|r5
-init|=
-literal|7.7794247773e-04
-decl_stmt|,
-comment|/* 0x3a4beed6 */
-name|r6
-init|=
-literal|7.3266842264e-06
-decl_stmt|,
-comment|/* 0x36f5d7bd */
+comment|/* 0x3b763396 */
+comment|/*  * Domain z in [8, 0x1p24], range ~[-1.2640e-09, 1.2640e-09]:  * |lgamma(x) - (x - 0.5) * (log(x) - 1) - w(1/x)|< 2**-29.6.  */
 name|w0
 init|=
-literal|4.1893854737e-01
+literal|4.18938547e-01
 decl_stmt|,
 comment|/* 0x3ed67f1d */
 name|w1
 init|=
-literal|8.3333335817e-02
+literal|8.33332464e-02
 decl_stmt|,
-comment|/* 0x3daaaaab */
+comment|/* 0x3daaaa9f */
 name|w2
 init|=
 operator|-
-literal|2.7777778450e-03
-decl_stmt|,
-comment|/* 0xbb360b61 */
-name|w3
-init|=
-literal|7.9365057172e-04
-decl_stmt|,
-comment|/* 0x3a500cfd */
-name|w4
-init|=
-operator|-
-literal|5.9518753551e-04
-decl_stmt|,
-comment|/* 0xba1c065c */
-name|w5
-init|=
-literal|8.3633989561e-04
-decl_stmt|,
-comment|/* 0x3a5b3dd2 */
-name|w6
-init|=
-operator|-
-literal|1.6309292987e-03
+literal|2.76129087e-03
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0xbad5c4e8 */
+comment|/* 0xbb34f6c6 */
 end_comment
 
 begin_function
@@ -905,10 +759,7 @@ condition|)
 block|{
 name|y
 operator|=
-operator|(
-name|float
-operator|)
-literal|2.0
+literal|2
 operator|-
 name|x
 expr_stmt|;
@@ -977,25 +828,7 @@ name|a2
 operator|+
 name|z
 operator|*
-operator|(
 name|a4
-operator|+
-name|z
-operator|*
-operator|(
-name|a6
-operator|+
-name|z
-operator|*
-operator|(
-name|a8
-operator|+
-name|z
-operator|*
-name|a10
-operator|)
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 name|p2
@@ -1012,25 +845,7 @@ name|a3
 operator|+
 name|z
 operator|*
-operator|(
 name|a5
-operator|+
-name|z
-operator|*
-operator|(
-name|a7
-operator|+
-name|z
-operator|*
-operator|(
-name|a9
-operator|+
-name|z
-operator|*
-name|a11
-operator|)
-operator|)
-operator|)
 operator|)
 operator|)
 expr_stmt|;
@@ -1047,126 +862,56 @@ operator|+=
 operator|(
 name|p
 operator|-
-operator|(
-name|float
-operator|)
-literal|0.5
-operator|*
 name|y
+operator|/
+literal|2
 operator|)
 expr_stmt|;
 break|break;
 case|case
 literal|1
 case|:
-name|z
-operator|=
-name|y
-operator|*
-name|y
-expr_stmt|;
-name|w
-operator|=
-name|z
-operator|*
-name|y
-expr_stmt|;
-name|p1
+name|p
 operator|=
 name|t0
 operator|+
-name|w
+name|y
+operator|*
+name|t1
+operator|+
+name|y
+operator|*
+name|y
+operator|*
+operator|(
+name|t2
+operator|+
+name|y
 operator|*
 operator|(
 name|t3
 operator|+
-name|w
-operator|*
-operator|(
-name|t6
-operator|+
-name|w
-operator|*
-operator|(
-name|t9
-operator|+
-name|w
-operator|*
-name|t12
-operator|)
-operator|)
-operator|)
-expr_stmt|;
-comment|/* parallel comp */
-name|p2
-operator|=
-name|t1
-operator|+
-name|w
+name|y
 operator|*
 operator|(
 name|t4
 operator|+
-name|w
-operator|*
-operator|(
-name|t7
-operator|+
-name|w
-operator|*
-operator|(
-name|t10
-operator|+
-name|w
-operator|*
-name|t13
-operator|)
-operator|)
-operator|)
-expr_stmt|;
-name|p3
-operator|=
-name|t2
-operator|+
-name|w
+name|y
 operator|*
 operator|(
 name|t5
 operator|+
-name|w
+name|y
 operator|*
 operator|(
-name|t8
-operator|+
-name|w
-operator|*
-operator|(
-name|t11
-operator|+
-name|w
-operator|*
-name|t14
-operator|)
-operator|)
-operator|)
-expr_stmt|;
-name|p
-operator|=
-name|z
-operator|*
-name|p1
-operator|-
-operator|(
-name|tt
-operator|-
-name|w
-operator|*
-operator|(
-name|p2
+name|t6
 operator|+
 name|y
 operator|*
-name|p3
+name|t7
+operator|)
+operator|)
+operator|)
 operator|)
 operator|)
 expr_stmt|;
@@ -1196,25 +941,7 @@ name|u1
 operator|+
 name|y
 operator|*
-operator|(
 name|u2
-operator|+
-name|y
-operator|*
-operator|(
-name|u3
-operator|+
-name|y
-operator|*
-operator|(
-name|u4
-operator|+
-name|y
-operator|*
-name|u5
-operator|)
-operator|)
-operator|)
 operator|)
 operator|)
 expr_stmt|;
@@ -1234,36 +961,20 @@ name|v2
 operator|+
 name|y
 operator|*
-operator|(
 name|v3
-operator|+
-name|y
-operator|*
-operator|(
-name|v4
-operator|+
-name|y
-operator|*
-name|v5
-operator|)
-operator|)
 operator|)
 operator|)
 expr_stmt|;
 name|r
 operator|+=
 operator|(
-operator|-
-operator|(
-name|float
-operator|)
-literal|0.5
-operator|*
-name|y
-operator|+
 name|p1
 operator|/
 name|p2
+operator|-
+name|y
+operator|/
+literal|2
 operator|)
 expr_stmt|;
 block|}
@@ -1279,18 +990,12 @@ block|{
 comment|/* x< 8.0 */
 name|i
 operator|=
-operator|(
-name|int
-operator|)
 name|x
 expr_stmt|;
 name|y
 operator|=
 name|x
 operator|-
-operator|(
-name|float
-operator|)
 name|i
 expr_stmt|;
 name|p
@@ -1312,25 +1017,7 @@ name|s2
 operator|+
 name|y
 operator|*
-operator|(
 name|s3
-operator|+
-name|y
-operator|*
-operator|(
-name|s4
-operator|+
-name|y
-operator|*
-operator|(
-name|s5
-operator|+
-name|y
-operator|*
-name|s6
-operator|)
-operator|)
-operator|)
 operator|)
 operator|)
 operator|)
@@ -1351,33 +1038,15 @@ name|r2
 operator|+
 name|y
 operator|*
-operator|(
 name|r3
-operator|+
-name|y
-operator|*
-operator|(
-name|r4
-operator|+
-name|y
-operator|*
-operator|(
-name|r5
-operator|+
-name|y
-operator|*
-name|r6
-operator|)
-operator|)
-operator|)
 operator|)
 operator|)
 expr_stmt|;
 name|r
 operator|=
-name|half
-operator|*
 name|y
+operator|/
+literal|2
 operator|+
 name|p
 operator|/
@@ -1401,10 +1070,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-operator|(
-name|float
-operator|)
-literal|6.0
+literal|6
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1416,10 +1082,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-operator|(
-name|float
-operator|)
-literal|5.0
+literal|5
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1431,10 +1094,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-operator|(
-name|float
-operator|)
-literal|4.0
+literal|4
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1446,10 +1106,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-operator|(
-name|float
-operator|)
-literal|3.0
+literal|3
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1461,10 +1118,7 @@ operator|*=
 operator|(
 name|y
 operator|+
-operator|(
-name|float
-operator|)
-literal|2.0
+literal|2
 operator|)
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -1477,14 +1131,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 8.0<= x< 2**58 */
+comment|/* 8.0<= x< 2**24 */
 block|}
 elseif|else
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x5c800000
+literal|0x4b800000
 condition|)
 block|{
 name|t
@@ -1517,31 +1171,7 @@ name|w1
 operator|+
 name|y
 operator|*
-operator|(
 name|w2
-operator|+
-name|y
-operator|*
-operator|(
-name|w3
-operator|+
-name|y
-operator|*
-operator|(
-name|w4
-operator|+
-name|y
-operator|*
-operator|(
-name|w5
-operator|+
-name|y
-operator|*
-name|w6
-operator|)
-operator|)
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 name|r
@@ -1562,7 +1192,7 @@ name|w
 expr_stmt|;
 block|}
 else|else
-comment|/* 2**58<= x<= inf */
+comment|/* 2**24<= x<= inf */
 name|r
 operator|=
 name|x
