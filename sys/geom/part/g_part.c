@@ -510,6 +510,12 @@ literal|"dragonfly-hammer2"
 block|,
 name|G_PART_ALIAS_DFBSD_HAMMER2
 block|}
+block|,
+block|{
+literal|"prep-boot"
+block|,
+name|G_PART_ALIAS_PREP_BOOT
+block|}
 block|, }
 struct|;
 end_struct

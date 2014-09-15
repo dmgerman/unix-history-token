@@ -3326,7 +3326,10 @@ name|strcmp
 argument_list|(
 name|type
 argument_list|,
-literal|"freebsd-boot"
+name|bootpart_type
+argument_list|(
+name|scheme
+argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -5494,7 +5497,10 @@ name|gc
 operator|->
 name|lg_val
 argument_list|,
-literal|"freebsd-boot"
+name|bootpart_type
+argument_list|(
+name|scheme
+argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -5642,7 +5648,10 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-literal|"freebsd-boot"
+name|bootpart_type
+argument_list|(
+name|scheme
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -6142,7 +6151,10 @@ index|]
 operator|.
 name|text
 argument_list|,
-literal|"freebsd-boot"
+name|bootpart_type
+argument_list|(
+name|scheme
+argument_list|)
 argument_list|)
 operator|==
 literal|0

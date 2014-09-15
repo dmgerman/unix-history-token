@@ -749,7 +749,7 @@ block|,
 block|{
 name|DOSPTYP_PPCBOOT
 block|,
-name|G_PART_ALIAS_FREEBSD_BOOT
+name|G_PART_ALIAS_PREP_BOOT
 block|}
 block|,
 block|{
