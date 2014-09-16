@@ -67,20 +67,6 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|vd_drawrect_t
-name|vt_fb_drawrect
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vd_setpixel_t
-name|vt_fb_setpixel
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|vt_driver
 name|vt_fb_driver
@@ -576,7 +562,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vt_fb_setpixel
 parameter_list|(
@@ -755,7 +740,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vt_fb_drawrect
 parameter_list|(

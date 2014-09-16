@@ -74,6 +74,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vd_drawrect_t
+name|vt_fb_drawrect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vd_setpixel_t
+name|vt_fb_setpixel
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vd_postswitch_t
 name|vt_fb_postswitch
 decl_stmt|;
