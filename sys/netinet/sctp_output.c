@@ -56435,6 +56435,9 @@ name|hb_info
 operator|.
 name|addr_family
 operator|=
+operator|(
+name|uint8_t
+operator|)
 name|net
 operator|->
 name|ro
