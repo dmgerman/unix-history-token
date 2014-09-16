@@ -11756,11 +11756,6 @@ name|vd
 operator|=
 name|main_vd
 expr_stmt|;
-name|VT_LOCK
-argument_list|(
-name|vd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vd
@@ -11790,6 +11785,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Reset VDF_TEXTMODE flag, driver who require that flag (vt_vga) will 	 * set it. 	 */
+name|VT_LOCK
+argument_list|(
+name|vd
+argument_list|)
+expr_stmt|;
 name|vd
 operator|->
 name|vd_flags
