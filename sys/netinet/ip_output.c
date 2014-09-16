@@ -958,7 +958,10 @@ argument_list|(
 name|dst
 argument_list|)
 argument_list|,
-name|RT_ALL_FIBS
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 argument_list|)
 operator|)
@@ -977,7 +980,10 @@ argument_list|(
 name|dst
 argument_list|)
 argument_list|,
-name|RT_ALL_FIBS
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 argument_list|)
 operator|)
@@ -1057,7 +1063,10 @@ argument_list|(
 name|dst
 argument_list|)
 argument_list|,
-name|RT_ALL_FIBS
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 argument_list|)
 operator|)
@@ -1078,7 +1087,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|RT_ALL_FIBS
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 argument_list|)
 operator|)
