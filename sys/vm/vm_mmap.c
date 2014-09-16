@@ -908,7 +908,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* XXX: MAP_RENAME, MAP_NORESERVE */
 if|if
 condition|(
 operator|(
@@ -921,6 +920,10 @@ operator||
 name|MAP_PRIVATE
 operator||
 name|MAP_FIXED
+operator||
+name|MAP_RENAME
+operator||
+name|MAP_NORESERVE
 operator||
 name|MAP_HASSEMAPHORE
 operator||
