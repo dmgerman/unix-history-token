@@ -13529,6 +13529,24 @@ condition|)
 block|{
 if|if
 condition|(
+name|zio
+operator|->
+name|io_error
+operator|==
+name|ENOTSUP
+operator|&&
+name|zio
+operator|->
+name|io_type
+operator|==
+name|ZIO_TYPE_FREE
+condition|)
+block|{
+comment|/* Not all devices support TRIM. */
+block|}
+elseif|else
+if|if
+condition|(
 operator|!
 name|vdev_accessible
 argument_list|(
