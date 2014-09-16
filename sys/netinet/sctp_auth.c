@@ -2647,7 +2647,7 @@ name|sctp_hmaclist_t
 modifier|*
 name|sctp_alloc_hmaclist
 parameter_list|(
-name|uint8_t
+name|uint16_t
 name|num_hmacs
 parameter_list|)
 block|{
@@ -6233,10 +6233,10 @@ operator|==
 name|SCTP_HMAC_LIST
 condition|)
 block|{
-name|int
+name|uint16_t
 name|num_hmacs
 decl_stmt|;
-name|int
+name|uint16_t
 name|i
 decl_stmt|;
 if|if

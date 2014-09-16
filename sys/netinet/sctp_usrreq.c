@@ -20928,6 +20928,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|optsize
 operator|<
 sizeof|sizeof
@@ -20944,6 +20945,15 @@ sizeof|sizeof
 argument_list|(
 name|uint16_t
 argument_list|)
+operator|)
+operator|||
+operator|(
+name|shmac
+operator|->
+name|shmac_number_of_idents
+operator|>
+literal|0xffff
+operator|)
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -20969,6 +20979,9 @@ name|hmaclist
 operator|=
 name|sctp_alloc_hmaclist
 argument_list|(
+operator|(
+name|uint16_t
+operator|)
 name|shmac
 operator|->
 name|shmac_number_of_idents
