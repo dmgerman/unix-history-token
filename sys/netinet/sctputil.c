@@ -12369,14 +12369,19 @@ name|now
 operator|.
 name|tv_usec
 expr_stmt|;
-comment|/* computer rtt in ms */
+comment|/* compute rtt in ms */
 name|rtt
 operator|=
+call|(
+name|int32_t
+call|)
+argument_list|(
 name|net
 operator|->
 name|rtt
 operator|/
 literal|1000
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
