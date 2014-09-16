@@ -1457,7 +1457,7 @@ name|sa
 parameter_list|,
 name|rt
 parameter_list|)
-value|((rt != NULL) ? rt->rt_mtu : 0)
+value|((uint32_t)((rt != NULL) ? rt->rt_mtu : 0))
 end_define
 
 begin_define
