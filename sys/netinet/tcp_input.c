@@ -8587,20 +8587,11 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 		 * If this is a duplicate SYN for our current connection, 		 * advance over it and pretend and it's not a SYN. 		 */
 if|if
 condition|(
 name|thflags
 operator|&
 name|TH_SYN
-operator|&&
-name|th
-operator|->
-name|th_seq
-operator|==
-name|tp
-operator|->
-name|irs
 condition|)
 block|{
 name|thflags
