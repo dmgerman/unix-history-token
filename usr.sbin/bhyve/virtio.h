@@ -773,6 +773,19 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 comment|/* called to write config regs */
+name|void
+function_decl|(
+modifier|*
+name|vc_apply_features
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|)
+function_decl|;
+comment|/* called to apply negotiated features */
 name|uint64_t
 name|vc_hv_caps
 decl_stmt|;
