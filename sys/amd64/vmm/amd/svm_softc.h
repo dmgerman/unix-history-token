@@ -140,14 +140,6 @@ index|[
 name|VM_MAXCPU
 index|]
 decl_stmt|;
-name|uint32_t
-name|svm_feature
-decl_stmt|;
-comment|/* SVM features from CPUID.*/
-name|int
-name|vcpu_cnt
-decl_stmt|;
-comment|/* number of VCPUs for this guest.*/
 block|}
 name|__aligned
 argument_list|(
