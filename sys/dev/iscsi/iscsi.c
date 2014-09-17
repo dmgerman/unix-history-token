@@ -10331,11 +10331,12 @@ name|max_target
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * Note that the variable below is only relevant for targets 		 * that don't claim compliance with anything above SPC2, which 		 * means they don't support REPORT_LUNS. 		 */
 name|cpi
 operator|->
 name|max_lun
 operator|=
-literal|0
+literal|255
 expr_stmt|;
 name|cpi
 operator|->
