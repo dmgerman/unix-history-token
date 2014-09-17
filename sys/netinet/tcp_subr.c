@@ -2374,7 +2374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a single message to the TCP at address specified by  * the given TCP/IP header.  If m == NULL, then we make a copy  * of the tcpiphdr at ti and send directly to the addressed host.  * This is used to force keep alive messages out using the TCP  * template for a connection.  If flags are given then we send  * a message back to the TCP which originated the * segment ti,  * and discard the mbuf containing it and any other attached mbufs.  *  * In any case the ack and sequence number of the transmitted  * segment are as specified by the parameters.  *  * NOTE: If m != NULL, then ti must point to *inside* the mbuf.  */
+comment|/*  * Send a single message to the TCP at address specified by  * the given TCP/IP header.  If m == NULL, then we make a copy  * of the tcpiphdr at th and send directly to the addressed host.  * This is used to force keep alive messages out using the TCP  * template for a connection.  If flags are given then we send  * a message back to the TCP which originated the segment th,  * and discard the mbuf containing it and any other attached mbufs.  *  * In any case the ack and sequence number of the transmitted  * segment are as specified by the parameters.  *  * NOTE: If m != NULL, then th must point to *inside* the mbuf.  */
 end_comment
 
 begin_function

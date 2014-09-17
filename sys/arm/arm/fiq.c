@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -101,20 +107,6 @@ name|uint32_t
 name|fiq_nullhandler_size
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IRQ_BIT
-value|I32_bit
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIQ_BIT
-value|F32_bit
-end_define
 
 begin_comment
 comment|/*  * fiq_installhandler:  *  *	Actually install the FIQ handler down at the FIQ vector.  *	  *	The FIQ vector is fixed by the hardware definition as the  *	seventh 32-bit word in the vector page.  *  *	Note: If the FIQ is invoked via an extra layer of  *	indirection, the actual FIQ code store lives in the  *	data segment, so there is no need to manipulate  *	the vector page's protection.  */
@@ -248,7 +240,7 @@ name|oldirqstate
 operator|=
 name|disable_interrupts
 argument_list|(
-name|FIQ_BIT
+name|PSR_F
 argument_list|)
 expr_stmt|;
 if|if
@@ -346,7 +338,7 @@ comment|/* Make sure FIQs are enabled when we return. */
 name|oldirqstate
 operator|&=
 operator|~
-name|FIQ_BIT
+name|PSR_F
 expr_stmt|;
 name|out
 label|:
@@ -389,7 +381,7 @@ name|oldirqstate
 operator|=
 name|disable_interrupts
 argument_list|(
-name|FIQ_BIT
+name|PSR_F
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are the currently active FIQ handler, then we 	 * need to save our registers and pop the next one back 	 * into the vector. 	 */
@@ -505,7 +497,7 @@ expr_stmt|;
 comment|/* Make sure FIQs are disabled when we return. */
 name|oldirqstate
 operator||=
-name|FIQ_BIT
+name|PSR_F
 expr_stmt|;
 block|}
 name|restore_interrupts

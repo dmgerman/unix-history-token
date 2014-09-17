@@ -1590,6 +1590,8 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+name|int
+parameter_list|,
 name|void
 modifier|*
 parameter_list|)
@@ -3352,6 +3354,39 @@ end_function
 begin_function
 specifier|static
 name|int
+name|iwn_is_3stream_device
+parameter_list|(
+name|struct
+name|iwn_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+comment|/* XXX for now only 5300, until the 5350 can be tested */
+if|if
+condition|(
+name|sc
+operator|->
+name|hw_type
+operator|==
+name|IWN_HW_REV_TYPE_5300
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|iwn_attach
 parameter_list|(
 name|device_t
@@ -4283,7 +4318,16 @@ name|sc
 operator|->
 name|ntxchains
 expr_stmt|;
-comment|/* 		 * The NICs we currently support cap out at 2x2 support 		 * separate from the chains being used. 		 * 		 * This is a total hack to work around that until some 		 * per-device method is implemented to return the 		 * actual stream support. 		 * 		 * XXX Note: the 5350 is a 3x3 device; so we shouldn't 		 * cap this!  But, anything that touches rates in the 		 * driver needs to be audited first before 3x3 is enabled. 		 */
+comment|/* 		 * Some of the 3 antenna devices (ie, the 4965) only supports 		 * 2x2 operation.  So correct the number of streams if 		 * it's not a 3-stream device. 		 */
+if|if
+condition|(
+operator|!
+name|iwn_is_3stream_device
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|ic
@@ -4312,6 +4356,7 @@ name|ic_txstream
 operator|=
 literal|2
 expr_stmt|;
+block|}
 name|ic
 operator|->
 name|ic_htcaps
@@ -14361,6 +14406,95 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|iwn_get_1stream_tx_antmask
+parameter_list|(
+name|struct
+name|iwn_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+return|return
+name|IWN_LSB
+argument_list|(
+name|sc
+operator|->
+name|txchainmask
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|iwn_get_2stream_tx_antmask
+parameter_list|(
+name|struct
+name|iwn_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|int
+name|tx
+decl_stmt|;
+comment|/* 	 * The '2 stream' setup is a bit .. odd. 	 * 	 * For NICs that support only 1 antenna, default to IWN_ANT_AB or 	 * the firmware panics (eg Intel 5100.) 	 * 	 * For NICs that support two antennas, we use ANT_AB. 	 * 	 * For NICs that support three antennas, we use the two that 	 * wasn't the default one. 	 * 	 * XXX TODO: if bluetooth (full concurrent) is enabled, restrict 	 * this to only one antenna. 	 */
+comment|/* Default - transmit on the other antennas */
+name|tx
+operator|=
+operator|(
+name|sc
+operator|->
+name|txchainmask
+operator|&
+operator|~
+name|IWN_LSB
+argument_list|(
+name|sc
+operator|->
+name|txchainmask
+argument_list|)
+operator|)
+expr_stmt|;
+comment|/* Now, if it's zero, set it to IWN_ANT_AB, so to not panic firmware */
+if|if
+condition|(
+name|tx
+operator|==
+literal|0
+condition|)
+name|tx
+operator|=
+name|IWN_ANT_AB
+expr_stmt|;
+comment|/* 	 * If the NIC is a two-stream TX NIC, configure the TX mask to 	 * the default chainmask 	 */
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|ntxchains
+operator|==
+literal|2
+condition|)
+name|tx
+operator|=
+name|sc
+operator|->
+name|txchainmask
+expr_stmt|;
+return|return
+operator|(
+name|tx
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Calculate the required PLCP value from the given rate,  * to the given node.  *  * This will take the node configuration (eg 11n, rate table  * setup, etc) into consideration.  */
 end_comment
@@ -14400,11 +14534,6 @@ name|ni
 operator|->
 name|ni_ic
 decl_stmt|;
-name|uint8_t
-name|txant1
-decl_stmt|,
-name|txant2
-decl_stmt|;
 name|uint32_t
 name|plcp
 init|=
@@ -14413,28 +14542,6 @@ decl_stmt|;
 name|int
 name|ridx
 decl_stmt|;
-comment|/* Use the first valid TX antenna. */
-name|txant1
-operator|=
-name|IWN_LSB
-argument_list|(
-name|sc
-operator|->
-name|txchainmask
-argument_list|)
-expr_stmt|;
-name|txant2
-operator|=
-name|IWN_LSB
-argument_list|(
-name|sc
-operator|->
-name|txchainmask
-operator|&
-operator|~
-name|txant1
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If it's an MCS rate, let's set the plcp correctly 	 * and set the relevant flags based on the node config. 	 */
 if|if
 condition|(
@@ -14497,7 +14604,23 @@ operator||=
 name|IWN_RFLAG_SGI
 expr_stmt|;
 block|}
-comment|/* 		 * If it's a two stream rate, enable TX on both 		 * antennas. 		 * 		 * XXX three stream rates? 		 */
+comment|/* 		 * Ensure the selected rate matches the link quality 		 * table entries being used. 		 */
+if|if
+condition|(
+name|rate
+operator|>
+literal|0x8f
+condition|)
+name|plcp
+operator||=
+name|IWN_RFLAG_ANT
+argument_list|(
+name|sc
+operator|->
+name|txchainmask
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|rate
@@ -14508,9 +14631,10 @@ name|plcp
 operator||=
 name|IWN_RFLAG_ANT
 argument_list|(
-name|txant1
-operator||
-name|txant2
+name|iwn_get_2stream_tx_antmask
+argument_list|(
+name|sc
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -14518,7 +14642,10 @@ name|plcp
 operator||=
 name|IWN_RFLAG_ANT
 argument_list|(
-name|txant1
+name|iwn_get_1stream_tx_antmask
+argument_list|(
+name|sc
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -14565,11 +14692,15 @@ operator||=
 name|IWN_RFLAG_CCK
 expr_stmt|;
 comment|/* Set antenna configuration */
+comment|/* XXX TODO: is this the right antenna to use for legacy? */
 name|plcp
 operator||=
 name|IWN_RFLAG_ANT
 argument_list|(
-name|txant1
+name|iwn_get_1stream_tx_antmask
+argument_list|(
+name|sc
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -16281,11 +16412,22 @@ name|res
 decl_stmt|,
 name|shift
 decl_stmt|;
+name|int
+name|tx_ok
+init|=
+literal|0
+decl_stmt|,
+name|tx_err
+init|=
+literal|0
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
 name|IWN_DEBUG_TRACE
+operator||
+name|IWN_DEBUG_XMIT
 argument_list|,
 literal|"->%s begin\n"
 argument_list|,
@@ -16491,6 +16633,19 @@ literal|"no mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: freeing m=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|ieee80211_tx_complete
 argument_list|(
 name|ni
@@ -16642,6 +16797,7 @@ name|shift
 operator|)
 condition|)
 return|return;
+comment|/* 	 * Walk the bitmap and calculate how many successful and failed 	 * attempts are made. 	 * 	 * Yes, the rate control code doesn't know these are A-MPDU 	 * subframes and that it's okay to fail some of these. 	 */
 name|ni
 operator|=
 name|tap
@@ -16698,6 +16854,9 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
+name|tx_err
+operator|++
+expr_stmt|;
 name|ieee80211_ratectl_tx_complete
 argument_list|(
 name|ni
@@ -16720,6 +16879,9 @@ block|{
 name|ifp
 operator|->
 name|if_opackets
+operator|++
+expr_stmt|;
+name|tx_ok
 operator|++
 expr_stmt|;
 name|ieee80211_ratectl_tx_complete
@@ -16749,10 +16911,16 @@ argument_list|(
 name|sc
 argument_list|,
 name|IWN_DEBUG_TRACE
+operator||
+name|IWN_DEBUG_XMIT
 argument_list|,
-literal|"->%s: end\n"
+literal|"->%s: end; %d ok; %d err\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|tx_ok
+argument_list|,
+name|tx_err
 argument_list|)
 expr_stmt|;
 block|}
@@ -18001,7 +18169,7 @@ argument_list|,
 name|IWN_DEBUG_XMIT
 argument_list|,
 literal|"%s: "
-literal|"qid %d idx %d retries %d nkill %d rate %x duration %d status %x\n"
+literal|"qid %d idx %d RTS retries %d ACK retries %d nkill %d rate %x duration %d status %x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -18012,6 +18180,10 @@ argument_list|,
 name|desc
 operator|->
 name|idx
+argument_list|,
+name|stat
+operator|->
+name|rtsfailcnt
 argument_list|,
 name|stat
 operator|->
@@ -18075,6 +18247,10 @@ argument_list|,
 name|stat
 operator|->
 name|nframes
+argument_list|,
+name|stat
+operator|->
+name|ackfailcnt
 argument_list|,
 operator|&
 name|stat
@@ -18179,7 +18355,7 @@ argument_list|,
 name|IWN_DEBUG_XMIT
 argument_list|,
 literal|"%s: "
-literal|"qid %d idx %d retries %d nkill %d rate %x duration %d status %x\n"
+literal|"qid %d idx %d RTS retries %d ACK retries %d nkill %d rate %x duration %d status %x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -18190,6 +18366,10 @@ argument_list|,
 name|desc
 operator|->
 name|idx
+argument_list|,
+name|stat
+operator|->
+name|rtsfailcnt
 argument_list|,
 name|stat
 operator|->
@@ -18274,6 +18454,10 @@ argument_list|,
 name|stat
 operator|->
 name|nframes
+argument_list|,
+name|stat
+operator|->
+name|ackfailcnt
 argument_list|,
 operator|&
 name|stat
@@ -18802,6 +18986,9 @@ parameter_list|,
 name|int
 name|nframes
 parameter_list|,
+name|int
+name|ackfailcnt
+parameter_list|,
 name|void
 modifier|*
 name|stat
@@ -18901,6 +19088,7 @@ name|shift
 decl_stmt|,
 name|start
 decl_stmt|;
+comment|/* XXX TODO: status is le16 field! Grr */
 name|DPRINTF
 argument_list|(
 name|sc
@@ -18912,6 +19100,55 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: nframes=%d, status=0x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|nframes
+argument_list|,
+operator|*
+name|status
+argument_list|)
+expr_stmt|;
+name|tap
+operator|=
+name|sc
+operator|->
+name|qid2tap
+index|[
+name|qid
+index|]
+expr_stmt|;
+name|tid
+operator|=
+name|tap
+operator|->
+name|txa_tid
+expr_stmt|;
+name|wn
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|tap
+operator|->
+name|txa_ni
+expr_stmt|;
+name|ni
+operator|=
+name|tap
+operator|->
+name|txa_ni
+expr_stmt|;
+comment|/* 	 * XXX TODO: ACK and RTS failures would be nice here! 	 */
+comment|/* 	 * A-MPDU single frame status - if we failed to transmit it 	 * in A-MPDU, then it may be a permanent failure. 	 * 	 * XXX TODO: check what the Linux iwlwifi driver does here; 	 * there's some permanent and temporary failures that may be 	 * handled differently. 	 */
 if|if
 condition|(
 name|nframes
@@ -18951,37 +19188,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 			 * If we completely fail a transmit, make sure a 			 * notification is pushed up to the rate control 			 * layer. 			 */
-name|tap
-operator|=
-name|sc
-operator|->
-name|qid2tap
-index|[
-name|qid
-index|]
-expr_stmt|;
-name|tid
-operator|=
-name|tap
-operator|->
-name|txa_tid
-expr_stmt|;
-name|wn
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|tap
-operator|->
-name|txa_ni
-expr_stmt|;
-name|ni
-operator|=
-name|tap
-operator|->
-name|txa_ni
-expr_stmt|;
 name|ieee80211_ratectl_tx_complete
 argument_list|(
 name|ni
@@ -18993,7 +19199,27 @@ argument_list|,
 name|IEEE80211_RATECTL_TX_FAILURE
 argument_list|,
 operator|&
-name|nframes
+name|ackfailcnt
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * If nframes=1, then we won't be getting a BA for 			 * this frame.  Ensure that we correctly update the 			 * rate control code with how many retries were 			 * needed to send it. 			 */
+name|ieee80211_ratectl_tx_complete
+argument_list|(
+name|ni
+operator|->
+name|ni_vap
+argument_list|,
+name|ni
+argument_list|,
+name|IEEE80211_RATECTL_TX_SUCCESS
+argument_list|,
+operator|&
+name|ackfailcnt
 argument_list|,
 name|NULL
 argument_list|)
@@ -19229,6 +19455,7 @@ operator|&
 literal|0xfff
 expr_stmt|;
 block|}
+comment|/* This is going nframes DWORDS into the descriptor? */
 name|seqno
 operator|=
 name|le32toh
@@ -19342,6 +19569,19 @@ argument_list|,
 operator|(
 literal|"no mbuf"
 operator|)
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: freeing m=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 name|ieee80211_tx_complete
@@ -21844,7 +22084,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * If it's an 11n rate, then for now we enable 	 * protection. 	 */
+comment|/* 	 * If it's an 11n rate - no protection. 	 * We'll do it via a specific 11n check. 	 */
 if|if
 condition|(
 name|rate
@@ -21854,7 +22094,7 @@ condition|)
 block|{
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -22898,6 +23138,29 @@ operator||=
 name|IWN_TX_NEED_RTS
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|rate
+operator|&
+name|IEEE80211_RATE_MCS
+operator|)
+operator|&&
+operator|(
+name|ic
+operator|->
+name|ic_htprotmode
+operator|==
+name|IEEE80211_PROT_RTSCTS
+operator|)
+condition|)
+block|{
+name|flags
+operator||=
+name|IWN_TX_NEED_RTS
+expr_stmt|;
+block|}
 comment|/* XXX HT protection? */
 if|if
 condition|(
@@ -23396,7 +23659,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_XMIT
 argument_list|,
-literal|"%s: qid %d idx %d len %d nsegs %d rate %04x plcp 0x%08x\n"
+literal|"%s: qid %d idx %d len %d nsegs %d flags 0x%08x rate 0x%04x plcp 0x%08x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -23415,6 +23678,8 @@ operator|.
 name|len
 argument_list|,
 name|nsegs
+argument_list|,
+name|flags
 argument_list|,
 name|rate
 argument_list|,
@@ -24904,6 +25169,8 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
+name|IWN_DEBUG_XMIT
+operator||
 name|IWN_DEBUG_TRACE
 argument_list|,
 literal|"->%s begin\n"
@@ -25015,6 +25282,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|IWN_DEBUG_TRACE
+operator||
+name|IWN_DEBUG_XMIT
 argument_list|,
 literal|"->%s: end\n"
 argument_list|,
@@ -25098,6 +25367,17 @@ decl_stmt|;
 name|IWN_LOCK_ASSERT
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -25207,6 +25487,17 @@ operator|=
 literal|5
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: done\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -26326,9 +26617,6 @@ name|struct
 name|iwn_cmd_link_quality
 name|linkq
 decl_stmt|;
-name|uint8_t
-name|txant
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -26348,16 +26636,6 @@ argument_list|,
 literal|"->%s begin\n"
 argument_list|,
 name|__func__
-argument_list|)
-expr_stmt|;
-comment|/* Use the first valid TX antenna. */
-name|txant
-operator|=
-name|IWN_LSB
-argument_list|(
-name|sc
-operator|->
-name|txchainmask
 argument_list|)
 expr_stmt|;
 name|memset
@@ -26383,61 +26661,19 @@ name|linkq
 operator|.
 name|antmsk_1stream
 operator|=
-name|txant
-expr_stmt|;
-comment|/* 	 * The '2 stream' setup is a bit .. odd. 	 * 	 * For NICs that support only 1 antenna, default to IWN_ANT_AB or 	 * the firmware panics (eg Intel 5100.) 	 * 	 * For NICs that support two antennas, we use ANT_AB. 	 * 	 * For NICs that support three antennas, we use the two that 	 * wasn't the default one. 	 * 	 * XXX TODO: if bluetooth (full concurrent) is enabled, restrict 	 * this to only one antenna. 	 */
-comment|/* So - if there's no secondary antenna, assume IWN_ANT_AB */
-comment|/* Default - transmit on the other antennas */
-name|linkq
-operator|.
-name|antmsk_2stream
-operator|=
-operator|(
-name|sc
-operator|->
-name|txchainmask
-operator|&
-operator|~
-name|IWN_LSB
+name|iwn_get_1stream_tx_antmask
 argument_list|(
 name|sc
-operator|->
-name|txchainmask
 argument_list|)
-operator|)
 expr_stmt|;
-comment|/* Now, if it's zero, set it to IWN_ANT_AB, so to not panic firmware */
-if|if
-condition|(
-name|linkq
-operator|.
-name|antmsk_2stream
-operator|==
-literal|0
-condition|)
 name|linkq
 operator|.
 name|antmsk_2stream
 operator|=
-name|IWN_ANT_AB
-expr_stmt|;
-comment|/* 	 * If the NIC is a two-stream TX NIC, configure the TX mask to 	 * the default chainmask 	 */
-elseif|else
-if|if
-condition|(
+name|iwn_get_2stream_tx_antmask
+argument_list|(
 name|sc
-operator|->
-name|ntxchains
-operator|==
-literal|2
-condition|)
-name|linkq
-operator|.
-name|antmsk_2stream
-operator|=
-name|sc
-operator|->
-name|txchainmask
+argument_list|)
 expr_stmt|;
 name|linkq
 operator|.
@@ -26577,6 +26813,21 @@ block|{
 name|uint32_t
 name|plcp
 decl_stmt|;
+comment|/* 		 * XXX TODO: ensure the last two slots are the two lowest 		 * rate entries, just for now. 		 */
+if|if
+condition|(
+name|i
+operator|==
+literal|14
+operator|||
+name|i
+operator|==
+literal|15
+condition|)
+name|txrate
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|is_11n
@@ -26605,23 +26856,6 @@ name|txrate
 index|]
 argument_list|)
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|IWN_DEBUG_XMIT
-argument_list|,
-literal|"%s: i=%d, txrate=%d, rate=0x%02x\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|i
-argument_list|,
-name|txrate
-argument_list|,
-name|rate
-argument_list|)
-expr_stmt|;
 comment|/* Do rate -> PLCP config mapping */
 name|plcp
 operator|=
@@ -26642,6 +26876,28 @@ name|i
 index|]
 operator|=
 name|plcp
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: i=%d, txrate=%d, rate=0x%02x, plcp=0x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|i
+argument_list|,
+name|txrate
+argument_list|,
+name|rate
+argument_list|,
+name|le32toh
+argument_list|(
+name|plcp
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 		 * The mimo field is an index into the table which 		 * indicates the first index where it and subsequent entries 		 * will not be using MIMO. 		 * 		 * Since we're filling linkq from 0..15 and we're filling 		 * from the higest MCS rates to the lowest rates, if we 		 * _are_ doing a dual-stream rate, set mimo to idx+1 (ie, 		 * the next entry.)  That way if the next entry is a non-MIMO 		 * entry, we're already pointing at it. 		 */
 if|if
@@ -26684,6 +26940,36 @@ name|txrate
 operator|--
 expr_stmt|;
 block|}
+comment|/* 	 * If we reached the end of the list and indeed we hit 	 * all MIMO rates (eg 5300 doing MCS23-15) then yes, 	 * set mimo to 15.  Setting it to 16 panics the firmware. 	 */
+if|if
+condition|(
+name|linkq
+operator|.
+name|mimo
+operator|>
+literal|15
+condition|)
+name|linkq
+operator|.
+name|mimo
+operator|=
+literal|15
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: mimo = %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|linkq
+operator|.
+name|mimo
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -26899,13 +27185,19 @@ name|linkq
 operator|.
 name|antmsk_1stream
 operator|=
-name|txant
+name|iwn_get_1stream_tx_antmask
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|linkq
 operator|.
 name|antmsk_2stream
 operator|=
-name|IWN_ANT_AB
+name|iwn_get_2stream_tx_antmask
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 name|linkq
 operator|.
@@ -26930,6 +27222,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 4ms */
 comment|/* Use lowest mandatory bit-rate. */
+comment|/* XXX rate table lookup? */
 if|if
 condition|(
 name|IEEE80211_IS_CHAN_5GHZ
@@ -28814,6 +29107,9 @@ name|struct
 name|iwn5000_cmd_txpower
 name|cmd
 decl_stmt|;
+name|int
+name|cmdid
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -28863,18 +29159,47 @@ argument_list|(
 name|sc
 argument_list|,
 name|IWN_DEBUG_CALIBRATE
+operator||
+name|IWN_DEBUG_XMIT
 argument_list|,
-literal|"%s: setting TX power\n"
+literal|"%s: setting TX power; rev=%d\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|IWN_UCODE_API
+argument_list|(
+name|sc
+operator|->
+name|ucode_rev
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IWN_UCODE_API
+argument_list|(
+name|sc
+operator|->
+name|ucode_rev
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|cmdid
+operator|=
+name|IWN_CMD_TXPOWER_DBM_V1
+expr_stmt|;
+else|else
+name|cmdid
+operator|=
+name|IWN_CMD_TXPOWER_DBM
 expr_stmt|;
 return|return
 name|iwn_cmd
 argument_list|(
 name|sc
 argument_list|,
-name|IWN_CMD_TXPOWER_DBM
+name|cmdid
 argument_list|,
 operator|&
 name|cmd
@@ -30035,6 +30360,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|IWN_DEBUG_CALIBRATE
+operator||
+name|IWN_DEBUG_XMIT
 argument_list|,
 literal|"%s: RX chains mask: theoretical=0x%x, actual=0x%x\n"
 argument_list|,
@@ -30797,6 +31124,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|IWN_DEBUG_CALIBRATE
+operator||
+name|IWN_DEBUG_XMIT
 argument_list|,
 literal|"setting differential gains Ant B/C: %x/%x (%x)\n"
 argument_list|,
@@ -33686,6 +34015,15 @@ operator|->
 name|hw_type
 operator|!=
 name|IWN_HW_REV_TYPE_4965
+operator|&&
+name|IWN_UCODE_API
+argument_list|(
+name|sc
+operator|->
+name|ucode_rev
+argument_list|)
+operator|>
+literal|1
 condition|)
 block|{
 name|txmask
@@ -33702,6 +34040,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|IWN_DEBUG_RESET
+operator||
+name|IWN_DEBUG_XMIT
 argument_list|,
 literal|"%s: configuring valid TX chains 0x%x\n"
 argument_list|,
@@ -34026,6 +34366,7 @@ name|ht_triple_mask
 operator|=
 literal|0xff
 expr_stmt|;
+comment|/* 	 * In active association mode, ensure that 	 * all the receive chains are enabled. 	 * 	 * Since we're not yet doing SMPS, don't allow the 	 * number of idle RX chains to be less than the active 	 * number. 	 */
 name|rxchain
 operator|=
 name|IWN_RXCHAIN_VALID
@@ -34037,12 +34378,16 @@ argument_list|)
 operator||
 name|IWN_RXCHAIN_MIMO_COUNT
 argument_list|(
-literal|2
+name|sc
+operator|->
+name|nrxchains
 argument_list|)
 operator||
 name|IWN_RXCHAIN_IDLE_COUNT
 argument_list|(
-literal|2
+name|sc
+operator|->
+name|nrxchains
 argument_list|)
 expr_stmt|;
 name|sc
@@ -34054,6 +34399,27 @@ operator|=
 name|htole16
 argument_list|(
 name|rxchain
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|IWN_DEBUG_RESET
+operator||
+name|IWN_DEBUG_XMIT
+argument_list|,
+literal|"%s: rxchainmask=0x%x, nrxchains=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sc
+operator|->
+name|rxchainmask
+argument_list|,
+name|sc
+operator|->
+name|nrxchains
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -41658,6 +42024,12 @@ name|ptr
 operator|++
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|ucode_rev
+operator|=
+name|rev
+expr_stmt|;
 comment|/* Check firmware API version. */
 if|if
 condition|(
@@ -42094,6 +42466,17 @@ name|hdr
 operator|->
 name|build
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|ucode_rev
+operator|=
+name|le32toh
+argument_list|(
+name|hdr
+operator|->
+name|rev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Select the closest supported alternative that is less than 	 * or equal to the specified one. 	 */
@@ -42821,6 +43204,21 @@ return|return
 name|error
 return|;
 block|}
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: ucode rev=0x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|sc
+operator|->
+name|ucode_rev
+argument_list|)
+expr_stmt|;
 comment|/* Make sure text and data sections fit in hardware memory. */
 if|if
 condition|(

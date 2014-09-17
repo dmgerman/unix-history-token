@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  *  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -933,12 +933,6 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* !defined(_KERNEL) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
 specifier|extern
 name|int
 name|acl
@@ -977,22 +971,6 @@ modifier|*
 name|buf
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-comment|/* !__STDC__ */
-specifier|extern
-name|int
-name|acl
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|facl
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-comment|/* defined(__STDC__) */
 ifdef|#
 directive|ifdef
 name|__cplusplus

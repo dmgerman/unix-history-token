@@ -149,51 +149,7 @@ directive|include
 file|"sdhci_if.h"
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|sdhci_softc
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|sdhci_softc
-block|{
-name|device_t
-name|dev
-decl_stmt|;
-comment|/* Controller device */
-name|struct
-name|resource
-modifier|*
-name|irq_res
-decl_stmt|;
-comment|/* IRQ resource */
-name|int
-name|irq_rid
-decl_stmt|;
-name|void
-modifier|*
-name|intrhand
-decl_stmt|;
-comment|/* Interrupt handle */
-name|int
-name|num_slots
-decl_stmt|;
-comment|/* Number of slots on this controller */
-name|struct
-name|sdhci_slot
-name|slots
-index|[
-literal|6
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_expr_stmt
-specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -212,10 +168,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sdhci_debug
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

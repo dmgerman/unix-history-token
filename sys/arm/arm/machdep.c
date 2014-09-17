@@ -2803,9 +2803,9 @@ name|cspr
 operator|=
 name|disable_interrupts
 argument_list|(
-name|I32_bit
+name|PSR_I
 operator||
-name|F32_bit
+name|PSR_F
 argument_list|)
 expr_stmt|;
 name|td
@@ -3475,9 +3475,9 @@ operator|(
 name|spsr
 operator|&
 operator|(
-name|I32_bit
+name|PSR_I
 operator||
-name|F32_bit
+name|PSR_F
 operator|)
 operator|)
 operator|!=

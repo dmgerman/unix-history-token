@@ -1284,8 +1284,6 @@ name|int
 name|chip_type
 decl_stmt|,
 name|pp_isaint
-decl_stmt|,
-name|pp_isadma
 decl_stmt|;
 name|sc
 operator|->
@@ -1489,10 +1487,6 @@ name|pp_isaint
 operator|=
 name|PP_CS8900_ISAINT
 expr_stmt|;
-name|pp_isadma
-operator|=
-name|PP_CS8900_ISADMA
-expr_stmt|;
 name|sc
 operator|->
 name|send_cmd
@@ -1505,10 +1499,6 @@ block|{
 name|pp_isaint
 operator|=
 name|PP_CS8920_ISAINT
-expr_stmt|;
-name|pp_isadma
-operator|=
-name|PP_CS8920_ISADMA
 expr_stmt|;
 name|sc
 operator|->
@@ -1893,7 +1883,6 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Temporary disabled 	 * 	if (drq>0) 		cs_writereg(sc, pp_isadma, drq); 	else { 		device_printf(dev, "incorrect drq\n",); 		return (0); 	} 	*/
 if|if
 condition|(
 name|bootverbose
@@ -3298,11 +3287,6 @@ decl_stmt|,
 name|length
 decl_stmt|;
 name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
-name|struct
 name|mbuf
 modifier|*
 name|m
@@ -3496,17 +3480,6 @@ literal|1
 operator|)
 operator|>>
 literal|1
-argument_list|)
-expr_stmt|;
-name|eh
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
 argument_list|)
 expr_stmt|;
 ifdef|#

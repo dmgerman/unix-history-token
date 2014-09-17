@@ -3496,6 +3496,31 @@ begin_comment
 comment|/* __ISO_C_VISIBLE>= 1999 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_function_decl
+name|long
+name|double
+name|lgammal_r
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|__END_DECLS
 end_macro

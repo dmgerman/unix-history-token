@@ -2658,6 +2658,12 @@ name|startcode
 decl_stmt|,
 name|startdata
 decl_stmt|;
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -2669,6 +2675,12 @@ name|p
 argument_list|,
 operator|&
 name|kp
+argument_list|)
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -3332,6 +3344,12 @@ decl_stmt|;
 name|segsz_t
 name|lsize
 decl_stmt|;
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3348,6 +3366,12 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * See comments in linprocfs_doprocstatus() regarding the 	 * computation of lsize. 	 */
@@ -3522,6 +3546,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3639,6 +3669,12 @@ name|p
 argument_list|,
 operator|&
 name|kp
+argument_list|)
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 name|sbuf_printf

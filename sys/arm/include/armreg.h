@@ -51,34 +51,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSR_USR26_MODE
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSR_FIQ26_MODE
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSR_IRQ26_MODE
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|PSR_SVC26_MODE
-value|0x00000003
-end_define
-
-begin_define
-define|#
-directive|define
 name|PSR_USR32_MODE
 value|0x00000010
 end_define
@@ -107,8 +79,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|PSR_MON32_MODE
+value|0x00000016
+end_define
+
+begin_define
+define|#
+directive|define
 name|PSR_ABT32_MODE
 value|0x00000017
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSR_HYP32_MODE
+value|0x0000001a
 end_define
 
 begin_define
@@ -135,23 +121,144 @@ end_define
 begin_define
 define|#
 directive|define
-name|PSR_FLAGS
-value|0xf0000000
+name|PSR_T
+value|0x00000020
 end_define
 
 begin_comment
-comment|/* flags */
+comment|/* Instruction set bit */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PSR_C_bit
-value|(1<< 29)
+name|PSR_F
+value|0x00000040
 end_define
 
 begin_comment
-comment|/* carry */
+comment|/* FIQ disable bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_I
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* IRQ disable bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_A
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Imprecise abort bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_E
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Data endianess bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_GE
+value|0x000f0000
+end_define
+
+begin_comment
+comment|/* Greater than or equal to bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_J
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Java bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_Q
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Sticky overflow bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_V
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Overflow bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_C
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Carry bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_Z
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Zero bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_N
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Negative bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSR_FLAGS
+value|0xf0000000
+end_define
+
+begin_comment
+comment|/* Flags mask. */
 end_comment
 
 begin_comment
@@ -1151,6 +1258,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_CONTROL_SW_ENABLE
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* SW: SWP instruction enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_CONTROL_BPRD_ENABLE
 value|0x00000800
 end_define
@@ -1206,6 +1324,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_CONTROL_HAF_ENABLE
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* HA: Hardware Access Flag Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_CONTROL_FI_ENABLE
 value|0x00200000
 end_define
@@ -1239,6 +1368,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_CONTROL_V_ENABLE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* VE: Interrupt vectors enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CONTROL_EX_BEND
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* EE: exception endianness */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_CONTROL_L2_ENABLE
 value|0x04000000
 end_define
@@ -1250,12 +1401,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPU_CONTROL_NMFI
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* NMFI: Non maskable FIQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CONTROL_TR_ENABLE
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* TRE: TEX Remap*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CPU_CONTROL_AF_ENABLE
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* Access Flag enable */
+comment|/* AFE: Access Flag enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CONTROL_TE_ENABLE
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* TE: Thumb Exception enable */
 end_comment
 
 begin_define
@@ -2185,6 +2369,64 @@ end_define
 
 begin_comment
 comment|/* Write-not-Read access (armv6+) */
+end_comment
+
+begin_comment
+comment|/* Fault status register definitions - v6+ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSR_STATUS_TO_IDX
+parameter_list|(
+name|fsr
+parameter_list|)
+value|(((fsr)& 0xF) | 			\ 				 (((fsr)& (1<< 10)>> (10 - 4))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSR_LPAE
+value|(1<<  9)
+end_define
+
+begin_comment
+comment|/* LPAE indicator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSR_WNR
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* Write-not-Read access */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSR_EXT
+value|(1<< 12)
+end_define
+
+begin_comment
+comment|/* DECERR/SLVERR for external*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSR_CM
+value|(1<< 13)
+end_define
+
+begin_comment
+comment|/* Cache maintenance fault */
 end_comment
 
 begin_comment

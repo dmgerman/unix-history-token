@@ -3119,7 +3119,9 @@ name|opcode
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|have_action
@@ -3144,7 +3146,9 @@ name|opcode
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 break|break;
@@ -3295,7 +3299,9 @@ literal|"ipfw: no IPv6 support in kernel\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EPROTONOSUPPORT
+operator|)
 return|;
 endif|#
 directive|endif
@@ -3310,7 +3316,9 @@ name|opcode
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -3328,7 +3336,9 @@ literal|"ipfw: missing action\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
@@ -3348,7 +3358,9 @@ name|cmdlen
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 end_function

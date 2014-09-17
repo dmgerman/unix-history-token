@@ -333,6 +333,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|vm_map_pmap_enter
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|,
+name|vm_offset_t
+name|addr
+parameter_list|,
+name|vm_prot_t
+name|prot
+parameter_list|,
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|pindex
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -7372,6 +7401,7 @@ comment|/*  *	vm_map_pmap_enter:  *  *	Preload the specified map's pmap with map
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vm_map_pmap_enter
 parameter_list|(

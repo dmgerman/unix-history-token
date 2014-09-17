@@ -18427,7 +18427,7 @@ operator|&
 name|BGE_FLAG_TBI
 condition|)
 block|{
-name|ifmedia_init_drv
+name|ifmedia_init
 argument_list|(
 operator|&
 name|sc

@@ -203,10 +203,11 @@ comment|//===------------------------------------------------------------------=
 comment|// PPC Specific MachineOperand flags.
 name|MO_NO_FLAG
 block|,
-comment|/// MO_DARWIN_STUB - On a symbol operand "FOO", this indicates that the
-comment|/// reference is actually to the "FOO$stub" symbol.  This is used for calls
-comment|/// and jumps to external functions on Tiger and earlier.
-name|MO_DARWIN_STUB
+comment|/// MO_PLT_OR_STUB - On a symbol operand "FOO", this indicates that the
+comment|/// reference is actually to the "FOO$stub" or "FOO@plt" symbol.  This is
+comment|/// used for calls and jumps to external functions on Tiger and earlier, and
+comment|/// for PIC calls on Linux and ELF systems.
+name|MO_PLT_OR_STUB
 init|=
 literal|1
 block|,

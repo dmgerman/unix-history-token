@@ -533,7 +533,6 @@ name|port_num
 operator|=
 name|ctl_ffz
 argument_list|(
-operator|&
 name|control_softc
 operator|->
 name|ctl_port_mask
@@ -553,7 +552,6 @@ operator|||
 operator|(
 name|ctl_set_mask
 argument_list|(
-operator|&
 name|control_softc
 operator|->
 name|ctl_port_mask
@@ -703,7 +701,6 @@ argument_list|)
 expr_stmt|;
 name|ctl_clear_mask
 argument_list|(
-operator|&
 name|control_softc
 operator|->
 name|ctl_port_mask
@@ -944,7 +941,6 @@ name|CTL_MAX_PORTS
 expr_stmt|;
 name|ctl_clear_mask
 argument_list|(
-operator|&
 name|control_softc
 operator|->
 name|ctl_port_mask

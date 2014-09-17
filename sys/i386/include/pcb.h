@@ -201,6 +201,22 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|susppcb
+block|{
+name|struct
+name|pcb
+name|sp_pcb
+decl_stmt|;
+name|union
+name|savefpu
+name|sp_fpususpend
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef

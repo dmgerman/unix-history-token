@@ -2309,7 +2309,7 @@ condition|(
 operator|(
 name|ifa
 operator|=
-name|ifa_ifwithnet_fib
+name|ifa_ifwithnet
 argument_list|(
 name|gateway
 argument_list|,
@@ -2886,52 +2886,11 @@ comment|/* INET */
 block|}
 end_function
 
-begin_comment
-comment|/*  * For both ifa_ifwithroute() routines, 'ifa' is returned referenced.  */
-end_comment
-
 begin_function
 name|struct
 name|ifaddr
 modifier|*
 name|ifa_ifwithroute
-parameter_list|(
-name|int
-name|flags
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|dst
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|gateway
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ifa_ifwithroute_fib
-argument_list|(
-name|flags
-argument_list|,
-name|dst
-argument_list|,
-name|gateway
-argument_list|,
-name|RT_DEFAULT_FIB
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|struct
-name|ifaddr
-modifier|*
-name|ifa_ifwithroute_fib
 parameter_list|(
 name|int
 name|flags
@@ -2984,7 +2943,7 @@ name|RTF_HOST
 condition|)
 name|ifa
 operator|=
-name|ifa_ifwithdstaddr_fib
+name|ifa_ifwithdstaddr
 argument_list|(
 name|dst
 argument_list|,
@@ -3010,7 +2969,7 @@ block|{
 comment|/* 		 * If we are adding a route to a remote net 		 * or host, the gateway may still be on the 		 * other end of a pt to pt link. 		 */
 name|ifa
 operator|=
-name|ifa_ifwithdstaddr_fib
+name|ifa_ifwithdstaddr
 argument_list|(
 name|gateway
 argument_list|,
@@ -3026,7 +2985,7 @@ name|NULL
 condition|)
 name|ifa
 operator|=
-name|ifa_ifwithnet_fib
+name|ifa_ifwithnet
 argument_list|(
 name|gateway
 argument_list|,
@@ -3524,7 +3483,7 @@ operator|&&
 operator|(
 name|ifa
 operator|=
-name|ifa_ifwithnet_fib
+name|ifa_ifwithnet
 argument_list|(
 name|ifpaddr
 argument_list|,
@@ -3644,7 +3603,7 @@ name|info
 operator|->
 name|rti_ifa
 operator|=
-name|ifa_ifwithroute_fib
+name|ifa_ifwithroute
 argument_list|(
 name|flags
 argument_list|,
@@ -3666,7 +3625,7 @@ name|info
 operator|->
 name|rti_ifa
 operator|=
-name|ifa_ifwithroute_fib
+name|ifa_ifwithroute
 argument_list|(
 name|flags
 argument_list|,

@@ -5291,14 +5291,12 @@ operator|->
 name|ftpc_rcount
 operator|++
 expr_stmt|;
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|fprc
 operator|->
 name|ftpc_acount
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -5453,14 +5451,12 @@ operator|->
 name|ftpc_rcount
 operator|++
 expr_stmt|;
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 operator|&
 name|fprc
 operator|->
 name|ftpc_acount
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -6456,7 +6452,7 @@ operator|->
 name|ftp_retired
 condition|)
 block|{
-name|atomic_add_64
+name|atomic_dec_64
 argument_list|(
 operator|&
 name|provider
@@ -6464,9 +6460,6 @@ operator|->
 name|ftp_proc
 operator|->
 name|ftpc_acount
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -6745,7 +6738,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Mark the provider to be removed in our post-processing step, mark it 	 * retired, and drop the active count on its proc. Marking it indicates 	 * that we should try to remove it; setting the retired flag indicates 	 * that we're done with this provider; dropping the active the proc 	 * releases our hold, and when this reaches zero (as it will during 	 * exit or exec) the proc and associated providers become defunct. 	 * 	 * We obviously need to take the bucket lock before the provider lock 	 * to perform the lookup, but we need to drop the provider lock 	 * before calling into the DTrace framework since we acquire the 	 * provider lock in callbacks invoked from the DTrace framework. The 	 * bucket lock therefore protects the integrity of the provider hash 	 * table. 	 */
-name|atomic_add_64
+name|atomic_dec_64
 argument_list|(
 operator|&
 name|fp
@@ -6753,9 +6746,6 @@ operator|->
 name|ftp_proc
 operator|->
 name|ftpc_acount
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|ASSERT
@@ -7111,12 +7101,10 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|atomic_add_32
+name|atomic_inc_32
 argument_list|(
 operator|&
 name|fasttrap_total
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -7126,13 +7114,10 @@ operator|>
 name|fasttrap_max
 condition|)
 block|{
-name|atomic_add_32
+name|atomic_dec_32
 argument_list|(
 operator|&
 name|fasttrap_total
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9017,6 +9002,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 			 * Report an error if the process doesn't exist 			 * or is actively being birthed. 			 */
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|pfind
@@ -9034,6 +9025,12 @@ name|p
 argument_list|,
 operator|&
 name|kp
+argument_list|)
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -9311,6 +9308,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 			 * Report an error if the process doesn't exist 			 * or is actively being birthed. 			 */
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|pfind
@@ -9328,6 +9331,12 @@ name|p
 argument_list|,
 operator|&
 name|kp
+argument_list|)
+expr_stmt|;
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
 argument_list|)
 expr_stmt|;
 if|if

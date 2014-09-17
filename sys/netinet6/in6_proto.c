@@ -804,10 +804,6 @@ block|,
 operator|.
 name|pr_output
 operator|=
-operator|(
-name|pr_output_t
-operator|*
-operator|)
 name|rip6_output
 block|,
 operator|.
@@ -872,10 +868,6 @@ block|,
 operator|.
 name|pr_output
 operator|=
-operator|(
-name|pr_output_t
-operator|*
-operator|)
 name|rip6_output
 block|,
 operator|.
@@ -1169,10 +1161,6 @@ block|,
 operator|.
 name|pr_output
 operator|=
-operator|(
-name|pr_output_t
-operator|*
-operator|)
 name|rip6_output
 block|,
 operator|.
@@ -1229,10 +1217,6 @@ block|,
 operator|.
 name|pr_output
 operator|=
-operator|(
-name|pr_output_t
-operator|*
-operator|)
 name|rip6_output
 block|,
 operator|.
@@ -1286,10 +1270,6 @@ block|,
 operator|.
 name|pr_output
 operator|=
-operator|(
-name|pr_output_t
-operator|*
-operator|)
 name|rip6_output
 block|,
 operator|.
@@ -1349,10 +1329,6 @@ block|,
 operator|.
 name|pr_output
 operator|=
-operator|(
-name|pr_output_t
-operator|*
-operator|)
 name|rip6_output
 block|,
 operator|.

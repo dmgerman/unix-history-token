@@ -12082,6 +12082,17 @@ name|b_bufobj
 operator|->
 name|bo_bsize
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bsize
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"bsize == 0, check bo->bo_bsize"
+operator|)
+argument_list|)
+expr_stmt|;
 name|offset
 operator|=
 name|blkno
@@ -12851,6 +12862,17 @@ else|:
 name|bo
 operator|->
 name|bo_bsize
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bsize
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"bsize == 0, check bo->bo_bsize"
+operator|)
+argument_list|)
 expr_stmt|;
 name|offset
 operator|=

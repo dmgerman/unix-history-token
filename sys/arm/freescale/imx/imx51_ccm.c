@@ -2425,5 +2425,23 @@ return|;
 block|}
 end_function
 
+begin_function
+name|uint32_t
+name|imx_ccm_ahb_hz
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|imx51_get_clock
+argument_list|(
+name|IMX51CLK_AHB_CLK_ROOT
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

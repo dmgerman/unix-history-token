@@ -1506,9 +1506,9 @@ name|sdhci_fdt_driver
 argument_list|,
 name|sdhci_fdt_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -31,7 +31,7 @@ end_ifndef
 
 begin_decl_stmt
 name|struct
-name|mouse_cursor
+name|vt_mouse_cursor
 name|vt_default_mouse_pointer
 init|=
 block|{
@@ -65,7 +65,7 @@ block|,
 comment|/* "_**_****" */
 literal|0x4c
 block|,
-comment|/* "_*__**__" */
+comment|/* "_*__**_ " */
 literal|0x0c
 block|,
 comment|/* " _ _**_ " */
@@ -108,12 +108,12 @@ comment|/* "________" */
 literal|0xff
 block|,
 comment|/* "________" */
-literal|0xff
+literal|0xfe
 block|,
-comment|/* "________" */
-literal|0x1e
+comment|/* "_______ " */
+literal|0x5e
 block|,
-comment|/* "   ____ " */
+comment|/* " _ ____ " */
 literal|0x0f
 block|,
 comment|/* "    ____" */
@@ -126,12 +126,12 @@ comment|/* "    ____" */
 block|}
 block|,
 operator|.
-name|w
+name|width
 operator|=
 literal|8
 block|,
 operator|.
-name|h
+name|height
 operator|=
 literal|13
 block|, }

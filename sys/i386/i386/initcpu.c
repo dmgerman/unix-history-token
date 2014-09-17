@@ -103,52 +103,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I586_CPU
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|CPU_WT_ALLOC
-argument_list|)
-end_if
-
-begin_function_decl
-name|void
-name|enable_K5_wt_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|enable_K6_wt_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|enable_K6_2_wt_alloc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -235,6 +189,55 @@ begin_comment
 comment|/* I486_CPU */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CPU_WT_ALLOC
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|static
+name|void
+name|enable_K5_wt_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|enable_K6_wt_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|enable_K6_2_wt_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -318,15 +321,9 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Must *NOT* be BSS or locore will bzero these after setting them */
-end_comment
-
 begin_decl_stmt
 name|int
 name|cpu
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -337,8 +334,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_feature
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -349,8 +344,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_feature2
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -361,8 +354,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|amd_feature
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -373,8 +364,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|amd_feature2
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -385,8 +374,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|amd_pminfo
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -397,8 +384,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|via_feature_rng
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -409,8 +394,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|via_feature_xcrypt
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -421,8 +404,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_high
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -432,9 +413,17 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|cpu_exthigh
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Highest arg to extended CPUID */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|cpu_id
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -445,8 +434,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_procinfo
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -457,8 +444,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_procinfo2
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -472,8 +457,6 @@ name|cpu_vendor
 index|[
 literal|20
 index|]
-init|=
-literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -484,8 +467,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|cpu_vendor_id
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -493,11 +474,48 @@ begin_comment
 comment|/* CPU vendor ID */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
+
+begin_decl_stmt
+name|u_int
+name|cpu_fxsr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SSE enabled */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cpu_mxcsr_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Valid bits in mxcsr */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|u_int
 name|cpu_clflush_line_size
 init|=
 literal|32
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|cpu_stdext_feature
 decl_stmt|;
 end_decl_stmt
 
@@ -529,6 +547,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* MONITOR minimum range size, bytes */
+end_comment
+
+begin_decl_stmt
+name|u_int
+name|cyrix_did
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Device ID of Cyrix CPU */
 end_comment
 
 begin_expr_stmt
@@ -572,37 +600,6 @@ literal|"VIA xcrypt feature available in CPU"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
-
-begin_decl_stmt
-name|u_int
-name|cpu_fxsr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* SSE enabled */
-end_comment
-
-begin_decl_stmt
-name|u_int
-name|cpu_mxcsr_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* valid bits in mxcsr */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1793,7 +1790,7 @@ operator|<<
 literal|11
 operator|)
 expr_stmt|;
-comment|/* 	 * Additioanlly, set EBRPRED, E2MMX and EAMD3D for WinChip 2 and 3. 	 */
+comment|/* 	 * Additionally, set EBRPRED, E2MMX and EAMD3D for WinChip 2 and 3. 	 */
 if|if
 condition|(
 name|CPUID_TO_MODEL
@@ -2106,6 +2103,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ppro_apic_used
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -2118,6 +2125,13 @@ name|u_int64_t
 name|apicbase
 decl_stmt|;
 comment|/* 	 * Local APIC should be disabled if it is not going to be used. 	 */
+if|if
+condition|(
+name|ppro_apic_used
+operator|!=
+literal|1
+condition|)
+block|{
 name|apicbase
 operator|=
 name|rdmsr
@@ -2137,6 +2151,58 @@ argument_list|,
 name|apicbase
 argument_list|)
 expr_stmt|;
+name|ppro_apic_used
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * If the local APIC is going to be used after being disabled above,  * re-enable it and don't disable it in the future.  */
+end_comment
+
+begin_function
+name|void
+name|ppro_reenable_apic
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|apicbase
+decl_stmt|;
+if|if
+condition|(
+name|ppro_apic_used
+operator|==
+literal|0
+condition|)
+block|{
+name|apicbase
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_APICBASE
+argument_list|)
+expr_stmt|;
+name|apicbase
+operator||=
+name|APICBASE_ENABLED
+expr_stmt|;
+name|wrmsr
+argument_list|(
+name|MSR_APICBASE
+argument_list|,
+name|apicbase
+argument_list|)
+expr_stmt|;
+name|ppro_apic_used
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2539,60 +2605,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Initialize CR4 (Control register 4) to enable SSE instructions.  */
-end_comment
-
-begin_function
-name|void
-name|enable_sse
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_ENABLE_SSE
-argument_list|)
-if|if
-condition|(
-operator|(
-name|cpu_feature
-operator|&
-name|CPUID_XMM
-operator|)
-operator|&&
-operator|(
-name|cpu_feature
-operator|&
-name|CPUID_FXSR
-operator|)
-condition|)
-block|{
-name|load_cr4
-argument_list|(
-name|rcr4
-argument_list|()
-operator||
-name|CR4_FXSR
-operator||
-name|CR4_XMM
-argument_list|)
-expr_stmt|;
-name|cpu_fxsr
-operator|=
-name|hw_instruction_sse
-operator|=
-literal|1
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-block|}
-end_function
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -2676,6 +2688,123 @@ condition|(
 name|cpu_vendor_id
 condition|)
 block|{
+case|case
+name|CPU_VENDOR_AMD
+case|:
+ifdef|#
+directive|ifdef
+name|CPU_WT_ALLOC
+if|if
+condition|(
+operator|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x0f0
+operator|)
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x0f0
+operator|)
+operator|<
+literal|0x60
+operator|)
+operator|&&
+operator|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x00f
+operator|)
+operator|>
+literal|3
+operator|)
+condition|)
+name|enable_K5_wt_alloc
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x0f0
+operator|)
+operator|>
+literal|0x80
+operator|)
+operator|||
+operator|(
+operator|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x0f0
+operator|)
+operator|==
+literal|0x80
+operator|)
+operator|&&
+operator|(
+name|cpu_id
+operator|&
+literal|0x00f
+operator|)
+operator|>
+literal|0x07
+operator|)
+condition|)
+name|enable_K6_2_wt_alloc
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x0f0
+operator|)
+operator|>
+literal|0x50
+condition|)
+name|enable_K6_wt_alloc
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+operator|(
+name|cpu_id
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0xa0
+condition|)
+comment|/* 				 * Make sure the TSC runs through 				 * suspension, otherwise we can't use 				 * it as timecounter 				 */
+name|wrmsr
+argument_list|(
+literal|0x1900
+argument_list|,
+name|rdmsr
+argument_list|(
+literal|0x1900
+argument_list|)
+operator||
+literal|0x20ULL
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|CPU_VENDOR_CENTAUR
 case|:
@@ -2894,9 +3023,56 @@ directive|endif
 default|default:
 break|break;
 block|}
-name|enable_sse
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_ENABLE_SSE
+argument_list|)
+if|if
+condition|(
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_XMM
+operator|)
+operator|&&
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_FXSR
+operator|)
+condition|)
+block|{
+name|load_cr4
+argument_list|(
+name|rcr4
 argument_list|()
+operator||
+name|CR4_FXSR
+operator||
+name|CR4_XMM
+argument_list|)
 expr_stmt|;
+name|cpu_fxsr
+operator|=
+name|hw_instruction_sse
+operator|=
+literal|1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|initializecpucache
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 comment|/* 	 * CPUID with %eax = 1, %ebx returns 	 * Bits 15-8: CLFLUSH line size 	 * 	(Value * 8 = cache line size in bytes) 	 */
 if|if
 condition|(
@@ -3110,6 +3286,7 @@ comment|/*  * Enable write allocate feature of AMD processors.  * Following two 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|enable_K5_wt_alloc
 parameter_list|(
@@ -3273,6 +3450,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|enable_K6_wt_alloc
 parameter_list|(
@@ -3449,6 +3627,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|enable_K6_2_wt_alloc
 parameter_list|(

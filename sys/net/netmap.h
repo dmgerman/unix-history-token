@@ -401,7 +401,7 @@ name|NIOCREGIF
 end_ifndef
 
 begin_comment
-comment|/*  * ioctl names and related fields  *  * NIOCTXSYNC, NIOCRXSYNC synchronize tx or rx queues,  *	whose identity is set in NIOCREGIF through nr_ringid.  *	These are non blocking and take no argument.  *  * NIOCGINFO takes a struct ifreq, the interface name is the input,  *	the outputs are number of queues and number of descriptor  *	for each queue (useful to set number of threads etc.).  *	The info returned is only advisory and may change before  *	the interface is bound to a file descriptor.  *  * NIOCREGIF takes an interface name within a struct nmre,  *	and activates netmap mode on the interface (if possible).  *  * The argument to NIOCGINFO/NIOCREGIF overlays struct ifreq so we  * can pass it down to other NIC-related ioctls.  *  * The actual argument (struct nmreq) has a number of options to request  * different functions.  * The following are used in NIOCREGIF when nr_cmd == 0:  *  * nr_name	(in)  *	The name of the port (em0, valeXXX:YYY, etc.)  *	limited to IFNAMSIZ for backward compatibility.  *  * nr_version	(in/out)  *	Must match NETMAP_API as used in the kernel, error otherwise.  *	Always returns the desired value on output.  *  * nr_tx_slots, nr_tx_slots, nr_tx_rings, nr_rx_rings (in/out)  *	On input, non-zero values may be used to reconfigure the port  *	according to the requested values, but this is not guaranteed.  *	On output the actual values in use are reported.  *  * nr_ringid (in)  *	Indicates how rings should be bound to the file descriptors.  *	If nr_flags != 0, then the low bits (in NETMAP_RING_MASK)  *	are used to indicate the ring number, and nr_flags specifies  *	the actual rings to bind. NETMAP_NO_TX_POLL is unaffected.  *  *	NOTE: THE FOLLOWING (nr_flags == 0) IS DEPRECATED:  *	If nr_flags == 0, NETMAP_HW_RING and NETMAP_SW_RING control  *	the binding as follows:  *	0 (default)			binds all physical rings  *	NETMAP_HW_RING | ring number	binds a single ring pair  *	NETMAP_SW_RING			binds only the host tx/rx rings  *  *	NETMAP_NO_TX_POLL can be OR-ed to make select()/poll() push  *		packets on tx rings only if POLLOUT is set.  *		The default is to push any pending packet.  *  *	NETMAP_DO_RX_POLL can be OR-ed to make select()/poll() release  *		packets on rx rings also when POLLIN is NOT set.  *		The default is to touch the rx ring only with POLLIN.  *		Note that this is the opposite of TX because it  *		reflects the common usage.  *  *	NOTE: NETMAP_PRIV_MEM IS DEPRECATED, use nr_arg2 instead.  *	NETMAP_PRIV_MEM is set on return for ports that do not use  *		the global memory allocator.  *		This information is not significant and applications  *		should look at the region id in nr_arg2  *  * nr_flags	is the recommended mode to indicate which rings should  *		be bound to a file descriptor. Values are NR_REG_*  *  * nr_arg1 (in)	The number of extra rings to be reserved.  *		Especially when allocating a VALE port the system only  *		allocates the amount of memory needed for the port.  *		If more shared memory rings are desired (e.g. for pipes),  *		the first invocation for the same basename/allocator  *		should specify a suitable number. Memory cannot be  *		extended after the first allocation without closing  *		all ports on the same region.  *  * nr_arg2 (in/out) The identity of the memory region used.  *		On input, 0 means the system decides autonomously,  *		other values may try to select a specific region.  *		On return the actual value is reported.  *		Region '1' is the global allocator, normally shared  *		by all interfaces. Other values are private regions.  *		If two ports the same region zero-copy is possible.  *  * nr_arg3 (in/out)	number of extra buffers to be allocated.  *  *  *  * nr_cmd (in)	if non-zero indicates a special command:  *	NETMAP_BDG_ATTACH	 and nr_name = vale*:ifname  *		attaches the NIC to the switch; nr_ringid specifies  *		which rings to use. Used by vale-ctl -a ...  *	    nr_arg1 = NETMAP_BDG_HOST also attaches the host port  *		as in vale-ctl -h ...  *  *	NETMAP_BDG_DETACH	and nr_name = vale*:ifname  *		disconnects a previously attached NIC.  *		Used by vale-ctl -d ...  *  *	NETMAP_BDG_LIST  *		list the configuration of VALE switches.  *  *	NETMAP_BDG_VNET_HDR  *		Set the virtio-net header length used by the client  *		of a VALE switch port.  *  * nr_arg1, nr_arg2, nr_arg3  (in/out)		command specific  *  *  *  */
+comment|/*  * ioctl names and related fields  *  * NIOCTXSYNC, NIOCRXSYNC synchronize tx or rx queues,  *	whose identity is set in NIOCREGIF through nr_ringid.  *	These are non blocking and take no argument.  *  * NIOCGINFO takes a struct ifreq, the interface name is the input,  *	the outputs are number of queues and number of descriptor  *	for each queue (useful to set number of threads etc.).  *	The info returned is only advisory and may change before  *	the interface is bound to a file descriptor.  *  * NIOCREGIF takes an interface name within a struct nmre,  *	and activates netmap mode on the interface (if possible).  *  * The argument to NIOCGINFO/NIOCREGIF overlays struct ifreq so we  * can pass it down to other NIC-related ioctls.  *  * The actual argument (struct nmreq) has a number of options to request  * different functions.  * The following are used in NIOCREGIF when nr_cmd == 0:  *  * nr_name	(in)  *	The name of the port (em0, valeXXX:YYY, etc.)  *	limited to IFNAMSIZ for backward compatibility.  *  * nr_version	(in/out)  *	Must match NETMAP_API as used in the kernel, error otherwise.  *	Always returns the desired value on output.  *  * nr_tx_slots, nr_tx_slots, nr_tx_rings, nr_rx_rings (in/out)  *	On input, non-zero values may be used to reconfigure the port  *	according to the requested values, but this is not guaranteed.  *	On output the actual values in use are reported.  *  * nr_ringid (in)  *	Indicates how rings should be bound to the file descriptors.  *	If nr_flags != 0, then the low bits (in NETMAP_RING_MASK)  *	are used to indicate the ring number, and nr_flags specifies  *	the actual rings to bind. NETMAP_NO_TX_POLL is unaffected.  *  *	NOTE: THE FOLLOWING (nr_flags == 0) IS DEPRECATED:  *	If nr_flags == 0, NETMAP_HW_RING and NETMAP_SW_RING control  *	the binding as follows:  *	0 (default)			binds all physical rings  *	NETMAP_HW_RING | ring number	binds a single ring pair  *	NETMAP_SW_RING			binds only the host tx/rx rings  *  *	NETMAP_NO_TX_POLL can be OR-ed to make select()/poll() push  *		packets on tx rings only if POLLOUT is set.  *		The default is to push any pending packet.  *  *	NETMAP_DO_RX_POLL can be OR-ed to make select()/poll() release  *		packets on rx rings also when POLLIN is NOT set.  *		The default is to touch the rx ring only with POLLIN.  *		Note that this is the opposite of TX because it  *		reflects the common usage.  *  *	NOTE: NETMAP_PRIV_MEM IS DEPRECATED, use nr_arg2 instead.  *	NETMAP_PRIV_MEM is set on return for ports that do not use  *		the global memory allocator.  *		This information is not significant and applications  *		should look at the region id in nr_arg2  *  * nr_flags	is the recommended mode to indicate which rings should  *		be bound to a file descriptor. Values are NR_REG_*  *  * nr_arg1 (in)	The number of extra rings to be reserved.  *		Especially when allocating a VALE port the system only  *		allocates the amount of memory needed for the port.  *		If more shared memory rings are desired (e.g. for pipes),  *		the first invocation for the same basename/allocator  *		should specify a suitable number. Memory cannot be  *		extended after the first allocation without closing  *		all ports on the same region.  *  * nr_arg2 (in/out) The identity of the memory region used.  *		On input, 0 means the system decides autonomously,  *		other values may try to select a specific region.  *		On return the actual value is reported.  *		Region '1' is the global allocator, normally shared  *		by all interfaces. Other values are private regions.  *		If two ports the same region zero-copy is possible.  *  * nr_arg3 (in/out)	number of extra buffers to be allocated.  *  *  *  * nr_cmd (in)	if non-zero indicates a special command:  *	NETMAP_BDG_ATTACH	 and nr_name = vale*:ifname  *		attaches the NIC to the switch; nr_ringid specifies  *		which rings to use. Used by vale-ctl -a ...  *	    nr_arg1 = NETMAP_BDG_HOST also attaches the host port  *		as in vale-ctl -h ...  *  *	NETMAP_BDG_DETACH	and nr_name = vale*:ifname  *		disconnects a previously attached NIC.  *		Used by vale-ctl -d ...  *  *	NETMAP_BDG_LIST  *		list the configuration of VALE switches.  *  *	NETMAP_BDG_VNET_HDR  *		Set the virtio-net header length used by the client  *		of a VALE switch port.  *  *	NETMAP_BDG_NEWIF  *		create a persistent VALE port with name nr_name.  *		Used by vale-ctl -n ...  *  *	NETMAP_BDG_DELIF  *		delete a persistent VALE port. Used by vale-ctl -d ...  *  * nr_arg1, nr_arg2, nr_arg3  (in/out)		command specific  *  *  *  */
 end_comment
 
 begin_comment
@@ -490,9 +490,9 @@ value|2
 comment|/* detach the NIC */
 define|#
 directive|define
-name|NETMAP_BDG_LOOKUP_REG
+name|NETMAP_BDG_REGOPS
 value|3
-comment|/* register lookup function */
+comment|/* register bridge callbacks */
 define|#
 directive|define
 name|NETMAP_BDG_LIST
@@ -508,6 +508,16 @@ directive|define
 name|NETMAP_BDG_OFFSET
 value|NETMAP_BDG_VNET_HDR
 comment|/* deprecated alias */
+define|#
+directive|define
+name|NETMAP_BDG_NEWIF
+value|6
+comment|/* create a virtual port */
+define|#
+directive|define
+name|NETMAP_BDG_DELIF
+value|7
+comment|/* destroy a virtual port */
 name|uint16_t
 name|nr_arg1
 decl_stmt|;
@@ -650,6 +660,17 @@ begin_comment
 comment|/* sync rx queues */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NIOCCONFIG
+value|_IOWR('i',150, struct nm_ifreq)
+end_define
+
+begin_comment
+comment|/* for ext. modules */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -692,6 +713,37 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Opaque structure that is passed to an external kernel  * module via ioctl(fd, NIOCCONFIG, req) for a user-owned  * bridge port (at this point ephemeral VALE interface).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_IFRDATA_LEN
+value|256
+end_define
+
+begin_struct
+struct|struct
+name|nm_ifreq
+block|{
+name|char
+name|nifr_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+name|char
+name|data
+index|[
+name|NM_IFRDATA_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

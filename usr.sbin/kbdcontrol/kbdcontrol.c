@@ -4233,8 +4233,6 @@ name|blank
 block|,
 name|blank
 block|,
-name|blank
-block|,
 name|keymap_path
 block|,
 name|NULL

@@ -1842,11 +1842,11 @@ literal|0
 operator|||
 name|ixv_rxd
 operator|<
-name|MIN_TXD
+name|MIN_RXD
 operator|||
 name|ixv_rxd
 operator|>
-name|MAX_TXD
+name|MAX_RXD
 condition|)
 block|{
 name|device_printf
@@ -8188,9 +8188,7 @@ expr_stmt|;
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(

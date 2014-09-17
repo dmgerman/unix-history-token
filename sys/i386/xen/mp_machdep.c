@@ -2333,29 +2333,17 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* set up SSE/NX */
+block|initializecpu();
+endif|#
+directive|endif
 comment|/* set up FPU state on the AP */
 name|npxinit
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* set up SSE registers */
-block|enable_sse();
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-operator|&&
-name|defined
-argument_list|(
-name|PAE
-argument_list|)
-comment|/* Enable the PTE no-execute bit. */
-block|if ((amd_feature& AMDID_NX) != 0) { 		uint64_t msr;  		msr = rdmsr(MSR_EFER) | EFER_NXE; 		wrmsr(MSR_EFER, msr); 	}
-endif|#
-directive|endif
 if|#
 directive|if
 literal|0

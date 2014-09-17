@@ -8,7 +8,7 @@ comment|/*  *	Copyright (c) 1984, 1986, 1987, 1988, 1989 AT&T  *	  All Rights Re
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2014 Garrett D'Amore<garrett@damore.org>  *  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -202,9 +202,6 @@ comment|/*  * User-level system call interface prototypes  */
 ifndef|#
 directive|ifndef
 name|_KERNEL
-ifdef|#
-directive|ifdef
-name|__STDC__
 specifier|extern
 name|int
 name|p_online
@@ -260,36 +257,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-specifier|extern
-name|int
-name|p_online
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|processor_info
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|processor_bind
-parameter_list|()
-function_decl|;
-specifier|extern
-name|processorid_t
-name|getcpuid
-parameter_list|()
-function_decl|;
-specifier|extern
-name|lgrpid_t
-name|gethomelgroup
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-comment|/* __STDC__ */
 else|#
 directive|else
 comment|/* _KERNEL */

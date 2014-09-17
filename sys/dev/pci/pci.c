@@ -621,54 +621,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pci_disable_msi
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pci_enable_msi
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|uint64_t
-name|address
-parameter_list|,
-name|uint16_t
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pci_enable_msix
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|u_int
-name|index
-parameter_list|,
-name|uint64_t
-name|address
-parameter_list|,
-name|uint32_t
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|pci_mask_msix
 parameter_list|(
 name|device_t
@@ -1094,6 +1046,27 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|pci_enable_msi
+argument_list|,
+name|pci_enable_msi_method
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pci_enable_msix
+argument_list|,
+name|pci_enable_msix_method
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pci_disable_msi
+argument_list|,
+name|pci_disable_msi_method
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|pci_remap_msix
 argument_list|,
 name|pci_remap_msix_method
@@ -1125,6 +1098,13 @@ argument_list|(
 name|pci_get_rid
 argument_list|,
 name|pci_get_rid_method
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pci_child_added
+argument_list|,
+name|pci_child_added_method
 argument_list|)
 block|,
 name|DEVMETHOD_END
@@ -6840,10 +6820,13 @@ end_comment
 
 begin_function
 name|void
-name|pci_enable_msix
+name|pci_enable_msix_method
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|device_t
+name|child
 parameter_list|,
 name|u_int
 name|index
@@ -6862,7 +6845,7 @@ name|dinfo
 init|=
 name|device_get_ivars
 argument_list|(
-name|dev
+name|child
 argument_list|)
 decl_stmt|;
 name|struct
@@ -6947,7 +6930,7 @@ expr_stmt|;
 comment|/* Enable MSI -> HT mapping. */
 name|pci_ht_map_msi
 argument_list|(
-name|dev
+name|child
 argument_list|,
 name|address
 argument_list|)
@@ -9598,10 +9581,13 @@ end_comment
 
 begin_function
 name|void
-name|pci_enable_msi
+name|pci_enable_msi_method
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|device_t
+name|child
 parameter_list|,
 name|uint64_t
 name|address
@@ -9617,7 +9603,7 @@ name|dinfo
 init|=
 name|device_get_ivars
 argument_list|(
-name|dev
+name|child
 argument_list|)
 decl_stmt|;
 name|struct
@@ -9635,7 +9621,7 @@ decl_stmt|;
 comment|/* Write data and address values. */
 name|pci_write_config
 argument_list|(
-name|dev
+name|child
 argument_list|,
 name|msi
 operator|->
@@ -9661,7 +9647,7 @@ condition|)
 block|{
 name|pci_write_config
 argument_list|(
-name|dev
+name|child
 argument_list|,
 name|msi
 operator|->
@@ -9678,7 +9664,7 @@ argument_list|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|dev
+name|child
 argument_list|,
 name|msi
 operator|->
@@ -9695,7 +9681,7 @@ block|}
 else|else
 name|pci_write_config
 argument_list|(
-name|dev
+name|child
 argument_list|,
 name|msi
 operator|->
@@ -9717,7 +9703,7 @@ name|PCIM_MSICTRL_MSI_ENABLE
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|dev
+name|child
 argument_list|,
 name|msi
 operator|->
@@ -9735,7 +9721,7 @@ expr_stmt|;
 comment|/* Enable MSI -> HT mapping. */
 name|pci_ht_map_msi
 argument_list|(
-name|dev
+name|child
 argument_list|,
 name|address
 argument_list|)
@@ -9745,10 +9731,13 @@ end_function
 
 begin_function
 name|void
-name|pci_disable_msi
+name|pci_disable_msi_method
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|device_t
+name|child
 parameter_list|)
 block|{
 name|struct
@@ -9758,7 +9747,7 @@ name|dinfo
 init|=
 name|device_get_ivars
 argument_list|(
-name|dev
+name|child
 argument_list|)
 decl_stmt|;
 name|struct
@@ -9776,7 +9765,7 @@ decl_stmt|;
 comment|/* Disable MSI -> HT mapping. */
 name|pci_ht_map_msi
 argument_list|(
-name|dev
+name|child
 argument_list|,
 literal|0
 argument_list|)
@@ -9791,7 +9780,7 @@ name|PCIM_MSICTRL_MSI_ENABLE
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|dev
+name|child
 argument_list|,
 name|msi
 operator|->
@@ -17625,7 +17614,29 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|pci_child_added
+argument_list|(
+name|dinfo
+operator|->
+name|cfg
+operator|.
+name|dev
+argument_list|)
+expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
+name|pci_child_added_method
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+block|{  }
 end_function
 
 begin_function

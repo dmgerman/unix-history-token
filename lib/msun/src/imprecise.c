@@ -121,14 +121,6 @@ end_define
 begin_expr_stmt
 name|DECLARE_IMPRECISE
 argument_list|(
-name|lgamma
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DECLARE_IMPRECISE
-argument_list|(
 name|tgamma
 argument_list|)
 expr_stmt|;

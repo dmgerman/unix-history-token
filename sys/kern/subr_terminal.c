@@ -2010,7 +2010,26 @@ name|consdev
 modifier|*
 name|cp
 parameter_list|)
-block|{  }
+block|{
+name|struct
+name|terminal
+modifier|*
+name|tm
+init|=
+name|cp
+operator|->
+name|cn_arg
+decl_stmt|;
+name|tm
+operator|->
+name|tm_class
+operator|->
+name|tc_cngrab
+argument_list|(
+name|tm
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -2023,7 +2042,26 @@ name|consdev
 modifier|*
 name|cp
 parameter_list|)
-block|{  }
+block|{
+name|struct
+name|terminal
+modifier|*
+name|tm
+init|=
+name|cp
+operator|->
+name|cn_arg
+decl_stmt|;
+name|tm
+operator|->
+name|tm_class
+operator|->
+name|tc_cnungrab
+argument_list|(
+name|tm
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function

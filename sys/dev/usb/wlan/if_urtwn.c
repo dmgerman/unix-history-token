@@ -809,6 +809,13 @@ block|,
 comment|/* URTWN_RTL8188E */
 name|URTWN_RTL8188E_DEV
 argument_list|(
+name|DLINK
+argument_list|,
+name|DWA125D1
+argument_list|)
+block|,
+name|URTWN_RTL8188E_DEV
+argument_list|(
 name|REALTEK
 argument_list|,
 name|RTL8188ETV
@@ -3893,6 +3900,32 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * This should not happen since we setup our Rx filter 		 * to not receive these frames. 		 */
+name|ifp
+operator|->
+name|if_ierrors
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|pktlen
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|wh
+argument_list|)
+operator|||
+name|pktlen
+operator|>
+name|MCLBYTES
+condition|)
+block|{
 name|ifp
 operator|->
 name|if_ierrors

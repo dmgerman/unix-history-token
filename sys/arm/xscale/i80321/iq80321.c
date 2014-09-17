@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -1290,9 +1296,9 @@ name|void
 operator|)
 name|disable_interrupts
 argument_list|(
-name|I32_bit
+name|PSR_I
 operator||
-name|F32_bit
+name|PSR_F
 argument_list|)
 expr_stmt|;
 operator|*

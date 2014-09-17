@@ -2920,6 +2920,7 @@ begin_function_decl
 name|int
 name|in6_addrscope
 parameter_list|(
+specifier|const
 name|struct
 name|in6_addr
 modifier|*

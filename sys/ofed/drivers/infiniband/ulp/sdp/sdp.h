@@ -3451,6 +3451,12 @@ begin_comment
 comment|/* sdp_zcopy.c */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|kiocb
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|sdp_sendmsg_zcopy

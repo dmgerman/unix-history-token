@@ -196,7 +196,7 @@ begin_define
 define|#
 directive|define
 name|GT_CNTKCTL_EVNTI
-value|(1<< 4)
+value|(0xf<< 4)
 end_define
 
 begin_comment
@@ -272,6 +272,9 @@ decl_stmt|;
 name|struct
 name|eventtimer
 name|et
+decl_stmt|;
+name|bool
+name|physical
 decl_stmt|;
 block|}
 struct|;
@@ -392,7 +395,6 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|get_freq
 parameter_list|(
@@ -402,6 +404,7 @@ block|{
 name|uint32_t
 name|val
 decl_stmt|;
+comment|/* cntfrq */
 asm|__asm volatile("mrc p15, 0, %0, c14, c0, 0" : "=r" (val));
 return|return
 operator|(
@@ -413,53 +416,28 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
-name|int
-name|set_freq
-parameter_list|(
-name|uint32_t
-name|val
-parameter_list|)
-block|{
-asm|__asm volatile("mcr p15, 0, %[val], c14, c0, 0" : :
-index|[
-name|val
-index|]
-literal|"r"
-operator|(
-name|val
-operator|)
-block|)
-function|;
-end_function
-
-begin_expr_stmt
-name|isb
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
-name|val
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}   static
-specifier|inline
 name|long
-name|get_cntpct
+name|get_cntxct
 parameter_list|(
-name|void
+name|bool
+name|physical
 parameter_list|)
 block|{
 name|uint64_t
 name|val
 decl_stmt|;
+name|isb
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|physical
+condition|)
+comment|/* cntpct */
 asm|__asm volatile("mrrc p15, 0, %Q0, %R0, c14" : "=r" (val));
+else|else
+comment|/* cntvct */
+asm|__asm volatile("mrrc p15, 1, %Q0, %R0, c14" : "=r" (val));
 return|return
 operator|(
 name|val
@@ -470,14 +448,21 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|int
 name|set_ctrl
 parameter_list|(
 name|uint32_t
 name|val
+parameter_list|,
+name|bool
+name|physical
 parameter_list|)
 block|{
+if|if
+condition|(
+name|physical
+condition|)
+comment|/* cntp_ctl */
 asm|__asm volatile("mcr p15, 0, %[val], c14, c2, 1" : :
 index|[
 name|val
@@ -490,6 +475,24 @@ block|)
 function|;
 end_function
 
+begin_else
+else|else
+comment|/* cntv_ctl */
+asm|__asm volatile("mcr p15, 0, %[val], c14, c3, 1" : :
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|val
+operator|)
+end_else
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_expr_stmt
 name|isb
 argument_list|()
@@ -506,14 +509,21 @@ end_return
 
 begin_function
 unit|}  static
-specifier|inline
 name|int
 name|set_tval
 parameter_list|(
 name|uint32_t
 name|val
+parameter_list|,
+name|bool
+name|physical
 parameter_list|)
 block|{
+if|if
+condition|(
+name|physical
+condition|)
+comment|/* cntp_tval */
 asm|__asm volatile("mcr p15, 0, %[val], c14, c2, 0" : :
 index|[
 name|val
@@ -526,6 +536,24 @@ block|)
 function|;
 end_function
 
+begin_else
+else|else
+comment|/* cntv_tval */
+asm|__asm volatile("mcr p15, 0, %[val], c14, c3, 0" : :
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|val
+operator|)
+end_else
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_expr_stmt
 name|isb
 argument_list|()
@@ -542,17 +570,25 @@ end_return
 
 begin_function
 unit|}  static
-specifier|inline
 name|int
 name|get_ctrl
 parameter_list|(
-name|void
+name|bool
+name|physical
 parameter_list|)
 block|{
 name|uint32_t
 name|val
 decl_stmt|;
+if|if
+condition|(
+name|physical
+condition|)
+comment|/* cntp_ctl */
 asm|__asm volatile("mrc p15, 0, %0, c14, c2, 1" : "=r" (val));
+else|else
+comment|/* cntv_ctl */
+asm|__asm volatile("mrc p15, 0, %0, c14, c3, 1" : "=r" (val));
 return|return
 operator|(
 name|val
@@ -563,28 +599,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
-name|int
-name|get_tval
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uint32_t
-name|val
-decl_stmt|;
-asm|__asm volatile("mrc p15, 0, %0, c14, c2, 0" : "=r" (val));
-return|return
-operator|(
-name|val
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
 name|void
 name|disable_user_access
 parameter_list|(
@@ -630,8 +644,12 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|get_cntpct
-argument_list|()
+name|get_cntxct
+argument_list|(
+name|arm_tmr_sc
+operator|->
+name|physical
+argument_list|)
 operator|)
 return|;
 block|}
@@ -700,7 +718,11 @@ expr_stmt|;
 name|ctrl
 operator|=
 name|get_ctrl
-argument_list|()
+argument_list|(
+name|sc
+operator|->
+name|physical
+argument_list|)
 expr_stmt|;
 name|ctrl
 operator|&=
@@ -714,11 +736,19 @@ expr_stmt|;
 name|set_tval
 argument_list|(
 name|counts
+argument_list|,
+name|sc
+operator|->
+name|physical
 argument_list|)
 expr_stmt|;
 name|set_ctrl
 argument_list|(
 name|ctrl
+argument_list|,
+name|sc
+operator|->
+name|physical
 argument_list|)
 expr_stmt|;
 return|return
@@ -746,13 +776,33 @@ modifier|*
 name|et
 parameter_list|)
 block|{
+name|struct
+name|arm_tmr_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|int
 name|ctrl
 decl_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|arm_tmr_softc
+operator|*
+operator|)
+name|et
+operator|->
+name|et_priv
+expr_stmt|;
 name|ctrl
 operator|=
 name|get_ctrl
-argument_list|()
+argument_list|(
+name|sc
+operator|->
+name|physical
+argument_list|)
 expr_stmt|;
 name|ctrl
 operator|&=
@@ -761,6 +811,10 @@ expr_stmt|;
 name|set_ctrl
 argument_list|(
 name|ctrl
+argument_list|,
+name|sc
+operator|->
+name|physical
 argument_list|)
 expr_stmt|;
 return|return
@@ -801,7 +855,11 @@ expr_stmt|;
 name|ctrl
 operator|=
 name|get_ctrl
-argument_list|()
+argument_list|(
+name|sc
+operator|->
+name|physical
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -817,6 +875,10 @@ expr_stmt|;
 name|set_ctrl
 argument_list|(
 name|ctrl
+argument_list|,
+name|sc
+operator|->
+name|physical
 argument_list|)
 expr_stmt|;
 block|}
@@ -1057,12 +1119,17 @@ name|ENXIO
 operator|)
 return|;
 block|}
-empty_stmt|;
+name|sc
+operator|->
+name|physical
+operator|=
+name|true
+expr_stmt|;
 name|arm_tmr_sc
 operator|=
 name|sc
 expr_stmt|;
-comment|/* Setup secure and non-secure IRQs handler */
+comment|/* Setup secure, non-secure and virtual IRQs handler */
 for|for
 control|(
 name|i
@@ -1071,7 +1138,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|2
+literal|3
 condition|;
 name|i
 operator|++
@@ -1433,8 +1500,12 @@ name|counts_per_usec
 expr_stmt|;
 name|first
 operator|=
-name|get_cntpct
-argument_list|()
+name|get_cntxct
+argument_list|(
+name|arm_tmr_sc
+operator|->
+name|physical
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1445,8 +1516,12 @@ condition|)
 block|{
 name|last
 operator|=
-name|get_cntpct
-argument_list|()
+name|get_cntxct
+argument_list|(
+name|arm_tmr_sc
+operator|->
+name|physical
+argument_list|)
 expr_stmt|;
 name|counts
 operator|-=

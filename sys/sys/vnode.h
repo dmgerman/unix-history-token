@@ -1769,6 +1769,16 @@ parameter_list|)
 value|lockallowshare((vp)->v_vnlock)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VN_LOCK_DSHARE
+parameter_list|(
+name|vp
+parameter_list|)
+value|lockdisableshare((vp)->v_vnlock)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -3710,25 +3710,6 @@ block|{
 goto|goto
 name|noerror
 goto|;
-comment|/* 		 * Some Samsung SSDs report supported Asynchronous Notification, 		 * but return ABORT on attempt to enable it. 		 */
-block|}
-elseif|else
-if|if
-condition|(
-name|softc
-operator|->
-name|action
-operator|==
-name|PROBE_SETAN
-operator|&&
-name|status
-operator|==
-name|CAM_ATA_STATUS_ERROR
-condition|)
-block|{
-goto|goto
-name|noerror
-goto|;
 comment|/* 		 * SES and SAF-TE SEPs have different IDENTIFY commands, 		 * but SATA specification doesn't tell how to identify them. 		 * Until better way found, just try another if first fail. 		 */
 block|}
 elseif|else
@@ -5761,6 +5742,14 @@ name|PROBE_SETDMAAA
 case|:
 if|if
 condition|(
+name|path
+operator|->
+name|device
+operator|->
+name|protocol
+operator|!=
+name|PROTO_ATA
+operator|&&
 operator|(
 name|ident_buf
 operator|->
@@ -6492,9 +6481,19 @@ expr_stmt|;
 comment|/* Remember what transport thinks about AEN. */
 if|if
 condition|(
+operator|(
 name|caps
 operator|&
 name|CTS_SATA_CAPS_H_AN
+operator|)
+operator|&&
+name|path
+operator|->
+name|device
+operator|->
+name|protocol
+operator|!=
+name|PROTO_ATA
 condition|)
 name|path
 operator|->

@@ -62,8 +62,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vd_bitbltchr_t
-name|vt_fb_bitbltchr
+name|vd_bitblt_text_t
+name|vt_fb_bitblt_text
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vd_bitblt_bmp_t
+name|vt_fb_bitblt_bitmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vd_drawrect_t
+name|vt_fb_drawrect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vd_setpixel_t
+name|vt_fb_setpixel
 decl_stmt|;
 end_decl_stmt
 

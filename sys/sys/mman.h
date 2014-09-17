@@ -975,6 +975,9 @@ name|struct
 name|timespec
 name|shm_birthtime
 decl_stmt|;
+name|ino_t
+name|shm_ino
+decl_stmt|;
 name|struct
 name|label
 modifier|*

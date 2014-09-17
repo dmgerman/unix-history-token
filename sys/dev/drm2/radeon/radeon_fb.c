@@ -1297,6 +1297,15 @@ expr_stmt|;
 name|free
 argument_list|(
 name|info
+operator|->
+name|fb_priv
+argument_list|,
+name|DRM_MEM_KMS
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|info
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|)

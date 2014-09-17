@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -136,7 +142,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_page.h>
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
 end_include
 
 begin_include
@@ -148,7 +160,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
+file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_pager.h>
 end_include
 
 begin_include
@@ -530,6 +548,11 @@ operator|.
 name|vop_fsync
 operator|=
 name|ext2_fsync
+block|,
+operator|.
+name|vop_getpages
+operator|=
+name|vnode_pager_local_getpages
 block|,
 operator|.
 name|vop_getattr

@@ -5888,9 +5888,7 @@ expr_stmt|;
 comment|/* IFQ_SET_READY(&ifp->if_snd); */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(

@@ -537,6 +537,17 @@ begin_comment
 comment|/* 0x20 can send broadcast packets */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_NODEFAULTFLOWID
+value|0x40
+end_define
+
+begin_comment
+comment|/* Don't set the flowid from inp */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1192,7 +1203,7 @@ name|struct
 name|socket
 modifier|*
 parameter_list|,
-name|u_long
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

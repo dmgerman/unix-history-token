@@ -698,6 +698,8 @@ name|struct
 name|socket
 modifier|*
 name|so
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2420,6 +2422,8 @@ name|struct
 name|socket
 modifier|*
 name|so
+parameter_list|,
+modifier|...
 parameter_list|)
 block|{
 name|struct
@@ -3506,6 +3510,8 @@ name|RTAX_DST
 index|]
 argument_list|,
 literal|1
+argument_list|,
+name|RT_ALL_FIBS
 argument_list|)
 expr_stmt|;
 if|if
@@ -5947,13 +5953,15 @@ name|ifp
 operator|->
 name|if_drv_flags
 expr_stmt|;
+name|if_data_copy
+argument_list|(
+name|ifp
+argument_list|,
+operator|&
 name|ifm
 operator|->
 name|ifm_data
-operator|=
-name|ifp
-operator|->
-name|if_data
+argument_list|)
 expr_stmt|;
 name|ifm
 operator|->
@@ -7739,12 +7747,12 @@ operator|->
 name|ifm_data
 expr_stmt|;
 block|}
-operator|*
-name|ifd
-operator|=
+name|if_data_copy
+argument_list|(
 name|ifp
-operator|->
-name|if_data
+argument_list|,
+name|ifd
+argument_list|)
 expr_stmt|;
 comment|/* Some drivers still use ifqueue(9), add its stats. */
 name|ifd
@@ -7926,12 +7934,12 @@ operator|->
 name|ifm_data
 expr_stmt|;
 block|}
-operator|*
-name|ifd
-operator|=
+name|if_data_copy
+argument_list|(
 name|ifp
-operator|->
-name|if_data
+argument_list|,
+name|ifd
+argument_list|)
 expr_stmt|;
 comment|/* Some drivers still use ifqueue(9), add its stats. */
 name|ifd

@@ -3281,7 +3281,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|if_initname_drv
+name|if_initname
 argument_list|(
 name|ifp
 argument_list|,
@@ -3501,7 +3501,7 @@ name|ifp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Tell the upper layer(s) we support long frames. 	 * Must appear after the call to ether_ifattach_drv() because 	 * ether_ifattach_drv() sets ifi_hdrlen to the default value. 	 */
+comment|/* 	 * Tell the upper layer(s) we support long frames. 	 * Must appear after the call to ether_ifattach() because 	 * ether_ifattach() sets ifi_hdrlen to the default value. 	 */
 name|if_setifheaderlen
 argument_list|(
 name|ifp
@@ -3623,7 +3623,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|ether_ifattach_drv
+name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
@@ -3819,7 +3819,7 @@ name|nfe_tq
 operator|=
 name|NULL
 expr_stmt|;
-name|ether_ifdetach_drv
+name|ether_ifdetach
 argument_list|(
 name|ifp
 argument_list|)
@@ -3966,7 +3966,7 @@ operator|->
 name|nfe_stat_ch
 argument_list|)
 expr_stmt|;
-name|ether_ifdetach_drv
+name|ether_ifdetach
 argument_list|(
 name|ifp
 argument_list|)
@@ -4040,7 +4040,7 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
-name|if_free_drv
+name|if_free
 argument_list|(
 name|ifp
 argument_list|)
@@ -9250,7 +9250,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ifmedia_ioctl_drv
+name|ifmedia_ioctl
 argument_list|(
 name|ifp
 argument_list|,
@@ -9739,7 +9739,7 @@ break|break;
 default|default:
 name|error
 operator|=
-name|ether_ioctl_drv
+name|ether_ioctl
 argument_list|(
 name|ifp
 argument_list|,

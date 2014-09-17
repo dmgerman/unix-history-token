@@ -21532,13 +21532,13 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"devq_openings %d\n"
+literal|"allocated     %d\n"
 argument_list|,
 name|ccb
 operator|->
 name|cgds
 operator|.
-name|devq_openings
+name|allocated
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -21554,13 +21554,13 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"devq_queued   %d\n"
+literal|"queued        %d\n"
 argument_list|,
 name|ccb
 operator|->
 name|cgds
 operator|.
-name|devq_queued
+name|queued
 argument_list|)
 expr_stmt|;
 name|fprintf

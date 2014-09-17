@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|VM_PHYSSEG_MAX
-value|31
+value|63
 end_define
 
 begin_comment

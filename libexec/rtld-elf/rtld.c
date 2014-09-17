@@ -13164,7 +13164,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Process the non-PLT relocations. */
+comment|/* Process the non-PLT non-IFUNC relocations. */
 if|if
 condition|(
 name|reloc_non_plt
@@ -13280,6 +13280,32 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* 	 * Process the non-PLT IFUNC relocations.  The relocations are 	 * processed in two phases, because IFUNC resolvers may 	 * reference other symbols, which must be readily processed 	 * before resolvers are called. 	 */
+if|if
+condition|(
+name|obj
+operator|->
+name|non_plt_gnu_ifunc
+operator|&&
+name|reloc_non_plt
+argument_list|(
+name|obj
+argument_list|,
+name|rtldobj
+argument_list|,
+name|flags
+operator||
+name|SYMLOOK_IFUNC
+argument_list|,
+name|lockstate
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -14194,7 +14220,7 @@ name|fd
 decl_stmt|;
 name|dbg
 argument_list|(
-literal|"%s('%s', '%s', fdp)\n"
+literal|"%s('%s', '%s', fdp)"
 argument_list|,
 name|__func__
 argument_list|,

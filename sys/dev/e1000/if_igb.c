@@ -14915,9 +14915,7 @@ directive|endif
 comment|/* 	 * Tell the upper layer(s) we 	 * support full VLAN capability. 	 */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -16873,6 +16871,8 @@ decl_stmt|;
 comment|/* no need to set the address */
 name|netmap_load_map
 argument_list|(
+name|na
+argument_list|,
 name|txr
 operator|->
 name|txtag
@@ -16883,6 +16883,8 @@ name|map
 argument_list|,
 name|NMB
 argument_list|(
+name|na
+argument_list|,
 name|slot
 operator|+
 name|si
@@ -20565,6 +20567,8 @@ name|addr
 operator|=
 name|PNMB
 argument_list|(
+name|na
+argument_list|,
 name|slot
 operator|+
 name|sj
@@ -20575,6 +20579,8 @@ argument_list|)
 expr_stmt|;
 name|netmap_load_map
 argument_list|(
+name|na
+argument_list|,
 name|rxr
 operator|->
 name|ptag
@@ -21645,6 +21651,37 @@ expr_stmt|;
 name|rctl
 operator||=
 name|E1000_RCTL_SZ_2048
+expr_stmt|;
+block|}
+comment|/* 	 * If TX flow control is disabled and there's>1 queue defined, 	 * enable DROP. 	 * 	 * This drops frames rather than hanging the RX MAC for all queues. 	 */
+if|if
+condition|(
+operator|(
+name|adapter
+operator|->
+name|num_queues
+operator|>
+literal|1
+operator|)
+operator|&&
+operator|(
+name|adapter
+operator|->
+name|fc
+operator|==
+name|e1000_fc_none
+operator|||
+name|adapter
+operator|->
+name|fc
+operator|==
+name|e1000_fc_rx_pause
+operator|)
+condition|)
+block|{
+name|srrctl
+operator||=
+name|E1000_SRRCTL_DROP_EN
 expr_stmt|;
 block|}
 comment|/* Setup the Base and Length of the Rx Descriptor Rings */
@@ -29561,6 +29598,7 @@ operator|->
 name|hw
 argument_list|)
 expr_stmt|;
+comment|/* XXX TODO: update DROP_EN on each RX queue if appropriate */
 return|return
 operator|(
 name|error

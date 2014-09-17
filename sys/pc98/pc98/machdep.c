@@ -615,40 +615,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|printcpuinfo
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX header file */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|finishidentcpu
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|panicifcpuunsupported
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -11549,6 +11515,9 @@ name|initializecpu
 argument_list|()
 expr_stmt|;
 comment|/* Initialize CPU registers */
+name|initializecpucache
+argument_list|()
+expr_stmt|;
 comment|/* make an initial tss so cpu can get interrupt stack on syscall! */
 comment|/* Note: -16 is so we can grow the trapframe if we came from vm86 */
 name|PCPU_SET

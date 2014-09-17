@@ -965,7 +965,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip_doopts
+name|V_ip_doopts
 operator|==
 literal|1
 condition|)
@@ -975,7 +975,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|ip_doopts
+name|V_ip_doopts
 operator|==
 literal|2
 condition|)
@@ -1817,22 +1817,6 @@ condition|(
 name|ip_len
 operator|<=
 name|mtu
-operator|||
-operator|(
-name|ifp
-operator|->
-name|if_hwassist
-operator|&
-name|CSUM_FRAGMENT
-operator|&&
-operator|(
-name|ip_off
-operator|&
-name|IP_DF
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 comment|/* 		 * Avoid confusing lower layers. 		 */

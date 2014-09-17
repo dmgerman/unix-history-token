@@ -103,6 +103,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|npxresume
+parameter_list|(
+name|union
+name|savefpu
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|npxsave
 parameter_list|(
 name|union
@@ -122,6 +134,18 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|union
+name|savefpu
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|npxsuspend
+parameter_list|(
 name|union
 name|savefpu
 modifier|*

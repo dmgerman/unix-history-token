@@ -1682,7 +1682,7 @@ condition|)
 block|{
 name|ph
 operator|=
-name|OF_xref_phandle
+name|OF_node_from_xref
 argument_list|(
 name|iph
 argument_list|)

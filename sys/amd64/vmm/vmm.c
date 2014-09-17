@@ -4828,6 +4828,8 @@ modifier|*
 name|wmesg
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|t
 decl_stmt|,
 name|vcpu_halted
@@ -4869,6 +4871,35 @@ expr_stmt|;
 name|vm_halted
 operator|=
 literal|0
+expr_stmt|;
+comment|/* 	 * The typical way to halt a cpu is to execute: "sti; hlt" 	 * 	 * STI sets RFLAGS.IF to enable interrupts. However, the processor 	 * remains in an "interrupt shadow" for an additional instruction 	 * following the STI. This guarantees that "sti; hlt" sequence is 	 * atomic and a pending interrupt will be recognized after the HLT. 	 * 	 * After the HLT emulation is done the vcpu is no longer in an 	 * interrupt shadow and a pending interrupt can be injected on 	 * the next entry into the guest. 	 */
+name|error
+operator|=
+name|vm_set_register
+argument_list|(
+name|vm
+argument_list|,
+name|vcpuid
+argument_list|,
+name|VM_REG_GUEST_INTR_SHADOW
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|error
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: error %d clearing interrupt shadow"
+operator|,
+name|__func__
+operator|,
+name|error
+operator|)
+argument_list|)
 expr_stmt|;
 name|vcpu_lock
 argument_list|(

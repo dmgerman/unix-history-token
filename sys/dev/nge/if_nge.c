@@ -4188,9 +4188,7 @@ directive|endif
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 * Must appear after the call to ether_ifattach() because 	 * ether_ifattach() sets ifi_hdrlen to the default value. 	 */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(

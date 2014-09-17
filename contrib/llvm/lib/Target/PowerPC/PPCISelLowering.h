@@ -292,6 +292,12 @@ name|CR6SET
 block|,
 name|CR6UNSET
 block|,
+name|PPC32_GOT
+block|,
+comment|/// GPRC = address of _GLOBAL_OFFSET_TABLE_. Used by general dynamic and
+comment|/// local dynamic TLS  on PPC32.
+name|PPC32_PICGOT
+block|,
 comment|/// G8RC = ADDIS_GOT_TPREL_HA %X2, Symbol - Used by the initial-exec
 comment|/// TLS model, produces an ADDIS8 instruction that adds the GOT
 comment|/// base to sym\@got\@tprel\@ha.

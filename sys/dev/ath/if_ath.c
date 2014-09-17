@@ -6770,14 +6770,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable interrupts */
-name|ath_draintxq
-argument_list|(
-name|sc
-argument_list|,
-name|ATH_RESET_DEFAULT
-argument_list|)
-expr_stmt|;
-comment|/* stop hw xmit side */
 comment|/* XXX Do all frames from all vaps/nodes need draining here? */
 name|ath_stoprecv
 argument_list|(
@@ -6787,6 +6779,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* stop recv side */
+name|ath_draintxq
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_RESET_DEFAULT
+argument_list|)
+expr_stmt|;
+comment|/* stop hw xmit side */
 block|}
 comment|/* .. leave the hardware awake for now. */
 name|ieee80211_vap_detach
@@ -10059,13 +10059,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|ath_draintxq
-argument_list|(
-name|sc
-argument_list|,
-name|ATH_RESET_DEFAULT
-argument_list|)
-expr_stmt|;
+comment|/* XXX we should stop RX regardless of whether it's valid */
 if|if
 condition|(
 operator|!
@@ -10093,6 +10087,13 @@ operator|->
 name|sc_rxlink
 operator|=
 name|NULL
+expr_stmt|;
+name|ath_draintxq
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_RESET_DEFAULT
+argument_list|)
 expr_stmt|;
 name|ath_beacon_free
 argument_list|(
@@ -10603,15 +10604,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Should now wait for pending TX/RX to complete 	 * and block future ones from occuring. This needs to be 	 * done before the TX queue is drained. 	 */
-name|ath_draintxq
-argument_list|(
-name|sc
-argument_list|,
-name|reset_type
-argument_list|)
-expr_stmt|;
-comment|/* stop xmit side */
 comment|/* 	 * Regardless of whether we're doing a no-loss flush or 	 * not, stop the PCU and handle what's in the RX queue. 	 * That way frames aren't dropped which shouldn't be. 	 */
 name|ath_stoprecv
 argument_list|(
@@ -10629,6 +10621,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Should now wait for pending TX/RX to complete 	 * and block future ones from occuring. This needs to be 	 * done before the TX queue is drained. 	 */
+name|ath_draintxq
+argument_list|(
+name|sc
+argument_list|,
+name|reset_type
+argument_list|)
+expr_stmt|;
+comment|/* stop xmit side */
 name|ath_settkipmic
 argument_list|(
 name|sc

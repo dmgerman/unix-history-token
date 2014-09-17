@@ -2518,7 +2518,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ifmedia_init_drv
+name|ifmedia_init
 argument_list|(
 operator|&
 name|sc
@@ -4492,7 +4492,7 @@ name|fail
 goto|;
 block|}
 block|}
-name|if_initname_drv
+name|if_initname
 argument_list|(
 name|ifp
 argument_list|,
@@ -4681,7 +4681,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Attach the interface. 	 */
-name|ether_ifattach_drv
+name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
@@ -4815,7 +4815,7 @@ argument_list|,
 literal|"could not setup irq\n"
 argument_list|)
 expr_stmt|;
-name|ether_ifdetach_drv
+name|ether_ifdetach
 argument_list|(
 name|sc
 operator|->
@@ -5342,7 +5342,7 @@ name|sc
 operator|->
 name|ifp
 condition|)
-name|if_free_drv
+name|if_free
 argument_list|(
 name|sc
 operator|->
@@ -5440,7 +5440,7 @@ name|stat_ch
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Close down routes etc. 	 */
-name|ether_ifdetach_drv
+name|ether_ifdetach
 argument_list|(
 name|sc
 operator|->
@@ -13852,7 +13852,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ifmedia_ioctl_drv
+name|ifmedia_ioctl
 argument_list|(
 name|ifp
 argument_list|,
@@ -13871,7 +13871,7 @@ else|else
 block|{
 name|error
 operator|=
-name|ifmedia_ioctl_drv
+name|ifmedia_ioctl
 argument_list|(
 name|ifp
 argument_list|,
@@ -14443,7 +14443,7 @@ break|break;
 default|default:
 name|error
 operator|=
-name|ether_ioctl_drv
+name|ether_ioctl
 argument_list|(
 name|ifp
 argument_list|,

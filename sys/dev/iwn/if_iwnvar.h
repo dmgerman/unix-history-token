@@ -1350,6 +1350,16 @@ name|iwn_base_params
 modifier|*
 name|base_params
 decl_stmt|;
+define|#
+directive|define
+name|IWN_UCODE_API
+parameter_list|(
+name|ver
+parameter_list|)
+value|(((ver)& 0x0000FF00)>> 8)
+name|uint32_t
+name|ucode_rev
+decl_stmt|;
 block|}
 struct|;
 end_struct

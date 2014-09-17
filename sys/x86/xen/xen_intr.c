@@ -735,16 +735,6 @@ operator|=
 name|xen_intr_source_pending
 block|,
 operator|.
-name|pic_suspend
-operator|=
-name|xen_intr_suspend
-block|,
-operator|.
-name|pic_resume
-operator|=
-name|xen_intr_resume
-block|,
-operator|.
 name|pic_config_intr
 operator|=
 name|xen_intr_pirq_config_intr

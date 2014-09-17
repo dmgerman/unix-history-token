@@ -635,7 +635,6 @@ literal|"n_cs_precedes = %d\n"
 literal|"n_sep_by_space = %d\n"
 literal|"p_sign_posn = %d\n"
 literal|"n_sign_posn = %d\n"
-argument_list|,
 literal|"int_p_cs_precedes = %d\n"
 literal|"int_p_sep_by_space = %d\n"
 literal|"int_n_cs_precedes = %d\n"

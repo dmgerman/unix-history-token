@@ -48,6 +48,13 @@ name|HELPER_CLASS_TCP
 value|0x00000001
 end_define
 
+begin_define
+define|#
+directive|define
+name|HELPER_CLASS_SOCKET
+value|0x00000002
+end_define
+
 begin_comment
 comment|/* Public KPI functions. */
 end_comment

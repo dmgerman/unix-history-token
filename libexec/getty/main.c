@@ -1035,8 +1035,6 @@ name|openlog
 argument_list|(
 literal|"getty"
 argument_list|,
-name|LOG_ODELAY
-operator||
 name|LOG_CONS
 operator||
 name|LOG_PID

@@ -1135,10 +1135,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* Expects res->hr_amp locked, returns unlocked. */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1148,6 +1144,12 @@ name|struct
 name|hast_resource
 modifier|*
 name|res
+parameter_list|)
+function|__unlocks
+parameter_list|(
+name|res
+operator|->
+name|hr_amp_lock
 parameter_list|)
 block|{
 specifier|const

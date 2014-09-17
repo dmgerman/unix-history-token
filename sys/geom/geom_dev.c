@@ -1282,6 +1282,9 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|make_dev_alias_p
 argument_list|(
 name|MAKEDEV_CHECKNAME
@@ -1297,12 +1300,17 @@ literal|"%s"
 argument_list|,
 name|buf
 argument_list|)
-expr_stmt|;
-name|adev
-operator|->
-name|si_flags
-operator||=
-name|SI_UNMAPPED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Warning: unable to create device "
+literal|"alias %s\n"
+argument_list|,
+name|buf
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1337,6 +1345,12 @@ operator|->
 name|si_drv2
 operator|=
 name|cp
+expr_stmt|;
+name|adev
+operator|->
+name|si_flags
+operator||=
+name|SI_UNMAPPED
 expr_stmt|;
 block|}
 name|g_dev_attrchanged
