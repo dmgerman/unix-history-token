@@ -4773,6 +4773,10 @@ literal|1
 argument_list|)
 condition|)
 return|return;
+comment|/* 	 * Make sure that tdq_load updated before calling this function 	 * is globally visible before we read tdq_cpu_idle.  Idle thread 	 * accesses both of them without locks, and the order is important. 	 */
+name|mb
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|TD_IS_IDLETHREAD
@@ -11365,6 +11369,10 @@ operator|->
 name|tdq_cpu_idle
 operator|=
 literal|1
+expr_stmt|;
+comment|/* 		 * Make sure that tdq_cpu_idle update is globally visible 		 * before cpu_idle() read tdq_load.  The order is important 		 * to avoid race with tdq_notify. 		 */
+name|mb
+argument_list|()
 expr_stmt|;
 name|cpu_idle
 argument_list|(
