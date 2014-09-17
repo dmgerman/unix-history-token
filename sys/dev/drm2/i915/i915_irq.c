@@ -3052,8 +3052,6 @@ operator|!
 name|i915_reset
 argument_list|(
 name|dev
-argument_list|,
-name|GRDOM_RENDER
 argument_list|)
 condition|)
 block|{
