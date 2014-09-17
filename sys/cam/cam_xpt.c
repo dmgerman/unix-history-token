@@ -13885,7 +13885,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Schedule a peripheral driver to receive a ccb when it's  * target device has space for more transactions.  */
+comment|/*  * Schedule a peripheral driver to receive a ccb when its  * target device has space for more transactions.  */
 end_comment
 
 begin_function
