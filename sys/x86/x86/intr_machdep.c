@@ -324,7 +324,7 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|u_char
+name|int
 name|cpu
 parameter_list|)
 function_decl|;
@@ -1322,7 +1322,7 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|u_char
+name|int
 name|cpu
 parameter_list|)
 block|{

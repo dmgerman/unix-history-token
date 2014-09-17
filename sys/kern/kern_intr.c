@@ -1183,7 +1183,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_char
+name|int
 parameter_list|)
 parameter_list|,
 specifier|const
@@ -1421,7 +1421,7 @@ name|intr_event
 modifier|*
 name|ie
 parameter_list|,
-name|u_char
+name|int
 name|cpu
 parameter_list|)
 block|{
@@ -5104,7 +5104,7 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|u_char
+name|int
 name|cpu
 parameter_list|)
 block|{

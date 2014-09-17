@@ -252,7 +252,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_char
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -274,7 +274,7 @@ name|int
 name|ie_irq
 decl_stmt|;
 comment|/* Physical irq number if !SOFT. */
-name|u_char
+name|int
 name|ie_cpu
 decl_stmt|;
 comment|/* CPU this event is bound to. */
@@ -557,7 +557,7 @@ name|intr_event
 modifier|*
 name|ie
 parameter_list|,
-name|u_char
+name|int
 name|cpu
 parameter_list|)
 function_decl|;
@@ -622,7 +622,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_char
+name|int
 parameter_list|)
 parameter_list|,
 specifier|const
