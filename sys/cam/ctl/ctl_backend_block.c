@@ -5081,6 +5081,8 @@ operator||
 name|SWS_UNMAP
 operator||
 name|SWS_ANCHOR
+operator||
+name|SWS_NDOB
 operator|)
 operator|||
 operator|(
