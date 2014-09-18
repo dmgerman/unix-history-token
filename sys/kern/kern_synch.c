@@ -1486,6 +1486,8 @@ expr_stmt|;
 if|if
 condition|(
 name|cold
+operator|||
+name|kdb_active
 condition|)
 block|{
 comment|/* 		 * We delay one second at a time to avoid overflowing the 		 * system specific DELAY() function(s): 		 */
