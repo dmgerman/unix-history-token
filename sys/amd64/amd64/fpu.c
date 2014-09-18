@@ -1461,7 +1461,7 @@ name|PCPU_SET
 argument_list|(
 name|fpcurthread
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2046,10 +2046,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Implement device not available (DNA) exception  *  * It would be better to switch FP context here (if curthread != fpcurthread)  * and not necessarily for every context switch, but it is too hard to  * access foreign pcb's.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -2058,6 +2054,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Device Not Available (DNA, #NM) exception handler.  *  * It would be better to switch FP context here (if curthread !=  * fpcurthread) and not necessarily for every context switch, but it  * is too hard to access foreign pcb's.  *  * The handler is entered with interrupts enabled, which allows the  * context switch to happen before critical enter() is executed, and  * causes restoration of FPU context on CPU other than that caused  * DNA.  It is fine, since context switch started emulation on the  * current CPU as well.  */
+end_comment
 
 begin_function
 name|void
@@ -2105,7 +2105,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
+name|panic
 argument_list|(
 literal|"fpudna: fpcurthread = %p (%d), curthread = %p (%d)\n"
 argument_list|,
@@ -2119,22 +2119,13 @@ argument_list|(
 name|fpcurthread
 argument_list|)
 operator|->
-name|td_proc
-operator|->
-name|p_pid
+name|td_tid
 argument_list|,
 name|curthread
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"fpudna"
+name|td_tid
 argument_list|)
 expr_stmt|;
 block|}
