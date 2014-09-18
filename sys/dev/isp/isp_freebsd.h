@@ -1086,6 +1086,9 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|int
+name|num_threads
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1165,6 +1168,9 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|int
+name|num_threads
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1340,6 +1346,9 @@ decl_stmt|;
 block|}
 name|pc
 union|;
+name|int
+name|is_exiting
+decl_stmt|;
 block|}
 struct|;
 end_struct
