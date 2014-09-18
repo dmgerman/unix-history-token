@@ -1103,10 +1103,10 @@ begin_struct
 struct|struct
 name|chk_id
 block|{
-name|uint16_t
+name|uint8_t
 name|id
 decl_stmt|;
-name|uint16_t
+name|uint8_t
 name|can_take_data
 decl_stmt|;
 block|}

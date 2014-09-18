@@ -29528,10 +29528,10 @@ operator|==
 name|SCTP_HMAC_LIST
 condition|)
 block|{
-name|int
+name|uint16_t
 name|num_hmacs
 decl_stmt|;
-name|int
+name|uint16_t
 name|i
 decl_stmt|;
 if|if
