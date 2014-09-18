@@ -33,221 +33,202 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/* XXX Prevent compilers from erroneously constant folding: */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
+specifier|volatile
 name|float
 name|tiny
 init|=
 literal|1e-30
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|float
 name|half
 init|=
-literal|5.0000000000e-01
+literal|0.5
 decl_stmt|,
-comment|/* 0x3F000000 */
 name|one
 init|=
-literal|1.0000000000e+00
+literal|1
 decl_stmt|,
-comment|/* 0x3F800000 */
 name|two
 init|=
-literal|2.0000000000e+00
+literal|2
 decl_stmt|,
-comment|/* 0x40000000 */
-comment|/*  * Coefficients for approximation to erf on [0,0.84375]  */
+name|erx
+init|=
+literal|8.42697144e-01
+decl_stmt|,
+comment|/* 0x3f57bb00 */
+comment|/*  * In the domain [0, 2**-14], only the first term in the power series  * expansion of erf(x) is used.  The magnitude of the first neglected  * terms is less than 2**-42.  */
 name|efx
 init|=
-literal|1.2837916613e-01
+literal|1.28379166e-01
 decl_stmt|,
 comment|/* 0x3e0375d4 */
 name|efx8
 init|=
-literal|1.0270333290e+00
+literal|1.02703333e+00
 decl_stmt|,
 comment|/* 0x3f8375d4 */
-comment|/*  *  Domain [0, 0.84375], range ~[-5.4446e-10,5.5197e-10]:  *  |(erf(x) - x)/x - p(x)/q(x)|< 2**-31.  */
+comment|/*  * Domain [0, 0.84375], range ~[-5.4419e-10, 5.5179e-10]:  * |(erf(x) - x)/x - pp(x)/qq(x)|< 2**-31  */
 name|pp0
 init|=
-literal|1.28379166e-01F
+literal|1.28379166e-01
 decl_stmt|,
-comment|/*  0x1.06eba8p-3 */
+comment|/* 0x3e0375d4 */
 name|pp1
 init|=
 operator|-
-literal|3.36030394e-01F
+literal|3.36030394e-01
 decl_stmt|,
-comment|/* -0x1.58185ap-2 */
+comment|/* 0xbeac0c2d */
 name|pp2
 init|=
 operator|-
-literal|1.86260219e-03F
+literal|1.86261395e-03
 decl_stmt|,
-comment|/* -0x1.e8451ep-10 */
+comment|/* 0xbaf422f4 */
 name|qq1
 init|=
-literal|3.12324286e-01F
+literal|3.12324315e-01
 decl_stmt|,
-comment|/*  0x1.3fd1f0p-2 */
+comment|/* 0x3e9fe8f9 */
 name|qq2
 init|=
-literal|2.16070302e-02F
+literal|2.16070414e-02
 decl_stmt|,
-comment|/*  0x1.620274p-6 */
+comment|/* 0x3cb10140 */
 name|qq3
 init|=
 operator|-
-literal|1.98859419e-03F
+literal|1.98859372e-03
 decl_stmt|,
-comment|/* -0x1.04a626p-9 */
-comment|/*  * Domain [0.84375, 1.25], range ~[-1.953e-11,1.940e-11]:  * |(erf(x) - erx) - p(x)/q(x)|< 2**-36.  */
-name|erx
-init|=
-literal|8.42697144e-01F
-decl_stmt|,
-comment|/*  0x1.af7600p-1.  erf(1) rounded to 16 bits. */
+comment|/* 0xbb025311 */
+comment|/*  * Domain [0.84375, 1.25], range ~[-1.023e-9, 1.023e-9]:  * |(erf(x) - erx) - pa(x)/qa(x)|< 2**-31  */
 name|pa0
 init|=
-literal|3.64939137e-06F
+literal|3.65041046e-06
 decl_stmt|,
-comment|/*  0x1.e9d022p-19 */
+comment|/* 0x3674f993 */
 name|pa1
 init|=
-literal|4.15109694e-01F
+literal|4.15109307e-01
 decl_stmt|,
-comment|/*  0x1.a91284p-2 */
+comment|/* 0x3ed48935 */
 name|pa2
 init|=
 operator|-
-literal|1.65179938e-01F
+literal|2.09395722e-01
 decl_stmt|,
-comment|/* -0x1.5249dcp-3 */
+comment|/* 0xbe566bd5 */
 name|pa3
 init|=
-literal|1.10914491e-01F
+literal|8.67677554e-02
 decl_stmt|,
-comment|/*  0x1.c64e46p-4 */
+comment|/* 0x3db1b34b */
 name|qa1
 init|=
-literal|6.02074385e-01F
+literal|4.95560974e-01
 decl_stmt|,
-comment|/*  0x1.344318p-1 */
+comment|/* 0x3efdba2b */
 name|qa2
 init|=
-literal|5.35934687e-01F
+literal|3.71248513e-01
 decl_stmt|,
-comment|/*  0x1.126608p-1 */
+comment|/* 0x3ebe1449 */
 name|qa3
 init|=
-literal|1.68576106e-01F
+literal|3.92478965e-02
 decl_stmt|,
-comment|/*  0x1.593e6ep-3 */
-name|qa4
-init|=
-literal|5.62181212e-02F
-decl_stmt|,
-comment|/*  0x1.cc89f2p-5 */
-comment|/*  * Domain [1.25,1/0.35], range ~[-7.043e-10,7.457e-10]:  * |log(x*erfc(x)) + x**2 + 0.5625 - r(x)/s(x)|< 2**-30  */
+comment|/* 0x3d20c267 */
+comment|/*  * Domain [1.25,1/0.35], range ~[-4.821e-9, 4.927e-9]:  * |log(x*erfc(x)) + x**2 + 0.5625 - ra(x)/sa(x)|< 2**-28  */
 name|ra0
 init|=
 operator|-
-literal|9.87132732e-03F
+literal|9.88156721e-03
 decl_stmt|,
-comment|/* -0x1.4376b2p-7 */
+comment|/* 0xbc21e64c */
 name|ra1
 init|=
 operator|-
-literal|5.53605914e-01F
+literal|5.43658376e-01
 decl_stmt|,
-comment|/* -0x1.1b723cp-1 */
+comment|/* 0xbf0b2d32 */
 name|ra2
 init|=
 operator|-
-literal|2.17589188e+00F
+literal|1.66828310e+00
 decl_stmt|,
-comment|/* -0x1.1683a0p+1 */
+comment|/* 0xbfd58a4d */
 name|ra3
 init|=
 operator|-
-literal|1.43268085e+00F
+literal|6.91554189e-01
 decl_stmt|,
-comment|/* -0x1.6ec42cp+0 */
+comment|/* 0xbf3109b2 */
 name|sa1
 init|=
-literal|5.45995426e+00F
+literal|4.48581553e+00
 decl_stmt|,
-comment|/*  0x1.5d6fe4p+2 */
+comment|/* 0x408f8bcd */
 name|sa2
 init|=
-literal|6.69798088e+00F
+literal|4.10799170e+00
 decl_stmt|,
-comment|/*  0x1.acabb8p+2 */
+comment|/* 0x408374ab */
 name|sa3
 init|=
-literal|1.43113089e+00F
+literal|5.53855181e-01
 decl_stmt|,
-comment|/*  0x1.6e5e98p+0 */
-name|sa4
-init|=
-operator|-
-literal|5.77397496e-02F
-decl_stmt|,
-comment|/* -0x1.d90108p-5 */
-comment|/*  * Domain [1/0.35, 11], range ~[-2.264e-13,2.336e-13]:  * |log(x*erfc(x)) + x**2 + 0.5625 - r(x)/s(x)|< 2**-42  */
+comment|/* 0x3f0dc974 */
+comment|/*  * Domain [2.85715, 11], range ~[-1.484e-9, 1.505e-9]:  * |log(x*erfc(x)) + x**2 + 0.5625 - rb(x)/sb(x)|< 2**-30  */
 name|rb0
 init|=
 operator|-
-literal|9.86494310e-03F
+literal|9.86496918e-03
 decl_stmt|,
-comment|/* -0x1.434124p-7 */
+comment|/* 0xbc21a0ae */
 name|rb1
 init|=
 operator|-
-literal|6.25171244e-01F
+literal|5.48049808e-01
 decl_stmt|,
-comment|/* -0x1.401672p-1 */
+comment|/* 0xbf0c4cfe */
 name|rb2
 init|=
 operator|-
-literal|6.16498327e+00F
+literal|1.84115684e+00
 decl_stmt|,
-comment|/* -0x1.8a8f16p+2 */
-name|rb3
-init|=
-operator|-
-literal|1.66696873e+01F
-decl_stmt|,
-comment|/* -0x1.0ab70ap+4 */
-name|rb4
-init|=
-operator|-
-literal|9.53764343e+00F
-decl_stmt|,
-comment|/* -0x1.313460p+3 */
+comment|/* 0xbfebab07 */
 name|sb1
 init|=
-literal|1.26884899e+01F
+literal|4.87132740e+00
 decl_stmt|,
-comment|/*  0x1.96081cp+3 */
+comment|/* 0x409be1ea */
 name|sb2
 init|=
-literal|4.51839523e+01F
+literal|3.04982710e+00
 decl_stmt|,
-comment|/*  0x1.6978bcp+5 */
+comment|/* 0x4043305e */
 name|sb3
 init|=
-literal|4.72810211e+01F
-decl_stmt|,
-comment|/*  0x1.7a3f88p+5 */
-name|sb4
-init|=
-literal|8.93033314e+00F
+operator|-
+literal|7.61900663e-01
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  0x1.1dc54ap+3 */
+comment|/* 0xbf430bec */
 end_comment
 
 begin_function
@@ -302,7 +283,7 @@ operator|>=
 literal|0x7f800000
 condition|)
 block|{
-comment|/* erf(nan)=nan */
+comment|/* erff(nan)=nan */
 name|i
 operator|=
 operator|(
@@ -330,7 +311,7 @@ name|one
 operator|/
 name|x
 return|;
-comment|/* erf(+-inf)=+-1 */
+comment|/* erff(+-inf)=+-1 */
 block|}
 if|if
 condition|(
@@ -484,13 +465,7 @@ name|qa2
 operator|+
 name|s
 operator|*
-operator|(
 name|qa3
-operator|+
-name|s
-operator|*
-name|qa4
-operator|)
 operator|)
 operator|)
 expr_stmt|;
@@ -564,10 +539,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x4036DB6E
+literal|0x4036db8c
 condition|)
 block|{
-comment|/* |x|< 1/0.35 */
+comment|/* |x|< 2.85715 ~ 1/0.35 */
 name|R
 operator|=
 name|ra0
@@ -604,20 +579,14 @@ name|sa2
 operator|+
 name|s
 operator|*
-operator|(
 name|sa3
-operator|+
-name|s
-operator|*
-name|sa4
-operator|)
 operator|)
 operator|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* |x|>= 1/0.35 */
+comment|/* |x|>= 2.85715 ~ 1/0.35 */
 name|R
 operator|=
 name|rb0
@@ -629,19 +598,7 @@ name|rb1
 operator|+
 name|s
 operator|*
-operator|(
 name|rb2
-operator|+
-name|s
-operator|*
-operator|(
-name|rb3
-operator|+
-name|s
-operator|*
-name|rb4
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 name|S
@@ -660,13 +617,7 @@ name|sb2
 operator|+
 name|s
 operator|*
-operator|(
 name|sb3
-operator|+
-name|s
-operator|*
-name|sb4
-operator|)
 operator|)
 operator|)
 expr_stmt|;
@@ -785,8 +736,8 @@ operator|>=
 literal|0x7f800000
 condition|)
 block|{
-comment|/* erfc(nan)=nan */
-comment|/* erfc(+-inf)=0,2 */
+comment|/* erfcf(nan)=nan */
+comment|/* erfcf(+-inf)=0,2 */
 return|return
 call|(
 name|float
@@ -971,13 +922,7 @@ name|qa2
 operator|+
 name|s
 operator|*
-operator|(
 name|qa3
-operator|+
-name|s
-operator|*
-name|qa4
-operator|)
 operator|)
 operator|)
 expr_stmt|;
@@ -1048,10 +993,10 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x4036DB6D
+literal|0x4036db8c
 condition|)
 block|{
-comment|/* |x|< 1/.35 ~ 2.857143*/
+comment|/* |x|< 2.85715 ~ 1/.35 */
 name|R
 operator|=
 name|ra0
@@ -1088,20 +1033,14 @@ name|sa2
 operator|+
 name|s
 operator|*
-operator|(
 name|sa3
-operator|+
-name|s
-operator|*
-name|sa4
-operator|)
 operator|)
 operator|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* |x|>= 1/.35 ~ 2.857143 */
+comment|/* |x|>= 2.85715 ~ 1/.35 */
 if|if
 condition|(
 name|hx
@@ -1129,19 +1068,7 @@ name|rb1
 operator|+
 name|s
 operator|*
-operator|(
 name|rb2
-operator|+
-name|s
-operator|*
-operator|(
-name|rb3
-operator|+
-name|s
-operator|*
-name|rb4
-operator|)
-operator|)
 operator|)
 expr_stmt|;
 name|S
@@ -1160,13 +1087,7 @@ name|sb2
 operator|+
 name|s
 operator|*
-operator|(
 name|sb3
-operator|+
-name|s
-operator|*
-name|sb4
-operator|)
 operator|)
 operator|)
 expr_stmt|;

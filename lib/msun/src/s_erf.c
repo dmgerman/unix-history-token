@@ -37,36 +37,44 @@ directive|include
 file|"math_private.h"
 end_include
 
+begin_comment
+comment|/* XXX Prevent compilers from erroneously constant folding: */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
+specifier|volatile
 name|double
 name|tiny
 init|=
 literal|1e-300
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|double
 name|half
 init|=
-literal|5.00000000000000000000e-01
+literal|0.5
 decl_stmt|,
-comment|/* 0x3FE00000, 0x00000000 */
 name|one
 init|=
-literal|1.00000000000000000000e+00
+literal|1
 decl_stmt|,
-comment|/* 0x3FF00000, 0x00000000 */
 name|two
 init|=
-literal|2.00000000000000000000e+00
+literal|2
 decl_stmt|,
-comment|/* 0x40000000, 0x00000000 */
 comment|/* c = (float)0.84506291151 */
 name|erx
 init|=
 literal|8.45062911510467529297e-01
 decl_stmt|,
 comment|/* 0x3FEB0AC1, 0x60000000 */
-comment|/*  * Coefficients for approximation to  erf on [0,0.84375]  */
+comment|/*  * In the domain [0, 2**-28], only the first term in the power series  * expansion of erf(x) is used.  The magnitude of the first neglected  * terms is less than 2**-84.  */
 name|efx
 init|=
 literal|1.28379167095512586316e-01
@@ -77,6 +85,7 @@ init|=
 literal|1.02703333676410069053e+00
 decl_stmt|,
 comment|/* 0x3FF06EBA, 0x8214DB69 */
+comment|/*  * Coefficients for approximation to erf on [0,0.84375]  */
 name|pp0
 init|=
 literal|1.28379167095512558561e-01
@@ -132,7 +141,7 @@ operator|-
 literal|3.96022827877536812320e-06
 decl_stmt|,
 comment|/* 0xBED09C43, 0x42A26120 */
-comment|/*  * Coefficients for approximation to  erf  in [0.84375,1.25]  */
+comment|/*  * Coefficients for approximation to erf in [0.84375,1.25]  */
 name|pa0
 init|=
 operator|-
@@ -202,7 +211,7 @@ init|=
 literal|1.19844998467991074170e-02
 decl_stmt|,
 comment|/* 0x3F888B54, 0x5735151D */
-comment|/*  * Coefficients for approximation to  erfc in [1.25,1/0.35]  */
+comment|/*  * Coefficients for approximation to erfc in [1.25,1/0.35]  */
 name|ra0
 init|=
 operator|-
@@ -292,7 +301,7 @@ operator|-
 literal|6.04244152148580987438e-02
 decl_stmt|,
 comment|/* 0xBFAEEFF2, 0xEE749A62 */
-comment|/*  * Coefficients for approximation to  erfc in [1/.35,28]  */
+comment|/*  * Coefficients for approximation to erfc in [1/.35,28]  */
 name|rb0
 init|=
 operator|-
@@ -994,6 +1003,31 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|erf
+argument_list|,
+name|erfl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|double
 name|erfc
@@ -1646,6 +1680,31 @@ return|;
 block|}
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|erfc
+argument_list|,
+name|erfcl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -40,6 +46,17 @@ end_include
 begin_decl_stmt
 specifier|static
 specifier|const
+specifier|volatile
+name|double
+name|tiny
+init|=
+literal|1.0e-300
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
 name|double
 name|one
 init|=
@@ -48,10 +65,6 @@ decl_stmt|,
 name|two
 init|=
 literal|2.0
-decl_stmt|,
-name|tiny
-init|=
-literal|1.0e-300
 decl_stmt|,
 name|huge
 init|=
@@ -238,6 +251,31 @@ name|z
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+operator|(
+name|LDBL_MANT_DIG
+operator|==
+literal|53
+operator|)
+end_if
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|tanh
+argument_list|,
+name|tanhl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
