@@ -1542,6 +1542,26 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * PNY USB 3.0 Flash Drives 		*/
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"PNY"
+block|,
+literal|"USB 3.0 FD*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+operator||
+name|DA_Q_NO_RC16
+block|}
+block|,
+block|{
 comment|/* 		 * PNY USB Flash keys 		 * PR: usb/75578, usb/72344, usb/65436  		 */
 block|{
 name|T_DIRECT
