@@ -18105,6 +18105,26 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|if_setgetcounterfn
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|,
+name|if_get_counter_t
+name|fn
+parameter_list|)
+block|{
+name|ifp
+operator|->
+name|if_get_counter
+operator|=
+name|fn
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Revisit these - These are inline functions originally. */
 end_comment

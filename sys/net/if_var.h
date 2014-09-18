@@ -3648,6 +3648,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|if_setgetcounterfn
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|,
+name|if_get_counter_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Revisit the below. These are inline functions originally */
 end_comment
