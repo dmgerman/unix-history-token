@@ -5279,7 +5279,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%8ju %7ju %4ju %4lu %4lu %5ju %7lu %10lu\n"
+literal|"%8ju %7ju %4ju %4ju %4lu %5ju %7lu %10lu\n"
 argument_list|,
 operator|(
 name|uintmax_t
