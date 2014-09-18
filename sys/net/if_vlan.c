@@ -929,7 +929,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|ifnet_counter
+name|ift_counter
 name|cnt
 parameter_list|)
 function_decl|;
@@ -5051,7 +5051,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|ifnet_counter
+name|ift_counter
 name|cnt
 parameter_list|)
 block|{

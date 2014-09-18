@@ -6208,7 +6208,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|ifnet_counter
+name|ift_counter
 name|cnt
 parameter_list|)
 block|{
@@ -6363,7 +6363,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|ifnet_counter
+name|ift_counter
 name|cnt
 parameter_list|,
 name|int64_t

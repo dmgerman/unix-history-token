@@ -312,7 +312,7 @@ name|IFCOUNTER_OQDROPS
 block|,
 name|IFCOUNTER_NOPROTO
 block|, }
-name|ifnet_counter
+name|ift_counter
 typedef|;
 end_typedef
 
@@ -409,7 +409,7 @@ function_decl|)
 parameter_list|(
 name|if_t
 parameter_list|,
-name|ifnet_counter
+name|ift_counter
 parameter_list|)
 function_decl|;
 end_typedef
@@ -2703,7 +2703,7 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
-name|ifnet_counter
+name|ift_counter
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2716,7 +2716,7 @@ name|struct
 name|ifnet
 modifier|*
 parameter_list|,
-name|ifnet_counter
+name|ift_counter
 parameter_list|,
 name|int64_t
 parameter_list|)
