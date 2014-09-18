@@ -5208,33 +5208,50 @@ name|uintmax_t
 operator|)
 name|ifp
 operator|->
-name|if_ibytes
+name|if_get_counter
+argument_list|(
+name|ifp
 argument_list|,
-comment|/* rx_bytes */
+name|IFCOUNTER_IBYTES
+argument_list|)
+argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ifp
 operator|->
-name|if_ipackets
+name|if_get_counter
+argument_list|(
+name|ifp
 argument_list|,
-comment|/* rx_packets */
+name|IFCOUNTER_IPACKETS
+argument_list|)
+argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ifp
 operator|->
-name|if_ierrors
+name|if_get_counter
+argument_list|(
+name|ifp
 argument_list|,
-comment|/* rx_errors */
+name|IFCOUNTER_IERRORS
+argument_list|)
+argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ifp
 operator|->
-name|if_iqdrops
+name|if_get_counter
+argument_list|(
+name|ifp
 argument_list|,
-comment|/* rx_dropped + 							 * rx_missed_errors */
+name|IFCOUNTER_IQDROPS
+argument_list|)
+argument_list|,
+comment|/* rx_missed_errors */
 literal|0UL
 argument_list|,
 comment|/* rx_fifo_errors */
@@ -5249,10 +5266,15 @@ name|uintmax_t
 operator|)
 name|ifp
 operator|->
-name|if_imcasts
+name|if_get_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_IMCASTS
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* multicast, 							 * XXX-BZ rx only? */
+comment|/* XXX-BZ rx only? */
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -5264,28 +5286,49 @@ name|uintmax_t
 operator|)
 name|ifp
 operator|->
-name|if_obytes
+name|if_get_counter
+argument_list|(
+name|ifp
 argument_list|,
-comment|/* tx_bytes */
+name|IFCOUNTER_OBYTES
+argument_list|)
+argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ifp
 operator|->
-name|if_opackets
+name|if_get_counter
+argument_list|(
+name|ifp
 argument_list|,
-comment|/* tx_packets */
+name|IFCOUNTER_OPACKETS
+argument_list|)
+argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|ifp
 operator|->
-name|if_oerrors
+name|if_get_counter
+argument_list|(
+name|ifp
 argument_list|,
-comment|/* tx_errors */
-literal|0UL
+name|IFCOUNTER_OERRORS
+argument_list|)
 argument_list|,
-comment|/* tx_dropped */
+operator|(
+name|uintmax_t
+operator|)
+name|ifp
+operator|->
+name|if_get_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_OQDROPS
+argument_list|)
+argument_list|,
 literal|0UL
 argument_list|,
 comment|/* tx_fifo_errors */
@@ -5294,9 +5337,13 @@ name|uintmax_t
 operator|)
 name|ifp
 operator|->
-name|if_collisions
+name|if_get_counter
+argument_list|(
+name|ifp
 argument_list|,
-comment|/* collisions */
+name|IFCOUNTER_COLLISIONS
+argument_list|)
+argument_list|,
 literal|0UL
 argument_list|,
 comment|/* tx_carrier_errors + 							 * tx_aborted_errors + 							 * tx_window_errors + 							 * tx_heartbeat_errors*/
