@@ -10222,7 +10222,7 @@ if|if
 condition|(
 operator|(
 name|win
-operator|>
+operator|>=
 name|VT_MAXWINDOWS
 operator|)
 operator|||
