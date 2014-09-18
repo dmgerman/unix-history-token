@@ -2697,7 +2697,7 @@ end_function_decl
 
 begin_function_decl
 name|uint64_t
-name|if_get_counter_compat
+name|if_get_counter_default
 parameter_list|(
 name|struct
 name|ifnet

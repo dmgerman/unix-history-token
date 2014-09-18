@@ -2917,7 +2917,7 @@ name|ifp
 operator|->
 name|if_get_counter
 operator|=
-name|if_get_counter_compat
+name|if_get_counter_default
 expr_stmt|;
 if|if
 condition|(
@@ -6201,7 +6201,7 @@ end_comment
 
 begin_function
 name|uint64_t
-name|if_get_counter_compat
+name|if_get_counter_default
 parameter_list|(
 name|struct
 name|ifnet

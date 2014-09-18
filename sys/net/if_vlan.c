@@ -5152,7 +5152,7 @@ return|;
 default|default:
 return|return
 operator|(
-name|if_get_counter_compat
+name|if_get_counter_default
 argument_list|(
 name|ifp
 argument_list|,
