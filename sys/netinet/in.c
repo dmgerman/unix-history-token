@@ -6530,10 +6530,10 @@ name|sa_family
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX rtalloc1 should take a const param */
+comment|/* XXX rtalloc1_fib should take a const param */
 name|rt
 operator|=
-name|rtalloc1
+name|rtalloc1_fib
 argument_list|(
 name|__DECONST
 argument_list|(
@@ -6547,6 +6547,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|ifp
+operator|->
+name|if_fib
 argument_list|)
 expr_stmt|;
 if|if

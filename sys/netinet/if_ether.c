@@ -1636,7 +1636,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"arpresolve: can't allocate llinfo for %s\n"
+literal|"arpresolve: can't allocate llinfo for %s on %s\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1647,6 +1647,10 @@ argument_list|)
 operator|->
 name|sin_addr
 argument_list|)
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 name|m_freem
