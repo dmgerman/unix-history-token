@@ -2708,6 +2708,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|if_inc_counter
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|ifnet_counter
+parameter_list|,
+name|int64_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
