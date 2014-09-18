@@ -6494,7 +6494,11 @@ argument_list|,
 operator|&
 name|rt
 argument_list|,
-literal|0
+name|ifa
+operator|->
+name|ifa_ifp
+operator|->
+name|if_fib
 argument_list|)
 expr_stmt|;
 if|if
@@ -6716,7 +6720,11 @@ name|info
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|ifa
+operator|->
+name|ifa_ifp
+operator|->
+name|if_fib
 argument_list|)
 expr_stmt|;
 if|if

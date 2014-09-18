@@ -6143,11 +6143,11 @@ name|startfib
 operator|=
 name|endfib
 operator|=
-name|curthread
+name|ifa
 operator|->
-name|td_proc
+name|ifa_ifp
 operator|->
-name|p_fibnum
+name|if_fib
 expr_stmt|;
 block|}
 else|else
