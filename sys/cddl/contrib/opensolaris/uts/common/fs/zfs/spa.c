@@ -285,6 +285,19 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The interval, in seconds, at which failed configuration cache file writes  * should be retried.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|zfs_ccw_retry_interval
+init|=
+literal|300
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -314,18 +327,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * The interval, in seconds, at which failed configuration cache file writes  * should be retried.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.ccw_retry_interval"
+argument_list|,
+operator|&
 name|zfs_ccw_retry_interval
-init|=
-literal|300
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ccw_retry_interval
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|zfs_ccw_retry_interval
+argument_list|,
+literal|0
+argument_list|,
+literal|"Configuration cache file write, retry after failure, interval (seconds)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
