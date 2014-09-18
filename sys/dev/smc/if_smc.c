@@ -4102,7 +4102,7 @@ name|if_inc_counter
 argument_list|(
 name|ifp
 argument_list|,
-name|IFNET_COLLISIONS
+name|IFCOUNTER_COLLISIONS
 argument_list|,
 operator|(
 operator|(
