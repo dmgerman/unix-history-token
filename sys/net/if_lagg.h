@@ -261,8 +261,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LAGG_PROTO_MAX
+name|LAGG_PROTO_BROADCAST
 value|6
+end_define
+
+begin_comment
+comment|/* broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LAGG_PROTO_MAX
+value|7
 end_define
 
 begin_struct
@@ -292,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|LAGG_PROTOS
-value|{						\ 	{ "failover",		LAGG_PROTO_FAILOVER },			\ 	{ "fec",		LAGG_PROTO_ETHERCHANNEL },		\ 	{ "lacp",		LAGG_PROTO_LACP },			\ 	{ "loadbalance",	LAGG_PROTO_LOADBALANCE },		\ 	{ "roundrobin",		LAGG_PROTO_ROUNDROBIN },		\ 	{ "none",		LAGG_PROTO_NONE },			\ 	{ "default",		LAGG_PROTO_DEFAULT }			\ }
+value|{						\ 	{ "failover",		LAGG_PROTO_FAILOVER },		\ 	{ "fec",		LAGG_PROTO_ETHERCHANNEL },		\ 	{ "lacp",		LAGG_PROTO_LACP },			\ 	{ "loadbalance",	LAGG_PROTO_LOADBALANCE },		\ 	{ "roundrobin",	LAGG_PROTO_ROUNDROBIN },		\ 	{ "broadcast",	LAGG_PROTO_BROADCAST },		\ 	{ "none",		LAGG_PROTO_NONE },			\ 	{ "default",		LAGG_PROTO_DEFAULT }			\ }
 end_define
 
 begin_comment
