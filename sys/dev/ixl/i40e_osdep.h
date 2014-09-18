@@ -922,36 +922,6 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|i40e_allocate_dma_mem
-parameter_list|(
-name|h
-parameter_list|,
-name|m
-parameter_list|,
-name|unused
-parameter_list|,
-name|s
-parameter_list|,
-name|a
-parameter_list|)
-value|i40e_allocate_dma(h, m, s, a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|i40e_free_dma_mem
-parameter_list|(
-name|h
-parameter_list|,
-name|m
-parameter_list|)
-value|i40e_free_dma(h, m)
-end_define
-
-begin_define
-define|#
-directive|define
 name|i40e_debug
 parameter_list|(
 name|h
@@ -1000,32 +970,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|i40e_allocate_virt_mem
-parameter_list|(
-name|h
-parameter_list|,
-name|m
-parameter_list|,
-name|s
-parameter_list|)
-value|i40e_allocate_virt(h, m, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|i40e_free_virt_mem
-parameter_list|(
-name|h
-parameter_list|,
-name|m
-parameter_list|)
-value|i40e_free_virt(h, m)
-end_define
 
 begin_comment
 comment|/* ** This hardware supports either 16 or 32 byte rx descriptors ** we default here to the larger size. */
