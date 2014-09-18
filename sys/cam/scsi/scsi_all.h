@@ -990,6 +990,10 @@ name|SPRI_ALLOW_4
 value|0x40
 define|#
 directive|define
+name|SPRI_ALLOW_5
+value|0x50
+define|#
+directive|define
 name|SPRI_PTPL_A
 value|0x01
 name|uint8_t

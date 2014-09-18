@@ -35479,7 +35479,7 @@ name|flags2
 operator||=
 name|SPRI_TMV
 operator||
-name|SPRI_ALLOW_3
+name|SPRI_ALLOW_5
 expr_stmt|;
 name|type_mask
 operator|=
