@@ -83,34 +83,6 @@ directive|include
 file|<sys/kdb.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__DragonFly__
-argument_list|)
-operator|||
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_comment
-comment|/* for DELAY() */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -126,47 +98,6 @@ include|#
 directive|include
 file|<machine/bus.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__DragonFly__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"firewire.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"firewirereg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"fwmem.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"iec13213.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"iec68113.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -197,11 +128,6 @@ include|#
 directive|include
 file|<dev/firewire/iec68113.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -426,18 +352,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int firewire_shutdown    (device_t);
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -2866,18 +2780,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int firewire_shutdown( device_t dev ) { 	return 0; }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -5470,9 +5372,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|#
-directive|if
-literal|1
 comment|/* make sure the label is allocated */
 name|STAILQ_FOREACH
 argument_list|(
@@ -5554,8 +5453,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 name|STAILQ_REMOVE
 argument_list|(
 operator|&

@@ -1867,44 +1867,6 @@ begin_comment
 comment|/* 8 bits DMA channel id. in device No. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__DragonFly__
-argument_list|)
-operator|||
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_define
-define|#
-directive|define
-name|dev2unit
-parameter_list|(
-name|x
-parameter_list|)
-value|((minor(x)& 0xff) | (minor(x)>> 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|unit2minor
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0xff) | (((x)<< 8)& ~0xffff))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
