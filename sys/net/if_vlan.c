@@ -4,7 +4,7 @@ comment|/*-  * Copyright 1998 Massachusetts Institute of Technology  *  * Permis
 end_comment
 
 begin_comment
-comment|/*  * if_vlan.c - pseudo-device driver for IEEE 802.1Q virtual LANs.  * Might be extended some day to also handle IEEE 802.1p priority  * tagging.  This is sort of sneaky in the implementation, since  * we need to pretend to be enough of an Ethernet implementation  * to make arp work.  The way we do this is by telling everyone  * that we are an Ethernet, and then catch the packets that  * ether_output() sends to us via if_transmit(), rewrite them for  * use by the real outgoing interface, and ask it to send them.  */
+comment|/*  * if_vlan.c - pseudo-device driver for IEEE 802.1Q virtual LANs.  * This is sort of sneaky in the implementation, since  * we need to pretend to be enough of an Ethernet implementation  * to make arp work.  The way we do this is by telling everyone  * that we are an Ethernet, and then catch the packets that  * ether_output() sends to us via if_transmit(), rewrite them for  * use by the real outgoing interface, and ask it to send them.  */
 end_comment
 
 begin_include
