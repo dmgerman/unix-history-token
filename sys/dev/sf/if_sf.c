@@ -7689,7 +7689,7 @@ name|rxd
 operator|->
 name|rx_m
 expr_stmt|;
-comment|/* 		 * Note, IFCOUNTER_IPACKETS and ICOUNTER_IERRORS 		 * are handled in sf_stats_update(). 		 */
+comment|/* 		 * Note, IFCOUNTER_IPACKETS and IFCOUNTER_IERRORS 		 * are handled in sf_stats_update(). 		 */
 if|if
 condition|(
 operator|(
