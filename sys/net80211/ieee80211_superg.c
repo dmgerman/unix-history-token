@@ -2301,10 +2301,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 block|}
