@@ -1649,10 +1649,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* if bpf&& mc_head, call bpf_mtap code */
 if|if
@@ -2316,10 +2320,14 @@ name|M_VLANTAG
 expr_stmt|;
 block|}
 comment|/* 	 * Note:  Moved RX completion back to hv_nv_on_receive() so all 	 * messages (not just data messages) will trigger a response. 	 */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* We're not holding the lock here, so don't release it */
 call|(
@@ -3310,10 +3318,14 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/*???*/
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function

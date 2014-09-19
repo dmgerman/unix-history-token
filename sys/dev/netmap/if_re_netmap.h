@@ -956,7 +956,7 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|// sc->rl_ifp->if_ipackets++;
+comment|// if_inc_counter(sc->rl_ifp, IFCOUNTER_IPACKETS, 1);
 name|nm_i
 operator|=
 name|nm_next
