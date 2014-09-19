@@ -4363,10 +4363,8 @@ name|int
 name|setpgrp
 parameter_list|(
 name|pid_t
-name|_pid
 parameter_list|,
 name|pid_t
-name|_pgrp
 parameter_list|)
 function_decl|;
 end_function_decl
