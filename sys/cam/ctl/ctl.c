@@ -31476,7 +31476,7 @@ block|{
 if|if
 condition|(
 name|control_dev
-operator|!=
+operator|==
 literal|0
 condition|)
 name|scsi_ulto3b
