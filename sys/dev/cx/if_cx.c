@@ -13777,11 +13777,6 @@ name|q
 argument_list|)
 condition|)
 block|{
-name|_IF_DROP
-argument_list|(
-name|q
-argument_list|)
-expr_stmt|;
 name|IF_UNLOCK
 argument_list|(
 name|q

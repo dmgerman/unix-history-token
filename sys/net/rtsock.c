@@ -7754,17 +7754,6 @@ argument_list|,
 name|ifd
 argument_list|)
 expr_stmt|;
-comment|/* Some drivers still use ifqueue(9), add its stats. */
-name|ifd
-operator|->
-name|ifi_oqdrops
-operator|+=
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_drops
-expr_stmt|;
 return|return
 operator|(
 name|SYSCTL_OUT
@@ -7940,17 +7929,6 @@ name|ifp
 argument_list|,
 name|ifd
 argument_list|)
-expr_stmt|;
-comment|/* Some drivers still use ifqueue(9), add its stats. */
-name|ifd
-operator|->
-name|ifi_oqdrops
-operator|+=
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_drops
 expr_stmt|;
 return|return
 operator|(

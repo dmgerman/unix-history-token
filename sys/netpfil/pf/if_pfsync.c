@@ -8999,9 +8999,7 @@ name|sc
 operator|->
 name|sc_ifp
 operator|->
-name|if_snd
-operator|.
-name|ifq_drops
+name|if_oqdrops
 operator|++
 expr_stmt|;
 block|}

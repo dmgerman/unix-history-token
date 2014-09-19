@@ -2222,9 +2222,7 @@ name|error
 condition|)
 name|ifp
 operator|->
-name|if_snd
-operator|.
-name|ifq_drops
+name|if_oqdrops
 operator|++
 expr_stmt|;
 name|IF_UNLOCK

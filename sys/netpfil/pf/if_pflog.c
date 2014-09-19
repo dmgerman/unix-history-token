@@ -667,14 +667,6 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-name|_IF_DROP
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
-expr_stmt|;
 name|_IF_DEQUEUE
 argument_list|(
 operator|&
