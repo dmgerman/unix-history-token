@@ -4953,10 +4953,6 @@ name|vt_font
 modifier|*
 name|vf
 decl_stmt|;
-name|struct
-name|vt_bufmask
-name|tmask
-decl_stmt|;
 name|term_rect_t
 name|tarea
 decl_stmt|;
@@ -5180,9 +5176,6 @@ name|vw_buf
 argument_list|,
 operator|&
 name|tarea
-argument_list|,
-operator|&
-name|tmask
 argument_list|)
 expr_stmt|;
 name|vt_termsize
@@ -5224,16 +5217,6 @@ operator|.
 name|tr_end
 operator|=
 name|size
-expr_stmt|;
-name|tmask
-operator|.
-name|vbm_row
-operator|=
-name|tmask
-operator|.
-name|vbm_col
-operator|=
-name|VBM_DIRTY
 expr_stmt|;
 name|vd
 operator|->
