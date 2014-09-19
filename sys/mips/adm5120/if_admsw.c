@@ -4456,10 +4456,14 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* printf("clear tx slot %d\n",i); */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -4972,10 +4976,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|ADMSW_INIT_RXLDESC
 argument_list|(
@@ -5076,10 +5084,14 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Update the receive pointer. */
