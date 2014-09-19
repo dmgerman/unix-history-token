@@ -225,7 +225,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/if_rlreg.h>
+file|<dev/rl/if_rlreg.h>
 end_include
 
 begin_expr_stmt
