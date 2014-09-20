@@ -266,12 +266,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vmm_msr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vmm_ipi.h"
 end_include
 
@@ -374,13 +368,6 @@ modifier|*
 name|stats
 decl_stmt|;
 comment|/* (a,i) statistics */
-name|uint64_t
-name|guest_msrs
-index|[
-name|VMM_MSR_NUM
-index|]
-decl_stmt|;
-comment|/* (i) emulated MSRs */
 name|struct
 name|vm_exit
 name|exitinfo
@@ -851,20 +838,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-name|VMM_MSR_NUM
-operator|<=
-literal|64
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* msr_mask can keep track of up to 64 msrs */
-end_comment
-
 begin_comment
 comment|/* statistics */
 end_comment
@@ -1192,13 +1165,6 @@ operator|->
 name|stats
 argument_list|)
 expr_stmt|;
-name|guest_msrs_init
-argument_list|(
-name|vm
-argument_list|,
-name|vcpu_id
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1344,9 +1310,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|vmm_msr_init
-argument_list|()
-expr_stmt|;
 name|vmm_resume_p
 operator|=
 name|vmm_resume
@@ -6489,13 +6452,6 @@ argument_list|,
 name|PCB_FULL_IRET
 argument_list|)
 expr_stmt|;
-name|restore_guest_msrs
-argument_list|(
-name|vm
-argument_list|,
-name|vcpuid
-argument_list|)
-expr_stmt|;
 name|restore_guest_fpustate
 argument_list|(
 name|vcpu
@@ -6541,13 +6497,6 @@ expr_stmt|;
 name|save_guest_fpustate
 argument_list|(
 name|vcpu
-argument_list|)
-expr_stmt|;
-name|restore_host_msrs
-argument_list|(
-name|vm
-argument_list|,
-name|vcpuid
 argument_list|)
 expr_stmt|;
 name|vmm_stat_incr
@@ -8509,35 +8458,6 @@ name|type
 argument_list|,
 name|val
 argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|uint64_t
-modifier|*
-name|vm_guest_msrs
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|cpu
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vm
-operator|->
-name|vcpu
-index|[
-name|cpu
-index|]
-operator|.
-name|guest_msrs
 operator|)
 return|;
 block|}

@@ -2365,6 +2365,34 @@ name|MSR_MC4_MISC
 value|0x413
 end_define
 
+begin_define
+define|#
+directive|define
+name|MSR_PKG_ENERGY_STATUS
+value|0x611
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_DRAM_ENERGY_STATUS
+value|0x619
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_PP0_ENERGY_STATUS
+value|0x639
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_PP1_ENERGY_STATUS
+value|0x641
+end_define
+
 begin_comment
 comment|/*  * VMX MSRs  */
 end_comment

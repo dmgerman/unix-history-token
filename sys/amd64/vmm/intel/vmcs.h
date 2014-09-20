@@ -202,6 +202,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Avoid header pollution caused by inline use of 'vtophys()' in vmx_cpufunc.h  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_VMX_CPUFUNC_H_
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -293,6 +303,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _VMX_CPUFUNC_H_ */
+end_comment
 
 begin_define
 define|#
