@@ -2565,6 +2565,13 @@ name|APIC_LVT_DM_FIXED
 argument_list|)
 condition|)
 block|{
+name|VLAPIC_CTR0
+argument_list|(
+name|vlapic
+argument_list|,
+literal|"vlapic timer fired"
+argument_list|)
+expr_stmt|;
 name|vmm_stat_incr
 argument_list|(
 name|vlapic
