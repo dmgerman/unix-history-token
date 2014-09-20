@@ -228,6 +228,11 @@ name|vb_history_size
 else|:
 literal|0
 expr_stmt|;
+name|roffset
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Make gcc happy. */
 switch|switch
 condition|(
 name|whence
