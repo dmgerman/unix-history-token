@@ -1137,22 +1137,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint64_t
-modifier|*
-name|vm_guest_msrs
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|cpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|vlapic
 modifier|*
