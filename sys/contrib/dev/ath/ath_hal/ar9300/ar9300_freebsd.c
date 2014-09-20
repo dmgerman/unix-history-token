@@ -279,12 +279,6 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
-comment|/* stub everything first */
-name|ar9300_set_stub_functions
-argument_list|(
-name|ah
-argument_list|)
-expr_stmt|;
 comment|/* Global functions */
 name|ah
 operator|->
