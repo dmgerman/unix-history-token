@@ -2006,7 +2006,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * XXX: For some reson this returns -1 				 *	instead of EINTR, wtf?! 				 */
+comment|/* 				 * XXX: For some reason this returns -1 				 *	instead of EINTR, wtf?! 				 */
 name|error
 operator|=
 name|EINTR
@@ -2456,7 +2456,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * XXX: For some reson this returns -1 instead 			 * 	of EINTR, wtf?! 			 */
+comment|/* 			 * XXX: For some reason this returns -1 instead 			 * 	of EINTR, wtf?! 			 */
 name|error
 operator|=
 name|EINTR

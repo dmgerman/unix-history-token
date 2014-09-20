@@ -5003,12 +5003,16 @@ argument_list|,
 literal|"watchdog timeout\n"
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|sc
 operator|->
 name|atse_ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|atse_intr_debug
 argument_list|(
@@ -5481,10 +5485,14 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -5579,10 +5587,14 @@ name|atse_rx_buf_len
 argument_list|)
 expr_stmt|;
 comment|/* XXX-BZ any better counter? */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -5639,10 +5651,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* 				 * XXX-BZ Error.  We need more mbufs and are 				 * not setup for this yet. 				 */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -5721,10 +5737,14 @@ operator|-
 name|empty
 operator|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|rx_npkts
 operator|++
@@ -6078,10 +6098,14 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * There is considerable subtlety in the race-free handling of rx 	 * interrupts: we must disable interrupts whenever we manipulate the 	 * FIFO to prevent further interrupts from firing before we are done; 	 * we must clear the event after processing to prevent the event from 	 * being immediately reposted due to data remaining; we must clear the 	 * event mask before reenabling interrupts or risk missing a positive 	 * edge; and we must recheck everything after completing in case the 	 * event posted between clearing events and reenabling interrupts.  If 	 * a race is experienced, we must restart the whole mechanism. 	 */
@@ -6235,10 +6259,14 @@ operator|)
 condition|)
 block|{
 comment|/* XXX-BZ ERROR HANDLING. */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * There is also considerable subtlety in the race-free handling of 	 * tx interrupts: all processing occurs with interrupts disabled to 	 * prevent spurious refiring while transmit is in progress (which 	 * could occur if the FIFO drains while sending -- quite likely); we 	 * must not clear the event mask until after we've sent, also to 	 * prevent spurious refiring; once we've cleared the event mask we can 	 * reenable interrupts, but there is a possible race between clear and 	 * enable, so we must recheck and potentially repeat the whole process 	 * if it is detected. 	 */
@@ -6454,10 +6482,14 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -6472,10 +6504,14 @@ operator|)
 condition|)
 block|{
 comment|/* XXX-BZ ERROR HANDLING. */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if

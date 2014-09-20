@@ -1174,6 +1174,8 @@ block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -1249,6 +1251,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -1296,6 +1300,8 @@ block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -1934,6 +1940,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -1979,6 +1987,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -4610,7 +4620,7 @@ block|,
 literal|16
 block|,
 block|{
-literal|0x1a
+literal|0x1b
 block|,
 literal|0xff
 block|,

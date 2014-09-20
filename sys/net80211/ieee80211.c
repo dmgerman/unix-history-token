@@ -1327,10 +1327,14 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return
 name|EACCES

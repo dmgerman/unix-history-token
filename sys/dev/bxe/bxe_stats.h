@@ -1666,6 +1666,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint64_t
+name|bxe_get_counter
+parameter_list|(
+name|if_t
+parameter_list|,
+name|ift_counter
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

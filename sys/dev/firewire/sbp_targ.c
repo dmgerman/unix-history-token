@@ -51,25 +51,6 @@ directive|include
 file|<sys/endian.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/devicestat.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

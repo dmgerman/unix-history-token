@@ -6663,6 +6663,12 @@ operator|!=
 name|oldlun
 operator|->
 name|l_size
+operator|||
+name|newlun
+operator|->
+name|l_size
+operator|==
+literal|0
 condition|)
 block|{
 name|log_debugx

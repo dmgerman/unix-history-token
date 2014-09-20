@@ -2003,27 +2003,6 @@ operator|>
 name|MAX_TEXT
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__DragonFly__
-argument_list|)
-operator|||
-name|__FreeBSD_version
-operator|<
-literal|500000
-name|printf
-argument_list|(
-literal|"text(%d) trancated to %d.\n"
-argument_list|,
-name|len
-argument_list|,
-name|MAX_TEXT
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|printf
 argument_list|(
 literal|"text(%d) trancated to %td.\n"
@@ -2033,8 +2012,6 @@ argument_list|,
 name|MAX_TEXT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|len
 operator|=
 name|MAX_TEXT

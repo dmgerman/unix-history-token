@@ -20459,9 +20459,7 @@ name|sc
 operator|->
 name|ifp
 operator|->
-name|if_snd
-operator|.
-name|ifq_drops
+name|if_oqdrops
 operator|=
 name|odrops
 expr_stmt|;

@@ -720,20 +720,27 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Update the interface counters. 		 */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_obytes
-operator|+=
+argument_list|,
+name|IFCOUNTER_OBYTES
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
+argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Finally, just drop the packet. 		 * TODO: Reply to ARP requests unless IFF_NOARP is set. 		 */
 name|m_freem

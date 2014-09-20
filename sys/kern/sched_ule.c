@@ -4852,7 +4852,7 @@ literal|1
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Make sure that tdq_load updated before calling this function 	 * is globally visible before we read tdq_cpu_idle.  Idle thread 	 * accesses both of them without locks, and the order is important. 	 */
+comment|/* 	 * Make sure that our caller's earlier update to tdq_load is 	 * globally visible before we read tdq_cpu_idle.  Idle thread 	 * accesses both of them without locks, and the order is important. 	 */
 name|mb
 argument_list|()
 expr_stmt|;

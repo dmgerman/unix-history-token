@@ -9785,9 +9785,11 @@ block|}
 else|else
 block|{
 comment|/* Reuse RFA and loaded DMA map. */
-name|if_inciqdrops
+name|if_inc_counter
 argument_list|(
 name|ifp
+argument_list|,
+name|IFCOUNTER_IQDROPS
 argument_list|,
 literal|1
 argument_list|)
@@ -10200,9 +10202,11 @@ operator|->
 name|rx_tco
 argument_list|)
 expr_stmt|;
-name|if_incopackets
+name|if_inc_counter
 argument_list|(
 name|ifp
+argument_list|,
+name|IFCOUNTER_OPACKETS
 argument_list|,
 name|le32toh
 argument_list|(
@@ -10212,9 +10216,11 @@ name|tx_good
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|if_inccollisions
+name|if_inc_counter
 argument_list|(
 name|ifp
+argument_list|,
+name|IFCOUNTER_COLLISIONS
 argument_list|,
 name|le32toh
 argument_list|(
@@ -10231,9 +10237,11 @@ operator|->
 name|rx_good
 condition|)
 block|{
-name|if_incipackets
+name|if_inc_counter
 argument_list|(
 name|ifp
+argument_list|,
+name|IFCOUNTER_IPACKETS
 argument_list|,
 name|le32toh
 argument_list|(
@@ -10267,9 +10275,11 @@ name|rx_idle_secs
 operator|++
 expr_stmt|;
 block|}
-name|if_incierrors
+name|if_inc_counter
 argument_list|(
 name|ifp
+argument_list|,
+name|IFCOUNTER_IERRORS
 argument_list|,
 name|le32toh
 argument_list|(
@@ -10308,9 +10318,11 @@ operator|->
 name|tx_underruns
 condition|)
 block|{
-name|if_incoerrors
+name|if_inc_counter
 argument_list|(
 name|ifp
+argument_list|,
+name|IFCOUNTER_OERRORS
 argument_list|,
 name|le32toh
 argument_list|(
@@ -10790,9 +10802,11 @@ argument_list|,
 literal|"device timeout\n"
 argument_list|)
 expr_stmt|;
-name|if_incoerrors
+name|if_inc_counter
 argument_list|(
 name|ifp
+argument_list|,
+name|IFCOUNTER_OERRORS
 argument_list|,
 literal|1
 argument_list|)

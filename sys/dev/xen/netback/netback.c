@@ -6750,10 +6750,14 @@ literal|0
 return|;
 comment|/* Nothing to receive */
 comment|/* update statistics independent of errors */
+name|if_inc_counter
+argument_list|(
 name|ifnet
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 * if we got here, then 1 or more requests was consumed, but the packet 	 * is not necessarily valid. 	 */
 if|if
@@ -6791,10 +6795,14 @@ argument_list|,
 name|num_consumed
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifnet
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return
 name|EINVAL
@@ -6837,10 +6845,14 @@ argument_list|,
 name|num_consumed
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifnet
-operator|->
-name|if_iqdrops
-operator|++
+argument_list|,
+name|IFCOUNTER_IQDROPS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return
 name|ENOMEM
@@ -9079,18 +9091,26 @@ case|case
 name|EINVAL
 case|:
 comment|/* OS gave a corrupt packet.  Drop it.*/
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 default|default:
 comment|/* Send succeeded, or packet had error. 					 * Free the packet */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

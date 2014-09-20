@@ -124,9 +124,6 @@ decl_stmt|;
 name|int
 name|ifq_maxlen
 decl_stmt|;
-name|int
-name|ifq_drops
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__

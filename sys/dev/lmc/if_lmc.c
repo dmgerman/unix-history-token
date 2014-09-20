@@ -23444,6 +23444,11 @@ operator|.
 name|odiscards
 operator|++
 expr_stmt|;
+name|ifp
+operator|->
+name|if_oqdrops
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|DRIVER_DEBUG

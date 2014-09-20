@@ -1751,6 +1751,12 @@ name|AFPDIR
 expr_stmt|;
 if|if
 condition|(
+name|fsopts
+operator|->
+name|maxsize
+operator|>
+literal|0
+operator|&&
 name|roundup
 argument_list|(
 name|fsopts

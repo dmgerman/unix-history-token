@@ -1194,6 +1194,12 @@ argument_list|,
 name|agp_type
 argument_list|)
 expr_stmt|;
+name|obj
+operator|->
+name|has_global_gtt_mapping
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1277,6 +1283,12 @@ name|pages
 argument_list|,
 name|agp_type
 argument_list|)
+expr_stmt|;
+name|obj
+operator|->
+name|has_global_gtt_mapping
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

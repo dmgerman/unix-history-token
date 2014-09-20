@@ -19,6 +19,38 @@ begin_empty
 empty|#include_next<sys/sdt.h>
 end_empty
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+end_ifdef
+
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
+name|sdt
+argument_list|, , ,
+name|set__error
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|SET_ERROR
+parameter_list|(
+name|err
+parameter_list|)
+define|\
+value|((sdt_sdt___set__error->id ? \ 	(*sdt_probe_func)(sdt_sdt___set__error->id, \ 	    (uintptr_t)err, 0, 0, 0, 0) : 0), err)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -28,6 +60,11 @@ name|err
 parameter_list|)
 value|(err)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

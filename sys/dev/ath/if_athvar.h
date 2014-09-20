@@ -1991,6 +1991,14 @@ comment|/* Number of TX maps */
 name|int
 name|sc_edma_bufsize
 decl_stmt|;
+name|int
+name|sc_rx_stopped
+decl_stmt|;
+comment|/* XXX only for EDMA */
+name|int
+name|sc_rx_resetted
+decl_stmt|;
+comment|/* XXX only for EDMA */
 name|void
 function_decl|(
 modifier|*

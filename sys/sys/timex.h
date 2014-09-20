@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  ***********************************************************************  *								       *  * Copyright (c) David L. Mills 1993-2001			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name        *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,	       *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied	       *  * warranty.							       *  *								       *  **********************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * Modification history timex.h  *  * 16 Aug 00	David L. Mills  *	API Version 4. Added MOD_TAI and tai member of ntptimeval  *	structure.  *  * 17 Nov 98	David L. Mills  *	Revised for nanosecond kernel and user interface.  *  * 26 Sep 94	David L. Mills  *	Added defines for hybrid phase/frequency-lock loop.  *  * 19 Mar 94	David L. Mills  *	Moved defines from kernel routines to header file and added new  *	defines for PPS phase-lock loop.  *  * 20 Feb 94	David L. Mills  *	Revised status codes and structures for external clock and PPS  *	signal discipline.  *  * 28 Nov 93	David L. Mills  *	Adjusted parameters to improve stability and increase poll  *	interval.  *  * 17 Sep 93    David L. Mills  *      Created file  *  * $FreeBSD$  */
-end_comment
-
-begin_comment
-comment|/*  * This header file defines the Network Time Protocol (NTP) interfaces  * for user and daemon application programs. These are implemented using  * defined syscalls and data structures and require specific kernel  * support.  *  * The original precision time kernels developed from 1993 have an  * ultimate resolution of one microsecond; however, the most recent  * kernels have an ultimate resolution of one nanosecond. In these  * kernels, a ntp_adjtime() syscalls can be used to determine which  * resolution is in use and to select either one at any time. The  * resolution selected affects the scaling of certain fields in the  * ntp_gettime() and ntp_adjtime() syscalls, as described below.  *  * NAME  *	ntp_gettime - NTP user application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *  *	int ntp_gettime(struct ntptimeval *ntv);  *  * DESCRIPTION  *	The time returned by ntp_gettime() is in a timespec structure,  *	but may be in either microsecond (seconds and microseconds) or  *	nanosecond (seconds and nanoseconds) format. The particular  *	format in use is determined by the STA_NANO bit of the status  *	word returned by the ntp_adjtime() syscall.  *  * NAME  *	ntp_adjtime - NTP daemon application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *	#include<sys/syscall.h>  *  *	int syscall(SYS_ntp_adjtime, tptr);  *	int SYS_ntp_adjtime;  *	struct timex *tptr;  *  * DESCRIPTION  *	Certain fields of the timex structure are interpreted in either  *	microseconds or nanoseconds according to the state of the  *	STA_NANO bit in the status word. See the description below for  *	further information.  */
+comment|/*-  ***********************************************************************  *								       *  * Copyright (c) David L. Mills 1993-2001			       *  * Copyright (c) Poul-Henning Kamp 2000-2001                           *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name        *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,	       *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied	       *  * warranty.							       *  *								       *  ***********************************************************************  *  * $FreeBSD$  *  * This header file defines the Network Time Protocol (NTP) interfaces  * for user and daemon application programs.  *  * This file was originally created 17 Sep 93 by David L. Mills, Professor  * of University of Delaware, building on work which had already been ongoing  * for a decade and a half at that point in time.  *  * In 2000 the APIs got a upgrade from microseconds to nanoseconds,  * a joint work between Poul-Henning Kamp and David L. Mills.  *  */
 end_comment
 
 begin_ifndef
@@ -54,31 +46,6 @@ end_endif
 
 begin_comment
 comment|/* __FreeBSD__ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MSDOS
-end_ifndef
-
-begin_comment
-comment|/* Microsoft specific */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/syscall.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MSDOS */
 end_comment
 
 begin_comment
@@ -163,7 +130,7 @@ comment|/* max time constant */
 end_comment
 
 begin_comment
-comment|/*  * The following defines and structures define the user interface for  * the ntp_gettime() and ntp_adjtime() syscalls.  *  * Control mode codes (timex.modes)  */
+comment|/*  * Control mode codes (timex.modes)  */
 end_comment
 
 begin_define
@@ -486,7 +453,7 @@ value|(STA_PPSSIGNAL | STA_PPSJITTER | STA_PPSWANDER | \     STA_PPSERROR | STA_
 end_define
 
 begin_comment
-comment|/*  * Clock states (time_state)  */
+comment|/*  * Clock states (ntptimeval.time_state)  */
 end_comment
 
 begin_define
@@ -556,7 +523,7 @@ comment|/* error (see status word) */
 end_comment
 
 begin_comment
-comment|/*  * NTP user interface (ntp_gettime()) - used to read kernel clock values  *  * Note: The time member is in microseconds if STA_NANO is zero and  * nanoseconds if not.  */
+comment|/*  * NTP user interface -- ntp_gettime(2) - used to read kernel clock values  */
 end_comment
 
 begin_struct
@@ -589,7 +556,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * NTP daemon interface (ntp_adjtime()) - used to discipline CPU clock  * oscillator and determine status.  *  * Note: The offset, precision and jitter members are in microseconds if  * STA_NANO is zero and nanoseconds if not.  */
+comment|/*  * NTP daemon interface -- ntp_adjtime(2) -- used to discipline CPU clock  * oscillator and control/determine status.  *  * Note: The offset, precision and jitter members are in microseconds if  * STA_NANO is zero and nanoseconds if not.  */
 end_comment
 
 begin_struct
@@ -632,7 +599,7 @@ comment|/* clock precision (ns/us) (ro) */
 name|long
 name|tolerance
 decl_stmt|;
-comment|/* clock frequency tolerance (scaled 				 * PPM) (ro) */
+comment|/* clock frequency tolerance (scaled 				 	 * PPM) (ro) */
 comment|/* 	 * The following read-only structure members are implemented 	 * only if the PPS signal discipline is configured in the 	 * kernel. They are included in all configurations to insure 	 * portability. 	 */
 name|long
 name|ppsfreq

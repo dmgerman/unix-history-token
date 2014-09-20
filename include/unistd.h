@@ -3180,23 +3180,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setpgrp
-parameter_list|(
-name|pid_t
-name|_pid
-parameter_list|,
-name|pid_t
-name|_pgrp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* obsoleted by setpgid() */
-end_comment
-
-begin_function_decl
-name|int
 name|setregid
 parameter_list|(
 name|gid_t
@@ -4374,6 +4357,21 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|setpgrp
+parameter_list|(
+name|pid_t
+parameter_list|,
+name|pid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* obsoleted by setpgid() */
+end_comment
 
 begin_function_decl
 name|void

@@ -7185,8 +7185,33 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NB: don't worry about putting the chip in low power 	 * mode; pci will power off our socket on suspend and 	 * CardBus detaches the device. 	 */
-comment|/* 	 * XXX ensure none of the taskqueues are running 	 * XXX ensure sc_invalid is 1 	 * XXX ensure the calibration callout is disabled 	 */
+comment|/* 	 * NB: don't worry about putting the chip in low power 	 * mode; pci will power off our socket on suspend and 	 * CardBus detaches the device. 	 * 	 * XXX TODO: well, that's great, except for non-cardbus 	 * devices! 	 */
+comment|/* 	 * XXX This doesn't wait until all pending taskqueue 	 * items and parallel transmit/receive/other threads 	 * are running! 	 */
+name|ath_hal_intrset
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|taskqueue_block
+argument_list|(
+name|sc
+operator|->
+name|sc_tq
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_cal_ch
+argument_list|)
+expr_stmt|;
+comment|/* 	 * XXX ensure sc_invalid is 1 	 */
 comment|/* Disable the PCIe PHY, complete with workarounds */
 name|ath_hal_enablepcie
 argument_list|(
@@ -7537,6 +7562,28 @@ name|status
 argument_list|)
 expr_stmt|;
 name|ath_reset_keycache
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_stopped
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_resetted
+operator|=
+literal|1
+expr_stmt|;
+name|ATH_RX_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -8297,12 +8344,20 @@ argument_list|,
 literal|"ath_intr: RXEOL"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_isedma
+condition|)
+block|{
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 			 * NB: the hardware should re-read the link when 			 *     RXE bit is written, but it doesn't work at 			 *     least on older hardware revs. 			 */
+comment|/* 				 * NB: the hardware should re-read the link when 				 *     RXE bit is written, but it doesn't work at 				 *     least on older hardware revs. 				 */
 name|sc
 operator|->
 name|sc_stats
@@ -8310,7 +8365,7 @@ operator|.
 name|ast_rxeol
 operator|++
 expr_stmt|;
-comment|/* 			 * Disable RXEOL/RXORN - prevent an interrupt 			 * storm until the PCU logic can be reset. 			 * In case the interface is reset some other 			 * way before "sc_kickpcu" is called, don't 			 * modify sc_imask - that way if it is reset 			 * by a call to ath_reset() somehow, the 			 * interrupt mask will be correctly reprogrammed. 			 */
+comment|/* 				 * Disable RXEOL/RXORN - prevent an interrupt 				 * storm until the PCU logic can be reset. 				 * In case the interface is reset some other 				 * way before "sc_kickpcu" is called, don't 				 * modify sc_imask - that way if it is reset 				 * by a call to ath_reset() somehow, the 				 * interrupt mask will be correctly reprogrammed. 				 */
 name|imask
 operator|=
 name|sc
@@ -8333,7 +8388,7 @@ argument_list|,
 name|imask
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Only blank sc_rxlink if we've not yet kicked 			 * the PCU. 			 * 			 * This isn't entirely correct - the correct solution 			 * would be to have a PCU lock and engage that for 			 * the duration of the PCU fiddling; which would include 			 * running the RX process. Otherwise we could end up 			 * messing up the RX descriptor chain and making the 			 * RX desc list much shorter. 			 */
+comment|/* 				 * Only blank sc_rxlink if we've not yet kicked 				 * the PCU. 				 * 				 * This isn't entirely correct - the correct solution 				 * would be to have a PCU lock and engage that for 				 * the duration of the PCU fiddling; which would include 				 * running the RX process. Otherwise we could end up 				 * messing up the RX descriptor chain and making the 				 * RX desc list much shorter. 				 */
 if|if
 condition|(
 operator|!
@@ -8358,7 +8413,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Enqueue an RX proc, to handled whatever 			 * is in the RX queue. 			 * This will then kick the PCU. 			 */
+block|}
+comment|/* 			 * Enqueue an RX proc to handle whatever 			 * is in the RX queue. 			 * This will then kick the PCU if required. 			 */
 name|sc
 operator|->
 name|sc_rx
@@ -9567,6 +9623,28 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_stopped
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_resetted
+operator|=
+literal|1
+expr_stmt|;
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ath_chan_change
 argument_list|(
 name|sc
@@ -9728,8 +9806,6 @@ name|HAL_INT_RX
 operator||
 name|HAL_INT_TX
 operator||
-name|HAL_INT_RXEOL
-operator||
 name|HAL_INT_RXORN
 operator||
 name|HAL_INT_TXURN
@@ -9754,6 +9830,20 @@ name|HAL_INT_RXHP
 operator||
 name|HAL_INT_RXLP
 operator|)
+expr_stmt|;
+comment|/* 	 * If we're an EDMA NIC, we don't care about RXEOL. 	 * Writing a new descriptor in will simply restart 	 * RX DMA. 	 */
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_isedma
+condition|)
+name|sc
+operator|->
+name|sc_imask
+operator||=
+name|HAL_INT_RXEOL
 expr_stmt|;
 comment|/* 	 * Enable MIB interrupts when there are hardware phy counters. 	 * Note we only do this (at the moment) for station mode. 	 */
 if|if
@@ -10700,6 +10790,28 @@ operator|=
 name|ath_hal_getdiversity
 argument_list|(
 name|ah
+argument_list|)
+expr_stmt|;
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_stopped
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_resetted
+operator|=
+literal|1
+expr_stmt|;
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Let DFS at it in case it's a DFS channel */
@@ -12220,10 +12332,14 @@ operator|.
 name|ast_tx_nofrag
 operator|++
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|ath_freetx
 argument_list|(
@@ -12302,10 +12418,14 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Bump the ifp output counter. 	 * 	 * XXX should use atomics? 	 */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|nextfrag
 label|:
@@ -12332,10 +12452,14 @@ condition|)
 block|{
 name|bad
 label|:
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|reclaim
 label|:
@@ -21271,6 +21395,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Disable interrupts */
+name|ath_hal_intrset
+argument_list|(
+name|ah
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Stop new RX/TX/interrupt completion */
 if|if
 condition|(
@@ -21296,13 +21428,6 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-name|ath_hal_intrset
-argument_list|(
-name|ah
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Stop pending RX/TX completion */
 name|ath_txrx_stop_locked
 argument_list|(
@@ -21474,6 +21599,28 @@ operator|=
 name|ath_hal_getdiversity
 argument_list|(
 name|ah
+argument_list|)
+expr_stmt|;
+name|ATH_RX_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_stopped
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_resetted
+operator|=
+literal|1
+expr_stmt|;
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Let DFS at it in case it's a DFS channel */
@@ -25469,10 +25616,14 @@ name|do_reset
 operator|=
 literal|1
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -26193,7 +26344,12 @@ name|ast_tx_packets
 operator|=
 name|ifp
 operator|->
-name|if_opackets
+name|if_get_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -26203,7 +26359,12 @@ name|ast_rx_packets
 operator|=
 name|ifp
 operator|->
-name|if_ipackets
+name|if_get_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->

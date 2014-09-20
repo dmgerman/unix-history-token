@@ -1032,11 +1032,25 @@ name|lx
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|hx
+operator|&
+literal|0x8000
+condition|)
+operator|*
+name|signgamp
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 return|return
 name|one
 operator|/
 name|vzero
 return|;
+block|}
 comment|/* purge off tiny and negative arguments */
 if|if
 condition|(

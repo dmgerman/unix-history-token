@@ -4400,6 +4400,7 @@ argument_list|(
 name|nvl
 argument_list|)
 expr_stmt|;
+else|else
 name|nvlist_set_parent
 argument_list|(
 name|nvl

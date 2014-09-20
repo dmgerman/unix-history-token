@@ -279,12 +279,6 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
-comment|/* stub everything first */
-name|ar9300_set_stub_functions
-argument_list|(
-name|ah
-argument_list|)
-expr_stmt|;
 comment|/* Global functions */
 name|ah
 operator|->
@@ -1860,27 +1854,12 @@ name|u_int
 name|txTries3
 parameter_list|)
 block|{
-name|ath_hal_printf
-argument_list|(
-name|ah
-argument_list|,
-literal|"%s: called, 0x%x/%d, 0x%x/%d, 0x%x/%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|txRate1
-argument_list|,
-name|txTries1
-argument_list|,
-name|txRate2
-argument_list|,
-name|txTries2
-argument_list|,
-name|txRate3
-argument_list|,
-name|txTries3
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|ath_hal_printf(ah, "%s: called, 0x%x/%d, 0x%x/%d, 0x%x/%d\n", 	    __func__, 	    txRate1, txTries1, 	    txRate2, txTries2, 	    txRate3, txTries3);
+endif|#
+directive|endif
 comment|/* XXX should only be called during probe */
 return|return
 operator|(
