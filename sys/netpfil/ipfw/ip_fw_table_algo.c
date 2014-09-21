@@ -169,7 +169,6 @@ comment|/*  * IPFW table lookup algorithms.  *  * What is needed to add another 
 end_comment
 
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_IPFW_TBL
@@ -17997,6 +17996,21 @@ operator|.
 name|idx
 argument_list|)
 expr_stmt|;
+name|ipfw_add_table_algo
+argument_list|(
+name|ch
+argument_list|,
+operator|&
+name|addr_dxr
+argument_list|,
+name|sz
+argument_list|,
+operator|&
+name|addr_dxr
+operator|.
+name|idx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -18060,6 +18074,15 @@ argument_list|(
 name|ch
 argument_list|,
 name|addr_kfib
+operator|.
+name|idx
+argument_list|)
+expr_stmt|;
+name|ipfw_del_table_algo
+argument_list|(
+name|ch
+argument_list|,
+name|addr_dxr
 operator|.
 name|idx
 argument_list|)

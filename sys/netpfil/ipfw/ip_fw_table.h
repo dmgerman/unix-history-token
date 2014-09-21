@@ -980,6 +980,26 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* external algos */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|table_algo
+name|addr_dxr
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_IPFW_TBL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Exported to support legacy opcodes */
 end_comment
 
