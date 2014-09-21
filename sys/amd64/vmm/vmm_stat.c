@@ -576,16 +576,6 @@ end_expr_stmt
 begin_expr_stmt
 name|VMM_STAT
 argument_list|(
-name|VMEXIT_HLT_IGNORED
-argument_list|,
-literal|"number of times hlt was ignored"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VMM_STAT
-argument_list|(
 name|VMEXIT_CR_ACCESS
 argument_list|,
 literal|"number of times %cr access was intercepted"
