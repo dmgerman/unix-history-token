@@ -193,6 +193,12 @@ begin_comment
 comment|/* Announce event for every fib */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -224,6 +230,11 @@ directive|define
 name|V_rt_add_addr_allfibs
 value|VNET(rt_add_addr_allfibs)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We distinguish between routes to hosts and routes to networks,  * preferring the former if available.  For each route we infer  * the interface to use from the gateway address supplied when  * the route was entered.  Routes that forward packets through  * gateways are marked so that the output routines know to address the  * gateway rather than the ultimate destination.  */
