@@ -5005,6 +5005,9 @@ block|{
 case|case
 name|PT_X86
 case|:
+case|case
+name|PT_RVI
+case|:
 comment|/* Verify that both PAT bits are not set at the same time */
 name|KASSERT
 argument_list|(
@@ -5038,11 +5041,6 @@ name|entry
 operator|^=
 name|x86_pat_bits
 expr_stmt|;
-break|break;
-case|case
-name|PT_RVI
-case|:
-comment|/* XXX: PAT support. */
 break|break;
 case|case
 name|PT_EPT
@@ -5128,6 +5126,9 @@ block|{
 case|case
 name|PT_X86
 case|:
+case|case
+name|PT_RVI
+case|:
 comment|/* The PAT bit is different for PTE's and PDE's. */
 name|pat_flag
 operator|=
@@ -5179,15 +5180,6 @@ condition|)
 name|cache_bits
 operator||=
 name|PG_NC_PWT
-expr_stmt|;
-break|break;
-case|case
-name|PT_RVI
-case|:
-comment|/* XXX: PAT support. */
-name|cache_bits
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -5247,6 +5239,9 @@ block|{
 case|case
 name|PT_X86
 case|:
+case|case
+name|PT_RVI
+case|:
 name|mask
 operator|=
 name|is_pde
@@ -5254,15 +5249,6 @@ condition|?
 name|X86_PG_PDE_CACHE
 else|:
 name|X86_PG_PTE_CACHE
-expr_stmt|;
-break|break;
-case|case
-name|PT_RVI
-case|:
-comment|/* XXX: PAT support. */
-name|mask
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
