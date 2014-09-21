@@ -21,6 +21,12 @@ directive|include
 file|<sys/counter.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel resident routing tables.  *  * The routing tables are initialized when interface addresses  * are set by making entries for all directly connected interfaces.  */
 end_comment
@@ -198,16 +204,26 @@ begin_comment
 comment|/* number of usable routing tables */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|u_int
+argument_list|,
 name|rt_add_addr_allfibs
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Announce interfaces to all fibs */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|V_rt_add_addr_allfibs
+value|VNET(rt_add_addr_allfibs)
+end_define
 
 begin_comment
 comment|/*  * We distinguish between routes to hosts and routes to networks,  * preferring the former if available.  For each route we infer  * the interface to use from the gateway address supplied when  * the route was entered.  Routes that forward packets through  * gateways are marked so that the output routines know to address the  * gateway rather than the ultimate destination.  */
