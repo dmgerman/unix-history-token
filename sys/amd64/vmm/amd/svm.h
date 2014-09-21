@@ -193,62 +193,7 @@ asm|__asm __volatile("stgi" : : :);
 block|}
 end_function
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|save_cr2
-parameter_list|(
-name|uint64_t
-modifier|*
-name|cr2
-parameter_list|)
-block|{
-asm|__asm __volatile(
-literal|"mov %%cr2, %%rax; movq %%rax, %0"
-operator|:
-literal|"=m"
-operator|(
-operator|*
-name|cr2
-operator|)
-operator|:
-operator|:
-literal|"rax"
-operator|,
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|load_cr2
-parameter_list|(
-name|uint64_t
-modifier|*
-name|cr2
-parameter_list|)
-block|{
-asm|__asm __volatile(
-literal|"movq %0, %%rax; movq %%rax, %%cr2"
-operator|:
-operator|:
-literal|"m"
-operator|(
-operator|*
-name|cr2
-operator|)
-operator|:
-literal|"rax"
-block|)
-function|;
-end_function
-
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
