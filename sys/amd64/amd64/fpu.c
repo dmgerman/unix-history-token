@@ -2046,17 +2046,8 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|int
-name|err_count
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * Device Not Available (DNA, #NM) exception handler.  *  * It would be better to switch FP context here (if curthread !=  * fpcurthread) and not necessarily for every context switch, but it  * is too hard to access foreign pcb's.  *  * The handler is entered with interrupts enabled, which allows the  * context switch to happen before critical enter() is executed, and  * causes restoration of FPU context on CPU other than that caused  * DNA.  It is fine, since context switch started emulation on the  * current CPU as well.  */
+comment|/*  * Device Not Available (DNA, #NM) exception handler.  *  * It would be better to switch FP context here (if curthread !=  * fpcurthread) and not necessarily for every context switch, but it  * is too hard to access foreign pcb's.  */
 end_comment
 
 begin_function
@@ -2066,6 +2057,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * This handler is entered with interrupts enabled, so context 	 * switches may occur before critical_enter() is executed.  If 	 * a context switch occurs, then when we regain control, our 	 * state will have been completely restored.  The CPU may 	 * change underneath us, but the only part of our context that 	 * lives in the CPU is CR0.TS and that will be "restored" by 	 * setting it on the new CPU. 	 */
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -2081,10 +2073,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fpudna: fpcurthread == curthread %d times\n"
-argument_list|,
-operator|++
-name|err_count
+literal|"fpudna: fpcurthread == curthread\n"
 argument_list|)
 expr_stmt|;
 name|stop_emulating
