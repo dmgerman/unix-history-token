@@ -2886,6 +2886,35 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|linux_file_fill_kinfo
+parameter_list|(
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|struct
+name|kinfo_file
+modifier|*
+name|kif
+parameter_list|,
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|fileops
@@ -2946,6 +2975,11 @@ operator|.
 name|fo_sendfile
 operator|=
 name|invfo_sendfile
+block|,
+operator|.
+name|fo_fill_kinfo
+operator|=
+name|linux_file_fill_kinfo
 block|, }
 decl_stmt|;
 end_decl_stmt
