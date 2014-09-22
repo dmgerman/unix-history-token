@@ -1524,7 +1524,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* Only forward dirrection. Do not eat history. */
+comment|/* Only forward direction. Do not eat history. */
 name|vthistory_addlines
 argument_list|(
 name|vb
@@ -3330,8 +3330,6 @@ operator|)
 operator|*
 literal|2
 operator|)
-operator|+
-literal|1
 expr_stmt|;
 return|return
 operator|(

@@ -388,6 +388,29 @@ end_endif
 
 begin_struct
 struct|struct
+name|vt_pastebuf
+block|{
+name|term_char_t
+modifier|*
+name|vpb_buf
+decl_stmt|;
+comment|/* Copy-paste buffer. */
+name|unsigned
+name|int
+name|vpb_bufsz
+decl_stmt|;
+comment|/* Buffer size. */
+name|unsigned
+name|int
+name|vpb_len
+decl_stmt|;
+comment|/* Length of a last selection. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vt_device
 block|{
 name|struct
@@ -412,11 +435,10 @@ name|vd_savedwindow
 decl_stmt|;
 comment|/* (?) Saved for suspend. */
 name|struct
-name|vt_window
-modifier|*
-name|vd_markedwin
+name|vt_pastebuf
+name|vd_pastebuf
 decl_stmt|;
-comment|/* (?) Copy/paste buf owner. */
+comment|/* (?) Copy/paste buf. */
 specifier|const
 name|struct
 name|vt_driver
@@ -563,6 +585,36 @@ comment|/* (c) Device unit. */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|VD_PASTEBUF
+parameter_list|(
+name|vd
+parameter_list|)
+value|((vd)->vd_pastebuf.vpb_buf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VD_PASTEBUFSZ
+parameter_list|(
+name|vd
+parameter_list|)
+value|((vd)->vd_pastebuf.vpb_bufsz)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VD_PASTEBUFLEN
+parameter_list|(
+name|vd
+parameter_list|)
+value|((vd)->vd_pastebuf.vpb_len)
+end_define
 
 begin_comment
 comment|/*  * Per-window terminal screen buffer.  *  * Because redrawing is performed asynchronously, the buffer keeps track  * of a rectangle that needs to be redrawn (vb_dirtyrect).  Because this  * approach seemed to cause suboptimal performance (when the top left  * and the bottom right of the screen are modified), it also uses a set  * of bitmasks to keep track of the rows and columns (mod 64) that have  * been modified.  */
