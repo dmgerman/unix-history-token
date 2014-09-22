@@ -2069,6 +2069,9 @@ operator|->
 name|pcb_current_pmap
 argument_list|)
 expr_stmt|;
+name|ia64_mf
+argument_list|()
+expr_stmt|;
 name|atomic_store_rel_ptr
 argument_list|(
 operator|&
