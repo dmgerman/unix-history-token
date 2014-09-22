@@ -335,6 +335,13 @@ name|acpi_mutex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|callout
+name|acpi_sleep_timer
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Bitmap of device quirks. */
 end_comment
@@ -3662,15 +3669,29 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Allow sleep request after a while. */
-name|timeout
+name|callout_init_mtx
 argument_list|(
-name|acpi_sleep_enable
+operator|&
+name|acpi_sleep_timer
 argument_list|,
-name|sc
+operator|&
+name|acpi_mutex
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|acpi_sleep_timer
 argument_list|,
 name|hz
 operator|*
 name|ACPI_MINIMUM_AWAKETIME
+argument_list|,
+name|acpi_sleep_enable
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
 name|error
@@ -11298,7 +11319,7 @@ argument_list|,
 literal|"suspend request timed out, forcing sleep now\n"
 argument_list|)
 expr_stmt|;
-comment|/*      * XXX Suspending from callout cause the freeze in DEVICE_SUSPEND().      * Suspend from acpi_task thread in stead.      */
+comment|/*      * XXX Suspending from callout causes freezes in DEVICE_SUSPEND().      * Suspend from acpi_task thread instead.      */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -11857,6 +11878,11 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|ACPI_LOCK_ASSERT
+argument_list|(
+name|acpi
+argument_list|)
+expr_stmt|;
 comment|/* Reschedule if the system is not fully up and running. */
 if|if
 condition|(
@@ -11864,11 +11890,10 @@ operator|!
 name|AcpiGbl_SystemAwakeAndRunning
 condition|)
 block|{
-name|timeout
+name|callout_schedule
 argument_list|(
-name|acpi_sleep_enable
-argument_list|,
-name|sc
+operator|&
+name|acpi_sleep_timer
 argument_list|,
 name|hz
 operator|*
@@ -11877,21 +11902,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ACPI_LOCK
-argument_list|(
-name|acpi
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|acpi_sleep_disabled
 operator|=
 name|FALSE
-expr_stmt|;
-name|ACPI_UNLOCK
-argument_list|(
-name|acpi
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -12546,11 +12561,10 @@ name|power_resume
 argument_list|)
 expr_stmt|;
 comment|/* Allow another sleep request after a while. */
-name|timeout
+name|callout_schedule
 argument_list|(
-name|acpi_sleep_enable
-argument_list|,
-name|sc
+operator|&
+name|acpi_sleep_timer
 argument_list|,
 name|hz
 operator|*
