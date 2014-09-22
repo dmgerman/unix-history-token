@@ -622,23 +622,6 @@ end_comment
 
 begin_struct
 struct|struct
-name|vt_bufmask
-block|{
-name|uint64_t
-name|vbm_row
-decl_stmt|,
-name|vbm_col
-decl_stmt|;
-define|#
-directive|define
-name|VBM_DIRTY
-value|UINT64_MAX
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|vt_buf
 block|{
 name|struct
@@ -715,11 +698,6 @@ name|term_rect_t
 name|vb_dirtyrect
 decl_stmt|;
 comment|/* (b) Dirty rectangle. */
-name|struct
-name|vt_bufmask
-name|vb_dirtymask
-decl_stmt|;
-comment|/* (b) Dirty bitmasks. */
 name|term_char_t
 modifier|*
 name|vb_buffer
@@ -888,10 +866,6 @@ name|vt_buf
 modifier|*
 parameter_list|,
 name|term_rect_t
-modifier|*
-parameter_list|,
-name|struct
-name|vt_bufmask
 modifier|*
 parameter_list|)
 function_decl|;
