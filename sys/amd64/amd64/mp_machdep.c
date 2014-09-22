@@ -416,7 +416,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|pcb
+name|susppcb
 modifier|*
 modifier|*
 name|susppcbs
@@ -6106,10 +6106,13 @@ if|if
 condition|(
 name|savectx
 argument_list|(
+operator|&
 name|susppcbs
 index|[
 name|cpu
 index|]
+operator|->
+name|sp_pcb
 argument_list|)
 condition|)
 block|{
@@ -6120,7 +6123,7 @@ index|[
 name|cpu
 index|]
 operator|->
-name|pcb_fpususpend
+name|sp_fpususpend
 argument_list|)
 expr_stmt|;
 name|wbinvd
@@ -6137,6 +6140,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|fpuresume
+argument_list|(
+name|susppcbs
+index|[
+name|cpu
+index|]
+operator|->
+name|sp_fpususpend
+argument_list|)
+expr_stmt|;
 name|pmap_init_pat
 argument_list|()
 expr_stmt|;
