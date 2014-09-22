@@ -10198,6 +10198,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Some hardware requires that we drop the endpoint 		 * context before adding it again: 		 */
 name|xhci_ctx_set_le32
 argument_list|(
 name|sc
@@ -10209,9 +10210,12 @@ name|ctx_input
 operator|.
 name|dwInCtx0
 argument_list|,
-literal|0
+name|mask
+operator|&
+name|XHCI_INCTX_NON_CTRL_MASK
 argument_list|)
 expr_stmt|;
+comment|/* Add new endpoint context */
 name|xhci_ctx_set_le32
 argument_list|(
 name|sc
