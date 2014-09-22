@@ -3533,6 +3533,32 @@ name|rx_csum
 operator|=
 literal|0
 expr_stmt|;
+comment|/* set TSO limits so that we don't have to drop TX packets */
+name|dev
+operator|->
+name|if_hw_tsomax
+operator|=
+literal|65536
+operator|-
+operator|(
+name|ETHER_HDR_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
+operator|)
+expr_stmt|;
+name|dev
+operator|->
+name|if_hw_tsomaxsegcount
+operator|=
+literal|16
+expr_stmt|;
+name|dev
+operator|->
+name|if_hw_tsomaxsegsize
+operator|=
+literal|65536
+expr_stmt|;
+comment|/* XXX can do up to 4GByte */
 name|err
 operator|=
 name|mlx4_wol_read
