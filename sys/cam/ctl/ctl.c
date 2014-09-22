@@ -26575,20 +26575,28 @@ return|;
 break|break;
 comment|/* NOTREACHED */
 block|}
-comment|/* NDOB flag can be used only together with UNMAP */
+comment|/* NDOB and ANCHOR flags can be used only together with UNMAP */
 if|if
 condition|(
+operator|(
+name|byte2
+operator|&
+name|SWS_UNMAP
+operator|)
+operator|==
+literal|0
+operator|&&
 operator|(
 name|byte2
 operator|&
 operator|(
 name|SWS_NDOB
 operator||
-name|SWS_UNMAP
+name|SWS_ANCHOR
 operator|)
 operator|)
-operator|==
-name|SWS_NDOB
+operator|!=
+literal|0
 condition|)
 block|{
 name|ctl_set_invalid_field
