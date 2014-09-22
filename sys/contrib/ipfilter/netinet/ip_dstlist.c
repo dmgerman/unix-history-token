@@ -5537,6 +5537,10 @@ decl_stmt|;
 if|if
 condition|(
 name|d
+operator|==
+name|NULL
+operator|||
+name|d
 operator|->
 name|ipld_dests
 operator|==
@@ -6046,6 +6050,8 @@ break|break;
 block|}
 if|if
 condition|(
+name|sel
+operator|&&
 name|sel
 operator|->
 name|ipfd_dest
