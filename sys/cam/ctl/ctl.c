@@ -23539,6 +23539,17 @@ name|CTL_FLAG_IO_CONT
 operator|)
 operator|&&
 operator|(
+name|io
+operator|->
+name|io_hdr
+operator|.
+name|flags
+operator|&
+name|CTL_FLAG_ABORT
+operator|)
+operator|==
+literal|0
+operator|&&
 operator|(
 operator|(
 name|io
@@ -23551,9 +23562,7 @@ name|CTL_STATUS_MASK
 operator|)
 operator|==
 name|CTL_STATUS_NONE
-operator|)
 operator|||
-operator|(
 operator|(
 name|io
 operator|->
@@ -23565,7 +23574,6 @@ name|CTL_STATUS_MASK
 operator|)
 operator|==
 name|CTL_SUCCESS
-operator|)
 operator|)
 condition|)
 block|{
