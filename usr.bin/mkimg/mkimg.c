@@ -438,6 +438,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-\t\t\t-  unused partition entry\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t    where:\n"
 argument_list|)
 expr_stmt|;
@@ -581,7 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A partition specification has the following format:  *<type> ':'<kind><contents>  * where:  *	type	  the partition type alias  *	kind	  the interpretation of the contents specification  *		  ':'   contents holds the size of an empty partition  *		  '='   contents holds the name of a file to read  *		  '-'   contents holds a command to run; the output of  *			which is the contents of the partition.  *	contents  the specification of a partition's contents  */
+comment|/*  * A partition specification has the following format:  *<type> ':'<kind><contents>  * where:  *	type	  the partition type alias  *	kind	  the interpretation of the contents specification  *		  ':'   contents holds the size of an empty partition  *		  '='   contents holds the name of a file to read  *		  '-'   contents holds a command to run; the output of  *			which is the contents of the partition.  *	contents  the specification of a partition's contents  *  * A specification that is a single dash indicates an unused partition  * entry.  */
 end_comment
 
 begin_function
@@ -610,6 +617,27 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|spec
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|nparts
+operator|++
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|part
 operator|=
 name|calloc
