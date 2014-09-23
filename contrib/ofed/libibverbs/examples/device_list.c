@@ -33,18 +33,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<byteswap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<infiniband/verbs.h>
 end_include
 

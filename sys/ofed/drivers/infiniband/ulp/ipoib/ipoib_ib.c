@@ -1206,10 +1206,14 @@ name|saverx
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|dev
-operator|->
-name|if_iqdrops
-operator|++
+argument_list|,
+name|IFCOUNTER_IQDROPS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 goto|goto
 name|repost

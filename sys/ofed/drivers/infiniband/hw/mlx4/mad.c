@@ -6069,6 +6069,10 @@ argument_list|,
 name|port_num
 argument_list|,
 name|MLX4_EQ_PORT_INFO_LID_CHANGE_MASK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6142,6 +6146,10 @@ argument_list|,
 name|port_num
 argument_list|,
 name|MLX4_EQ_PORT_INFO_CLIENT_REREG_MASK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6710,6 +6718,10 @@ argument_list|,
 name|port
 argument_list|,
 name|MLX4_EQ_PORT_INFO_GID_PFX_CHANGE_MASK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

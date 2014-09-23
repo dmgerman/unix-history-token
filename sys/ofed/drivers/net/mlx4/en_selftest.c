@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2007 Mellanox Technologies. All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  *  */
+comment|/*  * Copyright (c) 2007, 2014 Mellanox Technologies. All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  *  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"mlx4_en.h"
-end_include
 
 begin_include
 include|#
@@ -39,6 +33,12 @@ directive|include
 file|<linux/mlx4/driver.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mlx4_en.h"
+end_include
+
 begin_function
 specifier|static
 name|int
@@ -68,6 +68,8 @@ argument_list|,
 name|MLX4_CMD_HW_HEALTH_CHECK
 argument_list|,
 name|MLX4_CMD_TIME_CLASS_A
+argument_list|,
+name|MLX4_CMD_WRAPPED
 argument_list|)
 return|;
 block|}
@@ -85,9 +87,9 @@ name|priv
 parameter_list|)
 block|{
 name|struct
-name|mbuf
+name|sk_buff
 modifier|*
-name|mb
+name|skb
 decl_stmt|;
 name|struct
 name|ethhdr
@@ -113,9 +115,9 @@ name|int
 name|err
 decl_stmt|;
 comment|/* build the pkt before xmit */
-name|mb
+name|skb
 operator|=
-name|netdev_alloc_mb
+name|netdev_alloc_skb
 argument_list|(
 name|priv
 operator|->
@@ -131,14 +133,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mb
+name|skb
 condition|)
 block|{
 name|en_err
 argument_list|(
 name|priv
 argument_list|,
-literal|"-LOOPBACK_TEST_XMIT- failed to create mb for xmit\n"
+literal|"-LOOPBACK_TEST_XMIT- failed to create skb for xmit\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -146,9 +148,9 @@ operator|-
 name|ENOMEM
 return|;
 block|}
-name|mb_reserve
+name|skb_reserve
 argument_list|(
-name|mb
+name|skb
 argument_list|,
 name|NET_IP_ALIGN
 argument_list|)
@@ -160,9 +162,9 @@ expr|struct
 name|ethhdr
 operator|*
 operator|)
-name|mb_put
+name|skb_put
 argument_list|(
-name|mb
+name|skb
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -178,9 +180,9 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|mb_put
+name|skb_put
 argument_list|(
-name|mb
+name|skb
 argument_list|,
 name|packet_size
 argument_list|)
@@ -220,9 +222,9 @@ argument_list|(
 name|ETH_P_ARP
 argument_list|)
 expr_stmt|;
-name|mb_set_mac_header
+name|skb_set_mac_header
 argument_list|(
-name|mb
+name|skb
 argument_list|,
 literal|0
 argument_list|)
@@ -261,7 +263,7 @@ name|err
 operator|=
 name|mlx4_en_xmit
 argument_list|(
-name|mb
+name|skb
 argument_list|,
 name|priv
 operator|->
@@ -304,6 +306,19 @@ operator|->
 name|validate_loopback
 operator|=
 literal|1
+expr_stmt|;
+name|mlx4_en_update_loopback_state
+argument_list|(
+name|priv
+operator|->
+name|dev
+argument_list|,
+name|priv
+operator|->
+name|dev
+operator|->
+name|features
+argument_list|)
 expr_stmt|;
 comment|/* xmit */
 if|if
@@ -379,11 +394,22 @@ name|validate_loopback
 operator|=
 literal|0
 expr_stmt|;
+name|mlx4_en_update_loopback_state
+argument_list|(
+name|priv
+operator|->
+name|dev
+argument_list|,
+name|priv
+operator|->
+name|dev
+operator|->
+name|features
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
 operator|!
 name|loopback_ok
-operator|)
 return|;
 block|}
 end_function
@@ -464,7 +490,7 @@ return|return
 operator|-
 name|ENOMEM
 return|;
-comment|/* The device currently only supports 10G speed */
+comment|/* The device supports 1G, 10G and 40G speed */
 if|if
 condition|(
 name|priv
@@ -473,7 +499,23 @@ name|port_state
 operator|.
 name|link_speed
 operator|!=
-name|SPEED_10000
+name|MLX4_EN_LINK_SPEED_1G
+operator|&&
+name|priv
+operator|->
+name|port_state
+operator|.
+name|link_speed
+operator|!=
+name|MLX4_EN_LINK_SPEED_10G
+operator|&&
+name|priv
+operator|->
+name|port_state
+operator|.
+name|link_speed
+operator|!=
+name|MLX4_EN_LINK_SPEED_40G
 condition|)
 return|return
 name|priv
@@ -525,11 +567,6 @@ name|priv
 operator|->
 name|mdev
 decl_stmt|;
-name|struct
-name|mlx4_en_tx_ring
-modifier|*
-name|tx_ring
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -570,62 +607,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|retry_tx
-label|:
-comment|/* Wait untill all tx queues are empty. 		 * there should not be any additional incoming traffic 		 * since we turned the carrier off */
+comment|/* Wait until all tx queues are empty. 		 * there should not be any additional incoming traffic 		 * since we turned the carrier off */
 name|msleep
 argument_list|(
 literal|200
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|priv
-operator|->
-name|tx_ring_num
-operator|&&
-name|carrier_ok
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|tx_ring
-operator|=
-operator|&
-name|priv
-operator|->
-name|tx_ring
-index|[
-name|i
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|tx_ring
-operator|->
-name|prod
-operator|!=
-operator|(
-name|tx_ring
-operator|->
-name|cons
-operator|+
-name|tx_ring
-operator|->
-name|last_nr_txbb
-operator|)
-condition|)
-goto|goto
-name|retry_tx
-goto|;
-block|}
 if|if
 condition|(
 name|priv
@@ -636,7 +623,9 @@ name|dev
 operator|->
 name|caps
 operator|.
-name|loopback_support
+name|flags
+operator|&
+name|MLX4_DEV_CAP_FLAG_UC_LOOPBACK
 condition|)
 block|{
 name|buf
@@ -649,6 +638,12 @@ argument_list|(
 name|priv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|priv
+operator|->
+name|port_up
+condition|)
 name|buf
 index|[
 literal|4
