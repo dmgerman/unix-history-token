@@ -119,13 +119,15 @@ name|mkimg_alias
 modifier|*
 name|aliases
 decl_stmt|;
-name|u_int
+name|lba_t
 function_decl|(
 modifier|*
 name|metadata
 function_decl|)
 parameter_list|(
 name|u_int
+parameter_list|,
+name|lba_t
 parameter_list|)
 function_decl|;
 define|#
