@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/intpmreg.h>
+file|<dev/intpm/intpmreg.h>
 end_include
 
 begin_include
