@@ -2717,6 +2717,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_ktimer_getoverrun
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|timer_id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_thr_new
 parameter_list|(
 name|struct

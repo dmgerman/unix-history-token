@@ -176,6 +176,51 @@ parameter_list|)
 value|(l_uintptr_t)(uintptr_t)(v)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CP
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|fld
+parameter_list|)
+value|do { (dst).fld = (src).fld; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CP2
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|sfld
+parameter_list|,
+name|dfld
+parameter_list|)
+value|do { (dst).dfld = (src).sfld; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTRIN_CP
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|fld
+parameter_list|)
+define|\
+value|do { (dst).fld = PTRIN((src).fld); } while (0)
+end_define
+
 begin_comment
 comment|/*  * Provide a separate set of types for the Linux types.  */
 end_comment
