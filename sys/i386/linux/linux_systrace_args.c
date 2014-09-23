@@ -8741,9 +8741,19 @@ operator|->
 name|timerid
 expr_stmt|;
 comment|/* l_timer_t */
-name|uarg
+name|iarg
 index|[
 literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* l_int */
+name|uarg
+index|[
+literal|2
 index|]
 operator|=
 operator|(
@@ -8756,7 +8766,7 @@ expr_stmt|;
 comment|/* const struct itimerspec * */
 name|uarg
 index|[
-literal|2
+literal|3
 index|]
 operator|=
 operator|(
@@ -8770,7 +8780,7 @@ comment|/* struct itimerspec * */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|4
 expr_stmt|;
 break|break;
 block|}
@@ -17309,11 +17319,19 @@ literal|1
 case|:
 name|p
 operator|=
-literal|"const struct itimerspec *"
+literal|"l_int"
 expr_stmt|;
 break|break;
 case|case
 literal|2
+case|:
+name|p
+operator|=
+literal|"const struct itimerspec *"
+expr_stmt|;
+break|break;
+case|case
+literal|3
 case|:
 name|p
 operator|=
