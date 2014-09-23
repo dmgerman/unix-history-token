@@ -8926,11 +8926,18 @@ argument_list|,
 name|behav
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Pre-populate paging structures in the 			 * WILLNEED case.  For wired entries, the 			 * paging structures are already populated. 			 */
 if|if
 condition|(
 name|behav
 operator|==
 name|MADV_WILLNEED
+operator|&&
+name|current
+operator|->
+name|wired_count
+operator|==
+literal|0
 condition|)
 block|{
 name|vm_map_pmap_enter
