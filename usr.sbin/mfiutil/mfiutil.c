@@ -416,6 +416,20 @@ argument_list|,
 literal|"    bbu<setting><value>     - set BBU properties\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    ctrlprop rebuild [rate]   - get/set the volume rebuild rate\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    ctrlprop alarm [0/1]      - enable/disable controller alarms\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
