@@ -446,7 +446,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/ncrreg.h>
+file|<dev/ncr/ncrreg.h>
 end_include
 
 begin_include
