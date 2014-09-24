@@ -7124,7 +7124,7 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-comment|/* for 4-tuple check, syncache_add */
+comment|/* for 4-tuple check */
 comment|/* Don't offload if the 4-tuple is already in use */
 if|if
 condition|(
@@ -7159,6 +7159,12 @@ name|REJECT_PASS_ACCEPT
 argument_list|()
 expr_stmt|;
 block|}
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 name|inp
 operator|=
 name|lctx
@@ -7188,12 +7194,6 @@ comment|/* 		 * The listening socket has closed.  The reply from the TOE to 		 *
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|free
@@ -7531,12 +7531,6 @@ name|inp
 argument_list|)
 expr_stmt|;
 comment|/* ok to assert, we have a ref on the inp */
-name|INP_INFO_UNLOCK_ASSERT
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If we replied during syncache_add (synqe->wr has been consumed), 	 * good.  Otherwise, set it to 0 so that further syncache_respond 	 * attempts by the kernel will be ignored. 	 */
 if|if
 condition|(
