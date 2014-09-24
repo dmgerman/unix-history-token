@@ -2253,6 +2253,10 @@ name|mlx4_en_pkt_stats
 name|pkstats
 decl_stmt|;
 name|struct
+name|mlx4_en_pkt_stats
+name|pkstats_last
+decl_stmt|;
+name|struct
 name|mlx4_en_flow_stats
 name|flowstats
 index|[

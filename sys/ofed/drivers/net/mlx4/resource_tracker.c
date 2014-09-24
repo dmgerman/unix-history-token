@@ -9790,6 +9790,8 @@ name|mac
 decl_stmt|;
 name|u8
 name|smac_index
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
