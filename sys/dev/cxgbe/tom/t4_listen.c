@@ -7506,7 +7506,7 @@ name|lctx
 argument_list|)
 expr_stmt|;
 comment|/* A synqe on the list has a ref on its lctx */
-comment|/* 	 * If all goes well t4_syncache_respond will get called during 	 * syncache_add.  Also note that syncache_add releases both pcbinfo and 	 * pcb locks. 	 */
+comment|/* 	 * If all goes well t4_syncache_respond will get called during 	 * syncache_add.  Note that syncache_add releases the pcb lock. 	 */
 name|toe_syncache_add
 argument_list|(
 operator|&
