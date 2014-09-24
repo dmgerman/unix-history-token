@@ -20293,7 +20293,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ___FreeBSD__ */
+comment|/* __FreeBSD__ */
 name|printnl
 operator|=
 name|B_TRUE
@@ -20369,6 +20369,28 @@ name|printnl
 operator|=
 name|B_TRUE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|root_pool_upgrade_check
+argument_list|(
+name|zhp
+argument_list|,
+name|cbp
+operator|->
+name|cb_poolname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cbp
+operator|->
+name|cb_poolname
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 comment|/* 			 * If they did "zpool upgrade -a", then we could 			 * be doing ioctls to different pools.  We need 			 * to log this history once to each pool, and bypass 			 * the normal history logging that happens in main(). 			 */
 operator|(
 name|void
@@ -20999,7 +21021,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ___FreeBSD__ */
+comment|/* __FreeBSD__ */
 block|}
 if|if
 condition|(
