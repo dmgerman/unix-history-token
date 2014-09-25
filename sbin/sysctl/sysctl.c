@@ -1267,6 +1267,10 @@ operator|)
 return|;
 block|}
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|kind
@@ -3374,6 +3378,10 @@ name|len
 operator|-
 literal|1
 index|]
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
