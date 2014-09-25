@@ -1177,6 +1177,11 @@ operator|!
 name|filep
 condition|)
 block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -1199,6 +1204,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|filep
@@ -1295,6 +1305,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|filep
