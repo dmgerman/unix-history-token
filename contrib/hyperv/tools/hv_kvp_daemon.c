@@ -1058,16 +1058,6 @@ name|ENTRIES_PER_BLOCK
 decl_stmt|;
 if|if
 condition|(
-name|access
-argument_list|(
-literal|"/var/db/hyperv/pool"
-argument_list|,
-name|F_OK
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 name|mkdir
 argument_list|(
 literal|"/var/db/hyperv/pool"
@@ -1078,6 +1068,12 @@ name|S_IWUSR
 operator||
 name|S_IROTH
 argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|EISDIR
 condition|)
 block|{
 name|KVP_LOG
@@ -1092,7 +1088,6 @@ argument_list|(
 name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 for|for
 control|(
