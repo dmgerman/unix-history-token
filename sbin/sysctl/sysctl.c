@@ -1340,6 +1340,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|endptr
 operator|==
 name|newval
@@ -1403,6 +1407,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|endptr
 operator|==
 name|newval
@@ -1462,6 +1470,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|endptr
 operator|==
 name|newval
@@ -1521,6 +1533,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|endptr
 operator|==
 name|newval
@@ -1585,6 +1601,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|endptr
 operator|==
 name|newval
@@ -1644,6 +1664,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|endptr
 operator|==
 name|newval
@@ -3376,6 +3400,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|endptr
 operator|==
 name|str
@@ -3436,6 +3464,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|endptr
 operator|==
 name|str
