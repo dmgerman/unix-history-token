@@ -727,6 +727,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|kern_fcntl_freebsd
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|long
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|kern_fhstat
 parameter_list|(
 name|struct
