@@ -24,27 +24,6 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|NCR_DATE
-value|"pl30 98/1/1"
-end_define
-
-begin_define
-define|#
-directive|define
-name|NCR_VERSION
-value|(2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_UNITS
-value|(16)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NCR_GETCC_WITHMSG
 end_define
 
@@ -686,7 +665,7 @@ name|INB
 parameter_list|(
 name|r
 parameter_list|)
-value|bus_space_read_1(np->bst, np->bsh, offsetof(struct ncr_reg, r))
+value|bus_read_1(np->reg_res, offsetof(struct ncr_reg, r))
 end_define
 
 begin_define
@@ -696,7 +675,7 @@ name|INW
 parameter_list|(
 name|r
 parameter_list|)
-value|bus_space_read_2(np->bst, np->bsh, offsetof(struct ncr_reg, r))
+value|bus_read_2(np->reg_res, offsetof(struct ncr_reg, r))
 end_define
 
 begin_define
@@ -706,7 +685,7 @@ name|INL
 parameter_list|(
 name|r
 parameter_list|)
-value|bus_space_read_4(np->bst, np->bsh, offsetof(struct ncr_reg, r))
+value|bus_read_4(np->reg_res, offsetof(struct ncr_reg, r))
 end_define
 
 begin_define
@@ -718,7 +697,7 @@ name|r
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(np->bst, np->bsh, \ 				       offsetof(struct ncr_reg, r), val)
+value|bus_write_1(np->reg_res, offsetof(struct ncr_reg, r), val)
 end_define
 
 begin_define
@@ -730,7 +709,7 @@ name|r
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_2(np->bst, np->bsh, \ 				       offsetof(struct ncr_reg, r), val)
+value|bus_write_2(np->reg_res, offsetof(struct ncr_reg, r), val)
 end_define
 
 begin_define
@@ -742,7 +721,7 @@ name|r
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(np->bst, np->bsh, \ 				       offsetof(struct ncr_reg, r), val)
+value|bus_write_4(np->reg_res, offsetof(struct ncr_reg, r), val)
 end_define
 
 begin_define
@@ -754,7 +733,7 @@ name|o
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(np->bst, np->bsh, o, val)
+value|bus_write_4(np->reg_res, o, val)
 end_define
 
 begin_define
@@ -764,7 +743,7 @@ name|INB_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|bus_space_read_1(np->bst, np->bsh, o)
+value|bus_read_1(np->reg_res, o)
 end_define
 
 begin_define
@@ -774,7 +753,7 @@ name|INW_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|bus_space_read_2(np->bst, np->bsh, o)
+value|bus_read_2(np->reg_res, o)
 end_define
 
 begin_define
@@ -784,7 +763,7 @@ name|INL_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|bus_space_read_4(np->bst, np->bsh, o)
+value|bus_read_4(np->reg_res, o)
 end_define
 
 begin_define
@@ -797,7 +776,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|(base ? *((volatile u_int32_t *)((volatile char *)base + (off))) :	\     bus_space_read_4(np->bst2, np->bsh2, off))
+value|(base ? *((volatile u_int32_t *)((volatile char *)base + (off))) :	\     bus_read_4(np->sram_res, off))
 end_define
 
 begin_define
@@ -812,7 +791,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|do {								\     	if (base)							\     		*((volatile u_int32_t *)				\ 			((volatile char *)base + (off))) = (val);	\     	else								\ 		bus_space_write_4(np->bst2, np->bsh2, off, val);	\     } while (0)
+value|do {								\     	if (base)							\     		*((volatile u_int32_t *)				\ 			((volatile char *)base + (off))) = (val);	\     	else								\ 		bus_write_4(np->sram_res, off, val);			\     } while (0)
 end_define
 
 begin_define
@@ -2088,8 +2067,8 @@ name|struct
 name|head
 name|header
 decl_stmt|;
-name|int
-name|unit
+name|device_t
+name|dev
 decl_stmt|;
 comment|/*----------------------------------------------- 	**	Scripts .. 	**----------------------------------------------- 	** 	**	During reselection the ncr jumps to this point. 	**	The SFBR register is loaded with the encoded target id. 	** 	**	Jump to the first target. 	** 	**	JUMP 	**	@(next tcb) 	*/
 name|struct
@@ -2105,12 +2084,6 @@ name|resource
 modifier|*
 name|reg_res
 decl_stmt|;
-name|bus_space_tag_t
-name|bst
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh
-decl_stmt|;
 name|int
 name|sram_rid
 decl_stmt|;
@@ -2118,12 +2091,6 @@ name|struct
 name|resource
 modifier|*
 name|sram_res
-decl_stmt|;
-name|bus_space_tag_t
-name|bst2
-decl_stmt|;
-name|bus_space_handle_t
-name|bsh2
 decl_stmt|;
 name|struct
 name|resource
@@ -2262,8 +2229,8 @@ name|time_t
 name|lasttime
 decl_stmt|;
 name|struct
-name|callout_handle
-name|timeout_ch
+name|callout
+name|timer
 decl_stmt|;
 comment|/*----------------------------------------------- 	**	Debug and profiling 	**----------------------------------------------- 	** 	**	register dump 	*/
 name|struct
@@ -2311,6 +2278,10 @@ decl_stmt|;
 comment|/* 	**	controller chip dependent maximal transfer width. 	*/
 name|u_char
 name|maxwide
+decl_stmt|;
+name|struct
+name|mtx
+name|lock
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2944,6 +2915,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|ncr_intr_locked
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|ncr_int_ma
 parameter_list|(
 name|ncb_p
@@ -3242,62 +3224,6 @@ begin_comment
 comment|/*========================================================== ** ** **      Global static data. ** ** **========================================================== */
 end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u_long
-name|ncr_version
-init|=
-name|NCR_VERSION
-operator|*
-literal|11
-operator|+
-operator|(
-name|u_long
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ncb
-argument_list|)
-operator|*
-literal|7
-operator|+
-operator|(
-name|u_long
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nccb
-argument_list|)
-operator|*
-literal|5
-operator|+
-operator|(
-name|u_long
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|lcb
-argument_list|)
-operator|*
-literal|3
-operator|+
-operator|(
-name|u_long
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tcb
-argument_list|)
-operator|*
-literal|2
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3432,47 +3358,6 @@ directive|define
 name|NCR_1510D_ID
 value|(0x000a1000ul)
 end_define
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|ncr_name
-parameter_list|(
-name|ncb_p
-name|np
-parameter_list|)
-block|{
-specifier|static
-name|char
-name|name
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|snprintf
-argument_list|(
-name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-argument_list|,
-literal|"ncr%d"
-argument_list|,
-name|np
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|name
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*========================================================== ** ** **      Scripts for NCR-Processor. ** **      Use ncr_script_bind for binding to physical addresses. ** ** **========================================================== ** **	NADDR generates a reference to a field of the controller data. **	PADDR generates a reference to another part of the script. **	RADDR generates a reference to a script processor register. **	FADDR generates a reference to a script processor register **		with offset. ** **---------------------------------------------------------- */
@@ -8069,14 +7954,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: ERROR0 IN SCRIPT at %d.\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"ERROR0 IN SCRIPT at %d.\n"
 argument_list|,
 call|(
 name|int
@@ -8188,14 +8072,13 @@ operator|&
 literal|3
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: ERROR1 IN SCRIPT at %d.\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"ERROR1 IN SCRIPT at %d.\n"
 argument_list|,
 call|(
 name|int
@@ -9389,11 +9272,37 @@ decl_stmt|;
 comment|/* 	**	allocate and initialize structures. 	*/
 name|np
 operator|->
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
 name|dev
+operator|=
+name|dev
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|lock
+argument_list|,
+literal|"ncr"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|callout_init_mtx
+argument_list|(
+operator|&
+name|np
+operator|->
+name|timer
+argument_list|,
+operator|&
+name|np
+operator|->
+name|lock
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	**	Try to map the controller chip to 	**	virtual and physical memory. 	*/
@@ -9401,7 +9310,10 @@ name|np
 operator|->
 name|reg_rid
 operator|=
-literal|0x14
+name|PCIR_BAR
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|np
 operator|->
@@ -9440,29 +9352,7 @@ return|return
 name|ENXIO
 return|;
 block|}
-comment|/* 	**	Make the controller's registers available. 	**	Now the INB INW INL OUTB OUTW OUTL macros 	**	can be used safely. 	*/
-name|np
-operator|->
-name|bst
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|np
-operator|->
-name|reg_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|np
-operator|->
-name|reg_res
-argument_list|)
-expr_stmt|;
+comment|/* 	**	Now the INB INW INL OUTB OUTW OUTL macros 	**	can be used safely. 	*/
 ifdef|#
 directive|ifdef
 name|NCR_IOMAPPED
@@ -9815,14 +9705,11 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Tekram EEPROM read %s\n"
+name|dev
 argument_list|,
-name|ncr_name
-argument_list|(
-name|np
-argument_list|)
+literal|"Tekram EEPROM read %s\n"
 argument_list|,
 name|read_tekram_eeprom
 argument_list|(
@@ -10336,7 +10223,10 @@ name|np
 operator|->
 name|sram_rid
 operator|=
-literal|0x18
+name|PCIR_BAR
+argument_list|(
+literal|2
+argument_list|)
 expr_stmt|;
 name|np
 operator|->
@@ -10378,28 +10268,6 @@ operator|->
 name|p_script
 operator|=
 name|rman_get_start
-argument_list|(
-name|np
-operator|->
-name|sram_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|bst2
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|np
-operator|->
-name|sram_res
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|bsh2
-operator|=
-name|rman_get_bushandle
 argument_list|(
 name|np
 operator|->
@@ -10591,14 +10459,11 @@ name|cachelnsz
 operator|=
 literal|8
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: setting PCI cache line size register to %d.\n"
+name|dev
 argument_list|,
-name|ncr_name
-argument_list|(
-name|np
-argument_list|)
+literal|"setting PCI cache line size register to %d.\n"
 argument_list|,
 operator|(
 name|int
@@ -10632,14 +10497,11 @@ name|command
 operator||=
 name|PCIM_CMD_MWRICEN
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: setting PCI command write and invalidate.\n"
+name|dev
 argument_list|,
-name|ncr_name
-argument_list|(
-name|np
-argument_list|)
+literal|"setting PCI command write and invalidate.\n"
 argument_list|)
 expr_stmt|;
 name|pci_write_config
@@ -10808,14 +10670,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: minsync=%d, maxsync=%d, maxoffs=%d, %d dwords burst, %s dma fifo\n"
+name|dev
 argument_list|,
-name|ncr_name
-argument_list|(
-name|np
-argument_list|)
+literal|"minsync=%d, maxsync=%d, maxoffs=%d, %d dwords burst, %s dma fifo\n"
 argument_list|,
 name|np
 operator|->
@@ -10854,14 +10713,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: %s, %s IRQ driver%s\n"
+name|dev
 argument_list|,
-name|ncr_name
-argument_list|(
-name|np
-argument_list|)
+literal|"%s, %s IRQ driver%s\n"
 argument_list|,
 name|np
 operator|->
@@ -11254,6 +11110,8 @@ argument_list|,
 name|INTR_TYPE_CAM
 operator||
 name|INTR_ENTROPY
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|NULL
 argument_list|,
@@ -11302,12 +11160,15 @@ literal|"ncr"
 argument_list|,
 name|np
 argument_list|,
-name|np
-operator|->
-name|unit
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 operator|&
-name|Giant
+name|np
+operator|->
+name|lock
 argument_list|,
 literal|1
 argument_list|,
@@ -11334,6 +11195,14 @@ return|return
 name|ENOMEM
 return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|np
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xpt_bus_register
@@ -11358,6 +11227,14 @@ name|sim
 argument_list|,
 comment|/*free_devq*/
 name|TRUE
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|np
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -11411,6 +11288,14 @@ comment|/*free_devq*/
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|np
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
@@ -11426,6 +11311,14 @@ operator|->
 name|lasttime
 operator|=
 literal|0
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|np
+operator|->
+name|lock
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -11448,12 +11341,36 @@ name|np
 init|=
 name|vnp
 decl_stmt|;
-name|int
-name|oldspl
-init|=
-name|splcam
-argument_list|()
-decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|np
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|ncr_intr_locked
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|np
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|void
+name|ncr_intr_locked
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+block|{
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -11525,11 +11442,6 @@ argument_list|(
 literal|"]\n"
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|oldspl
-argument_list|)
-expr_stmt|;
 block|}
 comment|/*========================================================== ** ** **	Start execution of a SCSI command. **	This is called from the generic SCSI driver. ** ** **========================================================== */
 specifier|static
@@ -11560,6 +11472,16 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|np
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ccb
@@ -11583,9 +11505,6 @@ name|lp
 decl_stmt|;
 name|tcb_p
 name|tp
-decl_stmt|;
-name|int
-name|oldspl
 decl_stmt|;
 name|struct
 name|ccb_scsiio
@@ -11635,11 +11554,6 @@ name|ccb
 operator|->
 name|csio
 expr_stmt|;
-name|oldspl
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
 comment|/* 		 * Last time we need to check if this CCB needs to 		 * be aborted. 		 */
 if|if
 condition|(
@@ -11659,11 +11573,6 @@ block|{
 name|xpt_done
 argument_list|(
 name|ccb
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|oldspl
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12324,11 +12233,6 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|oldspl
-argument_list|)
-expr_stmt|;
 name|xpt_done
 argument_list|(
 name|ccb
@@ -12917,14 +12821,13 @@ name|DEBUG_FLAGS
 operator|&
 name|DEBUG_QUEUE
 condition|)
-name|printf
-argument_list|(
-literal|"%s: queuepos=%d tryoffset=%d.\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"queuepos=%d tryoffset=%d.\n"
 argument_list|,
 name|np
 operator|->
@@ -12959,12 +12862,6 @@ argument_list|(
 name|nc_istat
 argument_list|,
 name|SIGP
-argument_list|)
-expr_stmt|;
-comment|/* 		**	and reenable interrupts 		*/
-name|splx
-argument_list|(
-name|oldspl
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13028,9 +12925,6 @@ decl_stmt|;
 name|u_int
 name|update_type
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|ccb_trans_settings_scsi
 modifier|*
@@ -13082,11 +12976,6 @@ condition|)
 name|update_type
 operator||=
 name|NCR_TRANS_USER
-expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 name|tp
 operator|=
@@ -13598,11 +13487,6 @@ operator|->
 name|bus_width
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -13653,9 +13537,6 @@ operator|.
 name|target_id
 index|]
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|ccb_trans_settings_scsi
 modifier|*
@@ -13703,11 +13584,6 @@ operator|->
 name|transport_version
 operator|=
 literal|2
-expr_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -13859,11 +13735,6 @@ operator|=
 name|tinfo
 operator|->
 name|width
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|spi
 operator|->
@@ -15221,14 +15092,13 @@ if|if
 condition|(
 name|msg
 condition|)
-name|printf
-argument_list|(
-literal|"%s: restart (%s).\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"restart (%s).\n"
 argument_list|,
 name|msg
 argument_list|)
@@ -15660,7 +15530,7 @@ modifier|*
 name|sim
 parameter_list|)
 block|{
-name|ncr_intr
+name|ncr_intr_locked
 argument_list|(
 name|cam_sim_softc
 argument_list|(
@@ -16781,6 +16651,16 @@ decl_stmt|;
 name|nccb_p
 name|cp
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|np
+operator|->
+name|lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|np
@@ -16790,13 +16670,6 @@ operator|!=
 name|thistime
 condition|)
 block|{
-comment|/* 		**	block ncr interrupts 		*/
-name|int
-name|oldspl
-init|=
-name|splcam
-argument_list|()
-decl_stmt|;
 name|np
 operator|->
 name|lasttime
@@ -16919,14 +16792,13 @@ name|select
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: timeout nccb=%p (skip)\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"timeout nccb=%p (skip)\n"
 argument_list|,
 name|cp
 argument_list|)
@@ -16991,30 +16863,23 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-name|splx
-argument_list|(
-name|oldspl
-argument_list|)
-expr_stmt|;
 block|}
+name|callout_reset
+argument_list|(
+operator|&
 name|np
 operator|->
-name|timeout_ch
-operator|=
-name|timeout
-argument_list|(
-name|ncr_timeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|np
+name|timer
 argument_list|,
 name|step
 condition|?
 name|step
 else|:
 literal|1
+argument_list|,
+name|ncr_timeout
+argument_list|,
+name|np
 argument_list|)
 expr_stmt|;
 if|if
@@ -17034,12 +16899,6 @@ operator|)
 condition|)
 block|{
 comment|/* 		**	Process pending interrupts. 		*/
-name|int
-name|oldspl
-init|=
-name|splcam
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 name|DEBUG_FLAGS
@@ -17065,11 +16924,6 @@ condition|)
 name|printf
 argument_list|(
 literal|"}"
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|oldspl
 argument_list|)
 expr_stmt|;
 block|}
@@ -17241,14 +17095,13 @@ operator|=
 literal|"mem"
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"%s:%d: ERROR (%x:%x) (%x-%x-%x) (%x/%x) @ (%s %x:%08x).\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"%d: ERROR (%x:%x) (%x-%x-%x) (%x/%x) @ (%s %x:%08x).\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -17337,14 +17190,13 @@ operator|<
 name|script_size
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: script cmd = %08x\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"script cmd = %08x\n"
 argument_list|,
 operator|(
 name|int
@@ -17358,14 +17210,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"%s: regdump:"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"regdump:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -17990,14 +17841,13 @@ name|DFE
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: have to clear fifos.\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"have to clear fifos.\n"
 argument_list|)
 expr_stmt|;
 name|OUTB
@@ -18031,14 +17881,13 @@ operator|&
 name|HTH
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: handshake timeout\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"handshake timeout\n"
 argument_list|)
 expr_stmt|;
 name|OUTB
@@ -18236,27 +18085,25 @@ name|STD
 argument_list|)
 expr_stmt|;
 comment|/* 			**	info message 			*/
-name|printf
-argument_list|(
-literal|"%s: INFO: LDSC while IID.\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"INFO: LDSC while IID.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 empty_stmt|;
-name|printf
-argument_list|(
-literal|"%s: target %d doesn't release the bus.\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"target %d doesn't release the bus.\n"
 argument_list|,
 name|INB
 argument_list|(
@@ -18394,14 +18241,13 @@ block|{
 case|case
 literal|0
 case|:
-name|printf
-argument_list|(
-literal|"%s: reg[%d0]: "
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"reg[%d0]: "
 argument_list|,
 name|i
 operator|/
@@ -18428,15 +18274,11 @@ block|}
 empty_stmt|;
 name|val
 operator|=
-name|bus_space_read_1
+name|bus_read_1
 argument_list|(
 name|np
 operator|->
-name|bst
-argument_list|,
-name|np
-operator|->
-name|bsh
+name|reg_res
 argument_list|,
 name|i
 argument_list|)
@@ -18469,28 +18311,21 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-name|untimeout
+name|callout_stop
 argument_list|(
-name|ncr_timeout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|np
-argument_list|,
+operator|&
 name|np
 operator|->
-name|timeout_ch
+name|timer
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: halted!\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"halted!\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		**	don't restart controller ... 		*/
@@ -18988,14 +18823,13 @@ operator|!
 name|cp
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: SCSI phase error fixup: CCB already dequeued (%p)\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"SCSI phase error fixup: CCB already dequeued (%p)\n"
 argument_list|,
 operator|(
 name|void
@@ -19021,15 +18855,14 @@ operator|.
 name|cp
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: SCSI phase error fixup: CCB address mismatch "
-literal|"(%p != %p) np->nccb = %p\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"SCSI phase error fixup: CCB address mismatch "
+literal|"(%p != %p) np->nccb = %p\n"
 argument_list|,
 operator|(
 name|void
@@ -20003,14 +19836,13 @@ name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
-name|printf
-argument_list|(
-literal|"%s: int#%d"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"int#%d"
 argument_list|,
 name|num
 argument_list|)
@@ -21434,14 +21266,13 @@ return|return;
 block|}
 empty_stmt|;
 comment|/* 		**	else remove the interrupt. 		*/
-name|printf
-argument_list|(
-literal|"%s: queue empty.\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"queue empty.\n"
 argument_list|)
 expr_stmt|;
 name|WRITESCRIPT
@@ -21575,14 +21406,13 @@ operator|->
 name|magic
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: Bogus free cp found\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Bogus free cp found\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -23471,14 +23301,13 @@ name|bootverbose
 operator|>=
 literal|2
 condition|)
-name|printf
-argument_list|(
-literal|"%s: enabling clock multiplier\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"enabling clock multiplier\n"
 argument_list|)
 expr_stmt|;
 name|OUTB
@@ -23531,14 +23360,13 @@ condition|(
 operator|!
 name|i
 condition|)
-name|printf
-argument_list|(
-literal|"%s: the chip cannot lock the frequency\n"
-argument_list|,
-name|ncr_name
+name|device_printf
 argument_list|(
 name|np
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"the chip cannot lock the frequency\n"
 argument_list|)
 expr_stmt|;
 block|}
