@@ -3060,15 +3060,26 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * EBUSY indicates that the objset is inconsistent, in which 		 * case it can not have a ZIL. 		 */
+if|if
+condition|(
+name|error
+operator|!=
+name|EBUSY
+condition|)
+block|{
 name|cmn_err
 argument_list|(
 name|CE_WARN
 argument_list|,
-literal|"can't open objset for %s"
+literal|"can't open objset for %s, error %u"
 argument_list|,
 name|osname
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
