@@ -11875,7 +11875,7 @@ name|KASSERT
 argument_list|(
 name|buffer_offset
 operator|+
-name|request
+name|response
 operator|->
 name|ip_data_len
 operator|<=
@@ -11886,7 +11886,7 @@ literal|"buffer_offset %zd + ip_data_len %zd> expected_len %zd"
 operator|,
 name|buffer_offset
 operator|,
-name|request
+name|response
 operator|->
 name|ip_data_len
 operator|,
@@ -11898,7 +11898,7 @@ if|if
 condition|(
 name|buffer_offset
 operator|+
-name|request
+name|response
 operator|->
 name|ip_data_len
 operator|==
