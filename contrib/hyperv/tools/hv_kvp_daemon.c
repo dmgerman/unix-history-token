@@ -2477,6 +2477,13 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf_ptr
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -2493,7 +2500,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|buf_ptr
 index|[
 name|i
@@ -2507,7 +2513,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|strncmp
@@ -2542,14 +2547,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-elseif|else
-if|if
-condition|(
-name|buf_ptr
-operator|!=
-name|NULL
-condition|)
-block|{
+else|else
 name|free
 argument_list|(
 name|buf_ptr
