@@ -30,7 +30,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c2xx0reg.h>
+file|<arm/samsung/s3c2xx0/s3c2xx0reg.h>
 end_include
 
 begin_comment

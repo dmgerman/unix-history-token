@@ -92,25 +92,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c2440reg.h>
+file|<arm/samsung/s3c2xx0/s3c2440reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/uart_dev_s3c2410.h>
+file|<arm/samsung/s3c2xx0/uart_dev_s3c2410.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c2xx0reg.h>
+file|<arm/samsung/s3c2xx0/s3c2xx0reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c2xx0var.h>
+file|<arm/samsung/s3c2xx0/s3c2xx0var.h>
 end_include
 
 begin_include

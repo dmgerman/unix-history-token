@@ -32,13 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c2410reg.h>
+file|<arm/samsung/s3c2xx0/s3c2410reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c2xx0board.h>
+file|<arm/samsung/s3c2xx0/s3c2xx0board.h>
 end_include
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: s3c2410var.h,v 1.2 2003/08/29 12:57:50 bsh Exp $ */
+comment|/* $NetBSD: s3c24x0var.h,v 1.1 2003/07/31 19:49:44 bsh Exp $ */
 end_comment
 
 begin_comment
@@ -10,61 +10,43 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ARM_S3C2410VAR_H_
+name|_ARM_S3C24X0VAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ARM_S3C2410VAR_H_
+name|_ARM_S3C24X0VAR_H_
 end_define
 
 begin_include
 include|#
 directive|include
-file|<arm/s3c2xx0/s3c24x0var.h>
+file|<arm/samsung/s3c2xx0/s3c2xx0var.h>
 end_include
 
-begin_function_decl
-name|int
-name|s3c2410_sscom_cnattach
-parameter_list|(
-name|bus_space_tag_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|tcflag_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|s3c2410_sscom_kgdb_attach
-parameter_list|(
-name|bus_space_tag_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|tcflag_t
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_struct
+struct|struct
+name|s3c24x0_softc
+block|{
+name|struct
+name|s3c2xx0_softc
+name|sc_sx
+decl_stmt|;
+name|bus_space_handle_t
+name|sc_timer_ioh
+decl_stmt|;
+comment|/* Timer control registers */
+block|}
+struct|;
+end_struct
 
 begin_function_decl
 name|void
-name|s3c2410_intr_init
+name|s3c24x0_clock_freq
 parameter_list|(
 name|struct
-name|s3c24x0_softc
+name|s3c2xx0_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -72,52 +54,17 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|s3c2410_softreset
+name|s3c2410_clock_freq2
 parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|s3c2410_mask_subinterrupts
-parameter_list|(
+name|vm_offset_t
+parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|s3c2410_unmask_subinterrupts
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 modifier|*
-name|s3c2410_extint_establish
-parameter_list|(
-name|int
 parameter_list|,
 name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-function_decl|(
 modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
 parameter_list|,
-name|void
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -125,10 +72,26 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|s3c2410_setup_extint
+name|s3c2440_clock_freq2
 parameter_list|(
-name|int
+name|vm_offset_t
 parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|s3c24x0_sleep
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
@@ -140,7 +103,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _ARM_S3C2410VAR_H_ */
+comment|/* _ARM_S3C24X0VAR_H_ */
 end_comment
 
 end_unit
