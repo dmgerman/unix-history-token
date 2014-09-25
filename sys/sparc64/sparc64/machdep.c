@@ -436,26 +436,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|ksym_start
-decl_stmt|,
-name|ksym_end
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|dtlb_slots

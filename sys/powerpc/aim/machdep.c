@@ -410,26 +410,6 @@ directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|ksym_start
-decl_stmt|,
-name|ksym_end
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|cold
@@ -854,6 +834,12 @@ name|__powerpc64__
 argument|int		ppc64;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|DDB
+argument|vm_offset_t ksym_start; 	vm_offset_t ksym_end;
+endif|#
+directive|endif
 argument|kmdp = NULL; 	trap_offset =
 literal|0
 argument|; 	cacheline_warn =
@@ -879,7 +865,7 @@ argument|); 		if (kmdp != NULL) { 			boothowto = MD_FETCH(kmdp, MODINFOMD_HOWTO,
 ifdef|#
 directive|ifdef
 name|DDB
-argument|ksym_start = MD_FETCH(kmdp, MODINFOMD_SSYM, uintptr_t); 			ksym_end = MD_FETCH(kmdp, MODINFOMD_ESYM, uintptr_t);
+argument|ksym_start = MD_FETCH(kmdp, MODINFOMD_SSYM, uintptr_t); 			ksym_end = MD_FETCH(kmdp, MODINFOMD_ESYM, uintptr_t); 			db_fetch_ksymtab(ksym_start, ksym_end);
 endif|#
 directive|endif
 argument|} 	}
