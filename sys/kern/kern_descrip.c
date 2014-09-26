@@ -384,6 +384,32 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|do_dup
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|old
+parameter_list|,
+name|int
+name|new
+parameter_list|,
+name|register_t
+modifier|*
+name|retval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|fd_first_free
 parameter_list|(
 name|struct
@@ -492,6 +518,43 @@ name|p
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Flags for do_dup() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DUP_FIXED
+value|0x1
+end_define
+
+begin_comment
+comment|/* Force fixed allocation. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DUP_FCNTL
+value|0x2
+end_define
+
+begin_comment
+comment|/* fcntl()-style errors. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DUP_CLOEXEC
+value|0x4
+end_define
+
+begin_comment
+comment|/* Atomically set FD_CLOEXEC. */
+end_comment
 
 begin_comment
 comment|/*  * Each process has:  *  * - An array of open file descriptors (fd_ofiles)  * - An array of file flags (fd_ofileflags)  * - A bitmap recording which descriptors are in use (fd_map)  *  * A process starts out with NDFILE descriptors.  The value of NDFILE has  * been selected based the historical limit of 20 open files, and an  * assumption that the majority of processes, especially short-lived  * processes like shells, will never need more.  *  * If this initial allocation is exhausted, a larger descriptor table and  * map are allocated dynamically, and the pointers in the process's struct  * filedesc are updated to point to those.  This is repeated every time  * the process runs out of file descriptors (provided it hasn't hit its  * resource limit).  *  * Since threads may hold references to individual descriptor table  * entries, the tables are never freed.  Instead, they are placed on a  * linked list and freed only when the struct filedesc is released.  */
@@ -3776,6 +3839,7 @@ comment|/*  * Common code for dup, dup2, fcntl(F_DUPFD) and fcntl(F_DUP2FD).  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|do_dup
 parameter_list|(
