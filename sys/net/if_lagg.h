@@ -192,89 +192,38 @@ begin_comment
 comment|/* Supported lagg PROTOs */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
 name|LAGG_PROTO_NONE
-value|0
-end_define
-
-begin_comment
+init|=
+literal|0
+block|,
 comment|/* no lagg protocol defined */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_ROUNDROBIN
-value|1
-end_define
-
-begin_comment
+block|,
 comment|/* simple round robin */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_FAILOVER
-value|2
-end_define
-
-begin_comment
+block|,
 comment|/* active failover */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_LOADBALANCE
-value|3
-end_define
-
-begin_comment
+block|,
 comment|/* loadbalance */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_LACP
-value|4
-end_define
-
-begin_comment
+block|,
 comment|/* 802.3ad lacp */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_ETHERCHANNEL
-value|5
-end_define
-
-begin_comment
+block|,
 comment|/* Cisco FEC */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_BROADCAST
-value|6
-end_define
-
-begin_comment
+block|,
 comment|/* broadcast */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_MAX
-value|7
-end_define
+block|, }
+name|lagg_proto
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -285,7 +234,7 @@ name|char
 modifier|*
 name|lpr_name
 decl_stmt|;
-name|int
+name|lagg_proto
 name|lpr_proto
 decl_stmt|;
 block|}
