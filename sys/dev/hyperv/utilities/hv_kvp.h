@@ -1,58 +1,96 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009-2012 Microsoft Corp.  * Copyright (c) 2012 NetApp Inc.  * Copyright (c) 2012 Citrix Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2014 Microsoft Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_expr_stmt
-operator|*
-operator|/
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|_KVP_H
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|_KVP_H
-comment|/*  * An implementation of HyperV key value pair (KVP) functionality for FreeBSD   *  */
+end_define
+
+begin_comment
+comment|/*  * An implementation of HyperV key value pair (KVP) functionality for FreeBSD  *  */
+end_comment
+
+begin_comment
 comment|/*  * Maximum value size - used for both key names and value data, and includes  * any applicable NULL terminators.  *  * Note:  This limit is somewhat arbitrary, but falls easily within what is  * supported for all native guests (back to Win 2000) and what is reasonable  * for the IC KVP exchange functionality.  Note that Windows Me/98/95 are  * limited to 255 character key names.  *  * MSDN recommends not storing data values larger than 2048 bytes in the  * registry.  *  * Note:  This value is used in defining the KVP exchange message - this value  * cannot be modified without affecting the message size and compatibility.  */
+end_comment
+
+begin_comment
 comment|/*  * bytes, including any null terminators  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|HV_KVP_EXCHANGE_MAX_VALUE_SIZE
 value|(2048)
+end_define
+
+begin_comment
 comment|/*  * Maximum key size - the registry limit for the length of an entry name  * is 256 characters, including the null terminator  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|HV_KVP_EXCHANGE_MAX_KEY_SIZE
 value|(512)
+end_define
+
+begin_comment
 comment|/*  * In FreeBSD, we implement the KVP functionality in two components:  * 1) The kernel component which is packaged as part of the hv_utils driver  * is responsible for communicating with the host and responsible for  * implementing the host/guest protocol. 2) A user level daemon that is  * responsible for data gathering.  *  * Host/Guest Protocol: The host iterates over an index and expects the guest  * to assign a key name to the index and also return the value corresponding to  * the key. The host will have atmost one KVP transaction outstanding at any  * given point in time. The host side iteration stops when the guest returns  * an error. Microsoft has specified the following mapping of key names to  * host specified index:  *  *  Index		Key Name  *	0		FullyQualifiedDomainName  *	1		IntegrationServicesVersion  *	2		NetworkAddressIPv4  *	3		NetworkAddressIPv6  *	4		OSBuildNumber  *	5		OSName  *	6		OSMajorVersion  *	7		OSMinorVersion  *	8		OSVersion  *	9		ProcessorArchitecture  *  * The Windows host expects the Key Name and Key Value to be encoded in utf16.  *  * Guest Kernel/KVP Daemon Protocol: As noted earlier, we implement all of the  * data gathering functionality in a user mode daemon. The user level daemon  * is also responsible for binding the key name to the index as well. The  * kernel and user-level daemon communicate using a connector channel.  *  * The user mode component first registers with the  * the kernel component. Subsequently, the kernel component requests, data  * for the specified keys. In response to this message the user mode component  * fills in the value corresponding to the specified key. We overload the  * sequence field in the cn_msg header to define our KVP message types.  *  *  * The kernel component simply acts as a conduit for communication between the  * Windows host and the user-level daemon. The kernel component passes up the  * index received from the Host to the user-level daemon. If the index is  * valid (supported), the corresponding key as well as its  * value (both are strings) is returned. If the index is invalid  * (not supported), a NULL key string is returned.  */
+end_comment
+
+begin_comment
 comment|/*  * Registry value types.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|HV_REG_SZ
 value|1
+end_define
+
+begin_define
 define|#
 directive|define
 name|HV_REG_U32
 value|4
+end_define
+
+begin_define
 define|#
 directive|define
 name|HV_REG_U64
 value|8
-comment|/*  * Daemon code not supporting IP injection (legacy daemon).  */
+end_define
+
+begin_comment
+comment|/*  * Daemon code supporting IP injection.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|HV_KVP_OP_REGISTER
 value|4
-comment|/*  * Daemon code supporting IP injection.  * The KVP opcode field is used to communicate the  * registration information; so define a namespace that  * will be distinct from the host defined KVP opcode.  */
-define|#
-directive|define
-name|KVP_OP_REGISTER1
-value|100
-expr|enum
+end_define
+
+begin_enum
+enum|enum
 name|hv_kvp_exchg_op
 block|{
 name|HV_KVP_OP_GET
-operator|=
+init|=
 literal|0
 block|,
 name|HV_KVP_OP_SET
@@ -68,8 +106,8 @@ block|,
 name|HV_KVP_OP_COUNT
 comment|/* Number of operations, must be last. */
 block|}
-expr_stmt|;
-end_expr_stmt
+enum|;
+end_enum
 
 begin_enum
 enum|enum
@@ -424,7 +462,7 @@ name|struct
 name|hv_kvp_hdr
 name|kvp_hdr
 decl_stmt|;
-name|int
+name|uint32_t
 name|error
 decl_stmt|;
 block|}
@@ -492,13 +530,6 @@ operator|)
 argument_list|)
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|BSD_SOC_PATH
-value|"/etc/hyperv/socket"
-end_define
 
 begin_define
 define|#
@@ -573,78 +604,6 @@ directive|define
 name|HV_NANO_SEC_PER_SEC
 value|1000000000
 end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|hv_vmbus_service
-block|{
-name|hv_guid
-name|guid
-decl_stmt|;
-comment|/* Hyper-V GUID */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* name of service */
-name|boolean_t
-name|enabled
-decl_stmt|;
-comment|/* service enabled */
-name|hv_work_queue
-modifier|*
-name|work_queue
-decl_stmt|;
-comment|/* background work queue */
-comment|//
-comment|// function to initialize service
-comment|//
-name|int
-function_decl|(
-modifier|*
-name|init
-function_decl|)
-parameter_list|(
-name|struct
-name|hv_vmbus_service
-modifier|*
-parameter_list|)
-function_decl|;
-comment|//
-comment|// function to process Hyper-V messages
-comment|//
-name|void
-function_decl|(
-modifier|*
-name|callback
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-block|}
-name|hv_vmbus_service
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|uint8_t
-modifier|*
-name|receive_buffer
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|hv_vmbus_service
-name|service_table
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
