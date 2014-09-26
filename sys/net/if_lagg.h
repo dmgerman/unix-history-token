@@ -836,7 +836,7 @@ name|sc_llq_head
 expr_stmt|;
 comment|/* interfaces to program 							   the lladdr on */
 comment|/* lagg protocol callbacks */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|sc_detach

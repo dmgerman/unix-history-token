@@ -4663,7 +4663,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|lacp_detach
 parameter_list|(
 name|struct
@@ -4744,11 +4744,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

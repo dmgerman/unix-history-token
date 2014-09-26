@@ -951,7 +951,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|lacp_detach
 parameter_list|(
 name|struct
