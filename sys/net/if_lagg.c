@@ -4987,9 +4987,6 @@ call|)
 argument_list|(
 name|lp
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|rp
 operator|->
@@ -5508,9 +5505,6 @@ call|)
 argument_list|(
 name|sc
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|ra
 operator|->
@@ -9378,9 +9372,6 @@ name|sc
 operator|->
 name|sc_psc
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|lb
 expr_stmt|;
 name|SLIST_FOREACH

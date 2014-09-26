@@ -733,7 +733,8 @@ name|ifmedia
 name|sc_media
 decl_stmt|;
 comment|/* media config */
-name|caddr_t
+name|void
+modifier|*
 name|sc_psc
 decl_stmt|;
 comment|/* protocol data */
@@ -897,7 +898,8 @@ name|struct
 name|lagg_softc
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 name|void
@@ -910,7 +912,8 @@ name|struct
 name|lagg_port
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 name|eventhandler_tag
@@ -989,7 +992,8 @@ modifier|*
 name|lh_cookie
 decl_stmt|;
 comment|/* if state hook */
-name|caddr_t
+name|void
+modifier|*
 name|lp_psc
 decl_stmt|;
 comment|/* protocol data */

@@ -1023,7 +1023,8 @@ name|struct
 name|lagg_softc
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1036,7 +1037,8 @@ name|struct
 name|lagg_port
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
