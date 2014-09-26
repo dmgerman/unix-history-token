@@ -940,7 +940,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|lacp_attach
 parameter_list|(
 name|struct
@@ -954,8 +954,7 @@ begin_function_decl
 name|void
 name|lacp_detach
 parameter_list|(
-name|struct
-name|lagg_softc
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

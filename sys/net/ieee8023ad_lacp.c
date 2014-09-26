@@ -4463,7 +4463,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|lacp_attach
 parameter_list|(
 name|struct
@@ -4494,22 +4494,11 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|lsc
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 name|sc
 operator|->
 name|sc_psc
@@ -4654,11 +4643,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -4666,10 +4650,9 @@ begin_function
 name|void
 name|lacp_detach
 parameter_list|(
-name|struct
-name|lagg_softc
+name|void
 modifier|*
-name|sc
+name|psc
 parameter_list|)
 block|{
 name|struct
@@ -4677,10 +4660,12 @@ name|lacp_softc
 modifier|*
 name|lsc
 init|=
-name|LACP_SOFTC
-argument_list|(
-name|sc
-argument_list|)
+operator|(
+expr|struct
+name|lacp_softc
+operator|*
+operator|)
+name|psc
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -4709,12 +4694,6 @@ operator|(
 literal|"aggregator still attached"
 operator|)
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_psc
-operator|=
-name|NULL
 expr_stmt|;
 name|callout_drain
 argument_list|(
