@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2014 Microsoft Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2009-2012 Microsoft Corp.  * Copyright (c) 2012 NetApp Inc.  * Copyright (c) 2012 Citrix Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_KVP_H
 end_define
 
 begin_comment
-comment|/*  * An implementation of HyperV key value pair (KVP) functionality for FreeBSD  *  */
+comment|/*  * An implementation of HyperV key value pair (KVP) functionality for FreeBSD   *  */
 end_comment
 
 begin_comment
@@ -75,7 +75,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * Daemon code supporting IP injection.  */
+comment|/*  * Daemon code not supporting IP injection (legacy daemon).  */
 end_comment
 
 begin_define
@@ -83,6 +83,17 @@ define|#
 directive|define
 name|HV_KVP_OP_REGISTER
 value|4
+end_define
+
+begin_comment
+comment|/*  * Daemon code supporting IP injection.  * The KVP opcode field is used to communicate the  * registration information; so define a namespace that  * will be distinct from the host defined KVP opcode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KVP_OP_REGISTER1
+value|100
 end_define
 
 begin_enum
@@ -462,7 +473,7 @@ name|struct
 name|hv_kvp_hdr
 name|kvp_hdr
 decl_stmt|;
-name|uint32_t
+name|int
 name|error
 decl_stmt|;
 block|}
@@ -530,6 +541,13 @@ operator|)
 argument_list|)
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BSD_SOC_PATH
+value|"/etc/hyperv/socket"
+end_define
 
 begin_define
 define|#
@@ -604,6 +622,78 @@ directive|define
 name|HV_NANO_SEC_PER_SEC
 value|1000000000
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|hv_vmbus_service
+block|{
+name|hv_guid
+name|guid
+decl_stmt|;
+comment|/* Hyper-V GUID */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name of service */
+name|boolean_t
+name|enabled
+decl_stmt|;
+comment|/* service enabled */
+name|hv_work_queue
+modifier|*
+name|work_queue
+decl_stmt|;
+comment|/* background work queue */
+comment|//
+comment|// function to initialize service
+comment|//
+name|int
+function_decl|(
+modifier|*
+name|init
+function_decl|)
+parameter_list|(
+name|struct
+name|hv_vmbus_service
+modifier|*
+parameter_list|)
+function_decl|;
+comment|//
+comment|// function to process Hyper-V messages
+comment|//
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+name|hv_vmbus_service
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|uint8_t
+modifier|*
+name|receive_buffer
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|hv_vmbus_service
+name|service_table
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
