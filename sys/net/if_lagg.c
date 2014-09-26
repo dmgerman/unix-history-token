@@ -7993,7 +7993,9 @@ if|if
 condition|(
 name|lp
 operator|->
-name|lp_link_state
+name|lp_ifp
+operator|->
+name|if_link_state
 operator|==
 name|LINK_STATE_UP
 condition|)
@@ -10022,7 +10024,9 @@ name|sc_ifname
 argument_list|,
 name|lp_next
 operator|->
-name|lp_ifname
+name|lp_ifp
+operator|->
+name|if_xname
 argument_list|,
 name|i
 argument_list|)

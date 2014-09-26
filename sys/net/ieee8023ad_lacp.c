@@ -3035,7 +3035,9 @@ name|__func__
 argument_list|,
 name|lgp
 operator|->
-name|lp_ifname
+name|lp_ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 return|return

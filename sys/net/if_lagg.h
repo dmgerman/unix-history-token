@@ -497,33 +497,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|lp_ifname
-value|lp_ifp->if_xname
-end_define
-
-begin_comment
-comment|/* interface name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|lp_link_state
-value|lp_ifp->if_link_state
-end_define
-
-begin_comment
-comment|/* link state */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PORTACTIVE
 parameter_list|(
 name|_tp
 parameter_list|)
-value|(					\ 	((_tp)->lp_link_state == LINK_STATE_UP)&&			\ 	((_tp)->lp_ifp->if_flags& IFF_UP)				\ )
+value|(					\ 	((_tp)->lp_ifp->if_link_state == LINK_STATE_UP)&&		\ 	((_tp)->lp_ifp->if_flags& IFF_UP)				\ )
 end_define
 
 begin_struct
