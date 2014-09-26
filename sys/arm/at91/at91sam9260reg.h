@@ -918,7 +918,7 @@ begin_define
 define|#
 directive|define
 name|AT91SAM9260_PIT_SIZE
-value|10
+value|0x10
 end_define
 
 begin_define
