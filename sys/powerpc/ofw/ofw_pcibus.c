@@ -788,7 +788,7 @@ name|ofw_bus_intr_to_rl
 argument_list|(
 name|dev
 argument_list|,
-name|node
+name|child
 argument_list|,
 operator|&
 name|dinfo
