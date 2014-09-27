@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -956,9 +962,13 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|" 0x%lx"
+literal|" 0x%"
+name|PRIx64
+literal|""
 else|:
-literal|" %lu"
+literal|" %"
+name|PRIu64
+literal|""
 argument_list|,
 operator|*
 name|fact
