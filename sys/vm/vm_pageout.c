@@ -3638,15 +3638,15 @@ name|pass
 operator|>
 literal|0
 operator|&&
-name|lowmem_ticks
-operator|+
 operator|(
-name|lowmem_period
-operator|*
-name|hz
-operator|)
-operator|<
 name|ticks
+operator|-
+name|lowmem_ticks
+operator|)
+operator|/
+name|hz
+operator|>=
+name|lowmem_period
 condition|)
 block|{
 comment|/* 		 * Decrease registered cache sizes. 		 */
