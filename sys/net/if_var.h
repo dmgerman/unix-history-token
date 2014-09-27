@@ -316,6 +316,13 @@ name|ift_counter
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|IFCOUNTER_LAST
+value|IFCOUNTER_NOPROTO
+end_define
+
 begin_typedef
 typedef|typedef
 name|struct

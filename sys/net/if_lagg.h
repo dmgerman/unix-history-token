@@ -484,12 +484,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<sys/counter.h>
-end_include
-
 begin_comment
 comment|/*  * Internal kernel part  */
 end_comment
@@ -668,6 +662,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|lagg_counters
+block|{
+name|uint64_t
+name|val
+index|[
+name|IFCOUNTER_LAST
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|lagg_softc
 block|{
 name|struct
@@ -679,10 +687,6 @@ comment|/* virtual interface */
 name|struct
 name|rmlock
 name|sc_mtx
-decl_stmt|;
-name|struct
-name|mtx
-name|sc_call_mtx
 decl_stmt|;
 name|int
 name|sc_proto
@@ -722,18 +726,6 @@ decl_stmt|;
 comment|/* sequence counter */
 name|uint32_t
 name|sc_flags
-decl_stmt|;
-name|counter_u64_t
-name|sc_ipackets
-decl_stmt|;
-name|counter_u64_t
-name|sc_opackets
-decl_stmt|;
-name|counter_u64_t
-name|sc_ibytes
-decl_stmt|;
-name|counter_u64_t
-name|sc_obytes
 decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
@@ -792,6 +784,11 @@ name|int
 name|flowid_shift
 decl_stmt|;
 comment|/* shift the flowid */
+name|struct
+name|lagg_counters
+name|detached_counters
+decl_stmt|;
+comment|/* detached ports sum */
 block|}
 struct|;
 end_struct
@@ -897,6 +894,11 @@ name|route
 modifier|*
 parameter_list|)
 function_decl|;
+name|struct
+name|lagg_counters
+name|port_counters
+decl_stmt|;
+comment|/* ifp counters copy */
 name|SLIST_ENTRY
 argument_list|(
 argument|lagg_port
@@ -989,27 +991,6 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|rm_assert(&(_sc)->sc_mtx, RA_WLOCKED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAGG_CALLOUT_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|)
-define|\
-value|mtx_init(&(_sc)->sc_call_mtx, "if_lagg callout mutex", NULL,\ 	    MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAGG_CALLOUT_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->sc_call_mtx)
 end_define
 
 begin_function_decl
