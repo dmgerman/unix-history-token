@@ -40,57 +40,7 @@ value|printf("SVM ERROR:%s " fmt "\n", __func__, ##args);
 end_define
 
 begin_comment
-comment|/*  * Software saved machine state for guest and host.   */
-end_comment
-
-begin_comment
-comment|/* Additional guest register state */
-end_comment
-
-begin_struct
-struct|struct
-name|svm_gctx
-block|{
-name|register_t
-name|sctx_rdx
-decl_stmt|;
-name|register_t
-name|sctx_rdi
-decl_stmt|;
-name|register_t
-name|sctx_rsi
-decl_stmt|;
-comment|/* Points to host context area. */
-name|register_t
-name|sctx_hostctx_base
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Additional host register state */
-end_comment
-
-begin_struct
-struct|struct
-name|svm_hctx
-block|{
-name|uint16_t
-name|sctx_fs
-decl_stmt|;
-name|uint16_t
-name|sctx_gs
-decl_stmt|;
-name|register_t
-name|sctx_rsp
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Common register context area for guest and host. */
+comment|/*  * Guest register state that is saved outside the VMCB.  */
 end_comment
 
 begin_struct
@@ -105,6 +55,15 @@ name|sctx_rbx
 decl_stmt|;
 name|register_t
 name|sctx_rcx
+decl_stmt|;
+name|register_t
+name|sctx_rdx
+decl_stmt|;
+name|register_t
+name|sctx_rdi
+decl_stmt|;
+name|register_t
+name|sctx_rsi
 decl_stmt|;
 name|register_t
 name|sctx_r8
@@ -130,21 +89,6 @@ decl_stmt|;
 name|register_t
 name|sctx_r15
 decl_stmt|;
-union|union
-block|{
-name|struct
-name|svm_hctx
-name|h
-decl_stmt|;
-comment|/* host-specific register state */
-name|struct
-name|svm_gctx
-name|g
-decl_stmt|;
-comment|/* guest-specific register state */
-block|}
-name|e
-union|;
 block|}
 struct|;
 end_struct
@@ -155,10 +99,6 @@ name|svm_launch
 parameter_list|(
 name|uint64_t
 name|pa
-parameter_list|,
-name|struct
-name|svm_regctx
-modifier|*
 parameter_list|,
 name|struct
 name|svm_regctx
