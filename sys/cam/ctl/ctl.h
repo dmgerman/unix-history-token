@@ -286,7 +286,7 @@ literal|0x0020
 block|,
 name|CTL_UA_MODE_CHANGE
 init|=
-literal|0x0030
+literal|0x0040
 block|,
 name|CTL_UA_LOG_CHANGE
 init|=
