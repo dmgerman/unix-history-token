@@ -515,14 +515,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9G45_IRQ_PIOD
+name|AT91SAM9G45_IRQ_PIODE
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9G45_IRQ_PIOE
+name|AT91SAM9G45_IRQ_TRNG
 value|6
 end_define
 
@@ -737,6 +737,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91SAM9G45_IRQ_PIOD
+value|AT91SAM9G45_IRQ_PIODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G45_IRQ_PIOE
+value|AT91SAM9G45_IRQ_PIODE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91SAM9G45_IRQ_OHCI
 value|AT91SAM9G45_IRQ_UHP
 end_define
@@ -848,20 +862,6 @@ define|#
 directive|define
 name|AT91SAM9G45_SMC_SIZE
 value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|AT91SAM9G45_PMC_BASE
-value|0xffffc00
-end_define
-
-begin_define
-define|#
-directive|define
-name|AT91SAM9G45_PMC_SIZE
-value|0x100
 end_define
 
 begin_define
