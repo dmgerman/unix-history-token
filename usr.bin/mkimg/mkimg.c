@@ -313,7 +313,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n    formats:\n"
+literal|"    formats:\n"
 argument_list|)
 expr_stmt|;
 name|SET_FOREACH
@@ -420,7 +420,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n    schemes:\n"
+literal|"    schemes:\n"
 argument_list|)
 expr_stmt|;
 name|SET_FOREACH
@@ -551,11 +551,18 @@ argument_list|,
 name|why
 argument_list|)
 expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nusage: %s<options>\n"
+literal|"usage: %s<options>\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -566,6 +573,34 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"    options:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t--formats\t-  list image formats\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t--schemes\t-  list partition schemes\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t--version\t-  show version information\n"
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -645,9 +680,23 @@ argument_list|,
 literal|"\t-T<num>\t-  number of tracks to simulate\n"
 argument_list|)
 expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|print_formats
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 name|print_schemes
@@ -655,11 +704,18 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n    partition specification:\n"
+literal|"    partition specification:\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
