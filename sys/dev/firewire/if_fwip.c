@@ -134,35 +134,6 @@ directive|include
 file|<net/if_types.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__DragonFly__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<bus/firewire/firewire.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<bus/firewire/firewirereg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"if_fwipvar.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -186,11 +157,6 @@ include|#
 directive|include
 file|<dev/firewire/if_fwipvar.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * We really need a mechanism for allocating regions in the FIFO  * address space. We pick a address in the OHCI controller's 'middle'  * address space. This means that the controller will automatically  * send responses for us, which is fine since we don't have any  * important information to put in the response anyway.  */
@@ -4830,25 +4796,6 @@ argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__DragonFly__
-end_ifdef
-
-begin_expr_stmt
-name|DECLARE_DUMMY_MODULE
-argument_list|(
-name|fwip
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|DRIVER_MODULE

@@ -1376,12 +1376,19 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"fwohci_pci_attach: Could not allocate DMA tag "
-literal|"- error %d\n"
+name|self
+argument_list|,
+literal|"fwohci_pci_attach: Could not allocate DMA "
+literal|"tag - error %d\n"
 argument_list|,
 name|err
+argument_list|)
+expr_stmt|;
+name|fwohci_pci_detach
+argument_list|(
+name|self
 argument_list|)
 expr_stmt|;
 return|return
@@ -1402,6 +1409,8 @@ expr_stmt|;
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -1884,10 +1893,6 @@ name|device_set_ivars
 argument_list|(
 name|child
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|sc
 operator|->
@@ -1953,11 +1958,10 @@ argument_list|()
 expr_stmt|;
 name|fwohci_poll
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+operator|&
 name|sc
+operator|->
+name|fc
 argument_list|,
 literal|0
 argument_list|,

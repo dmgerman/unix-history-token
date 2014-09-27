@@ -427,8 +427,7 @@ specifier|static
 name|void
 name|fw_bus_probe
 parameter_list|(
-name|struct
-name|firewire_comm
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1400,7 +1399,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
 operator|(
 name|xfer
@@ -1416,10 +1415,6 @@ name|err
 operator|=
 name|msleep
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|xfer
 argument_list|,
 name|lock
@@ -1507,7 +1502,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|xfer->q->queued ++;
+block|xfer->q->queued++;
 endif|#
 directive|endif
 name|FW_GUNLOCK
@@ -1767,8 +1762,7 @@ name|fc
 operator|->
 name|bdev
 argument_list|,
-literal|"split transaction timeout: "
-literal|"tl=0x%x flag=0x%02x\n"
+literal|"split transaction timeout: tl=0x%x flag=0x%02x\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1897,11 +1891,6 @@ literal|0
 decl_stmt|;
 name|fc
 operator|=
-operator|(
-expr|struct
-name|firewire_comm
-operator|*
-operator|)
 name|arg
 expr_stmt|;
 comment|/* 	 * At boot stage, the device interrupt is disabled and 	 * We encounter a timeout easily. To avoid this, 	 * ignore clock interrupt for a while. 	 */
@@ -1940,16 +1929,8 @@ name|hz
 operator|/
 name|WATCHDOG_HZ
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|firewire_watchdog
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|fc
 argument_list|)
 expr_stmt|;
@@ -1997,11 +1978,6 @@ name|fc
 decl_stmt|;
 name|fc
 operator|=
-operator|(
-expr|struct
-name|firewire_comm
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|pa
@@ -2049,11 +2025,6 @@ name|fc
 operator|->
 name|crom_src_buf
 operator|=
-operator|(
-expr|struct
-name|crom_src_buf
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2084,7 +2055,7 @@ name|fc
 operator|->
 name|dev
 argument_list|,
-literal|"%s: Malloc Failure crom src buff\n"
+literal|"%s: unable to allocate crom src buffer\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2097,11 +2068,6 @@ name|fc
 operator|->
 name|topology_map
 operator|=
-operator|(
-expr|struct
-name|fw_topology_map
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2132,7 +2098,7 @@ name|fc
 operator|->
 name|dev
 argument_list|,
-literal|"%s: Malloc Failure topology map\n"
+literal|"%s: unable to allocate topology map\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2154,11 +2120,6 @@ name|fc
 operator|->
 name|speed_map
 operator|=
-operator|(
-expr|struct
-name|fw_speed_map
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2189,7 +2150,7 @@ name|fc
 operator|->
 name|dev
 argument_list|,
-literal|"%s: Malloc Failure speed map\n"
+literal|"%s: unable to allocate speed map\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2279,10 +2240,6 @@ literal|0
 argument_list|,
 name|firewire_xfer_timeout
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|fc
 argument_list|)
 expr_stmt|;
@@ -2297,16 +2254,8 @@ name|timeout_callout
 argument_list|,
 name|hz
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|firewire_watchdog
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|sc
 operator|->
 name|fc
@@ -2317,10 +2266,6 @@ name|kproc_create
 argument_list|(
 name|fw_bus_probe_thread
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|fc
 argument_list|,
 operator|&
@@ -2414,11 +2359,6 @@ name|sc
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|firewire_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -2477,11 +2417,6 @@ name|sc
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|firewire_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -2509,7 +2444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dettach it.  */
+comment|/*  * Detach it.  */
 end_comment
 
 begin_function
@@ -2544,11 +2479,6 @@ name|err
 decl_stmt|;
 name|sc
 operator|=
-operator|(
-expr|struct
-name|firewire_softc
-operator|*
-operator|)
 name|device_get_softc
 argument_list|(
 name|dev
@@ -2827,7 +2757,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|xferq->queued --;
+block|xferq->queued--;
 endif|#
 directive|endif
 name|xfer
@@ -3731,34 +3661,6 @@ argument_list|,
 name|CSRVAL_VENDOR_PRIVATE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__DragonFly__
-name|crom_add_simple_text
-argument_list|(
-name|src
-argument_list|,
-name|root
-argument_list|,
-operator|&
-name|buf
-operator|->
-name|vendor
-argument_list|,
-literal|"DragonFly Project"
-argument_list|)
-expr_stmt|;
-name|crom_add_entry
-argument_list|(
-name|root
-argument_list|,
-name|CSRKEY_HW
-argument_list|,
-name|__DragonFly_cc_version
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|crom_add_simple_text
 argument_list|(
 name|src
@@ -3782,8 +3684,6 @@ argument_list|,
 name|__FreeBSD_version
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3996,7 +3896,7 @@ name|crom_src_buf
 operator|->
 name|src
 expr_stmt|;
-comment|/*          * If the old config rom needs to be overwritten,          * bump the businfo.generation indicator to           * indicate that we need to be reprobed          * See 1394a-2000 8.3.2.5.4 for more details.          * generation starts at 2 and rolls over at 0xF          * back to 2.          *           * A generation of 0 indicates a device          * that is not 1394a-2000 compliant.          * A generation of 1 indicates a device that          * does not change it's Bus Info Block or           * Configuration ROM.          */
+comment|/* 	 * If the old config rom needs to be overwritten, 	 * bump the businfo.generation indicator to 	 * indicate that we need to be reprobed 	 * See 1394a-2000 8.3.2.5.4 for more details. 	 * generation starts at 2 and rolls over at 0xF 	 * back to 2. 	 * 	 * A generation of 0 indicates a device 	 * that is not 1394a-2000 compliant. 	 * A generation of 1 indicates a device that 	 * does not change it's Bus Info Block or 	 * Configuration ROM. 	 */
 define|#
 directive|define
 name|FW_MAX_GENERATION
@@ -4071,10 +3971,6 @@ name|bcopy
 argument_list|(
 name|newrom
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|fc
 operator|->
 name|config_rom
@@ -4536,9 +4432,9 @@ directive|if
 literal|0
 block|CSRARC(fc, oMPR) = 0x3fff0001;
 comment|/* # output channel = 1 */
-block|CSRARC(fc, oPCR) = 0x8000007a; 	for(i = 4 ; i< 0x7c/4 ; i+=4){ 		CSRARC(fc, i + oPCR) = 0x8000007a;  	}   	CSRARC(fc, iMPR) = 0x00ff0001;
+block|CSRARC(fc, oPCR) = 0x8000007a; 	for (i = 4; i< 0x7c/4; i += 4) { 		CSRARC(fc, i + oPCR) = 0x8000007a; 	}  	CSRARC(fc, iMPR) = 0x00ff0001;
 comment|/* # input channel = 1 */
-block|CSRARC(fc, iPCR) = 0x803f0000; 	for(i = 4 ; i< 0x7c/4 ; i+=4){ 		CSRARC(fc, i + iPCR) = 0x0;  	}
+block|CSRARC(fc, iPCR) = 0x803f0000; 	for (i = 4; i< 0x7c/4; i += 4) { 		CSRARC(fc, i + iPCR) = 0x0; 	}
 endif|#
 directive|endif
 name|fc
@@ -4564,11 +4460,6 @@ condition|)
 return|return;
 name|fwb
 operator|=
-operator|(
-expr|struct
-name|fw_bind
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -4659,7 +4550,7 @@ name|addr
 parameter_list|,
 name|fwb
 parameter_list|)
-value|(((addr)< (fwb)->start)?-1:\     ((fwb)->end< (addr))?1:0)
+value|(((addr)< (fwb)->start)? -1 : \     ((fwb)->end< (addr)) ? 1 : 0)
 end_define
 
 begin_comment
@@ -5120,7 +5011,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|n
+name|i
 operator|)
 return|;
 name|xfer
@@ -6067,7 +5958,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|xfer->q->queued --;
+block|xfer->q->queued--;
 endif|#
 directive|endif
 name|FW_GUNLOCK
@@ -6138,7 +6029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * To free IEEE1394 XFER structure.   */
+comment|/*  * To free IEEE1394 XFER structure.  */
 end_comment
 
 begin_function
@@ -6182,7 +6073,6 @@ name|payload
 operator|!=
 name|NULL
 condition|)
-block|{
 name|free
 argument_list|(
 name|xfer
@@ -6196,7 +6086,6 @@ operator|->
 name|malloc
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|xfer
@@ -6207,7 +6096,6 @@ name|payload
 operator|!=
 name|NULL
 condition|)
-block|{
 name|free
 argument_list|(
 name|xfer
@@ -6221,7 +6109,6 @@ operator|->
 name|malloc
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|xfer
@@ -6302,7 +6189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * To configure PHY.   */
+comment|/*  * To configure PHY.  */
 end_comment
 
 begin_function
@@ -6400,16 +6287,18 @@ literal|1
 index|]
 operator||=
 operator|(
+literal|1
+operator|<<
+literal|23
+operator|)
+operator||
+operator|(
 name|root_node
 operator|&
 literal|0x3f
 operator|)
 operator|<<
 literal|24
-operator||
-literal|1
-operator|<<
-literal|23
 expr_stmt|;
 if|if
 condition|(
@@ -6426,9 +6315,11 @@ index|[
 literal|1
 index|]
 operator||=
+operator|(
 literal|1
 operator|<<
 literal|22
+operator|)
 operator||
 operator|(
 name|gap_count
@@ -6501,7 +6392,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dump self ID.   */
+comment|/*  * Dump self ID.  */
 end_comment
 
 begin_function
@@ -6763,7 +6654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * To receive self ID.   */
+comment|/*  * To receive self ID.  */
 end_comment
 
 begin_function
@@ -7041,7 +6932,6 @@ name|max_node
 operator|<
 name|node
 condition|)
-block|{
 name|fc
 operator|->
 name|max_node
@@ -7052,7 +6942,6 @@ name|p0
 operator|.
 name|phy_id
 expr_stmt|;
-block|}
 comment|/* XXX I'm not sure this is the right speed_map */
 name|fc
 operator|->
@@ -7167,7 +7056,6 @@ operator|.
 name|contender
 operator|)
 condition|)
-block|{
 name|fc
 operator|->
 name|irm
@@ -7178,7 +7066,6 @@ name|p0
 operator|.
 name|phy_id
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|self_id
@@ -7189,11 +7076,9 @@ name|port0
 operator|>=
 literal|0x2
 condition|)
-block|{
 name|c_port
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|self_id
@@ -7204,11 +7089,9 @@ name|port1
 operator|>=
 literal|0x2
 condition|)
-block|{
 name|c_port
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|self_id
@@ -7219,11 +7102,9 @@ name|port2
 operator|>=
 literal|0x2
 condition|)
-block|{
 name|c_port
 operator|++
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -7231,7 +7112,6 @@ name|c_port
 operator|>
 literal|2
 condition|)
-block|{
 name|i_branch
 operator|+=
 operator|(
@@ -7240,7 +7120,6 @@ operator|-
 literal|2
 operator|)
 expr_stmt|;
-block|}
 name|sid
 operator|+=
 literal|2
@@ -7572,16 +7451,8 @@ name|hz
 operator|/
 literal|8
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|fw_try_bmr
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|fc
 argument_list|)
 expr_stmt|;
@@ -7605,16 +7476,8 @@ name|hz
 operator|/
 literal|4
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|fw_bus_probe
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|fc
 argument_list|)
 expr_stmt|;
@@ -7622,7 +7485,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * To probe devices on the IEEE1394 bus.   */
+comment|/*  * To probe devices on the IEEE1394 bus.  */
 end_comment
 
 begin_function
@@ -7630,24 +7493,32 @@ specifier|static
 name|void
 name|fw_bus_probe
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|struct
 name|firewire_comm
 modifier|*
 name|fc
-parameter_list|)
-block|{
-name|int
-name|s
 decl_stmt|;
 name|struct
 name|fw_device
 modifier|*
 name|fwdev
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|s
 operator|=
 name|splfw
 argument_list|()
+expr_stmt|;
+name|fc
+operator|=
+name|arg
 expr_stmt|;
 name|fc
 operator|->
@@ -7768,10 +7639,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|fc
 argument_list|)
 expr_stmt|;
@@ -7850,10 +7717,6 @@ literal|0xf0000000
 operator||
 name|offset
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|tmp
 argument_list|,
@@ -8649,7 +8512,7 @@ name|dfwdev
 operator|->
 name|status
 expr_stmt|;
-comment|/* 		 * Pre-1394a-2000 didn't have link_spd in 		 * the Bus Info block, so try and use the  		 * speed map value. 		 * 1394a-2000 compliant devices only use 		 * the Bus Info Block link spd value, so 		 * ignore the speed map alltogether. SWB 		 */
+comment|/* 		 * Pre-1394a-2000 didn't have link_spd in 		 * the Bus Info block, so try and use the 		 * speed map value. 		 * 1394a-2000 compliant devices only use 		 * the Bus Info Block link spd value, so 		 * ignore the speed map alltogether. SWB 		 */
 if|if
 condition|(
 name|binfo
@@ -8736,8 +8599,7 @@ name|fc
 operator|->
 name|bdev
 argument_list|,
-literal|"%s: fwdev->speed(%s)"
-literal|" decremented due to negotiation\n"
+literal|"%s: fwdev->speed(%s) decremented due to negotiation\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8758,7 +8620,7 @@ block|}
 else|else
 break|break;
 block|}
-comment|/* 		 * If the fwdev is not found in the  		 * fc->devices TAILQ, then we will add it. 		 */
+comment|/* 		 * If the fwdev is not found in the 		 * fc->devices TAILQ, then we will add it. 		 */
 name|pfwdev
 operator|=
 name|NULL
@@ -9437,11 +9299,6 @@ name|fc
 decl_stmt|;
 name|fc
 operator|=
-operator|(
-expr|struct
-name|firewire_comm
-operator|*
-operator|)
 name|arg
 expr_stmt|;
 name|mtx_lock
@@ -10425,7 +10282,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|{ 		uint32_t *qld; 		int i; 		qld = (uint32_t *)buf; 		printf("spd %d len:%d\n", spd, len); 		for( i = 0 ; i<= len&& i< 32; i+= 4){ 			printf("0x%08x ", ntohl(qld[i/4])); 			if((i % 16) == 15) printf("\n"); 		} 		if((i % 16) != 15) printf("\n"); 	}
+block|{ 		uint32_t *qld; 		int i; 		qld = (uint32_t *)buf; 		printf("spd %d len:%d\n", spd, len); 		for (i = 0; i<= len&& i< 32; i+= 4) { 			printf("0x%08x ", ntohl(qld[i/4])); 			if ((i % 16) == 15) printf("\n"); 		} 		if ((i % 16) != 15) printf("\n"); 	}
 endif|#
 directive|endif
 name|fp
@@ -10525,8 +10382,7 @@ name|fc
 operator|->
 name|bdev
 argument_list|,
-literal|"%s: "
-literal|"unknown response "
+literal|"%s: unknown response "
 literal|"%s(%x) src=0x%x tl=0x%x rt=%d data=0x%x\n"
 argument_list|,
 name|__func__
@@ -10578,7 +10434,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("try ad-hoc work around!!\n"); 			rb->xfer = fw_tl2xfer(rb->fc, fp->mode.hdr.src, 					(fp->mode.hdr.tlrt>> 2)^3); 			if (rb->xfer == NULL) { 				printf("no use...\n"); 				return; 			}
+block|printf("try ad-hoc work around!!\n"); 			rb->xfer = fw_tl2xfer(rb->fc, fp->mode.hdr.src, 			    (fp->mode.hdr.tlrt>> 2)^3); 			if (rb->xfer == NULL) { 				printf("no use...\n"); 				return; 			}
 else|#
 directive|else
 return|return;
@@ -10748,24 +10604,8 @@ name|bdev
 argument_list|,
 literal|"%s: "
 literal|"Unknown service addr 0x%04x:0x%08x %s(%x)"
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__DragonFly__
-argument_list|)
-operator|||
-name|__FreeBSD_version
-operator|<
-literal|500000
-literal|" src=0x%x data=%lx\n"
-argument_list|,
-else|#
-directive|else
 literal|" src=0x%x data=%x\n"
 argument_list|,
-endif|#
-directive|endif
 name|__func__
 argument_list|,
 name|fp
@@ -11058,7 +10898,6 @@ operator|->
 name|xfer
 argument_list|)
 condition|)
-block|{
 name|fw_xfer_free
 argument_list|(
 name|rb
@@ -11066,9 +10905,6 @@ operator|->
 name|xfer
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-return|return;
 block|}
 name|len
 operator|=
@@ -11175,28 +11011,11 @@ literal|0
 block|printf("stream rcv dma %d len %d off %d spd %d\n", 			sub, len, off, spd);
 endif|#
 directive|endif
-block|if(xferq->queued>= xferq->maxq) { 			printf("receive queue is full\n"); 			return; 		}
-comment|/* XXX get xfer from xfer queue, we don't need copy for  			per packet mode */
+block|if (xferq->queued>= xferq->maxq) { 			printf("receive queue is full\n"); 			return; 		}
+comment|/* XXX get xfer from xfer queue, we don't need copy for 			per packet mode */
 block|rb->xfer = fw_xfer_alloc_buf(M_FWXFER, 0,
 comment|/* XXX */
-block|vec[0].iov_len); 		if (rb->xfer == NULL) 			return; 		fw_rcv_copy(rb) 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, rb->xfer, link); 		splx(s); 		sc = device_get_softc(rb->fc->bdev);
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__DragonFly__
-argument_list|)
-operator|||
-name|__FreeBSD_version
-operator|<
-literal|500000
-block|if (&xferq->rsel.si_pid != 0)
-else|#
-directive|else
-block|if (SEL_WAITING(&xferq->rsel))
-endif|#
-directive|endif
-block|selwakeuppri(&xferq->rsel, FWPRI); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq->flag&= ~FWXFERQ_WAKEUP; 			wakeup((caddr_t)xferq); 		} 		if (xferq->flag& FWXFERQ_HANDLER) { 			xferq->hand(xferq); 		} 		return; 		break; 	}
+block|vec[0].iov_len); 		if (rb->xfer == NULL) 			return; 		fw_rcv_copy(rb) 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, rb->xfer, link); 		splx(s); 		sc = device_get_softc(rb->fc->bdev); 		if (SEL_WAITING(&xferq->rsel)) 			selwakeuppri(&xferq->rsel, FWPRI); 		if (xferq->flag& FWXFERQ_WAKEUP) { 			xferq->flag&= ~FWXFERQ_WAKEUP; 			wakeup((caddr_t)xferq); 		} 		if (xferq->flag& FWXFERQ_HANDLER) { 			xferq->hand(xferq); 		} 		return; 		break; 	}
 endif|#
 directive|endif
 default|default:
@@ -11397,11 +11216,6 @@ name|firewire_comm
 modifier|*
 name|fc
 init|=
-operator|(
-expr|struct
-name|firewire_comm
-operator|*
-operator|)
 name|arg
 decl_stmt|;
 name|struct
@@ -11431,9 +11245,7 @@ name|xfer
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|xfer
 operator|->
 name|send
@@ -11624,7 +11436,7 @@ name|FW_VMACCESS
 end_ifdef
 
 begin_comment
-comment|/*  * Software implementation for physical memory block access.  * XXX:Too slow, usef for debug purpose only.  */
+comment|/*  * Software implementation for physical memory block access.  * XXX:Too slow, useful for debug purpose only.  */
 end_comment
 
 begin_function
@@ -11846,40 +11658,13 @@ name|buf
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|rfp
-operator|->
-name|mode
-operator|.
-name|wreqb
-operator|.
-name|payload
+argument|rfp->mode.wreqb.payload
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|ntohl
-argument_list|(
-name|rfp
-operator|->
-name|mode
-operator|.
-name|wreqb
-operator|.
-name|dest_lo
-argument_list|)
+argument|(caddr_t)ntohl(rfp->mode.wreqb.dest_lo)
 argument_list|,
-name|ntohs
-argument_list|(
-name|rfp
-operator|->
-name|mode
-operator|.
-name|wreqb
-operator|.
-name|len
+argument|s 			    ntohs(rfp->mode.wreqb.len)
 argument_list|)
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|sfp
 operator|->
 name|mode
@@ -12058,9 +11843,6 @@ name|rresb
 operator|.
 name|payload
 argument_list|,
-operator|(
-name|uint16_t
-operator|)
 name|ntohs
 argument_list|(
 name|rfp
@@ -12862,24 +12644,12 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|500000
 specifier|static
 name|eventhandler_tag
 name|fwdev_ehtag
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|type
@@ -12888,16 +12658,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|500000
 name|fwdev_ehtag
 operator|=
 name|EVENTHANDLER_REGISTER
@@ -12911,22 +12671,10 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|500000
 if|if
 condition|(
 name|fwdev_ehtag
@@ -12940,8 +12688,6 @@ argument_list|,
 name|fwdev_ehtag
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|MOD_SHUTDOWN
@@ -12961,25 +12707,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__DragonFly__
-end_ifdef
-
-begin_expr_stmt
-name|DECLARE_DUMMY_MODULE
-argument_list|(
-name|firewire
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|DRIVER_MODULE
