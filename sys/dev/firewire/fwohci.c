@@ -7659,9 +7659,10 @@ name|sc
 operator|->
 name|fc
 argument_list|,
-name|DB_SIZE
+sizeof|sizeof
 argument_list|(
-name|dbch
+expr|struct
+name|fwohcidb
 argument_list|)
 argument_list|,
 name|DB_SIZE
