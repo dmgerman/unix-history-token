@@ -7318,6 +7318,18 @@ decl_stmt|;
 name|uint32_t
 name|istatus
 decl_stmt|;
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ccb_hdr
+argument_list|)
+name|tmp_doneq
+operator|=
+name|STAILQ_HEAD_INITIALIZER
+argument_list|(
+name|tmp_doneq
+argument_list|)
+expr_stmt|;
 comment|/* Read interrupt statuses. */
 name|istatus
 operator|=
@@ -7364,6 +7376,18 @@ name|batch
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Prevent the possibility of issues caused by processing the queue 	 * while unlocked below by moving the contents to a local queue. 	 */
+name|STAILQ_CONCAT
+argument_list|(
+operator|&
+name|tmp_doneq
+argument_list|,
+operator|&
+name|ch
+operator|->
+name|doneq
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -7380,9 +7404,7 @@ operator|=
 name|STAILQ_FIRST
 argument_list|(
 operator|&
-name|ch
-operator|->
-name|doneq
+name|tmp_doneq
 argument_list|)
 operator|)
 operator|!=
@@ -7392,9 +7414,7 @@ block|{
 name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
-name|ch
-operator|->
-name|doneq
+name|tmp_doneq
 argument_list|,
 name|sim_links
 operator|.
