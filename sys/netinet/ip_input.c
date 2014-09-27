@@ -5255,11 +5255,6 @@ operator||=
 name|M_FLOWID
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|RSS
 comment|/* 	 * Queue/dispatch for reprocessing. 	 * 	 * Note: this is much slower than just handling the frame in the 	 * current receive context.  It's likely worth investigating 	 * why this is. 	 */
 name|netisr_dispatch
 argument_list|(
