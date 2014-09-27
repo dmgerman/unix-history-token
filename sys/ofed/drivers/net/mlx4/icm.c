@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005, 2006, 2007, 2008 Mellanox Technologies. All rights reserved.  * Copyright (c) 2006, 2007 Cisco Systems, Inc.  All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
+comment|/*  * Copyright (c) 2005, 2006, 2007, 2008, 2014 Mellanox Technologies. All rights reserved.  * Copyright (c) 2006, 2007 Cisco Systems, Inc.  All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<linux/slab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/math64.h>
 end_include
 
 begin_include
@@ -1361,6 +1367,9 @@ name|i
 operator|*
 name|MLX4_TABLE_CHUNK_SIZE
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|mlx4_UNMAP_ICM
 argument_list|(
 name|dev
@@ -1375,7 +1384,8 @@ name|MLX4_TABLE_CHUNK_SIZE
 operator|/
 name|MLX4_ICM_PAGE_SIZE
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|mlx4_free_icm
 argument_list|(
 name|dev
@@ -1401,6 +1411,15 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+block|}
+else|else
+block|{
+name|pr_warn
+argument_list|(
+literal|"mlx4_core: mlx4_UNMAP_ICM failed.\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|mutex_unlock
 argument_list|(
@@ -1849,7 +1868,7 @@ parameter_list|,
 name|int
 name|obj_size
 parameter_list|,
-name|u32
+name|u64
 name|nobj
 parameter_list|,
 name|int
@@ -1885,6 +1904,8 @@ name|obj_size
 expr_stmt|;
 name|num_icm
 operator|=
+name|div_u64
+argument_list|(
 operator|(
 name|nobj
 operator|+
@@ -1892,8 +1913,9 @@ name|obj_per_chunk
 operator|-
 literal|1
 operator|)
-operator|/
+argument_list|,
 name|obj_per_chunk
+argument_list|)
 expr_stmt|;
 name|table
 operator|->
@@ -2150,6 +2172,9 @@ name|i
 index|]
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|mlx4_UNMAP_ICM
 argument_list|(
 name|dev
@@ -2164,7 +2189,8 @@ name|MLX4_TABLE_CHUNK_SIZE
 operator|/
 name|MLX4_ICM_PAGE_SIZE
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|mlx4_free_icm
 argument_list|(
 name|dev
@@ -2179,6 +2205,19 @@ argument_list|,
 name|use_coherent
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|pr_warn
+argument_list|(
+literal|"mlx4_core: mlx4_UNMAP_ICM failed.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+name|ENOMEM
+return|;
+block|}
 block|}
 name|kfree
 argument_list|(
@@ -2211,6 +2250,10 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|err
+init|=
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -2237,6 +2280,8 @@ name|i
 index|]
 condition|)
 block|{
+name|err
+operator|=
 name|mlx4_UNMAP_ICM
 argument_list|(
 name|dev
@@ -2254,6 +2299,12 @@ operator|/
 name|MLX4_ICM_PAGE_SIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|err
+condition|)
+block|{
 name|mlx4_free_icm
 argument_list|(
 name|dev
@@ -2271,6 +2322,21 @@ name|coherent
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|pr_warn
+argument_list|(
+literal|"mlx4_core: mlx4_UNMAP_ICM failed.\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|err
+condition|)
 name|kfree
 argument_list|(
 name|table

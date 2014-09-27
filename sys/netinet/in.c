@@ -3162,7 +3162,7 @@ name|fibnum
 decl_stmt|;
 name|fibnum
 operator|=
-name|rt_add_addr_allfibs
+name|V_rt_add_addr_allfibs
 condition|?
 name|RT_ALL_FIBS
 else|:
@@ -3496,7 +3496,7 @@ name|fibnum
 decl_stmt|;
 name|fibnum
 operator|=
-name|rt_add_addr_allfibs
+name|V_rt_add_addr_allfibs
 condition|?
 name|RT_ALL_FIBS
 else|:

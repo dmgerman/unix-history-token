@@ -644,7 +644,7 @@ comment|/* IRQs : */
 end_comment
 
 begin_comment
-comment|/*  * 0: AIC  * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: ADC  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: MMC Interface  * 10: USB device port  * 11: Two-wirte interface  * 12: SPI 0  * 13: SPI 1  * 14: SSC  * 15: - (reserved)  * 16: - (reserved)  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: USB Host port  * 21: EMAC  * 22: ISI  * 23: USART 3  * 24: USART 4  * 25: USART 2  * 26: Timer Counter 3  * 27: Timer Counter 4  * 28: Timer Counter 5  * 29: AIC IRQ0  * 30: AIC IRQ1  * 31: AIC IRQ2  */
+comment|/*  * 0: AIC  * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: ADC  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: MMC Interface  * 10: USB device port  * 11: Two-wire interface  * 12: SPI 0  * 13: SPI 1  * 14: SSC  * 15: - (reserved)  * 16: - (reserved)  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: USB Host port  * 21: EMAC  * 22: ISI  * 23: USART 3  * 24: USART 4  * 25: USART 2  * 26: Timer Counter 3  * 27: Timer Counter 4  * 28: Timer Counter 5  * 29: AIC IRQ0  * 30: AIC IRQ1  * 31: AIC IRQ2  */
 end_comment
 
 begin_define
@@ -918,7 +918,7 @@ begin_define
 define|#
 directive|define
 name|AT91SAM9260_PIT_SIZE
-value|10
+value|0x10
 end_define
 
 begin_define

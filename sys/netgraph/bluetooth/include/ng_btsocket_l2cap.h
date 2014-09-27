@@ -543,7 +543,7 @@ name|link_timo
 decl_stmt|;
 comment|/* link timeout */
 name|struct
-name|callout_handle
+name|callout
 name|timo
 decl_stmt|;
 comment|/* timeout */

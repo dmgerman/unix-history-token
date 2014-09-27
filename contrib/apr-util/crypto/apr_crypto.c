@@ -807,7 +807,12 @@ name|err
 operator|->
 name|reason
 operator|=
+name|apr_pstrdup
+argument_list|(
+name|pool
+argument_list|,
 name|modname
+argument_list|)
 expr_stmt|;
 operator|*
 name|result

@@ -158,6 +158,72 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* * MSVC6 does not support intptr_t (C99) * APR does not have a signed inptr type until 2.0  (r1557720) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+name|_MSC_VER
+operator|<
+literal|1400
+end_if
+
+begin_if
+if|#
+directive|if
+name|APR_SIZEOF_VOIDP
+operator|==
+literal|8
+end_if
+
+begin_define
+define|#
+directive|define
+name|ODBC_INTPTR_T
+value|apr_int64_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ODBC_INTPTR_T
+value|apr_int32_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ODBC_INTPTR_T
+value|intptr_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Driver name is "odbc" and the entry point is 'apr_dbd_odbc_driver'   * unless ODBC_DRIVER_NAME is defined and it is linked with another db library which  * is ODBC source-compatible. e.g. DB2, Informix, TimesTen, mysql.    */
 end_comment
 
@@ -481,14 +547,14 @@ name|int
 name|defaultBufferSize
 decl_stmt|;
 comment|/* used for CLOBs in text mode,                                   * and when fld size is indeterminate */
-name|intptr_t
+name|ODBC_INTPTR_T
 name|transaction_mode
 decl_stmt|;
-name|intptr_t
+name|ODBC_INTPTR_T
 name|dboptions
 decl_stmt|;
 comment|/* driver options re SQLGetData */
-name|intptr_t
+name|ODBC_INTPTR_T
 name|default_transaction_mode
 decl_stmt|;
 name|int
@@ -1441,7 +1507,7 @@ block|{
 name|SQLRETURN
 name|rc
 decl_stmt|;
-name|intptr_t
+name|ODBC_INTPTR_T
 name|maxsize
 decl_stmt|,
 name|textsize
@@ -3631,7 +3697,7 @@ index|[
 name|col
 index|]
 decl_stmt|;
-name|intptr_t
+name|ODBC_INTPTR_T
 name|options
 init|=
 name|row
@@ -4079,7 +4145,7 @@ modifier|*
 modifier|*
 name|attrs
 parameter_list|,
-name|intptr_t
+name|ODBC_INTPTR_T
 modifier|*
 modifier|*
 name|attrvals
@@ -4143,7 +4209,7 @@ name|MAX_PARAMS
 operator|*
 sizeof|sizeof
 argument_list|(
-name|intptr_t
+name|ODBC_INTPTR_T
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5565,7 +5631,7 @@ name|connect
 init|=
 literal|0
 decl_stmt|;
-name|intptr_t
+name|ODBC_INTPTR_T
 modifier|*
 name|attrvals
 init|=
@@ -5942,7 +6008,7 @@ operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|intptr_t
+name|ODBC_INTPTR_T
 argument_list|)
 argument_list|,
 name|NULL
@@ -5971,7 +6037,7 @@ operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|intptr_t
+name|ODBC_INTPTR_T
 argument_list|)
 argument_list|,
 name|NULL

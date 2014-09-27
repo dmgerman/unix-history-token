@@ -175,6 +175,7 @@ name|ctl_ua_type
 name|ctl_build_ua
 parameter_list|(
 name|ctl_ua_type
+modifier|*
 name|ua_type
 parameter_list|,
 name|struct

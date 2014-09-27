@@ -575,14 +575,22 @@ comment|/* number of keepalives before close */
 name|u_int
 name|t_tsomax
 decl_stmt|;
-comment|/* tso burst length limit */
+comment|/* TSO total burst length limit in bytes */
 name|uint32_t
 name|t_ispare
 index|[
-literal|8
+literal|6
 index|]
 decl_stmt|;
-comment|/* 5 UTO, 3 TBD */
+comment|/* 5 UTO, 1 TBD */
+name|uint32_t
+name|t_tsomaxsegcount
+decl_stmt|;
+comment|/* TSO maximum segment count */
+name|uint32_t
+name|t_tsomaxsegsize
+decl_stmt|;
+comment|/* TSO maximum segment size in bytes */
 name|void
 modifier|*
 name|t_pspare2
@@ -1261,6 +1269,12 @@ name|ifcap
 decl_stmt|;
 name|u_int
 name|tsomax
+decl_stmt|;
+name|u_int
+name|tsomaxsegcount
+decl_stmt|;
+name|u_int
+name|tsomaxsegsize
 decl_stmt|;
 block|}
 struct|;

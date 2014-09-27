@@ -9396,14 +9396,6 @@ return|;
 block|}
 else|#
 directive|else
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|status

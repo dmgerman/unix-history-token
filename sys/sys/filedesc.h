@@ -286,43 +286,6 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/* Flags for do_dup() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUP_FIXED
-value|0x1
-end_define
-
-begin_comment
-comment|/* Force fixed allocation. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUP_FCNTL
-value|0x2
-end_define
-
-begin_comment
-comment|/* fcntl()-style errors. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUP_CLOEXEC
-value|0x4
-end_define
-
-begin_comment
-comment|/* Atomically set FD_CLOEXEC. */
-end_comment
-
-begin_comment
 comment|/* Lock a file descriptor table. */
 end_comment
 
@@ -504,31 +467,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|do_dup
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|int
-name|old
-parameter_list|,
-name|int
-name|new
-parameter_list|,
-name|register_t
-modifier|*
-name|retval
 parameter_list|)
 function_decl|;
 end_function_decl

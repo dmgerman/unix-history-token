@@ -3035,7 +3035,9 @@ name|__func__
 argument_list|,
 name|lgp
 operator|->
-name|lp_ifname
+name|lp_ifp
+operator|->
+name|if_xname
 argument_list|)
 expr_stmt|;
 return|return
@@ -3081,9 +3083,6 @@ name|lgp
 operator|->
 name|lp_psc
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|lp
 expr_stmt|;
 name|lp
@@ -3311,7 +3310,8 @@ name|lagg_softc
 modifier|*
 name|sc
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|data
 parameter_list|)
 block|{
@@ -3353,7 +3353,7 @@ name|lacp_opreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * If the LACP softc is NULL, return with the opreq structure full of 	 * zeros.  It is normal for the softc to be NULL while the lagg is 	 * being destroyed. 	 */
+comment|/* 	 * If the LACP softc is NULL, return with the opreq structure full of 	 * zeros.  It is normal for the softc to be NULL while the lagg is 	 * being destroyed. 	 */
 if|if
 condition|(
 name|NULL
@@ -3571,7 +3571,8 @@ name|lagg_port
 modifier|*
 name|lgp
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 name|data
 parameter_list|)
 block|{
@@ -4463,7 +4464,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|lacp_attach
 parameter_list|(
 name|struct
@@ -4494,29 +4495,15 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|lsc
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 name|sc
 operator|->
 name|sc_psc
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|lsc
 expr_stmt|;
 name|lsc
@@ -4654,22 +4641,16 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|lacp_detach
 parameter_list|(
-name|struct
-name|lagg_softc
+name|void
 modifier|*
-name|sc
+name|psc
 parameter_list|)
 block|{
 name|struct
@@ -4677,10 +4658,12 @@ name|lacp_softc
 modifier|*
 name|lsc
 init|=
-name|LACP_SOFTC
-argument_list|(
-name|sc
-argument_list|)
+operator|(
+expr|struct
+name|lacp_softc
+operator|*
+operator|)
+name|psc
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -4710,12 +4693,6 @@ literal|"aggregator still attached"
 operator|)
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_psc
-operator|=
-name|NULL
-expr_stmt|;
 name|callout_drain
 argument_list|(
 operator|&
@@ -4744,11 +4721,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -5410,7 +5382,7 @@ name|la_nports
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* This aggregator is chosen if 		 *      the partner has a better system priority 		 *  or, the total aggregated speed is higher 		 *  or, it is already the chosen aggregator 		 */
+comment|/* 		 * This aggregator is chosen if the partner has a better 		 * system priority or, the total aggregated speed is higher 		 * or, it is already the chosen aggregator 		 */
 if|if
 condition|(
 operator|(

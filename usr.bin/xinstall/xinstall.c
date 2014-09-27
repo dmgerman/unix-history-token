@@ -6540,6 +6540,8 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+name|again
+label|:
 if|if
 condition|(
 name|stat
@@ -6549,6 +6551,8 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 if|if
@@ -6556,7 +6560,18 @@ condition|(
 name|errno
 operator|!=
 name|ENOENT
-operator|||
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"stat %s"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|mkdir
 argument_list|(
 name|path
@@ -6567,6 +6582,15 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EEXIST
+condition|)
+goto|goto
+name|again
+goto|;
 name|err
 argument_list|(
 name|EX_OSERR
@@ -6576,9 +6600,7 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
-elseif|else
 if|if
 condition|(
 name|verbose

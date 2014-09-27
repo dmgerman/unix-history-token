@@ -1200,10 +1200,6 @@ argument|ctl_lun
 argument_list|)
 name|run_links
 expr_stmt|;
-name|struct
-name|ctl_nexus
-name|rsv_nexus
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CTL_WITH_CA
@@ -1237,6 +1233,9 @@ decl_stmt|;
 name|struct
 name|ctl_lun_io_stats
 name|stats
+decl_stmt|;
+name|uint32_t
+name|res_idx
 decl_stmt|;
 name|struct
 name|ctl_per_res_info

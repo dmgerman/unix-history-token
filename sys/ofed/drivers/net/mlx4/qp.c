@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Topspin Communications.  All rights reserved.  * Copyright (c) 2005, 2006, 2007 Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2005, 2006, 2007, 2008 Mellanox Technologies. All rights reserved.  * Copyright (c) 2004 Voltaire, Inc. All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
+comment|/*  * Copyright (c) 2004 Topspin Communications.  All rights reserved.  * Copyright (c) 2005, 2006, 2007 Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2005, 2006, 2007, 2008, 2014 Mellanox Technologies. All rights reserved.  * Copyright (c) 2004 Voltaire, Inc. All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/gfp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/module.h>
+end_include
 
 begin_include
 include|#
@@ -1071,9 +1089,23 @@ modifier|*
 name|base
 parameter_list|,
 name|u8
-name|bf_qp
+name|flags
 parameter_list|)
 block|{
+name|int
+name|bf_qp
+init|=
+operator|!
+operator|!
+operator|(
+name|flags
+operator|&
+operator|(
+name|u8
+operator|)
+name|MLX4_RESERVE_BF_QP
+operator|)
+decl_stmt|;
 name|struct
 name|mlx4_priv
 modifier|*
@@ -1094,6 +1126,7 @@ name|priv
 operator|->
 name|qp_table
 decl_stmt|;
+comment|/* Only IPoIB uses a large cnt. In this case, just allocate 	 * as usual, ignoring bf skipping, since IPoIB does not run over RoCE 	 */
 if|if
 condition|(
 name|cnt
@@ -1102,10 +1135,10 @@ name|MLX4_MAX_BF_QP_RANGE
 operator|&&
 name|bf_qp
 condition|)
-return|return
-operator|-
-name|ENOMEM
-return|;
+name|bf_qp
+operator|=
+literal|0
+expr_stmt|;
 operator|*
 name|base
 operator|=
@@ -1165,7 +1198,7 @@ modifier|*
 name|base
 parameter_list|,
 name|u8
-name|bf_qp
+name|flags
 parameter_list|)
 block|{
 name|u64
@@ -1195,19 +1228,18 @@ argument_list|,
 operator|(
 operator|(
 operator|(
-operator|!
-operator|!
-name|bf_qp
+name|u32
+operator|)
+name|flags
 operator|)
 operator|<<
-literal|31
+literal|24
 operator|)
 operator||
 operator|(
 name|u32
 operator|)
 name|cnt
-operator|)
 argument_list|)
 expr_stmt|;
 name|set_param_h
@@ -1271,7 +1303,7 @@ name|align
 argument_list|,
 name|base
 argument_list|,
-name|bf_qp
+name|flags
 argument_list|)
 return|;
 block|}
@@ -1344,6 +1376,8 @@ argument_list|,
 name|base_qpn
 argument_list|,
 name|cnt
+argument_list|,
+name|MLX4_USE_RR
 argument_list|)
 expr_stmt|;
 block|}

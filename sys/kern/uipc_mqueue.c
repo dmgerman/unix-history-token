@@ -234,6 +234,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -12926,6 +12932,41 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|mqf_fill_kinfo
+parameter_list|(
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|struct
+name|kinfo_file
+modifier|*
+name|kif
+parameter_list|,
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|)
+block|{
+name|kif
+operator|->
+name|kf_type
+operator|=
+name|KF_TYPE_MQUEUE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -12987,6 +13028,11 @@ operator|.
 name|fo_sendfile
 operator|=
 name|invfo_sendfile
+block|,
+operator|.
+name|fo_fill_kinfo
+operator|=
+name|mqf_fill_kinfo
 block|, }
 decl_stmt|;
 end_decl_stmt

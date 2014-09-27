@@ -1295,12 +1295,6 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp

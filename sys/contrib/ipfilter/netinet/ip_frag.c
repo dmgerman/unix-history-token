@@ -4435,7 +4435,11 @@ comment|/* Returns:     Nil                                                     
 end_comment
 
 begin_comment
-comment|/* Parameters:  ptr(I) - pointer to data structure                          */
+comment|/* Parameters:  softc(I) - pointer to soft context main structure           */
+end_comment
+
+begin_comment
+comment|/*              ptr(I) - pointer to data structure                          */
 end_comment
 
 begin_comment
@@ -4545,7 +4549,11 @@ comment|/* Returns:     Nil                                                     
 end_comment
 
 begin_comment
-comment|/* Parameters:  fra(I)   - pointer to fragment structure to delete          */
+comment|/* Parameters:  softc(I) - pointer to soft context main structure           */
+end_comment
+
+begin_comment
+comment|/*              fra(I)   - pointer to fragment structure to delete          */
 end_comment
 
 begin_comment
@@ -4733,7 +4741,19 @@ comment|/* Returns:     Nil                                                     
 end_comment
 
 begin_comment
+comment|/* Parameters:  softf(I) - pointer to fragment context information          */
+end_comment
+
+begin_comment
+comment|/*              fra(I)   - pointer to fragment structure to free            */
+end_comment
+
+begin_comment
 comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* Free up a fragment cache entry and bump relevent statistics.             */
 end_comment
 
 begin_comment
@@ -4791,7 +4811,7 @@ comment|/* Returns:     Nil                                                     
 end_comment
 
 begin_comment
-comment|/* Parameters:  Nil                                                         */
+comment|/* Parameters:  softc(I) - pointer to soft context main structure           */
 end_comment
 
 begin_comment
@@ -5009,7 +5029,7 @@ comment|/* Returns:     Nil                                                     
 end_comment
 
 begin_comment
-comment|/* Parameters:  Nil                                                         */
+comment|/* Parameters:  softc(I) - pointer to soft context main structure           */
 end_comment
 
 begin_comment
@@ -5346,6 +5366,34 @@ comment|/* Function:    ipf_frag_pkt_next                                       
 end_comment
 
 begin_comment
+comment|/* Returns:     int      - 0 == success, else error                         */
+end_comment
+
+begin_comment
+comment|/* Parameters:  softc(I) - pointer to soft context main structure           */
+end_comment
+
+begin_comment
+comment|/*              token(I) - pointer to token information for this caller     */
+end_comment
+
+begin_comment
+comment|/*              itp(I)   - pointer to generic iterator from caller          */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* This function is used to step through the fragment cache list used for   */
+end_comment
+
+begin_comment
+comment|/* filter rules. The hard work is done by the more generic ipf_frag_next.   */
+end_comment
+
+begin_comment
 comment|/* ------------------------------------------------------------------------ */
 end_comment
 
@@ -5431,6 +5479,34 @@ end_comment
 
 begin_comment
 comment|/* Function:    ipf_frag_nat_next                                           */
+end_comment
+
+begin_comment
+comment|/* Returns:     int      - 0 == success, else error                         */
+end_comment
+
+begin_comment
+comment|/* Parameters:  softc(I) - pointer to soft context main structure           */
+end_comment
+
+begin_comment
+comment|/*              token(I) - pointer to token information for this caller     */
+end_comment
+
+begin_comment
+comment|/*              itp(I)   - pointer to generic iterator from caller          */
+end_comment
+
+begin_comment
+comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* This function is used to step through the fragment cache list used for   */
+end_comment
+
+begin_comment
+comment|/* NAT. The hard work is done by the more generic ipf_frag_next.            */
 end_comment
 
 begin_comment
@@ -5527,7 +5603,11 @@ comment|/* Returns:     int      - 0 == success, else error                     
 end_comment
 
 begin_comment
-comment|/* Parameters:  token(I) - pointer to token information for this caller     */
+comment|/* Parameters:  softc(I) - pointer to soft context main structure           */
+end_comment
+
+begin_comment
+comment|/*              token(I) - pointer to token information for this caller     */
 end_comment
 
 begin_comment
@@ -5844,7 +5924,23 @@ comment|/* Returns:     Nil                                                     
 end_comment
 
 begin_comment
+comment|/* Parameters:  softc(I) - pointer to soft context main structure           */
+end_comment
+
+begin_comment
+comment|/*              data(I)  - pointer to frag cache pointer                    */
+end_comment
+
+begin_comment
 comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* This function is the external interface for dropping a reference to a    */
+end_comment
+
+begin_comment
+comment|/* fragment cache entry used by filter rules.                               */
 end_comment
 
 begin_comment
@@ -5929,7 +6025,23 @@ comment|/* Returns:     Nil                                                     
 end_comment
 
 begin_comment
+comment|/* Parameters:  softc(I) - pointer to soft context main structure           */
+end_comment
+
+begin_comment
+comment|/*              data(I)  - pointer to frag cache pointer                    */
+end_comment
+
+begin_comment
 comment|/*                                                                          */
+end_comment
+
+begin_comment
+comment|/* This function is the external interface for dropping a reference to a    */
+end_comment
+
+begin_comment
+comment|/* fragment cache entry used by NAT table entries.                          */
 end_comment
 
 begin_comment

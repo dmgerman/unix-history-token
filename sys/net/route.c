@@ -366,13 +366,17 @@ begin_comment
 comment|/*  * By default add routes to all fibs for new interfaces.  * Once this is set to 0 then only allocate routes on interface  * changes for the FIB of the caller when adding a new set of addresses  * to an interface.  XXX this is a shotgun aproach to a problem that needs  * a more fine grained solution.. that will come.  * XXX also has the problems getting the FIB from curthread which will not  * always work given the fib can be overridden and prefixes can be added  * from the network stack context.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|u_int
+argument_list|,
 name|rt_add_addr_allfibs
-init|=
+argument_list|)
+operator|=
 literal|1
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -384,9 +388,14 @@ argument_list|,
 name|add_addr_allfibs
 argument_list|,
 name|CTLFLAG_RWTUN
+operator||
+name|CTLFLAG_VNET
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|rt_add_addr_allfibs
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -6678,7 +6687,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|rt_add_addr_allfibs
+name|V_rt_add_addr_allfibs
 operator|==
 literal|0
 operator|&&
@@ -6689,7 +6698,6 @@ name|int
 operator|)
 name|RTM_ADD
 condition|)
-block|{
 name|startfib
 operator|=
 name|endfib
@@ -6700,7 +6708,6 @@ name|ifa_ifp
 operator|->
 name|if_fib
 expr_stmt|;
-block|}
 else|else
 block|{
 name|startfib

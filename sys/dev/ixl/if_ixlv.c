@@ -3519,6 +3519,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|!
@@ -3537,6 +3540,8 @@ argument_list|,
 name|ifa
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|error

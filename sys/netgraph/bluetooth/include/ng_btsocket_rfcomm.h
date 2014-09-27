@@ -1198,7 +1198,7 @@ name|pcb_mtx
 decl_stmt|;
 comment|/* PCB lock */
 name|struct
-name|callout_handle
+name|callout
 name|timo
 decl_stmt|;
 comment|/* timeout */

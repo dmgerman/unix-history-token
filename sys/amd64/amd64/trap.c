@@ -1542,7 +1542,7 @@ case|case
 name|T_FPOPFLT
 case|:
 comment|/* FPU operand fetch fault */
-comment|/* 			 * XXXKIB for now disable any FPU traps in kernel 			 * handler registration seems to be overkill 			 */
+comment|/* 			 * For now, supporting kernel handler 			 * registration for FPU traps is overkill. 			 */
 name|trap_fatal
 argument_list|(
 name|frame

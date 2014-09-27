@@ -414,6 +414,26 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_struct
+struct|struct
+name|ifnet_hw_tsomax
+block|{
+name|u_int
+name|tsomaxbytes
+decl_stmt|;
+comment|/* TSO total burst length limit in bytes */
+name|u_int
+name|tsomaxsegcount
+decl_stmt|;
+comment|/* TSO maximum segment count */
+name|u_int
+name|tsomaxsegsize
+decl_stmt|;
+comment|/* TSO maximum segment size in bytes */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Structure defining a network interface.  *  * Size ILP32:  592 (approx)  *	 LP64: 1048 (approx)  */
 end_comment
@@ -801,7 +821,7 @@ comment|/* Stuff that's only temporary and doesn't belong here. */
 name|u_int
 name|if_hw_tsomax
 decl_stmt|;
-comment|/* tso burst length limit, the minimum 					 * is (IP_MAXPACKET / 8). 					 * XXXAO: Have to find a better place 					 * for it eventually. */
+comment|/* TSO total burst length 					 * limit in bytes. A value of 					 * zero means no limit. Have 					 * to find a better place for 					 * it eventually. */
 comment|/* 	 * Old, racy and expensive statistics, should not be used in 	 * new drivers. 	 */
 name|uint64_t
 name|if_ipackets
@@ -851,6 +871,15 @@ name|uint64_t
 name|if_noproto
 decl_stmt|;
 comment|/* destined for unsupported protocol */
+comment|/* TSO fields for segment limits. If a field is zero below, there is no limit. */
+name|u_int
+name|if_hw_tsomaxsegcount
+decl_stmt|;
+comment|/* TSO maximum segment count */
+name|u_int
+name|if_hw_tsomaxsegsize
+decl_stmt|;
+comment|/* TSO maximum segment size in bytes */
 comment|/* 	 * Spare fields to be added before branching a stable branch, so 	 * that structure can be enhanced without changing the kernel 	 * binary interface. 	 */
 block|}
 struct|;
@@ -3492,6 +3521,38 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* TSO */
+end_comment
+
+begin_function_decl
+name|void
+name|if_hw_tsomax_common
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|,
+name|struct
+name|ifnet_hw_tsomax
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|if_hw_tsomax_update
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|,
+name|struct
+name|ifnet_hw_tsomax
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
