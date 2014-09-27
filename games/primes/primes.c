@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -268,20 +274,9 @@ literal|0
 expr_stmt|;
 name|stop
 operator|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|ubig
-argument_list|)
-operator|>
-literal|4
-operator|)
-condition|?
 name|SPSPMAX
-else|:
-name|BIG
 expr_stmt|;
-comment|/* 	 * Convert low and high args.  Strtoul(3) sets errno to 	 * ERANGE if the number is too large, but, if there's 	 * a leading minus sign it returns the negation of the 	 * result of the conversion, which we'd rather disallow. 	 */
+comment|/* 	 * Convert low and high args.  Strtoumax(3) sets errno to 	 * ERANGE if the number is too large, but, if there's 	 * a leading minus sign it returns the negation of the 	 * result of the conversion, which we'd rather disallow. 	 */
 switch|switch
 condition|(
 name|argc
@@ -326,7 +321,7 @@ literal|0
 expr_stmt|;
 name|start
 operator|=
-name|strtoul
+name|strtoumax
 argument_list|(
 name|argv
 index|[
@@ -380,7 +375,7 @@ literal|0
 expr_stmt|;
 name|stop
 operator|=
-name|strtoul
+name|strtoumax
 argument_list|(
 name|argv
 index|[
@@ -430,9 +425,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|uint64_t
-operator|)
 name|stop
 operator|>
 name|SPSPMAX
@@ -479,7 +471,7 @@ literal|0
 expr_stmt|;
 name|start
 operator|=
-name|strtoul
+name|strtoumax
 argument_list|(
 name|argv
 index|[
@@ -687,7 +679,7 @@ literal|0
 expr_stmt|;
 name|val
 operator|=
-name|strtoul
+name|strtoumax
 argument_list|(
 name|buf
 argument_list|,
@@ -913,9 +905,13 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|"0x%lx\n"
+literal|"%"
+name|PRIx64
+literal|"\n"
 else|:
-literal|"%lu\n"
+literal|"%"
+name|PRIu64
+literal|"\n"
 argument_list|,
 name|factor
 argument_list|)
@@ -1229,9 +1225,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|uint64_t
-operator|)
 name|start
 operator|>
 name|SIEVEMAX
@@ -1251,9 +1244,13 @@ name|printf
 argument_list|(
 name|hflag
 condition|?
-literal|"0x%lx\n"
+literal|"%"
+name|PRIx64
+literal|"\n"
 else|:
-literal|"%lu\n"
+literal|"%"
+name|PRIu64
+literal|"\n"
 argument_list|,
 name|start
 argument_list|)

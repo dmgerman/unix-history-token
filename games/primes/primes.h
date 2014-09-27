@@ -7,14 +7,19 @@ begin_comment
 comment|/*  * primes - generate a table of primes between two values  *  * By: Landon Curt Noll chongo@toad.com, ...!{sun,tolsoft}!hoptoad!chongo  *  * chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_comment
 comment|/* ubig is the type that holds a large unsigned value */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|uint64_t
 name|ubig
 typedef|;
 end_typedef
