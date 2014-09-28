@@ -8521,7 +8521,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|poll_handler_drv_t
+name|poll_handler_t
 name|nfe_poll
 decl_stmt|;
 end_decl_stmt
@@ -9308,7 +9308,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|ether_poll_register_drv
+name|ether_poll_register
 argument_list|(
 name|nfe_poll
 argument_list|,

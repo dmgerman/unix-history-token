@@ -2253,7 +2253,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|poll_handler_drv_t
+name|poll_handler_t
 name|em_poll
 decl_stmt|;
 end_decl_stmt
@@ -4374,7 +4374,7 @@ argument_list|)
 operator|&
 name|IFCAP_POLLING
 condition|)
-name|ether_poll_deregister_drv
+name|ether_poll_deregister
 argument_list|(
 name|ifp
 argument_list|)
@@ -6200,7 +6200,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|ether_poll_register_drv
+name|ether_poll_register
 argument_list|(
 name|em_poll
 argument_list|,
@@ -6245,7 +6245,7 @@ else|else
 block|{
 name|error
 operator|=
-name|ether_poll_deregister_drv
+name|ether_poll_deregister
 argument_list|(
 name|ifp
 argument_list|)
