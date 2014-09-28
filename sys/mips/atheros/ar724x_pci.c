@@ -695,7 +695,7 @@ literal|0
 operator|)
 condition|)
 return|return;
-comment|/* 	 * WAR for BAR issue on AR7240 - We are unable to access the PCI device 	 * space if we set the BAR with proper base address. 	 */
+comment|/* 	 * WAR for BAR issue on AR7240 - We are unable to access the PCI 	 * device space if we set the BAR with proper base address. 	 * 	 * However, we _do_ want to allow programming in the probe value 	 * (0xffffffff) so the PCI code can find out how big the memory 	 * map is for this device.  Without it, it'll think the memory 	 * map is 32 bits wide, the PCI code will then end up thinking 	 * the register window is '0' and fail to allocate resources. 	 */
 if|if
 condition|(
 name|reg
@@ -712,6 +712,10 @@ operator|&&
 name|ar71xx_soc
 operator|==
 name|AR71XX_SOC_AR7240
+operator|&&
+name|data
+operator|!=
+literal|0xffffffff
 condition|)
 name|ar724x_pci_write
 argument_list|(
