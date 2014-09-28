@@ -288,7 +288,7 @@ enum|enum
 block|{
 name|IFCOUNTER_IPACKETS
 init|=
-literal|1
+literal|0
 block|,
 name|IFCOUNTER_IERRORS
 block|,
@@ -311,17 +311,13 @@ block|,
 name|IFCOUNTER_OQDROPS
 block|,
 name|IFCOUNTER_NOPROTO
-block|, }
+block|,
+name|IFCOUNTERS
+comment|/* Array size. */
+block|}
 name|ift_counter
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|IFCOUNTER_LAST
-value|IFCOUNTER_NOPROTO
-end_define
 
 begin_typedef
 typedef|typedef
@@ -824,60 +820,18 @@ name|if_get_counter_t
 name|if_get_counter
 decl_stmt|;
 comment|/* get counter values */
+comment|/* Statistics. */
+name|counter_u64_t
+name|if_counters
+index|[
+name|IFCOUNTERS
+index|]
+decl_stmt|;
 comment|/* Stuff that's only temporary and doesn't belong here. */
 name|u_int
 name|if_hw_tsomax
 decl_stmt|;
 comment|/* TSO total burst length 					 * limit in bytes. A value of 					 * zero means no limit. Have 					 * to find a better place for 					 * it eventually. */
-comment|/* 	 * Old, racy and expensive statistics, should not be used in 	 * new drivers. 	 */
-name|uint64_t
-name|if_ipackets
-decl_stmt|;
-comment|/* packets received on interface */
-name|uint64_t
-name|if_ierrors
-decl_stmt|;
-comment|/* input errors on interface */
-name|uint64_t
-name|if_opackets
-decl_stmt|;
-comment|/* packets sent on interface */
-name|uint64_t
-name|if_oerrors
-decl_stmt|;
-comment|/* output errors on interface */
-name|uint64_t
-name|if_collisions
-decl_stmt|;
-comment|/* collisions on csma interfaces */
-name|uint64_t
-name|if_ibytes
-decl_stmt|;
-comment|/* total number of octets received */
-name|uint64_t
-name|if_obytes
-decl_stmt|;
-comment|/* total number of octets sent */
-name|uint64_t
-name|if_imcasts
-decl_stmt|;
-comment|/* packets received via multicast */
-name|uint64_t
-name|if_omcasts
-decl_stmt|;
-comment|/* packets sent via multicast */
-name|uint64_t
-name|if_iqdrops
-decl_stmt|;
-comment|/* dropped on input */
-name|uint64_t
-name|if_oqdrops
-decl_stmt|;
-comment|/* dropped on output */
-name|uint64_t
-name|if_noproto
-decl_stmt|;
-comment|/* destined for unsupported protocol */
 comment|/* TSO fields for segment limits. If a field is zero below, there is no limit. */
 name|u_int
 name|if_hw_tsomaxsegcount

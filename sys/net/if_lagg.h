@@ -667,7 +667,7 @@ block|{
 name|uint64_t
 name|val
 index|[
-name|IFCOUNTER_LAST
+name|IFCOUNTERS
 index|]
 decl_stmt|;
 block|}

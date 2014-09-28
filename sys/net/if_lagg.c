@@ -4575,11 +4575,11 @@ for|for
 control|(
 name|i
 operator|=
-name|IFCOUNTER_IPACKETS
+literal|0
 init|;
 name|i
-operator|<=
-name|IFCOUNTER_LAST
+operator|<
+name|IFCOUNTERS
 condition|;
 name|i
 operator|++
@@ -4893,11 +4893,11 @@ for|for
 control|(
 name|i
 operator|=
-name|IFCOUNTER_IPACKETS
+literal|0
 init|;
 name|i
 operator|<=
-name|IFCOUNTER_LAST
+name|IFCOUNTERS
 condition|;
 name|i
 operator|++
@@ -4927,8 +4927,6 @@ operator|.
 name|val
 index|[
 name|i
-operator|-
-literal|1
 index|]
 operator|+=
 name|vdiff
@@ -5461,26 +5459,22 @@ name|oldval
 decl_stmt|,
 name|vsum
 decl_stmt|;
-if|if
-condition|(
-name|cnt
-operator|<=
-literal|0
-operator|||
-name|cnt
-operator|>
-name|IFCOUNTER_LAST
-condition|)
-return|return
-operator|(
-name|if_get_counter_default
+comment|/* Revise this when we've got non-generic counters. */
+name|KASSERT
 argument_list|(
-name|ifp
-argument_list|,
 name|cnt
-argument_list|)
+operator|<
+name|IFCOUNTERS
+argument_list|,
+operator|(
+literal|"%s: invalid cnt %d"
+operator|,
+name|__func__
+operator|,
+name|cnt
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 operator|(
@@ -5523,8 +5517,6 @@ operator|.
 name|val
 index|[
 name|cnt
-operator|-
-literal|1
 index|]
 expr_stmt|;
 comment|/* current value */
@@ -5573,8 +5565,6 @@ operator|.
 name|val
 index|[
 name|cnt
-operator|-
-literal|1
 index|]
 expr_stmt|;
 name|LAGG_RUNLOCK

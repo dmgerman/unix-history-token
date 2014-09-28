@@ -72,12 +72,32 @@ begin_comment
 comment|/* struct ifqueue */
 end_comment
 
+begin_comment
+comment|/*  * Couple of ugly extra definitions that are required since ifq.h  * is splitted from if_var.h.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IF_DUNIT_NONE
 value|-1
 end_define
+
+begin_function_decl
+name|void
+name|if_inc_counter
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|ift_counter
+parameter_list|,
+name|int64_t
+name|inc
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_include
 include|#
@@ -575,7 +595,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|do {									\ 	int len;							\ 	short mflags;							\ 									\ 	len = (m)->m_pkthdr.len;					\ 	mflags = (m)->m_flags;						\ 	IFQ_ENQUEUE(&(ifp)->if_snd, m, err);				\ 	if ((err) == 0) {						\ 		(ifp)->if_obytes += len + (adj);			\ 		if (mflags& M_MCAST)					\ 			(ifp)->if_omcasts++;				\ 		if (((ifp)->if_drv_flags& IFF_DRV_OACTIVE) == 0)	\ 			if_start(ifp);					\ 	} else								\ 		ifp->if_oqdrops++;					\ } while (0)
+value|do {									\ 	int len;							\ 	short mflags;							\ 									\ 	len = (m)->m_pkthdr.len;					\ 	mflags = (m)->m_flags;						\ 	IFQ_ENQUEUE(&(ifp)->if_snd, m, err);				\ 	if ((err) == 0) {						\ 		if_inc_counter((ifp), IFCOUNTER_OBYTES, len + (adj));	\ 		if (mflags& M_MCAST)					\ 			if_inc_counter((ifp), IFCOUNTER_OMCASTS, 1);	\ 		if (((ifp)->if_drv_flags& IFF_DRV_OACTIVE) == 0)	\ 			if_start(ifp);					\ 	} else								\ 		if_inc_counter((ifp), IFCOUNTER_OQDROPS, 1);		\ } while (0)
 end_define
 
 begin_define
@@ -698,10 +718,16 @@ if|if
 condition|(
 name|error
 condition|)
+name|if_inc_counter
+argument_list|(
+operator|(
 name|ifp
-operator|->
-name|if_oqdrops
-operator|++
+operator|)
+argument_list|,
+name|IFCOUNTER_OQDROPS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
