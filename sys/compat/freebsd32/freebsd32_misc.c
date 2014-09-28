@@ -17350,7 +17350,7 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-name|intptr_t
+name|long
 name|tmp
 decl_stmt|;
 switch|switch
@@ -17403,7 +17403,7 @@ break|break;
 block|}
 return|return
 operator|(
-name|kern_fcntl
+name|kern_fcntl_freebsd
 argument_list|(
 name|td
 argument_list|,
