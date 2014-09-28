@@ -846,16 +846,6 @@ block|}
 struct|;
 end_struct
 
-begin_include
-include|#
-directive|include
-file|<net/ifq.h>
-end_include
-
-begin_comment
-comment|/* XXXAO: temporary unconditional include */
-end_comment
-
 begin_comment
 comment|/* for compatibility with other BSDs */
 end_comment
@@ -3593,6 +3583,16 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/ifq.h>
+end_include
+
+begin_comment
+comment|/* XXXAO: temporary unconditional include */
 end_comment
 
 begin_endif
