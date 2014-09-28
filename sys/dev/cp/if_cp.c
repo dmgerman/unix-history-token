@@ -5106,15 +5106,13 @@ operator|->
 name|ifp
 expr_stmt|;
 comment|/* Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf. */
-name|BPF_TAP
+name|BPF_MTAP
 argument_list|(
 name|d
 operator|->
 name|ifp
 argument_list|,
-name|data
-argument_list|,
-name|len
+name|m
 argument_list|)
 expr_stmt|;
 name|IF_ENQUEUE
