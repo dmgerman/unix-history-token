@@ -83,22 +83,6 @@ name|IF_DUNIT_NONE
 value|-1
 end_define
 
-begin_function_decl
-name|void
-name|if_inc_counter
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|ift_counter
-parameter_list|,
-name|int64_t
-name|inc
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_include
 include|#
 directive|include
