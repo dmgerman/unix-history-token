@@ -347,6 +347,11 @@ name|PAM_LOG
 argument_list|(
 literal|"Checking login.access for user %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|)
 expr_stmt|;
