@@ -1615,6 +1615,16 @@ condition|(
 name|export
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"export "
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
 name|fwrite
 argument_list|(
 operator|*
@@ -1747,13 +1757,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|fputs
-argument_list|(
-literal|"; export "
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
 name|fwrite
 argument_list|(
 operator|*
