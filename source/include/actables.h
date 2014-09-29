@@ -34,6 +34,17 @@ comment|/*  * tbxfroot - Root pointer utilities  */
 end_comment
 
 begin_function_decl
+name|UINT32
+name|AcpiTbGetRsdpLength
+parameter_list|(
+name|ACPI_TABLE_RSDP
+modifier|*
+name|Rsdp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbValidateRsdp
 parameter_list|(

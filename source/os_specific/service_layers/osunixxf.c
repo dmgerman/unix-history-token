@@ -249,6 +249,22 @@ name|struct
 name|termios
 name|LocalTermAttributes
 decl_stmt|;
+name|TermAttributesWereSet
+operator|=
+literal|0
+expr_stmt|;
+comment|/* STDIN must be a terminal */
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 comment|/* Get and keep the original attributes */
 if|if
 condition|(

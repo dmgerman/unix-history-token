@@ -1121,6 +1121,16 @@ operator|->
 name|ResourceLength
 expr_stmt|;
 block|}
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|PinNumberIndex
+operator|=
+name|Info
+operator|->
+name|PinNumberIndex
+expr_stmt|;
 comment|/* Allow full data read from EC address space */
 if|if
 condition|(

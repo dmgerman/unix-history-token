@@ -270,9 +270,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|AcpiTbGetRsdpLength
+argument_list|(
 name|Rsdp
-operator|->
-name|Length
+argument_list|)
 operator|)
 return|;
 block|}

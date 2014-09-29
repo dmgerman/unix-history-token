@@ -2174,6 +2174,14 @@ argument_list|,
 name|NextOp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NextOp
+condition|)
+block|{
+return|return;
+block|}
 comment|/* Don't need to use the length, just walk the peer list */
 name|NextOp
 operator|=

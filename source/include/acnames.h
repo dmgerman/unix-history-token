@@ -68,6 +68,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|METHOD_NAME__DDN
+value|"_DDN"
+end_define
+
+begin_define
+define|#
+directive|define
 name|METHOD_NAME__HID
 value|"_HID"
 end_define

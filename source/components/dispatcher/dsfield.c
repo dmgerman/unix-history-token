@@ -882,6 +882,12 @@ name|ConnectionNode
 operator|=
 name|NULL
 expr_stmt|;
+name|Info
+operator|->
+name|PinNumberIndex
+operator|=
+literal|0
+expr_stmt|;
 comment|/*              * A Connection() is either an actual resource descriptor (buffer)              * or a named reference to a resource template              */
 name|Child
 operator|=
@@ -1183,6 +1189,12 @@ name|Info
 operator|->
 name|FieldBitLength
 expr_stmt|;
+name|Info
+operator|->
+name|PinNumberIndex
+operator|++
+expr_stmt|;
+comment|/* Index relative to previous Connection() */
 break|break;
 default|default:
 name|ACPI_ERROR

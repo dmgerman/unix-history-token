@@ -219,6 +219,55 @@ value|"?b:d:e:f:ghm^orv^:x:"
 end_define
 
 begin_comment
+comment|/* Stubs for the disassembler */
+end_comment
+
+begin_function
+name|void
+name|MpSaveGpioInfo
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|AML_RESOURCE
+modifier|*
+name|Resource
+parameter_list|,
+name|UINT32
+name|PinCount
+parameter_list|,
+name|UINT16
+modifier|*
+name|PinList
+parameter_list|,
+name|char
+modifier|*
+name|DeviceName
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|MpSaveSerialInfo
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|AML_RESOURCE
+modifier|*
+name|Resource
+parameter_list|,
+name|char
+modifier|*
+name|DeviceName
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    usage  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print a usage message  *  *****************************************************************************/
 end_comment
 

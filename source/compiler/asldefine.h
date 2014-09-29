@@ -343,6 +343,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FILE_SUFFIX_MAP
+value|"map"
+end_define
+
+begin_define
+define|#
+directive|define
 name|FILE_SUFFIX_LISTING
 value|"lst"
 end_define

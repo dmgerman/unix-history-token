@@ -929,6 +929,17 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Disable the GPE in case it's been enabled already. */
+operator|(
+name|void
+operator|)
+name|AcpiHwLowSetGpe
+argument_list|(
+name|GpeEventInfo
+argument_list|,
+name|ACPI_GPE_DISABLE
+argument_list|)
+expr_stmt|;
 comment|/*      * Add the GPE information from above to the GpeEventInfo block for      * use during dispatch of this GPE.      */
 name|GpeEventInfo
 operator|->

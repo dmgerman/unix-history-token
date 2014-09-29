@@ -454,6 +454,24 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|!=
+name|AML_FIELD_OP
+condition|)
+block|{
+name|Info
+operator|->
+name|MappingOp
+operator|=
+name|Op
+expr_stmt|;
+block|}
 name|Level
 operator|=
 name|Info
@@ -623,6 +641,8 @@ expr_stmt|;
 comment|/* Go ahead and insert EndDependentFn() */
 name|AcpiDmEndDependentDescriptor
 argument_list|(
+name|Info
+argument_list|,
 name|Aml
 argument_list|,
 name|ResourceLength
@@ -671,6 +691,8 @@ index|[
 name|ResourceIndex
 index|]
 operator|(
+name|Info
+operator|,
 name|Aml
 operator|,
 name|ResourceLength

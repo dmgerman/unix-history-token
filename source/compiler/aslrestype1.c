@@ -38,7 +38,7 @@ comment|/*  * This module contains miscellaneous small resource descriptors:  * 
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoEndTagDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "EndDependentFn" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoEndTagDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "EndDependentFn" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -46,12 +46,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoEndTagDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -105,7 +102,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoEndDependentDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "EndDependentFn" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoEndDependentDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "EndDependentFn" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -113,12 +110,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoEndDependentDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -164,7 +158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoMemory24Descriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "Memory24" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoMemory24Descriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "Memory24" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -172,12 +166,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoMemory24Descriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -211,15 +202,26 @@ modifier|*
 name|Rnode
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -480,7 +482,9 @@ case|:
 comment|/* Name */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -545,7 +549,9 @@ name|LengthOp
 argument_list|,
 name|NULL
 argument_list|,
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|)
 expr_stmt|;
 return|return
@@ -557,7 +563,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoMemory32Descriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "Memory32" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoMemory32Descriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "Memory32" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -565,12 +571,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoMemory32Descriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -610,15 +613,26 @@ modifier|*
 name|Rnode
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -883,7 +897,9 @@ case|:
 comment|/* Name */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -948,7 +964,9 @@ name|LengthOp
 argument_list|,
 name|AlignOp
 argument_list|,
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|)
 expr_stmt|;
 return|return
@@ -960,7 +978,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoMemory32FixedDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "Memory32Fixed" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoMemory32FixedDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "Memory32Fixed" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -968,12 +986,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoMemory32FixedDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -989,15 +1004,26 @@ modifier|*
 name|Rnode
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -1170,7 +1196,9 @@ case|:
 comment|/* Name */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -1207,7 +1235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoStartDependentDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "StartDependentFn" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoStartDependentDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "StartDependentFn" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1215,12 +1243,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoStartDependentDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -1243,6 +1268,12 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|NextRnode
 decl_stmt|;
+name|ASL_RESOURCE_INFO
+name|NextInfo
+decl_stmt|;
+name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
@@ -1251,11 +1282,19 @@ name|State
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -1421,13 +1460,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|NextInfo
+operator|.
+name|CurrentByteOffset
+operator|=
+name|CurrentByteOffset
+expr_stmt|;
+name|NextInfo
+operator|.
+name|DescriptorTypeOp
+operator|=
+name|InitializerOp
+expr_stmt|;
 name|NextRnode
 operator|=
 name|RsDoOneResourceDescriptor
 argument_list|(
-name|InitializerOp
-argument_list|,
-name|CurrentByteOffset
+operator|&
+name|NextInfo
 argument_list|,
 operator|&
 name|State
@@ -1463,7 +1513,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoStartDependentNoPriDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "StartDependentNoPri" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoStartDependentNoPriDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "StartDependentNoPri" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1471,12 +1521,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoStartDependentNoPriDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -1499,16 +1546,30 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|NextRnode
 decl_stmt|;
+name|ASL_RESOURCE_INFO
+name|NextInfo
+decl_stmt|;
+name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
 name|UINT8
 name|State
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -1558,13 +1619,24 @@ condition|(
 name|InitializerOp
 condition|)
 block|{
+name|NextInfo
+operator|.
+name|CurrentByteOffset
+operator|=
+name|CurrentByteOffset
+expr_stmt|;
+name|NextInfo
+operator|.
+name|DescriptorTypeOp
+operator|=
+name|InitializerOp
+expr_stmt|;
 name|NextRnode
 operator|=
 name|RsDoOneResourceDescriptor
 argument_list|(
-name|InitializerOp
-argument_list|,
-name|CurrentByteOffset
+operator|&
+name|NextInfo
 argument_list|,
 operator|&
 name|State
@@ -1598,7 +1670,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoVendorSmallDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "VendorShort" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoVendorSmallDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a short "VendorShort" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1606,12 +1678,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoVendorSmallDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -1635,7 +1704,9 @@ name|i
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.

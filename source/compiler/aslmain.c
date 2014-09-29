@@ -438,6 +438,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-lm"
+argument_list|,
+literal|"Create hardware summary map file (*.map)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-ln"
 argument_list|,
 literal|"Create namespace file (*.nsp)"

@@ -51,9 +51,21 @@ literal|"Realtek I2S Audio Codec"
 block|}
 block|,
 block|{
+literal|"80860F09"
+block|,
+literal|"Intel PWM Controller"
+block|}
+block|,
+block|{
 literal|"80860F0A"
 block|,
 literal|"Intel Atom UART Controller"
+block|}
+block|,
+block|{
+literal|"80860F0E"
+block|,
+literal|"Intel SPI Controller"
 block|}
 block|,
 block|{
@@ -165,6 +177,18 @@ literal|"User Presence Detection Device"
 block|}
 block|,
 block|{
+literal|"ADMA0F28"
+block|,
+literal|"Intel Audio DMA"
+block|}
+block|,
+block|{
+literal|"AMCR0F28"
+block|,
+literal|"Intel Audio Machine Driver"
+block|}
+block|,
+block|{
 literal|"ATK4001"
 block|,
 literal|"Asus Radio Control Button"
@@ -177,9 +201,27 @@ literal|"Atmel Touchscreen Controller"
 block|}
 block|,
 block|{
+literal|"AUTH2750"
+block|,
+literal|"AuthenTec AES2750"
+block|}
+block|,
+block|{
 literal|"BCM2E39"
 block|,
 literal|"Broadcom BT Serial Bus Driver over UART Bus Enumerator"
+block|}
+block|,
+block|{
+literal|"BCM4752E"
+block|,
+literal|"Broadcom GPS Controller"
+block|}
+block|,
+block|{
+literal|"BMG0160"
+block|,
+literal|"Bosch Gyro Sensor"
 block|}
 block|,
 block|{
@@ -198,6 +240,24 @@ block|{
 literal|"DLAC3002"
 block|,
 literal|"Qualcomm Atheros Bluetooth UART Transport"
+block|}
+block|,
+block|{
+literal|"FTTH5506"
+block|,
+literal|"FocalTech 5506 Touch Controller"
+block|}
+block|,
+block|{
+literal|"HAD0F28"
+block|,
+literal|"Intel HDMI Audio Driver"
+block|}
+block|,
+block|{
+literal|"INBC0000"
+block|,
+literal|"GPIO Expander"
 block|}
 block|,
 block|{
@@ -246,6 +306,12 @@ block|{
 literal|"INT33BD"
 block|,
 literal|"Intel Baytrail Mailbox Device"
+block|}
+block|,
+block|{
+literal|"INT33BE"
+block|,
+literal|"Camera Sensor OV5693"
 block|}
 block|,
 block|{
@@ -357,6 +423,18 @@ literal|"Camera Sensor MT9M114"
 block|}
 block|,
 block|{
+literal|"INT33F4"
+block|,
+literal|"XPOWER PMIC Controller"
+block|}
+block|,
+block|{
+literal|"INT33F5"
+block|,
+literal|"TI PMIC Controller"
+block|}
+block|,
+block|{
 literal|"INT33FB"
 block|,
 literal|"MIPI-CSI Camera Sensor OV2722"
@@ -372,6 +450,12 @@ block|{
 literal|"INT33FD"
 block|,
 literal|"Intel Baytrail Power Management IC"
+block|}
+block|,
+block|{
+literal|"INT33FE"
+block|,
+literal|"XPOWER Battery Device"
 block|}
 block|,
 block|{
@@ -489,6 +573,12 @@ literal|"ACPI Video Controller"
 block|}
 block|,
 block|{
+literal|"MAX17047"
+block|,
+literal|"Fuel Gauge Controller"
+block|}
+block|,
+block|{
 literal|"MSFT0101"
 block|,
 literal|"TPM 2.0 Security Device"
@@ -498,6 +588,12 @@ block|{
 literal|"NXP5442"
 block|,
 literal|"NXP 5442 Near Field Communications Controller"
+block|}
+block|,
+block|{
+literal|"NXP5472"
+block|,
+literal|"NXP NFC"
 block|}
 block|,
 block|{
@@ -813,9 +909,45 @@ literal|"Microsoft PS/2-style Mouse"
 block|}
 block|,
 block|{
+literal|"PNP0F13"
+block|,
+literal|"PS/2 Mouse"
+block|}
+block|,
+block|{
+literal|"RTL8723"
+block|,
+literal|"Realtek Wireless Controller"
+block|}
+block|,
+block|{
+literal|"SMB0349"
+block|,
+literal|"Charger"
+block|}
+block|,
+block|{
 literal|"SMO91D0"
 block|,
 literal|"Sensor Hub"
+block|}
+block|,
+block|{
+literal|"SMSC3750"
+block|,
+literal|"SMSC 3750 USB MUX"
+block|}
+block|,
+block|{
+literal|"SSPX0000"
+block|,
+literal|"Intel SSP Device"
+block|}
+block|,
+block|{
+literal|"TBQ24296"
+block|,
+literal|"Charger"
 block|}
 block|,
 block|{

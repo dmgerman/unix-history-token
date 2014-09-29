@@ -777,6 +777,9 @@ decl_stmt|;
 name|UINT16
 name|ResourceLength
 decl_stmt|;
+name|UINT16
+name|PinNumberIndex
+decl_stmt|;
 name|UINT8
 name|FieldFlags
 decl_stmt|;

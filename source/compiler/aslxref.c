@@ -158,21 +158,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|BOOLEAN
-name|XfIsObjectParental
-parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|MethodOp1
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|MethodOp2
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__UNDER_DEVELOPMENT
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -202,6 +192,27 @@ name|Node
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|BOOLEAN
+name|XfIsObjectParental
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|MethodOp1
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|MethodOp2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    XfCrossReferenceNamespace  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Perform a cross reference check of the parse tree against the  *              namespace. Every named referenced within the parse tree  *              should be get resolved with a namespace lookup. If not, the  *              original reference in the ASL code is invalid -- i.e., refers  *              to a non-existent object.  *  * NOTE:  The ASL "External" operator causes the name to be inserted into the  *        namespace so that references to the external name will be resolved  *        correctly here.  *  ******************************************************************************/
@@ -500,6 +511,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__UNDER_DEVELOPMENT
+end_ifdef
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    XfIsObjectParental  *  * PARAMETERS:  ChildOp                 - Op to be checked  *              PossibleParentOp        - Determine if this op is in the family  *  * RETURN:      TRUE if ChildOp is a descendent of PossibleParentOp  *  * DESCRIPTION: Determine if an Op is a descendent of another Op. Used to  *              detect if a method is declared within another method.  *  ******************************************************************************/
 end_comment
@@ -790,6 +807,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    XfNamespaceLocateBegin  *  * PARAMETERS:  ASL_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during cross-reference. For named  *              object references, attempt to locate the name in the  *              namespace.  *  * NOTE: ASL references to named fields within resource descriptors are  *       resolved to integer values here. Therefore, this step is an  *       important part of the code generation. We don't know that the  *       name refers to a resource descriptor until now.  *  ******************************************************************************/
@@ -1388,6 +1410,9 @@ name|Flags
 operator||=
 name|ANOBJ_IS_REFERENCED
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__UNDER_DEVELOPMENT
 comment|/* Check for an illegal reference */
 name|XfCheckIllegalReference
 argument_list|(
@@ -1396,6 +1421,8 @@ argument_list|,
 name|Node
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Attempt to optimize the NamePath */
 name|OptOptimizeNamePath
@@ -2461,6 +2488,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* 5) Check for a connection object */
+if|#
+directive|if
+literal|0
+block|else if (Op->Asl.Parent->Asl.ParseOpcode == PARSEOP_CONNECTION)     {         return_ACPI_STATUS (Status);     }
+endif|#
+directive|endif
 name|Op
 operator|->
 name|Asl

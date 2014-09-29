@@ -700,6 +700,10 @@ modifier|*
 name|ResourceBuffer
 decl_stmt|;
 comment|/* ResourceTemplate for serial regions/fields */
+name|UINT16
+name|PinNumberIndex
+decl_stmt|;
+comment|/* Index relative to previous Connection/Template */
 block|}
 name|ACPI_OBJECT_REGION_FIELD
 typedef|;

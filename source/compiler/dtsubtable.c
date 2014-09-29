@@ -64,12 +64,23 @@ name|DT_SUBTABLE
 modifier|*
 name|Subtable
 decl_stmt|;
+name|char
+modifier|*
+name|String
+decl_stmt|;
 name|Subtable
 operator|=
 name|UtSubtableCacheCalloc
 argument_list|()
 expr_stmt|;
 comment|/* Create a new buffer for the subtable data */
+name|String
+operator|=
+name|UtStringCacheCalloc
+argument_list|(
+name|Length
+argument_list|)
+expr_stmt|;
 name|Subtable
 operator|->
 name|Buffer
@@ -78,10 +89,7 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|UINT8
 argument_list|,
-name|UtStringCacheCalloc
-argument_list|(
-name|Length
-argument_list|)
+name|String
 argument_list|)
 expr_stmt|;
 name|ACPI_MEMCPY

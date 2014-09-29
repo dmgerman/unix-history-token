@@ -2452,7 +2452,7 @@ value|ACPI_EVENT_MAX + 1
 end_define
 
 begin_comment
-comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+  * |   Bits 31:3 |2|1|0|  * +-------------+-+-+-+  *          |     | | |  *          |     | | +- Enabled?  *          |     | +--- Enabled for wake?  *          |     +----- Set?  *          +-----------<Reserved>  */
+comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+-+  * |   Bits 31:4 |3|2|1|0|  * +-------------+-+-+-+-+  *          |     | | | |  *          |     | | | +- Enabled?  *          |     | | +--- Enabled for wake?  *          |     | +----- Set?  *          |     +------- Has a handler?  *          +-------------<Reserved>  */
 end_comment
 
 begin_typedef
@@ -2488,6 +2488,13 @@ define|#
 directive|define
 name|ACPI_EVENT_FLAG_SET
 value|(ACPI_EVENT_STATUS) 0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_FLAG_HAS_HANDLER
+value|(ACPI_EVENT_STATUS) 0x08
 end_define
 
 begin_comment

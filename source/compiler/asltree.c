@@ -982,11 +982,6 @@ operator|&
 name|Filename
 argument_list|)
 expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|Path
-argument_list|)
-expr_stmt|;
 name|Op
 operator|->
 name|Asl

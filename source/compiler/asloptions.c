@@ -863,6 +863,15 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'m'
+case|:
+comment|/* Produce hardware map summary file */
+name|Gbl_MapfileFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 comment|/* Produce namespace file */

@@ -272,6 +272,16 @@ literal|"Offset Table: "
 block|,
 literal|"C Offset Table Output"
 block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Device Map:   "
+block|,
+literal|"Device Map Output"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -621,6 +631,18 @@ parameter_list|(
 name|Gbl_UseDefaultAmlFilename
 parameter_list|,
 name|TRUE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_MapfileFlag
+parameter_list|,
+name|FALSE
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1357,6 +1379,36 @@ name|ASL_INIT_GLOBAL
 argument_list|(
 operator|*
 name|Gbl_StringCacheLast
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Map file */
+end_comment
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|ACPI_GPIO_INFO
+name|ASL_INIT_GLOBAL
+argument_list|(
+operator|*
+name|Gbl_GpioList
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ASL_EXTERN
+name|ACPI_SERIAL_INFO
+name|ASL_INIT_GLOBAL
+argument_list|(
+operator|*
+name|Gbl_SerialList
 argument_list|,
 name|NULL
 argument_list|)

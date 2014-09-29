@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"amlresrc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acapps.h"
 end_include
 
@@ -166,6 +172,13 @@ begin_decl_stmt
 specifier|extern
 name|BOOLEAN
 name|AcpiGbl_LoadTestTables
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_CONNECTION_INFO
+name|AeMyContext
 decl_stmt|;
 end_decl_stmt
 
@@ -501,6 +514,37 @@ parameter_list|,
 name|void
 modifier|*
 name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* aeregion */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AeInstallDeviceHandlers
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AeInstallRegionHandlers
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AeOverrideRegionHandlers
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

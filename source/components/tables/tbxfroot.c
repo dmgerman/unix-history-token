@@ -46,6 +46,66 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetRsdpLength  *  * PARAMETERS:  Rsdp                - Pointer to RSDP  *  * RETURN:      Table length  *  * DESCRIPTION: Get the length of the RSDP  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|UINT32
+name|AcpiTbGetRsdpLength
+parameter_list|(
+name|ACPI_TABLE_RSDP
+modifier|*
+name|Rsdp
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|ACPI_VALIDATE_RSDP_SIG
+argument_list|(
+name|Rsdp
+operator|->
+name|Signature
+argument_list|)
+condition|)
+block|{
+comment|/* BAD Signature */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* "Length" field is available if table version>= 2 */
+if|if
+condition|(
+name|Rsdp
+operator|->
+name|Revision
+operator|>=
+literal|2
+condition|)
+block|{
+return|return
+operator|(
+name|Rsdp
+operator|->
+name|Length
+operator|)
+return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+name|ACPI_RSDP_CHECKSUM_LENGTH
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbValidateRsdp  *  * PARAMETERS:  Rsdp                - Pointer to unvalidated RSDP  *  * RETURN:      Status  *  * DESCRIPTION: Validate the RSDP (ptr)  *  ******************************************************************************/
 end_comment
 

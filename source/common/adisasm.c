@@ -274,7 +274,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiGbl_ParseOpRoot
@@ -1203,6 +1202,38 @@ name|File
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_MapfileFlag
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%14s %s - %u bytes\n"
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_MAP_OUTPUT
+index|]
+operator|.
+name|ShortDescription
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_MAP_OUTPUT
+index|]
+operator|.
+name|Filename
+argument_list|,
+name|FlGetFileSize
+argument_list|(
+name|ASL_FILE_MAP_OUTPUT
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|Cleanup
@@ -1704,6 +1735,9 @@ name|AcpiGbl_ParseOpRoot
 argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
+expr_stmt|;
+name|MpEmitMappingInfo
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

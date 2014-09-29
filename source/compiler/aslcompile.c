@@ -1213,6 +1213,10 @@ operator|)
 name|NsDisplayNamespace
 argument_list|()
 expr_stmt|;
+comment|/* Dump the device mapping file */
+name|MpEmitMappingInfo
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

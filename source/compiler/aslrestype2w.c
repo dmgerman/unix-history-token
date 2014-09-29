@@ -38,7 +38,7 @@ comment|/*  * This module contains the Word (16-bit) address space descriptors: 
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoWordIoDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "WordIO" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoWordIoDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "WordIO" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -46,12 +46,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoWordIoDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -105,6 +102,9 @@ init|=
 literal|0
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|BOOLEAN
@@ -114,7 +114,9 @@ name|FALSE
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
@@ -126,6 +128,12 @@ name|RsGetStringDataLength
 argument_list|(
 name|InitializerOp
 argument_list|)
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -757,7 +765,9 @@ case|:
 comment|/* ResourceTag */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -916,7 +926,9 @@ name|LengthOp
 argument_list|,
 name|GranOp
 argument_list|,
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|)
 expr_stmt|;
 name|Rnode
@@ -941,7 +953,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoWordBusNumberDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "WordBusNumber" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoWordBusNumberDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "WordBusNumber" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -949,12 +961,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoWordBusNumberDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -1008,6 +1017,9 @@ init|=
 literal|0
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|BOOLEAN
@@ -1017,7 +1029,9 @@ name|FALSE
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
@@ -1029,6 +1043,12 @@ name|RsGetStringDataLength
 argument_list|(
 name|InitializerOp
 argument_list|)
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -1619,7 +1639,9 @@ case|:
 comment|/* ResourceTag */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -1700,7 +1722,9 @@ name|LengthOp
 argument_list|,
 name|GranOp
 argument_list|,
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|)
 expr_stmt|;
 name|Rnode
@@ -1725,7 +1749,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoWordSpaceDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "WordSpace" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoWordSpaceDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "WordSpace" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1733,12 +1757,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoWordSpaceDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -1792,6 +1813,9 @@ init|=
 literal|0
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|BOOLEAN
@@ -1801,7 +1825,9 @@ name|FALSE
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
@@ -1813,6 +1839,12 @@ name|RsGetStringDataLength
 argument_list|(
 name|InitializerOp
 argument_list|)
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -2439,7 +2471,9 @@ case|:
 comment|/* ResourceTag */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -2520,7 +2554,9 @@ name|LengthOp
 argument_list|,
 name|GranOp
 argument_list|,
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|)
 expr_stmt|;
 name|Rnode

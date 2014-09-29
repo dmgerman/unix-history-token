@@ -1170,13 +1170,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmWordDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Word Address Space descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmWordDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Word Address Space descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmWordDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1252,13 +1256,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDwordDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a DWord Address Space descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDwordDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a DWord Address Space descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmDwordDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1334,13 +1342,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmQwordDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a QWord Address Space descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmQwordDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a QWord Address Space descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmQwordDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1416,13 +1428,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmExtendedDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Extended Address Space descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmExtendedDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Extended Address Space descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmExtendedDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1504,13 +1520,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmMemory24Descriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Memory24 descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmMemory24Descriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Memory24 descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmMemory24Descriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1580,13 +1600,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmMemory32Descriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Memory32 descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmMemory32Descriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Memory32 descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmMemory32Descriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1656,13 +1680,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmFixedMemory32Descriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Fixed Memory32 descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmFixedMemory32Descriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Fixed Memory32 descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmFixedMemory32Descriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1753,13 +1781,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGenericRegisterDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Generic Register descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGenericRegisterDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Generic Register descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmGenericRegisterDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1908,13 +1940,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmInterruptDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a extended Interrupt descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmInterruptDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a extended Interrupt descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmInterruptDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2187,13 +2223,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmVendorLargeDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Vendor Large descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmVendorLargeDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Vendor Large descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmVendorLargeDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource

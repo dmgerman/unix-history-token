@@ -2325,6 +2325,12 @@ name|Level
 operator|+=
 literal|1
 expr_stmt|;
+name|Info
+operator|->
+name|MappingOp
+operator|=
+name|Op
+expr_stmt|;
 name|Op
 operator|->
 name|Common

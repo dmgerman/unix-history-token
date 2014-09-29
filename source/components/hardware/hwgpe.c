@@ -411,6 +411,25 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
+comment|/* GPE currently handled? */
+if|if
+condition|(
+operator|(
+name|GpeEventInfo
+operator|->
+name|Flags
+operator|&
+name|ACPI_GPE_DISPATCH_MASK
+operator|)
+operator|!=
+name|ACPI_GPE_DISPATCH_NONE
+condition|)
+block|{
+name|LocalEventStatus
+operator||=
+name|ACPI_EVENT_FLAG_HAS_HANDLER
+expr_stmt|;
+block|}
 comment|/* Get the info block for the entire GPE register */
 name|GpeRegisterInfo
 operator|=

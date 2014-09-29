@@ -985,6 +985,10 @@ name|FlagBuffer
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|String
+decl_stmt|;
 name|UINT32
 name|CurrentFlagByteOffset
 init|=
@@ -1081,6 +1085,13 @@ operator|>
 literal|0
 condition|)
 block|{
+name|String
+operator|=
+name|UtStringCacheCalloc
+argument_list|(
+name|Length
+argument_list|)
+expr_stmt|;
 name|Subtable
 operator|->
 name|Buffer
@@ -1089,10 +1100,7 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|UINT8
 argument_list|,
-name|UtStringCacheCalloc
-argument_list|(
-name|Length
-argument_list|)
+name|String
 argument_list|)
 expr_stmt|;
 block|}
