@@ -343,16 +343,36 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PAM_VERBOSE_ERROR
+name|PAM_LOG
 argument_list|(
-literal|"PAM_RHOST or PAM_TTY required"
+literal|"Checking login.access for user %s"
+argument_list|,
+name|user
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|login_access
+argument_list|(
+name|user
+argument_list|,
+literal|"***unknown***"
+argument_list|)
+operator|!=
+literal|0
+condition|)
 return|return
 operator|(
-name|PAM_AUTHINFO_UNAVAIL
+name|PAM_SUCCESS
 operator|)
 return|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"%s is not allowed to log in"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
