@@ -171,6 +171,12 @@ directive|include
 file|<machine/specialreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<x86/init.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -6597,6 +6603,8 @@ literal|"BSP"
 argument_list|)
 expr_stmt|;
 comment|/* Enable the MSI "pic". */
+name|init_ops
+operator|.
 name|msi_init
 argument_list|()
 expr_stmt|;
