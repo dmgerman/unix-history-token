@@ -211,7 +211,10 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TXQ_UNBLOCK_LEVEL
-value|(EFX_TXQ_LIMIT(SFXGE_NDESCS) / 4)
+parameter_list|(
+name|_entries
+parameter_list|)
+value|(EFX_TXQ_LIMIT(_entries) / 4)
 end_define
 
 begin_define
@@ -313,6 +316,14 @@ decl_stmt|;
 name|unsigned
 name|int
 name|buf_base_id
+decl_stmt|;
+name|unsigned
+name|int
+name|entries
+decl_stmt|;
+name|unsigned
+name|int
+name|ptr_mask
 decl_stmt|;
 name|struct
 name|sfxge_tx_mapping
