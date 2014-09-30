@@ -1610,6 +1610,13 @@ name|bs
 operator|.
 name|current_pages
 operator|=
+name|xen_pv_domain
+argument_list|()
+condition|?
+name|HYPERVISOR_start_info
+operator|->
+name|nr_pages
+else|:
 name|realmem
 expr_stmt|;
 endif|#
