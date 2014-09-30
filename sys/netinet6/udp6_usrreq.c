@@ -842,12 +842,24 @@ name|nxt
 operator|==
 name|IPPROTO_UDPLITE
 operator|&&
+operator|(
+name|ulen
+operator|==
+literal|0
+operator|||
+name|ulen
+operator|==
+name|plen
+operator|)
+condition|)
+block|{
+comment|/* Zero means checksum over the complete packet. */
+if|if
+condition|(
 name|ulen
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* Zero means checksum over the complete packet. */
 name|ulen
 operator|=
 name|plen
