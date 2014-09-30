@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_DPL_GET_PKT_LIMIT_DEFAULT
-value|64
+value|1024
 end_define
 
 begin_define
@@ -128,6 +128,16 @@ begin_struct
 struct|struct
 name|sfxge_tx_dpl
 block|{
+name|unsigned
+name|int
+name|std_get_max
+decl_stmt|;
+comment|/* Maximum number of packets 						 * in get list */
+name|unsigned
+name|int
+name|std_put_max
+decl_stmt|;
+comment|/* Maximum number of packets 						 * in put list */
 name|uintptr_t
 name|std_put
 decl_stmt|;
