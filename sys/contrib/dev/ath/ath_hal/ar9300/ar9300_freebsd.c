@@ -1072,25 +1072,6 @@ name|ah_divLnaConfSet
 operator|=
 name|ar9300_ant_div_comb_set_config
 expr_stmt|;
-comment|/* Setup HAL configuration defaults */
-comment|/* XXX cus198 defaults from ath9k */
-comment|/* xlna_gpio = 9 */
-comment|/* xatten_margin_cfg = true */
-comment|/* alt_mingainidx = true */
-comment|/* comm2g_switch_enable = 0x000bbb88 */
-comment|/* ant_comb.low_rssi_thresh = 20 */
-comment|/* ant_comb.fast_div_bias = 3 */
-if|#
-directive|if
-literal|0
-comment|/* 	 * The HAL code treats this as a mask. 	 * The ath9k code above treats it as a bit offset. 	 * So it should be set to 0x200, not 0x9. 	 */
-block|ah->ah_config.ath_hal_ext_lna_ctl_gpio = 0x200;
-comment|/* bit 9 */
-block|ah->ah_config.ath_hal_ext_atten_margin_cfg = AH_TRUE; 	ah->ah_config.ath_hal_min_gainidx = AH_TRUE; 	ah->ah_config.ath_hal_ant_ctrl_comm2g_switch_enable = 0x000bbb88;
-comment|/* XXX low_rssi_thresh */
-comment|/* XXX fast_div_bias */
-endif|#
-directive|endif
 block|}
 end_function
 
