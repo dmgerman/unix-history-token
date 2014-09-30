@@ -3396,9 +3396,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|xs_dev_init
-argument_list|()
-expr_stmt|;
 name|bus_generic_probe
 argument_list|(
 name|xs
