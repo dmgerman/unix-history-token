@@ -1375,14 +1375,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
-name|struct
-name|secpolicy
-modifier|*
-name|sp
-decl_stmt|;
-name|int
-name|ipsecerror
-decl_stmt|;
 name|size_t
 name|ipsechdrsiz
 decl_stmt|;
@@ -1402,25 +1394,6 @@ ifdef|#
 directive|ifdef
 name|IPSEC
 comment|/* 			 * When we do IPsec tunnel ingress, we need to play 			 * with the link value (decrement IPsec header size 			 * from mtu value).  The code is much simpler than v4 			 * case, as we have the outgoing interface for 			 * encapsulated packet as "rt->rt_ifp". 			 */
-name|sp
-operator|=
-name|ipsec_getpolicybyaddr
-argument_list|(
-name|mcopy
-argument_list|,
-name|IPSEC_DIR_OUTBOUND
-argument_list|,
-name|IP_FORWARDING
-argument_list|,
-operator|&
-name|ipsecerror
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-condition|)
-block|{
 name|ipsechdrsiz
 operator|=
 name|ipsec_hdrsiz
@@ -1442,7 +1415,6 @@ name|mtu
 operator|-=
 name|ipsechdrsiz
 expr_stmt|;
-block|}
 comment|/* 			 * if mtu becomes less than minimum MTU, 			 * tell minimum MTU (and I'll need to fragment it). 			 */
 if|if
 condition|(
