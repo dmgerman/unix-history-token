@@ -859,6 +859,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|nxt
+operator|==
+name|IPPROTO_UDP
+operator|&&
 name|plen
 operator|!=
 name|ulen
