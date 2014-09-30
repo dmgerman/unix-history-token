@@ -2766,11 +2766,11 @@ begin_define
 define|#
 directive|define
 name|DN_MIN_INDBLKSHIFT
-value|10
+value|12
 end_define
 
 begin_comment
-comment|/* 1k */
+comment|/* 4k */
 end_comment
 
 begin_define
