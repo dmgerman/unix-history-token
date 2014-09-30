@@ -18645,9 +18645,6 @@ argument_list|(
 operator|(
 name|u64
 operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|buffer
 argument_list|)
 argument_list|)
@@ -18662,9 +18659,6 @@ name|I40E_LO_DWORD
 argument_list|(
 operator|(
 name|u64
-operator|)
-operator|(
-name|uintptr_t
 operator|)
 name|buffer
 argument_list|)
@@ -18979,9 +18973,6 @@ argument_list|(
 operator|(
 name|u64
 operator|)
-operator|(
-name|uintptr_t
-operator|)
 name|buffer
 argument_list|)
 argument_list|)
@@ -18996,9 +18987,6 @@ name|I40E_LO_DWORD
 argument_list|(
 operator|(
 name|u64
-operator|)
-operator|(
-name|uintptr_t
 operator|)
 name|buffer
 argument_list|)

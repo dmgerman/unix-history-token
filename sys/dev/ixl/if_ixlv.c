@@ -3519,6 +3519,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|!
@@ -3537,6 +3540,8 @@ argument_list|,
 name|ifa
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|error
@@ -6748,7 +6753,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i40e_allocate_dma
+name|i40e_allocate_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -6759,6 +6764,8 @@ operator|&
 name|txr
 operator|->
 name|dma
+argument_list|,
+name|i40e_mem_reserved
 argument_list|,
 name|tsize
 argument_list|,
@@ -6962,7 +6969,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i40e_allocate_dma
+name|i40e_allocate_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -6973,6 +6980,8 @@ operator|&
 name|rxr
 operator|->
 name|dma
+argument_list|,
+name|i40e_mem_reserved
 argument_list|,
 name|rsize
 argument_list|,
@@ -7112,7 +7121,7 @@ name|rxr
 operator|->
 name|base
 condition|)
-name|i40e_free_dma
+name|i40e_free_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -7131,7 +7140,7 @@ name|txr
 operator|->
 name|base
 condition|)
-name|i40e_free_dma
+name|i40e_free_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -10564,7 +10573,7 @@ name|txr
 operator|->
 name|base
 condition|)
-name|i40e_free_dma
+name|i40e_free_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -10616,7 +10625,7 @@ name|rxr
 operator|->
 name|base
 condition|)
-name|i40e_free_dma
+name|i40e_free_dma_mem
 argument_list|(
 operator|&
 name|sc
