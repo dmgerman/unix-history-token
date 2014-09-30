@@ -715,6 +715,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX need to low_rssi_thresh config from ath9k, to support CUS198  * antenna diversity correctly.  */
+end_comment
+
 begin_function
 specifier|static
 name|HAL_BOOL

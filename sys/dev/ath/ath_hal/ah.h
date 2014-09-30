@@ -3780,6 +3780,9 @@ name|int
 name|ath_hal_ext_atten_margin_cfg
 decl_stmt|;
 name|int
+name|ath_hal_min_gainidx
+decl_stmt|;
+name|int
 name|ath_hal_war70c
 decl_stmt|;
 name|uint32_t
@@ -6424,6 +6427,10 @@ parameter_list|,
 name|uint16_t
 modifier|*
 name|eepromdata
+parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah_config
 parameter_list|,
 name|HAL_STATUS
 modifier|*
