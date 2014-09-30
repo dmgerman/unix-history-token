@@ -2247,11 +2247,36 @@ return|;
 block|}
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|proto
+operator|==
+name|IPPROTO_UDP
+condition|)
+block|{
 name|UDPSTAT_INC
 argument_list|(
 name|udps_nosum
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* UDPLite requires a checksum */
+comment|/* XXX: What is the right UDPLite MIB counter here? */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
+block|}
+block|}
 name|pcbinfo
 operator|=
 name|get_inpcbinfo
