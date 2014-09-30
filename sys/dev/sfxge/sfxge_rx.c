@@ -737,6 +737,8 @@ comment|/* Allocate (and attach) packet buffer */
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 operator|&&
 operator|!
 name|uma_zalloc_arg
@@ -764,7 +766,9 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|m
+operator|)
 return|;
 block|}
 end_function
@@ -1770,6 +1774,8 @@ operator|->
 name|next_buf
 operator|.
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 block|{
 name|sfxge_rx_deliver
@@ -2620,6 +2626,8 @@ condition|(
 name|c
 operator|->
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 name|sfxge_lro_deliver
 argument_list|(
@@ -2691,6 +2699,8 @@ condition|(
 name|c
 operator|->
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 name|sfxge_lro_deliver
 argument_list|(
@@ -2710,7 +2720,9 @@ name|c
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|c
@@ -2758,6 +2770,8 @@ condition|(
 name|c
 operator|->
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 name|sfxge_lro_deliver
 argument_list|(
@@ -2797,7 +2811,9 @@ name|c
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 goto|goto
@@ -2901,7 +2917,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 name|deliver_buf_out
 label|:
@@ -2915,7 +2933,9 @@ name|rx_buf
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3504,6 +3524,8 @@ condition|(
 name|c
 operator|->
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3653,6 +3675,8 @@ operator|->
 name|next_buf
 operator|.
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -3808,6 +3832,8 @@ operator|&&
 name|c
 operator|->
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 name|sfxge_lro_deliver
 argument_list|(
@@ -3831,6 +3857,8 @@ condition|(
 name|c
 operator|->
 name|mbuf
+operator|!=
+name|NULL
 condition|)
 name|sfxge_lro_deliver
 argument_list|(
@@ -5958,6 +5986,7 @@ name|offset
 operator|)
 expr_stmt|;
 return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -5970,6 +5999,7 @@ argument_list|(
 name|sum
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
