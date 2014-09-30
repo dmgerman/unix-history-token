@@ -147,9 +147,9 @@ decl_stmt|;
 comment|/* Tail of get list. */
 name|unsigned
 name|int
-name|std_count
+name|std_get_count
 decl_stmt|;
-comment|/* Count of packets. */
+comment|/* Packets in get list. */
 block|}
 struct|;
 end_struct
