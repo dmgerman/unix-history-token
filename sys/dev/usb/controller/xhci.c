@@ -3480,6 +3480,19 @@ name|devices_max
 operator|=
 name|XHCI_MAX_DEVICES
 expr_stmt|;
+comment|/* set default cycle state in case of early interrupts */
+name|sc
+operator|->
+name|sc_event_ccs
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_command_ccs
+operator|=
+literal|1
+expr_stmt|;
 comment|/* setup command queue mutex and condition varible */
 name|cv_init
 argument_list|(
