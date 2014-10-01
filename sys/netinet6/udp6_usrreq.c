@@ -1007,9 +1007,7 @@ argument_list|(
 name|udps_badsum
 argument_list|)
 expr_stmt|;
-goto|goto
-name|badunlocked
-goto|;
+comment|/*goto badunlocked;*/
 block|}
 comment|/* 	 * Construct sockaddr format source address. 	 */
 name|init_sin6
@@ -1896,6 +1894,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|up
+operator|->
+name|u_rxcslen
+operator|==
+literal|0
+operator|||
 name|up
 operator|->
 name|u_rxcslen

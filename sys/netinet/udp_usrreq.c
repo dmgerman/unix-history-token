@@ -3084,6 +3084,12 @@ condition|(
 name|up
 operator|->
 name|u_rxcslen
+operator|==
+literal|0
+operator|||
+name|up
+operator|->
+name|u_rxcslen
 operator|>
 name|len
 condition|)
