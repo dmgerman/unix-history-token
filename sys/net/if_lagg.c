@@ -4896,7 +4896,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
+operator|<
 name|IFCOUNTERS
 condition|;
 name|i
