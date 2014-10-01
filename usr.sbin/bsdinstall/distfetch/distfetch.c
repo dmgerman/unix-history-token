@@ -357,7 +357,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-literal|1
+name|EXIT_FAILURE
 operator|)
 return|;
 block|}
@@ -412,9 +412,9 @@ operator|==
 name|ndists
 operator|)
 condition|?
-literal|0
+name|EXIT_SUCCESS
 else|:
-literal|1
+name|EXIT_FAILURE
 operator|)
 return|;
 block|}
