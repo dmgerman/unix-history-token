@@ -272,8 +272,18 @@ name|PAM_VERBOSE_ERROR
 argument_list|(
 literal|"%s is not allowed to log in from %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|rhost
 argument_list|)
 expr_stmt|;
@@ -335,8 +345,18 @@ name|PAM_VERBOSE_ERROR
 argument_list|(
 literal|"%s is not allowed to log in on %s"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|tty
 argument_list|)
 expr_stmt|;
@@ -375,6 +395,11 @@ name|PAM_VERBOSE_ERROR
 argument_list|(
 literal|"%s is not allowed to log in"
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|user
 argument_list|)
 expr_stmt|;
