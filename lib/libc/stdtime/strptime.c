@@ -135,12 +135,6 @@ directive|include
 file|"tzfile.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|char
@@ -1609,6 +1603,10 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|buf
+operator|+=
+name|len
+expr_stmt|;
 name|tm
 operator|->
 name|tm_wday
