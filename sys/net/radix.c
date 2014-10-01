@@ -5480,16 +5480,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|_KERNEL
-name|RADIX_NODE_HEAD_LOCK_INIT
-argument_list|(
-name|rnh
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|head
 operator|=

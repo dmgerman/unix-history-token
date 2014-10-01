@@ -10746,14 +10746,6 @@ name|pfrkt_ip4
 operator|!=
 name|NULL
 condition|)
-block|{
-name|RADIX_NODE_HEAD_DESTROY
-argument_list|(
-name|kt
-operator|->
-name|pfrkt_ip4
-argument_list|)
-expr_stmt|;
 name|rn_detachhead
 argument_list|(
 operator|(
@@ -10767,7 +10759,6 @@ operator|->
 name|pfrkt_ip4
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kt
@@ -10776,14 +10767,6 @@ name|pfrkt_ip6
 operator|!=
 name|NULL
 condition|)
-block|{
-name|RADIX_NODE_HEAD_DESTROY
-argument_list|(
-name|kt
-operator|->
-name|pfrkt_ip6
-argument_list|)
-expr_stmt|;
 name|rn_detachhead
 argument_list|(
 operator|(
@@ -10797,7 +10780,6 @@ operator|->
 name|pfrkt_ip6
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kt
