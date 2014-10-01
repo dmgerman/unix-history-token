@@ -1376,6 +1376,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|fflag
+operator|&&
 name|errno
 condition|)
 name|err
