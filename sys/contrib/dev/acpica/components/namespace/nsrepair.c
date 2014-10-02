@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -355,7 +355,7 @@ operator|)
 return|;
 block|}
 comment|/*      * At this point, we know that the type of the returned object was not      * one of the expected types for this predefined name. Attempt to      * repair the object by converting it to one of the expected object      * types for this predefined name.      */
-comment|/*      * If there is no return value, check if we require a return value for      * this predefined name. Either one return value is expected, or none,      * for both methods and other objects.      *      * Exit now if there is no return object. Warning if one was expected.      */
+comment|/*      * If there is no return value, check if we require a return value for      * this predefined name. Either one return value is expected, or none,      * for both methods and other objects.      *      * Try to fix if there was no return object. Warning if failed to fix.      */
 if|if
 condition|(
 operator|!
@@ -376,6 +376,59 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|PackageIndex
+operator|!=
+name|ACPI_NOT_PACKAGE_ELEMENT
+condition|)
+block|{
+name|ACPI_WARN_PREDEFINED
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Info
+operator|->
+name|FullPathname
+operator|,
+name|ACPI_WARN_ALWAYS
+operator|,
+literal|"Found unexpected NULL package element"
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiNsRepairNullElement
+argument_list|(
+name|Info
+argument_list|,
+name|ExpectedBtypes
+argument_list|,
+name|PackageIndex
+argument_list|,
+name|ReturnObjectPtr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+comment|/* Repair was successful */
+block|}
+block|}
+else|else
+block|{
 name|ACPI_WARN_PREDEFINED
 argument_list|(
 operator|(
@@ -391,6 +444,7 @@ literal|"Missing expected return value"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_AML_NO_RETURN_VALUE
@@ -956,7 +1010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRemoveNullElements  *  * PARAMETERS:  Info                - Method execution information block  *              PackageType         - An AcpiReturnPackageTypes value  *              ObjDesc             - A Package object  *  * RETURN:      None.  *  * DESCRIPTION: Remove all NULL package elements from packages that contain  *              a variable number of sub-packages. For these types of  *              packages, NULL elements can be safely removed.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRemoveNullElements  *  * PARAMETERS:  Info                - Method execution information block  *              PackageType         - An AcpiReturnPackageTypes value  *              ObjDesc             - A Package object  *  * RETURN:      None.  *  * DESCRIPTION: Remove all NULL package elements from packages that contain  *              a variable number of subpackages. For these types of  *              packages, NULL elements can be safely removed.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -999,7 +1053,7 @@ argument_list|(
 name|NsRemoveNullElements
 argument_list|)
 expr_stmt|;
-comment|/*      * We can safely remove all NULL elements from these package types:      * PTYPE1_VAR packages contain a variable number of simple data types.      * PTYPE2 packages contain a variable number of sub-packages.      */
+comment|/*      * We can safely remove all NULL elements from these package types:      * PTYPE1_VAR packages contain a variable number of simple data types.      * PTYPE2 packages contain a variable number of subpackages.      */
 switch|switch
 condition|(
 name|PackageType

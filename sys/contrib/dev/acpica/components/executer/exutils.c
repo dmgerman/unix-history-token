@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -135,39 +135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReacquireInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Reacquire the interpreter execution region from within the  *              interpreter code. Failure to enter the interpreter region is a  *              fatal system error. Used in conjunction with  *              RelinquishInterpreter  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiExReacquireInterpreter
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|ExReacquireInterpreter
-argument_list|)
-expr_stmt|;
-comment|/*      * If the global serialized flag is set, do not release the interpreter,      * since it was not actually released by AcpiExRelinquishInterpreter.      * This forces the interpreter to be single threaded.      */
-if|if
-condition|(
-operator|!
-name|AcpiGbl_AllMethodsSerialized
-condition|)
-block|{
-name|AcpiExEnterInterpreter
-argument_list|()
-expr_stmt|;
-block|}
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExitInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Exit the interpreter execution region. This is the top level  *              routine used to exit the interpreter when all processing has  *              been completed.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExitInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Exit the interpreter execution region. This is the top level  *              routine used to exit the interpreter when all processing has  *              been completed, or when the method blocks.  *  * Cases where the interpreter is unlocked internally:  *      1) Method will be blocked on a Sleep() AML opcode  *      2) Method will be blocked on an Acquire() AML opcode  *      3) Method will be blocked on a Wait() AML opcode  *      4) Method will be blocked to acquire the global lock  *      5) Method will be blocked waiting to execute a serialized control  *          method that is currently executing  *      6) About to invoke a user-installed opregion handler  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -208,38 +176,6 @@ operator|,
 literal|"Could not release AML Interpreter mutex"
 operator|)
 argument_list|)
-expr_stmt|;
-block|}
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExRelinquishInterpreter  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Exit the interpreter execution region, from within the  *              interpreter - before attempting an operation that will possibly  *              block the running thread.  *  * Cases where the interpreter is unlocked internally  *      1) Method to be blocked on a Sleep() AML opcode  *      2) Method to be blocked on an Acquire() AML opcode  *      3) Method to be blocked on a Wait() AML opcode  *      4) Method to be blocked to acquire the global lock  *      5) Method to be blocked waiting to execute a serialized control method  *          that is currently executing  *      6) About to invoke a user-installed opregion handler  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiExRelinquishInterpreter
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-name|ExRelinquishInterpreter
-argument_list|)
-expr_stmt|;
-comment|/*      * If the global serialized flag is set, do not release the interpreter.      * This forces the interpreter to be single threaded.      */
-if|if
-condition|(
-operator|!
-name|AcpiGbl_AllMethodsSerialized
-condition|)
-block|{
-name|AcpiExExitInterpreter
-argument_list|()
 expr_stmt|;
 block|}
 name|return_VOID

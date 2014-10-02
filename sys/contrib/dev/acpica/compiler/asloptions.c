@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -210,9 +210,6 @@ index|]
 operator|&&
 operator|!
 name|Gbl_DisasmFlag
-operator|&&
-operator|!
-name|Gbl_GetAllTables
 condition|)
 block|{
 name|printf
@@ -317,7 +314,7 @@ name|ASL_SUPPORTED_OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|ACPI_OPT_END
 condition|)
 switch|switch
 condition|(
@@ -533,11 +530,45 @@ case|case
 literal|'e'
 case|:
 comment|/* External files for disassembler */
+comment|/* Get entire list of external files */
+name|AcpiGbl_Optind
+operator|--
+expr_stmt|;
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+operator|=
+name|AcpiGbl_Optarg
+expr_stmt|;
+while|while
+condition|(
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+operator|&&
+operator|(
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+operator|)
+condition|)
+block|{
 name|Status
 operator|=
 name|AcpiDmAddToExternalFileList
 argument_list|(
-name|AcpiGbl_Optarg
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -552,7 +583,10 @@ name|printf
 argument_list|(
 literal|"Could not add %s to external list\n"
 argument_list|,
-name|AcpiGbl_Optarg
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -561,6 +595,10 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+name|AcpiGbl_Optind
+operator|++
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -637,15 +675,16 @@ case|case
 literal|'g'
 case|:
 comment|/* Get all ACPI tables */
-name|Gbl_GetAllTables
-operator|=
-name|TRUE
+name|printf
+argument_list|(
+literal|"-g option is deprecated, use acpidump utility instead\n"
+argument_list|)
 expr_stmt|;
-name|Gbl_DoCompile
-operator|=
-name|FALSE
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
-break|break;
 case|case
 literal|'h'
 case|:
@@ -819,6 +858,15 @@ literal|'i'
 case|:
 comment|/* Produce preprocessor output file */
 name|Gbl_PreprocessorOutputFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+comment|/* Produce hardware map summary file */
+name|Gbl_MapfileFlag
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1045,6 +1093,11 @@ name|Gbl_OutputFilenamePrefix
 operator|=
 name|AcpiGbl_Optarg
 expr_stmt|;
+name|UtConvertBackslashes
+argument_list|(
+name|Gbl_OutputFilenamePrefix
+argument_list|)
+expr_stmt|;
 name|Gbl_UseDefaultAmlFilename
 operator|=
 name|FALSE
@@ -1220,10 +1273,23 @@ expr_stmt|;
 case|case
 literal|'a'
 case|:
-comment|/* Disable All error/warning messages */
+comment|/* Disable all error/warning/remark messages */
 name|Gbl_NoErrors
 operator|=
 name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+comment|/* Disable all warning/remark messages (errors only) */
+name|Gbl_DisplayRemarks
+operator|=
+name|FALSE
+expr_stmt|;
+name|Gbl_DisplayWarnings
+operator|=
+name|FALSE
 expr_stmt|;
 break|break;
 case|case

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -251,7 +251,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetAmlLength  *  * PARAMETERS:  Resource            - Pointer to the resource linked list  *              SizeNeeded          - Where the required size is returned  *  * RETURN:      Status  *  * DESCRIPTION: Takes a linked list of internal resource descriptors and  *              calculates the size buffer needed to hold the corresponding  *              external resource byte stream.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetAmlLength  *  * PARAMETERS:  Resource            - Pointer to the resource linked list  *              ResourceListSize    - Size of the resource linked list  *              SizeNeeded          - Where the required size is returned  *  * RETURN:      Status  *  * DESCRIPTION: Takes a linked list of internal resource descriptors and  *              calculates the size buffer needed to hold the corresponding  *              external resource byte stream.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -263,6 +263,9 @@ modifier|*
 name|Resource
 parameter_list|,
 name|ACPI_SIZE
+name|ResourceListSize
+parameter_list|,
+name|ACPI_SIZE
 modifier|*
 name|SizeNeeded
 parameter_list|)
@@ -271,6 +274,10 @@ name|ACPI_SIZE
 name|AmlSizeNeeded
 init|=
 literal|0
+decl_stmt|;
+name|ACPI_RESOURCE
+modifier|*
+name|ResourceEnd
 decl_stmt|;
 name|ACPI_RS_LENGTH
 name|TotalSize
@@ -281,9 +288,22 @@ name|RsGetAmlLength
 argument_list|)
 expr_stmt|;
 comment|/* Traverse entire list of internal resource descriptors */
+name|ResourceEnd
+operator|=
+name|ACPI_ADD_PTR
+argument_list|(
+name|ACPI_RESOURCE
+argument_list|,
+name|Resource
+argument_list|,
+name|ResourceListSize
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|Resource
+operator|<
+name|ResourceEnd
 condition|)
 block|{
 comment|/* Validate the descriptor type */
@@ -1209,7 +1229,7 @@ name|Index
 operator|++
 control|)
 block|{
-comment|/* Dereference the sub-package */
+comment|/* Dereference the subpackage */
 name|PackageElement
 operator|=
 operator|*

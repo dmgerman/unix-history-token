@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -147,8 +147,6 @@ name|CMD_ARGS
 block|,
 name|CMD_ARGUMENTS
 block|,
-name|CMD_BATCH
-block|,
 name|CMD_BREAKPOINT
 block|,
 name|CMD_BUSINFO
@@ -217,7 +215,7 @@ name|CMD_NAMESPACE
 block|,
 name|CMD_NOTIFY
 block|,
-name|CMD_OBJECT
+name|CMD_OBJECTS
 block|,
 name|CMD_OPEN
 block|,
@@ -254,6 +252,8 @@ block|,
 name|CMD_TEMPLATE
 block|,
 name|CMD_TERMINATE
+block|,
+name|CMD_TEST
 block|,
 name|CMD_THREADS
 block|,
@@ -313,12 +313,6 @@ block|}
 block|,
 block|{
 literal|"ARGUMENTS"
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"BATCH"
 block|,
 literal|0
 block|}
@@ -416,7 +410,7 @@ block|,
 block|{
 literal|"GPE"
 block|,
-literal|2
+literal|1
 block|}
 block|,
 block|{
@@ -528,7 +522,7 @@ literal|2
 block|}
 block|,
 block|{
-literal|"OBJECT"
+literal|"OBJECTS"
 block|,
 literal|1
 block|}
@@ -639,6 +633,12 @@ block|{
 literal|"TERMINATE"
 block|,
 literal|0
+block|}
+block|,
+block|{
+literal|"TEST"
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -789,17 +789,9 @@ literal|"Exit this command\n"
 block|}
 block|,
 block|{
-literal|9
+literal|8
 block|,
-literal|"  Stats [Allocations|Memory|Misc|"
-block|,
-literal|"\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"      Objects|Sizes|Stack|Tables]"
+literal|"  Stats<SubCommand>"
 block|,
 literal|"Display namespace and memory statistics\n"
 block|}
@@ -1247,7 +1239,7 @@ block|,
 block|{
 literal|1
 block|,
-literal|"  Gpe<GpeNum><GpeBlock>"
+literal|"  Gpe<GpeNum> [GpeBlockDevice]"
 block|,
 literal|"Simulate a GPE\n"
 block|}
@@ -1306,6 +1298,38 @@ block|,
 literal|"  Open<Output Filename>"
 block|,
 literal|"Open a file for debug output\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"\nDebug Test Commands:"
+block|,
+literal|"\n"
+block|}
+block|,
+block|{
+literal|3
+block|,
+literal|"  Test<TestName>"
+block|,
+literal|"Invoke a debug test\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Objects"
+block|,
+literal|"Read/write/compare all namespace data objects\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"     Predefined"
+block|,
+literal|"Execute all ACPI predefined names (_STA, etc.)\n"
 block|}
 block|,
 block|{
@@ -1970,13 +1994,37 @@ name|char
 modifier|*
 name|This
 decl_stmt|;
-name|ACPI_STRCPY
+if|if
+condition|(
+name|AcpiUtSafeStrcpy
 argument_list|(
 name|AcpiGbl_DbParsedBuf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|AcpiGbl_DbParsedBuf
+argument_list|)
+argument_list|,
 name|InputBuffer
 argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Buffer overflow while parsing input line (max %u characters)\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|AcpiGbl_DbParsedBuf
+argument_list|)
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|This
 operator|=
 name|AcpiGbl_DbParsedBuf
@@ -2212,6 +2260,12 @@ name|AE_CTRL_TERMINATE
 operator|)
 return|;
 block|}
+comment|/* Add all commands that come here to the history buffer */
+name|AcpiDbAddToHistory
+argument_list|(
+name|InputBuffer
+argument_list|)
+expr_stmt|;
 name|ParamCount
 operator|=
 name|AcpiDbGetLine
@@ -2334,18 +2388,6 @@ name|CMD_ARGUMENTS
 case|:
 name|AcpiDbDisplayArguments
 argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|CMD_BATCH
-case|:
-name|AcpiDbBatchExecute
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
-index|]
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2922,7 +2964,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CMD_OBJECT
+name|CMD_OBJECTS
 case|:
 name|AcpiUtStrupr
 argument_list|(
@@ -3155,6 +3197,18 @@ comment|/*          * TBD: [Restructure] Need some way to re-initialize without 
 comment|/*  AcpiInitialize (NULL);  */
 break|break;
 case|case
+name|CMD_TEST
+case|:
+name|AcpiDbExecuteTest
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CMD_THREADS
 case|:
 name|AcpiDbCreateExecutionThreads
@@ -3279,7 +3333,12 @@ case|:
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unknown Command\n"
+literal|"%s: unknown command\n"
+argument_list|,
+name|AcpiGbl_DbArgs
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -3301,12 +3360,6 @@ operator|=
 name|AE_CTRL_TRUE
 expr_stmt|;
 block|}
-comment|/* Add all commands that come here to the history buffer */
-name|AcpiDbAddToHistory
-argument_list|(
-name|InputBuffer
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|Status

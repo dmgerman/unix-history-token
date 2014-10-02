@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -128,42 +128,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* Special case for Memory24, values are compressed */
-if|if
-condition|(
-name|Type
-operator|==
-name|ACPI_RESOURCE_NAME_MEMORY24
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|Alignment
-condition|)
-comment|/* Alignment==0 means 64K - no invalid alignment */
-block|{
-name|Alignment
-operator|=
-name|ACPI_UINT16_MAX
-operator|+
-literal|1
-expr_stmt|;
-block|}
-name|Minimum
-operator|<<=
-literal|8
-expr_stmt|;
-name|Maximum
-operator|<<=
-literal|8
-expr_stmt|;
-name|Length
-operator|*=
-literal|256
-expr_stmt|;
-block|}
-comment|/* IO descriptor has different definition of min/max, don't check */
+comment|/*      * Range checks for Memory24 and Memory32.      * IO descriptor has different definition of min/max, don't check.      */
 if|if
 condition|(
 name|Type
@@ -215,6 +180,37 @@ name|LengthOp
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* Special case for Memory24, min/max values are compressed */
+if|if
+condition|(
+name|Type
+operator|==
+name|ACPI_RESOURCE_NAME_MEMORY24
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|Alignment
+condition|)
+comment|/* Alignment==0 means 64K alignment */
+block|{
+name|Alignment
+operator|=
+name|ACPI_UINT16_MAX
+operator|+
+literal|1
+expr_stmt|;
+block|}
+name|Minimum
+operator|<<=
+literal|8
+expr_stmt|;
+name|Maximum
+operator|<<=
+literal|8
 expr_stmt|;
 block|}
 block|}
@@ -1185,12 +1181,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoOneResourceDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|DescriptorTypeOp
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|,
 name|UINT8
 modifier|*
@@ -1206,6 +1199,8 @@ decl_stmt|;
 comment|/* Construct the resource */
 switch|switch
 condition|(
+name|Info
+operator|->
 name|DescriptorTypeOp
 operator|->
 name|Asl
@@ -1220,9 +1215,7 @@ name|Rnode
 operator|=
 name|RsDoDmaDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1233,9 +1226,7 @@ name|Rnode
 operator|=
 name|RsDoFixedDmaDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1246,9 +1237,7 @@ name|Rnode
 operator|=
 name|RsDoDwordIoDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1259,9 +1248,7 @@ name|Rnode
 operator|=
 name|RsDoDwordMemoryDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1272,9 +1259,7 @@ name|Rnode
 operator|=
 name|RsDoDwordSpaceDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1296,6 +1281,8 @@ name|ASL_ERROR
 argument_list|,
 name|ASL_MSG_MISSING_STARTDEPENDENT
 argument_list|,
+name|Info
+operator|->
 name|DescriptorTypeOp
 argument_list|,
 name|NULL
@@ -1311,6 +1298,8 @@ name|ASL_ERROR
 argument_list|,
 name|ASL_MSG_DEPENDENT_NESTING
 argument_list|,
+name|Info
+operator|->
 name|DescriptorTypeOp
 argument_list|,
 name|NULL
@@ -1332,9 +1321,7 @@ name|Rnode
 operator|=
 name|RsDoEndDependentDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1345,9 +1332,7 @@ name|Rnode
 operator|=
 name|RsDoEndTagDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1358,9 +1343,7 @@ name|Rnode
 operator|=
 name|RsDoExtendedIoDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1371,9 +1354,7 @@ name|Rnode
 operator|=
 name|RsDoExtendedMemoryDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1384,9 +1365,7 @@ name|Rnode
 operator|=
 name|RsDoExtendedSpaceDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1397,9 +1376,7 @@ name|Rnode
 operator|=
 name|RsDoFixedIoDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1410,9 +1387,7 @@ name|Rnode
 operator|=
 name|RsDoInterruptDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1423,9 +1398,7 @@ name|Rnode
 operator|=
 name|RsDoIoDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1436,9 +1409,7 @@ name|Rnode
 operator|=
 name|RsDoIrqDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1449,9 +1420,7 @@ name|Rnode
 operator|=
 name|RsDoIrqNoFlagsDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1462,9 +1431,7 @@ name|Rnode
 operator|=
 name|RsDoMemory24Descriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1475,9 +1442,7 @@ name|Rnode
 operator|=
 name|RsDoMemory32Descriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1488,9 +1453,7 @@ name|Rnode
 operator|=
 name|RsDoMemory32FixedDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1501,9 +1464,7 @@ name|Rnode
 operator|=
 name|RsDoQwordIoDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1514,9 +1475,7 @@ name|Rnode
 operator|=
 name|RsDoQwordMemoryDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1527,9 +1486,7 @@ name|Rnode
 operator|=
 name|RsDoQwordSpaceDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1540,9 +1497,7 @@ name|Rnode
 operator|=
 name|RsDoGeneralRegisterDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1564,6 +1519,8 @@ name|ASL_ERROR
 argument_list|,
 name|ASL_MSG_DEPENDENT_NESTING
 argument_list|,
+name|Info
+operator|->
 name|DescriptorTypeOp
 argument_list|,
 name|NULL
@@ -1588,9 +1545,7 @@ name|Rnode
 operator|=
 name|RsDoStartDependentDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1617,6 +1572,8 @@ name|ASL_ERROR
 argument_list|,
 name|ASL_MSG_DEPENDENT_NESTING
 argument_list|,
+name|Info
+operator|->
 name|DescriptorTypeOp
 argument_list|,
 name|NULL
@@ -1641,9 +1598,7 @@ name|Rnode
 operator|=
 name|RsDoStartDependentNoPriDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1659,9 +1614,7 @@ name|Rnode
 operator|=
 name|RsDoVendorLargeDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1672,9 +1625,7 @@ name|Rnode
 operator|=
 name|RsDoVendorSmallDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1685,9 +1636,7 @@ name|Rnode
 operator|=
 name|RsDoWordBusNumberDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1698,9 +1647,7 @@ name|Rnode
 operator|=
 name|RsDoWordIoDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1711,9 +1658,7 @@ name|Rnode
 operator|=
 name|RsDoWordSpaceDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1724,9 +1669,7 @@ name|Rnode
 operator|=
 name|RsDoGpioIntDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1737,9 +1680,7 @@ name|Rnode
 operator|=
 name|RsDoGpioIoDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1750,9 +1691,7 @@ name|Rnode
 operator|=
 name|RsDoI2cSerialBusDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1763,9 +1702,7 @@ name|Rnode
 operator|=
 name|RsDoSpiSerialBusDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1776,9 +1713,7 @@ name|Rnode
 operator|=
 name|RsDoUartSerialBusDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+name|Info
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1792,6 +1727,8 @@ name|printf
 argument_list|(
 literal|"Unknown resource descriptor type [%s]\n"
 argument_list|,
+name|Info
+operator|->
 name|DescriptorTypeOp
 operator|->
 name|Asl
@@ -1802,6 +1739,8 @@ expr_stmt|;
 break|break;
 block|}
 comment|/*      * Mark original node as unused, but head of a resource descriptor.      * This allows the resource to be installed in the namespace so that      * references to the descriptor can be resolved.      */
+name|Info
+operator|->
 name|DescriptorTypeOp
 operator|->
 name|Asl
@@ -1810,6 +1749,8 @@ name|ParseOpcode
 operator|=
 name|PARSEOP_DEFAULT_ARG
 expr_stmt|;
+name|Info
+operator|->
 name|DescriptorTypeOp
 operator|->
 name|Asl
@@ -1818,6 +1759,8 @@ name|CompileFlags
 operator|=
 name|NODE_IS_RESOURCE_DESC
 expr_stmt|;
+name|Info
+operator|->
 name|DescriptorTypeOp
 operator|->
 name|Asl
@@ -1826,6 +1769,8 @@ name|Value
 operator|.
 name|Integer
 operator|=
+name|Info
+operator|->
 name|CurrentByteOffset
 expr_stmt|;
 if|if
@@ -1833,6 +1778,8 @@ condition|(
 name|Rnode
 condition|)
 block|{
+name|Info
+operator|->
 name|DescriptorTypeOp
 operator|->
 name|Asl
@@ -1843,6 +1790,8 @@ name|Rnode
 operator|->
 name|BufferLength
 expr_stmt|;
+name|Info
+operator|->
 name|DescriptorTypeOp
 operator|->
 name|Asl
@@ -2010,6 +1959,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|Rnode
 decl_stmt|;
+name|ASL_RESOURCE_INFO
+name|Info
+decl_stmt|;
 name|UINT8
 name|State
 decl_stmt|;
@@ -2076,6 +2028,54 @@ condition|(
 name|DescriptorTypeOp
 condition|)
 block|{
+comment|/* Save information for optional mapfile */
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_CONNECTION
+condition|)
+block|{
+name|Info
+operator|.
+name|MappingOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Info
+operator|.
+name|MappingOp
+operator|=
+name|DescriptorTypeOp
+expr_stmt|;
+block|}
+name|Info
+operator|.
+name|DescriptorTypeOp
+operator|=
+name|DescriptorTypeOp
+expr_stmt|;
+name|Info
+operator|.
+name|CurrentByteOffset
+operator|=
+name|CurrentByteOffset
+expr_stmt|;
 name|DescriptorTypeOp
 operator|->
 name|Asl
@@ -2088,9 +2088,8 @@ name|Rnode
 operator|=
 name|RsDoOneResourceDescriptor
 argument_list|(
-name|DescriptorTypeOp
-argument_list|,
-name|CurrentByteOffset
+operator|&
+name|Info
 argument_list|,
 operator|&
 name|State
