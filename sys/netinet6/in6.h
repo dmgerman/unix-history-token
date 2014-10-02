@@ -2896,6 +2896,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|in6_cksum_partial
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|u_int8_t
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|in6_localaddr
 parameter_list|(
 name|struct
