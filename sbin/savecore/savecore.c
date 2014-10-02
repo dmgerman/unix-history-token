@@ -535,11 +535,31 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|feof
+argument_list|(
+name|fp
+argument_list|)
+condition|)
 name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"unable to read from bounds, using 0"
+literal|"bounds file is empty, using 0"
+argument_list|)
+expr_stmt|;
+else|else
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"bounds file: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -592,6 +612,11 @@ argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"invalid value found in bounds, using 0"
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
