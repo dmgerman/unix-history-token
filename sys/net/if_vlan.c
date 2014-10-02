@@ -533,14 +533,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|VNET_DEFINE
+argument_list|(
 name|int
+argument_list|,
 name|soft_pad
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_soft_pad
+value|VNET(soft_pad)
+end_define
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -552,9 +561,14 @@ argument_list|,
 name|soft_pad
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_VNET
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|soft_pad
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -4806,7 +4820,7 @@ block|}
 comment|/* 	 * Pad the frame to the minimum size allowed if told to. 	 * This option is in accord with IEEE Std 802.1Q, 2003 Ed., 	 * paragraph C.4.4.3.b.  It can help to work around buggy 	 * bridges that violate paragraph C.4.4.3.a from the same 	 * document, i.e., fail to pad short frames after untagging. 	 * E.g., a tagged frame 66 bytes long (incl. FCS) is OK, but 	 * untagging it will produce a 62-byte frame, which is a runt 	 * and requires padding.  There are VLAN-enabled network 	 * devices that just discard such runts instead or mishandle 	 * them somehow. 	 */
 if|if
 condition|(
-name|soft_pad
+name|V_soft_pad
 operator|&&
 name|p
 operator|->
