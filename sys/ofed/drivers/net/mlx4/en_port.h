@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2007 Mellanox Technologies. All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  *  */
+comment|/*  * Copyright (c) 2007, 2014 Mellanox Technologies. All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  *  */
 end_comment
 
 begin_ifndef
@@ -25,32 +25,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|SET_PORT_PROMISC_EN_SHIFT
+name|SET_PORT_PROMISC_SHIFT
 value|31
 end_define
 
 begin_define
 define|#
 directive|define
-name|SET_PORT_PROMISC_MODE_SHIFT
+name|SET_PORT_MC_PROMISC_SHIFT
 value|30
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|//moved to port.c - shahark
-end_comment
-
-begin_endif
-unit|struct mlx4_set_port_general_context { 	u8 reserved[3]; 	u8 flags; 	u16 reserved2; 	__be16 mtu; 	u8 pptx; 	u8 pfctx; 	u16 reserved3; 	u8 pprx; 	u8 pfcrx; 	u16 reserved4; };  struct mlx4_set_port_rqp_calc_context { 	__be32 base_qpn; 	__be32 flags; 	u8 reserved[3]; 	u8 mac_miss; 	u8 intra_no_vlan; 	u8 no_vlan; 	u8 intra_vlan_miss; 	u8 vlan_miss; 	u8 reserved2[3]; 	u8 no_vlan_prio; 	__be32 promisc; 	__be32 mcast; };
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|MLX4_EN_NUM_TC
+value|8
+end_define
 
 begin_define
 define|#
@@ -94,21 +85,29 @@ end_enum
 begin_enum
 enum|enum
 block|{
-name|MLX4_EN_1G_SPEED
+name|MLX4_EN_10G_SPEED_XAUI
 init|=
-literal|0x02
+literal|0x00
 block|,
 name|MLX4_EN_10G_SPEED_XFI
 init|=
 literal|0x01
 block|,
-name|MLX4_EN_10G_SPEED_XAUI
+name|MLX4_EN_1G_SPEED
 init|=
-literal|0x00
+literal|0x02
+block|,
+name|MLX4_EN_20G_SPEED
+init|=
+literal|0x08
 block|,
 name|MLX4_EN_40G_SPEED
 init|=
 literal|0x40
+block|,
+name|MLX4_EN_56G_SPEED
+init|=
+literal|0x20
 block|,
 name|MLX4_EN_OTHER_SPEED
 init|=
@@ -129,8 +128,12 @@ directive|define
 name|MLX4_EN_LINK_UP_MASK
 value|0x80
 name|u8
-name|reserved
+name|autoneg
 decl_stmt|;
+define|#
+directive|define
+name|MLX4_EN_AUTONEG_MASK
+value|0x80
 name|__be16
 name|mtu
 decl_stmt|;
@@ -143,7 +146,7 @@ decl_stmt|;
 define|#
 directive|define
 name|MLX4_EN_SPEED_MASK
-value|0x43
+value|0x6b
 name|u16
 name|reserved3
 index|[
@@ -155,24 +158,6 @@ name|mac
 decl_stmt|;
 name|u8
 name|transceiver
-decl_stmt|;
-name|u8
-name|reserved4
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|__be32
-name|wavelenth
-decl_stmt|;
-name|u32
-name|reserved5
-decl_stmt|;
-name|__be32
-name|transceiver_code_hi
-decl_stmt|;
-name|__be32
-name|transceiver_code_low
 decl_stmt|;
 block|}
 struct|;
@@ -1369,22 +1354,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-name|enum
-name|mlx4_query_reply
-name|mlx4_en_query
-parameter_list|(
-name|void
-modifier|*
-name|endev_ptr
-parameter_list|,
-name|void
-modifier|*
-name|int_dev
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

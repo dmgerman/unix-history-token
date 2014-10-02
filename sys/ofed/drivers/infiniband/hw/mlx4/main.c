@@ -5721,7 +5721,7 @@ name|spec_l2
 operator|->
 name|ib
 operator|.
-name|r_u_qpn
+name|l3_qpn
 operator|=
 name|cpu_to_be32
 argument_list|(
@@ -11608,6 +11608,10 @@ name|ibdev
 operator|->
 name|dev
 argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|,
 operator|&
 name|ibdev
 operator|->
@@ -12126,6 +12130,8 @@ name|ibdev
 operator|->
 name|dev
 argument_list|,
+name|i
+argument_list|,
 name|ibdev
 operator|->
 name|counters
@@ -12606,6 +12612,10 @@ argument_list|(
 name|ibdev
 operator|->
 name|dev
+argument_list|,
+name|p
+operator|+
+literal|1
 argument_list|,
 name|ibdev
 operator|->
