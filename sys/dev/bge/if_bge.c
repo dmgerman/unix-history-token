@@ -27692,7 +27692,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|ether_poll_register_drv
+name|ether_poll_register
 argument_list|(
 name|bge_poll
 argument_list|,

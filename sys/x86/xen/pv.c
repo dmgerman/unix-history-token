@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/xen-os.h>
 end_include
 
@@ -201,6 +207,12 @@ begin_include
 include|#
 directive|include
 file|<xen/xen_pv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<xen/xen_msi.h>
 end_include
 
 begin_include
@@ -452,7 +464,11 @@ name|xen_pv_start_all_aps
 block|,
 endif|#
 directive|endif
-block|}
+operator|.
+name|msi_init
+operator|=
+name|xen_msi_init
+block|, }
 decl_stmt|;
 end_decl_stmt
 

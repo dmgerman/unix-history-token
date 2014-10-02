@@ -740,6 +740,13 @@ name|URTWN_DEV
 argument_list|(
 name|REALTEK
 argument_list|,
+name|RTL8188RU_3
+argument_list|)
+block|,
+name|URTWN_DEV
+argument_list|(
+name|REALTEK
+argument_list|,
 name|RTL8191CU
 argument_list|)
 block|,

@@ -4,19 +4,6 @@ comment|/*-  * Core definitions and data structures shareable across OS platform
 end_comment
 
 begin_comment
-comment|/* Initialize support for userspace access to the XenStore. */
-end_comment
-
-begin_function_decl
-name|void
-name|xs_dev_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Used by the XenStore character device to borrow kernel's store connection. */
 end_comment
 

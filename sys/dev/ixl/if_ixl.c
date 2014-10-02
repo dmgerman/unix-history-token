@@ -10138,6 +10138,14 @@ argument_list|)
 expr_stmt|;
 name|pf
 operator|->
+name|osdep
+operator|.
+name|flush_reg
+operator|=
+name|I40E_GLGEN_STAT
+expr_stmt|;
+name|pf
+operator|->
 name|hw
 operator|.
 name|hw_addr

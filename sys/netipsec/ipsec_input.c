@@ -1762,6 +1762,12 @@ condition|(
 name|prot
 operator|==
 name|IPPROTO_IPIP
+operator|&&
+name|saidx
+operator|->
+name|mode
+operator|!=
+name|IPSEC_MODE_TRANSPORT
 condition|)
 block|{
 if|if
@@ -1950,6 +1956,12 @@ condition|(
 name|prot
 operator|==
 name|IPPROTO_IPV6
+operator|&&
+name|saidx
+operator|->
+name|mode
+operator|!=
+name|IPSEC_MODE_TRANSPORT
 condition|)
 block|{
 if|if
@@ -2294,6 +2306,19 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* record data transfer */
+comment|/* 	 * In transport mode requeue decrypted mbuf back to IPv4 protocol 	 * handler. This is necessary to correctly expose rcvif. 	 */
+if|if
+condition|(
+name|saidx
+operator|->
+name|mode
+operator|==
+name|IPSEC_MODE_TRANSPORT
+condition|)
+name|prot
+operator|=
+name|IPPROTO_IPIP
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_ENC

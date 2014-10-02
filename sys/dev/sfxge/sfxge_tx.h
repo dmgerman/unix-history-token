@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_DPL_GET_PKT_LIMIT_DEFAULT
-value|64
+value|1024
 end_define
 
 begin_define
@@ -128,6 +128,16 @@ begin_struct
 struct|struct
 name|sfxge_tx_dpl
 block|{
+name|unsigned
+name|int
+name|std_get_max
+decl_stmt|;
+comment|/* Maximum number of packets 						 * in get list */
+name|unsigned
+name|int
+name|std_put_max
+decl_stmt|;
+comment|/* Maximum number of packets 						 * in put list */
 name|uintptr_t
 name|std_put
 decl_stmt|;
@@ -147,9 +157,9 @@ decl_stmt|;
 comment|/* Tail of get list. */
 name|unsigned
 name|int
-name|std_count
+name|std_get_count
 decl_stmt|;
-comment|/* Count of packets. */
+comment|/* Packets in get list. */
 block|}
 struct|;
 end_struct
@@ -211,7 +221,10 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TXQ_UNBLOCK_LEVEL
-value|(EFX_TXQ_LIMIT(SFXGE_NDESCS) / 4)
+parameter_list|(
+name|_entries
+parameter_list|)
+value|(EFX_TXQ_LIMIT(_entries) / 4)
 end_define
 
 begin_define
@@ -313,6 +326,14 @@ decl_stmt|;
 name|unsigned
 name|int
 name|buf_base_id
+decl_stmt|;
+name|unsigned
+name|int
+name|entries
+decl_stmt|;
+name|unsigned
+name|int
+name|ptr_mask
 decl_stmt|;
 name|struct
 name|sfxge_tx_mapping

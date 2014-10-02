@@ -25061,6 +25061,19 @@ operator|.
 name|ath_hal_ant_ctrl_comm2g_switch_enable
 expr_stmt|;
 block|}
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_RESET
+argument_list|,
+literal|"%s: com2=0x%08x\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
 name|OS_REG_RMW_FIELD
 argument_list|(
 name|ah

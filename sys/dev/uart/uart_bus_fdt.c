@@ -309,6 +309,16 @@ name|uart_lpc_class
 block|}
 block|,
 block|{
+literal|"qcom,uart-dm"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|uart_msm_class
+block|}
+block|,
+block|{
 literal|"ti,ns16550"
 block|,
 operator|(

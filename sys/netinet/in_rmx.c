@@ -1479,6 +1479,16 @@ condition|)
 return|return
 literal|0
 return|;
+name|rnh
+operator|=
+operator|*
+name|head
+expr_stmt|;
+name|RADIX_NODE_HEAD_LOCK_INIT
+argument_list|(
+name|rnh
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|off
@@ -1490,11 +1500,6 @@ return|return
 literal|1
 return|;
 comment|/* only do the rest for a real routing table */
-name|rnh
-operator|=
-operator|*
-name|head
-expr_stmt|;
 name|rnh
 operator|->
 name|rnh_addaddr

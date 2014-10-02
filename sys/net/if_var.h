@@ -288,7 +288,7 @@ enum|enum
 block|{
 name|IFCOUNTER_IPACKETS
 init|=
-literal|1
+literal|0
 block|,
 name|IFCOUNTER_IERRORS
 block|,
@@ -311,17 +311,13 @@ block|,
 name|IFCOUNTER_OQDROPS
 block|,
 name|IFCOUNTER_NOPROTO
-block|, }
+block|,
+name|IFCOUNTERS
+comment|/* Array size. */
+block|}
 name|ift_counter
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|IFCOUNTER_LAST
-value|IFCOUNTER_NOPROTO
-end_define
 
 begin_typedef
 typedef|typedef
@@ -824,60 +820,18 @@ name|if_get_counter_t
 name|if_get_counter
 decl_stmt|;
 comment|/* get counter values */
+comment|/* Statistics. */
+name|counter_u64_t
+name|if_counters
+index|[
+name|IFCOUNTERS
+index|]
+decl_stmt|;
 comment|/* Stuff that's only temporary and doesn't belong here. */
 name|u_int
 name|if_hw_tsomax
 decl_stmt|;
 comment|/* TSO total burst length 					 * limit in bytes. A value of 					 * zero means no limit. Have 					 * to find a better place for 					 * it eventually. */
-comment|/* 	 * Old, racy and expensive statistics, should not be used in 	 * new drivers. 	 */
-name|uint64_t
-name|if_ipackets
-decl_stmt|;
-comment|/* packets received on interface */
-name|uint64_t
-name|if_ierrors
-decl_stmt|;
-comment|/* input errors on interface */
-name|uint64_t
-name|if_opackets
-decl_stmt|;
-comment|/* packets sent on interface */
-name|uint64_t
-name|if_oerrors
-decl_stmt|;
-comment|/* output errors on interface */
-name|uint64_t
-name|if_collisions
-decl_stmt|;
-comment|/* collisions on csma interfaces */
-name|uint64_t
-name|if_ibytes
-decl_stmt|;
-comment|/* total number of octets received */
-name|uint64_t
-name|if_obytes
-decl_stmt|;
-comment|/* total number of octets sent */
-name|uint64_t
-name|if_imcasts
-decl_stmt|;
-comment|/* packets received via multicast */
-name|uint64_t
-name|if_omcasts
-decl_stmt|;
-comment|/* packets sent via multicast */
-name|uint64_t
-name|if_iqdrops
-decl_stmt|;
-comment|/* dropped on input */
-name|uint64_t
-name|if_oqdrops
-decl_stmt|;
-comment|/* dropped on output */
-name|uint64_t
-name|if_noproto
-decl_stmt|;
-comment|/* destined for unsupported protocol */
 comment|/* TSO fields for segment limits. If a field is zero below, there is no limit. */
 name|u_int
 name|if_hw_tsomaxsegcount
@@ -891,16 +845,6 @@ comment|/* 	 * Spare fields to be added before branching a stable branch, so 	 *
 block|}
 struct|;
 end_struct
-
-begin_include
-include|#
-directive|include
-file|<net/ifq.h>
-end_include
-
-begin_comment
-comment|/* XXXAO: temporary unconditional include */
-end_comment
 
 begin_comment
 comment|/* for compatibility with other BSDs */
@@ -3564,6 +3508,74 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
+begin_enum
+enum|enum
+name|poll_cmd
+block|{
+name|POLL_ONLY
+block|,
+name|POLL_AND_CHECK_STATUS
+block|}
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+name|int
+name|poll_handler_t
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|,
+name|enum
+name|poll_cmd
+name|cmd
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+name|int
+name|ether_poll_register
+parameter_list|(
+name|poll_handler_t
+modifier|*
+name|h
+parameter_list|,
+name|if_t
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ether_poll_deregister
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEVICE_POLLING */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -3571,6 +3583,16 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/ifq.h>
+end_include
+
+begin_comment
+comment|/* XXXAO: temporary unconditional include */
 end_comment
 
 begin_endif

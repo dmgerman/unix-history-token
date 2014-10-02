@@ -427,6 +427,61 @@ define|#
 directive|define
 name|ra_lacpreq
 value|ra_psc.rpsc_lacp
+name|int
+name|ra_opts
+decl_stmt|;
+comment|/* Option bitmap */
+define|#
+directive|define
+name|LAGG_OPT_NONE
+value|0x00
+define|#
+directive|define
+name|LAGG_OPT_USE_FLOWID
+value|0x01
+comment|/* use M_FLOWID */
+comment|/* Pseudo flags which are used in ra_opts but not stored into sc_opts. */
+define|#
+directive|define
+name|LAGG_OPT_FLOWIDSHIFT
+value|0x02
+comment|/* Set flowid */
+define|#
+directive|define
+name|LAGG_OPT_FLOWIDSHIFT_MASK
+value|0x1f
+comment|/* flowid is uint32_t */
+define|#
+directive|define
+name|LAGG_OPT_LACP_STRICT
+value|0x10
+comment|/* LACP strict mode */
+define|#
+directive|define
+name|LAGG_OPT_LACP_TXTEST
+value|0x20
+comment|/* LACP debug: txtest */
+define|#
+directive|define
+name|LAGG_OPT_LACP_RXTEST
+value|0x40
+comment|/* LACP debug: rxtest */
+name|u_int
+name|ra_count
+decl_stmt|;
+comment|/* number of ports */
+name|u_int
+name|ra_active
+decl_stmt|;
+comment|/* active port count */
+name|u_int
+name|ra_flapping
+decl_stmt|;
+comment|/* number of flapping */
+name|int
+name|ra_flowid_shift
+decl_stmt|;
+comment|/* shift the flowid */
 block|}
 struct|;
 end_struct
@@ -667,7 +722,7 @@ block|{
 name|uint64_t
 name|val
 index|[
-name|IFCOUNTER_LAST
+name|IFCOUNTERS
 index|]
 decl_stmt|;
 block|}
@@ -765,21 +820,9 @@ name|struct
 name|callout
 name|sc_callout
 decl_stmt|;
-name|struct
-name|sysctl_ctx_list
-name|ctx
+name|u_int
+name|sc_opts
 decl_stmt|;
-comment|/* sysctl variables */
-name|struct
-name|sysctl_oid
-modifier|*
-name|sc_oid
-decl_stmt|;
-comment|/* sysctl tree oid */
-name|int
-name|use_flowid
-decl_stmt|;
-comment|/* use M_FLOWID */
 name|int
 name|flowid_shift
 decl_stmt|;

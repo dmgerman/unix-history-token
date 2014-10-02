@@ -839,6 +839,9 @@ decl_stmt|;
 name|bus_size_t
 name|mem_bus_space_size
 decl_stmt|;
+name|uint32_t
+name|flush_reg
+decl_stmt|;
 name|struct
 name|device
 modifier|*
@@ -1102,6 +1105,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ixl_flush_osdep
+parameter_list|(
+name|struct
+name|i40e_osdep
+modifier|*
+name|osdep
+parameter_list|)
+block|{
+name|rd32_osdep
+argument_list|(
+name|osdep
+argument_list|,
+name|osdep
+operator|->
+name|flush_reg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -1161,7 +1188,7 @@ name|ixl_flush
 parameter_list|(
 name|a
 parameter_list|)
-value|(\    bus_space_read_4( ((struct i40e_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct i40e_osdep *)(a)->back)->mem_bus_space_handle, \                      I40E_GLGEN_STAT))
+value|ixl_flush_osdep((a)->back)
 end_define
 
 begin_endif

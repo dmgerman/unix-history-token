@@ -5240,6 +5240,14 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|osdep
+operator|.
+name|flush_reg
+operator|=
+name|I40E_VFGEN_RSTAT
+expr_stmt|;
+name|sc
+operator|->
 name|hw
 operator|.
 name|hw_addr
