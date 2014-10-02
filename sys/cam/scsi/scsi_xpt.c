@@ -8770,6 +8770,25 @@ name|next_target
 operator|=
 literal|0
 expr_stmt|;
+comment|/*  -- stop if CAM_QUIRK_NOLUNS is set. */
+block|}
+elseif|else
+if|if
+condition|(
+name|SCSI_QUIRK
+argument_list|(
+name|device
+argument_list|)
+operator|->
+name|quirks
+operator|&
+name|CAM_QUIRK_NOLUNS
+condition|)
+block|{
+name|next_target
+operator|=
+literal|1
+expr_stmt|;
 comment|/*  -- this LUN is connected and its SCSI version 			 *     allows more LUNs. */
 block|}
 elseif|else
