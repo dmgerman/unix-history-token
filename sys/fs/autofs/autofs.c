@@ -2121,7 +2121,7 @@ argument_list|,
 name|ar_next
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Is it safe? 		 */
+comment|/* 		 * Unlock the sc_lock, so that autofs_task() can complete. 		 */
 name|sx_xunlock
 argument_list|(
 operator|&
@@ -2152,19 +2152,19 @@ operator|->
 name|ar_task
 argument_list|)
 expr_stmt|;
+name|uma_zfree
+argument_list|(
+name|autofs_request_zone
+argument_list|,
+name|ar
+argument_list|)
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
 name|autofs_softc
 operator|->
 name|sc_lock
-argument_list|)
-expr_stmt|;
-name|uma_zfree
-argument_list|(
-name|autofs_request_zone
-argument_list|,
-name|ar
 argument_list|)
 expr_stmt|;
 block|}
