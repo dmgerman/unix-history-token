@@ -4497,7 +4497,7 @@ name|SID_ANSI_REV
 argument_list|(
 name|inq_buf
 argument_list|)
-operator|>
+operator|>=
 name|SCSI_REV_SPC2
 operator|&&
 operator|(
