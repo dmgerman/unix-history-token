@@ -8834,6 +8834,13 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+name|errmsg
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|nmount
@@ -12774,6 +12781,13 @@ name|f_mntfromname
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+name|errmsg
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 while|while
 condition|(
