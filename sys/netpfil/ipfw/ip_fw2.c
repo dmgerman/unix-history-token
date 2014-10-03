@@ -526,6 +526,12 @@ name|IPFW_TABLES_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINEAR_SKIPTO
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -552,6 +558,29 @@ name|jump_backwards
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|JUMP
+parameter_list|(
+name|ch
+parameter_list|,
+name|f
+parameter_list|,
+name|num
+parameter_list|,
+name|targ
+parameter_list|,
+name|back
+parameter_list|)
+value|jump_fast(ch, f, num, targ, back)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function_decl
 specifier|static
@@ -595,8 +624,13 @@ name|targ
 parameter_list|,
 name|back
 parameter_list|)
-value|jump_fast(ch, f, num, targ, back)
+value|jump_linear(ch, f, num, targ, back)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Each rule belongs to one of 32 different sets (0..31).  * The variable set_disable contains one bit per set.  * If the bit is set, all rules in the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted individually.  */
@@ -3784,6 +3818,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINEAR_SKIPTO
+end_ifndef
+
 begin_comment
 comment|/*  * Helper function to enable cached rule lookups using  * cached_id and cached_pos fields in ipfw rule.  */
 end_comment
@@ -3933,6 +3973,11 @@ return|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/*  * Helper function to enable real fast rule lookups.  */
 end_comment
@@ -4013,6 +4058,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -11559,11 +11609,16 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LINEAR_SKIPTO
 name|ipfw_init_skipto_cache
 argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* First set up some values that are compile time options */
 name|V_ipfw_vnet_ready
 operator|=
@@ -11732,11 +11787,16 @@ argument_list|,
 name|M_IPFW
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LINEAR_SKIPTO
 name|ipfw_destroy_skipto_cache
 argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|IPFW_WUNLOCK
 argument_list|(
 name|chain
