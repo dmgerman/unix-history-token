@@ -27000,6 +27000,16 @@ operator|)
 operator|!=
 literal|0x40
 operator|&&
+operator|(
+name|inst
+operator|.
+name|instruction
+operator|&
+literal|0xf0
+operator|)
+operator|!=
+literal|0x50
+operator|&&
 name|inst
 operator|.
 name|operands
