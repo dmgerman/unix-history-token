@@ -2081,7 +2081,7 @@ name|u_int
 operator|*
 operator|)
 name|data
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
