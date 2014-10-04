@@ -10277,6 +10277,11 @@ modifier|*
 name|zio_data_buf_cache
 index|[]
 decl_stmt|;
+specifier|extern
+name|kmem_cache_t
+modifier|*
+name|range_seg_cache
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -10402,6 +10407,11 @@ expr_stmt|;
 name|kmem_cache_reap_now
 argument_list|(
 name|hdr_cache
+argument_list|)
+expr_stmt|;
+name|kmem_cache_reap_now
+argument_list|(
+name|range_seg_cache
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ask the vmem areana to reclaim unused memory from its 	 * quantum caches. 	 */
