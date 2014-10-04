@@ -1825,7 +1825,10 @@ block|,
 name|Tag_ABI_FP_optimization_goals
 block|,
 comment|/* 32 is generic.  */
-block|}
+name|Tag_Virtualization_use
+operator|=
+literal|68
+block|, }
 expr_stmt|;
 end_expr_stmt
 
