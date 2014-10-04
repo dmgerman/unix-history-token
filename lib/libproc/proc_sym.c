@@ -2640,20 +2640,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|DPRINTFX
-argument_list|(
-literal|"ERROR: couldn't find object %s"
-argument_list|,
-name|object
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|ctf_open
