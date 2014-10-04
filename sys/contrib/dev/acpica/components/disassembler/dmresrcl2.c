@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -54,6 +54,10 @@ specifier|static
 name|void
 name|AcpiDmI2cSerialBusDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -72,6 +76,10 @@ specifier|static
 name|void
 name|AcpiDmSpiSerialBusDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -90,6 +98,10 @@ specifier|static
 name|void
 name|AcpiDmUartSerialBusDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -108,6 +120,10 @@ specifier|static
 name|void
 name|AcpiDmGpioCommon
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -340,7 +356,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGpioCommon  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode common parts of a GPIO Interrupt descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGpioCommon  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode common parts of a GPIO Interrupt descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -348,6 +364,10 @@ specifier|static
 name|void
 name|AcpiDmGpioCommon
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -356,9 +376,6 @@ name|UINT32
 name|Level
 parameter_list|)
 block|{
-name|UINT32
-name|PinCount
-decl_stmt|;
 name|UINT16
 modifier|*
 name|PinList
@@ -366,6 +383,15 @@ decl_stmt|;
 name|UINT8
 modifier|*
 name|VendorData
+decl_stmt|;
+name|char
+modifier|*
+name|DeviceName
+init|=
+name|NULL
+decl_stmt|;
+name|UINT32
+name|PinCount
 decl_stmt|;
 name|UINT32
 name|i
@@ -387,8 +413,8 @@ operator|.
 name|ResSourceOffset
 condition|)
 block|{
-name|AcpiUtPrintString
-argument_list|(
+name|DeviceName
+operator|=
 name|ACPI_ADD_PTR
 argument_list|(
 name|char
@@ -401,6 +427,10 @@ name|Gpio
 operator|.
 name|ResSourceOffset
 argument_list|)
+operator|,
+name|AcpiUtPrintString
+argument_list|(
+name|DeviceName
 argument_list|,
 name|ACPI_UINT16_MAX
 argument_list|)
@@ -620,11 +650,31 @@ argument_list|(
 literal|"}\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_KERNEL
+name|MpSaveGpioInfo
+argument_list|(
+name|Info
+operator|->
+name|MappingOp
+argument_list|,
+name|Resource
+argument_list|,
+name|PinCount
+argument_list|,
+name|PinList
+argument_list|,
+name|DeviceName
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGpioIntDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a GPIO Interrupt descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGpioIntDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a GPIO Interrupt descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -632,6 +682,10 @@ specifier|static
 name|void
 name|AcpiDmGpioIntDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -668,7 +722,7 @@ index|]
 argument_list|,
 name|AcpiGbl_LlDecode
 index|[
-name|ACPI_EXTRACT_1BIT_FLAG
+name|ACPI_EXTRACT_2BIT_FLAG
 argument_list|(
 name|Resource
 operator|->
@@ -750,6 +804,8 @@ expr_stmt|;
 comment|/* Dump the GpioInt/GpioIo common portion of the descriptor */
 name|AcpiDmGpioCommon
 argument_list|(
+name|Info
+argument_list|,
 name|Resource
 argument_list|,
 name|Level
@@ -759,7 +815,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGpioIoDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a GPIO I/O descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGpioIoDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a GPIO I/O descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -767,6 +823,10 @@ specifier|static
 name|void
 name|AcpiDmGpioIoDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -887,6 +947,8 @@ expr_stmt|;
 comment|/* Dump the GpioInt/GpioIo common portion of the descriptor */
 name|AcpiDmGpioCommon
 argument_list|(
+name|Info
+argument_list|,
 name|Resource
 argument_list|,
 name|Level
@@ -896,13 +958,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGpioDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a GpioInt/GpioIo GPIO Interrupt/IO descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmGpioDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a GpioInt/GpioIo GPIO Interrupt/IO descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmGpioDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -935,6 +1001,8 @@ name|AML_RESOURCE_GPIO_TYPE_INT
 case|:
 name|AcpiDmGpioIntDescriptor
 argument_list|(
+name|Info
+argument_list|,
 name|Resource
 argument_list|,
 name|Length
@@ -948,6 +1016,8 @@ name|AML_RESOURCE_GPIO_TYPE_IO
 case|:
 name|AcpiDmGpioIoDescriptor
 argument_list|(
+name|Info
+argument_list|,
 name|Resource
 argument_list|,
 name|Length
@@ -1102,7 +1172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmI2cSerialBusDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a I2C serial bus descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmI2cSerialBusDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a I2C serial bus descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1110,6 +1180,10 @@ specifier|static
 name|void
 name|AcpiDmI2cSerialBusDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1123,6 +1197,10 @@ parameter_list|)
 block|{
 name|UINT32
 name|ResourceSourceOffset
+decl_stmt|;
+name|char
+modifier|*
+name|DeviceName
 decl_stmt|;
 comment|/* SlaveAddress, SlaveMode, ConnectionSpeed, AddressingMode */
 name|AcpiDmIndent
@@ -1197,8 +1275,8 @@ name|CommonSerialBus
 operator|.
 name|TypeDataLength
 expr_stmt|;
-name|AcpiUtPrintString
-argument_list|(
+name|DeviceName
+operator|=
 name|ACPI_ADD_PTR
 argument_list|(
 name|char
@@ -1207,6 +1285,10 @@ name|Resource
 argument_list|,
 name|ResourceSourceOffset
 argument_list|)
+operator|,
+name|AcpiUtPrintString
+argument_list|(
+name|DeviceName
 argument_list|,
 name|ACPI_UINT16_MAX
 argument_list|)
@@ -1283,11 +1365,27 @@ argument_list|(
 literal|")\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_KERNEL
+name|MpSaveSerialInfo
+argument_list|(
+name|Info
+operator|->
+name|MappingOp
+argument_list|,
+name|Resource
+argument_list|,
+name|DeviceName
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmSpiSerialBusDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a SPI serial bus descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmSpiSerialBusDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a SPI serial bus descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1295,6 +1393,10 @@ specifier|static
 name|void
 name|AcpiDmSpiSerialBusDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1308,6 +1410,10 @@ parameter_list|)
 block|{
 name|UINT32
 name|ResourceSourceOffset
+decl_stmt|;
+name|char
+modifier|*
+name|DeviceName
 decl_stmt|;
 comment|/* DeviceSelection, DeviceSelectionPolarity, WireMode, DataBitLength */
 name|AcpiDmIndent
@@ -1439,8 +1545,8 @@ name|CommonSerialBus
 operator|.
 name|TypeDataLength
 expr_stmt|;
-name|AcpiUtPrintString
-argument_list|(
+name|DeviceName
+operator|=
 name|ACPI_ADD_PTR
 argument_list|(
 name|char
@@ -1449,6 +1555,10 @@ name|Resource
 argument_list|,
 name|ResourceSourceOffset
 argument_list|)
+operator|,
+name|AcpiUtPrintString
+argument_list|(
+name|DeviceName
 argument_list|,
 name|ACPI_UINT16_MAX
 argument_list|)
@@ -1525,11 +1635,27 @@ argument_list|(
 literal|")\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_KERNEL
+name|MpSaveSerialInfo
+argument_list|(
+name|Info
+operator|->
+name|MappingOp
+argument_list|,
+name|Resource
+argument_list|,
+name|DeviceName
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmUartSerialBusDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a UART serial bus descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmUartSerialBusDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a UART serial bus descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1537,6 +1663,10 @@ specifier|static
 name|void
 name|AcpiDmUartSerialBusDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1550,6 +1680,10 @@ parameter_list|)
 block|{
 name|UINT32
 name|ResourceSourceOffset
+decl_stmt|;
+name|char
+modifier|*
+name|DeviceName
 decl_stmt|;
 comment|/* ConnectionSpeed, BitsPerByte, StopBits */
 name|AcpiDmIndent
@@ -1692,8 +1826,8 @@ name|CommonSerialBus
 operator|.
 name|TypeDataLength
 expr_stmt|;
-name|AcpiUtPrintString
-argument_list|(
+name|DeviceName
+operator|=
 name|ACPI_ADD_PTR
 argument_list|(
 name|char
@@ -1702,6 +1836,10 @@ name|Resource
 argument_list|,
 name|ResourceSourceOffset
 argument_list|)
+operator|,
+name|AcpiUtPrintString
+argument_list|(
+name|DeviceName
 argument_list|,
 name|ACPI_UINT16_MAX
 argument_list|)
@@ -1778,17 +1916,37 @@ argument_list|(
 literal|")\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_KERNEL
+name|MpSaveSerialInfo
+argument_list|(
+name|Info
+operator|->
+name|MappingOp
+argument_list|,
+name|Resource
+argument_list|,
+name|DeviceName
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmSerialBusDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a I2C/SPI/UART serial bus descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmSerialBusDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a I2C/SPI/UART serial bus descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmSerialBusDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -1809,6 +1967,8 @@ operator|.
 name|Type
 index|]
 operator|(
+name|Info
+operator|,
 name|Resource
 operator|,
 name|Length

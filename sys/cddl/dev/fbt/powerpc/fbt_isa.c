@@ -600,7 +600,7 @@ name|name
 argument_list|,
 name|FBT_ENTRY
 argument_list|,
-literal|3
+literal|7
 argument_list|,
 name|fbt
 argument_list|)
@@ -866,7 +866,7 @@ name|name
 argument_list|,
 name|FBT_RETURN
 argument_list|,
-literal|5
+literal|7
 argument_list|,
 name|fbt
 argument_list|)

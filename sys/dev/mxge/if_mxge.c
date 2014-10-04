@@ -1852,7 +1852,7 @@ operator|!
 name|base
 condition|)
 return|return;
-comment|/* XXXX 	   Test below is commented because it is believed that doing 	   config read/write beyond 0xff will access the config space 	   for the next larger function.  Uncomment this and remove  	   the hacky pmap_mapdev() way of accessing config space when 	   FreeBSD grows support for extended pcie config space access 	*/
+comment|/* XXXX 	   Test below is commented because it is believed that doing 	   config read/write beyond 0xff will access the config space 	   for the next larger function.  Uncomment this and remove 	   the hacky pmap_mapdev() way of accessing config space when 	   FreeBSD grows support for extended pcie config space access 	*/
 if|#
 directive|if
 literal|0
@@ -2615,7 +2615,7 @@ literal|2048
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * load the optimized firmware (which assumes aligned PCIe 	 * completions) in order to see if it works on this host. 	 */
+comment|/* 	 * load the optimized firmware (which assumes aligned PCIe 	 * completions) in order to see if it works on this host. 	 */
 name|sc
 operator|->
 name|fw_name
@@ -2642,13 +2642,13 @@ return|return
 name|status
 return|;
 block|}
-comment|/*  	 * Enable ECRC if possible 	 */
+comment|/* 	 * Enable ECRC if possible 	 */
 name|mxge_enable_nvidia_ecrc
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Run a DMA test which watches for unaligned completions and 	 * aborts on the first one seen.  Not required on Z8ES or newer. 	 */
+comment|/* 	 * Run a DMA test which watches for unaligned completions and 	 * aborts on the first one seen.  Not required on Z8ES or newer. 	 */
 if|if
 condition|(
 name|pci_get_revid
@@ -4375,7 +4375,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/*  	 * check to see if adopted firmware has bug where adopting 	 * it will cause broadcasts to be filtered unless the NIC 	 * is kept in ALLMULTI mode 	 */
+comment|/* 	 * check to see if adopted firmware has bug where adopting 	 * it will cause broadcasts to be filtered unless the NIC 	 * is kept in ALLMULTI mode 	 */
 if|if
 condition|(
 name|sc
@@ -5580,7 +5580,7 @@ operator|&
 name|cmd
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Even though we already know how many slices are supported 	 * via mxge_slice_probe(), MXGEFW_CMD_GET_MAX_RSS_QUEUES 	 * has magic side effects, and must be called after a reset. 	 * It must be called prior to calling any RSS related cmds, 	 * including assigning an interrupt queue for anything but 	 * slice 0.  It must also be called *after* 	 * MXGEFW_CMD_SET_INTRQ_SIZE, since the intrq size is used by 	 * the firmware to compute offsets. 	 */
+comment|/* 	 * Even though we already know how many slices are supported 	 * via mxge_slice_probe(), MXGEFW_CMD_GET_MAX_RSS_QUEUES 	 * has magic side effects, and must be called after a reset. 	 * It must be called prior to calling any RSS related cmds, 	 * including assigning an interrupt queue for anything but 	 * slice 0.  It must also be called *after* 	 * MXGEFW_CMD_SET_INTRQ_SIZE, since the intrq size is used by 	 * the firmware to compute offsets. 	 */
 if|if
 condition|(
 name|sc
@@ -5623,7 +5623,7 @@ return|return
 name|status
 return|;
 block|}
-comment|/*  		 * MXGEFW_CMD_ENABLE_RSS_QUEUES must be called prior 		 * to setting up the interrupt queue DMA 		 */
+comment|/* 		 * MXGEFW_CMD_ENABLE_RSS_QUEUES must be called prior 		 * to setting up the interrupt queue DMA 		 */
 name|cmd
 operator|.
 name|data0
@@ -7072,7 +7072,7 @@ argument_list|,
 literal|"Wait for IRQ line to go low in ihandler"
 argument_list|)
 expr_stmt|;
-comment|/* stats block from firmware is in network byte order.   	   Need to swap it */
+comment|/* stats block from firmware is in network byte order. 	   Need to swap it */
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -7935,7 +7935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* copy an array of mcp_kreq_ether_send_t's to the mcp.  Copy     backwards one at a time and handle ring wraps */
+comment|/* copy an array of mcp_kreq_ether_send_t's to the mcp.  Copy    backwards one at a time and handle ring wraps */
 end_comment
 
 begin_function
@@ -8020,7 +8020,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * copy an array of mcp_kreq_ether_send_t's to the mcp.  Copy  * at most 32 bytes at a time, so as to avoid involving the software  * pio handler in the nic.   We re-write the first segment's flags  * to mark them valid only after writing the entire chain   */
+comment|/*  * copy an array of mcp_kreq_ether_send_t's to the mcp.  Copy  * at most 32 bytes at a time, so as to avoid involving the software  * pio handler in the nic.   We re-write the first segment's flags  * to mark them valid only after writing the entire chain  */
 end_comment
 
 begin_function
@@ -8174,7 +8174,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* submit all but the first request, and ensure                     that it is submitted below */
+comment|/* submit all but the first request, and ensure 		   that it is submitted below */
 name|mxge_submit_req_backwards
 argument_list|(
 name|tx
@@ -9744,7 +9744,7 @@ name|MXGE_NEW_VLAN_API
 end_ifdef
 
 begin_comment
-comment|/*   * We reproduce the software vlan tag insertion from  * net/if_vlan.c:vlan_start() here so that we can advertise "hardware"  * vlan tag insertion. We need to advertise this in order to have the  * vlan interface respect our csum offload flags.  */
+comment|/*  * We reproduce the software vlan tag insertion from  * net/if_vlan.c:vlan_start() here so that we can advertise "hardware"  * vlan tag insertion. We need to advertise this in order to have the  * vlan interface respect our csum offload flags.  */
 end_comment
 
 begin_function
@@ -12410,7 +12410,7 @@ comment|/* INET6 */
 end_comment
 
 begin_comment
-comment|/*   *  Myri10GE hardware checksums are not valid if the sender  *  padded the frame with non-zero padding.  This is because  *  the firmware just does a simple 16-bit 1s complement  *  checksum across the entire frame, excluding the first 14  *  bytes.  It is best to simply to check the checksum and  *  tell the stack about it only if the checksum is good  */
+comment|/*  *  Myri10GE hardware checksums are not valid if the sender  *  padded the frame with non-zero padding.  This is because  *  the firmware just does a simple 16-bit 1s complement  *  checksum across the entire frame, excluding the first 14  *  bytes.  It is best to simply to check the checksum and  *  tell the stack about it only if the checksum is good  */
 end_comment
 
 begin_function
@@ -12806,7 +12806,7 @@ operator|&
 literal|0xFFFF
 operator|)
 expr_stmt|;
-comment|/* restore checksum to network byte order;  	   later consumers expect this */
+comment|/* restore checksum to network byte order; 	   later consumers expect this */
 operator|*
 name|csum
 operator|=
@@ -13039,10 +13039,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* drop the frame -- the old mbuf is re-cycled */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -13402,10 +13406,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* drop the frame -- the old mbuf is re-cycled */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -14085,7 +14093,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* If we have space, clear IFF_OACTIVE to tell the stack that            its OK to send packets */
+comment|/* If we have space, clear IFF_OACTIVE to tell the stack that 	   its OK to send packets */
 ifdef|#
 directive|ifdef
 name|IFNET_BUF_RING
@@ -14536,7 +14544,7 @@ argument_list|,
 name|IFM_AUTO
 argument_list|)
 expr_stmt|;
-comment|/*  	 * parse the product code to deterimine the interface type 	 * (CX4, XFP, Quad Ribbon Fiber) by looking at the character 	 * after the 3rd dash in the driver's cached copy of the 	 * EEPROM's product code string. 	 */
+comment|/* 	 * parse the product code to deterimine the interface type 	 * (CX4, XFP, Quad Ribbon Fiber) by looking at the character 	 * after the 3rd dash in the driver's cached copy of the 	 * EEPROM's product code string. 	 */
 name|ptr
 operator|=
 name|sc
@@ -14729,7 +14737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine the media type for a NIC.  Some XFPs will identify  * themselves only when their link is up, so this is initiated via a  * link up interrupt.  However, this can potentially take up to  * several milliseconds, so it is run via the watchdog routine, rather  * than in the interrupt handler itself.   */
+comment|/*  * Determine the media type for a NIC.  Some XFPs will identify  * themselves only when their link is up, so this is initiated via a  * link up interrupt.  However, this can potentially take up to  * several milliseconds, so it is run via the watchdog routine, rather  * than in the interrupt handler itself.  */
 end_comment
 
 begin_function
@@ -18599,7 +18607,7 @@ operator|&
 name|cmd
 argument_list|)
 expr_stmt|;
-comment|/* error is only meaningful if we're trying to set  	   MXGEFW_CMD_ALWAYS_USE_N_BIG_BUFFERS> 1 */
+comment|/* error is only meaningful if we're trying to set 	   MXGEFW_CMD_ALWAYS_USE_N_BIG_BUFFERS> 1 */
 if|if
 condition|(
 name|err
@@ -19541,7 +19549,7 @@ argument_list|,
 literal|"Watchdog reset!\n"
 argument_list|)
 expr_stmt|;
-comment|/*  	 * check to see if the NIC rebooted.  If it did, then all of 	 * PCI config space has been reset, and things like the 	 * busmaster bit will be zero.  If this is the case, then we 	 * must restore PCI config space before the NIC can be used 	 * again 	 */
+comment|/* 	 * check to see if the NIC rebooted.  If it did, then all of 	 * PCI config space has been reset, and things like the 	 * busmaster bit will be zero.  If this is the case, then we 	 * must restore PCI config space before the NIC can be used 	 * again 	 */
 name|cmd
 operator|=
 name|pci_read_config
@@ -19562,7 +19570,7 @@ operator|==
 literal|0xffff
 condition|)
 block|{
-comment|/*  		 * maybe the watchdog caught the NIC rebooting; wait 		 * up to 100ms for it to finish.  If it does not come 		 * back, then give up  		 */
+comment|/* 		 * maybe the watchdog caught the NIC rebooting; wait 		 * up to 100ms for it to finish.  If it does not come 		 * back, then give up 		 */
 name|DELAY
 argument_list|(
 literal|1000
@@ -19646,7 +19654,7 @@ condition|(
 name|running
 condition|)
 block|{
-comment|/*  			 * quiesce NIC so that TX routines will not try to 			 * xmit after restoration of BAR 			 */
+comment|/* 			 * quiesce NIC so that TX routines will not try to 			 * xmit after restoration of BAR 			 */
 comment|/* Mark the link as down */
 if|if
 condition|(
@@ -20268,216 +20276,273 @@ end_function
 
 begin_function
 specifier|static
-name|u_long
-name|mxge_update_stats
+name|uint64_t
+name|mxge_get_counter
 parameter_list|(
-name|mxge_softc_t
+name|struct
+name|ifnet
 modifier|*
-name|sc
+name|ifp
+parameter_list|,
+name|ift_counter
+name|cnt
 parameter_list|)
 block|{
 name|struct
-name|mxge_slice_state
+name|mxge_softc
 modifier|*
-name|ss
+name|sc
 decl_stmt|;
-name|u_long
-name|pkts
-init|=
-literal|0
+name|uint64_t
+name|rv
 decl_stmt|;
-name|u_long
-name|ipackets
-init|=
-literal|0
-decl_stmt|;
-name|u_long
-name|opackets
-init|=
-literal|0
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IFNET_BUF_RING
-name|u_long
-name|obytes
-init|=
-literal|0
-decl_stmt|;
-name|u_long
-name|omcasts
-init|=
-literal|0
-decl_stmt|;
-name|u_long
-name|odrops
-init|=
-literal|0
-decl_stmt|;
-endif|#
-directive|endif
-name|u_long
-name|oerrors
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|slice
-decl_stmt|;
-for|for
-control|(
-name|slice
+name|sc
+operator|=
+name|if_getsoftc
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|rv
 operator|=
 literal|0
+expr_stmt|;
+switch|switch
+condition|(
+name|cnt
+condition|)
+block|{
+case|case
+name|IFCOUNTER_IPACKETS
+case|:
+for|for
+control|(
+name|int
+name|s
+init|=
+literal|0
 init|;
-name|slice
+name|s
 operator|<
 name|sc
 operator|->
 name|num_slices
 condition|;
-name|slice
+name|s
 operator|++
 control|)
-block|{
-name|ss
-operator|=
-operator|&
+name|rv
+operator|+=
 name|sc
 operator|->
 name|ss
 index|[
-name|slice
+name|s
 index|]
-expr_stmt|;
-name|ipackets
-operator|+=
-name|ss
-operator|->
+operator|.
 name|ipackets
 expr_stmt|;
-name|opackets
-operator|+=
-name|ss
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+case|case
+name|IFCOUNTER_OPACKETS
+case|:
+for|for
+control|(
+name|int
+name|s
+init|=
+literal|0
+init|;
+name|s
+operator|<
+name|sc
 operator|->
+name|num_slices
+condition|;
+name|s
+operator|++
+control|)
+name|rv
+operator|+=
+name|sc
+operator|->
+name|ss
+index|[
+name|s
+index|]
+operator|.
 name|opackets
 expr_stmt|;
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+case|case
+name|IFCOUNTER_OERRORS
+case|:
+for|for
+control|(
+name|int
+name|s
+init|=
+literal|0
+init|;
+name|s
+operator|<
+name|sc
+operator|->
+name|num_slices
+condition|;
+name|s
+operator|++
+control|)
+name|rv
+operator|+=
+name|sc
+operator|->
+name|ss
+index|[
+name|s
+index|]
+operator|.
+name|oerrors
+expr_stmt|;
+return|return
+operator|(
+name|rv
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|IFNET_BUF_RING
-name|obytes
-operator|+=
-name|ss
+case|case
+name|IFCOUNTER_OBYTES
+case|:
+for|for
+control|(
+name|int
+name|s
+init|=
+literal|0
+init|;
+name|s
+operator|<
+name|sc
 operator|->
+name|num_slices
+condition|;
+name|s
+operator|++
+control|)
+name|rv
+operator|+=
+name|sc
+operator|->
+name|ss
+index|[
+name|s
+index|]
+operator|.
 name|obytes
 expr_stmt|;
-name|omcasts
-operator|+=
-name|ss
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+case|case
+name|IFCOUNTER_OMCASTS
+case|:
+for|for
+control|(
+name|int
+name|s
+init|=
+literal|0
+init|;
+name|s
+operator|<
+name|sc
 operator|->
+name|num_slices
+condition|;
+name|s
+operator|++
+control|)
+name|rv
+operator|+=
+name|sc
+operator|->
+name|ss
+index|[
+name|s
+index|]
+operator|.
 name|omcasts
 expr_stmt|;
-name|odrops
-operator|+=
-name|ss
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+case|case
+name|IFCOUNTER_OQDROPS
+case|:
+for|for
+control|(
+name|int
+name|s
+init|=
+literal|0
+init|;
+name|s
+operator|<
+name|sc
 operator|->
+name|num_slices
+condition|;
+name|s
+operator|++
+control|)
+name|rv
+operator|+=
+name|sc
+operator|->
+name|ss
+index|[
+name|s
+index|]
+operator|.
 name|tx
 operator|.
 name|br
 operator|->
 name|br_drops
 expr_stmt|;
-endif|#
-directive|endif
-name|oerrors
-operator|+=
-name|ss
-operator|->
-name|oerrors
-expr_stmt|;
-block|}
-name|pkts
-operator|=
-operator|(
-name|ipackets
-operator|-
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_ipackets
-operator|)
-expr_stmt|;
-name|pkts
-operator|+=
-operator|(
-name|opackets
-operator|-
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_opackets
-operator|)
-expr_stmt|;
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_ipackets
-operator|=
-name|ipackets
-expr_stmt|;
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_opackets
-operator|=
-name|opackets
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IFNET_BUF_RING
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_obytes
-operator|=
-name|obytes
-expr_stmt|;
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_omcasts
-operator|=
-name|omcasts
-expr_stmt|;
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_drops
-operator|=
-name|odrops
-expr_stmt|;
-endif|#
-directive|endif
-name|sc
-operator|->
-name|ifp
-operator|->
-name|if_oerrors
-operator|=
-name|oerrors
-expr_stmt|;
 return|return
-name|pkts
+operator|(
+name|rv
+operator|)
 return|;
+endif|#
+directive|endif
+default|default:
+return|return
+operator|(
+name|if_get_counter_default
+argument_list|(
+name|ifp
+argument_list|,
+name|cnt
+argument_list|)
+operator|)
+return|;
+block|}
 block|}
 end_function
 
@@ -20534,14 +20599,6 @@ condition|(
 name|running
 condition|)
 block|{
-comment|/* aggregate stats from different slices */
-name|pkts
-operator|=
-name|mxge_update_stats
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -22191,7 +22248,7 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-comment|/*  		 * allocate the per-slice firmware stats; stats 		 * (including tx) are used used only on the first 		 * slice for now 		 */
+comment|/* 		 * allocate the per-slice firmware stats; stats 		 * (including tx) are used used only on the first 		 * slice for now 		 */
 ifndef|#
 directive|ifndef
 name|IFNET_BUF_RING
@@ -22386,7 +22443,7 @@ name|num_slices
 operator|=
 literal|1
 expr_stmt|;
-comment|/*  	 *  don't enable multiple slices if they are not enabled, 	 *  or if this is not an SMP system  	 */
+comment|/* 	 *  don't enable multiple slices if they are not enabled, 	 *  or if this is not an SMP system 	 */
 if|if
 condition|(
 name|mxge_max_slices
@@ -24955,6 +25012,12 @@ operator|->
 name|if_start
 operator|=
 name|mxge_start
+expr_stmt|;
+name|ifp
+operator|->
+name|if_get_counter
+operator|=
+name|mxge_get_counter
 expr_stmt|;
 comment|/* Initialise the ifmedia structure */
 name|ifmedia_init

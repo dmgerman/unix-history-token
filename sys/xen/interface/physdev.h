@@ -426,6 +426,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAP_PIRQ_TYPE_MULTI_MSI
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
 name|PHYSDEVOP_map_pirq
 value|13
 end_define

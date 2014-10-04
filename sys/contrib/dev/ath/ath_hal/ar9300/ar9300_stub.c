@@ -67,15 +67,7 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
-name|ath_hal_printf
-argument_list|(
-name|ah
-argument_list|,
-literal|"%s: setting stub functions\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
+comment|//	ath_hal_printf(ah, "%s: setting stub functions\n", __func__);
 name|ah
 operator|->
 name|ah_getRateTable

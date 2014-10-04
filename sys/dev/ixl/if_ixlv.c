@@ -3519,6 +3519,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|!
@@ -3537,6 +3540,8 @@ argument_list|,
 name|ifa
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|error
@@ -5235,6 +5240,14 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|osdep
+operator|.
+name|flush_reg
+operator|=
+name|I40E_VFGEN_RSTAT
+expr_stmt|;
+name|sc
+operator|->
 name|hw
 operator|.
 name|hw_addr
@@ -6288,6 +6301,20 @@ name|if_ioctl
 operator|=
 name|ixlv_ioctl
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+name|if_setgetcounterfn
+argument_list|(
+name|ifp
+argument_list|,
+name|ixl_get_counter
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_transmit
@@ -6748,7 +6775,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i40e_allocate_dma
+name|i40e_allocate_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -6759,6 +6786,8 @@ operator|&
 name|txr
 operator|->
 name|dma
+argument_list|,
+name|i40e_mem_reserved
 argument_list|,
 name|tsize
 argument_list|,
@@ -6962,7 +6991,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i40e_allocate_dma
+name|i40e_allocate_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -6973,6 +7002,8 @@ operator|&
 name|rxr
 operator|->
 name|dma
+argument_list|,
+name|i40e_mem_reserved
 argument_list|,
 name|rsize
 argument_list|,
@@ -7112,7 +7143,7 @@ name|rxr
 operator|->
 name|base
 condition|)
-name|i40e_free_dma
+name|i40e_free_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -7131,7 +7162,7 @@ name|txr
 operator|->
 name|base
 condition|)
-name|i40e_free_dma
+name|i40e_free_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -10564,7 +10595,7 @@ name|txr
 operator|->
 name|base
 condition|)
-name|i40e_free_dma
+name|i40e_free_dma_mem
 argument_list|(
 operator|&
 name|sc
@@ -10616,7 +10647,7 @@ name|rxr
 operator|->
 name|base
 condition|)
-name|i40e_free_dma
+name|i40e_free_dma_mem
 argument_list|(
 operator|&
 name|sc

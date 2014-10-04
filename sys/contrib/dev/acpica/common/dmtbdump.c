@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -913,7 +913,7 @@ decl_stmt|;
 name|UINT8
 name|Type
 decl_stmt|;
-comment|/* No main table, only sub-tables */
+comment|/* No main table, only subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -934,7 +934,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|Status
 operator|=
 name|AcpiDmDumpTable
@@ -1162,7 +1162,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown ASF sub-table type 0x%X\n"
+literal|"\n**** Unknown ASF subtable type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -1361,7 +1361,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 if|if
 condition|(
 operator|!
@@ -1467,7 +1467,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -1522,7 +1522,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -1603,7 +1603,7 @@ name|UINT32
 name|InfoLength
 decl_stmt|;
 comment|/* The main table only contains the ACPI header, thus already handled */
-comment|/* Sub-tables (Resource Groups) */
+comment|/* Subtables (Resource Groups) */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -1848,7 +1848,7 @@ name|Length
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -1946,7 +1946,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -2207,6 +2207,13 @@ block|{
 return|return;
 block|}
 comment|/* Dump the OemData (optional) */
+if|if
+condition|(
+name|SubTable
+operator|->
+name|OemDataOffset
+condition|)
+block|{
 name|AcpiDmDumpBuffer
 argument_list|(
 name|SubTable
@@ -2228,7 +2235,8 @@ argument_list|,
 literal|"OEM Data"
 argument_list|)
 expr_stmt|;
-comment|/* Point to next sub-table */
+block|}
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -2331,7 +2339,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -2352,7 +2360,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -2428,7 +2436,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_DMAR_TYPE_ATSR
+name|ACPI_DMAR_TYPE_ROOT_ATS
 case|:
 name|InfoTable
 operator|=
@@ -2443,7 +2451,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_DMAR_HARDWARE_AFFINITY
+name|ACPI_DMAR_TYPE_HARDWARE_AFFINITY
 case|:
 name|InfoTable
 operator|=
@@ -2457,10 +2465,25 @@ name|ACPI_DMAR_RHSA
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_DMAR_TYPE_NAMESPACE
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoDmar4
+expr_stmt|;
+name|ScopeOffset
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_DMAR_ANDD
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown DMAR sub-table type 0x%X\n\n"
+literal|"\n**** Unknown DMAR subtable type 0x%X\n\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -2496,7 +2519,31 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Dump the device scope entries (if any) */
+comment|/*          * Dump the optional device scope entries          */
+if|if
+condition|(
+operator|(
+name|SubTable
+operator|->
+name|Type
+operator|==
+name|ACPI_DMAR_TYPE_HARDWARE_AFFINITY
+operator|)
+operator|||
+operator|(
+name|SubTable
+operator|->
+name|Type
+operator|==
+name|ACPI_DMAR_TYPE_NAMESPACE
+operator|)
+condition|)
+block|{
+comment|/* These types do not support device scopes */
+goto|goto
+name|NextSubtable
+goto|;
+block|}
 name|ScopeTable
 operator|=
 name|ACPI_ADD_PTR
@@ -2654,7 +2701,9 @@ name|Length
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Point to next sub-table */
+name|NextSubtable
+label|:
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -2739,7 +2788,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -2793,7 +2842,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table (each subtable is of fixed length) */
+comment|/* Point to next subtable (each subtable is of fixed length) */
 name|Offset
 operator|+=
 sizeof|sizeof
@@ -2880,7 +2929,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -2934,7 +2983,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table (each subtable is of fixed length) */
+comment|/* Point to next subtable (each subtable is of fixed length) */
 name|Offset
 operator|+=
 sizeof|sizeof
@@ -3000,7 +3049,7 @@ modifier|*
 name|InfoTable
 decl_stmt|;
 comment|/* There is no main table (other than the standard ACPI header) */
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -3021,7 +3070,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -3080,7 +3129,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown FPDT sub-table type 0x%X\n\n"
+literal|"\n**** Unknown FPDT subtable type 0x%X\n\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -3136,7 +3185,7 @@ return|return;
 block|}
 name|NextSubTable
 label|:
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -3154,6 +3203,329 @@ argument_list|,
 name|SubTable
 operator|->
 name|Length
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpGtdt  *  * PARAMETERS:  Table               - A GTDT table  *  * RETURN:      None  *  * DESCRIPTION: Format the contents of a GTDT. This table type consists  *              of an open-ended number of subtables.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDmDumpGtdt
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_GTDT_HEADER
+modifier|*
+name|SubTable
+decl_stmt|;
+name|UINT32
+name|Length
+init|=
+name|Table
+operator|->
+name|Length
+decl_stmt|;
+name|UINT32
+name|Offset
+init|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_GTDT
+argument_list|)
+decl_stmt|;
+name|ACPI_DMTABLE_INFO
+modifier|*
+name|InfoTable
+decl_stmt|;
+name|UINT32
+name|SubTableLength
+decl_stmt|;
+name|UINT32
+name|GtCount
+decl_stmt|;
+name|ACPI_GTDT_TIMER_ENTRY
+modifier|*
+name|GtxTable
+decl_stmt|;
+comment|/* Main table */
+name|Status
+operator|=
+name|AcpiDmDumpTable
+argument_list|(
+name|Length
+argument_list|,
+literal|0
+argument_list|,
+name|Table
+argument_list|,
+literal|0
+argument_list|,
+name|AcpiDmTableInfoGtdt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Subtables */
+name|SubTable
+operator|=
+name|ACPI_ADD_PTR
+argument_list|(
+name|ACPI_GTDT_HEADER
+argument_list|,
+name|Table
+argument_list|,
+name|Offset
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|Offset
+operator|<
+name|Table
+operator|->
+name|Length
+condition|)
+block|{
+comment|/* Common subtable header */
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiDmDumpTable
+argument_list|(
+name|Length
+argument_list|,
+name|Offset
+argument_list|,
+name|SubTable
+argument_list|,
+name|SubTable
+operator|->
+name|Length
+argument_list|,
+name|AcpiDmTableInfoGtdtHdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+name|GtCount
+operator|=
+literal|0
+expr_stmt|;
+switch|switch
+condition|(
+name|SubTable
+operator|->
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_GTDT_TYPE_TIMER_BLOCK
+case|:
+name|SubTableLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_GTDT_TIMER_BLOCK
+argument_list|)
+expr_stmt|;
+name|GtCount
+operator|=
+operator|(
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_GTDT_TIMER_BLOCK
+argument_list|,
+name|SubTable
+argument_list|)
+operator|)
+operator|->
+name|TimerCount
+expr_stmt|;
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoGtdt0
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_GTDT_TYPE_WATCHDOG
+case|:
+name|SubTableLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_GTDT_WATCHDOG
+argument_list|)
+expr_stmt|;
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoGtdt1
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Cannot continue on unknown type - no length */
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n**** Unknown GTDT subtable type 0x%X\n"
+argument_list|,
+name|SubTable
+operator|->
+name|Type
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|Status
+operator|=
+name|AcpiDmDumpTable
+argument_list|(
+name|Length
+argument_list|,
+name|Offset
+argument_list|,
+name|SubTable
+argument_list|,
+name|SubTable
+operator|->
+name|Length
+argument_list|,
+name|InfoTable
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Point to end of current subtable (each subtable above is of fixed length) */
+name|Offset
+operator|+=
+name|SubTableLength
+expr_stmt|;
+comment|/* If there are any Gt Timer Blocks from above, dump them now */
+if|if
+condition|(
+name|GtCount
+condition|)
+block|{
+name|GtxTable
+operator|=
+name|ACPI_ADD_PTR
+argument_list|(
+name|ACPI_GTDT_TIMER_ENTRY
+argument_list|,
+name|SubTable
+argument_list|,
+name|SubTableLength
+argument_list|)
+expr_stmt|;
+name|SubTableLength
+operator|+=
+name|GtCount
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ACPI_GTDT_TIMER_ENTRY
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|GtCount
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiDmDumpTable
+argument_list|(
+name|Length
+argument_list|,
+name|Offset
+argument_list|,
+name|GtxTable
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_GTDT_TIMER_ENTRY
+argument_list|)
+argument_list|,
+name|AcpiDmTableInfoGtdt0a
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+name|Offset
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|ACPI_GTDT_TIMER_ENTRY
+argument_list|)
+expr_stmt|;
+name|GtxTable
+operator|++
+expr_stmt|;
+name|GtCount
+operator|--
+expr_stmt|;
+block|}
+block|}
+comment|/* Point to next subtable */
+name|SubTable
+operator|=
+name|ACPI_ADD_PTR
+argument_list|(
+name|ACPI_GTDT_HEADER
+argument_list|,
+name|SubTable
+argument_list|,
+name|SubTableLength
 argument_list|)
 expr_stmt|;
 block|}
@@ -3235,7 +3607,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -3402,7 +3774,7 @@ default|default:
 comment|/* Cannot continue on unknown type - no length */
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown HEST sub-table type 0x%X\n"
+literal|"\n**** Unknown HEST subtable type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -3525,7 +3897,7 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -3632,7 +4004,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -3653,7 +4025,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -3720,7 +4092,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown IVRS sub-table type 0x%X\n"
+literal|"\n**** Unknown IVRS subtable type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -3967,7 +4339,7 @@ block|}
 block|}
 name|NextSubTable
 label|:
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -3985,6 +4357,198 @@ argument_list|,
 name|SubTable
 operator|->
 name|Length
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpLpit  *  * PARAMETERS:  Table               - A LPIT table  *  * RETURN:      None  *  * DESCRIPTION: Format the contents of a LPIT. This table type consists  *              of an open-ended number of subtables. Note: There are no  *              entries in the main table. An LPIT consists of the table  *              header and then subtables only.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDmDumpLpit
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_LPIT_HEADER
+modifier|*
+name|SubTable
+decl_stmt|;
+name|UINT32
+name|Length
+init|=
+name|Table
+operator|->
+name|Length
+decl_stmt|;
+name|UINT32
+name|Offset
+init|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_LPIT
+argument_list|)
+decl_stmt|;
+name|ACPI_DMTABLE_INFO
+modifier|*
+name|InfoTable
+decl_stmt|;
+name|UINT32
+name|SubTableLength
+decl_stmt|;
+comment|/* Subtables */
+name|SubTable
+operator|=
+name|ACPI_ADD_PTR
+argument_list|(
+name|ACPI_LPIT_HEADER
+argument_list|,
+name|Table
+argument_list|,
+name|Offset
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|Offset
+operator|<
+name|Table
+operator|->
+name|Length
+condition|)
+block|{
+comment|/* Common subtable header */
+name|Status
+operator|=
+name|AcpiDmDumpTable
+argument_list|(
+name|Length
+argument_list|,
+name|Offset
+argument_list|,
+name|SubTable
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_LPIT_HEADER
+argument_list|)
+argument_list|,
+name|AcpiDmTableInfoLpitHdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+switch|switch
+condition|(
+name|SubTable
+operator|->
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_LPIT_TYPE_NATIVE_CSTATE
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoLpit0
+expr_stmt|;
+name|SubTableLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_LPIT_NATIVE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_LPIT_TYPE_SIMPLE_IO
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoLpit1
+expr_stmt|;
+name|SubTableLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_LPIT_IO
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Cannot continue on unknown type - no length */
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n**** Unknown LPIT subtable type 0x%X\n"
+argument_list|,
+name|SubTable
+operator|->
+name|Type
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|Status
+operator|=
+name|AcpiDmDumpTable
+argument_list|(
+name|Length
+argument_list|,
+name|Offset
+argument_list|,
+name|SubTable
+argument_list|,
+name|SubTableLength
+argument_list|,
+name|InfoTable
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* Point to next subtable */
+name|Offset
+operator|+=
+name|SubTableLength
+expr_stmt|;
+name|SubTable
+operator|=
+name|ACPI_ADD_PTR
+argument_list|(
+name|ACPI_LPIT_HEADER
+argument_list|,
+name|SubTable
+argument_list|,
+name|SubTableLength
 argument_list|)
 expr_stmt|;
 block|}
@@ -4056,7 +4620,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -4077,7 +4641,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -4221,10 +4785,26 @@ operator|=
 name|AcpiDmTableInfoMadt12
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_MADT_TYPE_GENERIC_MSI_FRAME
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoMadt13
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_MADT_TYPE_GENERIC_REDISTRIBUTOR
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoMadt14
+expr_stmt|;
+break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown MADT sub-table type 0x%X\n\n"
+literal|"\n**** Unknown MADT subtable type 0x%X\n\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -4280,7 +4860,7 @@ return|return;
 block|}
 name|NextSubTable
 label|:
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -4360,7 +4940,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -4450,7 +5030,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table (each subtable is of fixed length) */
+comment|/* Point to next subtable (each subtable is of fixed length) */
 name|Offset
 operator|+=
 sizeof|sizeof
@@ -5024,7 +5604,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -5045,7 +5625,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -5081,7 +5661,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 sizeof|sizeof
@@ -5163,7 +5743,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -5184,7 +5764,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -5220,7 +5800,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 sizeof|sizeof
@@ -5266,6 +5846,10 @@ name|ACPI_PCCT_SUBSPACE
 modifier|*
 name|SubTable
 decl_stmt|;
+name|ACPI_DMTABLE_INFO
+modifier|*
+name|InfoTable
+decl_stmt|;
 name|UINT32
 name|Length
 init|=
@@ -5307,7 +5891,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -5328,6 +5912,7 @@ operator|->
 name|Length
 condition|)
 block|{
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -5349,7 +5934,7 @@ name|Header
 operator|.
 name|Length
 argument_list|,
-name|AcpiDmTableInfoPcct0
+name|AcpiDmTableInfoPcctHdr
 argument_list|)
 expr_stmt|;
 if|if
@@ -5362,7 +5947,80 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table */
+switch|switch
+condition|(
+name|SubTable
+operator|->
+name|Header
+operator|.
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_PCCT_TYPE_GENERIC_SUBSPACE
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoPcct0
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoPcct1
+expr_stmt|;
+break|break;
+default|default:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n**** Unexpected or unknown PCCT subtable type 0x%X\n\n"
+argument_list|,
+name|SubTable
+operator|->
+name|Header
+operator|.
+name|Type
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiDmDumpTable
+argument_list|(
+name|Length
+argument_list|,
+name|Offset
+argument_list|,
+name|SubTable
+argument_list|,
+name|SubTable
+operator|->
+name|Header
+operator|.
+name|Length
+argument_list|,
+name|InfoTable
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -5828,10 +6486,6 @@ block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n**** DomainCount exceeds subtable length\n\n"
-argument_list|,
-name|MemSubTable
-operator|->
-name|Type
 argument_list|)
 expr_stmt|;
 block|}
@@ -6123,7 +6777,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -6186,7 +6840,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown S3PT sub-table type 0x%X\n"
+literal|"\n**** Unknown S3PT subtable type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -6253,7 +6907,7 @@ return|;
 block|}
 name|NextSubTable
 label|:
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -6337,7 +6991,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -6398,7 +7052,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown SLIC sub-table type 0x%X\n"
+literal|"\n**** Unknown SLIC subtable type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -6461,7 +7115,7 @@ return|return;
 block|}
 name|NextSubTable
 label|:
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -6785,7 +7439,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -6806,7 +7460,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -6872,10 +7526,18 @@ operator|=
 name|AcpiDmTableInfoSrat2
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_SRAT_TYPE_GICC_AFFINITY
+case|:
+name|InfoTable
+operator|=
+name|AcpiDmTableInfoSrat3
+expr_stmt|;
+break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown SRAT sub-table type 0x%X\n"
+literal|"\n**** Unknown SRAT subtable type 0x%X\n"
 argument_list|,
 name|SubTable
 operator|->
@@ -6938,7 +7600,7 @@ return|return;
 block|}
 name|NextSubTable
 label|:
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 name|SubTable
@@ -7018,7 +7680,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -7039,7 +7701,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -7075,7 +7737,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 sizeof|sizeof
@@ -7157,7 +7819,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Sub-tables */
+comment|/* Subtables */
 name|SubTable
 operator|=
 name|ACPI_ADD_PTR
@@ -7178,7 +7840,7 @@ operator|->
 name|Length
 condition|)
 block|{
-comment|/* Common sub-table header */
+comment|/* Common subtable header */
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
@@ -7214,7 +7876,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Point to next sub-table */
+comment|/* Point to next subtable */
 name|Offset
 operator|+=
 sizeof|sizeof

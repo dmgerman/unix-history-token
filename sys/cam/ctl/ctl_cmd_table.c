@@ -1174,6 +1174,8 @@ block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -1249,6 +1251,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -1296,6 +1300,8 @@ block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -1934,6 +1940,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -1979,6 +1987,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_RESV
 block|,
 name|CTL_LUN_PAT_NONE
 block|,
@@ -2597,7 +2607,7 @@ literal|0x08
 block|,
 literal|0xff
 block|,
-literal|0
+literal|0xff
 block|,
 literal|0xff
 block|,
@@ -2823,7 +2833,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x18
+literal|0x1a
 block|,
 literal|0xff
 block|,
@@ -2871,7 +2881,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x18
+literal|0x1a
 block|,
 literal|0xff
 block|,
@@ -2941,7 +2951,7 @@ block|,
 literal|10
 block|,
 block|{
-literal|0x10
+literal|0x12
 block|,
 literal|0xff
 block|,
@@ -3707,7 +3717,7 @@ literal|0x18
 block|,
 literal|0xff
 block|,
-literal|0
+literal|0xff
 block|,
 literal|0
 block|,
@@ -4261,7 +4271,7 @@ block|,
 literal|16
 block|,
 block|{
-literal|0x18
+literal|0x1a
 block|,
 literal|0xff
 block|,
@@ -4359,7 +4369,7 @@ block|,
 literal|16
 block|,
 block|{
-literal|0x18
+literal|0x1a
 block|,
 literal|0xff
 block|,
@@ -4441,7 +4451,7 @@ block|,
 literal|16
 block|,
 block|{
-literal|0x10
+literal|0x12
 block|,
 literal|0xff
 block|,
@@ -4610,7 +4620,7 @@ block|,
 literal|16
 block|,
 block|{
-literal|0x1a
+literal|0x1b
 block|,
 literal|0xff
 block|,
@@ -4935,7 +4945,7 @@ block|,
 literal|12
 block|,
 block|{
-literal|0x18
+literal|0x1a
 block|,
 literal|0xff
 block|,
@@ -4987,7 +4997,7 @@ block|,
 literal|12
 block|,
 block|{
-literal|0x18
+literal|0x1a
 block|,
 literal|0xff
 block|,
@@ -5061,7 +5071,7 @@ block|,
 literal|12
 block|,
 block|{
-literal|0x10
+literal|0x12
 block|,
 literal|0xff
 block|,

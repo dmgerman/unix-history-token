@@ -330,8 +330,8 @@ return|;
 ifndef|#
 directive|ifndef
 name|notyet
-comment|/* Assume SSDT is loaded with DSDT. */
-name|AcpiGbl_DisableSsdtTableLoad
+comment|/* Assume SSDT is installed with DSDT. */
+name|AcpiGbl_DisableSsdtTableInstall
 operator|=
 name|TRUE
 expr_stmt|;

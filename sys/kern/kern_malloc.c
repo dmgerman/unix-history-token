@@ -2937,6 +2937,17 @@ name|v_page_count
 expr_stmt|;
 if|if
 condition|(
+name|mem_size
+operator|<=
+literal|32768
+condition|)
+comment|/* delphij XXX 128MB */
+name|kmem_zmax
+operator|=
+name|PAGE_SIZE
+expr_stmt|;
+if|if
+condition|(
 name|vm_kmem_size_scale
 operator|<
 literal|1

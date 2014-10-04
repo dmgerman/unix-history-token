@@ -7,14 +7,19 @@ begin_comment
 comment|/*  * primes - generate a table of primes between two values  *  * By: Landon Curt Noll chongo@toad.com, ...!{sun,tolsoft}!hoptoad!chongo  *  * chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_comment
 comment|/* ubig is the type that holds a large unsigned value */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|uint64_t
 name|ubig
 typedef|;
 end_typedef
@@ -73,6 +78,17 @@ comment|/* largest prime in the prime array */
 end_comment
 
 begin_comment
+comment|/* Maximum size sieving alone can handle. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIEVEMAX
+value|4295098368ULL
+end_define
+
+begin_comment
 comment|/*  * To avoid excessive sieves for small factors, we use the table below to  * setup our sieve blocks.  Each element represents an odd number starting  * with 1.  All non-zero elements are factors of 3, 5, 7, 11 and 13.  */
 end_comment
 
@@ -96,6 +112,30 @@ end_decl_stmt
 begin_comment
 comment|/* length of pattern array */
 end_comment
+
+begin_comment
+comment|/* Test for primality using strong pseudoprime tests. */
+end_comment
+
+begin_function_decl
+name|int
+name|isprime
+parameter_list|(
+name|ubig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Maximum value which the SPSP code can handle. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPSPMAX
+value|3825123056546413050ULL
+end_define
 
 end_unit
 

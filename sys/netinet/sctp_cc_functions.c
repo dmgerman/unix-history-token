@@ -6295,9 +6295,6 @@ block|{
 name|uint32_t
 name|bw_avail
 decl_stmt|;
-name|int
-name|rtt
-decl_stmt|;
 name|unsigned
 name|int
 name|incr
@@ -6309,15 +6306,6 @@ name|net
 operator|->
 name|cwnd
 decl_stmt|;
-comment|/* need real RTT in msd for this calc */
-name|rtt
-operator|=
-name|net
-operator|->
-name|rtt
-operator|/
-literal|1000
-expr_stmt|;
 comment|/* get bottle neck bw */
 operator|*
 name|bottle_bw
@@ -6350,6 +6338,7 @@ name|net
 operator|->
 name|flight_size
 condition|)
+block|{
 operator|*
 name|on_queue
 operator|=
@@ -6357,17 +6346,33 @@ name|net
 operator|->
 name|flight_size
 expr_stmt|;
-comment|/* calculate the available space */
+block|}
+comment|/* rtt is measured in micro seconds, bottle_bw in bytes per second */
 name|bw_avail
 operator|=
+call|(
+name|uint32_t
+call|)
+argument_list|(
 operator|(
+call|(
+name|uint64_t
+call|)
+argument_list|(
 operator|*
 name|bottle_bw
+argument_list|)
 operator|*
+name|net
+operator|->
 name|rtt
 operator|)
 operator|/
-literal|1000
+operator|(
+name|uint64_t
+operator|)
+literal|1000000
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

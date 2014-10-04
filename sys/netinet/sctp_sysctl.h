@@ -408,7 +408,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_AUTOASCONF_DEFAULT
-value|SCTP_DEFAULT_AUTO_ASCONF
+value|1
 end_define
 
 begin_comment
@@ -2168,7 +2168,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_MOBILITY_BASE_DEFAULT
-value|SCTP_DEFAULT_MOBILITY_BASE
+value|0
 end_define
 
 begin_comment
@@ -2200,7 +2200,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_MOBILITY_FASTHANDOFF_DEFAULT
-value|SCTP_DEFAULT_MOBILITY_FASTHANDOFF
+value|0
 end_define
 
 begin_comment

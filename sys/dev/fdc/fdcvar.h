@@ -86,10 +86,15 @@ comment|/* The active drive */
 name|int
 name|retry
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|int
 name|fdout
 decl_stmt|;
 comment|/* mirror of the w/o digital output reg */
+endif|#
+directive|endif
 name|u_int
 name|status
 index|[

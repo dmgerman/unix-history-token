@@ -126,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cputypes.h>
 end_include
 
@@ -175,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|<machine/specialreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<x86/init.h>
 end_include
 
 begin_ifdef
@@ -6275,14 +6275,6 @@ name|apic_enumerator
 modifier|*
 name|enumerator
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__amd64__
-name|uint64_t
-name|apic_base
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|retval
 decl_stmt|,
@@ -6408,44 +6400,9 @@ ifndef|#
 directive|ifndef
 name|__amd64__
 comment|/* 	 * To work around an errata, we disable the local APIC on some 	 * CPUs during early startup.  We need to turn the local APIC back 	 * on on such CPUs now. 	 */
-if|if
-condition|(
-name|cpu
-operator|==
-name|CPU_686
-operator|&&
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_INTEL
-operator|&&
-operator|(
-name|cpu_id
-operator|&
-literal|0xff0
-operator|)
-operator|==
-literal|0x610
-condition|)
-block|{
-name|apic_base
-operator|=
-name|rdmsr
-argument_list|(
-name|MSR_APICBASE
-argument_list|)
+name|ppro_reenable_apic
+argument_list|()
 expr_stmt|;
-name|apic_base
-operator||=
-name|APICBASE_ENABLED
-expr_stmt|;
-name|wrmsr
-argument_list|(
-name|MSR_APICBASE
-argument_list|,
-name|apic_base
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* Probe the CPU's in the system. */
@@ -6646,6 +6603,8 @@ literal|"BSP"
 argument_list|)
 expr_stmt|;
 comment|/* Enable the MSI "pic". */
+name|init_ops
+operator|.
 name|msi_init
 argument_list|()
 expr_stmt|;

@@ -192,78 +192,38 @@ begin_comment
 comment|/* Supported lagg PROTOs */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
 name|LAGG_PROTO_NONE
-value|0
-end_define
-
-begin_comment
+init|=
+literal|0
+block|,
 comment|/* no lagg protocol defined */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_ROUNDROBIN
-value|1
-end_define
-
-begin_comment
+block|,
 comment|/* simple round robin */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_FAILOVER
-value|2
-end_define
-
-begin_comment
+block|,
 comment|/* active failover */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_LOADBALANCE
-value|3
-end_define
-
-begin_comment
+block|,
 comment|/* loadbalance */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_LACP
-value|4
-end_define
-
-begin_comment
+block|,
 comment|/* 802.3ad lacp */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LAGG_PROTO_ETHERCHANNEL
-value|5
-end_define
-
-begin_comment
+block|,
 comment|/* Cisco FEC */
-end_comment
-
-begin_define
-define|#
-directive|define
+name|LAGG_PROTO_BROADCAST
+block|,
+comment|/* broadcast */
 name|LAGG_PROTO_MAX
-value|6
-end_define
+block|, }
+name|lagg_proto
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -274,7 +234,7 @@ name|char
 modifier|*
 name|lpr_name
 decl_stmt|;
-name|int
+name|lagg_proto
 name|lpr_proto
 decl_stmt|;
 block|}
@@ -292,7 +252,7 @@ begin_define
 define|#
 directive|define
 name|LAGG_PROTOS
-value|{						\ 	{ "failover",		LAGG_PROTO_FAILOVER },			\ 	{ "fec",		LAGG_PROTO_ETHERCHANNEL },		\ 	{ "lacp",		LAGG_PROTO_LACP },			\ 	{ "loadbalance",	LAGG_PROTO_LOADBALANCE },		\ 	{ "roundrobin",		LAGG_PROTO_ROUNDROBIN },		\ 	{ "none",		LAGG_PROTO_NONE },			\ 	{ "default",		LAGG_PROTO_DEFAULT }			\ }
+value|{						\ 	{ "failover",		LAGG_PROTO_FAILOVER },		\ 	{ "fec",		LAGG_PROTO_ETHERCHANNEL },		\ 	{ "lacp",		LAGG_PROTO_LACP },			\ 	{ "loadbalance",	LAGG_PROTO_LOADBALANCE },		\ 	{ "roundrobin",	LAGG_PROTO_ROUNDROBIN },		\ 	{ "broadcast",	LAGG_PROTO_BROADCAST },		\ 	{ "none",		LAGG_PROTO_NONE },			\ 	{ "default",		LAGG_PROTO_DEFAULT }			\ }
 end_define
 
 begin_comment
@@ -518,42 +478,98 @@ name|SIOCSLAGGHASH
 value|_IOW('i', 146, struct lagg_reqflags)
 end_define
 
+begin_struct
+struct|struct
+name|lagg_reqopts
+block|{
+name|char
+name|ro_ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* name of the lagg */
+name|int
+name|ro_opts
+decl_stmt|;
+comment|/* Option bitmap */
+define|#
+directive|define
+name|LAGG_OPT_NONE
+value|0x00
+define|#
+directive|define
+name|LAGG_OPT_USE_FLOWID
+value|0x01
+comment|/* use M_FLOWID */
+comment|/* Pseudo flags which are used in ro_opts but not stored into sc_opts. */
+define|#
+directive|define
+name|LAGG_OPT_FLOWIDSHIFT
+value|0x02
+comment|/* Set flowid */
+define|#
+directive|define
+name|LAGG_OPT_FLOWIDSHIFT_MASK
+value|0x1f
+comment|/* flowid is uint32_t */
+define|#
+directive|define
+name|LAGG_OPT_LACP_STRICT
+value|0x10
+comment|/* LACP strict mode */
+define|#
+directive|define
+name|LAGG_OPT_LACP_TXTEST
+value|0x20
+comment|/* LACP debug: txtest */
+define|#
+directive|define
+name|LAGG_OPT_LACP_RXTEST
+value|0x40
+comment|/* LACP debug: rxtest */
+name|u_int
+name|ro_count
+decl_stmt|;
+comment|/* number of ports */
+name|u_int
+name|ro_active
+decl_stmt|;
+comment|/* active port count */
+name|u_int
+name|ro_flapping
+decl_stmt|;
+comment|/* number of flapping */
+name|int
+name|ro_flowid_shift
+decl_stmt|;
+comment|/* shift the flowid */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOCGLAGGOPTS
+value|_IOWR('i', 152, struct lagg_reqopts)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSLAGGOPTS
+value|_IOW('i', 153, struct lagg_reqopts)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<sys/counter.h>
-end_include
-
 begin_comment
 comment|/*  * Internal kernel part  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|lp_ifname
-value|lp_ifp->if_xname
-end_define
-
-begin_comment
-comment|/* interface name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|lp_link_state
-value|lp_ifp->if_link_state
-end_define
-
-begin_comment
-comment|/* link state */
 end_comment
 
 begin_define
@@ -563,7 +579,7 @@ name|LAGG_PORTACTIVE
 parameter_list|(
 name|_tp
 parameter_list|)
-value|(					\ 	((_tp)->lp_link_state == LINK_STATE_UP)&&			\ 	((_tp)->lp_ifp->if_flags& IFF_UP)				\ )
+value|(					\ 	((_tp)->lp_ifp->if_link_state == LINK_STATE_UP)&&		\ 	((_tp)->lp_ifp->if_flags& IFF_UP)				\ )
 end_define
 
 begin_struct
@@ -730,6 +746,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|lagg_counters
+block|{
+name|uint64_t
+name|val
+index|[
+name|IFCOUNTERS
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|lagg_softc
 block|{
 name|struct
@@ -741,10 +771,6 @@ comment|/* virtual interface */
 name|struct
 name|rmlock
 name|sc_mtx
-decl_stmt|;
-name|struct
-name|mtx
-name|sc_call_mtx
 decl_stmt|;
 name|int
 name|sc_proto
@@ -773,7 +799,8 @@ name|ifmedia
 name|sc_media
 decl_stmt|;
 comment|/* media config */
-name|caddr_t
+name|void
+modifier|*
 name|sc_psc
 decl_stmt|;
 comment|/* protocol data */
@@ -783,18 +810,6 @@ decl_stmt|;
 comment|/* sequence counter */
 name|uint32_t
 name|sc_flags
-decl_stmt|;
-name|counter_u64_t
-name|sc_ipackets
-decl_stmt|;
-name|counter_u64_t
-name|sc_opackets
-decl_stmt|;
-name|counter_u64_t
-name|sc_ibytes
-decl_stmt|;
-name|counter_u64_t
-name|sc_obytes
 decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
@@ -824,146 +839,6 @@ argument_list|)
 name|sc_llq_head
 expr_stmt|;
 comment|/* interfaces to program 							   the lladdr on */
-comment|/* lagg protocol callbacks */
-name|int
-function_decl|(
-modifier|*
-name|sc_detach
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_softc
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|sc_start
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_softc
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-name|struct
-name|mbuf
-modifier|*
-function_decl|(
-modifier|*
-name|sc_input
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_softc
-modifier|*
-parameter_list|,
-name|struct
-name|lagg_port
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|sc_port_create
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_port
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_port_destroy
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_port
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_linkstate
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_port
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_init
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_softc
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_stop
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_softc
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_lladdr
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_softc
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_req
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_softc
-modifier|*
-parameter_list|,
-name|caddr_t
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_portreq
-function_decl|)
-parameter_list|(
-name|struct
-name|lagg_port
-modifier|*
-parameter_list|,
-name|caddr_t
-parameter_list|)
-function_decl|;
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
@@ -974,25 +849,18 @@ name|struct
 name|callout
 name|sc_callout
 decl_stmt|;
-name|struct
-name|sysctl_ctx_list
-name|ctx
+name|u_int
+name|sc_opts
 decl_stmt|;
-comment|/* sysctl variables */
-name|struct
-name|sysctl_oid
-modifier|*
-name|sc_oid
-decl_stmt|;
-comment|/* sysctl tree oid */
-name|int
-name|use_flowid
-decl_stmt|;
-comment|/* use M_FLOWID */
 name|int
 name|flowid_shift
 decl_stmt|;
 comment|/* shift the flowid */
+name|struct
+name|lagg_counters
+name|detached_counters
+decl_stmt|;
+comment|/* detached ports sum */
 block|}
 struct|;
 end_struct
@@ -1040,7 +908,8 @@ modifier|*
 name|lh_cookie
 decl_stmt|;
 comment|/* if state hook */
-name|caddr_t
+name|void
+modifier|*
 name|lp_psc
 decl_stmt|;
 comment|/* protocol data */
@@ -1097,6 +966,11 @@ name|route
 modifier|*
 parameter_list|)
 function_decl|;
+name|struct
+name|lagg_counters
+name|port_counters
+decl_stmt|;
+comment|/* ifp counters copy */
 name|SLIST_ENTRY
 argument_list|(
 argument|lagg_port
@@ -1189,27 +1063,6 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|rm_assert(&(_sc)->sc_mtx, RA_WLOCKED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAGG_CALLOUT_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|)
-define|\
-value|mtx_init(&(_sc)->sc_call_mtx, "if_lagg callout mutex", NULL,\ 	    MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAGG_CALLOUT_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->sc_call_mtx)
 end_define
 
 begin_function_decl

@@ -481,7 +481,7 @@ comment|/* IRQs : */
 end_comment
 
 begin_comment
-comment|/*  * 0: AIC  * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: PIO Controller D/E  * 6: TRNG  * 7: USART 0  * 8: USART 1  * 9: USART 2  * 10: USART 3  * 11: Multimedia Card interface 0  * 12: Two-wirte interface 0  * 13: Two-wirte interface 1  * 14: SPI 0  * 15: SPI 1  * 16: SSC 0  * 17: SSC 0  * 18: Timer Counter 0, 2, 3, 4, 5  * 19: PWM  * 20: Touch Screen ADC  * 21: DMA  * 22: USB Host port  * 23: LCD  * 24: AC97  * 25: EMAC  * 26: Image Sensor Interface  * 27: USB Device High Speed  * 28: -  * 29: Multimedia Card interface 1  * 30: Reserved  * 31: AIC  */
+comment|/*  * 0: AIC  * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: PIO Controller D/E  * 6: TRNG  * 7: USART 0  * 8: USART 1  * 9: USART 2  * 10: USART 3  * 11: Multimedia Card interface 0  * 12: Two-wire interface 0  * 13: Two-wire interface 1  * 14: SPI 0  * 15: SPI 1  * 16: SSC 0  * 17: SSC 1  * 18: Timer Counter 0, 1, 2, 3, 4, 5  * 19: PWM  * 20: Touch Screen ADC  * 21: DMA  * 22: USB Host port  * 23: LCD  * 24: AC97  * 25: EMAC  * 26: Image Sensor Interface  * 27: USB Device High Speed  * 28: -  * 29: Multimedia Card interface 1  * 30: Reserved  * 31: AIC  */
 end_comment
 
 begin_define
@@ -515,14 +515,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9G45_IRQ_PIOD
+name|AT91SAM9G45_IRQ_PIODE
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9G45_IRQ_PIOE
+name|AT91SAM9G45_IRQ_TRNG
 value|6
 end_define
 
@@ -737,6 +737,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91SAM9G45_IRQ_PIOD
+value|AT91SAM9G45_IRQ_PIODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G45_IRQ_PIOE
+value|AT91SAM9G45_IRQ_PIODE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91SAM9G45_IRQ_OHCI
 value|AT91SAM9G45_IRQ_UHP
 end_define
@@ -848,20 +862,6 @@ define|#
 directive|define
 name|AT91SAM9G45_SMC_SIZE
 value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|AT91SAM9G45_PMC_BASE
-value|0xffffc00
-end_define
-
-begin_define
-define|#
-directive|define
-name|AT91SAM9G45_PMC_SIZE
-value|0x100
 end_define
 
 begin_define

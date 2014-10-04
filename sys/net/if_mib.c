@@ -303,9 +303,12 @@ name|ifmd_snd_drops
 operator|=
 name|ifp
 operator|->
-name|if_snd
-operator|.
-name|ifq_drops
+name|if_get_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_OQDROPS
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

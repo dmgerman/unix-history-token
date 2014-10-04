@@ -925,10 +925,26 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pci_suspend
+name|pci_resume_child
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pci_suspend_child
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
 parameter_list|)
 function_decl|;
 end_function_decl

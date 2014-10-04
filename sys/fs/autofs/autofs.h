@@ -71,7 +71,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (autofs_debug> 1) {					\ 		printf("%s: " X "\n", __func__, ## __VA_ARGS__);\ 	} while (0)
+value|do {								\ 		if (autofs_debug> 1)					\ 			printf("%s: " X "\n", __func__, ## __VA_ARGS__);\ 	} while (0)
 end_define
 
 begin_define
@@ -84,13 +84,23 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (autofs_debug> 0) {					\ 		printf("WARNING: %s: " X "\n",			\ 		    __func__, ## __VA_ARGS__);			\ 	} while (0)
+value|do {								\ 		if (autofs_debug> 0) {					\ 			printf("WARNING: %s: " X "\n",			\ 		    	    __func__, ## __VA_ARGS__);			\ 		}							\ 	} while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUTOFS_LOCK
+name|AUTOFS_SLOCK
+parameter_list|(
+name|X
+parameter_list|)
+value|sx_slock(&X->am_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTOFS_XLOCK
 parameter_list|(
 name|X
 parameter_list|)
@@ -100,7 +110,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
+parameter_list|(
+name|X
+parameter_list|)
+value|sx_sunlock(&X->am_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTOFS_XUNLOCK
 parameter_list|(
 name|X
 parameter_list|)
@@ -111,6 +131,16 @@ begin_define
 define|#
 directive|define
 name|AUTOFS_ASSERT_LOCKED
+parameter_list|(
+name|X
+parameter_list|)
+value|sx_assert(&X->am_lock, SA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTOFS_ASSERT_XLOCKED
 parameter_list|(
 name|X
 parameter_list|)
@@ -301,8 +331,8 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|struct
-name|callout
-name|ar_callout
+name|timeout_task
+name|ar_task
 decl_stmt|;
 specifier|volatile
 name|u_int
@@ -540,6 +570,9 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|vnode

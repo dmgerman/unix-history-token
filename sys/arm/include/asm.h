@@ -45,50 +45,6 @@ parameter_list|)
 value|x
 end_define
 
-begin_define
-define|#
-directive|define
-name|I32_bit
-value|(1<< 7)
-end_define
-
-begin_comment
-comment|/* IRQ disable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F32_bit
-value|(1<< 6)
-end_define
-
-begin_comment
-comment|/* FIQ disable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_CONTROL_32BP_ENABLE
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* P: 32-bit exception handlers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_CONTROL_32BD_ENABLE
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* D: 32-bit addressing */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -35,6 +35,23 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|struct
+name|mlx4_srq
+modifier|*
+name|mlx4_srq_lookup
+parameter_list|(
+name|struct
+name|mlx4_dev
+modifier|*
+name|dev
+parameter_list|,
+name|u32
+name|srqn
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

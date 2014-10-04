@@ -204,7 +204,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Condensing a metaslab is not guaranteed to actually reduce the amount of  * space used on disk. In particular, a space map uses data in increments of  * MAX(1<< ashift, SPACE_MAP_INITIAL_BLOCKSIZE), so a metaslab might use the  * same number of blocks after condensing. Since the goal of condensing is to  * reduce the number of IOPs required to read the space map, we only want to  * condense when we can be sure we will reduce the number of blocks used by the  * space map. Unfortunately, we cannot precisely compute whether or not this is  * the case in metaslab_should_condense since we are holding ms_lock. Instead,  * we apply the following heuristic: do not condense a spacemap unless the  * uncondensed size consumes greater than zfs_metaslab_condense_block_threshold  * blocks.  */
+comment|/*  * Condensing a metaslab is not guaranteed to actually reduce the amount of  * space used on disk. In particular, a space map uses data in increments of  * MAX(1<< ashift, space_map_blksize), so a metaslab might use the  * same number of blocks after condensing. Since the goal of condensing is to  * reduce the number of IOPs required to read the space map, we only want to  * condense when we can be sure we will reduce the number of blocks used by the  * space map. Unfortunately, we cannot precisely compute whether or not this is  * the case in metaslab_should_condense since we are holding ms_lock. Instead,  * we apply the following heuristic: do not condense a spacemap unless the  * uncondensed size consumes greater than zfs_metaslab_condense_block_threshold  * blocks.  */
 end_comment
 
 begin_decl_stmt
@@ -6020,6 +6020,14 @@ name|ms_group
 operator|->
 name|mg_vd
 decl_stmt|;
+if|if
+condition|(
+name|spa_writeable
+argument_list|(
+name|spa
+argument_list|)
+condition|)
+block|{
 name|msp
 operator|->
 name|ms_condense_wanted
@@ -6053,6 +6061,7 @@ argument_list|,
 name|vd
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ZFS_FRAG_INVALID
@@ -7672,6 +7681,26 @@ operator|->
 name|ms_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Note: metaslab_condense() clears the space_map's histogram. 	 * Therefore we must verify and remove this histogram before 	 * condensing. 	 */
+name|metaslab_group_histogram_verify
+argument_list|(
+name|mg
+argument_list|)
+expr_stmt|;
+name|metaslab_class_histogram_verify
+argument_list|(
+name|mg
+operator|->
+name|mg_class
+argument_list|)
+expr_stmt|;
+name|metaslab_group_histogram_remove
+argument_list|(
+name|mg
+argument_list|,
+name|msp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|msp
@@ -7731,25 +7760,6 @@ name|tx
 argument_list|)
 expr_stmt|;
 block|}
-name|metaslab_group_histogram_verify
-argument_list|(
-name|mg
-argument_list|)
-expr_stmt|;
-name|metaslab_class_histogram_verify
-argument_list|(
-name|mg
-operator|->
-name|mg_class
-argument_list|)
-expr_stmt|;
-name|metaslab_group_histogram_remove
-argument_list|(
-name|mg
-argument_list|,
-name|msp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|msp

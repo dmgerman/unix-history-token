@@ -1931,7 +1931,28 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0003]\t\tReserved : 000000\n"
+literal|"[0002]\t\tARM Flags (decoded below): 0000\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t\t\tPSCI Compliant : 0\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t\t\tMust use HVC for PSCI : 0\n"
+argument_list|)
+expr_stmt|;
+name|EFPRINTF
+argument_list|(
+name|fp
+argument_list|,
+literal|"[0001]\t\tFADT Minor Revision : 01\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF

@@ -367,9 +367,40 @@ operator|=
 literal|"Please review the disk setup. When complete, press "
 literal|"the Finish button."
 expr_stmt|;
+comment|/* Experimental ZFS autopartition support */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"zfs"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|part_wizard
-argument_list|()
+argument_list|(
+literal|"zfs"
+argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|part_wizard
+argument_list|(
+literal|"ufs"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -746,7 +777,9 @@ literal|4
 case|:
 comment|/* Auto */
 name|part_wizard
-argument_list|()
+argument_list|(
+literal|"ufs"
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

@@ -9207,10 +9207,14 @@ name|timer
 operator|=
 literal|0
 expr_stmt|;
-operator|++
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 operator|++
 name|sc

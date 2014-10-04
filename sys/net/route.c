@@ -366,13 +366,17 @@ begin_comment
 comment|/*  * By default add routes to all fibs for new interfaces.  * Once this is set to 0 then only allocate routes on interface  * changes for the FIB of the caller when adding a new set of addresses  * to an interface.  XXX this is a shotgun aproach to a problem that needs  * a more fine grained solution.. that will come.  * XXX also has the problems getting the FIB from curthread which will not  * always work given the fib can be overridden and prefixes can be added  * from the network stack context.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
+name|VNET_DEFINE
+argument_list|(
 name|u_int
+argument_list|,
 name|rt_add_addr_allfibs
-init|=
+argument_list|)
+operator|=
 literal|1
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_UINT
@@ -384,9 +388,14 @@ argument_list|,
 name|add_addr_allfibs
 argument_list|,
 name|CTLFLAG_RWTUN
+operator||
+name|CTLFLAG_VNET
 argument_list|,
 operator|&
+name|VNET_NAME
+argument_list|(
 name|rt_add_addr_allfibs
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2309,7 +2318,7 @@ condition|(
 operator|(
 name|ifa
 operator|=
-name|ifa_ifwithnet_fib
+name|ifa_ifwithnet
 argument_list|(
 name|gateway
 argument_list|,
@@ -2886,52 +2895,11 @@ comment|/* INET */
 block|}
 end_function
 
-begin_comment
-comment|/*  * For both ifa_ifwithroute() routines, 'ifa' is returned referenced.  */
-end_comment
-
 begin_function
 name|struct
 name|ifaddr
 modifier|*
 name|ifa_ifwithroute
-parameter_list|(
-name|int
-name|flags
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|dst
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|gateway
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ifa_ifwithroute_fib
-argument_list|(
-name|flags
-argument_list|,
-name|dst
-argument_list|,
-name|gateway
-argument_list|,
-name|RT_DEFAULT_FIB
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|struct
-name|ifaddr
-modifier|*
-name|ifa_ifwithroute_fib
 parameter_list|(
 name|int
 name|flags
@@ -2984,7 +2952,7 @@ name|RTF_HOST
 condition|)
 name|ifa
 operator|=
-name|ifa_ifwithdstaddr_fib
+name|ifa_ifwithdstaddr
 argument_list|(
 name|dst
 argument_list|,
@@ -3010,7 +2978,7 @@ block|{
 comment|/* 		 * If we are adding a route to a remote net 		 * or host, the gateway may still be on the 		 * other end of a pt to pt link. 		 */
 name|ifa
 operator|=
-name|ifa_ifwithdstaddr_fib
+name|ifa_ifwithdstaddr
 argument_list|(
 name|gateway
 argument_list|,
@@ -3026,7 +2994,7 @@ name|NULL
 condition|)
 name|ifa
 operator|=
-name|ifa_ifwithnet_fib
+name|ifa_ifwithnet
 argument_list|(
 name|gateway
 argument_list|,
@@ -3524,7 +3492,7 @@ operator|&&
 operator|(
 name|ifa
 operator|=
-name|ifa_ifwithnet_fib
+name|ifa_ifwithnet
 argument_list|(
 name|ifpaddr
 argument_list|,
@@ -3644,7 +3612,7 @@ name|info
 operator|->
 name|rti_ifa
 operator|=
-name|ifa_ifwithroute_fib
+name|ifa_ifwithroute
 argument_list|(
 name|flags
 argument_list|,
@@ -3666,7 +3634,7 @@ name|info
 operator|->
 name|rti_ifa
 operator|=
-name|ifa_ifwithroute_fib
+name|ifa_ifwithroute
 argument_list|(
 name|flags
 argument_list|,
@@ -6719,7 +6687,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|rt_add_addr_allfibs
+name|V_rt_add_addr_allfibs
 operator|==
 literal|0
 operator|&&
@@ -6730,7 +6698,6 @@ name|int
 operator|)
 name|RTM_ADD
 condition|)
-block|{
 name|startfib
 operator|=
 name|endfib
@@ -6741,7 +6708,6 @@ name|ifa_ifp
 operator|->
 name|if_fib
 expr_stmt|;
-block|}
 else|else
 block|{
 name|startfib

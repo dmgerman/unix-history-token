@@ -1191,7 +1191,7 @@ name|PAGE_SIZE
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|fd
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003  * 	Hidetoshi Shimokawa. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  *	This product includes software developed by Hidetoshi Shimokawa.  *  * 4. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*-  * Copyright (c) 2003  * 	Hidetoshi Shimokawa. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  *	This product includes software developed by Hidetoshi Shimokawa.  *  * 4. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -58,19 +58,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|501102
-end_if
-
 begin_include
 include|#
 directive|include
@@ -83,11 +70,6 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -99,35 +81,6 @@ include|#
 directive|include
 file|<machine/bus.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__DragonFly__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<bus/firewire/firewire.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<bus/firewire/firewirereg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<bus/firewire/fwdma.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -146,11 +99,6 @@ include|#
 directive|include
 file|<dev/firewire/fwdma.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -278,16 +226,6 @@ argument_list|,
 comment|/*flags*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|501102
 comment|/*lockfunc*/
 name|busdma_lock_mutex
 argument_list|,
@@ -297,8 +235,6 @@ argument_list|(
 name|fc
 argument_list|)
 argument_list|,
-endif|#
-directive|endif
 operator|&
 name|dma
 operator|->
@@ -759,16 +695,6 @@ argument_list|,
 comment|/*flags*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|501102
 comment|/*lockfunc*/
 name|busdma_lock_mutex
 argument_list|,
@@ -778,8 +704,6 @@ argument_list|(
 name|fc
 argument_list|)
 argument_list|,
-endif|#
-directive|endif
 operator|&
 name|am
 operator|->
@@ -805,27 +729,6 @@ name|NULL
 operator|)
 return|;
 block|}
-if|#
-directive|if
-literal|0
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__DragonFly__
-argument_list|)
-operator|||
-name|__FreeBSD_version
-operator|<
-literal|500000
-block|printf("malloc_multi: ssize=%d nseg=%d\n", ssize, nseg);
-else|#
-directive|else
-block|printf("malloc_multi: ssize=%td nseg=%d\n", ssize, nseg);
-endif|#
-directive|endif
-endif|#
-directive|endif
 for|for
 control|(
 name|seg

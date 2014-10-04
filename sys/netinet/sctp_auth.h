@@ -666,7 +666,7 @@ name|sctp_hmaclist_t
 modifier|*
 name|sctp_alloc_hmaclist
 parameter_list|(
-name|uint8_t
+name|uint16_t
 name|num_hmacs
 parameter_list|)
 function_decl|;

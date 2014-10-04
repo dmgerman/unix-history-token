@@ -557,7 +557,7 @@ parameter_list|(
 name|lwpid_t
 name|id
 parameter_list|,
-name|u_char
+name|int
 name|cpu
 parameter_list|)
 function_decl|;

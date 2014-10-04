@@ -158,6 +158,10 @@ name|uint16_t
 modifier|*
 name|eepromdata
 parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah_config
+parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|error
@@ -220,6 +224,8 @@ argument_list|,
 name|sh
 argument_list|,
 name|eepromdata
+argument_list|,
+name|ah_config
 argument_list|,
 name|error
 argument_list|)

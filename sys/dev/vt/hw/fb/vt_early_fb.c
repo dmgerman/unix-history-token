@@ -158,6 +158,16 @@ operator|=
 name|vt_fb_bitblt_bitmap
 block|,
 operator|.
+name|vd_drawrect
+operator|=
+name|vt_fb_drawrect
+block|,
+operator|.
+name|vd_setpixel
+operator|=
+name|vt_fb_setpixel
+block|,
+operator|.
 name|vd_priority
 operator|=
 name|VD_PRIORITY_GENERIC

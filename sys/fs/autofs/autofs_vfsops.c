@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -391,7 +397,23 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|AUTOFS_LOCK
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_kern_flag
+operator||=
+name|MNTK_LOOKUP_SHARED
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|AUTOFS_XLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -422,7 +444,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -440,7 +462,7 @@ name|error
 operator|)
 return|;
 block|}
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -642,7 +664,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|AUTOFS_LOCK
+name|AUTOFS_XLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -714,7 +736,7 @@ name|mnt_data
 operator|=
 name|NULL
 expr_stmt|;
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -786,6 +808,8 @@ operator|->
 name|am_root
 argument_list|,
 name|mp
+argument_list|,
+name|flags
 argument_list|,
 name|vpp
 argument_list|)

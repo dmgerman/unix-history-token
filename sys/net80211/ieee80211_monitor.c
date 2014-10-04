@@ -453,10 +453,14 @@ name|vap
 operator|->
 name|iv_ifp
 decl_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

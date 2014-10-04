@@ -335,6 +335,13 @@ name|acpi_mutex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|callout
+name|acpi_sleep_timer
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Bitmap of device quirks. */
 end_comment
@@ -1715,28 +1722,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Allow override of whether methods execute in parallel or not.  * Enable this for serial behavior, which fixes "AE_ALREADY_EXISTS"  * errors for AML that really can't handle parallel method execution.  * It is off by default since this breaks recursive methods and  * some IBMs use such code.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|acpi_serialize_methods
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.acpi.serialize_methods"
-argument_list|,
-operator|&
-name|acpi_serialize_methods
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Allow users to dump Debug objects without ACPI debugger. */
 end_comment
 
@@ -1825,6 +1810,51 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"Turn on interpreter slack mode."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Ignore register widths set by FADT and use default widths instead. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_ignore_reg_width
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.default_register_width"
+argument_list|,
+operator|&
+name|acpi_ignore_reg_width
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_acpi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|default_register_width
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|acpi_ignore_reg_width
+argument_list|,
+literal|1
+argument_list|,
+literal|"Ignore register widths set by FADT"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2670,14 +2700,6 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/*      * Set the globals from our tunables.  This is needed because ACPI-CA      * uses UINT8 for some values and we have no tunable_byte.      */
-name|AcpiGbl_AllMethodsSerialized
-operator|=
-name|acpi_serialize_methods
-condition|?
-name|TRUE
-else|:
-name|FALSE
-expr_stmt|;
 name|AcpiGbl_EnableInterpreterSlack
 operator|=
 name|acpi_interpreter_slack
@@ -2689,6 +2711,14 @@ expr_stmt|;
 name|AcpiGbl_EnableAmlDebugObject
 operator|=
 name|acpi_debug_objects
+condition|?
+name|TRUE
+else|:
+name|FALSE
+expr_stmt|;
+name|AcpiGbl_UseDefaultRegisterWidths
+operator|=
+name|acpi_ignore_reg_width
 condition|?
 name|TRUE
 else|:
@@ -3662,15 +3692,29 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Allow sleep request after a while. */
-name|timeout
+name|callout_init_mtx
 argument_list|(
-name|acpi_sleep_enable
+operator|&
+name|acpi_sleep_timer
 argument_list|,
-name|sc
+operator|&
+name|acpi_mutex
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|acpi_sleep_timer
 argument_list|,
 name|hz
 operator|*
 name|ACPI_MINIMUM_AWAKETIME
+argument_list|,
+name|acpi_sleep_enable
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
 name|error
@@ -4338,12 +4382,22 @@ argument_list|(
 name|child
 argument_list|)
 decl_stmt|;
+name|char
+name|buf2
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|int
+name|pxm
+decl_stmt|;
 if|if
 condition|(
 name|dinfo
 operator|->
 name|ad_handle
 condition|)
+block|{
 name|snprintf
 argument_list|(
 name|buf
@@ -4360,7 +4414,48 @@ name|ad_handle
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|acpi_GetInteger
+argument_list|(
+name|dinfo
+operator|->
+name|ad_handle
+argument_list|,
+literal|"_PXM"
+argument_list|,
+operator|&
+name|pxm
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|buf2
+argument_list|,
+literal|32
+argument_list|,
+literal|" _PXM=%d"
+argument_list|,
+name|pxm
+argument_list|)
+expr_stmt|;
+name|strlcat
+argument_list|(
+name|buf
+argument_list|,
+name|buf2
+argument_list|,
+name|buflen
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
+block|{
 name|snprintf
 argument_list|(
 name|buf
@@ -4370,6 +4465,7 @@ argument_list|,
 literal|"unknown"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -11246,7 +11342,7 @@ argument_list|,
 literal|"suspend request timed out, forcing sleep now\n"
 argument_list|)
 expr_stmt|;
-comment|/*      * XXX Suspending from callout cause the freeze in DEVICE_SUSPEND().      * Suspend from acpi_task thread in stead.      */
+comment|/*      * XXX Suspending from callout causes freezes in DEVICE_SUSPEND().      * Suspend from acpi_task thread instead.      */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -11805,6 +11901,11 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|ACPI_LOCK_ASSERT
+argument_list|(
+name|acpi
+argument_list|)
+expr_stmt|;
 comment|/* Reschedule if the system is not fully up and running. */
 if|if
 condition|(
@@ -11812,11 +11913,10 @@ operator|!
 name|AcpiGbl_SystemAwakeAndRunning
 condition|)
 block|{
-name|timeout
+name|callout_schedule
 argument_list|(
-name|acpi_sleep_enable
-argument_list|,
-name|sc
+operator|&
+name|acpi_sleep_timer
 argument_list|,
 name|hz
 operator|*
@@ -11825,21 +11925,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ACPI_LOCK
-argument_list|(
-name|acpi
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|acpi_sleep_disabled
 operator|=
 name|FALSE
-expr_stmt|;
-name|ACPI_UNLOCK
-argument_list|(
-name|acpi
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -12494,11 +12584,10 @@ name|power_resume
 argument_list|)
 expr_stmt|;
 comment|/* Allow another sleep request after a while. */
-name|timeout
+name|callout_schedule
 argument_list|(
-name|acpi_sleep_enable
-argument_list|,
-name|sc
+operator|&
+name|acpi_sleep_timer
 argument_list|,
 name|hz
 operator|*

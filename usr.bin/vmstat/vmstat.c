@@ -3346,6 +3346,14 @@ name|rate_adj
 operator|=
 literal|1
 expr_stmt|;
+name|ncpus
+operator|=
+literal|1
+expr_stmt|;
+name|maxid
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * If the user stops the program (control-Z) and then resumes it, 	 * print out the header again. 	 */
 operator|(
 name|void
@@ -3574,7 +3582,7 @@ name|hdrcnt
 condition|)
 name|printhdr
 argument_list|(
-name|ncpus
+name|maxid
 argument_list|,
 name|cpumask
 argument_list|)
@@ -3838,7 +3846,7 @@ literal|1
 case|:
 name|printhdr
 argument_list|(
-name|ncpus
+name|maxid
 argument_list|,
 name|cpumask
 argument_list|)
@@ -4297,7 +4305,7 @@ name|void
 name|printhdr
 parameter_list|(
 name|int
-name|ncpus
+name|maxid
 parameter_list|,
 name|u_long
 name|cpumask
@@ -4389,8 +4397,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|ncpus
+operator|<=
+name|maxid
 condition|;
 name|i
 operator|++
@@ -4524,17 +4532,29 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|ncpus
+operator|<=
+name|maxid
 condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|cpumask
+operator|&
+operator|(
+literal|1ul
+operator|<<
+name|i
+operator|)
+condition|)
 name|printf
 argument_list|(
 literal|" us sy id"
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"

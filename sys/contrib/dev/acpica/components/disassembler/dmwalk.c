@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -561,6 +561,7 @@ name|AML_BUFFER_OP
 case|:
 if|if
 condition|(
+operator|(
 name|Op
 operator|->
 name|Common
@@ -568,6 +569,17 @@ operator|.
 name|DisasmOpcode
 operator|==
 name|ACPI_DASM_UNICODE
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|DisasmOpcode
+operator|==
+name|ACPI_DASM_UUID
+operator|)
 condition|)
 block|{
 return|return
@@ -1316,7 +1328,7 @@ case|case
 name|AML_NAME_OP
 case|:
 comment|/* Check for _HID and related EISAID() */
-name|AcpiDmIsEisaId
+name|AcpiDmCheckForHardwareId
 argument_list|(
 name|Op
 argument_list|)
@@ -2054,6 +2066,29 @@ name|Op
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Decode Notify() values */
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_NOTIFY_OP
+condition|)
+block|{
+name|AcpiDmNotifyDescription
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiDmDisplayTargetPathname
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
 comment|/* Could be a nested operator, check if comma required */
 if|if
 condition|(
@@ -2435,6 +2470,15 @@ name|AE_OK
 operator|)
 return|;
 block|}
+comment|/*          * The parent Op is guaranteed to be valid because of the flag          * ACPI_PARSEOP_PARAMLIST -- which means that this op is part of          * a parameter list and thus has a valid parent.          */
+name|ParentOp
+operator|=
+name|Op
+operator|->
+name|Common
+operator|.
+name|Parent
+expr_stmt|;
 comment|/*          * Just completed a parameter node for something like "Buffer (param)".          * Close the paren and open up the term list block with a brace          */
 if|if
 condition|(
@@ -2450,20 +2494,7 @@ argument_list|(
 literal|")"
 argument_list|)
 expr_stmt|;
-comment|/* Emit description comment for Name() with a predefined ACPI name */
-name|ParentOp
-operator|=
-name|Op
-operator|->
-name|Common
-operator|.
-name|Parent
-expr_stmt|;
-if|if
-condition|(
-name|ParentOp
-condition|)
-block|{
+comment|/*              * Emit a description comment for a Name() operator that is a              * predefined ACPI name. Must check the grandparent.              */
 name|ParentOp
 operator|=
 name|ParentOp
@@ -2476,6 +2507,7 @@ if|if
 condition|(
 name|ParentOp
 operator|&&
+operator|(
 name|ParentOp
 operator|->
 name|Asl
@@ -2483,6 +2515,7 @@ operator|.
 name|AmlOpcode
 operator|==
 name|AML_NAME_OP
+operator|)
 condition|)
 block|{
 name|AcpiDmPredefinedDescription
@@ -2490,7 +2523,6 @@ argument_list|(
 name|ParentOp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|AcpiOsPrintf
 argument_list|(
@@ -2512,11 +2544,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|Op
-operator|->
-name|Common
-operator|.
-name|Parent
+name|ParentOp
 operator|->
 name|Common
 operator|.

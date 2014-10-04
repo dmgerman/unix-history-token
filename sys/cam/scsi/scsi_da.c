@@ -1097,7 +1097,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * The STEC 842 sometimes hang on UNMAP. 		 */
+comment|/* 		 * The STEC SSDs sometimes hang on UNMAP. 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -1105,7 +1105,7 @@ name|SIP_MEDIA_FIXED
 block|,
 literal|"STEC"
 block|,
-literal|"S842E800M2"
+literal|"*"
 block|,
 literal|"*"
 block|}
@@ -1535,6 +1535,26 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * PNY USB 3.0 Flash Drives 		*/
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"PNY"
+block|,
+literal|"USB 3.0 FD*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+operator||
+name|DA_Q_NO_RC16
 block|}
 block|,
 block|{

@@ -3480,6 +3480,19 @@ name|devices_max
 operator|=
 name|XHCI_MAX_DEVICES
 expr_stmt|;
+comment|/* set default cycle state in case of early interrupts */
+name|sc
+operator|->
+name|sc_event_ccs
+operator|=
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_command_ccs
+operator|=
+literal|1
+expr_stmt|;
 comment|/* setup command queue mutex and condition varible */
 name|cv_init
 argument_list|(
@@ -10198,6 +10211,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * Some hardware requires that we drop the endpoint 		 * context before adding it again: 		 */
 name|xhci_ctx_set_le32
 argument_list|(
 name|sc
@@ -10209,9 +10223,12 @@ name|ctx_input
 operator|.
 name|dwInCtx0
 argument_list|,
-literal|0
+name|mask
+operator|&
+name|XHCI_INCTX_NON_CTRL_MASK
 argument_list|)
 expr_stmt|;
+comment|/* Add new endpoint context */
 name|xhci_ctx_set_le32
 argument_list|(
 name|sc
@@ -10257,7 +10274,7 @@ comment|/* adjust */
 name|x
 operator|--
 expr_stmt|;
-comment|/* figure out maximum */
+comment|/* figure out the maximum number of contexts */
 if|if
 condition|(
 name|x
@@ -10273,7 +10290,6 @@ index|]
 operator|.
 name|context_num
 condition|)
-block|{
 name|sc
 operator|->
 name|sc_hw
@@ -10287,6 +10303,21 @@ name|context_num
 operator|=
 name|x
 expr_stmt|;
+else|else
+name|x
+operator|=
+name|sc
+operator|->
+name|sc_hw
+operator|.
+name|devs
+index|[
+name|index
+index|]
+operator|.
+name|context_num
+expr_stmt|;
+comment|/* update number of contexts */
 name|temp
 operator|=
 name|xhci_ctx_get_le32
@@ -10332,7 +10363,6 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(

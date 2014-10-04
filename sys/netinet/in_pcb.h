@@ -200,6 +200,10 @@ decl_stmt|;
 block|}
 name|ie_dependladdr
 union|;
+name|u_int32_t
+name|ie6_zoneid
+decl_stmt|;
+comment|/* scope zone id */
 block|}
 struct|;
 end_struct
@@ -321,6 +325,13 @@ define|#
 directive|define
 name|inc6_laddr
 value|inc_ie.ie6_laddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|inc6_zoneid
+value|inc_ie.ie6_zoneid
 end_define
 
 begin_struct_decl
@@ -632,6 +643,13 @@ define|#
 directive|define
 name|in6p_laddr
 value|inp_inc.inc6_laddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|in6p_zoneid
+value|inp_inc.inc6_zoneid
 end_define
 
 begin_define
@@ -1649,6 +1667,16 @@ define|\
 value|(ntohs((lport))& (mask))
 end_define
 
+begin_define
+define|#
+directive|define
+name|INP6_PCBHASHKEY
+parameter_list|(
+name|faddr
+parameter_list|)
+value|((faddr)->s6_addr32[3])
+end_define
+
 begin_comment
 comment|/*  * Flags for inp_vflags -- historically version flags only  */
 end_comment
@@ -2131,6 +2159,28 @@ end_define
 
 begin_comment
 comment|/* IP_RSS_LISTEN_BUCKET is set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RECVFLOWID
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* populate recv datagram with flow info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RECVRSSBUCKETID
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* populate recv datagram with bucket id */
 end_comment
 
 begin_comment

@@ -2372,6 +2372,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|iscsid_timeout
+operator|>
+literal|0
+operator|&&
 name|is
 operator|->
 name|is_timeout
@@ -2409,6 +2413,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|login_timeout
+operator|>
+literal|0
+operator|&&
 name|is
 operator|->
 name|is_timeout
@@ -2433,6 +2441,24 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+goto|goto
+name|out
+goto|;
+block|}
+if|if
+condition|(
+name|ping_timeout
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* 		 * Pings are disabled.  Don't send NOP-Out in this case. 		 * Reset the timeout, to avoid triggering reconnection, 		 * should the user decide to reenable them. 		 */
+name|is
+operator|->
+name|is_timeout
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -10305,11 +10331,12 @@ name|max_target
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * Note that the variable below is only relevant for targets 		 * that don't claim compliance with anything above SPC2, which 		 * means they don't support REPORT_LUNS. 		 */
 name|cpi
 operator|->
 name|max_lun
 operator|=
-literal|0
+literal|255
 expr_stmt|;
 name|cpi
 operator|->

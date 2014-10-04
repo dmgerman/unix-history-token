@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -778,39 +778,12 @@ operator|&
 name|noff
 argument_list|)
 expr_stmt|;
-comment|/* end of file? */
 if|if
 condition|(
-operator|(
 name|error
 operator|==
 name|ESRCH
-operator|)
-operator|||
-operator|(
-name|noff
-operator|>
-name|file_sz
-operator|)
 condition|)
-block|{
-comment|/* 		 * Handle the virtual hole at the end of file. 		 */
-if|if
-condition|(
-name|hole
-condition|)
-block|{
-operator|*
-name|off
-operator|=
-name|file_sz
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 return|return
 operator|(
 name|SET_ERROR
@@ -819,6 +792,23 @@ name|ENXIO
 argument_list|)
 operator|)
 return|;
+comment|/* 	 * We could find a hole that begins after the logical end-of-file, 	 * because dmu_offset_next() only works on whole blocks.  If the 	 * EOF falls mid-block, then indicate that the "virtual hole" 	 * at the end of the file begins at the logical EOF, rather than 	 * at the end of the last block. 	 */
+if|if
+condition|(
+name|noff
+operator|>
+name|file_sz
+condition|)
+block|{
+name|ASSERT
+argument_list|(
+name|hole
+argument_list|)
+expr_stmt|;
+name|noff
+operator|=
+name|file_sz
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -11933,6 +11923,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* FreeBSD: Reset chflags(2) flags. */
+name|vap
+operator|->
+name|va_filerev
+operator|=
+name|zp
+operator|->
+name|z_seq
+expr_stmt|;
 comment|/* 	 * Add in any requested optional attributes and the create time. 	 * Also set the corresponding bits in the returned attribute bitmap. 	 */
 if|if
 condition|(
@@ -25953,7 +25951,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getpages_args
-comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_reqpage; 		vm_ooffset_t a_offset; 	} */
+comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_reqpage; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -26848,7 +26846,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_putpages_args
-comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_sync; 		int *a_rtvals; 		vm_ooffset_t a_offset; 	} */
+comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_sync; 		int *a_rtvals; 	} */
 modifier|*
 name|ap
 decl_stmt|;

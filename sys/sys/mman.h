@@ -1076,25 +1076,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|shm_path
-parameter_list|(
-name|struct
-name|shmfd
-modifier|*
-name|shmfd
-parameter_list|,
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_else
 else|#
 directive|else

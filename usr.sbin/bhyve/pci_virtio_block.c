@@ -457,6 +457,9 @@ comment|/* read PCI config */
 name|pci_vtblk_cfgwrite
 block|,
 comment|/* write PCI config */
+name|NULL
+block|,
+comment|/* apply negotiated features */
 name|VTBLK_S_HOSTCAPS
 block|,
 comment|/* our capabilities */

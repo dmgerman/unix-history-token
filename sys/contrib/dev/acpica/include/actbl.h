@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -408,6 +408,20 @@ name|ACPI_TABLE_XSDT
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ACPI_RSDT_ENTRY_SIZE
+value|(sizeof (UINT32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_XSDT_ENTRY_SIZE
+value|(sizeof (UINT64))
+end_define
+
 begin_comment
 comment|/*******************************************************************************  *  * FACS - Firmware ACPI Control Structure (FACS)  *  ******************************************************************************/
 end_comment
@@ -718,13 +732,14 @@ name|UINT8
 name|ResetValue
 decl_stmt|;
 comment|/* Value to write to the ResetRegister port to reset the system */
-name|UINT8
-name|Reserved4
-index|[
-literal|3
-index|]
+name|UINT16
+name|ArmBootFlags
 decl_stmt|;
-comment|/* Reserved, must be zero */
+comment|/* ARM-Specific Boot Flags (see below for individual flags) (ACPI 5.1) */
+name|UINT8
+name|MinorRevision
+decl_stmt|;
+comment|/* FADT Minor Revision (ACPI 5.1) */
 name|UINT64
 name|XFacs
 decl_stmt|;
@@ -779,7 +794,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Masks for FADT Boot Architecture Flags (BootFlags) [Vx]=Introduced in this FADT revision */
+comment|/* Masks for FADT IA-PC Boot Architecture Flags (boot_flags) [Vx]=Introduced in this FADT revision */
 end_comment
 
 begin_define
@@ -846,6 +861,32 @@ end_define
 
 begin_comment
 comment|/* 05: [V5] No CMOS real-time clock present */
+end_comment
+
+begin_comment
+comment|/* Masks for FADT ARM Boot Architecture Flags (arm_boot_flags) ACPI 5.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_PSCI_COMPLIANT
+value|(1)
+end_define
+
+begin_comment
+comment|/* 00: [V5+] PSCI 0.2+ is implemented */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_PSCI_USE_HVC
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* 01: [V5+] HVC must be used instead of SMC as the PSCI conduit */
 end_comment
 
 begin_comment
@@ -1249,36 +1290,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_ORIGIN_UNKNOWN
+name|ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL
 value|(0)
 end_define
 
+begin_comment
+comment|/* Virtual address, external maintained */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_ORIGIN_MAPPED
+name|ACPI_TABLE_ORIGIN_INTERNAL_PHYSICAL
 value|(1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_ORIGIN_ALLOCATED
-value|(2)
-end_define
+begin_comment
+comment|/* Physical address, internally mapped */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_TABLE_ORIGIN_OVERRIDE
-value|(4)
+name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
+value|(2)
 end_define
+
+begin_comment
+comment|/* Virtual address, internallly allocated */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_TABLE_ORIGIN_MASK
-value|(7)
+value|(3)
 end_define
 
 begin_define
@@ -1339,7 +1385,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_FADT_V2_SIZE
-value|(UINT32) (ACPI_FADT_OFFSET (Reserved4[0]) + 3)
+value|(UINT32) (ACPI_FADT_OFFSET (MinorRevision) + 1)
 end_define
 
 begin_define

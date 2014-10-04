@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -733,8 +739,7 @@ modifier|*
 name|arg
 parameter_list|,
 name|int
-name|lkflags
-name|__unused
+name|flags
 parameter_list|,
 name|struct
 name|vnode
@@ -750,6 +755,8 @@ argument_list|(
 name|arg
 argument_list|,
 name|mp
+argument_list|,
+name|flags
 argument_list|,
 name|vpp
 argument_list|)
@@ -881,7 +888,9 @@ name|anp
 operator|->
 name|an_parent
 argument_list|,
-literal|0
+name|cnp
+operator|->
+name|cn_lkflags
 argument_list|,
 name|vpp
 argument_list|)
@@ -1067,7 +1076,7 @@ operator|)
 return|;
 block|}
 block|}
-name|AUTOFS_LOCK
+name|AUTOFS_SLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1114,7 +1123,7 @@ operator|==
 name|CREATE
 condition|)
 block|{
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1125,7 +1134,7 @@ name|EJUSTRETURN
 operator|)
 return|;
 block|}
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1137,7 +1146,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * XXX: Dropping the node here is ok, because we never remove nodes. 	 */
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1149,6 +1158,10 @@ argument_list|(
 name|child
 argument_list|,
 name|mp
+argument_list|,
+name|cnp
+operator|->
+name|cn_lkflags
 argument_list|,
 name|vpp
 argument_list|)
@@ -1265,7 +1278,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-name|AUTOFS_LOCK
+name|AUTOFS_XLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1301,7 +1314,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1312,7 +1325,7 @@ name|error
 operator|)
 return|;
 block|}
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1326,6 +1339,8 @@ argument_list|,
 name|vp
 operator|->
 name|v_mount
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 name|ap
 operator|->
@@ -1834,7 +1849,7 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* Account for "." and "..". */
-name|AUTOFS_LOCK
+name|AUTOFS_SLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1907,7 +1922,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1927,7 +1942,7 @@ operator|-=
 name|AUTOFS_DELEN
 expr_stmt|;
 block|}
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -2153,7 +2168,7 @@ name|parent
 operator|!=
 name|NULL
 condition|)
-name|AUTOFS_ASSERT_LOCKED
+name|AUTOFS_ASSERT_XLOCKED
 argument_list|(
 name|parent
 operator|->
@@ -2352,6 +2367,18 @@ condition|)
 block|{
 if|if
 condition|(
+name|strlen
+argument_list|(
+name|anp
+operator|->
+name|an_name
+argument_list|)
+operator|!=
+name|namelen
+condition|)
+continue|continue;
+if|if
+condition|(
 name|strncmp
 argument_list|(
 name|anp
@@ -2424,7 +2451,7 @@ name|autofs_node
 modifier|*
 name|parent
 decl_stmt|;
-name|AUTOFS_ASSERT_LOCKED
+name|AUTOFS_ASSERT_XLOCKED
 argument_list|(
 name|anp
 operator|->
@@ -2519,6 +2546,9 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -2568,7 +2598,7 @@ name|vget
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
 operator||
 name|LK_RETRY
 argument_list|,
@@ -2754,6 +2784,11 @@ operator|->
 name|v_data
 operator|=
 name|anp
+expr_stmt|;
+name|VN_LOCK_ASHARE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

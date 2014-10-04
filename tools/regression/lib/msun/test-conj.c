@@ -62,7 +62,7 @@ pragma|#
 directive|pragma
 name|STDC
 name|CX_LIMITED_RANGE
-name|off
+name|OFF
 end_pragma
 
 begin_comment

@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -1006,7 +1012,7 @@ argument_list|)
 expr_stmt|;
 name|enable_interrupts
 argument_list|(
-name|I32_bit
+name|PSR_I
 argument_list|)
 expr_stmt|;
 name|loop_counter

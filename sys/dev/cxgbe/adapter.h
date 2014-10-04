@@ -1081,8 +1081,15 @@ name|link_config
 name|link_cfg
 decl_stmt|;
 name|struct
+name|timeval
+name|last_refreshed
+decl_stmt|;
+name|struct
 name|port_stats
 name|stats
+decl_stmt|;
+name|u_int
+name|tnl_cong_drops
 decl_stmt|;
 name|eventhandler_tag
 name|vlan_c
@@ -2921,6 +2928,11 @@ name|struct
 name|callout
 name|sfl_callout
 decl_stmt|;
+name|struct
+name|mtx
+name|regwin_lock
+decl_stmt|;
+comment|/* for indirect reads and memory windows */
 name|an_handler_t
 name|an_handler
 name|__aligned

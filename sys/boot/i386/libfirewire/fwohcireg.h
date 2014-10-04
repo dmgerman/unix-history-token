@@ -966,9 +966,9 @@ name|post_wr_hi
 decl_stmt|;
 comment|/* post write addr hi 0x3c */
 name|fwohcireg_t
-name|vender
+name|vendor
 decl_stmt|;
-comment|/* vender ID 0x40 */
+comment|/* vendor ID 0x40 */
 name|fwohcireg_t
 name|dummy1
 index|[

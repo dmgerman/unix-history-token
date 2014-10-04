@@ -315,38 +315,6 @@ define|\
 value|static int vt_##_name = _default;					\ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RWTUN,&vt_##_name, _default,\ 		_descr);
 end_define
 
-begin_comment
-comment|/* Allow to disable some special keys by users. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VT_DEBUG_KEY_ENABLED
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VT_REBOOT_KEY_ENABLED
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VT_HALT_KEY_ENABLED
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VT_POWEROFF_KEY_ENABLED
-value|(1<< 3)
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|vt_driver
@@ -420,6 +388,29 @@ end_endif
 
 begin_struct
 struct|struct
+name|vt_pastebuf
+block|{
+name|term_char_t
+modifier|*
+name|vpb_buf
+decl_stmt|;
+comment|/* Copy-paste buffer. */
+name|unsigned
+name|int
+name|vpb_bufsz
+decl_stmt|;
+comment|/* Buffer size. */
+name|unsigned
+name|int
+name|vpb_len
+decl_stmt|;
+comment|/* Length of a last selection. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|vt_device
 block|{
 name|struct
@@ -444,11 +435,10 @@ name|vd_savedwindow
 decl_stmt|;
 comment|/* (?) Saved for suspend. */
 name|struct
-name|vt_window
-modifier|*
-name|vd_markedwin
+name|vt_pastebuf
+name|vd_pastebuf
 decl_stmt|;
-comment|/* (?) Copy/paste buf owner. */
+comment|/* (?) Copy/paste buf. */
 specifier|const
 name|struct
 name|vt_driver
@@ -596,26 +586,39 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|VD_PASTEBUF
+parameter_list|(
+name|vd
+parameter_list|)
+value|((vd)->vd_pastebuf.vpb_buf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VD_PASTEBUFSZ
+parameter_list|(
+name|vd
+parameter_list|)
+value|((vd)->vd_pastebuf.vpb_bufsz)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VD_PASTEBUFLEN
+parameter_list|(
+name|vd
+parameter_list|)
+value|((vd)->vd_pastebuf.vpb_len)
+end_define
+
 begin_comment
 comment|/*  * Per-window terminal screen buffer.  *  * Because redrawing is performed asynchronously, the buffer keeps track  * of a rectangle that needs to be redrawn (vb_dirtyrect).  Because this  * approach seemed to cause suboptimal performance (when the top left  * and the bottom right of the screen are modified), it also uses a set  * of bitmasks to keep track of the rows and columns (mod 64) that have  * been modified.  */
 end_comment
-
-begin_struct
-struct|struct
-name|vt_bufmask
-block|{
-name|uint64_t
-name|vbm_row
-decl_stmt|,
-name|vbm_col
-decl_stmt|;
-define|#
-directive|define
-name|VBM_DIRTY
-value|UINT64_MAX
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -695,11 +698,6 @@ name|term_rect_t
 name|vb_dirtyrect
 decl_stmt|;
 comment|/* (b) Dirty rectangle. */
-name|struct
-name|vt_bufmask
-name|vb_dirtymask
-decl_stmt|;
-comment|/* (b) Dirty bitmasks. */
 name|term_char_t
 modifier|*
 name|vb_buffer
@@ -868,10 +866,6 @@ name|vt_buf
 modifier|*
 parameter_list|,
 name|term_rect_t
-modifier|*
-parameter_list|,
-name|struct
-name|vt_bufmask
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1277,6 +1271,10 @@ name|int
 name|vw_prev_kbdmode
 decl_stmt|;
 comment|/* (?) Previous mode. */
+name|int
+name|vw_kbdstate
+decl_stmt|;
+comment|/* (?) Keyboard state. */
 name|int
 name|vw_grabbed
 decl_stmt|;

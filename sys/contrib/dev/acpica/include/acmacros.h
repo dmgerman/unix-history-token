@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -152,11 +152,7 @@ value|(*ACPI_CAST64 (ptr) = (UINT64) (val))
 end_define
 
 begin_comment
-comment|/*  * printf() format helpers  */
-end_comment
-
-begin_comment
-comment|/* Split 64-bit integer into two 32-bit values. Use with %8.8X%8.8X */
+comment|/*  * printf() format helpers. These macros are workarounds for the difficulties  * with emitting 64-bit integers and 64-bit pointers with the same code  * for both 32-bit and 64-bit hosts.  */
 end_comment
 
 begin_define
@@ -187,6 +183,23 @@ parameter_list|)
 value|ACPI_FORMAT_UINT64(i)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_FORMAT_TO_UINT
+parameter_list|(
+name|i
+parameter_list|)
+value|ACPI_FORMAT_UINT64(i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PRINTF_UINT
+value|"0x%8.8X%8.8X"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -199,7 +212,24 @@ name|ACPI_FORMAT_NATIVE_UINT
 parameter_list|(
 name|i
 parameter_list|)
-value|0, (i)
+value|0, (UINT32) (i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FORMAT_TO_UINT
+parameter_list|(
+name|i
+parameter_list|)
+value|(UINT32) (i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PRINTF_UINT
+value|"0x%8.8X"
 end_define
 
 begin_endif
@@ -1937,124 +1967,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Memory allocation tracking (DEBUG ONLY)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEM_PARAMETERS
-value|_COMPONENT, _AcpiModuleName, __LINE__
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_DBG_TRACK_ALLOCATIONS
-end_ifndef
-
-begin_comment
-comment|/* Memory allocation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_ALLOCATE
-parameter_list|(
-name|a
-parameter_list|)
-value|AcpiUtAllocate((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ALLOCATE_ZEROED
-parameter_list|(
-name|a
-parameter_list|)
-value|AcpiUtAllocateZeroed((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FREE
-parameter_list|(
-name|a
-parameter_list|)
-value|AcpiOsFree(a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEM_TRACKING
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Memory allocation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_ALLOCATE
-parameter_list|(
-name|a
-parameter_list|)
-value|AcpiUtAllocateAndTrack((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ALLOCATE_ZEROED
-parameter_list|(
-name|a
-parameter_list|)
-value|AcpiUtAllocateZeroedAndTrack((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FREE
-parameter_list|(
-name|a
-parameter_list|)
-value|AcpiUtFreeAndTrack(a, ACPI_MEM_PARAMETERS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEM_TRACKING
-parameter_list|(
-name|a
-parameter_list|)
-value|a
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DBG_TRACK_ALLOCATIONS */
-end_comment
 
 begin_comment
 comment|/*  * Macros used for ACPICA utilities only  */

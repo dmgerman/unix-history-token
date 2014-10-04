@@ -9756,11 +9756,6 @@ name|sin
 decl_stmt|;
 name|sin
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 operator|&
 name|ifa
 operator|->
@@ -9874,11 +9869,6 @@ block|}
 comment|/* ok to use deprecated addresses? */
 name|sin6
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
 operator|&
 name|ifa
 operator|->
@@ -10240,11 +10230,6 @@ name|sin
 decl_stmt|;
 name|sin
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 operator|&
 name|ifa
 operator|->
@@ -10319,11 +10304,6 @@ name|sin6
 decl_stmt|;
 name|sin6
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
 operator|&
 name|ifa
 operator|->
@@ -30218,20 +30198,12 @@ name|param_length
 operator|=
 name|htons
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_paramhdr
-argument_list|)
+name|parameter_len
 argument_list|)
 expr_stmt|;
 name|chunk_len
 operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_paramhdr
-argument_list|)
+name|parameter_len
 expr_stmt|;
 block|}
 comment|/* And now tell the peer which extensions we support */
@@ -56463,6 +56435,9 @@ name|hb_info
 operator|.
 name|addr_family
 operator|=
+operator|(
+name|uint8_t
+operator|)
 name|net
 operator|->
 name|ro
@@ -68780,11 +68755,6 @@ operator|)
 expr_stmt|;
 name|sin
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 operator|&
 name|sifa
 operator|->

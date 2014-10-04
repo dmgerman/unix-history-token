@@ -940,7 +940,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|lacp_attach
 parameter_list|(
 name|struct
@@ -951,11 +951,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|lacp_detach
 parameter_list|(
-name|struct
-name|lagg_softc
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1024,7 +1023,8 @@ name|struct
 name|lagg_softc
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1037,7 +1037,8 @@ name|struct
 name|lagg_port
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

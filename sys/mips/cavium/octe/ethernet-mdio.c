@@ -193,6 +193,11 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+name|cvmx_wait
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|smi_rd
 operator|.
 name|u64
@@ -333,6 +338,11 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
+name|cvmx_wait
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 name|smi_wr
 operator|.
 name|u64

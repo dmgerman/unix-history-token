@@ -315,6 +315,14 @@ name|enum
 name|sfxge_rxq_state
 name|init_state
 decl_stmt|;
+name|unsigned
+name|int
+name|entries
+decl_stmt|;
+name|unsigned
+name|int
+name|ptr_mask
+decl_stmt|;
 name|struct
 name|sfxge_rx_sw_desc
 modifier|*
@@ -343,6 +351,10 @@ decl_stmt|;
 name|struct
 name|sfxge_lro_state
 name|lro
+decl_stmt|;
+name|unsigned
+name|int
+name|refill_threshold
 decl_stmt|;
 name|struct
 name|callout

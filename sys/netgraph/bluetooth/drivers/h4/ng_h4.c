@@ -3161,14 +3161,6 @@ operator|->
 name|stat
 argument_list|)
 expr_stmt|;
-name|_IF_DROP
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|outq
-argument_list|)
-expr_stmt|;
 name|NG_H4_UNLOCK
 argument_list|(
 name|sc

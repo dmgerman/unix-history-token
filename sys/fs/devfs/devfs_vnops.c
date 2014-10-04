@@ -8811,6 +8811,11 @@ operator|=
 name|vn_seek
 block|,
 operator|.
+name|fo_fill_kinfo
+operator|=
+name|vn_fill_kinfo
+block|,
+operator|.
 name|fo_flags
 operator|=
 name|DFLAG_PASSABLE

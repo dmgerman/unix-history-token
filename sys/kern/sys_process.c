@@ -5088,7 +5088,7 @@ name|p_flag
 operator|&
 name|P_SYSTEM
 operator|||
-name|p_cansee
+name|p_cansched
 argument_list|(
 name|td
 argument_list|,

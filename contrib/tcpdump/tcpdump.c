@@ -6587,6 +6587,7 @@ block|{
 name|BIOCGSTATS
 block|}
 decl_stmt|;
+comment|/* 		 * the various libpcap devices use a combination of 		 * read (bpf), ioctl (bpf, netmap), poll (netmap) 		 * so we add the relevant access rights. 		 */
 name|cap_rights_init
 argument_list|(
 operator|&
@@ -6595,6 +6596,8 @@ argument_list|,
 name|CAP_IOCTL
 argument_list|,
 name|CAP_READ
+argument_list|,
+name|CAP_EVENT
 argument_list|)
 expr_stmt|;
 if|if

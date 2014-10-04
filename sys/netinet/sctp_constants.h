@@ -1260,17 +1260,6 @@ value|2
 end_define
 
 begin_comment
-comment|/* default AUTO_ASCONF mode enable(1)/disable(0) value (sysctl) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEFAULT_AUTO_ASCONF
-value|1
-end_define
-
-begin_comment
 comment|/* default MULTIPLE_ASCONF mode enable(1)/disable(0) value (sysctl) */
 end_comment
 
@@ -1278,28 +1267,6 @@ begin_define
 define|#
 directive|define
 name|SCTP_DEFAULT_MULTIPLE_ASCONFS
-value|0
-end_define
-
-begin_comment
-comment|/* default MOBILITY_BASE mode enable(1)/disable(0) value (sysctl) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEFAULT_MOBILITY_BASE
-value|0
-end_define
-
-begin_comment
-comment|/* default MOBILITY_FASTHANDOFF mode enable(1)/disable(0) value (sysctl) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_DEFAULT_MOBILITY_FASTHANDOFF
 value|0
 end_define
 

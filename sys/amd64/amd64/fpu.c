@@ -745,6 +745,53 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|fpuresume
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|u_long
+name|cr0
+decl_stmt|;
+name|cr0
+operator|=
+name|rcr0
+argument_list|()
+expr_stmt|;
+name|stop_emulating
+argument_list|()
+expr_stmt|;
+name|fninit
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|use_xsave
+condition|)
+name|load_xcr
+argument_list|(
+name|XCR0
+argument_list|,
+name|xsave_mask
+argument_list|)
+expr_stmt|;
+name|fpurestore
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+name|load_cr0
+argument_list|(
+name|cr0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Enable XSAVE if supported and allowed by user.  * Calculate the xsave_mask.  */
 end_comment
@@ -1414,7 +1461,7 @@ name|PCPU_SET
 argument_list|(
 name|fpcurthread
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2000,17 +2047,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement device not available (DNA) exception  *  * It would be better to switch FP context here (if curthread != fpcurthread)  * and not necessarily for every context switch, but it is too hard to  * access foreign pcb's.  */
+comment|/*  * Device Not Available (DNA, #NM) exception handler.  *  * It would be better to switch FP context here (if curthread !=  * fpcurthread) and not necessarily for every context switch, but it  * is too hard to access foreign pcb's.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|err_count
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
@@ -2019,6 +2057,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * This handler is entered with interrupts enabled, so context 	 * switches may occur before critical_enter() is executed.  If 	 * a context switch occurs, then when we regain control, our 	 * state will have been completely restored.  The CPU may 	 * change underneath us, but the only part of our context that 	 * lives in the CPU is CR0.TS and that will be "restored" by 	 * setting it on the new CPU. 	 */
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -2034,10 +2073,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fpudna: fpcurthread == curthread %d times\n"
-argument_list|,
-operator|++
-name|err_count
+literal|"fpudna: fpcurthread == curthread\n"
 argument_list|)
 expr_stmt|;
 name|stop_emulating
@@ -2058,7 +2094,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
+name|panic
 argument_list|(
 literal|"fpudna: fpcurthread = %p (%d), curthread = %p (%d)\n"
 argument_list|,
@@ -2072,22 +2108,13 @@ argument_list|(
 name|fpcurthread
 argument_list|)
 operator|->
-name|td_proc
-operator|->
-name|p_pid
+name|td_tid
 argument_list|,
 name|curthread
 argument_list|,
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"fpudna"
+name|td_tid
 argument_list|)
 expr_stmt|;
 block|}

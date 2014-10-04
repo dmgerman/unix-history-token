@@ -344,6 +344,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/**  * Setup MSI vector interrupt(s).  *  * \param dev     The device that requests the binding.  *  * \param vector  Requested initial vector to bind the MSI interrupt(s) to.  *  * \param count   Number of vectors to allocate.  *  * \returns  0 on success, otherwise an errno.  */
+end_comment
+
+begin_function_decl
+name|int
+name|xen_register_msi
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|vector
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Teardown a MSI vector interrupt.  *  * \param vector  Requested vector to release.  *  * \returns  0 on success, otherwise an errno.  */
+end_comment
+
+begin_function_decl
+name|int
+name|xen_release_msi
+parameter_list|(
+name|int
+name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
