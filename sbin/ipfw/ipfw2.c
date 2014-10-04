@@ -19139,7 +19139,7 @@ name|action
 operator|->
 name|arg1
 operator|>=
-name|IP_FW_TARG
+name|IP_FW_TABLEARG
 condition|)
 name|errx
 argument_list|(
