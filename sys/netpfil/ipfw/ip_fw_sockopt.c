@@ -9806,6 +9806,7 @@ modifier|*
 name|_b
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|ipfw_sopt_handler
 modifier|*
@@ -9817,6 +9818,7 @@ decl_stmt|;
 name|a
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ipfw_sopt_handler
 operator|*
@@ -9826,6 +9828,7 @@ expr_stmt|;
 name|b
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ipfw_sopt_handler
 operator|*
