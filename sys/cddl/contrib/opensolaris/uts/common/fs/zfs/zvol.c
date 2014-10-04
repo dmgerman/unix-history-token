@@ -563,6 +563,39 @@ literal|2
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Toggle unmap functionality.  */
+end_comment
+
+begin_decl_stmt
+name|boolean_t
+name|zvol_unmap_enabled
+init|=
+name|B_TRUE
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_vol
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|unmap_enabled
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|zvol_unmap_enabled
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable UNMAP functionality"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -9559,6 +9592,12 @@ name|tx
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|zvol_unmap_enabled
+condition|)
+break|break;
+if|if
+condition|(
 name|ddi_copyin
 argument_list|(
 operator|(
@@ -13593,6 +13632,12 @@ break|break;
 case|case
 name|DIOCGDELETE
 case|:
+if|if
+condition|(
+operator|!
+name|zvol_unmap_enabled
+condition|)
+break|break;
 name|offset
 operator|=
 operator|(
