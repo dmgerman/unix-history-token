@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/libalias/alias.h>
 end_include
 
@@ -5203,6 +5209,8 @@ name|ip_fw_chain
 modifier|*
 name|chain
 decl_stmt|;
+name|IPFW_RLOCK_TRACKER
+expr_stmt|;
 name|chain
 operator|=
 operator|&

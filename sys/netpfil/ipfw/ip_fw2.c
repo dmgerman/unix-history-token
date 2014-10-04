@@ -159,6 +159,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -4269,6 +4275,8 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* flag to exit the outer loop */
+name|IPFW_RLOCK_TRACKER
+expr_stmt|;
 if|if
 condition|(
 name|m

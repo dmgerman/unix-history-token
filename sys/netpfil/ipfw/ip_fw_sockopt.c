@@ -121,6 +121,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -11450,6 +11456,8 @@ name|struct
 name|rule_check_info
 name|ci
 decl_stmt|;
+name|IPFW_RLOCK_TRACKER
+expr_stmt|;
 name|chain
 operator|=
 operator|&
