@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/caprights.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/priority.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/seq.h>
 end_include
 
 begin_include
@@ -86,6 +98,15 @@ begin_struct
 struct|struct
 name|filedescent
 block|{
+ifdef|#
+directive|ifdef
+name|CAPABILITIES
+name|seq_t
+name|fde_seq
+decl_stmt|;
+comment|/* if you need fde_file and fde_caps in sync */
+endif|#
+directive|endif
 name|struct
 name|file
 modifier|*
@@ -132,6 +153,56 @@ directive|define
 name|fde_nioctls
 value|fde_caps.fc_nioctls
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAPABILITIES
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|fde_change
+parameter_list|(
+name|fde
+parameter_list|)
+value|((char *)(fde) + sizeof(seq_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|fde_change_size
+value|(sizeof(struct filedescent) - sizeof(seq_t))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|fde_change
+parameter_list|(
+name|fde
+parameter_list|)
+value|((fde))
+end_define
+
+begin_define
+define|#
+directive|define
+name|fde_change_size
+value|(sizeof(struct filedescent))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This structure is used for the management of descriptors.  It may be  * shared by multiple processes.  */
@@ -222,6 +293,29 @@ comment|/* fdfree() needs wakeup */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CAPABILITIES
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|fd_seq
+parameter_list|(
+name|fdp
+parameter_list|,
+name|fd
+parameter_list|)
+value|(&(fdp)->fd_ofiles[(fd)].fde_seq)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Structure to keep track of (process leader, struct fildedesc) tuples.  * Each process has a pointer to such a structure when detailed tracking  * is needed, e.g., when rfork(RFPROC | RFMEM) causes a file descriptor  * table to be shared by processes having different "p_leader" pointers  * and thus distinct POSIX style locks.  *  * fdl_refcount and fdl_holdcount are protected by struct filedesc mtx.  */
