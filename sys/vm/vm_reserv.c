@@ -1009,7 +1009,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates a contiguous set of physical pages of the given size "npages"  * from an existing or newly-created reservation.  All of the physical pages  * must be at or above the given physical address "low" and below the given  * physical address "high".  The given value "alignment" determines the  * alignment of the first physical page in the set.  If the given value  * "boundary" is non-zero, then the set of physical pages cannot cross any  * physical address boundary that is a multiple of that value.  Both  * "alignment" and "boundary" must be a power of two.  *  * The object and free page queue must be locked.  */
+comment|/*  * Allocates a contiguous set of physical pages of the given size "npages"  * from existing or newly created reservations.  All of the physical pages  * must be at or above the given physical address "low" and below the given  * physical address "high".  The given value "alignment" determines the  * alignment of the first physical page in the set.  If the given value  * "boundary" is non-zero, then the set of physical pages cannot cross any  * physical address boundary that is a multiple of that value.  Both  * "alignment" and "boundary" must be a power of two.  *  * The object and free page queue must be locked.  */
 end_comment
 
 begin_function
@@ -1317,7 +1317,7 @@ goto|goto
 name|found
 goto|;
 block|}
-comment|/* 	 * Could at least one reservation fit between the first index to the 	 * left that can be used and the first index to the right that cannot 	 * be used? 	 */
+comment|/* 	 * Could at least one reservation fit between the first index to the 	 * left that can be used ("leftcap") and the first index to the right 	 * that cannot be used ("rightcap")? 	 */
 name|first
 operator|=
 name|pindex
@@ -1459,6 +1459,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* 			 * At least one reservation will fit between "leftcap" 			 * and "rightcap".  However, a reservation for the 			 * last of the requested pages will not fit.  Reduce 			 * the size of the upcoming allocation accordingly. 			 */
 name|allocpages
 operator|=
 name|minpages
@@ -1521,7 +1522,7 @@ expr_stmt|;
 block|}
 comment|/* Speculate that the object may grow. */
 block|}
-comment|/* 	 * Allocate and populate the new reservations.  The alignment and 	 * boundary specified for this allocation may be different from the 	 * alignment and boundary specified for the requested pages.  For 	 * instance, the specified index may not be the first page within the 	 * first new reservation. 	 */
+comment|/* 	 * Allocate the physical pages.  The alignment and boundary specified 	 * for this allocation may be different from the alignment and 	 * boundary specified for the requested pages.  For instance, the 	 * specified index may not be the first page within the first new 	 * reservation. 	 */
 name|m
 operator|=
 name|vm_phys_alloc_contig
@@ -1559,6 +1560,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* 	 * The allocated physical pages always begin at a reservation 	 * boundary, but they do not always end at a reservation boundary. 	 * Initialize every reservation that is completely covered by the 	 * allocated physical pages. 	 */
 name|m_ret
 operator|=
 name|NULL
@@ -1735,8 +1737,8 @@ block|}
 do|while
 condition|(
 name|allocpages
-operator|>
-literal|0
+operator|>=
+name|VM_LEVEL_0_NPAGES
 condition|)
 do|;
 return|return
