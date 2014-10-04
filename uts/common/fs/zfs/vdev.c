@@ -172,6 +172,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * When a vdev is added, it will be divided into approximately (but no  * more than) this number of metaslabs.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|metaslabs_per_vdev
+init|=
+literal|200
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Given a vdev type, return the appropriate ops vector.  */
 end_comment
 
@@ -6941,7 +6953,7 @@ modifier|*
 name|vd
 parameter_list|)
 block|{
-comment|/* 	 * Aim for roughly 200 metaslabs per vdev. 	 */
+comment|/* 	 * Aim for roughly metaslabs_per_vdev (default 200) metaslabs per vdev. 	 */
 name|vd
 operator|->
 name|vdev_ms_shift
@@ -6952,7 +6964,7 @@ name|vd
 operator|->
 name|vdev_asize
 operator|/
-literal|200
+name|metaslabs_per_vdev
 argument_list|)
 expr_stmt|;
 name|vd
