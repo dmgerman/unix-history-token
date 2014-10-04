@@ -11997,6 +11997,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ipfw_ctl3
+argument_list|,
+literal|"ipfw new sockopt calls"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|ipfw
