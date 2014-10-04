@@ -99,6 +99,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rmlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -8233,6 +8239,7 @@ modifier|*
 name|v
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|ifidx
 modifier|*
@@ -8246,6 +8253,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|uint16_t
 operator|*
 operator|)
@@ -8255,6 +8263,7 @@ expr_stmt|;
 name|ifidx
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ifidx
 operator|*
@@ -11259,6 +11268,7 @@ modifier|*
 name|v
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|numarray
 modifier|*
@@ -11272,6 +11282,7 @@ operator|=
 operator|*
 operator|(
 operator|(
+specifier|const
 name|uint32_t
 operator|*
 operator|)
@@ -11281,6 +11292,7 @@ expr_stmt|;
 name|na
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|numarray
 operator|*

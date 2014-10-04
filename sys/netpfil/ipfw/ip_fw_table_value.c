@@ -1883,6 +1883,10 @@ name|ta
 operator|->
 name|vlimit
 expr_stmt|;
+name|vidx
+operator|=
+literal|0
+expr_stmt|;
 name|tc
 operator|=
 name|ts

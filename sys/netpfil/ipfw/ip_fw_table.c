@@ -2234,6 +2234,10 @@ name|ts
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ta
+operator|=
+name|NULL
+expr_stmt|;
 name|IPFW_UH_WLOCK
 argument_list|(
 name|ch
