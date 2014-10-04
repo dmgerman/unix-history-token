@@ -11413,7 +11413,7 @@ block|{
 define|#
 directive|define
 name|RULE_MAXSIZE
-value|(256*sizeof(u_int32_t))
+value|(512*sizeof(u_int32_t))
 name|int
 name|error
 decl_stmt|;
