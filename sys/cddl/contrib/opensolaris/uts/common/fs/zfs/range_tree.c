@@ -48,7 +48,6 @@ file|<sys/range_tree.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|kmem_cache_t
 modifier|*
 name|range_seg_cache
