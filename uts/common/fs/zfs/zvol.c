@@ -470,6 +470,18 @@ literal|2
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Toggle unmap functionality.  */
+end_comment
+
+begin_decl_stmt
+name|boolean_t
+name|zvol_unmap_enabled
+init|=
+name|B_TRUE
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|int
@@ -8801,6 +8813,12 @@ name|dmu_tx_t
 modifier|*
 name|tx
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|zvol_unmap_enabled
+condition|)
+break|break;
 if|if
 condition|(
 name|ddi_copyin
