@@ -110,7 +110,7 @@ comment|/* per-process open file flags */
 name|seq_t
 name|fde_seq
 decl_stmt|;
-comment|/* if you need fde_file and fde_caps in sync */
+comment|/* keep file and caps in sync */
 block|}
 struct|;
 end_struct
