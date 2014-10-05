@@ -1864,9 +1864,15 @@ name|jp
 operator|->
 name|ps
 init|;
+name|procno
+operator|>
+literal|0
 condition|;
 name|ps
 operator|++
+operator|,
+name|procno
+operator|--
 control|)
 block|{
 comment|/* for each process */
@@ -1893,9 +1899,7 @@ operator|->
 name|pid
 argument_list|)
 expr_stmt|;
-goto|goto
-name|skip
-goto|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -1909,9 +1913,7 @@ name|jp
 operator|->
 name|ps
 condition|)
-goto|goto
-name|skip
-goto|;
+continue|continue;
 if|if
 condition|(
 name|jobno
@@ -2097,16 +2099,6 @@ argument_list|(
 name|jp
 argument_list|)
 expr_stmt|;
-name|skip
-label|:
-if|if
-condition|(
-operator|--
-name|procno
-operator|<=
-literal|0
-condition|)
-break|break;
 block|}
 block|}
 end_function
