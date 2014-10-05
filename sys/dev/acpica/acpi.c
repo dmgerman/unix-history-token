@@ -1722,28 +1722,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Allow override of whether methods execute in parallel or not.  * Enable this for serial behavior, which fixes "AE_ALREADY_EXISTS"  * errors for AML that really can't handle parallel method execution.  * It is off by default since this breaks recursive methods and  * some IBMs use such code.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|acpi_serialize_methods
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.acpi.serialize_methods"
-argument_list|,
-operator|&
-name|acpi_serialize_methods
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Allow users to dump Debug objects without ACPI debugger. */
 end_comment
 
@@ -1832,6 +1810,51 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"Turn on interpreter slack mode."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Ignore register widths set by FADT and use default widths instead. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_ignore_reg_width
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.default_register_width"
+argument_list|,
+operator|&
+name|acpi_ignore_reg_width
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_acpi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|default_register_width
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|acpi_ignore_reg_width
+argument_list|,
+literal|1
+argument_list|,
+literal|"Ignore register widths set by FADT"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2677,14 +2700,6 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/*      * Set the globals from our tunables.  This is needed because ACPI-CA      * uses UINT8 for some values and we have no tunable_byte.      */
-name|AcpiGbl_AllMethodsSerialized
-operator|=
-name|acpi_serialize_methods
-condition|?
-name|TRUE
-else|:
-name|FALSE
-expr_stmt|;
 name|AcpiGbl_EnableInterpreterSlack
 operator|=
 name|acpi_interpreter_slack
@@ -2696,6 +2711,14 @@ expr_stmt|;
 name|AcpiGbl_EnableAmlDebugObject
 operator|=
 name|acpi_debug_objects
+condition|?
+name|TRUE
+else|:
+name|FALSE
+expr_stmt|;
+name|AcpiGbl_UseDefaultRegisterWidths
+operator|=
+name|acpi_ignore_reg_width
 condition|?
 name|TRUE
 else|:

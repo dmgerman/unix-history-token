@@ -478,17 +478,95 @@ name|SIOCSLAGGHASH
 value|_IOW('i', 146, struct lagg_reqflags)
 end_define
 
+begin_struct
+struct|struct
+name|lagg_reqopts
+block|{
+name|char
+name|ro_ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* name of the lagg */
+name|int
+name|ro_opts
+decl_stmt|;
+comment|/* Option bitmap */
+define|#
+directive|define
+name|LAGG_OPT_NONE
+value|0x00
+define|#
+directive|define
+name|LAGG_OPT_USE_FLOWID
+value|0x01
+comment|/* use M_FLOWID */
+comment|/* Pseudo flags which are used in ro_opts but not stored into sc_opts. */
+define|#
+directive|define
+name|LAGG_OPT_FLOWIDSHIFT
+value|0x02
+comment|/* Set flowid */
+define|#
+directive|define
+name|LAGG_OPT_FLOWIDSHIFT_MASK
+value|0x1f
+comment|/* flowid is uint32_t */
+define|#
+directive|define
+name|LAGG_OPT_LACP_STRICT
+value|0x10
+comment|/* LACP strict mode */
+define|#
+directive|define
+name|LAGG_OPT_LACP_TXTEST
+value|0x20
+comment|/* LACP debug: txtest */
+define|#
+directive|define
+name|LAGG_OPT_LACP_RXTEST
+value|0x40
+comment|/* LACP debug: rxtest */
+name|u_int
+name|ro_count
+decl_stmt|;
+comment|/* number of ports */
+name|u_int
+name|ro_active
+decl_stmt|;
+comment|/* active port count */
+name|u_int
+name|ro_flapping
+decl_stmt|;
+comment|/* number of flapping */
+name|int
+name|ro_flowid_shift
+decl_stmt|;
+comment|/* shift the flowid */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOCGLAGGOPTS
+value|_IOWR('i', 152, struct lagg_reqopts)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSLAGGOPTS
+value|_IOW('i', 153, struct lagg_reqopts)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/counter.h>
-end_include
 
 begin_comment
 comment|/*  * Internal kernel part  */
@@ -668,6 +746,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|lagg_counters
+block|{
+name|uint64_t
+name|val
+index|[
+name|IFCOUNTERS
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|lagg_softc
 block|{
 name|struct
@@ -679,10 +771,6 @@ comment|/* virtual interface */
 name|struct
 name|rmlock
 name|sc_mtx
-decl_stmt|;
-name|struct
-name|mtx
-name|sc_call_mtx
 decl_stmt|;
 name|int
 name|sc_proto
@@ -723,18 +811,6 @@ comment|/* sequence counter */
 name|uint32_t
 name|sc_flags
 decl_stmt|;
-name|counter_u64_t
-name|sc_ipackets
-decl_stmt|;
-name|counter_u64_t
-name|sc_opackets
-decl_stmt|;
-name|counter_u64_t
-name|sc_ibytes
-decl_stmt|;
-name|counter_u64_t
-name|sc_obytes
-decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument|__tplhd
@@ -773,25 +849,18 @@ name|struct
 name|callout
 name|sc_callout
 decl_stmt|;
-name|struct
-name|sysctl_ctx_list
-name|ctx
+name|u_int
+name|sc_opts
 decl_stmt|;
-comment|/* sysctl variables */
-name|struct
-name|sysctl_oid
-modifier|*
-name|sc_oid
-decl_stmt|;
-comment|/* sysctl tree oid */
-name|int
-name|use_flowid
-decl_stmt|;
-comment|/* use M_FLOWID */
 name|int
 name|flowid_shift
 decl_stmt|;
 comment|/* shift the flowid */
+name|struct
+name|lagg_counters
+name|detached_counters
+decl_stmt|;
+comment|/* detached ports sum */
 block|}
 struct|;
 end_struct
@@ -897,6 +966,11 @@ name|route
 modifier|*
 parameter_list|)
 function_decl|;
+name|struct
+name|lagg_counters
+name|port_counters
+decl_stmt|;
+comment|/* ifp counters copy */
 name|SLIST_ENTRY
 argument_list|(
 argument|lagg_port
@@ -989,27 +1063,6 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|rm_assert(&(_sc)->sc_mtx, RA_WLOCKED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAGG_CALLOUT_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|)
-define|\
-value|mtx_init(&(_sc)->sc_call_mtx, "if_lagg callout mutex", NULL,\ 	    MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAGG_CALLOUT_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->sc_call_mtx)
 end_define
 
 begin_function_decl

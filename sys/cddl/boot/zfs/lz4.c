@@ -224,6 +224,31 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Unaligned memory access is automatically enabled for "common" CPU,  * such as x86. For others CPU, the compiler will be more cautious, and  * insert extra code to ensure aligned access is respected. If you know  * your target CPU supports unaligned memory access, you may want to  * force this option manually to improve performance  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ARM_FEATURE_UNALIGNED
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LZ4_FORCE_UNALIGNED_ACCESS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Compiler Options  */
 end_comment
 
@@ -394,6 +419,26 @@ name|U64
 value|uint64_t
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LZ4_FORCE_UNALIGNED_ACCESS
+end_ifndef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -432,6 +477,25 @@ block|}
 name|U64_S
 typedef|;
 end_typedef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LZ4_FORCE_UNALIGNED_ACCESS
+end_ifndef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

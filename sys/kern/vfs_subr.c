@@ -8117,11 +8117,26 @@ name|first_printf
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* 				 * Drop the sync mutex, because some watchdog 				 * drivers need to sleep while patting 				 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sync_mtx
+argument_list|)
+expr_stmt|;
 name|wdog_kern_pat
 argument_list|(
 name|WD_LASTVAL
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sync_mtx
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

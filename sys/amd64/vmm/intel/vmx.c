@@ -283,17 +283,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_EXIT_CTLS_ONE_SETTING_NO_PAT
-define|\
-value|(VM_EXIT_HOST_LMA			|			\ 	VM_EXIT_SAVE_EFER			|			\ 	VM_EXIT_LOAD_EFER)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_EXIT_CTLS_ONE_SETTING
 define|\
-value|(VM_EXIT_CTLS_ONE_SETTING_NO_PAT       	|			\ 	VM_EXIT_ACKNOWLEDGE_INTERRUPT		|			\ 	VM_EXIT_SAVE_PAT			|			\ 	VM_EXIT_LOAD_PAT)
+value|(VM_EXIT_HOST_LMA			|			\ 	VM_EXIT_SAVE_EFER			|			\ 	VM_EXIT_LOAD_EFER			|			\ 	VM_EXIT_ACKNOWLEDGE_INTERRUPT		|			\ 	VM_EXIT_SAVE_PAT			|			\ 	VM_EXIT_LOAD_PAT)
 end_define
 
 begin_define
@@ -306,16 +298,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_ENTRY_CTLS_ONE_SETTING_NO_PAT
-value|VM_ENTRY_LOAD_EFER
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_ENTRY_CTLS_ONE_SETTING
-define|\
-value|(VM_ENTRY_CTLS_ONE_SETTING_NO_PAT     	|			\ 	VM_ENTRY_LOAD_PAT)
+value|(VM_ENTRY_LOAD_EFER | VM_ENTRY_LOAD_PAT)
 end_define
 
 begin_define
@@ -587,34 +571,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|vmx_patmsr
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_hw_vmm_vmx_cap
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|patmsr
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|vmx_patmsr
-argument_list|,
-literal|0
-argument_list|,
-literal|"PAT MSR saved and restored in VCMS"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2390,10 +2346,6 @@ operator|)
 return|;
 block|}
 comment|/* Check support for VM-exit controls */
-name|vmx_patmsr
-operator|=
-literal|1
-expr_stmt|;
 name|error
 operator|=
 name|vmx_set_ctlreg
@@ -2403,28 +2355,6 @@ argument_list|,
 name|MSR_VMX_TRUE_EXIT_CTLS
 argument_list|,
 name|VM_EXIT_CTLS_ONE_SETTING
-argument_list|,
-name|VM_EXIT_CTLS_ZERO_SETTING
-argument_list|,
-operator|&
-name|exit_ctls
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-comment|/* Try again without the PAT MSR bits */
-name|error
-operator|=
-name|vmx_set_ctlreg
-argument_list|(
-name|MSR_VMX_EXIT_CTLS
-argument_list|,
-name|MSR_VMX_TRUE_EXIT_CTLS
-argument_list|,
-name|VM_EXIT_CTLS_ONE_SETTING_NO_PAT
 argument_list|,
 name|VM_EXIT_CTLS_ZERO_SETTING
 argument_list|,
@@ -2449,29 +2379,7 @@ name|error
 operator|)
 return|;
 block|}
-else|else
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"vmm: PAT MSR access not supported\n"
-argument_list|)
-expr_stmt|;
-name|vmx_patmsr
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
 comment|/* Check support for VM-entry controls */
-if|if
-condition|(
-name|vmx_patmsr
-condition|)
-block|{
 name|error
 operator|=
 name|vmx_set_ctlreg
@@ -2488,26 +2396,6 @@ operator|&
 name|entry_ctls
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|error
-operator|=
-name|vmx_set_ctlreg
-argument_list|(
-name|MSR_VMX_ENTRY_CTLS
-argument_list|,
-name|MSR_VMX_TRUE_ENTRY_CTLS
-argument_list|,
-name|VM_ENTRY_CTLS_ONE_SETTING_NO_PAT
-argument_list|,
-name|VM_ENTRY_CTLS_ZERO_SETTING
-argument_list|,
-operator|&
-name|entry_ctls
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -3378,7 +3266,7 @@ operator|->
 name|msr_bitmap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * The SYSENTER_CS/ESP/EIP MSRs are identical to FS/GSBASE in 	 * how they are saved/restored so can be directly accessed by the 	 * guest. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 * 	 * The TSC MSR is exposed read-only. Writes are disallowed as that 	 * will impact the host TSC. 	 * XXX Writes would be implemented with a wrmsr trap, and 	 * then modifying the TSC offset in the VMCS. 	 */
+comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * The SYSENTER_CS/ESP/EIP MSRs are identical to FS/GSBASE in 	 * how they are saved/restored so can be directly accessed by the 	 * guest. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 * 	 * MSR_PAT is saved and restored in the guest VMCS are on a VM exit 	 * and entry respectively. It is also restored from the host VMCS 	 * area on a VM exit. 	 * 	 * The TSC MSR is exposed read-only. Writes are disallowed as that 	 * will impact the host TSC. 	 * XXX Writes would be implemented with a wrmsr trap, and 	 * then modifying the TSC offset in the VMCS. 	 */
 if|if
 condition|(
 name|guest_msr_rw
@@ -3423,6 +3311,13 @@ argument_list|,
 name|MSR_EFER
 argument_list|)
 operator|||
+name|guest_msr_rw
+argument_list|(
+name|vmx
+argument_list|,
+name|MSR_PAT
+argument_list|)
+operator|||
 name|guest_msr_ro
 argument_list|(
 name|vmx
@@ -3433,23 +3328,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"vmx_vminit: error setting guest msr access"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * MSR_PAT is saved and restored in the guest VMCS are on a VM exit 	 * and entry respectively. It is also restored from the host VMCS 	 * area on a VM exit. However, if running on a system with no 	 * MSR_PAT save/restore support, leave access disabled so accesses 	 * will be trapped. 	 */
-if|if
-condition|(
-name|vmx_patmsr
-operator|&&
-name|guest_msr_rw
-argument_list|(
-name|vmx
-argument_list|,
-name|MSR_PAT
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"vmx_vminit: error setting guest pat msr access"
 argument_list|)
 expr_stmt|;
 name|vpid_alloc

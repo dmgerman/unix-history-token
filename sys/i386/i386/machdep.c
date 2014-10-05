@@ -1202,7 +1202,18 @@ operator|.
 name|early_delay
 operator|=
 name|i8254_delay
-block|,  }
+block|,
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+operator|.
+name|msi_init
+operator|=
+name|msi_init
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 

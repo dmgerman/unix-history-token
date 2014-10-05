@@ -3888,6 +3888,10 @@ name|uint16_t
 modifier|*
 name|eepromdata
 parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah_config
+parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|status
@@ -3917,6 +3921,10 @@ parameter_list|,
 name|uint16_t
 modifier|*
 name|eepromdata
+parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah_config
 parameter_list|,
 name|HAL_STATUS
 modifier|*

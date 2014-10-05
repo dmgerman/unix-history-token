@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -124,6 +124,17 @@ end_define
 
 begin_comment
 comment|/* I/O Virtualization Reporting Structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_LPIT
+value|"LPIT"
+end_define
+
+begin_comment
+comment|/* Low Power Idle Table */
 end_comment
 
 begin_define
@@ -893,6 +904,22 @@ name|ACPI_TABLE_DBG2
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_dbg2_header
+block|{
+name|UINT32
+name|InfoOffset
+decl_stmt|;
+name|UINT32
+name|InfoCount
+decl_stmt|;
+block|}
+name|ACPI_DBG2_HEADER
+typedef|;
+end_typedef
+
 begin_comment
 comment|/* Debug Device Information Subtable */
 end_comment
@@ -1048,7 +1075,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * DMAR - DMA Remapping table  *        Version 1  *  * Conforms to "Intel Virtualization Technology for Directed I/O",  * Version 1.2, Sept. 2008  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * DMAR - DMA Remapping table  *        Version 1  *  * Conforms to "Intel Virtualization Technology for Directed I/O",  * Version 2.2, Sept. 2013  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -1125,18 +1152,22 @@ name|ACPI_DMAR_TYPE_RESERVED_MEMORY
 init|=
 literal|1
 block|,
-name|ACPI_DMAR_TYPE_ATSR
+name|ACPI_DMAR_TYPE_ROOT_ATS
 init|=
 literal|2
 block|,
-name|ACPI_DMAR_HARDWARE_AFFINITY
+name|ACPI_DMAR_TYPE_HARDWARE_AFFINITY
 init|=
 literal|3
 block|,
-name|ACPI_DMAR_TYPE_RESERVED
+name|ACPI_DMAR_TYPE_NAMESPACE
 init|=
 literal|4
-comment|/* 4 and greater are reserved */
+block|,
+name|ACPI_DMAR_TYPE_RESERVED
+init|=
+literal|5
+comment|/* 5 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1171,7 +1202,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Values for EntryType in ACPI_DMAR_DEVICE_SCOPE */
+comment|/* Values for EntryType in ACPI_DMAR_DEVICE_SCOPE - device types */
 end_comment
 
 begin_enum
@@ -1198,10 +1229,14 @@ name|ACPI_DMAR_SCOPE_TYPE_HPET
 init|=
 literal|4
 block|,
-name|ACPI_DMAR_SCOPE_TYPE_RESERVED
+name|ACPI_DMAR_SCOPE_TYPE_NAMESPACE
 init|=
 literal|5
-comment|/* 5 and greater are reserved */
+block|,
+name|ACPI_DMAR_SCOPE_TYPE_RESERVED
+init|=
+literal|6
+comment|/* 6 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -1223,7 +1258,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * DMAR Sub-tables, correspond to Type in ACPI_DMAR_HEADER  */
+comment|/*  * DMAR Subtables, correspond to Type in ACPI_DMAR_HEADER  */
 end_comment
 
 begin_comment
@@ -1369,6 +1404,38 @@ name|ProximityDomain
 decl_stmt|;
 block|}
 name|ACPI_DMAR_RHSA
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 4: ACPI Namespace Device Declaration Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_dmar_andd
+block|{
+name|ACPI_DMAR_HEADER
+name|Header
+decl_stmt|;
+name|UINT8
+name|Reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|UINT8
+name|DeviceNumber
+decl_stmt|;
+name|char
+name|DeviceName
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|ACPI_DMAR_ANDD
 typedef|;
 end_typedef
 
@@ -2293,7 +2360,173 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * MCFG - PCI Memory Mapped Configuration table and sub-table  *        Version 1  *  * Conforms to "PCI Firmware Specification", Revision 3.0, June 20, 2005  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * LPIT - Low Power Idle Table  *  * Conforms to "ACPI Low Power Idle Table (LPIT) and _LPD Proposal (DRAFT)"  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_lpit
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+block|}
+name|ACPI_TABLE_LPIT
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* LPIT subtable header */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_lpit_header
+block|{
+name|UINT32
+name|Type
+decl_stmt|;
+comment|/* Subtable type */
+name|UINT32
+name|Length
+decl_stmt|;
+comment|/* Subtable length */
+name|UINT16
+name|UniqueId
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+block|}
+name|ACPI_LPIT_HEADER
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for subtable Type above */
+end_comment
+
+begin_enum
+enum|enum
+name|AcpiLpitType
+block|{
+name|ACPI_LPIT_TYPE_NATIVE_CSTATE
+init|=
+literal|0x00
+block|,
+name|ACPI_LPIT_TYPE_SIMPLE_IO
+init|=
+literal|0x01
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Masks for Flags field above  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_LPIT_STATE_DISABLED
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LPIT_NO_COUNTER
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/*  * LPIT subtables, correspond to Type in ACPI_LPIT_HEADER  */
+end_comment
+
+begin_comment
+comment|/* 0x00: Native C-state instruction based LPI structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_lpit_native
+block|{
+name|ACPI_LPIT_HEADER
+name|Header
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|EntryTrigger
+decl_stmt|;
+name|UINT32
+name|Residency
+decl_stmt|;
+name|UINT32
+name|Latency
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ResidencyCounter
+decl_stmt|;
+name|UINT64
+name|CounterFrequency
+decl_stmt|;
+block|}
+name|ACPI_LPIT_NATIVE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 0x01: Simple I/O based LPI structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_lpit_io
+block|{
+name|ACPI_LPIT_HEADER
+name|Header
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|EntryTrigger
+decl_stmt|;
+name|UINT32
+name|TriggerAction
+decl_stmt|;
+name|UINT64
+name|TriggerValue
+decl_stmt|;
+name|UINT64
+name|TriggerMask
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|MinimumIdleState
+decl_stmt|;
+name|UINT32
+name|Residency
+decl_stmt|;
+name|UINT32
+name|Latency
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+name|ResidencyCounter
+decl_stmt|;
+name|UINT64
+name|CounterFrequency
+decl_stmt|;
+block|}
+name|ACPI_LPIT_IO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * MCFG - PCI Memory Mapped Configuration table and subtable  *        Version 1  *  * Conforms to "PCI Firmware Specification", Revision 3.0, June 20, 2005  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -2511,7 +2744,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * SLIC Sub-tables, correspond to Type in ACPI_SLIC_HEADER  */
+comment|/*  * SLIC Subtables, correspond to Type in ACPI_SLIC_HEADER  */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -316,7 +316,7 @@ block|{
 case|case
 name|ACPI_PTYPE1_FIXED
 case|:
-comment|/*          * The package count is fixed and there are no sub-packages          *          * If package is too small, exit.          * If package is larger than expected, issue warning but continue          */
+comment|/*          * The package count is fixed and there are no subpackages          *          * If package is too small, exit.          * If package is larger than expected, issue warning but continue          */
 name|ExpectedCount
 operator|=
 name|Package
@@ -406,7 +406,7 @@ break|break;
 case|case
 name|ACPI_PTYPE1_VAR
 case|:
-comment|/*          * The package count is variable, there are no sub-packages,          * and all elements must be of the same type          */
+comment|/*          * The package count is variable, there are no subpackages,          * and all elements must be of the same type          */
 for|for
 control|(
 name|i
@@ -453,7 +453,7 @@ break|break;
 case|case
 name|ACPI_PTYPE1_OPTION
 case|:
-comment|/*          * The package count is variable, there are no sub-packages.          * There are a fixed number of required elements, and a variable          * number of optional elements.          *          * Check if package is at least as large as the minimum required          */
+comment|/*          * The package count is variable, there are no subpackages.          * There are a fixed number of required elements, and a variable          * number of optional elements.          *          * Check if package is at least as large as the minimum required          */
 name|ExpectedCount
 operator|=
 name|Package
@@ -586,7 +586,7 @@ expr_stmt|;
 name|Count
 operator|--
 expr_stmt|;
-comment|/* Examine the sub-packages */
+comment|/* Examine the subpackages */
 name|ApCheckPackageList
 argument_list|(
 name|Predefined
@@ -608,7 +608,7 @@ break|break;
 case|case
 name|ACPI_PTYPE2_PKG_COUNT
 case|:
-comment|/* First element is the (Integer) count of sub-packages to follow */
+comment|/* First element is the (Integer) count of subpackages to follow */
 name|Status
 operator|=
 name|ApCheckObjectType
@@ -673,7 +673,7 @@ name|Asl
 operator|.
 name|Next
 expr_stmt|;
-comment|/* Examine the sub-packages */
+comment|/* Examine the subpackages */
 name|ApCheckPackageList
 argument_list|(
 name|Predefined
@@ -693,6 +693,123 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_PTYPE2_UUID_PAIR
+case|:
+comment|/* The package contains a variable list of UUID Buffer/Package pairs */
+comment|/* The length of the package must be even */
+if|if
+condition|(
+name|Count
+operator|&
+literal|1
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|MsgBuffer
+argument_list|,
+literal|"%4.4s: Package length, %d, must be even."
+argument_list|,
+name|Predefined
+operator|->
+name|Info
+operator|.
+name|Name
+argument_list|,
+name|Count
+argument_list|)
+expr_stmt|;
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_RESERVED_PACKAGE_LENGTH
+argument_list|,
+name|ParentOp
+operator|->
+name|Asl
+operator|.
+name|Child
+argument_list|,
+name|MsgBuffer
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Validate the alternating types */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|Count
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|i
+operator|&
+literal|1
+condition|)
+block|{
+name|ApCheckObjectType
+argument_list|(
+name|Predefined
+operator|->
+name|Info
+operator|.
+name|Name
+argument_list|,
+name|Op
+argument_list|,
+name|Package
+operator|->
+name|RetInfo
+operator|.
+name|ObjectType2
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ApCheckObjectType
+argument_list|(
+name|Predefined
+operator|->
+name|Info
+operator|.
+name|Name
+argument_list|,
+name|Op
+argument_list|,
+name|Package
+operator|->
+name|RetInfo
+operator|.
+name|ObjectType1
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+name|Op
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|ACPI_PTYPE2
 case|:
 case|case
@@ -707,8 +824,8 @@ case|:
 case|case
 name|ACPI_PTYPE2_FIX_VAR
 case|:
-comment|/*          * These types all return a single Package that consists of a          * variable number of sub-Packages.          */
-comment|/* Examine the sub-packages */
+comment|/*          * These types all return a single Package that consists of a          * variable number of subpackages.          */
+comment|/* Examine the subpackages */
 name|ApCheckPackageList
 argument_list|(
 name|Predefined
@@ -1074,6 +1191,26 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|Count
+operator|>
+name|ExpectedCount
+condition|)
+block|{
+name|ApPackageTooLarge
+argument_list|(
+name|PredefinedName
+argument_list|,
+name|SubPackageOp
+argument_list|,
+name|Count
+argument_list|,
+name|ExpectedCount
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|ApCheckPackageElements
 argument_list|(
 name|PredefinedName
@@ -1181,7 +1318,7 @@ break|break;
 case|case
 name|ACPI_PTYPE2_FIXED
 case|:
-comment|/* Each sub-package has a fixed length */
+comment|/* Each subpackage has a fixed length */
 name|ExpectedCount
 operator|=
 name|Package
@@ -1198,6 +1335,26 @@ name|ExpectedCount
 condition|)
 block|{
 name|ApPackageTooSmall
+argument_list|(
+name|PredefinedName
+argument_list|,
+name|SubPackageOp
+argument_list|,
+name|Count
+argument_list|,
+name|ExpectedCount
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|Count
+operator|>
+name|ExpectedCount
+condition|)
+block|{
+name|ApPackageTooLarge
 argument_list|(
 name|PredefinedName
 argument_list|,
@@ -1256,7 +1413,7 @@ break|break;
 case|case
 name|ACPI_PTYPE2_MIN
 case|:
-comment|/* Each sub-package has a variable but minimum length */
+comment|/* Each subpackage has a variable but minimum length */
 name|ExpectedCount
 operator|=
 name|Package
@@ -1285,7 +1442,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* Check the type of each sub-package element */
+comment|/* Check the type of each subpackage element */
 name|ApCheckPackageElements
 argument_list|(
 name|PredefinedName
@@ -1424,7 +1581,7 @@ operator|=
 name|ExpectedCount
 expr_stmt|;
 block|}
-comment|/* Check the type of each sub-package element */
+comment|/* Check the type of each subpackage element */
 name|Op
 operator|=
 name|Op

@@ -800,7 +800,11 @@ name|native_start_all_aps
 block|,
 endif|#
 directive|endif
-block|}
+operator|.
+name|msi_init
+operator|=
+name|msi_init
+block|, }
 decl_stmt|;
 end_decl_stmt
 

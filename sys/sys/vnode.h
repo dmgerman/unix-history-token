@@ -1992,7 +1992,7 @@ name|DEBUG_VFS_LOCKS
 end_ifdef
 
 begin_comment
-comment|/*  * Support code to aid in debugging VFS locking problems.  Not totally  * reliable since if the thread sleeps between changing the lock  * state and checking it with the assert, some other thread could  * change the state.  They are good enough for debugging a single  * filesystem using a single-threaded test.  */
+comment|/*  * Support code to aid in debugging VFS locking problems.  Not totally  * reliable since if the thread sleeps between changing the lock  * state and checking it with the assert, some other thread could  * change the state.  They are good enough for debugging a single  * filesystem using a single-threaded test.  Note that the unreliability is  * limited to false negatives; efforts were made to ensure that false  * positives cannot occur.  */
 end_comment
 
 begin_function_decl

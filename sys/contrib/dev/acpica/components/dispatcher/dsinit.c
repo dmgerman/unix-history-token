@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -129,11 +129,12 @@ operator|*
 operator|)
 name|ObjHandle
 decl_stmt|;
-name|ACPI_OBJECT_TYPE
-name|Type
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -162,16 +163,12 @@ name|ObjectCount
 operator|++
 expr_stmt|;
 comment|/* And even then, we are only interested in a few object types */
-name|Type
-operator|=
+switch|switch
+condition|(
 name|AcpiNsGetType
 argument_list|(
 name|ObjHandle
 argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|Type
 condition|)
 block|{
 case|case
@@ -220,9 +217,87 @@ break|break;
 case|case
 name|ACPI_TYPE_METHOD
 case|:
+comment|/*          * Auto-serialization support. We will examine each method that is          * NotSerialized to determine if it creates any Named objects. If          * it does, it will be marked serialized to prevent problems if          * the method is entered by two or more threads and an attempt is          * made to create the same named object twice -- which results in          * an AE_ALREADY_EXISTS exception and method abort.          */
 name|Info
 operator|->
 name|MethodCount
+operator|++
+expr_stmt|;
+name|ObjDesc
+operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
+name|Node
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ObjDesc
+condition|)
+block|{
+break|break;
+block|}
+comment|/* Ignore if already serialized */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|InfoFlags
+operator|&
+name|ACPI_METHOD_SERIALIZED
+condition|)
+block|{
+name|Info
+operator|->
+name|SerialMethodCount
+operator|++
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|AcpiGbl_AutoSerializeMethods
+condition|)
+block|{
+comment|/* Parse/scan method and serialize it if necessary */
+name|AcpiDsAutoSerializeMethod
+argument_list|(
+name|Node
+argument_list|,
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|InfoFlags
+operator|&
+name|ACPI_METHOD_SERIALIZED
+condition|)
+block|{
+comment|/* Method was just converted to Serialized */
+name|Info
+operator|->
+name|SerialMethodCount
+operator|++
+expr_stmt|;
+name|Info
+operator|->
+name|SerializedMethodCount
+operator|++
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|Info
+operator|->
+name|NonSerialMethodCount
 operator|++
 expr_stmt|;
 break|break;
@@ -311,15 +386,6 @@ operator|(
 name|ACPI_DB_DISPATCH
 operator|,
 literal|"**** Starting initialization of namespace objects ****\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT_RAW
-argument_list|(
-operator|(
-name|ACPI_DB_INIT
-operator|,
-literal|"Parsing all Control Methods:"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -451,7 +517,8 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"\nTable [%4.4s](id %4.4X) - %u Objects with %u Devices %u Methods %u Regions\n"
+literal|"Table [%4.4s] (id %4.4X) - %4u Objects with %3u Devices, "
+literal|"%3u Regions, %3u Methods (%u/%u/%u Serial/Non/Cvt)\n"
 operator|,
 name|Table
 operator|->
@@ -469,11 +536,23 @@ name|DeviceCount
 operator|,
 name|Info
 operator|.
+name|OpRegionCount
+operator|,
+name|Info
+operator|.
 name|MethodCount
 operator|,
 name|Info
 operator|.
-name|OpRegionCount
+name|SerialMethodCount
+operator|,
+name|Info
+operator|.
+name|NonSerialMethodCount
+operator|,
+name|Info
+operator|.
+name|SerializedMethodCount
 operator|)
 argument_list|)
 expr_stmt|;

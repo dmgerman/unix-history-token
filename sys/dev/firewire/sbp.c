@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003 Hidetoshi Shimokawa  * Copyright (c) 1998-2002 Katsushi Kobayashi and Hidetoshi Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. Shimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * $FreeBSD$  *  */
+comment|/*-  * Copyright (c) 2003 Hidetoshi Shimokawa  * Copyright (c) 1998-2002 Katsushi Kobayashi and Hidetoshi Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. Shimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -209,7 +209,7 @@ value|(SBP_QUEUE_LEN * SBP_NUM_TARGETS)
 end_define
 
 begin_comment
-comment|/*   * STATUS FIFO addressing  *   bit  * -----------------------  *  0- 1( 2): 0 (alignment)  *  2- 7( 6): target  *  8-15( 8): lun  * 16-31( 8): reserved  * 32-47(16): SBP_BIND_HI   * 48-64(16): bus_id, node_id   */
+comment|/*  * STATUS FIFO addressing  *   bit  *-----------------------  *  0- 1( 2): 0 (alignment)  *  2- 7( 6): target  *  8-15( 8): lun  * 16-31( 8): reserved  * 32-47(16): SBP_BIND_HI  * 48-64(16): bus_id, node_id  */
 end_comment
 
 begin_define
@@ -8239,7 +8239,7 @@ name|CAM_SCSI_STATUS_ERROR
 operator||
 name|CAM_AUTOSNS_VALID
 expr_stmt|;
-comment|/* { 		uint8_t j, *tmp; 		tmp = sense; 		for( j = 0 ; j< 32 ; j+=8){ 			printf("sense %02x%02x %02x%02x %02x%02x %02x%02x\n",  				tmp[j], tmp[j+1], tmp[j+2], tmp[j+3], 				tmp[j+4], tmp[j+5], tmp[j+6], tmp[j+7]); 		}  } */
+comment|/* { 		uint8_t j, *tmp; 		tmp = sense; 		for (j = 0; j< 32; j += 8) { 			printf("sense %02x%02x %02x%02x %02x%02x %02x%02x\n", 				tmp[j], tmp[j + 1], tmp[j + 2], tmp[j + 3], 				tmp[j + 4], tmp[j + 5], tmp[j + 6], tmp[j + 7]); 		}  } */
 break|break;
 default|default:
 name|device_printf
@@ -8382,7 +8382,7 @@ case|:
 if|#
 directive|if
 literal|0
-comment|/*  		 * XXX Convert Direct Access device to RBC. 		 * I've never seen FireWire DA devices which support READ_6. 		 */
+comment|/* 		 * XXX Convert Direct Access device to RBC. 		 * I've never seen FireWire DA devices which support READ_6. 		 */
 block|if (SID_TYPE(inq) == T_DIRECT) 			inq->device |= T_RBC;
 comment|/*  T_DIRECT == 0 */
 endif|#
@@ -9752,7 +9752,7 @@ name|pay_len
 operator|=
 name|SBP_RECV_LEN
 expr_stmt|;
-comment|/* The received packet is usually small enough to be stored within  * the buffer. In that case, the controller return ack_complete and  * no respose is necessary.  *  * XXX fwohci.c and firewire.c should inform event_code such as   * ack_complete or ack_pending to upper driver.  */
+comment|/* The received packet is usually small enough to be stored within  * the buffer. In that case, the controller return ack_complete and  * no respose is necessary.  *  * XXX fwohci.c and firewire.c should inform event_code such as  * ack_complete or ack_pending to upper driver.  */
 if|#
 directive|if
 name|NEED_RESPONSE
@@ -14043,7 +14043,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 				 * XXX this is not correct for unordered 				 * execution.  				 */
+comment|/* 				 * XXX this is not correct for unordered 				 * execution. 				 */
 if|if
 condition|(
 name|sdev

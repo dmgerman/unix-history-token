@@ -4331,6 +4331,24 @@ decl_stmt|;
 name|uint64_t
 name|sa_obj
 decl_stmt|;
+comment|/* 	 * XXX: Fix struct statfs so this isn't necessary! 	 * 	 * The 'osname' is used as the filesystem's special node, which means 	 * it must fit in statfs.f_mntfromname, or else it can't be 	 * enumerated, so libzfs_mnttab_find() returns NULL, which causes 	 * 'zfs unmount' to think it's not mounted when it is. 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|osname
+argument_list|)
+operator|>=
+name|MNAMELEN
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|ENAMETOOLONG
+argument_list|)
+operator|)
+return|;
 name|zfsvfs
 operator|=
 name|kmem_zalloc

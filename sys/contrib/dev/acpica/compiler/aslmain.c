@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -52,6 +52,10 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/*  * Main routine for the iASL compiler.  *  * Portability note: The compiler depends upon the host for command-line  * wildcard support - it is not implemented locally. For example:  *  * Linux/Unix systems: Shell expands wildcards automatically.  *  * Windows: The setargv.obj module must be linked in to automatically  * expand wildcards.  */
+end_comment
+
+begin_comment
 comment|/* Local prototypes */
 end_comment
 
@@ -76,6 +80,58 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|UINT8
+name|AcpiIsBigEndianMachine
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiIsBigEndianMachine  *  * PARAMETERS:  None  *  * RETURN:      TRUE if machine is big endian  *              FALSE if machine is little endian  *  * DESCRIPTION: Detect whether machine is little endian or big endian.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|UINT8
+name|AcpiIsBigEndianMachine
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+union|union
+block|{
+name|UINT32
+name|Integer
+decl_stmt|;
+name|UINT8
+name|Bytes
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|Overlay
+init|=
+block|{
+literal|0xFF000000
+block|}
+union|;
+return|return
+operator|(
+name|Overlay
+operator|.
+name|Bytes
+index|[
+literal|0
+index|]
+operator|)
+return|;
+comment|/* Returns 0xFF (TRUE) for big endian */
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    Usage  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display option help message.  *              Optional items in square brackets.  *  ******************************************************************************/
@@ -102,7 +158,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nGlobal:\n"
+literal|"\nGeneral:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -128,9 +184,70 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-p<prefix>"
+argument_list|,
+literal|"Specify path/filename prefix for all output files"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-v"
 argument_list|,
 literal|"Display compiler version"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vo"
+argument_list|,
+literal|"Enable optimization comments"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vs"
+argument_list|,
+literal|"Disable signon"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nHelp:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-h"
+argument_list|,
+literal|"This message"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-hc"
+argument_list|,
+literal|"Display operators allowed in constant expressions"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-hf"
+argument_list|,
+literal|"Display help for output filename generation"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-hr"
+argument_list|,
+literal|"Display ACPI reserved method names"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ht"
+argument_list|,
+literal|"Display currently supported ACPI table names"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -168,21 +285,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nGeneral Processing:\n"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-p<prefix>"
-argument_list|,
-literal|"Specify path/filename prefix for all output files"
+literal|"\nErrors, Warnings, and Remarks:\n"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
 literal|"-va"
 argument_list|,
-literal|"Disable all errors and warnings (summary only)"
+literal|"Disable all errors/warnings/remarks"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-ve"
+argument_list|,
+literal|"Report only errors (ignore warnings and remarks)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -194,23 +311,9 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-vo"
-argument_list|,
-literal|"Enable optimization comments"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
 literal|"-vr"
 argument_list|,
 literal|"Disable remarks"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-vs"
-argument_list|,
-literal|"Disable signon"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -335,6 +438,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-lm"
+argument_list|,
+literal|"Create hardware summary map file (*.map)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-ln"
 argument_list|,
 literal|"Create namespace file (*.nsp)"
@@ -373,7 +483,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-d<f1,f2>"
+literal|"-d<f1 f2 ...>"
 argument_list|,
 literal|"Disassemble or decode binary ACPI tables to file (*.dsl)"
 argument_list|)
@@ -387,7 +497,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-da<f1,f2>"
+literal|"-da<f1 f2 ...>"
 argument_list|,
 literal|"Disassemble multiple tables from single namespace"
 argument_list|)
@@ -401,7 +511,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-dc<f1,f2>"
+literal|"-dc<f1 f2 ...>"
 argument_list|,
 literal|"Disassemble AML and immediately compile it"
 argument_list|)
@@ -415,7 +525,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-e<f1,f2>"
+literal|"-e<f1 f2 ...>"
 argument_list|,
 literal|"Include ACPI table(s) for external symbol resolution"
 argument_list|)
@@ -425,13 +535,6 @@ argument_list|(
 literal|"-fe<file>"
 argument_list|,
 literal|"Specify external symbol declaration file"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-g"
-argument_list|,
-literal|"Get ACPI tables and write to files (*.dat)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -446,46 +549,6 @@ argument_list|(
 literal|"-vt"
 argument_list|,
 literal|"Dump binary table data in hex format within output file"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\nHelp:\n"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-h"
-argument_list|,
-literal|"This message"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-hc"
-argument_list|,
-literal|"Display operators allowed in constant expressions"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-hf"
-argument_list|,
-literal|"Display help for output filename generation"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-hr"
-argument_list|,
-literal|"Display ACPI reserved method names"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-ht"
-argument_list|,
-literal|"Display currently supported ACPI table names"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -802,6 +865,35 @@ decl_stmt|;
 name|int
 name|Index2
 decl_stmt|;
+name|int
+name|ReturnStatus
+init|=
+literal|0
+decl_stmt|;
+comment|/*      * Big-endian machines are not currently supported. ACPI tables must      * be little-endian, and support for big-endian machines needs to      * be implemented.      */
+if|if
+condition|(
+name|AcpiIsBigEndianMachine
+argument_list|()
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"iASL is not currently supported on big-endian machines.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+name|AcpiOsInitialize
+argument_list|()
+expr_stmt|;
 name|ACPI_DEBUG_INITIALIZE
 argument_list|()
 expr_stmt|;
@@ -850,39 +942,6 @@ expr_stmt|;
 comment|/* Perform global actions first/only */
 if|if
 condition|(
-name|Gbl_GetAllTables
-condition|)
-block|{
-name|Status
-operator|=
-name|AslDoOneFile
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-if|if
-condition|(
 name|Gbl_DisassembleAll
 condition|)
 block|{
@@ -896,14 +955,12 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AslDoOnePathname
+name|AcpiDmAddToExternalFileList
 argument_list|(
 name|argv
 index|[
 name|Index1
 index|]
-argument_list|,
-name|AcpiDmAddToExternalFileList
 argument_list|)
 expr_stmt|;
 if|if
@@ -935,16 +992,33 @@ name|Index2
 index|]
 condition|)
 block|{
+comment|/*          * If -p not specified, we will use the input filename as the          * output filename prefix          */
+if|if
+condition|(
+name|Gbl_UseDefaultAmlFilename
+condition|)
+block|{
+name|Gbl_OutputFilenamePrefix
+operator|=
+name|argv
+index|[
+name|Index2
+index|]
+expr_stmt|;
+name|UtConvertBackslashes
+argument_list|(
+name|Gbl_OutputFilenamePrefix
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
-name|AslDoOnePathname
+name|AslDoOneFile
 argument_list|(
 name|argv
 index|[
 name|Index2
 index|]
-argument_list|,
-name|AslDoOneFile
 argument_list|)
 expr_stmt|;
 if|if
@@ -955,17 +1029,27 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|ReturnStatus
+operator|=
 operator|-
 literal|1
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|CleanupAndExit
+goto|;
 block|}
 name|Index2
 operator|++
 expr_stmt|;
 block|}
+name|CleanupAndExit
+label|:
+name|UtFreeLineBuffers
+argument_list|()
+expr_stmt|;
+name|AslParserCleanup
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|AcpiGbl_ExternalFileList
@@ -977,7 +1061,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|ReturnStatus
 operator|)
 return|;
 block|}

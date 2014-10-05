@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -135,7 +135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    LkIsObjectUsed  *  * PARAMETERS:  ACPI_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Check for an unreferenced namespace object and emit a warning.  *              We have to be careful, because some types and names are  *              typically or always unreferenced, we don't want to issue  *              excessive warnings.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    LkIsObjectUsed  *  * PARAMETERS:  ACPI_WALK_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Check for an unreferenced namespace object and emit a warning.  *              We have to be careful, because some types and names are  *              typically or always unreferenced, we don't want to issue  *              excessive warnings. Note: Names that are declared within a  *              control method are temporary, so we always issue a remark  *              if they are not referenced.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -170,6 +170,10 @@ argument_list|,
 name|ObjHandle
 argument_list|)
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Next
+decl_stmt|;
 comment|/* Referenced flag is set during the namespace xref */
 if|if
 condition|(
@@ -186,7 +190,117 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*      * Ignore names that start with an underscore,      * these are the reserved ACPI names and are typically not referenced,      * they are called by the host OS.      */
+if|if
+condition|(
+operator|!
+name|Node
+operator|->
+name|Op
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/* These types are typically never directly referenced, ignore them */
+switch|switch
+condition|(
+name|Node
+operator|->
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
+case|case
+name|ACPI_TYPE_PROCESSOR
+case|:
+case|case
+name|ACPI_TYPE_POWER
+case|:
+case|case
+name|ACPI_TYPE_THERMAL
+case|:
+case|case
+name|ACPI_TYPE_LOCAL_RESOURCE
+case|:
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+default|default:
+break|break;
+block|}
+comment|/* Determine if the name is within a control method */
+name|Next
+operator|=
+name|Node
+operator|->
+name|Parent
+expr_stmt|;
+while|while
+condition|(
+name|Next
+condition|)
+block|{
+if|if
+condition|(
+name|Next
+operator|->
+name|Type
+operator|==
+name|ACPI_TYPE_METHOD
+condition|)
+block|{
+comment|/*              * Name is within a method, therefore it is temporary.              * Issue a remark even if it is a reserved name (starts              * with an underscore).              */
+name|sprintf
+argument_list|(
+name|MsgBuffer
+argument_list|,
+literal|"Name is within method [%4.4s]"
+argument_list|,
+name|Next
+operator|->
+name|Name
+operator|.
+name|Ascii
+argument_list|)
+expr_stmt|;
+name|AslError
+argument_list|(
+name|ASL_REMARK
+argument_list|,
+name|ASL_MSG_NOT_REFERENCED
+argument_list|,
+name|LkGetNameOp
+argument_list|(
+name|Node
+operator|->
+name|Op
+argument_list|)
+argument_list|,
+name|MsgBuffer
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+name|Next
+operator|=
+name|Next
+operator|->
+name|Parent
+expr_stmt|;
+block|}
+comment|/* The name is not within a control method */
+comment|/*      * Ignore names that start with an underscore. These are the reserved      * ACPI names and are typically not referenced since they are meant      * to be called by the host OS.      */
 if|if
 condition|(
 name|Node
@@ -207,42 +321,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/* There are some types that are typically not referenced, ignore them */
-switch|switch
-condition|(
-name|Node
-operator|->
-name|Type
-condition|)
-block|{
-case|case
-name|ACPI_TYPE_DEVICE
-case|:
-case|case
-name|ACPI_TYPE_PROCESSOR
-case|:
-case|case
-name|ACPI_TYPE_POWER
-case|:
-case|case
-name|ACPI_TYPE_LOCAL_RESOURCE
-case|:
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-default|default:
-break|break;
-block|}
-comment|/* All others are valid unreferenced namespace objects */
-if|if
-condition|(
-name|Node
-operator|->
-name|Op
-condition|)
-block|{
+comment|/*      * What remains is an unresolved user name that is not within a method.      * However, the object could be referenced via another table, so issue      * the warning at level 2.      */
 name|AslError
 argument_list|(
 name|ASL_WARNING2
@@ -259,7 +338,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|AE_OK

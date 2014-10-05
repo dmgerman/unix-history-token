@@ -83,6 +83,15 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|msi_init
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

@@ -4,13 +4,19 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/compiler/aslcompiler.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acapps.h>
 end_include
 
 begin_define
@@ -26,42 +32,6 @@ argument_list|(
 literal|"aslfileio"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AslAbort  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Dump the error log and abort the compiler. Used for serious  *              I/O errors.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AslAbort
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|AePrintErrorLog
-argument_list|(
-name|ASL_FILE_STDERR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Gbl_DebugFlag
-condition|)
-block|{
-comment|/* Print error summary to stdout also */
-name|AePrintErrorLog
-argument_list|(
-name|ASL_FILE_STDOUT
-argument_list|)
-expr_stmt|;
-block|}
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    FlFileError  *  * PARAMETERS:  FileId              - Index into file info array  *              ErrorId             - Index into error message array  *  * RETURN:      None  *  * DESCRIPTION: Decode errno to an error message and add the entire error  *              to the error log.  *  ******************************************************************************/
@@ -191,7 +161,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlGetFileSize  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      File Size  *  * DESCRIPTION: Get current file size. Uses seek-to-EOF. File must be open.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlGetFileSize  *  * PARAMETERS:  FileId              - Index into file info array  *  * RETURN:      File Size  *  * DESCRIPTION: Get current file size. Uses common seek-to-EOF function.  *              File must be open. Aborts compiler on error.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -202,61 +172,32 @@ name|UINT32
 name|FileId
 parameter_list|)
 block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
 name|UINT32
 name|FileSize
 decl_stmt|;
-name|long
-name|Offset
-decl_stmt|;
-name|fp
+name|FileSize
 operator|=
+name|CmGetFileSize
+argument_list|(
 name|Gbl_Files
 index|[
 name|FileId
 index|]
 operator|.
 name|Handle
-expr_stmt|;
-name|Offset
-operator|=
-name|ftell
-argument_list|(
-name|fp
 argument_list|)
 expr_stmt|;
-name|fseek
-argument_list|(
-name|fp
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_END
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
 name|FileSize
-operator|=
-operator|(
-name|UINT32
-operator|)
-name|ftell
-argument_list|(
-name|fp
-argument_list|)
+operator|==
+name|ACPI_UINT32_MAX
+condition|)
+block|{
+name|AslAbort
+argument_list|()
 expr_stmt|;
-comment|/* Restore file pointer */
-name|fseek
-argument_list|(
-name|fp
-argument_list|,
-name|Offset
-argument_list|,
-name|SEEK_SET
-argument_list|)
-expr_stmt|;
+block|}
 return|return
 operator|(
 name|FileSize
@@ -601,6 +542,7 @@ name|AslAbort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Do not clear/free the filename string */
 name|Gbl_Files
 index|[
 name|FileId

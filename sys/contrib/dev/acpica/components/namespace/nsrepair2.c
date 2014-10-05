@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -1060,7 +1060,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_CST  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _CST object:  *              1. Sort the list ascending by C state type  *              2. Ensure type cannot be zero  *              3. A sub-package count of zero means _CST is meaningless  *              4. Count must match the number of C state sub-packages  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsRepair_CST  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if object is OK or was repaired successfully  *  * DESCRIPTION: Repair for the _CST object:  *              1. Sort the list ascending by C state type  *              2. Ensure type cannot be zero  *              3. A subpackage count of zero means _CST is meaningless  *              4. Count must match the number of C state subpackages  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1593,6 +1593,10 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SubPackage
+decl_stmt|;
 name|UINT32
 name|ElementCount
 decl_stmt|;
@@ -1616,6 +1620,7 @@ name|Package
 operator|.
 name|Count
 expr_stmt|;
+comment|/* Examine each subpackage */
 for|for
 control|(
 name|Index
@@ -1628,19 +1633,38 @@ name|ElementCount
 condition|;
 name|Index
 operator|++
+operator|,
+name|TopObjectList
+operator|++
 control|)
 block|{
-name|SubObjectList
+name|SubPackage
 operator|=
-operator|(
 operator|*
 name|TopObjectList
-operator|)
+expr_stmt|;
+name|SubObjectList
+operator|=
+name|SubPackage
 operator|->
 name|Package
 operator|.
 name|Elements
 expr_stmt|;
+comment|/* Check for minimum required element count */
+if|if
+condition|(
+name|SubPackage
+operator|->
+name|Package
+operator|.
+name|Count
+operator|<
+literal|4
+condition|)
+block|{
+continue|continue;
+block|}
 comment|/*          * If the BIOS has erroneously reversed the _PRT SourceName (index 2)          * and the SourceIndex (index 3), fix it. _PRT is important enough to          * workaround this BIOS error. This also provides compatibility with          * other ACPI implementations.          */
 name|ObjDesc
 operator|=
@@ -1708,10 +1732,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Point to the next ACPI_OPERAND_OBJECT in the top level package */
-name|TopObjectList
-operator|++
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1773,7 +1793,7 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-comment|/*      * Entries (sub-packages) in the _PSS Package must be sorted by power      * dissipation, in descending order. If it appears that the list is      * incorrectly sorted, sort it. We sort by CpuFrequency, since this      * should be proportional to the power.      */
+comment|/*      * Entries (subpackages) in the _PSS Package must be sorted by power      * dissipation, in descending order. If it appears that the list is      * incorrectly sorted, sort it. We sort by CpuFrequency, since this      * should be proportional to the power.      */
 name|Status
 operator|=
 name|AcpiNsCheckSortedList
@@ -2014,7 +2034,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsCheckSortedList  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObject        - Pointer to the top-level returned object  *              StartIndex          - Index of the first sub-package  *              ExpectedCount       - Minimum length of each sub-package  *              SortIndex           - Sub-package entry to sort on  *              SortDirection       - Ascending or descending  *              SortKeyName         - Name of the SortIndex field  *  * RETURN:      Status. AE_OK if the list is valid and is sorted correctly or  *              has been repaired by sorting the list.  *  * DESCRIPTION: Check if the package list is valid and sorted correctly by the  *              SortIndex. If not, then sort the list.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiNsCheckSortedList  *  * PARAMETERS:  Info                - Method execution information block  *              ReturnObject        - Pointer to the top-level returned object  *              StartIndex          - Index of the first subpackage  *              ExpectedCount       - Minimum length of each subpackage  *              SortIndex           - Subpackage entry to sort on  *              SortDirection       - Ascending or descending  *              SortKeyName         - Name of the SortIndex field  *  * RETURN:      Status. AE_OK if the list is valid and is sorted correctly or  *              has been repaired by sorting the list.  *  * DESCRIPTION: Check if the package list is valid and sorted correctly by the  *              SortIndex. If not, then sort the list.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -2093,7 +2113,7 @@ name|AE_AML_OPERAND_TYPE
 operator|)
 return|;
 block|}
-comment|/*      * NOTE: assumes list of sub-packages contains no NULL elements.      * Any NULL elements should have been removed by earlier call      * to AcpiNsRemoveNullElements.      */
+comment|/*      * NOTE: assumes list of subpackages contains no NULL elements.      * Any NULL elements should have been removed by earlier call      * to AcpiNsRemoveNullElements.      */
 name|OuterElementCount
 operator|=
 name|ReturnObject
@@ -2186,7 +2206,7 @@ name|AE_AML_OPERAND_TYPE
 operator|)
 return|;
 block|}
-comment|/* Each sub-package must have the minimum length */
+comment|/* Each subpackage must have the minimum length */
 if|if
 condition|(
 operator|(

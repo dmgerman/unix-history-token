@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -1287,6 +1287,7 @@ decl_stmt|;
 name|UINT32
 name|Bus
 decl_stmt|;
+comment|/* Bus and Segment numbers */
 name|UINT16
 name|Device
 decl_stmt|;
@@ -1332,6 +1333,30 @@ define|#
 directive|define
 name|ACPI_HEST_GLOBAL
 value|(1<<1)
+end_define
+
+begin_comment
+comment|/*  * Macros to access the bus/segment numbers in Bus field above:  *  Bus number is encoded in bits 7:0  *  Segment number is encoded in bits 23:8  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_BUS
+parameter_list|(
+name|Bus
+parameter_list|)
+value|((Bus)& 0xFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HEST_SEGMENT
+parameter_list|(
+name|Bus
+parameter_list|)
+value|(((Bus)>> 8)& 0xFFFF)
 end_define
 
 begin_comment
@@ -1948,16 +1973,24 @@ name|ACPI_MADT_TYPE_GENERIC_DISTRIBUTOR
 init|=
 literal|12
 block|,
-name|ACPI_MADT_TYPE_RESERVED
+name|ACPI_MADT_TYPE_GENERIC_MSI_FRAME
 init|=
 literal|13
-comment|/* 13 and greater are reserved */
+block|,
+name|ACPI_MADT_TYPE_GENERIC_REDISTRIBUTOR
+init|=
+literal|14
+block|,
+name|ACPI_MADT_TYPE_RESERVED
+init|=
+literal|15
+comment|/* 15 and greater are reserved */
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * MADT Sub-tables, correspond to Type in ACPI_SUBTABLE_HEADER  */
+comment|/*  * MADT Subtables, correspond to Type in ACPI_SUBTABLE_HEADER  */
 end_comment
 
 begin_comment
@@ -2352,7 +2385,7 @@ name|Reserved
 decl_stmt|;
 comment|/* Reserved - must be zero */
 name|UINT32
-name|GicId
+name|CpuInterfaceNumber
 decl_stmt|;
 name|UINT32
 name|Uid
@@ -2372,10 +2405,55 @@ decl_stmt|;
 name|UINT64
 name|BaseAddress
 decl_stmt|;
+name|UINT64
+name|GicvBaseAddress
+decl_stmt|;
+name|UINT64
+name|GichBaseAddress
+decl_stmt|;
+name|UINT32
+name|VgicInterrupt
+decl_stmt|;
+name|UINT64
+name|GicrBaseAddress
+decl_stmt|;
+name|UINT64
+name|ArmMpidr
+decl_stmt|;
 block|}
 name|ACPI_MADT_GENERIC_INTERRUPT
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Masks for Flags field above */
+end_comment
+
+begin_comment
+comment|/* ACPI_MADT_ENABLED                    (1)      Processor is usable if set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MADT_PERFORMANCE_IRQ_MODE
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* 01: Performance Interrupt Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MADT_VGIC_IRQ_MODE
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* 02: VGIC Maintenance Interrupt mode */
+end_comment
 
 begin_comment
 comment|/* 12: Generic Distributor (ACPI 5.0) */
@@ -2412,11 +2490,85 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* 13: Generic MSI Frame (ACPI 5.1) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_madt_generic_msi_frame
+block|{
+name|ACPI_SUBTABLE_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+comment|/* Reserved - must be zero */
+name|UINT32
+name|MsiFrameId
+decl_stmt|;
+name|UINT64
+name|BaseAddress
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+name|UINT16
+name|SpiCount
+decl_stmt|;
+name|UINT16
+name|SpiBase
+decl_stmt|;
+block|}
+name|ACPI_MADT_GENERIC_MSI_FRAME
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Masks for Flags field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MADT_OVERRIDE_SPI_VALUES
+value|(1)
+end_define
+
+begin_comment
+comment|/* 14: Generic Redistributor (ACPI 5.1) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_madt_generic_redistributor
+block|{
+name|ACPI_SUBTABLE_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+comment|/* reserved - must be zero */
+name|UINT64
+name|BaseAddress
+decl_stmt|;
+name|UINT32
+name|Length
+decl_stmt|;
+block|}
+name|ACPI_MADT_GENERIC_REDISTRIBUTOR
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Common flags fields for MADT subtables  */
 end_comment
 
 begin_comment
-comment|/* MADT Local APIC flags (LapicFlags) and GIC flags */
+comment|/* MADT Local APIC flags */
 end_comment
 
 begin_define
@@ -2686,16 +2838,20 @@ name|ACPI_SRAT_TYPE_X2APIC_CPU_AFFINITY
 init|=
 literal|2
 block|,
-name|ACPI_SRAT_TYPE_RESERVED
+name|ACPI_SRAT_TYPE_GICC_AFFINITY
 init|=
 literal|3
-comment|/* 3 and greater are reserved */
+block|,
+name|ACPI_SRAT_TYPE_RESERVED
+init|=
+literal|4
+comment|/* 4 and greater are reserved */
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * SRAT Sub-tables, correspond to Type in ACPI_SUBTABLE_HEADER  */
+comment|/*  * SRAT Subtables, correspond to Type in ACPI_SUBTABLE_HEADER  */
 end_comment
 
 begin_comment
@@ -2729,9 +2885,8 @@ literal|3
 index|]
 decl_stmt|;
 name|UINT32
-name|Reserved
+name|ClockDomain
 decl_stmt|;
-comment|/* Reserved, must be zero */
 block|}
 name|ACPI_SRAT_CPU_AFFINITY
 typedef|;
@@ -2873,6 +3028,50 @@ begin_define
 define|#
 directive|define
 name|ACPI_SRAT_CPU_ENABLED
+value|(1)
+end_define
+
+begin_comment
+comment|/* 00: Use affinity structure */
+end_comment
+
+begin_comment
+comment|/* 3: GICC Affinity (ACPI 5.1) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_srat_gicc_affinity
+block|{
+name|ACPI_SUBTABLE_HEADER
+name|Header
+decl_stmt|;
+name|UINT32
+name|ProximityDomain
+decl_stmt|;
+name|UINT32
+name|AcpiProcessorUid
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+name|UINT32
+name|ClockDomain
+decl_stmt|;
+block|}
+name|ACPI_SRAT_GICC_AFFINITY
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Flags for ACPI_SRAT_GICC_AFFINITY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SRAT_GICC_ENABLED
 value|(1)
 end_define
 

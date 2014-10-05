@@ -1072,15 +1072,6 @@ name|ah_divLnaConfSet
 operator|=
 name|ar9300_ant_div_comb_set_config
 expr_stmt|;
-comment|/* Setup HAL configuration defaults */
-name|ah
-operator|->
-name|ah_config
-operator|.
-name|ath_hal_ant_ctrl_comm2g_switch_enable
-operator|=
-literal|0x000bbb88
-expr_stmt|;
 block|}
 end_function
 
@@ -1364,8 +1355,28 @@ name|struct
 name|ath_hal
 modifier|*
 name|ah
+parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah_config
 parameter_list|)
 block|{
+comment|/* Until FreeBSD's HAL does this by default - just copy */
+name|OS_MEMCPY
+argument_list|(
+operator|&
+name|ah
+operator|->
+name|ah_config
+argument_list|,
+name|ah_config
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|HAL_OPS_CONFIG
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ah
 operator|->
 name|ah_config

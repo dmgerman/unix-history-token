@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -381,16 +381,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeXruptBlock  *  * PARAMETERS:  InterruptNumber             - Interrupt for a GPE block  *  * RETURN:      A GPE interrupt block  *  * DESCRIPTION: Get or Create a GPE interrupt block. There is one interrupt  *              block per unique interrupt level used for GPEs. Should be  *              called only when the GPE lists are semaphore locked and not  *              subject to change.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeXruptBlock  *  * PARAMETERS:  InterruptNumber             - Interrupt for a GPE block  *              GpeXruptBlock               - Where the block is returned  *  * RETURN:      Status  *  * DESCRIPTION: Get or Create a GPE interrupt block. There is one interrupt  *              block per unique interrupt level used for GPEs. Should be  *              called only when the GPE lists are semaphore locked and not  *              subject to change.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_GPE_XRUPT_INFO
-modifier|*
+name|ACPI_STATUS
 name|AcpiEvGetGpeXruptBlock
 parameter_list|(
 name|UINT32
 name|InterruptNumber
+parameter_list|,
+name|ACPI_GPE_XRUPT_INFO
+modifier|*
+modifier|*
+name|GpeXruptBlock
 parameter_list|)
 block|{
 name|ACPI_GPE_XRUPT_INFO
@@ -431,9 +435,14 @@ operator|==
 name|InterruptNumber
 condition|)
 block|{
-name|return_PTR
-argument_list|(
+operator|*
+name|GpeXruptBlock
+operator|=
 name|NextGpeXrupt
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
@@ -461,9 +470,9 @@ operator|!
 name|GpeXrupt
 condition|)
 block|{
-name|return_PTR
+name|return_ACPI_STATUS
 argument_list|(
-name|NULL
+name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
@@ -560,10 +569,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|ACPI_ERROR
+name|ACPI_EXCEPTION
 argument_list|(
 operator|(
 name|AE_INFO
+operator|,
+name|Status
 operator|,
 literal|"Could not install GPE interrupt handler at level 0x%X"
 operator|,
@@ -571,16 +582,21 @@ name|InterruptNumber
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_PTR
+name|return_ACPI_STATUS
 argument_list|(
-name|NULL
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|return_PTR
-argument_list|(
+operator|*
+name|GpeXruptBlock
+operator|=
 name|GpeXrupt
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
