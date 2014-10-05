@@ -275,12 +275,20 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"read %lu bytes from the block %ld [+%ld]\n"
+literal|"read %zu bytes from the block %lld [+%lld]\n"
 argument_list|,
 name|size
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|blk
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|dev
 operator|->
 name|d_offset
