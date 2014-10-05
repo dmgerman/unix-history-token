@@ -174,7 +174,7 @@ name|dv_print
 decl_stmt|;
 name|void
 modifier|*
-name|dv_cleanupa
+name|dv_cleanup
 decl_stmt|;
 block|}
 name|udisk
