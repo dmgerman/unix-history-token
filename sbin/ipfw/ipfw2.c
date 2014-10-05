@@ -24888,8 +24888,8 @@ argument_list|(
 name|IP_FW_XIFLIST
 argument_list|,
 operator|&
-name|olh
-operator|->
+name|req
+operator|.
 name|opheader
 argument_list|,
 operator|&
