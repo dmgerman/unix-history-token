@@ -464,18 +464,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|crshared
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|cru2x
 parameter_list|(
