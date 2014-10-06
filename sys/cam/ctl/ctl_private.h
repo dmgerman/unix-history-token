@@ -274,7 +274,11 @@ enum|enum
 block|{
 name|CTL_SER_BLOCK
 block|,
+name|CTL_SER_BLOCKOPT
+block|,
 name|CTL_SER_EXTENT
+block|,
+name|CTL_SER_EXTENTOPT
 block|,
 name|CTL_SER_PASS
 block|,
