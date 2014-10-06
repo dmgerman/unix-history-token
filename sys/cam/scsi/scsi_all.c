@@ -8363,9 +8363,8 @@ literal|0x26
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Too many target descriptors"
 argument_list|)
 block|}
@@ -8378,9 +8377,8 @@ literal|0x26
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Unsupported target descriptor type code"
 argument_list|)
 block|}
@@ -8393,9 +8391,8 @@ literal|0x26
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Too many segment descriptors"
 argument_list|)
 block|}
@@ -8408,9 +8405,8 @@ literal|0x26
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Unsupported segment descriptor type code"
 argument_list|)
 block|}
@@ -8423,9 +8419,8 @@ literal|0x26
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Unexpected inexact segment"
 argument_list|)
 block|}
@@ -8438,9 +8433,8 @@ literal|0x26
 argument_list|,
 literal|0x0B
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Inline data length exceeded"
 argument_list|)
 block|}
@@ -8453,9 +8447,8 @@ literal|0x26
 argument_list|,
 literal|0x0C
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid operation for copy source or destination"
 argument_list|)
 block|}
@@ -8468,9 +8461,8 @@ literal|0x26
 argument_list|,
 literal|0x0D
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Copy segment granularity violation"
 argument_list|)
 block|}
