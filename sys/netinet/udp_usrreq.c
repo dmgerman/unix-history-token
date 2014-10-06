@@ -4725,6 +4725,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|optval
 operator|!=
 literal|0
@@ -4732,6 +4733,13 @@ operator|&&
 name|optval
 operator|<
 literal|8
+operator|)
+operator|||
+operator|(
+name|optval
+operator|>
+literal|65535
+operator|)
 condition|)
 block|{
 name|INP_WUNLOCK
