@@ -1909,12 +1909,24 @@ name|pr
 operator|==
 name|IPPROTO_UDPLITE
 operator|&&
+operator|(
+name|len
+operator|==
+literal|0
+operator|||
+name|len
+operator|==
+name|ip_len
+operator|)
+condition|)
+block|{
+comment|/* Zero means checksum over the complete packet. */
+if|if
+condition|(
 name|len
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* Zero means checksum over the complete packet. */
 name|len
 operator|=
 name|ip_len
