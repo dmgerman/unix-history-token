@@ -2405,6 +2405,10 @@ name|VM_EXITCODE_INOUT_STR
 block|,
 name|VM_EXITCODE_TASK_SWITCH
 block|,
+name|VM_EXITCODE_MONITOR
+block|,
+name|VM_EXITCODE_MWAIT
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
