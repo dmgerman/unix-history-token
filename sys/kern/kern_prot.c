@@ -8158,32 +8158,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check to see if this ucred is shared.  */
-end_comment
-
-begin_function
-name|int
-name|crshared
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cr
-parameter_list|)
-block|{
-return|return
-operator|(
-name|cr
-operator|->
-name|cr_ref
-operator|>
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Copy a ucred's contents from a template.  Does not block.  */
 end_comment
 
@@ -8204,12 +8178,11 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
-name|crshared
-argument_list|(
 name|dest
-argument_list|)
+operator|->
+name|cr_ref
 operator|==
-literal|0
+literal|1
 argument_list|,
 operator|(
 literal|"crcopy of shared ucred"

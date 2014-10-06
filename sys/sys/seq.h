@@ -21,8 +21,25 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_comment
-comment|/*  * Typical usage:  *  * writers:  * 	lock_exclusive(&obj->lock);  * 	seq_write_begin(&obj->seq);  * 	.....  * 	seq_write_end(&obj->seq);  * 	unlock_exclusive(&obj->unlock);  *  * readers:  * 	obj_t lobj;  * 	seq_t seq;  *  * 	for (;;) {  * 		seq = seq_read(&gobj->seq);  * 		lobj = gobj;  * 		if (seq_consistent(&gobj->seq, seq))  * 			break;  * 		cpu_spinwait();  * 	}  * 	foo(lobj);  */
+comment|/*  * seq_t may be included in structs visible to userspace  */
 end_comment
 
 begin_typedef
@@ -32,15 +49,19 @@ name|seq_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Typical usage:  *  * writers:  * 	lock_exclusive(&obj->lock);  * 	seq_write_begin(&obj->seq);  * 	.....  * 	seq_write_end(&obj->seq);  * 	unlock_exclusive(&obj->unlock);  *  * readers:  * 	obj_t lobj;  * 	seq_t seq;  *  * 	for (;;) {  * 		seq = seq_read(&gobj->seq);  * 		lobj = gobj;  * 		if (seq_consistent(&gobj->seq, seq))  * 			break;  * 		cpu_spinwait();  * 	}  * 	foo(lobj);  */
+end_comment
+
 begin_comment
 comment|/* A hack to get MPASS macro */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
 
 begin_include
 include|#

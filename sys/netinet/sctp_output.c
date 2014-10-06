@@ -34427,18 +34427,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|MC_ALIGN
-parameter_list|(
-name|m
-parameter_list|,
-name|len
-parameter_list|)
-value|do {						\ 	SCTP_BUF_RESV_UF(m, ((MCLBYTES - (len))& ~(sizeof(long) - 1));	\ } while (0)
-end_define
-
 begin_function
 specifier|static
 name|struct

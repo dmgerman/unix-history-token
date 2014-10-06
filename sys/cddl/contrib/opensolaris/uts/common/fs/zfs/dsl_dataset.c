@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014, Joyent, Inc. All rights reserved.  * Copyright (c) 2014 RackTop Systems.  */
 end_comment
 
 begin_include
@@ -3821,6 +3821,7 @@ name|ds_phys
 operator|->
 name|ds_bp
 expr_stmt|;
+comment|/* 		 * Inherit flags that describe the dataset's contents 		 * (INCONSISTENT) or properties (Case Insensitive). 		 */
 name|dsphys
 operator|->
 name|ds_flags
@@ -3830,6 +3831,12 @@ operator|->
 name|ds_phys
 operator|->
 name|ds_flags
+operator|&
+operator|(
+name|DS_FLAG_INCONSISTENT
+operator||
+name|DS_FLAG_CI_DATASET
+operator|)
 expr_stmt|;
 name|dmu_buf_will_dirty
 argument_list|(

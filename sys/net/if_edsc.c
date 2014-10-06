@@ -147,6 +147,12 @@ begin_comment
 comment|/* kernel-only part of ifnet(9) */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -181,14 +187,25 @@ begin_comment
 comment|/*  * Attach to the interface cloning framework.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
+name|VNET_DEFINE
+argument_list|(
+expr|struct
 name|if_clone
-modifier|*
+operator|*
+argument_list|,
 name|edsc_cloner
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_edsc_cloner
+value|VNET(edsc_cloner)
+end_define
 
 begin_function_decl
 specifier|static
@@ -753,6 +770,88 @@ comment|/* 	 * ifp->if_drv_flags&= ~IFF_DRV_OACTIVE; 	 * would be here only if t
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|vnet_edsc_init
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+name|__unused
+parameter_list|)
+block|{
+comment|/* 	 * Connect to the network interface cloning framework. 	 * The last argument is the number of units to be created 	 * from the outset.  It's also the minimum number of units 	 * allowed.  We don't want any units created as soon as the 	 * driver is loaded. 	 */
+name|V_edsc_cloner
+operator|=
+name|if_clone_simple
+argument_list|(
+name|edscname
+argument_list|,
+name|edsc_clone_create
+argument_list|,
+name|edsc_clone_destroy
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|VNET_SYSINIT
+argument_list|(
+name|vnet_edsc_init
+argument_list|,
+name|SI_SUB_PROTO_IFATTACHDOMAIN
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|vnet_edsc_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+name|void
+name|vnet_edsc_uninit
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|unused
+name|__unused
+parameter_list|)
+block|{
+comment|/* 	 * Disconnect from the cloning framework. 	 * Existing interfaces will be disposed of properly. 	 */
+name|if_clone_detach
+argument_list|(
+name|V_edsc_cloner
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|VNET_SYSUNINIT
+argument_list|(
+name|vnet_edsc_uninit
+argument_list|,
+name|SI_SUB_PROTO_IFATTACHDOMAIN
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|vnet_edsc_uninit
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This function provides handlers for module events, namely load and unload.  */
 end_comment
@@ -781,30 +880,9 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-comment|/* 		 * Connect to the network interface cloning framework. 		 * The last argument is the number of units to be created 		 * from the outset.  It's also the minimum number of units 		 * allowed.  We don't want any units created as soon as the 		 * driver is loaded. 		 */
-name|edsc_cloner
-operator|=
-name|if_clone_simple
-argument_list|(
-name|edscname
-argument_list|,
-name|edsc_clone_create
-argument_list|,
-name|edsc_clone_destroy
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* 		 * Disconnect from the cloning framework. 		 * Existing interfaces will be disposed of properly. 		 */
-name|if_clone_detach
-argument_list|(
-name|edsc_cloner
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 comment|/* 		 * There are other event types, but we don't handle them. 		 * See module(9). 		 */

@@ -1741,6 +1741,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|DEBUG
+argument_list|(
+literal|"GPT detected"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pri
@@ -2183,6 +2188,11 @@ operator|(
 name|table
 operator|)
 return|;
+name|DEBUG
+argument_list|(
+literal|"EBR detected"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2741,6 +2751,11 @@ goto|goto
 name|out
 goto|;
 block|}
+name|DEBUG
+argument_list|(
+literal|"BSD detected"
+argument_list|)
+expr_stmt|;
 name|part
 operator|=
 operator|&
@@ -3224,6 +3239,11 @@ goto|goto
 name|out
 goto|;
 block|}
+name|DEBUG
+argument_list|(
+literal|"VTOC8 detected"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3911,6 +3931,11 @@ ifdef|#
 directive|ifdef
 name|LOADER_MBR_SUPPORT
 comment|/* Read MBR. */
+name|DEBUG
+argument_list|(
+literal|"MBR detected"
+argument_list|)
+expr_stmt|;
 name|table
 operator|->
 name|type

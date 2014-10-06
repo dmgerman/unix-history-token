@@ -2655,6 +2655,21 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * Hack: a tty device that is a controlling terminal 	 * has a reference from the session structure. 	 * We cannot easily tell that a character device is 	 * a controlling terminal, unless it is the closing 	 * process' controlling terminal.  In that case, 	 * if the reference count is 2 (this last descriptor 	 * plus the session), release the reference from the session. 	 */
+if|if
+condition|(
+name|td
+operator|&&
+name|vp
+operator|==
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_session
+operator|->
+name|s_ttyvp
+condition|)
+block|{
 name|oldvp
 operator|=
 name|NULL
@@ -2667,8 +2682,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|td
-operator|&&
 name|vp
 operator|==
 name|td
@@ -2771,6 +2784,7 @@ argument_list|(
 name|oldvp
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * We do not want to really close the device if it 	 * is still in use unless we are trying to close it 	 * forcibly. Since every use (buffer, vnode, swap, cmap) 	 * holds a reference to the vnode, and because we mark 	 * any other vnodes that alias this device, when the 	 * sum of the reference counts on all the aliased 	 * vnodes descends to one, we are on last close. 	 */
 name|dsw
 operator|=

@@ -10580,6 +10580,10 @@ modifier|*
 name|sd
 parameter_list|)
 block|{
+define|#
+directive|define
+name|RULE_MAXSIZE
+value|(512*sizeof(u_int32_t))
 name|int
 name|error
 decl_stmt|;

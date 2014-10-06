@@ -26348,6 +26348,12 @@ literal|128
 operator|)
 operator|<
 literal|64
+operator|&&
+name|in_list
+operator|->
+name|tag
+operator|!=
+name|Tag_Virtualization_use
 condition|)
 block|{
 name|_bfd_error_handler

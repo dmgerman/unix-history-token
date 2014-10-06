@@ -2986,13 +2986,13 @@ name|len
 condition|)
 block|{
 name|u_int
-name|cur_length
+name|mlen
 decl_stmt|;
 name|u_int
-name|cur_frags
+name|frags
 decl_stmt|;
-comment|/* 					 * Get length of mbuf fragment 					 * and how many hardware 					 * frags, rounded up, it would 					 * use: 					 */
-name|cur_length
+comment|/* 					 * Get length of mbuf fragment 					 * and how many hardware frags, 					 * rounded up, it would use: 					 */
+name|mlen
 operator|=
 operator|(
 name|mb
@@ -3002,33 +3002,30 @@ operator|-
 name|moff
 operator|)
 expr_stmt|;
-name|cur_frags
+name|frags
 operator|=
-operator|(
-name|cur_length
-operator|+
+name|howmany
+argument_list|(
+name|mlen
+argument_list|,
 name|if_hw_tsomaxsegsize
-operator|-
-literal|1
-operator|)
-operator|/
-name|if_hw_tsomaxsegsize
+argument_list|)
 expr_stmt|;
 comment|/* Handle special case: Zero Length Mbuf */
 if|if
 condition|(
-name|cur_frags
+name|frags
 operator|==
 literal|0
 condition|)
-name|cur_frags
+name|frags
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 					 * Check if the fragment limit 					 * will be reached or 					 * exceeded: 					 */
+comment|/* 					 * Check if the fragment limit 					 * will be reached or exceeded: 					 */
 if|if
 condition|(
-name|cur_frags
+name|frags
 operator|>=
 name|if_hw_tsomaxsegcount
 condition|)
@@ -3037,7 +3034,7 @@ name|max_len
 operator|+=
 name|min
 argument_list|(
-name|cur_length
+name|mlen
 argument_list|,
 name|if_hw_tsomaxsegcount
 operator|*
@@ -3048,11 +3045,11 @@ break|break;
 block|}
 name|max_len
 operator|+=
-name|cur_length
+name|mlen
 expr_stmt|;
 name|if_hw_tsomaxsegcount
 operator|-=
-name|cur_frags
+name|frags
 expr_stmt|;
 name|moff
 operator|=

@@ -309,7 +309,7 @@ name|uart_lpc_class
 block|}
 block|,
 block|{
-literal|"qcom,uart-dm"
+literal|"qcom,msm-uartdm"
 block|,
 operator|(
 name|uintptr_t

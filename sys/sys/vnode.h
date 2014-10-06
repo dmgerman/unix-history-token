@@ -1083,6 +1083,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_RANGELOCKED
+value|0x4000
+end_define
+
+begin_comment
+comment|/* range locked */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_SEQMAX
 value|0x7F
 end_define

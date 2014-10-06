@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ieee8023ad_lacp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -1553,21 +1559,20 @@ argument_list|(
 literal|"\tlagg options:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|printb
 argument_list|(
-literal|"\t\tuse_flowid: %d\n"
+literal|"\t\tflags"
 argument_list|,
-operator|(
 name|ro
 operator|.
 name|ro_opts
-operator|&
-name|LAGG_OPT_USE_FLOWID
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
+argument_list|,
+name|LAGG_OPT_BITS
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1579,68 +1584,6 @@ operator|.
 name|ro_flowid_shift
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|ra
-operator|.
-name|ra_proto
-condition|)
-block|{
-case|case
-name|LAGG_PROTO_LACP
-case|:
-name|printf
-argument_list|(
-literal|"\t\tlacp_strict: %d\n"
-argument_list|,
-operator|(
-name|ro
-operator|.
-name|ro_opts
-operator|&
-name|LAGG_OPT_LACP_STRICT
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t\tlacp_rxtest: %d\n"
-argument_list|,
-operator|(
-name|ro
-operator|.
-name|ro_opts
-operator|&
-name|LAGG_OPT_LACP_RXTEST
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t\tlacp_txtest: %d\n"
-argument_list|,
-operator|(
-name|ro
-operator|.
-name|ro_opts
-operator|&
-name|LAGG_OPT_LACP_TXTEST
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\tlagg statistics:\n"
@@ -1754,13 +1697,15 @@ name|ra_proto
 operator|==
 name|LAGG_PROTO_LACP
 condition|)
-name|printf
+name|printb
 argument_list|(
-literal|" state=%X"
+literal|" state"
 argument_list|,
 name|lp
 operator|->
 name|actor_state
+argument_list|,
+name|LACP_STATE_BITS
 argument_list|)
 expr_stmt|;
 name|putchar
