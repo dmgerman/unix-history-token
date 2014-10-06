@@ -832,7 +832,7 @@ name|CTL_PAGE_FLAG_DISK_ONLY
 block|,
 name|NULL
 block|,
-name|NULL
+name|ctl_caching_sp_handler
 block|}
 block|,
 block|{

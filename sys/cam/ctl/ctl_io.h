@@ -368,6 +368,14 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
+name|CTL_LLF_FUA
+value|0x04000000
+define|#
+directive|define
+name|CTL_LLF_DPO
+value|0x08000000
+define|#
+directive|define
 name|CTL_LLF_READ
 value|0x10000000
 define|#
