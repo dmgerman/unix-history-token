@@ -638,7 +638,7 @@ literal|1
 expr_stmt|;
 name|line
 operator|=
-name|TMALLOC
+name|TCMALLOC
 argument_list|(
 name|char
 argument_list|,
