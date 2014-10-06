@@ -3562,6 +3562,10 @@ decl_stmt|;
 name|uint8_t
 name|byte2
 decl_stmt|;
+define|#
+directive|define
+name|SWS_NDOB
+value|0x01
 name|uint8_t
 name|addr
 index|[
