@@ -45003,13 +45003,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|scsi_vpd_mode_page_policy
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|scsi_vpd_mode_page_policy_descr
+name|scsi_vpd_extended_inquiry_data
 argument_list|)
 expr_stmt|;
 name|ctsio
