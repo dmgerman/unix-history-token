@@ -7407,6 +7407,17 @@ break|break;
 case|case
 name|O_TCPOPTS
 case|:
+if|if
+condition|(
+name|proto
+operator|==
+name|IPPROTO_TCP
+operator|&&
+name|ulp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|PULLUP_LEN
 argument_list|(
 name|hlen
@@ -7447,6 +7458,7 @@ name|cmd
 argument_list|)
 operator|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|O_TCPSEQ
