@@ -7976,9 +7976,8 @@ literal|0x23
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, cause not reportable"
 argument_list|)
 block|}
@@ -7991,9 +7990,8 @@ literal|0x23
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, unsupported token type"
 argument_list|)
 block|}
@@ -8006,9 +8004,8 @@ literal|0x23
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, remote token usage not supported"
 argument_list|)
 block|}
@@ -8021,9 +8018,8 @@ literal|0x23
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, remote ROD token creation not supported"
 argument_list|)
 block|}
@@ -8036,9 +8032,8 @@ literal|0x23
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token unknown"
 argument_list|)
 block|}
@@ -8051,9 +8046,8 @@ literal|0x23
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token corrupt"
 argument_list|)
 block|}
@@ -8066,9 +8060,8 @@ literal|0x23
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token revoked"
 argument_list|)
 block|}
@@ -8081,9 +8074,8 @@ literal|0x23
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token expired"
 argument_list|)
 block|}
@@ -8096,9 +8088,8 @@ literal|0x23
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token cancelled"
 argument_list|)
 block|}
@@ -8111,9 +8102,8 @@ literal|0x23
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token deleted"
 argument_list|)
 block|}
@@ -8126,9 +8116,8 @@ literal|0x23
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, invalid token length"
 argument_list|)
 block|}
