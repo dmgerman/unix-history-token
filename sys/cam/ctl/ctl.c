@@ -12176,7 +12176,7 @@ operator|(
 name|ooa_hdr
 operator|->
 name|lun_num
-operator|>
+operator|>=
 name|CTL_MAX_LUNS
 operator|)
 operator|||
@@ -13140,7 +13140,7 @@ operator|(
 name|delay_info
 operator|->
 name|lun_id
-operator|>
+operator|>=
 name|CTL_MAX_LUNS
 operator|)
 operator|||
