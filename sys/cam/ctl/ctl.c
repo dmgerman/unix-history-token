@@ -47081,6 +47081,8 @@ argument_list|(
 operator|*
 name|bl_ptr
 argument_list|)
+operator|-
+literal|4
 argument_list|,
 name|bl_ptr
 operator|->
