@@ -8,7 +8,7 @@ comment|/* yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93" */
 end_comment
 
 begin_comment
-comment|/* (use YYMAJOR/YYMINOR for ifdefs dependent on parser version) */
+comment|/* (use YYMAJOR/YYMINOR for ifdefs dependent of parser version) */
 end_comment
 
 begin_define
@@ -314,6 +314,31 @@ literal|256
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|YYBTYACC
+end_if
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|YYINT
+name|yyctable
+index|[]
+init|=
+block|{
+operator|-
+literal|1
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1584,7 +1609,7 @@ end_function
 begin_line
 line|#
 directive|line
-number|232
+number|236
 file|"rename_debug.c"
 end_line
 
@@ -2717,19 +2742,29 @@ name|yylvlim
 condition|)
 block|{
 comment|/* Enlarge lexical value queue */
-name|int
+name|size_t
 name|p
 init|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yylvp
 operator|-
 name|yylvals
+argument_list|)
 decl_stmt|;
-name|int
+name|size_t
 name|s
 init|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yylvlim
 operator|-
 name|yylvals
+argument_list|)
 decl_stmt|;
 name|s
 operator|+=
@@ -3281,7 +3316,10 @@ name|yystack
 operator|.
 name|s_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|s_mark
@@ -3291,7 +3329,7 @@ operator|.
 name|s_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3333,7 +3371,10 @@ name|yystack
 operator|.
 name|l_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|l_mark
@@ -3343,7 +3384,7 @@ operator|.
 name|l_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3396,7 +3437,10 @@ name|yystack
 operator|.
 name|p_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|p_mark
@@ -3406,7 +3450,7 @@ operator|.
 name|p_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3712,9 +3756,14 @@ name|save
 operator|->
 name|lexeme
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|yylvp
 operator|-
 name|yylvals
+argument_list|)
 expr_stmt|;
 name|yyps
 operator|->
@@ -4293,7 +4342,10 @@ name|yystack
 operator|.
 name|s_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|s_mark
@@ -4303,7 +4355,7 @@ operator|.
 name|s_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4345,7 +4397,10 @@ name|yystack
 operator|.
 name|l_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|l_mark
@@ -4355,7 +4410,7 @@ operator|.
 name|l_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4408,7 +4463,10 @@ name|yystack
 operator|.
 name|p_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|p_mark
@@ -4418,7 +4476,7 @@ operator|.
 name|p_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4432,9 +4490,14 @@ name|yyerrctx
 operator|->
 name|lexeme
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|yylvp
 operator|-
 name|yylvals
+argument_list|)
 expr_stmt|;
 block|}
 name|yylvp
@@ -4512,7 +4575,10 @@ name|yystack
 operator|.
 name|s_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|s_mark
@@ -4522,7 +4588,7 @@ operator|.
 name|s_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4564,7 +4630,10 @@ name|yystack
 operator|.
 name|l_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|l_mark
@@ -4574,7 +4643,7 @@ operator|.
 name|l_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4627,7 +4696,10 @@ name|yystack
 operator|.
 name|p_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|p_mark
@@ -4637,7 +4709,7 @@ operator|.
 name|p_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4834,7 +4906,10 @@ name|yystack
 operator|.
 name|s_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|s_mark
@@ -4844,7 +4919,7 @@ operator|.
 name|s_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4886,7 +4961,10 @@ name|yystack
 operator|.
 name|l_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|l_mark
@@ -4896,7 +4974,7 @@ operator|.
 name|l_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -4949,7 +5027,10 @@ name|yystack
 operator|.
 name|p_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|p_mark
@@ -4959,7 +5040,7 @@ operator|.
 name|p_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -5991,19 +6072,29 @@ name|yylvlim
 condition|)
 block|{
 comment|/* Enlarge lexical value queue */
-name|int
+name|size_t
 name|p
 init|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yylvp
 operator|-
 name|yylvals
+argument_list|)
 decl_stmt|;
-name|int
+name|size_t
 name|s
 init|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yylvlim
 operator|-
 name|yylvals
+argument_list|)
 decl_stmt|;
 name|s
 operator|+=
@@ -6641,7 +6732,10 @@ name|yystack
 operator|.
 name|s_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|s_mark
@@ -6651,7 +6745,7 @@ operator|.
 name|s_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -6693,7 +6787,10 @@ name|yystack
 operator|.
 name|l_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|l_mark
@@ -6703,7 +6800,7 @@ operator|.
 name|l_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -6756,7 +6853,10 @@ name|yystack
 operator|.
 name|p_base
 argument_list|,
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|yystack
 operator|.
 name|p_mark
@@ -6766,7 +6866,7 @@ operator|.
 name|p_base
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
