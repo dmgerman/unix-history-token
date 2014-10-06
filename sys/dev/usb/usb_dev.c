@@ -1385,6 +1385,20 @@ argument_list|,
 literal|"fail\n"
 argument_list|)
 expr_stmt|;
+comment|/* clear all refs */
+name|memset
+argument_list|(
+name|crd
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|crd
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|USB_ERR_INVAL
@@ -4723,13 +4737,12 @@ name|refs
 argument_list|)
 condition|)
 block|{
-name|err
-operator|=
+comment|/* we lost the reference */
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-goto|goto
-name|done
-goto|;
+operator|)
+return|;
 block|}
 name|err
 operator|=
@@ -4834,14 +4847,12 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/* device no longer exits */
-name|err
-operator|=
+comment|/* device no longer exists */
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-goto|goto
-name|done
-goto|;
+operator|)
+return|;
 block|}
 name|usb_unref_device
 argument_list|(
@@ -5441,13 +5452,11 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|fflags
 operator|=
 name|cpd
@@ -5879,13 +5888,11 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|fflags
 operator|=
 name|cpd
