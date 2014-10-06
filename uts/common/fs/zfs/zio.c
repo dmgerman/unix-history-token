@@ -6550,6 +6550,9 @@ argument_list|(
 name|spa
 operator|->
 name|spa_async_zio_root
+index|[
+name|CPU_SEQID
+index|]
 argument_list|,
 name|zio
 argument_list|)

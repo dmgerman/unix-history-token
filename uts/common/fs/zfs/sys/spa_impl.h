@@ -655,11 +655,12 @@ name|list_t
 name|spa_config_list
 decl_stmt|;
 comment|/* previous cache file(s) */
+comment|/* per-CPU array of root of async I/O: */
 name|zio_t
+modifier|*
 modifier|*
 name|spa_async_zio_root
 decl_stmt|;
-comment|/* root of all async I/O */
 name|zio_t
 modifier|*
 name|spa_suspend_zio_root
