@@ -2127,10 +2127,11 @@ comment|/* root HUB device configuration */
 name|uint8_t
 name|sc_conf
 decl_stmt|;
+comment|/* root HUB port event bitmap, max 256 ports */
 name|uint8_t
 name|sc_hub_idata
 index|[
-literal|2
+literal|32
 index|]
 decl_stmt|;
 comment|/* size of context */
