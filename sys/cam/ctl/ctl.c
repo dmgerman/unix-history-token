@@ -31224,6 +31224,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|control_dev
+operator|==
+literal|0
+condition|)
+name|header
+operator|->
+name|dev_specific
+operator|=
+literal|0x10
+expr_stmt|;
+comment|/* DPOFUA */
+if|if
+condition|(
 name|dbd
 condition|)
 name|header
@@ -31301,6 +31314,19 @@ operator|->
 name|datalen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|control_dev
+operator|==
+literal|0
+condition|)
+name|header
+operator|->
+name|dev_specific
+operator|=
+literal|0x10
+expr_stmt|;
+comment|/* DPOFUA */
 if|if
 condition|(
 name|dbd
