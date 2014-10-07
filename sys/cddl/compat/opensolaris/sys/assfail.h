@@ -101,6 +101,10 @@ comment|/* !defined(_KERNEL) */
 ifndef|#
 directive|ifndef
 name|HAVE_ASSFAIL
+specifier|extern
+name|int
+name|aok
+decl_stmt|;
 specifier|static
 name|__inline
 name|int
@@ -136,10 +140,14 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|aok
+condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
 return|return
 operator|(
 literal|0
@@ -155,6 +163,10 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|HAVE_ASSFAIL3
+specifier|extern
+name|int
+name|aok
+decl_stmt|;
 specifier|static
 name|__inline
 name|void
@@ -207,10 +219,14 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|aok
+condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 define|#
 directive|define
