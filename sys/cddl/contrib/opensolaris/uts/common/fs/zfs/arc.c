@@ -2505,16 +2505,17 @@ begin_comment
 comment|/*  * Level 2 ARC  */
 end_comment
 
+begin_comment
+comment|/* initial write max */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|L2ARC_WRITE_SIZE
-value|(8 * 1024 * 1024)
+define|\
+value|(8 * 1024 * 1024 * 2 / (ARC_BUFC_NUMMETADATALISTS + ARC_BUFC_NUMDATALISTS))
 end_define
-
-begin_comment
-comment|/* initial write max */
-end_comment
 
 begin_define
 define|#
