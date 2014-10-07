@@ -5433,6 +5433,30 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Notify algo on real @ti address */
+if|if
+condition|(
+name|ta
+operator|->
+name|change_ti
+operator|!=
+name|NULL
+condition|)
+name|ta
+operator|->
+name|change_ti
+argument_list|(
+name|tc
+operator|->
+name|astate
+argument_list|,
+operator|&
+name|tablestate
+index|[
+name|kidx
+index|]
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Stage 4: unref values. 	 */
 name|ipfw_unref_table_values
 argument_list|(
