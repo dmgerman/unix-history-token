@@ -2199,7 +2199,31 @@ name|value
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* 			 * We may be here after several process restarts, 			 * so we need to update all fields that might 			 * have changed. 			 */
+name|ptv
+operator|=
+operator|(
+expr|struct
+name|table_val_link
+operator|*
+operator|)
+name|ptei
+operator|->
+name|ptv
+expr_stmt|;
+name|ptv
+operator|->
+name|pval
+operator|=
+operator|&
+name|pval
+index|[
+name|i
+index|]
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* Check if record has appeared */
 name|mask_table_value
 argument_list|(
