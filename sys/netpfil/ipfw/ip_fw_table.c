@@ -2255,6 +2255,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|IPFW_UH_WUNLOCK
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 name|flush_batch_buffer
 argument_list|(
 name|ch
@@ -2283,6 +2288,15 @@ sizeof|sizeof
 argument_list|(
 name|ts
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ta
+operator|=
+name|NULL
+expr_stmt|;
+name|IPFW_UH_WLOCK
+argument_list|(
+name|ch
 argument_list|)
 expr_stmt|;
 block|}

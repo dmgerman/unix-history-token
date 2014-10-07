@@ -1027,8 +1027,8 @@ name|table_val_link
 modifier|*
 name|ptvl
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|pval
 index|[
 name|kidx
@@ -1036,19 +1036,28 @@ index|]
 operator|.
 name|refcnt
 operator|>
-literal|1
-condition|)
-block|{
+literal|0
+argument_list|,
+operator|(
+literal|"Refcount is 0 on kidx %d"
+operator|,
+name|kidx
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|--
 name|pval
 index|[
 name|kidx
 index|]
 operator|.
 name|refcnt
-operator|--
-expr_stmt|;
+operator|>
+literal|0
+condition|)
 return|return;
-block|}
 comment|/* Last reference, delete item */
 name|ptvl
 operator|=
@@ -1313,6 +1322,11 @@ name|struct
 name|flush_args
 name|fa
 decl_stmt|;
+name|IPFW_UH_WLOCK_ASSERT
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&

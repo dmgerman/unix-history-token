@@ -1371,12 +1371,6 @@ name|void
 modifier|*
 name|cbdata
 decl_stmt|;
-name|int
-name|linked
-decl_stmt|;
-name|int
-name|spare
-decl_stmt|;
 block|}
 struct|;
 end_struct

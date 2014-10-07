@@ -1390,14 +1390,6 @@ name|ic
 operator|->
 name|iface
 expr_stmt|;
-if|if
-condition|(
-name|ic
-operator|->
-name|linked
-operator|!=
-literal|0
-condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&

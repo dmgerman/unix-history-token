@@ -9309,11 +9309,20 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|ife
+argument_list|,
+name|M_IPFW_TBL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 comment|/* Use ipfw_iface 'ifname' field as stable storage */
 name|ife
 operator|->
