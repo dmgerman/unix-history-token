@@ -323,6 +323,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|void
+name|mkimg_chs
+parameter_list|(
+name|lba_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+modifier|*
+parameter_list|,
+name|u_int
+modifier|*
+parameter_list|,
+name|u_int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct_decl
 struct_decl|struct
 name|uuid
