@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2014, LSI Corp.  * All rights reserved.  * Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of the<ORGANIZATION> nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation  * are those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com>  * Mail to: LSI Corporation, 1621 Barber Lane, Milpitas, CA 95035  *    ATTN: MegaRaid FreeBSD  *  */
+comment|/*  * Copyright (c) 2014, LSI Corp. All rights reserved. Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com> Mail to: LSI Corporation, 1621  * Barber Lane, Milpitas, CA 95035 ATTN: MegaRaid FreeBSD  *  */
 end_comment
 
 begin_include
@@ -447,7 +447,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Spanset related function prototypes  * Added for PRL11 configuration (Uneven span support)  */
+comment|/*  * Spanset related function prototypes Added for PRL11 configuration (Uneven  * span support)  */
 end_comment
 
 begin_function_decl
@@ -580,7 +580,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Spanset related defines  * Added for PRL11 configuration(Uneven span support)  */
+comment|/*  * Spanset related defines Added for PRL11 configuration(Uneven span support)  */
 end_comment
 
 begin_define
@@ -608,6 +608,7 @@ name|ld
 parameter_list|,
 name|index_
 parameter_list|)
+define|\
 value|MR_LdSpanPtrGet(ld, index_, map)->spanRowDataSize
 end_define
 
@@ -692,7 +693,7 @@ value|((unsigned int)( \     (((unsigned int)(x)& (unsigned int)0x000000ffUL)<< 
 end_define
 
 begin_comment
-comment|/*  * In-line functions for mod and divide of 64-bit dividend and 32-bit divisor.  * Assumes a check for a divisor of zero is not possible.   *   * @param dividend   : Dividend  * @param divisor    : Divisor  * @return remainder  */
+comment|/*  * In-line functions for mod and divide of 64-bit dividend and 32-bit  * divisor. Assumes a check for a divisor of zero is not possible.  *  * @param dividend:	Dividend  * @param divisor:	Divisor  * @return			remainder  */
 end_comment
 
 begin_define
@@ -720,7 +721,7 @@ value|({ \ int quotient; \ quotient = ((u_int64_t) (dividend)) / (u_int32_t) (di
 end_define
 
 begin_comment
-comment|/*  * Various RAID map access functions.  These functions access the various  * parts of the RAID map and returns the appropriate parameters.   */
+comment|/*  * Various RAID map access functions.  These functions access the various  * parts of the RAID map and returns the appropriate parameters.  */
 end_comment
 
 begin_function
@@ -1047,7 +1048,7 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-comment|/*      * Check if logical drive was removed.      */
+comment|/* 	 * Check if logical drive was removed. 	 */
 if|if
 condition|(
 name|ld
@@ -1179,7 +1180,7 @@ operator|->
 name|current_map_sz
 argument_list|)
 expr_stmt|;
-comment|/* New Raid map will not set totalSize, so keep expected value 		 * for legacy code in ValidateMapInfo 		 */
+comment|/* 		 * New Raid map will not set totalSize, so keep expected 		 * value for legacy code in ValidateMapInfo 		 */
 name|pDrvRaidMap
 operator|->
 name|totalSize
@@ -1569,7 +1570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * MR_ValidateMapInfo:        Validate RAID map  * input:                     Adapter instance soft state  *  * This function checks and validates the loaded RAID map. It returns 0 if   * successful, and 1 otherwise.  */
+comment|/*  * MR_ValidateMapInfo:	Validate RAID map  * input:				Adapter instance soft state  *  * This function checks and validates the loaded RAID map. It returns 0 if  * successful, and 1 otherwise.  */
 end_comment
 
 begin_function
@@ -1789,7 +1790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ******************************************************************************  *   *  Function to print info about span set created in driver from FW raid map  *   *  Inputs :  *  map    - LD map  *  ldSpanInfo - ldSpanInfo per HBA instance  *   *   * */
+comment|/*  *  * Function to print info about span set created in driver from FW raid map  *  * Inputs:		map  * ldSpanInfo:	ld map span info per HBA instance  *  *  */
 end_comment
 
 begin_if
@@ -1967,7 +1968,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"  Span Set %x: width=%x, diff=%x\n"
+literal|"Span Set %x: width=%x, diff=%x\n"
 argument_list|,
 name|element
 argument_list|,
@@ -1990,7 +1991,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    logical LBA start=0x%08lx, end=0x%08lx\n"
+literal|"logical LBA start=0x%08lx, end=0x%08lx\n"
 argument_list|,
 operator|(
 name|long
@@ -2013,7 +2014,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       span row start=0x%08lx, end=0x%08lx\n"
+literal|"span row start=0x%08lx, end=0x%08lx\n"
 argument_list|,
 operator|(
 name|long
@@ -2036,7 +2037,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       data row start=0x%08lx, end=0x%08lx\n"
+literal|"data row start=0x%08lx, end=0x%08lx\n"
 argument_list|,
 operator|(
 name|long
@@ -2059,7 +2060,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       data strip start=0x%08lx, end=0x%08lx\n"
+literal|"data strip start=0x%08lx, end=0x%08lx\n"
 argument_list|,
 operator|(
 name|long
@@ -2147,7 +2148,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Span=%x, Quad=%x, diff=%x\n"
+literal|"Span=%x, Quad=%x, diff=%x\n"
 argument_list|,
 name|span
 argument_list|,
@@ -2160,7 +2161,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    offset_in_span=0x%08lx\n"
+literal|"offset_in_span=0x%08lx\n"
 argument_list|,
 operator|(
 name|long
@@ -2174,7 +2175,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"     logical start=0x%08lx, end=0x%08lx\n"
+literal|"logical start=0x%08lx, end=0x%08lx\n"
 argument_list|,
 operator|(
 name|long
@@ -2211,7 +2212,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ****************************************************************************** * * This routine calculates the Span block for given row using spanset. * * Inputs : *    instance - HBA instance *    ld   - Logical drive number *    row        - Row number *    map    - LD map * * Outputs : * *    span          - Span number *    block         - Absolute Block number in the physical disk *    div_error    - Devide error code. */
+comment|/*  *  * This routine calculates the Span block for given row using spanset.  *  * Inputs :	HBA instance  * ld:		Logical drive number  * row:		Row number  * map:		LD map  *  * Outputs :	span	- Span number block  * 						- Absolute Block number in the physical disk  * 				div_error    - Devide error code.  */
 end_comment
 
 begin_function
@@ -2494,7 +2495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ****************************************************************************** * * This routine calculates the row for given strip using spanset. * * Inputs : *    instance - HBA instance *    ld   - Logical drive number *    Strip        - Strip *    map    - LD map * * Outputs : * *    row         - row associated with strip */
+comment|/*  *  * This routine calculates the row for given strip using spanset.  *  * Inputs :	HBA instance  * ld:		Logical drive number  * Strip:	Strip  * map:		LD map  *  * Outputs :	row - row associated with strip  */
 end_comment
 
 begin_function
@@ -2805,7 +2806,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ****************************************************************************** * * This routine calculates the Start Strip for given row using spanset. * * Inputs : *    instance - HBA instance *    ld   - Logical drive number *    row        - Row number *    map    - LD map * * Outputs : * *    Strip         - Start strip associated with row */
+comment|/*  *  * This routine calculates the Start Strip for given row using spanset.  *  * Inputs:	HBA instance  * ld:		Logical drive number  * row:		Row number  * map:		LD map  *  * Outputs :	Strip - Start strip associated with row  */
 end_comment
 
 begin_function
@@ -3083,7 +3084,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ****************************************************************************** * * This routine calculates the Physical Arm for given strip using spanset. * * Inputs : *    instance - HBA instance *    ld   - Logical drive number *    strip      - Strip *    map    - LD map * * Outputs : * *    Phys Arm         - Phys Arm associated with strip */
+comment|/*  * *****************************************************************************  *  *  * This routine calculates the Physical Arm for given strip using spanset.  *  * Inputs :	HBA instance  * 			Logical drive number  * 			Strip  * 			LD map  *  * Outputs :	Phys Arm - Phys Arm associated with strip  */
 end_comment
 
 begin_function
@@ -3279,7 +3280,7 @@ argument_list|,
 name|MRSAS_PRL11
 argument_list|,
 literal|"LSI PRL11: get_arm_from_strip: "
-literal|" for ld=0x%x strip=0x%lx arm is  0x%x\n"
+literal|"for ld=0x%x strip=0x%lx arm is  0x%x\n"
 argument_list|,
 name|ld
 argument_list|,
@@ -3411,7 +3412,7 @@ break|break;
 case|case
 literal|1
 case|:
-comment|// start with logical arm
+comment|/* start with logical arm */
 name|arm
 operator|=
 name|get_arm_from_strip
@@ -3438,7 +3439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ****************************************************************************** * * This routine calculates the arm, span and block for the specified stripe and * reference in stripe using spanset * * Inputs : * *    ld   - Logical drive number *    stripRow        - Stripe number *    stripRef    - Reference in stripe * * Outputs : * *    span          - Span number *    block         - Absolute Block number in the physical disk */
+comment|/*  *  * This routine calculates the arm, span and block for the specified stripe and  * reference in stripe using spanset  *  * Inputs :		Logical drive number  * stripRow:	Stripe number  * stripRef:	Reference in stripe  *  * Outputs :	span - Span number block - Absolute Block  * number in the physical disk  */
 end_comment
 
 begin_function
@@ -3557,7 +3558,7 @@ name|do_invader
 operator|=
 literal|1
 expr_stmt|;
-comment|// Get row and span from io_info for Uneven Span IO.
+comment|/* Get row and span from io_info for Uneven Span IO. */
 name|row
 operator|=
 name|io_info
@@ -3664,7 +3665,7 @@ name|arm
 expr_stmt|;
 block|}
 else|else
-comment|// Calculate the arm
+comment|/* Calculate the arm */
 name|physArm
 operator|=
 name|get_arm
@@ -3834,7 +3835,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** * MR_BuildRaidContext:           Set up Fast path RAID context * * This function will initiate command processing.  The start/end row  * and strip information is calculated then the lock is acquired. * This function will return 0 if region lock was acquired OR return  * num strips. */
+comment|/*  * MR_BuildRaidContext:	Set up Fast path RAID context  *  * This function will initiate command processing.  The start/end row and strip  * information is calculated then the lock is acquired. This function will  * return 0 if region lock was acquired OR return num strips.  */
 end_comment
 
 begin_function
@@ -3989,7 +3990,6 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-comment|/*   	* if rowDataSize @RAID map and spanRowDataSize @SPAN INFO are zero      * return FALSE     */
 if|if
 condition|(
 name|raid
@@ -4074,7 +4074,7 @@ name|stripSize
 operator|-
 literal|1
 expr_stmt|;
-comment|/*      * calculate starting row and stripe, and number of strips and rows      */
+comment|/* 	 * calculate starting row and stripe, and number of strips and rows 	 */
 name|start_strip
 operator|=
 name|ldStartBlock
@@ -4134,7 +4134,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// End strip
+comment|/* End strip */
 if|if
 condition|(
 name|io_info
@@ -4373,7 +4373,6 @@ operator|->
 name|rowDataSize
 argument_list|)
 expr_stmt|;
-comment|// Start Row
 name|endRow
 operator|=
 name|mega_div64_32
@@ -4399,8 +4398,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// get the row count
-comment|/*      * Calculate region info.  (Assume region at start of first row, and       * assume this IO needs the full row - will adjust if not true.)      */
+comment|/* get the row count */
+comment|/* 	 * Calculate region info.  (Assume region at start of first row, and 	 * assume this IO needs the full row - will adjust if not true.) 	 */
 name|regStart
 operator|=
 name|start_row
@@ -4502,7 +4501,6 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* single-strip IOs can always lock only the data needed,                multi-strip IOs always need to full stripe locked */
 name|regStart
 operator|+=
 name|ref_in_start_stripe
@@ -4523,8 +4521,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|// For Even span region lock optimization.
-comment|// If the start strip is the last in the start row
+comment|/* 		 * For Even span region lock optimization. If the start strip 		 * is the last in the start row 		 */
 if|if
 condition|(
 name|start_strip
@@ -4546,7 +4543,7 @@ name|regStart
 operator|+=
 name|ref_in_start_stripe
 expr_stmt|;
-comment|// initialize count to sectors from startRef to end of strip
+comment|/* 			 * initialize count to sectors from startRef to end 			 * of strip 			 */
 name|regSize
 operator|=
 name|stripSize
@@ -4554,7 +4551,7 @@ operator|-
 name|ref_in_start_stripe
 expr_stmt|;
 block|}
-comment|// add complete rows in the middle of the transfer
+comment|/* add complete rows in the middle of the transfer */
 if|if
 condition|(
 name|numRows
@@ -4573,7 +4570,7 @@ name|raid
 operator|->
 name|stripeShift
 expr_stmt|;
-comment|// if IO ends within first strip of last row
+comment|/* if IO ends within first strip of last row */
 if|if
 condition|(
 name|endStrip
@@ -4598,8 +4595,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|//For Uneven span region lock optimization.
-comment|// If the start strip is the last in the start row
 if|if
 condition|(
 name|start_strip
@@ -4633,7 +4628,7 @@ name|regStart
 operator|+=
 name|ref_in_start_stripe
 expr_stmt|;
-comment|// initialize count to sectors from startRef to end of strip
+comment|/* 			 * initialize count to sectors from startRef to end 			 * of strip 			 */
 name|regSize
 operator|=
 name|stripSize
@@ -4641,7 +4636,7 @@ operator|-
 name|ref_in_start_stripe
 expr_stmt|;
 block|}
-comment|// add complete rows in the middle of the transfer
+comment|/* add complete rows in the middle of the transfer */
 if|if
 condition|(
 name|numRows
@@ -4660,7 +4655,7 @@ name|raid
 operator|->
 name|stripeShift
 expr_stmt|;
-comment|// if IO ends within first strip of last row
+comment|/* if IO ends within first strip of last row */
 if|if
 condition|(
 name|endStrip
@@ -4775,7 +4770,7 @@ name|raid
 operator|->
 name|seqNum
 expr_stmt|;
-comment|/*      * Get Phy Params only if FP capable, or else leave it to MR firmware       * to do the calculation.      */
+comment|/* 	 * Get Phy Params only if FP capable, or else leave it to MR firmware 	 * to do the calculation. 	 */
 if|if
 condition|(
 name|io_info
@@ -4919,7 +4914,7 @@ block|}
 if|#
 directive|if
 name|SPAN_DEBUG
-comment|// Just for testing what arm we get for strip.
+comment|/* Just for testing what arm we get for strip. */
 name|get_arm_from_strip
 argument_list|(
 name|sc
@@ -4940,7 +4935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ****************************************************************************** * * This routine pepare spanset info from Valid Raid map and store it into * local copy of ldSpanInfo per instance data structure. * * Inputs : *    map    - LD map *    ldSpanInfo - ldSpanInfo per HBA instance * */
+comment|/*  *  * This routine pepare spanset info from Valid Raid map and store it into local  * copy of ldSpanInfo per instance data structure.  *  * Inputs :	LD map  * 			ldSpanInfo per HBA instance  *  */
 end_comment
 
 begin_function
@@ -5010,13 +5005,6 @@ argument_list|(
 name|ldCount
 argument_list|,
 name|map
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ld = %d\n\n"
-argument_list|,
-name|ld
 argument_list|)
 expr_stmt|;
 if|if
@@ -5090,7 +5078,7 @@ operator|+
 literal|1
 condition|)
 continue|continue;
-comment|// TO-DO
+comment|/* TO-DO */
 name|span_set
 operator|=
 operator|&
@@ -5484,7 +5472,7 @@ operator|->
 name|spanDepth
 condition|)
 break|break;
-comment|// no quads remain
+comment|/* no quads remain */
 block|}
 block|}
 if|#
@@ -5497,14 +5485,14 @@ argument_list|,
 name|ldSpanInfo
 argument_list|)
 expr_stmt|;
-comment|//to get span set info
+comment|/* to get span set info */
 endif|#
 directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_update_load_balance_params:  Update load balance parmas    * Inputs:                         map pointer   *                                 Load balance info   *                                 io_info pointer  *  * This function updates the load balance parameters for the LD config  * of a two drive optimal RAID-1.    */
+comment|/*  * mrsas_update_load_balance_params:	Update load balance parmas  * Inputs:								map pointer  * 										Load balance info  *  * This function updates the load balance parameters for the LD config of a two  * drive optimal RAID-1.  */
 end_comment
 
 begin_function
@@ -5713,7 +5701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_set_pd_lba:    Sets PD LBA  * input:               io_request pointer  *                      CDB length  *                      io_info pointer  *                      Pointer to CCB  *                      Local RAID map pointer  *                      Start block of IO  *                      Block Size  *  * Used to set the PD logical block address in CDB for FP IOs.  */
+comment|/*  * mrsas_set_pd_lba:	Sets PD LBA  * input:				io_request pointer  * 						CDB length  * 						io_info pointer  * 						Pointer to CCB  * 						Local RAID map pointer  * 						Start block of IO Block Size  *  * Used to set the PD logical block address in CDB for FP IOs.  */
 end_comment
 
 begin_function
@@ -6743,15 +6731,6 @@ literal|10
 expr_stmt|;
 block|}
 comment|/* Fall through normal case, just load LBA here */
-switch|switch
-condition|(
-name|cdb_len
-condition|)
-block|{
-case|case
-literal|6
-case|:
-block|{
 name|u_int8_t
 name|val
 init|=
@@ -6762,6 +6741,14 @@ index|]
 operator|&
 literal|0xE0
 decl_stmt|;
+switch|switch
+condition|(
+name|cdb_len
+condition|)
+block|{
+case|case
+literal|6
+case|:
 name|cdb
 index|[
 literal|3
@@ -6815,7 +6802,6 @@ literal|0x1f
 operator|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 literal|10
 case|:
@@ -7110,7 +7096,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_best_arm         Determine the best spindle arm    * Inputs:                    Load balance info   *  * This function determines and returns the best arm by looking at the  * parameters of the last PD access.  */
+comment|/*  * mrsas_get_best_arm:	Determine the best spindle arm  * Inputs:				Load balance info  *  * This function determines and returns the best arm by looking at the  * parameters of the last PD access.  */
 end_comment
 
 begin_function
@@ -7262,7 +7248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_updated_dev_handle    Get the update dev handle    * Inputs:                         Load balance info   *                                 io_info pointer  *  * This function determines and returns the updated dev handle.  */
+comment|/*  * mrsas_get_updated_dev_handle:	Get the update dev handle  * Inputs:							Load balance info io_info pointer  *  * This function determines and returns the updated dev handle.  */
 end_comment
 
 begin_function
@@ -7348,7 +7334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * MR_GetPhyParams     Calculates arm, span, and block  * Inputs:             Adapter instance soft state   *                     Logical drive number (LD)   *                     Stripe number (stripRow)  *                     Reference in stripe (stripRef)  * Outputs:            Span number  *                     Absolute Block number in the physical disk   *  * This routine calculates the arm, span and block for the specified stripe  * and reference in stripe.  */
+comment|/*  * MR_GetPhyParams:	Calculates arm, span, and block  * Inputs:			Adapter soft state  * 					Logical drive number (LD)  * 					Stripe number(stripRow)  * 					Reference in stripe (stripRef)  *  * Outputs:			Absolute Block number in the physical disk  *  * This routine calculates the arm, span and block for the specified stripe and  * reference in stripe.  */
 end_comment
 
 begin_function
@@ -7491,6 +7477,7 @@ operator|==
 literal|6
 condition|)
 block|{
+comment|/* logical arm within row */
 name|logArm
 operator|=
 name|mega_mod64
@@ -7502,7 +7489,6 @@ operator|->
 name|rowDataSize
 argument_list|)
 expr_stmt|;
-comment|// logical arm within row
 if|if
 condition|(
 name|raid
@@ -7525,7 +7511,7 @@ operator|->
 name|rowSize
 argument_list|)
 expr_stmt|;
-comment|// get logical row mod
+comment|/* get logical row mod */
 name|armQ
 operator|=
 name|raid
@@ -7536,7 +7522,7 @@ literal|1
 operator|-
 name|rowMod
 expr_stmt|;
-comment|// index of Q drive
+comment|/* index of Q drive */
 name|arm
 operator|=
 name|armQ
@@ -7545,7 +7531,7 @@ literal|1
 operator|+
 name|logArm
 expr_stmt|;
-comment|// data always logically follows Q
+comment|/* data always logically follows Q */
 if|if
 condition|(
 name|arm
@@ -7554,7 +7540,7 @@ name|raid
 operator|->
 name|rowSize
 condition|)
-comment|// handle wrap condition
+comment|/* handle wrap condition */
 name|arm
 operator|-=
 name|raid
@@ -7655,7 +7641,7 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/*  Get the array on which this span is present */
+comment|/* Get the array on which this span is present */
 name|arRef
 operator|=
 name|MR_LdSpanArrayGet
@@ -7678,13 +7664,14 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-comment|// Get the Pd.
+comment|/* Get the Pd. */
 if|if
 condition|(
 name|pd
 operator|!=
 name|MR_PD_INVALID
 condition|)
+comment|/* Get dev handle from Pd */
 operator|*
 name|pDevHandle
 operator|=
@@ -7695,7 +7682,6 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-comment|// Get dev handle from Pd.
 else|else
 block|{
 operator|*
@@ -7703,7 +7689,7 @@ name|pDevHandle
 operator|=
 name|MR_PD_INVALID
 expr_stmt|;
-comment|// set dev handle as invalid.
+comment|/* set dev handle as invalid. */
 if|if
 condition|(
 operator|(
@@ -7747,6 +7733,7 @@ operator|==
 literal|1
 condition|)
 block|{
+comment|/* Get Alternate Pd. */
 name|pd
 operator|=
 name|MR_ArPdGet
@@ -7760,13 +7747,13 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-comment|// Get Alternate Pd.
 if|if
 condition|(
 name|pd
 operator|!=
 name|MR_PD_INVALID
 condition|)
+comment|/* Get dev handle from Pd. */
 operator|*
 name|pDevHandle
 operator|=
@@ -7777,7 +7764,6 @@ argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-comment|//Get dev handle from Pd.
 block|}
 block|}
 operator|*
@@ -7815,7 +7801,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * MR_GetSpanBlock     Calculates span block  * Inputs:             LD   *                     row  *                     PD span block  *                     RAID map pointer  * Outputs:            Span number  *                     Error code   *  * This routine calculates the span from the span block info.    */
+comment|/*  * MR_GetSpanBlock:	Calculates span block  * Inputs:			LD  * 					row PD  * 					span block  * 					RAID map pointer  *  * Outputs:			Span number Error code  *  * This routine calculates the span from the span block info.  */
 end_comment
 
 begin_function

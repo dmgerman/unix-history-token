@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2014, LSI Corp.  * All rights reserved.  * Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of the<ORGANIZATION> nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation  * are those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com>  * Mail to: LSI Corporation, 1621 Barber Lane, Milpitas, CA 95035  *    ATTN: MegaRaid FreeBSD  *  */
+comment|/*  * Copyright (c) 2014, LSI Corp. All rights reserved. Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com> Mail to: LSI Corporation, 1621  * Barber Lane, Milpitas, CA 95035 ATTN: MegaRaid FreeBSD  *  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ file|<dev/mrsas/mrsas_ioctl.h>
 end_include
 
 begin_comment
-comment|/*   * Function prototypes   */
+comment|/*  * Function prototypes  */
 end_comment
 
 begin_function_decl
@@ -193,7 +193,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * mrsas_passthru:        Handle pass-through commands   * input:                 Adapter instance soft state  *                        argument pointer  *  * This function is called from mrsas_ioctl() to handle pass-through and   * ioctl commands to Firmware.    */
+comment|/*  * mrsas_passthru:	Handle pass-through commands  * input:			Adapter instance soft state argument pointer  *  * This function is called from mrsas_ioctl() to handle pass-through and ioctl  * commands to Firmware.  */
 end_comment
 
 begin_function
@@ -287,14 +287,12 @@ index|[
 name|MAX_IOCTL_SGE
 index|]
 decl_stmt|;
-comment|// ioctl data virtual addr
 name|bus_addr_t
 name|ioctl_data_phys_addr
 index|[
 name|MAX_IOCTL_SGE
 index|]
 decl_stmt|;
-comment|// ioctl data phys addr
 name|bus_dma_tag_t
 name|ioctl_sense_tag
 init|=
@@ -350,7 +348,7 @@ name|iov_len
 init|=
 literal|0
 decl_stmt|;
-comment|/*       * Check for NOP from MegaCli... MegaCli can issue a DCMD of 0.  In this       * case do nothing and return 0 to it as status.      */
+comment|/* 	 * Check for NOP from MegaCli... MegaCli can issue a DCMD of 0.  In 	 * this case do nothing and return 0 to it as status. 	 */
 if|if
 condition|(
 name|in_cmd
@@ -449,7 +447,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * User's IOCTL packet has 2 frames (maximum). Copy those two      * frames into our cmd's frames. cmd->frame's context will get      * overwritten when we copy from user's frames. So set that value      * alone separately      */
+comment|/* 	 * User's IOCTL packet has 2 frames (maximum). Copy those two frames 	 * into our cmd's frames. cmd->frame's context will get overwritten 	 * when we copy from user's frames. So set that value alone 	 * separately 	 */
 name|memcpy
 argument_list|(
 name|cmd
@@ -506,7 +504,7 @@ operator||
 name|MFI_FRAME_SENSE64
 operator|)
 expr_stmt|;
-comment|/*      * The management interface between applications and the fw uses      * MFI frames. E.g, RAID configuration changes, LD property changes      * etc are accomplishes through different kinds of MFI frames. The      * driver needs to care only about substituting user buffers with      * kernel buffers in SGLs. The location of SGL is embedded in the      * struct iocpacket itself.      */
+comment|/* 	 * The management interface between applications and the fw uses MFI 	 * frames. E.g, RAID configuration changes, LD property changes etc 	 * are accomplishes through different kinds of MFI frames. The driver 	 * needs to care only about substituting user buffers with kernel 	 * buffers in SGLs. The location of SGL is embedded in the struct 	 * iocpacket itself. 	 */
 name|kern_sge32
 operator|=
 operator|(
@@ -528,7 +526,7 @@ operator|->
 name|sgl_off
 operator|)
 expr_stmt|;
-comment|/*      * For each user buffer, create a mirror buffer and copy in      */
+comment|/* 	 * For each user buffer, create a mirror buffer and copy in 	 */
 for|for
 control|(
 name|i
@@ -617,40 +615,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|ioctl_data_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|ioctl_data_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|ioctl_data_tag
 index|[
@@ -943,40 +931,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|ioctl_sense_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|ioctl_sense_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|ioctl_sense_tag
 argument_list|)
@@ -1105,7 +1083,7 @@ operator|=
 name|ioctl_sense_mem
 expr_stmt|;
 block|}
-comment|/*      * Set the sync_cmd flag so that the ISR knows not to complete this      * cmd to the SCSI mid-layer      */
+comment|/* 	 * Set the sync_cmd flag so that the ISR knows not to complete this 	 * cmd to the SCSI mid-layer 	 */
 name|cmd
 operator|->
 name|sync_cmd
@@ -1125,7 +1103,7 @@ name|sync_cmd
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * copy out the kernel buffers to user buffers      */
+comment|/* 	 * copy out the kernel buffers to user buffers 	 */
 for|for
 control|(
 name|i
@@ -1238,7 +1216,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/*      * copy out the sense      */
+comment|/* 	 * copy out the sense 	 */
 if|if
 condition|(
 name|user_ioc
@@ -1246,7 +1224,7 @@ operator|->
 name|sense_len
 condition|)
 block|{
-comment|/*          * sense_buff points to the location that has the user          * sense buffer address          */
+comment|/* 		 * sense_buff points to the location that has the user sense 		 * buffer address 		 */
 name|sense_ptr
 operator|=
 operator|(
@@ -1308,7 +1286,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/*      * Return command status to user space      */
+comment|/* 	 * Return command status to user space 	 */
 name|memcpy
 argument_list|(
 operator|&
@@ -1337,7 +1315,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-comment|/*       * Release sense buffer       */
+comment|/* 	 * Release sense buffer 	 */
 if|if
 condition|(
 name|ioctl_sense_phys_addr
@@ -1375,7 +1353,7 @@ argument_list|(
 name|ioctl_sense_tag
 argument_list|)
 expr_stmt|;
-comment|/*       * Release data buffers       */
+comment|/* 	 * Release data buffers 	 */
 for|for
 control|(
 name|i
@@ -1514,7 +1492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_alloc_mfi_cmds:  Allocates the command packets  * input:                 Adapter instance soft state  *  * Each IOCTL or passthru command that is issued to the FW are wrapped in a  * local data structure called mrsas_mfi_cmd.  The frame embedded in this   * mrsas_mfi is issued to FW. The array is used only to look up the   * mrsas_mfi_cmd given the context. The free commands are maintained in a  * linked list.  */
+comment|/*  * mrsas_alloc_mfi_cmds:	Allocates the command packets  * input:					Adapter instance soft state  *  * Each IOCTL or passthru command that is issued to the FW are wrapped in a  * local data structure called mrsas_mfi_cmd.  The frame embedded in this  * mrsas_mfi is issued to FW. The array is used only to look up the  * mrsas_mfi_cmd given the context. The free commands are maintained in a  * linked list.  */
 end_comment
 
 begin_function
@@ -1544,7 +1522,7 @@ name|max_cmd
 operator|=
 name|MRSAS_MAX_MFI_CMDS
 expr_stmt|;
-comment|/*      * sc->mfi_cmd_list is an array of struct mrsas_mfi_cmd pointers. Allocate the      * dynamic array first and then allocate individual commands.      */
+comment|/* 	 * sc->mfi_cmd_list is an array of struct mrsas_mfi_cmd pointers. 	 * Allocate the dynamic array first and then allocate individual 	 * commands. 	 */
 name|sc
 operator|->
 name|mfi_cmd_list
@@ -1785,6 +1763,7 @@ argument_list|,
 literal|"Cannot allocate DMA frame pool.\n"
 argument_list|)
 expr_stmt|;
+comment|/* Free the frames */
 for|for
 control|(
 name|i
@@ -1799,7 +1778,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|// Free the frames
 name|cmd
 operator|=
 name|sc
@@ -1847,7 +1825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_create_frame_pool -   Creates DMA pool for cmd frames  * input:                      Adapter soft state  *  * Each command packet has an embedded DMA memory buffer that is used for  * filling MFI frame and the SG list that immediately follows the frame. This  * function creates those DMA memory buffers for each command packet by using  * PCI pool facility. pad_0 is initialized to 0 to prevent corrupting value   * of context and could cause FW crash.  */
+comment|/*  * mrsas_create_frame_pool:	Creates DMA pool for cmd frames  * input:					Adapter soft state  *  * Each command packet has an embedded DMA memory buffer that is used for  * filling MFI frame and the SG list that immediately follows the frame. This  * function creates those DMA memory buffers for each command packet by using  * PCI pool facility. pad_0 is initialized to 0 to prevent corrupting value  * of context and could cause FW crash.  */
 end_comment
 
 begin_function
@@ -1877,40 +1855,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|MRSAS_MFI_FRAME_SIZE
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|MRSAS_MFI_FRAME_SIZE
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -2034,7 +2002,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_alloc_frame -   Allocates MFI Frames  * input:                Adapter soft state  *  * Create bus DMA memory tag and dmamap and load memory for MFI frames.   * Returns virtual memory pointer to allocated region.   */
+comment|/*  * mrsas_alloc_frame:	Allocates MFI Frames  * input:				Adapter soft state  *  * Create bus DMA memory tag and dmamap and load memory for MFI frames. Returns  * virtual memory pointer to allocated region.  */
 end_comment
 
 begin_function
@@ -2155,7 +2123,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_alloc_cb:  Callback function of bus_dmamap_load()  * input:           callback argument,  *                  machine dependent type that describes DMA segments,  *                  number of segments,  *                  error code.  *  * This function is for the driver to receive mapping information resultant  * of the bus_dmamap_load(). The information is actually not being used,   * but the address is saved anyway.   */
+comment|/*  * mrsas_alloc_cb:	Callback function of bus_dmamap_load()  * input:			callback argument,  * 					machine dependent type that describes DMA segments,  * 					number of segments,  * 					error code.  *  * This function is for the driver to receive mapping information resultant of  * the bus_dmamap_load(). The information is actually not being used, but the  * address is saved anyway.  */
 end_comment
 
 begin_function
@@ -2200,7 +2168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_free_frames:    Frees memory for  MFI frames  * input:                Adapter soft state  *  * Deallocates MFI frames memory.  Called from mrsas_free_mem() during   * detach and error case during creation of frame pool.  */
+comment|/*  * mrsas_free_frames:	Frees memory for  MFI frames  * input:				Adapter soft state  *  * Deallocates MFI frames memory.  Called from mrsas_free_mem() during detach  * and error case during creation of frame pool.  */
 end_comment
 
 begin_function

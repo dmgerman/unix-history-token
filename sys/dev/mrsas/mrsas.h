@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2014, LSI Corp.  * All rights reserved.  * Authors: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of the<ORGANIZATION> nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation  * are those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com>  * Mail to: LSI Corporation, 1621 Barber Lane, Milpitas, CA 95035  *    ATTN: MegaRaid FreeBSD  *  */
+comment|/*  * Copyright (c) 2014, LSI Corp. All rights reserved. Authors: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com> Mail to: LSI Corporation, 1621  * Barber Lane, Milpitas, CA 95035 ATTN: MegaRaid FreeBSD  *  */
 end_comment
 
 begin_include
@@ -106,47 +106,13 @@ file|<sys/bus.h>
 end_include
 
 begin_comment
-comment|/* structs, prototypes for pci bus stuff */
+comment|/* structs, prototypes for pci bus 					 * stuff */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/atomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/pci/pcivar.h>
-end_include
-
-begin_comment
-comment|/* For pci_get macros! */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<dev/pci/pcireg.h>
 end_include
 
 begin_include
@@ -195,6 +161,40 @@ begin_include
 include|#
 directive|include
 file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_comment
+comment|/* For pci_get macros! */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_define
@@ -251,7 +251,7 @@ value|0x1C
 end_define
 
 begin_comment
-comment|/*  * Firmware State Defines   */
+comment|/*  * Firmware State Defines  */
 end_comment
 
 begin_define
@@ -294,7 +294,7 @@ value|3
 end_define
 
 begin_comment
-comment|/*  * Miscellaneous Defines   */
+comment|/*  * Miscellaneous Defines  */
 end_comment
 
 begin_define
@@ -315,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|MRSAS_VERSION
-value|"06.705.10.00-fbsd"
+value|"06.705.10.01-fbsd"
 end_define
 
 begin_define
@@ -333,7 +333,7 @@ value|0x14
 end_define
 
 begin_comment
-comment|//temp
+comment|/* Temporarily set */
 end_comment
 
 begin_define
@@ -394,7 +394,7 @@ value|128
 end_define
 
 begin_comment
-comment|/*   Boolean types  */
+comment|/*  * Boolean types  */
 end_comment
 
 begin_if
@@ -533,76 +533,59 @@ name|Type
 range|:
 literal|4
 decl_stmt|;
-comment|// 0x00
 name|u_int8_t
 name|nseg
 range|:
 literal|4
 decl_stmt|;
-comment|// 0x00
 name|u_int8_t
 name|resvd0
 decl_stmt|;
-comment|// 0x01
 name|u_int16_t
 name|timeoutValue
 decl_stmt|;
-comment|// 0x02 -0x03
 name|u_int8_t
 name|regLockFlags
 decl_stmt|;
-comment|// 0x04
 name|u_int8_t
 name|resvd1
 decl_stmt|;
-comment|// 0x05
 name|u_int16_t
 name|VirtualDiskTgtId
 decl_stmt|;
-comment|// 0x06 -0x07
 name|u_int64_t
 name|regLockRowLBA
 decl_stmt|;
-comment|// 0x08 - 0x0F
 name|u_int32_t
 name|regLockLength
 decl_stmt|;
-comment|// 0x10 - 0x13
 name|u_int16_t
 name|nextLMId
 decl_stmt|;
-comment|// 0x14 - 0x15
 name|u_int8_t
 name|exStatus
 decl_stmt|;
-comment|// 0x16
 name|u_int8_t
 name|status
 decl_stmt|;
-comment|// 0x17 status
 name|u_int8_t
 name|RAIDFlags
 decl_stmt|;
-comment|// 0x18 resvd[7:6],ioSubType[5:4],resvd[3:1],preferredCpu[0]
 name|u_int8_t
 name|numSGE
 decl_stmt|;
-comment|// 0x19 numSge; not including chain entries
 name|u_int16_t
 name|configSeqNum
 decl_stmt|;
-comment|// 0x1A -0x1B
 name|u_int8_t
 name|spanArm
 decl_stmt|;
-comment|// 0x1C span[7:5], arm[4:0]
 name|u_int8_t
 name|resvd2
 index|[
 literal|3
 index|]
 decl_stmt|;
-comment|// 0x1D-0x1f
 block|}
 name|RAID_CONTEXT
 typedef|;
@@ -1251,7 +1234,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * RAID SCSI IO Request Message  * Total SGE count will be one less than  _MPI2_SCSI_IO_REQUEST  */
+comment|/*  * RAID SCSI IO Request Message Total SGE count will be one less than  * _MPI2_SCSI_IO_REQUEST  */
 end_comment
 
 begin_typedef
@@ -1418,7 +1401,7 @@ name|MessageAddress1
 range|:
 literal|24
 decl_stmt|;
-comment|/* bits 31:8*/
+comment|/* bits 31:8 */
 name|u_int32_t
 name|MessageAddress2
 decl_stmt|;
@@ -2288,10 +2271,6 @@ name|MR_DCMD_LD_MAP_GET_INFO
 value|0x0300e101
 end_define
 
-begin_comment
-comment|// get the mapping information of this LD
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2338,14 +2317,14 @@ begin_define
 define|#
 directive|define
 name|MRSAS_MAX_PD
-value|(MRSAS_MAX_PD_CHANNELS * \ 		MRSAS_MAX_DEV_PER_CHANNEL)
+value|(MRSAS_MAX_PD_CHANNELS * \ 			MRSAS_MAX_DEV_PER_CHANNEL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MRSAS_MAX_LD_IDS
-value|(MRSAS_MAX_LD_CHANNELS * \ 		MRSAS_MAX_DEV_PER_CHANNEL)
+value|(MRSAS_MAX_LD_CHANNELS * \ 			MRSAS_MAX_DEV_PER_CHANNEL)
 end_define
 
 begin_define
@@ -2356,7 +2335,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*******************************************************************   * RAID map related structures   ********************************************************************/
+comment|/*******************************************************************  * RAID map related structures  ********************************************************************/
 end_comment
 
 begin_pragma
@@ -2376,11 +2355,9 @@ block|{
 name|u_int16_t
 name|curDevHdl
 decl_stmt|;
-comment|// the device handle currently used by fw to issue the command.
 name|u_int8_t
 name|validHandles
 decl_stmt|;
-comment|// bitmap of valid device handles.
 name|u_int8_t
 name|reserved
 decl_stmt|;
@@ -2390,7 +2367,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|// 0x04 dev handles for all the paths.
 block|}
 name|MR_DEV_HANDLE_INFO
 typedef|;
@@ -2420,10 +2396,6 @@ name|MR_ARRAY_INFO
 typedef|;
 end_typedef
 
-begin_comment
-comment|// 0x40, Total Size
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2432,31 +2404,22 @@ block|{
 name|u_int64_t
 name|logStart
 decl_stmt|;
-comment|// 0x00
 name|u_int64_t
 name|logEnd
 decl_stmt|;
-comment|// 0x08
 name|u_int64_t
 name|offsetInSpan
 decl_stmt|;
-comment|// 0x10
 name|u_int32_t
 name|diff
 decl_stmt|;
-comment|// 0x18
 name|u_int32_t
 name|reserved1
 decl_stmt|;
-comment|// 0x1C
 block|}
 name|MR_QUAD_ELEMENT
 typedef|;
 end_typedef
-
-begin_comment
-comment|// 0x20, Total size
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -2466,68 +2429,50 @@ block|{
 name|u_int32_t
 name|noElements
 decl_stmt|;
-comment|// 0x00
 name|u_int32_t
 name|reserved1
 decl_stmt|;
-comment|// 0x04
 name|MR_QUAD_ELEMENT
 name|quad
 index|[
 name|MAX_RAIDMAP_SPAN_DEPTH
 index|]
 decl_stmt|;
-comment|// 0x08
 block|}
 name|MR_SPAN_INFO
 typedef|;
 end_typedef
-
-begin_comment
-comment|// 0x108, Total size
-end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 name|_MR_LD_SPAN_
 block|{
-comment|// SPAN structure
 name|u_int64_t
 name|startBlk
 decl_stmt|;
-comment|// 0x00, starting block number in array
 name|u_int64_t
 name|numBlks
 decl_stmt|;
-comment|// 0x08, number of blocks
 name|u_int16_t
 name|arrayRef
 decl_stmt|;
-comment|// 0x10, array reference
 name|u_int8_t
 name|spanRowSize
 decl_stmt|;
-comment|// 0x11, span row size
 name|u_int8_t
 name|spanRowDataSize
 decl_stmt|;
-comment|// 0x12, span row data size
 name|u_int8_t
 name|reserved
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|// 0x13, reserved
 block|}
 name|MR_LD_SPAN
 typedef|;
 end_typedef
-
-begin_comment
-comment|// 0x18, Total Size
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -2537,15 +2482,12 @@ block|{
 name|u_int64_t
 name|num_rows
 decl_stmt|;
-comment|// number of rows/span
 name|MR_LD_SPAN
 name|span
 decl_stmt|;
-comment|// 0x08
 name|MR_SPAN_INFO
 name|block_span_info
 decl_stmt|;
-comment|// 0x20
 block|}
 name|MR_SPAN_BLOCK_INFO
 typedef|;
@@ -2578,13 +2520,11 @@ name|pdPiMode
 range|:
 literal|4
 decl_stmt|;
-comment|// Every Pd has to be same.
 name|u_int32_t
 name|encryptionType
 range|:
 literal|8
 decl_stmt|;
-comment|// FDE or ctlr encryption (MR_LD_ENCRYPTION_TYPE)
 name|u_int32_t
 name|fpWriteCapable
 range|:
@@ -2610,7 +2550,6 @@ name|fpNonRWCapable
 range|:
 literal|1
 decl_stmt|;
-comment|// TRUE if supporting Non RW IO
 name|u_int32_t
 name|reserved4
 range|:
@@ -2619,70 +2558,54 @@ decl_stmt|;
 block|}
 name|capability
 struct|;
-comment|// 0x00
 name|u_int32_t
 name|reserved6
 decl_stmt|;
 name|u_int64_t
 name|size
 decl_stmt|;
-comment|// 0x08, LD size in blocks
 name|u_int8_t
 name|spanDepth
 decl_stmt|;
-comment|// 0x10, Total Number of Spans
 name|u_int8_t
 name|level
 decl_stmt|;
-comment|// 0x11, RAID level
 name|u_int8_t
 name|stripeShift
 decl_stmt|;
-comment|// 0x12, shift-count to get stripe size (0=512, 1=1K, 7=64K, etc.)
 name|u_int8_t
 name|rowSize
 decl_stmt|;
-comment|// 0x13, number of disks in a row
 name|u_int8_t
 name|rowDataSize
 decl_stmt|;
-comment|// 0x14, number of data disks in a row
 name|u_int8_t
 name|writeMode
 decl_stmt|;
-comment|// 0x15, WRITE_THROUGH or WRITE_BACK
 name|u_int8_t
 name|PRL
 decl_stmt|;
-comment|// 0x16, To differentiate between RAID1 and RAID1E
 name|u_int8_t
 name|SRL
 decl_stmt|;
-comment|// 0x17
 name|u_int16_t
 name|targetId
 decl_stmt|;
-comment|// 0x18, ld Target Id.
 name|u_int8_t
 name|ldState
 decl_stmt|;
-comment|// 0x1a, state of ld, state corresponds to MR_LD_STATE
 name|u_int8_t
 name|regTypeReqOnWrite
 decl_stmt|;
-comment|// 0x1b, Pre calculate region type requests based on MFC etc..
 name|u_int8_t
 name|modFactor
 decl_stmt|;
-comment|// 0x1c, same as rowSize,
 name|u_int8_t
 name|regTypeReqOnRead
 decl_stmt|;
-comment|// 0x1d, region lock type used for read, valid only if regTypeOnReadIsValid=1
 name|u_int16_t
 name|seqNum
 decl_stmt|;
-comment|// 0x1e, LD sequence number
 struct|struct
 block|{
 name|u_int32_t
@@ -2690,13 +2613,11 @@ name|ldSyncRequired
 range|:
 literal|1
 decl_stmt|;
-comment|// This LD requires sync command before completing
 name|u_int32_t
 name|regTypeReqOnReadLsValid
 range|:
 literal|1
 decl_stmt|;
-comment|// Qualifier for regTypeOnRead
 name|u_int32_t
 name|reserved
 range|:
@@ -2705,29 +2626,24 @@ decl_stmt|;
 block|}
 name|flags
 struct|;
-comment|// 0x20
 name|u_int8_t
 name|LUN
 index|[
 literal|8
 index|]
 decl_stmt|;
-comment|// 0x24, 8 byte LUN field used for SCSI
 name|u_int8_t
 name|fpIoTimeoutForLd
 decl_stmt|;
-comment|// 0x2C, timeout value for FP IOs
 name|u_int8_t
 name|reserved2
 index|[
 literal|3
 index|]
 decl_stmt|;
-comment|// 0x2D
 name|u_int32_t
 name|logicalBlockLength
 decl_stmt|;
-comment|// 0x30 Logical block size for the LD
 struct|struct
 block|{
 name|u_int32_t
@@ -2735,19 +2651,16 @@ name|LdPiExp
 range|:
 literal|4
 decl_stmt|;
-comment|// 0x34, P_I_EXPONENT for ReadCap 16
 name|u_int32_t
 name|LdLogicalBlockExp
 range|:
 literal|4
 decl_stmt|;
-comment|// 0x34, LOGICAL BLOCKS PER PHYS BLOCK
 name|u_int32_t
 name|reserved1
 range|:
 literal|24
 decl_stmt|;
-comment|// 0x34
 block|}
 name|exponent
 struct|;
@@ -2759,15 +2672,10 @@ operator|-
 literal|0x38
 index|]
 decl_stmt|;
-comment|// 0x38
 block|}
 name|MR_LD_RAID
 typedef|;
 end_typedef
-
-begin_comment
-comment|// 0x80, Total Size
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -2777,29 +2685,22 @@ block|{
 name|MR_LD_RAID
 name|ldRaid
 decl_stmt|;
-comment|// 0x00
 name|u_int8_t
 name|dataArmMap
 index|[
 name|MAX_RAIDMAP_ROW_SIZE
 index|]
 decl_stmt|;
-comment|// 0x80, needed for GET_ARM() - R0/1/5 only.
 name|MR_SPAN_BLOCK_INFO
 name|spanBlock
 index|[
 name|MAX_RAIDMAP_SPAN_DEPTH
 index|]
 decl_stmt|;
-comment|// 0xA0
 block|}
 name|MR_LD_SPAN_MAP
 typedef|;
 end_typedef
-
-begin_comment
-comment|// 0x9E0
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -2809,12 +2710,10 @@ block|{
 name|u_int32_t
 name|totalSize
 decl_stmt|;
-comment|// total size of this structure, including this field.
 union|union
 block|{
 struct|struct
 block|{
-comment|// Simple method of version checking variables
 name|u_int32_t
 name|maxLd
 decl_stmt|;
@@ -2851,10 +2750,10 @@ union|;
 name|u_int32_t
 name|ldCount
 decl_stmt|;
-comment|// count of lds.
 name|u_int32_t
 name|Reserved1
 decl_stmt|;
+comment|/* 	 * This doesn't correspond to FW Ld Tgt Id to LD, but will purge. For 	 * example: if tgt Id is 4 and FW LD is 2, and there is only one LD, 	 * FW will populate the array like this. [0xFF, 0xFF, 0xFF, 0xFF, 	 * 0x0,.....]. This is to help reduce the entire strcture size if 	 * there are few LDs or driver is looking info for 1 LD only. 	 */
 name|u_int8_t
 name|ldTgtIdToLd
 index|[
@@ -2863,17 +2762,9 @@ operator|+
 name|MAX_RAIDMAP_VIEWS
 index|]
 decl_stmt|;
-comment|// 0x20
-comment|// This doesn't correspond to
-comment|// FW Ld Tgt Id to LD, but will purge. For example: if tgt Id is 4
-comment|// and FW LD is 2, and there is only one LD, FW will populate the
-comment|// array like this. [0xFF, 0xFF, 0xFF, 0xFF, 0x0,.....]. This is to
-comment|// help reduce the entire strcture size if there are few LDs or
-comment|// driver is looking info for 1 LD only.
 name|u_int8_t
 name|fpPdIoTimeoutSec
 decl_stmt|;
-comment|// timeout value used by driver in FP IOs
 name|u_int8_t
 name|reserved2
 index|[
@@ -2886,29 +2777,22 @@ index|[
 name|MAX_RAIDMAP_ARRAYS
 index|]
 decl_stmt|;
-comment|// 0x00a8
 name|MR_DEV_HANDLE_INFO
 name|devHndlInfo
 index|[
 name|MAX_RAIDMAP_PHYSICAL_DEVICES
 index|]
 decl_stmt|;
-comment|// 0x20a8
 name|MR_LD_SPAN_MAP
 name|ldSpanMap
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|// 0x28a8-[0-MAX_RAIDMAP_LOGICAL_DRIVES+MAX_RAIDMAP_VIEWS+1];
 block|}
 name|MR_FW_RAID_MAP
 typedef|;
 end_typedef
-
-begin_comment
-comment|// 0x3288, Total Size
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -3011,7 +2895,7 @@ typedef|typedef
 struct|struct
 name|_MR_DRV_RAID_MAP
 block|{
-comment|/* total size of this structure, including this field. 	 * This feild will be manupulated by driver for ext raid map, 	 * else pick the value from firmware raid map. 	 */
+comment|/* 	 * Total size of this structure, including this field. This feild 	 * will be manupulated by driver for ext raid map, else pick the 	 * value from firmware raid map. 	 */
 name|u_int32_t
 name|totalSize
 decl_stmt|;
@@ -3052,7 +2936,7 @@ decl_stmt|;
 block|}
 name|drv_raid_desc
 union|;
-comment|/* timeout value used by driver in FP IOs*/
+comment|/* timeout value used by driver in FP IOs */
 name|u_int8_t
 name|fpPdIoTimeoutSec
 decl_stmt|;
@@ -3104,7 +2988,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Driver raid map size is same as raid map ext  * MR_DRV_RAID_MAP_ALL is created to sync with old raid.  * And it is mainly for code re-use purpose.  */
+comment|/*  * Driver raid map size is same as raid map ext MR_DRV_RAID_MAP_ALL is  * created to sync with old raid. And it is mainly for code re-use purpose.  */
 end_comment
 
 begin_pragma
@@ -3430,7 +3314,7 @@ union|;
 end_union
 
 begin_comment
-comment|/*******************************************************************   * Temporary command   ********************************************************************/
+comment|/*******************************************************************  * Temporary command  ********************************************************************/
 end_comment
 
 begin_struct
@@ -3440,26 +3324,22 @@ block|{
 name|bus_dma_tag_t
 name|tmp_dcmd_tag
 decl_stmt|;
-comment|// tag for tmp DMCD cmd
 name|bus_dmamap_t
 name|tmp_dcmd_dmamap
 decl_stmt|;
-comment|// dmamap for tmp DCMD cmd
 name|void
 modifier|*
 name|tmp_dcmd_mem
 decl_stmt|;
-comment|// virtual addr of tmp DCMD cmd
 name|bus_addr_t
 name|tmp_dcmd_phys_addr
 decl_stmt|;
-comment|//physical addr of tmp DCMD
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*******************************************************************   * Register set, included legacy controllers 1068 and 1078,   * structure extended for 1078 registers  ********************************************************************/
+comment|/*******************************************************************  * Register set, included legacy controllers 1068 and 1078,  * structure extended for 1078 registers  *******************************************************************/
 end_comment
 
 begin_pragma
@@ -3479,137 +3359,137 @@ block|{
 name|u_int32_t
 name|doorbell
 decl_stmt|;
-comment|/*0000h*/
+comment|/* 0000h */
 name|u_int32_t
 name|fusion_seq_offset
 decl_stmt|;
-comment|/*0004h*/
+comment|/* 0004h */
 name|u_int32_t
 name|fusion_host_diag
 decl_stmt|;
-comment|/*0008h*/
+comment|/* 0008h */
 name|u_int32_t
 name|reserved_01
 decl_stmt|;
-comment|/*000Ch*/
+comment|/* 000Ch */
 name|u_int32_t
 name|inbound_msg_0
 decl_stmt|;
-comment|/*0010h*/
+comment|/* 0010h */
 name|u_int32_t
 name|inbound_msg_1
 decl_stmt|;
-comment|/*0014h*/
+comment|/* 0014h */
 name|u_int32_t
 name|outbound_msg_0
 decl_stmt|;
-comment|/*0018h*/
+comment|/* 0018h */
 name|u_int32_t
 name|outbound_msg_1
 decl_stmt|;
-comment|/*001Ch*/
+comment|/* 001Ch */
 name|u_int32_t
 name|inbound_doorbell
 decl_stmt|;
-comment|/*0020h*/
+comment|/* 0020h */
 name|u_int32_t
 name|inbound_intr_status
 decl_stmt|;
-comment|/*0024h*/
+comment|/* 0024h */
 name|u_int32_t
 name|inbound_intr_mask
 decl_stmt|;
-comment|/*0028h*/
+comment|/* 0028h */
 name|u_int32_t
 name|outbound_doorbell
 decl_stmt|;
-comment|/*002Ch*/
+comment|/* 002Ch */
 name|u_int32_t
 name|outbound_intr_status
 decl_stmt|;
-comment|/*0030h*/
+comment|/* 0030h */
 name|u_int32_t
 name|outbound_intr_mask
 decl_stmt|;
-comment|/*0034h*/
+comment|/* 0034h */
 name|u_int32_t
 name|reserved_1
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/*0038h*/
+comment|/* 0038h */
 name|u_int32_t
 name|inbound_queue_port
 decl_stmt|;
-comment|/*0040h*/
+comment|/* 0040h */
 name|u_int32_t
 name|outbound_queue_port
 decl_stmt|;
-comment|/*0044h*/
+comment|/* 0044h */
 name|u_int32_t
 name|reserved_2
 index|[
 literal|9
 index|]
 decl_stmt|;
-comment|/*0048h*/
+comment|/* 0048h */
 name|u_int32_t
 name|reply_post_host_index
 decl_stmt|;
-comment|/*006Ch*/
+comment|/* 006Ch */
 name|u_int32_t
 name|reserved_2_2
 index|[
 literal|12
 index|]
 decl_stmt|;
-comment|/*0070h*/
+comment|/* 0070h */
 name|u_int32_t
 name|outbound_doorbell_clear
 decl_stmt|;
-comment|/*00A0h*/
+comment|/* 00A0h */
 name|u_int32_t
 name|reserved_3
 index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/*00A4h*/
+comment|/* 00A4h */
 name|u_int32_t
 name|outbound_scratch_pad
 decl_stmt|;
-comment|/*00B0h*/
+comment|/* 00B0h */
 name|u_int32_t
 name|outbound_scratch_pad_2
 decl_stmt|;
-comment|/*00B4h*/
+comment|/* 00B4h */
 name|u_int32_t
 name|reserved_4
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/*00B8h*/
+comment|/* 00B8h */
 name|u_int32_t
 name|inbound_low_queue_port
 decl_stmt|;
-comment|/*00C0h*/
+comment|/* 00C0h */
 name|u_int32_t
 name|inbound_high_queue_port
 decl_stmt|;
-comment|/*00C4h*/
+comment|/* 00C4h */
 name|u_int32_t
 name|reserved_5
 decl_stmt|;
-comment|/*00C8h*/
+comment|/* 00C8h */
 name|u_int32_t
 name|res_6
 index|[
 literal|11
 index|]
 decl_stmt|;
-comment|/*CCh*/
+comment|/* CCh */
 name|u_int32_t
 name|host_diag
 decl_stmt|;
@@ -3622,7 +3502,7 @@ index|[
 literal|807
 index|]
 decl_stmt|;
-comment|/*00CCh*/
+comment|/* 00CCh */
 block|}
 name|mrsas_reg_set
 typedef|;
@@ -3764,7 +3644,7 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * During FW init, clear pending cmds& reset state using inbound_msg_0  *  * ABORT        : Abort all pending cmds  * READY        : Move from OPERATIONAL to READY state; discard queue info  * MFIMODE      : Discard (possible) low MFA posted in 64-bit mode (??)  * CLR_HANDSHAKE: FW is waiting for HANDSHAKE from BIOS or Driver  * HOTPLUG      : Resume from Hotplug  * MFI_STOP_ADP : Send signal to FW to stop processing  */
+comment|/*  * During FW init, clear pending cmds& reset state using inbound_msg_0  *  * ABORT        : Abort all pending cmds READY        : Move from OPERATIONAL to  * READY state; discard queue info MFIMODE      : Discard (possible) low MFA  * posted in 64-bit mode (??) CLR_HANDSHAKE: FW is waiting for HANDSHAKE from  * BIOS or Driver HOTPLUG      : Resume from Hotplug MFI_STOP_ADP : Send  * signal to FW to stop processing  */
 end_comment
 
 begin_define
@@ -3774,20 +3654,12 @@ name|WRITE_SEQUENCE_OFFSET
 value|(0x0000000FC)
 end_define
 
-begin_comment
-comment|// I20
-end_comment
-
 begin_define
 define|#
 directive|define
 name|HOST_DIAGNOSTIC_OFFSET
 value|(0x000000F8)
 end_define
-
-begin_comment
-comment|// I20
-end_comment
 
 begin_define
 define|#
@@ -3856,11 +3728,11 @@ begin_define
 define|#
 directive|define
 name|MFI_RESET_FLAGS
-value|MFI_INIT_READY| \                                                 MFI_INIT_MFIMODE| \                                                 MFI_INIT_ABORT
+value|MFI_INIT_READY|		\ 									MFI_INIT_MFIMODE|	\ 									MFI_INIT_ABORT
 end_define
 
 begin_comment
-comment|/*  * MFI frame flags   */
+comment|/*  * MFI frame flags  */
 end_comment
 
 begin_define
@@ -4199,10 +4071,6 @@ directive|define
 name|MR_DCMD_CTRL_IO_METRICS_GET
 value|0x01170200
 end_define
-
-begin_comment
-comment|// get IO metrics
-end_comment
 
 begin_define
 define|#
@@ -4694,7 +4562,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Thunderbolt (and later) Defines   */
+comment|/*  * Thunderbolt (and later) Defines  */
 end_comment
 
 begin_define
@@ -4775,7 +4643,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * Invader Defines   */
+comment|/*  * Invader Defines  */
 end_comment
 
 begin_define
@@ -4821,7 +4689,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/*   * T10 PI defines   */
+comment|/*  * T10 PI defines  */
 end_comment
 
 begin_define
@@ -4990,7 +4858,7 @@ value|(0xE0)
 end_define
 
 begin_comment
-comment|/*      * Define region lock types  */
+comment|/*  * Define region lock types  */
 end_comment
 
 begin_typedef
@@ -5002,12 +4870,10 @@ name|REGION_TYPE_UNUSED
 init|=
 literal|0
 block|,
-comment|// lock is currently not active
 name|REGION_TYPE_SHARED_READ
 init|=
 literal|1
 block|,
-comment|// shared lock (for reads)
 name|REGION_TYPE_SHARED_WRITE
 init|=
 literal|2
@@ -5015,15 +4881,13 @@ block|,
 name|REGION_TYPE_EXCLUSIVE
 init|=
 literal|3
-block|,
-comment|// exclusive lock (for writes)
-block|}
+block|, }
 name|REGION_TYPE
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * SCSI-CAM Related Defines   */
+comment|/*  * SCSI-CAM Related Defines  */
 end_comment
 
 begin_define
@@ -5032,10 +4896,6 @@ directive|define
 name|MRSAS_SCSI_MAX_LUNS
 value|0
 end_define
-
-begin_comment
-comment|//zero for now
-end_comment
 
 begin_define
 define|#
@@ -5181,7 +5041,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*   * Adapter Reset States   */
+comment|/*  * Adapter Reset States  */
 end_comment
 
 begin_enum
@@ -5215,7 +5075,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*   * MPT Command Structure   */
+comment|/*  * MPT Command Structure  */
 end_comment
 
 begin_struct
@@ -5256,7 +5116,6 @@ decl_stmt|;
 name|u_int32_t
 name|sync_cmd_idx
 decl_stmt|;
-comment|//For getting MFI cmd from list when complete
 name|u_int32_t
 name|index
 decl_stmt|;
@@ -5269,11 +5128,9 @@ decl_stmt|;
 name|bus_size_t
 name|length
 decl_stmt|;
-comment|// request length
 name|u_int32_t
 name|error_code
 decl_stmt|;
-comment|// error during request dmamap load
 name|bus_dmamap_t
 name|data_dmamap
 decl_stmt|;
@@ -5286,7 +5143,6 @@ name|ccb
 modifier|*
 name|ccb_ptr
 decl_stmt|;
-comment|// pointer to ccb
 name|struct
 name|callout
 name|cm_callout
@@ -5307,7 +5163,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * MFI Command Structure   */
+comment|/*  * MFI Command Structure  */
 end_comment
 
 begin_struct
@@ -5322,16 +5178,13 @@ decl_stmt|;
 name|bus_dmamap_t
 name|frame_dmamap
 decl_stmt|;
-comment|// mfi frame dmamap
 name|void
 modifier|*
 name|frame_mem
 decl_stmt|;
-comment|// mfi frame virtual addr
 name|bus_addr_t
 name|frame_phys_addr
 decl_stmt|;
-comment|// mfi frame physical addr
 name|u_int8_t
 modifier|*
 name|sense
@@ -5339,12 +5192,10 @@ decl_stmt|;
 name|bus_dmamap_t
 name|sense_dmamap
 decl_stmt|;
-comment|// mfi sense dmamap
 name|void
 modifier|*
 name|sense_mem
 decl_stmt|;
-comment|// mfi sense virtual addr
 name|bus_addr_t
 name|sense_phys_addr
 decl_stmt|;
@@ -5539,7 +5390,7 @@ block|,
 name|MR_PD_STATE_SYSTEM
 init|=
 literal|0x40
-block|,  }
+block|, }
 enum|;
 end_enum
 
@@ -5710,36 +5561,27 @@ typedef|typedef
 union|union
 name|_MR_LD_REF
 block|{
-comment|// LD reference structure
 struct|struct
 block|{
 name|u_int8_t
 name|targetId
 decl_stmt|;
-comment|// LD target id (0 to MAX_TARGET_ID)
 name|u_int8_t
 name|reserved
 decl_stmt|;
-comment|// reserved to make in line with MR_PD_REF
 name|u_int16_t
 name|seqNum
 decl_stmt|;
-comment|// Sequence Number
 block|}
 name|ld_context
 struct|;
 name|u_int32_t
 name|ref
 decl_stmt|;
-comment|// shorthand reference to full 32-bits
 block|}
 name|MR_LD_REF
 typedef|;
 end_typedef
-
-begin_comment
-comment|// 4 bytes
-end_comment
 
 begin_comment
 comment|/*  * defines the logical drive list structure  */
@@ -5761,32 +5603,26 @@ block|{
 name|u_int32_t
 name|ldCount
 decl_stmt|;
-comment|// number of LDs
 name|u_int32_t
 name|reserved
 decl_stmt|;
-comment|// pad to 8-byte boundary
 struct|struct
 block|{
 name|MR_LD_REF
 name|ref
 decl_stmt|;
-comment|// LD reference
 name|u_int8_t
 name|state
 decl_stmt|;
-comment|// current LD state (MR_LD_STATE)
 name|u_int8_t
 name|reserved
 index|[
 literal|3
 index|]
 decl_stmt|;
-comment|// pad to 8-byte boundary
 name|u_int64_t
 name|size
 decl_stmt|;
-comment|// LD size
 block|}
 name|ldList
 index|[
@@ -5894,27 +5730,16 @@ decl_stmt|;
 name|u_int8_t
 name|abortCCOnError
 decl_stmt|;
-comment|// set TRUE to abort CC on detecting an inconsistency
 name|u_int8_t
 name|loadBalanceMode
 decl_stmt|;
-comment|// load balance mode (MR_LOAD_BALANCE_MODE)
 name|u_int8_t
 name|disableAutoDetectBackplane
 decl_stmt|;
-comment|// 0 - use auto detect logic of backplanes
-comment|// like SGPIO, i2c SEP using h/w mechansim
-comment|// like GPIO pins.
-comment|// 1 - disable auto detect SGPIO,
-comment|// 2 - disable i2c SEP auto detect
-comment|// 3 - disable both auto detect
 name|u_int8_t
 name|snapVDSpace
 decl_stmt|;
-comment|// % of source LD to be reserved for a VDs snapshot in
-comment|// snapshot repository, for metadata and user data.
-comment|// 1=5%, 2=10%, 3=15% and so on.
-comment|/*      * Add properties that can be controlled by a bit in the following structure.      */
+comment|/* 	 * Add properties that can be controlled by a bit in the following 	 * structure. 	 */
 struct|struct
 block|{
 name|u_int32_t
@@ -5922,8 +5747,6 @@ name|copyBackDisabled
 range|:
 literal|1
 decl_stmt|;
-comment|// set TRUE to disable copyBack
-comment|// (0=copback enabled)
 name|u_int32_t
 name|SMARTerEnabled
 range|:
@@ -5994,97 +5817,81 @@ name|disableCacheBypass
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = disable cache-bypass-performance-improvement feature
 name|u_int32_t
 name|useDiskActivityForLocate
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = drive activity LED is toggled for LOCATE
 name|u_int32_t
 name|enablePI
 range|:
 literal|1
 decl_stmt|;
-comment|// 0 = Disable SCSI PI for controller.  Remove any active protection information
 name|u_int32_t
 name|preventPIImport
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = Prevent import of SCSI DIF protected logical disks
 name|u_int32_t
 name|useGlobalSparesForEmergency
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = Use global spares for Emergency (if spare is incompatible without Emergency)
 name|u_int32_t
 name|useUnconfGoodForEmergency
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = Use uncofgured good drives for Emergency
 name|u_int32_t
 name|useEmergencySparesforSMARTer
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = Use Emergency spares for SMARTer
 name|u_int32_t
 name|forceSGPIOForQuadOnly
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = Force SGPIO status per port only for four drives, affects HPC controllers
 name|u_int32_t
 name|enableConfigAutoBalance
 range|:
 literal|1
 decl_stmt|;
-comment|// 0 = Configuration auto balance disabled, 1 = Configuration auto balance enabled
 name|u_int32_t
 name|enableVirtualCache
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = Virtual caching is enabled on DFF and SFM.
 name|u_int32_t
 name|enableAutoLockRecovery
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = Auto Lock Recovery on DFF and SFM
 name|u_int32_t
 name|disableImmediateIO
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = Disable Legacy Immediate IO, 0 = Enable
 name|u_int32_t
 name|disableT10RebuildAssist
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = Disable T10 Rebuild Assist, use legacy rebuild method
 name|u_int32_t
 name|ignore64ldRestriction
 range|:
 literal|1
 decl_stmt|;
-comment|// 0 - limit LD to 64 even if more LD support exists, 1 - support more than 64 ld with new DDF format
 name|u_int32_t
 name|enableSwZone
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = enable Software Zone
 name|u_int32_t
 name|limitMaxRateSATA3G
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 = negotiated link rates to direct attached SATA devices shall be limited to 3Gbps
 name|u_int32_t
 name|reserved
 range|:
@@ -6096,21 +5903,12 @@ struct|;
 name|u_int8_t
 name|autoSnapVDSpace
 decl_stmt|;
-comment|// % of source LD to be reserved for auto
-comment|// snapshot in snapshot repository, for
-comment|// metadata and user data.
-comment|// 1=5%, 2=10%, 3=15% and so on.
 name|u_int8_t
 name|viewSpace
 decl_stmt|;
-comment|// snapshot writeable VIEWs capacity as a %
-comment|// of source LD capacity. 0=READ only.
-comment|// 1=5%, 2=10%, 3=15% and so on
 name|u_int16_t
 name|spinDownTime
 decl_stmt|;
-comment|// # of idle minutes before device is spun
-comment|// down (0=use FW defaults).
 name|u_int8_t
 name|reserved
 index|[
@@ -6133,15 +5931,11 @@ begin_comment
 comment|/*  * SAS controller information  */
 end_comment
 
-begin_comment
-comment|//#pragma pack(1)
-end_comment
-
 begin_struct
 struct|struct
 name|mrsas_ctrl_info
 block|{
-comment|/*       * PCI device information       */
+comment|/* 	 * PCI device information 	 */
 struct|struct
 block|{
 name|u_int16_t
@@ -6166,7 +5960,7 @@ block|}
 name|__packed
 name|pci
 struct|;
-comment|/*       * Host interface information       */
+comment|/* 	 * Host interface information 	 */
 struct|struct
 block|{
 name|u_int8_t
@@ -6213,7 +6007,7 @@ block|}
 name|__packed
 name|host_interface
 struct|;
-comment|/*      * Device (backend) interface information      */
+comment|/* 	 * Device (backend) interface information 	 */
 struct|struct
 block|{
 name|u_int8_t
@@ -6260,7 +6054,6 @@ block|}
 name|__packed
 name|device_interface
 struct|;
-comment|/*      * List of components residing in flash. All str are null terminated      */
 name|u_int32_t
 name|image_check_word
 decl_stmt|;
@@ -6300,7 +6093,6 @@ index|[
 literal|8
 index|]
 struct|;
-comment|/*      * List of flash components that have been flashed on the card, but      * are not in use, pending reset of the adapter. This list will be      * empty if a flash operation has not occurred. All stings are null      * terminated      */
 name|u_int32_t
 name|pending_image_component_count
 decl_stmt|;
@@ -6361,7 +6153,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/*      * Other physical/controller/operation information. Indicates the      * presence of the hardware      */
+comment|/* 	 * Other physical/controller/operation information. Indicates the 	 * presence of the hardware 	 */
 struct|struct
 block|{
 name|u_int32_t
@@ -6396,7 +6188,7 @@ struct|;
 name|u_int32_t
 name|current_fw_time
 decl_stmt|;
-comment|/*      * Maximum data transfer sizes      */
+comment|/* 	 * Maximum data transfer sizes 	 */
 name|u_int16_t
 name|max_concurrent_cmds
 decl_stmt|;
@@ -6406,7 +6198,7 @@ decl_stmt|;
 name|u_int32_t
 name|max_request_size
 decl_stmt|;
-comment|/*      * Logical and physical device counts      */
+comment|/* 	 * Logical and physical device counts 	 */
 name|u_int16_t
 name|ld_present_count
 decl_stmt|;
@@ -6428,7 +6220,7 @@ decl_stmt|;
 name|u_int16_t
 name|pd_disk_failed_count
 decl_stmt|;
-comment|/*      * Memory size information      */
+comment|/* 	 * Memory size information 	 */
 name|u_int16_t
 name|nvram_size
 decl_stmt|;
@@ -6438,25 +6230,25 @@ decl_stmt|;
 name|u_int16_t
 name|flash_size
 decl_stmt|;
-comment|/*      * Error counters      */
+comment|/* 	 * Error counters 	 */
 name|u_int16_t
 name|mem_correctable_error_count
 decl_stmt|;
 name|u_int16_t
 name|mem_uncorrectable_error_count
 decl_stmt|;
-comment|/*      * Cluster information      */
+comment|/* 	 * Cluster information 	 */
 name|u_int8_t
 name|cluster_permitted
 decl_stmt|;
 name|u_int8_t
 name|cluster_active
 decl_stmt|;
-comment|/*      * Additional max data transfer sizes      */
+comment|/* 	 * Additional max data transfer sizes 	 */
 name|u_int16_t
 name|max_strips_per_io
 decl_stmt|;
-comment|/*      * Controller capabilities structures      */
+comment|/* 	 * Controller capabilities structures 	 */
 struct|struct
 block|{
 name|u_int32_t
@@ -6695,7 +6487,7 @@ block|}
 name|__packed
 name|pd_mix_support
 struct|;
-comment|/*      * Define ECC single-bit-error bucket information      */
+comment|/* 	 * Define ECC single-bit-error bucket information 	 */
 name|u_int8_t
 name|ecc_bucket_count
 decl_stmt|;
@@ -6705,36 +6497,32 @@ index|[
 literal|11
 index|]
 decl_stmt|;
-comment|/*      * Include the controller properties (changeable items)      */
+comment|/* 	 * Include the controller properties (changeable items) 	 */
 name|struct
 name|mrsas_ctrl_prop
 name|properties
 decl_stmt|;
-comment|/*      * Define FW pkg version (set in envt v'bles on OEM basis)      */
+comment|/* 	 * Define FW pkg version (set in envt v'bles on OEM basis) 	 */
 name|char
 name|package_version
 index|[
 literal|0x60
 index|]
 decl_stmt|;
-comment|/* 	* If adapterOperations.supportMoreThan8Phys is set, and deviceInterface.portCount is greater than 8, 	* SAS Addrs for first 8 ports shall be populated in deviceInterface.portAddr, and the rest shall be 	* populated in deviceInterfacePortAddr2. 	*/
 name|u_int64_t
 name|deviceInterfacePortAddr2
 index|[
 literal|8
 index|]
 decl_stmt|;
-comment|//0x6a0
 name|u_int8_t
 name|reserved3
 index|[
 literal|128
 index|]
 decl_stmt|;
-comment|//0x6e0
 struct|struct
 block|{
-comment|//0x760
 name|u_int16_t
 name|minPdRaidLevel_0
 range|:
@@ -6847,73 +6635,73 @@ struct|;
 name|u_int16_t
 name|maxPds
 decl_stmt|;
-comment|//0x780
+comment|/* 0x780 */
 name|u_int16_t
 name|maxDedHSPs
 decl_stmt|;
-comment|//0x782
+comment|/* 0x782 */
 name|u_int16_t
 name|maxGlobalHSPs
 decl_stmt|;
-comment|//0x784
+comment|/* 0x784 */
 name|u_int16_t
 name|ddfSize
 decl_stmt|;
-comment|//0x786
+comment|/* 0x786 */
 name|u_int8_t
 name|maxLdsPerArray
 decl_stmt|;
-comment|//0x788
+comment|/* 0x788 */
 name|u_int8_t
 name|partitionsInDDF
 decl_stmt|;
-comment|//0x789
+comment|/* 0x789 */
 name|u_int8_t
 name|lockKeyBinding
 decl_stmt|;
-comment|//0x78a
+comment|/* 0x78a */
 name|u_int8_t
 name|maxPITsPerLd
 decl_stmt|;
-comment|//0x78b
+comment|/* 0x78b */
 name|u_int8_t
 name|maxViewsPerLd
 decl_stmt|;
-comment|//0x78c
+comment|/* 0x78c */
 name|u_int8_t
 name|maxTargetId
 decl_stmt|;
-comment|//0x78d
+comment|/* 0x78d */
 name|u_int16_t
 name|maxBvlVdSize
 decl_stmt|;
-comment|//0x78e
+comment|/* 0x78e */
 name|u_int16_t
 name|maxConfigurableSSCSize
 decl_stmt|;
-comment|//0x790
+comment|/* 0x790 */
 name|u_int16_t
 name|currentSSCsize
 decl_stmt|;
-comment|//0x792
+comment|/* 0x792 */
 name|char
 name|expanderFwVersion
 index|[
 literal|12
 index|]
 decl_stmt|;
-comment|//0x794
+comment|/* 0x794 */
 name|u_int16_t
 name|PFKTrialTimeRemaining
 decl_stmt|;
-comment|//0x7A0
+comment|/* 0x7A0 */
 name|u_int16_t
 name|cacheMemorySize
 decl_stmt|;
-comment|//0x7A2
+comment|/* 0x7A2 */
 struct|struct
 block|{
-comment|//0x7A4
+comment|/* 0x7A4 */
 name|u_int32_t
 name|supportPIcontroller
 range|:
@@ -7033,35 +6821,34 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-comment|//0x7A8
+comment|/* 0x7A8 */
 name|u_int8_t
 name|maxDAPdCountSpinup60
 decl_stmt|;
-comment|//0x7C8
+comment|/* 0x7C8 */
 name|u_int8_t
 name|temperatureROC
 decl_stmt|;
-comment|//0x7C9
+comment|/* 0x7C9 */
 name|u_int8_t
 name|temperatureCtrl
 decl_stmt|;
-comment|//0x7CA
+comment|/* 0x7CA */
 name|u_int8_t
 name|reserved4
 decl_stmt|;
-comment|//0x7CB
+comment|/* 0x7CB */
 name|u_int16_t
 name|maxConfigurablePds
 decl_stmt|;
-comment|//0x7CC
+comment|/* 0x7CC */
 name|u_int8_t
 name|reserved5
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|//0x7CD reserved for future use
-comment|/* 	* HA cluster information 	*/
+comment|/* 0x7CD reserved */
 struct|struct
 block|{
 name|u_int32_t
@@ -7108,17 +6895,17 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|//0x7D4
+comment|/* 0x7D4 */
 name|char
 name|reserved6
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|//0x7E4 RESERVED FOR IOV
+comment|/* 0x7E4 RESERVED FOR IOV */
 struct|struct
 block|{
-comment|//0x7E8
+comment|/* 0x7E8 */
 name|u_int32_t
 name|resrved
 range|:
@@ -7145,7 +6932,7 @@ operator|-
 literal|0x7EC
 index|]
 decl_stmt|;
-comment|//0x7EC
+comment|/* 0x7EC */
 block|}
 name|__packed
 struct|;
@@ -7251,7 +7038,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*   * FW reports the maximum of number of commands that it can accept (maximum  * commands that can be outstanding) at any time. The driver must report a  * lower number to the mid layer because it can issue a few internal commands  * itself (E.g, AEN, abort cmd, IOCTLs etc). The number of commands it needs  * is shown below  */
+comment|/*  * FW reports the maximum of number of commands that it can accept (maximum  * commands that can be outstanding) at any time. The driver must report a  * lower number to the mid layer because it can issue a few internal commands  * itself (E.g, AEN, abort cmd, IOCTLs etc). The number of commands it needs  * is shown below  */
 end_comment
 
 begin_define
@@ -7276,7 +7063,7 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * FW can accept both 32 and 64 bit SGLs. We want to allocate 32/64 bit  * SGLs based on the size of bus_addr_t  */
+comment|/*  * FW can accept both 32 and 64 bit SGLs. We want to allocate 32/64 bit SGLs  * based on the size of bus_addr_t  */
 end_comment
 
 begin_define
@@ -7292,10 +7079,6 @@ directive|define
 name|MFI_XSCALE_OMR0_CHANGE_INTERRUPT
 value|0x00000001
 end_define
-
-begin_comment
-comment|// MFI state change interrupt
-end_comment
 
 begin_define
 define|#
@@ -7317,10 +7100,6 @@ directive|define
 name|MFI_G2_OUTBOUND_DOORBELL_CHANGE_INTERRUPT
 value|0x00000004
 end_define
-
-begin_comment
-comment|//MFI state change interrupt
-end_comment
 
 begin_define
 define|#
@@ -7551,55 +7330,55 @@ block|{
 name|u_int8_t
 name|cmd
 decl_stmt|;
-comment|/*00e */
+comment|/* 00e */
 name|u_int8_t
 name|sense_len
 decl_stmt|;
-comment|/*01h */
+comment|/* 01h */
 name|u_int8_t
 name|cmd_status
 decl_stmt|;
-comment|/*02h */
+comment|/* 02h */
 name|u_int8_t
 name|scsi_status
 decl_stmt|;
-comment|/*03h */
+comment|/* 03h */
 name|u_int8_t
 name|target_id
 decl_stmt|;
-comment|/*04h */
+comment|/* 04h */
 name|u_int8_t
 name|lun
 decl_stmt|;
-comment|/*05h */
+comment|/* 05h */
 name|u_int8_t
 name|cdb_len
 decl_stmt|;
-comment|/*06h */
+comment|/* 06h */
 name|u_int8_t
 name|sge_count
 decl_stmt|;
-comment|/*07h */
+comment|/* 07h */
 name|u_int32_t
 name|context
 decl_stmt|;
-comment|/*08h */
+comment|/* 08h */
 name|u_int32_t
 name|pad_0
 decl_stmt|;
-comment|/*0Ch */
+comment|/* 0Ch */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/*10h */
+comment|/* 10h */
 name|u_int16_t
 name|timeout
 decl_stmt|;
-comment|/*12h */
+comment|/* 12h */
 name|u_int32_t
 name|data_xferlen
 decl_stmt|;
-comment|/*14h */
+comment|/* 14h */
 block|}
 struct|;
 end_struct
@@ -7628,74 +7407,74 @@ block|{
 name|u_int8_t
 name|cmd
 decl_stmt|;
-comment|/*00h */
+comment|/* 00h */
 name|u_int8_t
 name|reserved_0
 decl_stmt|;
-comment|/*01h */
+comment|/* 01h */
 name|u_int8_t
 name|cmd_status
 decl_stmt|;
-comment|/*02h */
+comment|/* 02h */
 name|u_int8_t
 name|reserved_1
 decl_stmt|;
-comment|/*03h */
+comment|/* 03h */
 name|MFI_CAPABILITIES
 name|driver_operations
 decl_stmt|;
-comment|/*04h*/
+comment|/* 04h */
 name|u_int32_t
 name|context
 decl_stmt|;
-comment|/*08h */
+comment|/* 08h */
 name|u_int32_t
 name|pad_0
 decl_stmt|;
-comment|/*0Ch */
+comment|/* 0Ch */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/*10h */
+comment|/* 10h */
 name|u_int16_t
 name|reserved_3
 decl_stmt|;
-comment|/*12h */
+comment|/* 12h */
 name|u_int32_t
 name|data_xfer_len
 decl_stmt|;
-comment|/*14h */
+comment|/* 14h */
 name|u_int32_t
 name|queue_info_new_phys_addr_lo
 decl_stmt|;
-comment|/*18h */
+comment|/* 18h */
 name|u_int32_t
 name|queue_info_new_phys_addr_hi
 decl_stmt|;
-comment|/*1Ch */
+comment|/* 1Ch */
 name|u_int32_t
 name|queue_info_old_phys_addr_lo
 decl_stmt|;
-comment|/*20h */
+comment|/* 20h */
 name|u_int32_t
 name|queue_info_old_phys_addr_hi
 decl_stmt|;
-comment|/*24h */
+comment|/* 24h */
 name|u_int32_t
 name|driver_ver_lo
 decl_stmt|;
-comment|/*28h */
+comment|/* 28h */
 name|u_int32_t
 name|driver_ver_hi
 decl_stmt|;
-comment|/*2Ch */
+comment|/* 2Ch */
 name|u_int32_t
 name|reserved_4
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/*30h */
+comment|/* 30h */
 block|}
 struct|;
 end_struct
@@ -7724,76 +7503,76 @@ block|{
 name|u_int8_t
 name|cmd
 decl_stmt|;
-comment|/*00h */
+comment|/* 00h */
 name|u_int8_t
 name|sense_len
 decl_stmt|;
-comment|/*01h */
+comment|/* 01h */
 name|u_int8_t
 name|cmd_status
 decl_stmt|;
-comment|/*02h */
+comment|/* 02h */
 name|u_int8_t
 name|scsi_status
 decl_stmt|;
-comment|/*03h */
+comment|/* 03h */
 name|u_int8_t
 name|target_id
 decl_stmt|;
-comment|/*04h */
+comment|/* 04h */
 name|u_int8_t
 name|access_byte
 decl_stmt|;
-comment|/*05h */
+comment|/* 05h */
 name|u_int8_t
 name|reserved_0
 decl_stmt|;
-comment|/*06h */
+comment|/* 06h */
 name|u_int8_t
 name|sge_count
 decl_stmt|;
-comment|/*07h */
+comment|/* 07h */
 name|u_int32_t
 name|context
 decl_stmt|;
-comment|/*08h */
+comment|/* 08h */
 name|u_int32_t
 name|pad_0
 decl_stmt|;
-comment|/*0Ch */
+comment|/* 0Ch */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/*10h */
+comment|/* 10h */
 name|u_int16_t
 name|timeout
 decl_stmt|;
-comment|/*12h */
+comment|/* 12h */
 name|u_int32_t
 name|lba_count
 decl_stmt|;
-comment|/*14h */
+comment|/* 14h */
 name|u_int32_t
 name|sense_buf_phys_addr_lo
 decl_stmt|;
-comment|/*18h */
+comment|/* 18h */
 name|u_int32_t
 name|sense_buf_phys_addr_hi
 decl_stmt|;
-comment|/*1Ch */
+comment|/* 1Ch */
 name|u_int32_t
 name|start_lba_lo
 decl_stmt|;
-comment|/*20h */
+comment|/* 20h */
 name|u_int32_t
 name|start_lba_hi
 decl_stmt|;
-comment|/*24h */
+comment|/* 24h */
 name|union
 name|mrsas_sgl
 name|sgl
 decl_stmt|;
-comment|/*28h */
+comment|/* 28h */
 block|}
 struct|;
 end_struct
@@ -7822,75 +7601,75 @@ block|{
 name|u_int8_t
 name|cmd
 decl_stmt|;
-comment|/*00h */
+comment|/* 00h */
 name|u_int8_t
 name|sense_len
 decl_stmt|;
-comment|/*01h */
+comment|/* 01h */
 name|u_int8_t
 name|cmd_status
 decl_stmt|;
-comment|/*02h */
+comment|/* 02h */
 name|u_int8_t
 name|scsi_status
 decl_stmt|;
-comment|/*03h */
+comment|/* 03h */
 name|u_int8_t
 name|target_id
 decl_stmt|;
-comment|/*04h */
+comment|/* 04h */
 name|u_int8_t
 name|lun
 decl_stmt|;
-comment|/*05h */
+comment|/* 05h */
 name|u_int8_t
 name|cdb_len
 decl_stmt|;
-comment|/*06h */
+comment|/* 06h */
 name|u_int8_t
 name|sge_count
 decl_stmt|;
-comment|/*07h */
+comment|/* 07h */
 name|u_int32_t
 name|context
 decl_stmt|;
-comment|/*08h */
+comment|/* 08h */
 name|u_int32_t
 name|pad_0
 decl_stmt|;
-comment|/*0Ch */
+comment|/* 0Ch */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/*10h */
+comment|/* 10h */
 name|u_int16_t
 name|timeout
 decl_stmt|;
-comment|/*12h */
+comment|/* 12h */
 name|u_int32_t
 name|data_xfer_len
 decl_stmt|;
-comment|/*14h */
+comment|/* 14h */
 name|u_int32_t
 name|sense_buf_phys_addr_lo
 decl_stmt|;
-comment|/*18h */
+comment|/* 18h */
 name|u_int32_t
 name|sense_buf_phys_addr_hi
 decl_stmt|;
-comment|/*1Ch */
+comment|/* 1Ch */
 name|u_int8_t
 name|cdb
 index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/*20h */
+comment|/* 20h */
 name|union
 name|mrsas_sgl
 name|sgl
 decl_stmt|;
-comment|/*30h */
+comment|/* 30h */
 block|}
 struct|;
 end_struct
@@ -7919,53 +7698,53 @@ block|{
 name|u_int8_t
 name|cmd
 decl_stmt|;
-comment|/*00h */
+comment|/* 00h */
 name|u_int8_t
 name|reserved_0
 decl_stmt|;
-comment|/*01h */
+comment|/* 01h */
 name|u_int8_t
 name|cmd_status
 decl_stmt|;
-comment|/*02h */
+comment|/* 02h */
 name|u_int8_t
 name|reserved_1
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/*03h */
+comment|/* 03h */
 name|u_int8_t
 name|sge_count
 decl_stmt|;
-comment|/*07h */
+comment|/* 07h */
 name|u_int32_t
 name|context
 decl_stmt|;
-comment|/*08h */
+comment|/* 08h */
 name|u_int32_t
 name|pad_0
 decl_stmt|;
-comment|/*0Ch */
+comment|/* 0Ch */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/*10h */
+comment|/* 10h */
 name|u_int16_t
 name|timeout
 decl_stmt|;
-comment|/*12h */
+comment|/* 12h */
 name|u_int32_t
 name|data_xfer_len
 decl_stmt|;
-comment|/*14h */
+comment|/* 14h */
 name|u_int32_t
 name|opcode
 decl_stmt|;
-comment|/*18h */
+comment|/* 18h */
 union|union
 block|{
-comment|/*1Ch */
+comment|/* 1Ch */
 name|u_int8_t
 name|b
 index|[
@@ -7991,7 +7770,7 @@ name|union
 name|mrsas_sgl
 name|sgl
 decl_stmt|;
-comment|/*28h */
+comment|/* 28h */
 block|}
 struct|;
 end_struct
@@ -8020,66 +7799,66 @@ block|{
 name|u_int8_t
 name|cmd
 decl_stmt|;
-comment|/*00h */
+comment|/* 00h */
 name|u_int8_t
 name|reserved_0
 decl_stmt|;
-comment|/*01h */
+comment|/* 01h */
 name|u_int8_t
 name|cmd_status
 decl_stmt|;
-comment|/*02h */
+comment|/* 02h */
 name|u_int8_t
 name|reserved_1
 decl_stmt|;
-comment|/*03h */
+comment|/* 03h */
 name|MFI_CAPABILITIES
 name|driver_operations
 decl_stmt|;
-comment|/*04h */
+comment|/* 04h */
 name|u_int32_t
 name|context
 decl_stmt|;
-comment|/*08h */
+comment|/* 08h */
 name|u_int32_t
 name|pad_0
 decl_stmt|;
-comment|/*0Ch */
+comment|/* 0Ch */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/*10h */
+comment|/* 10h */
 name|u_int16_t
 name|reserved_3
 decl_stmt|;
-comment|/*12h */
+comment|/* 12h */
 name|u_int32_t
 name|reserved_4
 decl_stmt|;
-comment|/*14h */
+comment|/* 14h */
 name|u_int32_t
 name|abort_context
 decl_stmt|;
-comment|/*18h */
+comment|/* 18h */
 name|u_int32_t
 name|pad_1
 decl_stmt|;
-comment|/*1Ch */
+comment|/* 1Ch */
 name|u_int32_t
 name|abort_mfi_phys_addr_lo
 decl_stmt|;
-comment|/*20h */
+comment|/* 20h */
 name|u_int32_t
 name|abort_mfi_phys_addr_hi
 decl_stmt|;
-comment|/*24h */
+comment|/* 24h */
 name|u_int32_t
 name|reserved_5
 index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/*28h */
+comment|/* 28h */
 block|}
 struct|;
 end_struct
@@ -8108,54 +7887,54 @@ block|{
 name|u_int8_t
 name|cmd
 decl_stmt|;
-comment|/*00h */
+comment|/* 00h */
 name|u_int8_t
 name|reserved_1
 decl_stmt|;
-comment|/*01h */
+comment|/* 01h */
 name|u_int8_t
 name|cmd_status
 decl_stmt|;
-comment|/*02h */
+comment|/* 02h */
 name|u_int8_t
 name|connection_status
 decl_stmt|;
-comment|/*03h */
+comment|/* 03h */
 name|u_int8_t
 name|reserved_2
 index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/*04h */
+comment|/* 04h */
 name|u_int8_t
 name|sge_count
 decl_stmt|;
-comment|/*07h */
+comment|/* 07h */
 name|u_int32_t
 name|context
 decl_stmt|;
-comment|/*08h */
+comment|/* 08h */
 name|u_int32_t
 name|pad_0
 decl_stmt|;
-comment|/*0Ch */
+comment|/* 0Ch */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/*10h */
+comment|/* 10h */
 name|u_int16_t
 name|timeout
 decl_stmt|;
-comment|/*12h */
+comment|/* 12h */
 name|u_int32_t
 name|data_xfer_len
 decl_stmt|;
-comment|/*14h */
+comment|/* 14h */
 name|u_int64_t
 name|sas_addr
 decl_stmt|;
-comment|/*18h */
+comment|/* 18h */
 union|union
 block|{
 name|struct
@@ -8205,61 +7984,61 @@ block|{
 name|u_int8_t
 name|cmd
 decl_stmt|;
-comment|/*00h */
+comment|/* 00h */
 name|u_int8_t
 name|reserved_1
 decl_stmt|;
-comment|/*01h */
+comment|/* 01h */
 name|u_int8_t
 name|cmd_status
 decl_stmt|;
-comment|/*02h */
+comment|/* 02h */
 name|u_int8_t
 name|reserved_2
 decl_stmt|;
-comment|/*03h */
+comment|/* 03h */
 name|u_int8_t
 name|target_id
 decl_stmt|;
-comment|/*04h */
+comment|/* 04h */
 name|u_int8_t
 name|reserved_3
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/*05h */
+comment|/* 05h */
 name|u_int8_t
 name|sge_count
 decl_stmt|;
-comment|/*07h */
+comment|/* 07h */
 name|u_int32_t
 name|context
 decl_stmt|;
-comment|/*08h */
+comment|/* 08h */
 name|u_int32_t
 name|pad_0
 decl_stmt|;
-comment|/*0Ch */
+comment|/* 0Ch */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/*10h */
+comment|/* 10h */
 name|u_int16_t
 name|timeout
 decl_stmt|;
-comment|/*12h */
+comment|/* 12h */
 name|u_int32_t
 name|data_xfer_len
 decl_stmt|;
-comment|/*14h */
+comment|/* 14h */
 name|u_int16_t
 name|fis
 index|[
 literal|10
 index|]
 decl_stmt|;
-comment|/*18h */
+comment|/* 18h */
 name|u_int32_t
 name|stp_flags
 decl_stmt|;
@@ -8881,214 +8660,168 @@ block|{
 name|device_t
 name|mrsas_dev
 decl_stmt|;
-comment|// bus device
 name|struct
 name|cdev
 modifier|*
 name|mrsas_cdev
 decl_stmt|;
-comment|// controller device
 name|uint16_t
 name|device_id
 decl_stmt|;
-comment|// pci device
 name|struct
 name|resource
 modifier|*
 name|reg_res
 decl_stmt|;
-comment|// register interface window
 name|int
 name|reg_res_id
 decl_stmt|;
-comment|// register resource id
 name|bus_space_tag_t
 name|bus_tag
 decl_stmt|;
-comment|// bus space tag
 name|bus_space_handle_t
 name|bus_handle
 decl_stmt|;
-comment|// bus space handle
 name|bus_dma_tag_t
 name|mrsas_parent_tag
 decl_stmt|;
-comment|// bus dma parent tag
 name|bus_dma_tag_t
 name|verbuf_tag
 decl_stmt|;
-comment|// verbuf tag
 name|bus_dmamap_t
 name|verbuf_dmamap
 decl_stmt|;
-comment|// verbuf dmamap
 name|void
 modifier|*
 name|verbuf_mem
 decl_stmt|;
-comment|// verbuf mem
 name|bus_addr_t
 name|verbuf_phys_addr
 decl_stmt|;
-comment|// verbuf physical addr
 name|bus_dma_tag_t
 name|sense_tag
 decl_stmt|;
-comment|// bus dma verbuf tag
 name|bus_dmamap_t
 name|sense_dmamap
 decl_stmt|;
-comment|// bus dma verbuf dmamap
 name|void
 modifier|*
 name|sense_mem
 decl_stmt|;
-comment|// pointer to sense buf
 name|bus_addr_t
 name|sense_phys_addr
 decl_stmt|;
-comment|// bus dma verbuf mem
 name|bus_dma_tag_t
 name|io_request_tag
 decl_stmt|;
-comment|// bus dma io request tag
 name|bus_dmamap_t
 name|io_request_dmamap
 decl_stmt|;
-comment|// bus dma io request dmamap
 name|void
 modifier|*
 name|io_request_mem
 decl_stmt|;
-comment|// bus dma io request mem
 name|bus_addr_t
 name|io_request_phys_addr
 decl_stmt|;
-comment|// io request physical address
 name|bus_dma_tag_t
 name|chain_frame_tag
 decl_stmt|;
-comment|// bus dma chain frame tag
 name|bus_dmamap_t
 name|chain_frame_dmamap
 decl_stmt|;
-comment|// bus dma chain frame dmamap
 name|void
 modifier|*
 name|chain_frame_mem
 decl_stmt|;
-comment|// bus dma chain frame mem
 name|bus_addr_t
 name|chain_frame_phys_addr
 decl_stmt|;
-comment|// chain frame phys address
 name|bus_dma_tag_t
 name|reply_desc_tag
 decl_stmt|;
-comment|// bus dma io request tag
 name|bus_dmamap_t
 name|reply_desc_dmamap
 decl_stmt|;
-comment|// bus dma io request dmamap
 name|void
 modifier|*
 name|reply_desc_mem
 decl_stmt|;
-comment|// bus dma io request mem
 name|bus_addr_t
 name|reply_desc_phys_addr
 decl_stmt|;
-comment|// bus dma io request mem
 name|bus_dma_tag_t
 name|ioc_init_tag
 decl_stmt|;
-comment|// bus dma io request tag
 name|bus_dmamap_t
 name|ioc_init_dmamap
 decl_stmt|;
-comment|// bus dma io request dmamap
 name|void
 modifier|*
 name|ioc_init_mem
 decl_stmt|;
-comment|// bus dma io request mem
 name|bus_addr_t
 name|ioc_init_phys_mem
 decl_stmt|;
-comment|// io request physical address
 name|bus_dma_tag_t
 name|data_tag
 decl_stmt|;
-comment|// bus dma data from OS tag
 name|struct
 name|cam_sim
 modifier|*
 name|sim_0
 decl_stmt|;
-comment|// SIM pointer
 name|struct
 name|cam_sim
 modifier|*
 name|sim_1
 decl_stmt|;
-comment|// SIM pointer
 name|struct
 name|cam_path
 modifier|*
 name|path_0
 decl_stmt|;
-comment|// ldio path pointer to CAM
 name|struct
 name|cam_path
 modifier|*
 name|path_1
 decl_stmt|;
-comment|// syspd path pointer to CAM
 name|struct
 name|mtx
 name|sim_lock
 decl_stmt|;
-comment|// sim lock
 name|struct
 name|mtx
 name|pci_lock
 decl_stmt|;
-comment|// serialize pci access
 name|struct
 name|mtx
 name|io_lock
 decl_stmt|;
-comment|// IO lock
 name|struct
 name|mtx
 name|ioctl_lock
 decl_stmt|;
-comment|// IOCTL lock
 name|struct
 name|mtx
 name|mpt_cmd_pool_lock
 decl_stmt|;
-comment|// lock for cmd pool linked list
 name|struct
 name|mtx
 name|mfi_cmd_pool_lock
 decl_stmt|;
-comment|// lock for cmd pool linked list
 name|struct
 name|mtx
 name|raidmap_lock
 decl_stmt|;
-comment|// lock for raid map access/update
 name|struct
 name|mtx
 name|aen_lock
 decl_stmt|;
-comment|// aen lock
 name|struct
 name|selinfo
 name|mrsas_select
 decl_stmt|;
-comment|// poll select interface for application
 name|uint32_t
 name|mrsas_aen_triggered
 decl_stmt|;
@@ -9099,15 +8832,12 @@ name|struct
 name|sema
 name|ioctl_count_sema
 decl_stmt|;
-comment|// counting semaphore for ioctl
 name|uint32_t
 name|max_fw_cmds
 decl_stmt|;
-comment|// Max commands from FW
 name|uint32_t
 name|max_num_sge
 decl_stmt|;
-comment|// Max number of SGEs
 name|struct
 name|resource
 modifier|*
@@ -9116,7 +8846,6 @@ index|[
 name|MAX_MSIX_COUNT
 index|]
 decl_stmt|;
-comment|// interrupt interface window
 name|void
 modifier|*
 name|intr_handle
@@ -9124,14 +8853,12 @@ index|[
 name|MAX_MSIX_COUNT
 index|]
 decl_stmt|;
-comment|// handle
 name|int
 name|irq_id
 index|[
 name|MAX_MSIX_COUNT
 index|]
 decl_stmt|;
-comment|// intr resource id
 name|struct
 name|mrsas_irq_context
 name|irq_context
@@ -9142,11 +8869,9 @@ decl_stmt|;
 name|int
 name|msix_vectors
 decl_stmt|;
-comment|// Max msix vectors
 name|int
 name|msix_enable
 decl_stmt|;
-comment|// MSI-x support
 name|uint32_t
 name|msix_reg_offset
 index|[
@@ -9284,14 +9009,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|// bus dma tag for RAID map
 name|bus_dmamap_t
 name|raidmap_dmamap
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|// bus dma dmamap RAID map
 name|void
 modifier|*
 name|raidmap_mem
@@ -9299,57 +9022,45 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|// bus dma mem RAID map
 name|bus_addr_t
 name|raidmap_phys_addr
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|// RAID map physical address
 name|bus_dma_tag_t
 name|mficmd_frame_tag
 decl_stmt|;
-comment|// tag for mfi frame
 name|bus_dma_tag_t
 name|mficmd_sense_tag
 decl_stmt|;
-comment|// tag for mfi sense
 name|bus_dma_tag_t
 name|evt_detail_tag
 decl_stmt|;
-comment|// event detail tag
 name|bus_dmamap_t
 name|evt_detail_dmamap
 decl_stmt|;
-comment|// event detail dmamap
 name|struct
 name|mrsas_evt_detail
 modifier|*
 name|evt_detail_mem
 decl_stmt|;
-comment|// event detail mem
 name|bus_addr_t
 name|evt_detail_phys_addr
 decl_stmt|;
-comment|// event detail physical addr
 name|bus_dma_tag_t
 name|ctlr_info_tag
 decl_stmt|;
-comment|// tag for get ctlr info cmd
 name|bus_dmamap_t
 name|ctlr_info_dmamap
 decl_stmt|;
-comment|// get ctlr info cmd dmamap
 name|void
 modifier|*
 name|ctlr_info_mem
 decl_stmt|;
-comment|// get ctlr info cmd virtual addr
 name|bus_addr_t
 name|ctlr_info_phys_addr
 decl_stmt|;
-comment|//get ctlr info cmd physical addr
 name|u_int32_t
 name|max_sectors_per_req
 decl_stmt|;
@@ -9394,20 +9105,16 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|el_info_tag
 decl_stmt|;
-comment|// tag for get event log info cmd
 name|bus_dmamap_t
 name|el_info_dmamap
 decl_stmt|;
-comment|// get event log info cmd dmamap
 name|void
 modifier|*
 name|el_info_mem
 decl_stmt|;
-comment|// get event log info cmd virtual addr
 name|bus_addr_t
 name|el_info_phys_addr
 decl_stmt|;
-comment|//get event log info cmd physical addr
 name|struct
 name|mrsas_pd_list
 name|pd_list
@@ -9433,7 +9140,6 @@ name|taskqueue
 modifier|*
 name|ev_tq
 decl_stmt|;
-comment|//taskqueue for events
 name|struct
 name|task
 name|ev_task
@@ -9486,7 +9192,7 @@ decl_stmt|;
 name|u_int32_t
 name|drv_map_sz
 decl_stmt|;
-comment|/*Non dma-able memory. Driver local copy.*/
+comment|/* Non dma-able memory. Driver local copy. */
 name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|ld_drv_map

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2014, LSI Corp.  * All rights reserved.  * Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of the<ORGANIZATION> nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  * */
+comment|/*  * Copyright (c) 2014, LSI Corp. All rights reserved. Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -132,10 +132,6 @@ name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|//int mrsas_ldio_inq(union ccb *ccb);
-end_comment
 
 begin_function_decl
 name|int
@@ -689,7 +685,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * mrsas_cam_attach:        Main entry to CAM subsystem   * input:                   Adapter instance soft state   *  * This function is called from mrsas_attach() during initialization  * to perform SIM allocations and XPT bus registration.  If the kernel   * version is 7.4 or earlier, it would also initiate a bus scan.  */
+comment|/*  * mrsas_cam_attach:	Main entry to CAM subsystem  * input:				Adapter instance soft state  *  * This function is called from mrsas_attach() during initialization to perform  * SIM allocations and XPT bus registration.  If the kernel version is 7.4 or  * earlier, it would also initiate a bus scan.  */
 end_comment
 
 begin_function
@@ -747,7 +743,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*       * Create SIM for bus 0 and register, also create path       */
+comment|/* 	 * Create SIM for bus 0 and register, also create path 	 */
 name|sc
 operator|->
 name|sim_0
@@ -906,7 +902,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|// passing true frees the devq
+comment|/* passing true frees the devq */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -966,7 +962,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|// passing true will free the devq
+comment|/* passing true will free the 						 * devq */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -989,7 +985,7 @@ operator|->
 name|sim_lock
 argument_list|)
 expr_stmt|;
-comment|/*       * Create SIM for bus 1 and register, also create path       */
+comment|/* 	 * Create SIM for bus 1 and register, also create path 	 */
 name|sc
 operator|->
 name|sim_1
@@ -1087,7 +1083,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|// passing true frees the devq
+comment|/* passing true frees the devq */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1210,7 +1206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_cam_detach:        De-allocates and teardown CAM    * input:                   Adapter instance soft state   *  * De-registers and frees the paths and SIMs.   */
+comment|/*  * mrsas_cam_detach:	De-allocates and teardown CAM  * input:				Adapter instance soft state  *  * De-registers and frees the paths and SIMs.  */
 end_comment
 
 begin_function
@@ -1338,7 +1334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_action:            SIM callback entry point     * input:                   pointer to SIM   *                          pointer to CAM Control Block  *  * This function processes CAM subsystem requests. The type of request is  * stored in ccb->ccb_h.func_code.  The preprocessor #ifdef is necessary  * because ccb->cpi.maxio is not supported for FreeBSD version 7.4 or   * earlier.     */
+comment|/*  * mrsas_action:	SIM callback entry point  * input:			pointer to SIM pointer to CAM Control Block  *  * This function processes CAM subsystem requests. The type of request is stored  * in ccb->ccb_h.func_code.  The preprocessor #ifdef is necessary because  * ccb->cpi.maxio is not supported for FreeBSD version 7.4 or earlier.  */
 end_comment
 
 begin_function
@@ -1406,7 +1402,7 @@ name|ccb_h
 operator|->
 name|target_id
 expr_stmt|;
-comment|/*               * bus 0 is LD, bus 1 is for system-PD               */
+comment|/* 			 * bus 0 is LD, bus 1 is for system-PD 			 */
 if|if
 condition|(
 name|cam_sim_bus
@@ -1891,7 +1887,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_scsiio_timeout         Callback function for IO timed out  * input:                       mpt command context  *  * This function will execute after timeout value  * provided by ccb header from CAM layer, if timer expires.  * Driver will run timer for all DCDM and LDIO comming from CAM layer.  * This function is callback function for IO timeout and it runs in  * no-sleep context. Set do_timedout_reset in Adapter context so that  * it will execute OCR/Kill adpter from ocr_thread context.  */
+comment|/*  * mrsas_scsiio_timeout:	Callback function for IO timed out  * input:					mpt command context  *  * This function will execute after timeout value provided by ccb header from  * CAM layer, if timer expires. Driver will run timer for all DCDM and LDIO  * comming from CAM layer. This function is callback function for IO timeout  * and it runs in no-sleep context. Set do_timedout_reset in Adapter context  * so that it will execute OCR/Kill adpter from ocr_thread context.  */
 end_comment
 
 begin_function
@@ -1945,7 +1941,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Below callout is dummy entry so that it will be      * cancelled from mrsas_cmd_done(). Now Controller will      * go to OCR/Kill Adapter based on OCR enable/disable      * property of Controller from ocr_thread context.      */
+comment|/* 	 * Below callout is dummy entry so that it will be cancelled from 	 * mrsas_cmd_done(). Now Controller will go to OCR/Kill Adapter based 	 * on OCR enable/disable property of Controller from ocr_thread 	 * context. 	 */
 name|callout_reset
 argument_list|(
 operator|&
@@ -1990,7 +1986,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_startio:           SCSI IO entry point     * input:                   Adapter instance soft state   *                          pointer to CAM Control Block  *  * This function is the SCSI IO entry point and it initiates IO processing.   * It copies the IO and depending if the IO is read/write or inquiry, it would   * call mrsas_build_ldio() or mrsas_build_dcdb(), respectively.  It returns  * 0 if the command is sent to firmware successfully, otherwise it returns 1.  */
+comment|/*  * mrsas_startio:	SCSI IO entry point  * input:			Adapter instance soft state  * 					pointer to CAM Control Block  *  * This function is the SCSI IO entry point and it initiates IO processing. It  * copies the IO and depending if the IO is read/write or inquiry, it would  * call mrsas_build_ldio() or mrsas_build_dcdb(), respectively.  It returns 0  * if the command is sent to firmware successfully, otherwise it returns 1.  */
 end_comment
 
 begin_function
@@ -2176,7 +2172,7 @@ name|__FreeBSD_version
 operator|>=
 literal|1000000
 operator|)
-comment|/*  *      * XXX We don't yet support physical addresses here.  */
+comment|/* 	 * XXX We don't yet support physical addresses here. 	 */
 switch|switch
 condition|(
 operator|(
@@ -2196,8 +2192,12 @@ case|:
 case|case
 name|CAM_DATA_SG_PADDR
 case|:
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
 literal|"%s: physical addresses not supported\n"
 argument_list|,
 name|__func__
@@ -2227,8 +2227,12 @@ goto|;
 case|case
 name|CAM_DATA_SG
 case|:
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|mrsas_dev
+argument_list|,
 literal|"%s: scatter gather is not supported\n"
 argument_list|,
 name|__func__
@@ -2325,7 +2329,7 @@ name|CAM_DATA_PHYS
 operator|)
 condition|)
 block|{
-comment|//Virtual data address
+comment|/* Virtual data address */
 if|if
 condition|(
 operator|!
@@ -2405,7 +2409,7 @@ block|}
 block|}
 else|else
 block|{
-comment|//Data addresses are physical.
+comment|/* Data addresses are physical. */
 name|mrsas_release_mpt_cmd
 argument_list|(
 name|cmd
@@ -2652,7 +2656,7 @@ name|flags
 operator|==
 name|MRSAS_DIR_IN
 condition|)
-comment|//from device
+comment|/* from device */
 name|cmd
 operator|->
 name|io_request
@@ -2670,7 +2674,7 @@ name|flags
 operator|==
 name|MRSAS_DIR_OUT
 condition|)
-comment|//to device
+comment|/* to device */
 name|cmd
 operator|->
 name|io_request
@@ -2736,7 +2740,7 @@ name|cmd
 operator|->
 name|index
 expr_stmt|;
-comment|/*      * Start timer for IO timeout. Default timeout value is 90 second.      */
+comment|/* 	 * Start timer for IO timeout. Default timeout value is 90 second. 	 */
 name|callout_reset
 argument_list|(
 operator|&
@@ -2828,7 +2832,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_ldio_inq:           Determines if IO is read/write or inquiry     * input:                        pointer to CAM Control Block  *  * This function determines if the IO is read/write or inquiry.  It returns a  * 1 if the IO is read/write and 0 if it is inquiry.  */
+comment|/*  * mrsas_ldio_inq:	Determines if IO is read/write or inquiry  * input:			pointer to CAM Control Block  *  * This function determines if the IO is read/write or inquiry.  It returns a 1  * if the IO is read/write and 0 if it is inquiry.  */
 end_comment
 
 begin_function
@@ -2920,7 +2924,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_mpt_cmd:            Get a cmd from free command pool    * input:                        Adapter instance soft state   *  * This function removes an MPT command from the command free list and   * initializes it.  */
+comment|/*  * mrsas_get_mpt_cmd:	Get a cmd from free command pool  * input:				Adapter instance soft state  *  * This function removes an MPT command from the command free list and  * initializes it.  */
 end_comment
 
 begin_function
@@ -3051,7 +3055,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_release_mpt_cmd:      Return a cmd to free command pool    * input:                      Command packet for return to free command pool   *  * This function returns an MPT command to the free command list.  */
+comment|/*  * mrsas_release_mpt_cmd:	Return a cmd to free command pool  * input:					Command packet for return to free command pool  *  * This function returns an MPT command to the free command list.  */
 end_comment
 
 begin_function
@@ -3117,7 +3121,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_get_request_desc:     Get request descriptor from array    * input:                      Adapter instance soft state  *                             SMID index   *  * This function returns a pointer to the request descriptor.  */
+comment|/*  * mrsas_get_request_desc:	Get request descriptor from array  * input:					Adapter instance soft state  * 							SMID index  *  * This function returns a pointer to the request descriptor.  */
 end_comment
 
 begin_function
@@ -3186,7 +3190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_build_ldio:       Builds an LDIO command    * input:                  Adapter instance soft state  *                         Pointer to command packet  *                         Pointer to CCB   *  * This function builds the LDIO command packet.  It returns 0 if the   * command is built successfully, otherwise it returns a 1.   */
+comment|/*  * mrsas_build_ldio:	Builds an LDIO command  * input:				Adapter instance soft state  * 						Pointer to command packet  * 						Pointer to CCB  *  * This function builds the LDIO command packet.  It returns 0 if the command is  * built successfully, otherwise it returns a 1.  */
 end_comment
 
 begin_function
@@ -3401,7 +3405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_setup_io:             Set up data including Fast Path I/O    * input:                      Adapter instance soft state  *                             Pointer to command packet  *                             Pointer to CCB   *  * This function builds the DCDB inquiry command.  It returns 0 if the   * command is built successfully, otherwise it returns a 1.   */
+comment|/*  * mrsas_setup_io:	Set up data including Fast Path I/O  * input:			Adapter instance soft state  * 					Pointer to command packet  * 					Pointer to CCB  *  * This function builds the DCDB inquiry command.  It returns 0 if the command  * is built successfully, otherwise it returns a 1.  */
 end_comment
 
 begin_function
@@ -3490,7 +3494,7 @@ name|fp_possible
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * READ_6 (0x08) or WRITE_6 (0x0A) cdb      */
+comment|/* 	 * READ_6 (0x08) or WRITE_6 (0x0A) cdb 	 */
 if|if
 condition|(
 name|csio
@@ -3565,7 +3569,7 @@ operator|&=
 literal|0x1FFFFF
 expr_stmt|;
 block|}
-comment|/*      * READ_10 (0x28) or WRITE_6 (0x2A) cdb      */
+comment|/* 	 * READ_10 (0x28) or WRITE_6 (0x2A) cdb 	 */
 elseif|else
 if|if
 condition|(
@@ -3669,7 +3673,7 @@ index|]
 operator|)
 expr_stmt|;
 block|}
-comment|/*      * READ_12 (0xA8) or WRITE_12 (0xAA) cdb      */
+comment|/* 	 * READ_12 (0xA8) or WRITE_12 (0xAA) cdb 	 */
 elseif|else
 if|if
 condition|(
@@ -3805,7 +3809,7 @@ index|]
 operator|)
 expr_stmt|;
 block|}
-comment|/*      * READ_16 (0x88) or WRITE_16 (0xx8A) cdb      */
+comment|/* 	 * READ_16 (0x88) or WRITE_16 (0xx8A) cdb 	 */
 elseif|else
 if|if
 condition|(
@@ -4522,7 +4526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_build_dcdb:       Builds an DCDB command    * input:                  Adapter instance soft state  *                         Pointer to command packet  *                         Pointer to CCB   *  * This function builds the DCDB inquiry command.  It returns 0 if the   * command is built successfully, otherwise it returns a 1.   */
+comment|/*  * mrsas_build_dcdb:	Builds an DCDB command  * input:				Adapter instance soft state  * 						Pointer to command packet  * 						Pointer to CCB  *  * This function builds the DCDB inquiry command.  It returns 0 if the command  * is built successfully, otherwise it returns a 1.  */
 end_comment
 
 begin_function
@@ -4679,9 +4683,6 @@ name|regLockLength
 operator|=
 literal|0
 expr_stmt|;
-comment|// LSI TEST
-comment|//printf("LSI Debug bus %d device_id %d map_ptr->raidMap.devHndlInfo[device_id].curDevHdl %d \n",
-comment|//		cam_sim_bus(sim), device_id, map_ptr->raidMap.devHndlInfo[device_id].curDevHdl);
 name|io_request
 operator|->
 name|RaidContext
@@ -4913,7 +4914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_map_request:           Map and load data     * input:                       Adapter instance soft state  *                              Pointer to command packet  *  * For data from OS, map and load the data buffer into bus space.  The  * SG list is built in the callback.  If the  bus dmamap load is not  * successful, cmd->error_code will contain the  error code and a 1 is   * returned.  */
+comment|/*  * mrsas_map_request:	Map and load data  * input:				Adapter instance soft state  * 						Pointer to command packet  *  * For data from OS, map and load the data buffer into bus space.  The SG list  * is built in the callback.  If the  bus dmamap load is not successful,  * cmd->error_code will contain the  error code and a 1 is returned.  */
 end_comment
 
 begin_function
@@ -5072,7 +5073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_unmap_request:       Unmap and unload data     * input:                     Adapter instance soft state  *                            Pointer to command packet  *  * This function unmaps and unloads data from OS.  */
+comment|/*  * mrsas_unmap_request:	Unmap and unload data  * input:				Adapter instance soft state  * 						Pointer to command packet  *  * This function unmaps and unloads data from OS.  */
 end_comment
 
 begin_function
@@ -5173,7 +5174,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_data_load_cb:        Callback entry point     * input:                     Pointer to command packet as argument   *                            Pointer to segment  *                            Number of segments  *                            Error   *  * This is the callback function of the bus dma map load.  It builds   * the SG list.    */
+comment|/*  * mrsas_data_load_cb:	Callback entry point  * input:				Pointer to command packet as argument  * 						Pointer to segment  * 						Number of segments Error  *  * This is the callback function of the bus dma map load.  It builds the SG  * list.  */
 end_comment
 
 begin_function
@@ -5488,7 +5489,6 @@ name|i
 operator|+
 literal|1
 expr_stmt|;
-comment|/*               * Prepare chain element               */
 if|if
 condition|(
 operator|(
@@ -5665,7 +5665,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_freeze_simq:        Freeze SIM queue     * input:                    Pointer to command packet    *                           Pointer to SIM  *  * This function freezes the sim queue.  */
+comment|/*  * mrsas_freeze_simq:	Freeze SIM queue  * input:				Pointer to command packet  * 						Pointer to SIM  *  * This function freezes the sim queue.  */
 end_comment
 
 begin_function
@@ -5789,7 +5789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_cmd_done:           Perform remaining command completion   * input:                    Adapter instance soft state    *                           Pointer to command packet   *  * This function calls ummap request and releases the MPT command.   */
+comment|/*  * mrsas_cmd_done:	Perform remaining command completion  * input:			Adapter instance soft state  Pointer to command packet  *  * This function calls ummap request and releases the MPT command.  */
 end_comment
 
 begin_function
@@ -5860,7 +5860,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_cam_poll:               Polling entry point  * input:                    Pointer to SIM    *  * This is currently a stub function.  */
+comment|/*  * mrsas_cam_poll:	Polling entry point  * input:			Pointer to SIM  *  * This is currently a stub function.  */
 end_comment
 
 begin_function
@@ -5902,7 +5902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_bus_scan:           Perform bus scan   * input:                    Adapter instance soft state    *  * This mrsas_bus_scan function is needed for FreeBSD 7.x.  Also, it should  * not be called in FreeBSD 8.x and later versions, where the bus scan is   * automatic.   */
+comment|/*  * mrsas_bus_scan:	Perform bus scan  * input:			Adapter instance soft state  *  * This mrsas_bus_scan function is needed for FreeBSD 7.x.  Also, it should not  * be called in FreeBSD 8.x and later versions, where the bus scan is  * automatic.  */
 end_comment
 
 begin_function
@@ -6105,7 +6105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_bus_scan_sim:		Perform bus scan per SIM  * input:					Adapter instance soft state    * 							This function will be called from Event handler   * 							on LD creation/deletion, JBOD on/off.  */
+comment|/*  * mrsas_bus_scan_sim:	Perform bus scan per SIM  * input:				adapter instance soft state  *  * This function will be called from Event handler on LD creation/deletion,  * JBOD on/off.  */
 end_comment
 
 begin_function
