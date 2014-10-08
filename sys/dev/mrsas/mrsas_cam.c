@@ -365,7 +365,7 @@ name|ccb
 modifier|*
 name|ccb
 parameter_list|,
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|local_map_ptr
 parameter_list|,
@@ -522,7 +522,7 @@ parameter_list|(
 name|u_int32_t
 name|ldTgtId
 parameter_list|,
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map
 parameter_list|)
@@ -537,7 +537,7 @@ parameter_list|(
 name|u_int32_t
 name|ldTgtId
 parameter_list|,
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map
 parameter_list|,
@@ -593,7 +593,7 @@ name|RAID_CONTEXT
 modifier|*
 name|pRAID_Context
 parameter_list|,
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map
 parameter_list|)
@@ -611,7 +611,7 @@ parameter_list|,
 name|u_int32_t
 name|span
 parameter_list|,
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map
 parameter_list|)
@@ -1788,7 +1788,7 @@ name|cpi
 operator|.
 name|max_target
 operator|=
-name|MRSAS_MAX_LD
+name|MRSAS_MAX_PD
 operator|-
 literal|1
 expr_stmt|;
@@ -1799,7 +1799,7 @@ name|cpi
 operator|.
 name|max_target
 operator|=
-name|MRSAS_MAX_PD
+name|MRSAS_MAX_LD_IDS
 operator|-
 literal|1
 expr_stmt|;
@@ -3425,7 +3425,7 @@ name|struct
 name|IO_REQUEST_INFO
 name|io_info
 decl_stmt|;
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map_ptr
 decl_stmt|;
@@ -4066,7 +4066,7 @@ name|map_ptr
 operator|=
 name|sc
 operator|->
-name|raidmap_mem
+name|ld_drv_map
 index|[
 operator|(
 name|sc
@@ -4098,7 +4098,7 @@ argument_list|,
 name|map_ptr
 argument_list|)
 operator|>=
-name|MAX_LOGICAL_DRIVES
+name|MAX_LOGICAL_DRIVES_EXT
 operator|)
 operator|||
 operator|(
@@ -4510,7 +4510,7 @@ decl_stmt|;
 name|u_int32_t
 name|device_id
 decl_stmt|;
-name|MR_FW_RAID_MAP_ALL
+name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map_ptr
 decl_stmt|;
@@ -4534,7 +4534,7 @@ name|map_ptr
 operator|=
 name|sc
 operator|->
-name|raidmap_mem
+name|ld_drv_map
 index|[
 operator|(
 name|sc
@@ -4624,6 +4624,9 @@ name|regLockLength
 operator|=
 literal|0
 expr_stmt|;
+comment|// LSI TEST
+comment|//printf("LSI Debug bus %d device_id %d map_ptr->raidMap.devHndlInfo[device_id].curDevHdl %d \n",
+comment|//		cam_sim_bus(sim), device_id, map_ptr->raidMap.devHndlInfo[device_id].curDevHdl);
 name|io_request
 operator|->
 name|RaidContext
