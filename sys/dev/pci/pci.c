@@ -1233,7 +1233,7 @@ comment|/* MSI-X doesn't work */
 define|#
 directive|define
 name|PCI_QUIRK_MSI_INTX_BUG
-value|5
+value|6
 comment|/* PCIM_CMD_INTxDIS disables MSI */
 name|int
 name|arg1
