@@ -367,6 +367,13 @@ name|THRESHOLD_REPLY_COUNT
 value|50
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAX_MSIX_COUNT
+value|128
+end_define
+
 begin_comment
 comment|/*   Boolean types  */
 end_comment
@@ -7179,6 +7186,52 @@ value|16
 end_define
 
 begin_comment
+comment|/*  * MSI-x regsiters offset defines  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_SUP_REPLY_POST_HOST_INDEX_OFFSET
+value|(0x0000030C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_REPLY_POST_HOST_INDEX_OFFSET
+value|(0x0000006C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MR_MAX_REPLY_QUEUES_OFFSET
+value|(0x0000001F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MR_MAX_REPLY_QUEUES_EXT_OFFSET
+value|(0x003FC000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MR_MAX_REPLY_QUEUES_EXT_OFFSET_SHIFT
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|MR_MAX_MSIX_REG_ARRAY
+value|16
+end_define
+
+begin_comment
 comment|/*   * FW reports the maximum of number of commands that it can accept (maximum  * commands that can be outstanding) at any time. The driver must report a  * lower number to the mid layer because it can issue a few internal commands  * itself (E.g, AEN, abort cmd, IOCTLs etc). The number of commands it needs  * is shown below  */
 end_comment
 
@@ -7200,7 +7253,7 @@ begin_define
 define|#
 directive|define
 name|MRSAS_MAX_MSIX_QUEUES
-value|16
+value|128
 end_define
 
 begin_comment
@@ -7319,6 +7372,49 @@ directive|define
 name|MFI_1068_FW_READY
 value|0xDDDD0000
 end_define
+
+begin_typedef
+typedef|typedef
+union|union
+name|_MFI_CAPABILITIES
+block|{
+struct|struct
+block|{
+name|u_int32_t
+name|support_fp_remote_lun
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
+name|support_additional_msix
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
+name|support_fastpath_wb
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
+name|support_max_255lds
+range|:
+literal|1
+decl_stmt|;
+name|u_int32_t
+name|reserved
+range|:
+literal|28
+decl_stmt|;
+block|}
+name|mfi_capabilities
+struct|;
+name|u_int32_t
+name|reg
+decl_stmt|;
+block|}
+name|MFI_CAPABILITIES
+typedef|;
+end_typedef
 
 begin_pragma
 pragma|#
@@ -7496,49 +7592,6 @@ name|pack
 name|(
 name|)
 end_pragma
-
-begin_typedef
-typedef|typedef
-union|union
-name|_MFI_CAPABILITIES
-block|{
-struct|struct
-block|{
-name|u_int32_t
-name|support_fp_remote_lun
-range|:
-literal|1
-decl_stmt|;
-name|u_int32_t
-name|support_additional_msix
-range|:
-literal|1
-decl_stmt|;
-name|u_int32_t
-name|support_fastpath_wb
-range|:
-literal|1
-decl_stmt|;
-name|u_int32_t
-name|support_max_255lds
-range|:
-literal|1
-decl_stmt|;
-name|u_int32_t
-name|reserved
-range|:
-literal|28
-decl_stmt|;
-block|}
-name|mfi_capabilities
-struct|;
-name|u_int32_t
-name|reg
-decl_stmt|;
-block|}
-name|MFI_CAPABILITIES
-typedef|;
-end_typedef
 
 begin_pragma
 pragma|#
@@ -7961,8 +8014,8 @@ name|u_int8_t
 name|reserved_1
 decl_stmt|;
 comment|/*03h */
-name|u_int32_t
-name|reserved_2
+name|MFI_CAPABILITIES
+name|driver_operations
 decl_stmt|;
 comment|/*04h */
 name|u_int32_t
@@ -8749,6 +8802,22 @@ name|__packed
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|mrsas_irq_context
+block|{
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|uint32_t
+name|MSIxIndex
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Controller management info added to support Linux Emulator */
 end_comment
@@ -9008,17 +9077,47 @@ name|struct
 name|resource
 modifier|*
 name|mrsas_irq
+index|[
+name|MAX_MSIX_COUNT
+index|]
 decl_stmt|;
 comment|// interrupt interface window
 name|void
 modifier|*
 name|intr_handle
+index|[
+name|MAX_MSIX_COUNT
+index|]
 decl_stmt|;
 comment|// handle
 name|int
 name|irq_id
+index|[
+name|MAX_MSIX_COUNT
+index|]
 decl_stmt|;
 comment|// intr resource id
+name|struct
+name|mrsas_irq_context
+name|irq_context
+index|[
+name|MAX_MSIX_COUNT
+index|]
+decl_stmt|;
+name|int
+name|msix_vectors
+decl_stmt|;
+comment|// Max msix vectors
+name|int
+name|msix_enable
+decl_stmt|;
+comment|// MSI-x support
+name|uint32_t
+name|msix_reg_offset
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|struct
 name|mrsas_mpt_cmd
 modifier|*
@@ -9068,6 +9167,9 @@ name|reply_frames_desc_phys
 decl_stmt|;
 name|u_int16_t
 name|last_reply_idx
+index|[
+name|MAX_MSIX_COUNT
+index|]
 decl_stmt|;
 name|u_int32_t
 name|reply_q_depth
