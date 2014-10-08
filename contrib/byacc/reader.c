@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: reader.c,v 1.57 2014/10/06 00:52:44 tom Exp $ */
+comment|/* $Id: reader.c,v 1.58 2014/10/06 22:15:08 tom Exp $ */
 end_comment
 
 begin_include
@@ -659,7 +659,7 @@ literal|1
 expr_stmt|;
 name|line
 operator|=
-name|TCMALLOC
+name|TMALLOC
 argument_list|(
 name|char
 argument_list|,
@@ -688,6 +688,7 @@ block|{
 name|line
 index|[
 name|i
+operator|++
 index|]
 operator|=
 operator|(
@@ -704,8 +705,11 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|++
+operator|(
 name|i
+operator|+
+literal|3
+operator|)
 operator|>=
 name|linesize
 condition|)
@@ -748,6 +752,7 @@ block|{
 name|line
 index|[
 name|i
+operator|++
 index|]
 operator|=
 literal|'\n'
@@ -759,6 +764,13 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|line
+index|[
+name|i
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|cptr
 operator|=
 name|line
