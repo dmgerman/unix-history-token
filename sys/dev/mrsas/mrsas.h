@@ -158,6 +158,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sema.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -184,6 +196,13 @@ include|#
 directive|include
 file|<sys/selinfo.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|IOCTL_SEMA_DESCRIPTION
+value|"mrsas semaphore for MFI pool"
+end_define
 
 begin_comment
 comment|/*  * Device IDs and PCI  */
@@ -9076,6 +9095,11 @@ decl_stmt|;
 name|uint32_t
 name|mrsas_poll_waiting
 decl_stmt|;
+name|struct
+name|sema
+name|ioctl_count_sema
+decl_stmt|;
+comment|// counting semaphore for ioctl
 name|uint32_t
 name|max_fw_cmds
 decl_stmt|;

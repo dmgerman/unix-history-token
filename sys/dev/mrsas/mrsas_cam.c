@@ -433,7 +433,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|mrsas_poll
+name|mrsas_cam_poll
 parameter_list|(
 name|struct
 name|cam_sim
@@ -756,7 +756,7 @@ name|cam_sim_alloc
 argument_list|(
 name|mrsas_action
 argument_list|,
-name|mrsas_poll
+name|mrsas_cam_poll
 argument_list|,
 literal|"mrsas"
 argument_list|,
@@ -998,7 +998,7 @@ name|cam_sim_alloc
 argument_list|(
 name|mrsas_action
 argument_list|,
-name|mrsas_poll
+name|mrsas_cam_poll
 argument_list|,
 literal|"mrsas"
 argument_list|,
@@ -5860,13 +5860,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_poll:               Polling entry point   * input:                    Pointer to SIM    *  * This is currently a stub function.  */
+comment|/**  * mrsas_cam_poll:               Polling entry point  * input:                    Pointer to SIM    *  * This is currently a stub function.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|mrsas_poll
+name|mrsas_cam_poll
 parameter_list|(
 name|struct
 name|cam_sim

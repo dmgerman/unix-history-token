@@ -4146,6 +4146,21 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+comment|/* Intialize a counting Semaphore to take care no. of concurrent IOCTLs */
+name|sema_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|,
+name|MRSAS_MAX_MFI_CMDS
+operator|-
+literal|5
+argument_list|,
+name|IOCTL_SEMA_DESCRIPTION
+argument_list|)
+expr_stmt|;
 comment|/* Intialize linked list */
 name|TAILQ_INIT
 argument_list|(
@@ -4537,6 +4552,15 @@ operator|->
 name|raidmap_lock
 argument_list|)
 expr_stmt|;
+comment|/* Destroy the counting semaphore created for Ioctl */
+name|sema_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|)
+expr_stmt|;
 name|attach_fail
 label|:
 name|destroy_dev
@@ -4615,7 +4639,15 @@ name|remove_in_progress
 operator|=
 literal|1
 expr_stmt|;
-comment|/*      * Take the instance off the instance array. Note that we will not      * decrement the max_index. We let this array be sparse array     */
+comment|/* Destroy the character device so no other IOCTL will be handled */
+name|destroy_dev
+argument_list|(
+name|sc
+operator|->
+name|mrsas_cdev
+argument_list|)
+expr_stmt|;
+comment|/*      * Take the instance off the instance array. Note that we will not      * decrement the max_index. We let this array be sparse array      */
 for|for
 control|(
 name|i
@@ -4860,6 +4892,39 @@ operator|->
 name|raidmap_lock
 argument_list|)
 expr_stmt|;
+comment|/* Wait for all the semaphores to be released */
+while|while
+condition|(
+name|sema_value
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|)
+operator|!=
+operator|(
+name|MRSAS_MAX_MFI_CMDS
+operator|-
+literal|5
+operator|)
+condition|)
+name|pause
+argument_list|(
+literal|"mr_shutdown"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+comment|/* Destroy the counting semaphore created for Ioctl */
+name|sema_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -4885,13 +4950,6 @@ name|reg_res
 argument_list|)
 expr_stmt|;
 block|}
-name|destroy_dev
-argument_list|(
-name|sc
-operator|->
-name|mrsas_cdev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -6118,6 +6176,15 @@ name|MRSAS_IOC_FIRMWARE_PASS_THROUGH32
 case|:
 endif|#
 directive|endif
+comment|/* Decrement the Ioctl counting Semaphore before getting an mfi command */
+name|sema_wait
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|mrsas_passthru
@@ -6131,6 +6198,15 @@ operator|)
 name|arg
 argument_list|,
 name|cmd
+argument_list|)
+expr_stmt|;
+comment|/* Increment the Ioctl counting semaphore value */
+name|sema_post
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ioctl_count_sema
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6156,6 +6232,10 @@ literal|"IOCTL command 0x%lx is not handled\n"
 argument_list|,
 name|cmd
 argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|ENOENT
 expr_stmt|;
 block|}
 return|return

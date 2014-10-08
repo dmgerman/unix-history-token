@@ -668,11 +668,13 @@ argument_list|,
 literal|"Cannot allocate ioctl data tag\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -717,11 +719,13 @@ argument_list|,
 literal|"Cannot allocate ioctl data mem\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -765,11 +769,13 @@ argument_list|,
 literal|"Cannot load ioctl data mem\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* Save the physical address and length */
 name|kern_sge32
@@ -985,11 +991,13 @@ argument_list|,
 literal|"Cannot allocate ioctl sense tag\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -1022,14 +1030,16 @@ name|sc
 operator|->
 name|mrsas_dev
 argument_list|,
-literal|"Cannot allocate ioctl data mem\n"
+literal|"Cannot allocate ioctl sense mem\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -1061,11 +1071,13 @@ argument_list|,
 literal|"Cannot load ioctl sense mem\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|sense_ptr
 operator|=
@@ -1340,6 +1352,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ioctl_sense_mem
+operator|!=
+name|NULL
 condition|)
 name|bus_dmamem_free
 argument_list|(
@@ -1353,6 +1367,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ioctl_sense_tag
+operator|!=
+name|NULL
 condition|)
 name|bus_dma_tag_destroy
 argument_list|(
@@ -1378,6 +1394,13 @@ control|)
 block|{
 if|if
 condition|(
+name|ioctlCmd
+operator|==
+name|MRSAS_IOC_FIRMWARE_PASS_THROUGH64
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|user_ioc
 operator|->
@@ -1389,6 +1412,28 @@ operator|.
 name|iov_len
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|user_ioc32
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+condition|)
+continue|continue;
+endif|#
+directive|endif
+block|}
 if|if
 condition|(
 name|ioctl_data_phys_addr
