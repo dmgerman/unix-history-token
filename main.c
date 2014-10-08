@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.53 2014/10/06 00:55:28 tom Exp $ */
+comment|/* $Id: main.c,v 1.54 2014/10/06 22:40:07 tom Exp $ */
 end_comment
 
 begin_include
@@ -2212,12 +2212,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|int
+name|mode_t
 name|save_umask
 init|=
 name|umask
 argument_list|(
-literal|0600
+literal|0177
 argument_list|)
 decl_stmt|;
 if|if
