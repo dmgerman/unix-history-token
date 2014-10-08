@@ -2525,6 +2525,11 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
