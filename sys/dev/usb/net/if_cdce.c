@@ -1333,17 +1333,6 @@ argument_list|,
 argument|MSC_EJECT_HUAWEI2
 argument_list|)
 block|}
-block|,
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_HUAWEI
-argument_list|,
-argument|USB_PRODUCT_HUAWEI_R215_INIT
-argument_list|,
-argument|MSC_EJECT_HUAWEI2
-argument_list|)
-block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
