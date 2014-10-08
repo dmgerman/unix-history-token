@@ -8750,6 +8750,39 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Controller management info added to support Linux Emulator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_MGMT_ADAPTERS
+value|1024
+end_define
+
+begin_struct
+struct|struct
+name|mrsas_mgmt_info
+block|{
+name|u_int16_t
+name|count
+decl_stmt|;
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc_ptr
+index|[
+name|MAX_MGMT_ADAPTERS
+index|]
+decl_stmt|;
+name|int
+name|max_index
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*******************************************************************  * per-instance data  ********************************************************************/
 end_comment
 
