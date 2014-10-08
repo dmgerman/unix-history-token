@@ -2150,11 +2150,14 @@ name|modified
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* 		 * In general, we should free all state/indexes here 		 * and return. However, we keep allocated state instead 		 * to ensure we achieve some progress on each restart. 		 */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|KASSERT
 argument_list|(
 name|pval

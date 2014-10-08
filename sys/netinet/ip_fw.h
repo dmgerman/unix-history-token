@@ -469,6 +469,17 @@ begin_comment
 comment|/* Get log from NAT44 instance */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_DUMP_SOPTCODES
+value|116
+end_define
+
+begin_comment
+comment|/* Dump available sopts/versions */
+end_comment
+
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metadata) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  * Note that the code is written so that individual instructions  * have a size which is a multiple of 32 bits. This means that, if  * such structures contain pointers or other 64-bit entities,  * (there is just one instance now) they may end up unaligned on  * 64-bit architectures, so the must be handled with care.  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes. When adding new opcodes, they should  * be appended to the end of the opcode list before O_LAST_OPCODE,  * this will prevent the ABI from being broken, otherwise users  * will have to recompile ipfw(8) when they update the kernel.  */
 end_comment
@@ -3529,6 +3540,31 @@ name|range
 decl_stmt|;
 block|}
 name|ipfw_range_header
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_sopt_info
+block|{
+name|uint16_t
+name|opcode
+decl_stmt|;
+name|uint8_t
+name|version
+decl_stmt|;
+name|uint8_t
+name|dir
+decl_stmt|;
+name|uint8_t
+name|spare
+decl_stmt|;
+name|uint64_t
+name|refcnt
+decl_stmt|;
+block|}
+name|ipfw_sopt_info
 typedef|;
 end_typedef
 
