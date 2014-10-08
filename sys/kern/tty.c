@@ -4614,6 +4614,13 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|!=
+name|NULL
+condition|)
+block|{
 name|sx_xlock
 argument_list|(
 operator|&
@@ -4639,12 +4646,6 @@ operator|&
 name|tty_list_sx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dev
-operator|!=
-name|NULL
-condition|)
 name|destroy_dev_sched_cb
 argument_list|(
 name|dev
@@ -4654,6 +4655,7 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
