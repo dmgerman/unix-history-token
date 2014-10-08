@@ -9065,6 +9065,17 @@ name|mtx
 name|aen_lock
 decl_stmt|;
 comment|// aen lock
+name|struct
+name|selinfo
+name|mrsas_select
+decl_stmt|;
+comment|// poll select interface for application
+name|uint32_t
+name|mrsas_aen_triggered
+decl_stmt|;
+name|uint32_t
+name|mrsas_poll_waiting
+decl_stmt|;
 name|uint32_t
 name|max_fw_cmds
 decl_stmt|;
