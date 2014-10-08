@@ -3778,12 +3778,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|uma_mtx
-argument_list|)
-expr_stmt|;
 name|msleep
 argument_list|(
 name|zone
@@ -3797,12 +3791,6 @@ argument_list|,
 literal|"zonedrain"
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|uma_mtx
 argument_list|)
 expr_stmt|;
 block|}
