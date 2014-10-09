@@ -155,6 +155,14 @@ argument_list|,
 literal|0x100000
 argument_list|)
 expr_stmt|;
+comment|/* dwmmc */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0xff700000
+argument_list|,
+literal|0x100000
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

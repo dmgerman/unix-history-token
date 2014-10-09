@@ -22010,6 +22010,10 @@ operator|=
 name|target_sz
 operator|*
 name|l2arc_headroom
+operator|*
+literal|2
+operator|/
+name|ARC_BUFC_NUMLISTS
 expr_stmt|;
 if|if
 condition|(

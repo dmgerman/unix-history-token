@@ -644,45 +644,7 @@ operator|&
 name|component
 argument_list|)
 expr_stmt|;
-comment|//log_debugx("checking \"%s\" for existence", partial);
-name|error
-operator|=
-name|access
-argument_list|(
-name|partial
-argument_list|,
-name|F_OK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-name|errno
-operator|!=
-name|ENOENT
-condition|)
-name|log_err
-argument_list|(
-literal|1
-argument_list|,
-literal|"cannot access %s"
-argument_list|,
-name|partial
-argument_list|)
-expr_stmt|;
-name|log_debugx
-argument_list|(
-literal|"directory %s does not exist, creating"
-argument_list|,
-name|partial
-argument_list|)
-expr_stmt|;
+comment|//log_debugx("creating \"%s\"", partial);
 name|error
 operator|=
 name|mkdir
@@ -697,16 +659,21 @@ condition|(
 name|error
 operator|!=
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|EEXIST
 condition|)
-name|log_err
+block|{
+name|log_warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"cannot create %s"
 argument_list|,
 name|partial
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 block|}
 name|free
 argument_list|(

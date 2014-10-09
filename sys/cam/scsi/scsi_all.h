@@ -6198,6 +6198,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WRITE_ATOMIC_16
+value|0x9C
+end_define
+
+begin_define
+define|#
+directive|define
 name|SERVICE_ACTION_IN
 value|0x9E
 end_define
@@ -8630,7 +8637,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Block Limits VDP Page based on  * T10/1799-D Revision 31  */
+comment|/*  * Block Limits VDP Page based on SBC-4 Revision 2  */
 end_comment
 
 begin_struct
@@ -8722,9 +8729,27 @@ literal|8
 index|]
 decl_stmt|;
 name|u_int8_t
+name|max_atomic_transfer_length
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u_int8_t
+name|atomic_alignment
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u_int8_t
+name|atomic_transfer_length_granularity
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u_int8_t
 name|reserved2
 index|[
-literal|20
+literal|8
 index|]
 decl_stmt|;
 block|}

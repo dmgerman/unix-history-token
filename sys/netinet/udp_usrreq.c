@@ -1293,13 +1293,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|n
-operator|==
-name|NULL
-condition|)
-return|return;
 name|off
 operator|+=
 sizeof|sizeof
@@ -2603,6 +2596,9 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|n
 operator|=
 name|m_copy
@@ -2613,7 +2609,11 @@ literal|0
 argument_list|,
 name|M_COPYALL
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|udp_append
 argument_list|(
 name|last
@@ -2628,6 +2628,7 @@ operator|&
 name|udp_in
 argument_list|)
 expr_stmt|;
+block|}
 name|INP_RUNLOCK
 argument_list|(
 name|last

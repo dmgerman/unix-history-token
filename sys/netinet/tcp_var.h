@@ -576,6 +576,14 @@ name|u_int
 name|t_tsomax
 decl_stmt|;
 comment|/* TSO total burst length limit in bytes */
+name|u_int
+name|t_pmtud_saved_maxopd
+decl_stmt|;
+comment|/* pre-blackhole MSS */
+name|u_int
+name|t_flags2
+decl_stmt|;
+comment|/* More tcpcb flags storage */
 name|uint32_t
 name|t_ispare
 index|[
@@ -1114,6 +1122,43 @@ end_endif
 
 begin_comment
 comment|/* TCP_SIGNATURE */
+end_comment
+
+begin_comment
+comment|/*  * Flags for PLPMTU handling, t_flags2  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF2_PLPMTU_BLACKHOLE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Possible PLPMTUD Black Hole. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF2_PLPMTU_PMTUD
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Allowed to attempt PLPMTUD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF2_PLPMTU_MAXSEGSNT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Last seg sent was full seg. */
 end_comment
 
 begin_comment

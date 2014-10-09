@@ -7749,9 +7749,11 @@ name|proto
 operator|==
 name|IPPROTO_TCP
 operator|&&
+name|offset
+operator|==
+literal|0
+operator|&&
 name|ulp
-operator|!=
-name|NULL
 condition|)
 block|{
 name|PULLUP_LEN
@@ -7774,15 +7776,6 @@ argument_list|)
 expr_stmt|;
 name|match
 operator|=
-operator|(
-name|proto
-operator|==
-name|IPPROTO_TCP
-operator|&&
-name|offset
-operator|==
-literal|0
-operator|&&
 name|tcpopts_match
 argument_list|(
 name|TCP
@@ -7792,7 +7785,6 @@ argument_list|)
 argument_list|,
 name|cmd
 argument_list|)
-operator|)
 expr_stmt|;
 block|}
 break|break;

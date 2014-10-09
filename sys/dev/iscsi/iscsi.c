@@ -1701,13 +1701,6 @@ modifier|*
 name|is
 parameter_list|)
 block|{
-name|icl_conn_shutdown
-argument_list|(
-name|is
-operator|->
-name|is_conn
-argument_list|)
-expr_stmt|;
 name|icl_conn_close
 argument_list|(
 name|is

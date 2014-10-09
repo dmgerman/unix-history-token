@@ -4941,6 +4941,9 @@ case|:
 case|case
 name|WRITE_16
 case|:
+case|case
+name|WRITE_ATOMIC_16
+case|:
 block|{
 name|struct
 name|scsi_rw_16

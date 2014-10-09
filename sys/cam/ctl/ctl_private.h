@@ -512,6 +512,10 @@ block|,
 name|CTL_LUN_SENSE_DESC
 init|=
 literal|0x400
+block|,
+name|CTL_LUN_READONLY
+init|=
+literal|0x800
 block|}
 name|ctl_lun_flags
 typedef|;

@@ -6396,9 +6396,9 @@ operator|->
 name|apic_name
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__amd64__
+ifdef|#
+directive|ifdef
+name|I686_CPU
 comment|/* 	 * To work around an errata, we disable the local APIC on some 	 * CPUs during early startup.  We need to turn the local APIC back 	 * on on such CPUs now. 	 */
 name|ppro_reenable_apic
 argument_list|()
