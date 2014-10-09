@@ -175,6 +175,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -8302,7 +8314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dumps requested objects data  * Data layout (version 0)(current):  * Request: [ ipfw_cfg_lheader ] + IPFW_CFG_GET_* flags  *   size = ipfw_cfg_lheader.size  * Reply: [ ipfw_rules_lheader   *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST)  *     ipfw_obj_tlv(IPFW_TLV_RULE_ENT) [ ip_fw_bcounter (optional) ip_fw_rule ]  *   ] (optional)  *   [ ipfw_obj_ctlv(IPFW_TLV_STATE_LIST) ipfw_obj_dyntlv x N ] (optional)  * ]  * * NOTE IPFW_TLV_STATE_LIST has the single valid field: objsize.  * The rest (size, count) are set to zero and needs to be ignored.  *  * Returns 0 on success.  */
+comment|/*  * Dumps requested objects data  * Data layout (version 0)(current):  * Request: [ ipfw_cfg_lheader ] + IPFW_CFG_GET_* flags  *   size = ipfw_cfg_lheader.size  * Reply: [ ipfw_cfg_lheader   *   [ ipfw_obj_ctlv(IPFW_TLV_TBL_LIST) ipfw_obj_ntlv x N ] (optional)  *   [ ipfw_obj_ctlv(IPFW_TLV_RULE_LIST)  *     ipfw_obj_tlv(IPFW_TLV_RULE_ENT) [ ip_fw_bcounter (optional) ip_fw_rule ]  *   ] (optional)  *   [ ipfw_obj_ctlv(IPFW_TLV_STATE_LIST) ipfw_obj_dyntlv x N ] (optional)  * ]  * * NOTE IPFW_TLV_STATE_LIST has the single valid field: objsize.  * The rest (size, count) are set to zero and needs to be ignored.  *  * Returns 0 on success.  */
 end_comment
 
 begin_function
@@ -8423,7 +8435,10 @@ expr_stmt|;
 comment|/* 	 * STAGE 1: Determine size/count for objects in range. 	 * Prepare used tables bitmask. 	 */
 name|sz
 operator|=
-literal|0
+sizeof|sizeof
+argument_list|(
+name|ipfw_cfg_lheader
+argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
@@ -10990,7 +11005,7 @@ name|sopt_valsize
 operator|=
 name|sd
 operator|->
-name|kavail
+name|ktotal
 expr_stmt|;
 name|sd
 operator|->
@@ -11191,6 +11206,8 @@ parameter_list|)
 block|{
 name|int
 name|error
+decl_stmt|,
+name|locked
 decl_stmt|;
 name|size_t
 name|size
@@ -11418,6 +11435,10 @@ return|;
 block|}
 block|}
 comment|/* 	 * Fill in sockopt_data structure that may be useful for 	 * IP_FW3 get requests. 	 */
+name|locked
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|valsize
@@ -11507,6 +11528,41 @@ name|valsize
 else|:
 name|CTL3_SMALLBUF
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+name|valsize
+condition|)
+block|{
+comment|/* We have to wire user buffer */
+name|error
+operator|=
+name|vslock
+argument_list|(
+name|sopt
+operator|->
+name|sopt_val
+argument_list|,
+name|valsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|locked
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 name|sdata
 operator|.
@@ -11639,6 +11695,21 @@ name|ipfw_flush_sopt_data
 argument_list|(
 operator|&
 name|sdata
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|locked
+operator|!=
+literal|0
+condition|)
+name|vsunlock
+argument_list|(
+name|sdata
+operator|.
+name|sopt_val
+argument_list|,
+name|valsize
 argument_list|)
 expr_stmt|;
 comment|/* Restore original pointer and set number of bytes written */
