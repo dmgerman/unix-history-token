@@ -74,16 +74,26 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
 name|int
+argument_list|,
 name|ip_doopts
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* process or ignore IP options */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|V_ip_doopts
+value|VNET(ip_doopts)
+end_define
 
 begin_function_decl
 name|int
