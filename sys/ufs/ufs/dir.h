@@ -187,7 +187,7 @@ parameter_list|(
 name|namlen
 parameter_list|)
 define|\
-value|((offsetof(struct direct, d_name) +			\ 	  ((namlen)+1)*sizeof(((struct direct *)0)->d_name[0]) + 3)& ~3)
+value|(((uintptr_t)&((struct direct *)0)->d_name +			\ 	  ((namlen)+1)*sizeof(((struct direct *)0)->d_name[0]) + 3)& ~3)
 end_define
 
 begin_if
