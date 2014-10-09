@@ -209,7 +209,7 @@ decl_stmt|;
 comment|/* algorithm state */
 name|struct
 name|table_info
-name|ti
+name|ti_copy
 decl_stmt|;
 comment|/* data to put to table_info */
 name|struct
@@ -5423,7 +5423,7 @@ name|astate_new
 expr_stmt|;
 name|tc
 operator|->
-name|ti
+name|ti_copy
 operator|=
 name|ti_new
 expr_stmt|;
@@ -6015,7 +6015,7 @@ expr_stmt|;
 comment|/* Ensure tc.ti copies are in sync */
 name|tc_a
 operator|->
-name|ti
+name|ti_copy
 operator|=
 name|tablestate
 index|[
@@ -6028,7 +6028,7 @@ index|]
 expr_stmt|;
 name|tc_b
 operator|->
-name|ti
+name|ti_copy
 operator|=
 name|tablestate
 index|[
@@ -6271,23 +6271,9 @@ operator|->
 name|astate
 argument_list|,
 operator|&
-operator|(
-operator|(
-expr|struct
-name|table_info
-operator|*
-operator|)
-name|ch
-operator|->
-name|tablestate
-operator|)
-index|[
 name|tc
 operator|->
-name|no
-operator|.
-name|kidx
-index|]
+name|ti_copy
 argument_list|)
 expr_stmt|;
 name|IPFW_UH_WUNLOCK
@@ -12992,7 +12978,7 @@ argument_list|,
 operator|&
 name|tc
 operator|->
-name|ti
+name|ti_copy
 argument_list|,
 name|aname
 argument_list|,
@@ -13074,7 +13060,7 @@ argument_list|,
 operator|&
 name|tc
 operator|->
-name|ti
+name|ti_copy
 argument_list|)
 expr_stmt|;
 name|free
@@ -13169,7 +13155,7 @@ name|ti
 operator|=
 name|tc
 operator|->
-name|ti
+name|ti_copy
 expr_stmt|;
 comment|/* Notify algo on real @ti address */
 if|if
