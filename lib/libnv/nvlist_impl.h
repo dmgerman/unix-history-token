@@ -105,9 +105,9 @@ parameter_list|,
 name|size_t
 name|nfds
 parameter_list|,
-name|int
+name|bool
 modifier|*
-name|flagsp
+name|isbep
 parameter_list|,
 name|size_t
 modifier|*
