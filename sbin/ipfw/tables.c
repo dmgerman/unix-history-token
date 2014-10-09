@@ -5192,6 +5192,11 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* Get real OS error */
+name|error
+operator|=
+name|errno
+expr_stmt|;
 comment|/* Try to provide more human-readable error */
 switch|switch
 condition|(
@@ -7916,6 +7921,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|sz
+operator|=
+name|olh
+operator|->
+name|size
+expr_stmt|;
 name|free
 argument_list|(
 name|olh
@@ -7924,23 +7935,15 @@ expr_stmt|;
 if|if
 condition|(
 name|errno
-operator|==
+operator|!=
 name|ENOMEM
 condition|)
-block|{
-name|sz
-operator|=
-name|olh
-operator|->
-name|size
-expr_stmt|;
-continue|continue;
-block|}
 return|return
 operator|(
 name|errno
 operator|)
 return|;
+continue|continue;
 block|}
 if|if
 condition|(
