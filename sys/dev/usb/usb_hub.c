@@ -375,6 +375,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|USB_HAVE_DISABLE_ENUM
+end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|usb_disable_enumeration
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|disable_enumeration
+argument_list|,
+name|CTLFLAG_RWTUN
+argument_list|,
+operator|&
+name|usb_disable_enumeration
+argument_list|,
+literal|0
+argument_list|,
+literal|"Set to disable all USB device enumeration."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|uhub_current_state
@@ -2602,11 +2643,9 @@ if|if
 condition|(
 name|err
 condition|)
-block|{
 goto|goto
 name|error
 goto|;
-block|}
 comment|/* check if there is a child */
 if|if
 condition|(
@@ -2642,11 +2681,37 @@ if|if
 condition|(
 name|err
 condition|)
+goto|goto
+name|error
+goto|;
+if|#
+directive|if
+name|USB_HAVE_DISABLE_ENUM
+comment|/* check if we should skip enumeration from this USB HUB */
+if|if
+condition|(
+name|usb_disable_enumeration
+operator|!=
+literal|0
+operator|||
+name|sc
+operator|->
+name|sc_disable_enumeration
+operator|!=
+literal|0
+condition|)
 block|{
+name|DPRINTF
+argument_list|(
+literal|"Enumeration is disabled!\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/* check if nothing is connected to the port */
 if|if
 condition|(
@@ -2661,11 +2726,9 @@ operator|&
 name|UPS_CURRENT_CONNECT_STATUS
 operator|)
 condition|)
-block|{
 goto|goto
 name|error
 goto|;
-block|}
 comment|/* check if there is no power on the port and print a warning */
 switch|switch
 condition|(
@@ -3859,32 +3922,6 @@ operator|->
 name|address
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|USB_HAVE_DISABLE_ENUM
-comment|/* check if we should skip enumeration from this USB HUB */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_disable_enumeration
-operator|!=
-literal|0
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-literal|"Enumeration is disabled!\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
 comment|/* ignore devices that are too deep */
 if|if
 condition|(
