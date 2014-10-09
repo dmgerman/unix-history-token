@@ -19751,6 +19751,15 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|+=
+name|bus_print_child_domain
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|)
+expr_stmt|;
+name|retval
+operator|+=
 name|bus_print_child_footer
 argument_list|(
 name|dev

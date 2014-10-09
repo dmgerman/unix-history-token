@@ -406,6 +406,13 @@ argument_list|,
 name|acpi_pci_get_dma_tag
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_get_domain
+argument_list|,
+name|acpi_get_domain
+argument_list|)
+block|,
 comment|/* PCI interface */
 name|DEVMETHOD
 argument_list|(
