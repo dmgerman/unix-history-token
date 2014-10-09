@@ -1067,7 +1067,7 @@ name|WID_IF_DEFAULT
 parameter_list|(
 name|af
 parameter_list|)
-value|(Wflag ? 8 : 6)
+value|(Wflag ? 10 : 8)
 end_define
 
 begin_comment
@@ -1108,7 +1108,7 @@ name|WID_IF_DEFAULT
 parameter_list|(
 name|af
 parameter_list|)
-value|((af) == AF_INET6 ? 8 : (Wflag ? 8 : 6))
+value|((af) == AF_INET6 ? 8 : (Wflag ? 10 : 8))
 end_define
 
 begin_endif
@@ -3038,7 +3038,10 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|7
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|NULL
 argument_list|,
@@ -3052,10 +3055,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"sysctl: net.route.0.%d.dump.%d estimate"
 argument_list|,
@@ -3064,7 +3066,6 @@ argument_list|,
 name|fibnum
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -3076,9 +3077,8 @@ name|needed
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|2
@@ -3092,14 +3092,16 @@ operator|)
 name|needed
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-literal|6
+name|nitems
+argument_list|(
+name|mib
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
@@ -3113,7 +3115,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|err
 argument_list|(
 literal|1
@@ -3125,7 +3126,6 @@ argument_list|,
 name|fibnum
 argument_list|)
 expr_stmt|;
-block|}
 name|lim
 operator|=
 name|buf
