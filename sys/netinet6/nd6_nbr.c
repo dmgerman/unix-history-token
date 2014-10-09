@@ -395,6 +395,7 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -407,10 +408,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* ignore NS in DAD - specwise incorrect*/
+comment|/* ignore NS in DAD 						   - specwise incorrect */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -423,7 +425,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* max # of *tries* to transmit DAD packet */
+comment|/* max # of *tries* to 						   transmit DAD packet */
 end_comment
 
 begin_define
@@ -5159,14 +5161,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
-name|int
+expr|struct
+name|rwlock
 argument_list|,
-name|dad_init
+name|dad_rwlock
 argument_list|)
-operator|=
-literal|0
 expr_stmt|;
 end_expr_stmt
 
@@ -5180,8 +5182,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_dad_init
-value|VNET(dad_init)
+name|V_dad_rwlock
+value|VNET(dad_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DADQ_LOCK_INIT
+parameter_list|()
+value|rw_init(&V_dad_rwlock, "nd6 DAD queue")
+end_define
+
+begin_define
+define|#
+directive|define
+name|DADQ_LOCK_DESTROY
+parameter_list|()
+value|rw_destroy(&V_dad_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DADQ_LOCK_INITIALIZED
+parameter_list|()
+value|rw_initialized(&V_dad_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DADQ_RLOCK
+parameter_list|()
+value|rw_rlock(&V_dad_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DADQ_RUNLOCK
+parameter_list|()
+value|rw_runlock(&V_dad_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DADQ_WLOCK
+parameter_list|()
+value|rw_wlock(&V_dad_rwlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DADQ_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&V_dad_rwlock)
 end_define
 
 begin_function
@@ -5202,6 +5260,9 @@ name|dadq
 modifier|*
 name|dp
 decl_stmt|;
+name|DADQ_RLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|dp
@@ -5218,14 +5279,13 @@ name|dad_ifa
 operator|==
 name|ifa
 condition|)
+break|break;
+name|DADQ_RUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|dp
-operator|)
-return|;
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
@@ -5340,18 +5400,20 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|V_dad_init
+name|DADQ_LOCK_INITIALIZED
+argument_list|()
+operator|==
+literal|0
 condition|)
 block|{
+name|DADQ_LOCK_INIT
+argument_list|()
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
 name|V_dadq
 argument_list|)
-expr_stmt|;
-name|V_dad_init
-operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * If we don't need DAD, don't do it. 	 * There are several cases: 	 * - DAD is disabled (ip6_dad_count == 0) 	 * - the interface address is anycast 	 */
@@ -5580,6 +5642,9 @@ name|curvnet
 expr_stmt|;
 endif|#
 directive|endif
+name|DADQ_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5594,6 +5659,9 @@ name|dp
 argument_list|,
 name|dad_list
 argument_list|)
+expr_stmt|;
+name|DADQ_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|nd6log
 argument_list|(
@@ -5732,8 +5800,10 @@ name|dp
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|V_dad_init
+name|DADQ_LOCK_INITIALIZED
+argument_list|()
+operator|==
+literal|0
 condition|)
 return|return;
 name|dp
@@ -5757,6 +5827,9 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
+name|DADQ_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5771,6 +5844,9 @@ name|dp
 argument_list|,
 name|dad_list
 argument_list|)
+expr_stmt|;
+name|DADQ_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
@@ -5977,6 +6053,9 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|DADQ_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5991,6 +6070,9 @@ name|dp
 argument_list|,
 name|dad_list
 argument_list|)
+expr_stmt|;
+name|DADQ_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
@@ -6142,6 +6224,9 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|DADQ_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -6156,6 +6241,9 @@ name|dp
 argument_list|,
 name|dad_list
 argument_list|)
+expr_stmt|;
+name|DADQ_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
@@ -6453,6 +6541,9 @@ block|}
 break|break;
 block|}
 block|}
+name|DADQ_WLOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -6467,6 +6558,9 @@ name|dp
 argument_list|,
 name|dad_list
 argument_list|)
+expr_stmt|;
+name|DADQ_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
