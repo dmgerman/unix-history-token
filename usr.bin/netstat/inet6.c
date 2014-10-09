@@ -803,7 +803,7 @@ literal|"alive interface"
 block|,
 literal|"preferred interface"
 block|,
-literal|"rule #10"
+literal|"preferred source"
 block|,
 literal|"rule #11"
 block|,
