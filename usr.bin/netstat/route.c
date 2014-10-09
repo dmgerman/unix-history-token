@@ -3158,6 +3158,15 @@ operator|*
 operator|)
 name|next
 expr_stmt|;
+if|if
+condition|(
+name|rtm
+operator|->
+name|rtm_version
+operator|!=
+name|RTM_VERSION
+condition|)
+continue|continue;
 comment|/* 		 * Peek inside header to determine AF 		 */
 name|sa
 operator|=
@@ -3211,6 +3220,11 @@ name|rtm
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5212,7 +5226,14 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
-comment|/* XXX: override is ok? */
+if|if
+condition|(
+name|sa6
+operator|->
+name|sin6_scope_id
+operator|==
+literal|0
+condition|)
 name|sa6
 operator|->
 name|sin6_scope_id
