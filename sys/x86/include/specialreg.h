@@ -1961,6 +1961,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSR_PLATFORM_INFO
+value|0x0ce
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSR_MPERF
 value|0x0e7
 end_define
@@ -2121,6 +2128,20 @@ define|#
 directive|define
 name|MSR_IA32_TEMPERATURE_TARGET
 value|0x1a2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_TURBO_RATIO_LIMIT
+value|0x1ad
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_TURBO_RATIO_LIMIT1
+value|0x1ae
 end_define
 
 begin_define
@@ -2352,6 +2373,13 @@ define|#
 directive|define
 name|MSR_MC4_MISC
 value|0x413
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_RAPL_POWER_UNIT
+value|0x606
 end_define
 
 begin_define
