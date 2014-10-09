@@ -10220,7 +10220,7 @@ name|next_periph
 operator|=
 name|SLIST_NEXT
 argument_list|(
-name|periph
+name|next_periph
 argument_list|,
 name|periph_links
 argument_list|)
@@ -10536,7 +10536,7 @@ name|next_periph
 operator|=
 name|TAILQ_NEXT
 argument_list|(
-name|periph
+name|next_periph
 argument_list|,
 name|unit_links
 argument_list|)
