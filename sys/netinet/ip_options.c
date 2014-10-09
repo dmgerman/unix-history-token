@@ -197,7 +197,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -205,6 +205,8 @@ name|IPCTL_SOURCEROUTE
 argument_list|,
 name|sourceroute
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -239,7 +241,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -247,6 +249,8 @@ name|IPCTL_ACCEPTSOURCEROUTE
 argument_list|,
 name|accept_sourceroute
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -286,7 +290,7 @@ comment|/* 0 = ignore, 1 = process, 2 = reject */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -294,6 +298,8 @@ name|OID_AUTO
 argument_list|,
 name|process_options
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
