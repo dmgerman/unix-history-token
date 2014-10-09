@@ -471,12 +471,6 @@ name|signgamp
 parameter_list|)
 block|{
 name|float
-name|t
-decl_stmt|,
-name|y
-decl_stmt|,
-name|z
-decl_stmt|,
 name|nadj
 decl_stmt|,
 name|p
@@ -491,7 +485,13 @@ name|q
 decl_stmt|,
 name|r
 decl_stmt|,
+name|t
+decl_stmt|,
 name|w
+decl_stmt|,
+name|y
+decl_stmt|,
+name|z
 decl_stmt|;
 name|int32_t
 name|hx
@@ -508,7 +508,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-comment|/* purge off +-inf, NaN, +-0, tiny and negative arguments */
+comment|/* purge +-Inf and NaNs */
 operator|*
 name|signgamp
 operator|=
@@ -531,39 +531,54 @@ name|x
 operator|*
 name|x
 return|;
+comment|/* purge +-0 and tiny arguments */
+operator|*
+name|signgamp
+operator|=
+literal|1
+operator|-
+literal|2
+operator|*
+operator|(
+operator|(
+name|uint32_t
+operator|)
+name|hx
+operator|>>
+literal|31
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ix
+operator|<
+literal|0x32000000
+condition|)
+block|{
+comment|/* |x|<2**-27, return -log(|x|) */
 if|if
 condition|(
 name|ix
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|hx
-operator|<
-literal|0
-condition|)
-operator|*
-name|signgamp
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 return|return
 name|one
 operator|/
 name|vzero
 return|;
+return|return
+operator|-
+name|__ieee754_logf
+argument_list|(
+name|fabsf
+argument_list|(
+name|x
+argument_list|)
+argument_list|)
+return|;
 block|}
-if|if
-condition|(
-name|ix
-operator|<
-literal|0x35000000
-condition|)
-block|{
-comment|/* |x|<2**-21, return -log(|x|) */
+comment|/* purge negative integers and start evaluation for other x< 0 */
 if|if
 condition|(
 name|hx
@@ -574,34 +589,8 @@ block|{
 operator|*
 name|signgamp
 operator|=
-operator|-
 literal|1
 expr_stmt|;
-return|return
-operator|-
-name|__ieee754_logf
-argument_list|(
-operator|-
-name|x
-argument_list|)
-return|;
-block|}
-else|else
-return|return
-operator|-
-name|__ieee754_logf
-argument_list|(
-name|x
-argument_list|)
-return|;
-block|}
-if|if
-condition|(
-name|hx
-operator|<
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|ix
@@ -665,7 +654,7 @@ operator|-
 name|x
 expr_stmt|;
 block|}
-comment|/* purge off 1 and 2 */
+comment|/* purge 1 and 2 */
 if|if
 condition|(
 name|ix
@@ -873,13 +862,11 @@ name|p2
 expr_stmt|;
 name|r
 operator|+=
-operator|(
 name|p
 operator|-
 name|y
 operator|/
 literal|2
-operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -931,11 +918,9 @@ operator|)
 expr_stmt|;
 name|r
 operator|+=
-operator|(
 name|tf
 operator|+
 name|p
-operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -981,7 +966,6 @@ operator|)
 expr_stmt|;
 name|r
 operator|+=
-operator|(
 name|p1
 operator|/
 name|p2
@@ -989,10 +973,10 @@ operator|-
 name|y
 operator|/
 literal|2
-operator|)
 expr_stmt|;
 block|}
 block|}
+comment|/* x< 8.0 */
 elseif|else
 if|if
 condition|(
@@ -1001,7 +985,6 @@ operator|<
 literal|0x41000000
 condition|)
 block|{
-comment|/* x< 8.0 */
 name|i
 operator|=
 name|x
@@ -1145,14 +1128,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 8.0<= x< 2**24 */
+comment|/* 8.0<= x< 2**27 */
 block|}
 elseif|else
 if|if
 condition|(
 name|ix
 operator|<
-literal|0x4b800000
+literal|0x4d000000
 condition|)
 block|{
 name|t
@@ -1206,7 +1189,7 @@ name|w
 expr_stmt|;
 block|}
 else|else
-comment|/* 2**24<= x<= inf */
+comment|/* 2**27<= x<= inf */
 name|r
 operator|=
 name|x
