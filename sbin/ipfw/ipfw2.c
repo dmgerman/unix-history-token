@@ -13451,7 +13451,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"## Dynamic rules (%d %lu):\n"
+literal|"## Dynamic rules (%d %zu):\n"
 argument_list|,
 name|fo
 operator|->
