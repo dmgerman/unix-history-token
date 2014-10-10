@@ -9320,26 +9320,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|if_notifier
-parameter_list|(
-name|struct
-name|ip_fw_chain
-modifier|*
-name|ch
-parameter_list|,
-name|void
-modifier|*
-name|cbdata
-parameter_list|,
-name|uint16_t
-name|ifindex
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|struct
 name|ifidx
 modifier|*
