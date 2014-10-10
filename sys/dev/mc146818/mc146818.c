@@ -228,7 +228,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
 call|(
 modifier|*
 name|sc
@@ -242,6 +242,9 @@ name|MC_REGD
 argument_list|)
 operator|&
 name|MC_REGD_VRT
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|mtx_unlock_spin
@@ -429,7 +432,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 call|(
 modifier|*
@@ -445,6 +447,8 @@ argument_list|)
 operator|&
 name|MC_REGA_UIP
 operator|)
+operator|==
+literal|0
 condition|)
 break|break;
 name|mtx_unlock_spin
@@ -755,7 +759,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 call|(
 modifier|*
@@ -771,6 +774,8 @@ argument_list|)
 operator|&
 name|MC_REGA_UIP
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|sec
