@@ -13716,7 +13716,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"bitmask size needs to power of 2 and greater or equal to %lu"
+literal|"bitmask size needs to power of 2 and greater or equal to %zu"
 operator|,
 name|BLOCK_ITEMS
 operator|)
