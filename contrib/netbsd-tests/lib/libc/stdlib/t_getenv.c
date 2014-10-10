@@ -51,6 +51,26 @@ directive|include
 file|<string.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -849,6 +869,23 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* 	   Both FreeBSD and OS/X does not validate the second 	   argument to setenv(3) 	 */
+name|atf_tc_expect_signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+literal|"FreeBSD does not validate the second "
+literal|"argument to setenv(3); see bin/189805"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ATF_CHECK_ERRNO
 argument_list|(
 name|EINVAL
