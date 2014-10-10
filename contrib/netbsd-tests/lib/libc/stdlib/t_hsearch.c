@@ -79,6 +79,15 @@ parameter_list|)
 value|ATF_REQUIRE_MSG(x, "%s", strerror(errno))
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -326,6 +335,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ATF_TC
@@ -870,6 +884,15 @@ expr_stmt|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -1145,6 +1168,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ATF_TC
@@ -1800,6 +1828,12 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1807,6 +1841,8 @@ argument_list|,
 name|hsearch_basic
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1828,6 +1864,12 @@ argument_list|,
 name|hsearch_two
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1835,6 +1877,8 @@ argument_list|,
 name|hsearch_r_basic
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
