@@ -31,7 +31,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * The ID_REQ flag is used to say that the caller has requested a  * particular LUN ID in the req_lun_id field.  If we cannot allocate that  * LUN ID, the ctl_add_lun() call will fail.  *  * The POWERED_OFF flag tells us that the LUN should default to the powered  * off state.  It will return 0x04,0x02 until it is powered up.  ("Logical  * unit not ready, initializing command required.")  *  * The INOPERABLE flag tells us that this LUN is not operable for whatever  * reason.  This means that user data may have been (or has been?) lost.  * We will return 0x31,0x00 ("Medium format corrupted") until the host  * issues a FORMAT UNIT command to clear the error.  *  * The PRIMARY flag tells us that this LUN is registered as a Primary LUN  * which is accessible via the Master shelf controller in an HA. This flag  * being set indicates a Primary LUN. This flag being reset represents a  * Secondary LUN controlled by the Secondary controller in an HA  * configuration. Flag is applicable at this time to T_DIRECT types.   *  * The SERIAL_NUM flag tells us that the serial_num field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x80.  *  * The DEVID flag tells us that the device_id field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x83.  *  * The DEV_TYPE flag tells us that the device_type field is filled in.  *  * The UNMAP flag tells us that this LUN supports UNMAP.  */
+comment|/*  * The ID_REQ flag is used to say that the caller has requested a  * particular LUN ID in the req_lun_id field.  If we cannot allocate that  * LUN ID, the ctl_add_lun() call will fail.  *  * The POWERED_OFF flag tells us that the LUN should default to the powered  * off state.  It will return 0x04,0x02 until it is powered up.  ("Logical  * unit not ready, initializing command required.")  *  * The INOPERABLE flag tells us that this LUN is not operable for whatever  * reason.  This means that user data may have been (or has been?) lost.  * We will return 0x31,0x00 ("Medium format corrupted") until the host  * issues a FORMAT UNIT command to clear the error.  *  * The PRIMARY flag tells us that this LUN is registered as a Primary LUN  * which is accessible via the Master shelf controller in an HA. This flag  * being set indicates a Primary LUN. This flag being reset represents a  * Secondary LUN controlled by the Secondary controller in an HA  * configuration. Flag is applicable at this time to T_DIRECT types.   *  * The SERIAL_NUM flag tells us that the serial_num field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x80.  *  * The DEVID flag tells us that the device_id field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x83.  *  * The DEV_TYPE flag tells us that the device_type field is filled in.  *  * The UNMAP flag tells us that this LUN supports UNMAP.  *  * The OFFLINE flag tells us that this LUN can not access backing store.  */
 end_comment
 
 begin_typedef
@@ -69,6 +69,10 @@ block|,
 name|CTL_LUN_FLAG_UNMAP
 init|=
 literal|0x80
+block|,
+name|CTL_LUN_FLAG_OFFLINE
+init|=
+literal|0x100
 block|}
 name|ctl_backend_lun_flags
 typedef|;

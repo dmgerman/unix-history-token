@@ -521,6 +521,10 @@ struct|struct
 name|ctl_be_block_lun
 block|{
 name|struct
+name|ctl_lun_create_params
+name|params
+decl_stmt|;
+name|struct
 name|ctl_block_disk
 modifier|*
 name|disk
@@ -7433,9 +7437,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: invalid LUN request type %d"
-argument_list|,
-name|__func__
+literal|"invalid LUN request type %d"
 argument_list|,
 name|lun_req
 operator|->
@@ -7510,11 +7512,9 @@ expr_stmt|;
 name|params
 operator|=
 operator|&
-name|req
+name|be_lun
 operator|->
-name|reqdata
-operator|.
-name|create
+name|params
 expr_stmt|;
 name|be_lun
 operator|->
@@ -7828,11 +7828,9 @@ decl_stmt|;
 name|params
 operator|=
 operator|&
-name|req
+name|be_lun
 operator|->
-name|reqdata
-operator|.
-name|create
+name|params
 expr_stmt|;
 name|be_lun
 operator|->
@@ -7975,9 +7973,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: error getting vnode attributes for device %s"
-argument_list|,
-name|__func__
+literal|"error getting vnode attributes for device %s"
 argument_list|,
 name|be_lun
 operator|->
@@ -8025,9 +8021,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: no d_ioctl for device %s!"
-argument_list|,
-name|__func__
+literal|"no d_ioctl for device %s!"
 argument_list|,
 name|be_lun
 operator|->
@@ -8081,10 +8075,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: error %d returned for DIOCGSECTORSIZE ioctl "
+literal|"error %d returned for DIOCGSECTORSIZE ioctl "
 literal|"on %s!"
-argument_list|,
-name|__func__
 argument_list|,
 name|error
 argument_list|,
@@ -8177,10 +8169,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: requested blocksize %u is not an even "
+literal|"requested blocksize %u is not an even "
 literal|"multiple of backing device blocksize %u"
-argument_list|,
-name|__func__
 argument_list|,
 name|params
 operator|->
@@ -8233,10 +8223,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: requested blocksize %u< backing device "
+literal|"requested blocksize %u< backing device "
 literal|"blocksize %u"
-argument_list|,
-name|__func__
 argument_list|,
 name|params
 operator|->
@@ -8294,10 +8282,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: error %d returned for DIOCGMEDIASIZE "
+literal|"error %d returned for DIOCGMEDIASIZE "
 literal|" ioctl on %s!"
-argument_list|,
-name|__func__
 argument_list|,
 name|error
 argument_list|,
@@ -8345,10 +8331,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: requested LUN size %ju> backing device "
+literal|"requested LUN size %ju> backing device "
 literal|"size %ju"
-argument_list|,
-name|__func__
 argument_list|,
 operator|(
 name|uintmax_t
@@ -8730,6 +8714,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|be_lun
+operator|->
+name|dev_type
+operator|=
+name|CTL_BE_BLOCK_NONE
+expr_stmt|;
 block|}
 name|PICKUP_GIANT
 argument_list|()
@@ -8804,9 +8794,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: Root filesystem is not mounted"
-argument_list|,
-name|__func__
+literal|"Root filesystem is not mounted"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9037,13 +9025,13 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: error opening %s"
-argument_list|,
-name|__func__
+literal|"error opening %s: %d"
 argument_list|,
 name|be_lun
 operator|->
 name|dev_path
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -9266,6 +9254,12 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
+name|req
+operator|->
+name|status
+operator|=
+name|CTL_LUN_OK
+expr_stmt|;
 name|num_threads
 operator|=
 name|cbb_num_threads
@@ -9286,6 +9280,16 @@ name|M_ZERO
 operator||
 name|M_WAITOK
 argument_list|)
+expr_stmt|;
+name|be_lun
+operator|->
+name|params
+operator|=
+name|req
+operator|->
+name|reqdata
+operator|.
+name|create
 expr_stmt|;
 name|be_lun
 operator|->
@@ -9425,9 +9429,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: error allocating UMA zone"
-argument_list|,
-name|__func__
+literal|"error allocating UMA zone"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9506,9 +9508,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: no file argument specified"
-argument_list|,
-name|__func__
+literal|"no file argument specified"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9525,6 +9525,25 @@ name|value
 argument_list|,
 name|M_CTLBLK
 argument_list|)
+expr_stmt|;
+name|be_lun
+operator|->
+name|blocksize
+operator|=
+literal|512
+expr_stmt|;
+name|be_lun
+operator|->
+name|blocksize_shift
+operator|=
+name|fls
+argument_list|(
+name|be_lun
+operator|->
+name|blocksize
+argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|retval
 operator|=
@@ -9548,32 +9567,13 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
-goto|goto
-name|bailout_error
-goto|;
+name|req
+operator|->
+name|status
+operator|=
+name|CTL_LUN_WARNING
+expr_stmt|;
 block|}
-comment|/* 		 * Tell the user the size of the file/device. 		 */
-name|params
-operator|->
-name|lun_size_bytes
-operator|=
-name|be_lun
-operator|->
-name|size_bytes
-expr_stmt|;
-comment|/* 		 * The maximum LBA is the size - 1. 		 */
-name|be_lun
-operator|->
-name|ctl_be_lun
-operator|.
-name|maxlba
-operator|=
-name|be_lun
-operator|->
-name|size_blocks
-operator|-
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -9613,12 +9613,6 @@ operator|->
 name|ctl_be_lun
 operator|.
 name|maxlba
-operator|=
-literal|0
-expr_stmt|;
-name|params
-operator|->
-name|lun_size_bytes
 operator|=
 literal|0
 expr_stmt|;
@@ -9682,9 +9676,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: invalid number of threads %s"
-argument_list|,
-name|__func__
+literal|"invalid number of threads %s"
 argument_list|,
 name|num_thread_str
 argument_list|)
@@ -9751,6 +9743,22 @@ name|CTL_LUN_FLAG_PRIMARY
 expr_stmt|;
 if|if
 condition|(
+name|be_lun
+operator|->
+name|vn
+operator|==
+name|NULL
+condition|)
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|flags
+operator||=
+name|CTL_LUN_FLAG_OFFLINE
+expr_stmt|;
+if|if
+condition|(
 name|unmap
 condition|)
 name|be_lun
@@ -9761,6 +9769,68 @@ name|flags
 operator||=
 name|CTL_LUN_FLAG_UNMAP
 expr_stmt|;
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|be_lun
+operator|=
+name|be_lun
+expr_stmt|;
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|maxlba
+operator|=
+operator|(
+name|be_lun
+operator|->
+name|size_blocks
+operator|==
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
+operator|(
+name|be_lun
+operator|->
+name|size_blocks
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|blocksize
+operator|=
+name|be_lun
+operator|->
+name|blocksize
+expr_stmt|;
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|pblockexp
+operator|=
+name|be_lun
+operator|->
+name|pblockexp
+expr_stmt|;
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|pblockoff
+operator|=
+name|be_lun
+operator|->
+name|pblockoff
+expr_stmt|;
 if|if
 condition|(
 name|be_lun
@@ -9768,6 +9838,12 @@ operator|->
 name|dispatch
 operator|==
 name|ctl_be_block_dispatch_zvol
+operator|&&
+name|be_lun
+operator|->
+name|blocksize
+operator|!=
+literal|0
 condition|)
 name|be_lun
 operator|->
@@ -9781,45 +9857,15 @@ name|be_lun
 operator|->
 name|blocksize
 expr_stmt|;
-name|be_lun
-operator|->
-name|ctl_be_lun
-operator|.
-name|be_lun
-operator|=
-name|be_lun
-expr_stmt|;
-name|be_lun
-operator|->
-name|ctl_be_lun
-operator|.
-name|blocksize
-operator|=
-name|be_lun
-operator|->
-name|blocksize
-expr_stmt|;
-name|be_lun
-operator|->
-name|ctl_be_lun
-operator|.
-name|pblockexp
-operator|=
-name|be_lun
-operator|->
-name|pblockexp
-expr_stmt|;
-name|be_lun
-operator|->
-name|ctl_be_lun
-operator|.
-name|pblockoff
-operator|=
-name|be_lun
-operator|->
-name|pblockoff
-expr_stmt|;
 comment|/* Tell the user the blocksize we ended up using */
+name|params
+operator|->
+name|lun_size_bytes
+operator|=
+name|be_lun
+operator|->
+name|size_bytes
+expr_stmt|;
 name|params
 operator|->
 name|blocksize_bytes
@@ -10208,9 +10254,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: Unable to create taskqueue"
-argument_list|,
-name|__func__
+literal|"unable to create taskqueue"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10354,10 +10398,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: ctl_add_lun() returned error %d, see dmesg for "
+literal|"ctl_add_lun() returned error %d, see dmesg for "
 literal|"details"
-argument_list|,
-name|__func__
 argument_list|,
 name|retval
 argument_list|)
@@ -10449,9 +10491,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: LUN configuration error, see dmesg for details"
-argument_list|,
-name|__func__
+literal|"LUN configuration error, see dmesg for details"
 argument_list|)
 expr_stmt|;
 name|STAILQ_REMOVE
@@ -10534,12 +10574,6 @@ name|DEVSTAT_TYPE_IF_OTHER
 argument_list|,
 name|DEVSTAT_PRIORITY_OTHER
 argument_list|)
-expr_stmt|;
-name|req
-operator|->
-name|status
-operator|=
-name|CTL_LUN_OK
 expr_stmt|;
 return|return
 operator|(
@@ -10748,9 +10782,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: LUN %u is not managed by the block backend"
-argument_list|,
-name|__func__
+literal|"LUN %u is not managed by the block backend"
 argument_list|,
 name|params
 operator|->
@@ -10791,10 +10823,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: error %d returned from ctl_disable_lun() for "
+literal|"error %d returned from ctl_disable_lun() for "
 literal|"LUN %d"
-argument_list|,
-name|__func__
 argument_list|,
 name|retval
 argument_list|,
@@ -10837,10 +10867,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: error %d returned from ctl_invalidate_lun() for "
+literal|"error %d returned from ctl_invalidate_lun() for "
 literal|"LUN %d"
-argument_list|,
-name|__func__
 argument_list|,
 name|retval
 argument_list|,
@@ -10939,9 +10967,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: interrupted waiting for LUN to be freed"
-argument_list|,
-name|__func__
+literal|"interrupted waiting for LUN to be freed"
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -11122,19 +11148,15 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|ctl_lun_modify_params
+name|ctl_lun_create_params
 modifier|*
 name|params
-decl_stmt|;
-name|params
-operator|=
+init|=
 operator|&
-name|req
+name|be_lun
 operator|->
-name|reqdata
-operator|.
-name|modify
-expr_stmt|;
+name|params
+decl_stmt|;
 if|if
 condition|(
 name|params
@@ -11266,22 +11288,18 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|ctl_lun_modify_params
+name|ctl_lun_create_params
 modifier|*
+name|params
+init|=
+operator|&
+name|be_lun
+operator|->
 name|params
 decl_stmt|;
 name|uint64_t
 name|size_bytes
 decl_stmt|;
-name|params
-operator|=
-operator|&
-name|req
-operator|->
-name|reqdata
-operator|.
-name|modify
-expr_stmt|;
 name|dev_data
 operator|=
 operator|&
@@ -11314,9 +11332,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: no d_ioctl for device %s!"
-argument_list|,
-name|__func__
+literal|"no d_ioctl for device %s!"
 argument_list|,
 name|be_lun
 operator|->
@@ -11372,10 +11388,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: error %d returned for DIOCGMEDIASIZE ioctl "
+literal|"error %d returned for DIOCGMEDIASIZE ioctl "
 literal|"on %s!"
-argument_list|,
-name|__func__
 argument_list|,
 name|error
 argument_list|,
@@ -11421,10 +11435,8 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: requested LUN size %ju> backing device "
+literal|"requested LUN size %ju> backing device "
 literal|"size %ju"
-argument_list|,
-name|__func__
 argument_list|,
 operator|(
 name|uintmax_t
@@ -11575,9 +11587,7 @@ operator|->
 name|error_str
 argument_list|)
 argument_list|,
-literal|"%s: LUN %u is not managed by the block backend"
-argument_list|,
-name|__func__
+literal|"LUN %u is not managed by the block backend"
 argument_list|,
 name|params
 operator|->
@@ -11588,63 +11598,42 @@ goto|goto
 name|bailout_error
 goto|;
 block|}
-if|if
-condition|(
-name|params
-operator|->
-name|lun_size_bytes
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|params
-operator|->
-name|lun_size_bytes
-operator|<
 name|be_lun
 operator|->
-name|blocksize
-condition|)
-block|{
-name|snprintf
-argument_list|(
-name|req
-operator|->
-name|error_str
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|req
-operator|->
-name|error_str
-argument_list|)
-argument_list|,
-literal|"%s: LUN size %ju< blocksize %u"
-argument_list|,
-name|__func__
-argument_list|,
+name|params
+operator|.
+name|lun_size_bytes
+operator|=
 name|params
 operator|->
 name|lun_size_bytes
-argument_list|,
-name|be_lun
-operator|->
-name|blocksize
-argument_list|)
 expr_stmt|;
-goto|goto
-name|bailout_error
-goto|;
-block|}
-block|}
 name|oldsize
 operator|=
 name|be_lun
 operator|->
-name|size_bytes
+name|size_blocks
 expr_stmt|;
+if|if
+condition|(
+name|be_lun
+operator|->
+name|vn
+operator|==
+name|NULL
+condition|)
+name|error
+operator|=
+name|ctl_be_block_open
+argument_list|(
+name|softc
+argument_list|,
+name|be_lun
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|be_lun
@@ -11677,17 +11666,12 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
+operator|==
 literal|0
-condition|)
-goto|goto
-name|bailout_error
-goto|;
-if|if
-condition|(
+operator|&&
 name|be_lun
 operator|->
-name|size_bytes
+name|size_blocks
 operator|!=
 name|oldsize
 condition|)
@@ -11711,13 +11695,101 @@ name|ctl_be_lun
 operator|.
 name|maxlba
 operator|=
+operator|(
+name|be_lun
+operator|->
+name|size_blocks
+operator|==
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
+operator|(
 name|be_lun
 operator|->
 name|size_blocks
 operator|-
 literal|1
+operator|)
+expr_stmt|;
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|blocksize
+operator|=
+name|be_lun
+operator|->
+name|blocksize
+expr_stmt|;
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|pblockexp
+operator|=
+name|be_lun
+operator|->
+name|pblockexp
+expr_stmt|;
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|pblockoff
+operator|=
+name|be_lun
+operator|->
+name|pblockoff
+expr_stmt|;
+if|if
+condition|(
+name|be_lun
+operator|->
+name|dispatch
+operator|==
+name|ctl_be_block_dispatch_zvol
+operator|&&
+name|be_lun
+operator|->
+name|blocksize
+operator|!=
+literal|0
+condition|)
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
+name|atomicblock
+operator|=
+name|CTLBLK_MAX_IO_SIZE
+operator|/
+name|be_lun
+operator|->
+name|blocksize
 expr_stmt|;
 name|ctl_lun_capacity_changed
+argument_list|(
+operator|&
+name|be_lun
+operator|->
+name|ctl_be_lun
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|oldsize
+operator|==
+literal|0
+operator|&&
+name|be_lun
+operator|->
+name|size_blocks
+operator|!=
+literal|0
+condition|)
+name|ctl_lun_online
 argument_list|(
 operator|&
 name|be_lun
@@ -11739,6 +11811,10 @@ name|req
 operator|->
 name|status
 operator|=
+name|error
+condition|?
+name|CTL_LUN_WARNING
+else|:
 name|CTL_LUN_OK
 expr_stmt|;
 return|return
