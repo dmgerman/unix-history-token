@@ -675,23 +675,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
-name|void
-name|ipv6_writemask
-parameter_list|(
-name|struct
-name|in6_addr
-modifier|*
-name|addr6
-parameter_list|,
-name|uint8_t
-name|mask
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|tei_to_sockaddr_ent
 parameter_list|(
@@ -1916,6 +1899,23 @@ directive|ifdef
 name|INET6
 end_ifdef
 
+begin_function_decl
+specifier|static
+specifier|inline
+name|void
+name|ipv6_writemask
+parameter_list|(
+name|struct
+name|in6_addr
+modifier|*
+name|addr6
+parameter_list|,
+name|uint8_t
+name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 specifier|inline
@@ -2296,9 +2296,9 @@ name|set_mask
 operator|=
 literal|0
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 end_function
 
@@ -2332,11 +2332,16 @@ name|radix_addr_entry
 modifier|*
 name|ent
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|radix_addr_xentry
 modifier|*
 name|xent
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sockaddr
 modifier|*
@@ -3613,6 +3618,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|__inline
@@ -3627,6 +3638,17 @@ name|hsize
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -3709,6 +3731,11 @@ name|hsize
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -4240,6 +4267,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 name|__inline
@@ -4266,6 +4299,17 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_function
 specifier|static
@@ -4515,6 +4559,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -4565,6 +4614,9 @@ name|in_addr_t
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|head
 operator|=
 operator|(
@@ -4666,9 +4718,14 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 comment|/* IPv6: worst scenario: non-round mask */
 name|struct
 name|in6_addr
@@ -4766,6 +4823,8 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -4825,6 +4884,9 @@ name|in_addr_t
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|head
 operator|=
 operator|(
@@ -4926,9 +4988,14 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 comment|/* IPv6: aligned to 8bit mask */
 name|struct
 name|in6_addr
@@ -5058,6 +5125,8 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -5117,6 +5186,9 @@ name|in_addr_t
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|head
 operator|=
 operator|(
@@ -5218,9 +5290,14 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 comment|/* IPv6: /64 */
 name|uint64_t
 name|a6
@@ -5322,6 +5399,8 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -6521,6 +6600,10 @@ block|{
 name|uint32_t
 name|hash
 decl_stmt|;
+name|hash
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|af
@@ -6528,6 +6611,9 @@ operator|==
 name|AF_INET
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|hash
 operator|=
 name|hash_ip
@@ -6541,9 +6627,14 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|mlen
@@ -6579,6 +6670,8 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -6604,13 +6697,18 @@ modifier|*
 name|ent
 parameter_list|)
 block|{
+name|int
+name|mlen
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|in6_addr
 name|mask6
 decl_stmt|;
-name|int
-name|mlen
-decl_stmt|;
+endif|#
+directive|endif
 name|mlen
 operator|=
 name|tei
@@ -17078,16 +17176,26 @@ modifier|*
 name|ent
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|fhashentry4
 modifier|*
 name|fe4
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|fhashentry6
 modifier|*
 name|fe6
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|tflow_entry
 modifier|*
@@ -19935,6 +20043,9 @@ name|rtentry
 modifier|*
 name|rte
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|sockaddr_in
 modifier|*
@@ -19943,6 +20054,11 @@ decl_stmt|,
 modifier|*
 name|mask
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -19951,6 +20067,8 @@ decl_stmt|,
 modifier|*
 name|mask6
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|len
 decl_stmt|;
@@ -19992,6 +20110,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Guess IPv4/IPv6 radix by sockaddr family */
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|addr
@@ -20073,11 +20194,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Do we need to put GW here? */
+block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
-block|}
-elseif|else
 if|if
 condition|(
 name|addr
@@ -20181,9 +20303,9 @@ name|kidx
 operator|=
 literal|0
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-block|}
 return|return
 operator|(
 literal|0
