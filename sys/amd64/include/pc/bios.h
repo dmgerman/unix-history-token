@@ -105,6 +105,31 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Structure extended to include extended attribute field in ACPI 3.0. */
+end_comment
+
+begin_struct
+struct|struct
+name|bios_smap_xattr
+block|{
+name|u_int64_t
+name|base
+decl_stmt|;
+name|u_int64_t
+name|length
+decl_stmt|;
+name|u_int32_t
+name|type
+decl_stmt|;
+name|u_int32_t
+name|xattr
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * System Management BIOS  */
 end_comment
 
