@@ -241,15 +241,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|uint64_t
-name|kmem_used
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|kmem_cache_t
 modifier|*
@@ -400,6 +391,27 @@ name|s
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|freemem
+value|(cnt.v_free_count + cnt.v_cache_count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|minfree
+value|cnt.v_free_min
+end_define
+
+begin_define
+define|#
+directive|define
+name|heap_arena
+value|kmem_arena
+end_define
 
 begin_define
 define|#

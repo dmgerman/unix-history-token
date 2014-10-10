@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -233,6 +245,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|vm_pageout_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|vm_pageout_clean
 parameter_list|(
@@ -273,6 +295,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|pagedaemon_init
+argument_list|,
+name|SI_SUB_KTHREAD_PAGE
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|vm_pageout_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|struct
 name|proc
@@ -305,12 +343,40 @@ name|pagedaemon
 argument_list|,
 name|SI_SUB_KTHREAD_PAGE
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_SECOND
 argument_list|,
 name|kproc_start
 argument_list|,
 operator|&
 name|page_kp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|vm
+argument_list|, , ,
+name|vm__lowmem_cache
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|vm
+argument_list|, , ,
+name|vm__lowmem_scan
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2596,6 +2662,13 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Decrease registered cache sizes.  The vm_lowmem handlers 		 * may acquire locks and/or sleep, so they can only be invoked 		 * when "tries" is greater than zero. 		 */
+name|SDT_PROBE0
+argument_list|(
+name|vm
+argument_list|, , ,
+name|vm__lowmem_cache
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|vm_lowmem
@@ -3650,6 +3723,13 @@ name|lowmem_period
 condition|)
 block|{
 comment|/* 		 * Decrease registered cache sizes. 		 */
+name|SDT_PROBE0
+argument_list|(
+name|vm
+argument_list|, , ,
+name|vm__lowmem_scan
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|vm_lowmem
@@ -5909,29 +5989,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_pageout is the high level pageout daemon.  */
+comment|/*  *	vm_pageout_init initialises basic pageout daemon settings.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|vm_pageout
+name|vm_pageout_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|MAXMEMDOM
-operator|>
-literal|1
-name|int
-name|error
-decl_stmt|,
-name|i
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Initialize some paging parameters. 	 */
 name|cnt
 operator|.
@@ -6132,6 +6200,33 @@ name|v_free_count
 operator|/
 literal|3
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *     vm_pageout is the high level pageout daemon.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|vm_pageout
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|#
+directive|if
+name|MAXMEMDOM
+operator|>
+literal|1
+name|int
+name|error
+decl_stmt|,
+name|i
+decl_stmt|;
+endif|#
+directive|endif
 name|swap_pager_swap_init
 argument_list|()
 expr_stmt|;

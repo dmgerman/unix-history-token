@@ -545,26 +545,6 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
-name|kmem_used
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vmem_size
-argument_list|(
-name|kmem_arena
-argument_list|,
-name|VMEM_ALLOC
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|kmem_std_constructor
