@@ -423,6 +423,17 @@ argument_list|,
 name|off
 argument_list|,
 name|inp
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|fromsa
+argument_list|,
+name|up
+operator|->
+name|u_tun_ctx
 argument_list|)
 expr_stmt|;
 return|return;
