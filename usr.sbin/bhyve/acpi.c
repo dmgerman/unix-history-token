@@ -2245,7 +2245,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tBit Width : 32\n"
+literal|"[0001]\t\tBit Width : 20\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
@@ -2296,7 +2296,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tBit Width : 80\n"
+literal|"[0001]\t\tBit Width : 00\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF

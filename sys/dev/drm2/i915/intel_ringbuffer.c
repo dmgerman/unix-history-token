@@ -1276,6 +1276,8 @@ operator|->
 name|cpu_page
 operator|+
 name|PAGE_SIZE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|pc
@@ -4065,6 +4067,8 @@ operator|.
 name|page_addr
 operator|+
 name|PAGE_SIZE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|ring

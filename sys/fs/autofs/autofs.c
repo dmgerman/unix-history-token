@@ -1568,14 +1568,9 @@ name|last
 decl_stmt|;
 name|amp
 operator|=
-name|VFSTOAUTOFS
-argument_list|(
 name|anp
 operator|->
-name|an_vnode
-operator|->
-name|v_mount
-argument_list|)
+name|an_mount
 expr_stmt|;
 name|sx_assert
 argument_list|(

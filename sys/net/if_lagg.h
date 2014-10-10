@@ -562,6 +562,13 @@ name|SIOCSLAGGOPTS
 value|_IOW('i', 153, struct lagg_reqopts)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LAGG_OPT_BITS
+value|"\020\001USE_FLOWID\005LACP_STRICT" \ 				"\006LACP_TXTEST\007LACP_RXTEST"
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -733,6 +740,9 @@ name|llq_lladdr
 index|[
 name|ETHER_ADDR_LEN
 index|]
+decl_stmt|;
+name|uint8_t
+name|llq_primary
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(

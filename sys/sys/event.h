@@ -1073,6 +1073,11 @@ modifier|*
 name|p_lio
 decl_stmt|;
 comment|/* LIO job pointer */
+name|sbintime_t
+modifier|*
+name|p_nexttime
+decl_stmt|;
+comment|/* next timer event fires at */
 name|void
 modifier|*
 name|p_v

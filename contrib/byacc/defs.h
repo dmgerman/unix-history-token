@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: defs.h,v 1.49 2014/04/22 23:34:34 tom Exp $ */
+comment|/* $Id: defs.h,v 1.51 2014/10/02 22:38:13 tom Exp $ */
 end_comment
 
 begin_ifdef
@@ -915,6 +915,18 @@ parameter_list|(
 name|n
 parameter_list|)
 value|(malloc((size_t)(n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCMALLOC
+parameter_list|(
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|((t*) calloc((size_t)(n), sizeof(t)))
 end_define
 
 begin_define
@@ -2059,6 +2071,14 @@ specifier|extern
 name|Value_t
 modifier|*
 name|lookaheads
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Value_t
+modifier|*
+name|goto_base
 decl_stmt|;
 end_decl_stmt
 

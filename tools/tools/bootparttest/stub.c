@@ -23,6 +23,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_function
 name|void
 modifier|*
@@ -76,6 +82,26 @@ name|ptr
 argument_list|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pager_output
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

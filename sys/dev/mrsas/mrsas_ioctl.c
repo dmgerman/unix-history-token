@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2014, LSI Corp.  * All rights reserved.  * Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  * 3. Neither the name of the<ORGANIZATION> nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation  * are those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com>  * Mail to: LSI Corporation, 1621 Barber Lane, Milpitas, CA 95035  *    ATTN: MegaRaid FreeBSD  *  */
+comment|/*  * Copyright (c) 2014, LSI Corp. All rights reserved. Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com> Mail to: LSI Corporation, 1621  * Barber Lane, Milpitas, CA 95035 ATTN: MegaRaid FreeBSD  *  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ file|<dev/mrsas/mrsas_ioctl.h>
 end_include
 
 begin_comment
-comment|/*   * Function prototypes   */
+comment|/*  * Function prototypes  */
 end_comment
 
 begin_function_decl
@@ -57,6 +57,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|u_long
+name|ioctlCmd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -86,40 +89,6 @@ name|struct
 name|mrsas_mfi_cmd
 modifier|*
 name|cmd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mrsas_dump_dcmd
-parameter_list|(
-name|struct
-name|mrsas_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|mrsas_dcmd_frame
-modifier|*
-name|dcmd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mrsas_dump_ioctl
-parameter_list|(
-name|struct
-name|mrsas_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|mrsas_iocpacket
-modifier|*
-name|user_ioc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -224,556 +193,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * mrsas_dump_ioctl:       Print debug output for DCMDs   * input:                  Adapter instance soft state  *                         DCMD frame structure  *  * This function is called from mrsas_passthru() to print out debug information  * in the handling and routing of DCMD commands.  */
-end_comment
-
-begin_function
-name|void
-name|mrsas_dump_dcmd
-parameter_list|(
-name|struct
-name|mrsas_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|mrsas_dcmd_frame
-modifier|*
-name|dcmd
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->cmd:           0x%02hhx\n"
-argument_list|,
-name|dcmd
-operator|->
-name|cmd
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->cmd_status:    0x%02hhx\n"
-argument_list|,
-name|dcmd
-operator|->
-name|cmd_status
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->sge_count:     0x%02hhx\n"
-argument_list|,
-name|dcmd
-operator|->
-name|sge_count
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->context:       0x%08x\n"
-argument_list|,
-name|dcmd
-operator|->
-name|context
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->flags:         0x%04hx\n"
-argument_list|,
-name|dcmd
-operator|->
-name|flags
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->timeout:       0x%04hx\n"
-argument_list|,
-name|dcmd
-operator|->
-name|timeout
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->data_xfer_len: 0x%08x\n"
-argument_list|,
-name|dcmd
-operator|->
-name|data_xfer_len
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->opcode:        0x%08x\n"
-argument_list|,
-name|dcmd
-operator|->
-name|opcode
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->mbox.w[0]:     0x%08x\n"
-argument_list|,
-name|dcmd
-operator|->
-name|mbox
-operator|.
-name|w
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->mbox.w[1]:     0x%08x\n"
-argument_list|,
-name|dcmd
-operator|->
-name|mbox
-operator|.
-name|w
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"dcmd->mbox.w[2]:     0x%08x\n"
-argument_list|,
-name|dcmd
-operator|->
-name|mbox
-operator|.
-name|w
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MIN
-argument_list|(
-name|MAX_IOCTL_SGE
-argument_list|,
-name|dcmd
-operator|->
-name|sge_count
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"sgl[%02d]\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"    sge32[%02d].phys_addr: 0x%08x\n"
-argument_list|,
-name|i
-argument_list|,
-name|dcmd
-operator|->
-name|sgl
-operator|.
-name|sge32
-index|[
-name|i
-index|]
-operator|.
-name|phys_addr
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"    sge32[%02d].length:    0x%08x\n"
-argument_list|,
-name|i
-argument_list|,
-name|dcmd
-operator|->
-name|sgl
-operator|.
-name|sge32
-index|[
-name|i
-index|]
-operator|.
-name|length
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"    sge64[%02d].phys_addr: 0x%08llx\n"
-argument_list|,
-name|i
-argument_list|,
-operator|(
-name|long
-name|long
-name|unsigned
-name|int
-operator|)
-name|dcmd
-operator|->
-name|sgl
-operator|.
-name|sge64
-index|[
-name|i
-index|]
-operator|.
-name|phys_addr
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"    sge64[%02d].length:    0x%08x\n"
-argument_list|,
-name|i
-argument_list|,
-name|dcmd
-operator|->
-name|sgl
-operator|.
-name|sge64
-index|[
-name|i
-index|]
-operator|.
-name|length
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/**  * mrsas_dump_ioctl:       Print debug output for ioctl   * input:                  Adapter instance soft state  *                         iocpacket structure   *  * This function is called from mrsas_passthru() to print out debug information  * in the handling and routing of ioctl commands.  */
-end_comment
-
-begin_function
-name|void
-name|mrsas_dump_ioctl
-parameter_list|(
-name|struct
-name|mrsas_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|mrsas_iocpacket
-modifier|*
-name|user_ioc
-parameter_list|)
-block|{
-name|union
-name|mrsas_frame
-modifier|*
-name|in_cmd
-init|=
-operator|(
-expr|union
-name|mrsas_frame
-operator|*
-operator|)
-operator|&
-operator|(
-name|user_ioc
-operator|->
-name|frame
-operator|.
-name|raw
-operator|)
-decl_stmt|;
-name|struct
-name|mrsas_dcmd_frame
-modifier|*
-name|dcmd
-init|=
-operator|(
-expr|struct
-name|mrsas_dcmd_frame
-operator|*
-operator|)
-operator|&
-operator|(
-name|in_cmd
-operator|->
-name|dcmd
-operator|)
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"====== In %s() ======================================\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"host_no:    0x%04hx\n"
-argument_list|,
-name|user_ioc
-operator|->
-name|host_no
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|" __pad1:    0x%04hx\n"
-argument_list|,
-name|user_ioc
-operator|->
-name|__pad1
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"sgl_off:    0x%08x\n"
-argument_list|,
-name|user_ioc
-operator|->
-name|sgl_off
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"sge_count:  0x%08x\n"
-argument_list|,
-name|user_ioc
-operator|->
-name|sge_count
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"sense_off:  0x%08x\n"
-argument_list|,
-name|user_ioc
-operator|->
-name|sense_off
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"sense_len:  0x%08x\n"
-argument_list|,
-name|user_ioc
-operator|->
-name|sense_len
-argument_list|)
-expr_stmt|;
-name|mrsas_dump_dcmd
-argument_list|(
-name|sc
-argument_list|,
-name|dcmd
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MIN
-argument_list|(
-name|MAX_IOCTL_SGE
-argument_list|,
-name|user_ioc
-operator|->
-name|sge_count
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"sge[%02d]\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"    iov_base: %p\n"
-argument_list|,
-name|user_ioc
-operator|->
-name|sgl
-index|[
-name|i
-index|]
-operator|.
-name|iov_base
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"    iov_len:  %p\n"
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|user_ioc
-operator|->
-name|sgl
-index|[
-name|i
-index|]
-operator|.
-name|iov_len
-argument_list|)
-expr_stmt|;
-block|}
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"==================================================================\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/**  * mrsas_passthru:        Handle pass-through commands   * input:                 Adapter instance soft state  *                        argument pointer  *  * This function is called from mrsas_ioctl() to handle pass-through and   * ioctl commands to Firmware.    */
+comment|/*  * mrsas_passthru:	Handle pass-through commands  * input:			Adapter instance soft state argument pointer  *  * This function is called from mrsas_ioctl() to handle pass-through and ioctl  * commands to Firmware.  */
 end_comment
 
 begin_function
@@ -788,6 +208,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|u_long
+name|ioctlCmd
 parameter_list|)
 block|{
 name|struct
@@ -802,6 +225,23 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+name|struct
+name|mrsas_iocpacket32
+modifier|*
+name|user_ioc32
+init|=
+operator|(
+expr|struct
+name|mrsas_iocpacket32
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+endif|#
+directive|endif
 name|union
 name|mrsas_frame
 modifier|*
@@ -847,14 +287,12 @@ index|[
 name|MAX_IOCTL_SGE
 index|]
 decl_stmt|;
-comment|// ioctl data virtual addr
 name|bus_addr_t
 name|ioctl_data_phys_addr
 index|[
 name|MAX_IOCTL_SGE
 index|]
 decl_stmt|;
-comment|// ioctl data phys addr
 name|bus_dma_tag_t
 name|ioctl_sense_tag
 init|=
@@ -879,9 +317,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|adapter
-decl_stmt|,
 name|ioctl_data_size
+init|=
+literal|0
 decl_stmt|,
 name|ioctl_sense_size
 decl_stmt|,
@@ -899,9 +337,18 @@ name|long
 modifier|*
 name|sense_ptr
 decl_stmt|;
-comment|/* For debug - uncomment the following line for debug output */
-comment|//mrsas_dump_ioctl(sc, user_ioc);
-comment|/*       * Check for NOP from MegaCli... MegaCli can issue a DCMD of 0.  In this       * case do nothing and return 0 to it as status.      */
+name|uint8_t
+modifier|*
+name|iov_base_ptrin
+init|=
+name|NULL
+decl_stmt|;
+name|size_t
+name|iov_len
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * Check for NOP from MegaCli... MegaCli can issue a DCMD of 0.  In 	 * this case do nothing and return 0 to it as status. 	 */
 if|if
 condition|(
 name|in_cmd
@@ -937,42 +384,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-comment|/* Validate host_no */
-name|adapter
-operator|=
-name|user_ioc
-operator|->
-name|host_no
-expr_stmt|;
-if|if
-condition|(
-name|adapter
-operator|!=
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mrsas_dev
-argument_list|,
-literal|"In %s() IOCTL not for me!\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOENT
 operator|)
 return|;
 block|}
@@ -1036,7 +447,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * User's IOCTL packet has 2 frames (maximum). Copy those two      * frames into our cmd's frames. cmd->frame's context will get      * overwritten when we copy from user's frames. So set that value      * alone separately      */
+comment|/* 	 * User's IOCTL packet has 2 frames (maximum). Copy those two frames 	 * into our cmd's frames. cmd->frame's context will get overwritten 	 * when we copy from user's frames. So set that value alone 	 * separately 	 */
 name|memcpy
 argument_list|(
 name|cmd
@@ -1093,7 +504,7 @@ operator||
 name|MFI_FRAME_SENSE64
 operator|)
 expr_stmt|;
-comment|/*      * The management interface between applications and the fw uses      * MFI frames. E.g, RAID configuration changes, LD property changes      * etc are accomplishes through different kinds of MFI frames. The      * driver needs to care only about substituting user buffers with      * kernel buffers in SGLs. The location of SGL is embedded in the      * struct iocpacket itself.      */
+comment|/* 	 * The management interface between applications and the fw uses MFI 	 * frames. E.g, RAID configuration changes, LD property changes etc 	 * are accomplishes through different kinds of MFI frames. The driver 	 * needs to care only about substituting user buffers with kernel 	 * buffers in SGLs. The location of SGL is embedded in the struct 	 * iocpacket itself. 	 */
 name|kern_sge32
 operator|=
 operator|(
@@ -1115,7 +526,7 @@ operator|->
 name|sgl_off
 operator|)
 expr_stmt|;
-comment|/*      * For each user buffer, create a mirror buffer and copy in      */
+comment|/* 	 * For each user buffer, create a mirror buffer and copy in 	 */
 for|for
 control|(
 name|i
@@ -1131,6 +542,13 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|ioctlCmd
+operator|==
+name|MRSAS_IOC_FIRMWARE_PASS_THROUGH64
+condition|)
 block|{
 if|if
 condition|(
@@ -1156,6 +574,39 @@ index|]
 operator|.
 name|iov_len
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|user_ioc32
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+condition|)
+continue|continue;
+name|ioctl_data_size
+operator|=
+name|user_ioc32
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -1164,40 +615,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|ioctl_data_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|ioctl_data_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|ioctl_data_tag
 index|[
@@ -1215,11 +656,13 @@ argument_list|,
 literal|"Cannot allocate ioctl data tag\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -1264,11 +707,13 @@ argument_list|,
 literal|"Cannot allocate ioctl data mem\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -1312,11 +757,13 @@ argument_list|,
 literal|"Cannot load ioctl data mem\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* Save the physical address and length */
 name|kern_sge32
@@ -1334,6 +781,13 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|ioctlCmd
+operator|==
+name|MRSAS_IOC_FIRMWARE_PASS_THROUGH64
+condition|)
+block|{
 name|kern_sge32
 index|[
 name|i
@@ -1350,11 +804,8 @@ index|]
 operator|.
 name|iov_len
 expr_stmt|;
-comment|/* Copy in data from user space */
-name|ret
+name|iov_base_ptrin
 operator|=
-name|copyin
-argument_list|(
 name|user_ioc
 operator|->
 name|sgl
@@ -1363,12 +814,9 @@ name|i
 index|]
 operator|.
 name|iov_base
-argument_list|,
-name|ioctl_data_mem
-index|[
-name|i
-index|]
-argument_list|,
+expr_stmt|;
+name|iov_len
+operator|=
 name|user_ioc
 operator|->
 name|sgl
@@ -1376,6 +824,70 @@ index|[
 name|i
 index|]
 operator|.
+name|iov_len
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+block|}
+else|else
+block|{
+name|kern_sge32
+index|[
+name|i
+index|]
+operator|.
+name|length
+operator|=
+name|user_ioc32
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+expr_stmt|;
+name|iov_base_ptrin
+operator|=
+name|PTRIN
+argument_list|(
+name|user_ioc32
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_base
+argument_list|)
+expr_stmt|;
+name|iov_len
+operator|=
+name|user_ioc32
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+comment|/* Copy in data from user space */
+name|ret
+operator|=
+name|copyin
+argument_list|(
+name|iov_base_ptrin
+argument_list|,
+name|ioctl_data_mem
+index|[
+name|i
+index|]
+argument_list|,
 name|iov_len
 argument_list|)
 expr_stmt|;
@@ -1419,40 +931,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|ioctl_sense_size
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|ioctl_sense_size
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|ioctl_sense_tag
 argument_list|)
@@ -1467,11 +969,13 @@ argument_list|,
 literal|"Cannot allocate ioctl sense tag\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -1504,14 +1008,16 @@ name|sc
 operator|->
 name|mrsas_dev
 argument_list|,
-literal|"Cannot allocate ioctl data mem\n"
+literal|"Cannot allocate ioctl sense mem\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
@@ -1543,11 +1049,13 @@ argument_list|,
 literal|"Cannot load ioctl sense mem\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 name|sense_ptr
 operator|=
@@ -1575,7 +1083,7 @@ operator|=
 name|ioctl_sense_mem
 expr_stmt|;
 block|}
-comment|/*      * Set the sync_cmd flag so that the ISR knows not to complete this      * cmd to the SCSI mid-layer      */
+comment|/* 	 * Set the sync_cmd flag so that the ISR knows not to complete this 	 * cmd to the SCSI mid-layer 	 */
 name|cmd
 operator|->
 name|sync_cmd
@@ -1595,7 +1103,7 @@ name|sync_cmd
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * copy out the kernel buffers to user buffers      */
+comment|/* 	 * copy out the kernel buffers to user buffers 	 */
 for|for
 control|(
 name|i
@@ -1612,6 +1120,69 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|ioctlCmd
+operator|==
+name|MRSAS_IOC_FIRMWARE_PASS_THROUGH64
+condition|)
+block|{
+name|iov_base_ptrin
+operator|=
+name|user_ioc
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_base
+expr_stmt|;
+name|iov_len
+operator|=
+name|user_ioc
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+block|}
+else|else
+block|{
+name|iov_base_ptrin
+operator|=
+name|PTRIN
+argument_list|(
+name|user_ioc32
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_base
+argument_list|)
+expr_stmt|;
+name|iov_len
+operator|=
+name|user_ioc32
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|ret
 operator|=
 name|copyout
@@ -1621,22 +1192,8 @@ index|[
 name|i
 index|]
 argument_list|,
-name|user_ioc
-operator|->
-name|sgl
-index|[
-name|i
-index|]
-operator|.
-name|iov_base
+name|iov_base_ptrin
 argument_list|,
-name|user_ioc
-operator|->
-name|sgl
-index|[
-name|i
-index|]
-operator|.
 name|iov_len
 argument_list|)
 expr_stmt|;
@@ -1659,7 +1216,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/*      * copy out the sense      */
+comment|/* 	 * copy out the sense 	 */
 if|if
 condition|(
 name|user_ioc
@@ -1667,7 +1224,7 @@ operator|->
 name|sense_len
 condition|)
 block|{
-comment|/*          * sense_buff points to the location that has the user          * sense buffer address          */
+comment|/* 		 * sense_buff points to the location that has the user sense 		 * buffer address 		 */
 name|sense_ptr
 operator|=
 operator|(
@@ -1729,7 +1286,7 @@ name|out
 goto|;
 block|}
 block|}
-comment|/*      * Return command status to user space      */
+comment|/* 	 * Return command status to user space 	 */
 name|memcpy
 argument_list|(
 operator|&
@@ -1758,7 +1315,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-comment|/*       * Release sense buffer       */
+comment|/* 	 * Release sense buffer 	 */
 if|if
 condition|(
 name|ioctl_sense_phys_addr
@@ -1773,6 +1330,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ioctl_sense_mem
+operator|!=
+name|NULL
 condition|)
 name|bus_dmamem_free
 argument_list|(
@@ -1786,13 +1345,15 @@ expr_stmt|;
 if|if
 condition|(
 name|ioctl_sense_tag
+operator|!=
+name|NULL
 condition|)
 name|bus_dma_tag_destroy
 argument_list|(
 name|ioctl_sense_tag
 argument_list|)
 expr_stmt|;
-comment|/*       * Release data buffers       */
+comment|/* 	 * Release data buffers 	 */
 for|for
 control|(
 name|i
@@ -1811,6 +1372,13 @@ control|)
 block|{
 if|if
 condition|(
+name|ioctlCmd
+operator|==
+name|MRSAS_IOC_FIRMWARE_PASS_THROUGH64
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|user_ioc
 operator|->
@@ -1822,6 +1390,28 @@ operator|.
 name|iov_len
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|user_ioc32
+operator|->
+name|sgl
+index|[
+name|i
+index|]
+operator|.
+name|iov_len
+condition|)
+continue|continue;
+endif|#
+directive|endif
+block|}
 if|if
 condition|(
 name|ioctl_data_phys_addr
@@ -1902,7 +1492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_alloc_mfi_cmds:  Allocates the command packets  * input:                 Adapter instance soft state  *  * Each IOCTL or passthru command that is issued to the FW are wrapped in a  * local data structure called mrsas_mfi_cmd.  The frame embedded in this   * mrsas_mfi is issued to FW. The array is used only to look up the   * mrsas_mfi_cmd given the context. The free commands are maintained in a  * linked list.  */
+comment|/*  * mrsas_alloc_mfi_cmds:	Allocates the command packets  * input:					Adapter instance soft state  *  * Each IOCTL or passthru command that is issued to the FW are wrapped in a  * local data structure called mrsas_mfi_cmd.  The frame embedded in this  * mrsas_mfi is issued to FW. The array is used only to look up the  * mrsas_mfi_cmd given the context. The free commands are maintained in a  * linked list.  */
 end_comment
 
 begin_function
@@ -1932,7 +1522,7 @@ name|max_cmd
 operator|=
 name|MRSAS_MAX_MFI_CMDS
 expr_stmt|;
-comment|/*      * sc->mfi_cmd_list is an array of struct mrsas_mfi_cmd pointers. Allocate the      * dynamic array first and then allocate individual commands.      */
+comment|/* 	 * sc->mfi_cmd_list is an array of struct mrsas_mfi_cmd pointers. 	 * Allocate the dynamic array first and then allocate individual 	 * commands. 	 */
 name|sc
 operator|->
 name|mfi_cmd_list
@@ -2173,6 +1763,7 @@ argument_list|,
 literal|"Cannot allocate DMA frame pool.\n"
 argument_list|)
 expr_stmt|;
+comment|/* Free the frames */
 for|for
 control|(
 name|i
@@ -2187,7 +1778,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|// Free the frames
 name|cmd
 operator|=
 name|sc
@@ -2235,7 +1825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_create_frame_pool -   Creates DMA pool for cmd frames  * input:                      Adapter soft state  *  * Each command packet has an embedded DMA memory buffer that is used for  * filling MFI frame and the SG list that immediately follows the frame. This  * function creates those DMA memory buffers for each command packet by using  * PCI pool facility. pad_0 is initialized to 0 to prevent corrupting value   * of context and could cause FW crash.  */
+comment|/*  * mrsas_create_frame_pool:	Creates DMA pool for cmd frames  * input:					Adapter soft state  *  * Each command packet has an embedded DMA memory buffer that is used for  * filling MFI frame and the SG list that immediately follows the frame. This  * function creates those DMA memory buffers for each command packet by using  * PCI pool facility. pad_0 is initialized to 0 to prevent corrupting value  * of context and could cause FW crash.  */
 end_comment
 
 begin_function
@@ -2265,40 +1855,30 @@ name|sc
 operator|->
 name|mrsas_parent_tag
 argument_list|,
-comment|// parent
 literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|// algnmnt, boundary
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|// lowaddr
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|// highaddr
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// filter, filterarg
 name|MRSAS_MFI_FRAME_SIZE
 argument_list|,
-comment|// maxsize
 literal|1
 argument_list|,
-comment|// msegments
 name|MRSAS_MFI_FRAME_SIZE
 argument_list|,
-comment|// maxsegsize
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|// flags
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-comment|// lockfunc, lockarg
 operator|&
 name|sc
 operator|->
@@ -2422,7 +2002,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_alloc_frame -   Allocates MFI Frames  * input:                Adapter soft state  *  * Create bus DMA memory tag and dmamap and load memory for MFI frames.   * Returns virtual memory pointer to allocated region.   */
+comment|/*  * mrsas_alloc_frame:	Allocates MFI Frames  * input:				Adapter soft state  *  * Create bus DMA memory tag and dmamap and load memory for MFI frames. Returns  * virtual memory pointer to allocated region.  */
 end_comment
 
 begin_function
@@ -2543,7 +2123,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_alloc_cb:  Callback function of bus_dmamap_load()  * input:           callback argument,  *                  machine dependent type that describes DMA segments,  *                  number of segments,  *                  error code.  *  * This function is for the driver to receive mapping information resultant  * of the bus_dmamap_load(). The information is actually not being used,   * but the address is saved anyway.   */
+comment|/*  * mrsas_alloc_cb:	Callback function of bus_dmamap_load()  * input:			callback argument,  * 					machine dependent type that describes DMA segments,  * 					number of segments,  * 					error code.  *  * This function is for the driver to receive mapping information resultant of  * the bus_dmamap_load(). The information is actually not being used, but the  * address is saved anyway.  */
 end_comment
 
 begin_function
@@ -2588,7 +2168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mrsas_free_frames:    Frees memory for  MFI frames  * input:                Adapter soft state  *  * Deallocates MFI frames memory.  Called from mrsas_free_mem() during   * detach and error case during creation of frame pool.  */
+comment|/*  * mrsas_free_frames:	Frees memory for  MFI frames  * input:				Adapter soft state  *  * Deallocates MFI frames memory.  Called from mrsas_free_mem() during detach  * and error case during creation of frame pool.  */
 end_comment
 
 begin_function

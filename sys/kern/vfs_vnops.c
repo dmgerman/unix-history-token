@@ -2411,6 +2411,17 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|ioflg
+operator|&
+name|IO_RANGELOCKED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|rw
 operator|==
 name|UIO_READ
@@ -2446,6 +2457,12 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+name|rl_cookie
+operator|=
+name|NULL
+expr_stmt|;
 name|mp
 operator|=
 name|NULL
@@ -10521,6 +10538,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Grant permission if the caller is the owner of the file, or 	 * the super-user, or has ACL_WRITE_ATTRIBUTES permission on 	 * on the file.  If the time pointer is null, then write 	 * permission on the file is also sufficient. 	 * 	 * From NFSv4.1, draft 21, 6.2.1.3.1, Discussion of Mask Attributes: 	 * A user having ACL_WRITE_DATA or ACL_WRITE_ATTRIBUTES 	 * will be allowed to set the times [..] to the current 	 * server time. 	 */
 name|error
 operator|=
 name|VOP_ACCESSX
@@ -10534,7 +10552,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * From utimes(2): 	 * Grant permission if the caller is the owner of the file or 	 * the super-user.  If the time pointer is null, then write 	 * permission on the file is also sufficient. 	 * 	 * From NFSv4.1, draft 21, 6.2.1.3.1, Discussion of Mask Attributes: 	 * A user having ACL_WRITE_DATA or ACL_WRITE_ATTRIBUTES 	 * will be allowed to set the times [..] to the current 	 * server time. 	 */
 if|if
 condition|(
 name|error

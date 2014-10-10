@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kdtrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sdt.h>
 end_include
 
 begin_include
@@ -337,6 +349,34 @@ name|kproc_start
 argument_list|,
 operator|&
 name|page_kp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROVIDER_DEFINE
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|vm
+argument_list|, , ,
+name|vm__lowmem_cache
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|vm
+argument_list|, , ,
+name|vm__lowmem_scan
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2622,6 +2662,13 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Decrease registered cache sizes.  The vm_lowmem handlers 		 * may acquire locks and/or sleep, so they can only be invoked 		 * when "tries" is greater than zero. 		 */
+name|SDT_PROBE0
+argument_list|(
+name|vm
+argument_list|, , ,
+name|vm__lowmem_cache
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|vm_lowmem
@@ -3655,6 +3702,13 @@ name|lowmem_period
 condition|)
 block|{
 comment|/* 		 * Decrease registered cache sizes. 		 */
+name|SDT_PROBE0
+argument_list|(
+name|vm
+argument_list|, , ,
+name|vm__lowmem_scan
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|vm_lowmem

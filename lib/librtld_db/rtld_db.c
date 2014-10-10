@@ -873,6 +873,8 @@ literal|"r_debug_state"
 argument_list|,
 operator|&
 name|sym
+argument_list|,
+name|NULL
 argument_list|)
 operator|<
 literal|0
@@ -925,6 +927,8 @@ literal|"_r_debug_postinit"
 argument_list|,
 operator|&
 name|sym
+argument_list|,
+name|NULL
 argument_list|)
 operator|<
 literal|0

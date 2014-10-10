@@ -6026,6 +6026,8 @@ argument_list|,
 name|IO_UNIT
 operator||
 name|IO_DIRECT
+operator||
+name|IO_RANGELOCKED
 argument_list|,
 name|active_cred
 argument_list|,
@@ -6222,6 +6224,8 @@ argument_list|,
 name|IO_UNIT
 operator||
 name|IO_DIRECT
+operator||
+name|IO_RANGELOCKED
 argument_list|,
 name|p
 operator|->

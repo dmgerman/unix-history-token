@@ -255,7 +255,7 @@ define|#
 directive|define
 name|PROCBASED_CTLS_ONE_SETTING
 define|\
-value|(PROCBASED_SECONDARY_CONTROLS	|				\ 	 PROCBASED_IO_EXITING		|				\ 	 PROCBASED_MSR_BITMAPS		|				\ 	 PROCBASED_CTLS_WINDOW_SETTING	|				\ 	 PROCBASED_CR8_LOAD_EXITING	|				\ 	 PROCBASED_CR8_STORE_EXITING)
+value|(PROCBASED_SECONDARY_CONTROLS	|				\ 	 PROCBASED_MWAIT_EXITING	|				\ 	 PROCBASED_MONITOR_EXITING	|				\ 	 PROCBASED_IO_EXITING		|				\ 	 PROCBASED_MSR_BITMAPS		|				\ 	 PROCBASED_CTLS_WINDOW_SETTING	|				\ 	 PROCBASED_CR8_LOAD_EXITING	|				\ 	 PROCBASED_CR8_STORE_EXITING)
 end_define
 
 begin_define
@@ -9915,6 +9915,26 @@ name|vcpu
 argument_list|,
 name|vmexit
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EXIT_REASON_MONITOR
+case|:
+name|vmexit
+operator|->
+name|exitcode
+operator|=
+name|VM_EXITCODE_MONITOR
+expr_stmt|;
+break|break;
+case|case
+name|EXIT_REASON_MWAIT
+case|:
+name|vmexit
+operator|->
+name|exitcode
+operator|=
+name|VM_EXITCODE_MWAIT
 expr_stmt|;
 break|break;
 default|default:

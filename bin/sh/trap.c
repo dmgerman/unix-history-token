@@ -1916,6 +1916,7 @@ name|exiting_exitstatus
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|setjmp
 argument_list|(
 name|loc1
@@ -1924,24 +1925,6 @@ name|loc
 argument_list|)
 condition|)
 block|{
-goto|goto
-name|l1
-goto|;
-block|}
-if|if
-condition|(
-name|setjmp
-argument_list|(
-name|loc2
-operator|.
-name|loc
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|l2
-goto|;
-block|}
 name|handler
 operator|=
 operator|&
@@ -1966,7 +1949,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* 		 * Reset evalskip, or the trap on EXIT could be 		 * interrupted if the last command was a "return". 		 */
+comment|/* 			 * Reset evalskip, or the trap on EXIT could be 			 * interrupted if the last command was a "return". 			 */
 name|evalskip
 operator|=
 literal|0
@@ -1986,8 +1969,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|l1
-label|:
+block|}
+if|if
+condition|(
+operator|!
+name|setjmp
+argument_list|(
+name|loc2
+operator|.
+name|loc
+argument_list|)
+condition|)
+block|{
 name|handler
 operator|=
 operator|&
@@ -2007,8 +2000,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|l2
-label|:
+block|}
 if|if
 condition|(
 name|sig
