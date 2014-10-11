@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: main.c,v 1.50 2014/04/22 23:34:47 tom Exp $ */
+comment|/* $Id: main.c,v 1.51 2014/05/28 02:01:55 Tom.Shields Exp $ */
 end_comment
 
 begin_include
@@ -971,8 +971,6 @@ block|,
 literal|"  -d                    write definitions ("
 name|DEFINES_SUFFIX
 literal|")"
-block|,
-literal|"  -D                    enable value stack memory reclamation"
 block|,
 literal|"  -i                    write interface (y.tab.i)"
 block|,
