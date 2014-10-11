@@ -550,6 +550,8 @@ operator|>=
 name|bp
 operator|+
 name|BUFSIZ
+operator|-
+literal|1
 condition|)
 block|{
 name|write
@@ -558,7 +560,7 @@ name|STDERR_FILENO
 argument_list|,
 literal|"Remcap entry too long\n"
 argument_list|,
-literal|23
+literal|22
 argument_list|)
 expr_stmt|;
 break|break;
