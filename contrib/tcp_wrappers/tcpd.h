@@ -378,6 +378,18 @@ end_comment
 
 begin_function_decl
 specifier|extern
+name|int
+name|hosts_ctl
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* wrapper around request_init() */
+end_comment
+
+begin_function_decl
+specifier|extern
 name|void
 name|shell_cmd
 parameter_list|()
