@@ -15,12 +15,6 @@ directive|define
 name|_SVM_NPT_H_
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|svm_softc
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 name|int
 name|svm_npt_init
