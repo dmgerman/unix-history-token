@@ -3556,6 +3556,23 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|intr_prof_stack_use
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
+name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

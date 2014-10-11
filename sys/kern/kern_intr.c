@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kstack_usage_prof.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -6430,6 +6436,18 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSTACK_USAGE_PROF
+name|intr_prof_stack_use
+argument_list|(
+name|td
+argument_list|,
+name|frame
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* An interrupt with no event or handlers is a stray interrupt. */
 if|if
 condition|(
