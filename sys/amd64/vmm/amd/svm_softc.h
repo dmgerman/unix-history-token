@@ -46,7 +46,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * svm_vpcu contains SVM VMCB state and vcpu register state.  */
+comment|/*  * XXX separate out 'struct vmcb' from 'svm_vcpu' to avoid wasting space  * due to VMCB alignment requirements.  */
 end_comment
 
 begin_struct
@@ -99,20 +99,20 @@ begin_struct
 struct|struct
 name|svm_softc
 block|{
-comment|/* 	 * IO permission map, VMCB.ctrl.iopm_base_pa should point to this. 	 * If a bit is set, access to I/O port is intercepted. 	 */
 name|uint8_t
 name|iopm_bitmap
 index|[
 name|SVM_IO_BITMAP_SIZE
 index|]
 decl_stmt|;
-comment|/* 	 * MSR permission bitmap, VMCB.ctrl.msrpm_base_pa should point to this. 	 * Two bits are used for each MSR with the LSB used for read access 	 * and the MSB used for write access. A value of '1' indicates that 	 * the operation is intercepted. 	 */
+comment|/* shared by all vcpus */
 name|uint8_t
 name|msr_bitmap
 index|[
 name|SVM_MSR_BITMAP_SIZE
 index|]
 decl_stmt|;
+comment|/* shared by all vcpus */
 name|uint8_t
 name|apic_page
 index|[
@@ -122,23 +122,21 @@ index|[
 name|PAGE_SIZE
 index|]
 decl_stmt|;
-comment|/* Nested Paging */
-name|vm_offset_t
-name|nptp
-decl_stmt|;
-comment|/* Virtual machine pointer. */
-name|struct
-name|vm
-modifier|*
-name|vm
-decl_stmt|;
-comment|/* Guest VCPU h/w and s/w context. */
 name|struct
 name|svm_vcpu
 name|vcpu
 index|[
 name|VM_MAXCPU
 index|]
+decl_stmt|;
+name|vm_offset_t
+name|nptp
+decl_stmt|;
+comment|/* nested page table */
+name|struct
+name|vm
+modifier|*
+name|vm
 decl_stmt|;
 block|}
 name|__aligned
