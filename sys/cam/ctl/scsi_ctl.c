@@ -855,6 +855,8 @@ argument_list|)
 block|,
 comment|/*generation*/
 literal|0
+block|,
+name|CAM_PERIPH_DRV_EARLY
 block|}
 decl_stmt|;
 end_decl_stmt
