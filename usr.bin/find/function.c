@@ -6545,7 +6545,7 @@ case|:
 comment|/* terabytes 1<<40 */
 name|scale
 operator|=
-literal|0x1000000000LL
+literal|0x10000000000LL
 expr_stmt|;
 break|break;
 case|case
