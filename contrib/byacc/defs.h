@@ -920,6 +920,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|TCMALLOC
+parameter_list|(
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|((t*) calloc((size_t)(n), sizeof(t)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|TMALLOC
 parameter_list|(
 name|t
