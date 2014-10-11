@@ -2160,6 +2160,7 @@ name|parent
 operator|!=
 name|NULL
 condition|)
+block|{
 name|AUTOFS_ASSERT_XLOCKED
 argument_list|(
 name|parent
@@ -2167,6 +2168,29 @@ operator|->
 name|an_mount
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|autofs_node_find
+argument_list|(
+name|parent
+argument_list|,
+name|name
+argument_list|,
+name|namelen
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+name|ENOENT
+argument_list|,
+operator|(
+literal|"node \"%s\" already exists"
+operator|,
+name|name
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|anp
 operator|=
 name|uma_zalloc
