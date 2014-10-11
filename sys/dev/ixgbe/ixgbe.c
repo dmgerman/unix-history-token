@@ -19577,6 +19577,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* 	** With advanced descriptors the writeback 	** clobbers the buffer addrs, so its easier 	** to just free the existing mbufs and take 	** the normal refresh path to get new buffers 	** and mapping. 	*/
 if|if
 condition|(
 name|rbuf
@@ -19608,8 +19609,15 @@ name|fmp
 operator|=
 name|NULL
 expr_stmt|;
+name|rbuf
+operator|->
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* rbuf->buf is part of fmp's chain */
 block|}
-comment|/* 	** With advanced descriptors the writeback 	** clobbers the buffer addrs, so its easier 	** to just free the existing mbufs and take 	** the normal refresh path to get new buffers 	** and mapping. 	*/
+elseif|else
 if|if
 condition|(
 name|rbuf
