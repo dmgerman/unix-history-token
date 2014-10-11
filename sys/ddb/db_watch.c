@@ -672,9 +672,9 @@ endif|#
 directive|endif
 comment|/* Delete hardware watchpoint */
 comment|/*ARGSUSED*/
-argument|void db_deletehwatch_cmd(addr, have_addr, count, modif) 	db_expr_t	addr; 	boolean_t	have_addr; 	db_expr_t	count; 	char *		modif; { 	int rc;          if (count<
+argument|void db_deletehwatch_cmd(addr, have_addr, count, modif) 	db_expr_t	addr; 	boolean_t	have_addr; 	db_expr_t	count; 	char *		modif; { 	int rc;  	if (count<
 literal|0
-argument|)                 count =
+argument|) 		count =
 literal|4
 argument|;  	rc = db_md_clr_watchpoint(addr, count); 	if (rc<
 literal|0
@@ -683,9 +683,9 @@ literal|"hardware watchpoint could not be deleted\n"
 argument|); }
 comment|/* Set hardware watchpoint */
 comment|/*ARGSUSED*/
-argument|void db_hwatchpoint_cmd(addr, have_addr, count, modif) 	db_expr_t	addr; 	boolean_t	have_addr; 	db_expr_t	count; 	char *		modif; { 	int rc;          if (count<
+argument|void db_hwatchpoint_cmd(addr, have_addr, count, modif) 	db_expr_t	addr; 	boolean_t	have_addr; 	db_expr_t	count; 	char *		modif; { 	int rc;  	if (count<
 literal|0
-argument|)                 count =
+argument|) 		count =
 literal|4
 argument|;  	rc = db_md_set_watchpoint(addr, count); 	if (rc<
 literal|0
