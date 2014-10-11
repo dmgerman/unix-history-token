@@ -733,13 +733,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for required BHyVe SVM features in a CPU.  */
+comment|/*  * Verify that all the features required by bhyve are available.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|svm_cpuid_features
+name|check_svm_features
 parameter_list|(
 name|void
 parameter_list|)
@@ -767,7 +767,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SVM rev: 0x%x NASID:0x%x\n"
+literal|"SVM: Revision %d\n"
 argument_list|,
 name|regs
 index|[
@@ -775,6 +775,11 @@ literal|0
 index|]
 operator|&
 literal|0xFF
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SVM: NumASID %u\n"
 argument_list|,
 name|regs
 index|[
@@ -804,7 +809,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SVM Features:0x%b\n"
+literal|"SVM: Features 0x%b\n"
 argument_list|,
 name|svm_feature
 argument_list|,
@@ -825,37 +830,15 @@ literal|"\007FlushByAsid"
 comment|/* Flush by ASID */
 literal|"\010DecodeAssist"
 comment|/* Decode assist */
-literal|"\011<b20>"
-literal|"\012<b20>"
+literal|"\011<b8>"
+literal|"\012<b9>"
 literal|"\013PauseFilter"
-literal|"\014<b20>"
+literal|"\014<b11>"
 literal|"\015PauseFilterThreshold"
 literal|"\016AVIC"
 argument_list|)
 expr_stmt|;
-comment|/* SVM Lock */
-if|if
-condition|(
-operator|!
-operator|(
-name|svm_feature
-operator|&
-name|AMD_CPUID_SVM_SVML
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"SVM is disabled by BIOS, please enable in BIOS.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-comment|/* 	 * bhyve need RVI to work. 	 */
+comment|/* bhyve requires the Nested Paging feature */
 if|if
 condition|(
 operator|!
@@ -868,29 +851,40 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Missing Nested paging or RVI SVM support in processor.\n"
+literal|"SVM: Nested Paging feature not available.\n"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* bhyve requires the NRIP Save feature */
 if|if
 condition|(
+operator|!
+operator|(
 name|svm_feature
 operator|&
 name|AMD_CPUID_SVM_NRIP_SAVE
+operator|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SVM: NRIP Save feature not available.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-return|return
-operator|(
-name|EIO
 operator|)
 return|;
 block|}
@@ -999,7 +993,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if a processor support SVM.  */
+comment|/*  * Verify that SVM is enabled and the processor has all the required features.  */
 end_comment
 
 begin_function
@@ -1027,7 +1021,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SVM is not supported on this processor.\n"
+literal|"SVM: not available.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1043,7 +1037,6 @@ argument_list|(
 name|MSR_VM_CR
 argument_list|)
 expr_stmt|;
-comment|/* Make sure SVM is not disabled by BIOS. */
 if|if
 condition|(
 operator|(
@@ -1051,23 +1044,25 @@ name|msr
 operator|&
 name|VM_CR_SVMDIS
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
-return|return
-name|svm_cpuid_features
-argument_list|()
-return|;
-block|}
 name|printf
 argument_list|(
-literal|"SVM disabled by Key, consult TPM/BIOS manual.\n"
+literal|"SVM: disabled by BIOS.\n"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|ENXIO
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|check_svm_features
+argument_list|()
 operator|)
 return|;
 block|}

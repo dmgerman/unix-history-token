@@ -4648,7 +4648,7 @@ begin_define
 define|#
 directive|define
 name|MSR_VM_CR
-value|0xC0010114
+value|0xc0010114
 end_define
 
 begin_comment
@@ -4659,7 +4659,7 @@ begin_define
 define|#
 directive|define
 name|MSR_VM_HSAVE_PA
-value|0xC0010117
+value|0xc0010117
 end_define
 
 begin_comment
@@ -4667,7 +4667,7 @@ comment|/* SVM: host save area address */
 end_comment
 
 begin_comment
-comment|/* AMD VM_CR related */
+comment|/* MSR_VM_CR related */
 end_comment
 
 begin_define
