@@ -1159,9 +1159,6 @@ name|bool
 name|hw_rsc
 decl_stmt|;
 name|bool
-name|discard
-decl_stmt|;
-name|bool
 name|vtag_strip
 decl_stmt|;
 name|u16
