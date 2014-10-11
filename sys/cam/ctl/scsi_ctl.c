@@ -871,7 +871,7 @@ block|{
 operator|.
 name|name
 operator|=
-literal|"camtarget"
+literal|"camtgt"
 block|,
 operator|.
 name|init
