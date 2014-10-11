@@ -1782,25 +1782,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* tunable for Witness count */
-end_comment
+begin_decl_stmt
+name|int
+name|badstack_sbuf_size
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|witness_count
 init|=
 name|WITNESS_COUNT
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|badstack_sbuf_size
-init|=
-name|WITNESS_COUNT
-operator|*
-literal|256
 decl_stmt|;
 end_decl_stmt
 
@@ -3314,7 +3306,7 @@ name|witness_count
 argument_list|,
 name|M_WITNESS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -3325,8 +3317,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|uint8_t
 operator|*
+name|w_rmatrix
 argument_list|)
 operator|*
 operator|(
@@ -3337,7 +3329,7 @@ operator|)
 argument_list|,
 name|M_WITNESS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -3367,7 +3359,11 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|uint8_t
+operator|*
+name|w_rmatrix
+index|[
+name|i
+index|]
 argument_list|)
 operator|*
 operator|(
@@ -3378,7 +3374,7 @@ operator|)
 argument_list|,
 name|M_WITNESS
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -3541,7 +3537,11 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uint8_t
+operator|*
+name|w_rmatrix
+index|[
+name|i
+index|]
 argument_list|)
 operator|*
 operator|(
