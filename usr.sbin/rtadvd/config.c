@@ -288,7 +288,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|size_t
+name|ssize_t
 name|dname_labelenc
 parameter_list|(
 name|char
@@ -307,7 +307,7 @@ end_comment
 
 begin_function
 specifier|static
-name|size_t
+name|ssize_t
 name|dname_labelenc
 parameter_list|(
 name|char
@@ -342,6 +342,26 @@ argument_list|(
 name|src
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|+
+name|len
+operator|/
+literal|64
+operator|+
+literal|1
+operator|+
+literal|1
+operator|>
+name|DNAME_LABELENC_MAXLEN
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* Length fields per 63 octets + '\0' (<= DNAME_LABELENC_MAXLEN) */
 name|memset
 argument_list|(
@@ -405,7 +425,6 @@ name|NULL
 condition|)
 operator|*
 name|dst
-operator|++
 operator|=
 name|len
 operator|=
@@ -419,7 +438,6 @@ expr_stmt|;
 else|else
 operator|*
 name|dst
-operator|++
 operator|=
 name|len
 operator|=
@@ -432,6 +450,28 @@ operator|-
 name|src
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dst
+operator|+
+literal|1
+operator|+
+name|len
+operator|<
+name|dst_origin
+operator|+
+name|DNAME_LABELENC_MAXLEN
+condition|)
+name|dst
+operator|++
+expr_stmt|;
+else|else
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* Copy 63 octets at most. */
 name|memcpy
 argument_list|(
@@ -4377,6 +4417,28 @@ argument_list|,
 name|abuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dnsa
+operator|->
+name|da_len
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Invalid dnssl entry: %s"
+argument_list|,
+name|abuf
+argument_list|)
+expr_stmt|;
+goto|goto
+name|getconfig_free_dns
+goto|;
+block|}
 name|syslog
 argument_list|(
 name|LOG_DEBUG
