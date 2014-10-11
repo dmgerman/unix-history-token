@@ -20748,12 +20748,6 @@ name|lmp
 operator|=
 name|NULL
 expr_stmt|;
-name|rxr
-operator|->
-name|discard
-operator|=
-name|FALSE
-expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|rxr
@@ -22949,9 +22943,11 @@ operator|==
 name|E1000_RXD_STAT_EOP
 operator|)
 expr_stmt|;
-comment|/* Make sure all segments of a bad packet are discarded */
+comment|/* 		 * Free the frame (all segments) if we're at EOP and 		 * it's an error. 		 * 		 * The datasheet states that EOP + status is only valid for 		 * the final segment in a multi-segment frame. 		 */
 if|if
 condition|(
+name|eop
+operator|&&
 operator|(
 operator|(
 name|staterr
@@ -22960,12 +22956,6 @@ name|E1000_RXDEXT_ERR_FRAME_ERR_MASK
 operator|)
 operator|!=
 literal|0
-operator|)
-operator|||
-operator|(
-name|rxr
-operator|->
-name|discard
 operator|)
 condition|)
 block|{
@@ -22978,25 +22968,6 @@ operator|++
 name|rxr
 operator|->
 name|rx_discarded
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|eop
-condition|)
-comment|/* Catch subsequent segs */
-name|rxr
-operator|->
-name|discard
-operator|=
-name|TRUE
-expr_stmt|;
-else|else
-name|rxr
-operator|->
-name|discard
-operator|=
-name|FALSE
 expr_stmt|;
 name|igb_rx_discard
 argument_list|(
