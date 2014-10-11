@@ -21,6 +21,16 @@ name|svm_softc
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|BIT
+parameter_list|(
+name|n
+parameter_list|)
+value|(1ULL<< n)
+end_define
+
 begin_comment
 comment|/*  * Secure Virtual Machine: AMD64 Programmer's Manual Vol2, Chapter 15  * Layout of VMCB: AMD64 Programmer's Manual Vol2, Appendix B  */
 end_comment

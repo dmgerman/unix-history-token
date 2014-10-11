@@ -15,30 +15,6 @@ directive|define
 name|_SVM_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|BIT
-parameter_list|(
-name|n
-parameter_list|)
-value|(1ULL<< n)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERR
-parameter_list|(
-name|fmt
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-define|\
-value|printf("SVM ERROR:%s " fmt "\n", __func__, ##args);
-end_define
-
 begin_comment
 comment|/*  * Guest register state that is saved outside the VMCB.  */
 end_comment
@@ -106,32 +82,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|disable_gintr
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("clgi" : : :);
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|enable_gintr
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-asm|__asm __volatile("stgi" : : :);
-block|}
-end_function
 
 begin_endif
 endif|#

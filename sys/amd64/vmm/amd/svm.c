@@ -104,19 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/specialreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/segments.h>
 end_include
 
 begin_include
@@ -134,19 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/vmm_dev.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/vmm_instruction_emul.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<x86/apicreg.h>
 end_include
 
 begin_include
@@ -405,6 +381,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SVM
@@ -417,6 +394,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SVM_VLAPIC
@@ -623,61 +601,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*   * Common function to enable or disabled SVM for a CPU.  */
-end_comment
-
 begin_function
 specifier|static
+name|__inline
 name|int
-name|cpu_svm_enable_disable
+name|flush_by_asid
 parameter_list|(
-name|boolean_t
-name|enable
+name|void
 parameter_list|)
 block|{
-name|uint64_t
-name|efer_msr
-decl_stmt|;
-name|efer_msr
-operator|=
-name|rdmsr
-argument_list|(
-name|MSR_EFER
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|enable
-condition|)
-name|efer_msr
-operator||=
-name|EFER_SVM
-expr_stmt|;
-else|else
-name|efer_msr
-operator|&=
-operator|~
-name|EFER_SVM
-expr_stmt|;
-name|wrmsr
-argument_list|(
-name|MSR_EFER
-argument_list|,
-name|efer_msr
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|svm_feature
+operator|&
+name|AMD_CPUID_SVM_FLUSH_BY_ASID
 operator|)
 return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Disable SVM on a CPU.  */
-end_comment
+begin_function
+specifier|static
+name|__inline
+name|int
+name|decode_assist
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|svm_feature
+operator|&
+name|AMD_CPUID_SVM_DECODE_ASSIST
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -690,19 +650,33 @@ name|arg
 name|__unused
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|cpu_svm_enable_disable
+name|uint64_t
+name|efer
+decl_stmt|;
+name|efer
+operator|=
+name|rdmsr
 argument_list|(
-name|FALSE
+name|MSR_EFER
+argument_list|)
+expr_stmt|;
+name|efer
+operator|&=
+operator|~
+name|EFER_SVM
+expr_stmt|;
+name|wrmsr
+argument_list|(
+name|MSR_EFER
+argument_list|,
+name|efer
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Disable SVM for all CPUs.  */
+comment|/*  * Disable SVM on all CPUs.  */
 end_comment
 
 begin_function
@@ -892,48 +866,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
-name|int
-name|flush_by_asid
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|svm_feature
-operator|&
-name|AMD_CPUID_SVM_FLUSH_BY_ASID
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|decode_assist
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|svm_feature
-operator|&
-name|AMD_CPUID_SVM_DECODE_ASSIST
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Enable SVM for a CPU.  */
-end_comment
-
-begin_function
-specifier|static
 name|void
 name|svm_enable
 parameter_list|(
@@ -944,18 +876,30 @@ name|__unused
 parameter_list|)
 block|{
 name|uint64_t
-name|hsave_pa
+name|efer
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|cpu_svm_enable_disable
+name|efer
+operator|=
+name|rdmsr
 argument_list|(
-name|TRUE
+name|MSR_EFER
 argument_list|)
 expr_stmt|;
-name|hsave_pa
-operator|=
+name|efer
+operator||=
+name|EFER_SVM
+expr_stmt|;
+name|wrmsr
+argument_list|(
+name|MSR_EFER
+argument_list|,
+name|efer
+argument_list|)
+expr_stmt|;
+name|wrmsr
+argument_list|(
+name|MSR_VM_HSAVE_PA
+argument_list|,
 name|vtophys
 argument_list|(
 name|hsave
@@ -963,43 +907,19 @@ index|[
 name|curcpu
 index|]
 argument_list|)
-expr_stmt|;
-name|wrmsr
-argument_list|(
-name|MSR_VM_HSAVE_PA
-argument_list|,
-name|hsave_pa
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rdmsr
-argument_list|(
-name|MSR_VM_HSAVE_PA
-argument_list|)
-operator|!=
-name|hsave_pa
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"VM_HSAVE_PA is wrong on CPU%d\n"
-argument_list|,
-name|curcpu
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * Verify that SVM is enabled and the processor has all the required features.  */
+comment|/*  * Return 1 if SVM is enabled on this processor and 0 otherwise.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|is_svm_enabled
+name|svm_available
 parameter_list|(
 name|void
 parameter_list|)
@@ -1026,7 +946,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}
@@ -1055,22 +975,17 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}
 return|return
 operator|(
-name|check_svm_features
-argument_list|()
+literal|1
 operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Enable SVM on CPU and initialize nested page table h/w.  */
-end_comment
 
 begin_function
 specifier|static
@@ -1082,22 +997,33 @@ name|ipinum
 parameter_list|)
 block|{
 name|int
-name|err
+name|error
 decl_stmt|,
 name|cpu
 decl_stmt|;
-name|err
+if|if
+condition|(
+operator|!
+name|svm_available
+argument_list|()
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+name|error
 operator|=
-name|is_svm_enabled
+name|check_svm_features
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|error
 condition|)
 return|return
 operator|(
-name|err
+name|error
 operator|)
 return|;
 name|vmcb_clean
@@ -1149,7 +1075,7 @@ argument_list|(
 name|ipinum
 argument_list|)
 expr_stmt|;
-comment|/* Start SVM on all CPUs */
+comment|/* Enable SVM on all CPUs */
 name|smp_rendezvous
 argument_list|(
 name|NULL
@@ -1186,7 +1112,61 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get index and bit position for a MSR in MSR permission  * bitmap. Two bits are used for each MSR, lower bit is  * for read and higher bit is for write.  */
+comment|/* Pentium compatible MSRs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_PENTIUM_START
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_PENTIUM_END
+value|0x1FFF
+end_define
+
+begin_comment
+comment|/* AMD 6th generation and Intel compatible MSRs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_AMD6TH_START
+value|0xC0000000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_AMD6TH_END
+value|0xC0001FFFUL
+end_define
+
+begin_comment
+comment|/* AMD 7th and 8th generation compatible MSRs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_AMD7TH_START
+value|0xC0010000UL
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_AMD7TH_END
+value|0xC0011FFFUL
+end_define
+
+begin_comment
+comment|/*  * Get the index and bit position for a MSR in permission bitmap.  * Two bits are used for each MSR: lower bit for read and higher bit for write.  */
 end_comment
 
 begin_function
@@ -1211,33 +1191,6 @@ name|base
 decl_stmt|,
 name|off
 decl_stmt|;
-comment|/* Pentium compatible MSRs */
-define|#
-directive|define
-name|MSR_PENTIUM_START
-value|0
-define|#
-directive|define
-name|MSR_PENTIUM_END
-value|0x1FFF
-comment|/* AMD 6th generation and Intel compatible MSRs */
-define|#
-directive|define
-name|MSR_AMD6TH_START
-value|0xC0000000UL
-define|#
-directive|define
-name|MSR_AMD6TH_END
-value|0xC0001FFFUL
-comment|/* AMD 7th and 8th generation compatible MSRs */
-define|#
-directive|define
-name|MSR_AMD7TH_START
-value|0xC0010000UL
-define|#
-directive|define
-name|MSR_AMD7TH_END
-value|0xC0011FFFUL
 operator|*
 name|index
 operator|=
@@ -1377,19 +1330,19 @@ return|;
 block|}
 return|return
 operator|(
-name|EIO
+name|EINVAL
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Give virtual cpu the complete access to MSR(read& write).  */
+comment|/*  * Allow vcpu to read or write the 'msr' without trapping into the hypervisor.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|svm_msr_perm
 parameter_list|(
 name|uint8_t
@@ -1411,9 +1364,9 @@ name|index
 decl_stmt|,
 name|bit
 decl_stmt|,
-name|err
+name|error
 decl_stmt|;
-name|err
+name|error
 operator|=
 name|svm_msr_index
 argument_list|(
@@ -1426,79 +1379,64 @@ operator|&
 name|bit
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-block|{
-name|ERR
+name|KASSERT
 argument_list|(
-literal|"MSR 0x%lx is not writeable by guest.\n"
+name|error
+operator|==
+literal|0
 argument_list|,
+operator|(
+literal|"%s: invalid msr %#lx"
+operator|,
+name|__func__
+operator|,
 name|msr
+operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+name|index
+operator|>=
+literal|0
+operator|&&
 name|index
 operator|<
-literal|0
-operator|||
-name|index
-operator|>
-operator|(
 name|SVM_MSR_BITMAP_SIZE
-operator|)
-condition|)
-block|{
-name|ERR
-argument_list|(
-literal|"MSR 0x%lx index out of range(%d).\n"
 argument_list|,
-name|msr
-argument_list|,
+operator|(
+literal|"%s: invalid index %d for msr %#lx"
+operator|,
+name|__func__
+operator|,
 name|index
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|bit
-operator|<
-literal|0
-operator|||
-name|bit
-operator|>
-literal|8
-condition|)
-block|{
-name|ERR
-argument_list|(
-literal|"MSR 0x%lx bit out of range(%d).\n"
-argument_list|,
+operator|,
 name|msr
-argument_list|,
-name|bit
+operator|)
 argument_list|)
 expr_stmt|;
-return|return
+name|KASSERT
+argument_list|(
+name|bit
+operator|>=
+literal|0
+operator|&&
+name|bit
+operator|<=
+literal|6
+argument_list|,
 operator|(
-name|EINVAL
+literal|"%s: invalid bit position %d "
+literal|"msr %#lx"
+operator|,
+name|__func__
+operator|,
+name|bit
+operator|,
+name|msr
 operator|)
-return|;
-block|}
-comment|/* Disable intercept for read and write. */
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|read
@@ -1531,37 +1469,12 @@ operator|<<
 name|bit
 operator|)
 expr_stmt|;
-name|CTR2
-argument_list|(
-name|KTR_VMM
-argument_list|,
-literal|"Guest has control:0x%x on SVM:MSR(0x%lx).\n"
-argument_list|,
-operator|(
-name|perm_bitmap
-index|[
-name|index
-index|]
-operator|>>
-name|bit
-operator|)
-operator|&
-literal|0x3
-argument_list|,
-name|msr
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|svm_msr_rw_ok
 parameter_list|(
 name|uint8_t
@@ -1572,7 +1485,6 @@ name|uint64_t
 name|msr
 parameter_list|)
 block|{
-return|return
 name|svm_msr_perm
 argument_list|(
 name|perm_bitmap
@@ -1583,13 +1495,13 @@ name|true
 argument_list|,
 name|true
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|svm_msr_rd_ok
 parameter_list|(
 name|uint8_t
@@ -1600,7 +1512,6 @@ name|uint64_t
 name|msr
 parameter_list|)
 block|{
-return|return
 name|svm_msr_perm
 argument_list|(
 name|perm_bitmap
@@ -1611,7 +1522,7 @@ name|true
 argument_list|,
 name|false
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -2287,7 +2198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialise a virtual machine.  */
+comment|/*  * Initialize a virtual machine.  */
 end_comment
 
 begin_function
@@ -2327,11 +2238,6 @@ name|i
 decl_stmt|;
 name|svm_sc
 operator|=
-operator|(
-expr|struct
-name|svm_softc
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2367,7 +2273,7 @@ operator|->
 name|pm_pml4
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Intercept MSR access to all MSRs except GSBASE, FSBASE,... etc. 	 */
+comment|/* 	 * Intercept read and write accesses to all MSRs. 	 */
 name|memset
 argument_list|(
 name|svm_sc
@@ -2384,7 +2290,7 @@ name|msr_bitmap
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Following MSR can be completely controlled by virtual machines 	 * since access to following are translated to access to VMCB. 	 */
+comment|/* 	 * Access to the following MSRs is redirected to the VMCB when the 	 * guest is executing. Therefore it is safe to allow the guest to 	 * read/write these MSRs directly without hypervisor involvement. 	 */
 name|svm_msr_rw_ok
 argument_list|(
 name|svm_sc
@@ -2475,7 +2381,6 @@ argument_list|,
 name|MSR_SYSENTER_EIP_MSR
 argument_list|)
 expr_stmt|;
-comment|/* For Nested Paging/RVI only. */
 name|svm_msr_rw_ok
 argument_list|(
 name|svm_sc
@@ -2521,7 +2426,6 @@ name|iopm_bitmap
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Cache physical address for multiple vcpus. */
 name|iopm_pa
 operator|=
 name|vtophys
@@ -3489,7 +3393,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|svm_npf_paging
+name|npf_fault_type
 parameter_list|(
 name|uint64_t
 name|exitinfo1
@@ -3506,6 +3410,7 @@ operator|(
 name|VM_PROT_WRITE
 operator|)
 return|;
+else|else
 return|return
 operator|(
 name|VM_PROT_READ
@@ -6261,7 +6166,7 @@ name|paging
 operator|.
 name|fault_type
 operator|=
-name|svm_npf_paging
+name|npf_fault_type
 argument_list|(
 name|info1
 argument_list|)
@@ -7611,6 +7516,32 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|disable_gintr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("clgi" : : :);
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|enable_gintr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("stgi" : : :);
+block|}
+end_function
+
 begin_comment
 comment|/*  * Start vcpu with specified RIP.  */
 end_comment
@@ -8080,10 +8011,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Cleanup for virtual machine.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -8097,36 +8024,19 @@ block|{
 name|struct
 name|svm_softc
 modifier|*
-name|svm_sc
-decl_stmt|;
-name|svm_sc
-operator|=
+name|sc
+init|=
 name|arg
-expr_stmt|;
-name|VCPU_CTR0
-argument_list|(
-name|svm_sc
-operator|->
-name|vm
-argument_list|,
-literal|0
-argument_list|,
-literal|"SVM:cleanup\n"
-argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|free
 argument_list|(
-name|svm_sc
+name|sc
 argument_list|,
 name|M_SVM
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Return pointer to hypervisor saved register state.  */
-end_comment
 
 begin_function
 specifier|static
@@ -8303,26 +8213,14 @@ name|sctx_r15
 operator|)
 return|;
 default|default:
-name|ERR
-argument_list|(
-literal|"Unknown register requested, reg=%d.\n"
-argument_list|,
-name|reg
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
+block|}
 end_function
-
-begin_comment
-comment|/*  * Interface to read guest registers.  * This can be SVM h/w saved or hypervisor saved register.  */
-end_comment
 
 begin_function
 specifier|static
@@ -8432,9 +8330,15 @@ literal|0
 operator|)
 return|;
 block|}
-name|ERR
+name|VCPU_CTR1
 argument_list|(
-literal|"SVM_ERR:reg type %x is not saved in VMCB.\n"
+name|svm_sc
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"svm_getreg: unknown register %#x"
 argument_list|,
 name|ident
 argument_list|)
@@ -8446,10 +8350,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Interface to write to guest registers.  * This can be SVM h/w saved or hypervisor saved register.  */
-end_comment
 
 begin_function
 specifier|static
@@ -8558,9 +8458,15 @@ operator|)
 return|;
 block|}
 comment|/* 	 * XXX deal with CR3 and invalidate TLB entries tagged with the 	 * vcpu's ASID. This needs to be treated differently depending on 	 * whether 'running' is true/false. 	 */
-name|ERR
+name|VCPU_CTR1
 argument_list|(
-literal|"SVM_ERR:reg type %x is not saved in VMCB.\n"
+name|svm_sc
+operator|->
+name|vm
+argument_list|,
+name|vcpu
+argument_list|,
+literal|"svm_setreg: unknown register %#x"
 argument_list|,
 name|ident
 argument_list|)
