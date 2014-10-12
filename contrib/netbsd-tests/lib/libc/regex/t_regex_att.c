@@ -69,6 +69,26 @@ directive|include
 file|<atf-c.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1936,6 +1956,25 @@ operator|+=
 name|l
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|ATF_CHECK_STREQ_MSG
+argument_list|(
+name|res
+argument_list|,
+name|matches
+argument_list|,
+literal|" at line %zu"
+argument_list|,
+name|lineno
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ATF_REQUIRE_STREQ_MSG
 argument_list|(
 name|res
@@ -1947,6 +1986,8 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|res
@@ -2900,6 +2941,19 @@ comment|/* jmmv: I converted the original shell-based tests to C and they 	 * di
 name|atf_tc_expect_fail
 argument_list|(
 literal|"Reason for breakage unknown"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"The expected and matched groups are mismatched on FreeBSD"
 argument_list|)
 expr_stmt|;
 endif|#
