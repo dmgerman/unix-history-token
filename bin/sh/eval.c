@@ -728,6 +728,11 @@ name|any
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|evalskip
+condition|)
+break|break;
 block|}
 name|popstackmark
 argument_list|(
