@@ -48,6 +48,17 @@ decl_stmt|;
 name|u_32_t
 name|addr
 decl_stmt|;
+name|bzero
+argument_list|(
+name|hostp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|hostp
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
