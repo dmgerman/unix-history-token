@@ -95,7 +95,10 @@ index|[
 literal|0
 index|]
 operator|=
+name|htonl
+argument_list|(
 literal|0xfe80aa55
+argument_list|)
 expr_stmt|;
 name|hostp
 operator|->
@@ -104,7 +107,10 @@ index|[
 literal|1
 index|]
 operator|=
+name|htonl
+argument_list|(
 literal|0x12345678
+argument_list|)
 expr_stmt|;
 name|hostp
 operator|->
@@ -113,7 +119,10 @@ index|[
 literal|2
 index|]
 operator|=
+name|htonl
+argument_list|(
 literal|0x5a5aa5a5
+argument_list|)
 expr_stmt|;
 name|hostp
 operator|->
@@ -122,7 +131,10 @@ index|[
 literal|3
 index|]
 operator|=
+name|htonl
+argument_list|(
 literal|0xfedcba98
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
