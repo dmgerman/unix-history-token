@@ -21,6 +21,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|MBUF_PRIVATE
+end_define
+
+begin_comment
+comment|/* XXXRW: Optimisation tries to avoid M_EXT mbufs */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -2221,15 +2231,11 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
+operator|!
+name|M_WRITABLE
+argument_list|(
 name|n
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
-operator|)
-operator|!=
-literal|0
+argument_list|)
 operator|||
 name|n
 operator|->
