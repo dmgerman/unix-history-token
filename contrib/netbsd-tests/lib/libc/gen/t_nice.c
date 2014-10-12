@@ -197,6 +197,20 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"nice(incr) with incr< 0 fails with unprivileged "
+literal|"users and sets errno == EPERM; see PR # 189821 for more details"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * The call should fail with EPERM if the 	 * supplied parameter is negative and the 	 * caller does not have privileges. 	 */
 for|for
 control|(
