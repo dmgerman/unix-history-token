@@ -1909,12 +1909,24 @@ name|pr
 operator|==
 name|IPPROTO_UDPLITE
 operator|&&
+operator|(
+name|len
+operator|==
+literal|0
+operator|||
+name|len
+operator|==
+name|ip_len
+operator|)
+condition|)
+block|{
+comment|/* Zero means checksum over the complete packet. */
+if|if
+condition|(
 name|len
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* Zero means checksum over the complete packet. */
 name|len
 operator|=
 name|ip_len
@@ -2201,11 +2213,32 @@ return|return;
 block|}
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|pr
+operator|==
+name|IPPROTO_UDP
+condition|)
+block|{
 name|UDPSTAT_INC
 argument_list|(
 name|udps_nosum
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* UDPLite requires a checksum */
+comment|/* XXX: What is the right UDPLite MIB counter here? */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
 name|pcbinfo
 operator|=
 name|get_inpcbinfo
@@ -2998,6 +3031,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|up
+operator|->
+name|u_rxcslen
+operator|==
+literal|0
+operator|||
 name|up
 operator|->
 name|u_rxcslen
@@ -4725,6 +4764,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|optval
 operator|!=
 literal|0
@@ -4732,6 +4772,13 @@ operator|&&
 name|optval
 operator|<
 literal|8
+operator|)
+operator|||
+operator|(
+name|optval
+operator|>
+literal|65535
+operator|)
 condition|)
 block|{
 name|INP_WUNLOCK
