@@ -245,6 +245,15 @@ literal|0
 operator|&&
 name|strcmp
 argument_list|(
+name|part_type
+argument_list|,
+literal|"GPT"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
 name|x86_bootmethod
 argument_list|()
 argument_list|,
