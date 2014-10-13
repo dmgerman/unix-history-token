@@ -1272,6 +1272,10 @@ name|vw_prev_kbdmode
 decl_stmt|;
 comment|/* (?) Previous mode. */
 name|int
+name|vw_kbdstate
+decl_stmt|;
+comment|/* (?) Keyboard state. */
+name|int
 name|vw_grabbed
 decl_stmt|;
 comment|/* (?) Grab count. */
