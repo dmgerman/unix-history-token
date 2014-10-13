@@ -243,6 +243,26 @@ operator|&
 name|tms
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* Open Group says "and may set errno to indicate the error" */
+name|ATF_REQUIRE
+argument_list|(
+name|t
+operator|==
+operator|(
+name|time_t
+operator|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ATF_REQUIRE_ERRNO
 argument_list|(
 literal|0
@@ -256,6 +276,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
