@@ -4167,7 +4167,7 @@ operator|->
 name|mrsas_mfi_cmd_list_head
 argument_list|)
 expr_stmt|;
-name|atomic_set
+name|mrsas_atomic_set
 argument_list|(
 operator|&
 name|sc
@@ -6612,7 +6612,7 @@ block|}
 comment|/* If we are resetting, bail */
 if|if
 condition|(
-name|test_bit
+name|mrsas_test_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -6924,7 +6924,7 @@ literal|0
 else|:
 literal|1
 expr_stmt|;
-name|atomic_dec
+name|mrsas_atomic_dec
 argument_list|(
 operator|&
 name|lbinfo
@@ -6979,7 +6979,7 @@ name|exStatus
 operator|=
 literal|0
 expr_stmt|;
-name|atomic_dec
+name|mrsas_atomic_dec
 argument_list|(
 operator|&
 name|sc
@@ -12499,7 +12499,7 @@ return|return
 name|FAIL
 return|;
 block|}
-name|set_bit
+name|mrsas_set_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -12608,7 +12608,7 @@ argument_list|,
 name|mpt_cmd
 argument_list|)
 expr_stmt|;
-name|atomic_dec
+name|mrsas_atomic_dec
 argument_list|(
 operator|&
 name|sc
@@ -13107,7 +13107,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|clear_bit
+name|mrsas_clear_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -13348,7 +13348,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|clear_bit
+name|mrsas_clear_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -13372,7 +13372,7 @@ expr_stmt|;
 block|}
 name|out
 label|:
-name|clear_bit
+name|mrsas_clear_bit
 argument_list|(
 name|MRSAS_FUSION_IN_RESET
 argument_list|,
@@ -13565,7 +13565,7 @@ goto|;
 block|}
 name|outstanding
 operator|=
-name|atomic_read
+name|mrsas_atomic_read
 argument_list|(
 operator|&
 name|sc
@@ -13650,7 +13650,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|atomic_read
+name|mrsas_atomic_read
 argument_list|(
 operator|&
 name|sc

@@ -315,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|MRSAS_VERSION
-value|"06.705.10.01-fbsd"
+value|"06.705.10.02-fbsd"
 end_define
 
 begin_define
@@ -1976,14 +1976,14 @@ name|int
 name|val
 decl_stmt|;
 block|}
-name|atomic_t
+name|mrsas_atomic_t
 typedef|;
 end_typedef
 
 begin_define
 define|#
 directive|define
-name|atomic_read
+name|mrsas_atomic_read
 parameter_list|(
 name|v
 parameter_list|)
@@ -1993,7 +1993,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_set
+name|mrsas_atomic_set
 parameter_list|(
 name|v
 parameter_list|,
@@ -2005,7 +2005,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_dec
+name|mrsas_atomic_dec
 parameter_list|(
 name|v
 parameter_list|)
@@ -2015,7 +2015,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_inc
+name|mrsas_atomic_inc
 parameter_list|(
 name|v
 parameter_list|)
@@ -3046,7 +3046,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|atomic_t
+name|mrsas_atomic_t
 name|scsi_pending_cmds
 index|[
 literal|2
@@ -9067,7 +9067,7 @@ decl_stmt|;
 name|u_int8_t
 name|disableOnlineCtrlReset
 decl_stmt|;
-name|atomic_t
+name|mrsas_atomic_t
 name|fw_outstanding
 decl_stmt|;
 name|u_int32_t
@@ -9296,7 +9296,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|clear_bit
+name|mrsas_clear_bit
 parameter_list|(
 name|int
 name|b
@@ -9340,7 +9340,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|set_bit
+name|mrsas_set_bit
 parameter_list|(
 name|int
 name|b
@@ -9384,7 +9384,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|test_bit
+name|mrsas_test_bit
 parameter_list|(
 name|int
 name|b
