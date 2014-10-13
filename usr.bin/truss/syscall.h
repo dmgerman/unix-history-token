@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * See i386-fbsd.c for copyright and license terms.  *  * System call arguments come in several flavours:  * Hex -- values that should be printed in hex (addresses)  * Octal -- Same as above, but octal  * Int -- normal integer values (file descriptors, for example)  * Name -- pointer to a NULL-terminated string.  * BinString -- pointer to an array of chars, printed via strvisx().  * Ptr -- pointer to some unspecified structure.  Just print as hex for now.  * Stat -- a pointer to a stat buffer.  Prints a couple fields.  * Ioctl -- an ioctl command.  Woefully limited.  * Quad -- a double-word value.  e.g., lseek(int, offset_t, int)  * Signal -- a signal number.  Prints the signal name (SIGxxx)  * Sockaddr -- a pointer to a struct sockaddr.  Prints symbolic AF, and IP:Port  * StringArray -- a pointer to an array of string pointers.  * Timespec -- a pointer to a struct timespec.  Prints both elements.  * Timeval -- a pointer to a struct timeval.  Prints both elements.  * Timeval2 -- a pointer to two struct timevals.  Prints both elements of both.  * Itimerval -- a pointer to a struct itimerval.  Prints all elements.  * Pollfd -- a pointer to an array of struct pollfd.  Prints .fd and .events.  * Fd_set -- a pointer to an array of fd_set.  Prints the fds that are set.  * Sigaction -- a pointer to a struct sigaction.  Prints all elements.  * Sigset -- a pointer to a sigset_t.  Prints the signals that are set.  * Sigprocmask -- the first argument to sigprocmask().  Prints the name.  * Kevent -- a pointer to an array of struct kevents.  Prints all elements.  * Pathconf -- the 2nd argument of pathconf().  *  * In addition, the pointer types (String, Ptr) may have OUT masked in --  * this means that the data is set on *return* from the system call -- or  * IN (meaning that the data is passed *into* the system call).  */
+comment|/*  * See i386-fbsd.c for copyright and license terms.  *  * System call arguments come in several flavours:  * Hex -- values that should be printed in hex (addresses)  * Octal -- Same as above, but octal  * Int -- normal integer values (file descriptors, for example)  * LongHex -- long value that should be printed in hex  * Name -- pointer to a NULL-terminated string.  * BinString -- pointer to an array of chars, printed via strvisx().  * Ptr -- pointer to some unspecified structure.  Just print as hex for now.  * Stat -- a pointer to a stat buffer.  Prints a couple fields.  * Ioctl -- an ioctl command.  Woefully limited.  * Quad -- a double-word value.  e.g., lseek(int, offset_t, int)  * Signal -- a signal number.  Prints the signal name (SIGxxx)  * Sockaddr -- a pointer to a struct sockaddr.  Prints symbolic AF, and IP:Port  * StringArray -- a pointer to an array of string pointers.  * Timespec -- a pointer to a struct timespec.  Prints both elements.  * Timeval -- a pointer to a struct timeval.  Prints both elements.  * Timeval2 -- a pointer to two struct timevals.  Prints both elements of both.  * Itimerval -- a pointer to a struct itimerval.  Prints all elements.  * Pollfd -- a pointer to an array of struct pollfd.  Prints .fd and .events.  * Fd_set -- a pointer to an array of fd_set.  Prints the fds that are set.  * Sigaction -- a pointer to a struct sigaction.  Prints all elements.  * Sigset -- a pointer to a sigset_t.  Prints the signals that are set.  * Sigprocmask -- the first argument to sigprocmask().  Prints the name.  * Kevent -- a pointer to an array of struct kevents.  Prints all elements.  * Pathconf -- the 2nd argument of pathconf().  *  * In addition, the pointer types (String, Ptr) may have OUT masked in --  * this means that the data is set on *return* from the system call -- or  * IN (meaning that the data is passed *into* the system call).  */
 end_comment
 
 begin_comment
@@ -20,6 +20,8 @@ block|,
 name|Octal
 block|,
 name|Int
+block|,
+name|LongHex
 block|,
 name|Name
 block|,
@@ -98,6 +100,8 @@ block|,
 name|Procctl
 block|,
 name|LinuxSockArgs
+block|,
+name|Umtxop
 block|}
 enum|;
 end_enum
