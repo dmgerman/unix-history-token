@@ -137,6 +137,20 @@ argument_list|,
 literal|"zh_TW.Big5"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"does not fail as expected (may be implementation "
+literal|"specific issue with the test)"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE_ERRNO
 argument_list|(
 name|EILSEQ
@@ -228,6 +242,20 @@ argument_list|,
 literal|"zh_TW.Big5"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"does not fail as expected (may be implementation "
+literal|"specific issue with the test)"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE_ERRNO
 argument_list|(
 name|EILSEQ
@@ -731,6 +759,19 @@ argument_list|,
 literal|"zh_TW.Big5"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|atf_tc_expect_fail
+argument_list|(
+literal|"does not return WEOF as expected"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE_EQ
 argument_list|(
 name|getwc

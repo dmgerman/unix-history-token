@@ -1516,6 +1516,11 @@ name|defined
 argument_list|(
 name|__linux__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 block|{
 literal|L"0X.0"
 block|,
