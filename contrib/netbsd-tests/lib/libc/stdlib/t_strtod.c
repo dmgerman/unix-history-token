@@ -1037,6 +1037,13 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|ATF_REQUIRE
 argument_list|(
 name|__isnanl
@@ -1047,6 +1054,8 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE
 argument_list|(
 name|strcmp
