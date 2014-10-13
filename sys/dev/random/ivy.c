@@ -204,7 +204,7 @@ operator|*
 name|buf
 operator|)
 operator|,
-literal|"=q"
+literal|"+q"
 operator|(
 name|tmp
 operator|)
