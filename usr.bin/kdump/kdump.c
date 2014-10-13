@@ -523,8 +523,7 @@ begin_function_decl
 name|void
 name|ktruser_malloc
 parameter_list|(
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -536,8 +535,7 @@ name|ktruser_rtld
 parameter_list|(
 name|int
 parameter_list|,
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -549,8 +547,7 @@ name|ktruser
 parameter_list|(
 name|int
 parameter_list|,
-name|unsigned
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -693,6 +690,28 @@ value|0x4
 end_define
 
 begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|signames
+index|[]
+decl_stmt|,
+modifier|*
+name|syscallnames
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsyscalls
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|timestamp
 decl_stmt|,
@@ -725,6 +744,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -735,6 +755,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ktr_header
 name|ktr_header
@@ -1148,16 +1169,14 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument|trace_procs
 argument_list|,
 argument|proc_info
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|trace_procs
 expr_stmt|;
 end_expr_stmt
@@ -2524,8 +2543,7 @@ argument_list|)
 expr_stmt|;
 name|cmd
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -2628,8 +2646,7 @@ if|if
 condition|(
 name|cmd
 operator|!=
-operator|-
-literal|1
+literal|0
 operator|&&
 name|cap_ioctls_limit
 argument_list|(
@@ -5326,6 +5343,10 @@ name|printf
 argument_list|(
 literal|",0%o"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ip
 index|[
 literal|1
@@ -7460,8 +7481,7 @@ parameter_list|(
 name|int
 name|len
 parameter_list|,
-name|unsigned
-name|char
+name|void
 modifier|*
 name|p
 parameter_list|)
@@ -7471,12 +7491,12 @@ name|utrace_rtld
 modifier|*
 name|ut
 init|=
-operator|(
-expr|struct
-name|utrace_rtld
-operator|*
-operator|)
 name|p
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 name|void
 modifier|*
@@ -7809,7 +7829,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|cp
+operator|=
 name|p
+expr_stmt|;
+name|cp
 operator|+=
 literal|4
 expr_stmt|;
@@ -7838,7 +7862,7 @@ argument_list|(
 literal|" %d"
 argument_list|,
 operator|*
-name|p
+name|cp
 operator|++
 argument_list|)
 expr_stmt|;
@@ -7848,7 +7872,7 @@ argument_list|(
 literal|" %02x"
 argument_list|,
 operator|*
-name|p
+name|cp
 operator|++
 argument_list|)
 expr_stmt|;
@@ -7884,8 +7908,7 @@ begin_function
 name|void
 name|ktruser_malloc
 parameter_list|(
-name|unsigned
-name|char
+name|void
 modifier|*
 name|p
 parameter_list|)
@@ -7895,11 +7918,6 @@ name|utrace_malloc
 modifier|*
 name|ut
 init|=
-operator|(
-expr|struct
-name|utrace_malloc
-operator|*
-operator|)
 name|p
 decl_stmt|;
 if|if
@@ -7993,12 +8011,16 @@ parameter_list|(
 name|int
 name|len
 parameter_list|,
-name|unsigned
-name|char
+name|void
 modifier|*
 name|p
 parameter_list|)
 block|{
+name|unsigned
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 if|if
 condition|(
 name|len
@@ -8051,6 +8073,10 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
+name|p
+expr_stmt|;
 while|while
 condition|(
 name|len
@@ -8065,7 +8091,7 @@ argument_list|(
 literal|" %d"
 argument_list|,
 operator|*
-name|p
+name|cp
 operator|++
 argument_list|)
 expr_stmt|;
@@ -8075,7 +8101,7 @@ argument_list|(
 literal|" %02x"
 argument_list|,
 operator|*
-name|p
+name|cp
 operator|++
 argument_list|)
 expr_stmt|;
