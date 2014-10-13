@@ -6203,6 +6203,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * The original screen size was faked (_VTDEFW x _VTDEFH). Now 	 * that we have the real viewable size, fix it in the static 	 * buffer. 	 */
+if|if
+condition|(
+name|vd
+operator|->
+name|vd_width
+operator|!=
+literal|0
+operator|&&
+name|vd
+operator|->
+name|vd_height
+operator|!=
+literal|0
+condition|)
 name|vt_termsize
 argument_list|(
 name|vd
