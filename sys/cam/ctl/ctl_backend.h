@@ -581,30 +581,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * If a LUN is locked on or unlocked from a power/APS standpoint, call  * ctl_lun_power_lock() to update the current status in CTL's APS subpage.  * Set the lock flag to 1 to lock the LUN, set it to 0 to unlock the LUN.  */
-end_comment
-
-begin_function_decl
-name|int
-name|ctl_lun_power_lock
-parameter_list|(
-name|struct
-name|ctl_be_lun
-modifier|*
-name|be_lun
-parameter_list|,
-name|struct
-name|ctl_nexus
-modifier|*
-name|nexus
-parameter_list|,
-name|int
-name|lock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * To take a LUN offline, call ctl_lun_offline().  Generally the LUN will  * be online again once the user sends a SCSI START STOP UNIT command with  * the start and on/offline bits set.  The backend can bring the LUN back  * online via the ctl_lun_online() function, if necessary.  */
 end_comment
 
