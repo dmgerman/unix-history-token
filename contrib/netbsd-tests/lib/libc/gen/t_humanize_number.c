@@ -49,11 +49,36 @@ directive|include
 file|<string.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<util.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 specifier|const
@@ -314,6 +339,13 @@ literal|"1 K"
 block|}
 block|,
 comment|/* 	 * Truncated output.  Rev. 1.7 produces "1.0 K". 	 */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 block|{
 literal|6
 block|,
@@ -373,6 +405,8 @@ block|,
 literal|"1.0M"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|5
 block|,

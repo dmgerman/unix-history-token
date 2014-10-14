@@ -3041,6 +3041,32 @@ begin_comment
 comment|/* match rules in given set	*/
 end_comment
 
+begin_comment
+comment|/* User-settable flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_RCFLAG_USER
+value|(IPFW_RCFLAG_RANGE | IPFW_RCFLAG_ALL | \ 	IPFW_RCFLAG_SET)
+end_define
+
+begin_comment
+comment|/* Internally used flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPFW_RCFLAG_DEFAULT
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Do not skip defaul rule	*/
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct

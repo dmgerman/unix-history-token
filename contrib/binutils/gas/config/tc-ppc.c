@@ -5309,9 +5309,9 @@ condition|?
 operator|(
 name|ppc_obj64
 condition|?
-literal|"elf64-powerpc"
+literal|"elf64-powerpc-freebsd"
 else|:
-literal|"elf32-powerpc"
+literal|"elf32-powerpc-freebsd"
 operator|)
 else|:
 operator|(

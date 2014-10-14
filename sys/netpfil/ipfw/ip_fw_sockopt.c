@@ -3590,7 +3590,7 @@ modifier|*
 name|rt
 parameter_list|)
 block|{
-comment|/* Don't match default rule regardless of query */
+comment|/* Don't match default rule for modification queries */
 if|if
 condition|(
 name|rule
@@ -3598,6 +3598,16 @@ operator|->
 name|rulenum
 operator|==
 name|IPFW_DEFAULT_RULE
+operator|&&
+operator|(
+name|rt
+operator|->
+name|flags
+operator|&
+name|IPFW_RCFLAG_DEFAULT
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -4202,8 +4212,6 @@ operator|<
 name|chain
 operator|->
 name|n_rules
-operator|-
-literal|1
 condition|;
 name|i
 operator|++
@@ -4352,6 +4360,12 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
+name|rt
+operator|->
+name|flags
+operator||=
+name|IPFW_RCFLAG_DEFAULT
+expr_stmt|;
 name|IPFW_UH_WLOCK
 argument_list|(
 name|chain
@@ -4369,8 +4383,6 @@ operator|<
 name|chain
 operator|->
 name|n_rules
-operator|-
-literal|1
 condition|;
 name|i
 operator|++
@@ -4478,6 +4490,25 @@ operator|->
 name|new_set
 operator|>=
 name|IPFW_MAX_SETS
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|rt
+operator|->
+name|flags
+operator|&
+name|IPFW_RCFLAG_USER
+operator|)
+operator|!=
+name|rt
+operator|->
+name|flags
 condition|)
 return|return
 operator|(
@@ -8538,6 +8569,8 @@ name|rnum
 argument_list|,
 literal|0
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -13716,7 +13749,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"bitmask size needs to power of 2 and greater or equal to %lu"
+literal|"bitmask size needs to power of 2 and greater or equal to %zu"
 operator|,
 name|BLOCK_ITEMS
 operator|)

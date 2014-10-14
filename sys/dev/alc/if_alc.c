@@ -23565,11 +23565,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|ALC_LOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Disable RxQ. */
 name|reg
 operator|=

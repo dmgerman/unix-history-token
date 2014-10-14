@@ -3746,18 +3746,19 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|log_warnx
 argument_list|(
-literal|"error returned from LUN creation request: %s"
+literal|"LUN creation error: %s"
 argument_list|,
 name|req
 operator|.
@@ -3769,19 +3770,27 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|log_warnx
 argument_list|(
-literal|"unknown LUN creation request status %d"
+literal|"LUN creation warning: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|log_warnx
+argument_list|(
+literal|"unknown LUN creation status: %d"
 argument_list|,
 name|req
 operator|.
@@ -3915,18 +3924,19 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|log_warnx
 argument_list|(
-literal|"error returned from LUN modification request: %s"
+literal|"LUN modification error: %s"
 argument_list|,
 name|req
 operator|.
@@ -3938,19 +3948,27 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|log_warnx
 argument_list|(
-literal|"unknown LUN modification request status %d"
+literal|"LUN modification warning: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|log_warnx
+argument_list|(
+literal|"unknown LUN modification status: %d"
 argument_list|,
 name|req
 operator|.
@@ -4059,18 +4077,19 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|log_warnx
 argument_list|(
-literal|"error returned from LUN removal request: %s"
+literal|"LUN removal error: %s"
 argument_list|,
 name|req
 operator|.
@@ -4082,19 +4101,27 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|log_warnx
 argument_list|(
-literal|"unknown LUN removal request status %d"
+literal|"LUN removal warning: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|log_warnx
+argument_list|(
+literal|"unknown LUN removal status: %d"
 argument_list|,
 name|req
 operator|.

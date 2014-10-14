@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2014 Yandex LLC  * Copyright (c) 2014 Alexander V. Chernikov  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * in-kernel ipfw tables support.  *  * $FreeBSD: projects/ipfw/sbin/ipfw/ipfw2.c 267467 2014-06-14 10:58:39Z melifaro $  */
+comment|/*  * Copyright (c) 2014 Yandex LLC  * Copyright (c) 2014 Alexander V. Chernikov  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * in-kernel ipfw tables support.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -9780,7 +9780,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[%u] refs=%lu %s\n"
+literal|"[%u] refs=%ju %s\n"
 argument_list|,
 name|v
 operator|->

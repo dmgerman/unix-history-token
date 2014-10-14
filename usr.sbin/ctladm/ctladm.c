@@ -727,7 +727,7 @@ name|CTLADM_CMD_PORTLIST
 block|,
 name|CTLADM_ARG_NONE
 block|,
-literal|"f:vx"
+literal|"f:ip:qvx"
 block|}
 block|,
 block|{
@@ -15002,20 +15002,19 @@ goto|goto
 name|bailout
 goto|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|warnx
 argument_list|(
-literal|"%s: error returned from LUN creation request:\n%s"
-argument_list|,
-name|__func__
+literal|"LUN creation error: %s"
 argument_list|,
 name|req
 operator|.
@@ -15029,22 +15028,27 @@ expr_stmt|;
 goto|goto
 name|bailout
 goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|warnx
 argument_list|(
-literal|"%s: unknown LUN creation request status %d"
+literal|"LUN creation warning: %s"
 argument_list|,
-name|__func__
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|warnx
+argument_list|(
+literal|"unknown LUN creation status: %d"
 argument_list|,
 name|req
 operator|.
@@ -15815,20 +15819,19 @@ goto|goto
 name|bailout
 goto|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|warnx
 argument_list|(
-literal|"%s: error returned from LUN removal request:\n%s"
-argument_list|,
-name|__func__
+literal|"LUN removal error: %s"
 argument_list|,
 name|req
 operator|.
@@ -15842,22 +15845,27 @@ expr_stmt|;
 goto|goto
 name|bailout
 goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|warnx
 argument_list|(
-literal|"%s: unknown LUN removal request status %d"
+literal|"LUN removal warning: %s"
 argument_list|,
-name|__func__
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|warnx
+argument_list|(
+literal|"unknown LUN removal status: %d"
 argument_list|,
 name|req
 operator|.
@@ -15874,7 +15882,7 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"LUN %d deleted successfully\n"
+literal|"LUN %d removed successfully\n"
 argument_list|,
 name|lun_id
 argument_list|)
@@ -16186,20 +16194,19 @@ goto|goto
 name|bailout
 goto|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|warnx
 argument_list|(
-literal|"%s: error returned from LUN modification request:\n%s"
-argument_list|,
-name|__func__
+literal|"LUN modification error: %s"
 argument_list|,
 name|req
 operator|.
@@ -16213,22 +16220,27 @@ expr_stmt|;
 goto|goto
 name|bailout
 goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|warnx
 argument_list|(
-literal|"%s: unknown LUN modification request status %d"
+literal|"LUN modification warning: %s"
 argument_list|,
-name|__func__
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|warnx
+argument_list|(
+literal|"unknown LUN modification status: %d"
 argument_list|,
 name|req
 operator|.
@@ -19962,11 +19974,18 @@ name|vp
 decl_stmt|;
 name|char
 modifier|*
-name|wwnn
+name|target
 decl_stmt|,
 modifier|*
-name|wwpn
+name|port
 decl_stmt|;
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|cctl_lun_nv
+argument_list|)
+name|init_list
+expr_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -20231,6 +20250,14 @@ operator|->
 name|cur_port
 operator|=
 name|cur_port
+expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|cur_port
+operator|->
+name|init_list
+argument_list|)
 expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
@@ -20684,7 +20711,7 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
-literal|"wwnn"
+literal|"target"
 argument_list|)
 operator|==
 literal|0
@@ -20692,7 +20719,7 @@ condition|)
 block|{
 name|cur_port
 operator|->
-name|wwnn
+name|target
 operator|=
 name|str
 expr_stmt|;
@@ -20708,7 +20735,7 @@ name|strcmp
 argument_list|(
 name|name
 argument_list|,
-literal|"wwpn"
+literal|"port"
 argument_list|)
 operator|==
 literal|0
@@ -20716,7 +20743,7 @@ condition|)
 block|{
 name|cur_port
 operator|->
-name|wwpn
+name|port
 operator|=
 name|str
 expr_stmt|;
@@ -20840,6 +20867,30 @@ name|str
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"initiator"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|STAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|cur_port
+operator|->
+name|init_list
+argument_list|,
+name|nv
+argument_list|,
+name|links
+argument_list|)
+expr_stmt|;
+else|else
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -20972,8 +21023,21 @@ name|frontend
 init|=
 name|NULL
 decl_stmt|;
+name|uint64_t
+name|portarg
+init|=
+name|UINT64_MAX
+decl_stmt|;
 name|int
 name|verbose
+init|=
+literal|0
+decl_stmt|,
+name|init
+init|=
+literal|0
+decl_stmt|,
+name|quiet
 init|=
 literal|0
 decl_stmt|;
@@ -21037,6 +21101,35 @@ name|strdup
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|init
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|portarg
+operator|=
+name|strtoll
+argument_list|(
+name|optarg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|quiet
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -21275,15 +21368,15 @@ goto|goto
 name|bailout
 goto|;
 block|}
+if|if
+condition|(
+name|quiet
+operator|==
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"Port Online Frontend %-12s pp vp %-18s %-18s\n"
-argument_list|,
-literal|"Name"
-argument_list|,
-literal|"WWNN"
-argument_list|,
-literal|"WWPN"
+literal|"Port Online Frontend Name     pp vp\n"
 argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
@@ -21322,9 +21415,26 @@ literal|0
 operator|)
 condition|)
 continue|continue;
+if|if
+condition|(
+operator|(
+name|portarg
+operator|!=
+name|UINT64_MAX
+operator|)
+operator|&&
+operator|(
+name|portarg
+operator|!=
+name|port
+operator|->
+name|port_id
+operator|)
+condition|)
+continue|continue;
 name|printf
 argument_list|(
-literal|"%-4ju %-6s %-8s %-12s %-2d %-2d %-18s %-18s\n"
+literal|"%-4ju %-6s %-8s %-8s %-2d %-2d %s\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -21355,20 +21465,62 @@ name|vp
 argument_list|,
 name|port
 operator|->
-name|wwnn
-argument_list|,
+name|port
+condition|?
 name|port
 operator|->
-name|wwpn
+name|port
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|init
+operator|||
 name|verbose
-operator|==
-literal|0
 condition|)
-continue|continue;
+block|{
+if|if
+condition|(
+name|port
+operator|->
+name|target
+condition|)
+name|printf
+argument_list|(
+literal|"  Target: %s\n"
+argument_list|,
+name|port
+operator|->
+name|target
+argument_list|)
+expr_stmt|;
+name|STAILQ_FOREACH
+argument_list|(
+argument|nv
+argument_list|,
+argument|&port->init_list
+argument_list|,
+argument|links
+argument_list|)
+block|{
+name|printf
+argument_list|(
+literal|"  Initiator: %s\n"
+argument_list|,
+name|nv
+operator|->
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|verbose
+condition|)
+block|{
 name|STAILQ_FOREACH
 argument_list|(
 argument|nv
@@ -21391,6 +21543,7 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|bailout
@@ -21467,7 +21620,7 @@ literal|"         ctladm inject      [dev_id]<-i action><-p pattern> [-r lba,len
 literal|"                            [-s len fmt [args]] [-c] [-d delete_id]\n"
 literal|"         ctladm port<-l | -o<on|off> | [-w wwnn][-W wwpn]>\n"
 literal|"                            [-p targ_port] [-t port_type] [-q] [-x]\n"
-literal|"         ctladm portlist    [-f frontend] [-v] [-x]\n"
+literal|"         ctladm portlist    [-f frontend] [-i] [-p targ_port] [-q] [-v] [-x]\n"
 literal|"         ctladm islist      [-v | -x]\n"
 literal|"         ctladm islogout<-a | -c connection-id | -i name | -p portal>\n"
 literal|"         ctladm isterminate<-a | -c connection-id | -i name | -p portal>\n"
@@ -21552,6 +21705,13 @@ literal|"-W wwpn                  : set WWPN for one frontend\n"
 literal|"-t port_type             : specify fc, scsi, ioctl, internal frontend type\n"
 literal|"-p targ_port             : specify target port number\n"
 literal|"-q                       : omit header in list output\n"
+literal|"-x                       : output port list in XML format\n"
+literal|"portlist options:\n"
+literal|"-f fronetnd              : specify frontend type\n"
+literal|"-i                       : report target and initiators addresses\n"
+literal|"-p targ_port             : specify target port number\n"
+literal|"-q                       : omit header in list output\n"
+literal|"-v                       : verbose output (report all port options)\n"
 literal|"-x                       : output port list in XML format\n"
 literal|"bbrread options:\n"
 literal|"-l lba                   : starting LBA\n"

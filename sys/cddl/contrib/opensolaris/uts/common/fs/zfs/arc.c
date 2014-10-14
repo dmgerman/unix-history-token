@@ -462,6 +462,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.arc_shrink_shift"
+argument_list|,
+operator|&
+name|zfs_arc_shrink_shift
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_vfs_zfs
@@ -528,6 +539,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"ARC average blocksize"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|arc_shrink_shift
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|arc_shrink_shift
+argument_list|,
+literal|0
+argument_list|,
+literal|"log2(fraction of arc to reclaim)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -22622,7 +22654,7 @@ name|dev
 operator|->
 name|l2ad_vdev
 argument_list|,
-name|write_asize
+name|write_psize
 argument_list|,
 literal|0
 argument_list|,

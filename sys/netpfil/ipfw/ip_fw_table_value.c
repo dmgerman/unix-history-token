@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: projects/ipfw/sys/netpfil/ipfw/ip_fw_table.c 270407 2014-08-23 12:41:39Z melifaro $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2164,7 +2164,7 @@ name|pval
 operator|==
 name|ch
 operator|->
-name|tablestate
+name|valuestate
 argument_list|,
 operator|(
 literal|"resize_storage() notify failure"

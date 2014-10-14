@@ -303,7 +303,9 @@ end_comment
 begin_function
 name|void
 name|db_force_whitespace
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -979,7 +981,9 @@ end_comment
 begin_function
 name|int
 name|db_print_position
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(

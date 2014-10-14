@@ -2763,7 +2763,7 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-name|atomic_inc
+name|mrsas_atomic_inc
 argument_list|(
 operator|&
 name|sc
@@ -2773,7 +2773,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_read
+name|mrsas_atomic_read
 argument_list|(
 operator|&
 name|sc

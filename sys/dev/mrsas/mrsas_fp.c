@@ -7132,7 +7132,7 @@ decl_stmt|;
 comment|/* get the pending cmds for the data and mirror arms */
 name|pend0
 operator|=
-name|atomic_read
+name|mrsas_atomic_read
 argument_list|(
 operator|&
 name|lbInfo
@@ -7145,7 +7145,7 @@ argument_list|)
 expr_stmt|;
 name|pend1
 operator|=
-name|atomic_read
+name|mrsas_atomic_read
 argument_list|(
 operator|&
 name|lbInfo
@@ -7316,7 +7316,7 @@ index|[
 name|arm
 index|]
 expr_stmt|;
-name|atomic_inc
+name|mrsas_atomic_inc
 argument_list|(
 operator|&
 name|lbInfo

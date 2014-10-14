@@ -75,11 +75,50 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"h_macros.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|__gl_stat_t
+value|struct stat
+end_define
+
+begin_define
+define|#
+directive|define
+name|_S_IFDIR
+value|S_IFDIR
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|"../../../h_macros.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -589,6 +628,22 @@ name|d_type
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|dir
+operator|.
+name|d_reclen
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Does not have _DIRENT_RECLEN */
+else|#
+directive|else
 name|dir
 operator|.
 name|d_reclen
@@ -603,6 +658,8 @@ operator|.
 name|d_namlen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|&
 name|dir
@@ -1056,6 +1113,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -1114,6 +1181,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ATF_TC
@@ -1195,6 +1267,13 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1202,6 +1281,8 @@ argument_list|,
 name|glob_star
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp

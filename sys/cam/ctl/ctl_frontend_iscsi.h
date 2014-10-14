@@ -79,6 +79,9 @@ decl_stmt|;
 name|int
 name|ct_online
 decl_stmt|;
+name|int
+name|ct_target_id
+decl_stmt|;
 name|struct
 name|ctl_port
 name|ct_port
@@ -348,6 +351,9 @@ index|]
 decl_stmt|;
 name|int
 name|online
+decl_stmt|;
+name|int
+name|last_target_id
 decl_stmt|;
 name|unsigned
 name|int

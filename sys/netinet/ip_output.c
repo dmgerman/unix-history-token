@@ -5565,11 +5565,11 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
+operator|!
+name|M_WRITABLE
+argument_list|(
 name|copym
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
+argument_list|)
 operator|||
 name|copym
 operator|->

@@ -254,26 +254,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SOC_OMAP3
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"Unsupported SoC"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|SOC_OMAP4
 argument_list|)
 end_if
