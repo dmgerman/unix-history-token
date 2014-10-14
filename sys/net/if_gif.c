@@ -4376,8 +4376,6 @@ argument_list|(
 name|sin6
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
@@ -4397,6 +4395,8 @@ name|sin6
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 break|break;
 case|case
