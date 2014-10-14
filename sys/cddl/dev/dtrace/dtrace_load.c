@@ -547,34 +547,6 @@ operator|&
 name|cpu_lock
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|800039
-comment|/* Enable device cloning. */
-name|clone_setup
-argument_list|(
-operator|&
-name|dtrace_clones
-argument_list|)
-expr_stmt|;
-comment|/* Setup device cloning events. */
-name|eh_tag
-operator|=
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|dev_clone
-argument_list|,
-name|dtrace_clone
-argument_list|,
-literal|0
-argument_list|,
-literal|1000
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|dtrace_dev
 operator|=
 name|make_dev
@@ -611,8 +583,6 @@ argument_list|,
 literal|"dtrace/helper"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 end_function
