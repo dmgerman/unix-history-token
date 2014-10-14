@@ -762,6 +762,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|m_clrprotoflags
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|netisr_queue
 argument_list|(
 name|isr

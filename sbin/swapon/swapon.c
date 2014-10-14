@@ -759,14 +759,12 @@ operator|!=
 name|NULL
 condition|)
 continue|continue;
-comment|/* 				 * Forcibly enable "late" option when file= is 				 * specified.  This is because mounting file 				 * systems with rw option is typically 				 * required to make the backing store ready. 				 */
 if|if
 condition|(
 name|which_prog
 operator|!=
 name|SWAPOFF
 operator|&&
-operator|(
 name|strstr
 argument_list|(
 name|fsp
@@ -775,20 +773,6 @@ name|fs_mntops
 argument_list|,
 literal|"late"
 argument_list|)
-operator|!=
-name|NULL
-operator|||
-name|strstr
-argument_list|(
-name|fsp
-operator|->
-name|fs_mntops
-argument_list|,
-literal|"file="
-argument_list|)
-operator|!=
-name|NULL
-operator|)
 operator|&&
 name|late
 operator|==

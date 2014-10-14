@@ -187,6 +187,16 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uuid_t
+name|gpt_uuid_freebsd
+init|=
+name|GPT_ENT_TYPE_FREEBSD
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uuid_t
 name|gpt_uuid_freebsd_boot
 init|=
 name|GPT_ENT_TYPE_FREEBSD_BOOT
@@ -678,6 +688,25 @@ condition|)
 return|return
 operator|(
 name|PART_FREEBSD_NANDFS
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|uuid_equal
+argument_list|(
+operator|&
+name|type
+argument_list|,
+operator|&
+name|gpt_uuid_freebsd
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+operator|(
+name|PART_FREEBSD
 operator|)
 return|;
 return|return
@@ -1712,6 +1741,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|DEBUG
+argument_list|(
+literal|"GPT detected"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pri
@@ -2154,6 +2188,11 @@ operator|(
 name|table
 operator|)
 return|;
+name|DEBUG
+argument_list|(
+literal|"EBR detected"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2712,6 +2751,11 @@ goto|goto
 name|out
 goto|;
 block|}
+name|DEBUG
+argument_list|(
+literal|"BSD detected"
+argument_list|)
+expr_stmt|;
 name|part
 operator|=
 operator|&
@@ -3195,6 +3239,11 @@ goto|goto
 name|out
 goto|;
 block|}
+name|DEBUG
+argument_list|(
+literal|"VTOC8 detected"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3882,6 +3931,11 @@ ifdef|#
 directive|ifdef
 name|LOADER_MBR_SUPPORT
 comment|/* Read MBR. */
+name|DEBUG
+argument_list|(
+literal|"MBR detected"
+argument_list|)
+expr_stmt|;
 name|table
 operator|->
 name|type

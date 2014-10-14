@@ -137,6 +137,14 @@ parameter_list|,
 name|struct
 name|inpcb
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -165,6 +173,11 @@ name|uint16_t
 name|u_txcslen
 decl_stmt|;
 comment|/* Coverage for outgoing datagrams. */
+name|void
+modifier|*
+name|u_tun_ctx
+decl_stmt|;
+comment|/* Tunneling callback context. */
 block|}
 struct|;
 end_struct
@@ -819,6 +832,10 @@ name|so
 parameter_list|,
 name|udp_tun_func_t
 name|f
+parameter_list|,
+name|void
+modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl

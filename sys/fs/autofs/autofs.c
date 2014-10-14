@@ -1275,7 +1275,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AUTOFS_LOCK
+name|AUTOFS_SLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1293,7 +1293,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1568,14 +1568,9 @@ name|last
 decl_stmt|;
 name|amp
 operator|=
-name|VFSTOAUTOFS
-argument_list|(
 name|anp
 operator|->
-name|an_vnode
-operator|->
-name|v_mount
-argument_list|)
+name|an_mount
 expr_stmt|;
 name|sx_assert
 argument_list|(

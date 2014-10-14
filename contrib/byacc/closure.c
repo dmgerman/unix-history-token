@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: closure.c,v 1.10 2014/02/19 00:45:42 Tom.Shields Exp $ */
+comment|/* $Id: closure.c,v 1.11 2014/09/18 00:40:07 tom Exp $ */
 end_comment
 
 begin_include
@@ -27,6 +27,14 @@ begin_decl_stmt
 name|unsigned
 modifier|*
 name|ruleset
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+modifier|*
+name|first_base
 decl_stmt|;
 end_decl_stmt
 
@@ -286,7 +294,7 @@ argument_list|(
 name|nvars
 argument_list|)
 expr_stmt|;
-name|first_derives
+name|first_base
 operator|=
 name|NEW2
 argument_list|(
@@ -296,6 +304,10 @@ name|rulesetsize
 argument_list|,
 name|unsigned
 argument_list|)
+expr_stmt|;
+name|first_derives
+operator|=
+name|first_base
 operator|-
 name|ntokens
 operator|*
@@ -755,14 +767,7 @@ argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(
-name|first_derives
-operator|+
-name|ntokens
-operator|*
-name|WORDSIZE
-argument_list|(
-name|nrules
-argument_list|)
+name|first_base
 argument_list|)
 expr_stmt|;
 block|}

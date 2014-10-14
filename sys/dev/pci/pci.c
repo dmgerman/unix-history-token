@@ -1230,6 +1230,11 @@ directive|define
 name|PCI_QUIRK_DISABLE_MSIX
 value|5
 comment|/* MSI-X doesn't work */
+define|#
+directive|define
+name|PCI_QUIRK_MSI_INTX_BUG
+value|6
+comment|/* PCIM_CMD_INTxDIS disables MSI */
 name|int
 name|arg1
 decl_stmt|;
@@ -1425,6 +1430,37 @@ block|,
 name|PCI_QUIRK_UNMAP_REG
 block|,
 literal|0x14
+block|,
+literal|0
+block|}
+block|,
+comment|/* 	 * Atheros AR8161/AR8162/E2200 ethernet controller has a bug that 	 * MSI interrupt does not assert if PCIM_CMD_INTxDIS bit of the 	 * command register is set. 	 */
+block|{
+literal|0x10911969
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xE0911969
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x10901969
+block|,
+name|PCI_QUIRK_MSI_INTX_BUG
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -19173,7 +19209,21 @@ name|mte_handlers
 operator|++
 expr_stmt|;
 block|}
-comment|/* Make sure that INTx is disabled if we are using MSI/MSIX */
+if|if
+condition|(
+operator|!
+name|pci_has_quirk
+argument_list|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|PCI_QUIRK_MSI_INTX_BUG
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Make sure that INTx is disabled if we are 			 * using MSI/MSIX 			 */
 name|pci_set_command_bit
 argument_list|(
 name|dev
@@ -19183,6 +19233,7 @@ argument_list|,
 name|PCIM_CMD_INTxDIS
 argument_list|)
 expr_stmt|;
+block|}
 name|bad
 label|:
 if|if
@@ -19696,6 +19747,15 @@ name|pci_get_function
 argument_list|(
 name|child
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|retval
+operator|+=
+name|bus_print_child_domain
+argument_list|(
+name|dev
+argument_list|,
+name|child
 argument_list|)
 expr_stmt|;
 name|retval

@@ -298,47 +298,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
-specifier|static
-name|void
-name|cuse_lock
-parameter_list|(
-name|void
-parameter_list|)
-function|__locks_exclusive
-parameter_list|(
-name|m_cuse
-parameter_list|)
-block|{
-name|pthread_mutex_lock
-argument_list|(
-operator|&
-name|m_cuse
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_define
+define|#
+directive|define
+name|CUSE_LOCK
+parameter_list|()
+define|\
+value|pthread_mutex_lock(&m_cuse)
+end_define
 
-begin_function
-specifier|static
-name|void
-name|cuse_unlock
-parameter_list|(
-name|void
-parameter_list|)
-function|__unlocks
-parameter_list|(
-name|m_cuse
-parameter_list|)
-block|{
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|m_cuse
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_define
+define|#
+directive|define
+name|CUSE_UNLOCK
+parameter_list|()
+define|\
+value|pthread_mutex_unlock(&m_cuse)
+end_define
 
 begin_function
 name|int
@@ -522,7 +498,7 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -593,7 +569,7 @@ name|ptr_max
 operator|)
 condition|)
 block|{
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 name|remainder
@@ -625,7 +601,7 @@ operator|)
 return|;
 block|}
 block|}
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -709,7 +685,7 @@ operator|)
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -763,7 +739,7 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 name|info
@@ -789,7 +765,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|a_cuse
@@ -864,7 +840,7 @@ condition|)
 block|{
 comment|/* ignore */
 block|}
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|a_cuse
@@ -878,7 +854,7 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|a_cuse
@@ -899,7 +875,7 @@ name|size
 operator|=
 name|size
 expr_stmt|;
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -909,7 +885,7 @@ operator|)
 return|;
 comment|/* success */
 block|}
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -949,7 +925,7 @@ literal|0
 operator|)
 return|;
 comment|/* false */
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -979,7 +955,7 @@ name|ptr
 condition|)
 break|break;
 block|}
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1002,6 +978,10 @@ name|ptr
 parameter_list|)
 block|{
 name|struct
+name|cuse_vm_allocation
+name|temp
+decl_stmt|;
+name|struct
 name|cuse_alloc_info
 name|info
 decl_stmt|;
@@ -1018,20 +998,7 @@ operator|<
 literal|0
 condition|)
 return|return;
-name|memset
-argument_list|(
-operator|&
-name|info
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|info
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 for|for
@@ -1060,26 +1027,45 @@ operator|!=
 name|ptr
 condition|)
 continue|continue;
-name|cuse_unlock
+name|temp
+operator|=
+name|a_cuse
+index|[
+name|n
+index|]
+expr_stmt|;
+name|CUSE_UNLOCK
 argument_list|()
+expr_stmt|;
+name|munmap
+argument_list|(
+name|temp
+operator|.
+name|ptr
+argument_list|,
+name|temp
+operator|.
+name|size
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|info
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|info
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|info
 operator|.
 name|alloc_nr
 operator|=
 name|n
-expr_stmt|;
-name|munmap
-argument_list|(
-name|ptr
-argument_list|,
-name|a_cuse
-index|[
-name|n
-index|]
-operator|.
-name|size
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -1096,11 +1082,20 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* ignore */
+comment|/* ignore any errors */
+name|DPRINTF
+argument_list|(
+literal|"Freeing memory failed: %d\n"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
 block|}
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|a_cuse
@@ -1123,7 +1118,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -1585,7 +1580,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -1598,7 +1593,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -1629,7 +1624,7 @@ operator|<
 literal|0
 condition|)
 return|return;
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -1642,7 +1637,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -1830,7 +1825,7 @@ name|info
 operator|.
 name|dev
 expr_stmt|;
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|enter
@@ -1888,7 +1883,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 name|DPRINTF
@@ -1990,7 +1985,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -2051,7 +2046,7 @@ operator|=
 name|CUSE_ERR_BUSY
 expr_stmt|;
 block|}
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -2332,7 +2327,7 @@ break|break;
 case|case
 name|CUSE_CMD_SIGNAL
 case|:
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -2389,7 +2384,7 @@ name|SIGHUP
 argument_list|)
 expr_stmt|;
 block|}
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 break|break;
@@ -2414,7 +2409,7 @@ name|command
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -2428,7 +2423,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* we ignore any sync command failures */
@@ -2471,7 +2466,7 @@ init|=
 name|pthread_self
 argument_list|()
 decl_stmt|;
-name|cuse_lock
+name|CUSE_LOCK
 argument_list|()
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -2493,7 +2488,7 @@ name|curr
 condition|)
 break|break;
 block|}
-name|cuse_unlock
+name|CUSE_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return

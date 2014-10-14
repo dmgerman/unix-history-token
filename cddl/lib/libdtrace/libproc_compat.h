@@ -67,7 +67,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|proc_name2sym((p), (s1), (s2), (sym))
+value|proc_name2sym(p, s1, s2, sym, a)
 end_define
 
 begin_define
@@ -142,7 +142,7 @@ name|p
 parameter_list|,
 name|obj
 parameter_list|)
-value|NULL
+value|(ctf_file_t *)proc_name2ctf(p, obj)
 end_define
 
 begin_define
@@ -170,7 +170,7 @@ name|f
 parameter_list|,
 name|arg
 parameter_list|)
-value|1
+value|proc_iter_objs(p, f, arg)
 end_define
 
 begin_define

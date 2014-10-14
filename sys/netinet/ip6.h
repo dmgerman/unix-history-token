@@ -1015,7 +1015,7 @@ parameter_list|,
 name|ret
 parameter_list|)
 define|\
-value|do {									\     if ((m)->m_next != NULL) {						\ 	if (((m)->m_flags& M_LOOP)&&					\ 	    ((m)->m_len< (off) + (hlen))&&				\ 	    (((m) = m_pullup((m), (off) + (hlen))) == NULL)) {		\ 		IP6STAT_INC(ip6s_exthdrtoolong);				\ 		return ret;						\ 	} else if ((m)->m_flags& M_EXT) {				\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			IP6STAT_INC(ip6s_exthdrtoolong);			\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	} else {							\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			IP6STAT_INC(ip6s_exthdrtoolong);			\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	}								\     } else {								\ 	if ((m)->m_len< (off) + (hlen)) {				\ 		IP6STAT_INC(ip6s_tooshort);				\ 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_truncated);	\ 		m_freem(m);						\ 		return ret;						\ 	}								\     }									\ } while (
+value|do {									\     if ((m)->m_next != NULL) {						\ 	if (((m)->m_flags& M_LOOP)&&					\ 	    ((m)->m_len< (off) + (hlen))&&				\ 	    (((m) = m_pullup((m), (off) + (hlen))) == NULL)) {		\ 		IP6STAT_INC(ip6s_exthdrtoolong);				\ 		return ret;						\ 	} else {							\ 		if ((m)->m_len< (off) + (hlen)) {			\ 			IP6STAT_INC(ip6s_exthdrtoolong);			\ 			m_freem(m);					\ 			return ret;					\ 		}							\ 	}								\     } else {								\ 	if ((m)->m_len< (off) + (hlen)) {				\ 		IP6STAT_INC(ip6s_tooshort);				\ 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_truncated);	\ 		m_freem(m);						\ 		return ret;						\ 	}								\     }									\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define

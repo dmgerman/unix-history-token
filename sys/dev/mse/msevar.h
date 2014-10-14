@@ -30,7 +30,7 @@ value|(MSE_CONFIG_ACCEL)
 end_define
 
 begin_comment
-comment|/*  * Software control structure for mouse. The sc_enablemouse(),  * sc_disablemouse() and sc_getmouse() routines must be called spl'd().  */
+comment|/*  * Software control structure for mouse. The sc_enablemouse(),  * sc_disablemouse() and sc_getmouse() routines must be called locked.  */
 end_comment
 
 begin_typedef
@@ -58,12 +58,6 @@ name|resource
 modifier|*
 name|sc_intr
 decl_stmt|;
-name|bus_space_tag_t
-name|sc_iot
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_ioh
-decl_stmt|;
 name|void
 modifier|*
 name|sc_ih
@@ -74,11 +68,10 @@ modifier|*
 name|sc_enablemouse
 function_decl|)
 parameter_list|(
-name|bus_space_tag_t
-name|t
-parameter_list|,
-name|bus_space_handle_t
-name|h
+name|struct
+name|resource
+modifier|*
+name|port
 parameter_list|)
 function_decl|;
 name|void
@@ -87,11 +80,10 @@ modifier|*
 name|sc_disablemouse
 function_decl|)
 parameter_list|(
-name|bus_space_tag_t
-name|t
-parameter_list|,
-name|bus_space_handle_t
-name|h
+name|struct
+name|resource
+modifier|*
+name|port
 parameter_list|)
 function_decl|;
 name|void
@@ -100,11 +92,10 @@ modifier|*
 name|sc_getmouse
 function_decl|)
 parameter_list|(
-name|bus_space_tag_t
-name|t
-parameter_list|,
-name|bus_space_handle_t
-name|h
+name|struct
+name|resource
+modifier|*
+name|port
 parameter_list|,
 name|int
 modifier|*
@@ -141,8 +132,12 @@ name|MOUSE_SYS_PACKETSIZE
 index|]
 decl_stmt|;
 name|struct
-name|callout_handle
+name|callout
 name|sc_callout
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_lock
 decl_stmt|;
 name|int
 name|sc_watchdog
@@ -171,6 +166,36 @@ name|mse_softc_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|MSE_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->sc_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSE_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->sc_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSE_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->sc_lock, MA_OWNED)
+end_define
+
 begin_comment
 comment|/* Flags */
 end_comment
@@ -187,6 +212,13 @@ define|#
 directive|define
 name|MSESC_WANT
 value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSESC_READING
+value|0x4
 end_define
 
 begin_comment
@@ -312,11 +344,10 @@ modifier|*
 name|m_enable
 function_decl|)
 parameter_list|(
-name|bus_space_tag_t
-name|t
-parameter_list|,
-name|bus_space_handle_t
-name|h
+name|struct
+name|resource
+modifier|*
+name|port
 parameter_list|)
 function_decl|;
 comment|/* Start routine */
@@ -326,11 +357,10 @@ modifier|*
 name|m_disable
 function_decl|)
 parameter_list|(
-name|bus_space_tag_t
-name|t
-parameter_list|,
-name|bus_space_handle_t
-name|h
+name|struct
+name|resource
+modifier|*
+name|port
 parameter_list|)
 function_decl|;
 comment|/* Disable interrupts routine */
@@ -340,11 +370,10 @@ modifier|*
 name|m_get
 function_decl|)
 parameter_list|(
-name|bus_space_tag_t
-name|t
-parameter_list|,
-name|bus_space_handle_t
-name|h
+name|struct
+name|resource
+modifier|*
+name|port
 parameter_list|,
 name|int
 modifier|*
@@ -382,6 +411,15 @@ end_decl_stmt
 begin_function_decl
 name|int
 name|mse_common_attach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mse_detach
 parameter_list|(
 name|device_t
 parameter_list|)

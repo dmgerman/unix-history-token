@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -38,6 +38,10 @@ argument_list|(
 literal|"utosi"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/******************************************************************************  *  * ACPICA policy for new _OSI strings:  *  * It is the stated policy of ACPICA that new _OSI strings will be integrated  * into this module as soon as possible after they are defined. It is strongly  * recommended that all ACPICA hosts mirror this policy and integrate any  * changes to this module as soon as possible. There are several historical  * reasons behind this policy:  *  * 1) New BIOSs tend to test only the case where the host responds TRUE to  *    the latest version of Windows, which would respond to the latest/newest  *    _OSI string. Not responding TRUE to the latest version of Windows will  *    risk executing untested code paths throughout the DSDT and SSDTs.  *  * 2) If a new _OSI string is recognized only after a significant delay, this  *    has the potential to cause problems on existing working machines because  *    of the possibility that a new and different path through the ASL code  *    will be executed.  *  * 3) New _OSI strings are tending to come out about once per year. A delay  *    in recognizing a new string for a significant amount of time risks the  *    release of another string which only compounds the initial problem.  *  *****************************************************************************/
+end_comment
 
 begin_comment
 comment|/*  * Strings supported by the _OSI predefined control method (which is  * implemented internally within this module.)  *  * March 2009: Removed "Linux" as this host no longer wants to respond true  * for this string. Basically, the only safe OS strings are windows-related  * and in many or most cases represent the only test path within the  * BIOS-provided ASL code.  *  * The last element of each entry is used to track the newest version of  * Windows that the BIOS has requested.  */
@@ -183,6 +187,17 @@ name|ACPI_OSI_WIN_8
 block|}
 block|,
 comment|/* Windows 8 and Server 2012 - Added 08/2012 */
+block|{
+literal|"Windows 2013"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|ACPI_OSI_WIN_8
+block|}
+block|,
+comment|/* Windows 8.1 and Server 2012 R2 - Added 01/2014 */
 comment|/* Feature Group Strings */
 block|{
 literal|"Extended Address Space Descriptor"

@@ -31,7 +31,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * The ID_REQ flag is used to say that the caller has requested a  * particular LUN ID in the req_lun_id field.  If we cannot allocate that  * LUN ID, the ctl_add_lun() call will fail.  *  * The POWERED_OFF flag tells us that the LUN should default to the powered  * off state.  It will return 0x04,0x02 until it is powered up.  ("Logical  * unit not ready, initializing command required.")  *  * The INOPERABLE flag tells us that this LUN is not operable for whatever  * reason.  This means that user data may have been (or has been?) lost.  * We will return 0x31,0x00 ("Medium format corrupted") until the host  * issues a FORMAT UNIT command to clear the error.  *  * The PRIMARY flag tells us that this LUN is registered as a Primary LUN  * which is accessible via the Master shelf controller in an HA. This flag  * being set indicates a Primary LUN. This flag being reset represents a  * Secondary LUN controlled by the Secondary controller in an HA  * configuration. Flag is applicable at this time to T_DIRECT types.   *  * The SERIAL_NUM flag tells us that the serial_num field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x80.  *  * The DEVID flag tells us that the device_id field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x83.  *  * The DEV_TYPE flag tells us that the device_type field is filled in.  *  * The UNMAP flag tells us that this LUN supports UNMAP.  */
+comment|/*  * The ID_REQ flag is used to say that the caller has requested a  * particular LUN ID in the req_lun_id field.  If we cannot allocate that  * LUN ID, the ctl_add_lun() call will fail.  *  * The POWERED_OFF flag tells us that the LUN should default to the powered  * off state.  It will return 0x04,0x02 until it is powered up.  ("Logical  * unit not ready, initializing command required.")  *  * The INOPERABLE flag tells us that this LUN is not operable for whatever  * reason.  This means that user data may have been (or has been?) lost.  * We will return 0x31,0x00 ("Medium format corrupted") until the host  * issues a FORMAT UNIT command to clear the error.  *  * The PRIMARY flag tells us that this LUN is registered as a Primary LUN  * which is accessible via the Master shelf controller in an HA. This flag  * being set indicates a Primary LUN. This flag being reset represents a  * Secondary LUN controlled by the Secondary controller in an HA  * configuration. Flag is applicable at this time to T_DIRECT types.   *  * The SERIAL_NUM flag tells us that the serial_num field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x80.  *  * The DEVID flag tells us that the device_id field is filled in and  * valid for use in SCSI INQUIRY VPD page 0x83.  *  * The DEV_TYPE flag tells us that the device_type field is filled in.  *  * The UNMAP flag tells us that this LUN supports UNMAP.  *  * The OFFLINE flag tells us that this LUN can not access backing store.  */
 end_comment
 
 begin_typedef
@@ -69,6 +69,10 @@ block|,
 name|CTL_LUN_FLAG_UNMAP
 init|=
 literal|0x80
+block|,
+name|CTL_LUN_FLAG_OFFLINE
+init|=
+literal|0x100
 block|}
 name|ctl_backend_lun_flags
 typedef|;
@@ -139,7 +143,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * The lun_type field is the SCSI device type of this particular LUN.  In  * general, this should be T_DIRECT, although backends will want to create  * a processor LUN, typically at LUN 0.  See scsi_all.h for the defines for  * the various SCSI device types.  *  * The flags are described above.  *  * The be_lun field is the backend driver's own context that will get  * passsed back so that it can tell which LUN CTL is referencing.  *  * maxlba is the maximum accessible LBA on the LUN.  Note that this is  * different from the capacity of the array.  capacity = maxlba + 1  *  * blocksize is the size, in bytes, of each LBA on the LUN.  In general  * this should be 512.  In theory CTL should be able to handle other block  * sizes.  Host application software may not deal with it very well, though.  *  * pblockexp is the log2() of number of LBAs on the LUN per physical sector.  *  * pblockoff is the lowest LBA on the LUN aligned ot physical sector.  *  * req_lun_id is the requested LUN ID.  CTL only pays attention to this  * field if the CTL_LUN_FLAG_ID_REQ flag is set.  If the requested LUN ID is  * not available, the LUN addition will fail.  If a particular LUN ID isn't  * requested, the first available LUN ID will be allocated.  *  * serial_num is the device serial number returned in the SCSI INQUIRY VPD  * page 0x80.  This should be a unique, per-shelf value.  The data inside  * this field should be ASCII only, left aligned, and any unused space  * should be padded out with ASCII spaces.  This field should NOT be NULL  * terminated.  *  * device_id is the T10 device identifier returned in the SCSI INQUIRY VPD  * page 0x83.  This should be a unique, per-LUN value.  The data inside  * this field should be ASCII only, left aligned, and any unused space  * should be padded with ASCII spaces.  This field should NOT be NULL  * terminated.  *  * The lun_shutdown() method is the callback for the ctl_invalidate_lun()  * call.  It is called when all outstanding I/O for that LUN has been  * completed and CTL has deleted the resources for that LUN.  When the CTL  * backend gets this call, it can safely free its per-LUN resources.  *  * The lun_config_status() method is the callback for the ctl_add_lun()  * call.  It is called when the LUN is successfully added, or when LUN  * addition fails.  If the LUN is successfully added, the backend may call  * the ctl_enable_lun() method to enable the LUN.  *  * The be field is a pointer to the ctl_backend_driver structure, which  * contains the backend methods to be called by CTL.  *  * The ctl_lun field is for CTL internal use only, and should not be used  * by the backend.  *  * The links field is for CTL internal use only, and should not be used by  * the backend.  */
+comment|/*  * The lun_type field is the SCSI device type of this particular LUN.  In  * general, this should be T_DIRECT, although backends will want to create  * a processor LUN, typically at LUN 0.  See scsi_all.h for the defines for  * the various SCSI device types.  *  * The flags are described above.  *  * The be_lun field is the backend driver's own context that will get  * passsed back so that it can tell which LUN CTL is referencing.  *  * maxlba is the maximum accessible LBA on the LUN.  Note that this is  * different from the capacity of the array.  capacity = maxlba + 1  *  * blocksize is the size, in bytes, of each LBA on the LUN.  In general  * this should be 512.  In theory CTL should be able to handle other block  * sizes.  Host application software may not deal with it very well, though.  *  * pblockexp is the log2() of number of LBAs on the LUN per physical sector.  *  * pblockoff is the lowest LBA on the LUN aligned ot physical sector.  *  * atomicblock is the number of blocks that can be written atomically.  *  * req_lun_id is the requested LUN ID.  CTL only pays attention to this  * field if the CTL_LUN_FLAG_ID_REQ flag is set.  If the requested LUN ID is  * not available, the LUN addition will fail.  If a particular LUN ID isn't  * requested, the first available LUN ID will be allocated.  *  * serial_num is the device serial number returned in the SCSI INQUIRY VPD  * page 0x80.  This should be a unique, per-shelf value.  The data inside  * this field should be ASCII only, left aligned, and any unused space  * should be padded out with ASCII spaces.  This field should NOT be NULL  * terminated.  *  * device_id is the T10 device identifier returned in the SCSI INQUIRY VPD  * page 0x83.  This should be a unique, per-LUN value.  The data inside  * this field should be ASCII only, left aligned, and any unused space  * should be padded with ASCII spaces.  This field should NOT be NULL  * terminated.  *  * The lun_shutdown() method is the callback for the ctl_invalidate_lun()  * call.  It is called when all outstanding I/O for that LUN has been  * completed and CTL has deleted the resources for that LUN.  When the CTL  * backend gets this call, it can safely free its per-LUN resources.  *  * The lun_config_status() method is the callback for the ctl_add_lun()  * call.  It is called when the LUN is successfully added, or when LUN  * addition fails.  If the LUN is successfully added, the backend may call  * the ctl_enable_lun() method to enable the LUN.  *  * The be field is a pointer to the ctl_backend_driver structure, which  * contains the backend methods to be called by CTL.  *  * The ctl_lun field is for CTL internal use only, and should not be used  * by the backend.  *  * The links field is for CTL internal use only, and should not be used by  * the backend.  */
 end_comment
 
 begin_struct
@@ -173,6 +177,10 @@ decl_stmt|;
 comment|/* passed to CTL */
 name|uint16_t
 name|pblockoff
+decl_stmt|;
+comment|/* passed to CTL */
+name|uint32_t
+name|atomicblock
 decl_stmt|;
 comment|/* passed to CTL */
 name|uint32_t
@@ -568,30 +576,6 @@ name|struct
 name|ctl_be_lun
 modifier|*
 name|be_lun
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * If a LUN is locked on or unlocked from a power/APS standpoint, call  * ctl_lun_power_lock() to update the current status in CTL's APS subpage.  * Set the lock flag to 1 to lock the LUN, set it to 0 to unlock the LUN.  */
-end_comment
-
-begin_function_decl
-name|int
-name|ctl_lun_power_lock
-parameter_list|(
-name|struct
-name|ctl_be_lun
-modifier|*
-name|be_lun
-parameter_list|,
-name|struct
-name|ctl_nexus
-modifier|*
-name|nexus
-parameter_list|,
-name|int
-name|lock
 parameter_list|)
 function_decl|;
 end_function_decl

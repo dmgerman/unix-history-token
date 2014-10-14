@@ -385,18 +385,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|icl_conn_shutdown
-parameter_list|(
-name|struct
-name|icl_conn
-modifier|*
-name|ic
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|icl_conn_close
 parameter_list|(
 name|struct

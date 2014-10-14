@@ -404,14 +404,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* This mutex protects the keg list */
+comment|/* This RW lock protects the keg list */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx_padalign
-name|uma_mtx
+name|rwlock_padalign
+name|uma_rwlock
 decl_stmt|;
 end_decl_stmt
 
@@ -3767,12 +3767,6 @@ condition|)
 goto|goto
 name|out
 goto|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|uma_mtx
-argument_list|)
-expr_stmt|;
 name|msleep
 argument_list|(
 name|zone
@@ -3786,12 +3780,6 @@ argument_list|,
 literal|"zonedrain"
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|uma_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -3811,7 +3799,7 @@ argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The DRAINING flag protects us from being freed while 	 * we're running.  Normally the uma_mtx would protect us but we 	 * must be able to release and acquire the right lock for each keg. 	 */
+comment|/* 	 * The DRAINING flag protects us from being freed while 	 * we're running.  Normally the uma_rwlock would protect us but we 	 * must be able to release and acquire the right lock for each keg. 	 */
 name|zone_foreach_keg
 argument_list|(
 name|zone
@@ -6489,10 +6477,10 @@ argument_list|,
 name|uz_link
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|rw_wlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -6505,10 +6493,10 @@ argument_list|,
 name|uk_link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|rw_wunlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -6756,10 +6744,10 @@ name|zone
 operator|->
 name|uz_lock
 expr_stmt|;
-name|mtx_lock
+name|rw_wlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -6772,10 +6760,10 @@ argument_list|,
 name|uz_link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|rw_wunlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6860,10 +6848,10 @@ name|uz_flags
 operator||=
 name|UMA_ZONE_SECONDARY
 expr_stmt|;
-name|mtx_lock
+name|rw_wlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|ZONE_LOCK
@@ -6909,10 +6897,10 @@ argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|rw_wunlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 block|}
@@ -7338,10 +7326,10 @@ argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|rw_wlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -7351,10 +7339,10 @@ argument_list|,
 name|uz_link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|rw_wunlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX there are some races here where 	 * the zone can be drained but zone lock 	 * released and then refilled before we 	 * remove it... we dont care for now 	 */
@@ -7432,10 +7420,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_lock
+name|rw_wlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -7445,10 +7433,10 @@ argument_list|,
 name|uk_link
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|rw_wunlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|zone_free_item
@@ -7496,10 +7484,10 @@ decl_stmt|;
 name|uma_zone_t
 name|zone
 decl_stmt|;
-name|mtx_lock
+name|rw_rlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -7525,10 +7513,10 @@ name|zone
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|rw_runlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 block|}
@@ -7577,16 +7565,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_init
+name|rw_init
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|,
 literal|"UMA lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* "manually" create the initial zone */
@@ -14133,10 +14117,10 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_lock
+name|rw_rlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -14160,10 +14144,10 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|rw_runlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -14266,10 +14250,10 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_lock
+name|rw_rlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -14707,10 +14691,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock
+name|rw_runlock
 argument_list|(
 operator|&
-name|uma_mtx
+name|uma_rwlock
 argument_list|)
 expr_stmt|;
 name|error

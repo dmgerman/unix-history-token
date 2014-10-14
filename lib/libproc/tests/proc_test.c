@@ -1000,6 +1000,11 @@ name|sym1
 decl_stmt|,
 name|sym2
 decl_stmt|;
+name|prsyminfo_t
+name|si1
+decl_stmt|,
+name|si2
+decl_stmt|;
 name|struct
 name|proc_handle
 modifier|*
@@ -1039,6 +1044,9 @@ literal|"main"
 argument_list|,
 operator|&
 name|sym1
+argument_list|,
+operator|&
+name|si1
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_EQ_MSG
@@ -1064,6 +1072,9 @@ literal|"main"
 argument_list|,
 operator|&
 name|sym2
+argument_list|,
+operator|&
+name|si2
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_EQ_MSG
@@ -1094,6 +1105,17 @@ argument_list|)
 argument_list|)
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|ATF_CHECK_EQ
+argument_list|(
+name|si1
+operator|.
+name|prs_id
+argument_list|,
+name|si2
+operator|.
+name|prs_id
 argument_list|)
 expr_stmt|;
 name|ATF_CHECK_EQ_MSG
@@ -1198,6 +1220,8 @@ literal|"main"
 argument_list|,
 operator|&
 name|main_sym
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_EQ_MSG
@@ -1221,6 +1245,8 @@ literal|"r_debug_state"
 argument_list|,
 operator|&
 name|r_debug_state_sym
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_EQ_MSG

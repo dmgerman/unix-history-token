@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -162,7 +162,36 @@ literal|"Root Port ATS Capability"
 block|,
 literal|"Remapping Hardware Static Affinity"
 block|,
+literal|"ACPI Namespace Device Declaration"
+block|,
 literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmDmarScope
+index|[]
+init|=
+block|{
+literal|"Reserved value"
+block|,
+literal|"PCI Endpoint Device"
+block|,
+literal|"PCI Bridge Device"
+block|,
+literal|"IOAPIC Device"
+block|,
+literal|"Message-capable HPET Device"
+block|,
+literal|"Namespace Device"
+block|,
+literal|"Unknown Scope Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -329,6 +358,25 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+name|AcpiDmGtdtSubnames
+index|[]
+init|=
+block|{
+literal|"Generic Timer Block"
+block|,
+literal|"Generic Watchdog Timer"
+block|,
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
 name|AcpiDmHestSubnames
 index|[]
 init|=
@@ -441,6 +489,32 @@ comment|/* ACPI_MADT_GENERIC_INTERRUPT */
 literal|"Generic Interrupt Distributor"
 block|,
 comment|/* ACPI_MADT_GENERIC_DISTRIBUTOR */
+literal|"Generic MSI Frame"
+block|,
+comment|/* ACPI_MADT_GENERIC_MSI_FRAME */
+literal|"Generic Interrupt Redistributor"
+block|,
+comment|/* ACPI_MADT_GENERIC_REDISTRIBUTOR */
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmPcctSubnames
+index|[]
+init|=
+block|{
+literal|"Generic Communications Subspace"
+block|,
+comment|/* ACPI_PCCT_TYPE_GENERIC_SUBSPACE */
+literal|"HW-Reduced Communications Subspace"
+block|,
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
 block|}
@@ -505,6 +579,8 @@ literal|"Memory Affinity"
 block|,
 literal|"Processor Local x2APIC Affinity"
 block|,
+literal|"GICC Affinity"
+block|,
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
 block|}
@@ -523,6 +599,25 @@ block|{
 literal|"Hardware Definition Block"
 block|,
 literal|"Memory Definition Block"
+block|,
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmLpitSubnames
+index|[]
+init|=
+block|{
+literal|"Native C-state Idle Structure"
+block|,
+literal|"Simple I/O Idle Structure"
 block|,
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
@@ -697,13 +792,13 @@ block|,
 block|{
 name|ACPI_SIG_DBG2
 block|,
-name|NULL
+name|AcpiDmTableInfoDbg2
 block|,
 name|AcpiDmDumpDbg2
 block|,
-name|NULL
+name|DtCompileDbg2
 block|,
-name|NULL
+name|TemplateDbg2
 block|,
 literal|"Debug Port table type 2"
 block|}
@@ -809,11 +904,11 @@ block|,
 block|{
 name|ACPI_SIG_GTDT
 block|,
-name|AcpiDmTableInfoGtdt
-block|,
 name|NULL
 block|,
-name|NULL
+name|AcpiDmDumpGtdt
+block|,
+name|DtCompileGtdt
 block|,
 name|TemplateGtdt
 block|,
@@ -860,6 +955,20 @@ block|,
 name|TemplateIvrs
 block|,
 literal|"I/O Virtualization Reporting Structure"
+block|}
+block|,
+block|{
+name|ACPI_SIG_LPIT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpLpit
+block|,
+name|DtCompileLpit
+block|,
+name|TemplateLpit
+block|,
+literal|"Low Power Idle Table"
 block|}
 block|,
 block|{
@@ -949,13 +1058,13 @@ block|,
 block|{
 name|ACPI_SIG_PCCT
 block|,
-name|NULL
+name|AcpiDmTableInfoPcct
 block|,
 name|AcpiDmDumpPcct
 block|,
-name|NULL
+name|DtCompilePcct
 block|,
-name|NULL
+name|TemplatePcct
 block|,
 literal|"Platform Communications Channel Table"
 block|}
@@ -1974,6 +2083,9 @@ decl_stmt|;
 name|UINT16
 name|Temp16
 decl_stmt|;
+name|UINT64
+name|Value
+decl_stmt|;
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
@@ -2102,7 +2214,13 @@ case|case
 name|ACPI_DMT_IVRS
 case|:
 case|case
+name|ACPI_DMT_GTDT
+case|:
+case|case
 name|ACPI_DMT_MADT
+case|:
+case|case
+name|ACPI_DMT_PCCT
 case|:
 case|case
 name|ACPI_DMT_PMTT
@@ -2130,6 +2248,9 @@ name|ACPI_DMT_ERSTACT
 case|:
 case|case
 name|ACPI_DMT_ERSTINST
+case|:
+case|case
+name|ACPI_DMT_DMAR_SCOPE
 case|:
 name|ByteLength
 operator|=
@@ -2169,6 +2290,9 @@ name|ACPI_DMT_SIG
 case|:
 case|case
 name|ACPI_DMT_SLIC
+case|:
+case|case
+name|ACPI_DMT_LPIT
 case|:
 name|ByteLength
 operator|=
@@ -2518,6 +2642,10 @@ case|case
 name|ACPI_DMT_UINT64
 case|:
 comment|/*              * Dump bytes - high byte first, low byte last.              * Note: All ACPI tables are little-endian.              */
+name|Value
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|Temp8
@@ -2545,6 +2673,39 @@ name|Temp8
 operator|-
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|Value
+operator||=
+name|Target
+index|[
+name|Temp8
+operator|-
+literal|1
+index|]
+expr_stmt|;
+name|Value
+operator|<<=
+literal|8
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|Value
+operator|&&
+operator|(
+name|Info
+operator|->
+name|Flags
+operator|&
+name|DT_DESCRIBES_OPTIONAL
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" [Optional field not present]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3058,6 +3219,41 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_DMAR_SCOPE
+case|:
+comment|/* DMAR device scope types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_DMAR_SCOPE_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_DMAR_SCOPE_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmDmarScope
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_EINJACT
 case|:
 comment|/* EINJ Action types */
@@ -3191,6 +3387,41 @@ operator|*
 name|Target
 argument_list|,
 name|AcpiDmErstInstructions
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_GTDT
+case|:
+comment|/* GTDT subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_GTDT_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_GTDT_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmGtdtSubnames
 index|[
 name|Temp8
 index|]
@@ -3336,6 +3567,41 @@ operator|*
 name|Target
 argument_list|,
 name|AcpiDmMadtSubnames
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_PCCT
+case|:
+comment|/* PCCT subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_PCCT_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_PCCT_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmPcctSubnames
 index|[
 name|Temp8
 index|]
@@ -3537,6 +3803,63 @@ block|}
 name|AcpiOsPrintf
 argument_list|(
 name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_LPIT
+case|:
+comment|/* LPIT subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+switch|switch
+condition|(
+name|Temp8
+condition|)
+block|{
+case|case
+name|ACPI_LPIT_TYPE_NATIVE_CSTATE
+case|:
+name|Name
+operator|=
+name|AcpiDmLpitSubnames
+index|[
+literal|0
+index|]
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_LPIT_TYPE_SIMPLE_IO
+case|:
+name|Name
+operator|=
+name|AcpiDmLpitSubnames
+index|[
+literal|1
+index|]
+expr_stmt|;
+break|break;
+default|default:
+name|Name
+operator|=
+name|AcpiDmLpitSubnames
+index|[
+literal|2
+index|]
+expr_stmt|;
+break|break;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT32_FORMAT
 argument_list|,
 operator|*
 name|Target

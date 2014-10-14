@@ -209,6 +209,16 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+case|case
+name|MSR_RAPL_POWER_UNIT
+case|:
+comment|/* 			 * Use the default value documented in section 			 * "RAPL Interfaces" in Intel SDM vol3. 			 */
+operator|*
+name|val
+operator|=
+literal|0x000a1003
+expr_stmt|;
+break|break;
 default|default:
 name|error
 operator|=

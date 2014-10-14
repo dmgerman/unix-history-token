@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/compiler/dtcompiler.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acapps.h>
 end_include
 
 begin_define
@@ -278,7 +284,7 @@ condition|)
 block|{
 name|ReturnString
 operator|=
-name|UtLocalCalloc
+name|UtStringCacheCalloc
 argument_list|(
 literal|1
 argument_list|)
@@ -414,7 +420,7 @@ literal|1
 expr_stmt|;
 name|ReturnString
 operator|=
-name|UtLocalCalloc
+name|UtStringCacheCalloc
 argument_list|(
 name|Length
 operator|+
@@ -890,13 +896,8 @@ condition|)
 block|{
 name|Field
 operator|=
-name|UtLocalCalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|DT_FIELD
-argument_list|)
-argument_list|)
+name|UtFieldCacheCalloc
+argument_list|()
 expr_stmt|;
 name|Field
 operator|->
@@ -940,20 +941,7 @@ name|Field
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-comment|/* Ignore this field, it has no valid data */
-block|{
-name|ACPI_FREE
-argument_list|(
-name|Name
-argument_list|)
-expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|Value
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* Else -- Ignore this field, it has no valid data */
 return|return
 operator|(
 name|AE_OK
@@ -1592,11 +1580,22 @@ expr_stmt|;
 comment|/* Get the file size */
 name|Gbl_InputByteCount
 operator|=
-name|DtGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|Handle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_InputByteCount
+operator|==
+name|ACPI_UINT32_MAX
+condition|)
+block|{
+name|AslAbort
+argument_list|()
+expr_stmt|;
+block|}
 name|Gbl_CurrentLineNumber
 operator|=
 literal|0
@@ -1751,7 +1750,7 @@ argument_list|)
 expr_stmt|;
 name|Gbl_TableLength
 operator|=
-name|DtGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|Gbl_Files
 index|[
@@ -1761,6 +1760,17 @@ operator|.
 name|Handle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_TableLength
+operator|==
+name|ACPI_UINT32_MAX
+condition|)
+block|{
+name|AslAbort
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2271,6 +2281,13 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_DEBUG_OUTPUT
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

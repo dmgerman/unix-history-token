@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|__ACPREDEF_H__
 end_define
 
 begin_comment
-comment|/******************************************************************************  *  * Return Package types  *  * 1) PTYPE1 packages do not contain sub-packages.  *  * ACPI_PTYPE1_FIXED: Fixed-length length, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *  * ACPI_PTYPE1_VAR: Variable-length length. Zero-length package is allowed:  *      object type (Int/Buf/Ref)  *  * ACPI_PTYPE1_OPTION: Package has some required and some optional elements  *      (Used for _PRW)  *  *  * 2) PTYPE2 packages contain a Variable-length number of sub-packages. Each  *    of the different types describe the contents of each of the sub-packages.  *  * ACPI_PTYPE2: Each subpackage contains 1 or 2 object types. Zero-length  *      parent package is allowed:  *      object type  *      count  *      object type  *      count  *      (Used for _ALR,_MLS,_PSS,_TRT,_TSS)  *  * ACPI_PTYPE2_COUNT: Each subpackage has a count as first element.  *      Zero-length parent package is allowed:  *      object type  *      (Used for _CSD,_PSD,_TSD)  *  * ACPI_PTYPE2_PKG_COUNT: Count of subpackages at start, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *      (Used for _CST)  *  * ACPI_PTYPE2_FIXED: Each subpackage is of Fixed-length. Zero-length  *      parent package is allowed.  *      (Used for _PRT)  *  * ACPI_PTYPE2_MIN: Each subpackage has a Variable-length but minimum length.  *      Zero-length parent package is allowed:  *      (Used for _HPX)  *  * ACPI_PTYPE2_REV_FIXED: Revision at start, each subpackage is Fixed-length  *      (Used for _ART, _FPS)  *  * ACPI_PTYPE2_FIX_VAR: Each subpackage consists of some fixed-length elements  *      followed by an optional element. Zero-length parent package is allowed.  *      object type  *      count  *      object type  *      count = 0 (optional)  *      (Used for _DLM)  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Return Package types  *  * 1) PTYPE1 packages do not contain subpackages.  *  * ACPI_PTYPE1_FIXED: Fixed-length length, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *  * ACPI_PTYPE1_VAR: Variable-length length. Zero-length package is allowed:  *      object type (Int/Buf/Ref)  *  * ACPI_PTYPE1_OPTION: Package has some required and some optional elements  *      (Used for _PRW)  *  *  * 2) PTYPE2 packages contain a Variable-length number of subpackages. Each  *    of the different types describe the contents of each of the subpackages.  *  * ACPI_PTYPE2: Each subpackage contains 1 or 2 object types. Zero-length  *      parent package is allowed:  *      object type  *      count  *      object type  *      count  *      (Used for _ALR,_MLS,_PSS,_TRT,_TSS)  *  * ACPI_PTYPE2_COUNT: Each subpackage has a count as first element.  *      Zero-length parent package is allowed:  *      object type  *      (Used for _CSD,_PSD,_TSD)  *  * ACPI_PTYPE2_PKG_COUNT: Count of subpackages at start, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *      (Used for _CST)  *  * ACPI_PTYPE2_FIXED: Each subpackage is of Fixed-length. Zero-length  *      parent package is allowed.  *      (Used for _PRT)  *  * ACPI_PTYPE2_MIN: Each subpackage has a Variable-length but minimum length.  *      Zero-length parent package is allowed:  *      (Used for _HPX)  *  * ACPI_PTYPE2_REV_FIXED: Revision at start, each subpackage is Fixed-length  *      (Used for _ART, _FPS)  *  * ACPI_PTYPE2_FIX_VAR: Each subpackage consists of some fixed-length elements  *      followed by an optional element. Zero-length parent package is allowed.  *      object type  *      count  *      object type  *      count = 0 (optional)  *      (Used for _DLM)  *  * ACPI_PTYPE2_UUID_PAIR: Each subpackage is preceded by a UUID Buffer. The UUID  *      defines the format of the package. Zero-length parent package is  *      allowed.  *      (Used for _DSD)  *  *****************************************************************************/
 end_comment
 
 begin_enum
@@ -66,6 +66,10 @@ block|,
 name|ACPI_PTYPE2_FIX_VAR
 init|=
 literal|10
+block|,
+name|ACPI_PTYPE2_UUID_PAIR
+init|=
+literal|11
 block|}
 enum|;
 end_enum
@@ -1209,6 +1213,20 @@ block|,
 comment|/* See PCI firmware spec 3.0 */
 block|{
 block|{
+literal|"_CCA"
+block|,
+name|METHOD_0ARGS
+block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_INTEGER
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* ACPI 5.1 */
+block|{
+block|{
 literal|"_CDM"
 block|,
 name|METHOD_0ARGS
@@ -1606,6 +1624,35 @@ block|,
 name|METHOD_NO_RETURN_VALUE
 block|}
 block|}
+block|,
+block|{
+block|{
+literal|"_DSD"
+block|,
+name|METHOD_0ARGS
+block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_PACKAGE
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* Variable-length (Pkgs) each: 1 Buf, 1 Pkg */
+name|PACKAGE_INFO
+argument_list|(
+name|ACPI_PTYPE2_UUID_PAIR
+argument_list|,
+name|ACPI_RTYPE_BUFFER
+argument_list|,
+literal|1
+argument_list|,
+name|ACPI_RTYPE_PACKAGE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 block|,
 block|{
 block|{
@@ -2226,7 +2273,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/*      * For _HPX, a single package is returned, containing a variable-length number      * of sub-packages. Each sub-package contains a PCI record setting.      * There are several different type of record settings, of different      * lengths, but all elements of all settings are Integers.      */
+comment|/*      * For _HPX, a single package is returned, containing a variable-length number      * of subpackages. Each subpackage contains a PCI record setting.      * There are several different type of record settings, of different      * lengths, but all elements of all settings are Integers.      */
 block|{
 block|{
 literal|"_HPX"
@@ -2328,6 +2375,35 @@ argument|ACPI_RTYPE_INTEGER
 argument_list|)
 block|}
 block|}
+block|,
+block|{
+block|{
+literal|"_LPD"
+block|,
+name|METHOD_0ARGS
+block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_PACKAGE
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* Variable-length (1 Int(rev), n Pkg (2 Int) */
+name|PACKAGE_INFO
+argument_list|(
+name|ACPI_PTYPE2_REV_FIXED
+argument_list|,
+name|ACPI_RTYPE_INTEGER
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 block|,
 block|{
 block|{

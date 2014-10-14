@@ -427,61 +427,6 @@ define|#
 directive|define
 name|ra_lacpreq
 value|ra_psc.rpsc_lacp
-name|int
-name|ra_opts
-decl_stmt|;
-comment|/* Option bitmap */
-define|#
-directive|define
-name|LAGG_OPT_NONE
-value|0x00
-define|#
-directive|define
-name|LAGG_OPT_USE_FLOWID
-value|0x01
-comment|/* use M_FLOWID */
-comment|/* Pseudo flags which are used in ra_opts but not stored into sc_opts. */
-define|#
-directive|define
-name|LAGG_OPT_FLOWIDSHIFT
-value|0x02
-comment|/* Set flowid */
-define|#
-directive|define
-name|LAGG_OPT_FLOWIDSHIFT_MASK
-value|0x1f
-comment|/* flowid is uint32_t */
-define|#
-directive|define
-name|LAGG_OPT_LACP_STRICT
-value|0x10
-comment|/* LACP strict mode */
-define|#
-directive|define
-name|LAGG_OPT_LACP_TXTEST
-value|0x20
-comment|/* LACP debug: txtest */
-define|#
-directive|define
-name|LAGG_OPT_LACP_RXTEST
-value|0x40
-comment|/* LACP debug: rxtest */
-name|u_int
-name|ra_count
-decl_stmt|;
-comment|/* number of ports */
-name|u_int
-name|ra_active
-decl_stmt|;
-comment|/* active port count */
-name|u_int
-name|ra_flapping
-decl_stmt|;
-comment|/* number of flapping */
-name|int
-name|ra_flowid_shift
-decl_stmt|;
-comment|/* shift the flowid */
 block|}
 struct|;
 end_struct
@@ -531,6 +476,97 @@ define|#
 directive|define
 name|SIOCSLAGGHASH
 value|_IOW('i', 146, struct lagg_reqflags)
+end_define
+
+begin_struct
+struct|struct
+name|lagg_reqopts
+block|{
+name|char
+name|ro_ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* name of the lagg */
+name|int
+name|ro_opts
+decl_stmt|;
+comment|/* Option bitmap */
+define|#
+directive|define
+name|LAGG_OPT_NONE
+value|0x00
+define|#
+directive|define
+name|LAGG_OPT_USE_FLOWID
+value|0x01
+comment|/* use M_FLOWID */
+comment|/* Pseudo flags which are used in ro_opts but not stored into sc_opts. */
+define|#
+directive|define
+name|LAGG_OPT_FLOWIDSHIFT
+value|0x02
+comment|/* Set flowid */
+define|#
+directive|define
+name|LAGG_OPT_FLOWIDSHIFT_MASK
+value|0x1f
+comment|/* flowid is uint32_t */
+define|#
+directive|define
+name|LAGG_OPT_LACP_STRICT
+value|0x10
+comment|/* LACP strict mode */
+define|#
+directive|define
+name|LAGG_OPT_LACP_TXTEST
+value|0x20
+comment|/* LACP debug: txtest */
+define|#
+directive|define
+name|LAGG_OPT_LACP_RXTEST
+value|0x40
+comment|/* LACP debug: rxtest */
+name|u_int
+name|ro_count
+decl_stmt|;
+comment|/* number of ports */
+name|u_int
+name|ro_active
+decl_stmt|;
+comment|/* active port count */
+name|u_int
+name|ro_flapping
+decl_stmt|;
+comment|/* number of flapping */
+name|int
+name|ro_flowid_shift
+decl_stmt|;
+comment|/* shift the flowid */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOCGLAGGOPTS
+value|_IOWR('i', 152, struct lagg_reqopts)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSLAGGOPTS
+value|_IOW('i', 153, struct lagg_reqopts)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAGG_OPT_BITS
+value|"\020\001USE_FLOWID\005LACP_STRICT" \ 				"\006LACP_TXTEST\007LACP_RXTEST"
 end_define
 
 begin_ifdef
@@ -704,6 +740,9 @@ name|llq_lladdr
 index|[
 name|ETHER_ADDR_LEN
 index|]
+decl_stmt|;
+name|uint8_t
+name|llq_primary
 decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(

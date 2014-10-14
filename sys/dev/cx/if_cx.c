@@ -2220,7 +2220,7 @@ name|end
 argument_list|,
 name|count
 argument_list|,
-name|RF_ALLOCATED
+literal|0
 argument_list|)
 operator|)
 condition|)

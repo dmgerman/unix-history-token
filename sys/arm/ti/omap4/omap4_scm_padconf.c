@@ -332,6 +332,7 @@ end_define
 
 begin_decl_stmt
 specifier|const
+specifier|static
 name|struct
 name|ti_scm_padstate
 name|ti_padstate_devmap

@@ -915,9 +915,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Are we a task leader? */
+comment|/* Are we a task leader with peers? */
 if|if
 condition|(
+name|p
+operator|->
+name|p_peers
+operator|!=
+name|NULL
+operator|&&
 name|p
 operator|==
 name|p
@@ -1162,6 +1168,17 @@ name|g_waitidle
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Remove ourself from our leader's peer list and wake our leader. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_leader
+operator|->
+name|p_peers
+operator|!=
+name|NULL
+condition|)
+block|{
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1175,6 +1192,8 @@ operator|->
 name|p_leader
 operator|->
 name|p_peers
+operator|!=
+name|NULL
 condition|)
 block|{
 name|q
@@ -1219,6 +1238,7 @@ operator|&
 name|ppeers_lock
 argument_list|)
 expr_stmt|;
+block|}
 name|vmspace_exit
 argument_list|(
 name|td

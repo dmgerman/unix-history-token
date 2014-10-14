@@ -113,7 +113,9 @@ end_function_decl
 begin_function
 name|int
 name|db_read_line
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -252,7 +254,9 @@ begin_function
 specifier|static
 name|int
 name|db_read_char
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|c
@@ -406,7 +410,9 @@ end_decl_stmt
 begin_function
 name|void
 name|db_flush_lex
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|db_flush_line
 argument_list|()
@@ -426,7 +432,9 @@ begin_function
 specifier|static
 name|int
 name|db_lex
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|c

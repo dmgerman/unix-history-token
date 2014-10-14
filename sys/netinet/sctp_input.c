@@ -20801,6 +20801,12 @@ return|;
 block|}
 name|chk
 operator|->
+name|copy_by_ref
+operator|=
+literal|0
+expr_stmt|;
+name|chk
+operator|->
 name|rec
 operator|.
 name|chunk_id
@@ -20816,6 +20822,12 @@ operator|.
 name|chunk_id
 operator|.
 name|can_take_data
+operator|=
+literal|0
+expr_stmt|;
+name|chk
+operator|->
+name|flags
 operator|=
 literal|0
 expr_stmt|;

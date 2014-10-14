@@ -4,13 +4,19 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|__EVXFACE_C__
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPORT_ACPI_INTERFACES
 end_define
 
 begin_include
@@ -594,6 +600,8 @@ name|PreviousHandlerObj
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|UINT32
 name|i
@@ -634,31 +642,6 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Make sure all deferred notify tasks are completed */
-name|AcpiOsWaitEventsComplete
-argument_list|()
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Root Object. Global handlers are removed here */
 if|if
 condition|(
@@ -692,6 +675,27 @@ literal|1
 operator|)
 condition|)
 block|{
+name|Status
+operator|=
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -749,11 +753,25 @@ name|Context
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
+argument_list|)
+expr_stmt|;
+comment|/* Make sure all deferred notify tasks are completed */
+name|AcpiOsWaitEventsComplete
+argument_list|()
+expr_stmt|;
 block|}
 block|}
-goto|goto
-name|UnlockAndExit
-goto|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* All other objects: Are Notifies allowed on this object? */
 if|if
@@ -765,13 +783,11 @@ name|Node
 argument_list|)
 condition|)
 block|{
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_TYPE
+argument_list|)
 expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
 block|}
 comment|/* Must have an existing internal object */
 name|ObjDesc
@@ -787,13 +803,11 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NOT_EXIST
+argument_list|)
 expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
 block|}
 comment|/* Internal object exists. Find the handler and remove it */
 for|for
@@ -821,6 +835,27 @@ literal|1
 operator|)
 condition|)
 block|{
+name|Status
+operator|=
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|HandlerObj
 operator|=
 name|ObjDesc
@@ -930,6 +965,18 @@ name|i
 index|]
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
+argument_list|)
+expr_stmt|;
+comment|/* Make sure all deferred notify tasks are completed */
+name|AcpiOsWaitEventsComplete
+argument_list|()
+expr_stmt|;
 name|AcpiUtRemoveReference
 argument_list|(
 name|HandlerObj
@@ -937,6 +984,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 name|UnlockAndExit
 label|:
 operator|(
@@ -1251,6 +1303,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiInstallSciHandler
+argument_list|)
+end_macro
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveSciHandler  *  * PARAMETERS:  Address             - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for a System Control Interrupt.  *  ******************************************************************************/
 end_comment
@@ -1424,6 +1483,13 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiRemoveSciHandler
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallGlobalEventHandler  *  * PARAMETERS:  Handler         - Pointer to the global event handler function  *              Context         - Value passed to the handler on each event  *  * RETURN:      Status  *  * DESCRIPTION: Saves the pointer to the handler function. The global handler  *              is invoked upon each incoming GPE and Fixed Event. It is  *              invoked at interrupt level at the time of the event dispatch.  *              Can be used to update event counters, etc.  *  ******************************************************************************/
@@ -2292,10 +2358,6 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Make sure all deferred GPE tasks are completed */
-name|AcpiOsWaitEventsComplete
-argument_list|()
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
@@ -2435,11 +2497,21 @@ comment|/*      * If the GPE was previously associated with a method and it was 
 if|if
 condition|(
 operator|(
+operator|(
 name|Handler
 operator|->
 name|OriginalFlags
 operator|&
 name|ACPI_GPE_DISPATCH_METHOD
+operator|)
+operator|||
+operator|(
+name|Handler
+operator|->
+name|OriginalFlags
+operator|&
+name|ACPI_GPE_DISPATCH_NOTIFY
+operator|)
 operator|)
 operator|&&
 name|Handler
@@ -2456,10 +2528,34 @@ name|GpeEventInfo
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_GpeLock
+argument_list|,
+name|Flags
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+comment|/* Make sure all deferred GPE tasks are completed */
+name|AcpiOsWaitEventsComplete
+argument_list|()
+expr_stmt|;
 comment|/* Now we can free the handler object */
 name|ACPI_FREE
 argument_list|(
 name|Handler
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
 argument_list|)
 expr_stmt|;
 name|UnlockAndExit

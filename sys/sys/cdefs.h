@@ -1433,6 +1433,21 @@ end_define
 begin_elif
 elif|#
 directive|elif
+name|__GNUC_PREREQ__
+argument_list|(
+literal|4
+operator|,
+literal|6
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Nothing, gcc 4.6 and higher has _Static_assert built-in */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__COUNTER__

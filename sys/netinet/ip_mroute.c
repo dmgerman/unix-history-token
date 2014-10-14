@@ -297,16 +297,6 @@ name|VIFI_INVALID
 value|((vifi_t) -1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|M_HASCL
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_flags& M_EXT)
-end_define
-
 begin_expr_stmt
 specifier|static
 name|VNET_DEFINE
@@ -5629,7 +5619,8 @@ condition|(
 name|mb0
 operator|&&
 operator|(
-name|M_HASCL
+operator|!
+name|M_WRITABLE
 argument_list|(
 name|mb0
 argument_list|)
@@ -6707,7 +6698,8 @@ condition|(
 name|mm
 operator|&&
 operator|(
-name|M_HASCL
+operator|!
+name|M_WRITABLE
 argument_list|(
 name|mm
 argument_list|)
@@ -7213,7 +7205,8 @@ condition|(
 name|mb_copy
 operator|&&
 operator|(
-name|M_HASCL
+operator|!
+name|M_WRITABLE
 argument_list|(
 name|mb_copy
 argument_list|)
