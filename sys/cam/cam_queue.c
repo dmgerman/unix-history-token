@@ -1263,12 +1263,6 @@ name|delta
 expr_stmt|;
 name|ccbq
 operator|->
-name|devq_openings
-operator|+=
-name|delta
-expr_stmt|;
-name|ccbq
-operator|->
 name|dev_openings
 operator|+=
 name|delta
@@ -1383,12 +1377,6 @@ return|;
 name|ccbq
 operator|->
 name|total_openings
-operator|=
-name|openings
-expr_stmt|;
-name|ccbq
-operator|->
-name|devq_openings
 operator|=
 name|openings
 expr_stmt|;

@@ -1192,13 +1192,13 @@ name|dev_active
 decl_stmt|;
 comment|/* Transactions running on the device */
 name|int
-name|devq_openings
+name|allocated
 decl_stmt|;
-comment|/* Space left for more queued work */
+comment|/* CCBs allocated for the device */
 name|int
-name|devq_queued
+name|queued
 decl_stmt|;
-comment|/* Transactions queued to be sent */
+comment|/* CCBs queued to be sent to the device */
 name|int
 name|held
 decl_stmt|;
