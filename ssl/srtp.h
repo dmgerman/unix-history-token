@@ -63,6 +63,9 @@ define|#
 directive|define
 name|SRTP_NULL_SHA1_32
 value|0x0006
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SRTP
 name|int
 name|SSL_CTX_set_tlsext_use_srtp
 parameter_list|(
@@ -119,6 +122,8 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus
