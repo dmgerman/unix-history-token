@@ -824,7 +824,9 @@ condition|)
 return|return
 literal|0
 return|;
-asm|asm ( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	adcq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc" 	);
+asm|asm
+specifier|volatile
+asm|( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	adcq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc", "memory" 	);
 return|return
 name|ret
 operator|&
@@ -879,7 +881,9 @@ condition|)
 return|return
 literal|0
 return|;
-asm|asm ( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	sbbq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc" 	);
+asm|asm
+specifier|volatile
+asm|( 	"	subq	%2,%2		\n" 	".p2align 4			\n" 	"1:	movq	(%4,%2,8),%0	\n" 	"	sbbq	(%5,%2,8),%0	\n" 	"	movq	%0,(%3,%2,8)	\n" 	"	leaq	1(%2),%2	\n" 	"	loop	1b		\n" 	"	sbbq	%0,%0		\n" 		: "=&a"(ret),"+c"(n),"=&r"(i) 		: "r"(rp),"r"(ap),"r"(bp) 		: "cc", "memory" 	);
 return|return
 name|ret
 operator|&
