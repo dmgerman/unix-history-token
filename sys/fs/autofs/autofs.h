@@ -203,6 +203,9 @@ decl_stmt|;
 name|bool
 name|an_cached
 decl_stmt|;
+name|bool
+name|an_wildcards
+decl_stmt|;
 name|struct
 name|callout
 name|an_callout
@@ -296,6 +299,9 @@ name|ar_done
 decl_stmt|;
 name|int
 name|ar_error
+decl_stmt|;
+name|bool
+name|ar_wildcards
 decl_stmt|;
 name|bool
 name|ar_in_progress
