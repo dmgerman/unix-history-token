@@ -3670,7 +3670,7 @@ name|conn
 operator|->
 name|ssl_meth
 operator|=
-name|SSLv23_client_method
+name|TLSv1_client_method
 argument_list|()
 expr_stmt|;
 name|conn
