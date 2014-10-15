@@ -710,6 +710,9 @@ name|kmem_alloc_nofault
 argument_list|(
 name|pager_map
 argument_list|,
+operator|(
+name|long
+operator|)
 name|nswbuf
 operator|*
 name|MAXPHYS
