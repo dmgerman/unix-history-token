@@ -769,6 +769,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|RSA_R_PKCS_DECODING_ERROR
+argument_list|)
+block|,
+literal|"pkcs decoding error"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|RSA_R_P_NOT_PRIME
 argument_list|)
 block|,
