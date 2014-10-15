@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/ethtool.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/netdevice.h>
 end_include
 
