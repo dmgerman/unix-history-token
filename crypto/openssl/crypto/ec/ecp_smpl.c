@@ -59,15 +59,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|OPENSSL_FIPS
-return|return
-name|fips_ec_gfp_simple_method
-argument_list|()
-return|;
-else|#
-directive|else
 specifier|static
 specifier|const
 name|EC_METHOD
@@ -160,12 +151,24 @@ literal|0
 comment|/* field_set_to_one */
 block|}
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+if|if
+condition|(
+name|FIPS_mode
+argument_list|()
+condition|)
+return|return
+name|fips_ec_gfp_simple_method
+argument_list|()
+return|;
+endif|#
+directive|endif
 return|return
 operator|&
 name|ret
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7162,9 +7165,10 @@ name|prod_Z
 index|[
 name|i
 index|]
-operator|!=
+operator|==
 name|NULL
 condition|)
+break|break;
 name|BN_clear_free
 argument_list|(
 name|prod_Z

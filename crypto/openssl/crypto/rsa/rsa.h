@@ -2377,6 +2377,10 @@ name|RSA_R_PADDING_CHECK_FAILED
 value|114
 define|#
 directive|define
+name|RSA_R_PKCS_DECODING_ERROR
+value|159
+define|#
+directive|define
 name|RSA_R_P_NOT_PRIME
 value|128
 define|#

@@ -721,6 +721,17 @@ block|}
 end_function
 
 begin_comment
+comment|/* MAX_EMPTY_RECORDS defines the number of consecutive, empty records that will  * be processed per call to ssl3_get_record. Without this limit an attacker  * could send empty records at a faster rate than we can process and cause  * ssl3_get_record to loop forever. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_EMPTY_RECORDS
+value|32
+end_define
+
+begin_comment
 comment|/* Call this to get a new input record.  * It will return<= 0 if more data is needed, normally due to an error  * or non-blocking IO.  * When it finishes, one packet has been decoded and can be found in  * ssl->s3->rrec.type    - is the type of record  * ssl->s3->rrec.data, 	 - data  * ssl->s3->rrec.length, - number of bytes  */
 end_comment
 
@@ -787,6 +798,11 @@ name|orig_len
 decl_stmt|;
 name|size_t
 name|extra
+decl_stmt|;
+name|unsigned
+name|empty_record_count
+init|=
+literal|0
 decl_stmt|;
 name|rr
 operator|=
@@ -1678,9 +1694,36 @@ name|length
 operator|==
 literal|0
 condition|)
+block|{
+name|empty_record_count
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|empty_record_count
+operator|>
+name|MAX_EMPTY_RECORDS
+condition|)
+block|{
+name|al
+operator|=
+name|SSL_AD_UNEXPECTED_MESSAGE
+expr_stmt|;
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_RECORD
+argument_list|,
+name|SSL_R_RECORD_TOO_SMALL
+argument_list|)
+expr_stmt|;
+goto|goto
+name|f_err
+goto|;
+block|}
 goto|goto
 name|again
 goto|;
+block|}
 if|#
 directive|if
 literal|0

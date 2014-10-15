@@ -6605,6 +6605,22 @@ return|return
 literal|0
 return|;
 comment|/* silently discard */
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|->
+name|rrec
+operator|.
+name|length
+operator|>
+name|SSL3_RT_MAX_PLAIN_LENGTH
+condition|)
+return|return
+literal|0
+return|;
+comment|/* silently discard per RFC 6520 sec. 4 */
 name|hbtype
 operator|=
 operator|*
