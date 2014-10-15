@@ -460,16 +460,6 @@ break|break;
 case|case
 name|CPUID_8000_0001
 case|:
-comment|/* Hide SVM capability from guest. */
-name|regs
-index|[
-literal|2
-index|]
-operator|&=
-operator|~
-name|AMDID2_SVM
-expr_stmt|;
-comment|/* 			 * Hide rdtscp/ia32_tsc_aux until we know how 			 * to deal with them. 			 */
 name|cpuid_count
 argument_list|(
 operator|*
@@ -481,6 +471,16 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Hide SVM capability from guest. 			 */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|AMDID2_SVM
+expr_stmt|;
+comment|/* 			 * Hide rdtscp/ia32_tsc_aux until we know how 			 * to deal with them. 			 */
 name|regs
 index|[
 literal|3
