@@ -1401,6 +1401,12 @@ name|filedesc
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|filedescent
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Test whether a capability grants the requested rights.  */
 end_comment
@@ -1444,6 +1450,19 @@ end_comment
 begin_function_decl
 name|cap_rights_t
 modifier|*
+name|cap_rights_fde
+parameter_list|(
+name|struct
+name|filedescent
+modifier|*
+name|fde
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|cap_rights_t
+modifier|*
 name|cap_rights
 parameter_list|(
 name|struct
@@ -1470,6 +1489,21 @@ name|int
 name|fd
 parameter_list|,
 name|u_long
+name|cmd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cap_fcntl_check_fde
+parameter_list|(
+name|struct
+name|filedescent
+modifier|*
+name|fde
+parameter_list|,
+name|int
 name|cmd
 parameter_list|)
 function_decl|;

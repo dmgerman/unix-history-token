@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/seq.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sx.h>
 end_include
 
@@ -101,6 +107,10 @@ name|uint8_t
 name|fde_flags
 decl_stmt|;
 comment|/* per-process open file flags */
+name|seq_t
+name|fde_seq
+decl_stmt|;
+comment|/* keep file and caps in sync */
 block|}
 struct|;
 end_struct
@@ -131,6 +141,13 @@ define|#
 directive|define
 name|fde_nioctls
 value|fde_caps.fc_nioctls
+end_define
+
+begin_define
+define|#
+directive|define
+name|fde_change_size
+value|(offsetof(struct filedescent, fde_seq))
 end_define
 
 begin_comment
@@ -222,6 +239,18 @@ comment|/* fdfree() needs wakeup */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|fd_seq
+parameter_list|(
+name|fdp
+parameter_list|,
+name|fd
+parameter_list|)
+value|(&(fdp)->fd_ofiles[(fd)].fde_seq)
+end_define
 
 begin_comment
 comment|/*  * Structure to keep track of (process leader, struct fildedesc) tuples.  * Each process has a pointer to such a structure when detailed tracking  * is needed, e.g., when rfork(RFPROC | RFMEM) causes a file descriptor  * table to be shared by processes having different "p_leader" pointers  * and thus distinct POSIX style locks.  *  * fdl_refcount and fdl_holdcount are protected by struct filedesc mtx.  */
