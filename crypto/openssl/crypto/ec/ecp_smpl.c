@@ -8903,9 +8903,10 @@ name|prod_Z
 index|[
 name|i
 index|]
-operator|!=
+operator|==
 name|NULL
 condition|)
+break|break;
 name|BN_clear_free
 argument_list|(
 name|prod_Z
