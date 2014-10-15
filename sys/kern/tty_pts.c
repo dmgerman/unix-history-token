@@ -905,6 +905,23 @@ name|cmd
 condition|)
 block|{
 case|case
+name|FIODTYPE
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|=
+name|D_TTY
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
 name|FIONBIO
 case|:
 comment|/* This device supports non-blocking operation. */
