@@ -7554,19 +7554,6 @@ name|err
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If we didn't make progress, mark the async destroy as 		 * stalled, so that we will not initiate a spa_sync() on 		 * its behalf. 		 */
-name|scn
-operator|->
-name|scn_async_stalled
-operator|=
-operator|(
-name|scn
-operator|->
-name|scn_visited_this_txg
-operator|==
-literal|0
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|bptree_is_empty
@@ -7645,6 +7632,22 @@ operator|->
 name|scn_async_destroying
 operator|=
 name|B_FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * If we didn't make progress, mark the async destroy as 			 * stalled, so that we will not initiate a spa_sync() on 			 * its behalf. 			 */
+name|scn
+operator|->
+name|scn_async_stalled
+operator|=
+operator|(
+name|scn
+operator|->
+name|scn_visited_this_txg
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 block|}
 block|}
