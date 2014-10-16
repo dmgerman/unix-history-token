@@ -971,7 +971,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip_doopts
+name|V_ip_doopts
 operator|==
 literal|1
 condition|)
@@ -981,7 +981,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|ip_doopts
+name|V_ip_doopts
 operator|==
 literal|2
 condition|)
