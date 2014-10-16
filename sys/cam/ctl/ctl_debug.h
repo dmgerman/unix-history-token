@@ -19,6 +19,38 @@ directive|define
 name|_CTL_DEBUG_H_
 end_define
 
+begin_comment
+comment|/*  * Debugging flags.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CTL_DEBUG_NONE
+init|=
+literal|0x00
+block|,
+comment|/* no debugging */
+name|CTL_DEBUG_INFO
+init|=
+literal|0x01
+block|,
+comment|/* SCSI errors */
+name|CTL_DEBUG_CDB
+init|=
+literal|0x02
+block|,
+comment|/* SCSI CDBs and tasks */
+name|CTL_DEBUG_CDB_DATA
+init|=
+literal|0x04
+comment|/* SCSI CDB DATA */
+block|}
+name|ctl_debug_flags
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
