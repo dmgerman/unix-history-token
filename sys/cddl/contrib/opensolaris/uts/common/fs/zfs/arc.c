@@ -11937,6 +11937,11 @@ name|prev_data_cache
 init|=
 name|NULL
 decl_stmt|;
+specifier|extern
+name|kmem_cache_t
+modifier|*
+name|range_seg_cache
+decl_stmt|;
 name|DTRACE_PROBE
 argument_list|(
 name|arc__kmem_reap_start
@@ -12067,6 +12072,11 @@ expr_stmt|;
 name|kmem_cache_reap_now
 argument_list|(
 name|hdr_cache
+argument_list|)
+expr_stmt|;
+name|kmem_cache_reap_now
+argument_list|(
+name|range_seg_cache
 argument_list|)
 expr_stmt|;
 ifdef|#
