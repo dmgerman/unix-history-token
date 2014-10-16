@@ -5995,7 +5995,7 @@ argument_list|,
 name|legacy_id
 argument_list|)
 expr_stmt|;
-name|setenv
+name|kern_setenv
 argument_list|(
 name|announce_buf
 argument_list|,

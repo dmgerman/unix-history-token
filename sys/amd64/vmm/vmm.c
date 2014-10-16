@@ -8630,7 +8630,7 @@ name|cp
 operator|=
 name|val
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|names
 index|[

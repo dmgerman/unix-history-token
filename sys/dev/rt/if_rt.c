@@ -1396,7 +1396,7 @@ condition|(
 operator|(
 name|var
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"ethaddr"
 argument_list|)
@@ -1407,7 +1407,7 @@ operator|||
 operator|(
 name|var
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"kmac"
 argument_list|)

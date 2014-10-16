@@ -137,7 +137,7 @@ argument_list|)
 expr_stmt|;
 name|tun_mode
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|tun_var_name
 argument_list|)

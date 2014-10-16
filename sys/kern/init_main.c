@@ -3173,7 +3173,7 @@ condition|(
 operator|(
 name|var
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"init_path"
 argument_list|)

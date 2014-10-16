@@ -53662,7 +53662,7 @@ condition|(
 operator|(
 name|p_env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|name
 argument_list|)

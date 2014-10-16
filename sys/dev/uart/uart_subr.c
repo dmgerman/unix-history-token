@@ -937,7 +937,7 @@ name|UART_DEV_CONSOLE
 condition|)
 name|spec
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"hw.uart.console"
 argument_list|)
@@ -951,7 +951,7 @@ name|UART_DEV_DBGPORT
 condition|)
 name|spec
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"hw.uart.dbgport"
 argument_list|)

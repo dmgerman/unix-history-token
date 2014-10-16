@@ -2352,7 +2352,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|getenv
+name|kern_getenv
 parameter_list|(
 specifier|const
 name|char
@@ -2476,7 +2476,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setenv
+name|kern_setenv
 parameter_list|(
 specifier|const
 name|char
@@ -2493,7 +2493,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|unsetenv
+name|kern_unsetenv
 parameter_list|(
 specifier|const
 name|char

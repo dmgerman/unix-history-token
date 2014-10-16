@@ -2429,7 +2429,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"boot.netif.mtu"
 argument_list|)
