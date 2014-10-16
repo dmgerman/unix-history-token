@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vmm_ktr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vmm_util.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"x86.h"
 end_include
 
@@ -148,6 +160,27 @@ name|uint64_t
 name|bhyve_xcpuids
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_hw_vmm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bhyve_xcpuids
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bhyve_xcpuids
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of times an unknown cpuid leaf was accessed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * The default CPU topology is a single thread per package.  */
@@ -343,6 +376,21 @@ name|enum
 name|x2apic_state
 name|x2apic_state
 decl_stmt|;
+name|VCPU_CTR2
+argument_list|(
+name|vm
+argument_list|,
+name|vcpu_id
+argument_list|,
+literal|"cpuid %#x,%#x"
+argument_list|,
+operator|*
+name|eax
+argument_list|,
+operator|*
+name|ecx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Requests for invalid CPUID levels should map to the highest 	 * available level instead. 	 */
 if|if
 condition|(
@@ -442,6 +490,18 @@ case|:
 case|case
 name|CPUID_8000_0006
 case|:
+name|cpuid_count
+argument_list|(
+operator|*
+name|eax
+argument_list|,
+operator|*
+name|ecx
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|CPUID_8000_0008
 case|:
@@ -456,6 +516,29 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vmm_is_amd
+argument_list|()
+condition|)
+block|{
+comment|/* 				 * XXX this might appear silly because AMD 				 * cpus don't have threads. 				 * 				 * However this matches the logical cpus as 				 * advertised by leaf 0x1 and will work even 				 * if the 'threads_per_core' tunable is set 				 * incorrectly on an AMD host. 				 */
+name|logical_cpus
+operator|=
+name|threads_per_core
+operator|*
+name|cores_per_package
+expr_stmt|;
+name|regs
+index|[
+literal|2
+index|]
+operator|=
+name|logical_cpus
+operator|-
+literal|1
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|CPUID_8000_0001
@@ -471,14 +554,18 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Hide SVM capability from guest. 			 */
+comment|/* 			 * Hide SVM and Topology Extension features from guest. 			 */
 name|regs
 index|[
 literal|2
 index|]
 operator|&=
 operator|~
+operator|(
 name|AMDID2_SVM
+operator||
+name|AMDID2_TOPOLOGY
+operator|)
 expr_stmt|;
 comment|/* 			 * Hide rdtscp/ia32_tsc_aux until we know how 			 * to deal with them. 			 */
 name|regs
