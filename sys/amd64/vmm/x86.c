@@ -592,6 +592,15 @@ operator|&=
 operator|~
 name|AMDID2_PTSCEL2I
 expr_stmt|;
+comment|/* 			 * Don't advertise Instruction Based Sampling feature. 			 */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|AMDID2_IBS
+expr_stmt|;
 comment|/* 			 * Hide rdtscp/ia32_tsc_aux until we know how 			 * to deal with them. 			 */
 name|regs
 index|[

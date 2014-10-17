@@ -4629,6 +4629,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSR_NB_CFG1
+value|0xc001001f
+end_define
+
+begin_comment
+comment|/* NB configuration 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_IC_CFG
+value|0xc0011021
+end_define
+
+begin_comment
+comment|/* Instruction Cache Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSR_K8_UCODE_UPDATE
 value|0xc0010020
 end_define

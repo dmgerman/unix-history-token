@@ -162,6 +162,18 @@ literal|0
 operator|)
 return|;
 case|case
+name|MSR_NB_CFG1
+case|:
+case|case
+name|MSR_IC_CFG
+case|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Ignore writes */
+case|case
 name|MSR_PERFEVSEL0
 case|:
 case|case
@@ -317,6 +329,19 @@ operator|<<
 literal|9
 expr_stmt|;
 comment|/* MONITOR/MWAIT disable */
+break|break;
+case|case
+name|MSR_NB_CFG1
+case|:
+case|case
+name|MSR_IC_CFG
+case|:
+comment|/* 			 * The reset value is processor family dependent so 			 * just return 0. 			 */
+operator|*
+name|val
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|MSR_PERFEVSEL0
