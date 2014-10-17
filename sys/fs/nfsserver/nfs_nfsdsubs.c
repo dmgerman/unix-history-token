@@ -182,9 +182,9 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|disable_checkutf8
+name|enable_checkutf8
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -195,16 +195,16 @@ name|_vfs_nfsd
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|disable_checkutf8
+name|enable_checkutf8
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|disable_checkutf8
+name|enable_checkutf8
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disable the NFSv4 check for a UTF8 compliant name"
+literal|"Enable the NFSv4 check for the UTF8 compliant name required by rfc3530"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6639,9 +6639,9 @@ goto|;
 block|}
 if|if
 condition|(
-name|disable_checkutf8
+name|enable_checkutf8
 operator|==
-literal|0
+literal|1
 operator|&&
 name|nfsrv_checkutf8
 argument_list|(
