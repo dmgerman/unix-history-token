@@ -567,6 +567,31 @@ operator||
 name|AMDID2_TOPOLOGY
 operator|)
 expr_stmt|;
+comment|/* 			 * Don't advertise extended performance counter MSRs 			 * to the guest. 			 */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|AMDID2_PCXC
+expr_stmt|;
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|AMDID2_PNXC
+expr_stmt|;
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|AMDID2_PTSCEL2I
+expr_stmt|;
 comment|/* 			 * Hide rdtscp/ia32_tsc_aux until we know how 			 * to deal with them. 			 */
 name|regs
 index|[
