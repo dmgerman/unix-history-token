@@ -12151,6 +12151,15 @@ name|VTY_VT
 argument_list|)
 condition|)
 return|return;
+if|if
+condition|(
+name|main_vd
+operator|->
+name|vd_driver
+operator|==
+name|NULL
+condition|)
+return|return;
 for|for
 control|(
 name|i
