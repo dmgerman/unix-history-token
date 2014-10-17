@@ -11401,11 +11401,28 @@ name|res
 operator|)
 return|;
 block|}
-name|panic
+name|device_printf
 argument_list|(
-literal|"resource_list_alloc: resource entry is busy"
+name|bus
+argument_list|,
+literal|"resource entry %#x type %d for child %s is busy\n"
+argument_list|,
+operator|*
+name|rid
+argument_list|,
+name|type
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|child
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 if|if
 condition|(
