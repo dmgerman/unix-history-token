@@ -15640,14 +15640,6 @@ name|EXDEV
 argument_list|)
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|zvol_remove_minor
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
 block|}
 name|error
 operator|=
