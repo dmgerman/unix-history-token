@@ -10655,8 +10655,6 @@ decl_stmt|;
 name|uint8_t
 name|cmd
 decl_stmt|,
-name|new_set
-decl_stmt|,
 name|rulenum
 decl_stmt|;
 name|ipfw_range_tlv
@@ -11251,6 +11249,8 @@ index|]
 operator|)
 argument_list|)
 operator|||
+name|rt
+operator|.
 name|new_set
 operator|>
 name|RESVD_SET
@@ -13231,6 +13231,10 @@ argument_list|(
 operator|*
 name|cfg
 argument_list|)
+expr_stmt|;
+name|rcnt
+operator|=
+literal|0
 expr_stmt|;
 name|fo
 operator|->
