@@ -17846,7 +17846,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: invalid DSO for symbol `%s' definition"
+literal|"%B: invalid DSO for symbol `%s' definition"
 argument_list|)
 argument_list|,
 name|abfd
