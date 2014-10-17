@@ -2006,7 +2006,7 @@ name|arg
 operator|==
 name|NULL
 condition|)
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,
@@ -2014,7 +2014,7 @@ literal|"1"
 argument_list|)
 expr_stmt|;
 else|else
-name|setenv
+name|kern_setenv
 argument_list|(
 name|n
 argument_list|,
