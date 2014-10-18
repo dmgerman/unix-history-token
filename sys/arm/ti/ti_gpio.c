@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/ti/ti_gpio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/ti/ti_scm.h>
 end_include
 
@@ -133,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|"gpio_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ti_gpio_if.h"
 end_include
 
 begin_comment
@@ -458,24 +470,6 @@ define|#
 directive|define
 name|PINS_PER_BANK
 value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_GPIO_BANKS
-value|6
-end_define
-
-begin_comment
-comment|/* Maximum GPIOS possible, max of *_MAX_GPIO_BANKS * *_INTR_PER_BANK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_GPIO_INTRS
-value|8
 end_define
 
 begin_function
@@ -874,57 +868,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/**  *	Structure that stores the driver context.  *  *	This structure is allocated during driver attach.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ti_gpio_softc
-block|{
-name|device_t
-name|sc_dev
-decl_stmt|;
-comment|/* 	 * The memory resource(s) for the PRCM register set, when the device is 	 * created the caller can assign up to 6 memory regions depending on 	 * the SoC type. 	 */
-name|struct
-name|resource
-modifier|*
-name|sc_mem_res
-index|[
-name|MAX_GPIO_BANKS
-index|]
-decl_stmt|;
-name|struct
-name|resource
-modifier|*
-name|sc_irq_res
-index|[
-name|MAX_GPIO_INTRS
-index|]
-decl_stmt|;
-comment|/* The handle for the register IRQ handlers. */
-name|void
-modifier|*
-name|sc_irq_hdl
-index|[
-name|MAX_GPIO_INTRS
-index|]
-decl_stmt|;
-comment|/* 	 * The following describes the H/W revision of each of the GPIO banks. 	 */
-name|uint32_t
-name|sc_revision
-index|[
-name|MAX_GPIO_BANKS
-index|]
-decl_stmt|;
-name|struct
-name|mtx
-name|sc_mtx
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/**  *	Macros for driver mutex locking  */
@@ -1435,8 +1378,10 @@ operator|)
 return|;
 block|}
 comment|/* Get the current pin state */
-name|ti_scm_padconf_get_gpioflags
+name|TI_GPIO_GET_FLAGS
 argument_list|(
+name|dev
+argument_list|,
 name|pin
 argument_list|,
 name|flags
@@ -1727,8 +1672,10 @@ block|}
 comment|/* Set the GPIO mode and state */
 if|if
 condition|(
-name|ti_scm_padconf_set_gpioflags
+name|TI_GPIO_SET_FLAGS
 argument_list|(
+name|dev
+argument_list|,
 name|pin
 argument_list|,
 name|flags
@@ -2269,62 +2216,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/**  *	ti_gpio_probe - probe function for the driver  *	@dev: gpio device handle  *  *	Simply sets the name of the driver  *  *	LOCKING:  *	None  *  *	RETURNS:  *	Always returns 0  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|ti_gpio_probe
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|ofw_bus_status_okay
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-if|if
-condition|(
-operator|!
-name|ofw_bus_is_compatible
-argument_list|(
-name|dev
-argument_list|,
-literal|"ti,gpio"
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"TI General Purpose I/O (GPIO)"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
@@ -2652,8 +2543,10 @@ name|pin
 operator|++
 control|)
 block|{
-name|ti_scm_padconf_get_gpioflags
+name|TI_GPIO_GET_FLAGS
 argument_list|(
+name|dev
+argument_list|,
 name|PINS_PER_BANK
 operator|*
 name|bank
@@ -3131,13 +3024,6 @@ init|=
 block|{
 name|DEVMETHOD
 argument_list|(
-name|device_probe
-argument_list|,
-name|ti_gpio_probe
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|device_attach
 argument_list|,
 name|ti_gpio_attach
@@ -3225,7 +3111,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|driver_t
 name|ti_gpio_driver
 init|=
@@ -3242,31 +3127,6 @@ argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|ti_gpio_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|ti_gpio
-argument_list|,
-name|simplebus
-argument_list|,
-name|ti_gpio_driver
-argument_list|,
-name|ti_gpio_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 end_unit
 
