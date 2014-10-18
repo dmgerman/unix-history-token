@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/ethtool.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/if_vlan.h>
 end_include
 

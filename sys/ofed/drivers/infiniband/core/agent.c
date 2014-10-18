@@ -332,7 +332,9 @@ block|{
 name|printk
 argument_list|(
 argument|KERN_ERR SPFX
-literal|"ib_create_ah_from_wc error\n"
+literal|"ib_create_ah_from_wc error %ld\n"
+argument_list|,
+argument|PTR_ERR(ah)
 argument_list|)
 empty_stmt|;
 return|return;
