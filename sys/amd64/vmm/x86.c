@@ -601,6 +601,15 @@ operator|&=
 operator|~
 name|AMDID2_IBS
 expr_stmt|;
+comment|/* NodeID MSR not available */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|AMDID2_NODE_ID
+expr_stmt|;
 comment|/* 			 * Hide rdtscp/ia32_tsc_aux until we know how 			 * to deal with them. 			 */
 name|regs
 index|[
