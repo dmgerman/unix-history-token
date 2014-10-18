@@ -2503,7 +2503,11 @@ name|v_mount
 operator|->
 name|mnt_flag
 operator|&
+operator|(
 name|MNT_NOATIME
+operator||
+name|MNT_RDONLY
+operator|)
 operator|)
 operator|==
 literal|0
