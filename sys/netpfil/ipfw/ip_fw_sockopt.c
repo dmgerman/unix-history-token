@@ -857,10 +857,7 @@ name|uma_zcreate
 argument_list|(
 literal|"IPFW counters"
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ip_fw_cntr
-argument_list|)
+name|IPFW_RULE_CNTR_SIZE
 argument_list|,
 name|NULL
 argument_list|,

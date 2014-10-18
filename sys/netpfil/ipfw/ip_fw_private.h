@@ -889,28 +889,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|ip_fw_cntr
-block|{
-name|uint64_t
-name|pcnt
-decl_stmt|;
-comment|/* Packet counter		*/
-name|uint64_t
-name|bcnt
-decl_stmt|;
-comment|/* Byte counter		 */
-name|uint64_t
-name|timestamp
-decl_stmt|;
-comment|/* tv_sec of last match	 */
-block|}
-name|ip_fw_cntr
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  * Here we have the structure representing an ipfw rule.  *  * It starts with a general area   * followed by an array of one or more instructions, which the code  * accesses as an array of 32-bit values.  *  * Given a rule pointer  r:  *  *  r->cmd		is the start of the first instruction.  *  ACTION_PTR(r)	is the start of the first action (things to do  *			once a rule matched).  */
 end_comment
@@ -969,6 +947,13 @@ comment|/* storage for commands		*/
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IPFW_RULE_CNTR_SIZE
+value|(2 * sizeof(counter_u64_t))
+end_define
 
 begin_endif
 endif|#
