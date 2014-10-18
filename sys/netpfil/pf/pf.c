@@ -2180,7 +2180,7 @@ name|h
 decl_stmt|;
 name|h
 operator|=
-name|murmur3_aligned_32
+name|murmur3_32_hash32
 argument_list|(
 operator|(
 name|uint32_t
@@ -2192,6 +2192,11 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|pf_state_key_cmp
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint32_t
 argument_list|)
 argument_list|,
 name|V_pf_hashseed
@@ -2235,7 +2240,7 @@ name|AF_INET
 case|:
 name|h
 operator|=
-name|murmur3_aligned_32
+name|murmur3_32_hash32
 argument_list|(
 operator|(
 name|uint32_t
@@ -2251,6 +2256,11 @@ argument_list|(
 name|addr
 operator|->
 name|v4
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint32_t
 argument_list|)
 argument_list|,
 name|V_pf_hashseed
@@ -2262,7 +2272,7 @@ name|AF_INET6
 case|:
 name|h
 operator|=
-name|murmur3_aligned_32
+name|murmur3_32_hash32
 argument_list|(
 operator|(
 name|uint32_t
@@ -2278,6 +2288,11 @@ argument_list|(
 name|addr
 operator|->
 name|v6
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint32_t
 argument_list|)
 argument_list|,
 name|V_pf_hashseed
