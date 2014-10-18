@@ -248,10 +248,6 @@ struct|struct
 name|ti_wdt_softc
 block|{
 name|struct
-name|mtx
-name|sc_mtx
-decl_stmt|;
-name|struct
 name|resource
 modifier|*
 name|sc_mem_res
@@ -652,20 +648,6 @@ expr_stmt|;
 name|rid
 operator|=
 literal|0
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-literal|"TI WDT"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
 expr_stmt|;
 name|sc
 operator|->
