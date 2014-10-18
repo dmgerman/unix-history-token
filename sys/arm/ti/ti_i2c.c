@@ -1277,7 +1277,7 @@ literal|1
 condition|)
 name|mtx_sleep
 argument_list|(
-name|dev
+name|sc
 argument_list|,
 operator|&
 name|sc
