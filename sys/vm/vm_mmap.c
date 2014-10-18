@@ -786,6 +786,26 @@ name|fp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * Ignore old flags that used to be defined but did not do anything. 	 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_osrel
+operator|<
+name|P_OSREL_MAP_RENAME
+condition|)
+name|flags
+operator|&=
+operator|~
+operator|(
+name|MAP_RESERVED0020
+operator||
+name|MAP_RESERVED0040
+operator|)
+expr_stmt|;
 comment|/* 	 * Enforce the constraints. 	 * Mapping of length 0 is only allowed for old binaries. 	 * Anonymous mapping shall specify -1 as filedescriptor and 	 * zero position for new code. Be nice to ancient a.out 	 * binaries and correct pos for anonymous mapping, since old 	 * ld.so sometimes issues anonymous map requests with non-zero 	 * pos. 	 */
 if|if
 condition|(
@@ -920,10 +940,6 @@ operator||
 name|MAP_PRIVATE
 operator||
 name|MAP_FIXED
-operator||
-name|MAP_RENAME
-operator||
-name|MAP_NORESERVE
 operator||
 name|MAP_HASSEMAPHORE
 operator||
