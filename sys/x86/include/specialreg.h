@@ -4640,6 +4640,75 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MSR_P_STATE_LIMIT
+value|0xc0010061
+end_define
+
+begin_comment
+comment|/* P-state Current Limit Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_P_STATE_CONTROL
+value|0xc0010062
+end_define
+
+begin_comment
+comment|/* P-state Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_P_STATE_STATUS
+value|0xc0010063
+end_define
+
+begin_comment
+comment|/* P-state Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_P_STATE_CONFIG
+parameter_list|(
+name|n
+parameter_list|)
+value|(0xc0010064 + (n))
+end_define
+
+begin_comment
+comment|/* P-state Config */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_SMM_ADDR
+value|0xc0010112
+end_define
+
+begin_comment
+comment|/* SMM TSEG base address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_SMM_MASK
+value|0xc0010113
+end_define
+
+begin_comment
+comment|/* SMM TSEG address mask */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MSR_IC_CFG
 value|0xc0011021
 end_define

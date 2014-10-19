@@ -610,6 +610,15 @@ operator|&=
 operator|~
 name|AMDID2_NODE_ID
 expr_stmt|;
+comment|/* Don't advertise the OS visible workaround feature */
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+name|AMDID2_OSVW
+expr_stmt|;
 comment|/* 			 * Hide rdtscp/ia32_tsc_aux until we know how 			 * to deal with them. 			 */
 name|regs
 index|[
@@ -623,29 +632,47 @@ break|break;
 case|case
 name|CPUID_8000_0007
 case|:
-name|cpuid_count
-argument_list|(
-operator|*
-name|eax
-argument_list|,
-operator|*
-name|ecx
-argument_list|,
+comment|/* 			 * AMD uses this leaf to advertise the processor's 			 * power monitoring and RAS capabilities. These 			 * features are hardware-specific and exposing 			 * them to a guest doesn't make a lot of sense. 			 * 			 * Intel uses this leaf only to advertise the 			 * "Invariant TSC" feature with all other bits 			 * being reserved (set to zero). 			 */
 name|regs
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|0
 expr_stmt|;
-comment|/* 			 * If the host TSCs are not synchronized across 			 * physical cpus then we cannot advertise an 			 * invariant tsc to a vcpu. 			 * 			 * XXX This still falls short because the vcpu 			 * can observe the TSC moving backwards as it 			 * migrates across physical cpus. But at least 			 * it should discourage the guest from using the 			 * TSC to keep track of time. 			 */
+name|regs
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|regs
+index|[
+literal|2
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|regs
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 			 * "Invariant TSC" can be advertised to the guest if: 			 * - host TSC frequency is invariant 			 * - host TSCs are synchronized across physical cpus 			 * 			 * XXX This still falls short because the vcpu 			 * can observe the TSC moving backwards as it 			 * migrates across physical cpus. But at least 			 * it should discourage the guest from using the 			 * TSC to keep track of time. 			 */
 if|if
 condition|(
-operator|!
+name|tsc_is_invariant
+operator|&&
 name|smp_tsc
 condition|)
 name|regs
 index|[
 literal|3
 index|]
-operator|&=
-operator|~
+operator||=
 name|AMDPM_TSC_INVARIANT
 expr_stmt|;
 break|break;
