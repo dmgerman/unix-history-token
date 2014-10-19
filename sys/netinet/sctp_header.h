@@ -1356,6 +1356,22 @@ end_comment
 
 begin_struct
 struct|struct
+name|sctp_stream_reset_request
+block|{
+name|struct
+name|sctp_paramhdr
+name|ph
+decl_stmt|;
+name|uint32_t
+name|request_seq
+decl_stmt|;
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_stream_reset_out_request
 block|{
 name|struct

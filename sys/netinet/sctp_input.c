@@ -17148,7 +17148,7 @@ end_function
 
 begin_function
 name|struct
-name|sctp_stream_reset_out_request
+name|sctp_stream_reset_request
 modifier|*
 name|sctp_find_stream_reset
 parameter_list|(
@@ -17178,7 +17178,7 @@ modifier|*
 name|ch
 decl_stmt|;
 name|struct
-name|sctp_stream_reset_out_request
+name|sctp_stream_reset_request
 modifier|*
 name|r
 decl_stmt|;
@@ -17305,7 +17305,7 @@ name|r
 operator|=
 operator|(
 expr|struct
-name|sctp_stream_reset_out_request
+name|sctp_stream_reset_request
 operator|*
 operator|)
 operator|(
@@ -17370,7 +17370,7 @@ name|r
 operator|=
 operator|(
 expr|struct
-name|sctp_stream_reset_out_request
+name|sctp_stream_reset_request
 operator|*
 operator|)
 operator|(
@@ -17579,9 +17579,19 @@ modifier|*
 name|chk
 decl_stmt|;
 name|struct
+name|sctp_stream_reset_request
+modifier|*
+name|req_param
+decl_stmt|;
+name|struct
 name|sctp_stream_reset_out_request
 modifier|*
-name|srparam
+name|req_out_param
+decl_stmt|;
+name|struct
+name|sctp_stream_reset_in_request
+modifier|*
+name|req_in_param
 decl_stmt|;
 name|uint32_t
 name|number_entries
@@ -17613,7 +17623,7 @@ operator|.
 name|str_reset_seq_out
 condition|)
 block|{
-name|srparam
+name|req_param
 operator|=
 name|sctp_find_stream_reset
 argument_list|(
@@ -17627,7 +17637,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|srparam
+name|req_param
+operator|!=
+name|NULL
 condition|)
 block|{
 name|stcb
@@ -17641,7 +17653,7 @@ name|type
 operator|=
 name|ntohs
 argument_list|(
-name|srparam
+name|req_param
 operator|->
 name|ph
 operator|.
@@ -17652,7 +17664,7 @@ name|lparm_len
 operator|=
 name|ntohs
 argument_list|(
-name|srparam
+name|req_param
 operator|->
 name|ph
 operator|.
@@ -17666,6 +17678,15 @@ operator|==
 name|SCTP_STR_RESET_OUT_REQUEST
 condition|)
 block|{
+name|req_out_param
+operator|=
+operator|(
+expr|struct
+name|sctp_stream_reset_out_request
+operator|*
+operator|)
+name|req_param
+expr_stmt|;
 name|number_entries
 operator|=
 operator|(
@@ -17714,7 +17735,7 @@ name|stcb
 argument_list|,
 name|number_entries
 argument_list|,
-name|srparam
+name|req_out_param
 operator|->
 name|list_of_streams
 argument_list|)
@@ -17736,7 +17757,7 @@ name|stcb
 argument_list|,
 name|number_entries
 argument_list|,
-name|srparam
+name|req_out_param
 operator|->
 name|list_of_streams
 argument_list|,
@@ -17754,7 +17775,7 @@ name|stcb
 argument_list|,
 name|number_entries
 argument_list|,
-name|srparam
+name|req_out_param
 operator|->
 name|list_of_streams
 argument_list|,
@@ -17771,7 +17792,15 @@ operator|==
 name|SCTP_STR_RESET_IN_REQUEST
 condition|)
 block|{
-comment|/* Answered my request */
+name|req_in_param
+operator|=
+operator|(
+expr|struct
+name|sctp_stream_reset_in_request
+operator|*
+operator|)
+name|req_param
+expr_stmt|;
 name|number_entries
 operator|=
 operator|(
@@ -17815,7 +17844,7 @@ name|stcb
 argument_list|,
 name|number_entries
 argument_list|,
-name|srparam
+name|req_in_param
 operator|->
 name|list_of_streams
 argument_list|,
@@ -17839,7 +17868,7 @@ name|stcb
 argument_list|,
 name|number_entries
 argument_list|,
-name|srparam
+name|req_in_param
 operator|->
 name|list_of_streams
 argument_list|,
