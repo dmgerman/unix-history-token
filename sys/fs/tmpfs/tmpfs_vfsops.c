@@ -2048,6 +2048,23 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * A stub created so that vfs does vn_start_write for this filesystem  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|tmpfs_susp_clean
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/*  * tmpfs vfs operations.  */
 end_comment
 
@@ -2086,6 +2103,11 @@ operator|.
 name|vfs_sync
 operator|=
 name|tmpfs_sync
+block|,
+operator|.
+name|vfs_susp_clean
+operator|=
+name|tmpfs_susp_clean
 block|, }
 decl_stmt|;
 end_decl_stmt

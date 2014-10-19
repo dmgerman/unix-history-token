@@ -3239,7 +3239,7 @@ name|VFS_SUSP_CLEAN
 parameter_list|(
 name|MP
 parameter_list|)
-value|do {						\ 	if (*(MP)->mnt_op->vfs_susp_clean != NULL) {			\ 		VFS_PROLOGUE(MP);					\ 		(*(MP)->mnt_op->vfs_susp_clean)(MP);			\ 		VFS_EPILOGUE(MP);					\ 	}								\ } while (0)
+value|do {						\ 	MPASS(*(MP)->mnt_op->vfs_susp_clean != NULL); 			\ 	VFS_PROLOGUE(MP);						\ 	(*(MP)->mnt_op->vfs_susp_clean)(MP);				\ 	VFS_EPILOGUE(MP);						\ } while (0)
 end_define
 
 begin_define
