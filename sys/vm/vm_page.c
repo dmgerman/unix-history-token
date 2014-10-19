@@ -1762,7 +1762,7 @@ literal|0
 expr_stmt|;
 name|list
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"vm.blacklist"
 argument_list|)

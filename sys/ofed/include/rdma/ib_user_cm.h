@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<linux/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rdma/ib_user_sa.h>
 end_include
 

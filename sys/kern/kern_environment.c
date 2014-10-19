@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998 Michael Smith  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  * The unified bootloader passes us a pointer to a preserved copy of  * bootstrap/kernel environment variables.  We convert them to a  * dynamic array of strings later when the VM subsystem is up.  *  * We make these available through the kenv(2) syscall for userland  * and through getenv()/freeenv() setenv() unsetenv() testenv() for  * the kernel.  */
+comment|/*  * The unified bootloader passes us a pointer to a preserved copy of  * bootstrap/kernel environment variables.  We convert them to a  * dynamic array of strings later when the VM subsystem is up.  *  * We make these available through the kenv(2) syscall for userland  * and through kern_getenv()/freeenv() kern_setenv() kern_unsetenv() testenv() for  * the kernel.  */
 end_comment
 
 begin_include
@@ -637,7 +637,7 @@ endif|#
 directive|endif
 name|value
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|name
 argument_list|)
@@ -819,7 +819,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
-name|setenv
+name|kern_setenv
 argument_list|(
 name|name
 argument_list|,
@@ -862,7 +862,7 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|unsetenv
+name|kern_unsetenv
 argument_list|(
 name|name
 argument_list|)
@@ -1392,7 +1392,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|getenv
+name|kern_getenv
 parameter_list|(
 specifier|const
 name|char
@@ -1660,7 +1660,7 @@ end_comment
 
 begin_function
 name|int
-name|setenv
+name|kern_setenv
 parameter_list|(
 specifier|const
 name|char
@@ -1926,7 +1926,7 @@ end_comment
 
 begin_function
 name|int
-name|unsetenv
+name|kern_unsetenv
 parameter_list|(
 specifier|const
 name|char

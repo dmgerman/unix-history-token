@@ -5311,11 +5311,6 @@ decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* 	 * Check if the mount point has any quotas. 	 * If not, simply return. 	 */
-name|UFS_LOCK
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5341,11 +5336,6 @@ operator|!=
 name|NULLVP
 condition|)
 break|break;
-name|UFS_UNLOCK
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i
@@ -5512,11 +5502,6 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Check if the mount point has any quotas. 	 * If not, simply return. 	 */
-name|UFS_LOCK
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5542,11 +5527,6 @@ operator|!=
 name|NULLVP
 condition|)
 break|break;
-name|UFS_UNLOCK
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i

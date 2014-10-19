@@ -1016,7 +1016,7 @@ name|CTLTYPE_STRING
 case|:
 name|penv
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|path
 operator|+

@@ -1880,6 +1880,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|public_key
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|pub_key
 operator|=
@@ -1911,10 +1918,6 @@ goto|goto
 name|err
 goto|;
 block|}
-if|if
-condition|(
-name|pub_key
-condition|)
 name|buf_len
 operator|=
 operator|(
@@ -1925,6 +1928,7 @@ argument_list|(
 name|pub_key
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

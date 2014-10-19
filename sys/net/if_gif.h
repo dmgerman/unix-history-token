@@ -11,10 +11,6 @@ begin_comment
 comment|/*-  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_comment
-comment|/*  * if_gif.h  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -51,9 +47,17 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_comment
-comment|/* xxx sigh, why route have struct route instead of pointer? */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|ip
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ip6_hdr
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -174,67 +178,56 @@ modifier|*
 name|gif_ifp
 decl_stmt|;
 name|struct
-name|mtx
-name|gif_mtx
+name|rmlock
+name|gif_lock
 decl_stmt|;
+specifier|const
 name|struct
-name|sockaddr
+name|encaptab
 modifier|*
-name|gif_psrc
+name|gif_ecookie
 decl_stmt|;
-comment|/* Physical src addr */
-name|struct
-name|sockaddr
-modifier|*
-name|gif_pdst
+name|int
+name|gif_family
 decl_stmt|;
-comment|/* Physical dst addr */
-union|union
-block|{
-name|struct
-name|route
-name|gifscr_ro
-decl_stmt|;
-comment|/* xxx */
-ifdef|#
-directive|ifdef
-name|INET6
-name|struct
-name|route_in6
-name|gifscr_ro6
-decl_stmt|;
-comment|/* xxx */
-endif|#
-directive|endif
-block|}
-name|gifsc_gifscr
-union|;
 name|int
 name|gif_flags
 decl_stmt|;
 name|u_int
 name|gif_fibnum
 decl_stmt|;
-specifier|const
-name|struct
-name|encaptab
-modifier|*
-name|encap_cookie4
-decl_stmt|;
-specifier|const
-name|struct
-name|encaptab
-modifier|*
-name|encap_cookie6
+name|u_int
+name|gif_options
 decl_stmt|;
 name|void
 modifier|*
 name|gif_netgraph
 decl_stmt|;
-comment|/* ng_gif(4) netgraph node info */
-name|u_int
-name|gif_options
+comment|/* netgraph node info */
+union|union
+block|{
+name|void
+modifier|*
+name|hdr
 decl_stmt|;
+name|struct
+name|ip
+modifier|*
+name|iphdr
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|struct
+name|ip6_hdr
+modifier|*
+name|ip6hdr
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|gif_uhdr
+union|;
 name|LIST_ENTRY
 argument_list|(
 argument|gif_softc
@@ -263,7 +256,7 @@ name|GIF_LOCK_INIT
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_init(&(sc)->gif_mtx, "gif softc",	\ 				     NULL, MTX_DEF)
+value|rm_init(&(sc)->gif_lock, "gif softc")
 end_define
 
 begin_define
@@ -273,44 +266,88 @@ name|GIF_LOCK_DESTROY
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_destroy(&(sc)->gif_mtx)
+value|rm_destroy(&(sc)->gif_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GIF_LOCK
+name|GIF_RLOCK_TRACKER
+value|struct rm_priotracker gif_tracker
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_RLOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_lock(&(sc)->gif_mtx)
+value|rm_rlock(&(sc)->gif_lock,&gif_tracker)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GIF_UNLOCK
+name|GIF_RUNLOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_unlock(&(sc)->gif_mtx)
+value|rm_runlock(&(sc)->gif_lock,&gif_tracker)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GIF_LOCK_ASSERT
+name|GIF_RLOCK_ASSERT
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_assert(&(sc)->gif_mtx, MA_OWNED)
+value|rm_assert(&(sc)->gif_lock, RA_RLOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|gif_ro
-value|gifsc_gifscr.gifscr_ro
+name|GIF_WLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_wlock(&(sc)->gif_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_WUNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_wunlock(&(sc)->gif_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIF_WLOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_assert(&(sc)->gif_lock, RA_WLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|gif_iphdr
+value|gif_uhdr.iphdr
+end_define
+
+begin_define
+define|#
+directive|define
+name|gif_hdr
+value|gif_uhdr.hdr
 end_define
 
 begin_ifdef
@@ -322,8 +359,8 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|gif_ro6
-value|gifsc_gifscr.gifscr_ro6
+name|gif_ip6hdr
+value|gif_uhdr.ip6hdr
 end_define
 
 begin_endif
@@ -457,11 +494,13 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|int
-parameter_list|,
 name|struct
 name|ifnet
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -485,51 +524,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|route
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|gif_ioctl
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|u_long
-parameter_list|,
-name|caddr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|gif_set_tunnel
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|gif_delete_tunnel
-parameter_list|(
-name|struct
-name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;

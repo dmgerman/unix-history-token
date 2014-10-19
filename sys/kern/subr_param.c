@@ -945,7 +945,7 @@ name|i
 decl_stmt|;
 name|sysenv
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"smbios.bios.vendor"
 argument_list|)
@@ -1007,7 +1007,7 @@ expr_stmt|;
 block|}
 name|sysenv
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"smbios.system.product"
 argument_list|)

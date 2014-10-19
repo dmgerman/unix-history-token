@@ -1435,6 +1435,15 @@ name|UFTDI_DEV
 argument_list|(
 name|DRESDENELEKTRONIK
 argument_list|,
+name|DE_RFNODE
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|DRESDENELEKTRONIK
+argument_list|,
 name|LEVELSHIFTERSTICKLOWCOST
 argument_list|,
 literal|0

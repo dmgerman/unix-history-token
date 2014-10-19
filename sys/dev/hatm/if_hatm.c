@@ -7721,7 +7721,7 @@ condition|(
 operator|(
 name|val
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|full
 argument_list|)

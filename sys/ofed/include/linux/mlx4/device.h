@@ -4314,6 +4314,12 @@ block|,
 name|MLX4_NET_TRANS_RULE_NUM
 block|,
 comment|/* should be last */
+name|MLX4_NET_TRANS_RULE_DUMMY
+init|=
+operator|-
+literal|1
+block|,
+comment|/* force enum to be signed */
 block|}
 enum|;
 end_enum
@@ -4393,6 +4399,12 @@ block|,
 name|MLX4_FS_MODE_NUM
 block|,
 comment|/* should be last */
+name|MLX4_FS_MODE_DUMMY
+init|=
+operator|-
+literal|1
+block|,
+comment|/* force enum to be signed */
 block|}
 enum|;
 end_enum

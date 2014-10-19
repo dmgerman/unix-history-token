@@ -25,6 +25,12 @@ directive|include
 file|<rdma/ib_mad.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<asm/byteorder.h>
+end_include
+
 begin_define
 define|#
 directive|define

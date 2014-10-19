@@ -3336,7 +3336,7 @@ condition|(
 operator|(
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"hw.acpi.verbose"
 argument_list|)
@@ -14577,7 +14577,7 @@ condition|(
 operator|(
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"debug.acpi.avoid"
 argument_list|)
@@ -14720,7 +14720,7 @@ condition|(
 operator|(
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"debug.acpi.disabled"
 argument_list|)
@@ -16558,14 +16558,14 @@ expr_stmt|;
 block|}
 name|layer
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"debug.acpi.layer"
 argument_list|)
 expr_stmt|;
 name|level
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"debug.acpi.level"
 argument_list|)
@@ -16920,7 +16920,7 @@ name|dbg
 operator|=
 literal|0
 expr_stmt|;
-name|setenv
+name|kern_setenv
 argument_list|(
 operator|(
 name|char

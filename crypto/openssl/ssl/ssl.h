@@ -1727,6 +1727,11 @@ define|#
 directive|define
 name|SSL_MODE_SEND_SERVERHELLO_TIME
 value|0x00000040L
+comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details. */
+define|#
+directive|define
+name|SSL_MODE_SEND_FALLBACK_SCSV
+value|0x00000080L
 comment|/* Note: SSL[_CTX]_set_{options,mode} use |= op on the previous value,  * they cannot be used to clear bits. */
 define|#
 directive|define
@@ -5213,6 +5218,11 @@ value|TLS1_AD_UNKNOWN_PSK_IDENTITY
 comment|/* fatal */
 define|#
 directive|define
+name|SSL_AD_INAPPROPRIATE_FALLBACK
+value|TLS1_AD_INAPPROPRIATE_FALLBACK
+comment|/* fatal */
+define|#
+directive|define
 name|SSL_ERROR_NONE
 value|0
 define|#
@@ -5573,6 +5583,10 @@ define|#
 directive|define
 name|SSL_CTRL_CLEAR_EXTRA_CHAIN_CERTS
 value|83
+define|#
+directive|define
+name|SSL_CTRL_CHECK_PROTO_VERSION
+value|119
 define|#
 directive|define
 name|DTLSv1_get_timeout
@@ -10132,6 +10146,10 @@ name|SSL_R_ILLEGAL_PADDING
 value|283
 define|#
 directive|define
+name|SSL_R_INAPPROPRIATE_FALLBACK
+value|373
+define|#
+directive|define
 name|SSL_R_INCONSISTENT_COMPRESSION
 value|340
 define|#
@@ -10714,6 +10732,10 @@ define|#
 directive|define
 name|SSL_R_TLSV1_ALERT_EXPORT_RESTRICTION
 value|1060
+define|#
+directive|define
+name|SSL_R_TLSV1_ALERT_INAPPROPRIATE_FALLBACK
+value|1086
 define|#
 directive|define
 name|SSL_R_TLSV1_ALERT_INSUFFICIENT_SECURITY

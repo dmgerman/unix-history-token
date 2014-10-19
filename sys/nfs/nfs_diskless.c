@@ -732,7 +732,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"boot.nfsroot.nfshandlelen"
 argument_list|)
@@ -1150,7 +1150,7 @@ return|return;
 comment|/* no matching interface */
 name|match_done
 label|:
-name|setenv
+name|kern_setenv
 argument_list|(
 literal|"boot.netif.name"
 argument_list|,
@@ -1326,7 +1326,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"boot.nfsroot.path"
 argument_list|)
@@ -1359,7 +1359,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"boot.nfsroot.options"
 argument_list|)
@@ -1527,7 +1527,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"boot.nfsroot.path"
 argument_list|)
@@ -1560,7 +1560,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"boot.nfsroot.options"
 argument_list|)
@@ -1736,7 +1736,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|ev
 argument_list|)
@@ -1919,7 +1919,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|ev
 argument_list|)
@@ -2106,7 +2106,7 @@ name|ep
 operator|=
 name|cp
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|ev
 argument_list|)

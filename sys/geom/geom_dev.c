@@ -415,7 +415,7 @@ parameter_list|)
 block|{
 name|dumpdev
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"dumpdev"
 argument_list|)
@@ -1499,7 +1499,7 @@ literal|0
 expr_stmt|;
 name|val
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|buf
 argument_list|)

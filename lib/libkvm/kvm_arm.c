@@ -1118,7 +1118,7 @@ decl_stmt|;
 name|pt_entry_t
 name|pte
 decl_stmt|;
-name|u_long
+name|off_t
 name|pte_pa
 decl_stmt|;
 if|if
@@ -1253,10 +1253,6 @@ name|kd
 argument_list|,
 name|pte_pa
 argument_list|,
-operator|(
-name|off_t
-operator|*
-operator|)
 operator|&
 name|pte_pa
 argument_list|,

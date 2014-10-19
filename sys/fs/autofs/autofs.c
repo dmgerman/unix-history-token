@@ -1195,6 +1195,12 @@ name|ETIMEDOUT
 expr_stmt|;
 name|ar
 operator|->
+name|ar_wildcards
+operator|=
+name|true
+expr_stmt|;
+name|ar
+operator|->
 name|ar_done
 operator|=
 name|true
@@ -1261,7 +1267,7 @@ argument_list|(
 name|amp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For top-level nodes we need to request automountd(8) 	 * assistance even if the node is marked as cached, 	 * but the requested subdirectory does not exist.  This 	 * is necessary for wildcard indirect map keys to work. 	 */
+comment|/* 	 * For root node we need to request automountd(8) assistance even 	 * if the node is marked as cached, but the requested top-level 	 * directory does not exist.  This is necessary for wildcard indirect 	 * map keys to work.  We don't do this if we know that there are 	 * no wildcards. 	 */
 if|if
 condition|(
 name|anp
@@ -1273,6 +1279,10 @@ operator|&&
 name|componentlen
 operator|!=
 literal|0
+operator|&&
+name|anp
+operator|->
+name|an_wildcards
 condition|)
 block|{
 name|AUTOFS_SLOCK
@@ -1565,6 +1575,9 @@ decl_stmt|,
 name|request_error
 decl_stmt|,
 name|last
+decl_stmt|;
+name|bool
+name|wildcards
 decl_stmt|;
 name|amp
 operator|=
@@ -2089,6 +2102,12 @@ name|request_error
 argument_list|)
 expr_stmt|;
 block|}
+name|wildcards
+operator|=
+name|ar
+operator|->
+name|ar_wildcards
+expr_stmt|;
 name|last
 operator|=
 name|refcount_release
@@ -2184,6 +2203,12 @@ operator|->
 name|an_cached
 operator|=
 name|true
+expr_stmt|;
+name|anp
+operator|->
+name|an_wildcards
+operator|=
+name|wildcards
 expr_stmt|;
 name|callout_reset
 argument_list|(
@@ -2739,6 +2764,14 @@ operator|=
 name|add
 operator|->
 name|add_error
+expr_stmt|;
+name|ar
+operator|->
+name|ar_wildcards
+operator|=
+name|add
+operator|->
+name|add_wildcards
 expr_stmt|;
 name|ar
 operator|->

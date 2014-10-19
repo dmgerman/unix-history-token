@@ -1725,7 +1725,7 @@ expr_stmt|;
 comment|/* 	 * Grab booted kernel's name 	 */
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"kernelname"
 argument_list|)

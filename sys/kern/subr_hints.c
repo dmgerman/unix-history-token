@@ -318,7 +318,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|setenv
+name|kern_setenv
 argument_list|(
 name|line
 argument_list|,

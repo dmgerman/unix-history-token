@@ -376,6 +376,7 @@ specifier|inline
 name|u64
 name|mlx4_mac_to_u64
 parameter_list|(
+specifier|const
 name|u8
 modifier|*
 name|addr

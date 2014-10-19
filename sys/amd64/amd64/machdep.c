@@ -1028,7 +1028,7 @@ decl_stmt|;
 comment|/* 	 * On MacBooks, we need to disallow the legacy USB circuit to 	 * generate an SMI# because this can cause several problems, 	 * namely: incorrect CPU frequency detection and failure to 	 * start the APs. 	 * We do this by disabling a bit in the SMI_EN (SMI Control and 	 * Enable register) of the Intel ICH LPC Interface Bridge.  	 */
 name|sysenv
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"smbios.system.product"
 argument_list|)
@@ -1186,7 +1186,7 @@ literal|0
 expr_stmt|;
 name|sysenv
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"smbios.memory.enabled"
 argument_list|)
@@ -9720,7 +9720,7 @@ name|proc0_tf
 expr_stmt|;
 name|env
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"kernelname"
 argument_list|)

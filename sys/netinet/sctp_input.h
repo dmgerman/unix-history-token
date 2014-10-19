@@ -100,7 +100,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|sctp_stream_reset_out_request
+name|sctp_stream_reset_request
 modifier|*
 name|sctp_find_stream_reset
 parameter_list|(

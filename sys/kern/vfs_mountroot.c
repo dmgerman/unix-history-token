@@ -1865,7 +1865,7 @@ name|val
 decl_stmt|;
 name|val
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 name|var
 argument_list|)
@@ -3860,7 +3860,7 @@ expr_stmt|;
 block|}
 name|s
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"vfs.root.mountfrom"
 argument_list|)
@@ -3874,7 +3874,7 @@ condition|)
 block|{
 name|opt
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"vfs.root.mountfrom.options"
 argument_list|)

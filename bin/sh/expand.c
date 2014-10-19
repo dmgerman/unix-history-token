@@ -4300,9 +4300,7 @@ name|num
 operator|=
 name|rootpid
 expr_stmt|;
-goto|goto
-name|numvar
-goto|;
+break|break;
 case|case
 literal|'?'
 case|:
@@ -4310,9 +4308,7 @@ name|num
 operator|=
 name|oexitstatus
 expr_stmt|;
-goto|goto
-name|numvar
-goto|;
+break|break;
 case|case
 literal|'#'
 case|:
@@ -4322,9 +4318,7 @@ name|shellparam
 operator|.
 name|nparam
 expr_stmt|;
-goto|goto
-name|numvar
-goto|;
+break|break;
 case|case
 literal|'!'
 case|:
@@ -4332,17 +4326,6 @@ name|num
 operator|=
 name|backgndpidval
 argument_list|()
-expr_stmt|;
-name|numvar
-label|:
-name|expdest
-operator|=
-name|cvtnum
-argument_list|(
-name|num
-argument_list|,
-name|expdest
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4384,7 +4367,7 @@ name|expdest
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+return|return;
 case|case
 literal|'@'
 case|:
@@ -4441,7 +4424,7 @@ name|expdest
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+return|return;
 block|}
 comment|/* FALLTHROUGH */
 case|case
@@ -4530,7 +4513,7 @@ name|expdest
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+return|return;
 default|default:
 if|if
 condition|(
@@ -4583,7 +4566,7 @@ literal|1
 index|]
 expr_stmt|;
 else|else
-break|break;
+return|return;
 name|strtodest
 argument_list|(
 name|p
@@ -4596,8 +4579,17 @@ name|quoted
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+return|return;
 block|}
+name|expdest
+operator|=
+name|cvtnum
+argument_list|(
+name|num
+argument_list|,
+name|expdest
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5218,13 +5210,18 @@ condition|(
 name|str
 condition|)
 block|{
+name|savelastp
+operator|=
+name|exparg
+operator|.
+name|lastp
+expr_stmt|;
 if|if
 condition|(
+operator|!
 name|fflag
 condition|)
-goto|goto
-name|nometa
-goto|;
+block|{
 name|p
 operator|=
 name|str
@@ -5234,25 +5231,20 @@ expr_stmt|;
 for|for
 control|(
 init|;
-condition|;
-control|)
-block|{
-comment|/* fast check for meta chars */
-if|if
-condition|(
 operator|(
 name|c
 operator|=
 operator|*
 name|p
-operator|++
 operator|)
-operator|==
+operator|!=
 literal|'\0'
-condition|)
-goto|goto
-name|nometa
-goto|;
+condition|;
+name|p
+operator|++
+control|)
+block|{
+comment|/* fast check for meta chars */
 if|if
 condition|(
 name|c
@@ -5267,14 +5259,7 @@ name|c
 operator|==
 literal|'['
 condition|)
-break|break;
-block|}
-name|savelastp
-operator|=
-name|exparg
-operator|.
-name|lastp
-expr_stmt|;
+block|{
 name|INTOFF
 expr_stmt|;
 name|expmeta
@@ -5288,6 +5273,10 @@ argument_list|)
 expr_stmt|;
 name|INTON
 expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
 if|if
 condition|(
 name|exparg
@@ -5298,8 +5287,6 @@ name|savelastp
 condition|)
 block|{
 comment|/* 			 * no matches 			 */
-name|nometa
-label|:
 operator|*
 name|exparg
 operator|.
