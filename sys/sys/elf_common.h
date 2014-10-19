@@ -2631,6 +2631,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PT_DUMP_DELTA
+value|0x6fb5d000
+end_define
+
+begin_comment
+comment|/* va->pa map for kernel dumps 					   (currently arm). */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_LOSUNW
 value|0x6ffffffa
 end_define
