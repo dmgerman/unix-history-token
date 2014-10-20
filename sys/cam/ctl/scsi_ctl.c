@@ -1570,15 +1570,13 @@ name|physical_port
 operator|=
 name|cpi
 operator|->
-name|unit_number
+name|bus_id
 expr_stmt|;
 name|port
 operator|->
 name|virtual_port
 operator|=
-name|cpi
-operator|->
-name|bus_id
+literal|0
 expr_stmt|;
 name|port
 operator|->
