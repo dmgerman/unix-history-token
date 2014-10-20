@@ -6701,7 +6701,6 @@ block|{
 case|case
 name|MSG_ABORT_TASK_SET
 case|:
-comment|/* 					 * XXX KDM this isn't currently 					 * supported by CTL.  It ends up 					 * being a no-op. 					 */
 name|io
 operator|->
 name|taskio
@@ -6750,7 +6749,6 @@ break|break;
 case|case
 name|MSG_CLEAR_TASK_SET
 case|:
-comment|/* 					 * XXX KDM this isn't currently 					 * supported by CTL.  It ends up 					 * being a no-op. 					 */
 name|io
 operator|->
 name|taskio
