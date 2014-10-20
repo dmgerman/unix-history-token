@@ -153,6 +153,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
@@ -197,6 +199,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -243,6 +247,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
@@ -287,6 +293,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -352,6 +360,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_OUT
@@ -396,6 +406,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -442,6 +454,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_OUT
@@ -487,6 +501,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_OUT
@@ -531,6 +547,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -587,6 +605,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -1881,6 +1901,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
@@ -1937,6 +1959,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_IN
@@ -1983,6 +2007,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -2041,6 +2067,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -2467,6 +2495,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_OUT
@@ -2502,6 +2532,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_OUT
@@ -2536,6 +2568,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -2591,6 +2625,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -3553,6 +3589,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_OUT
@@ -3596,6 +3634,8 @@ name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
 operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
 name|CTL_FLAG_DATA_OUT
@@ -3638,6 +3678,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||
@@ -3701,6 +3743,8 @@ operator||
 name|CTL_CMD_FLAG_OK_ON_STOPPED
 operator||
 name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_CMD_FLAG_OK_ON_SECONDARY
 operator||

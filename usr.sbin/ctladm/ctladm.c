@@ -15002,20 +15002,19 @@ goto|goto
 name|bailout
 goto|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|warnx
 argument_list|(
-literal|"%s: error returned from LUN creation request:\n%s"
-argument_list|,
-name|__func__
+literal|"LUN creation error: %s"
 argument_list|,
 name|req
 operator|.
@@ -15029,22 +15028,27 @@ expr_stmt|;
 goto|goto
 name|bailout
 goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|warnx
 argument_list|(
-literal|"%s: unknown LUN creation request status %d"
+literal|"LUN creation warning: %s"
 argument_list|,
-name|__func__
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|warnx
+argument_list|(
+literal|"unknown LUN creation status: %d"
 argument_list|,
 name|req
 operator|.
@@ -15815,20 +15819,19 @@ goto|goto
 name|bailout
 goto|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|warnx
 argument_list|(
-literal|"%s: error returned from LUN removal request:\n%s"
-argument_list|,
-name|__func__
+literal|"LUN removal error: %s"
 argument_list|,
 name|req
 operator|.
@@ -15842,22 +15845,27 @@ expr_stmt|;
 goto|goto
 name|bailout
 goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|warnx
 argument_list|(
-literal|"%s: unknown LUN removal request status %d"
+literal|"LUN removal warning: %s"
 argument_list|,
-name|__func__
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|warnx
+argument_list|(
+literal|"unknown LUN removal status: %d"
 argument_list|,
 name|req
 operator|.
@@ -15874,7 +15882,7 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"LUN %d deleted successfully\n"
+literal|"LUN %d removed successfully\n"
 argument_list|,
 name|lun_id
 argument_list|)
@@ -16186,20 +16194,19 @@ goto|goto
 name|bailout
 goto|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|warnx
 argument_list|(
-literal|"%s: error returned from LUN modification request:\n%s"
-argument_list|,
-name|__func__
+literal|"LUN modification error: %s"
 argument_list|,
 name|req
 operator|.
@@ -16213,22 +16220,27 @@ expr_stmt|;
 goto|goto
 name|bailout
 goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|warnx
 argument_list|(
-literal|"%s: unknown LUN modification request status %d"
+literal|"LUN modification warning: %s"
 argument_list|,
-name|__func__
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|warnx
+argument_list|(
+literal|"unknown LUN modification status: %d"
 argument_list|,
 name|req
 operator|.
