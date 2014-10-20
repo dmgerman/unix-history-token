@@ -1634,8 +1634,6 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|binvp
-init|=
-name|NULL
 decl_stmt|;
 name|cap_rights_t
 name|rights
@@ -3476,8 +3474,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|binvp
-operator|&&
 name|error
 operator|!=
 literal|0
