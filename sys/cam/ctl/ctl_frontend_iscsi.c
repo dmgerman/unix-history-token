@@ -4412,6 +4412,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|login_timeout
+operator|>
+literal|0
+operator|&&
 name|cs
 operator|->
 name|cs_timeout
