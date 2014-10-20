@@ -1651,8 +1651,12 @@ name|u_int8_t
 name|data_strobe_offset_cnt
 decl_stmt|;
 name|u_int8_t
-name|reserved
+name|byte8
 decl_stmt|;
+define|#
+directive|define
+name|SMS_RWER_LBPERE
+value|0x80
 name|u_int8_t
 name|write_retry_count
 decl_stmt|;
