@@ -2090,9 +2090,13 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/* Check if we have a timeout or an I2C error. */
+comment|/* Check for errors. */
 if|if
 condition|(
+name|err
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|sc
 operator|->
@@ -2100,27 +2104,18 @@ name|sc_flags
 operator|&
 name|BCM_I2C_ERROR
 operator|)
-operator|||
-name|err
-operator|==
-name|EWOULDBLOCK
 condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"I2C error\n"
-argument_list|)
-expr_stmt|;
 name|err
 operator|=
 name|EIO
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+condition|)
 break|break;
-block|}
 block|}
 comment|/* Clean the controller flags. */
 name|sc
