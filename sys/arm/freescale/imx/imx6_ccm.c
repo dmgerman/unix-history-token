@@ -698,7 +698,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|ccm
 argument_list|,
@@ -711,6 +711,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|BUS_PASS_CPU
+operator|+
+name|BUS_PASS_ORDER_EARLY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
