@@ -8201,6 +8201,27 @@ operator|<
 literal|3
 condition|)
 return|return;
+if|if
+condition|(
+name|dl
+operator|->
+name|dl_oldfmt
+condition|)
+block|{
+name|dump_bpobj
+argument_list|(
+operator|&
+name|dl
+operator|->
+name|dl_bpobj
+argument_list|,
+literal|"old-format deadlist"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|zdb_nicenum
 argument_list|(
 name|dl
