@@ -6633,6 +6633,7 @@ argument_list|(
 name|dbuf
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We can only assign if the offset is aligned, the arc buf is the 	 * same size as the dbuf, and the dbuf is not metadata.  It 	 * can't be metadata because the loaned arc buf comes from the 	 * user-data kmem arena. 	 */
 if|if
 condition|(
 name|offset
@@ -6650,6 +6651,13 @@ operator|->
 name|db
 operator|.
 name|db_size
+operator|&&
+name|DBUF_GET_BUFC_TYPE
+argument_list|(
+name|db
+argument_list|)
+operator|==
+name|ARC_BUFC_DATA
 condition|)
 block|{
 name|dbuf_assign_arcbuf
