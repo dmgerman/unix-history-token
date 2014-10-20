@@ -14234,19 +14234,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|bp
-operator|->
-name|bio_flags
-operator||=
-name|BIO_DONE
-expr_stmt|;
 name|done
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
