@@ -118,6 +118,9 @@ decl_stmt|;
 name|size_t
 name|cdw_sg_len
 decl_stmt|;
+name|uint32_t
+name|cdw_r2t_end
+decl_stmt|;
 block|}
 struct|;
 end_struct
