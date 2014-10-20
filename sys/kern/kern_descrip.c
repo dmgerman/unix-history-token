@@ -14571,11 +14571,6 @@ name|maxlen
 parameter_list|)
 block|{
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|file
 modifier|*
 name|fp
@@ -14609,10 +14604,6 @@ decl_stmt|;
 name|cap_rights_t
 name|rights
 decl_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -15494,11 +15485,6 @@ name|filedesc
 modifier|*
 name|fdp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -15517,10 +15503,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
 name|name
 operator|=
 operator|(
