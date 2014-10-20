@@ -1548,12 +1548,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNTK_UNUSED25
+name|MNTK_SUSPENDABLE
 value|0x20000000
 end_define
 
 begin_comment
-comment|/*  --available-- */
+comment|/* writes can be suspended */
 end_comment
 
 begin_define
@@ -3239,7 +3239,7 @@ name|VFS_SUSP_CLEAN
 parameter_list|(
 name|MP
 parameter_list|)
-value|do {						\ 	MPASS(*(MP)->mnt_op->vfs_susp_clean != NULL); 			\ 	VFS_PROLOGUE(MP);						\ 	(*(MP)->mnt_op->vfs_susp_clean)(MP);				\ 	VFS_EPILOGUE(MP);						\ } while (0)
+value|do {						\ 	if (*(MP)->mnt_op->vfs_susp_clean != NULL) {			\ 		VFS_PROLOGUE(MP);					\ 		(*(MP)->mnt_op->vfs_susp_clean)(MP);			\ 		VFS_EPILOGUE(MP);					\ 	}								\ } while (0)
 end_define
 
 begin_define

@@ -5496,6 +5496,8 @@ operator||
 name|MNTK_NO_IOPF
 operator||
 name|MNTK_UNMAPPED_BUFS
+operator||
+name|MNTK_SUSPENDABLE
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
