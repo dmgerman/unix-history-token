@@ -144,7 +144,8 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"z%p [shape=hexagon,label=\"%s\\nr%dw%de%d\\nerr#%d\"];\n"
+literal|"z%p [shape=hexagon,label=\"%s\\nr%dw%de%d\\nerr#%d\\n"
+literal|"sector=%u\\nstripe=%u\"];\n"
 argument_list|,
 name|pp
 argument_list|,
@@ -167,6 +168,14 @@ argument_list|,
 name|pp
 operator|->
 name|error
+argument_list|,
+name|pp
+operator|->
+name|sectorsize
+argument_list|,
+name|pp
+operator|->
+name|stripesize
 argument_list|)
 expr_stmt|;
 block|}

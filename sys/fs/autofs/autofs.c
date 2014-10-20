@@ -2528,13 +2528,6 @@ operator|->
 name|sc_lock
 argument_list|)
 expr_stmt|;
-name|AUTOFS_DEBUG
-argument_list|(
-literal|"failed with error %d"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
