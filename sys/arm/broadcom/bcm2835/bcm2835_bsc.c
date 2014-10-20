@@ -1855,7 +1855,7 @@ name|sc_mtx
 argument_list|,
 literal|0
 argument_list|,
-literal|"bcm_bsc"
+literal|"bscbusw"
 argument_list|,
 literal|0
 argument_list|)
@@ -2085,7 +2085,7 @@ name|sc_mtx
 argument_list|,
 literal|0
 argument_list|,
-literal|"bcm_bsc"
+literal|"bsciow"
 argument_list|,
 name|hz
 argument_list|)
@@ -2128,6 +2128,12 @@ operator|->
 name|sc_flags
 operator|=
 literal|0
+expr_stmt|;
+comment|/* Wake up the threads waiting for bus. */
+name|wakeup
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 name|BCM_BSC_UNLOCK
 argument_list|(
