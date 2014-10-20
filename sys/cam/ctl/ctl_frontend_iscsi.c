@@ -5035,13 +5035,6 @@ operator|->
 name|cs_callout
 argument_list|)
 expr_stmt|;
-name|icl_conn_shutdown
-argument_list|(
-name|cs
-operator|->
-name|cs_conn
-argument_list|)
-expr_stmt|;
 name|icl_conn_close
 argument_list|(
 name|cs
