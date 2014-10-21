@@ -932,26 +932,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kern_getgroups
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|u_int
-modifier|*
-name|ngrp
-parameter_list|,
-name|gid_t
-modifier|*
-name|groups
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|kern_getitimer
 parameter_list|(
 name|struct
