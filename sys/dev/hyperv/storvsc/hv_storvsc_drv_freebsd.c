@@ -246,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|STORVSC_MAX_TARGETS
-value|(1)
+value|(2)
 end_define
 
 begin_struct_decl
@@ -2123,12 +2123,6 @@ operator|->
 name|u
 operator|.
 name|vm_srb
-expr_stmt|;
-name|request
-operator|->
-name|sense_info_len
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
