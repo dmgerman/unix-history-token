@@ -326,6 +326,14 @@ name|struct
 name|vie
 modifier|*
 name|vie
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|inst_bytes
+parameter_list|,
+name|int
+name|inst_length
 parameter_list|)
 function_decl|;
 end_function_decl

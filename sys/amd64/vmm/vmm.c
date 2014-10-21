@@ -5387,6 +5387,8 @@ name|int
 name|cs_d
 decl_stmt|,
 name|error
+decl_stmt|,
+name|length
 decl_stmt|;
 name|vcpu
 operator|=
@@ -5474,12 +5476,29 @@ argument_list|,
 name|gpa
 argument_list|)
 expr_stmt|;
-name|vie_init
-argument_list|(
-name|vie
-argument_list|)
-expr_stmt|;
 comment|/* Fetch, decode and emulate the faulting instruction */
+if|if
+condition|(
+name|vie
+operator|->
+name|num_valid
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * If the instruction length is not known then assume a 		 * maximum size instruction. 		 */
+name|length
+operator|=
+name|vme
+operator|->
+name|inst_length
+condition|?
+name|vme
+operator|->
+name|inst_length
+else|:
+name|VIE_INST_SIZE
+expr_stmt|;
 name|error
 operator|=
 name|vmm_fetch_instruction
@@ -5494,13 +5513,20 @@ name|vme
 operator|->
 name|rip
 argument_list|,
-name|vme
-operator|->
-name|inst_length
+name|length
 argument_list|,
 name|vie
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * The instruction bytes have already been copied into 'vie' 		 */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -5566,6 +5592,23 @@ operator|(
 name|EFAULT
 operator|)
 return|;
+comment|/* 	 * If the instruction length is not specified the update it now. 	 */
+if|if
+condition|(
+name|vme
+operator|->
+name|inst_length
+operator|==
+literal|0
+condition|)
+name|vme
+operator|->
+name|inst_length
+operator|=
+name|vie
+operator|->
+name|num_processed
+expr_stmt|;
 comment|/* return to userland unless this is an in-kernel emulated device */
 if|if
 condition|(
