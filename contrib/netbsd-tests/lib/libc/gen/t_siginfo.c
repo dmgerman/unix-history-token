@@ -19,11 +19,25 @@ directive|include
 file|<atf-c/config.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/inttypes.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -361,6 +375,12 @@ operator|.
 name|ss_flags
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 for|for
 control|(
 name|i
@@ -400,6 +420,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -663,6 +685,12 @@ operator|->
 name|si_status
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|printf
 argument_list|(
 literal|"si_utime=%lu\n"
@@ -691,6 +719,8 @@ operator|->
 name|si_stime
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|ATF_REQUIRE_EQ
 argument_list|(
