@@ -1232,7 +1232,7 @@ operator|&
 name|kld_sx
 argument_list|)
 expr_stmt|;
-name|sysctl_lock
+name|sysctl_xlock
 argument_list|()
 expr_stmt|;
 for|for
@@ -1254,7 +1254,7 @@ operator|*
 name|oidp
 argument_list|)
 expr_stmt|;
-name|sysctl_unlock
+name|sysctl_xunlock
 argument_list|()
 expr_stmt|;
 name|sx_xlock
@@ -1337,7 +1337,7 @@ operator|&
 name|kld_sx
 argument_list|)
 expr_stmt|;
-name|sysctl_lock
+name|sysctl_xlock
 argument_list|()
 expr_stmt|;
 for|for
@@ -1359,7 +1359,7 @@ operator|*
 name|oidp
 argument_list|)
 expr_stmt|;
-name|sysctl_unlock
+name|sysctl_xunlock
 argument_list|()
 expr_stmt|;
 name|sx_xlock

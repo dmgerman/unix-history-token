@@ -961,7 +961,7 @@ name|vfsconf_unlock
 argument_list|()
 expr_stmt|;
 comment|/* 	 * If this filesystem has a sysctl node under vfs 	 * (i.e. vfs.xxfs), then change the oid number of that node to 	 * match the filesystem's type number.  This allows user code 	 * which uses the type number to read sysctl variables defined 	 * by the filesystem to continue working. Since the oids are 	 * in a sorted list, we need to make sure the order is 	 * preserved by re-registering the oid after modifying its 	 * number. 	 */
-name|sysctl_lock
+name|sysctl_xlock
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -1010,7 +1010,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|sysctl_unlock
+name|sysctl_xunlock
 argument_list|()
 expr_stmt|;
 return|return

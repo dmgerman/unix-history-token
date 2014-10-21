@@ -4129,7 +4129,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sysctl_lock
+name|sysctl_xlock
 parameter_list|(
 name|void
 parameter_list|)
@@ -4138,7 +4138,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sysctl_unlock
+name|sysctl_xunlock
 parameter_list|(
 name|void
 parameter_list|)

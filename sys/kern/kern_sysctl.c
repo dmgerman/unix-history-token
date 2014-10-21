@@ -429,7 +429,7 @@ end_comment
 
 begin_function
 name|void
-name|sysctl_lock
+name|sysctl_xlock
 parameter_list|(
 name|void
 parameter_list|)
@@ -442,7 +442,7 @@ end_function
 
 begin_function
 name|void
-name|sysctl_unlock
+name|sysctl_xunlock
 parameter_list|(
 name|void
 parameter_list|)
