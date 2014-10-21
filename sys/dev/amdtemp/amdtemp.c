@@ -210,6 +210,13 @@ name|DEVICEID_AMD_MISC16
 value|0x1533
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_AMD_MISC17
+value|0x141d
+end_define
+
 begin_struct
 specifier|static
 struct|struct
@@ -248,6 +255,12 @@ block|{
 name|VENDORID_AMD
 block|,
 name|DEVICEID_AMD_MISC16
+block|}
+block|,
+block|{
+name|VENDORID_AMD
+block|,
+name|DEVICEID_AMD_MISC17
 block|}
 block|,
 block|{
