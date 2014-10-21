@@ -4759,6 +4759,17 @@ name|len
 operator|)
 operator|<=
 name|src_last
+operator|&&
+operator|(
+name|dst
+operator|-
+name|dst_origin
+operator|<
+operator|(
+name|ssize_t
+operator|)
+name|dlen
+operator|)
 condition|)
 block|{
 if|if

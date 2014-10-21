@@ -129,6 +129,10 @@ name|DTLS1_VERSION
 value|0xFEFF
 define|#
 directive|define
+name|DTLS_MAX_VERSION
+value|DTLS1_VERSION
+define|#
+directive|define
 name|DTLS1_BAD_VER
 value|0x0100
 if|#
