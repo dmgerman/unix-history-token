@@ -3024,7 +3024,7 @@ name|sysctl_oid
 modifier|*
 name|oidp
 decl_stmt|;
-name|SYSCTL_ASSERT_XLOCKED
+name|SYSCTL_ASSERT_LOCKED
 argument_list|()
 expr_stmt|;
 name|SLIST_FOREACH
@@ -3256,7 +3256,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|SYSCTL_XLOCK
+name|SYSCTL_SLOCK
 argument_list|()
 expr_stmt|;
 name|sysctl_sysctl_debug_dump_node
@@ -3267,7 +3267,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_SUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -3290,6 +3290,8 @@ argument_list|,
 name|CTLTYPE_STRING
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 argument_list|,
 literal|0
 argument_list|,
@@ -3359,7 +3361,7 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_SLOCK
 argument_list|()
 expr_stmt|;
 while|while
@@ -3562,7 +3564,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|SYSCTL_XUNLOCK
+name|SYSCTL_SUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -3588,6 +3590,8 @@ argument_list|,
 name|name
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
@@ -3974,7 +3978,7 @@ index|[
 name|CTL_MAXNAME
 index|]
 decl_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_SLOCK
 argument_list|()
 expr_stmt|;
 name|i
@@ -3998,7 +4002,7 @@ operator|&
 name|oid
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_SUNLOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -4049,6 +4053,8 @@ argument_list|,
 name|next
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
@@ -4475,7 +4481,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_SLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -4566,7 +4572,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|SYSCTL_XUNLOCK
+name|SYSCTL_SUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -4616,7 +4622,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_SLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -4681,7 +4687,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|SYSCTL_XUNLOCK
+name|SYSCTL_SUNLOCK
 argument_list|()
 expr_stmt|;
 return|return
@@ -4703,6 +4709,8 @@ argument_list|,
 name|oiddescr
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_MPSAFE
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
