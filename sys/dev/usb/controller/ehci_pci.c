@@ -389,6 +389,14 @@ literal|"AMD SB7x0/SB8x0/SB9x0 USB 2.0 controller"
 operator|)
 return|;
 case|case
+literal|0x0f348086
+case|:
+return|return
+operator|(
+literal|"Intel BayTrail USB 2.0 controller"
+operator|)
+return|;
+case|case
 literal|0x1d268086
 case|:
 return|return

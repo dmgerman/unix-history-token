@@ -397,6 +397,14 @@ literal|"ASMedia ASM1042 USB 3.0 controller"
 operator|)
 return|;
 case|case
+literal|0x0f358086
+case|:
+return|return
+operator|(
+literal|"Intel Intel BayTrail USB 3.0 controller"
+operator|)
+return|;
+case|case
 literal|0x9c318086
 case|:
 case|case
@@ -1141,6 +1149,10 @@ name|self
 argument_list|)
 condition|)
 block|{
+case|case
+literal|0x0f358086
+case|:
+comment|/* BayTrail */
 case|case
 literal|0x9c318086
 case|:
