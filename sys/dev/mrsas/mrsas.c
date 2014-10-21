@@ -2332,6 +2332,8 @@ operator|&
 name|sc
 operator|->
 name|fw_outstanding
+operator|.
+name|val_rdonly
 argument_list|,
 literal|0
 argument_list|,

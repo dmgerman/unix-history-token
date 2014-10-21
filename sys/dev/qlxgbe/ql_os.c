@@ -775,7 +775,6 @@ literal|"fw_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|ha
 operator|->
 name|fw_ver_str

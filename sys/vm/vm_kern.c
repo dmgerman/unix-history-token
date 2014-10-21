@@ -196,7 +196,7 @@ name|min_kernel_address
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|NULL
+name|SYSCTL_NULL_ULONG_PTR
 argument_list|,
 name|VM_MIN_KERNEL_ADDRESS
 argument_list|,
@@ -234,7 +234,7 @@ literal|0
 argument_list|,
 else|#
 directive|else
-name|NULL
+name|SYSCTL_NULL_ULONG_PTR
 argument_list|,
 name|VM_MAX_KERNEL_ADDRESS
 argument_list|,

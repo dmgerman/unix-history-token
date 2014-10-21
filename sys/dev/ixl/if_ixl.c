@@ -2209,8 +2209,6 @@ name|OID_AUTO
 argument_list|,
 literal|"rx_itr"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2240,8 +2238,6 @@ name|OID_AUTO
 argument_list|,
 literal|"dynamic_rx_itr"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2271,8 +2267,6 @@ name|OID_AUTO
 argument_list|,
 literal|"tx_itr"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2302,8 +2296,6 @@ name|OID_AUTO
 argument_list|,
 literal|"dynamic_tx_itr"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

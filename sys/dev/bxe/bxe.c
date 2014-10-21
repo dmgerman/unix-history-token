@@ -70390,7 +70390,6 @@ literal|"bc_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|devinfo
@@ -70438,7 +70437,6 @@ literal|"fw_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_ver_str
@@ -70536,7 +70534,6 @@ literal|"mf_mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|mf_mode_str
@@ -70584,7 +70581,6 @@ literal|"mac_addr"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|mac_addr_str
@@ -70668,7 +70664,6 @@ literal|"pci_link"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|pci_link_str
@@ -70684,7 +70679,7 @@ name|debug
 operator|=
 name|bxe_debug
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -70700,8 +70695,6 @@ operator|&
 name|sc
 operator|->
 name|debug
-argument_list|,
-literal|0
 argument_list|,
 literal|"debug logging mode"
 argument_list|)

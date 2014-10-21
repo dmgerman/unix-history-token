@@ -5150,7 +5150,7 @@ name|family
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|AF_NETGRAPH
 argument_list|,
@@ -5189,7 +5189,7 @@ name|proto
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|NG_DATA
 argument_list|,
@@ -5228,7 +5228,7 @@ name|proto
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|NG_CONTROL
 argument_list|,

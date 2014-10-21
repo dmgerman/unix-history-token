@@ -1281,7 +1281,7 @@ name|namecache
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(

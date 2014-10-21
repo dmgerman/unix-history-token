@@ -498,7 +498,7 @@ modifier|*
 name|description
 decl_stmt|;
 name|int
-name|access
+name|flag_rdonly
 decl_stmt|;
 block|}
 name|acpi_asus_wmi_sysctls
@@ -520,14 +520,7 @@ operator|.
 name|description
 operator|=
 literal|"hw_switch"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -544,14 +537,7 @@ operator|.
 name|description
 operator|=
 literal|"Wireless LED control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -568,14 +554,7 @@ operator|.
 name|description
 operator|=
 literal|"Alt+F2 function"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -592,14 +571,7 @@ operator|.
 name|description
 operator|=
 literal|"WLAN power control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -616,14 +588,7 @@ operator|.
 name|description
 operator|=
 literal|"Bluetooth power control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -640,14 +605,7 @@ operator|.
 name|description
 operator|=
 literal|"GPS power control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -664,14 +622,7 @@ operator|.
 name|description
 operator|=
 literal|"WiMAX power control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -688,14 +639,7 @@ operator|.
 name|description
 operator|=
 literal|"WWAN-3G power control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -712,14 +656,7 @@ operator|.
 name|description
 operator|=
 literal|"UWB power control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -736,14 +673,7 @@ operator|.
 name|description
 operator|=
 literal|"LED1 control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -760,14 +690,7 @@ operator|.
 name|description
 operator|=
 literal|"LED2 control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -784,14 +707,7 @@ operator|.
 name|description
 operator|=
 literal|"LED3 control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -808,14 +724,7 @@ operator|.
 name|description
 operator|=
 literal|"LED4 control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -832,14 +741,7 @@ operator|.
 name|description
 operator|=
 literal|"LED5 control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -856,14 +758,7 @@ operator|.
 name|description
 operator|=
 literal|"LED6 control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -880,14 +775,7 @@ operator|.
 name|description
 operator|=
 literal|"LCD backlight on/off control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -904,14 +792,7 @@ operator|.
 name|description
 operator|=
 literal|"LCD backlight brightness control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -928,14 +809,7 @@ operator|.
 name|description
 operator|=
 literal|"Keyboard backlight brightness control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -952,14 +826,7 @@ operator|.
 name|description
 operator|=
 literal|"Ambient light sensor"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -976,14 +843,7 @@ operator|.
 name|description
 operator|=
 literal|"Camera power control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -1000,14 +860,7 @@ operator|.
 name|description
 operator|=
 literal|"Cardreader power control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -1024,14 +877,7 @@ operator|.
 name|description
 operator|=
 literal|"Touchpad control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -1048,14 +894,7 @@ operator|.
 name|description
 operator|=
 literal|"Touchpad LED control"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -1074,11 +913,9 @@ operator|=
 literal|"Temperature (C)"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -1098,11 +935,9 @@ operator|=
 literal|"Fan speed (0-3)"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -1117,16 +952,9 @@ operator|=
 name|ASUS_WMI_DEVID_PROCESSOR_STATE
 block|,
 operator|.
-name|description
+name|flag_rdonly
 operator|=
-literal|"Processor state"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
+literal|1
 block|}
 block|,
 block|{
@@ -2075,6 +1903,18 @@ condition|)
 continue|continue;
 break|break;
 block|}
+if|if
+condition|(
+name|acpi_asus_wmi_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|flag_rdonly
+operator|!=
+literal|0
+condition|)
+block|{
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|sc
@@ -2097,12 +1937,9 @@ index|]
 operator|.
 name|name
 argument_list|,
-name|acpi_asus_wmi_sysctls
-index|[
-name|i
-index|]
-operator|.
-name|access
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RD
 argument_list|,
 name|sc
 argument_list|,
@@ -2120,6 +1957,52 @@ operator|.
 name|description
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|sc
+operator|->
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sc
+operator|->
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|acpi_asus_wmi_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|sc
+argument_list|,
+name|i
+argument_list|,
+name|acpi_asus_wmi_sysctl
+argument_list|,
+literal|"I"
+argument_list|,
+name|acpi_asus_wmi_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|description
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|ACPI_SERIAL_END
 argument_list|(

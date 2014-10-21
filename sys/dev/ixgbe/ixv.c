@@ -1715,8 +1715,6 @@ name|OID_AUTO
 argument_list|,
 literal|"enable_aim"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -18098,8 +18096,6 @@ name|OID_AUTO
 argument_list|,
 name|name
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 name|limit

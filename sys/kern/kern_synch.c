@@ -323,16 +323,6 @@ begin_comment
 comment|/* kernel uses `FSCALE', userland (SHOULD) use kern.fscale */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|fscale
-name|__unused
-init|=
-name|FSCALE
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -344,7 +334,7 @@ name|fscale
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|FSCALE
 argument_list|,

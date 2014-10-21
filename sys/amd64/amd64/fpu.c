@@ -577,7 +577,7 @@ name|floatingpoint
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|NULL
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|1
 argument_list|,

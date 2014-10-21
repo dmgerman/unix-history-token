@@ -41544,8 +41544,6 @@ name|OID_AUTO
 argument_list|,
 literal|"autosrc"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
