@@ -1445,6 +1445,28 @@ name|parg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|SSL_CTRL_CHECK_PROTO_VERSION
+case|:
+comment|/* For library-internal use; checks that the current protocol 		 * is the highest enabled version (according to s->ctx->method, 		 * as version negotiation may have changed s->method). */
+if|#
+directive|if
+name|DTLS_MAX_VERSION
+operator|!=
+name|DTLS1_VERSION
+error|#
+directive|error
+error|Code needs update for DTLS_method() support beyond DTLS1_VERSION.
+endif|#
+directive|endif
+comment|/* Just one protocol version is supported so far; 		 * fail closed if the version is not as expected. */
+return|return
+name|s
+operator|->
+name|version
+operator|==
+name|DTLS_MAX_VERSION
+return|;
 default|default:
 name|ret
 operator|=

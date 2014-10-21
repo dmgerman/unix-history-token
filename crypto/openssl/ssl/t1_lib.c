@@ -3915,9 +3915,17 @@ argument_list|,
 name|mlen
 argument_list|)
 condition|)
+block|{
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|ctx
+argument_list|)
+expr_stmt|;
 goto|goto
 name|tickerr
 goto|;
+block|}
 comment|/* Attempt to decrypt session data */
 comment|/* Move p after IV to start of encrypted ticket, update length */
 name|p
