@@ -789,6 +789,17 @@ condition|)
 name|ABORT
 expr_stmt|;
 comment|/* Exercise EC_POINTs_mul, including corner cases. */
+if|if
+condition|(
+name|EC_POINT_is_at_infinity
+argument_list|(
+name|group
+argument_list|,
+name|P
+argument_list|)
+condition|)
+name|ABORT
+expr_stmt|;
 name|scalars
 index|[
 literal|0
@@ -886,11 +897,11 @@ name|EC_POINTs_mul
 argument_list|(
 name|group
 argument_list|,
-name|Q
+name|P
 argument_list|,
 name|NULL
 argument_list|,
-literal|5
+literal|6
 argument_list|,
 name|points
 argument_list|,
@@ -908,7 +919,7 @@ name|EC_POINT_is_at_infinity
 argument_list|(
 name|group
 argument_list|,
-name|Q
+name|P
 argument_list|)
 condition|)
 name|ABORT
