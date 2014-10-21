@@ -4262,7 +4262,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|sx_xlock
+name|sx_slock
 argument_list|(
 operator|&
 name|kld_sx
@@ -4281,7 +4281,7 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-name|sx_xunlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|kld_sx
