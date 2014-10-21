@@ -31310,17 +31310,23 @@ condition|)
 goto|goto
 name|done
 goto|;
+comment|/* 		 * Set the modified and accessed bits simultaneously. 		 * 		 * Intel EPT PTEs that do software emulation of A/D bits map 		 * PG_A and PG_M to EPT_PG_READ and EPT_PG_WRITE respectively. 		 * An EPT misconfiguration is triggered if the PTE is writable 		 * but not readable (WR=10). This is avoided by setting PG_A 		 * and PG_M simultaneously. 		 */
 operator|*
 name|pte
 operator||=
 name|PG_M
+operator||
+name|PG_A
 expr_stmt|;
 block|}
+else|else
+block|{
 operator|*
 name|pte
 operator||=
 name|PG_A
 expr_stmt|;
+block|}
 comment|/* try to promote the mapping */
 if|if
 condition|(
