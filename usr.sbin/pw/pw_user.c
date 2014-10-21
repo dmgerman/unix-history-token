@@ -3574,7 +3574,7 @@ name|login_setcryptfmt
 argument_list|(
 name|lc
 argument_list|,
-literal|"md5"
+literal|"sha512"
 argument_list|,
 name|NULL
 argument_list|)
@@ -4048,7 +4048,7 @@ name|login_setcryptfmt
 argument_list|(
 name|lc
 argument_list|,
-literal|"md5"
+literal|"sha512"
 argument_list|,
 name|NULL
 argument_list|)
