@@ -2366,6 +2366,11 @@ directive|ifndef
 name|OPENSSL_NO_SRTP
 if|if
 condition|(
+name|SSL_IS_DTLS
+argument_list|(
+name|s
+argument_list|)
+operator|&&
 name|SSL_get_srtp_profiles
 argument_list|(
 name|s
@@ -3039,6 +3044,11 @@ directive|ifndef
 name|OPENSSL_NO_SRTP
 if|if
 condition|(
+name|SSL_IS_DTLS
+argument_list|(
+name|s
+argument_list|)
+operator|&&
 name|s
 operator|->
 name|srtp_profile
@@ -5299,6 +5309,16 @@ name|OPENSSL_NO_SRTP
 elseif|else
 if|if
 condition|(
+name|SSL_IS_DTLS
+argument_list|(
+name|s
+argument_list|)
+operator|&&
+name|SSL_get_srtp_profiles
+argument_list|(
+name|s
+argument_list|)
+operator|&&
 name|type
 operator|==
 name|TLSEXT_TYPE_use_srtp
@@ -6369,6 +6389,11 @@ name|OPENSSL_NO_SRTP
 elseif|else
 if|if
 condition|(
+name|SSL_IS_DTLS
+argument_list|(
+name|s
+argument_list|)
+operator|&&
 name|type
 operator|==
 name|TLSEXT_TYPE_use_srtp
@@ -8974,9 +8999,17 @@ argument_list|,
 name|mlen
 argument_list|)
 condition|)
+block|{
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|ctx
+argument_list|)
+expr_stmt|;
 return|return
 literal|2
 return|;
+block|}
 comment|/* Attempt to decrypt session data */
 comment|/* Move p after IV to start of encrypted ticket, update length */
 name|p

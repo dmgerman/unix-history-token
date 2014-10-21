@@ -112,6 +112,9 @@ operator|)
 return|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL3
 if|if
 condition|(
 name|ver
@@ -124,7 +127,8 @@ name|SSLv3_client_method
 argument_list|()
 operator|)
 return|;
-elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|ver
@@ -2599,6 +2603,9 @@ operator|)
 condition|)
 block|{
 comment|/* we have sslv3 or tls1 (server hello or alert) */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SSL3
 if|if
 condition|(
 operator|(
@@ -2657,6 +2664,8 @@ argument_list|()
 expr_stmt|;
 block|}
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2777,6 +2786,16 @@ goto|goto
 name|err
 goto|;
 block|}
+comment|/* ensure that TLS_MAX_VERSION is up-to-date */
+name|OPENSSL_assert
+argument_list|(
+name|s
+operator|->
+name|version
+operator|<=
+name|TLS_MAX_VERSION
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p

@@ -2857,6 +2857,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|SSL_R_INAPPROPRIATE_FALLBACK
+argument_list|)
+block|,
+literal|"inappropriate fallback"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|SSL_R_INCONSISTENT_COMPRESSION
 argument_list|)
 block|,
@@ -4166,6 +4175,15 @@ name|SSL_R_TLSV1_ALERT_EXPORT_RESTRICTION
 argument_list|)
 block|,
 literal|"tlsv1 alert export restriction"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_TLSV1_ALERT_INAPPROPRIATE_FALLBACK
+argument_list|)
+block|,
+literal|"tlsv1 alert inappropriate fallback"
 block|}
 block|,
 block|{

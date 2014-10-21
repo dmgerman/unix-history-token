@@ -1136,6 +1136,20 @@ block|{
 comment|/* Answer a query from a utility program 				 * with all we know. 				 */
 if|if
 condition|(
+name|aifp
+operator|==
+name|NULL
+condition|)
+block|{
+name|trace_pkt
+argument_list|(
+literal|"ignore remote query"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|from
 operator|->
 name|sin_port
