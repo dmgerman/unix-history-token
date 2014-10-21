@@ -204,6 +204,54 @@ name|throw
 argument_list|()
 block|; 	}
 decl_stmt|;
+name|class
+name|bad_array_new_length
+range|:
+name|public
+name|exception
+block|{
+name|public
+operator|:
+name|bad_array_new_length
+argument_list|()
+name|throw
+argument_list|()
+block|;
+name|bad_array_new_length
+argument_list|(
+argument|const bad_array_new_length&
+argument_list|)
+name|throw
+argument_list|()
+block|;
+name|bad_array_new_length
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|bad_array_new_length
+operator|&
+operator|)
+name|throw
+argument_list|()
+block|;
+name|virtual
+operator|~
+name|bad_array_new_length
+argument_list|()
+block|;
+name|virtual
+specifier|const
+name|char
+operator|*
+name|what
+argument_list|()
+specifier|const
+name|throw
+argument_list|()
+block|; 	}
+decl_stmt|;
 block|}
 end_decl_stmt
 
