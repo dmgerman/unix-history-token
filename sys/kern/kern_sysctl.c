@@ -4363,7 +4363,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|SYSCTL_XLOCK
+name|SYSCTL_SLOCK
 argument_list|()
 expr_stmt|;
 name|error
@@ -4381,7 +4381,7 @@ operator|&
 name|op
 argument_list|)
 expr_stmt|;
-name|SYSCTL_XUNLOCK
+name|SYSCTL_SUNLOCK
 argument_list|()
 expr_stmt|;
 name|free
