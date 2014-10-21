@@ -1495,7 +1495,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_NULL_QUAD_PTR
-value|((int64_T *)NULL)
+value|((int64_t *)NULL)
 end_define
 
 begin_define
