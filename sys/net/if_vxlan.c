@@ -4013,7 +4013,7 @@ name|vxlfe_mac
 argument_list|,
 name|mac
 argument_list|,
-name|ETHER_HDR_LEN
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 name|vxlan_sockaddr_copy
