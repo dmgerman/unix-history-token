@@ -51,6 +51,19 @@ name|TLS1_VERSION
 value|0x0301
 define|#
 directive|define
+name|TLS1_1_VERSION
+value|0x0302
+define|#
+directive|define
+name|TLS1_2_VERSION
+value|0x0303
+comment|/* TLS 1.1 and 1.2 are not supported by this version of OpenSSL, so  * TLS_MAX_VERSION indicates TLS 1.0 regardless of the above  * definitions. (s23_clnt.c and s23_srvr.c have an OPENSSL_assert()  * check that would catch the error if TLS_MAX_VERSION was too low.)  */
+define|#
+directive|define
+name|TLS_MAX_VERSION
+value|TLS1_VERSION
+define|#
+directive|define
 name|TLS1_VERSION_MAJOR
 value|0x03
 define|#
@@ -103,6 +116,11 @@ define|#
 directive|define
 name|TLS1_AD_INTERNAL_ERROR
 value|80
+comment|/* fatal */
+define|#
+directive|define
+name|TLS1_AD_INAPPROPRIATE_FALLBACK
+value|86
 comment|/* fatal */
 define|#
 directive|define
