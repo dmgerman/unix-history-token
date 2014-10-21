@@ -1254,7 +1254,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|setenv
+name|kern_setenv
 argument_list|(
 name|pair
 argument_list|,
@@ -1287,7 +1287,7 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
-name|setenv
+name|kern_setenv
 argument_list|(
 literal|"ethaddr"
 argument_list|,
@@ -1322,7 +1322,7 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
-name|setenv
+name|kern_setenv
 argument_list|(
 literal|"eth1addr"
 argument_list|,

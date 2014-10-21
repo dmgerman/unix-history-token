@@ -1467,7 +1467,20 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * If the U-boot environment contains a variable giving the address of a 	 * valid blob in memory, use it.  Board vendors use both fdtaddr and 	 * fdt_addr names. 	 */
+comment|/* 	 * If the U-boot environment contains a variable giving the address of a 	 * valid blob in memory, use it.  The U-boot README says the right 	 * variable for fdt data loaded into ram is fdt_addr_r, so try that 	 * first.  Board vendors also use both fdtaddr and fdt_addr names. 	 */
+name|s
+operator|=
+name|ub_env_get
+argument_list|(
+literal|"fdt_addr_r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
 name|s
 operator|=
 name|ub_env_get

@@ -620,11 +620,11 @@ modifier|*
 name|td_wmesg
 decl_stmt|;
 comment|/* (t) Reason for sleep. */
-name|u_char
+name|int
 name|td_lastcpu
 decl_stmt|;
 comment|/* (t) Last cpu we were on. */
-name|u_char
+name|int
 name|td_oncpu
 decl_stmt|;
 comment|/* (t) Which cpu we are on. */
@@ -2763,12 +2763,26 @@ begin_define
 define|#
 directive|define
 name|NOCPU
-value|0xff
+value|(-1)
 end_define
 
 begin_comment
 comment|/* For when we aren't on a CPU. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NOCPU_OLD
+value|(255)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXCPU_OLD
+value|(254)
+end_define
 
 begin_define
 define|#

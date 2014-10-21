@@ -269,7 +269,7 @@ name|short
 name|ts_flags
 decl_stmt|;
 comment|/* TSF_* flags. */
-name|u_char
+name|int
 name|ts_cpu
 decl_stmt|;
 comment|/* CPU that we have affinity for. */

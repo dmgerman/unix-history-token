@@ -1057,10 +1057,10 @@ name|char
 name|ki_rqindex
 decl_stmt|;
 name|u_char
-name|ki_oncpu
+name|ki_oncpu_old
 decl_stmt|;
 name|u_char
-name|ki_lastcpu
+name|ki_lastcpu_old
 decl_stmt|;
 name|char
 name|ki_tdname
@@ -1129,6 +1129,12 @@ name|ki_spareints
 index|[
 name|KI_NSPARE_INT
 index|]
+decl_stmt|;
+name|int
+name|ki_oncpu
+decl_stmt|;
+name|int
+name|ki_lastcpu
 decl_stmt|;
 name|int
 name|ki_tracer

@@ -10655,8 +10655,6 @@ decl_stmt|;
 name|uint8_t
 name|cmd
 decl_stmt|,
-name|new_set
-decl_stmt|,
 name|rulenum
 decl_stmt|;
 name|ipfw_range_tlv
@@ -11251,6 +11249,8 @@ index|]
 operator|)
 argument_list|)
 operator|||
+name|rt
+operator|.
 name|new_set
 operator|>
 name|RESVD_SET
@@ -13190,7 +13190,7 @@ modifier|*
 name|endptr
 decl_stmt|;
 name|size_t
-name|read
+name|readsz
 decl_stmt|;
 name|struct
 name|buf_pr
@@ -13224,13 +13224,17 @@ name|dynsz
 operator|=
 literal|0
 expr_stmt|;
-name|read
+name|readsz
 operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
 name|cfg
 argument_list|)
+expr_stmt|;
+name|rcnt
+operator|=
+literal|0
 expr_stmt|;
 name|fo
 operator|->
@@ -13279,7 +13283,7 @@ name|tstate
 operator|=
 name|ctlv
 expr_stmt|;
-name|read
+name|readsz
 operator|+=
 name|ctlv
 operator|->
@@ -13336,7 +13340,7 @@ name|ctlv
 operator|->
 name|count
 expr_stmt|;
-name|read
+name|readsz
 operator|+=
 name|ctlv
 operator|->
@@ -13376,7 +13380,7 @@ name|IPFW_CFG_GET_STATES
 operator|)
 operator|&&
 operator|(
-name|read
+name|readsz
 operator|!=
 name|sz
 operator|)
@@ -13387,7 +13391,7 @@ name|dynsz
 operator|=
 name|sz
 operator|-
-name|read
+name|readsz
 expr_stmt|;
 comment|/* Skip empty header */
 if|if
@@ -23917,6 +23921,15 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|rulebuf
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|rulebuf
+argument_list|,
+literal|0
+argument_list|,
+name|rbufsize
 argument_list|)
 expr_stmt|;
 name|memset

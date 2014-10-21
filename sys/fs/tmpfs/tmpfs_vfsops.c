@@ -1261,6 +1261,12 @@ name|mnt_flag
 operator||=
 name|MNT_LOCAL
 expr_stmt|;
+name|mp
+operator|->
+name|mnt_kern_flag
+operator||=
+name|MNTK_SUSPENDABLE
+expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
 name|mp

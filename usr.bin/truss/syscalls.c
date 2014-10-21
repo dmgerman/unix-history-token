@@ -4114,11 +4114,11 @@ argument|MAP_FIXED
 argument_list|)
 name|X
 argument_list|(
-argument|MAP_RENAME
+argument|MAP_RESERVED0020
 argument_list|)
 name|X
 argument_list|(
-argument|MAP_NORESERVE
+argument|MAP_RESERVED0040
 argument_list|)
 name|X
 argument_list|(

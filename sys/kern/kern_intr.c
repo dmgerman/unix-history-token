@@ -1758,10 +1758,9 @@ name|cpuset_t
 modifier|*
 name|mask
 decl_stmt|;
-name|u_char
-name|cpu
-decl_stmt|;
 name|int
+name|cpu
+decl_stmt|,
 name|n
 decl_stmt|;
 name|mask
@@ -1821,9 +1820,6 @@ operator|)
 return|;
 name|cpu
 operator|=
-operator|(
-name|u_char
-operator|)
 name|n
 expr_stmt|;
 block|}

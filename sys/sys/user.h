@@ -199,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_INT
-value|6
+value|4
 end_define
 
 begin_define
@@ -625,13 +625,13 @@ name|ki_rqindex
 decl_stmt|;
 comment|/* Run queue index */
 name|u_char
-name|ki_oncpu
+name|ki_oncpu_old
 decl_stmt|;
-comment|/* Which cpu we are on */
+comment|/* Which cpu we are on (legacy) */
 name|u_char
-name|ki_lastcpu
+name|ki_lastcpu_old
 decl_stmt|;
-comment|/* Last cpu we were on */
+comment|/* Last cpu we were on (legacy) */
 name|char
 name|ki_tdname
 index|[
@@ -710,6 +710,14 @@ name|KI_NSPARE_INT
 index|]
 decl_stmt|;
 comment|/* spare room for growth */
+name|int
+name|ki_oncpu
+decl_stmt|;
+comment|/* Which cpu we are on */
+name|int
+name|ki_lastcpu
+decl_stmt|;
+comment|/* Last cpu we were on */
 name|int
 name|ki_tracer
 decl_stmt|;

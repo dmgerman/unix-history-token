@@ -77,6 +77,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ELFNOTE
+parameter_list|(
+name|section
+parameter_list|,
+name|type
+parameter_list|,
+name|vendor
+parameter_list|,
+name|desctype
+parameter_list|,
+name|descdata
+modifier|...
+parameter_list|)
+define|\
+value|.pushsection section					; \ 	    .balign 4						; \ 	    .long 2f - 1f
+comment|/* namesz */
+value|; \ 	    .long 4f - 3f
+comment|/* descsz */
+value|; \ 	    .long type
+comment|/* type */
+value|; \ 	    1: .asciz vendor
+comment|/* vendor name */
+value|; \ 	    2: .balign 4					; \ 	    3:  desctype descdata
+comment|/* node */
+value|; \ 	    4: .balign 4					; \ 	.popsection
+end_define
+
 begin_endif
 endif|#
 directive|endif
