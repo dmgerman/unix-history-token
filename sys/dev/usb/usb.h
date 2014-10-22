@@ -521,7 +521,7 @@ begin_define
 define|#
 directive|define
 name|USB_PORT_ROOT_RESET_DELAY
-value|250
+value|200
 end_define
 
 begin_comment
