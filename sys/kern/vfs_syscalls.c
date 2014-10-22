@@ -9727,15 +9727,17 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Flags == 0 means only check for existence. */
-name|error
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|user_flags
+operator|==
+literal|0
 condition|)
-block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|accmode
 operator|=
 literal|0
@@ -9831,7 +9833,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
