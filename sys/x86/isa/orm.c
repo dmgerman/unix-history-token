@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|MAX_ROMS
-value|16
+value|32
 end_define
 
 begin_struct
@@ -314,6 +314,12 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+name|sc
+operator|->
+name|rnum
+operator|<
+name|MAX_ROMS
+operator|&&
 name|chunk
 operator|<
 name|IOMEM_END
