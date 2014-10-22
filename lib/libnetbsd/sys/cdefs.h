@@ -53,6 +53,46 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * The __CONCAT macro is used to concatenate parts of symbol names, e.g.  * with "#define OLD(foo) __CONCAT(old,foo)", OLD(foo) produces oldfoo.  * The __CONCAT macro is a bit tricky -- make sure you don't put spaces  * in between its arguments.  __CONCAT can also concatenate double-quoted  * strings produced by the __STRING macro, but this only works with ANSI C.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|___STRING
+parameter_list|(
+name|x
+parameter_list|)
+value|__STRING(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|___CONCAT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|__CONCAT(x,y)
+end_define
+
+begin_comment
+comment|/*  * The following macro is used to remove const cast-away warnings  * from gcc -Wcast-qual; it should be used with caution because it  * can hide valid errors; in particular most valid uses are in  * situations where the API requires it, not to cast away string  * constants. We don't use *intptr_t on purpose here and we are  * explicit about unsigned long so that we don't have additional  * dependencies.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__UNCONST
+parameter_list|(
+name|a
+parameter_list|)
+value|((void *)(unsigned long)(const void *)(a))
+end_define
+
+begin_comment
 comment|/*  * Return the number of elements in a statically-allocated array,  * __x.  */
 end_comment
 
