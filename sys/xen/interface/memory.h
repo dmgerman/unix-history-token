@@ -386,6 +386,61 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|XENMAPSPACE_shared_info
+value|0
+end_define
+
+begin_comment
+comment|/* shared info page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMAPSPACE_grant_table
+value|1
+end_define
+
+begin_comment
+comment|/* grant table page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMAPSPACE_gmfn
+value|2
+end_define
+
+begin_comment
+comment|/* GMFN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMAPSPACE_gmfn_range
+value|3
+end_define
+
+begin_comment
+comment|/* GMFN range, XENMEM_add_to_physmap only. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMAPSPACE_gmfn_foreign
+value|4
+end_define
+
+begin_comment
+comment|/* GMFN from another dom,                                     * XENMEM_add_to_physmap_range only.                                     */
+end_comment
+
 begin_comment
 comment|/*  * Sets the GPFN at which a particular page appears in the specified guest's  * pseudophysical address space.  * arg == addr of xen_add_to_physmap_t.  */
 end_comment
@@ -516,6 +571,76 @@ end_comment
 begin_comment
 comment|/*#define XENMEM_translate_gpfn_list  8*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|XENMEM_add_to_physmap_range
+value|23
+end_define
+
+begin_struct
+struct|struct
+name|xen_add_to_physmap_range
+block|{
+comment|/* IN */
+comment|/* Which domain to change the mapping for. */
+name|domid_t
+name|domid
+decl_stmt|;
+name|uint16_t
+name|space
+decl_stmt|;
+comment|/* => enum phys_map_space */
+comment|/* Number of pages to go through */
+name|uint16_t
+name|size
+decl_stmt|;
+name|domid_t
+name|foreign_domid
+decl_stmt|;
+comment|/* IFF gmfn_foreign */
+comment|/* Indexes into space being mapped. */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_ulong_t
+argument_list|)
+name|idxs
+expr_stmt|;
+comment|/* GPFN in domid where the source mapping page should appear. */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|xen_pfn_t
+argument_list|)
+name|gpfns
+expr_stmt|;
+comment|/* OUT */
+comment|/* Per index error code. */
+name|XEN_GUEST_HANDLE
+argument_list|(
+argument|int
+argument_list|)
+name|errs
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|xen_add_to_physmap_range
+name|xen_add_to_physmap_range_t
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|DEFINE_XEN_GUEST_HANDLE
+argument_list|(
+name|xen_add_to_physmap_range_t
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Returns the pseudo-physical memory map as it was when the domain  * was started (specified by XENMEM_set_memory_map).  * arg == addr of xen_memory_map_t.  */
