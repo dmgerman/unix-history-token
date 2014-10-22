@@ -223,23 +223,16 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
 name|dead_getwritemount
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_getwritemount_args
-comment|/* { 		struct vnode *a_vp; 		struct mount **a_mpp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 operator|(
@@ -262,23 +255,16 @@ begin_comment
 comment|/*  * Trivial lookup routine that always fails.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
 name|dead_lookup
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_lookup_args
-comment|/* { 		struct vnode * a_dvp; 		struct vnode ** a_vpp; 		struct componentname * a_cnp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 name|ap
@@ -299,23 +285,16 @@ begin_comment
 comment|/*  * Open always fails as if device did not exist.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
 name|dead_open
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_open_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -325,26 +304,15 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Vnode op for read  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|dead_read
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_read_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* 	 * Return EOF for tty devices, EIO for others 	 */
 if|if
@@ -374,26 +342,15 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Vnode op for write  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|dead_write
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_write_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -407,13 +364,11 @@ begin_function
 name|int
 name|dead_poll
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_poll_args
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -455,14 +410,11 @@ specifier|static
 name|int
 name|dead_rename
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
 name|vop_rename_args
-comment|/* { 		struct vnode *a_fdvp; 		struct vnode *a_fvp; 		struct componentname *a_fcnp; 		struct vnode *a_tdvp; 		struct vnode *a_tvp; 		struct componentname *a_tcnp; 	} */
 modifier|*
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|vop_rename_fail
 argument_list|(
