@@ -65,27 +65,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vop_poll_t
-name|dead_poll
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vop_read_t
-name|dead_read
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vop_write_t
-name|dead_write
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|vop_getwritemount_t
 name|dead_getwritemount
 decl_stmt|;
@@ -355,7 +334,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|dead_read
 parameter_list|(
@@ -405,7 +383,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|dead_write
 parameter_list|(
@@ -427,7 +404,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|dead_poll
 parameter_list|(
