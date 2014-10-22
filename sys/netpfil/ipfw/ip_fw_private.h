@@ -1364,61 +1364,6 @@ begin_comment
 comment|/* Macro for working with various counters */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USERSPACE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPFW_INC_RULE_COUNTER
-parameter_list|(
-name|_cntr
-parameter_list|,
-name|_bytes
-parameter_list|)
-value|do {	\ 	(_cntr)->pcnt++;				\ 	(_cntr)->bcnt += _bytes;			\ 	(_cntr)->timestamp = time_uptime;		\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPFW_INC_DYN_COUNTER
-parameter_list|(
-name|_cntr
-parameter_list|,
-name|_bytes
-parameter_list|)
-value|do {		\ 	(_cntr)->pcnt++;				\ 	(_cntr)->bcnt += _bytes;			\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPFW_ZERO_RULE_COUNTER
-parameter_list|(
-name|_cntr
-parameter_list|)
-value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	(_cntr)->timestamp = 0;				\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPFW_ZERO_DYN_COUNTER
-parameter_list|(
-name|_cntr
-parameter_list|)
-value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	} while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1462,11 +1407,6 @@ name|_cntr
 parameter_list|)
 value|do {		\ 	(_cntr)->pcnt = 0;				\ 	(_cntr)->bcnt = 0;				\ 	} while (0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

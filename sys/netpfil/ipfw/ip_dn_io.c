@@ -1413,7 +1413,7 @@ operator|=
 name|p
 expr_stmt|;
 comment|// point to new buffer
-name|pkt_copy
+name|_pkt_copy
 argument_list|(
 name|m
 operator|->
