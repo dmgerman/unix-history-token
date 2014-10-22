@@ -9696,6 +9696,15 @@ literal|"the fdtable should not be shared"
 operator|)
 argument_list|)
 expr_stmt|;
+name|MPASS
+argument_list|(
+name|fdp
+operator|->
+name|fd_nfiles
+operator|>=
+literal|3
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
