@@ -693,6 +693,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|fdsetugidsafety
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|filedesc
 modifier|*
@@ -820,18 +832,6 @@ name|struct
 name|vnode
 modifier|*
 name|newdp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|setugidsafety
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 function_decl|;
 end_function_decl

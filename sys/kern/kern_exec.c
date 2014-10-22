@@ -2943,7 +2943,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|setugidsafety
+name|fdsetugidsafety
 argument_list|(
 name|td
 argument_list|)
