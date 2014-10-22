@@ -340,7 +340,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Backend LUN information.    */
+comment|/*  * Backend LUN information.  */
 end_comment
 
 begin_struct
@@ -1177,7 +1177,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{ 		 	}
+block|{
+comment|/* Nothing. */
+block|}
 else|else
 block|{
 name|struct
@@ -1864,7 +1866,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{ 		 	}
+block|{
+comment|/* Nothing. */
+block|}
 else|else
 block|{
 name|struct

@@ -600,7 +600,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 			 * XXX: We should verify UTF-8 normalisation, as defined 			 * 	by 3.2.6.2: iSCSI Name Encoding. 			 */
+comment|/* 			 * XXX: We should verify UTF-8 normalisation, as defined 			 *      by 3.2.6.2: iSCSI Name Encoding. 			 */
 if|if
 condition|(
 name|isalnum
