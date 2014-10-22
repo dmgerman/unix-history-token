@@ -1276,6 +1276,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|char
+modifier|*
+name|env
+decl_stmt|;
 comment|/* get equivalents from the environment */
 for|for
 control|(
@@ -1298,6 +1302,9 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|env
+operator|=
 name|kern_getenv
 argument_list|(
 name|howto_names
@@ -1307,9 +1314,11 @@ index|]
 operator|.
 name|ev
 argument_list|)
+operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|boothowto
 operator||=
 name|howto_names
@@ -1319,6 +1328,12 @@ index|]
 operator|.
 name|mask
 expr_stmt|;
+name|freeenv
+argument_list|(
+name|env
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
