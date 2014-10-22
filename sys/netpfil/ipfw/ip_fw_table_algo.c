@@ -3853,7 +3853,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|log2
+name|ta_log2
 parameter_list|(
 name|uint32_t
 name|v
@@ -5758,7 +5758,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|log2
+name|ta_log2
 parameter_list|(
 name|uint32_t
 name|v
@@ -6025,7 +6025,7 @@ expr_stmt|;
 comment|/* Store data depending on v6 mask length */
 name|hsize
 operator|=
-name|log2
+name|ta_log2
 argument_list|(
 name|cfg
 operator|->
@@ -6034,7 +6034,7 @@ argument_list|)
 operator|<<
 literal|8
 operator||
-name|log2
+name|ta_log2
 argument_list|(
 name|cfg
 operator|->
@@ -8988,7 +8988,7 @@ name|ti
 operator|->
 name|data
 operator||=
-name|log2
+name|ta_log2
 argument_list|(
 name|cfg
 operator|->
@@ -8997,7 +8997,7 @@ argument_list|)
 operator|<<
 literal|8
 operator||
-name|log2
+name|ta_log2
 argument_list|(
 name|cfg
 operator|->
