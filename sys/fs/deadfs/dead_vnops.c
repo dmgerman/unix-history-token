@@ -426,10 +426,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Trivial poll routine that always returns POLLHUP.  * This is necessary so that a process which is polling a file  * gets notified when that file is revoke()d.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -443,9 +439,36 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|ap
+operator|->
+name|a_events
+operator|&
+operator|~
+name|POLLSTANDARD
+condition|)
+return|return
+operator|(
+name|POLLNVAL
+operator|)
+return|;
+comment|/* 	 * Let the user find out that the descriptor is gone. 	 */
 return|return
 operator|(
 name|POLLHUP
+operator||
+operator|(
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+operator|&
+name|ap
+operator|->
+name|a_events
+operator|)
 operator|)
 return|;
 block|}
