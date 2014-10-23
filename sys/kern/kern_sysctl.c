@@ -1177,19 +1177,21 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"Setting sysctl '%s' to '%s' failed: %d\n"
+literal|"Setting sysctl %s failed: %d\n"
 argument_list|,
 name|path
-argument_list|,
-name|penv
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|penv
+operator|!=
+name|NULL
+condition|)
 name|freeenv
 argument_list|(
 name|penv
