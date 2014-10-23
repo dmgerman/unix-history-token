@@ -9187,6 +9187,14 @@ name|dn_compress
 expr_stmt|;
 name|doi
 operator|->
+name|doi_nblkptr
+operator|=
+name|dn
+operator|->
+name|dn_nblkptr
+expr_stmt|;
+name|doi
+operator|->
 name|doi_physical_blocks_512
 operator|=
 operator|(
