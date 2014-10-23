@@ -80,7 +80,7 @@ file|"crc_macros.h"
 end_include
 
 begin_comment
-comment|// If you make any changes, do some bench marking! Seemingly unrelated
+comment|// If you make any changes, do some benchmarking! Seemingly unrelated
 end_comment
 
 begin_comment
