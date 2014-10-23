@@ -109,11 +109,51 @@ directive|include
 file|<paths.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/disklabel.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -570,6 +610,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -898,6 +944,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ATF_TC
@@ -2299,6 +2350,44 @@ name|int
 name|val
 decl_stmt|;
 comment|/* 	 * Make an anonymous fixed mapping at zero address. If the address 	 * is restricted as noted in security(7), the syscall should fail. 	 */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"security.bsd.map_at_zero"
+argument_list|,
+operator|&
+name|val
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|atf_tc_fail
+argument_list|(
+literal|"failed to read security.bsd.map_at_zero"
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+operator|!
+name|val
+expr_stmt|;
+comment|/* 1 == enable  map at zero */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 if|if
 condition|(
 name|sysctlbyname
@@ -2323,6 +2412,8 @@ argument_list|(
 literal|"failed to read vm.user_va0_disable"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|map
 operator|=
 name|mmap
@@ -2480,6 +2571,9 @@ operator|>=
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -2487,6 +2581,8 @@ argument_list|,
 name|mmap_block
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
