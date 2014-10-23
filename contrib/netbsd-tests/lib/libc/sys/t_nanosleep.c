@@ -90,11 +90,27 @@ end_include
 begin_function
 specifier|static
 name|void
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|handler
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
+else|#
+directive|else
+function|handler
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+endif|#
+directive|endif
 block|{
 comment|/* Nothing. */
 block|}
