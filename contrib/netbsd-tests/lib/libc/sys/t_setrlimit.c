@@ -2315,7 +2315,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|__NetBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
