@@ -520,19 +520,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|key_timehandler
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_long
 name|key_random
 name|__P
