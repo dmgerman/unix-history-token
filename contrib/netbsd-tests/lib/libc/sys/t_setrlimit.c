@@ -63,11 +63,22 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<lwp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1851,6 +1862,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -2065,6 +2082,11 @@ expr_stmt|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -2157,6 +2179,20 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|res
+operator|.
+name|rlim_max
+operator|==
+name|INT64_MAX
+condition|)
+comment|/* Overflow. */
+else|#
+directive|else
 if|if
 condition|(
 name|res
@@ -2166,6 +2202,8 @@ operator|==
 name|UINT64_MAX
 condition|)
 comment|/* Overflow. */
+endif|#
+directive|endif
 continue|continue;
 name|errno
 operator|=
@@ -2275,6 +2313,9 @@ argument_list|,
 name|setrlimit_perm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -2282,6 +2323,8 @@ argument_list|,
 name|setrlimit_nthr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|atf_no_error
 argument_list|()
