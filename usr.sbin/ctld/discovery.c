@@ -741,6 +741,7 @@ name|keys
 modifier|*
 name|response_keys
 parameter_list|,
+specifier|const
 name|struct
 name|target
 modifier|*
@@ -992,6 +993,13 @@ decl_stmt|,
 modifier|*
 name|response_keys
 decl_stmt|;
+specifier|const
+name|struct
+name|portal_group
+modifier|*
+name|pg
+decl_stmt|;
+specifier|const
 name|struct
 name|target
 modifier|*
@@ -1002,6 +1010,14 @@ name|char
 modifier|*
 name|send_targets
 decl_stmt|;
+name|pg
+operator|=
+name|conn
+operator|->
+name|conn_portal
+operator|->
+name|p_portal_group
+expr_stmt|;
 name|log_debugx
 argument_list|(
 literal|"beginning discovery session; waiting for Text PDU"
@@ -1076,7 +1092,7 @@ name|TAILQ_FOREACH
 argument_list|(
 argument|targ
 argument_list|,
-argument|&conn->conn_portal->p_portal_group->pg_conf->conf_targets
+argument|&pg->pg_conf->conf_targets
 argument_list|,
 argument|t_next
 argument_list|)
@@ -1087,11 +1103,7 @@ name|targ
 operator|->
 name|t_portal_group
 operator|!=
-name|conn
-operator|->
-name|conn_portal
-operator|->
-name|p_portal_group
+name|pg
 condition|)
 block|{
 name|log_debugx
@@ -1121,11 +1133,7 @@ name|targ
 operator|=
 name|target_find
 argument_list|(
-name|conn
-operator|->
-name|conn_portal
-operator|->
-name|p_portal_group
+name|pg
 operator|->
 name|pg_conf
 argument_list|,
