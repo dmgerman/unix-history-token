@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: gzip.c,v 1.105 2011/08/30 23:06:00 joerg Exp $	*/
+comment|/*	$NetBSD: gzip.c,v 1.106 2014/10/18 08:33:30 snj Exp $	*/
 end_comment
 
 begin_comment
@@ -576,7 +576,7 @@ name|char
 name|gzip_version
 index|[]
 init|=
-literal|"FreeBSD gzip 20111009"
+literal|"FreeBSD gzip 20141022"
 decl_stmt|;
 end_decl_stmt
 
@@ -8332,7 +8332,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* If stdin is a file use it's mtime, otherwise use current time */
+comment|/* If stdin is a file use its mtime, otherwise use current time */
 name|ret
 operator|=
 name|fstat
@@ -9848,7 +9848,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s (based on NetBSD gzip 20111009)\n"
+literal|"%s (based on NetBSD gzip 20141018)\n"
 argument_list|,
 name|gzip_version
 argument_list|)
