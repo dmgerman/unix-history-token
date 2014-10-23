@@ -1524,12 +1524,6 @@ argument|ctl_io_pool
 argument_list|)
 name|io_pools
 expr_stmt|;
-name|time_t
-name|last_print_jiffies
-decl_stmt|;
-name|uint32_t
-name|skipped_prints
-decl_stmt|;
 name|struct
 name|ctl_thread
 name|threads
