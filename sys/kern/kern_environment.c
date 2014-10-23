@@ -1154,6 +1154,10 @@ block|{
 if|if
 condition|(
 name|dynamic_kenv
+operator|&&
+name|env
+operator|!=
+name|NULL
 condition|)
 block|{
 name|memset
