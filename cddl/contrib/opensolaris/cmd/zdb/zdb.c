@@ -288,6 +288,15 @@ name|zfs_recover
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|uint64_t
+name|zfs_arc_max
+decl_stmt|,
+name|zfs_arc_meta_limit
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -296,6 +305,14 @@ end_else
 begin_decl_stmt
 name|boolean_t
 name|zfs_recover
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint64_t
+name|zfs_arc_max
+decl_stmt|,
+name|zfs_arc_meta_limit
 decl_stmt|;
 end_decl_stmt
 
@@ -382,7 +399,7 @@ begin_decl_stmt
 name|uint64_t
 name|max_inflight
 init|=
-literal|200
+literal|1000
 decl_stmt|;
 end_decl_stmt
 
@@ -13485,11 +13502,6 @@ index|]
 operator|<
 literal|5
 operator|&&
-name|isatty
-argument_list|(
-name|STDERR_FILENO
-argument_list|)
-operator|&&
 name|gethrtime
 argument_list|()
 operator|>
@@ -13956,7 +13968,7 @@ name|spa_root_vdev
 decl_stmt|;
 for|for
 control|(
-name|int
+name|uint64_t
 name|c
 init|=
 literal|0
@@ -13984,7 +13996,7 @@ index|]
 decl_stmt|;
 for|for
 control|(
-name|int
+name|uint64_t
 name|m
 init|=
 literal|0
@@ -14033,6 +14045,42 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\rloading space map for "
+literal|"vdev %llu of %llu, "
+literal|"metaslab %llu of %llu ..."
+argument_list|,
+operator|(
+name|longlong_t
+operator|)
+name|c
+argument_list|,
+operator|(
+name|longlong_t
+operator|)
+name|rvd
+operator|->
+name|vdev_children
+argument_list|,
+operator|(
+name|longlong_t
+operator|)
+name|m
+argument_list|,
+operator|(
+name|longlong_t
+operator|)
+name|vd
+operator|->
+name|vdev_ms_count
+argument_list|)
+expr_stmt|;
 name|msp
 operator|->
 name|ms_ops
@@ -14073,6 +14121,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 name|spa_config_enter
 argument_list|(
@@ -19405,6 +19463,17 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* 	 * ZDB does not typically re-read blocks; therefore limit the ARC 	 * to 256 MB, which can be used entirely for metadata. 	 */
+name|zfs_arc_max
+operator|=
+name|zfs_arc_meta_limit
+operator|=
+literal|256
+operator|*
+literal|1024
+operator|*
+literal|1024
+expr_stmt|;
 name|kernel_init
 argument_list|(
 name|FREAD
