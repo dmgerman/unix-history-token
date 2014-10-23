@@ -153,6 +153,19 @@ name|int
 modifier|*
 name|buf
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|atf_tc_skip
+argument_list|(
+literal|"revoke(2) is only implemented for devfs(5)."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -490,6 +503,19 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|atf_tc_skip
+argument_list|(
+literal|"revoke(2) is only implemented for devfs(5)."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|errno
 operator|=
 literal|0
@@ -591,6 +617,19 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|atf_tc_skip
+argument_list|(
+literal|"revoke(2) is only implemented for devfs(5)."
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pw
 operator|=
 name|getpwnam
