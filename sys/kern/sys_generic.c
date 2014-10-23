@@ -7797,6 +7797,14 @@ operator|->
 name|sf_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sfp
+operator|->
+name|sf_si
+operator|!=
+name|NULL
+condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
