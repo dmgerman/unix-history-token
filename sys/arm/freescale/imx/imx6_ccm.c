@@ -224,6 +224,95 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Until we have a fully functional ccm driver which implements the fdt_clock  * interface, use the age-old workaround of unconditionally enabling the clocks  * for devices we might need to use.  The SoC defaults to most clocks enabled,  * but the rom boot code and u-boot disable a few of them.  We turn on only  * what's needed to run the chip plus devices we have drivers for, and turn off  * devices we don't yet have drivers for.  (Note that USB is not turned on here  * because that is one we do when the driver asks for it.)  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ccm_init_gates
+parameter_list|(
+name|struct
+name|ccm_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+comment|/* Turns on... */
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|CCM_CCGR0
+argument_list|,
+literal|0x0000003f
+argument_list|)
+expr_stmt|;
+comment|/* ahpbdma, aipstz 1& 2 busses */
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|CCM_CCGR1
+argument_list|,
+literal|0x00300c00
+argument_list|)
+expr_stmt|;
+comment|/* gpt, enet */
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|CCM_CCGR2
+argument_list|,
+literal|0x0fffffc0
+argument_list|)
+expr_stmt|;
+comment|/* ipmux& ipsync (bridges), iomux, i2c */
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|CCM_CCGR3
+argument_list|,
+literal|0x3ff00000
+argument_list|)
+expr_stmt|;
+comment|/* DDR memory controller */
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|CCM_CCGR4
+argument_list|,
+literal|0x0000f300
+argument_list|)
+expr_stmt|;
+comment|/* pl301 bus crossbar */
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|CCM_CCGR5
+argument_list|,
+literal|0x0f000000
+argument_list|)
+expr_stmt|;
+comment|/* uarts */
+name|WR4
+argument_list|(
+name|sc
+argument_list|,
+name|CCM_CCGR6
+argument_list|,
+literal|0x000000cc
+argument_list|)
+expr_stmt|;
+comment|/* usdhc 1& 3 */
+block|}
+end_function
+
 begin_function
 specifier|static
 name|int
@@ -406,6 +495,11 @@ argument_list|,
 name|CCM_CLPCR
 argument_list|,
 name|reg
+argument_list|)
+expr_stmt|;
+name|ccm_init_gates
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|err
