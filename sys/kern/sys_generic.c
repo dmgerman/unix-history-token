@@ -7781,6 +7781,15 @@ argument_list|,
 name|sf_link
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sfp
+operator|->
+name|sf_si
+operator|!=
+name|NULL
+condition|)
+block|{
 name|mtx_lock
 argument_list|(
 name|sfp
@@ -7788,12 +7797,6 @@ operator|->
 name|sf_mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sfp
-operator|->
-name|sf_si
-condition|)
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -7815,6 +7818,7 @@ operator|->
 name|sf_mtx
 argument_list|)
 expr_stmt|;
+block|}
 name|uma_zfree
 argument_list|(
 name|selfd_zone
