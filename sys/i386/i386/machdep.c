@@ -11843,8 +11843,6 @@ decl_stmt|,
 name|da_indx
 decl_stmt|;
 name|u_long
-name|physmem_tunable
-decl_stmt|,
 name|memtest
 decl_stmt|;
 name|vm_paddr_t
@@ -11861,6 +11859,8 @@ name|quad_t
 name|dcons_addr
 decl_stmt|,
 name|dcons_size
+decl_stmt|,
+name|physmem_tunable
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -12551,7 +12551,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|TUNABLE_ULONG_FETCH
+name|TUNABLE_QUAD_FETCH
 argument_list|(
 literal|"hw.physmem"
 argument_list|,
