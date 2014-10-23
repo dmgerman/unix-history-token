@@ -81,11 +81,22 @@ directive|include
 file|<atf-c.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"../common/exec_prot.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -611,6 +622,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -941,6 +958,11 @@ break|break;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ATF_TC
@@ -1396,6 +1418,9 @@ argument_list|,
 name|mprotect_err
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -1403,6 +1428,8 @@ argument_list|,
 name|mprotect_exec
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
