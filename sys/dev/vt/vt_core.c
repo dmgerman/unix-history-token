@@ -10504,6 +10504,27 @@ operator|)
 return|;
 block|}
 case|case
+name|PIO_VFONT_DEFAULT
+case|:
+block|{
+comment|/* Reset to default font. */
+name|error
+operator|=
+name|vt_change_font
+argument_list|(
+name|vw
+argument_list|,
+operator|&
+name|vt_font_default
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+case|case
 name|GIO_SCRNMAP
 case|:
 block|{
