@@ -401,7 +401,7 @@ name|PHYS_TO_DMAP
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) | DMAP_MIN_ADDRESS)
+value|({						\ 	KASSERT((x)< dmaplimit,					\ 	    ("physical address %#jx not covered by the DMAP",		\ 	    (uintmax_t)x));						\ 	(x) | DMAP_MIN_ADDRESS; })
 end_define
 
 begin_define
@@ -411,7 +411,7 @@ name|DMAP_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& ~DMAP_MIN_ADDRESS)
+value|({						\ 	KASSERT((x)< (DMAP_MIN_ADDRESS + dmaplimit)&&			\ 	    (x)>= DMAP_MIN_ADDRESS,					\ 	    ("virtual address %#jx not covered by the DMAP",		\ 	    (uintmax_t)x));						\ 	(x)& ~DMAP_MIN_ADDRESS; })
 end_define
 
 begin_comment
