@@ -110,6 +110,13 @@ name|FBT_RETURN
 value|"return"
 end_define
 
+begin_define
+define|#
+directive|define
+name|FBT_AFRAMES
+value|7
+end_define
+
 begin_function
 name|int
 name|fbt_invop
@@ -442,7 +449,10 @@ decl_stmt|,
 modifier|*
 name|limit
 decl_stmt|;
-comment|/* PowerPC64 uses '.' prefixes on symbol names, ignore it. */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+comment|/* 	 * PowerPC64 uses '.' prefixes on symbol names, ignore it, but only 	 * allow symbols with the '.' prefix, so that we don't get the function 	 * descriptor instead. 	 */
 if|if
 condition|(
 name|name
@@ -455,6 +465,14 @@ condition|)
 name|name
 operator|++
 expr_stmt|;
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|strncmp
@@ -600,7 +618,7 @@ name|name
 argument_list|,
 name|FBT_ENTRY
 argument_list|,
-literal|7
+name|FBT_AFRAMES
 argument_list|,
 name|fbt
 argument_list|)
@@ -866,7 +884,7 @@ name|name
 argument_list|,
 name|FBT_RETURN
 argument_list|,
-literal|7
+name|FBT_AFRAMES
 argument_list|,
 name|fbt
 argument_list|)
@@ -952,6 +970,29 @@ operator|->
 name|fbtp_rval
 operator|=
 name|DTRACE_INVOP_JUMP
+expr_stmt|;
+name|fbt
+operator|->
+name|fbtp_roffset
+operator|=
+call|(
+name|uintptr_t
+call|)
+argument_list|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|instr
+operator|-
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|symval
+operator|->
+name|value
+argument_list|)
 expr_stmt|;
 name|fbt
 operator|->
