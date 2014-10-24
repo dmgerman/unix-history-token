@@ -461,11 +461,16 @@ name|size_t
 name|i
 decl_stmt|;
 comment|/* 	 * Test that two consecutive calls are sane. 	 */
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|atf_tc_expect_fail
 argument_list|(
 literal|"PR kern/30115"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -571,11 +576,16 @@ literal|"user time went backwards"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|atf_tc_fail
 argument_list|(
 literal|"anticipated error did not occur"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -628,20 +638,23 @@ decl_stmt|;
 name|size_t
 name|i
 decl_stmt|;
-comment|/* 	 * Test that getrusage(2) does not return 	 * zero user time for the calling process. 	 * 	 * See also (duplicate) PR port-amd64/41734. 	 */
-if|#
-directive|if
-name|defined
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_skip
 argument_list|(
-name|__NetBSD__
+literal|"this testcase passes/fails sporadically on FreeBSD/i386 "
+literal|"@ r273153 (at least)"
 argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Test that getrusage(2) does not return 	 * zero user time for the calling process. 	 * 	 * See also (duplicate) PR port-amd64/41734. 	 */
 name|atf_tc_expect_fail
 argument_list|(
 literal|"PR kern/30115"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -713,19 +726,11 @@ literal|"zero user time from getrusage(2)"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|atf_tc_fail
 argument_list|(
 literal|"anticipated error did not occur"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
