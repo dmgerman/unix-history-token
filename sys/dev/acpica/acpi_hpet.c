@@ -4431,6 +4431,37 @@ argument_list|,
 literal|"Allow userland to memory map HPET"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|device_get_sysctl_ctx
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|device_get_sysctl_tree
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"mmap_allow_write"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|mmap_allow_write
+argument_list|,
+literal|0
+argument_list|,
+literal|"Allow userland write to the HPET register space"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|device_printf
