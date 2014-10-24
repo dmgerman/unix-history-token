@@ -102,11 +102,27 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|sighandler
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
+else|#
+directive|else
+function|sighandler
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+endif|#
+directive|endif
 block|{
 comment|/* Nothing. */
 block|}
@@ -613,11 +629,19 @@ name|size_t
 name|i
 decl_stmt|;
 comment|/* 	 * Test that getrusage(2) does not return 	 * zero user time for the calling process. 	 * 	 * See also (duplicate) PR port-amd64/41734. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|atf_tc_expect_fail
 argument_list|(
 literal|"PR kern/30115"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -689,11 +713,19 @@ literal|"zero user time from getrusage(2)"
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|atf_tc_fail
 argument_list|(
 literal|"anticipated error did not occur"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
