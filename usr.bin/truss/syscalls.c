@@ -5130,6 +5130,14 @@ name|X
 argument_list|(
 argument|UMTX_OP_MUTEX_WAKE2
 argument_list|)
+name|X
+argument_list|(
+argument|UMTX_OP_SEM2_WAIT
+argument_list|)
+name|X
+argument_list|(
+argument|UMTX_OP_SEM2_WAKE
+argument_list|)
 name|XEND
 block|}
 decl_stmt|;

@@ -228,8 +228,20 @@ begin_define
 define|#
 directive|define
 name|SEM_MAGIC
-value|((u_int32_t)0x73656d31)
+value|((u_int32_t)0x73656d32)
 end_define
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|SEM_VALUE_MAX
+operator|<=
+name|USEM_MAX_COUNT
+argument_list|,
+literal|"SEM_VALUE_MAX too large"
+argument_list|)
+assert|;
+end_assert
 
 begin_struct
 struct|struct
@@ -491,14 +503,6 @@ operator|(
 name|u_int32_t
 operator|)
 name|value
-expr_stmt|;
-name|sem
-operator|->
-name|_kern
-operator|.
-name|_has_waiters
-operator|=
-literal|0
 expr_stmt|;
 name|sem
 operator|->
@@ -997,14 +1001,6 @@ operator|.
 name|_magic
 operator|=
 name|SEM_MAGIC
-expr_stmt|;
-name|tmp
-operator|.
-name|_kern
-operator|.
-name|_has_waiters
-operator|=
-literal|0
 expr_stmt|;
 name|tmp
 operator|.
@@ -1590,11 +1586,14 @@ operator|=
 operator|(
 name|int
 operator|)
+name|USEM_COUNT
+argument_list|(
 name|sem
 operator|->
 name|_kern
 operator|.
 name|_count
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1611,7 +1610,7 @@ name|int
 name|usem_wake
 parameter_list|(
 name|struct
-name|_usem
+name|_usem2
 modifier|*
 name|sem
 parameter_list|)
@@ -1621,7 +1620,7 @@ name|_umtx_op
 argument_list|(
 name|sem
 argument_list|,
-name|UMTX_OP_SEM_WAKE
+name|UMTX_OP_SEM2_WAKE
 argument_list|,
 literal|0
 argument_list|,
@@ -1640,7 +1639,7 @@ name|int
 name|usem_wait
 parameter_list|(
 name|struct
-name|_usem
+name|_usem2
 modifier|*
 name|sem
 parameter_list|,
@@ -1716,7 +1715,7 @@ name|_umtx_op
 argument_list|(
 name|sem
 argument_list|,
-name|UMTX_OP_SEM_WAIT
+name|UMTX_OP_SEM2_WAIT
 argument_list|,
 literal|0
 argument_list|,
@@ -1767,7 +1766,8 @@ operator|)
 return|;
 while|while
 condition|(
-operator|(
+name|USEM_COUNT
+argument_list|(
 name|val
 operator|=
 name|sem
@@ -1775,7 +1775,7 @@ operator|->
 name|_kern
 operator|.
 name|_count
-operator|)
+argument_list|)
 operator|>
 literal|0
 condition|)
@@ -1869,7 +1869,8 @@ control|)
 block|{
 while|while
 condition|(
-operator|(
+name|USEM_COUNT
+argument_list|(
 name|val
 operator|=
 name|sem
@@ -1877,7 +1878,7 @@ operator|->
 name|_kern
 operator|.
 name|_count
-operator|)
+argument_list|)
 operator|>
 literal|0
 condition|)
@@ -2046,7 +2047,10 @@ name|_count
 expr_stmt|;
 if|if
 condition|(
+name|USEM_COUNT
+argument_list|(
 name|count
+argument_list|)
 operator|+
 literal|1
 operator|>
@@ -2078,9 +2082,12 @@ literal|1
 argument_list|)
 condition|)
 do|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|count
+operator|&
+name|USEM_HAS_WAITERS
+condition|)
 name|usem_wake
 argument_list|(
 operator|&

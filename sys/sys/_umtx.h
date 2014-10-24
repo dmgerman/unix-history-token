@@ -133,6 +133,22 @@ end_struct
 
 begin_struct
 struct|struct
+name|_usem2
+block|{
+specifier|volatile
+name|__uint32_t
+name|_count
+decl_stmt|;
+comment|/* Waiters flag in high bit. */
+name|__uint32_t
+name|_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|_umtx_time
 block|{
 name|struct
