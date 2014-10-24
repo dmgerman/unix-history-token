@@ -159,6 +159,10 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+comment|/* 	 * As of FreeBSD 6.0 device nodes may be created in regular file systems but 	 * such nodes cannot be used to access devices. As a result an invalid dev 	 * argument is unchecked. 	 */
 name|errno
 operator|=
 literal|0
@@ -181,6 +185,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|errno
 operator|=
 literal|0
@@ -774,6 +780,16 @@ name|stat
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"mknod does not allow S_IFREG"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ATF_REQUIRE
 argument_list|(
 name|mknod
