@@ -4745,6 +4745,22 @@ operator|=
 name|MLX4_DEV_EVENT_PORT_UP
 expr_stmt|;
 comment|/* Important note: the following call for if_link_state_change 			 * is needed for interface up scenario (start port, link state 			 * change) */
+comment|/* update netif baudrate */
+name|priv
+operator|->
+name|dev
+operator|->
+name|if_baudrate
+operator|=
+name|IF_Mbps
+argument_list|(
+name|priv
+operator|->
+name|port_state
+operator|.
+name|link_speed
+argument_list|)
+expr_stmt|;
 name|if_link_state_change
 argument_list|(
 name|priv
@@ -5927,6 +5943,15 @@ argument_list|,
 name|LINK_STATE_DOWN
 argument_list|)
 expr_stmt|;
+comment|/* update netif baudrate */
+name|priv
+operator|->
+name|dev
+operator|->
+name|if_baudrate
+operator|=
+literal|0
+expr_stmt|;
 comment|/* make sure the port is up before notifying the OS.  		 * This is tricky since we get here on INIT_PORT and  		 * in such case we can't tell the OS the port is up. 		 * To solve this there is a call to if_link_state_change 		 * in set_rx_mode. 		 * */
 block|}
 elseif|else
@@ -5943,6 +5968,41 @@ name|MLX4_DEV_EVENT_PORT_UP
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|mlx4_en_QUERY_PORT
+argument_list|(
+name|priv
+operator|->
+name|mdev
+argument_list|,
+name|priv
+operator|->
+name|port
+argument_list|)
+condition|)
+name|en_info
+argument_list|(
+name|priv
+argument_list|,
+literal|"Query port failed\n"
+argument_list|)
+expr_stmt|;
+name|priv
+operator|->
+name|dev
+operator|->
+name|if_baudrate
+operator|=
+name|IF_Mbps
+argument_list|(
+name|priv
+operator|->
+name|port_state
+operator|.
+name|link_speed
+argument_list|)
+expr_stmt|;
 name|en_info
 argument_list|(
 name|priv
@@ -10188,12 +10248,6 @@ operator|->
 name|if_mtu
 operator|=
 name|ETHERMTU
-expr_stmt|;
-name|dev
-operator|->
-name|if_baudrate
-operator|=
-literal|1000000000
 expr_stmt|;
 name|dev
 operator|->
