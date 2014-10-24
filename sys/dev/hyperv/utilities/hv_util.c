@@ -1574,7 +1574,7 @@ argument_list|)
 expr_stmt|;
 name|rtn_value
 operator|=
-literal|0
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 block|}
 block|}

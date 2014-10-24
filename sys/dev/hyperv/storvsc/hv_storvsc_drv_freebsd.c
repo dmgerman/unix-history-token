@@ -2575,7 +2575,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-literal|0
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 block|}
 elseif|else
@@ -2607,7 +2607,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-literal|0
+name|BUS_PROBE_DEFAULT
 expr_stmt|;
 break|break;
 default|default:
