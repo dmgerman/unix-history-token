@@ -269,17 +269,15 @@ decl_stmt|,
 modifier|*
 name|endp
 decl_stmt|;
-comment|/* 	 * Cast to an integer value first to avoid the warning for removing 	 * 'const' via a cast. 	 */
 name|ep
 operator|=
-operator|(
+name|__DECONST
+argument_list|(
 name|uint8_t
 operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
+argument_list|,
 name|base
+argument_list|)
 expr_stmt|;
 for|for
 control|(
