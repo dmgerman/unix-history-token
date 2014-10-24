@@ -3876,7 +3876,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%2d %1d %1d"
+literal|"%1d %1d %1d"
 argument_list|,
 name|total
 operator|.
@@ -3919,7 +3919,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" "
+literal|""
 argument_list|)
 expr_stmt|;
 name|prthuman
@@ -3935,7 +3935,7 @@ name|sum
 operator|.
 name|v_page_size
 argument_list|,
-literal|7
+literal|5
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3956,7 +3956,7 @@ name|sum
 operator|.
 name|v_page_size
 argument_list|,
-literal|6
+literal|5
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3964,9 +3964,44 @@ argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%5lu "
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|rate
+argument_list|(
+name|sum
+operator|.
+name|v_vm_faults
+operator|-
+name|osum
+operator|.
+name|v_vm_faults
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+name|printf
+argument_list|(
+literal|" %7d"
+argument_list|,
+name|vmstat_pgtok
+argument_list|(
+name|total
+operator|.
+name|t_avm
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %7d "
@@ -3975,19 +4010,30 @@ name|vmstat_pgtok
 argument_list|(
 name|total
 operator|.
-name|t_avm
+name|t_free
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|" %6d "
+literal|"%4lu "
 argument_list|,
-name|vmstat_pgtok
+operator|(
+name|unsigned
+name|long
+operator|)
+name|rate
 argument_list|(
-name|total
+name|sum
 operator|.
-name|t_free
+name|v_vm_faults
+operator|-
+name|osum
+operator|.
+name|v_vm_faults
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3997,29 +4043,6 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%5lu "
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|rate
-argument_list|(
-name|sum
-operator|.
-name|v_vm_faults
-operator|-
-name|osum
-operator|.
-name|v_vm_faults
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
 literal|"%3lu "
 argument_list|,
 operator|(
@@ -4132,7 +4155,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%3lu "
+literal|"%4lu "
 argument_list|,
 operator|(
 name|unsigned
@@ -4158,7 +4181,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%4lu %4lu %4lu"
+literal|"%4lu %5lu %5lu"
 argument_list|,
 operator|(
 name|unsigned
@@ -4305,7 +4328,7 @@ name|void
 name|printhdr
 parameter_list|(
 name|int
-name|maxid
+name|ncpus
 parameter_list|,
 name|u_long
 name|cpumask
@@ -4328,18 +4351,39 @@ name|num_selected
 else|:
 name|maxshowdevs
 expr_stmt|;
+if|if
+condition|(
+name|hflag
+condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" procs      memory      page%*s"
+literal|"procs  memory      page%*s "
 argument_list|,
 literal|19
 argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"procs     memory       page%*s "
+argument_list|,
+literal|19
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|num_shown
@@ -4351,7 +4395,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" disks %*s"
+literal|"   disks %*s"
 argument_list|,
 name|num_shown
 operator|*
@@ -4374,7 +4418,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"disk"
+literal|"   disk"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4382,7 +4426,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"   faults         "
+literal|"   faults      "
 argument_list|)
 expr_stmt|;
 if|if
@@ -4397,8 +4441,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
-name|maxid
+operator|<
+name|ncpus
 condition|;
 name|i
 operator|++
@@ -4416,7 +4460,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"cpu%-2d    "
+literal|"  cpu%d   "
 argument_list|,
 name|i
 argument_list|)
@@ -4431,17 +4475,34 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"cpu\n"
+literal|"   cpu\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hflag
+condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" r b w     avm    fre   flt  re  pi  po    fr  sr "
+literal|"r b w  avm   fre   flt  re  pi  po    fr   sr "
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"r b w     avm     fre  flt  re  pi  po    fr   sr "
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -4517,7 +4578,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  in   sy   cs"
+literal|"  in    sy    cs"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4532,8 +4593,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<=
-name|maxid
+operator|<
+name|ncpus
 condition|;
 name|i
 operator|++
