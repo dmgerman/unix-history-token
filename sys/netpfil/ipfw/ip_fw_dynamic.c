@@ -2744,9 +2744,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ipfw: %s: Cannot allocate rule\n"
-argument_list|,
-name|__func__
+literal|"ipfw: Cannot allocate dynamic state, "
+literal|"consider increasing net.inet.ip.fw.dyn_max\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5913,7 +5912,7 @@ name|time_uptime
 expr_stmt|;
 name|V_dyn_max
 operator|=
-literal|4096
+literal|16384
 expr_stmt|;
 comment|/* max # of dynamic rules */
 name|V_ipfw_dyn_rule_zone
