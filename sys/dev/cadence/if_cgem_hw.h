@@ -387,6 +387,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CGEM_NET_CFG_1536RXEN
+value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CGEM_NET_CFG_UNI_HASH_EN
 value|(1<<7)
 end_define
@@ -1714,7 +1721,7 @@ begin_define
 define|#
 directive|define
 name|CGEM_UNDERSZ_RX
-value|0x180
+value|0x184
 end_define
 
 begin_comment
@@ -1725,7 +1732,7 @@ begin_define
 define|#
 directive|define
 name|CGEM_OVERSZ_RX
-value|0x184
+value|0x188
 end_define
 
 begin_comment
