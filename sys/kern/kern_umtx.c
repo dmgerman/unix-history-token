@@ -14343,10 +14343,16 @@ name|count
 operator|=
 name|fuword32
 argument_list|(
+name|__DEVOLATILE
+argument_list|(
+name|void
+operator|*
+argument_list|,
 operator|&
 name|sem
 operator|->
 name|_count
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
