@@ -34290,12 +34290,8 @@ condition|)
 block|{
 name|int
 name|num_out
-init|=
-literal|0
 decl_stmt|,
 name|reason
-init|=
-literal|0
 decl_stmt|,
 name|now_filled
 init|=
@@ -39733,6 +39729,11 @@ literal|0
 decl_stmt|;
 operator|*
 name|num_out
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|reason_code
 operator|=
 literal|0
 expr_stmt|;
@@ -49439,8 +49440,6 @@ init|=
 literal|0
 decl_stmt|,
 name|num_out
-init|=
-literal|0
 decl_stmt|,
 name|tot_out
 init|=
@@ -49451,8 +49450,6 @@ init|=
 literal|0
 decl_stmt|,
 name|reason_code
-init|=
-literal|0
 decl_stmt|;
 name|unsigned
 name|int
