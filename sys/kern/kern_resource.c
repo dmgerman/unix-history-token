@@ -5356,19 +5356,6 @@ modifier|*
 name|limp
 decl_stmt|;
 block|{
-name|KASSERT
-argument_list|(
-name|limp
-operator|->
-name|pl_refcnt
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"plimit refcnt underflow"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|refcount_release
