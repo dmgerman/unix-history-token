@@ -14345,7 +14345,7 @@ name|fuword32
 argument_list|(
 name|__DEVOLATILE
 argument_list|(
-name|void
+name|uint32_t
 operator|*
 argument_list|,
 operator|&
