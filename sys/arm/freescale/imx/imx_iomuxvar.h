@@ -16,6 +16,46 @@ name|IMX_IOMUXVAR_H
 end_define
 
 begin_comment
+comment|/*  * IOMUX interface functions  */
+end_comment
+
+begin_function_decl
+name|void
+name|iomux_set_function
+parameter_list|(
+name|u_int
+name|pin
+parameter_list|,
+name|u_int
+name|fn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|iomux_set_pad
+parameter_list|(
+name|u_int
+name|pin
+parameter_list|,
+name|u_int
+name|cfg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|iomux_get_pad_config
+parameter_list|(
+name|u_int
+name|pin
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * The IOMUX Controller device has a small set of "general purpose registers"   * which control various aspects of SoC operation that really have nothing to do  * with IO pin assignments or pad control.  These functions let other soc level  * code manipulate these values.  */
 end_comment
 
