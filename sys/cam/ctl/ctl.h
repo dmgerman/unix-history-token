@@ -440,6 +440,9 @@ parameter_list|,
 name|char
 modifier|*
 name|str
+parameter_list|,
+name|int
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
