@@ -8,7 +8,7 @@ comment|/*  * Vybrid Family Inter-Integrated Circuit (I2C)  * Chapter 48, Vybrid
 end_comment
 
 begin_comment
-comment|/*  * This driver is based on the I2C driver for IMX (imx/i2c.c).  */
+comment|/*  * This driver is based on the I2C driver for i.MX  */
 end_comment
 
 begin_include
