@@ -185,6 +185,9 @@ name|struct
 name|sysent
 modifier|*
 name|old_sysent
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -232,6 +235,9 @@ name|struct
 name|syscall_helper_data
 modifier|*
 name|sd
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
