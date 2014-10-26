@@ -5045,6 +5045,12 @@ literal|1
 expr_stmt|;
 name|shellparam
 operator|.
+name|optp
+operator|=
+name|NULL
+expr_stmt|;
+name|shellparam
+operator|.
 name|optnext
 operator|=
 name|NULL
