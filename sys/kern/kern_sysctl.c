@@ -212,7 +212,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The sysctllock protects the MIB tree.  It also protects sysctl  * contexts used with dynamic sysctls.  The sysctl_register_oid() and  * sysctl_unregister_oid() routines require the sysctllock to already  * be held, so the sysctl_lock() and sysctl_unlock() routines are  * provided for the few places in the kernel which need to use that  * API rather than using the dynamic API.  Use of the dynamic API is  * strongly encouraged for most code.  *  * The sysctlmemlock is used to limit the amount of user memory wired for  * sysctl requests.  This is implemented by serializing any userland  * sysctl requests larger than a single page via an exclusive lock.  */
+comment|/*  * The sysctllock protects the MIB tree.  It also protects sysctl  * contexts used with dynamic sysctls.  The sysctl_register_oid() and  * sysctl_unregister_oid() routines require the sysctllock to already  * be held, so the sysctl_xlock() and sysctl_xunlock() routines are  * provided for the few places in the kernel which need to use that  * API rather than using the dynamic API.  Use of the dynamic API is  * strongly encouraged for most code.  *  * The sysctlmemlock is used to limit the amount of user memory wired for  * sysctl requests.  This is implemented by serializing any userland  * sysctl requests larger than a single page via an exclusive lock.  */
 end_comment
 
 begin_decl_stmt
@@ -285,6 +285,14 @@ directive|define
 name|SYSCTL_ASSERT_XLOCKED
 parameter_list|()
 value|sx_assert(&sysctllock, SA_XLOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_ASSERT_SLOCKED
+parameter_list|()
+value|sx_assert(&sysctllock, SA_SLOCKED)
 end_define
 
 begin_define
@@ -6859,7 +6867,7 @@ name|indx
 decl_stmt|,
 name|lvl
 decl_stmt|;
-name|SYSCTL_ASSERT_LOCKED
+name|SYSCTL_ASSERT_SLOCKED
 argument_list|()
 expr_stmt|;
 name|error
