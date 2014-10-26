@@ -72,7 +72,8 @@ begin_function_decl
 name|int
 name|vatpic_master_handler
 parameter_list|(
-name|void
+name|struct
+name|vm
 modifier|*
 name|vm
 parameter_list|,
@@ -99,7 +100,8 @@ begin_function_decl
 name|int
 name|vatpic_slave_handler
 parameter_list|(
-name|void
+name|struct
+name|vm
 modifier|*
 name|vm
 parameter_list|,
@@ -126,7 +128,8 @@ begin_function_decl
 name|int
 name|vatpic_elc_handler
 parameter_list|(
-name|void
+name|struct
+name|vm
 modifier|*
 name|vm
 parameter_list|,

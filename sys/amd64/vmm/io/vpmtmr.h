@@ -58,7 +58,8 @@ begin_function_decl
 name|int
 name|vpmtmr_handler
 parameter_list|(
-name|void
+name|struct
+name|vm
 modifier|*
 name|vm
 parameter_list|,
