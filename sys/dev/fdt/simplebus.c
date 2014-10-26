@@ -510,15 +510,25 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 	 * FDT data puts a "simple-bus" compatible string on many things that 	 * have children but aren't really busses in our world.  Without a 	 * ranges property we will fail to attach, so just fail to probe too. 	 */
 if|if
 condition|(
 operator|!
+operator|(
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
 literal|"simple-bus"
 argument_list|)
+operator|&&
+name|ofw_bus_has_prop
+argument_list|(
+name|dev
+argument_list|,
+literal|"ranges"
+argument_list|)
+operator|)
 operator|&&
 operator|(
 name|ofw_bus_get_type
