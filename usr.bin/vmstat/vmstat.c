@@ -4328,7 +4328,7 @@ name|void
 name|printhdr
 parameter_list|(
 name|int
-name|ncpus
+name|maxid
 parameter_list|,
 name|u_long
 name|cpumask
@@ -4441,8 +4441,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|ncpus
+operator|<=
+name|maxid
 condition|;
 name|i
 operator|++
@@ -4593,8 +4593,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|ncpus
+operator|<=
+name|maxid
 condition|;
 name|i
 operator|++
