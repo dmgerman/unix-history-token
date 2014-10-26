@@ -266,6 +266,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vpmtmr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_ipi.h"
 end_include
 
@@ -496,6 +502,12 @@ modifier|*
 name|vatpit
 decl_stmt|;
 comment|/* (i) virtual atpit */
+name|struct
+name|vpmtmr
+modifier|*
+name|vpmtmr
+decl_stmt|;
+comment|/* (i) virtual ACPI PM timer */
 specifier|volatile
 name|cpuset_t
 name|active_cpus
@@ -1565,6 +1577,15 @@ argument_list|(
 name|vm
 argument_list|)
 expr_stmt|;
+name|vm
+operator|->
+name|vpmtmr
+operator|=
+name|vpmtmr_init
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 name|CPU_ZERO
 argument_list|(
 operator|&
@@ -1847,6 +1868,13 @@ argument_list|(
 name|vm
 operator|->
 name|iommu
+argument_list|)
+expr_stmt|;
+name|vpmtmr_cleanup
+argument_list|(
+name|vm
+operator|->
+name|vpmtmr
 argument_list|)
 expr_stmt|;
 name|vatpit_cleanup
@@ -9693,6 +9721,28 @@ operator|(
 name|vm
 operator|->
 name|vatpit
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|vpmtmr
+modifier|*
+name|vm_pmtmr
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+block|{
+return|return
+operator|(
+name|vm
+operator|->
+name|vpmtmr
 operator|)
 return|;
 block|}
