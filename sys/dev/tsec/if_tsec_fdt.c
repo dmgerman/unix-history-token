@@ -767,7 +767,7 @@ return|;
 block|}
 name|phy
 operator|=
-name|OF_xref_phandle
+name|OF_node_from_xref
 argument_list|(
 name|phy
 argument_list|)
