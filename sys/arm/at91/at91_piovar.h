@@ -190,6 +190,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|at91_pio_gpio_pullup
+parameter_list|(
+name|uint32_t
+name|pio
+parameter_list|,
+name|uint32_t
+name|data_mask
+parameter_list|,
+name|int
+name|do_pullup
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
