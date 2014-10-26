@@ -1204,6 +1204,13 @@ name|NUM_TARGET_PORT_GROUPS
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|CTL_WRITE_BUFFER_SIZE
+value|262144
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|tpc_list
@@ -1357,10 +1364,8 @@ name|uint8_t
 name|res_type
 decl_stmt|;
 name|uint8_t
+modifier|*
 name|write_buffer
-index|[
-literal|262144
-index|]
 decl_stmt|;
 name|struct
 name|ctl_devid
