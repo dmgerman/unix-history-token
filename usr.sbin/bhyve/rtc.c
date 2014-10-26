@@ -1752,6 +1752,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Reserve the extended RTC I/O ports although they are not emulated at this  * time.  */
+end_comment
+
 begin_expr_stmt
 name|SYSRES_IO
 argument_list|(
