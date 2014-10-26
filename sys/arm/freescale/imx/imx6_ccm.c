@@ -622,6 +622,21 @@ return|;
 block|}
 end_function
 
+begin_function
+name|uint32_t
+name|imx_ccm_ahb_hz
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|132000000
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
