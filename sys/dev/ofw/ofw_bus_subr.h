@@ -240,6 +240,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Routines for parsing device-tree data into resource lists. */
+end_comment
+
+begin_function_decl
+name|int
+name|ofw_bus_intr_to_rl
+parameter_list|(
+name|device_t
+parameter_list|,
+name|phandle_t
+parameter_list|,
+name|struct
+name|resource_list
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Helper to get device status property */
 end_comment
 
