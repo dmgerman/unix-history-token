@@ -3402,6 +3402,8 @@ argument_list|(
 name|ngrp
 operator|<=
 name|ngroups_max
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|AUDIT_ARG_GROUPSET
