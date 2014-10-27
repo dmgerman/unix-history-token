@@ -517,6 +517,9 @@ name|struct
 name|c4iw_ep
 modifier|*
 name|ep
+parameter_list|,
+name|int
+name|status
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1970,6 +1973,8 @@ expr_stmt|;
 name|close_complete_upcall
 argument_list|(
 name|ep
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|__state_set
@@ -2642,6 +2647,8 @@ block|}
 name|close_complete_upcall
 argument_list|(
 name|ep
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|__state_set
@@ -6510,6 +6517,9 @@ name|struct
 name|c4iw_ep
 modifier|*
 name|ep
+parameter_list|,
+name|int
+name|status
 parameter_list|)
 block|{
 name|struct
@@ -6545,6 +6555,12 @@ operator|.
 name|event
 operator|=
 name|IW_CM_EVENT_CLOSE
+expr_stmt|;
+name|event
+operator|.
+name|status
+operator|=
+name|status
 expr_stmt|;
 if|if
 condition|(
@@ -6670,6 +6686,9 @@ expr_stmt|;
 name|close_complete_upcall
 argument_list|(
 name|ep
+argument_list|,
+operator|-
+name|ECONNRESET
 argument_list|)
 expr_stmt|;
 name|state_set
@@ -11805,6 +11824,9 @@ expr_stmt|;
 name|close_complete_upcall
 argument_list|(
 name|ep
+argument_list|,
+operator|-
+name|EIO
 argument_list|)
 expr_stmt|;
 name|ep
