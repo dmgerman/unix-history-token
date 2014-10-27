@@ -21,16 +21,15 @@ modifier|*
 name|dbp
 decl_stmt|;
 comment|/* current buffer I/O address */
-comment|/* XXX ssize_t? */
-name|size_t
+name|ssize_t
 name|dbcnt
 decl_stmt|;
 comment|/* current buffer byte count */
-name|size_t
+name|ssize_t
 name|dbrcnt
 decl_stmt|;
 comment|/* last read byte count */
-name|size_t
+name|ssize_t
 name|dbsz
 decl_stmt|;
 comment|/* block size */
@@ -90,31 +89,31 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|uintmax_t
+name|size_t
 name|in_full
 decl_stmt|;
 comment|/* # of full input blocks */
-name|uintmax_t
+name|size_t
 name|in_part
 decl_stmt|;
 comment|/* # of partial input blocks */
-name|uintmax_t
+name|size_t
 name|out_full
 decl_stmt|;
 comment|/* # of full output blocks */
-name|uintmax_t
+name|size_t
 name|out_part
 decl_stmt|;
 comment|/* # of partial output blocks */
-name|uintmax_t
+name|size_t
 name|trunc
 decl_stmt|;
 comment|/* # of truncated records */
-name|uintmax_t
+name|size_t
 name|swab
 decl_stmt|;
 comment|/* # of odd-length swab blocks */
-name|uintmax_t
+name|size_t
 name|bytes
 decl_stmt|;
 comment|/* # of bytes written */
