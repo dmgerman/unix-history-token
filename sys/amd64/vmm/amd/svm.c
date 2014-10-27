@@ -739,28 +739,6 @@ index|[
 literal|3
 index|]
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"SVM: Revision %d\n"
-argument_list|,
-name|regs
-index|[
-literal|0
-index|]
-operator|&
-literal|0xFF
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"SVM: NumASID %u\n"
-argument_list|,
-name|regs
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 name|nasid
 operator|=
 name|regs
@@ -779,37 +757,6 @@ literal|"Insufficient ASIDs for guests: %#x"
 operator|,
 name|nasid
 operator|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"SVM: Features 0x%b\n"
-argument_list|,
-name|svm_feature
-argument_list|,
-literal|"\020"
-literal|"\001NP"
-comment|/* Nested paging */
-literal|"\002LbrVirt"
-comment|/* LBR virtualization */
-literal|"\003SVML"
-comment|/* SVM lock */
-literal|"\004NRIPS"
-comment|/* NRIP save */
-literal|"\005TscRateMsr"
-comment|/* MSR based TSC rate control */
-literal|"\006VmcbClean"
-comment|/* VMCB clean bits */
-literal|"\007FlushByAsid"
-comment|/* Flush by ASID */
-literal|"\010DecodeAssist"
-comment|/* Decode assist */
-literal|"\011<b8>"
-literal|"\012<b9>"
-literal|"\013PauseFilter"
-literal|"\014<b11>"
-literal|"\015PauseFilterThreshold"
-literal|"\016AVIC"
 argument_list|)
 expr_stmt|;
 comment|/* bhyve requires the Nested Paging feature */
