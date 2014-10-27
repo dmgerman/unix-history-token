@@ -324,7 +324,7 @@ name|init_backgrounded
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|1
 argument_list|,
@@ -343,7 +343,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_INT
 argument_list|(
 name|_vfs_fuse
 argument_list|,

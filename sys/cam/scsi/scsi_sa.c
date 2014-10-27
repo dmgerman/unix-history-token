@@ -6114,9 +6114,9 @@ name|OID_AUTO
 argument_list|,
 literal|"allow_io_split"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|softc
@@ -6146,8 +6146,6 @@ name|OID_AUTO
 argument_list|,
 literal|"maxio"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -6178,8 +6176,6 @@ name|OID_AUTO
 argument_list|,
 literal|"cpi_maxio"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&

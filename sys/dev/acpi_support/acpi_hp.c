@@ -552,7 +552,7 @@ modifier|*
 name|description
 decl_stmt|;
 name|int
-name|access
+name|flag_rdonly
 decl_stmt|;
 block|}
 name|acpi_hp_sysctls
@@ -574,14 +574,7 @@ operator|.
 name|description
 operator|=
 literal|"Enable/Disable WLAN (WiFi)"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -600,11 +593,9 @@ operator|=
 literal|"WLAN radio status"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -624,11 +615,9 @@ operator|=
 literal|"WLAN radio ready to use (enabled and radio)"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -646,14 +635,7 @@ operator|.
 name|description
 operator|=
 literal|"Enable WLAN if radio is turned on"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -670,14 +652,7 @@ operator|.
 name|description
 operator|=
 literal|"Disable WLAN if radio is turned off"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -694,14 +669,7 @@ operator|.
 name|description
 operator|=
 literal|"Enable/Disable Bluetooth"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -720,11 +688,9 @@ operator|=
 literal|"Bluetooth radio status"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -745,11 +711,9 @@ literal|"Bluetooth radio ready to use"
 literal|" (enabled and radio)"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -767,14 +731,7 @@ operator|.
 name|description
 operator|=
 literal|"Enable bluetooth if radio is turned on"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -791,14 +748,7 @@ operator|.
 name|description
 operator|=
 literal|"Disable bluetooth if radio is turned off"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -815,14 +765,7 @@ operator|.
 name|description
 operator|=
 literal|"Enable/Disable WWAN (UMTS)"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -841,11 +784,9 @@ operator|=
 literal|"WWAN radio status"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -865,11 +806,9 @@ operator|=
 literal|"WWAN radio ready to use (enabled and radio)"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -887,14 +826,7 @@ operator|.
 name|description
 operator|=
 literal|"Enable WWAN if radio is turned on"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -911,14 +843,7 @@ operator|.
 name|description
 operator|=
 literal|"Disable WWAN if radio is turned off"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -935,14 +860,7 @@ operator|.
 name|description
 operator|=
 literal|"Enable/Disable ALS (Ambient light sensor)"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -961,11 +879,9 @@ operator|=
 literal|"Display status"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -985,11 +901,9 @@ operator|=
 literal|"HDD temperature"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -1009,11 +923,9 @@ operator|=
 literal|"Docking station status"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -1032,14 +944,7 @@ name|description
 operator|=
 literal|"Details shown in CMI output "
 literal|"(cat /dev/hpcmi)"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -1056,14 +961,7 @@ operator|.
 name|description
 operator|=
 literal|"Verbosity level"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 name|NULL
@@ -2586,6 +2484,18 @@ operator|=
 name|arg
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|acpi_hp_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|flag_rdonly
+operator|!=
+literal|0
+condition|)
+block|{
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|sc
@@ -2608,12 +2518,9 @@ index|]
 operator|.
 name|name
 argument_list|,
-name|acpi_hp_sysctls
-index|[
-name|i
-index|]
-operator|.
-name|access
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RD
 argument_list|,
 name|sc
 argument_list|,
@@ -2631,6 +2538,52 @@ operator|.
 name|description
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|sc
+operator|->
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sc
+operator|->
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|acpi_hp_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|sc
+argument_list|,
+name|i
+argument_list|,
+name|acpi_hp_sysctl
+argument_list|,
+literal|"I"
+argument_list|,
+name|acpi_hp_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|description
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|ACPI_SERIAL_END
 argument_list|(

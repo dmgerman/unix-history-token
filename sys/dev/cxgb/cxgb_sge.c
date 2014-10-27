@@ -18581,7 +18581,6 @@ literal|"firmware_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_version
@@ -18627,7 +18626,6 @@ literal|"port_types"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|port_types
@@ -19434,7 +19432,7 @@ argument_list|,
 literal|"#times starved"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UAUTO
 argument_list|(
 name|ctx
 argument_list|,
@@ -19665,7 +19663,7 @@ argument_list|,
 literal|"#tunneled packet slots in use"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -19771,7 +19769,7 @@ argument_list|,
 literal|"tx queues stopped"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UAUTO
 argument_list|(
 name|ctx
 argument_list|,

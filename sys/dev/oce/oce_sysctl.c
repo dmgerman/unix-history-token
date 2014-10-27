@@ -317,11 +317,8 @@ name|OID_AUTO
 argument_list|,
 literal|"component_revision"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|component_revision
 argument_list|,
 sizeof|sizeof
@@ -342,11 +339,8 @@ name|OID_AUTO
 argument_list|,
 literal|"firmware_version"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_version
@@ -371,8 +365,6 @@ name|OID_AUTO
 argument_list|,
 literal|"max_rsp_handled"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -5064,7 +5056,7 @@ argument_list|,
 literal|"Total Receive completion errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -5085,12 +5077,10 @@ name|xe201
 operator|.
 name|rx_pause_frames
 argument_list|,
-literal|0
-argument_list|,
 literal|"Pause Frames"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -5110,8 +5100,6 @@ operator|.
 name|xe201
 operator|.
 name|rx_control_frames
-argument_list|,
-literal|0
 argument_list|,
 literal|"Control Frames"
 argument_list|)
@@ -5370,7 +5358,7 @@ argument_list|(
 name|rx_stats_node
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -5391,12 +5379,10 @@ name|xe201
 operator|.
 name|rx_crc_errors
 argument_list|,
-literal|0
-argument_list|,
 literal|"CRC Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -5416,8 +5402,6 @@ operator|.
 name|xe201
 operator|.
 name|rx_alignment_errors
-argument_list|,
-literal|0
 argument_list|,
 literal|"RX Alignmnet Errors"
 argument_list|)
@@ -5474,7 +5458,7 @@ argument_list|,
 literal|"Out Range Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -5494,8 +5478,6 @@ operator|.
 name|xe201
 operator|.
 name|rx_frames_too_long
-argument_list|,
-literal|0
 argument_list|,
 literal|"Frame Too Long"
 argument_list|)
@@ -5953,7 +5935,7 @@ argument_list|,
 literal|"Total Transmit IPV6 Drops"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -5974,12 +5956,10 @@ name|xe201
 operator|.
 name|tx_pause_frames
 argument_list|,
-literal|0
-argument_list|,
 literal|"Pause Frames"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -5999,8 +5979,6 @@ operator|.
 name|xe201
 operator|.
 name|tx_control_frames
-argument_list|,
-literal|0
 argument_list|,
 literal|"Tx Control Frames"
 argument_list|)

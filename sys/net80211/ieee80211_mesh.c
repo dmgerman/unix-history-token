@@ -787,8 +787,6 @@ name|OID_AUTO
 argument_list|,
 name|maxretries
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -819,8 +817,6 @@ name|OID_AUTO
 argument_list|,
 name|maxholding
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

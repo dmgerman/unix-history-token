@@ -405,7 +405,7 @@ name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|BSD
 argument_list|,
@@ -585,7 +585,7 @@ name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|ARG_MAX
 argument_list|,
@@ -607,7 +607,7 @@ name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|_POSIX_VERSION
 argument_list|,
@@ -652,7 +652,7 @@ name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|1
 argument_list|,
@@ -680,7 +680,7 @@ name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|1
 argument_list|,
@@ -707,7 +707,7 @@ name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -793,7 +793,7 @@ name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|BYTE_ORDER
 argument_list|,
@@ -815,7 +815,7 @@ name|CTLFLAG_RD
 operator||
 name|CTLFLAG_CAPRD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
@@ -2469,7 +2469,7 @@ name|bc_base_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2489,7 +2489,7 @@ name|bc_dim_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2509,7 +2509,7 @@ name|bc_scale_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2529,7 +2529,7 @@ name|bc_string_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2549,7 +2549,7 @@ name|coll_weights_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2569,7 +2569,7 @@ name|expr_nest_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2589,7 +2589,7 @@ name|line_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2609,7 +2609,7 @@ name|re_dup_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2629,7 +2629,7 @@ name|posix2_version
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2649,7 +2649,7 @@ name|posix2_c_bind
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2669,7 +2669,7 @@ name|posix2_c_dev
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2689,7 +2689,7 @@ name|posix2_char_term
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2709,7 +2709,7 @@ name|posix2_fort_dev
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2729,7 +2729,7 @@ name|posix2_fort_run
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2749,7 +2749,7 @@ name|posix2_localedef
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2769,7 +2769,7 @@ name|posix2_sw_dev
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2789,7 +2789,7 @@ name|posix2_upe
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2809,7 +2809,7 @@ name|stream_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2829,7 +2829,7 @@ name|tzname_max
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 literal|0
 argument_list|,
@@ -2855,7 +2855,7 @@ name|vnode
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2879,7 +2879,7 @@ name|proc
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3042,7 +3042,7 @@ name|bio
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3066,7 +3066,7 @@ name|buf
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3096,7 +3096,7 @@ name|kinfo_proc
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(

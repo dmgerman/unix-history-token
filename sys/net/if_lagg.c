@@ -1996,8 +1996,6 @@ name|OID_AUTO
 argument_list|,
 literal|"use_flowid"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2028,8 +2026,6 @@ name|OID_AUTO
 argument_list|,
 literal|"flowid_shift"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2060,8 +2056,6 @@ name|OID_AUTO
 argument_list|,
 literal|"count"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -2123,8 +2117,6 @@ name|OID_AUTO
 argument_list|,
 literal|"flapping"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&

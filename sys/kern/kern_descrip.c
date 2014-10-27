@@ -15405,7 +15405,7 @@ argument_list|,
 name|ofiledesc
 argument_list|,
 name|CTLFLAG_RD
-operator|||
+operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
 name|sysctl_kern_proc_ofiledesc

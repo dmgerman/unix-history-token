@@ -6092,7 +6092,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|busdma_sysctl_tree
 argument_list|(
@@ -6117,8 +6117,6 @@ operator|&
 name|bz
 operator|->
 name|alignment
-argument_list|,
-literal|0
 argument_list|,
 literal|""
 argument_list|)

@@ -2215,7 +2215,7 @@ name|devstat
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|NULL
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(

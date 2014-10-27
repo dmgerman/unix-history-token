@@ -10911,7 +10911,7 @@ argument_list|,
 literal|"statistic"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -10931,12 +10931,10 @@ name|sc
 operator|->
 name|interrupts
 argument_list|,
-literal|0
-argument_list|,
 literal|"all interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -10956,12 +10954,10 @@ name|sc
 operator|->
 name|tx_coherent_interrupts
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx coherent interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -10981,12 +10977,10 @@ name|sc
 operator|->
 name|rx_coherent_interrupts
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx coherent interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11006,12 +11000,10 @@ name|sc
 operator|->
 name|rx_interrupts
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11031,12 +11023,10 @@ name|sc
 operator|->
 name|rx_delay_interrupts
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx delay interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11059,12 +11049,10 @@ index|[
 literal|3
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx AC3 interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11087,12 +11075,10 @@ index|[
 literal|2
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx AC2 interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11115,12 +11101,10 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx AC1 interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11143,12 +11127,10 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx AC0 interrupts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11167,8 +11149,6 @@ operator|&
 name|sc
 operator|->
 name|tx_delay_interrupts
-argument_list|,
-literal|0
 argument_list|,
 literal|"Tx delay interrupts"
 argument_list|)
@@ -11413,7 +11393,7 @@ argument_list|,
 literal|"Tx AC0 data queued"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11436,12 +11416,10 @@ index|[
 literal|3
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx AC3 data queue full"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11464,12 +11442,10 @@ index|[
 literal|2
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx AC2 data queue full"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11492,12 +11468,10 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx AC1 data queue full"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11520,12 +11494,10 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx AC0 data queue full"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11545,12 +11517,10 @@ name|sc
 operator|->
 name|tx_watchdog_timeouts
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx watchdog timeouts"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11570,12 +11540,10 @@ name|sc
 operator|->
 name|tx_defrag_packets
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx defragmented packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11595,12 +11563,10 @@ name|sc
 operator|->
 name|no_tx_desc_avail
 argument_list|,
-literal|0
-argument_list|,
 literal|"no Tx descriptors available"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11620,12 +11586,10 @@ name|sc
 operator|->
 name|rx_mbuf_alloc_errors
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx mbuf allocation errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11645,12 +11609,10 @@ name|sc
 operator|->
 name|rx_mbuf_dmamap_errors
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx mbuf DMA mapping errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11673,12 +11635,10 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx queue 0 not empty"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11701,12 +11661,10 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx queue 1 not empty"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11726,12 +11684,10 @@ name|sc
 operator|->
 name|rx_packets
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11751,12 +11707,10 @@ name|sc
 operator|->
 name|rx_crc_err
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx CRC errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11776,12 +11730,10 @@ name|sc
 operator|->
 name|rx_phy_err
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx PHY errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11801,12 +11753,10 @@ name|sc
 operator|->
 name|rx_dup_packets
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx duplicate packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11826,12 +11776,10 @@ name|sc
 operator|->
 name|rx_fifo_overflows
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx FIFO overflows"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11851,12 +11799,10 @@ name|sc
 operator|->
 name|rx_bytes
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx bytes"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11876,12 +11822,10 @@ name|sc
 operator|->
 name|rx_long_err
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx too long frame errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11901,12 +11845,10 @@ name|sc
 operator|->
 name|rx_short_err
 argument_list|,
-literal|0
-argument_list|,
 literal|"Rx too short frame errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11926,12 +11868,10 @@ name|sc
 operator|->
 name|tx_bytes
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx bytes"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11951,12 +11891,10 @@ name|sc
 operator|->
 name|tx_packets
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -11976,12 +11914,10 @@ name|sc
 operator|->
 name|tx_skip
 argument_list|,
-literal|0
-argument_list|,
 literal|"Tx skip count for GDMA ports"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -12000,8 +11936,6 @@ operator|&
 name|sc
 operator|->
 name|tx_collision
-argument_list|,
-literal|0
 argument_list|,
 literal|"Tx collision count for GDMA ports"
 argument_list|)

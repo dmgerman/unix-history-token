@@ -1044,7 +1044,7 @@ argument_list|(
 name|_vm_memguard
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UAUTO
 argument_list|(
 name|NULL
 argument_list|,
@@ -1062,7 +1062,7 @@ argument_list|,
 literal|"MemGuard KVA base"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UAUTO
 argument_list|(
 name|NULL
 argument_list|,

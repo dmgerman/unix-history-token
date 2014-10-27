@@ -3906,7 +3906,7 @@ literal|0
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++
@@ -10901,7 +10901,7 @@ control|(
 init|;
 name|i
 operator|<=
-name|V_pf_hashmask
+name|pf_hashmask
 condition|;
 name|i
 operator|++
