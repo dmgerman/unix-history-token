@@ -82,6 +82,9 @@ block|{
 name|uint32_t
 name|addr
 decl_stmt|;
+name|bool
+name|nostop
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -90,7 +93,11 @@ begin_enum
 enum|enum
 block|{
 name|IICBUS_IVAR_ADDR
+block|,
 comment|/* Address or base address */
+name|IICBUS_IVAR_NOSTOP
+block|,
+comment|/* nostop defaults */
 block|}
 enum|;
 end_enum
@@ -118,6 +125,17 @@ argument_list|,
 argument|ADDR
 argument_list|,
 argument|uint32_t
+argument_list|)
+end_macro
+
+begin_macro
+name|IICBUS_ACCESSOR
+argument_list|(
+argument|nostop
+argument_list|,
+argument|NOSTOP
+argument_list|,
+argument|bool
 argument_list|)
 end_macro
 
