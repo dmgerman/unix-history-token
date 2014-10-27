@@ -648,6 +648,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|n
 operator|!=
 name|out

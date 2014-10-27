@@ -372,9 +372,6 @@ name|MIN
 argument_list|(
 name|cbsz
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|in
 operator|.
 name|dbcnt
@@ -459,9 +456,6 @@ name|ch
 operator|!=
 literal|'\n'
 operator|&&
-operator|(
-name|size_t
-operator|)
 name|in
 operator|.
 name|dbcnt
@@ -800,9 +794,6 @@ name|in
 operator|.
 name|db
 init|;
-operator|(
-name|size_t
-operator|)
 name|in
 operator|.
 name|dbcnt
