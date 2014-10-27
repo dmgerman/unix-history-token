@@ -281,11 +281,15 @@ name|req
 operator|->
 name|newlen
 operator|!=
-name|strlen
+name|strnlen
 argument_list|(
 name|funcs
 operator|->
 name|name
+argument_list|,
+name|TCP_CA_NAME_MAX
+operator|-
+literal|1
 argument_list|)
 condition|)
 continue|continue;
