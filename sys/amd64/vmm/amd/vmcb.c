@@ -1326,6 +1326,7 @@ argument_list|,
 name|VMCB_CACHE_SEG
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|VM_REG_GUEST_GDTR
 case|:
