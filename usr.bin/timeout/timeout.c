@@ -200,7 +200,7 @@ name|duration
 condition|)
 name|errx
 argument_list|(
-name|EXIT_FAILURE
+literal|125
 argument_list|,
 literal|"invalid duration"
 argument_list|)
@@ -286,7 +286,7 @@ break|break;
 default|default:
 name|errx
 argument_list|(
-name|EX_USAGE
+literal|125
 argument_list|,
 literal|"invalid duration"
 argument_list|)
@@ -304,7 +304,7 @@ literal|100000000UL
 condition|)
 name|errx
 argument_list|(
-name|EX_USAGE
+literal|125
 argument_list|,
 literal|"invalid duration"
 argument_list|)
@@ -416,7 +416,7 @@ return|;
 block|}
 name|errx
 argument_list|(
-name|EX_USAGE
+literal|125
 argument_list|,
 literal|"invalid signal"
 argument_list|)
@@ -1111,13 +1111,39 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
 name|err
 argument_list|(
-name|EX_UNAVAILABLE
+literal|127
 argument_list|,
-literal|"exec()"
+literal|"exec(%s)"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
+else|else
+name|err
+argument_list|(
+literal|126
+argument_list|,
+literal|"exec(%s)"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
