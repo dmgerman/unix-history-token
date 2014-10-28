@@ -259,6 +259,8 @@ name|VM_GUEST_XEN
 block|,
 name|VM_GUEST_HV
 block|,
+name|VM_GUEST_VMWARE
+block|,
 name|VM_LAST
 block|}
 enum|;
