@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: spec.c,v 1.88 2013/10/17 17:22:59 christos Exp $	*/
+comment|/*	$NetBSD: spec.c,v 1.89 2014/04/24 17:22:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: spec.c,v 1.88 2013/10/17 17:22:59 christos Exp $"
+literal|"$NetBSD: spec.c,v 1.89 2014/04/24 17:22:41 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -313,6 +313,9 @@ specifier|static
 name|int
 name|appendfield
 parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
 name|int
 parameter_list|,
 specifier|const
@@ -323,9 +326,9 @@ modifier|...
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
-function_decl|2
-operator|,
 function_decl|3
+operator|,
+function_decl|4
 end_function_decl
 
 begin_empty_stmt
@@ -1311,7 +1314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * appendfield --  *	Like printf(), but output a space either before or after  *	the regular output, according to the pathlast flag.  */
+comment|/*  * appendfield --  *	Like fprintf(), but output a space either before or after  *	the regular output, according to the pathlast flag.  */
 end_comment
 
 begin_function
@@ -1319,6 +1322,10 @@ specifier|static
 name|int
 name|appendfield
 parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
 name|int
 name|pathlast
 parameter_list|,
@@ -1348,8 +1355,10 @@ condition|(
 operator|!
 name|pathlast
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
@@ -1366,8 +1375,10 @@ if|if
 condition|(
 name|pathlast
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
@@ -1390,6 +1401,10 @@ begin_function
 name|void
 name|dump_nodes
 parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1506,8 +1521,10 @@ condition|(
 operator|!
 name|pathlast
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|fp
+argument_list|,
 literal|"%s"
 argument_list|,
 name|vispath
@@ -1532,6 +1549,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"type=%s"
@@ -1577,6 +1596,8 @@ name|NULL
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"uname=%s"
@@ -1587,6 +1608,8 @@ expr_stmt|;
 else|else
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"uid=%u"
@@ -1630,6 +1653,8 @@ name|NULL
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"gname=%s"
@@ -1640,6 +1665,8 @@ expr_stmt|;
 else|else
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"gid=%u"
@@ -1659,6 +1686,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"mode=%#o"
@@ -1691,6 +1720,8 @@ operator|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"device=%#jx"
@@ -1712,6 +1743,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"nlink=%d"
@@ -1730,6 +1763,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"link=%s"
@@ -1751,6 +1786,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"size=%ju"
@@ -1772,6 +1809,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"time=%jd.%09ld"
@@ -1801,6 +1840,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"cksum=%lu"
@@ -1819,6 +1860,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"%s=%s"
@@ -1839,6 +1882,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"%s=%s"
@@ -1859,6 +1904,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"%s=%s"
@@ -1879,6 +1926,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"%s=%s"
@@ -1899,6 +1948,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"%s=%s"
@@ -1919,6 +1970,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"%s=%s"
@@ -1951,6 +2004,8 @@ argument_list|)
 expr_stmt|;
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"flags=%s"
@@ -1973,6 +2028,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"ignore"
@@ -1987,6 +2044,8 @@ argument_list|)
 condition|)
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"optional"
@@ -2045,6 +2104,8 @@ operator|--
 expr_stmt|;
 name|appendfield
 argument_list|(
+name|fp
+argument_list|,
 name|pathlast
 argument_list|,
 literal|"tags=%.*s"
@@ -2082,6 +2143,8 @@ name|child
 condition|)
 name|dump_nodes
 argument_list|(
+name|fp
+argument_list|,
 name|path
 argument_list|,
 name|cur
