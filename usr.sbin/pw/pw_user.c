@@ -1930,6 +1930,34 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|strspn
+argument_list|(
+name|a_uid
+operator|->
+name|val
+argument_list|,
+literal|"0123456789"
+argument_list|)
+operator|!=
+name|strlen
+argument_list|(
+name|a_uid
+operator|->
+name|val
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-u expects a number"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Update, delete& print require that the user exists 	 */
 if|if
 condition|(
