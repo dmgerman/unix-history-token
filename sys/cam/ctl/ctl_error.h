@@ -479,6 +479,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ctl_set_space_alloc_fail
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ctl_set_success
 parameter_list|(
 name|struct
