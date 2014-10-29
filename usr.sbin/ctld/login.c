@@ -2015,10 +2015,20 @@ argument_list|(
 name|request
 argument_list|)
 expr_stmt|;
-name|chap_delete
-argument_list|(
+comment|/* 	 * Leave username and CHAP information for discovery(). 	 */
+name|conn
+operator|->
+name|conn_user
+operator|=
+name|auth
+operator|->
+name|a_user
+expr_stmt|;
+name|conn
+operator|->
+name|conn_chap
+operator|=
 name|chap
-argument_list|)
 expr_stmt|;
 block|}
 end_function
