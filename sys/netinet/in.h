@@ -345,7 +345,9 @@ argument_list|(
 name|_KERNEL
 argument_list|)
 operator|&&
-name|__BSD_VISIBLE
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
 end_if
 
 begin_ifndef
@@ -469,7 +471,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_KERNEL&& __BSD_VISIBLE */
+comment|/* !_KERNEL&& __POSIX_VISIBLE>= 200112 */
 end_comment
 
 begin_if
