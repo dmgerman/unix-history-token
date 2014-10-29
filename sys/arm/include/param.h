@@ -25,6 +25,12 @@ directive|include
 file|<machine/_align.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/acle-compat.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -51,21 +57,9 @@ end_define
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__FreeBSD_ARCH_armv6__
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__ARM_ARCH
-argument_list|)
-operator|&&
 name|__ARM_ARCH
 operator|>=
 literal|6
-operator|)
 end_if
 
 begin_define
@@ -125,7 +119,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__ARMEB__
+name|__ARM_BIG_ENDIAN
 end_ifdef
 
 begin_define
