@@ -33,21 +33,6 @@ directive|include
 file|"mlx4.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|u8
-name|zero_gid
-index|[
-literal|16
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* automatically initialized to 0 */
-end_comment
-
 begin_function
 name|int
 name|mlx4_get_mgm_entry_size

@@ -18,7 +18,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/slab.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/workqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/notifier.h>
 end_include
 
 begin_include
@@ -37,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<rdma/ib_addr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
 end_include
 
 begin_expr_stmt
@@ -837,12 +861,6 @@ name|unsigned
 name|long
 name|delay
 decl_stmt|;
-name|cancel_delayed_work
-argument_list|(
-operator|&
-name|work
-argument_list|)
-expr_stmt|;
 name|delay
 operator|=
 name|time
@@ -862,7 +880,7 @@ name|delay
 operator|=
 literal|1
 expr_stmt|;
-name|queue_delayed_work
+name|mod_delayed_work
 argument_list|(
 name|addr_wq
 argument_list|,
@@ -3066,6 +3084,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
+name|__init
 name|addr_init
 parameter_list|(
 name|void
@@ -3110,6 +3129,7 @@ end_function
 begin_function
 specifier|static
 name|void
+name|__exit
 name|addr_cleanup
 parameter_list|(
 name|void

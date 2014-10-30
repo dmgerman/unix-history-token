@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/cdev.h>
 end_include
 
