@@ -15936,13 +15936,11 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|addr
 operator|->
 name|sa_family
 operator|==
 name|AF_INET6
-operator|)
 condition|)
 block|{
 name|ipv6_ib_mc_map

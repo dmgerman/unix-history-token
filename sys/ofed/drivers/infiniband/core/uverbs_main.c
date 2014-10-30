@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/device.h>
 end_include
 
@@ -386,11 +380,11 @@ function_decl|[IB_USER_VERBS_CMD_CREATE_XRC_SRQ]
 init|=
 name|ib_uverbs_create_xrc_srq
 operator|,
-function_decl|[IB_USER_VERBS_CMD_OPEN_XRC_DOMAIN]
+function_decl|[IB_USER_VERBS_CMD_OPEN_XRCD]
 init|=
 name|ib_uverbs_open_xrc_domain
 operator|,
-function_decl|[IB_USER_VERBS_CMD_CLOSE_XRC_DOMAIN]
+function_decl|[IB_USER_VERBS_CMD_CLOSE_XRCD]
 init|=
 name|ib_uverbs_close_xrc_domain
 operator|,
@@ -1149,7 +1143,7 @@ argument|uobj
 argument_list|,
 argument|tmp
 argument_list|,
-argument|&context->xrc_domain_list
+argument|&context->xrcd_list
 argument_list|,
 argument|list
 argument_list|)
@@ -2772,6 +2766,9 @@ name|err
 goto|;
 block|}
 comment|/* 	 * fops_get() can't fail here, because we're coming from a 	 * system call on a uverbs file, which will already have a 	 * module reference. 	 */
+ifdef|#
+directive|ifdef
+name|__linux__
 name|filp
 operator|=
 name|alloc_file
@@ -2794,6 +2791,23 @@ name|uverbs_event_fops
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|filp
+operator|=
+name|alloc_file
+argument_list|(
+name|FMODE_READ
+argument_list|,
+name|fops_get
+argument_list|(
+operator|&
+name|uverbs_event_fops
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3018,12 +3032,6 @@ name|EINVAL
 return|;
 if|if
 condition|(
-name|hdr
-operator|.
-name|command
-operator|<
-literal|0
-operator|||
 name|hdr
 operator|.
 name|command
@@ -3677,6 +3685,11 @@ name|struct
 name|class
 modifier|*
 name|class
+parameter_list|,
+name|struct
+name|class_attribute
+modifier|*
+name|attr
 parameter_list|,
 name|char
 modifier|*

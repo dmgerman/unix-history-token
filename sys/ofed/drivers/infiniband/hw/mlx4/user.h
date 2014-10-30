@@ -28,8 +28,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLX4_IB_UVERBS_ABI_VERSION
+name|MLX4_IB_UVERBS_NO_DEV_CAPS_ABI_VERSION
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLX4_IB_UVERBS_ABI_VERSION
+value|4
 end_define
 
 begin_comment
@@ -38,7 +45,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|mlx4_ib_alloc_ucontext_resp
+name|mlx4_ib_alloc_ucontext_resp_v3
 block|{
 name|__u32
 name|qp_tab_size
@@ -48,6 +55,29 @@ name|bf_reg_size
 decl_stmt|;
 name|__u16
 name|bf_regs_per_page
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mlx4_ib_alloc_ucontext_resp
+block|{
+name|__u32
+name|dev_caps
+decl_stmt|;
+name|__u32
+name|qp_tab_size
+decl_stmt|;
+name|__u16
+name|bf_reg_size
+decl_stmt|;
+name|__u16
+name|bf_regs_per_page
+decl_stmt|;
+name|__u32
+name|cqe_size
 decl_stmt|;
 block|}
 struct|;

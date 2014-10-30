@@ -9842,7 +9842,7 @@ literal|2
 expr_stmt|;
 break|break;
 case|case
-name|IB_QPT_RAW_ETY
+name|IB_QPT_RAW_ETHERTYPE
 case|:
 name|op_mod
 operator|=

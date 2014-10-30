@@ -25,6 +25,23 @@ directive|ifndef
 name|SOLARIS_BUILD
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -46,6 +63,11 @@ end_define
 begin_comment
 comment|/* SDP socket protocol family */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/device.h>
 end_include
 
@@ -4960,6 +4954,11 @@ name|struct
 name|class
 modifier|*
 name|class
+parameter_list|,
+name|struct
+name|class_attribute
+modifier|*
+name|attr
 parameter_list|,
 name|char
 modifier|*

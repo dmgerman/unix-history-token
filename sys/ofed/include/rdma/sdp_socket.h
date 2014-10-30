@@ -18,6 +18,12 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|AF_INET_SDP
 end_ifndef
 
@@ -34,6 +40,11 @@ directive|define
 name|PF_INET_SDP
 value|AF_INET_SDP
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

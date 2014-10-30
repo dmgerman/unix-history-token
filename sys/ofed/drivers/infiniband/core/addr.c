@@ -24,18 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/neighbour.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -43,18 +31,6 @@ begin_include
 include|#
 directive|include
 file|<net/netevent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/addrconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/ip6_route.h>
 end_include
 
 begin_include
@@ -1759,6 +1735,8 @@ name|bcast
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * Determine whether the address is unicast, multicast, or broadcast 	 * and whether the source interface is valid. 	 */
 name|multi

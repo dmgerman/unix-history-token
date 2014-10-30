@@ -1073,12 +1073,20 @@ name|srq_context
 expr_stmt|;
 name|srq
 operator|->
-name|xrc_cq
+name|ext
+operator|.
+name|xrc
+operator|.
+name|cq
 operator|=
 name|NULL
 expr_stmt|;
 name|srq
 operator|->
+name|ext
+operator|.
+name|xrc
+operator|.
 name|xrcd
 operator|=
 name|NULL
@@ -1230,12 +1238,20 @@ name|srq_context
 expr_stmt|;
 name|srq
 operator|->
-name|xrc_cq
+name|ext
+operator|.
+name|xrc
+operator|.
+name|cq
 operator|=
 name|xrc_cq
 expr_stmt|;
 name|srq
 operator|->
+name|ext
+operator|.
+name|xrc
+operator|.
 name|xrcd
 operator|=
 name|xrcd
@@ -1443,12 +1459,20 @@ name|xrc_cq
 operator|=
 name|srq
 operator|->
-name|xrc_cq
+name|ext
+operator|.
+name|xrc
+operator|.
+name|cq
 expr_stmt|;
 name|xrcd
 operator|=
 name|srq
 operator|->
+name|ext
+operator|.
+name|xrc
+operator|.
 name|xrcd
 expr_stmt|;
 name|ret
@@ -1645,7 +1669,7 @@ name|IB_QPT_XRC
 condition|?
 name|qp_init_attr
 operator|->
-name|xrc_domain
+name|xrcd
 else|:
 name|NULL
 expr_stmt|;
@@ -1738,7 +1762,7 @@ name|enum
 name|ib_qp_attr_mask
 name|req_param
 index|[
-name|IB_QPT_RAW_ETH
+name|IB_QPT_RAW_PACKET
 operator|+
 literal|1
 index|]
@@ -1747,7 +1771,7 @@ name|enum
 name|ib_qp_attr_mask
 name|opt_param
 index|[
-name|IB_QPT_RAW_ETH
+name|IB_QPT_RAW_PACKET
 operator|+
 literal|1
 index|]
@@ -1809,7 +1833,7 @@ name|IB_QP_QKEY
 operator|)
 block|,
 index|[
-name|IB_QPT_RAW_ETH
+name|IB_QPT_RAW_PACKET
 index|]
 operator|=
 name|IB_QP_PORT
@@ -4684,7 +4708,7 @@ name|qp
 operator|->
 name|qp_type
 operator|==
-name|IB_QPT_RAW_ETH
+name|IB_QPT_RAW_PACKET
 condition|)
 block|{
 comment|/* In raw Etherent mgids the 63 msb's should be 0 */
@@ -4739,7 +4763,7 @@ name|qp
 operator|->
 name|qp_type
 operator|!=
-name|IB_QPT_RAW_ETH
+name|IB_QPT_RAW_PACKET
 condition|)
 return|return
 operator|-
@@ -4824,7 +4848,7 @@ name|qp
 operator|->
 name|qp_type
 operator|==
-name|IB_QPT_RAW_ETH
+name|IB_QPT_RAW_PACKET
 condition|)
 block|{
 comment|/* In raw Etherent mgids the 63 msb's should be 0 */
@@ -4879,7 +4903,7 @@ name|qp
 operator|->
 name|qp_type
 operator|!=
-name|IB_QPT_RAW_ETH
+name|IB_QPT_RAW_PACKET
 condition|)
 return|return
 operator|-

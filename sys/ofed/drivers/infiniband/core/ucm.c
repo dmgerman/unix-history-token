@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/fs.h>
 end_include
 
@@ -73,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<linux/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/string.h>
 end_include
 
 begin_include
@@ -287,18 +287,6 @@ literal|32
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|/* ib_cm and ib_user_cm modules share /sys/class/infiniband_cm */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|class
-name|cm_class
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -6706,6 +6694,11 @@ name|struct
 name|class
 modifier|*
 name|class
+parameter_list|,
+name|struct
+name|class_attribute
+modifier|*
+name|attr
 parameter_list|,
 name|char
 modifier|*

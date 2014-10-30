@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/init.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/errno.h>
 end_include
 
@@ -6200,7 +6194,7 @@ block|{
 name|printk
 argument_list|(
 argument|KERN_WARNING PFX
-literal|"bad log_mtts_per_seg (%d). Using default - %ld\n"
+literal|"bad log_mtts_per_seg (%d). Using default - %d\n"
 argument_list|,
 argument|log_mtts_per_seg
 argument_list|,

@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|MLX4_UVERBS_MAX_ABI_VERSION
-value|3
+value|4
 end_define
 
 begin_struct
