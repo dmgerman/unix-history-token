@@ -4608,7 +4608,8 @@ condition|)
 name|args
 operator|.
 name|flags
-operator||=
+operator|&=
+operator|~
 name|NFSMNT_NOCONN
 expr_stmt|;
 if|if
