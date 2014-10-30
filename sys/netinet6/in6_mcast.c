@@ -2438,15 +2438,6 @@ argument_list|(
 name|inm
 argument_list|)
 expr_stmt|;
-comment|/* Free state-change requests that might be queued. */
-name|_IF_DRAIN
-argument_list|(
-operator|&
-name|inm
-operator|->
-name|in6m_scq
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|inm
@@ -5072,6 +5063,15 @@ name|in6m_nsrc
 operator|--
 expr_stmt|;
 block|}
+comment|/* Free state-change requests that might be queued. */
+name|_IF_DRAIN
+argument_list|(
+operator|&
+name|inm
+operator|->
+name|in6m_scq
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
