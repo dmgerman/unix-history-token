@@ -15,7 +15,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"bconfig.h"
+file|"config.h"
 end_include
 
 begin_endif
