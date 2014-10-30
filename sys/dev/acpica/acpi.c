@@ -16522,6 +16522,12 @@ name|struct
 name|sbuf
 name|sb
 decl_stmt|;
+name|char
+name|temp
+index|[
+literal|128
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|sbuf_new
@@ -16674,12 +16680,9 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* Copy out the old values to the user. */
-name|error
-operator|=
-name|SYSCTL_OUT
+name|strlcpy
 argument_list|(
-name|req
+name|temp
 argument_list|,
 name|sbuf_data
 argument_list|(
@@ -16687,10 +16690,9 @@ operator|&
 name|sb
 argument_list|)
 argument_list|,
-name|sbuf_len
+sizeof|sizeof
 argument_list|(
-operator|&
-name|sb
+name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16700,7 +16702,23 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* If the user is setting a string, parse it. */
+name|error
+operator|=
+name|sysctl_handle_string
+argument_list|(
+name|oidp
+argument_list|,
+name|temp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+comment|/* Check for error or no change */
 if|if
 condition|(
 name|error
@@ -16729,13 +16747,7 @@ name|oidp
 operator|->
 name|oid_arg1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|req
-operator|->
-name|newptr
+name|temp
 argument_list|)
 expr_stmt|;
 name|acpi_set_debugging
