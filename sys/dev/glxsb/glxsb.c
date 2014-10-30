@@ -2605,7 +2605,10 @@ argument_list|(
 operator|&
 name|value
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+name|value
+argument_list|)
 argument_list|,
 literal|32
 operator|/

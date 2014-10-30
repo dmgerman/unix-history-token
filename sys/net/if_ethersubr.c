@@ -2741,12 +2741,6 @@ operator||=
 name|M_PROMISC
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|harvest
-operator|.
-name|ethernet
-condition|)
 name|random_harvest
 argument_list|(
 operator|&

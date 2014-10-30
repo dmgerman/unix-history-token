@@ -4746,12 +4746,6 @@ name|EAFNOSUPPORT
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|harvest
-operator|.
-name|point_to_point
-condition|)
 name|random_harvest
 argument_list|(
 operator|&

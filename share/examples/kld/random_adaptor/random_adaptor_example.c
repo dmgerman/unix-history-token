@@ -56,7 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/random/live_entropy_sources.h>
+file|<dev/random/randomdev.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/random/randomdev_soft.h>
 end_include
 
 begin_include
@@ -68,18 +74,38 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/random/randomdev.h>
+file|<dev/random/live_entropy_sources.h>
 end_include
 
 begin_function_decl
 specifier|static
-name|int
-name|random_example_read
+name|void
+name|live_random_example_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|live_random_example_deinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|u_int
+name|live_random_example_read
 parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -87,24 +113,24 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|random_adaptor
-name|random_example
+name|live_random_example
 init|=
 block|{
 operator|.
-name|ident
+name|les_ident
 operator|=
 literal|"Example RNG"
 block|,
 operator|.
-name|source
+name|les_source
 operator|=
 name|RANDOM_PURE_BOGUS
 block|,
-comment|/* Make sure this is in 					 * sys/random.h and is unique */
+comment|/* Make sure this is in 					  * sys/random.h and is unique */
 operator|.
-name|read
+name|les_read
 operator|=
-name|random_example_read
+name|live_random_example_read
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -130,14 +156,42 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|random_example_read
+name|void
+name|live_random_example_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Do initialisation stuff here */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|live_random_example_deinit
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Do de-initialisation stuff here */
+block|}
+end_function
+
+begin_comment
+comment|/* get<c> bytes of random stuff into<buf>. You may presume  * that<c> is a multiple of 2^n, with n>=3. A typical value  * is c=16.  */
+end_comment
+
+begin_function
+specifier|static
+name|u_int
+name|live_random_example_read
 parameter_list|(
 name|void
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|u_int
 name|c
 parameter_list|)
 block|{
@@ -173,13 +227,7 @@ operator|=
 name|getRandomNumber
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"returning %d bytes of pure randomness\n"
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
+comment|/* printf("returning %d bytes of pure randomness\n", c); */
 return|return
 operator|(
 name|c
@@ -188,13 +236,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
-name|random_example_modevent
+name|live_random_example_modevent
 parameter_list|(
 name|module_t
 name|mod
+name|__unused
 parameter_list|,
 name|int
 name|type
@@ -202,6 +255,7 @@ parameter_list|,
 name|void
 modifier|*
 name|unused
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -220,7 +274,7 @@ case|:
 name|live_entropy_source_register
 argument_list|(
 operator|&
-name|random_example
+name|live_random_example
 argument_list|)
 expr_stmt|;
 break|break;
@@ -230,7 +284,7 @@ case|:
 name|live_entropy_source_deregister
 argument_list|(
 operator|&
-name|random_example
+name|live_random_example
 argument_list|)
 expr_stmt|;
 break|break;
@@ -254,11 +308,37 @@ block|}
 end_function
 
 begin_expr_stmt
-name|LIVE_ENTROPY_SRC_MODULE
+name|DEV_MODULE
 argument_list|(
-name|live_entropy_source_example
+name|live_random_example
 argument_list|,
-name|random_example_modevent
+name|live_random_example_modevent
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|live_random_example
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|live_random_example
+argument_list|,
+name|randomdev
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)

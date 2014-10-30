@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -28,6 +34,72 @@ include|#
 directive|include
 file|<sys/systm.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<threads.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"unit_test.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_include
 include|#
@@ -46,6 +118,22 @@ include|#
 directive|include
 file|<dev/random/hash.h>
 end_include
+
+begin_comment
+comment|/* This code presumes that KEYSIZE is twice as large as BLOCKSIZE */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|KEYSIZE
+operator|==
+literal|2
+operator|*
+name|BLOCKSIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Initialise the hash */
@@ -209,7 +297,7 @@ name|void
 modifier|*
 name|d_out
 parameter_list|,
-name|unsigned
+name|u_int
 name|length
 parameter_list|)
 block|{

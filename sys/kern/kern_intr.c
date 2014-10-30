@@ -4264,10 +4264,6 @@ expr_stmt|;
 comment|/* 	 * If any of the handlers for this ithread claim to be good 	 * sources of entropy, then gather some. 	 */
 if|if
 condition|(
-name|harvest
-operator|.
-name|interrupt
-operator|&&
 name|ie
 operator|->
 name|ie_flags
@@ -4275,23 +4271,6 @@ operator|&
 name|IE_ENTROPY
 condition|)
 block|{
-name|CTR3
-argument_list|(
-name|KTR_INTR
-argument_list|,
-literal|"%s: pid %d (%s) gathering entropy"
-argument_list|,
-name|__func__
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|td
-operator|->
-name|td_name
-argument_list|)
-expr_stmt|;
 name|entropy
 operator|.
 name|event
@@ -4919,10 +4898,6 @@ expr_stmt|;
 comment|/* 	 * If any of the handlers for this ithread claim to be good 	 * sources of entropy, then gather some. 	 */
 if|if
 condition|(
-name|harvest
-operator|.
-name|interrupt
-operator|&&
 name|ie
 operator|->
 name|ie_flags
@@ -4930,23 +4905,6 @@ operator|&
 name|IE_ENTROPY
 condition|)
 block|{
-name|CTR3
-argument_list|(
-name|KTR_INTR
-argument_list|,
-literal|"%s: pid %d (%s) gathering entropy"
-argument_list|,
-name|__func__
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|td
-operator|->
-name|td_name
-argument_list|)
-expr_stmt|;
 name|entropy
 operator|.
 name|event
@@ -5357,28 +5315,6 @@ operator|->
 name|ih_need
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|harvest
-operator|.
-name|swi
-condition|)
-block|{
-name|CTR2
-argument_list|(
-name|KTR_INTR
-argument_list|,
-literal|"swi_sched: pid %d (%s) gathering entropy"
-argument_list|,
-name|curproc
-operator|->
-name|p_pid
-argument_list|,
-name|curthread
-operator|->
-name|td_name
-argument_list|)
-expr_stmt|;
 name|entropy
 operator|.
 name|event
@@ -5409,7 +5345,6 @@ argument_list|,
 name|RANDOM_SWI
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Set ih_need for this handler so that if the ithread is already 	 * running it will execute this handler on the next pass.  Otherwise, 	 * it will execute it the next time it runs. 	 */
 name|atomic_store_rel_int
 argument_list|(

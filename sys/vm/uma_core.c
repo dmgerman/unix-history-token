@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rwlock.h>
 end_include
 
@@ -8957,6 +8963,14 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|random_harvest(&(zone->uz_name), sizeof(void *), 1, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 comment|/* This is the fast path allocation */
 ifdef|#
 directive|ifdef
@@ -9125,6 +9139,14 @@ name|NULL
 operator|)
 return|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|random_harvest(&item, sizeof(void *), 1, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 return|return
 operator|(
 name|item
@@ -9305,6 +9327,14 @@ argument_list|,
 name|zone
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|random_harvest(&item, sizeof(void *), 1, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 return|return
 operator|(
 name|item
@@ -9683,6 +9713,14 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|random_harvest(&item, sizeof(void *), 1, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 return|return
 operator|(
 name|item
@@ -11096,6 +11134,14 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: FIX!! Do not enable this in CURRENT!! MarkM */
+comment|/* The entropy here is desirable, but the harvesting is expensive */
+block|struct entropy { 		const void *uz_name; 		const void *item; 	} entropy;  	entropy.uz_name = zone->uz_name; 	entropy.item = item; 	random_harvest(&entropy, sizeof(struct entropy), 2, RANDOM_UMA_ALLOC);
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|UMA_DEBUG_ALLOC_1

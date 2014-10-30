@@ -10411,7 +10411,7 @@ directive|ifdef
 name|RANDOM_DEBUG
 name|printf
 argument_list|(
-literal|"%s(): feeding %d bit(s) of entropy from %s%d\n"
+literal|"random: %s(): feeding %d bit(s) of entropy from %s%d\n"
 argument_list|,
 name|__func__
 argument_list|,

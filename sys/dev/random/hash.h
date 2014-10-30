@@ -136,7 +136,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|unsigned
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
