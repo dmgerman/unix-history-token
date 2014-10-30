@@ -10890,11 +10890,23 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * Force a reload. Other thread could reallocate the 			 * table before this fd was closed, so it possible that 			 * there is a stale fp pointer in cached version. 			 */
 name|fdt
 operator|=
+operator|*
+operator|(
+expr|struct
+name|fdescenttbl
+operator|*
+specifier|volatile
+operator|*
+operator|)
+operator|&
+operator|(
 name|fdp
 operator|->
 name|fd_files
+operator|)
 expr_stmt|;
 continue|continue;
 block|}
