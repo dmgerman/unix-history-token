@@ -10875,6 +10875,8 @@ block|}
 block|}
 endif|#
 directive|endif
+name|retry
+label|:
 name|count
 operator|=
 name|fp
@@ -10915,15 +10917,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fdt
-operator|=
-name|fdp
-operator|->
-name|fd_files
-expr_stmt|;
-continue|continue;
-block|}
+goto|goto
+name|retry
+goto|;
 name|fdt
 operator|=
 name|fdp
