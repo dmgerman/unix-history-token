@@ -2279,6 +2279,15 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_PROTOFLAGS
+operator|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC

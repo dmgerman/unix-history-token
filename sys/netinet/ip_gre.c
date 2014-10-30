@@ -777,6 +777,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+operator|(
+name|M_PROTOFLAGS
+operator|)
+expr_stmt|;
 name|netisr_queue
 argument_list|(
 name|isr
