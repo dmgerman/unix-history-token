@@ -556,9 +556,10 @@ begin_function_decl
 name|struct
 name|tcptw
 modifier|*
-name|tcp_tw_2msl_reuse
+name|tcp_tw_2msl_scan
 parameter_list|(
-name|void
+name|int
+name|reuse
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -566,15 +567,6 @@ end_function_decl
 begin_comment
 comment|/* XXX temporary? */
 end_comment
-
-begin_function_decl
-name|void
-name|tcp_tw_2msl_scan
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

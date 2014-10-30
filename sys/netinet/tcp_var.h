@@ -1401,10 +1401,6 @@ argument|tcptw
 argument_list|)
 name|tw_2msl
 expr_stmt|;
-name|u_int
-name|tw_refcount
-decl_stmt|;
-comment|/* refcount */
 block|}
 struct|;
 end_struct
@@ -2755,10 +2751,8 @@ parameter_list|(
 name|struct
 name|tcptw
 modifier|*
-name|_tw
 parameter_list|,
 name|int
-name|_reuse
 parameter_list|)
 function_decl|;
 end_function_decl
