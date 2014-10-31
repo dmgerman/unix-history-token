@@ -1320,7 +1320,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_int, "I", descr);		\ 	CTASSERT(((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT);	\ 	CTASSERT(sizeof(int) == sizeof(*(ptr)))
+value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_int, "I", descr);		\ 	CTASSERT((((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT)&& \ 	    sizeof(int) == sizeof(*(ptr)))
 end_define
 
 begin_define
@@ -1379,7 +1379,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_int, "IU", descr);		\ 	CTASSERT(((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_UINT);\ 	CTASSERT(sizeof(unsigned) == sizeof(*(ptr)))
+value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_int, "IU", descr);		\ 	CTASSERT((((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_UINT)&& \ 	    sizeof(unsigned) == sizeof(*(ptr)))
 end_define
 
 begin_define
@@ -1438,7 +1438,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_LONG | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_long, "L", descr);		\ 	CTASSERT(((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_LONG);\ 	CTASSERT(sizeof(long) == sizeof(*(ptr)))
+value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_LONG | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_long, "L", descr);		\ 	CTASSERT((((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_LONG)&& \ 	    sizeof(long) == sizeof(*(ptr)))
 end_define
 
 begin_define
@@ -1495,7 +1495,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_ULONG | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_long, "LU", descr);			\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_ULONG);	\ 	CTASSERT(sizeof(unsigned long) == sizeof(*(ptr)))
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_ULONG | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_long, "LU", descr);			\ 	CTASSERT((((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_ULONG)&&	\ 	    sizeof(unsigned long) == sizeof(*(ptr)))
 end_define
 
 begin_define
@@ -1552,7 +1552,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_64, "Q", descr);		\ 	CTASSERT(((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S64);	\ 	CTASSERT(sizeof(int64_t) == sizeof(*(ptr)))
+value|SYSCTL_OID(parent, nbr, name,				\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),		\ 	    ptr, val, sysctl_handle_64, "Q", descr);		\ 	CTASSERT((((access)& CTLTYPE) == 0 ||			\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_S64)&& \ 	    sizeof(int64_t) == sizeof(*(ptr)))
 end_define
 
 begin_define
@@ -1605,7 +1605,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	     ptr, val, sysctl_handle_64, "QU", descr);			\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	CTASSERT(sizeof(uint64_t) == sizeof(*(ptr)))
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	     ptr, val, sysctl_handle_64, "QU", descr);			\ 	CTASSERT((((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64)&&	\ 	    sizeof(uint64_t) == sizeof(*(ptr)))
 end_define
 
 begin_define
@@ -1655,7 +1655,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|({									\ 	struct sysctl_oid *__ret;					\ 	CTASSERT(sizeof(uint64_t) == sizeof(*(ptr)) ||			\ 	    sizeof(unsigned) == sizeof(*(ptr)));			\ 	CTASSERT(((access)& CTLTYPE) == 0);				\ 	if (sizeof(uint64_t) == sizeof(*(ptr))) {			\ 		__ret = sysctl_add_oid(ctx, parent, nbr, name,		\ 		    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),		\ 		    (ptr), 0, sysctl_handle_64, "QU",			\ 		    __DESCR(descr));					\ 	} else {							\ 		__ret = sysctl_add_oid(ctx, parent, nbr, name,		\ 		    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),		\ 		    (ptr), 0, sysctl_handle_int, "IU",			\ 		    __DESCR(descr));					\ 	}								\ 	__ret;								\ })
+value|({									\ 	struct sysctl_oid *__ret;					\ 	CTASSERT((sizeof(uint64_t) == sizeof(*(ptr)) ||			\ 	    sizeof(unsigned) == sizeof(*(ptr)))&&			\ 	    ((access)& CTLTYPE) == 0);					\ 	if (sizeof(uint64_t) == sizeof(*(ptr))) {			\ 		__ret = sysctl_add_oid(ctx, parent, nbr, name,		\ 		    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),		\ 		    (ptr), 0, sysctl_handle_64, "QU",			\ 		    __DESCR(descr));					\ 	} else {							\ 		__ret = sysctl_add_oid(ctx, parent, nbr, name,		\ 		    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),		\ 		    (ptr), 0, sysctl_handle_int, "IU",			\ 		    __DESCR(descr));					\ 	}								\ 	__ret;								\ })
 end_define
 
 begin_comment
@@ -1680,7 +1680,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    (ptr), 0, sysctl_handle_counter_u64, "QU", descr);		\ 	CTASSERT(((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64);		\ 	CTASSERT(sizeof(counter_u64_t) == sizeof(*(ptr)));		\ 	CTASSERT(sizeof(uint64_t) == sizeof(**(ptr)))
+value|SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    (ptr), 0, sysctl_handle_counter_u64, "QU", descr);		\ 	CTASSERT((((access)& CTLTYPE) == 0 ||				\ 	    ((access)& SYSCTL_CT_ASSERT_MASK) == CTLTYPE_U64)&&	\ 	    sizeof(counter_u64_t) == sizeof(*(ptr))&&			\ 	    sizeof(uint64_t) == sizeof(**(ptr)))
 end_define
 
 begin_define
