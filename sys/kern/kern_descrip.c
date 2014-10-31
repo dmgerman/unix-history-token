@@ -1063,6 +1063,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -1129,6 +1135,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Mark a file descriptor as used.  */
@@ -8798,14 +8809,12 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|fdisused
-argument_list|(
-name|fdp
-argument_list|,
-name|i
-argument_list|)
+name|ofde
+operator|->
+name|fde_file
+operator|!=
+name|NULL
 operator|&&
-operator|(
 name|ofde
 operator|->
 name|fde_file
@@ -8815,16 +8824,6 @@ operator|->
 name|fo_flags
 operator|&
 name|DFLAG_PASSABLE
-operator|)
-operator|&&
-name|ofde
-operator|->
-name|fde_file
-operator|->
-name|f_ops
-operator|!=
-operator|&
-name|badfileops
 condition|)
 block|{
 name|nfde
