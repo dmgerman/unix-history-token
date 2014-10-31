@@ -247,8 +247,6 @@ end_decl_stmt
 begin_decl_stmt
 name|devclass_t
 name|usb_devclass_ptr
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 

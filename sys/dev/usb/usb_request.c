@@ -2927,11 +2927,6 @@ condition|)
 goto|goto
 name|done
 goto|;
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-endif|#
-directive|endif
 name|n
 operator|=
 literal|0
