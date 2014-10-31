@@ -466,6 +466,7 @@ begin_struct
 struct|struct
 name|cmdtab
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
