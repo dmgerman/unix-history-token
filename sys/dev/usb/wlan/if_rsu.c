@@ -467,7 +467,7 @@ name|RSU_DEV_HT
 argument_list|(
 name|EDIMAX
 argument_list|,
-name|RTL8192SU_3
+name|EW7622UMN
 argument_list|)
 block|,
 name|RSU_DEV_HT
