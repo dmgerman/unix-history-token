@@ -8212,12 +8212,14 @@ operator|<
 literal|0
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
 name|errno
-operator|==
-name|EPERM
 condition|)
+block|{
+case|case
+name|EPERM
+case|:
 name|err
 argument_list|(
 literal|1
@@ -8225,11 +8227,27 @@ argument_list|,
 literal|"writing to routing socket"
 argument_list|)
 expr_stmt|;
+case|case
+name|ESRCH
+case|:
+name|warnx
+argument_list|(
+literal|"route has not been found"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EEXIST
+case|:
+comment|/* Handled by newroute() */
+break|break;
+default|default:
 name|warn
 argument_list|(
 literal|"writing to routing socket"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 operator|-
