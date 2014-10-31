@@ -2065,6 +2065,7 @@ begin_function
 name|int
 name|fueword
 parameter_list|(
+specifier|volatile
 specifier|const
 name|void
 modifier|*
@@ -2115,6 +2116,7 @@ begin_function
 name|int
 name|fueword32
 parameter_list|(
+specifier|volatile
 specifier|const
 name|void
 modifier|*
@@ -2171,6 +2173,7 @@ begin_function
 name|int
 name|fueword64
 parameter_list|(
+specifier|volatile
 specifier|const
 name|void
 modifier|*
@@ -2355,6 +2358,7 @@ begin_function
 name|int32_t
 name|fuword32
 parameter_list|(
+specifier|volatile
 specifier|const
 name|void
 modifier|*
@@ -2403,6 +2407,7 @@ begin_function
 name|int64_t
 name|fuword64
 parameter_list|(
+specifier|volatile
 specifier|const
 name|void
 modifier|*
@@ -2454,6 +2459,7 @@ begin_function
 name|long
 name|fuword
 parameter_list|(
+specifier|volatile
 specifier|const
 name|void
 modifier|*
