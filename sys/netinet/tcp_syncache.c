@@ -6967,7 +6967,7 @@ name|TOF_SIGNATURE
 expr_stmt|;
 else|else
 block|{
-comment|/* 				 * We've got SCF_SIGNATURE flag 				 * inherited from listening socket, 				 * but to SADB key for given source 				 * address. Assume signature is not 				 * required and remove signature flag 				 * instead of silently dropping 				 * connection. 				 */
+comment|/* 				 * We've got SCF_SIGNATURE flag 				 * inherited from listening socket, 				 * but no SADB key for given source 				 * address. Assume signature is not 				 * required and remove signature flag 				 * instead of silently dropping 				 * connection. 				 */
 if|if
 condition|(
 name|locked
