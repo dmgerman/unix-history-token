@@ -5744,6 +5744,7 @@ name|env
 operator|!=
 name|NULL
 condition|)
+block|{
 name|strlcpy
 argument_list|(
 name|kernelname
@@ -5756,6 +5757,12 @@ name|kernelname
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|freeenv
+argument_list|(
+name|env
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|err_devmap
