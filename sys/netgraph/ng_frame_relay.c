@@ -493,6 +493,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|ERROUT
+parameter_list|(
+name|x
+parameter_list|)
+value|do { error = (x); goto done; } while (0)
+end_define
+
 begin_comment
 comment|/*  * Given a DLCI, return the index of the  context table entry for it,  * Allocating a new one if needs be, or -1 if none available.  */
 end_comment
@@ -1245,15 +1255,11 @@ name|ctxp
 operator|==
 name|NULL
 condition|)
-block|{
-name|error
-operator|=
+name|ERROUT
+argument_list|(
 name|ENETDOWN
+argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 comment|/* If coming from downstream, decode it to a channel */
 name|dlci
 operator|=
@@ -1324,15 +1330,11 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
-name|error
-operator|=
+name|ERROUT
+argument_list|(
 name|ENETDOWN
+argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 comment|/* Store the DLCI on the front of the packet */
 name|alen
 operator|=
@@ -1366,15 +1368,11 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
-name|error
-operator|=
+name|ERROUT
+argument_list|(
 name|ENOBUFS
+argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 name|data
 operator|=
 name|mtod
@@ -1632,7 +1630,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|bad
+name|done
 label|:
 name|NG_FREE_ITEM
 argument_list|(
@@ -1730,15 +1728,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|error
-operator|=
+name|ERROUT
+argument_list|(
 name|ENOBUFS
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|data
 operator|=
 name|mtod
@@ -1919,13 +1913,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|error
-operator|=
+name|ERROUT
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
 if|if
 condition|(
@@ -1933,15 +1925,11 @@ name|dlci
 operator|>
 literal|1023
 condition|)
-block|{
-name|error
-operator|=
+name|ERROUT
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|ctxnum
 operator|=
 name|sc
@@ -2010,7 +1998,7 @@ operator|=
 name|ENETDOWN
 expr_stmt|;
 block|}
-name|out
+name|done
 label|:
 name|NG_FREE_ITEM
 argument_list|(
