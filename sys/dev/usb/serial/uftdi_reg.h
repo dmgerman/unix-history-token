@@ -206,43 +206,44 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UFTDI_TYPE_MASK
-value|0x000000ff
+name|UFTDI_JTAG_IFACE
+parameter_list|(
+name|i
+parameter_list|)
+value|(1<< i)
 end_define
+
+begin_comment
+comment|/* Flag interface as jtag */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|UFTDI_TYPE_SIO
-value|0x00000001
+name|UFTDI_JTAG_IFACES_MAX
+value|8
 end_define
+
+begin_comment
+comment|/* Allow up to 8 jtag intfs */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|UFTDI_TYPE_8U232AM
-value|0x00000002
+name|UFTDI_JTAG_CHECK_STRING
+value|0xff
 end_define
+
+begin_comment
+comment|/* Check product names table */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|UFTDI_TYPE_AUTO
-value|(UFTDI_TYPE_SIO | UFTDI_TYPE_8U232AM)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UFTDI_FLAG_MASK
-value|0x0000ff00
-end_define
-
-begin_define
-define|#
-directive|define
-name|UFTDI_FLAG_JTAG
-value|0x00000100
+name|UFTDI_JTAG_MASK
+value|0xff
 end_define
 
 begin_comment
