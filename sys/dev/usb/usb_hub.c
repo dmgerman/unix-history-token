@@ -2529,10 +2529,6 @@ argument_list|,
 name|portno
 argument_list|)
 expr_stmt|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
 name|timeout
 operator|=
 literal|0

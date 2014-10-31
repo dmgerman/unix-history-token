@@ -3188,16 +3188,6 @@ name|ep_max
 operator|=
 name|temp
 expr_stmt|;
-comment|/* optimalisation */
-name|id
-operator|=
-operator|(
-expr|struct
-name|usb_interface_descriptor
-operator|*
-operator|)
-name|ed
-expr_stmt|;
 block|}
 block|}
 comment|/* NOTE: It is valid to have no interfaces and no endpoints! */

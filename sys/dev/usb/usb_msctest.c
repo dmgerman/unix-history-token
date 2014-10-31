@@ -3722,10 +3722,6 @@ operator|(
 name|USB_ERR_INVAL
 operator|)
 return|;
-name|err
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 name|method
@@ -3952,6 +3948,10 @@ literal|"Unknown eject method (%d)\n"
 argument_list|,
 name|method
 argument_list|)
+expr_stmt|;
+name|err
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 block|}
