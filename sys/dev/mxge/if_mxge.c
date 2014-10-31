@@ -6766,7 +6766,6 @@ literal|"firmware_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_version
@@ -6788,7 +6787,6 @@ literal|"serial_number"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|serial_number_string
@@ -6810,7 +6808,6 @@ literal|"product_code"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|product_code_string

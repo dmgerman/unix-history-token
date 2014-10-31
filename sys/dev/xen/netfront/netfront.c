@@ -2176,8 +2176,6 @@ name|OID_AUTO
 argument_list|,
 literal|"enable_lro"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

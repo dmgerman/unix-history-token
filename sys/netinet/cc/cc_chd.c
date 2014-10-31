@@ -2008,8 +2008,6 @@ name|OID_AUTO
 argument_list|,
 name|queue_min
 argument_list|,
-name|CTLTYPE_UINT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2034,8 +2032,6 @@ name|OID_AUTO
 argument_list|,
 name|use_max
 argument_list|,
-name|CTLTYPE_UINT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

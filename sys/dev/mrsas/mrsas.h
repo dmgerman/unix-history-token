@@ -1959,12 +1959,16 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-struct|struct
+union|union
 block|{
 specifier|volatile
 name|unsigned
 name|int
 name|val
+decl_stmt|;
+name|unsigned
+name|int
+name|val_rdonly
 decl_stmt|;
 block|}
 name|atomic_t
@@ -8793,7 +8797,7 @@ comment|//get ctlr info cmd physical addr
 name|u_int32_t
 name|max_sectors_per_req
 decl_stmt|;
-name|u_int8_t
+name|u_int32_t
 name|disableOnlineCtrlReset
 decl_stmt|;
 name|atomic_t

@@ -687,8 +687,6 @@ name|OID_AUTO
 argument_list|,
 name|cpu_features
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&

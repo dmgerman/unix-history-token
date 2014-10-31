@@ -26556,7 +26556,7 @@ name|QUEUE_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* Driver Statistics */
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -26572,8 +26572,6 @@ operator|&
 name|adapter
 operator|->
 name|link_irq
-argument_list|,
-literal|0
 argument_list|,
 literal|"Link MSIX IRQ Handled"
 argument_list|)
@@ -26910,6 +26908,8 @@ name|OID_AUTO
 argument_list|,
 literal|"interrupt_rate"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -26948,6 +26948,8 @@ name|OID_AUTO
 argument_list|,
 literal|"txd_head"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|adapter
@@ -26976,6 +26978,8 @@ name|OID_AUTO
 argument_list|,
 literal|"txd_tail"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|adapter
@@ -27044,6 +27048,8 @@ name|OID_AUTO
 argument_list|,
 literal|"rxd_head"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|adapter
@@ -27072,6 +27078,8 @@ name|OID_AUTO
 argument_list|,
 literal|"rxd_tail"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|adapter
@@ -28964,8 +28972,6 @@ name|OID_AUTO
 argument_list|,
 name|name
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 argument_list|,
 name|limit

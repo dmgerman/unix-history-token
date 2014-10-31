@@ -349,31 +349,7 @@ name|CTASSERT
 parameter_list|(
 name|x
 parameter_list|)
-value|_CTASSERT(x, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_CTASSERT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|__CTASSERT(x, y)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__CTASSERT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|typedef char __assert ## y[(x) ? 1 : -1]
+value|_Static_assert(x, "compile-time assertion failed")
 end_define
 
 begin_endif

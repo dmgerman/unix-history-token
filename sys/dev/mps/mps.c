@@ -6736,7 +6736,6 @@ literal|"firmware_version"
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_version

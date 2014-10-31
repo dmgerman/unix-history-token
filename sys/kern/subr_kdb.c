@@ -545,8 +545,6 @@ name|OID_AUTO
 argument_list|,
 name|break_to_debugger
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_TUN
@@ -581,8 +579,6 @@ name|OID_AUTO
 argument_list|,
 name|alt_break_to_debugger
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_TUN

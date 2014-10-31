@@ -824,7 +824,7 @@ name|g_class
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -848,7 +848,7 @@ name|g_geom
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -872,7 +872,7 @@ name|g_provider
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -896,7 +896,7 @@ name|g_consumer
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -920,7 +920,7 @@ name|g_bioq
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 sizeof|sizeof
 argument_list|(

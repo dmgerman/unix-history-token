@@ -14999,7 +14999,6 @@ literal|"Driver version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15026,7 +15025,6 @@ literal|"Serial number"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15053,7 +15051,6 @@ literal|"Part number"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15080,7 +15077,6 @@ literal|"Firmware version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15107,7 +15103,6 @@ literal|"Firmware date"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15134,7 +15129,6 @@ literal|"Link width"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15168,7 +15162,6 @@ literal|"Function mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15196,7 +15189,6 @@ literal|"Interrupt type"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15223,7 +15215,6 @@ literal|"VPath(s) opened"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15250,7 +15241,6 @@ literal|"Adapter Type"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15277,7 +15267,6 @@ literal|"pmd port 0"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15313,7 +15302,6 @@ literal|"pmd port 1"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15347,7 +15335,6 @@ literal|"Port Mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15382,7 +15369,6 @@ literal|"Port Failure"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15409,7 +15395,6 @@ literal|"L2 Switch"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15438,7 +15423,6 @@ literal|"LRO mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15465,7 +15449,6 @@ literal|"RTH mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15492,7 +15475,6 @@ literal|"TSO mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
