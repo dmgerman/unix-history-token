@@ -294,7 +294,7 @@ specifier|static
 name|int
 name|debug
 init|=
-literal|3
+literal|1
 decl_stmt|;
 end_decl_stmt
 
