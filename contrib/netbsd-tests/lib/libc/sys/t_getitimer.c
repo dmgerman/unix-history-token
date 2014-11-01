@@ -800,6 +800,34 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|ot
+operator|.
+name|it_value
+operator|.
+name|tv_sec
+operator|==
+literal|4
+operator|&&
+name|ot
+operator|.
+name|it_value
+operator|.
+name|tv_usec
+operator|==
+literal|3
+condition|)
+name|atf_tc_fail
+argument_list|(
+literal|"setitimer(2) did not return remaining time"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|ot
@@ -823,6 +851,8 @@ argument_list|(
 literal|"setitimer(2) did not store old values"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
