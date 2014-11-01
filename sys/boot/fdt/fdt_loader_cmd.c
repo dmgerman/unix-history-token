@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"fdt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"glue.h"
 end_include
 
