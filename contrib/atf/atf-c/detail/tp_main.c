@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Automated Testing Framework (atf)  *  * Copyright (c) 2008 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE  * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* Copyright (c) 2008 The NetBSD Foundation, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE  * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -15,7 +15,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"bconfig.h"
+file|"config.h"
 end_include
 
 begin_endif
@@ -62,6 +62,36 @@ end_include
 begin_include
 include|#
 directive|include
+file|"atf-c/detail/dynstr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"atf-c/detail/env.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"atf-c/detail/fs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"atf-c/detail/map.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"atf-c/detail/sanity.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"atf-c/error.h"
 end_include
 
@@ -81,36 +111,6 @@ begin_include
 include|#
 directive|include
 file|"atf-c/utils.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dynstr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"env.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"fs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sanity.h"
 end_include
 
 begin_if
@@ -1847,7 +1847,7 @@ condition|)
 block|{
 name|print_warning
 argument_list|(
-literal|"Running test cases without atf-run(1) is unsupported"
+literal|"Running test cases outside of kyua(1) is unsupported"
 argument_list|)
 expr_stmt|;
 name|print_warning
