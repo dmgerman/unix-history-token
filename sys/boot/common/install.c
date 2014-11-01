@@ -1245,9 +1245,9 @@ if|if
 condition|(
 name|file_loadraw
 argument_list|(
-literal|"mfs_root"
-argument_list|,
 name|s
+argument_list|,
+literal|"mfs_root"
 argument_list|)
 operator|==
 name|NULL
