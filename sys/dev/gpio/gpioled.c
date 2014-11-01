@@ -38,31 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/gpio.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kthread.h>
 end_include
 
 begin_include
@@ -104,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/gpio/gpiobusvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -121,13 +103,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<dev/led/led.h>
+file|<dev/gpio/gpiobusvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/gpio.h>
+file|<dev/led/led.h>
 end_include
 
 begin_include
