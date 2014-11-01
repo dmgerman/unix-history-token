@@ -2103,6 +2103,9 @@ argument_list|,
 name|fopen_perm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
@@ -2110,6 +2113,8 @@ argument_list|,
 name|fopen_regular
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp
