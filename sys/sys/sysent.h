@@ -805,6 +805,10 @@ name|sysent
 name|old_sysent
 decl_stmt|;
 comment|/* old sysent */
+name|int
+name|flags
+decl_stmt|;
+comment|/* flags for syscall_register */
 block|}
 struct|;
 end_struct

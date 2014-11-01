@@ -1590,7 +1590,9 @@ literal|0
 block|,
 name|NULL
 block|}
-block|}
+block|,
+name|SY_THR_STATIC_KLD
+block|, }
 decl_stmt|;
 end_decl_stmt
 

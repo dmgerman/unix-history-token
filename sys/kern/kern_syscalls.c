@@ -735,7 +735,9 @@ name|data
 operator|->
 name|old_sysent
 argument_list|,
-name|SY_THR_STATIC_KLD
+name|data
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
