@@ -143,6 +143,11 @@ decl_stmt|;
 name|size_t
 name|i
 decl_stmt|;
+name|atf_tc_skip
+argument_list|(
+literal|"screws up the test host's hostname on FreeBSD"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -175,12 +180,9 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 comment|/*  		 * Sanity checks to ensure that the wrong invariant isn't being 		 * tested for per PR # 181127 		 */
 name|ATF_REQUIRE_EQ
 argument_list|(
@@ -448,12 +450,9 @@ end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ATF_REQUIRE
 argument_list|(
 name|sethostname
