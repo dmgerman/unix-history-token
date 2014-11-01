@@ -61,6 +61,23 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NetBSD__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|ATF_TC
 argument_list|(
@@ -476,6 +493,19 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__NetBSD__
+name|atf_tc_expect_signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+literal|"some non-NetBSD platforms including FreeBSD don't validate "
+literal|"negative size; testcase blows up with SIGSEGV"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|snprintf
 argument_list|(
 name|fmt
