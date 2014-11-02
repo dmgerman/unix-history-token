@@ -106,11 +106,6 @@ name|pcb_flags
 decl_stmt|;
 define|#
 directive|define
-name|FP_SOFTFP
-value|0x01
-comment|/* process using software fltng pnt emulator */
-define|#
-directive|define
 name|PCB_DBREGS
 value|0x02
 comment|/* process using debug registers */

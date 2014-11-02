@@ -8060,16 +8060,6 @@ operator|~
 name|PCB_DBREGS
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize the math emulator (if any) for the current process. 	 * Actually, just clear the bit that says that the emulator has 	 * been initialized.  Initialization is delayed until the process 	 * traps to the emulator (if it is done at all) mainly because 	 * emulators don't provide an entry point for initialization. 	 */
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
-name|FP_SOFTFP
-expr_stmt|;
 name|pcb
 operator|->
 name|pcb_initial_npxcw
