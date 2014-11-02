@@ -1360,12 +1360,6 @@ name|physical
 operator||
 literal|1
 expr_stmt|;
-comment|/* invalidate the cache */
-name|AGP_FLUSH_TLB
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
