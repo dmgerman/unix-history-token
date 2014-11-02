@@ -2811,6 +2811,11 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
+name|AGP_FLUSH_TLB
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|VM_OBJECT_WLOCK
 argument_list|(
 name|mem
@@ -2872,11 +2877,6 @@ argument_list|(
 name|mem
 operator|->
 name|am_obj
-argument_list|)
-expr_stmt|;
-name|AGP_FLUSH_TLB
-argument_list|(
-name|dev
 argument_list|)
 expr_stmt|;
 name|mem
@@ -4498,6 +4498,21 @@ argument_list|(
 name|i
 argument_list|)
 index|]
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|wire_count
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"agp_bind_pages: page %p hasn't been wired"
+operator|,
+name|m
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Install entries in the GATT, making sure that if 		 * AGP_PAGE_SIZE< PAGE_SIZE and size is not 		 * aligned to PAGE_SIZE, we don't modify too many GATT  		 * entries. 		 */
 for|for
