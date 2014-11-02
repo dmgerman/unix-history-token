@@ -1740,14 +1740,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * First seed.  *  * NB! NB! NB!  * NB! NB! NB!  *  * It turns out this is bloody dangerous. I was fiddling with code elsewhere  * and managed to get conditions where a safe (i.e. seeded) entropy device should  * not have been possible. This managed to hide that by unblocking the device anyway.  * As crap randomness is not directly distinguishable from good randomness, this  * could have gone unnoticed for quite a while.  *  * NB! NB! NB!  * NB! NB! NB!  *  * Very luckily, the probe-time entropy is very nearly good enough to cause a  * first seed all of the time, and the default settings for other entropy  * harvesting causes a proper, safe, first seed (unblock) in short order after that.  *  * That said, the below would be useful where folks are more concerned with  * a quick start than with extra paranoia in a low-entropy environment.  *  * markm - October 2013.  */
+comment|/*  * Reseed the active adaptor shortly before starting init(8).  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RANDOM_AUTOSEED
-end_ifdef
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1811,25 +1805,16 @@ name|SYSINIT
 argument_list|(
 name|random_seed
 argument_list|,
-name|SI_SUB_INTRINSIC_POST
+name|SI_SUB_KTHREAD_INIT
 argument_list|,
-name|SI_ORDER_LAST
+name|SI_ORDER_FIRST
 argument_list|,
-name|random_adaptors_reseed
+name|random_adaptors_seed
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  RANDOM_AUTOSEED */
-end_comment
 
 end_unit
 
