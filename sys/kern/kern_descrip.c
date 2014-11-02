@@ -9866,11 +9866,6 @@ literal|"the fdtable should not be shared"
 operator|)
 argument_list|)
 expr_stmt|;
-name|FILEDESC_XLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -9926,6 +9921,11 @@ operator|)
 operator|)
 condition|)
 block|{
+name|FILEDESC_XLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|fdfree
 argument_list|(
 name|fdp
@@ -9950,18 +9950,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* closefp() drops the FILEDESC lock. */
-name|FILEDESC_XLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 block|}
 block|}
-name|FILEDESC_XUNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
