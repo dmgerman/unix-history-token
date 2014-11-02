@@ -4224,12 +4224,6 @@ argument_list|,
 name|vd
 argument_list|)
 expr_stmt|;
-name|vd
-operator|->
-name|vd_keyboard
-operator|=
-name|idx0
-expr_stmt|;
 if|if
 condition|(
 name|idx0
@@ -4427,6 +4421,12 @@ operator|)
 return|;
 block|}
 block|}
+name|vd
+operator|->
+name|vd_keyboard
+operator|=
+name|idx0
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|20
