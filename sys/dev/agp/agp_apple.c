@@ -879,37 +879,16 @@ index|]
 operator|=
 name|physical
 expr_stmt|;
-asm|__asm __volatile("dcbst 0,%0; sync" ::
-literal|"r"
-operator|(
-operator|&
-name|sc
-operator|->
-name|gatt
-operator|->
-name|ag_virtual
-index|[
-name|offset
-operator|>>
-name|AGP_PAGE_SHIFT
-index|]
-operator|)
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|agp_apple_unbind_page
 parameter_list|(
@@ -960,37 +939,16 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-asm|__asm __volatile("dcbst 0,%0; sync" ::
-literal|"r"
-operator|(
-operator|&
-name|sc
-operator|->
-name|gatt
-operator|->
-name|ag_virtual
-index|[
-name|offset
-operator|>>
-name|AGP_PAGE_SHIFT
-index|]
-operator|)
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|void
 name|agp_apple_flush_tlb
 parameter_list|(

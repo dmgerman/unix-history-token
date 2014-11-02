@@ -140,6 +140,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_param.h>
 end_include
 
@@ -294,30 +306,6 @@ end_decl_stmt
 begin_comment
 comment|/* Helper functions for implementing chipset mini drivers. */
 end_comment
-
-begin_function
-name|void
-name|agp_flush_cache
-parameter_list|()
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-name|wbinvd
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
 
 begin_function
 name|u_int8_t
@@ -613,8 +601,14 @@ name|gatt
 operator|->
 name|ag_virtual
 operator|=
-name|contigmalloc
+operator|(
+name|void
+operator|*
+operator|)
+name|kmem_alloc_contig
 argument_list|(
+name|kernel_arena
+argument_list|,
 name|entries
 operator|*
 sizeof|sizeof
@@ -622,9 +616,9 @@ argument_list|(
 name|u_int32_t
 argument_list|)
 argument_list|,
-name|M_AGP
-argument_list|,
-literal|0
+name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|,
 literal|0
 argument_list|,
@@ -634,6 +628,8 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|,
 literal|0
+argument_list|,
+name|VM_MEMATTR_WRITE_COMBINING
 argument_list|)
 expr_stmt|;
 if|if
@@ -666,20 +662,6 @@ return|return
 literal|0
 return|;
 block|}
-name|bzero
-argument_list|(
-name|gatt
-operator|->
-name|ag_virtual
-argument_list|,
-name|entries
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_int32_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|gatt
 operator|->
 name|ag_physical
@@ -693,9 +675,6 @@ name|gatt
 operator|->
 name|ag_virtual
 argument_list|)
-expr_stmt|;
-name|agp_flush_cache
-argument_list|()
 expr_stmt|;
 return|return
 name|gatt
@@ -713,8 +692,13 @@ modifier|*
 name|gatt
 parameter_list|)
 block|{
-name|contigfree
+name|kmem_free
 argument_list|(
+name|kernel_arena
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|gatt
 operator|->
 name|ag_virtual
@@ -727,8 +711,6 @@ sizeof|sizeof
 argument_list|(
 name|u_int32_t
 argument_list|)
-argument_list|,
-name|M_AGP
 argument_list|)
 expr_stmt|;
 name|free
@@ -1138,9 +1120,6 @@ name|sc
 operator|->
 name|as_lock
 argument_list|)
-expr_stmt|;
-name|agp_flush_cache
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2621,10 +2600,6 @@ operator|->
 name|am_obj
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Flush the cpu cache since we are providing a new mapping 	 * for these pages. 	 */
-name|agp_flush_cache
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Make sure the chipset gets the new mappings. 	 */
 name|AGP_FLUSH_TLB
 argument_list|(
@@ -2898,9 +2873,6 @@ name|mem
 operator|->
 name|am_obj
 argument_list|)
-expr_stmt|;
-name|agp_flush_cache
-argument_list|()
 expr_stmt|;
 name|AGP_FLUSH_TLB
 argument_list|(
@@ -4639,9 +4611,6 @@ return|;
 block|}
 block|}
 block|}
-name|agp_flush_cache
-argument_list|()
-expr_stmt|;
 name|AGP_FLUSH_TLB
 argument_list|(
 name|dev
@@ -4753,9 +4722,6 @@ name|offset
 operator|+
 name|i
 argument_list|)
-expr_stmt|;
-name|agp_flush_cache
-argument_list|()
 expr_stmt|;
 name|AGP_FLUSH_TLB
 argument_list|(
