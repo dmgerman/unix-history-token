@@ -2783,6 +2783,8 @@ operator|||
 name|LK_CAN_SHARE
 argument_list|(
 name|x
+argument_list|,
+name|flags
 argument_list|)
 operator|!=
 literal|0
