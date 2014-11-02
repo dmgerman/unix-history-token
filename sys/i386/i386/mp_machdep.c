@@ -3057,7 +3057,9 @@ argument_list|()
 expr_stmt|;
 comment|/* set up FPU state on the AP */
 name|npxinit
-argument_list|()
+argument_list|(
+name|false
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6198,7 +6200,6 @@ condition|)
 block|{
 name|npxsuspend
 argument_list|(
-operator|&
 name|susppcbs
 index|[
 name|cpu
@@ -6223,7 +6224,6 @@ else|else
 block|{
 name|npxresume
 argument_list|(
-operator|&
 name|susppcbs
 index|[
 name|cpu
