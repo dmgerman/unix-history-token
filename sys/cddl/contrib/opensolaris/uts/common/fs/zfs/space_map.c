@@ -71,6 +71,14 @@ directive|include
 file|<sys/zfeature.h>
 end_include
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * The data for a given space map can be kept on blocks of any size.  * Larger blocks entail fewer i/o operations, but they also cause the  * DMU to keep more data in-core, and also to waste more i/o bandwidth  * when only a few blocks have changed since the last transaction group.  */
 end_comment
@@ -86,6 +94,27 @@ literal|12
 operator|)
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|space_map_blksz
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|space_map_blksz
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum block size for space map.  Must be power of 2 and greater than 4096."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Load the space map disk into the specified range tree. Segments of maptype  * are added to the range tree, other segment types are removed.  *  * Note: space_map_load() will drop sm_lock across dmu_read() calls.  * The caller must be OK with this.  */
