@@ -4419,12 +4419,10 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|NG_NODE_NAME
+name|NG_NODE_HAS_NAME
 argument_list|(
 name|node
 argument_list|)
-operator|!=
-name|NULL
 condition|)
 name|snprintf
 argument_list|(
