@@ -186,7 +186,7 @@ name|OID_AUTO
 argument_list|,
 name|nfs_privport
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|nfs_privport
@@ -216,7 +216,7 @@ name|OID_AUTO
 argument_list|,
 name|server_min_nfsvers
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|nfs_minvers
@@ -246,7 +246,7 @@ name|OID_AUTO
 argument_list|,
 name|server_max_nfsvers
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|nfs_maxvers
