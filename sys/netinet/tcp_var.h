@@ -577,6 +577,14 @@ name|t_tsomax
 decl_stmt|;
 comment|/* TSO total burst length limit in bytes */
 name|u_int
+name|t_tsomaxsegcount
+decl_stmt|;
+comment|/* TSO maximum segment count */
+name|u_int
+name|t_tsomaxsegsize
+decl_stmt|;
+comment|/* TSO maximum segment size in bytes */
+name|u_int
 name|t_pmtud_saved_maxopd
 decl_stmt|;
 comment|/* pre-blackhole MSS */
@@ -587,18 +595,10 @@ comment|/* More tcpcb flags storage */
 name|uint32_t
 name|t_ispare
 index|[
-literal|6
+literal|8
 index|]
 decl_stmt|;
-comment|/* 5 UTO, 1 TBD */
-name|uint32_t
-name|t_tsomaxsegcount
-decl_stmt|;
-comment|/* TSO maximum segment count */
-name|uint32_t
-name|t_tsomaxsegsize
-decl_stmt|;
-comment|/* TSO maximum segment size in bytes */
+comment|/* 5 UTO, 3 TBD */
 name|void
 modifier|*
 name|t_pspare2
