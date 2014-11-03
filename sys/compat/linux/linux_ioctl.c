@@ -9413,7 +9413,7 @@ name|SOUND_MIXER_INFO
 expr_stmt|;
 return|return
 operator|(
-name|sys_ioctl
+name|ioctl
 argument_list|(
 name|td
 argument_list|,
