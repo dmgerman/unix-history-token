@@ -332,6 +332,10 @@ name|CTL_CMD_FLAG_ALLOW_ON_RESV
 init|=
 literal|0x0040
 block|,
+name|CTL_CMD_FLAG_ALLOW_ON_PR_WRESV
+init|=
+literal|0x0080
+block|,
 name|CTL_CMD_FLAG_OK_ON_PROC
 init|=
 literal|0x0100
