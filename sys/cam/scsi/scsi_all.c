@@ -8649,9 +8649,8 @@ literal|0x27
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | ENOSPC
 argument_list|,
-comment|/* XXX TBD */
 literal|"Space allocation failed write protect"
 argument_list|)
 block|}
