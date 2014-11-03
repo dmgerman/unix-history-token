@@ -994,6 +994,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|use_xsave
@@ -1005,6 +1011,11 @@ name|uint64_t
 name|xsave_mask
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1021,6 +1032,12 @@ modifier|*
 name|npx_initialstate
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
 
 begin_struct
 struct|struct
@@ -1044,6 +1061,11 @@ name|int
 name|use_xsaveopt
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1310,8 +1332,14 @@ operator|)
 return|;
 end_return
 
-begin_comment
+begin_ifdef
 unit|}
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
+
+begin_comment
 comment|/*  * Enable XSAVE if supported and allowed by user.  * Calculate the xsave_mask.  */
 end_comment
 
@@ -1502,8 +1530,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Calculate the fpu save area size.  */
+comment|/*   * Calculate the fpu save area size.  */
 end_comment
 
 begin_function
@@ -1514,6 +1547,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|u_int
 name|cp
 index|[
@@ -1558,6 +1594,8 @@ index|]
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 name|cpu_max_ext_state_size
 operator|=
 sizeof|sizeof
@@ -1589,9 +1627,14 @@ decl_stmt|;
 name|register_t
 name|saveintr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|u_int
 name|mxcsr
 decl_stmt|;
+endif|#
+directive|endif
 name|u_short
 name|control
 decl_stmt|;
@@ -1607,10 +1650,18 @@ name|npx_probe
 argument_list|()
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|npxinit_bsp1
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -1632,6 +1683,8 @@ name|xsave_mask
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* 	 * XCR0 shall be set up before CPU can report the save area size. 	 */
 if|if
 condition|(
@@ -1726,6 +1779,9 @@ block|{
 name|register_t
 name|saveintr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|int
 name|cp
 index|[
@@ -1736,6 +1792,8 @@ name|i
 decl_stmt|,
 name|max_ext_n
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1860,6 +1918,9 @@ name|sv_ac
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 comment|/* 	 * Create a table describing the layout of the CPU Extended 	 * Save Area. 	 */
 if|if
 condition|(
@@ -2001,6 +2062,8 @@ index|]
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|fpu_save_area_zone
 operator|=
 name|uma_zcreate
@@ -3052,6 +3115,9 @@ block|{
 name|stop_emulating
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsaveopt
@@ -3068,6 +3134,8 @@ name|xsave_mask
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|fpusave
 argument_list|(
 name|addr
@@ -3284,6 +3352,9 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|uint64_t
 modifier|*
 name|xstate_bv
@@ -3298,7 +3369,10 @@ name|int
 name|max_ext_n
 decl_stmt|,
 name|i
-decl_stmt|,
+decl_stmt|;
+endif|#
+directive|endif
+name|int
 name|owned
 decl_stmt|;
 if|if
@@ -3415,6 +3489,9 @@ block|}
 name|critical_exit
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 if|if
 condition|(
 name|use_xsave
@@ -3562,6 +3639,8 @@ name|bit
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|owned
@@ -3612,6 +3691,12 @@ name|PCB_NPXUSERINITDONE
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
 
 begin_function
 name|int
@@ -3795,6 +3880,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|npxsetregs
@@ -3822,9 +3912,14 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|int
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3859,6 +3954,9 @@ name|pcb
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|error
 operator|=
 name|npxsetxstate
@@ -3886,9 +3984,6 @@ name|error
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
 if|if
 condition|(
 operator|!
@@ -3941,6 +4036,9 @@ block|{
 name|critical_exit
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 name|error
 operator|=
 name|npxsetxstate
@@ -3963,6 +4061,8 @@ operator|(
 name|error
 operator|)
 return|;
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 name|addr
