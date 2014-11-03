@@ -637,10 +637,18 @@ comment|/* 4 TBD */
 name|uint64_t
 name|_pad
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
-comment|/* 6 TBD (1-2 CC/RTT?) */
+comment|/* 5 TBD (1-2 CC/RTT?) */
+name|uint32_t
+name|t_tsomaxsegcount
+decl_stmt|;
+comment|/* TSO maximum segment count */
+name|uint32_t
+name|t_tsomaxsegsize
+decl_stmt|;
+comment|/* TSO maximum segment size in bytes */
 block|}
 struct|;
 end_struct
@@ -1304,6 +1312,12 @@ name|ifcap
 decl_stmt|;
 name|u_int
 name|tsomax
+decl_stmt|;
+name|u_int
+name|tsomaxsegcount
+decl_stmt|;
+name|u_int
+name|tsomaxsegsize
 decl_stmt|;
 block|}
 struct|;
