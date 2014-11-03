@@ -832,7 +832,7 @@ name|u_int
 name|if_hw_tsomax
 decl_stmt|;
 comment|/* TSO total burst length 					 * limit in bytes. A value of 					 * zero means no limit. Have 					 * to find a better place for 					 * it eventually. */
-comment|/* TSO fields for segment limits. If a field is zero below, there is no limit. */
+comment|/* 	 * TSO fields for segment limits. If a field below is zero, 	 * there is no TSO segment limit. 	 */
 name|u_int
 name|if_hw_tsomaxsegcount
 decl_stmt|;
