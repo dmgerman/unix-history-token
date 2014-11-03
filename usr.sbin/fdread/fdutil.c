@@ -410,6 +410,9 @@ name|fd_types_288m
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 if|#
 directive|if
 literal|0
@@ -444,6 +447,9 @@ block|{
 name|FDF_3_720
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* !PC98 */
 block|{
 literal|0
 block|,
@@ -484,12 +490,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|PC98
-if|#
-directive|if
-literal|0
-block|{ FDF_3_1722 }, 	{ FDF_3_1476 },
-endif|#
-directive|endif
 block|{
 name|FDF_3_1440
 block|}
@@ -498,12 +498,6 @@ block|{
 name|FDF_3_1200
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ FDF_3_820 }, 	{ FDF_3_800 },
-endif|#
-directive|endif
 block|{
 name|FDF_3_720
 block|}
@@ -520,12 +514,6 @@ block|{
 name|FDF_3_1230
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ FDF_3_1280 }, 	{ FDF_3_1480 }, 	{ FDF_3_1640 },
-endif|#
-directive|endif
 block|{
 literal|0
 block|,
@@ -627,12 +615,6 @@ block|{
 name|FDF_5_1200
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ FDF_5_820 }, 	{ FDF_5_800 },
-endif|#
-directive|endif
 block|{
 name|FDF_5_720
 block|}
@@ -649,12 +631,6 @@ block|{
 name|FDF_5_1230
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ FDF_5_1280 },
-endif|#
-directive|endif
 block|{
 literal|0
 block|,
@@ -759,10 +735,15 @@ name|fd_types_720k
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 block|{
 name|FDF_3_720
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
@@ -800,10 +781,15 @@ name|fd_types_360k
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 block|{
 name|FDF_5_360
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
