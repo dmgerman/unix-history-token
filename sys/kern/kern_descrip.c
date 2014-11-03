@@ -239,6 +239,12 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -8639,18 +8645,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Certain daemons might not have file descriptors. */
-if|if
-condition|(
+name|MPASS
+argument_list|(
 name|fdp
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|newfdp
 operator|=
 name|fdinit
@@ -9274,7 +9275,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Certain daemons might not have file descriptors. */
 name|fdp
 operator|=
 name|td
@@ -9283,13 +9283,13 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-if|if
-condition|(
+name|MPASS
+argument_list|(
 name|fdp
-operator|==
+operator|!=
 name|NULL
-condition|)
-return|return;
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
