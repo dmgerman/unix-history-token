@@ -1326,6 +1326,9 @@ name|children
 decl_stmt|,
 name|bus
 decl_stmt|;
+name|bool
+name|nostop
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1386,6 +1389,13 @@ argument_list|(
 name|children
 argument_list|,
 name|M_TEMP
+argument_list|)
+expr_stmt|;
+name|nostop
+operator|=
+name|iicbus_get_nostop
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 for|for
@@ -1556,7 +1566,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|msgs
 index|[
@@ -1567,7 +1576,27 @@ name|flags
 operator|&
 name|IIC_M_NOSTOP
 operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|nostop
+operator|&&
+name|i
+operator|+
+literal|1
+operator|<
+name|nmsgs
+operator|)
 condition|)
+block|{
+name|rpstart
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Next message gets repeated start */
+block|}
+else|else
 block|{
 name|rpstart
 operator|=
@@ -1578,14 +1607,6 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|rpstart
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Next message gets repeated start */
 block|}
 block|}
 return|return
