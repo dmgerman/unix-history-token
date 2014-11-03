@@ -239,12 +239,6 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/kdb.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
