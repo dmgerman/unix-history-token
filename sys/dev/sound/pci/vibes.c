@@ -3752,11 +3752,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|500000
 if|if
 condition|(
 name|pci_get_powerstate
@@ -3788,8 +3783,6 @@ name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|sc
 operator|->
 name|enh_rid

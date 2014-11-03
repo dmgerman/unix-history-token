@@ -14191,24 +14191,8 @@ literal|"pcm"
 block|,
 name|envy24_methods
 block|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|500000
 name|PCM_SOFTC_SIZE
-block|,
-else|#
-directive|else
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snddev_info
-argument_list|)
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
