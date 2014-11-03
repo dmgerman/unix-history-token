@@ -338,6 +338,26 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ifnet_hw_tsomax
+block|{
+name|u_int
+name|tsomaxbytes
+decl_stmt|;
+comment|/* TSO total burst length limit in bytes */
+name|u_int
+name|tsomaxsegcount
+decl_stmt|;
+comment|/* TSO maximum segment count */
+name|u_int
+name|tsomaxsegsize
+decl_stmt|;
+comment|/* TSO maximum segment size in bytes */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Structure defining a network interface.  *  * (Would like to call this struct ``if'', but C isn't PL/1.)  */
 end_comment
@@ -725,7 +745,7 @@ comment|/* if_type at time of allocation */
 name|u_int
 name|if_hw_tsomax
 decl_stmt|;
-comment|/* tso burst length limit, the minimum 					 * is (IP_MAXPACKET / 8). 					 * XXXAO: Have to find a better place 					 * for it eventually. */
+comment|/* TSO total burst length 					 * limit in bytes. A value of 					 * zero means no limit. Have 					 * to find a better place for 					 * it eventually. */
 comment|/* 	 * Spare fields are added so that we can modify sensitive data 	 * structures without changing the kernel binary interface, and must 	 * be used with care where binary compatibility is required. 	 */
 name|char
 name|if_cspare
@@ -736,9 +756,18 @@ decl_stmt|;
 name|int
 name|if_ispare
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
+comment|/* 	 * TSO fields for segment limits. If a field is zero below, 	 * there is no limit: 	 */
+name|u_int
+name|if_hw_tsomaxsegcount
+decl_stmt|;
+comment|/* TSO maximum segment count */
+name|u_int
+name|if_hw_tsomaxsegsize
+decl_stmt|;
+comment|/* TSO maximum segment size in bytes */
 name|void
 modifier|*
 name|if_pspare
@@ -4260,6 +4289,40 @@ end_endif
 begin_comment
 comment|/* DEVICE_POLLING */
 end_comment
+
+begin_comment
+comment|/* TSO */
+end_comment
+
+begin_function_decl
+name|void
+name|if_hw_tsomax_common
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet_hw_tsomax
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|if_hw_tsomax_update
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet_hw_tsomax
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

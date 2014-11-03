@@ -1000,14 +1000,6 @@ name|VMXNET3_TX_MAXSIZE
 value|(VMXNET3_TX_MAXSEGS * MCLBYTES)
 end_define
 
-begin_define
-define|#
-directive|define
-name|VMXNET3_TSO_MAXSIZE
-define|\
-value|(VMXNET3_TX_MAXSIZE - sizeof(struct ether_vlan_header))
-end_define
-
 begin_comment
 comment|/*  * Maximum support Tx segments size. The length field in the  * Tx descriptor is 14 bits.  */
 end_comment

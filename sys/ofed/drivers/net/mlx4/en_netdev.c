@@ -10915,14 +10915,32 @@ name|IFCAP_TSO6
 operator||
 name|IFCAP_VLAN_HWTSO
 expr_stmt|;
-if|#
-directive|if
-literal|0
 comment|/* set TSO limits so that we don't have to drop TX packets */
-block|dev->if_hw_tsomax = 65536 - (ETHER_HDR_LEN + ETHER_VLAN_ENCAP_LEN); 	dev->if_hw_tsomaxsegcount = 16; 	dev->if_hw_tsomaxsegsize = 65536;
+name|dev
+operator|->
+name|if_hw_tsomax
+operator|=
+literal|65536
+operator|-
+operator|(
+name|ETHER_HDR_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
+operator|)
+expr_stmt|;
+name|dev
+operator|->
+name|if_hw_tsomaxsegcount
+operator|=
+literal|16
+expr_stmt|;
+name|dev
+operator|->
+name|if_hw_tsomaxsegsize
+operator|=
+literal|65536
+expr_stmt|;
 comment|/* XXX can do up to 4GByte */
-endif|#
-directive|endif
 name|dev
 operator|->
 name|if_capenable

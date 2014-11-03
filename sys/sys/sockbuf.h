@@ -1012,6 +1012,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sbsndmbuf
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|u_int
+name|off
+parameter_list|,
+name|u_int
+modifier|*
+name|moff
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sbtoxsockbuf
 parameter_list|(
