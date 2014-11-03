@@ -1597,7 +1597,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|/* 	 * If we are no longer processing the command list and nothing 	 * is in-flight, clear the running bit. 	 */
+comment|/* 	 * If we are no longer processing the command list and nothing 	 * is in-flight, clear the running bit, the current command 	 * slot, the command issue and active bits. 	 */
 if|if
 condition|(
 operator|!
@@ -1618,6 +1618,7 @@ name|pending
 operator|==
 literal|0
 condition|)
+block|{
 name|p
 operator|->
 name|cmd
@@ -1629,6 +1630,19 @@ operator||
 name|AHCI_P_CMD_CCS_MASK
 operator|)
 expr_stmt|;
+name|p
+operator|->
+name|ci
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|sact
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
