@@ -359,6 +359,25 @@ argument_list|,
 name|connector_name
 argument_list|)
 expr_stmt|;
+name|DRM_INFO
+argument_list|(
+literal|"Connector %s: get mode from tunables:\n"
+argument_list|,
+name|connector_name
+argument_list|)
+expr_stmt|;
+name|DRM_INFO
+argument_list|(
+literal|"  - %s\n"
+argument_list|,
+name|tunable
+argument_list|)
+expr_stmt|;
+name|DRM_INFO
+argument_list|(
+literal|"  - kern.vt.fb.default_mode\n"
+argument_list|)
+expr_stmt|;
 operator|*
 name|option
 operator|=
