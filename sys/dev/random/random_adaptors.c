@@ -1073,27 +1073,6 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-name|sx_assert
-argument_list|(
-operator|&
-name|random_adaptors_lock
-argument_list|,
-name|SA_LOCKED
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|random_adaptor
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"No active random adaptor in %s"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
