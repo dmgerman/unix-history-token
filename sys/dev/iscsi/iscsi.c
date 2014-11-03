@@ -1234,7 +1234,7 @@ name|bhslr
 decl_stmt|;
 name|request
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|is
 operator|->
@@ -2500,7 +2500,7 @@ condition|)
 return|return;
 name|request
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|is
 operator|->
@@ -3236,7 +3236,7 @@ expr_stmt|;
 block|}
 name|request
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|response
 operator|->
@@ -5112,7 +5112,7 @@ return|return;
 block|}
 name|request
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|response
 operator|->
@@ -6975,7 +6975,7 @@ block|}
 block|}
 name|ip
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|is
 operator|->
@@ -9369,7 +9369,7 @@ return|return;
 block|}
 name|request
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|is
 operator|->
@@ -9640,7 +9640,7 @@ endif|#
 directive|endif
 name|request
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|is
 operator|->

@@ -977,7 +977,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|request
 operator|->
@@ -4509,7 +4509,7 @@ condition|)
 return|return;
 name|cp
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|cs
 operator|->
@@ -7495,7 +7495,7 @@ condition|)
 continue|continue;
 name|response
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|cs
 operator|->
@@ -7735,7 +7735,7 @@ condition|)
 continue|continue;
 name|response
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|cs
 operator|->
@@ -8619,7 +8619,7 @@ block|}
 block|}
 name|ip
 operator|=
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 argument_list|(
 name|cs
 operator|->
