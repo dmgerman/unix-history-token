@@ -8394,14 +8394,6 @@ operator|->
 name|lun_softc_mtx
 argument_list|)
 expr_stmt|;
-name|ctlfe_onoffline
-argument_list|(
-name|arg
-argument_list|,
-comment|/*online*/
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 name|xpt_path_unlock
 argument_list|(
