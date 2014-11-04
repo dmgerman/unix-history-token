@@ -7612,11 +7612,6 @@ name|namedobj_instance
 modifier|*
 name|ni
 decl_stmt|;
-name|struct
-name|table_config
-modifier|*
-name|tc
-decl_stmt|;
 if|if
 condition|(
 name|sd
@@ -7756,9 +7751,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|tc
-operator|=
 name|find_table
 argument_list|(
 name|ni
@@ -7766,7 +7758,6 @@ argument_list|,
 operator|&
 name|ti
 argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)
