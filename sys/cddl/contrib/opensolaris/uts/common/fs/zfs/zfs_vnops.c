@@ -11905,6 +11905,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* FreeBSD: Reset chflags(2) flags. */
+name|vap
+operator|->
+name|va_filerev
+operator|=
+name|zp
+operator|->
+name|z_seq
+expr_stmt|;
 comment|/* 	 * Add in any requested optional attributes and the create time. 	 * Also set the corresponding bits in the returned attribute bitmap. 	 */
 if|if
 condition|(
