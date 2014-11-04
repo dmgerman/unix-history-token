@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: t_fpsetmask.c,v 1.13 2014/02/09 21:26:07 jmmv Exp $ */
+comment|/*	$NetBSD: t_fpsetmask.c,v 1.14 2014/11/04 00:20:19 justin Exp $ */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<atf-c.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<atf-c/config.h>
 end_include
 
 begin_include
