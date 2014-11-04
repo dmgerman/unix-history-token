@@ -1024,7 +1024,6 @@ name|char
 modifier|*
 name|list
 decl_stmt|;
-comment|/* the biggest memory array is the second group of pages */
 name|vm_paddr_t
 name|end
 decl_stmt|;
