@@ -8227,6 +8227,7 @@ argument_list|,
 literal|"writing to routing socket"
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|ESRCH
 case|:
