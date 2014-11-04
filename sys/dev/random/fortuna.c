@@ -3,6 +3,10 @@ begin_comment
 comment|/*-  * Copyright (c) 2013-2014 Mark R V Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
+begin_comment
+comment|/* This implementation of Fortuna is based on the descriptions found in  * ISBN 0-471-22357-3 "Practical Cryptography" by Ferguson and Schneier  * ("K&S").  *  * The above book is superceded by ISBN 978-0-470-47424-2 "Cryptography  * Engineering" by Ferguson, Schneier and Kohno ("FS&K").  *  * This code has not yet caught up with FS&K, but differences are not  * expected to be complex.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -874,11 +878,6 @@ name|hash
 index|[
 name|KEYSIZE
 index|]
-decl_stmt|,
-name|temp
-index|[
-name|KEYSIZE
-index|]
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -906,13 +905,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* F&S - temp = H(K|s) */
+comment|/* F&S - K = Hd(K|s) where Hd(m) is H(H(m)) */
 name|randomdev_hash_init
 argument_list|(
 operator|&
 name|context
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* FS&K defines Hd(m) as H(H(0^512|m)) */
+block|randomdev_hash_iterate(&context, zero_region, KEYSIZE);
+endif|#
+directive|endif
 name|randomdev_hash_iterate
 argument_list|(
 operator|&
@@ -946,10 +952,9 @@ argument_list|(
 operator|&
 name|context
 argument_list|,
-name|temp
+name|hash
 argument_list|)
 expr_stmt|;
-comment|/* F&S - hash = H(temp) */
 name|randomdev_hash_init
 argument_list|(
 operator|&
@@ -961,7 +966,7 @@ argument_list|(
 operator|&
 name|context
 argument_list|,
-name|temp
+name|hash
 argument_list|,
 name|KEYSIZE
 argument_list|)
@@ -974,7 +979,6 @@ argument_list|,
 name|hash
 argument_list|)
 expr_stmt|;
-comment|/* F&S - K = hash */
 name|randomdev_encrypt_init
 argument_list|(
 operator|&
@@ -982,19 +986,7 @@ name|fortuna_state
 operator|.
 name|key
 argument_list|,
-name|temp
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|temp
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
+name|hash
 argument_list|)
 expr_stmt|;
 name|memset
