@@ -119,6 +119,17 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_skip
+argument_list|(
+literal|"does not fail as expected (may be implementation "
+literal|"specific issue with the test)"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* XXX implementation detail knowledge (wchar_t encoding) */
 name|wchar_t
 name|ibuf
@@ -137,20 +148,6 @@ argument_list|,
 literal|"zh_TW.Big5"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|atf_tc_expect_fail
-argument_list|(
-literal|"does not fail as expected (may be implementation "
-literal|"specific issue with the test)"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ATF_REQUIRE_ERRNO
 argument_list|(
 name|EILSEQ
@@ -218,6 +215,17 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|atf_tc_skip
+argument_list|(
+literal|"does not fail as expected (may be implementation "
+literal|"specific issue with the test)"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* XXX implementation detail knowledge (wchar_t encoding) */
 name|wchar_t
 name|ibuf
@@ -242,20 +250,6 @@ argument_list|,
 literal|"zh_TW.Big5"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|atf_tc_expect_fail
-argument_list|(
-literal|"does not fail as expected (may be implementation "
-literal|"specific issue with the test)"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ATF_REQUIRE_ERRNO
 argument_list|(
 name|EILSEQ
@@ -759,12 +753,9 @@ argument_list|,
 literal|"zh_TW.Big5"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_expect_fail
 argument_list|(
 literal|"does not return WEOF as expected"
