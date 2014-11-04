@@ -2765,10 +2765,7 @@ name|outfile
 condition|)
 name|savefile
 operator|=
-name|ftp_strdup
-argument_list|(
 name|outfile
-argument_list|)
 expr_stmt|;
 else|else
 block|{
@@ -2881,20 +2878,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|savefile
-argument_list|,
-literal|"-"
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-operator|*
-name|savefile
-operator|!=
-literal|'|'
-operator|&&
 name|stat
 argument_list|(
 name|savefile
@@ -5478,6 +5461,14 @@ block|}
 block|}
 comment|/* end of ftp:// or http:// specific setup */
 comment|/* Open the output file. */
+comment|/* 	 * Only trust filenames with special meaning if they came from 	 * the command line 	 */
+if|if
+condition|(
+name|outfile
+operator|==
+name|savefile
+condition|)
+block|{
 if|if
 condition|(
 name|strcmp
@@ -5549,7 +5540,13 @@ operator|=
 name|pclose
 expr_stmt|;
 block|}
-else|else
+block|}
+if|if
+condition|(
+name|fout
+operator|==
+name|NULL
+condition|)
 block|{
 if|if
 condition|(
@@ -6557,6 +6554,12 @@ argument_list|(
 name|res0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|savefile
+operator|!=
+name|outfile
+condition|)
 name|FREEPTR
 argument_list|(
 name|savefile
