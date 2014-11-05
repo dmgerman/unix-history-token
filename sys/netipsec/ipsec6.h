@@ -339,6 +339,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|ipsec6_process_packet
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|ipsecrequest
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
