@@ -154,6 +154,12 @@ directive|include
 file|<wctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|uintmax_t
@@ -187,6 +193,14 @@ specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|siginfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|xo_handle_t
+modifier|*
+name|stderr_handle
 decl_stmt|;
 end_decl_stmt
 
@@ -284,6 +298,26 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|argc
+operator|)
+return|;
 while|while
 condition|(
 operator|(
@@ -407,6 +441,27 @@ name|dochar
 operator|=
 literal|1
 expr_stmt|;
+name|stderr_handle
+operator|=
+name|xo_create_to_file
+argument_list|(
+name|stderr
+argument_list|,
+name|XO_STYLE_TEXT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"wc"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"file"
+argument_list|)
+expr_stmt|;
 name|errors
 operator|=
 literal|0
@@ -422,6 +477,11 @@ operator|*
 name|argv
 condition|)
 block|{
+name|xo_open_instance
+argument_list|(
+literal|"file"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cnt
@@ -438,11 +498,21 @@ condition|)
 operator|++
 name|errors
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"file"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 do|do
 block|{
+name|xo_open_instance
+argument_list|(
+literal|"file"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cnt
@@ -455,6 +525,11 @@ literal|0
 condition|)
 operator|++
 name|errors
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"file"
+argument_list|)
 expr_stmt|;
 operator|++
 name|total
@@ -474,6 +549,12 @@ name|total
 operator|>
 literal|1
 condition|)
+block|{
+name|xo_open_container
+argument_list|(
+literal|"total"
+argument_list|)
+expr_stmt|;
 name|show_cnt
 argument_list|(
 literal|"total"
@@ -486,6 +567,25 @@ name|tcharct
 argument_list|,
 name|tlongline
 argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"total"
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_close_list
+argument_list|(
+literal|"file"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"wc"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -524,42 +624,46 @@ name|uintmax_t
 name|llct
 parameter_list|)
 block|{
-name|FILE
+name|xo_handle_t
 modifier|*
-name|out
+name|xop
 decl_stmt|;
 if|if
 condition|(
 operator|!
 name|siginfo
 condition|)
-name|out
+name|xop
 operator|=
-name|stdout
+name|NULL
 expr_stmt|;
 else|else
 block|{
-name|out
+name|xop
 operator|=
-name|stderr
+name|stderr_handle
 expr_stmt|;
 name|siginfo
 operator|=
 literal|0
 expr_stmt|;
 block|}
+name|xo_emit
+argument_list|(
+literal|"{ek:filename/%s}"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|doline
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|out
+name|xop
 argument_list|,
-literal|" %7ju"
+literal|" {:lines/%7ju/%ju}"
 argument_list|,
 name|linect
 argument_list|)
@@ -568,14 +672,11 @@ if|if
 condition|(
 name|doword
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|out
+name|xop
 argument_list|,
-literal|" %7ju"
+literal|" {:words/%7ju/%ju}"
 argument_list|,
 name|wordct
 argument_list|)
@@ -586,14 +687,11 @@ name|dochar
 operator|||
 name|domulti
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|out
+name|xop
 argument_list|,
-literal|" %7ju"
+literal|" {:characters/%7ju/%ju}"
 argument_list|,
 name|charct
 argument_list|)
@@ -602,14 +700,11 @@ if|if
 condition|(
 name|dolongline
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|out
+name|xop
 argument_list|,
-literal|" %7ju"
+literal|" {:long-lines/%7ju/%ju}"
 argument_list|,
 name|llct
 argument_list|)
@@ -620,25 +715,19 @@ name|file
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|out
+name|xop
 argument_list|,
-literal|" %s\n"
+literal|" {d:filename/%s}\n"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|out
+name|xop
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -743,7 +832,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s: open"
 argument_list|,
@@ -801,7 +890,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s: read"
 argument_list|,
@@ -962,7 +1051,7 @@ name|sb
 argument_list|)
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s: fstat"
 argument_list|,
@@ -1082,7 +1171,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s: read"
 argument_list|,
@@ -1198,7 +1287,7 @@ name|errno
 operator|=
 name|EILSEQ
 expr_stmt|;
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -1371,7 +1460,7 @@ operator|&&
 operator|!
 name|warned
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -1463,13 +1552,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"usage: wc [-Lclmw] [file ...]\n"
 argument_list|)
 expr_stmt|;
