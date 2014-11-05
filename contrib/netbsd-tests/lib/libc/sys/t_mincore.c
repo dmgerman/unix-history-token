@@ -820,12 +820,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-name|atf_tc_expect_fail
-argument_list|(
-literal|"the following calls fail; this seems to be a new "
-literal|"issue (didn't occur in 07/2014)"
-argument_list|)
-expr_stmt|;
 name|ATF_REQUIRE
 argument_list|(
 name|mlock
