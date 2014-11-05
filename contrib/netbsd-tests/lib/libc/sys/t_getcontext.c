@@ -352,6 +352,22 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* avoid longjmp clobbering */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+ifdef|#
+directive|ifdef
+name|__amd64__
+name|atf_tc_expect_fail
+argument_list|(
+literal|"setcontext in this testcase fails on "
+literal|"FreeBSD/amd64 with rc == -1/errno == EINVAL; see PR # 194828"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -478,6 +494,46 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|calls
+operator|==
+literal|0
+condition|)
+block|{
+name|int
+name|rc
+init|=
+name|setcontext
+argument_list|(
+operator|&
+name|uc
+index|[
+name|DEPTH
+operator|-
+literal|1
+index|]
+argument_list|)
+decl_stmt|;
+name|ATF_REQUIRE_EQ_MSG
+argument_list|(
+name|rc
+argument_list|,
+literal|0
+argument_list|,
+literal|"%d != 0; (errno = %d)"
+argument_list|,
+name|rc
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|calls
@@ -500,6 +556,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
