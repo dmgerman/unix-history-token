@@ -869,7 +869,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize our routing tree.  * XXX MRT When off == 0, we are being called from vfs_export.c  * so just set up their table and leave. (we know what the correct  * value should be so just use that).. FIX AFTER RELENG_7 is MFC'd  * see also comments in in_inithead() vfs_export.c and domain.h  */
+comment|/*  * Initialize our routing tree.  */
 end_comment
 
 begin_expr_stmt
@@ -927,9 +927,10 @@ literal|3
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* See above */
 name|rnh
 operator|=
 operator|*
@@ -940,17 +941,6 @@ argument_list|(
 name|rnh
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|off
-operator|==
-literal|0
-condition|)
-comment|/* See above */
-return|return
-literal|1
-return|;
-comment|/* only do the rest for the real thing */
 name|rnh
 operator|->
 name|rnh_addaddr
@@ -984,7 +974,9 @@ literal|1
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function

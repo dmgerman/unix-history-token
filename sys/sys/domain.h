@@ -143,7 +143,6 @@ name|int
 name|dom_rtoffset
 decl_stmt|;
 comment|/* an arg to rtattach, in bits */
-comment|/* XXX MRT. 		 * rtoffset May be 0 if the domain supplies its own rtattach(), 		 * in which case, a 0 indicates it's being called from  		 * vfs_export.c (HACK)  Only for AF_INET{,6} at this time. 		 * Temporary ABI compat hack.. fix post RELENG_7 		 */
 name|int
 name|dom_maxrtkey
 decl_stmt|;

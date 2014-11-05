@@ -1465,7 +1465,6 @@ name|radix_node_head
 modifier|*
 name|rnh
 decl_stmt|;
-comment|/* XXX MRT 	 * This can be called from vfs_export.c too in which case 'off' 	 * will be 0. We know the correct value so just use that and 	 * return directly if it was 0. 	 * This is a hack that replaces an even worse hack on a bad hack 	 * on a bad design. After RELENG_7 this should be fixed but that 	 * will change the ABI, so for now do it this way. 	 */
 if|if
 condition|(
 operator|!
@@ -1489,17 +1488,6 @@ argument_list|(
 name|rnh
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|off
-operator|==
-literal|0
-condition|)
-comment|/* XXX MRT  see above */
-return|return
-literal|1
-return|;
-comment|/* only do the rest for a real routing table */
 name|rnh
 operator|->
 name|rnh_addaddr
