@@ -690,8 +690,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SMALL_TXBRSZ
+value|4096
+end_define
+
+begin_comment
+comment|/* This may require mbuf cluster tuning */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_TXBRSZ
-value|(4096 * 4096)
+value|(SMALL_TXBRSZ * SMALL_TXBRSZ)
 end_define
 
 begin_comment
@@ -2012,6 +2023,7 @@ decl_stmt|;
 name|bool
 name|stat_offsets_loaded
 decl_stmt|;
+comment|/* VSI stat counters */
 name|u64
 name|ipackets
 decl_stmt|;
@@ -2176,6 +2188,10 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|f
+condition|)
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&

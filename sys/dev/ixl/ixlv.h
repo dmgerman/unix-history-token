@@ -19,11 +19,17 @@ directive|define
 name|_IXLV_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"ixlv_vc_mgr.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|IXLV_AQ_MAX_ERR
-value|100
+value|1000
 end_define
 
 begin_define
@@ -55,7 +61,7 @@ value|(hz / 50)
 end_define
 
 begin_comment
-comment|// 20 msec
+comment|/* 20 msec */
 end_comment
 
 begin_define
@@ -145,6 +151,17 @@ directive|define
 name|IXLV_FLAGS
 define|\
 value|"\20\1ENABLE_QUEUES\2DISABLE_QUEUES\3ADD_MAC_FILTER" \     "\4ADD_VLAN_FILTER\5DEL_MAC_FILTER\6DEL_VLAN_FILTER" \     "\7CONFIGURE_QUEUES\10MAP_VECTORS\11HANDLE_RESET" \     "\12CONFIGURE_PROMISC\13GET_STATS"
+end_define
+
+begin_comment
+comment|/* Hack for compatibility with 1.0.x linux pf driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I40E_VIRTCHNL_OP_EVENT
+value|17
 end_define
 
 begin_comment
@@ -301,10 +318,6 @@ name|struct
 name|callout
 name|timer
 decl_stmt|;
-name|struct
-name|callout
-name|aq_task
-decl_stmt|;
 name|int
 name|msix
 decl_stmt|;
@@ -314,10 +327,6 @@ decl_stmt|;
 name|struct
 name|mtx
 name|mtx
-decl_stmt|;
-name|struct
-name|mtx
-name|aq_task_mtx
 decl_stmt|;
 name|u32
 name|qbase
@@ -346,13 +355,12 @@ name|struct
 name|ixl_vsi
 name|vsi
 decl_stmt|;
-comment|/* Mac Filter List */
+comment|/* Filter lists */
 name|struct
 name|mac_list
 modifier|*
 name|mac_filters
 decl_stmt|;
-comment|/* Vlan Filter List */
 name|struct
 name|vlan_list
 modifier|*
@@ -366,17 +374,47 @@ comment|/* Admin queue task flags */
 name|u32
 name|aq_wait_count
 decl_stmt|;
-name|u32
-name|aq_required
+name|struct
+name|ixl_vc_mgr
+name|vc_mgr
 decl_stmt|;
-name|u32
-name|aq_pending
+name|struct
+name|ixl_vc_cmd
+name|add_mac_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|del_mac_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|config_queues_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|map_vectors_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|enable_queues_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|add_vlan_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|del_vlan_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|add_multi_cmd
+decl_stmt|;
+name|struct
+name|ixl_vc_cmd
+name|del_multi_cmd
 decl_stmt|;
 comment|/* Virtual comm channel */
-name|enum
-name|i40e_virtchnl_ops
-name|current_op
-decl_stmt|;
 name|struct
 name|i40e_virtchnl_vf_resource
 modifier|*
@@ -394,31 +432,25 @@ decl_stmt|;
 name|u64
 name|admin_irq
 decl_stmt|;
-comment|/* Signaling channels */
 name|u8
-name|init_done
-decl_stmt|;
-name|u8
-name|config_queues_done
-decl_stmt|;
-name|u8
-name|map_vectors_done
-decl_stmt|;
-name|u8
-name|enable_queues_done
-decl_stmt|;
-name|u8
-name|disable_queues_done
-decl_stmt|;
-name|u8
-name|add_ether_done
-decl_stmt|;
-name|u8
-name|del_ether_done
+name|aq_buffer
+index|[
+name|IXL_AQ_BUF_SZ
+index|]
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IXLV_CORE_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->mtx, MA_OWNED)
+end_define
 
 begin_comment
 comment|/* ** This checks for a zero mac addr, something that will be likely ** unless the Admin on the Host has created one. */
@@ -741,6 +773,17 @@ modifier|*
 parameter_list|,
 name|struct
 name|i40e_eth_stats
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ixlv_update_link_status
+parameter_list|(
+name|struct
+name|ixlv_sc
 modifier|*
 parameter_list|)
 function_decl|;

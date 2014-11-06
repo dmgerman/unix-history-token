@@ -356,6 +356,12 @@ goto|;
 block|}
 name|mem
 operator|->
+name|nseg
+operator|=
+literal|1
+expr_stmt|;
+name|mem
+operator|->
 name|size
 operator|=
 name|size
