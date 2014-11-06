@@ -258,6 +258,44 @@ begin_comment
 comment|/* 	 * Get a string defining the physical path for a given provider. 	 * This has similar rules to ident, but is intended to uniquely 	 * identify the physical location of the device, not the current 	 * occupant of that location. 	 */
 end_comment
 
+begin_struct
+struct|struct
+name|diocgattr_arg
+block|{
+name|char
+name|name
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+union|union
+block|{
+name|char
+name|str
+index|[
+name|DISK_IDENT_SIZE
+index|]
+decl_stmt|;
+name|off_t
+name|off
+decl_stmt|;
+block|}
+name|value
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|DIOCGATTR
+value|_IOWR('d', 142, struct diocgattr_arg)
+end_define
+
 begin_endif
 endif|#
 directive|endif

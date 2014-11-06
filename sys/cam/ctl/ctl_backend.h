@@ -357,6 +357,26 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|uint64_t
+function_decl|(
+modifier|*
+name|be_lunattr_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|be_lun
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|attrname
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ctl_backend_driver
@@ -398,6 +418,10 @@ decl_stmt|;
 comment|/* passed to CTL */
 name|be_luninfo_t
 name|lun_info
+decl_stmt|;
+comment|/* passed to CTL */
+name|be_lunattr_t
+name|lun_attr
 decl_stmt|;
 comment|/* passed to CTL */
 ifdef|#
