@@ -8465,6 +8465,15 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|fdp
+operator|->
+name|fd_holdcnt
+operator|>
+literal|1
+condition|)
+block|{
 name|mtx_lock
 argument_list|(
 operator|&
@@ -8491,6 +8500,7 @@ operator|>
 literal|0
 condition|)
 return|return;
+block|}
 name|FILEDESC_LOCK_DESTROY
 argument_list|(
 name|fdp
