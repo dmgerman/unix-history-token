@@ -1100,7 +1100,6 @@ operator|!=
 name|AF_INET
 condition|)
 break|break;
-comment|/* 			 * XXX MRT rtattach will be also called from 			 * vfs_export.c but the offset will be 0 (only for 			 * AF_INET and AF_INET6 which don't need it anyhow). 			 */
 name|rnh
 operator|=
 name|rt_tables_get_rnh_ptr
@@ -1134,9 +1133,7 @@ operator|*
 operator|)
 name|rnh
 argument_list|,
-name|dom
-operator|->
-name|dom_rtoffset
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -139,14 +139,6 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|int
-name|dom_rtoffset
-decl_stmt|;
-comment|/* an arg to rtattach, in bits */
-name|int
-name|dom_maxrtkey
-decl_stmt|;
-comment|/* for routing layer */
 name|void
 modifier|*
 function_decl|(
