@@ -1284,9 +1284,7 @@ operator|*
 operator|)
 name|rnh
 argument_list|,
-name|dom
-operator|->
-name|dom_rtoffset
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
