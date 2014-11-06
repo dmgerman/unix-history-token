@@ -224,6 +224,10 @@ modifier|*
 name|CurrentThreadContext
 parameter_list|()
 function_decl|;
+name|void
+name|EnsureMainThreadIDIsCorrect
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

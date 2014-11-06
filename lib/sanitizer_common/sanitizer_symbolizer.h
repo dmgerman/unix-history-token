@@ -36,31 +36,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Symbolizer is intended to be used by both
+comment|// Symbolizer is used by sanitizers to map instruction address to a location in
 end_comment
 
 begin_comment
-comment|// AddressSanitizer and ThreadSanitizer to symbolize a given
+comment|// source code at run-time. Symbolizer either uses __sanitizer_symbolize_*
 end_comment
 
 begin_comment
-comment|// address. It is an analogue of addr2line utility and allows to map
+comment|// defined in the program, or (if they are missing) tries to find and
 end_comment
 
 begin_comment
-comment|// instruction address to a location in source code at run-time.
+comment|// launch "llvm-symbolizer" commandline tool in a separate process and
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Symbolizer is planned to use debug information (in DWARF format)
-end_comment
-
-begin_comment
-comment|// in a binary via interface defined in "llvm/DebugInfo/DIContext.h"
+comment|// communicate with it.
 end_comment
 
 begin_comment
@@ -68,23 +60,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Symbolizer code should be called from the run-time library of
+comment|// Generally we should try to avoid calling system library functions during
 end_comment
 
 begin_comment
-comment|// dynamic tools, and generally should not call memory allocation
-end_comment
-
-begin_comment
-comment|// routines or other system library functions intercepted by those tools.
-end_comment
-
-begin_comment
-comment|// Instead, Symbolizer code should use their replacements, defined in
-end_comment
-
-begin_comment
-comment|// "compiler-rt/lib/sanitizer_common/sanitizer_libc.h".
+comment|// symbolization (and use their replacements from sanitizer_libc.h instead).
 end_comment
 
 begin_comment
@@ -106,6 +86,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"sanitizer_allocator_internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sanitizer_internal_defs.h"
 end_include
 
@@ -114,10 +100,6 @@ include|#
 directive|include
 file|"sanitizer_libc.h"
 end_include
-
-begin_comment
-comment|// WARNING: Do not include system headers here. See details above.
-end_comment
 
 begin_decl_stmt
 name|namespace
@@ -170,7 +152,35 @@ comment|// Deletes all strings and sets all fields to zero.
 name|void
 name|Clear
 parameter_list|()
-function_decl|;
+block|{
+name|InternalFree
+argument_list|(
+name|module
+argument_list|)
+expr_stmt|;
+name|InternalFree
+argument_list|(
+name|function
+argument_list|)
+expr_stmt|;
+name|InternalFree
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+name|internal_memset
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|AddressInfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|FillAddressAndModuleInfo
 parameter_list|(
@@ -229,25 +239,82 @@ name|size
 decl_stmt|;
 block|}
 struct|;
+name|class
+name|Symbolizer
+block|{
+name|public
+label|:
+comment|/// Returns platform-specific implementation of Symbolizer. The symbolizer
+comment|/// must be initialized (with init or disable) before calling this function.
+specifier|static
+name|Symbolizer
+modifier|*
+name|Get
+parameter_list|()
+function_decl|;
+comment|/// Returns platform-specific implementation of Symbolizer, or null if not
+comment|/// initialized.
+specifier|static
+name|Symbolizer
+modifier|*
+name|GetOrNull
+parameter_list|()
+function_decl|;
+comment|/// Returns platform-specific implementation of Symbolizer.  Will
+comment|/// automatically initialize symbolizer as if by calling Init(0) if needed.
+specifier|static
+name|Symbolizer
+modifier|*
+name|GetOrInit
+parameter_list|()
+function_decl|;
+comment|/// Initialize and return the symbolizer, given an optional path to an
+comment|/// external symbolizer.  The path argument is only required for legacy
+comment|/// reasons as this function will check $PATH for an external symbolizer.  Not
+comment|/// thread safe.
+specifier|static
+name|Symbolizer
+modifier|*
+name|Init
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path_to_external
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// Initialize the symbolizer in a disabled state.  Not thread safe.
+specifier|static
+name|Symbolizer
+modifier|*
+name|Disable
+parameter_list|()
+function_decl|;
 comment|// Fills at most "max_frames" elements of "frames" with descriptions
 comment|// for a given address (in all inlined functions). Returns the number
 comment|// of descriptions actually filled.
-comment|// This function should NOT be called from two threads simultaneously.
+name|virtual
 name|uptr
 name|SymbolizeCode
-argument_list|(
+parameter_list|(
 name|uptr
 name|address
-argument_list|,
+parameter_list|,
 name|AddressInfo
-operator|*
+modifier|*
 name|frames
-argument_list|,
+parameter_list|,
 name|uptr
 name|max_frames
-argument_list|)
-name|SANITIZER_WEAK_ATTRIBUTE
-decl_stmt|;
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
 name|bool
 name|SymbolizeData
 parameter_list|(
@@ -258,17 +325,37 @@ name|DataInfo
 modifier|*
 name|info
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
 name|bool
-name|IsSymbolizerAvailable
+name|IsAvailable
 parameter_list|()
-function_decl|;
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|IsExternalAvailable
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// Release internal caches (if any).
+name|virtual
 name|void
-name|FlushSymbolizer
+name|Flush
 parameter_list|()
-function_decl|;
-comment|// releases internal caches (if any)
+block|{}
 comment|// Attempts to demangle the provided C++ mangled name.
+name|virtual
 specifier|const
 name|char
 modifier|*
@@ -277,161 +364,129 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|Name
+name|name
+parameter_list|)
+block|{
+return|return
+name|name
+return|;
+block|}
+name|virtual
+name|void
+name|PrepareForSandboxing
+parameter_list|()
+block|{}
+comment|// Allow user to install hooks that would be called before/after Symbolizer
+comment|// does the actual file/line info fetching. Specific sanitizers may need this
+comment|// to distinguish system library calls made in user code from calls made
+comment|// during in-process symbolization.
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|StartSymbolizationHook
+function_decl|)
+parameter_list|()
+function_decl|;
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|EndSymbolizationHook
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|// May be called at most once.
+name|void
+name|AddHooks
+parameter_list|(
+name|StartSymbolizationHook
+name|start_hook
+parameter_list|,
+name|EndSymbolizationHook
+name|end_hook
 parameter_list|)
 function_decl|;
-comment|// Starts external symbolizer program in a subprocess. Sanitizer communicates
-comment|// with external symbolizer via pipes.
-name|bool
-name|InitializeExternalSymbolizer
+name|private
+label|:
+comment|/// Platform-specific function for creating a Symbolizer object.
+specifier|static
+name|Symbolizer
+modifier|*
+name|PlatformInit
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|path_to_symbolizer
+name|path_to_external
 parameter_list|)
 function_decl|;
+comment|/// Create a symbolizer and store it to symbolizer_ without checking if one
+comment|/// already exists.  Not thread safe.
+specifier|static
+name|Symbolizer
+modifier|*
+name|CreateAndStore
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path_to_external
+parameter_list|)
+function_decl|;
+specifier|static
+name|Symbolizer
+modifier|*
+name|symbolizer_
+decl_stmt|;
+specifier|static
+name|StaticSpinMutex
+name|init_mu_
+decl_stmt|;
+name|protected
+label|:
+name|Symbolizer
+argument_list|()
+expr_stmt|;
+specifier|static
+name|LowLevelAllocator
+name|symbolizer_allocator_
+decl_stmt|;
+name|StartSymbolizationHook
+name|start_hook_
+decl_stmt|;
+name|EndSymbolizationHook
+name|end_hook_
+decl_stmt|;
 name|class
-name|LoadedModule
+name|SymbolizerScope
 block|{
 name|public
 label|:
-name|LoadedModule
-argument_list|(
-argument|const char *module_name
-argument_list|,
-argument|uptr base_address
-argument_list|)
-empty_stmt|;
-name|void
-name|addAddressRange
+name|explicit
+name|SymbolizerScope
 parameter_list|(
-name|uptr
-name|beg
-parameter_list|,
-name|uptr
-name|end
+specifier|const
+name|Symbolizer
+modifier|*
+name|sym
 parameter_list|)
 function_decl|;
-name|bool
-name|containsAddress
-argument_list|(
-name|uptr
-name|address
-argument_list|)
-decl|const
-decl_stmt|;
-specifier|const
-name|char
-operator|*
-name|full_name
+operator|~
+name|SymbolizerScope
 argument_list|()
-specifier|const
-block|{
-return|return
-name|full_name_
-return|;
-block|}
-name|uptr
-name|base_address
-argument_list|()
-specifier|const
-block|{
-return|return
-name|base_address_
-return|;
-block|}
+expr_stmt|;
 name|private
 label|:
-struct|struct
-name|AddressRange
-block|{
-name|uptr
-name|beg
-decl_stmt|;
-name|uptr
-name|end
-decl_stmt|;
-block|}
-struct|;
-name|char
-modifier|*
-name|full_name_
-decl_stmt|;
-name|uptr
-name|base_address_
-decl_stmt|;
-specifier|static
 specifier|const
-name|uptr
-name|kMaxNumberOfAddressRanges
-init|=
-literal|6
-decl_stmt|;
-name|AddressRange
-name|ranges_
-index|[
-name|kMaxNumberOfAddressRanges
-index|]
-decl_stmt|;
-name|uptr
-name|n_ranges_
+name|Symbolizer
+modifier|*
+name|sym_
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|// Creates external symbolizer connected via pipe, user should write
-comment|// to output_fd and read from input_fd.
-name|bool
-name|StartSymbolizerSubprocess
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path_to_symbolizer
-parameter_list|,
-name|int
-modifier|*
-name|input_fd
-parameter_list|,
-name|int
-modifier|*
-name|output_fd
-parameter_list|)
-function_decl|;
-comment|// OS-dependent function that fills array with descriptions of at most
-comment|// "max_modules" currently loaded modules. Returns the number of
-comment|// initialized modules. If filter is nonzero, ignores modules for which
-comment|// filter(full_name) is false.
-typedef|typedef
-name|bool
-function_decl|(
-modifier|*
-name|string_predicate_t
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-name|uptr
-name|GetListOfModules
-parameter_list|(
-name|LoadedModule
-modifier|*
-name|modules
-parameter_list|,
-name|uptr
-name|max_modules
-parameter_list|,
-name|string_predicate_t
-name|filter
-parameter_list|)
-function_decl|;
-name|void
-name|SymbolizerPrepareForSandboxing
-parameter_list|()
-function_decl|;
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

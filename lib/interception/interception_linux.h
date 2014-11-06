@@ -114,6 +114,21 @@ name|uptr
 name|wrapper
 parameter_list|)
 function_decl|;
+name|void
+modifier|*
+name|GetFuncAddrVer
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|func_name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ver
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -131,6 +146,60 @@ parameter_list|)
 define|\
 value|::__interception::GetRealFunctionAddress( \           #func, (::__interception::uptr*)&REAL(func), \           (::__interception::uptr)&(func), \           (::__interception::uptr)&WRAP(func))
 end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ANDROID__
+argument_list|)
+end_if
+
+begin_comment
+comment|// android does not have dlvsym
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTERCEPT_FUNCTION_VER_LINUX
+parameter_list|(
+name|func
+parameter_list|,
+name|symver
+parameter_list|)
+define|\
+value|::__interception::real_##func = (func##_f)(unsigned long) \          ::__interception::GetFuncAddrVer(#func, symver)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INTERCEPT_FUNCTION_VER_LINUX
+parameter_list|(
+name|func
+parameter_list|,
+name|symver
+parameter_list|)
+define|\
+value|INTERCEPT_FUNCTION_LINUX(func)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// !defined(__ANDROID__)
+end_comment
 
 begin_endif
 endif|#

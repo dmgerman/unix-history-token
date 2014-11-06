@@ -99,6 +99,17 @@ name|func
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|INTERCEPT_FUNCTION_VER_MAC
+parameter_list|(
+name|func
+parameter_list|,
+name|symver
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif

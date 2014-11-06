@@ -170,10 +170,23 @@ comment|// Default ctor for thread-local stats.
 name|AsanStats
 argument_list|()
 expr_stmt|;
-comment|// Prints formatted stats to stderr.
 name|void
 name|Print
 parameter_list|()
+function_decl|;
+comment|// Prints formatted stats to stderr.
+name|void
+name|Clear
+parameter_list|()
+function_decl|;
+name|void
+name|MergeFrom
+parameter_list|(
+specifier|const
+name|AsanStats
+modifier|*
+name|stats
+parameter_list|)
 function_decl|;
 block|}
 struct|;
@@ -184,19 +197,9 @@ modifier|&
 name|GetCurrentThreadStats
 parameter_list|()
 function_decl|;
-comment|// Flushes all thread-local stats to accumulated stats, and makes
-comment|// a copy of accumulated stats.
+comment|// Flushes a given stats into accumulated stats of dead threads.
 name|void
-name|GetAccumulatedStats
-parameter_list|(
-name|AsanStats
-modifier|*
-name|stats
-parameter_list|)
-function_decl|;
-comment|// Flushes a given stats into accumulated stats.
-name|void
-name|FlushToAccumulatedStats
+name|FlushToDeadThreadStats
 parameter_list|(
 name|AsanStats
 modifier|*

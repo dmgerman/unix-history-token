@@ -124,11 +124,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|SHADOW_TO_ORIGIN
+parameter_list|(
+name|shadow
+parameter_list|)
+value|(((uptr)shadow) + 0x200000000000ULL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MEM_TO_ORIGIN
 parameter_list|(
 name|mem
 parameter_list|)
-value|(MEM_TO_SHADOW(mem) + 0x200000000000ULL)
+value|(SHADOW_TO_ORIGIN(MEM_TO_SHADOW(mem)))
 end_define
 
 begin_define
@@ -138,7 +148,7 @@ name|MEM_IS_APP
 parameter_list|(
 name|mem
 parameter_list|)
-value|((uptr)mem>=         0x600000000000ULL)
+value|((uptr)mem>= 0x600000000000ULL)
 end_define
 
 begin_define
@@ -148,18 +158,9 @@ name|MEM_IS_SHADOW
 parameter_list|(
 name|mem
 parameter_list|)
-value|((uptr)mem>=         0x200000000000ULL&& \                             (uptr)mem<=         0x400000000000ULL)
+define|\
+value|((uptr)mem>= 0x200000000000ULL&& (uptr)mem<= 0x400000000000ULL)
 end_define
-
-begin_struct_decl
-struct_decl|struct
-name|link_map
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|// Opaque type returned by dlopen().
-end_comment
 
 begin_decl_stmt
 specifier|const
@@ -231,6 +232,10 @@ name|InitializeInterceptors
 parameter_list|()
 function_decl|;
 name|void
+name|MsanAllocatorThreadFinish
+parameter_list|()
+function_decl|;
+name|void
 modifier|*
 name|MsanReallocate
 parameter_list|(
@@ -255,6 +260,10 @@ function_decl|;
 name|void
 name|MsanDeallocate
 parameter_list|(
+name|StackTrace
+modifier|*
+name|stack
+parameter_list|,
 name|void
 modifier|*
 name|ptr
@@ -271,6 +280,19 @@ function_decl|;
 name|void
 name|ReplaceOperatorsNewAndDelete
 parameter_list|()
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|GetOriginDescrIfStack
+parameter_list|(
+name|u32
+name|id
+parameter_list|,
+name|uptr
+modifier|*
+name|pc
+parameter_list|)
 function_decl|;
 name|void
 name|EnterSymbolizer
@@ -355,7 +377,7 @@ name|uptr
 name|bp
 parameter_list|,
 name|bool
-name|fast
+name|request_fast_unwind
 parameter_list|)
 function_decl|;
 name|void
@@ -381,26 +403,87 @@ name|void
 name|ReportAtExitStatistics
 parameter_list|()
 function_decl|;
+comment|// Unpoison first n function arguments.
 name|void
-name|UnpoisonMappedDSO
+name|UnpoisonParam
 parameter_list|(
-name|struct
-name|link_map
-modifier|*
-name|map
+name|uptr
+name|n
 parameter_list|)
+function_decl|;
+name|void
+name|UnpoisonThreadLocalState
+parameter_list|()
 function_decl|;
 define|#
 directive|define
 name|GET_MALLOC_STACK_TRACE
 define|\
 value|StackTrace stack;                                                \   stack.size = 0;                                                  \   if (__msan_get_track_origins()&& msan_inited)                   \     GetStackTrace(&stack, common_flags()->malloc_context_size,     \         StackTrace::GetCurrentPc(), GET_CURRENT_FRAME(),           \         common_flags()->fast_unwind_on_malloc)
+name|class
+name|ScopedThreadLocalStateBackup
+block|{
+name|public
+label|:
+name|ScopedThreadLocalStateBackup
+argument_list|()
+block|{
+name|Backup
+argument_list|()
+expr_stmt|;
+block|}
+operator|~
+name|ScopedThreadLocalStateBackup
+argument_list|()
+block|{
+name|Restore
+argument_list|()
+block|; }
+name|void
+name|Backup
+argument_list|()
+expr_stmt|;
+name|void
+name|Restore
+parameter_list|()
+function_decl|;
+name|private
+label|:
+name|u64
+name|va_arg_overflow_size_tls
+decl_stmt|;
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// namespace __msan
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MSAN_MALLOC_HOOK
+parameter_list|(
+name|ptr
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|if (&__msan_malloc_hook) __msan_malloc_hook(ptr, size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSAN_FREE_HOOK
+parameter_list|(
+name|ptr
+parameter_list|)
+define|\
+value|if (&__msan_free_hook) __msan_free_hook(ptr)
+end_define
 
 begin_endif
 endif|#

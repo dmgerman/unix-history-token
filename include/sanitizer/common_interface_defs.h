@@ -118,15 +118,6 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|// Tell the tools to write their reports to given file descriptor instead of
-comment|// stderr.
-name|void
-name|__sanitizer_set_report_fd
-parameter_list|(
-name|int
-name|fd
-parameter_list|)
-function_decl|;
 comment|// Notify the tools that the sandbox is going to be turned on. The reserved
 comment|// parameter will be used in the future to hold a structure with functions
 comment|// that the tools may call to bypass the sandbox.
@@ -211,6 +202,52 @@ name|p
 parameter_list|,
 name|uint64_t
 name|x
+parameter_list|)
+function_decl|;
+comment|// Record and dump coverage info.
+name|void
+name|__sanitizer_cov_dump
+parameter_list|()
+function_decl|;
+comment|// Annotate the current state of a contiguous container, such as
+comment|// std::vector, std::string or similar.
+comment|// A contiguous container is a container that keeps all of its elements
+comment|// in a contiguous region of memory. The container owns the region of memory
+comment|// [beg, end); the memory [beg, mid) is used to store the current elements
+comment|// and the memory [mid, end) is reserved for future elements;
+comment|// end<= mid<= end. For example, in "std::vector<> v"
+comment|//   beg =&v[0];
+comment|//   end = beg + v.capacity() * sizeof(v[0]);
+comment|//   mid = beg + v.size()     * sizeof(v[0]);
+comment|//
+comment|// This annotation tells the Sanitizer tool about the current state of the
+comment|// container so that the tool can report errors when memory from [mid, end)
+comment|// is accessed. Insert this annotation into methods like push_back/pop_back.
+comment|// Supply the old and the new values of mid (old_mid/new_mid).
+comment|// In the initial state mid == end and so should be the final
+comment|// state when the container is destroyed or when it reallocates the storage.
+comment|//
+comment|// Use with caution and don't use for anything other than vector-like classes.
+comment|//
+comment|// For AddressSanitizer, 'beg' should be 8-aligned.
+name|void
+name|__sanitizer_annotate_contiguous_container
+parameter_list|(
+name|void
+modifier|*
+name|beg
+parameter_list|,
+name|void
+modifier|*
+name|end
+parameter_list|,
+name|void
+modifier|*
+name|old_mid
+parameter_list|,
+name|void
+modifier|*
+name|new_mid
 parameter_list|)
 function_decl|;
 ifdef|#

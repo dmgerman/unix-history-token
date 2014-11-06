@@ -189,7 +189,17 @@ operator|::
 name|Type
 name|v
 block|;
-comment|// FIXME(dvyukov): 64-bit load is not atomic on 32-bits.
+comment|// FIXME:
+comment|// 64-bit atomic operations are not atomic on 32-bit platforms.
+comment|// The implementation lacks necessary memory fences on ARM/PPC.
+comment|// We would like to use compiler builtin atomic operations,
+comment|// but they are mostly broken:
+comment|// - they lead to vastly inefficient code generation
+comment|// (http://llvm.org/bugs/show_bug.cgi?id=17281)
+comment|// - 64-bit atomic operations are not implemented on x86_32
+comment|// (http://llvm.org/bugs/show_bug.cgi?id=15034)
+comment|// - they are not implemented on ARM
+comment|// error: undefined reference to '__atomic_load_4'
 if|if
 condition|(
 name|mo
@@ -273,7 +283,6 @@ argument_list|)
 operator|)
 argument_list|)
 block|;
-comment|// FIXME(dvyukov): 64-bit store is not atomic on 32-bits.
 if|if
 condition|(
 name|mo
@@ -620,6 +629,12 @@ begin_comment
 unit|}
 comment|// namespace __sanitizer
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ATOMIC_ORDER
+end_undef
 
 begin_endif
 endif|#

@@ -109,7 +109,7 @@ specifier|const
 name|uptr
 name|kSize
 init|=
-literal|1024
+literal|1021
 decl_stmt|;
 name|QuarantineBatch
 modifier|*
@@ -130,6 +130,21 @@ index|]
 decl_stmt|;
 block|}
 struct|;
+name|COMPILER_CHECK
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|QuarantineBatch
+argument_list|)
+operator|<=
+operator|(
+literal|1
+operator|<<
+literal|13
+operator|)
+argument_list|)
+expr_stmt|;
+comment|// 8Kb.
 comment|// The callback interface is:
 comment|// void Callback::Recycle(Node *ptr);
 comment|// void *cb.Allocate(uptr size);
@@ -569,11 +584,21 @@ name|QuarantineBatch
 operator|::
 name|kSize
 condition|)
+block|{
 name|AllocBatch
 argument_list|(
 name|cb
 argument_list|)
 expr_stmt|;
+name|size
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|QuarantineBatch
+argument_list|)
+expr_stmt|;
+comment|// Count the batch in Quarantine size.
+block|}
 name|QuarantineBatch
 operator|*
 name|b
@@ -716,9 +741,8 @@ operator|.
 name|pop_front
 argument_list|()
 expr_stmt|;
-name|SizeAdd
+name|SizeSub
 argument_list|(
-operator|-
 name|b
 operator|->
 name|size
@@ -767,6 +791,30 @@ name|Size
 argument_list|()
 operator|+
 name|add
+argument_list|,
+name|memory_order_relaxed
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|SizeSub
+parameter_list|(
+name|uptr
+name|sub
+parameter_list|)
+block|{
+name|atomic_store
+argument_list|(
+operator|&
+name|size_
+argument_list|,
+name|Size
+argument_list|()
+operator|-
+name|sub
 argument_list|,
 name|memory_order_relaxed
 argument_list|)

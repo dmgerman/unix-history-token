@@ -19,6 +19,12 @@ begin_comment
 comment|/*  * __eprintf() was used in an old version of<assert.h>.  * It can eventually go away, but it is needed when linking  * .o files built with the old<assert.h>.  *  * It should never be exported from a dylib, so it is marked  * visibility hidden.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_macro
 name|__attribute__
 argument_list|(
@@ -27,6 +33,11 @@ literal|"hidden"
 argument|))
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

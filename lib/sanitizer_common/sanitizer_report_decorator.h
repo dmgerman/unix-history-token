@@ -78,6 +78,8 @@ block|{
 name|class
 name|AnsiColorDecorator
 block|{
+comment|// FIXME: This is not portable. It assumes the special strings are printed to
+comment|// stdout, which is not the case on Windows (see SetConsoleTextAttribute()).
 name|public
 label|:
 name|explicit

@@ -599,6 +599,23 @@ name|func
 parameter_list|,
 modifier|...
 parameter_list|)
+define|\
+value|extern "C" ret_type func(__VA_ARGS__);
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECLARE_WRAPPER_WINAPI
+parameter_list|(
+name|ret_type
+parameter_list|,
+name|func
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|extern "C" __declspec(dllimport) ret_type __stdcall func(__VA_ARGS__);
 end_define
 
 begin_else
@@ -975,7 +992,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|typedef ret_type (__stdcall *FUNC_TYPE(func))(__VA_ARGS__); \     namespace __interception { \       FUNC_TYPE(func) PTR_TO_REAL(func); \     } \     DECLARE_WRAPPER(ret_type, func, __VA_ARGS__) \     extern "C" \     INTERCEPTOR_ATTRIBUTE \     ret_type __stdcall WRAP(func)(__VA_ARGS__)
+value|typedef ret_type (__stdcall *FUNC_TYPE(func))(__VA_ARGS__); \     namespace __interception { \       FUNC_TYPE(func) PTR_TO_REAL(func); \     } \     DECLARE_WRAPPER_WINAPI(ret_type, func, __VA_ARGS__) \     extern "C" \     INTERCEPTOR_ATTRIBUTE \     ret_type __stdcall WRAP(func)(__VA_ARGS__)
 end_define
 
 begin_endif
@@ -1069,6 +1086,19 @@ parameter_list|)
 value|INTERCEPT_FUNCTION_LINUX(func)
 end_define
 
+begin_define
+define|#
+directive|define
+name|INTERCEPT_FUNCTION_VER
+parameter_list|(
+name|func
+parameter_list|,
+name|symver
+parameter_list|)
+define|\
+value|INTERCEPT_FUNCTION_VER_LINUX(func, symver)
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -1094,6 +1124,19 @@ parameter_list|)
 value|INTERCEPT_FUNCTION_MAC(func)
 end_define
 
+begin_define
+define|#
+directive|define
+name|INTERCEPT_FUNCTION_VER
+parameter_list|(
+name|func
+parameter_list|,
+name|symver
+parameter_list|)
+define|\
+value|INTERCEPT_FUNCTION_VER_MAC(func, symver)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1117,6 +1160,19 @@ parameter_list|(
 name|func
 parameter_list|)
 value|INTERCEPT_FUNCTION_WIN(func)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTERCEPT_FUNCTION_VER
+parameter_list|(
+name|func
+parameter_list|,
+name|symver
+parameter_list|)
+define|\
+value|INTERCEPT_FUNCTION_VER_WIN(func, symver)
 end_define
 
 begin_endif

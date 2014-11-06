@@ -173,7 +173,7 @@ name|addr
 parameter_list|,
 name|StackTrace
 modifier|*
-name|stack
+name|free_stack
 parameter_list|)
 function_decl|;
 name|void
@@ -185,7 +185,7 @@ name|addr
 parameter_list|,
 name|StackTrace
 modifier|*
-name|stack
+name|free_stack
 parameter_list|)
 function_decl|;
 name|void
@@ -197,7 +197,7 @@ name|addr
 parameter_list|,
 name|StackTrace
 modifier|*
-name|stack
+name|free_stack
 parameter_list|,
 name|AllocType
 name|alloc_type

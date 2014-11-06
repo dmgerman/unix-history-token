@@ -315,7 +315,9 @@ argument_list|)
 struct|struct
 name|InvalidValueData
 block|{
-comment|// FIXME: SourceLocation Loc;
+name|SourceLocation
+name|Loc
+decl_stmt|;
 specifier|const
 name|TypeDescriptor
 modifier|&
@@ -329,6 +331,27 @@ argument_list|(
 argument|load_invalid_value
 argument_list|,
 argument|InvalidValueData *Data
+argument_list|,
+argument|ValueHandle Val
+argument_list|)
+struct|struct
+name|FunctionTypeMismatchData
+block|{
+name|SourceLocation
+name|Loc
+decl_stmt|;
+specifier|const
+name|TypeDescriptor
+modifier|&
+name|Type
+decl_stmt|;
+block|}
+struct|;
+name|RECOVERABLE
+argument_list|(
+argument|function_type_mismatch
+argument_list|,
+argument|FunctionTypeMismatchData *Data
 argument_list|,
 argument|ValueHandle Val
 argument_list|)

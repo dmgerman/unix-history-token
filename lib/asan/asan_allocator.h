@@ -139,28 +139,24 @@ block|{}
 name|bool
 name|IsValid
 argument_list|()
-block|{
-return|return
-name|chunk_
-operator|!=
-literal|0
-return|;
-block|}
+expr_stmt|;
+comment|// Checks if AsanChunkView points to a valid allocated
+comment|// or quarantined chunk.
 name|uptr
 name|Beg
 parameter_list|()
 function_decl|;
-comment|// first byte of user memory.
+comment|// First byte of user memory.
 name|uptr
 name|End
 parameter_list|()
 function_decl|;
-comment|// last byte of user memory.
+comment|// Last byte of user memory.
 name|uptr
 name|UsedSize
 parameter_list|()
 function_decl|;
-comment|// size requested by the user.
+comment|// Size requested by the user.
 name|uptr
 name|AllocTid
 parameter_list|()
@@ -596,9 +592,11 @@ name|void
 modifier|*
 name|ptr
 parameter_list|,
-name|StackTrace
-modifier|*
-name|stack
+name|uptr
+name|pc
+parameter_list|,
+name|uptr
+name|bp
 parameter_list|)
 function_decl|;
 name|uptr

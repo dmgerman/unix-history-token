@@ -9,10 +9,16 @@ directive|if
 name|__APPLE__
 end_if
 
+begin_include
+include|#
+directive|include
+file|<Availability.h>
+end_include
+
 begin_if
 if|#
 directive|if
-name|__arm__
+name|__IPHONE_OS_VERSION_MIN_REQUIRED
 end_if
 
 begin_define
@@ -31,23 +37,8 @@ name|NOT_HERE_IN_10_8_AND_EARLIER
 parameter_list|(
 name|sym
 parameter_list|)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|__ppc__
-end_elif
-
-begin_define
-define|#
-directive|define
-name|NOT_HERE_BEFORE_10_6
-parameter_list|(
-name|sym
-parameter_list|)
 define|\
-value|extern const char sym##_tmp3 __asm("$ld$hide$os10.3$_" #sym ); \             __attribute__((visibility("default"))) const char sym##_tmp3 = 0; \          extern const char sym##_tmp4 __asm("$ld$hide$os10.4$_" #sym ); \             __attribute__((visibility("default"))) const char sym##_tmp4 = 0; \         extern const char sym##_tmp5 __asm("$ld$hide$os10.5$_" #sym ); \             __attribute__((visibility("default"))) const char sym##_tmp5 = 0;
+value|extern const char sym##_tmp61 __asm("$ld$hide$os6.1$_" #sym ); \             __attribute__((visibility("default"))) const char sym##_tmp61 = 0; \         extern const char sym##_tmp60 __asm("$ld$hide$os6.0$_" #sym ); \             __attribute__((visibility("default"))) const char sym##_tmp60 = 0; \         extern const char sym##_tmp51 __asm("$ld$hide$os5.1$_" #sym ); \             __attribute__((visibility("default"))) const char sym##_tmp51 = 0; \         extern const char sym##_tmp50 __asm("$ld$hide$os5.0$_" #sym ); \             __attribute__((visibility("default"))) const char sym##_tmp50 = 0;
 end_define
 
 begin_else
@@ -81,10 +72,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __ppc__ */
-end_comment
 
 begin_comment
 comment|/* Symbols in libSystem.dylib in 10.6 and later,   *  but are in libgcc_s.dylib in earlier versions  */

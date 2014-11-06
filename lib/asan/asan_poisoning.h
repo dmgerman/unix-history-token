@@ -196,6 +196,14 @@ operator|->
 name|poison_heap
 argument_list|)
 expr_stmt|;
+name|bool
+name|poison_partial
+init|=
+name|flags
+argument_list|()
+operator|->
+name|poison_partial
+decl_stmt|;
 name|u8
 modifier|*
 name|shadow
@@ -269,14 +277,24 @@ comment|// unaddressable
 block|}
 else|else
 block|{
+comment|// first size-i bytes are addressable
 operator|*
 name|shadow
 operator|=
+name|poison_partial
+condition|?
+name|static_cast
+operator|<
+name|u8
+operator|>
+operator|(
 name|size
 operator|-
 name|i
+operator|)
+else|:
+literal|0
 expr_stmt|;
-comment|// first size-i bytes are addressable
 block|}
 block|}
 block|}

@@ -68,10 +68,6 @@ name|namespace
 name|__lsan
 block|{
 name|void
-name|Init
-parameter_list|()
-function_decl|;
-name|void
 name|InitializeInterceptors
 parameter_list|()
 function_decl|;
@@ -81,6 +77,29 @@ end_decl_stmt
 begin_comment
 comment|// namespace __lsan
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|lsan_inited
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|lsan_init_is_running
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern
+literal|"C"
+name|void
+name|__lsan_init
+parameter_list|()
+function_decl|;
+end_extern
 
 end_unit
 

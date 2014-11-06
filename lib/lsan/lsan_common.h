@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"sanitizer_common/sanitizer_allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sanitizer_common/sanitizer_common.h"
 end_include
 
@@ -142,6 +148,10 @@ block|,
 name|kReachable
 init|=
 literal|2
+block|,
+name|kIgnored
+init|=
+literal|3
 block|}
 enum|;
 struct|struct
@@ -163,11 +173,11 @@ name|uptr
 argument_list|)
 return|;
 block|}
-comment|// Print addresses of leaked blocks after main leak report.
+comment|// Print addresses of leaked objects after main leak report.
 name|bool
-name|report_blocks
+name|report_objects
 decl_stmt|;
-comment|// Aggregate two blocks into one leak if this many stack frames match. If
+comment|// Aggregate two objects into one leak if this many stack frames match. If
 comment|// zero, the entire stack trace must match.
 name|int
 name|resolution
@@ -179,6 +189,12 @@ decl_stmt|;
 comment|// If nonzero kill the process with this exit code upon finding leaks.
 name|int
 name|exitcode
+decl_stmt|;
+comment|// Suppressions file name.
+specifier|const
+name|char
+modifier|*
+name|suppressions
 decl_stmt|;
 comment|// Flags controlling the root set of reachable memory.
 comment|// Global variables (.data and .bss).
@@ -200,6 +216,10 @@ decl_stmt|;
 comment|// Consider unaligned pointers valid.
 name|bool
 name|use_unaligned
+decl_stmt|;
+comment|// User-visible verbosity.
+name|int
+name|verbosity
 decl_stmt|;
 comment|// Debug logging.
 name|bool
@@ -225,31 +245,6 @@ operator|&
 name|lsan_flags
 return|;
 block|}
-name|void
-name|InitCommonLsan
-parameter_list|()
-function_decl|;
-comment|// Testing interface. Find leaked chunks and dump their addresses to vector.
-name|void
-name|ReportLeaked
-argument_list|(
-name|InternalVector
-operator|<
-name|void
-operator|*
-operator|>
-operator|*
-name|leaked
-argument_list|,
-name|uptr
-name|sources
-argument_list|)
-decl_stmt|;
-comment|// Normal leak check. Find leaks and print a report according to flags.
-name|void
-name|DoLeakCheck
-parameter_list|()
-function_decl|;
 struct|struct
 name|Leak
 block|{
@@ -264,6 +259,9 @@ name|stack_trace_id
 decl_stmt|;
 name|bool
 name|is_directly_leaked
+decl_stmt|;
+name|bool
+name|is_suppressed
 decl_stmt|;
 block|}
 struct|;
@@ -315,9 +313,13 @@ operator|==
 literal|0
 return|;
 block|}
+name|uptr
+name|ApplySuppressions
+parameter_list|()
+function_decl|;
 name|private
 label|:
-name|InternalVector
+name|InternalMmapVector
 operator|<
 name|Leak
 operator|>
@@ -325,6 +327,13 @@ name|leaks_
 expr_stmt|;
 block|}
 empty_stmt|;
+typedef|typedef
+name|InternalMmapVector
+operator|<
+name|uptr
+operator|>
+name|Frontier
+expr_stmt|;
 comment|// Platform-specific functions.
 name|void
 name|InitializePlatformSpecificModules
@@ -332,206 +341,78 @@ parameter_list|()
 function_decl|;
 name|void
 name|ProcessGlobalRegions
-argument_list|(
-name|InternalVector
-operator|<
-name|uptr
-operator|>
-operator|*
+parameter_list|(
+name|Frontier
+modifier|*
 name|frontier
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|void
 name|ProcessPlatformSpecificAllocations
-argument_list|(
-name|InternalVector
-operator|<
-name|uptr
-operator|>
-operator|*
+parameter_list|(
+name|Frontier
+modifier|*
 name|frontier
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|void
 name|ScanRangeForPointers
-argument_list|(
+parameter_list|(
 name|uptr
 name|begin
-argument_list|,
+parameter_list|,
 name|uptr
 name|end
-argument_list|,
-name|InternalVector
-operator|<
-name|uptr
-operator|>
-operator|*
+parameter_list|,
+name|Frontier
+modifier|*
 name|frontier
-argument_list|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|region_type
-argument_list|,
+parameter_list|,
 name|ChunkTag
 name|tag
-argument_list|)
-decl_stmt|;
-comment|// Callables for iterating over chunks. Those classes are used as template
-comment|// parameters in ForEachChunk, so we must expose them here to allow for explicit
-comment|// template instantiation.
-comment|// Identifies unreachable chunks which must be treated as reachable. Marks them
-comment|// as reachable and adds them to the frontier.
-name|class
-name|ProcessPlatformSpecificAllocationsCb
+parameter_list|)
+function_decl|;
+enum|enum
+name|IgnoreObjectResult
 block|{
-name|public
-label|:
-name|explicit
-name|ProcessPlatformSpecificAllocationsCb
-argument_list|(
-name|InternalVector
-operator|<
-name|uptr
-operator|>
-operator|*
-name|frontier
-argument_list|)
-range|:
-name|frontier_
-argument_list|(
-argument|frontier
-argument_list|)
-block|{}
-name|void
-name|operator
-argument_list|()
-operator|(
-name|void
-operator|*
-name|p
-operator|)
-specifier|const
-decl_stmt|;
-name|private
-label|:
-name|InternalVector
-operator|<
-name|uptr
-operator|>
-operator|*
-name|frontier_
-expr_stmt|;
+name|kIgnoreObjectSuccess
+block|,
+name|kIgnoreObjectAlreadyIgnored
+block|,
+name|kIgnoreObjectInvalid
 block|}
-empty_stmt|;
-comment|// Prints addresses of unreachable chunks.
-name|class
-name|PrintLeakedCb
-block|{
-name|public
-label|:
+enum|;
+comment|// Functions called from the parent tool.
 name|void
-name|operator
-argument_list|()
-operator|(
+name|InitCommonLsan
+parameter_list|()
+function_decl|;
 name|void
-operator|*
-name|p
-operator|)
-specifier|const
-expr_stmt|;
-block|}
-empty_stmt|;
-comment|// Aggregates unreachable chunks into a LeakReport.
-name|class
-name|CollectLeaksCb
-block|{
-name|public
-label|:
-name|explicit
-name|CollectLeaksCb
-argument_list|(
-name|LeakReport
-operator|*
-name|leak_report
-argument_list|)
-operator|:
-name|leak_report_
-argument_list|(
-argument|leak_report
-argument_list|)
-block|{}
-name|void
-name|operator
-argument_list|()
-operator|(
-name|void
-operator|*
-name|p
-operator|)
-specifier|const
-expr_stmt|;
-name|private
-label|:
-name|LeakReport
-modifier|*
-name|leak_report_
-decl_stmt|;
-block|}
-empty_stmt|;
-comment|// Resets each chunk's tag to default (kDirectlyLeaked).
-name|class
-name|ClearTagCb
-block|{
-name|public
-label|:
-name|void
-name|operator
-argument_list|()
-operator|(
-name|void
-operator|*
-name|p
-operator|)
-specifier|const
-expr_stmt|;
-block|}
-empty_stmt|;
-comment|// Scans each leaked chunk for pointers to other leaked chunks, and marks each
-comment|// of them as indirectly leaked.
-name|class
-name|MarkIndirectlyLeakedCb
-block|{
-name|public
-label|:
-name|void
-name|operator
-argument_list|()
-operator|(
-name|void
-operator|*
-name|p
-operator|)
-specifier|const
-expr_stmt|;
-block|}
-empty_stmt|;
+name|DoLeakCheck
+parameter_list|()
+function_decl|;
+name|bool
+name|DisabledInThisThread
+parameter_list|()
+function_decl|;
 comment|// The following must be implemented in the parent tool.
-name|template
-operator|<
-name|typename
-name|Callable
-operator|>
 name|void
 name|ForEachChunk
-argument_list|(
-name|Callable
-specifier|const
-operator|&
+parameter_list|(
+name|ForEachChunkCallback
 name|callback
-argument_list|)
-expr_stmt|;
-comment|// The address range occupied by the global allocator object.
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+comment|// Returns the address range occupied by the global allocator object.
 name|void
 name|GetAllocatorGlobalRange
 parameter_list|(
@@ -593,10 +474,33 @@ modifier|*
 name|cache_end
 parameter_list|)
 function_decl|;
-comment|// If p points into a chunk that has been allocated to the user, return its
-comment|// user-visible address. Otherwise, return 0.
+name|void
+name|ForEachExtraStackRange
+parameter_list|(
+name|uptr
+name|os_id
+parameter_list|,
+name|RangeIteratorCallback
+name|callback
+parameter_list|,
 name|void
 modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+comment|// If called from the main thread, updates the main thread's TID in the thread
+comment|// registry. We need this to handle processes that fork() without a subsequent
+comment|// exec(), which invalidates the recorded TID. To update it, we must call
+comment|// gettid() from the main thread. Our solution is to call this function before
+comment|// leak checking and also before every call to pthread_create() (to handle cases
+comment|// where leak checking is initiated from a non-main thread).
+name|void
+name|EnsureMainThreadIDIsCorrect
+parameter_list|()
+function_decl|;
+comment|// If p points into a chunk that has been allocated to the user, returns its
+comment|// user-visible address. Otherwise, returns 0.
+name|uptr
 name|PointsIntoChunk
 parameter_list|(
 name|void
@@ -604,11 +508,19 @@ modifier|*
 name|p
 parameter_list|)
 function_decl|;
-comment|// Return address of user-visible chunk contained in this allocator chunk.
-name|void
-modifier|*
+comment|// Returns address of user-visible chunk contained in this allocator chunk.
+name|uptr
 name|GetUserBegin
 parameter_list|(
+name|uptr
+name|chunk
+parameter_list|)
+function_decl|;
+comment|// Helper for __lsan_ignore_object().
+name|IgnoreObjectResult
+name|IgnoreObjectLocked
+parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -620,12 +532,11 @@ name|LsanMetadata
 block|{
 name|public
 label|:
-comment|// Constructor accepts pointer to user-visible chunk.
+comment|// Constructor accepts address of user-visible chunk.
 name|explicit
 name|LsanMetadata
 parameter_list|(
-name|void
-modifier|*
+name|uptr
 name|chunk
 parameter_list|)
 function_decl|;
@@ -669,6 +580,31 @@ end_decl_stmt
 
 begin_comment
 comment|// namespace __lsan
+end_comment
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|SANITIZER_WEAK_ATTRIBUTE
+name|int
+name|__lsan_is_turned_off
+parameter_list|()
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|SANITIZER_WEAK_ATTRIBUTE
+specifier|const
+name|char
+modifier|*
+name|__lsan_default_suppressions
+parameter_list|()
+function_decl|;
+block|}
+end_extern
+
+begin_comment
+comment|// extern "C"
 end_comment
 
 begin_endif

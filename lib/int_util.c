@@ -46,6 +46,12 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_macro
 name|__attribute__
 argument_list|(
@@ -54,6 +60,11 @@ literal|"hidden"
 argument|))
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -91,9 +102,6 @@ begin_elif
 elif|#
 directive|elif
 name|__APPLE__
-operator|&&
-operator|!
-name|__STATIC__
 end_elif
 
 begin_comment
@@ -133,6 +141,12 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_macro
 name|__attribute__
 argument_list|(
@@ -148,6 +162,11 @@ literal|"hidden"
 argument|))
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -196,6 +215,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_macro
 name|__attribute__
 argument_list|(
@@ -211,6 +236,11 @@ literal|"hidden"
 argument|))
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

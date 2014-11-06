@@ -287,11 +287,8 @@ name|RACE
 goto|;
 block|}
 comment|// Do the memory access intersect?
-comment|// In Go all memory accesses are 1 byte, so there can be no intersections.
 if|if
 condition|(
-name|kCppMode
-operator|&&
 name|Shadow
 operator|::
 name|TwoRangesIntersect

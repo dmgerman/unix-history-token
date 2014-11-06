@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -107,6 +113,20 @@ end_comment
 begin_comment
 comment|/*  * --- GCOV file format I/O primitives ---  */
 end_comment
+
+begin_comment
+comment|/*  * The current file name we're outputting. Used primarily for error logging.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|filename
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * The current file we're outputting.  */
@@ -883,7 +903,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|map_file
 parameter_list|()
 block|{
@@ -903,6 +923,17 @@ argument_list|(
 name|output_file
 argument_list|)
 expr_stmt|;
+comment|/* A size of 0 is invalid to `mmap'. Return a fail here, but don't issue an    * error message because it should "just work" for the user. */
+if|if
+condition|(
+name|file_size
+operator|==
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|write_buffer
 operator|=
 name|mmap
@@ -924,6 +955,45 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|write_buffer
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+operator|-
+literal|1
+condition|)
+block|{
+name|int
+name|errnum
+init|=
+name|errno
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"profiling: %s: cannot map: %s\n"
+argument_list|,
+name|filename
+argument_list|,
+name|strerror
+argument_list|(
+name|errnum
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -933,6 +1003,8 @@ name|void
 name|unmap_file
 parameter_list|()
 block|{
+if|if
+condition|(
 name|msync
 argument_list|(
 name|write_buffer
@@ -941,7 +1013,35 @@ name|file_size
 argument_list|,
 name|MS_SYNC
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|int
+name|errnum
+init|=
+name|errno
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"profiling: %s: cannot msync: %s\n"
+argument_list|,
+name|filename
+argument_list|,
+name|strerror
+argument_list|(
+name|errnum
+argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
+comment|/* We explicitly ignore errors from unmapping because at this point the data    * is written and we don't care.    */
+operator|(
+name|void
+operator|)
 name|munmap
 argument_list|(
 name|write_buffer
@@ -985,15 +1085,6 @@ literal|4
 index|]
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|filename
-init|=
-name|mangle_filename
-argument_list|(
-name|orig_filename
-argument_list|)
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -1001,6 +1092,13 @@ name|mode
 init|=
 literal|"r+b"
 decl_stmt|;
+name|filename
+operator|=
+name|mangle_filename
+argument_list|(
+name|orig_filename
+argument_list|)
+expr_stmt|;
 comment|/* Try just opening the file. */
 name|new_file
 operator|=
@@ -1074,23 +1172,30 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|output_file
+name|fd
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* Bah! It's hopeless. */
+name|int
+name|errnum
+init|=
+name|errno
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"profiling:%s: cannot open\n"
+literal|"profiling: %s: cannot open: %s\n"
 argument_list|,
 name|filename
-argument_list|)
-expr_stmt|;
-name|free
+argument_list|,
+name|strerror
 argument_list|(
-name|filename
+name|errnum
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1141,9 +1246,43 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|map_file
 argument_list|()
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* mmap failed, try to recover by clobbering */
+name|new_file
+operator|=
+literal|1
 expr_stmt|;
+name|write_buffer
+operator|=
+name|NULL
+expr_stmt|;
+name|cur_buffer_size
+operator|=
+literal|0
+expr_stmt|;
+name|resize_write_buffer
+argument_list|(
+name|WRITE_BUFFER_SIZE
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|write_buffer
+argument_list|,
+literal|0
+argument_list|,
+name|WRITE_BUFFER_SIZE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* gcda file, version, stamp LLVM. */
 name|write_bytes
@@ -1165,11 +1304,6 @@ argument_list|(
 literal|"MVLL"
 argument_list|,
 literal|4
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|filename
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1440,7 +1574,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"profiling:invalid magic number (0x%08x)\n"
+literal|"profiling:invalid arc tag (0x%08x)\n"
 argument_list|,
 name|val
 argument_list|)
@@ -1626,16 +1760,210 @@ end_function
 
 begin_function
 name|void
-name|llvm_gcda_end_file
+name|llvm_gcda_summary_info
 parameter_list|()
 block|{
-comment|/* Write out EOF record. */
+specifier|const
+name|int
+name|obj_summary_len
+init|=
+literal|9
+decl_stmt|;
+comment|// length for gcov compatibility
+name|uint32_t
+name|i
+decl_stmt|;
+name|uint32_t
+name|runs
+init|=
+literal|1
+decl_stmt|;
+name|uint32_t
+name|val
+init|=
+literal|0
+decl_stmt|;
+name|uint64_t
+name|save_cur_pos
+init|=
+name|cur_pos
+decl_stmt|;
 if|if
 condition|(
 operator|!
 name|output_file
 condition|)
 return|return;
+name|val
+operator|=
+name|read_32bit_value
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|!=
+operator|(
+name|uint32_t
+operator|)
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* There are counters present in the file. Merge them. */
+if|if
+condition|(
+name|val
+operator|!=
+literal|0xa1000000
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"profiling:invalid object tag (0x%08x)\n"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|val
+operator|=
+name|read_32bit_value
+argument_list|()
+expr_stmt|;
+comment|// length
+if|if
+condition|(
+name|val
+operator|!=
+name|obj_summary_len
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"profiling:invalid object length (%d)\n"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+comment|// length
+return|return;
+block|}
+name|read_32bit_value
+argument_list|()
+expr_stmt|;
+comment|// checksum, unused
+name|read_32bit_value
+argument_list|()
+expr_stmt|;
+comment|// num, unused
+name|runs
+operator|+=
+name|read_32bit_value
+argument_list|()
+expr_stmt|;
+comment|// add previous run count to new counter
+block|}
+name|cur_pos
+operator|=
+name|save_cur_pos
+expr_stmt|;
+comment|/* Object summary tag */
+name|write_bytes
+argument_list|(
+literal|"\0\0\0\xa1"
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|write_32bit_value
+argument_list|(
+name|obj_summary_len
+argument_list|)
+expr_stmt|;
+name|write_32bit_value
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// checksum, unused
+name|write_32bit_value
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// num, unused
+name|write_32bit_value
+argument_list|(
+name|runs
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|3
+init|;
+name|i
+operator|<
+name|obj_summary_len
+condition|;
+operator|++
+name|i
+control|)
+name|write_32bit_value
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Program summary tag */
+name|write_bytes
+argument_list|(
+literal|"\0\0\0\xa3"
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+comment|// tag indicates 1 program
+name|write_32bit_value
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// 0 length
+ifdef|#
+directive|ifdef
+name|DEBUG_GCDAPROFILING
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"llvmgcda:   %u runs\n"
+argument_list|,
+name|runs
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|llvm_gcda_end_file
+parameter_list|()
+block|{
+comment|/* Write out EOF record. */
+if|if
+condition|(
+name|output_file
+condition|)
+block|{
 name|write_bytes
 argument_list|(
 literal|"\0\0\0\0\0\0\0\0"
@@ -1683,6 +2011,12 @@ expr_stmt|;
 name|write_buffer
 operator|=
 name|NULL
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|filename
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

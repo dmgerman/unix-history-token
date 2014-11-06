@@ -102,6 +102,7 @@ name|void
 name|__msan_set_origin
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|a
@@ -118,6 +119,7 @@ name|uint32_t
 name|__msan_get_origin
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|a
@@ -138,6 +140,7 @@ name|void
 name|__msan_unpoison
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|a
@@ -151,6 +154,7 @@ name|void
 name|__msan_poison
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|a
@@ -164,6 +168,7 @@ name|void
 name|__msan_partial_poison
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|data
@@ -181,6 +186,7 @@ name|intptr_t
 name|__msan_test_shadow
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|x
@@ -205,11 +211,20 @@ name|int
 name|expect_umr
 parameter_list|)
 function_decl|;
+comment|/* Change the value of keep_going flag. Non-zero value means don't terminate      program execution when an error is detected. This will not affect error in      modules that were compiled without the corresponding compiler flag. */
+name|void
+name|__msan_set_keep_going
+parameter_list|(
+name|int
+name|keep_going
+parameter_list|)
+function_decl|;
 comment|/* Print shadow and origin for the memory range to stdout in a human-readable      format. */
 name|void
 name|__msan_print_shadow
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|x
@@ -233,12 +248,96 @@ name|void
 name|__msan_allocated_memory
 parameter_list|(
 specifier|const
+specifier|volatile
 name|void
 modifier|*
 name|data
 parameter_list|,
 name|size_t
 name|size
+parameter_list|)
+function_decl|;
+comment|/* This function may be optionally provided by user and should return      a string containing Msan runtime options. See msan_flags.h for details. */
+specifier|const
+name|char
+modifier|*
+name|__msan_default_options
+parameter_list|()
+function_decl|;
+comment|/***********************************/
+comment|/* Allocator statistics interface. */
+comment|/* Returns the estimated number of bytes that will be reserved by allocator      for request of "size" bytes. If Msan allocator can't allocate that much      memory, returns the maximal possible allocation size, otherwise returns      "size". */
+name|size_t
+name|__msan_get_estimated_allocated_size
+parameter_list|(
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+comment|/* Returns true if p was returned by the Msan allocator and      is not yet freed. */
+name|int
+name|__msan_get_ownership
+parameter_list|(
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+comment|/* Returns the number of bytes reserved for the pointer p.      Requires (get_ownership(p) == true) or (p == 0). */
+name|size_t
+name|__msan_get_allocated_size
+parameter_list|(
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+comment|/* Number of bytes, allocated and not yet freed by the application. */
+name|size_t
+name|__msan_get_current_allocated_bytes
+parameter_list|()
+function_decl|;
+comment|/* Number of bytes, mmaped by msan allocator to fulfill allocation requests.      Generally, for request of X bytes, allocator can reserve and add to free      lists a large number of chunks of size X to use them for future requests.      All these chunks count toward the heap size. Currently, allocator never      releases memory to OS (instead, it just puts freed chunks to free      lists). */
+name|size_t
+name|__msan_get_heap_size
+parameter_list|()
+function_decl|;
+comment|/* Number of bytes, mmaped by msan allocator, which can be used to fulfill      allocation requests. When a user program frees memory chunk, it can first      fall into quarantine and will count toward __msan_get_free_bytes()      later. */
+name|size_t
+name|__msan_get_free_bytes
+parameter_list|()
+function_decl|;
+comment|/* Number of bytes in unmapped pages, that are released to OS. Currently,      always returns 0. */
+name|size_t
+name|__msan_get_unmapped_bytes
+parameter_list|()
+function_decl|;
+comment|/* Malloc hooks that may be optionally provided by user.      __msan_malloc_hook(ptr, size) is called immediately after        allocation of "size" bytes, which returned "ptr".      __msan_free_hook(ptr) is called immediately before        deallocation of "ptr". */
+name|void
+name|__msan_malloc_hook
+parameter_list|(
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+name|void
+name|__msan_free_hook
+parameter_list|(
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|ptr
 parameter_list|)
 function_decl|;
 else|#

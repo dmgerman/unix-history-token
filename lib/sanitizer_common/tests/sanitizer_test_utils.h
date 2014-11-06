@@ -211,7 +211,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ATTRIBUTE_NO_ADDRESS_SAFETY_ANALYSIS
+name|ATTRIBUTE_NO_SANITIZE_ADDRESS
 end_ifndef
 
 begin_if
@@ -231,7 +231,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_NO_ADDRESS_SAFETY_ANALYSIS
+name|ATTRIBUTE_NO_SANITIZE_ADDRESS
 define|\
 value|__attribute__((no_sanitize_address))
 end_define
@@ -244,7 +244,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_NO_ADDRESS_SAFETY_ANALYSIS
+name|ATTRIBUTE_NO_SANITIZE_ADDRESS
 end_define
 
 begin_endif
@@ -258,7 +258,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// ATTRIBUTE_NO_ADDRESS_SAFETY_ANALYSIS
+comment|// ATTRIBUTE_NO_SANITIZE_ADDRESS
 end_comment
 
 begin_if

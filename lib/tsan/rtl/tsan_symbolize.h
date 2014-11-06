@@ -75,6 +75,14 @@ begin_decl_stmt
 name|namespace
 name|__tsan
 block|{
+name|void
+name|EnterSymbolizer
+parameter_list|()
+function_decl|;
+name|void
+name|ExitSymbolizer
+parameter_list|()
+function_decl|;
 name|ReportStack
 modifier|*
 name|SymbolizeCode

@@ -216,7 +216,7 @@ expr_stmt|;
 block|}
 name|private
 label|:
-name|InternalVector
+name|InternalMmapVector
 operator|<
 name|SuspendedThreadID
 operator|>

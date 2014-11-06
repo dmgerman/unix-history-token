@@ -34,6 +34,15 @@ name|jptr
 typedef|;
 comment|// NOLINT
 name|void
+name|__tsan_java_preinit
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|libjvm_path
+parameter_list|)
+function_decl|;
+name|void
 name|__tsan_java_init
 parameter_list|(
 name|jptr

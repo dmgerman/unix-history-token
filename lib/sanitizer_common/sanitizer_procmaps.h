@@ -130,7 +130,7 @@ block|}
 empty_stmt|;
 else|#
 directive|else
-comment|// _WIN32
+comment|// SANITIZER_WINDOWS
 if|#
 directive|if
 name|SANITIZER_LINUX
@@ -456,9 +456,69 @@ endif|#
 directive|endif
 block|}
 empty_stmt|;
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|fill_profile_f
+function_decl|)
+parameter_list|(
+name|uptr
+name|start
+parameter_list|,
+name|uptr
+name|rss
+parameter_list|,
+name|bool
+name|file
+parameter_list|,
+comment|/*out*/
+name|uptr
+modifier|*
+name|stats
+parameter_list|,
+name|uptr
+name|stats_size
+parameter_list|)
+function_decl|;
+comment|// Parse the contents of /proc/self/smaps and generate a memory profile.
+comment|// |cb| is a tool-specific callback that fills the |stats| array containing
+comment|// |stats_size| elements.
+name|void
+name|GetMemoryProfile
+parameter_list|(
+name|fill_profile_f
+name|cb
+parameter_list|,
+name|uptr
+modifier|*
+name|stats
+parameter_list|,
+name|uptr
+name|stats_size
+parameter_list|)
+function_decl|;
+comment|// Returns code range for the specified module.
+name|bool
+name|GetCodeRangeForFile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|module
+parameter_list|,
+name|uptr
+modifier|*
+name|start
+parameter_list|,
+name|uptr
+modifier|*
+name|end
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
-comment|// _WIN32
+comment|// SANITIZER_WINDOWS
 block|}
 end_decl_stmt
 

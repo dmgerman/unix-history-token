@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_tsan -O1 %s -o %t&& %t 2>&1 | FileCheck %s
+comment|// RUN: %clang_tsan -O1 %s -o %t&& not %t 2>&1 | FileCheck %s
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -25,6 +31,11 @@ modifier|*
 name|x
 parameter_list|)
 block|{
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|Global
 operator|=
 literal|42
@@ -48,11 +59,11 @@ argument_list|(
 operator|&
 name|t
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|Thread1
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 name|Global
@@ -63,7 +74,7 @@ name|pthread_join
 argument_list|(
 name|t
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return

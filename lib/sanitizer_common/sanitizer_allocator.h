@@ -99,6 +99,12 @@ begin_decl_stmt
 name|namespace
 name|__sanitizer
 block|{
+comment|// Depending on allocator_may_return_null either return 0 or crash.
+name|void
+modifier|*
+name|AllocatorReturnNull
+parameter_list|()
+function_decl|;
 comment|// SizeClassMap maps allocation sizes into size classes and back.
 comment|// Class 0 corresponds to size 0.
 comment|// Classes 1 - 16 correspond to sizes 16 to 256 (size = class_id * 16).
@@ -1372,6 +1378,28 @@ struct|;
 end_struct
 
 begin_comment
+comment|// Callback type for iterating over chunks.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|ForEachChunkCallback
+function_decl|)
+parameter_list|(
+name|uptr
+name|chunk
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|// SizeClassAllocator64 -- allocator for 64-bit address space.
 end_comment
 
@@ -1780,6 +1808,7 @@ specifier|static
 name|bool
 name|PointerIsMine
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -1808,6 +1837,7 @@ specifier|static
 name|uptr
 name|GetSizeClass
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -1836,6 +1866,7 @@ name|void
 modifier|*
 name|GetBlockBegin
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -2009,6 +2040,7 @@ name|void
 modifier|*
 name|GetMetaData
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -2370,28 +2402,24 @@ block|}
 end_function
 
 begin_comment
-comment|// Iterate over existing chunks. May include chunks that are not currently
+comment|// Iterate over all existing chunks.
 end_comment
 
 begin_comment
-comment|// allocated to the user (e.g. freed).
+comment|// The allocator must be locked when calling this function.
 end_comment
 
-begin_comment
-comment|// The caller is expected to call ForceLock() before calling this function.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|Callable
-operator|>
+begin_function
 name|void
 name|ForEachChunk
-argument_list|(
-argument|const Callable&callback
-argument_list|)
+parameter_list|(
+name|ForEachChunkCallback
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
 block|{
 for|for
 control|(
@@ -2439,11 +2467,11 @@ decl_stmt|;
 for|for
 control|(
 name|uptr
-name|p
+name|chunk
 init|=
 name|region_beg
 init|;
-name|p
+name|chunk
 operator|<
 name|region_beg
 operator|+
@@ -2451,26 +2479,25 @@ name|region
 operator|->
 name|allocated_user
 condition|;
-name|p
+name|chunk
 operator|+=
 name|chunk_size
 control|)
 block|{
-comment|// Too slow: CHECK_EQ((void *)p, GetBlockBegin((void *)p));
+comment|// Too slow: CHECK_EQ((void *)chunk, GetBlockBegin((void *)chunk));
 name|callback
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|p
+name|chunk
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+block|}
+end_function
 
 begin_typedef
-unit|}   }
 typedef|typedef
 name|SizeClassMap
 name|SizeClassMapT
@@ -3658,6 +3685,7 @@ name|void
 modifier|*
 name|GetMetaData
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -3916,6 +3944,7 @@ begin_function
 name|bool
 name|PointerIsMine
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -3936,6 +3965,7 @@ begin_function
 name|uptr
 name|GetSizeClass
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -3964,6 +3994,7 @@ name|void
 modifier|*
 name|GetBlockBegin
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -4265,28 +4296,24 @@ block|}
 end_function
 
 begin_comment
-comment|// Iterate over existing chunks. May include chunks that are not currently
+comment|// Iterate over all existing chunks.
 end_comment
 
 begin_comment
-comment|// allocated to the user (e.g. freed).
+comment|// The allocator must be locked when calling this function.
 end_comment
 
-begin_comment
-comment|// The caller is expected to call ForceLock() before calling this function.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|Callable
-operator|>
+begin_function
 name|void
 name|ForEachChunk
-argument_list|(
-argument|const Callable&callback
-argument_list|)
+parameter_list|(
+name|ForEachChunkCallback
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
 block|{
 for|for
 control|(
@@ -4344,11 +4371,11 @@ decl_stmt|;
 for|for
 control|(
 name|uptr
-name|p
+name|chunk
 init|=
 name|region_beg
 init|;
-name|p
+name|chunk
 operator|<
 name|region_beg
 operator|+
@@ -4356,26 +4383,25 @@ name|max_chunks_in_region
 operator|*
 name|chunk_size
 condition|;
-name|p
+name|chunk
 operator|+=
 name|chunk_size
 control|)
 block|{
-comment|// Too slow: CHECK_EQ((void *)p, GetBlockBegin((void *)p));
+comment|// Too slow: CHECK_EQ((void *)chunk, GetBlockBegin((void *)chunk));
 name|callback
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|p
+name|chunk
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+block|}
+end_function
 
 begin_function
-unit|}   }
 name|void
 name|PrintStats
 parameter_list|()
@@ -4608,7 +4634,13 @@ argument_list|(
 name|res
 argument_list|)
 argument_list|,
+name|static_cast
+operator|<
+name|u8
+operator|>
+operator|(
 name|class_id
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5741,7 +5773,8 @@ operator|<
 name|size
 condition|)
 return|return
-literal|0
+name|AllocatorReturnNull
+argument_list|()
 return|;
 comment|// Overflow.
 name|uptr
@@ -5931,6 +5964,10 @@ init|=
 name|n_chunks_
 operator|++
 decl_stmt|;
+name|chunks_sorted_
+operator|=
+name|false
+expr_stmt|;
 name|CHECK_LT
 argument_list|(
 name|idx
@@ -6096,6 +6133,10 @@ expr_stmt|;
 name|n_chunks_
 operator|--
 expr_stmt|;
+name|chunks_sorted_
+operator|=
+name|false
+expr_stmt|;
 name|stats
 operator|.
 name|n_frees
@@ -6237,6 +6278,7 @@ begin_function
 name|bool
 name|PointerIsMine
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -6287,12 +6329,39 @@ name|void
 modifier|*
 name|GetMetaData
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
 parameter_list|)
 block|{
 comment|// Too slow: CHECK_EQ(p, GetBlockBegin(p));
+if|if
+condition|(
+operator|!
+name|IsAligned
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|>
+operator|(
+name|p
+operator|)
+argument_list|,
+name|page_size_
+argument_list|)
+condition|)
+block|{
+name|Printf
+argument_list|(
+literal|"%s: bad pointer %p\n"
+argument_list|,
+name|SanitizerToolName
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|CHECK
 argument_list|(
 name|IsAligned
@@ -6309,6 +6378,7 @@ name|page_size_
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|GetHeader
 argument_list|(
@@ -6325,6 +6395,7 @@ name|void
 modifier|*
 name|GetBlockBegin
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|ptr
@@ -6480,6 +6551,291 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// This function does the same as GetBlockBegin, but is much faster.
+end_comment
+
+begin_comment
+comment|// Must be called with the allocator locked.
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|GetBlockBeginFastLocked
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|)
+block|{
+name|mutex_
+operator|.
+name|CheckLocked
+argument_list|()
+expr_stmt|;
+name|uptr
+name|p
+init|=
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|>
+operator|(
+name|ptr
+operator|)
+decl_stmt|;
+name|uptr
+name|n
+init|=
+name|n_chunks_
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|n
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|chunks_sorted_
+condition|)
+block|{
+comment|// Do one-time sort. chunks_sorted_ is reset in Allocate/Deallocate.
+name|SortArray
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|*
+operator|>
+operator|(
+name|chunks_
+operator|)
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|uptr
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
+control|)
+name|chunks_
+index|[
+name|i
+index|]
+operator|->
+name|chunk_idx
+operator|=
+name|i
+expr_stmt|;
+name|chunks_sorted_
+operator|=
+name|true
+expr_stmt|;
+name|min_mmap_
+operator|=
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|>
+operator|(
+name|chunks_
+index|[
+literal|0
+index|]
+operator|)
+expr_stmt|;
+name|max_mmap_
+operator|=
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|>
+operator|(
+name|chunks_
+index|[
+name|n
+operator|-
+literal|1
+index|]
+operator|)
+operator|+
+name|chunks_
+index|[
+name|n
+operator|-
+literal|1
+index|]
+operator|->
+name|map_size
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|p
+operator|<
+name|min_mmap_
+operator|||
+name|p
+operator|>=
+name|max_mmap_
+condition|)
+return|return
+literal|0
+return|;
+name|uptr
+name|beg
+init|=
+literal|0
+decl_stmt|,
+name|end
+init|=
+name|n
+operator|-
+literal|1
+decl_stmt|;
+comment|// This loop is a log(n) lower_bound. It does not check for the exact match
+comment|// to avoid expensive cache-thrashing loads.
+while|while
+condition|(
+name|end
+operator|-
+name|beg
+operator|>=
+literal|2
+condition|)
+block|{
+name|uptr
+name|mid
+init|=
+operator|(
+name|beg
+operator|+
+name|end
+operator|)
+operator|/
+literal|2
+decl_stmt|;
+comment|// Invariant: mid>= beg + 1
+if|if
+condition|(
+name|p
+operator|<
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|>
+operator|(
+name|chunks_
+index|[
+name|mid
+index|]
+operator|)
+condition|)
+name|end
+operator|=
+name|mid
+operator|-
+literal|1
+expr_stmt|;
+comment|// We are not interested in chunks_[mid].
+else|else
+name|beg
+operator|=
+name|mid
+expr_stmt|;
+comment|// chunks_[mid] may still be what we want.
+block|}
+if|if
+condition|(
+name|beg
+operator|<
+name|end
+condition|)
+block|{
+name|CHECK_EQ
+argument_list|(
+name|beg
+operator|+
+literal|1
+argument_list|,
+name|end
+argument_list|)
+expr_stmt|;
+comment|// There are 2 chunks left, choose one.
+if|if
+condition|(
+name|p
+operator|>=
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|>
+operator|(
+name|chunks_
+index|[
+name|end
+index|]
+operator|)
+condition|)
+name|beg
+operator|=
+name|end
+expr_stmt|;
+block|}
+name|Header
+modifier|*
+name|h
+init|=
+name|chunks_
+index|[
+name|beg
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|map_beg
+operator|+
+name|h
+operator|->
+name|map_size
+operator|<=
+name|p
+operator|||
+name|p
+operator|<
+name|h
+operator|->
+name|map_beg
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|GetUser
+argument_list|(
+name|h
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|PrintStats
@@ -6604,28 +6960,24 @@ block|}
 end_function
 
 begin_comment
-comment|// Iterate over existing chunks. May include chunks that are not currently
+comment|// Iterate over all existing chunks.
 end_comment
 
 begin_comment
-comment|// allocated to the user (e.g. freed).
+comment|// The allocator must be locked when calling this function.
 end_comment
 
-begin_comment
-comment|// The caller is expected to call ForceLock() before calling this function.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|Callable
-operator|>
+begin_function
 name|void
 name|ForEachChunk
-argument_list|(
-argument|const Callable&callback
-argument_list|)
+parameter_list|(
+name|ForEachChunkCallback
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
 block|{
 for|for
 control|(
@@ -6643,6 +6995,11 @@ operator|++
 control|)
 name|callback
 argument_list|(
+name|reinterpret_cast
+operator|<
+name|uptr
+operator|>
+operator|(
 name|GetUser
 argument_list|(
 name|chunks_
@@ -6650,10 +7007,13 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|)
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+end_function
 
 begin_label
 name|private
@@ -6706,13 +7066,14 @@ name|uptr
 name|p
 parameter_list|)
 block|{
-name|CHECK_EQ
+name|CHECK
+argument_list|(
+name|IsAligned
 argument_list|(
 name|p
-operator|%
-name|page_size_
 argument_list|,
-literal|0
+name|page_size_
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6735,6 +7096,7 @@ name|Header
 modifier|*
 name|GetHeader
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -6765,16 +7127,17 @@ modifier|*
 name|h
 parameter_list|)
 block|{
-name|CHECK_EQ
+name|CHECK
+argument_list|(
+name|IsAligned
 argument_list|(
 operator|(
 name|uptr
 operator|)
 name|h
-operator|%
-name|page_size_
 argument_list|,
-literal|0
+name|page_size_
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6838,6 +7201,20 @@ end_decl_stmt
 begin_decl_stmt
 name|uptr
 name|n_chunks_
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uptr
+name|min_mmap_
+decl_stmt|,
+name|max_mmap_
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|chunks_sorted_
 decl_stmt|;
 end_decl_stmt
 
@@ -6965,7 +7342,8 @@ operator|<
 name|size
 condition|)
 return|return
-literal|0
+name|AllocatorReturnNull
+argument_list|()
 return|;
 end_expr_stmt
 
@@ -7324,6 +7702,7 @@ name|void
 modifier|*
 name|GetMetaData
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -7362,6 +7741,7 @@ name|void
 modifier|*
 name|GetBlockBegin
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|p
@@ -7388,6 +7768,52 @@ return|return
 name|secondary_
 operator|.
 name|GetBlockBegin
+argument_list|(
+name|p
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This function does the same as GetBlockBegin, but is much faster.
+end_comment
+
+begin_comment
+comment|// Must be called with the allocator locked.
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|GetBlockBeginFastLocked
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|)
+block|{
+if|if
+condition|(
+name|primary_
+operator|.
+name|PointerIsMine
+argument_list|(
+name|p
+argument_list|)
+condition|)
+return|return
+name|primary_
+operator|.
+name|GetBlockBegin
+argument_list|(
+name|p
+argument_list|)
+return|;
+return|return
+name|secondary_
+operator|.
+name|GetBlockBeginFastLocked
 argument_list|(
 name|p
 argument_list|)
@@ -7609,49 +8035,56 @@ block|}
 end_function
 
 begin_comment
-comment|// Iterate over existing chunks. May include chunks that are not currently
+comment|// Iterate over all existing chunks.
 end_comment
 
 begin_comment
-comment|// allocated to the user (e.g. freed).
+comment|// The allocator must be locked when calling this function.
 end_comment
 
-begin_comment
-comment|// The caller is expected to call ForceLock() before calling this function.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|Callable
-operator|>
+begin_function
 name|void
 name|ForEachChunk
-argument_list|(
-argument|const Callable&callback
-argument_list|)
+parameter_list|(
+name|ForEachChunkCallback
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
 block|{
 name|primary_
 operator|.
 name|ForEachChunk
 argument_list|(
 name|callback
+argument_list|,
+name|arg
 argument_list|)
-block|;
+expr_stmt|;
 name|secondary_
 operator|.
 name|ForEachChunk
 argument_list|(
 name|callback
+argument_list|,
+name|arg
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_label
 name|private
-operator|:
+label|:
+end_label
+
+begin_decl_stmt
 name|PrimaryAllocator
 name|primary_
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|SecondaryAllocator

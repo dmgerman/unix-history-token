@@ -78,38 +78,6 @@ file|"sanitizer_internal_defs.h"
 end_include
 
 begin_decl_stmt
-name|namespace
-name|__sanitizer
-block|{
-if|#
-directive|if
-operator|(
-name|SANITIZER_WORDSIZE
-operator|==
-literal|64
-operator|)
-operator|||
-name|SANITIZER_MAC
-typedef|typedef
-name|uptr
-name|operator_new_ptr_type
-typedef|;
-else|#
-directive|else
-typedef|typedef
-name|u32
-name|operator_new_ptr_type
-typedef|;
-endif|#
-directive|endif
-block|}
-end_decl_stmt
-
-begin_comment
-comment|// namespace __sanitizer
-end_comment
-
-begin_decl_stmt
 specifier|inline
 name|void
 modifier|*
@@ -118,7 +86,7 @@ name|new
 argument_list|(
 name|__sanitizer
 operator|::
-name|operator_new_ptr_type
+name|operator_new_size_type
 name|sz
 argument_list|,
 name|void

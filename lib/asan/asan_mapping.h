@@ -201,6 +201,104 @@ begin_comment
 comment|// || `[0x00000000, 0x1fffffff]` || LowMem     ||
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Default Linux/MIPS mapping:
+end_comment
+
+begin_comment
+comment|// || `[0x2aaa8000, 0xffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x0fffd000, 0x2aaa7fff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x0bffd000, 0x0fffcfff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x0aaa8000, 0x0bffcfff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00000000, 0x0aaa7fff]` || LowMem     ||
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kDefaultShadowScale
+init|=
+literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kDefaultShadowOffset32
+init|=
+literal|1ULL
+operator|<<
+literal|29
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kDefaultShadowOffset64
+init|=
+literal|1ULL
+operator|<<
+literal|44
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kDefaultShort64bitShadowOffset
+init|=
+literal|0x7FFF8000
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//< 2G.
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kPPC64_ShadowOffset64
+init|=
+literal|1ULL
+operator|<<
+literal|41
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kMIPS32_ShadowOffset32
+init|=
+literal|0x0aaa8000
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -244,18 +342,18 @@ else|#
 directive|else
 end_else
 
+begin_define
+define|#
+directive|define
+name|SHADOW_SCALE
+value|kDefaultShadowScale
+end_define
+
 begin_if
 if|#
 directive|if
 name|SANITIZER_ANDROID
 end_if
-
-begin_define
-define|#
-directive|define
-name|SHADOW_SCALE
-value|(3)
-end_define
 
 begin_define
 define|#
@@ -269,13 +367,6 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|SHADOW_SCALE
-value|(3)
-end_define
-
 begin_if
 if|#
 directive|if
@@ -284,12 +375,38 @@ operator|==
 literal|32
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|SHADOW_OFFSET
-value|(1<< 29)
+value|kMIPS32_ShadowOffset32
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|kDefaultShadowOffset32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -309,25 +426,20 @@ begin_define
 define|#
 directive|define
 name|SHADOW_OFFSET
-value|(1ULL<< 41)
+value|kPPC64_ShadowOffset64
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
+begin_elif
+elif|#
+directive|elif
 name|SANITIZER_MAC
-end_if
+end_elif
 
 begin_define
 define|#
 directive|define
 name|SHADOW_OFFSET
-value|(1ULL<< 44)
+value|kDefaultShadowOffset64
 end_define
 
 begin_else
@@ -339,13 +451,8 @@ begin_define
 define|#
 directive|define
 name|SHADOW_OFFSET
-value|0x7fff8000ULL
+value|kDefaultShort64bitShadowOffset
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -610,7 +717,6 @@ literal|0x4fffffffffULL
 decl_stmt|;
 else|#
 directive|else
-name|SANITIZER_INTERFACE_ATTRIBUTE
 specifier|extern
 name|uptr
 name|kHighMemEnd

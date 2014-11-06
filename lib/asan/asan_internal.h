@@ -340,6 +340,14 @@ name|tsd
 argument_list|)
 block|;
 name|void
+name|PlatformTSDDtor
+argument_list|(
+name|void
+operator|*
+name|tsd
+argument_list|)
+block|;
+name|void
 name|AppendToErrorMessageBuffer
 argument_list|(
 specifier|const

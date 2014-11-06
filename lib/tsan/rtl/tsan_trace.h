@@ -209,6 +209,19 @@ decl_stmt|;
 name|Mutex
 name|mtx
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|TSAN_GO
+comment|// Must be last to catch overflow as paging fault.
+comment|// Go shadow stack is dynamically allocated.
+name|uptr
+name|shadow_stack
+index|[
+name|kShadowStackSize
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|Trace
 argument_list|()
 operator|:

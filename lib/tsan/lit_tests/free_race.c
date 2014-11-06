@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_tsan -O1 %s -o %t&& %t 2>&1 | FileCheck %s
+comment|// RUN: %clang_tsan -O1 %s -o %t
+end_comment
+
+begin_comment
+comment|// RUN: not %t 2>&1 | FileCheck %s --check-prefix=CHECK-NOZUPP
+end_comment
+
+begin_comment
+comment|// RUN: TSAN_OPTIONS="suppressions=%s.supp print_suppressions=1" %t 2>&1 | FileCheck %s --check-prefix=CHECK-SUPP
 end_comment
 
 begin_include
@@ -183,35 +191,43 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: WARNING: ThreadSanitizer: heap-use-after-free
+comment|// CHECK-NOZUPP: WARNING: ThreadSanitizer: heap-use-after-free
 end_comment
 
 begin_comment
-comment|// CHECK:   Write of size 4 at {{.*}} by main thread{{.*}}:
+comment|// CHECK-NOZUPP:   Write of size 4 at {{.*}} by main thread{{.*}}:
 end_comment
 
 begin_comment
-comment|// CHECK:     #0 Thread2
+comment|// CHECK-NOZUPP:     #0 Thread2
 end_comment
 
 begin_comment
-comment|// CHECK:     #1 main
+comment|// CHECK-NOZUPP:     #1 main
 end_comment
 
 begin_comment
-comment|// CHECK:   Previous write of size 8 at {{.*}} by thread T1{{.*}}:
+comment|// CHECK-NOZUPP:   Previous write of size 8 at {{.*}} by thread T1{{.*}}:
 end_comment
 
 begin_comment
-comment|// CHECK:     #0 free
+comment|// CHECK-NOZUPP:     #0 free
 end_comment
 
 begin_comment
-comment|// CHECK:     #{{(1|2)}} Thread1
+comment|// CHECK-NOZUPP:     #{{(1|2)}} Thread1
 end_comment
 
 begin_comment
-comment|// CHECK: SUMMARY: ThreadSanitizer: heap-use-after-free{{.*}}Thread2
+comment|// CHECK-NOZUPP: SUMMARY: ThreadSanitizer: heap-use-after-free{{.*}}Thread2
+end_comment
+
+begin_comment
+comment|// CHECK-SUPP:   ThreadSanitizer: Matched 1 suppressions
+end_comment
+
+begin_comment
+comment|// CHECK-SUPP:    1 race:^Thread2$
 end_comment
 
 end_unit

@@ -331,6 +331,23 @@ name|GET_CALLER_PC
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|/// Try to obtain a location for the given function pointer. This might fail,
+comment|/// and produce either an invalid location or a module location for the caller.
+comment|/// If FName is non-null and the name of the function is known, set *FName to
+comment|/// the function name, otherwise *FName is unchanged.
+name|Location
+name|getFunctionLocation
+parameter_list|(
+name|uptr
+name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|FName
+parameter_list|)
+function_decl|;
 comment|/// A diagnostic severity level.
 enum|enum
 name|DiagLevel

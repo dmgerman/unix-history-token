@@ -65,21 +65,26 @@ directive|include
 file|"sanitizer_platform.h"
 end_include
 
+begin_comment
+comment|// Only use SANITIZER_*ATTRIBUTE* before the function return type!
+end_comment
+
 begin_if
 if|#
 directive|if
 name|SANITIZER_WINDOWS
 end_if
 
-begin_comment
-comment|// FIXME find out what we need on Windows. __declspec(dllexport) ?
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SANITIZER_INTERFACE_ATTRIBUTE
+value|__declspec(dllexport)
 end_define
+
+begin_comment
+comment|// FIXME find out what we need on Windows, if anything.
+end_comment
 
 begin_define
 define|#
@@ -161,6 +166,41 @@ define|#
 directive|define
 name|SANITIZER_SUPPORTS_WEAK_HOOKS
 value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__LP64__
+operator|||
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_WORDSIZE
+value|64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_WORDSIZE
+value|32
 end_define
 
 begin_endif
@@ -357,6 +397,27 @@ typedef|typedef
 name|u64
 name|OFF64_T
 typedef|;
+if|#
+directive|if
+operator|(
+name|SANITIZER_WORDSIZE
+operator|==
+literal|64
+operator|)
+operator|||
+name|SANITIZER_MAC
+typedef|typedef
+name|uptr
+name|operator_new_size_type
+typedef|;
+else|#
+directive|else
+typedef|typedef
+name|u32
+name|operator_new_size_type
+typedef|;
+endif|#
+directive|endif
 block|}
 end_decl_stmt
 
@@ -369,53 +430,79 @@ extern|extern
 literal|"C"
 block|{
 comment|// Tell the tools to write their reports to "path.<pid>" instead of stderr.
+comment|// The special values are "stdout" and "stderr".
+name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
 name|__sanitizer_set_report_path
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|path
-argument_list|)
-name|SANITIZER_INTERFACE_ATTRIBUTE
-decl_stmt|;
-comment|// Tell the tools to write their reports to given file descriptor instead of
-comment|// stderr.
-name|void
-name|__sanitizer_set_report_fd
-argument_list|(
-name|int
-name|fd
-argument_list|)
-name|SANITIZER_INTERFACE_ATTRIBUTE
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Notify the tools that the sandbox is going to be turned on. The reserved
 comment|// parameter will be used in the future to hold a structure with functions
 comment|// that the tools may call to bypass the sandbox.
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|SANITIZER_WEAK_ATTRIBUTE
 name|void
 name|__sanitizer_sandbox_on_notify
-argument_list|(
+parameter_list|(
 name|void
-operator|*
+modifier|*
 name|reserved
-argument_list|)
-name|SANITIZER_WEAK_ATTRIBUTE
-name|SANITIZER_INTERFACE_ATTRIBUTE
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// This function is called by the tool when it has just finished reporting
 comment|// an error. 'error_summary' is a one-line string that summarizes
 comment|// the error message. This function can be overridden by the client.
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|SANITIZER_WEAK_ATTRIBUTE
 name|void
 name|__sanitizer_report_error_summary
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|error_summary
-argument_list|)
-name|SANITIZER_WEAK_ATTRIBUTE
+parameter_list|)
+function_decl|;
 name|SANITIZER_INTERFACE_ATTRIBUTE
-decl_stmt|;
+name|void
+name|__sanitizer_cov_dump
+parameter_list|()
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__sanitizer_cov
+parameter_list|(
+name|void
+modifier|*
+name|pc
+parameter_list|)
+function_decl|;
+name|SANITIZER_INTERFACE_ATTRIBUTE
+name|void
+name|__sanitizer_annotate_contiguous_container
+parameter_list|(
+name|void
+modifier|*
+name|beg
+parameter_list|,
+name|void
+modifier|*
+name|end
+parameter_list|,
+name|void
+modifier|*
+name|old_mid
+parameter_list|,
+name|void
+modifier|*
+name|new_mid
+parameter_list|)
+function_decl|;
 block|}
 end_extern
 
@@ -619,6 +706,14 @@ parameter_list|)
 value|__attribute__((alias(x)))
 end_define
 
+begin_comment
+comment|// Please only use the ALIGNED macro before the type.
+end_comment
+
+begin_comment
+comment|// Using ALIGNED after the variable declaration is not portable!
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -760,6 +855,76 @@ begin_comment
 comment|// _MSC_VER
 end_comment
 
+begin_comment
+comment|// Unaligned versions of basic types.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ALIGNED
+argument_list|(
+literal|1
+argument_list|)
+name|u16
+name|uu16
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ALIGNED
+argument_list|(
+literal|1
+argument_list|)
+name|u32
+name|uu32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ALIGNED
+argument_list|(
+literal|1
+argument_list|)
+name|u64
+name|uu64
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ALIGNED
+argument_list|(
+literal|1
+argument_list|)
+name|s16
+name|us16
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ALIGNED
+argument_list|(
+literal|1
+argument_list|)
+name|s32
+name|us32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ALIGNED
+argument_list|(
+literal|1
+argument_list|)
+name|s64
+name|us64
+typedef|;
+end_typedef
+
 begin_if
 if|#
 directive|if
@@ -840,41 +1005,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|__LP64__
-operator|||
-name|defined
-argument_list|(
-name|_WIN64
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_WORDSIZE
-value|64
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SANITIZER_WORDSIZE
-value|32
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|// NOTE: Functions below must be defined in each run-time.
 end_comment
@@ -888,6 +1018,8 @@ name|NORETURN
 name|Die
 parameter_list|()
 function_decl|;
+comment|// FIXME: No, this shouldn't be in the sanitizer interface.
+name|SANITIZER_INTERFACE_ATTRIBUTE
 name|void
 name|NORETURN
 name|CheckFailed

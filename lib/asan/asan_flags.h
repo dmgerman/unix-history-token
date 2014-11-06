@@ -110,10 +110,6 @@ comment|// false negatives.
 name|int
 name|quarantine_size
 decl_stmt|;
-comment|// Verbosity level (0 - silent, 1 - a bit of output, 2+ - more output).
-name|int
-name|verbosity
-decl_stmt|;
 comment|// Size (in bytes) of redzones around heap objects.
 comment|// Requirement: redzone>= 32, is a power of two.
 name|int
@@ -146,9 +142,13 @@ comment|// Used on Mac only.
 name|bool
 name|mac_ignore_invalid_free
 decl_stmt|;
-comment|// ASan allocator flag.
+comment|// Enables stack-use-after-return checking at run-time.
 name|bool
-name|use_fake_stack
+name|detect_stack_use_after_return
+decl_stmt|;
+comment|// The minimal fake stack size log.
+name|int
+name|uar_stack_size_log
 decl_stmt|;
 comment|// ASan allocator flag. max_malloc_fill_size is the maximal amount of bytes
 comment|// that will be filled with malloc_fill_byte on malloc.
@@ -207,6 +207,11 @@ comment|// If set, prints ASan exit stats even after program terminates successf
 name|bool
 name|atexit
 decl_stmt|;
+comment|// If set, coverage information will be dumped at shutdown time if the
+comment|// appropriate instrumentation was enabled.
+name|bool
+name|coverage
+decl_stmt|;
 comment|// By default, disable core dumper on 64-bit - it makes little sense
 comment|// to dump 16T+ core.
 name|bool
@@ -223,24 +228,19 @@ comment|// etc. up to main thread.
 name|bool
 name|print_full_thread_history
 decl_stmt|;
-comment|// ASan will write logs to "log_path.pid" instead of stderr.
-specifier|const
-name|char
-modifier|*
-name|log_path
-decl_stmt|;
 comment|// Poison (or not) the heap memory on [de]allocation. Zero value is useful
 comment|// for benchmarking the allocator or instrumentator.
 name|bool
 name|poison_heap
 decl_stmt|;
+comment|// If true, poison partially addressable 8-byte aligned words (default=true).
+comment|// This flag affects heap and global buffers, but not stack buffers.
+name|bool
+name|poison_partial
+decl_stmt|;
 comment|// Report errors on malloc/delete, new/free, new/delete[], etc.
 name|bool
 name|alloc_dealloc_mismatch
-decl_stmt|;
-comment|// Use stack depot instead of storing stacks in the redzones.
-name|bool
-name|use_stack_depot
 decl_stmt|;
 comment|// If true, assume that memcmp(p1, p2, n) always reads n bytes before
 comment|// comparing p1 and p2.
@@ -251,10 +251,6 @@ comment|// If true, assume that dynamic initializers can never access globals fr
 comment|// other modules, even if the latter are already initialized.
 name|bool
 name|strict_init_order
-decl_stmt|;
-comment|// Invoke LeakSanitizer at process exit.
-name|bool
-name|detect_leaks
 decl_stmt|;
 block|}
 struct|;

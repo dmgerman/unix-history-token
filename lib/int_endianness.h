@@ -38,9 +38,10 @@ end_include
 begin_if
 if|#
 directive|if
-name|_BYTE_ORDER
-operator|==
+name|defined
+argument_list|(
 name|_BIG_ENDIAN
+argument_list|)
 end_if
 
 begin_define
@@ -60,9 +61,10 @@ end_define
 begin_elif
 elif|#
 directive|elif
-name|_BYTE_ORDER
-operator|==
+name|defined
+argument_list|(
 name|_LITTLE_ENDIAN
+argument_list|)
 end_elif
 
 begin_define
@@ -79,13 +81,28 @@ name|_YUGA_BIG_ENDIAN
 value|0
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_LITTLE_ENDIAN */
+end_comment
+
+begin_error
+error|#
+directive|error
+literal|"unknown endianness"
+end_error
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _BYTE_ORDER */
+comment|/* !_LITTLE_ENDIAN */
 end_comment
 
 begin_endif

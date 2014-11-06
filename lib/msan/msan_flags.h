@@ -74,9 +74,6 @@ block|{
 name|int
 name|exit_code
 decl_stmt|;
-name|int
-name|verbosity
-decl_stmt|;
 name|bool
 name|poison_heap_with_zeroes
 decl_stmt|;
@@ -90,10 +87,17 @@ name|poison_in_malloc
 decl_stmt|;
 comment|// default: true
 name|bool
+name|poison_in_free
+decl_stmt|;
+comment|// default: true
+name|bool
 name|report_umrs
 decl_stmt|;
 name|bool
 name|wrap_signals
+decl_stmt|;
+name|bool
+name|halt_on_error
 decl_stmt|;
 block|}
 struct|;

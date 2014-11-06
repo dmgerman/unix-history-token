@@ -60,7 +60,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|ASAN__MAC_H
+name|ASAN_MAC_H
 end_define
 
 begin_comment
@@ -154,10 +154,13 @@ end_typedef
 
 begin_enum
 enum|enum
+name|MacosVersion
 block|{
-name|MACOS_VERSION_UNKNOWN
+name|MACOS_VERSION_UNINITIALIZED
 init|=
 literal|0
+block|,
+name|MACOS_VERSION_UNKNOWN
 block|,
 name|MACOS_VERSION_LEOPARD
 block|,
@@ -166,6 +169,8 @@ block|,
 name|MACOS_VERSION_LION
 block|,
 name|MACOS_VERSION_MOUNTAIN_LION
+block|,
+name|MACOS_VERSION_MAVERICKS
 block|}
 enum|;
 end_enum
@@ -187,7 +192,7 @@ begin_decl_stmt
 name|namespace
 name|__asan
 block|{
-name|int
+name|MacosVersion
 name|GetMacosVersion
 parameter_list|()
 function_decl|;

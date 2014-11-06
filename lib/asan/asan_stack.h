@@ -99,6 +99,18 @@ modifier|*
 name|stack
 parameter_list|)
 function_decl|;
+name|void
+name|PrintStack
+parameter_list|(
+specifier|const
+name|uptr
+modifier|*
+name|trace
+parameter_list|,
+name|uptr
+name|size
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -138,7 +150,7 @@ parameter_list|,
 name|fast
 parameter_list|)
 define|\
-value|StackTrace stack;                                             \   GetStackTrace(&stack, max_s, pc, bp, 0, 0, fast)
+value|StackTrace stack;                                         \   stack.Unwind(max_s, pc, bp, 0, 0, fast)
 end_define
 
 begin_else
@@ -160,7 +172,7 @@ parameter_list|,
 name|fast
 parameter_list|)
 define|\
-value|StackTrace stack;                                             \   {                                                             \     uptr stack_top = 0, stack_bottom = 0;                       \     AsanThread *t;                                              \     if (asan_inited&& (t = GetCurrentThread())) {              \       stack_top = t->stack_top();                               \       stack_bottom = t->stack_bottom();                         \     }                                                           \     GetStackTrace(&stack, max_s, pc, bp,                        \                   stack_top, stack_bottom, fast);               \   }
+value|StackTrace stack;                                                        \   {                                                                        \     AsanThread *t;                                                         \     stack.size = 0;                                                        \     if (asan_inited&& (t = GetCurrentThread())&& !t->isUnwinding()) {    \       uptr stack_top = t->stack_top();                                     \       uptr stack_bottom = t->stack_bottom();                               \       ScopedUnwinding unwind_scope(t);                                     \       stack.Unwind(max_s, pc, bp, stack_top, stack_bottom, fast);          \     }                                                                      \   }
 end_define
 
 begin_endif
