@@ -188,6 +188,16 @@ end_include
 begin_define
 define|#
 directive|define
+name|IS_POWER_OF_2
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)& ((val) - 1)) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_BPAGES
 value|64
 end_define
@@ -1810,20 +1820,72 @@ literal|0
 block|if (!parent) 		parent = arm_root_dma_tag;
 endif|#
 directive|endif
-comment|/* Basic sanity checking */
-if|if
-condition|(
+comment|/* Basic sanity checking. */
+name|KASSERT
+argument_list|(
 name|boundary
+operator|==
+literal|0
+operator|||
+name|IS_POWER_OF_2
+argument_list|(
+name|boundary
+argument_list|)
+argument_list|,
+operator|(
+literal|"dma tag boundary %lu, must be a power of 2"
+operator|,
+name|boundary
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|boundary
+operator|==
+literal|0
+operator|||
+name|boundary
+operator|>=
+name|maxsegsz
+argument_list|,
+operator|(
+literal|"dma tag boundary %lu is< maxsegsz %lu\n"
+operator|,
+name|boundary
+operator|,
+name|maxsegsz
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|alignment
 operator|!=
 literal|0
 operator|&&
-name|boundary
-operator|<
+name|IS_POWER_OF_2
+argument_list|(
+name|alignment
+argument_list|)
+argument_list|,
+operator|(
+literal|"dma tag alignment %lu, must be non-zero power of 2"
+operator|,
+name|alignment
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|maxsegsz
-condition|)
-name|maxsegsz
-operator|=
-name|boundary
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"dma tag maxsegsz must not be zero"
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Return a NULL tag on failure */
 operator|*
@@ -1831,19 +1893,6 @@ name|dmat
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|maxsegsz
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 name|newtag
 operator|=
 operator|(
