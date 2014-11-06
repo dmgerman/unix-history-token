@@ -2440,7 +2440,7 @@ block|}
 block|,
 comment|/* 	 * UNIX Domain Sockets 	 */
 block|{
-literal|"unp_global_rwlock"
+literal|"unp_link_rwlock"
 block|,
 operator|&
 name|lock_class_rw
