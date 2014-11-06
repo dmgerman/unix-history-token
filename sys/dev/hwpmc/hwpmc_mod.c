@@ -781,6 +781,19 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|pmc_destroy_pmc_descriptor
+parameter_list|(
+name|struct
+name|pmc
+modifier|*
+name|pm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|struct
 name|pmc_owner
 modifier|*
@@ -3068,6 +3081,11 @@ name|pm
 argument_list|)
 expr_stmt|;
 comment|/* will unlink from the list */
+name|pmc_destroy_pmc_descriptor
+argument_list|(
+name|pm
+argument_list|)
+expr_stmt|;
 block|}
 name|KASSERT
 argument_list|(
@@ -8672,14 +8690,6 @@ modifier|*
 name|pm
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
-name|pm
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|KASSERT
 argument_list|(
 name|pm
@@ -8752,8 +8762,13 @@ name|pm_runcount
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|free
+argument_list|(
+name|pm
+argument_list|,
+name|M_PMC
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8837,7 +8852,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function does the following things:  *  *  - detaches the PMC from hardware  *  - unlinks all target threads that were attached to it  *  - removes the PMC from its owner's list  *  - destroy's the PMC private mutex  *  * Once this function completes, the given pmc pointer can be safely  * FREE'd by the caller.  */
+comment|/*  * This function does the following things:  *  *  - detaches the PMC from hardware  *  - unlinks all target threads that were attached to it  *  - removes the PMC from its owner's list  *  - destroys the PMC private mutex  *  * Once this function completes, the given pmc pointer can be freed by  * calling pmc_destroy_pmc_descriptor().  */
 end_comment
 
 begin_function
@@ -9326,11 +9341,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|pmc_destroy_pmc_descriptor
-argument_list|(
-name|pm
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -12986,13 +12996,6 @@ argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|pmc
-argument_list|,
-name|M_PMC
-argument_list|)
-expr_stmt|;
 name|pmc
 operator|=
 name|NULL
@@ -13182,13 +13185,6 @@ argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|pmc
-argument_list|,
-name|M_PMC
-argument_list|)
-expr_stmt|;
 name|pmc
 operator|=
 name|NULL
@@ -13261,11 +13257,9 @@ argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-name|free
+name|pmc_destroy_pmc_descriptor
 argument_list|(
 name|pmc
-argument_list|,
-name|M_PMC
 argument_list|)
 expr_stmt|;
 name|pmc
@@ -14010,11 +14004,9 @@ argument_list|(
 name|po
 argument_list|)
 expr_stmt|;
-name|free
+name|pmc_destroy_pmc_descriptor
 argument_list|(
 name|pm
-argument_list|,
-name|M_PMC
 argument_list|)
 expr_stmt|;
 block|}
