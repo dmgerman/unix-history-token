@@ -1951,6 +1951,7 @@ ifdef|#
 directive|ifdef
 name|INET6
 comment|/* IPv6-in-IP encapsulation. */
+elseif|else
 if|if
 condition|(
 name|prot
@@ -2151,6 +2152,26 @@ block|}
 endif|#
 directive|endif
 comment|/* INET6 */
+elseif|else
+if|if
+condition|(
+name|prot
+operator|!=
+name|IPPROTO_IPV6
+operator|&&
+name|saidx
+operator|->
+name|mode
+operator|==
+name|IPSEC_MODE_ANY
+condition|)
+block|{
+comment|/* 		 * When mode is wildcard, inner protocol is IPv6 and 		 * we have no INET6 support - drop this packet a bit later. 		 * In other cases we assume transport mode and outer 		 * header was already stripped in xform_xxx_cb. 		 */
+name|prot
+operator|=
+name|IPPROTO_IPIP
+expr_stmt|;
+block|}
 comment|/* 	 * Record what we've done to the packet (under what SA it was 	 * processed). If we've been passed an mtag, it means the packet 	 * was already processed by an ethernet/crypto combo card and 	 * thus has a tag attached with all the right information, but 	 * with a PACKET_TAG_IPSEC_IN_CRYPTO_DONE as opposed to 	 * PACKET_TAG_IPSEC_IN_DONE type; in that case, just change the type. 	 */
 if|if
 condition|(
