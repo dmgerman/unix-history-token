@@ -173,6 +173,17 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|dom_ifmtu
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* af-dependent data on ifnet */
 block|}
 struct|;

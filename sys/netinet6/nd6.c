@@ -4357,11 +4357,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|RT_LOCK_ASSERT
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
 name|gateway
 operator|=
 operator|(

@@ -3005,6 +3005,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|if_getmtu_family
+parameter_list|(
+name|if_t
+name|ifp
+parameter_list|,
+name|int
+name|family
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|if_setflagbits
 parameter_list|(
 name|if_t

@@ -1494,6 +1494,11 @@ operator|.
 name|dom_ifdetach
 operator|=
 name|in6_domifdetach
+block|,
+operator|.
+name|dom_ifmtu
+operator|=
+name|in6_domifmtu
 block|}
 decl_stmt|;
 end_decl_stmt

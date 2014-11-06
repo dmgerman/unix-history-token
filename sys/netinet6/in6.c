@@ -10292,6 +10292,27 @@ block|}
 end_function
 
 begin_function
+name|int
+name|in6_domifmtu
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|IN6_LINKMTU
+argument_list|(
+name|ifp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|in6_domifdetach
 parameter_list|(

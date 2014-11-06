@@ -279,24 +279,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|void
-name|lortrequest
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-parameter_list|,
-name|struct
-name|rt_addrinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|looutput
 parameter_list|(
@@ -1452,47 +1434,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|lortrequest
-parameter_list|(
-name|int
-name|cmd
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-name|rt
-parameter_list|,
-name|struct
-name|rt_addrinfo
-modifier|*
-name|info
-parameter_list|)
-block|{
-name|RT_LOCK_ASSERT
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
-name|rt
-operator|->
-name|rt_mtu
-operator|=
-name|rt
-operator|->
-name|rt_ifp
-operator|->
-name|if_mtu
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Process an ioctl request.  */
 end_comment
 
@@ -1516,11 +1457,6 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
 name|struct
 name|ifreq
 modifier|*
@@ -1559,21 +1495,6 @@ operator|->
 name|if_drv_flags
 operator||=
 name|IFF_DRV_RUNNING
-expr_stmt|;
-name|ifa
-operator|=
-operator|(
-expr|struct
-name|ifaddr
-operator|*
-operator|)
-name|data
-expr_stmt|;
-name|ifa
-operator|->
-name|ifa_rtrequest
-operator|=
-name|lortrequest
 expr_stmt|;
 comment|/* 		 * Everything else is done at a higher level. 		 */
 break|break;
