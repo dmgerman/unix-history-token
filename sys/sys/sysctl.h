@@ -2822,6 +2822,17 @@ begin_comment
 comment|/* signal trampoline location */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_CWD
+value|42
+end_define
+
+begin_comment
+comment|/* process current working directory */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment
