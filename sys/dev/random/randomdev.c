@@ -445,29 +445,16 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|EARLY_2_DEV_MODULE
-parameter_list|(
-name|name
-parameter_list|,
-name|evh
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|static moduledata_t name##_mod = {		\     #name,					\     evh,					\     arg						\ };						\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_SECOND)
-end_define
-
 begin_expr_stmt
-name|EARLY_2_DEV_MODULE
+name|DEV_MODULE_ORDERED
 argument_list|(
 name|randomdev
 argument_list|,
 name|randomdev_modevent
 argument_list|,
 name|NULL
+argument_list|,
+name|SI_ORDER_SECOND
 argument_list|)
 expr_stmt|;
 end_expr_stmt

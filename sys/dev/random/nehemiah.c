@@ -538,7 +538,7 @@ name|MODULE_DEPEND
 argument_list|(
 name|nehemiah
 argument_list|,
-name|random_adaptors
+name|randomdev
 argument_list|,
 literal|1
 argument_list|,
