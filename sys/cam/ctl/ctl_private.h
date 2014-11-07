@@ -650,7 +650,7 @@ begin_define
 define|#
 directive|define
 name|CTL_DEFAULT_ROTATION_RATE
-value|10000
+value|SVPD_NON_ROTATING
 end_define
 
 begin_struct_decl
