@@ -739,8 +739,7 @@ modifier|*
 name|arg
 parameter_list|,
 name|int
-name|lkflags
-name|__unused
+name|flags
 parameter_list|,
 name|struct
 name|vnode
@@ -756,6 +755,8 @@ argument_list|(
 name|arg
 argument_list|,
 name|mp
+argument_list|,
+name|flags
 argument_list|,
 name|vpp
 argument_list|)
@@ -887,7 +888,9 @@ name|anp
 operator|->
 name|an_parent
 argument_list|,
-literal|0
+name|cnp
+operator|->
+name|cn_lkflags
 argument_list|,
 name|vpp
 argument_list|)
@@ -1156,6 +1159,10 @@ name|child
 argument_list|,
 name|mp
 argument_list|,
+name|cnp
+operator|->
+name|cn_lkflags
+argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;
@@ -1332,6 +1339,8 @@ argument_list|,
 name|vp
 operator|->
 name|v_mount
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 name|ap
 operator|->
@@ -2537,6 +2546,9 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -2586,7 +2598,7 @@ name|vget
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
 operator||
 name|LK_RETRY
 argument_list|,
@@ -2772,6 +2784,11 @@ operator|->
 name|v_data
 operator|=
 name|anp
+expr_stmt|;
+name|VN_LOCK_ASHARE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

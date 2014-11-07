@@ -571,6 +571,9 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
