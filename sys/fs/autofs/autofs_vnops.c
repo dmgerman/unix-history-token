@@ -1073,7 +1073,7 @@ operator|)
 return|;
 block|}
 block|}
-name|AUTOFS_LOCK
+name|AUTOFS_SLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1120,7 +1120,7 @@ operator|==
 name|CREATE
 condition|)
 block|{
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1131,7 +1131,7 @@ name|EJUSTRETURN
 operator|)
 return|;
 block|}
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1143,7 +1143,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * XXX: Dropping the node here is ok, because we never remove nodes. 	 */
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1271,7 +1271,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-name|AUTOFS_LOCK
+name|AUTOFS_XLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1307,7 +1307,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1318,7 +1318,7 @@ name|error
 operator|)
 return|;
 block|}
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1840,7 +1840,7 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* Account for "." and "..". */
-name|AUTOFS_LOCK
+name|AUTOFS_SLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1913,7 +1913,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -1933,7 +1933,7 @@ operator|-=
 name|AUTOFS_DELEN
 expr_stmt|;
 block|}
-name|AUTOFS_UNLOCK
+name|AUTOFS_SUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -2159,7 +2159,7 @@ name|parent
 operator|!=
 name|NULL
 condition|)
-name|AUTOFS_ASSERT_LOCKED
+name|AUTOFS_ASSERT_XLOCKED
 argument_list|(
 name|parent
 operator|->
@@ -2442,7 +2442,7 @@ name|autofs_node
 modifier|*
 name|parent
 decl_stmt|;
-name|AUTOFS_ASSERT_LOCKED
+name|AUTOFS_ASSERT_XLOCKED
 argument_list|(
 name|anp
 operator|->

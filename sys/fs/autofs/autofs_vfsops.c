@@ -397,7 +397,7 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-name|AUTOFS_LOCK
+name|AUTOFS_XLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -428,7 +428,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -446,7 +446,7 @@ name|error
 operator|)
 return|;
 block|}
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -648,7 +648,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|AUTOFS_LOCK
+name|AUTOFS_XLOCK
 argument_list|(
 name|amp
 argument_list|)
@@ -720,7 +720,7 @@ name|mnt_data
 operator|=
 name|NULL
 expr_stmt|;
-name|AUTOFS_UNLOCK
+name|AUTOFS_XUNLOCK
 argument_list|(
 name|amp
 argument_list|)
