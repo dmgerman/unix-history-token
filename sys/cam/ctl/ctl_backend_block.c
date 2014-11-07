@@ -11931,7 +11931,7 @@ name|oldsize
 operator|=
 name|be_lun
 operator|->
-name|size_blocks
+name|size_bytes
 expr_stmt|;
 if|if
 condition|(
@@ -11990,7 +11990,7 @@ literal|0
 operator|&&
 name|be_lun
 operator|->
-name|size_blocks
+name|size_bytes
 operator|!=
 name|oldsize
 condition|)
