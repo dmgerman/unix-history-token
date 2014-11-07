@@ -301,8 +301,8 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|struct
-name|callout
-name|ar_callout
+name|timeout_task
+name|ar_task
 decl_stmt|;
 specifier|volatile
 name|u_int
