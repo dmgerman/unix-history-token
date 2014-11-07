@@ -391,19 +391,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct
-struct|struct
-name|ifindex_entry
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|ife_ifnet
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -1280,7 +1267,8 @@ begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
 expr|struct
-name|ifindex_entry
+name|ifnet
+operator|*
 operator|*
 argument_list|,
 name|ifindex_table
@@ -1417,8 +1405,6 @@ name|V_ifindex_table
 index|[
 name|idx
 index|]
-operator|.
-name|ife_ifnet
 operator|==
 name|IFNET_HOLD
 condition|)
@@ -1433,8 +1419,6 @@ name|V_ifindex_table
 index|[
 name|idx
 index|]
-operator|.
-name|ife_ifnet
 operator|)
 return|;
 block|}
@@ -1584,8 +1568,6 @@ name|V_ifindex_table
 index|[
 name|idx
 index|]
-operator|.
-name|ife_ifnet
 operator|==
 name|NULL
 condition|)
@@ -1645,8 +1627,6 @@ name|V_ifindex_table
 index|[
 name|idx
 index|]
-operator|.
-name|ife_ifnet
 operator|=
 name|NULL
 expr_stmt|;
@@ -1660,8 +1640,6 @@ name|V_ifindex_table
 index|[
 name|V_if_index
 index|]
-operator|.
-name|ife_ifnet
 operator|==
 name|NULL
 condition|)
@@ -1715,8 +1693,6 @@ name|V_ifindex_table
 index|[
 name|idx
 index|]
-operator|.
-name|ife_ifnet
 operator|=
 name|ifp
 expr_stmt|;
@@ -2011,7 +1987,8 @@ name|u_int
 name|n
 decl_stmt|;
 name|struct
-name|ifindex_entry
+name|ifnet
+modifier|*
 modifier|*
 name|e
 decl_stmt|;
