@@ -2180,13 +2180,6 @@ decl_stmt|;
 name|int
 name|old
 decl_stmt|;
-name|VNET_SYSCTL_ARG
-argument_list|(
-name|req
-argument_list|,
-name|arg1
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -2276,13 +2269,6 @@ decl_stmt|;
 name|int
 name|old
 decl_stmt|;
-name|VNET_SYSCTL_ARG
-argument_list|(
-name|req
-argument_list|,
-name|arg1
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
