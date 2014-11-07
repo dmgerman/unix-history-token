@@ -4568,8 +4568,6 @@ name|i_conf
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|res
 decl_stmt|;
 name|char
 name|hostname
@@ -4658,8 +4656,6 @@ name|oldisns
 operator|=
 name|isns
 expr_stmt|;
-name|res
-operator|=
 name|isns_do_deregister
 argument_list|(
 name|oldisns
@@ -4669,8 +4665,6 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
 name|isns_do_register
 argument_list|(
 name|isns
@@ -4804,8 +4798,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|res
-operator|=
 name|isns_do_deregister
 argument_list|(
 name|isns
@@ -4815,8 +4807,6 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
 name|isns_do_register
 argument_list|(
 name|isns
@@ -4863,8 +4853,6 @@ name|i_conf
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|res
 decl_stmt|;
 name|char
 name|hostname
@@ -4924,8 +4912,6 @@ name|hostname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
 name|isns_do_deregister
 argument_list|(
 name|isns
