@@ -71,7 +71,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (autofs_debug> 1) {					\ 		printf("%s: " X "\n", __func__, ## __VA_ARGS__);\ 	} while (0)
+value|do {								\ 		if (autofs_debug> 1)					\ 			printf("%s: " X "\n", __func__, ## __VA_ARGS__);\ 	} while (0)
 end_define
 
 begin_define
@@ -84,7 +84,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|if (autofs_debug> 0) {					\ 		printf("WARNING: %s: " X "\n",			\ 		    __func__, ## __VA_ARGS__);			\ 	} while (0)
+value|do {								\ 		if (autofs_debug> 0) {					\ 			printf("WARNING: %s: " X "\n",			\ 		    	    __func__, ## __VA_ARGS__);			\ 		}							\ 	} while (0)
 end_define
 
 begin_define
