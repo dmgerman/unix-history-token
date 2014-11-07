@@ -306,7 +306,7 @@ value|do { error = (e); goto bad; } while (0)
 end_define
 
 begin_comment
-comment|/*  * FDDI output routine.  * Encapsulate a packet of type family for the local net.  * Use trailer local net encapsulation if enough data in first  * packet leaves a multiple of 512 bytes of data in remainder.  * Assumes that ifp is actually pointer to arpcom structure.  */
+comment|/*  * FDDI output routine.  * Encapsulate a packet of type family for the local net.  * Use trailer local net encapsulation if enough data in first  * packet leaves a multiple of 512 bytes of data in remainder.  */
 end_comment
 
 begin_function

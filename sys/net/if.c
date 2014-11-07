@@ -9749,12 +9749,9 @@ operator|==
 name|IFT_L2VLAN
 operator|)
 operator|&&
-name|IFP2AC
-argument_list|(
 name|ifp
-argument_list|)
 operator|->
-name|ac_netgraph
+name|if_l2com
 operator|!=
 name|NULL
 condition|)

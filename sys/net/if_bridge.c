@@ -229,10 +229,6 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_comment
-comment|/* for struct arpcom */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -322,10 +318,6 @@ include|#
 directive|include
 file|<netinet/if_ether.h>
 end_include
-
-begin_comment
-comment|/* for struct arpcom */
-end_comment
 
 begin_include
 include|#

@@ -166,7 +166,7 @@ name|IFP2NG
 parameter_list|(
 name|ifp
 parameter_list|)
-value|(IFP2AC((ifp))->ac_netgraph)
+value|((ifp)->if_l2com)
 end_define
 
 begin_comment

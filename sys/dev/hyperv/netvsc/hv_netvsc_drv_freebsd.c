@@ -813,12 +813,6 @@ name|sc
 operator|->
 name|hn_ifp
 operator|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_ifp
-operator|=
 name|if_alloc
 argument_list|(
 name|IFT_ETHER
@@ -2098,14 +2092,6 @@ operator|=
 name|sc
 operator|->
 name|hn_ifp
-expr_stmt|;
-name|ifp
-operator|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_ifp
 expr_stmt|;
 if|if
 condition|(
