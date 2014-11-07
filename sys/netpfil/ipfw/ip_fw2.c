@@ -851,7 +851,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -859,6 +859,8 @@ name|OID_AUTO
 argument_list|,
 name|one_pass
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
@@ -877,7 +879,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -885,6 +887,8 @@ name|OID_AUTO
 argument_list|,
 name|autoinc_step
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -901,7 +905,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -909,6 +913,8 @@ name|OID_AUTO
 argument_list|,
 name|verbose
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE3
@@ -927,7 +933,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -935,6 +941,8 @@ name|OID_AUTO
 argument_list|,
 name|verbose_limit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -972,7 +980,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -980,6 +988,8 @@ name|OID_AUTO
 argument_list|,
 name|tables_max
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -998,7 +1008,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -1006,6 +1016,8 @@ name|OID_AUTO
 argument_list|,
 name|tables_sets
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -1060,7 +1072,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -1068,6 +1080,8 @@ name|OID_AUTO
 argument_list|,
 name|static_count
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1118,7 +1132,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ip6_fw
 argument_list|,
@@ -1126,6 +1140,8 @@ name|OID_AUTO
 argument_list|,
 name|deny_unknown_exthdrs
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE
@@ -1144,7 +1160,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ip6_fw
 argument_list|,
@@ -1152,6 +1168,8 @@ name|OID_AUTO
 argument_list|,
 name|permit_single_frag6
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE

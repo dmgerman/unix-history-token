@@ -429,7 +429,7 @@ value|VNET(arp_maxhold)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -437,6 +437,8 @@ name|OID_AUTO
 argument_list|,
 name|max_age
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -453,7 +455,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -461,6 +463,8 @@ name|OID_AUTO
 argument_list|,
 name|maxtries
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -477,7 +481,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -485,6 +489,8 @@ name|OID_AUTO
 argument_list|,
 name|proxyall
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -501,7 +507,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -509,6 +515,8 @@ name|OID_AUTO
 argument_list|,
 name|wait
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -544,7 +552,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_ether_inet
 argument_list|,
@@ -552,6 +560,8 @@ name|OID_AUTO
 argument_list|,
 name|maxhold
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

@@ -777,7 +777,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -785,6 +785,8 @@ name|OID_AUTO
 argument_list|,
 name|lowfirst
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -808,7 +810,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -816,6 +818,8 @@ name|OID_AUTO
 argument_list|,
 name|lowlast
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -839,7 +843,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -847,6 +851,8 @@ name|OID_AUTO
 argument_list|,
 name|first
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -870,7 +876,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -878,6 +884,8 @@ name|OID_AUTO
 argument_list|,
 name|last
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -901,7 +909,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -909,6 +917,8 @@ name|OID_AUTO
 argument_list|,
 name|hifirst
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -932,7 +942,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -940,6 +950,8 @@ name|OID_AUTO
 argument_list|,
 name|hilast
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -963,7 +975,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -971,6 +983,8 @@ name|OID_AUTO
 argument_list|,
 name|reservedhigh
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_SECURE
@@ -989,7 +1003,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -1015,7 +1029,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -1023,6 +1037,8 @@ name|OID_AUTO
 argument_list|,
 name|randomized
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1039,7 +1055,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -1047,6 +1063,8 @@ name|OID_AUTO
 argument_list|,
 name|randomcps
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1064,7 +1082,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip_portrange
 argument_list|,
@@ -1072,6 +1090,8 @@ name|OID_AUTO
 argument_list|,
 name|randomtime
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

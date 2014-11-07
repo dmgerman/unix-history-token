@@ -505,7 +505,7 @@ value|VNET(rtq_reallyold)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -513,6 +513,8 @@ name|IPCTL_RTEXPIRE
 argument_list|,
 name|rtexpire
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -553,7 +555,7 @@ value|VNET(rtq_minreallyold)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -561,6 +563,8 @@ name|IPCTL_RTMINEXPIRE
 argument_list|,
 name|rtminexpire
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -601,7 +605,7 @@ value|VNET(rtq_toomany)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -609,6 +613,8 @@ name|IPCTL_RTMAXCACHE
 argument_list|,
 name|rtmaxcache
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

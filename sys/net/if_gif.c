@@ -779,7 +779,7 @@ value|VNET(max_gif_nesting)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_gif
 argument_list|,
@@ -787,6 +787,8 @@ name|OID_AUTO
 argument_list|,
 name|max_nesting
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -856,7 +858,7 @@ value|VNET(parallel_tunnels)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_gif
 argument_list|,
@@ -864,6 +866,8 @@ name|OID_AUTO
 argument_list|,
 name|parallel_tunnels
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

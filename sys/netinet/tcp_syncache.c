@@ -407,7 +407,7 @@ value|VNET(tcp_syncookies)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -415,6 +415,8 @@ name|OID_AUTO
 argument_list|,
 name|syncookies
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -451,7 +453,7 @@ value|VNET(tcp_syncookiesonly)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -459,6 +461,8 @@ name|OID_AUTO
 argument_list|,
 name|syncookies_only
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -811,7 +815,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -819,6 +823,8 @@ name|OID_AUTO
 argument_list|,
 name|bucketlimit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -837,7 +843,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -845,6 +851,8 @@ name|OID_AUTO
 argument_list|,
 name|cachelimit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -887,7 +895,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -895,6 +903,8 @@ name|OID_AUTO
 argument_list|,
 name|hashsize
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -913,7 +923,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -921,6 +931,8 @@ name|OID_AUTO
 argument_list|,
 name|rexmtlimit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -951,7 +963,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -959,6 +971,8 @@ name|OID_AUTO
 argument_list|,
 name|rst_on_sock_fail
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

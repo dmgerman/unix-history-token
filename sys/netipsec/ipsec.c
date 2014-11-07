@@ -608,7 +608,7 @@ comment|/* net.inet.ipsec */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -616,6 +616,8 @@ name|IPSECCTL_DEF_POLICY
 argument_list|,
 name|def_policy
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -634,7 +636,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -642,6 +644,8 @@ name|IPSECCTL_DEF_ESP_TRANSLEV
 argument_list|,
 name|esp_trans_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -658,7 +662,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -666,6 +670,8 @@ name|IPSECCTL_DEF_ESP_NETLEV
 argument_list|,
 name|esp_net_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -682,7 +688,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -690,6 +696,8 @@ name|IPSECCTL_DEF_AH_TRANSLEV
 argument_list|,
 name|ah_trans_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -706,7 +714,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -714,6 +722,8 @@ name|IPSECCTL_DEF_AH_NETLEV
 argument_list|,
 name|ah_net_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -730,7 +740,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -738,6 +748,8 @@ name|IPSECCTL_AH_CLEARTOS
 argument_list|,
 name|ah_cleartos
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -754,7 +766,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -762,6 +774,8 @@ name|IPSECCTL_AH_OFFSETMASK
 argument_list|,
 name|ah_offsetmask
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -778,7 +792,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -786,6 +800,8 @@ name|IPSECCTL_DFBIT
 argument_list|,
 name|dfbit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -802,7 +818,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -810,6 +826,8 @@ name|IPSECCTL_ECN
 argument_list|,
 name|ecn
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -826,7 +844,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -834,6 +852,8 @@ name|IPSECCTL_DEBUG
 argument_list|,
 name|debug
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -850,7 +870,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -858,6 +878,8 @@ name|OID_AUTO
 argument_list|,
 name|crypto_support
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -915,7 +937,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -923,6 +945,8 @@ name|OID_AUTO
 argument_list|,
 name|test_replay
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -955,7 +979,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -963,6 +987,8 @@ name|OID_AUTO
 argument_list|,
 name|test_integrity
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1108,7 +1134,7 @@ comment|/* net.inet6.ipsec6 */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1116,6 +1142,8 @@ name|IPSECCTL_DEF_POLICY
 argument_list|,
 name|def_policy
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1134,7 +1162,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1142,6 +1170,8 @@ name|IPSECCTL_DEF_ESP_TRANSLEV
 argument_list|,
 name|esp_trans_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1158,7 +1188,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1166,6 +1196,8 @@ name|IPSECCTL_DEF_ESP_NETLEV
 argument_list|,
 name|esp_net_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1182,7 +1214,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1190,6 +1222,8 @@ name|IPSECCTL_DEF_AH_TRANSLEV
 argument_list|,
 name|ah_trans_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1206,7 +1240,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1214,6 +1248,8 @@ name|IPSECCTL_DEF_AH_NETLEV
 argument_list|,
 name|ah_net_deflev
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1230,7 +1266,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1238,6 +1274,8 @@ name|IPSECCTL_ECN
 argument_list|,
 name|ecn
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1254,7 +1292,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ipsec6
 argument_list|,
@@ -1262,6 +1300,8 @@ name|IPSECCTL_DEBUG
 argument_list|,
 name|debug
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

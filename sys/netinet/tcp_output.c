@@ -330,7 +330,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -338,6 +338,8 @@ name|OID_AUTO
 argument_list|,
 name|path_mtu_discovery
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -373,7 +375,7 @@ value|VNET(tcp_do_tso)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -381,6 +383,8 @@ name|OID_AUTO
 argument_list|,
 name|tso
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -418,7 +422,7 @@ value|VNET(tcp_sendspace)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -426,6 +430,8 @@ name|TCPCTL_SENDSPACE
 argument_list|,
 name|sendspace
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -461,7 +467,7 @@ value|VNET(tcp_do_autosndbuf)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -469,6 +475,8 @@ name|OID_AUTO
 argument_list|,
 name|sendbuf_auto
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -506,7 +514,7 @@ value|VNET(tcp_autosndbuf_inc)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -514,6 +522,8 @@ name|OID_AUTO
 argument_list|,
 name|sendbuf_inc
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -553,7 +563,7 @@ value|VNET(tcp_autosndbuf_max)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -561,6 +571,8 @@ name|OID_AUTO
 argument_list|,
 name|sendbuf_max
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

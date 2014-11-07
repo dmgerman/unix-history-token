@@ -180,7 +180,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_ip6
 argument_list|,
@@ -188,6 +188,8 @@ name|OID_AUTO
 argument_list|,
 name|deembed_scopeid
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

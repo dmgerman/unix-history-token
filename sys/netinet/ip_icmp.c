@@ -260,7 +260,7 @@ value|VNET(icmplim)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -268,6 +268,8 @@ name|ICMPCTL_ICMPLIM
 argument_list|,
 name|icmplim
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -304,7 +306,7 @@ value|VNET(icmplim_output)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -312,6 +314,8 @@ name|OID_AUTO
 argument_list|,
 name|icmplim_output
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -415,7 +419,7 @@ value|VNET(icmpmaskrepl)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -423,6 +427,8 @@ name|ICMPCTL_MASKREPL
 argument_list|,
 name|maskrepl
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -459,7 +465,7 @@ value|VNET(icmpmaskfake)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -467,6 +473,8 @@ name|OID_AUTO
 argument_list|,
 name|maskfake
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -515,7 +523,7 @@ value|VNET(log_redirect)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -523,6 +531,8 @@ name|OID_AUTO
 argument_list|,
 name|log_redirect
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -560,7 +570,7 @@ value|VNET(reply_src)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRING
+name|SYSCTL_STRING
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -568,6 +578,8 @@ name|OID_AUTO
 argument_list|,
 name|reply_src
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -604,7 +616,7 @@ value|VNET(icmp_rfi)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -612,6 +624,8 @@ name|OID_AUTO
 argument_list|,
 name|reply_from_interface
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -648,7 +662,7 @@ value|VNET(icmp_quotelen)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -656,6 +670,8 @@ name|OID_AUTO
 argument_list|,
 name|quotelen
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -696,7 +712,7 @@ value|VNET(icmpbmcastecho)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -704,6 +720,8 @@ name|OID_AUTO
 argument_list|,
 name|bmcastecho
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -954,7 +972,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_icmp
 argument_list|,
@@ -962,6 +980,8 @@ name|OID_AUTO
 argument_list|,
 name|drop_redirect
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW

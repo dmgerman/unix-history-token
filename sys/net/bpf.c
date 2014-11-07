@@ -903,7 +903,7 @@ value|VNET(bpf_optimize_writers)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_bpf
 argument_list|,
@@ -911,6 +911,8 @@ name|OID_AUTO
 argument_list|,
 name|optimize_writers
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

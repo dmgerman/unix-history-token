@@ -8965,7 +8965,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_icmp6
 argument_list|,
@@ -8973,6 +8973,8 @@ name|ICMPV6CTL_ND6_MAXQLEN
 argument_list|,
 name|nd6_maxqueuelen
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -8989,7 +8991,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_icmp6
 argument_list|,
@@ -8997,6 +8999,8 @@ name|OID_AUTO
 argument_list|,
 name|nd6_gctimer
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

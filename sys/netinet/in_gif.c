@@ -299,7 +299,7 @@ value|VNET(ip_gif_ttl)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -307,6 +307,8 @@ name|IPCTL_GIF_TTL
 argument_list|,
 name|gifttl
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

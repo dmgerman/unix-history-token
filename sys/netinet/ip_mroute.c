@@ -641,7 +641,7 @@ value|VNET(viftable)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_OPAQUE
+name|SYSCTL_OPAQUE
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -649,6 +649,8 @@ name|OID_AUTO
 argument_list|,
 name|viftable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&

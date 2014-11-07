@@ -2392,7 +2392,7 @@ value|VNET(allow_llz_overlap)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
 argument_list|,
@@ -2400,6 +2400,8 @@ name|OID_AUTO
 argument_list|,
 name|allow_llz_overlap
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_VNET

@@ -689,7 +689,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_flowtable
 argument_list|,
@@ -697,6 +697,8 @@ name|OID_AUTO
 argument_list|,
 name|enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

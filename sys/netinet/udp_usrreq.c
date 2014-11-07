@@ -359,7 +359,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_udp
 argument_list|,
@@ -367,6 +367,8 @@ name|UDPCTL_CHECKSUM
 argument_list|,
 name|checksum
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -424,7 +426,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_udp
 argument_list|,
@@ -432,6 +434,8 @@ name|OID_AUTO
 argument_list|,
 name|blackhole
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
