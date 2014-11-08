@@ -209,6 +209,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/dmu_objset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/refcount.h>
 end_include
 
@@ -7113,6 +7119,7 @@ operator|->
 name|z_max_blksz
 condition|)
 block|{
+comment|/* 			 * File's blocksize is already larger than the 			 * "recordsize" property.  Only let it grow to 			 * the next power of 2. 			 */
 name|ASSERT
 argument_list|(
 operator|!
@@ -7130,7 +7137,14 @@ name|MIN
 argument_list|(
 name|end
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+literal|1
+operator|<<
+name|highbit64
+argument_list|(
+name|zp
+operator|->
+name|z_blksz
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

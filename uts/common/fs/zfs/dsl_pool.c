@@ -1510,7 +1510,7 @@ name|dp
 operator|->
 name|dp_meta_objset
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|tx
 argument_list|)
@@ -3611,7 +3611,7 @@ name|dp_meta_objset
 argument_list|,
 name|DMU_OT_BPOBJ
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|DMU_OT_BPOBJ_HDR
 argument_list|,

@@ -433,10 +433,6 @@ define|#
 directive|define
 name|ZFS_SA_ATTRS
 value|"SA_ATTRS"
-define|#
-directive|define
-name|ZFS_MAX_BLOCKSIZE
-value|(SPA_MAXBLOCKSIZE)
 comment|/*  * Path component length  *  * The generic fs code uses MAXNAMELEN to represent  * what the largest component length is.  Unfortunately,  * this length includes the terminating NULL.  ZFS needs  * to tell the users via pathconf() and statvfs() what the  * true maximum length of a component is, excluding the NULL.  */
 define|#
 directive|define

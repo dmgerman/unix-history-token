@@ -117,7 +117,7 @@ name|bpobj_alloc
 argument_list|(
 name|os
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|tx
 argument_list|)
@@ -2222,7 +2222,7 @@ name|bpo_os
 argument_list|,
 name|DMU_OT_BPOBJ_SUBOBJ
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|DMU_OT_NONE
 argument_list|,

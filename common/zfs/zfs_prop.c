@@ -1883,13 +1883,13 @@ name|ZFS_PROP_RECORDSIZE
 argument_list|,
 literal|"recordsize"
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|PROP_INHERIT
 argument_list|,
 name|ZFS_TYPE_FILESYSTEM
 argument_list|,
-literal|"512 to 128k, power of 2"
+literal|"512 to 1M, power of 2"
 argument_list|,
 literal|"RECSIZE"
 argument_list|)

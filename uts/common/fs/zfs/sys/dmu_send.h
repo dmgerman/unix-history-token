@@ -72,6 +72,9 @@ parameter_list|,
 name|boolean_t
 name|embedok
 parameter_list|,
+name|boolean_t
+name|large_block_ok
+parameter_list|,
 name|int
 name|outfd
 parameter_list|,
@@ -126,10 +129,14 @@ parameter_list|,
 name|boolean_t
 name|embedok
 parameter_list|,
+name|boolean_t
+name|large_block_ok
+parameter_list|,
 name|int
 name|outfd
 parameter_list|,
-name|vnode_t
+name|struct
+name|vnode
 modifier|*
 name|vp
 parameter_list|,

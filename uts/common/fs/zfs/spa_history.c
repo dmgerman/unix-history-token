@@ -204,7 +204,7 @@ name|mos
 argument_list|,
 name|DMU_OT_SPA_HISTORY
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|DMU_OT_SPA_HISTORY_OFFSETS
 argument_list|,

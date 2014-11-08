@@ -2333,7 +2333,7 @@ if|if
 condition|(
 name|size
 operator|>
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 condition|)
 block|{
 name|ASSERT
@@ -3074,7 +3074,7 @@ if|if
 condition|(
 name|used
 operator|>
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 condition|)
 return|return
 operator|(
@@ -3218,7 +3218,7 @@ if|if
 condition|(
 name|spill_used
 operator|>
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 condition|)
 return|return
 operator|(

@@ -168,11 +168,16 @@ define|#
 directive|define
 name|DMU_BACKUP_FEATURE_EMBED_DATA_LZ4
 value|(1<<17)
+comment|/* flag #18 is reserved for a Delphix feature */
+define|#
+directive|define
+name|DMU_BACKUP_FEATURE_LARGE_BLOCKS
+value|(1<<19)
 comment|/*  * Mask of all supported backup features  */
 define|#
 directive|define
 name|DMU_BACKUP_FEATURE_MASK
-value|(DMU_BACKUP_FEATURE_DEDUP | \     DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL | \     DMU_BACKUP_FEATURE_EMBED_DATA | DMU_BACKUP_FEATURE_EMBED_DATA_LZ4)
+value|(DMU_BACKUP_FEATURE_DEDUP | \     DMU_BACKUP_FEATURE_DEDUPPROPS | DMU_BACKUP_FEATURE_SA_SPILL | \     DMU_BACKUP_FEATURE_EMBED_DATA | DMU_BACKUP_FEATURE_EMBED_DATA_LZ4 | \     DMU_BACKUP_FEATURE_LARGE_BLOCKS)
 comment|/* Are all features in the given flag word currently supported? */
 define|#
 directive|define

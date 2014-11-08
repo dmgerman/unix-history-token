@@ -283,27 +283,31 @@ parameter_list|,
 name|val
 parameter_list|)
 value|do { \ 	ASSERT(IS_P2ALIGNED(val, 1ULL<< shift)); \ 	ASSERT3S((val)>> (shift),>=, bias); \ 	BF64_SET(x, low, len, ((val)>> (shift)) - (bias)); \ _NOTE(CONSTCOND) } while (0)
-comment|/*  * We currently support nine block sizes, from 512 bytes to 128K.  * We could go higher, but the benefits are near-zero and the cost  * of COWing a giant block to modify one byte would become excessive.  */
+comment|/*  * We currently support block sizes from 512 bytes to 16MB.  * The benefits of larger blocks, and thus larger IO, need to be weighed  * against the cost of COWing a giant block to modify one byte, and the  * large latency of reading or writing a large block.  *  * Note that although blocks up to 16MB are supported, the recordsize  * property can not be set larger than zfs_max_recordsize (default 1MB).  * See the comment near zfs_max_recordsize in dsl_dataset.c for details.  *  * Note that although the LSIZE field of the blkptr_t can store sizes up  * to 32MB, the dnode's dn_datablkszsec can only store sizes up to  * 32MB - 512 bytes.  Therefore, we limit SPA_MAXBLOCKSIZE to 16MB.  */
 define|#
 directive|define
 name|SPA_MINBLOCKSHIFT
 value|9
 define|#
 directive|define
-name|SPA_MAXBLOCKSHIFT
+name|SPA_OLD_MAXBLOCKSHIFT
 value|17
+define|#
+directive|define
+name|SPA_MAXBLOCKSHIFT
+value|24
 define|#
 directive|define
 name|SPA_MINBLOCKSIZE
 value|(1ULL<< SPA_MINBLOCKSHIFT)
 define|#
 directive|define
-name|SPA_MAXBLOCKSIZE
-value|(1ULL<< SPA_MAXBLOCKSHIFT)
+name|SPA_OLD_MAXBLOCKSIZE
+value|(1ULL<< SPA_OLD_MAXBLOCKSHIFT)
 define|#
 directive|define
-name|SPA_BLOCKSIZES
-value|(SPA_MAXBLOCKSHIFT - SPA_MINBLOCKSHIFT + 1)
+name|SPA_MAXBLOCKSIZE
+value|(1ULL<< SPA_MAXBLOCKSHIFT)
 comment|/*  * Size of block to hold the configuration data (a packed nvlist)  */
 define|#
 directive|define
@@ -2541,6 +2545,15 @@ function_decl|;
 specifier|extern
 name|boolean_t
 name|spa_has_pending_synctask
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_maxblocksize
 parameter_list|(
 name|spa_t
 modifier|*

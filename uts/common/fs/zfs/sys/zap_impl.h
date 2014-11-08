@@ -74,12 +74,8 @@ name|MZAP_NAME_LEN
 value|(MZAP_ENT_LEN - 8 - 4 - 2)
 define|#
 directive|define
-name|MZAP_MAX_BLKSHIFT
-value|SPA_MAXBLOCKSHIFT
-define|#
-directive|define
 name|MZAP_MAX_BLKSZ
-value|(1<< MZAP_MAX_BLKSHIFT)
+value|SPA_OLD_MAXBLOCKSIZE
 define|#
 directive|define
 name|ZAP_NEED_CD

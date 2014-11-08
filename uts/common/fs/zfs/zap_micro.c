@@ -67,6 +67,12 @@ directive|include
 file|<sys/arc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/dmu_objset.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3526,7 +3532,7 @@ name|SPA_MINBLOCKSHIFT
 operator|&&
 name|leaf_blockshift
 operator|<=
-name|SPA_MAXBLOCKSHIFT
+name|SPA_OLD_MAXBLOCKSHIFT
 operator|&&
 name|indirect_blockshift
 operator|>=
@@ -3534,7 +3540,7 @@ name|SPA_MINBLOCKSHIFT
 operator|&&
 name|indirect_blockshift
 operator|<=
-name|SPA_MAXBLOCKSHIFT
+name|SPA_OLD_MAXBLOCKSHIFT
 argument_list|)
 expr_stmt|;
 name|VERIFY
@@ -7407,7 +7413,7 @@ literal|0
 operator|)
 operator|)
 operator|*
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 expr_stmt|;
 return|return
 operator|(
@@ -7508,7 +7514,7 @@ literal|0
 operator|)
 operator|)
 operator|*
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 expr_stmt|;
 block|}
 block|}
@@ -7527,13 +7533,13 @@ condition|)
 operator|*
 name|tooverwrite
 operator|+=
-name|SPA_MAXBLOCKSIZE
+name|MZAP_MAX_BLKSZ
 expr_stmt|;
 else|else
 operator|*
 name|towrite
 operator|+=
-name|SPA_MAXBLOCKSIZE
+name|MZAP_MAX_BLKSZ
 expr_stmt|;
 if|if
 condition|(
@@ -7545,7 +7551,7 @@ name|towrite
 operator|+=
 literal|4
 operator|*
-name|SPA_MAXBLOCKSIZE
+name|MZAP_MAX_BLKSZ
 expr_stmt|;
 block|}
 block|}

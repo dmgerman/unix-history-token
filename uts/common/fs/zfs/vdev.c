@@ -3877,7 +3877,7 @@ operator|->
 name|vdev_ishole
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Compute the raidz-deflation ratio.  Note, we hard-code 	 * in 128k (1<< 17) because it is the current "typical" blocksize. 	 * Even if SPA_MAXBLOCKSIZE changes, this algorithm must never change, 	 * or we will inconsistently account for existing bp's. 	 */
+comment|/* 	 * Compute the raidz-deflation ratio.  Note, we hard-code 	 * in 128k (1<< 17) because it is the "typical" blocksize. 	 * Even though SPA_MAXBLOCKSIZE changed, this algorithm can not change, 	 * otherwise it would inconsistently account for existing bp's. 	 */
 name|vd
 operator|->
 name|vdev_deflate_ratio
