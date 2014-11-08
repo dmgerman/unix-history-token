@@ -2669,6 +2669,11 @@ name|in6_ifaddr
 modifier|*
 name|ia6
 decl_stmt|;
+name|struct
+name|ip6_hdr
+modifier|*
+name|ip6
+decl_stmt|;
 name|IP6_EXTHDR_CHECK
 argument_list|(
 name|m
@@ -2686,11 +2691,28 @@ name|IPPROTO_DONE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * draft-itojun-ipv6-tcp-to-anycast 	 * better place to put this in? 	 */
-name|ia6
+name|ip6
 operator|=
-name|ip6_getdstifaddr
+name|mtod
 argument_list|(
 name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+expr_stmt|;
+name|ia6
+operator|=
+name|in6ifa_ifwithaddr
+argument_list|(
+operator|&
+name|ip6
+operator|->
+name|ip6_dst
+argument_list|,
+literal|0
+comment|/* XXX */
 argument_list|)
 expr_stmt|;
 if|if
@@ -5682,9 +5704,15 @@ name|ia6
 decl_stmt|;
 name|ia6
 operator|=
-name|ip6_getdstifaddr
+name|in6ifa_ifwithaddr
 argument_list|(
-name|m
+operator|&
+name|ip6
+operator|->
+name|ip6_dst
+argument_list|,
+literal|0
+comment|/* XXX */
 argument_list|)
 expr_stmt|;
 if|if
