@@ -2983,7 +2983,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vdev_disk_io_start
 parameter_list|(
 name|zio_t
@@ -3049,11 +3049,12 @@ name|io_error
 operator|=
 name|ENXIO
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_CONTINUE
-operator|)
-return|;
+name|zio_interrupt
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
@@ -3083,11 +3084,12 @@ argument_list|(
 name|ENXIO
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_CONTINUE
-operator|)
-return|;
+name|zio_interrupt
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 switch|switch
 condition|(
@@ -3196,11 +3198,7 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * The ioctl will be done asychronously, 				 * and will call vdev_disk_ioctl_done() 				 * upon completion. 				 */
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -3239,11 +3237,12 @@ name|ENOTSUP
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|ZIO_PIPELINE_CONTINUE
-operator|)
-return|;
+name|zio_execute
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|vb
 operator|=
@@ -3381,11 +3380,6 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
 block|}
 end_function
 
