@@ -544,12 +544,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ARM_DEVICE_MULTIPASS
-end_ifdef
-
 begin_expr_stmt
 name|EARLY_DRIVER_MODULE
 argument_list|(
@@ -571,34 +565,6 @@ name|BUS_PASS_ORDER_EARLY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|nexus
-argument_list|,
-name|root
-argument_list|,
-name|nexus_driver
-argument_list|,
-name|nexus_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
