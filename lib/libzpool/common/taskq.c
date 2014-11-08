@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2012 Garrett D'Amore<garrett@damore.org>.  All rights reserved.  */
+comment|/*  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright 2012 Garrett D'Amore<garrett@damore.org>.  All rights reserved.  * Copyright (c) 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -37,10 +37,25 @@ name|TASKQ_ACTIVE
 value|0x00010000
 end_define
 
+begin_define
+define|#
+directive|define
+name|TASKQ_NAMELEN
+value|31
+end_define
+
 begin_struct
 struct|struct
 name|taskq
 block|{
+name|char
+name|tq_name
+index|[
+name|TASKQ_NAMELEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
 name|kmutex_t
 name|tq_lock
 decl_stmt|;
@@ -1178,6 +1193,22 @@ argument_list|,
 name|CV_DEFAULT
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strncpy
+argument_list|(
+name|tq
+operator|->
+name|tq_name
+argument_list|,
+name|name
+argument_list|,
+name|TASKQ_NAMELEN
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|tq
