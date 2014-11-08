@@ -2587,6 +2587,10 @@ comment|/* show progress (ie. -v) */
 name|boolean_t
 name|progress
 decl_stmt|;
+comment|/* large blocks (>128K) are permitted */
+name|boolean_t
+name|largeblock
+decl_stmt|;
 comment|/* WRITE_EMBEDDED records of type DATA are permitted */
 name|boolean_t
 name|embed_data

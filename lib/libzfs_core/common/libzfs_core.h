@@ -218,6 +218,12 @@ init|=
 literal|1
 operator|<<
 literal|0
+block|,
+name|LZC_SEND_FLAG_LARGE_BLOCK
+init|=
+literal|1
+operator|<<
+literal|1
 block|}
 enum|;
 name|int
