@@ -3143,6 +3143,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|src
@@ -4352,6 +4356,12 @@ name|gre_oseq
 operator|++
 expr_stmt|;
 comment|/* XXX */
+else|else
+name|oseq
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Make compiler happy. */
 name|want_csum
 operator|=
 operator|(
