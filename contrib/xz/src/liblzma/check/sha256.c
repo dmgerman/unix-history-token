@@ -473,7 +473,6 @@ parameter_list|(
 name|uint32_t
 name|state
 index|[
-specifier|static
 literal|8
 index|]
 parameter_list|,
@@ -481,7 +480,6 @@ specifier|const
 name|uint32_t
 name|data
 index|[
-specifier|static
 literal|16
 index|]
 parameter_list|)

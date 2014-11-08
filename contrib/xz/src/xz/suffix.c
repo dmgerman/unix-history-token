@@ -949,7 +949,7 @@ argument_list|(
 literal|"%s: Invalid filename suffix"
 argument_list|)
 argument_list|,
-name|optarg
+name|suffix
 argument_list|)
 expr_stmt|;
 comment|// Replace the old custom_suffix (if any) with the new suffix.

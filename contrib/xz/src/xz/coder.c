@@ -707,9 +707,9 @@ operator|>
 name|memory_limit
 condition|)
 block|{
-comment|// If --no-auto-adjust was used or we didn't find LZMA1 or
+comment|// If --no-adjust was used or we didn't find LZMA1 or
 comment|// LZMA2 as the last filter, give an error immediately.
-comment|// --format=raw implies --no-auto-adjust.
+comment|// --format=raw implies --no-adjust.
 if|if
 condition|(
 operator|!
