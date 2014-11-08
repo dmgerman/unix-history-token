@@ -1342,6 +1342,60 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
+comment|/* 		 * Samsung 843T Series SSDs 		 * 4k optimised 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"SAMSUNG MZ7WD*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung 850 SSDs 		 * 4k optimised 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"Samsung SSD 850*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung PM853T Series SSDs 		 * 4k optimised 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"SAMSUNG MZ7GE*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
 comment|/* 		 * SuperTalent TeraDrive CT SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT
