@@ -1819,14 +1819,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|IFNET_LOCK_INIT
-parameter_list|()
-value|do {						\ 	rw_init_flags(&ifnet_rwlock, "ifnet_rw",  RW_RECURSE);		\ 	sx_init_flags(&ifnet_sxlock, "ifnet_sx",  SX_RECURSE);		\ } while(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IFNET_WLOCK
 parameter_list|()
 value|do {						\ 	sx_xlock(&ifnet_sxlock);					\ 	rw_wlock(&ifnet_rwlock);					\ } while (0)
