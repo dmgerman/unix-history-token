@@ -2698,6 +2698,8 @@ parameter_list|(
 name|struct
 name|mount
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10634,6 +10636,10 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|,
+name|int
+name|flags
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -10683,15 +10689,25 @@ name|softdep_req
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+operator|(
+name|flags
+operator|&
+name|FORCECLOSE
+operator|)
+operator|==
+literal|0
+operator|||
 name|ump
 operator|->
 name|softdep_on_worklist
-condition|)
-name|panic
-argument_list|(
-literal|"softdep_waitidle: work added after flush."
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"softdep_waitidle: work added after flush"
+operator|)
 argument_list|)
 expr_stmt|;
 name|msleep
@@ -10954,6 +10970,8 @@ operator|=
 name|softdep_waitidle
 argument_list|(
 name|oldmnt
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
