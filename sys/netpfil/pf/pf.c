@@ -579,10 +579,6 @@ name|pfse_type
 enum|;
 union|union
 block|{
-name|struct
-name|route
-name|ro
-decl_stmt|;
 struct|struct
 block|{
 name|int
@@ -600,10 +596,6 @@ struct|;
 block|}
 name|u
 union|;
-define|#
-directive|define
-name|pfse_ro
-value|u.ro
 define|#
 directive|define
 name|pfse_icmp_type
