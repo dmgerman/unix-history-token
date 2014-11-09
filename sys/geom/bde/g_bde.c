@@ -962,6 +962,67 @@ argument_list|(
 name|gp
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|error
+condition|)
+block|{
+case|case
+name|ENOENT
+case|:
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Lock was destroyed"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ESRCH
+case|:
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Lock was nuked"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EINVAL
+case|:
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Could not open lock"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ENOTDIR
+case|:
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Lock not found"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Could not open lock (%d)"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 return|return;
 block|}
 end_function
