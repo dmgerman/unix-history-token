@@ -41400,6 +41400,9 @@ break|break;
 case|case
 name|SPRO_PREEMPT
 case|:
+case|case
+name|SPRO_PRE_ABO
+case|:
 block|{
 name|int
 name|nretval
