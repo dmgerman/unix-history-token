@@ -1567,15 +1567,8 @@ begin_comment
 comment|/* IPSEC */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPV6_FAITH
-value|29
-end_define
-
 begin_comment
-comment|/* bool; accept FAITH'ed connections */
+comment|/* 29; unused; was IPV6_FAITH */
 end_comment
 
 begin_if
@@ -2401,12 +2394,9 @@ name|IPV6CTL_ACCEPT_RTADV
 value|12
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPV6CTL_KEEPFAITH
-value|13
-end_define
+begin_comment
+comment|/* 13; unused; was: IPV6CTL_KEEPFAITH */
+end_comment
 
 begin_define
 define|#
@@ -3088,21 +3078,6 @@ name|ifa
 parameter_list|)
 value|((struct in6_ifaddr *)(ifa))
 end_define
-
-begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|faithprefix_p
-function_decl|)
-parameter_list|(
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

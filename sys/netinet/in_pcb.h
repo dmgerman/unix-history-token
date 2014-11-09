@@ -1809,15 +1809,8 @@ begin_comment
 comment|/* user can do MTU discovery */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INP_FAITH
-value|0x00000200
-end_define
-
 begin_comment
-comment|/* accept FAITH'ed connections */
+comment|/* 0x000200 unused: was INP_FAITH */
 end_comment
 
 begin_define

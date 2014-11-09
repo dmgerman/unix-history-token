@@ -1007,20 +1007,6 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
-name|ip6_keepfaith
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Firewall Aided Internet Translator */
-end_comment
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
 name|ip6_log_interval
 argument_list|)
 expr_stmt|;
@@ -1118,13 +1104,6 @@ define|#
 directive|define
 name|V_ip6_rfc6204w3
 value|VNET(ip6_rfc6204w3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip6_keepfaith
-value|VNET(ip6_keepfaith)
 end_define
 
 begin_define

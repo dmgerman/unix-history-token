@@ -450,20 +450,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|faithprefix_p
-function_decl|)
-parameter_list|(
-name|struct
-name|in6_addr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|int
 name|in6_validate_ifra
@@ -8320,32 +8306,7 @@ operator|(
 literal|0
 operator|)
 return|;
-switch|switch
-condition|(
-name|ifp
-operator|->
-name|if_type
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|IFT_DUMMY
-case|case
-name|IFT_DUMMY
-case|:
-endif|#
-directive|endif
-case|case
-name|IFT_FAITH
-case|:
-comment|/* 		 * These interfaces do not have the IFF_LOOPBACK flag, 		 * but loop packets back.  We do not have to do DAD on such 		 * interfaces.  We should even omit it, because loop-backed 		 * NS would confuse the DAD procedure. 		 */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-default|default:
-comment|/* 		 * Our DAD routine requires the interface up and running. 		 * However, some interfaces can be up before the RUNNING 		 * status.  Additionaly, users may try to assign addresses 		 * before the interface becomes up (or running). 		 * We simply skip DAD in such a case as a work around. 		 * XXX: we should rather mark "tentative" on such addresses, 		 * and do DAD after the interface becomes ready. 		 */
+comment|/* 	 * Our DAD routine requires the interface up and running. 	 * However, some interfaces can be up before the RUNNING 	 * status.  Additionaly, users may try to assign addresses 	 * before the interface becomes up (or running). 	 * We simply skip DAD in such a case as a work around. 	 * XXX: we should rather mark "tentative" on such addresses, 	 * and do DAD after the interface becomes ready. 	 */
 if|if
 condition|(
 operator|!
@@ -8377,7 +8338,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
 block|}
 end_function
 

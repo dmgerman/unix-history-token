@@ -2520,15 +2520,8 @@ begin_comment
 comment|/* int; set/get security policy */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_FAITH
-value|22
-end_define
-
 begin_comment
-comment|/* bool; accept FAITH'ed connections */
+comment|/* unused; was IP_FAITH */
 end_comment
 
 begin_define
@@ -3661,15 +3654,8 @@ begin_comment
 comment|/* use fast IP forwarding code */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPCTL_KEEPFAITH
-value|15
-end_define
-
 begin_comment
-comment|/* FAITH IPv4->IPv6 translater ctl */
+comment|/* 15, unused, was: IPCTL_KEEPFAITH  */
 end_comment
 
 begin_define
