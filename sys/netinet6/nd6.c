@@ -6661,8 +6661,6 @@ name|chain
 argument_list|,
 operator|&
 name|sin6
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * When the link-layer address of a router changes, select the 	 * best router again.  In particular, when the neighbor entry is newly 	 * created, it might affect the selection policy. 	 * Question: can we restrict the first condition to the "is_newentry" 	 * case? 	 * XXX: when we hear an RA from a new router with the link-layer 	 * address option, defrouter_select() is called twice, since 	 * defrtrlist_update called the function as well.  However, I believe 	 * we can compromise the overhead, since it only happens the first 	 * time. 	 * XXX: although defrouter_select() should not have a bad effect 	 * for those are not autoconfigured hosts, we explicitly avoid such 	 * cases for safety. 	 */
@@ -8153,11 +8151,6 @@ name|struct
 name|sockaddr_in6
 modifier|*
 name|dst
-parameter_list|,
-name|struct
-name|route
-modifier|*
-name|ro
 parameter_list|)
 block|{
 name|struct
@@ -8238,7 +8231,7 @@ operator|*
 operator|)
 name|dst
 argument_list|,
-name|ro
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

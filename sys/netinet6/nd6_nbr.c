@@ -3981,8 +3981,6 @@ name|chain
 argument_list|,
 operator|&
 name|sin6
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
