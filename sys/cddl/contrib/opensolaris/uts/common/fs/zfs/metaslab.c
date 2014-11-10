@@ -391,7 +391,7 @@ begin_decl_stmt
 name|uint64_t
 name|metaslab_df_alloc_threshold
 init|=
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 decl_stmt|;
 end_decl_stmt
 

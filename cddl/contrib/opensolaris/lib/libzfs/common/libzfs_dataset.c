@@ -5109,12 +5109,50 @@ block|}
 break|break;
 block|}
 case|case
-name|ZFS_PROP_RECORDSIZE
-case|:
-case|case
 name|ZFS_PROP_VOLBLOCKSIZE
 case|:
-comment|/* must be power of two within SPA_{MIN,MAX}BLOCKSIZE */
+case|case
+name|ZFS_PROP_RECORDSIZE
+case|:
+block|{
+name|int
+name|maxbs
+init|=
+name|SPA_MAXBLOCKSIZE
+decl_stmt|;
+if|if
+condition|(
+name|zhp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|maxbs
+operator|=
+name|zpool_get_prop_int
+argument_list|(
+name|zhp
+operator|->
+name|zpool_hdl
+argument_list|,
+name|ZPOOL_PROP_MAXBLOCKSIZE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 			 * Volumes are limited to a volblocksize of 128KB, 			 * because they typically service workloads with 			 * small random writes, which incur a large performance 			 * penalty with large blocks. 			 */
+if|if
+condition|(
+name|prop
+operator|==
+name|ZFS_PROP_VOLBLOCKSIZE
+condition|)
+name|maxbs
+operator|=
+name|SPA_OLD_MAXBLOCKSIZE
+expr_stmt|;
+comment|/* 			 * The value must be a power of two between 			 * SPA_MINBLOCKSIZE and maxbs. 			 */
 if|if
 condition|(
 name|intval
@@ -5123,7 +5161,7 @@ name|SPA_MINBLOCKSIZE
 operator|||
 name|intval
 operator|>
-name|SPA_MAXBLOCKSIZE
+name|maxbs
 operator|||
 operator|!
 name|ISP2
@@ -5140,21 +5178,13 @@ name|dgettext
 argument_list|(
 name|TEXT_DOMAIN
 argument_list|,
-literal|"'%s' must be power of 2 from %u "
-literal|"to %uk"
+literal|"'%s' must be power of 2 from 512B "
+literal|"to %uKB"
 argument_list|)
 argument_list|,
 name|propname
 argument_list|,
-operator|(
-name|uint_t
-operator|)
-name|SPA_MINBLOCKSIZE
-argument_list|,
-operator|(
-name|uint_t
-operator|)
-name|SPA_MAXBLOCKSIZE
+name|maxbs
 operator|>>
 literal|10
 argument_list|)
@@ -5176,6 +5206,7 @@ name|error
 goto|;
 block|}
 break|break;
+block|}
 case|case
 name|ZFS_PROP_MLSLABEL
 case|:
@@ -6496,11 +6527,18 @@ break|break;
 case|case
 name|ERANGE
 case|:
+case|case
+name|EDOM
+case|:
 if|if
 condition|(
 name|prop
 operator|==
 name|ZFS_PROP_COMPRESSION
+operator|||
+name|prop
+operator|==
+name|ZFS_PROP_RECORDSIZE
 condition|)
 block|{
 operator|(
@@ -14366,20 +14404,8 @@ argument_list|(
 name|TEXT_DOMAIN
 argument_list|,
 literal|"volume block size must be power of 2 from "
-literal|"%u to %uk"
+literal|"512B to 128KB"
 argument_list|)
-argument_list|,
-operator|(
-name|uint_t
-operator|)
-name|SPA_MINBLOCKSIZE
-argument_list|,
-operator|(
-name|uint_t
-operator|)
-name|SPA_MAXBLOCKSIZE
-operator|>>
-literal|10
 argument_list|)
 expr_stmt|;
 return|return

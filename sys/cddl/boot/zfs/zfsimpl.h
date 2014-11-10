@@ -389,7 +389,7 @@ value|((BSWAP_32(x)<< 32) | BSWAP_32((x)>> 32))
 end_define
 
 begin_comment
-comment|/*  * We currently support nine block sizes, from 512 bytes to 128K.  * We could go higher, but the benefits are near-zero and the cost  * of COWing a giant block to modify one byte would become excessive.  */
+comment|/*  * Note: the boot loader can't actually read blocks larger than 128KB,  * due to lack of memory.  Therefore its SPA_MAXBLOCKSIZE is still 128KB.  */
 end_comment
 
 begin_define
@@ -418,13 +418,6 @@ define|#
 directive|define
 name|SPA_MAXBLOCKSIZE
 value|(1ULL<< SPA_MAXBLOCKSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPA_BLOCKSIZES
-value|(SPA_MAXBLOCKSHIFT - SPA_MINBLOCKSHIFT + 1)
 end_define
 
 begin_comment

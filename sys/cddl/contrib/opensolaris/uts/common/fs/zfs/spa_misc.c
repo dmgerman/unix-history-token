@@ -7457,5 +7457,37 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|spa_maxblocksize
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+block|{
+if|if
+condition|(
+name|spa_feature_is_enabled
+argument_list|(
+name|spa
+argument_list|,
+name|SPA_FEATURE_LARGE_BLOCKS
+argument_list|)
+condition|)
+return|return
+operator|(
+name|SPA_MAXBLOCKSIZE
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|SPA_OLD_MAXBLOCKSIZE
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

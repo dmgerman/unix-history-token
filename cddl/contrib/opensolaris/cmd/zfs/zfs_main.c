@@ -1373,9 +1373,9 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tsend [-DnPpRve] [-[iI] snapshot] "
+literal|"\tsend [-DnPpRvLe] [-[iI] snapshot] "
 literal|"<snapshot>\n"
-literal|"\tsend [-e] [-i snapshot|bookmark] "
+literal|"\tsend [-Le] [-i snapshot|bookmark] "
 literal|"<filesystem|volume|snapshot>\n"
 argument_list|)
 operator|)
@@ -17163,7 +17163,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":i:I:RDpvnPe"
+literal|":i:I:RDpvnPLe"
 argument_list|)
 operator|)
 operator|!=
@@ -17294,6 +17294,16 @@ case|:
 name|flags
 operator|.
 name|dryrun
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+name|flags
+operator|.
+name|largeblock
 operator|=
 name|B_TRUE
 expr_stmt|;
@@ -17569,6 +17579,16 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|flags
+operator|.
+name|largeblock
+condition|)
+name|lzc_flags
+operator||=
+name|LZC_SEND_FLAG_LARGE_BLOCK
+expr_stmt|;
 if|if
 condition|(
 name|flags

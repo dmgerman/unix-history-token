@@ -148,7 +148,7 @@ name|os
 argument_list|,
 name|DMU_OTN_UINT64_METADATA
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|DMU_OTN_UINT64_METADATA
 argument_list|,

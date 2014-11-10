@@ -934,6 +934,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|ASSERT3U
+argument_list|(
+name|len
+argument_list|,
+operator|<=
+argument_list|,
+name|SPA_OLD_MAXBLOCKSIZE
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|lr
@@ -1052,6 +1061,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|ASSERT3U
+argument_list|(
+name|zilc
+operator|->
+name|zc_nused
+argument_list|,
+operator|<=
+argument_list|,
+name|SPA_OLD_MAXBLOCKSIZE
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|lr
@@ -1443,7 +1463,7 @@ name|lrbuf
 operator|=
 name|zio_buf_alloc
 argument_list|(
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|)
 expr_stmt|;
 name|zil_bp_tree_init
@@ -1734,7 +1754,7 @@ name|zio_buf_free
 argument_list|(
 name|lrbuf
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|)
 expr_stmt|;
 return|return
@@ -4219,7 +4239,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Define a limited set of intent log block sizes.  *  * These must be a multiple of 4KB. Note only the amount used (again  * aligned to 4KB) actually gets written. However, we can't always just  * allocate SPA_MAXBLOCKSIZE as the slog space could be exhausted.  */
+comment|/*  * Define a limited set of intent log block sizes.  *  * These must be a multiple of 4KB. Note only the amount used (again  * aligned to 4KB) actually gets written. However, we can't always just  * allocate SPA_OLD_MAXBLOCKSIZE as the slog space could be exhausted.  */
 end_comment
 
 begin_decl_stmt
@@ -4489,7 +4509,7 @@ name|UINT64_MAX
 condition|)
 name|zil_blksz
 operator|=
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 expr_stmt|;
 name|zilog
 operator|->
