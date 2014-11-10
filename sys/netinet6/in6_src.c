@@ -2464,10 +2464,38 @@ goto|goto
 name|getroute
 goto|;
 block|}
+comment|/* 	 * If the destination address is a multicast address and the outgoing 	 * interface for the address is specified by the caller, use it. 	 */
+if|if
+condition|(
+name|IN6_IS_ADDR_MULTICAST
+argument_list|(
+name|dst
+argument_list|)
+operator|&&
+name|mopts
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|ifp
+operator|=
+name|mopts
+operator|->
+name|im6o_multicast_ifp
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+goto|goto
+name|done
+goto|;
+comment|/* we do not need a route for multicast. */
+block|}
 comment|/* 	 * If destination address is LLA or link- or node-local multicast, 	 * use it's embedded scope zone id to determine outgoing interface. 	 */
 if|if
 condition|(
-name|IN6_IS_SCOPE_LINKLOCAL
+name|IN6_IS_ADDR_MC_LINKLOCAL
 argument_list|(
 name|dst
 argument_list|)
@@ -2506,34 +2534,6 @@ goto|goto
 name|done
 goto|;
 block|}
-block|}
-comment|/* 	 * If the destination address is a multicast address and the outgoing 	 * interface for the address is specified by the caller, use it. 	 */
-if|if
-condition|(
-name|IN6_IS_ADDR_MULTICAST
-argument_list|(
-name|dst
-argument_list|)
-operator|&&
-name|mopts
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|ifp
-operator|=
-name|mopts
-operator|->
-name|im6o_multicast_ifp
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-goto|goto
-name|done
-goto|;
-comment|/* we do not need a route for multicast. */
 block|}
 name|getroute
 label|:
