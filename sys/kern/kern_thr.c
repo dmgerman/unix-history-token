@@ -1470,7 +1470,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Shutting down last thread in the proc.  This will actually 	 * call exit() in the trampoline when it returns. 	 */
 if|if
 condition|(
 name|p
@@ -1522,6 +1521,7 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+comment|/* 	 * Ignore attempts to shut down last thread in the proc.  This 	 * will actually call _exit(2) in the usermode trampoline when 	 * it returns. 	 */
 name|PROC_UNLOCK
 argument_list|(
 name|p
