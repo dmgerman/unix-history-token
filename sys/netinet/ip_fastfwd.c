@@ -1749,7 +1749,6 @@ argument_list|(
 name|ips_odropped
 argument_list|)
 expr_stmt|;
-comment|/* would send source quench here but that is depreciated */
 goto|goto
 name|drop
 goto|;

@@ -6681,15 +6681,6 @@ name|cmd
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Source quench is depreciated. 	 */
-elseif|else
-if|if
-condition|(
-name|cmd
-operator|==
-name|PRC_QUENCH
-condition|)
-return|return;
 comment|/* 	 * Hostdead is ugly because it goes linearly through all PCBs. 	 * XXX: We never get this from ICMP, otherwise it makes an 	 * excellent DoS attack on machines with many connections. 	 */
 elseif|else
 if|if
@@ -7247,15 +7238,6 @@ index|]
 operator|==
 literal|0
 operator|)
-condition|)
-return|return;
-comment|/* Source quench is depreciated. */
-elseif|else
-if|if
-condition|(
-name|cmd
-operator|==
-name|PRC_QUENCH
 condition|)
 return|return;
 comment|/* if the parameter is from icmp6, decode it. */

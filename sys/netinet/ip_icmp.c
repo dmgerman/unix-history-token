@@ -2426,23 +2426,6 @@ name|code
 operator|=
 name|PRC_PARAMPROB
 expr_stmt|;
-goto|goto
-name|deliver
-goto|;
-case|case
-name|ICMP_SOURCEQUENCH
-case|:
-if|if
-condition|(
-name|code
-condition|)
-goto|goto
-name|badcode
-goto|;
-name|code
-operator|=
-name|PRC_QUENCH
-expr_stmt|;
 name|deliver
 label|:
 comment|/* 		 * Problem with datagram; advise higher level routines. 		 */
@@ -3380,6 +3363,9 @@ name|ICMP_IREQREPLY
 case|:
 case|case
 name|ICMP_MASKREPLY
+case|:
+case|case
+name|ICMP_SOURCEQUENCH
 case|:
 default|default:
 break|break;
