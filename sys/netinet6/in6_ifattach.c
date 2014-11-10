@@ -1721,7 +1721,7 @@ argument|ifp
 argument_list|,
 argument|&V_ifnet
 argument_list|,
-argument|if_list
+argument|if_link
 argument_list|)
 block|{
 if|if
@@ -3549,7 +3549,7 @@ argument|ifp
 argument_list|,
 argument|&V_ifnet
 argument_list|,
-argument|if_list
+argument|if_link
 argument_list|)
 block|{
 if|if

@@ -7528,7 +7528,7 @@ argument|ifp
 argument_list|,
 argument|&V_ifnet
 argument_list|,
-argument|if_list
+argument|if_link
 argument_list|)
 block|{
 name|addrsofif
@@ -7875,7 +7875,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|ifp
 argument_list|,
-name|if_list
+name|if_link
 argument_list|)
 control|)
 block|{
