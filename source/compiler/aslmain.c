@@ -525,6 +525,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-dl"
+argument_list|,
+literal|"Emit legacy ASL code only (no C-style operators)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-e<f1 f2 ...>"
 argument_list|,
 literal|"Include ACPI table(s) for external symbol resolution"
@@ -558,9 +565,30 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-bf -bt"
+literal|"-bf"
 argument_list|,
-literal|"Create debug file (full or parse tree only) (*.txt)"
+literal|"Create debug file (full output) (*.txt)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-bs"
+argument_list|,
+literal|"Create debug file (parse tree only) (*.txt)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-bp<depth>"
+argument_list|,
+literal|"Prune ASL parse tree"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-bt<type>"
+argument_list|,
+literal|"Object type to be pruned from the parse tree"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION

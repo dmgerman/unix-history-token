@@ -2359,6 +2359,8 @@ value|\     ACPI_DISASM_ONLY_MEMBERS (\     UINT8                           Disa
 comment|/* Used during AML disassembly */
 value|\     UINT8                           DisasmOpcode;
 comment|/* Subtype used for disassembly */
+value|\     char                            *OperatorSymbol;
+comment|/* Used for C-style operator name strings */
 value|\     char                            AmlOpName[16])
 end_define
 
@@ -2829,6 +2831,20 @@ define|#
 directive|define
 name|ACPI_PARSEOP_SPECIAL
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_COMPOUND
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_ASSIGNMENT
+value|0x40
 end_define
 
 begin_comment

@@ -1337,12 +1337,33 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_COMMON_HEADER
 argument_list|(
-literal|"AML Disassembler"
+name|AML_DISASSEMBLER_NAME
 argument_list|,
 literal|" * "
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_CstyleDisassembly
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" * Disassembling to symbolic ASL+ operators\n"
+literal|" *\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" * Disassembling to non-symbolic legacy ASL operators\n"
+literal|" *\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|" * Disassembly of %s, %s"

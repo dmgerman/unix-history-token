@@ -1474,6 +1474,12 @@ return|return;
 case|case
 name|ACPI_DASM_LNOT_SUFFIX
 case|:
+if|if
+condition|(
+operator|!
+name|AcpiGbl_CstyleDisassembly
+condition|)
+block|{
 switch|switch
 condition|(
 name|Op
@@ -1512,6 +1518,7 @@ expr_stmt|;
 break|break;
 default|default:
 break|break;
+block|}
 block|}
 name|Op
 operator|->
@@ -1971,7 +1978,7 @@ name|ACPI_DASM_PLD_METHOD
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Buffer"
+literal|"ToPLD ("
 argument_list|)
 expr_stmt|;
 block|}

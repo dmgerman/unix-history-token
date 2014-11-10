@@ -10,12 +10,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__DTCOMPILE_C__
-end_define
-
-begin_define
-define|#
-directive|define
 name|_DECLARE_DT_GLOBALS
 end_define
 

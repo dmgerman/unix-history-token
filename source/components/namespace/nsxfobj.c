@@ -10,12 +10,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__NSXFOBJ_C__
-end_define
-
-begin_define
-define|#
-directive|define
 name|EXPORT_ACPI_INTERFACES
 end_define
 

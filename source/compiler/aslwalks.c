@@ -688,6 +688,27 @@ argument_list|(
 name|ArgType
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ArgOp
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_COMPILER_INTERNAL
+argument_list|,
+name|Op
+argument_list|,
+literal|"Null ArgOp in argument loop"
+argument_list|)
+expr_stmt|;
+name|AslAbort
+argument_list|()
+expr_stmt|;
+block|}
 name|ThisNodeBtype
 operator|=
 name|AnGetBtype

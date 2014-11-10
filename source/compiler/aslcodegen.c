@@ -174,6 +174,18 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_TREE_OUTPUT
+argument_list|,
+literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
+literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L\n"
+argument_list|,
+literal|76
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
 name|CgCloseTable
 argument_list|()
 expr_stmt|;
@@ -219,7 +231,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr    Child    Parent   Flags    AcTyp    Final Col L\n"
+literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
+literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L\n"
 argument_list|,
 literal|76
 argument_list|,
@@ -309,7 +322,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%08X %04X %04X %01X     %04X  %04X %04X   %04X    %08X %08X %08X %08X %08X %04X  %02d  %02d\n"
+literal|"%08X %04X %04X %01X     %04X  %04X %04X   %04X    "
+literal|"%08X %08X %08X %08X %08X %08X %04X  %02d  %02d\n"
 argument_list|,
 comment|/* 1  */
 operator|(
@@ -392,44 +406,51 @@ name|Op
 operator|->
 name|Asl
 operator|.
-name|Child
+name|Parent
 argument_list|,
 comment|/* 11 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|Parent
+name|Child
 argument_list|,
 comment|/* 12 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|CompileFlags
+name|Next
 argument_list|,
 comment|/* 13 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|AcpiBtype
+name|CompileFlags
 argument_list|,
 comment|/* 14 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|FinalAmlLength
+name|AcpiBtype
 argument_list|,
 comment|/* 15 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|Column
+name|FinalAmlLength
 argument_list|,
 comment|/* 16 */
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Column
+argument_list|,
+comment|/* 17 */
 name|Op
 operator|->
 name|Asl

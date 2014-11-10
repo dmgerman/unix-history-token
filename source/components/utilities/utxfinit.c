@@ -10,12 +10,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__UTXFINIT_C__
-end_define
-
-begin_define
-define|#
-directive|define
 name|EXPORT_ACPI_INTERFACES
 end_define
 
@@ -68,6 +62,19 @@ argument_list|(
 literal|"utxfinit"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* For AcpiExec only */
+end_comment
+
+begin_function_decl
+name|void
+name|AeDoObjectOverrides
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiInitializeSubsystem  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initializes all global variables. This is the first function  *              called, so any early initialization belongs here.  *  ******************************************************************************/
@@ -624,6 +631,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_EXEC_APP
+comment|/*      * This call implements the "initialization file" option for AcpiExec.      * This is the precise point that we want to perform the overrides.      */
+name|AeDoObjectOverrides
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*      * Execute any module-level code that was detected during the table load      * phase. Although illegal since ACPI 2.0, there are many machines that      * contain this type of code. Each block of detected executable AML code      * outside of any control method is wrapped with a temporary control      * method object and placed on a global list. The methods on this list      * are executed below.      */
 name|AcpiNsExecModuleCodeList
 argument_list|()

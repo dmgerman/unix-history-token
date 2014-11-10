@@ -11,12 +11,6 @@ begin_comment
 comment|/*  * These procedures are used for tracking memory leaks in the subsystem, and  * they get compiled out when the ACPI_DBG_TRACK_ALLOCATIONS is not set.  *  * Each memory allocation is tracked via a doubly linked list. Each  * element contains the caller's component, module name, function name, and  * line number. AcpiUtAllocate and AcpiUtAllocateZeroed call  * AcpiUtTrackAllocation to add an element to the list; deletion  * occurs in the body of AcpiUtFree.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__UTTRACK_C__
-end_define
-
 begin_include
 include|#
 directive|include

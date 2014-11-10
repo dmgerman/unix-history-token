@@ -34,14 +34,14 @@ begin_define
 define|#
 directive|define
 name|ASL_COMPILER_NAME
-value|"ASL Optimizing Compiler"
+value|"ASL+ Optimizing Compiler"
 end_define
 
 begin_define
 define|#
 directive|define
 name|AML_DISASSEMBLER_NAME
-value|"AML Disassembler"
+value|"AML/ASL+ Disassembler"
 end_define
 
 begin_define

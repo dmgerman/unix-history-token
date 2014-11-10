@@ -647,6 +647,23 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|Op
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Null Op in AnGetBtype\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ACPI_UINT32_MAX
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|Op
 operator|->

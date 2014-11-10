@@ -3330,6 +3330,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * dmcstyle  */
+end_comment
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiDmCheckForSymbolicOpcode
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDmCloseOperator
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * acdisasm  */
 end_comment
 

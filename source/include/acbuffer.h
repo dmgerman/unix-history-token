@@ -150,8 +150,14 @@ decl_stmt|;
 name|UINT8
 name|IgnoreColor
 decl_stmt|;
-name|UINT32
-name|Color
+name|UINT8
+name|Red
+decl_stmt|;
+name|UINT8
+name|Green
+decl_stmt|;
+name|UINT8
+name|Blue
 decl_stmt|;
 name|UINT16
 name|Width
@@ -312,27 +318,79 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_PLD_GET_COLOR
+name|ACPI_PLD_GET_RED
 parameter_list|(
 name|dword
 parameter_list|)
-value|ACPI_GET_BITS (dword, 8, ACPI_24BIT_MASK)
+value|ACPI_GET_BITS (dword, 8, ACPI_8BIT_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_PLD_SET_COLOR
+name|ACPI_PLD_SET_RED
 parameter_list|(
 name|dword
 parameter_list|,
 name|value
 parameter_list|)
-value|ACPI_SET_BITS (dword, 8, ACPI_24BIT_MASK, value)
+value|ACPI_SET_BITS (dword, 8, ACPI_8BIT_MASK, value)
 end_define
 
 begin_comment
-comment|/* Offset 8, Len 24 */
+comment|/* Offset 8, Len 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PLD_GET_GREEN
+parameter_list|(
+name|dword
+parameter_list|)
+value|ACPI_GET_BITS (dword, 16, ACPI_8BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PLD_SET_GREEN
+parameter_list|(
+name|dword
+parameter_list|,
+name|value
+parameter_list|)
+value|ACPI_SET_BITS (dword, 16, ACPI_8BIT_MASK, value)
+end_define
+
+begin_comment
+comment|/* Offset 16, Len 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PLD_GET_BLUE
+parameter_list|(
+name|dword
+parameter_list|)
+value|ACPI_GET_BITS (dword, 24, ACPI_8BIT_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PLD_SET_BLUE
+parameter_list|(
+name|dword
+parameter_list|,
+name|value
+parameter_list|)
+value|ACPI_SET_BITS (dword, 24, ACPI_8BIT_MASK, value)
+end_define
+
+begin_comment
+comment|/* Offset 24, Len 8 */
 end_comment
 
 begin_comment

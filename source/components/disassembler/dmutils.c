@@ -425,6 +425,28 @@ operator|&
 name|BLOCK_COMMA_LIST
 condition|)
 block|{
+comment|/* Exit if Target has been marked IGNORE */
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|Next
+operator|->
+name|Common
+operator|.
+name|DisasmFlags
+operator|&
+name|ACPI_PARSEOP_IGNORE
+condition|)
+block|{
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 comment|/* Check for a NULL target operand */
 if|if
 condition|(
@@ -516,11 +538,23 @@ name|FALSE
 operator|)
 return|;
 block|}
+comment|/* Emit comma only if this is not a C-style operator */
+if|if
+condition|(
+operator|!
+name|Op
+operator|->
+name|Common
+operator|.
+name|OperatorSymbol
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|", "
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|TRUE

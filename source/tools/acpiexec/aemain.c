@@ -215,7 +215,7 @@ begin_define
 define|#
 directive|define
 name|AE_SUPPORTED_OPTIONS
-value|"?b:d:e:f:ghm^orv^:x:"
+value|"?b:d:e:f^ghm^orv^:x:"
 end_define
 
 begin_comment
@@ -399,9 +399,16 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-f<Value>"
+literal|"-fv<Value>"
 argument_list|,
 literal|"Operation Region initialization fill value"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-fi<file>"
+argument_list|,
+literal|"Specify namespace initialization file"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -437,6 +444,12 @@ argument_list|(
 literal|"-x<DebugLevel>"
 argument_list|,
 literal|"Debug output level"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n  From within the interactive mode, use '?' or \"help\" to see\n"
+literal|"  a list of available AML Debugger commands\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -700,6 +713,35 @@ break|break;
 case|case
 literal|'f'
 case|:
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'v'
+case|:
+comment|/* -fv: region fill value */
+if|if
+condition|(
+name|AcpiGetoptArgument
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|AcpiGbl_RegionFillValue
 operator|=
 operator|(
@@ -714,6 +756,59 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+comment|/* -fi: specify initialization file */
+if|if
+condition|(
+name|AcpiGetoptArgument
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|AeOpenInitializationFile
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -f%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'g'
@@ -1051,6 +1146,11 @@ name|AcpiGbl_DbOpt_tables
 operator|=
 name|TRUE
 expr_stmt|;
+name|AcpiGbl_CstyleDisassembly
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Not supported for AcpiExec */
 name|TableCount
 operator|=
 literal|0

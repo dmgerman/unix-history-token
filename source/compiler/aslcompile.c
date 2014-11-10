@@ -252,6 +252,20 @@ expr_stmt|;
 name|CmFlushSourceCode
 argument_list|()
 expr_stmt|;
+comment|/* Prune the parse tree if requested (debug purposes only) */
+if|if
+condition|(
+name|Gbl_PruneParseTree
+condition|)
+block|{
+name|AslPruneParseTree
+argument_list|(
+name|Gbl_PruneDepth
+argument_list|,
+name|Gbl_PruneType
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Optional parse tree dump, compiler debug output only */
 name|LsDumpParseTree
 argument_list|()

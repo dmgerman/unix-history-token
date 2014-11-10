@@ -1288,6 +1288,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|ACPI_INIT_GLOBAL
+argument_list|(
+name|BOOLEAN
+argument_list|,
+name|AcpiGbl_CstyleDisassembly
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ACPI_GLOBAL
 argument_list|(
 name|BOOLEAN
