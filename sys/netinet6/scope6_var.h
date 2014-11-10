@@ -186,6 +186,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sa6_checkzone_ifp
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr_in6
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|in6_setscope
 parameter_list|(
 name|struct
