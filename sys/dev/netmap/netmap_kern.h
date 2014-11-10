@@ -795,7 +795,7 @@ name|netmap_adapter
 modifier|*
 name|na
 decl_stmt|;
-comment|/* The folloiwing fields are for VALE switch support */
+comment|/* The following fields are for VALE switch support */
 name|struct
 name|nm_bdg_fwd
 modifier|*
