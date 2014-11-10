@@ -2183,17 +2183,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|nd6_dad_duplicated
-parameter_list|(
-name|struct
-name|ifaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* nd6_rtr.c */
 end_comment
