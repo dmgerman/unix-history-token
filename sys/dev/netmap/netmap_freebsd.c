@@ -1896,6 +1896,15 @@ operator|)
 name|foff
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|color
+condition|)
+operator|*
+name|color
+operator|=
+literal|0
+expr_stmt|;
 name|dev_ref
 argument_list|(
 name|vmh
