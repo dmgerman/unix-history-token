@@ -9114,6 +9114,14 @@ modifier|*
 name|trl_uio
 decl_stmt|;
 name|struct
+name|file
+modifier|*
+name|fp
+decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
+name|struct
 name|iovec32
 modifier|*
 name|iov32

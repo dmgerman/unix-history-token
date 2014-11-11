@@ -9788,7 +9788,9 @@ block|}
 block|}
 name|AUDIT_ARG_FD
 argument_list|(
-name|src_fd
+name|uap
+operator|->
+name|fd
 argument_list|)
 expr_stmt|;
 comment|/* 	 * sendfile(2) can start at any offset within a file so we require 	 * CAP_READ+CAP_SEEK = CAP_PREAD. 	 */
