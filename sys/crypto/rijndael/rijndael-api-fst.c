@@ -2157,6 +2157,7 @@ index|]
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
@@ -2190,6 +2191,7 @@ index|]
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
@@ -2223,6 +2225,7 @@ index|]
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
@@ -2256,6 +2259,7 @@ index|]
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
