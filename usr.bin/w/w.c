@@ -2722,7 +2722,7 @@ block|}
 comment|/* Print number of users logged in to system */
 name|xo_emit
 argument_list|(
-literal|" {:users/%d} user%s"
+literal|" {:users/%d} {N:user%s}"
 argument_list|,
 name|nusers
 argument_list|,
