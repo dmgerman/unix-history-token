@@ -855,11 +855,7 @@ name|m
 expr_stmt|;
 name|m
 operator|=
-name|rxkring
-operator|->
-name|nkr_num_slots
-operator|-
-literal|1
+name|lim_rx
 expr_stmt|;
 comment|/* max avail space on destination */
 name|busy
@@ -879,7 +875,7 @@ literal|0
 condition|)
 name|busy
 operator|+=
-name|txkring
+name|rxkring
 operator|->
 name|nkr_num_slots
 expr_stmt|;
