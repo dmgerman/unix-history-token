@@ -451,6 +451,11 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -480,6 +485,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|td
 argument_list|)
 operator|)
 return|;
@@ -543,6 +550,8 @@ name|devtoname
 argument_list|(
 name|dev
 argument_list|)
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -604,6 +613,8 @@ condition|(
 name|g_dev_setdumpdev
 argument_list|(
 name|dev
+argument_list|,
+name|curthread
 argument_list|)
 operator|==
 literal|0
@@ -2349,6 +2360,8 @@ operator|=
 name|g_dev_setdumpdev
 argument_list|(
 name|NULL
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -2357,6 +2370,8 @@ operator|=
 name|g_dev_setdumpdev
 argument_list|(
 name|dev
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3444,6 +3459,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* Destroy the struct cdev *so we get no more requests */
