@@ -41,6 +41,12 @@ directive|define
 name|WITH_MONITOR
 end_define
 
+begin_define
+define|#
+directive|define
+name|WITH_GENERIC
+end_define
+
 begin_if
 if|#
 directive|if
@@ -76,6 +82,10 @@ directive|define
 name|NM_LOCK_T
 value|struct mtx
 end_define
+
+begin_comment
+comment|/* netmap global lock */
+end_comment
 
 begin_define
 define|#
@@ -457,15 +467,70 @@ name|NM_ATOMIC_T
 value|volatile long unsigned int
 end_define
 
-begin_comment
-comment|// XXX a mtx would suffice here too 20130404 gl
-end_comment
+begin_define
+define|#
+directive|define
+name|NM_MTX_T
+value|struct mutex
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_INIT
+parameter_list|(
+name|m
+parameter_list|,
+name|s
+parameter_list|)
+value|do { (void)s; mutex_init(&(m)); } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_DESTROY
+parameter_list|(
+name|m
+parameter_list|)
+value|do { (void)m; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_LOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|mutex_lock(&(m))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_UNLOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|mutex_unlock(&(m))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_MTX_LOCK_ASSERT
+parameter_list|(
+name|m
+parameter_list|)
+value|mutex_is_locked(&(m))
+end_define
 
 begin_define
 define|#
 directive|define
 name|NMG_LOCK_T
-value|struct semaphore
+value|NM_MTX_T
 end_define
 
 begin_define
@@ -473,7 +538,7 @@ define|#
 directive|define
 name|NMG_LOCK_INIT
 parameter_list|()
-value|sema_init(&netmap_global_lock, 1)
+value|NM_MTX_INIT(netmap_global_lock, \ 					"netmap_global_lock")
 end_define
 
 begin_define
@@ -481,6 +546,7 @@ define|#
 directive|define
 name|NMG_LOCK_DESTROY
 parameter_list|()
+value|NM_MTX_DESTROY(netmap_global_lock)
 end_define
 
 begin_define
@@ -488,7 +554,7 @@ define|#
 directive|define
 name|NMG_LOCK
 parameter_list|()
-value|down(&netmap_global_lock)
+value|NM_MTX_LOCK(netmap_global_lock)
 end_define
 
 begin_define
@@ -496,7 +562,7 @@ define|#
 directive|define
 name|NMG_UNLOCK
 parameter_list|()
-value|up(&netmap_global_lock)
+value|NM_MTX_UNLOCK(netmap_global_lock)
 end_define
 
 begin_define
@@ -504,11 +570,8 @@ define|#
 directive|define
 name|NMG_LOCK_ASSERT
 parameter_list|()
+value|NM_MTX_LOCK_ASSERT(netmap_global_lock)
 end_define
-
-begin_comment
-comment|//	XXX to be completed
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -1526,6 +1589,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_GENERIC
+end_ifdef
+
 begin_comment
 comment|/* Mitigation support. */
 end_comment
@@ -1618,6 +1687,15 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_GENERIC */
+end_comment
 
 begin_function
 specifier|static
@@ -4908,6 +4986,12 @@ begin_comment
 comment|/* WITH_MONITOR */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_GENERIC
+end_ifdef
+
 begin_comment
 comment|/*  * generic netmap emulation for devices that do not have  * native netmap support.  */
 end_comment
@@ -5177,6 +5261,15 @@ name|mit
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WITH_GENERIC */
+end_comment
 
 begin_comment
 comment|/* Shared declarations for the VALE switch. */
