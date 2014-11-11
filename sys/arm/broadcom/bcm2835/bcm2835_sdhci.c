@@ -289,7 +289,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Arasan HC seems to have problem with Data CRC on lower frequencies.  * Use this tunable to cap initialization sequence frequency at higher  * value. Default is standard 400kHz  */
+comment|/*   * Arasan HC seems to have problem with Data CRC on lower frequencies.  * Use this tunable to cap initialization sequence frequency at higher  * value.  Default is standard 400kHz.  * HS mode brings too many problems for most of cards, so disable HS mode  * until a better fix comes up.  * HS mode still can be enabled with the tunable.  */
 end_comment
 
 begin_decl_stmt
@@ -306,7 +306,7 @@ specifier|static
 name|int
 name|bcm2835_sdhci_hs
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
