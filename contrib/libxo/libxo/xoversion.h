@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|LIBXO_VERSION
-value|"0.1.4"
+value|"0.1.5"
 end_define
 
 begin_comment
