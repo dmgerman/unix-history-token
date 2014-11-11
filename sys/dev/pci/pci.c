@@ -18146,7 +18146,7 @@ name|PCIB_POWER_FOR_SLEEP
 argument_list|(
 name|pcib
 argument_list|,
-name|dev
+name|child
 argument_list|,
 operator|&
 name|dstate

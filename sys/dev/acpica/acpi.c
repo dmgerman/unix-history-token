@@ -3826,7 +3826,7 @@ name|acpi_device_pwr_for_sleep
 argument_list|(
 name|parent
 argument_list|,
-name|dev
+name|child
 argument_list|,
 operator|&
 name|dstate
