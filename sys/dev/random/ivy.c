@@ -173,7 +173,7 @@ expr_stmt|;
 asm|__asm __volatile(
 literal|"1:\n\t"
 literal|"rdrand	%1\n\t"
-comment|/* read randomness into tmp */
+comment|/* read randomness into rndval */
 literal|"jc		2f\n\t"
 comment|/* CF is set on success, exit retry loop */
 literal|"dec	%0\n\t"
