@@ -3752,8 +3752,6 @@ parameter_list|)
 block|{
 name|device_t
 name|child
-decl_stmt|,
-name|parent
 decl_stmt|;
 name|device_t
 modifier|*
@@ -3783,13 +3781,6 @@ literal|0
 condition|)
 return|return;
 comment|/* 	 * Retrieve and set D-state for the sleep state if _SxD is present. 	 * Skip children who aren't attached since they are handled separately. 	 */
-name|parent
-operator|=
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3824,7 +3815,7 @@ argument_list|)
 operator|&&
 name|acpi_device_pwr_for_sleep
 argument_list|(
-name|parent
+name|dev
 argument_list|,
 name|child
 argument_list|,
