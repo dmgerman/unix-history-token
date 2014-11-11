@@ -1558,15 +1558,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|in_rtqdrain
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|in_addprefix
 parameter_list|(
@@ -1776,19 +1767,6 @@ modifier|*
 modifier|*
 parameter_list|,
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|in_setmatchfunc
-parameter_list|(
-name|struct
-name|radix_node_head
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

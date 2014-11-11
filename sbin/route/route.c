@@ -4652,14 +4652,6 @@ name|RTF_PROTO2
 expr_stmt|;
 break|break;
 case|case
-name|K_PROTO3
-case|:
-name|flags
-operator||=
-name|RTF_PROTO3
-expr_stmt|;
-break|break;
-case|case
 name|K_PROXY
 case|:
 name|nrflags

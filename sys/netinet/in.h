@@ -3544,37 +3544,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|IPCTL_RTEXPIRE
-value|5
-end_define
-
 begin_comment
-comment|/* cloned route expiration time */
+comment|/*	IPCTL_RTEXPIRE		5	deprecated */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPCTL_RTMINEXPIRE
-value|6
-end_define
-
 begin_comment
-comment|/* min value for expiration time */
+comment|/*	IPCTL_RTMINEXPIRE	6	deprecated */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPCTL_RTMAXCACHE
-value|7
-end_define
-
 begin_comment
-comment|/* trigger level for dynamic expire */
+comment|/*	IPCTL_RTMAXCACHE	7	deprecated */
 end_comment
 
 begin_define

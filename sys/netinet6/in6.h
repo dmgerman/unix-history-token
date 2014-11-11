@@ -2502,37 +2502,16 @@ name|IPV6CTL_V6ONLY
 value|24
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPV6CTL_RTEXPIRE
-value|25
-end_define
-
 begin_comment
-comment|/* cloned route expiration time */
+comment|/*	IPV6CTL_RTEXPIRE	25	deprecated */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPV6CTL_RTMINEXPIRE
-value|26
-end_define
-
 begin_comment
-comment|/* min value for expiration time */
+comment|/*	IPV6CTL_RTMINEXPIRE	26	deprecated */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPV6CTL_RTMAXCACHE
-value|27
-end_define
-
 begin_comment
-comment|/* trigger level for dynamic expire */
+comment|/*	IPV6CTL_RTMAXCACHE	27	deprecated */
 end_comment
 
 begin_define

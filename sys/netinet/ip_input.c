@@ -5620,9 +5620,6 @@ expr_stmt|;
 name|VNET_LIST_RUNLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
-name|in_rtqdrain
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
