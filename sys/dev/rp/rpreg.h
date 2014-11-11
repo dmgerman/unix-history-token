@@ -2484,6 +2484,9 @@ decl_stmt|;
 name|int
 name|free
 decl_stmt|;
+name|int
+name|num_ports
+decl_stmt|;
 comment|/* Device and resource management */
 name|device_t
 name|dev
@@ -3520,15 +3523,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|rp_untimeout
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|__inline
@@ -3548,7 +3542,7 @@ name|hwmtx_init
 operator|!=
 literal|0
 condition|)
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|CtlP
@@ -3578,7 +3572,7 @@ name|hwmtx_init
 operator|!=
 literal|0
 condition|)
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|CtlP
