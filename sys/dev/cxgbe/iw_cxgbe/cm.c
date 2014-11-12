@@ -2912,7 +2912,7 @@ name|CTR5
 argument_list|(
 name|KTR_IW_CXGBE
 argument_list|,
-literal|"%s: so %p, ep %p, state %s, sb_cc %d"
+literal|"%s: so %p, ep %p, state %s, sbused %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2933,6 +2933,9 @@ operator|.
 name|state
 index|]
 argument_list|,
+name|sbused
+argument_list|(
+operator|&
 name|ep
 operator|->
 name|com
@@ -2940,8 +2943,7 @@ operator|.
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3044,6 +3046,9 @@ break|break;
 default|default:
 if|if
 condition|(
+name|sbused
+argument_list|(
+operator|&
 name|ep
 operator|->
 name|com
@@ -3051,15 +3056,14 @@ operator|.
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 condition|)
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: Unexpected streaming data.  "
-literal|"ep %p, state %d, so %p, so_state 0x%x, sb_cc %u\n"
+literal|"%s: Unexpected streaming data. ep %p, "
+literal|"state %d, so %p, so_state 0x%x, sbused %u\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3087,6 +3091,9 @@ name|so
 operator|->
 name|so_state
 argument_list|,
+name|sbused
+argument_list|(
+operator|&
 name|ep
 operator|->
 name|com
@@ -3094,8 +3101,7 @@ operator|.
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
