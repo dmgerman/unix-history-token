@@ -4832,7 +4832,7 @@ name|ret
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err2
+name|err3
 goto|;
 block|}
 name|ret
@@ -4857,14 +4857,14 @@ name|ret
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err3
+name|err4
 goto|;
 block|}
 name|ret
 operator|=
 literal|0
 expr_stmt|;
-name|err3
+name|err4
 label|:
 name|rdma_disconnect
 argument_list|(
@@ -4873,7 +4873,7 @@ operator|->
 name|cm_id
 argument_list|)
 expr_stmt|;
-name|err2
+name|err3
 label|:
 name|pthread_join
 argument_list|(
@@ -4884,6 +4884,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|err2
+label|:
 name|rping_free_buffers
 argument_list|(
 name|cb
