@@ -2077,7 +2077,7 @@ comment|/* Check for errors. */
 if|if
 condition|(
 name|err
-operator|!=
+operator|==
 literal|0
 operator|&&
 operator|(
