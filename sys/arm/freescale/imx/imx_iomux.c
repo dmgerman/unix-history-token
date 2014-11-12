@@ -485,7 +485,7 @@ name|padconf_val
 operator|&
 name|PADCONF_NONE
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 name|WR4
