@@ -1065,17 +1065,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * No IPsec processing is needed, free 				 * reference to SP. 				 * 				 * NB: null pointer to avoid free at 				 *     done: below. 				 */
-name|KEY_FREESP
-argument_list|(
-operator|&
-name|sp
-argument_list|)
-operator|,
-name|sp
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* 				 * No IPsec processing is needed, free 				 * reference to SP. 				 */
 goto|goto
 name|done
 goto|;
