@@ -550,9 +550,17 @@ operator|&
 name|configs
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+if|if
+condition|(
+name|nconfigs
+operator|<=
+literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
+name|bootverbose
+condition|)
 block|{
 name|char
 name|name
@@ -577,7 +585,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d items in pinctrl-0 for %s\n"
+literal|"Processing %d pin-config node(s) in pinctrl-0 for %s\n"
 argument_list|,
 name|nconfigs
 argument_list|,
@@ -585,15 +593,6 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-if|if
-condition|(
-name|nconfigs
-operator|<=
-literal|0
-condition|)
-continue|continue;
 for|for
 control|(
 name|i
