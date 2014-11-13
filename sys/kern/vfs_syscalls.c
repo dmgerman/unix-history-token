@@ -13830,7 +13830,7 @@ name|kern_fchownat
 argument_list|(
 name|td
 argument_list|,
-literal|0
+name|AT_FDCWD
 argument_list|,
 name|uap
 operator|->
