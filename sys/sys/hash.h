@@ -405,6 +405,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint32_t
+name|murmur3_aligned_32
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|uint32_t
+name|seed
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
