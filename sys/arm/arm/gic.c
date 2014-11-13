@@ -1371,7 +1371,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"pn 0x%x, arch 0x%x, rev 0x%x, implementer 0x%x sc->nirqs %u\n"
+literal|"pn 0x%x, arch 0x%x, rev 0x%x, implementer 0x%x irqs %u\n"
 argument_list|,
 name|icciidr
 operator|>>
