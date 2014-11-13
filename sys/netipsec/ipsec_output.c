@@ -659,11 +659,6 @@ operator|->
 name|next
 condition|)
 block|{
-name|IPSECSTAT_INC
-argument_list|(
-name|ips_out_bundlesa
-argument_list|)
-expr_stmt|;
 comment|/* XXX-BZ currently only support same AF bundles. */
 switch|switch
 condition|(
@@ -682,6 +677,11 @@ name|INET
 case|case
 name|AF_INET
 case|:
+name|IPSECSTAT_INC
+argument_list|(
+name|ips_out_bundlesa
+argument_list|)
+expr_stmt|;
 return|return
 name|ipsec4_process_packet
 argument_list|(
@@ -709,6 +709,11 @@ case|case
 name|AF_INET6
 case|:
 comment|/* XXX */
+name|IPSEC6STAT_INC
+argument_list|(
+name|ips_out_bundlesa
+argument_list|)
+expr_stmt|;
 return|return
 name|ipsec6_process_packet
 argument_list|(
