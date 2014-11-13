@@ -1431,6 +1431,8 @@ operator|->
 name|td_proc
 operator|->
 name|p_fd
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|fdescfree
@@ -1789,6 +1791,8 @@ argument_list|(
 name|p1
 operator|->
 name|p_fd
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|fdtol

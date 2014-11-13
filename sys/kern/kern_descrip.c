@@ -8164,6 +8164,9 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
+parameter_list|,
+name|bool
+name|prepfiles
 parameter_list|)
 block|{
 name|struct
@@ -8268,6 +8271,8 @@ operator|)
 return|;
 if|if
 condition|(
+name|prepfiles
+operator|&&
 name|fdp
 operator|->
 name|fd_lastfile
@@ -8355,6 +8360,20 @@ operator|->
 name|fd_jdir
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|prepfiles
+condition|)
+block|{
+name|FILEDESC_SUNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 while|while
 condition|(
 name|fdp
@@ -8387,6 +8406,7 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -8661,6 +8681,8 @@ operator|=
 name|fdinit
 argument_list|(
 name|fdp
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 comment|/* copy all passable descriptors (i.e. not kqueue) */

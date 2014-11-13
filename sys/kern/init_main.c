@@ -2308,6 +2308,8 @@ operator|=
 name|fdinit
 argument_list|(
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|p
