@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -382,9 +388,11 @@ literal|1
 expr_stmt|;
 name|error
 operator|=
-name|kern_connect
+name|kern_connectat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|fd
 argument_list|,

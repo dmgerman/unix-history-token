@@ -274,7 +274,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|kern_statat_vnhook
+name|kern_statat
 argument_list|(
 name|td
 argument_list|,

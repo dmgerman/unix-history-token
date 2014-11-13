@@ -10127,9 +10127,11 @@ else|else
 block|{
 name|error
 operator|=
-name|kern_open
+name|kern_openat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 literal|"/dev/null"
 argument_list|,
