@@ -138,7 +138,7 @@ begin_define
 define|#
 directive|define
 name|NM_SELINFO_T
-value|struct selinfo
+value|struct nm_selinfo
 end_define
 
 begin_define
@@ -374,6 +374,37 @@ name|M_NETMAP
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_struct
+struct|struct
+name|nm_selinfo
+block|{
+name|struct
+name|selinfo
+name|si
+decl_stmt|;
+name|struct
+name|mtx
+name|m
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|freebsd_selwakeup
+parameter_list|(
+name|struct
+name|nm_selinfo
+modifier|*
+name|si
+parameter_list|,
+name|int
+name|pri
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// XXX linux struct, not used in FreeBSD
