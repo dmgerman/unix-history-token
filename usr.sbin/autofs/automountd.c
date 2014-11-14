@@ -1460,7 +1460,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log_warnx
+name|log_debugx
 argument_list|(
 literal|"child process %d terminated with exit status %d"
 argument_list|,
