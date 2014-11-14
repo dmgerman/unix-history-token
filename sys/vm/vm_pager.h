@@ -174,7 +174,7 @@ name|pgo_haspage_t
 modifier|*
 name|pgo_haspage
 decl_stmt|;
-comment|/* Does pager have page? */
+comment|/* Query page. */
 name|pgo_pageunswapped_t
 modifier|*
 name|pgo_pageunswapped
