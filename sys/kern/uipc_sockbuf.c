@@ -3644,18 +3644,20 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|next
-operator|==
-literal|0
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"sbdrop"
+name|next
+argument_list|,
+operator|(
+literal|"%s: no next, len %d"
+operator|,
+name|__func__
+operator|,
+name|len
+operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -3668,7 +3670,6 @@ name|m
 operator|->
 name|m_nextpkt
 expr_stmt|;
-continue|continue;
 block|}
 if|if
 condition|(
