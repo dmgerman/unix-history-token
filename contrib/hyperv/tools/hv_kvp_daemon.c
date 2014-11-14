@@ -1071,9 +1071,15 @@ argument_list|)
 operator|<
 literal|0
 operator|&&
+operator|(
+name|errno
+operator|!=
+name|EEXIST
+operator|&&
 name|errno
 operator|!=
 name|EISDIR
+operator|)
 condition|)
 block|{
 name|KVP_LOG
