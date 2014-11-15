@@ -188,16 +188,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|IS_POWER_OF_2
-parameter_list|(
-name|val
-parameter_list|)
-value|(((val)& ((val) - 1)) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAX_BPAGES
 value|64
 end_define
@@ -1827,7 +1817,7 @@ name|boundary
 operator|==
 literal|0
 operator|||
-name|IS_POWER_OF_2
+name|powerof2
 argument_list|(
 name|boundary
 argument_list|)
@@ -1864,7 +1854,7 @@ name|alignment
 operator|!=
 literal|0
 operator|&&
-name|IS_POWER_OF_2
+name|powerof2
 argument_list|(
 name|alignment
 argument_list|)
