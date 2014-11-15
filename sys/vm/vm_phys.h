@@ -140,6 +140,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vm_phys_add_seg
+parameter_list|(
+name|vm_paddr_t
+name|start
+parameter_list|,
+name|vm_paddr_t
+name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|vm_page_t
 name|vm_phys_alloc_contig
 parameter_list|(

@@ -1957,6 +1957,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Add a physical memory segment (vm_phys_seg) corresponding to the 	 * preallocated kernel page table pages so that vm_page structures 	 * representing these pages will be created.  The vm_page structures 	 * are required for promotion of the corresponding kernel virtual 	 * addresses to superpage mappings. 	 */
+name|vm_phys_add_seg
+argument_list|(
+name|KPTphys
+argument_list|,
+name|KPTphys
+operator|+
+name|ptoa
+argument_list|(
+name|nkpt
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the first available kernel virtual address.  However, 	 * using "firstaddr" may waste a few pages of the kernel virtual 	 * address space, because locore may not have mapped every physical 	 * page that it allocated.  Preferably, locore would provide a first 	 * unused virtual address in addition to "firstaddr". 	 */
 name|virtual_avail
 operator|=
