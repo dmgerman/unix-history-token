@@ -6177,6 +6177,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * For COHERENT memory no cache maintenance is necessary, but ensure all 	 * writes have reached memory for the PREWRITE case. 	 */
 if|if
 condition|(
 name|map
@@ -6185,7 +6186,23 @@ name|flags
 operator|&
 name|DMAMAP_COHERENT
 condition|)
+block|{
+if|if
+condition|(
+name|op
+operator|&
+name|BUS_DMASYNC_PREWRITE
+condition|)
+block|{
+name|dsb
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_drain_writebuf
+argument_list|()
+expr_stmt|;
+block|}
 return|return;
+block|}
 if|if
 condition|(
 name|map
