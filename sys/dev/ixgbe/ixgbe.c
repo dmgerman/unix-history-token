@@ -19370,11 +19370,7 @@ literal|1
 operator|&&
 name|adapter
 operator|->
-name|hw
-operator|.
 name|fc
-operator|.
-name|requested_mode
 operator|==
 name|ixgbe_fc_none
 condition|)
