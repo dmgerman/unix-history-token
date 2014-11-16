@@ -6177,7 +6177,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * For COHERENT memory no cache maintenance is necessary, but ensure all 	 * writes have reached memory for the PREWRITE case. 	 */
+comment|/* 	 * For COHERENT memory no cache maintenance is necessary, but ensure all 	 * writes have reached memory for the PREWRITE case.  No action is 	 * needed for a PREREAD without PREWRITE also set, because that would 	 * imply that the cpu had written to the COHERENT buffer and expected 	 * the dma device to see that change, and by definition a PREWRITE sync 	 * is required to make that happen. 	 */
 if|if
 condition|(
 name|map
