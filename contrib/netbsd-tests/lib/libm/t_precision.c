@@ -137,6 +137,19 @@ operator|==
 literal|2.0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|y
 operator|+=
 name|LDBL_EPSILON
@@ -174,6 +187,8 @@ operator|==
 literal|2.0L
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
