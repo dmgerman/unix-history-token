@@ -457,9 +457,11 @@ directive|define
 name|LK_CAN_SHARE
 parameter_list|(
 name|x
+parameter_list|,
+name|flags
 parameter_list|)
 define|\
-value|(((x)& LK_SHARE)&& (((x)& LK_EXCLUSIVE_WAITERS) == 0 ||	\ 	((x)& LK_EXCLUSIVE_SPINNERS) == 0 ||				\ 	curthread->td_lk_slocks || (curthread->td_pflags& TDP_DEADLKTREAT)))
+value|(((x)& LK_SHARE)&&						\ 	(((x)& (LK_EXCLUSIVE_WAITERS | LK_EXCLUSIVE_SPINNERS)) == 0 ||	\ 	(curthread->td_lk_slocks != 0&& !(flags& LK_NODDLKTREAT)) ||	\ 	(curthread->td_pflags& TDP_DEADLKTREAT)))
 end_define
 
 begin_define
@@ -2452,6 +2454,8 @@ condition|(
 name|LK_CAN_SHARE
 argument_list|(
 name|x
+argument_list|,
+name|flags
 argument_list|)
 condition|)
 block|{
@@ -2785,6 +2789,8 @@ operator|||
 name|LK_CAN_SHARE
 argument_list|(
 name|x
+argument_list|,
+name|flags
 argument_list|)
 operator|!=
 literal|0
@@ -2828,6 +2834,8 @@ condition|(
 name|LK_CAN_SHARE
 argument_list|(
 name|x
+argument_list|,
+name|flags
 argument_list|)
 condition|)
 block|{
