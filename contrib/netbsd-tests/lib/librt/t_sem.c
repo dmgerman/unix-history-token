@@ -147,6 +147,16 @@ argument_list|(
 literal|"POSIX semaphores not supported"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|sem_unlink
+argument_list|(
+literal|"/sem_b"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sem_b
 operator|=
 name|sem_open
@@ -399,6 +409,16 @@ argument_list|(
 literal|"POSIX semaphores not supported"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|sem_unlink
+argument_list|(
+literal|"/sem_a"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sem_a
 operator|=
 name|sem_open
