@@ -2142,6 +2142,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * and the rtentry itself of course 		 */
+name|RT_LOCK_DESTROY
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|V_rtzone
