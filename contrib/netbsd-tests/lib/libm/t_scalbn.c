@@ -289,6 +289,15 @@ name|i
 operator|++
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|rv
 operator|=
 name|scalbn
