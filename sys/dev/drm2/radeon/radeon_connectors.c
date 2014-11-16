@@ -4387,7 +4387,7 @@ operator|->
 name|edid
 condition|)
 block|{
-name|DRM_ERROR
+name|DRM_DEBUG_KMS
 argument_list|(
 literal|"%s: probed a monitor but no|invalid EDID\n"
 argument_list|,
