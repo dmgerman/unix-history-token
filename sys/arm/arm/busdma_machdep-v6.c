@@ -5768,7 +5768,7 @@ decl_stmt|,
 modifier|*
 name|end
 decl_stmt|;
-comment|/* 	 * If the buffer was from user space, it is possible that this is not 	 * the same vm map, especially on a POST operation.  It's not clear that 	 * dma on userland buffers can work at all right now, certainly not if a 	 * partial cacheline flush has to be handled.  To be safe, until we're 	 * able to test direct userland dma, panic on a map mismatch. 	 */
+comment|/* 	 * If the buffer was from user space, it is possible that this is not 	 * the same vm map, especially on a POST operation.  It's not clear that 	 * dma on userland buffers can work at all right now.  To be safe, until 	 * we're able to test direct userland dma, panic on a map mismatch. 	 */
 if|if
 condition|(
 operator|(
@@ -5801,7 +5801,6 @@ argument_list|(
 literal|"_bus_dmamap_sync: wrong user map for bounce sync."
 argument_list|)
 expr_stmt|;
-comment|/* Handle data bouncing. */
 name|CTR4
 argument_list|(
 name|KTR_BUSDMA
@@ -5820,6 +5819,7 @@ argument_list|,
 name|op
 argument_list|)
 expr_stmt|;
+comment|/* 		 * For PREWRITE do a writeback.  Clean the caches from the 		 * innermost to the outermost levels. 		 */
 if|if
 condition|(
 name|op
@@ -5938,6 +5938,7 @@ name|total_bounced
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * Do an invalidate for PREREAD unless a writeback was already 		 * done above due to PREWRITE also being set.  The reason for a 		 * PREREAD invalidate is to prevent dirty lines currently in the 		 * cache from being evicted during the DMA.  If a writeback was 		 * done due to PREWRITE also being set there will be no dirty 		 * lines and the POSTREAD invalidate handles the rest. The 		 * invalidate is done from the innermost to outermost level. If 		 * L2 were done first, a dirty cacheline could be automatically 		 * evicted from L1 before we invalidated it, re-dirtying the L2. 		 */
 if|if
 condition|(
 operator|(
@@ -6017,6 +6018,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 		 * Re-invalidate the caches on a POSTREAD, even though they were 		 * already invalidated at PREREAD time.  Aggressive prefetching 		 * due to accesses to other data near the dma buffer could have 		 * brought buffer data into the caches which is now stale.  The 		 * caches are invalidated from the outermost to innermost; the 		 * prefetches could be happening right now, and if L1 were 		 * invalidated first, stale L2 data could be prefetched into L1. 		 */
 if|if
 condition|(
 name|op
@@ -6212,6 +6214,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+comment|/* 	 * Cache maintenance for normal (non-COHERENT non-bounce) buffers.  All 	 * the comments about the sequences for flushing cache levels in the 	 * bounce buffer code above apply here as well.  In particular, the fact 	 * that the sequence is inner-to-outer for PREREAD invalidation and 	 * outer-to-inner for POSTREAD invalidation is not a mistake. 	 */
 if|if
 condition|(
 name|map
@@ -6236,7 +6239,6 @@ argument_list|(
 literal|"_bus_dmamap_sync: wrong user map for sync."
 argument_list|)
 expr_stmt|;
-comment|/* ARM caches are not self-snooping for dma */
 name|sl
 operator|=
 operator|&
