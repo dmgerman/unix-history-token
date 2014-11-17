@@ -2561,6 +2561,13 @@ operator|->
 name|p_profthreads
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_STOPPROF
+expr_stmt|;
 name|stop
 operator|=
 literal|0
