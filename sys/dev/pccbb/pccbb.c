@@ -3776,7 +3776,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 		 */
 name|PCI_MASK_CONFIG
 argument_list|(
 name|brdev
