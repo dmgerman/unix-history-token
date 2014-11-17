@@ -140,12 +140,9 @@ operator|==
 name|EINVAL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|errno
 operator|=
 literal|0

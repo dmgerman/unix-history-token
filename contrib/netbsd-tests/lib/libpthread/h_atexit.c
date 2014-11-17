@@ -557,12 +557,9 @@ name|exiting_state
 operator|=
 literal|5
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|ASSERT
 argument_list|(
 literal|0

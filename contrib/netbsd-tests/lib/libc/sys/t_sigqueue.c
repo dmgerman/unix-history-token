@@ -90,12 +90,9 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|handler
 parameter_list|(
 name|int
@@ -243,12 +240,9 @@ name|sival_int
 operator|=
 name|VALUE
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 comment|/*  	 * From kern_sig.c: 	 * Specification says sigqueue can only send signal to single process. 	 */
 if|if
 condition|(

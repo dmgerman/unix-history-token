@@ -288,12 +288,9 @@ argument_list|,
 literal|"C"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|ATF_REQUIRE
 argument_list|(
 name|setlocale

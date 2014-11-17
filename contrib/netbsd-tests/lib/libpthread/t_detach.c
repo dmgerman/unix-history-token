@@ -193,12 +193,9 @@ operator|==
 name|EINVAL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_expect_fail
 argument_list|(
 literal|"PR # 191906: fails with EINVAL, not ESRCH"

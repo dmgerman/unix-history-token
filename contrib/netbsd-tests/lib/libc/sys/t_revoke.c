@@ -153,12 +153,9 @@ name|int
 modifier|*
 name|buf
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_skip
 argument_list|(
 literal|"revoke(2) is only implemented for devfs(5)."
@@ -503,12 +500,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_skip
 argument_list|(
 literal|"revoke(2) is only implemented for devfs(5)."
@@ -617,12 +611,9 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_skip
 argument_list|(
 literal|"revoke(2) is only implemented for devfs(5)."

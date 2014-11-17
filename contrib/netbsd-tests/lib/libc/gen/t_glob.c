@@ -75,14 +75,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -628,12 +625,9 @@ name|d_type
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|dir
 operator|.
 name|d_reclen
@@ -1113,15 +1107,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifndef
 
 begin_expr_stmt
 name|ATF_TC
@@ -1267,13 +1257,9 @@ end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|__FreeBSD__
-argument_list|)
 name|ATF_TP_ADD_TC
 argument_list|(
 name|tp

@@ -63,24 +63,17 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__NetBSD__
-argument_list|)
-end_if
+end_ifndef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__linux__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -104,14 +97,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -188,12 +178,9 @@ block|,
 literal|0
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 block|{
 block|{
 literal|0x00
@@ -345,12 +332,9 @@ end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|u_char
 name|dest
 index|[
@@ -368,12 +352,9 @@ directive|endif
 name|size_t
 name|t
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 name|int
 name|e
 decl_stmt|,
@@ -438,12 +419,9 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 if|if
 condition|(
 name|ether_aton_r
@@ -554,12 +532,9 @@ directive|endif
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__NetBSD__
-argument_list|)
 if|if
 condition|(
 operator|(

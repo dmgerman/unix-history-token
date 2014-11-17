@@ -57,14 +57,11 @@ directive|include
 file|<atf-c.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -769,12 +766,9 @@ argument_list|,
 literal|"600"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|atf_tc_set_md_var
 argument_list|(
 name|tc
@@ -814,12 +808,9 @@ block|{
 name|regex_t
 name|re
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|struct
 name|rlimit
 name|limit
@@ -829,12 +820,9 @@ directive|endif
 name|int
 name|e
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 name|limit
 operator|.
 name|rlim_cur
