@@ -8200,7 +8200,7 @@ name|len
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_PRIVATE
 argument_list|,
 name|fd
 argument_list|,
