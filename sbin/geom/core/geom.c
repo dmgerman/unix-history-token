@@ -3339,6 +3339,28 @@ comment|/* !STATIC_GEOM_CLASSES */
 name|set_class_name
 argument_list|()
 expr_stmt|;
+comment|/* If we can't load or list, it's not a class. */
+if|if
+condition|(
+operator|!
+name|std_available
+argument_list|(
+literal|"load"
+argument_list|)
+operator|&&
+operator|!
+name|std_available
+argument_list|(
+literal|"list"
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Invalid class name."
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
