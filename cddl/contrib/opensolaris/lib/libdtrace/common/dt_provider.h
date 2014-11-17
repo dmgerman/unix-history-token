@@ -165,19 +165,13 @@ struct|struct
 name|dt_probe_instance
 block|{
 name|char
+modifier|*
 name|pi_fname
-index|[
-name|DTRACE_FUNCNAMELEN
-index|]
 decl_stmt|;
 comment|/* function name */
 name|char
+modifier|*
 name|pi_rname
-index|[
-name|DTRACE_FUNCNAMELEN
-operator|+
-literal|20
-index|]
 decl_stmt|;
 comment|/* mangled relocation name */
 name|uint32_t
