@@ -11437,6 +11437,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|rt_updatemtu
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 block|}
