@@ -33,12 +33,6 @@ directive|ifdef
 name|LOCORE
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"opt_global.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
