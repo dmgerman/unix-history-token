@@ -256,6 +256,10 @@ name|SOC_OMAP4
 argument_list|)
 end_if
 
+begin_comment
+comment|/*  * OMAP4 i2c bus clock is 96MHz / ((psc + 1) * (scll + 7 + sclh + 5)).  * The prescaler values for 100KHz and 400KHz modes come from the table in the  * OMAP4 TRM.  The table doesn't list 1MHz; these values should give that speed.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -297,9 +301,9 @@ literal|1000000
 block|,
 literal|5
 block|,
-literal|3
+literal|1
 block|,
-literal|4
+literal|3
 block|,
 literal|0
 block|,
@@ -330,7 +334,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * AM335X doesn't support HS mode.  For 100kHz I2C clock set the internal  * clock to 12Mhz, for 400kHz I2C clock set the internal clock to 24Mhz.  */
+comment|/*  * AM335x i2c bus clock is 48MHZ / ((psc + 1) * (scll + 7 + sclh + 5))  * In all cases we prescale the clock to 24MHz as recommended in the manual.  */
 end_comment
 
 begin_decl_stmt
@@ -344,11 +348,11 @@ block|{
 block|{
 literal|100000
 block|,
-literal|7
+literal|1
 block|,
-literal|59
+literal|111
 block|,
-literal|61
+literal|117
 block|,
 literal|0
 block|,
@@ -358,11 +362,25 @@ block|,
 block|{
 literal|400000
 block|,
-literal|3
+literal|1
 block|,
 literal|23
 block|,
 literal|25
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|1000000
+block|,
+literal|1
+block|,
+literal|5
+block|,
+literal|7
 block|,
 literal|0
 block|,
