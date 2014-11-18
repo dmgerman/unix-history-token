@@ -151,6 +151,14 @@ directive|include
 file|<sys/dsl_bookmark.h>
 end_include
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * The SPA supports block sizes up to 16MB.  However, very large blocks  * can have an impact on i/o latency (e.g. tying up a spinning disk for  * ~300ms), and also potentially on the memory allocator.  Therefore,  * we do not allow the recordsize to be set larger than zfs_max_recordsize  * (default 1MB).  Larger blocks can be created by changing this tunable,  * and pools with larger blocks can always be imported and used, regardless  * of this setting.  */
 end_comment
@@ -166,6 +174,27 @@ operator|*
 literal|1024
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_recordsize
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|zfs_max_recordsize
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum block size.  Expect dragons when tuning this."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
