@@ -1027,11 +1027,6 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
 name|BCM_GPIO_WRITE
 argument_list|(
 name|sc
@@ -1046,11 +1041,6 @@ literal|1
 operator|<<
 name|offset
 operator|)
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|10
 argument_list|)
 expr_stmt|;
 name|BCM_GPIO_WRITE
