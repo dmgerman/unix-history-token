@@ -58,24 +58,6 @@ directive|include
 file|<sys/taskqueue.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INTR_ENTROPY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|INTR_ENTROPY
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/********************************************************************************  ********************************************************************************                                                       Driver Variable Definitions  ********************************************************************************  ********************************************************************************/
 end_comment
@@ -445,14 +427,6 @@ name|int
 name|mly_regs_rid
 decl_stmt|;
 comment|/* resource ID */
-name|bus_space_handle_t
-name|mly_bhandle
-decl_stmt|;
-comment|/* bus space handle */
-name|bus_space_tag_t
-name|mly_btag
-decl_stmt|;
-comment|/* bus space tag */
 name|bus_dma_tag_t
 name|mly_parent_dmat
 decl_stmt|;
@@ -559,6 +533,10 @@ name|mly_mmbox_status_index
 decl_stmt|;
 comment|/* index we next expect status at */
 comment|/* controller features, limits and status */
+name|struct
+name|mtx
+name|mly_lock
+decl_stmt|;
 name|int
 name|mly_state
 decl_stmt|;
@@ -670,7 +648,7 @@ name|mly_event_waiting
 decl_stmt|;
 comment|/* next event the controller will post status for */
 name|struct
-name|callout_handle
+name|callout
 name|mly_periodic
 decl_stmt|;
 comment|/* periodic event handling */
@@ -710,9 +688,48 @@ name|int
 name|mly_qfrzn_cnt
 decl_stmt|;
 comment|/* Track simq freezes */
+ifdef|#
+directive|ifdef
+name|MLY_DEBUG
+name|struct
+name|callout
+name|mly_timeout
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MLY_LOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_lock(&(sc)->mly_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLY_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->mly_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLY_ASSERT_LOCKED
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->mly_lock, MA_OWNED)
+end_define
 
 begin_comment
 comment|/*  * Register access helpers.  */
@@ -729,7 +746,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->mly_btag, sc->mly_bhandle, reg, val)
+value|bus_write_1(sc->mly_regs_resource, reg, val)
 end_define
 
 begin_define
@@ -741,7 +758,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_1 (sc->mly_btag, sc->mly_bhandle, reg)
+value|bus_read_1 (sc->mly_regs_resource, reg)
 end_define
 
 begin_define
@@ -753,7 +770,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_2 (sc->mly_btag, sc->mly_bhandle, reg)
+value|bus_read_2 (sc->mly_regs_resource, reg)
 end_define
 
 begin_define
@@ -765,7 +782,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_4 (sc->mly_btag, sc->mly_bhandle, reg)
+value|bus_read_4 (sc->mly_regs_resource, reg)
 end_define
 
 begin_define
@@ -780,7 +797,7 @@ parameter_list|,
 name|ptr
 parameter_list|)
 define|\
-value|do {												\ 	    bus_space_write_4(sc->mly_btag, sc->mly_bhandle, mbox,      *((u_int32_t *)ptr));		\ 	    bus_space_write_4(sc->mly_btag, sc->mly_bhandle, mbox +  4, *((u_int32_t *)ptr + 1));	\ 	    bus_space_write_4(sc->mly_btag, sc->mly_bhandle, mbox +  8, *((u_int32_t *)ptr + 2));	\ 	    bus_space_write_4(sc->mly_btag, sc->mly_bhandle, mbox + 12, *((u_int32_t *)ptr + 3));	\ 	} while(0);
+value|do {												\ 	    bus_write_4(sc->mly_regs_resource, mbox,      *((u_int32_t *)ptr));		\ 	    bus_write_4(sc->mly_regs_resource, mbox +  4, *((u_int32_t *)ptr + 1));	\ 	    bus_write_4(sc->mly_regs_resource, mbox +  8, *((u_int32_t *)ptr + 2));	\ 	    bus_write_4(sc->mly_regs_resource, mbox + 12, *((u_int32_t *)ptr + 3));	\ 	} while(0);
 end_define
 
 begin_define
@@ -795,7 +812,7 @@ parameter_list|,
 name|ptr
 parameter_list|)
 define|\
-value|do {												\ 	    *((u_int32_t *)ptr) = bus_space_read_4(sc->mly_btag, sc->mly_bhandle, mbox);		\ 	    *((u_int32_t *)ptr + 1) = bus_space_read_4(sc->mly_btag, sc->mly_bhandle, mbox + 4);	\ 	    *((u_int32_t *)ptr + 2) = bus_space_read_4(sc->mly_btag, sc->mly_bhandle, mbox + 8);	\ 	    *((u_int32_t *)ptr + 3) = bus_space_read_4(sc->mly_btag, sc->mly_bhandle, mbox + 12);	\ 	} while(0);
+value|do {												\ 	    *((u_int32_t *)ptr) = bus_read_4(sc->mly_regs_resource, mbox);		\ 	    *((u_int32_t *)ptr + 1) = bus_read_4(sc->mly_regs_resource, mbox + 4);	\ 	    *((u_int32_t *)ptr + 2) = bus_read_4(sc->mly_regs_resource, mbox + 8);	\ 	    *((u_int32_t *)ptr + 3) = bus_read_4(sc->mly_regs_resource, mbox + 12);	\ 	} while(0);
 end_define
 
 begin_define
@@ -975,7 +992,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|static __inline void							\ mly_initq_ ## name (struct mly_softc *sc)				\ {									\     TAILQ_INIT(&sc->mly_ ## name);					\     MLYQ_INIT(sc, index);						\ }									\ static __inline void							\ mly_enqueue_ ## name (struct mly_command *mc)				\ {									\     int		s;							\ 									\     s = splcam();							\     TAILQ_INSERT_TAIL(&mc->mc_sc->mly_ ## name, mc, mc_link);		\     MLYQ_ADD(mc->mc_sc, index);						\     splx(s);								\ }									\ static __inline void							\ mly_requeue_ ## name (struct mly_command *mc)				\ {									\     int		s;							\ 									\     s = splcam();							\     TAILQ_INSERT_HEAD(&mc->mc_sc->mly_ ## name, mc, mc_link);		\     MLYQ_ADD(mc->mc_sc, index);						\     splx(s);								\ }									\ static __inline struct mly_command *					\ mly_dequeue_ ## name (struct mly_softc *sc)				\ {									\     struct mly_command	*mc;						\     int			s;						\ 									\     s = splcam();							\     if ((mc = TAILQ_FIRST(&sc->mly_ ## name)) != NULL) {		\ 	TAILQ_REMOVE(&sc->mly_ ## name, mc, mc_link);			\ 	MLYQ_REMOVE(sc, index);						\     }									\     splx(s);								\     return(mc);								\ }									\ static __inline void							\ mly_remove_ ## name (struct mly_command *mc)				\ {									\     int			s;						\ 									\     s = splcam();							\     TAILQ_REMOVE(&mc->mc_sc->mly_ ## name, mc, mc_link);		\     MLYQ_REMOVE(mc->mc_sc, index);					\     splx(s);								\ }									\ struct hack
+value|static __inline void							\ mly_initq_ ## name (struct mly_softc *sc)				\ {									\     TAILQ_INIT(&sc->mly_ ## name);					\     MLYQ_INIT(sc, index);						\ }									\ static __inline void							\ mly_enqueue_ ## name (struct mly_command *mc)				\ {									\ 									\     TAILQ_INSERT_TAIL(&mc->mc_sc->mly_ ## name, mc, mc_link);		\     MLYQ_ADD(mc->mc_sc, index);						\ }									\ static __inline void							\ mly_requeue_ ## name (struct mly_command *mc)				\ {									\ 									\     TAILQ_INSERT_HEAD(&mc->mc_sc->mly_ ## name, mc, mc_link);		\     MLYQ_ADD(mc->mc_sc, index);						\ }									\ static __inline struct mly_command *					\ mly_dequeue_ ## name (struct mly_softc *sc)				\ {									\     struct mly_command	*mc;						\ 									\     if ((mc = TAILQ_FIRST(&sc->mly_ ## name)) != NULL) {		\ 	TAILQ_REMOVE(&sc->mly_ ## name, mc, mc_link);			\ 	MLYQ_REMOVE(sc, index);						\     }									\     return(mc);								\ }									\ static __inline void							\ mly_remove_ ## name (struct mly_command *mc)				\ {									\ 									\     TAILQ_REMOVE(&mc->mc_sc->mly_ ## name, mc, mc_link);		\     MLYQ_REMOVE(mc->mc_sc, index);					\ }									\ struct hack
 end_define
 
 begin_expr_stmt
