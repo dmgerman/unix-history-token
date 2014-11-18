@@ -71,6 +71,10 @@ name|struct
 name|mtx
 name|lock
 decl_stmt|;
+name|u_int
+name|bus_freq
+decl_stmt|;
+comment|/* Configured bus Hz. */
 block|}
 struct|;
 end_struct
@@ -170,7 +174,6 @@ value|mtx_assert(&(sc)->lock, MA_OWNED)
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|iicbus_generic_intr
 parameter_list|(
@@ -183,6 +186,19 @@ parameter_list|,
 name|char
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|iicbus_init_frequency
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_int
+name|bus_freq
 parameter_list|)
 function_decl|;
 end_function_decl
