@@ -134,19 +134,13 @@ decl_stmt|;
 name|int
 name|port_type
 decl_stmt|;
-name|bus_space_tag_t
-name|port_bst
-decl_stmt|;
-name|bus_space_handle_t
-name|port_bsh
-decl_stmt|;
 name|struct
 name|mtx
 name|mtx
 decl_stmt|;
 name|struct
-name|callout_handle
-name|ch
+name|callout
+name|timer
 decl_stmt|;
 name|int
 name|ch_state
@@ -171,7 +165,7 @@ name|SCD_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|splx(&(_sc)->mtx
+value|mtx_lock(&_sc->mtx)
 end_define
 
 begin_define
@@ -181,7 +175,17 @@ name|SCD_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|splx(&(_sc)->mtx
+value|mtx_unlock(&_sc->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCD_ASSERT_LOCKED
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&_sc->mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -194,7 +198,7 @@ parameter_list|,
 name|_reg
 parameter_list|)
 define|\
-value|bus_space_read_1(_sc->port_bst, _sc->port_bsh, _reg)
+value|bus_read_1(_sc->port, _reg)
 end_define
 
 begin_define
@@ -211,7 +215,7 @@ parameter_list|,
 name|_count
 parameter_list|)
 define|\
-value|bus_space_read_multi_1(_sc->port_bst, _sc->port_bsh, _reg, _addr, _count)
+value|bus_read_multi_1(_sc->port, _reg, _addr, _count)
 end_define
 
 begin_define
@@ -226,7 +230,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|bus_space_write_1(_sc->port_bst, _sc->port_bsh, _reg, _val)
+value|bus_write_1(_sc->port, _reg, _val)
 end_define
 
 begin_function_decl
