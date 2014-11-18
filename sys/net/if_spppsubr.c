@@ -25366,18 +25366,21 @@ name|EAGAIN
 operator|)
 return|;
 comment|/* 	 * ifr->ifr_data is supposed to point to a struct spppreq. 	 * Check the cmd word first before attempting to fetch all the 	 * data. 	 */
-if|if
-condition|(
-operator|(
-name|subcmd
+name|rv
 operator|=
-name|fuword
+name|fueword
 argument_list|(
 name|ifr
 operator|->
 name|ifr_data
+argument_list|,
+operator|&
+name|subcmd
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
 operator|==
 operator|-
 literal|1
