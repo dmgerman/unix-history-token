@@ -544,7 +544,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"libxo 0.1.5"
+value|"libxo 0.1.6"
 end_define
 
 begin_comment
@@ -577,7 +577,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.1.5"
+value|"0.1.6"
 end_define
 
 begin_comment
@@ -607,7 +607,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.1.5"
+value|"0.1.6"
 end_define
 
 begin_comment
