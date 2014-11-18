@@ -649,6 +649,10 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* sb QENTRY_LEN, but order of definitions is wrong */
+name|struct
+name|callout
+name|timer
+decl_stmt|;
 block|}
 name|isp_tna_t
 typedef|;
@@ -1478,6 +1482,16 @@ parameter_list|(
 name|isp
 parameter_list|)
 value|mtx_unlock(&isp->isp_osinfo.lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ASSERT_LOCKED
+parameter_list|(
+name|isp
+parameter_list|)
+value|mtx_assert(&isp->isp_osinfo.lock, MA_OWNED)
 end_define
 
 begin_comment
