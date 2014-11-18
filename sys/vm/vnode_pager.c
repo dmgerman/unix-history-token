@@ -2973,8 +2973,6 @@ name|mnt_stat
 operator|.
 name|f_iosize
 expr_stmt|;
-comment|/* get the UNDERLYING device for the file with VOP_BMAP() */
-comment|/* 	 * originally, we did not check for an error return value -- assuming 	 * an fs always has a bmap entry point -- that assumption is wrong!!! 	 */
 name|foff
 operator|=
 name|IDX_TO_OFF
@@ -2987,7 +2985,7 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
-comment|/* 	 * if we can't bmap, use old VOP code 	 */
+comment|/* 	 * Get the underlying device blocks for the file with VOP_BMAP(). 	 * If the file system doesn't support VOP_BMAP, use old way of 	 * getting pages via VOP_READ. 	 */
 name|error
 operator|=
 name|VOP_BMAP
