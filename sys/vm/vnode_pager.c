@@ -4373,7 +4373,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"vnode_pager_generic_getpages: page %p is dirty"
+literal|"%s: page %p is dirty"
+operator|,
+name|__func__
 operator|,
 name|mt
 operator|)
@@ -4388,7 +4390,9 @@ name|mt
 argument_list|)
 argument_list|,
 operator|(
-literal|"vnode_pager_generic_getpages: page %p is mapped"
+literal|"%s: page %p is mapped"
+operator|,
+name|__func__
 operator|,
 name|mt
 operator|)
@@ -4441,7 +4445,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"vnode_pager_generic_getpages: page %p is dirty"
+literal|"%s: page %p is dirty"
+operator|,
+name|__func__
 operator|,
 name|mt
 operator|)
