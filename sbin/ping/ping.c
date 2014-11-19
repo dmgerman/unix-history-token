@@ -430,6 +430,7 @@ comment|/* various options */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|options
 decl_stmt|;
@@ -638,6 +639,7 @@ value|(8 * 128)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mx_dup_ck
 init|=
@@ -646,6 +648,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|rcvd_tbl
 index|[
@@ -657,6 +660,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in
 name|whereto
@@ -668,6 +672,7 @@ comment|/* who to ping */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|datalen
 init|=
@@ -676,12 +681,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxpayload
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ssend
 decl_stmt|;
@@ -692,6 +699,7 @@ comment|/* send socket file descriptor */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|srecv
 decl_stmt|;
@@ -702,6 +710,7 @@ comment|/* receive socket file descriptor */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|outpackhdr
 index|[
@@ -714,6 +723,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|BBELL
 init|=
@@ -726,6 +736,7 @@ comment|/* characters written for MISSED and AUDIBLE */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|BSPACE
 init|=
@@ -738,6 +749,7 @@ comment|/* characters written for flood */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|DOT
 init|=
@@ -746,6 +758,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|hostname
@@ -753,6 +766,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|shostname
@@ -760,6 +774,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ident
 decl_stmt|;
@@ -770,6 +785,7 @@ comment|/* process id to identify our packets */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|uid
 decl_stmt|;
@@ -780,6 +796,7 @@ comment|/* cached uid for micro-optimization */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|icmp_type
 init|=
@@ -788,6 +805,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|icmp_type_rsp
 init|=
@@ -796,6 +814,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|phdr_len
 init|=
@@ -804,6 +823,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|send_len
 decl_stmt|;
@@ -814,6 +834,7 @@ comment|/* counters */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nmissedmax
 decl_stmt|;
@@ -824,6 +845,7 @@ comment|/* max value of ntransmitted - nreceived - 1 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|npackets
 decl_stmt|;
@@ -834,6 +856,7 @@ comment|/* max packets to transmit */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nreceived
 decl_stmt|;
@@ -844,6 +867,7 @@ comment|/* # of packets we got back */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nrepeats
 decl_stmt|;
@@ -854,6 +878,7 @@ comment|/* number of duplicates */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|ntransmitted
 decl_stmt|;
@@ -864,6 +889,7 @@ comment|/* sequence # for outbound packets = #sent */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|snpackets
 decl_stmt|;
@@ -874,16 +900,7 @@ comment|/* max packets to transmit in one sweep */
 end_comment
 
 begin_decl_stmt
-name|long
-name|snreceived
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of packets we got back in this sweep */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|long
 name|sntransmitted
 decl_stmt|;
@@ -894,6 +911,7 @@ comment|/* # of packets we sent in this sweep */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sweepmax
 decl_stmt|;
@@ -904,6 +922,7 @@ comment|/* max value of payload in sweep */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sweepmin
 init|=
@@ -916,6 +935,7 @@ comment|/* start value of payload in sweep */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sweepincr
 init|=
@@ -928,6 +948,7 @@ comment|/* payload increment in sweep */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|interval
 init|=
@@ -940,6 +961,7 @@ comment|/* interval between packets, ms */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|waittime
 init|=
@@ -952,6 +974,7 @@ comment|/* timeout for each packet */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nrcvtimeout
 init|=
@@ -968,6 +991,7 @@ comment|/* timing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|timing
 decl_stmt|;
@@ -978,6 +1002,7 @@ comment|/* flag to do timing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tmin
 init|=
@@ -990,6 +1015,7 @@ comment|/* minimum round trip time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tmax
 init|=
@@ -1002,6 +1028,7 @@ comment|/* maximum round trip time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tsum
 init|=
@@ -1014,6 +1041,7 @@ comment|/* sum of all times, for doing average */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tsumsq
 init|=
@@ -1025,18 +1053,20 @@ begin_comment
 comment|/* sum of all times squared, for std. dev. */
 end_comment
 
+begin_comment
+comment|/* nonzero if we've been told to finish up */
+end_comment
+
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|finish_up
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* nonzero if we've been told to finish up */
-end_comment
-
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|siginfo_p
@@ -6114,11 +6144,16 @@ name|phdr_len
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|cc
 operator|-
 name|ICMP_MINLEN
 operator|-
 name|phdr_len
+argument_list|)
 operator|>=
 sizeof|sizeof
 argument_list|(

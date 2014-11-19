@@ -51,14 +51,14 @@ block|}
 block|,
 comment|/* black */
 block|{
-literal|0
-block|,
-literal|0
-block|,
 literal|50
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
-comment|/* dark blue */
+comment|/* dark red */
 block|{
 literal|0
 block|,
@@ -69,23 +69,23 @@ block|}
 block|,
 comment|/* dark green */
 block|{
+literal|77
+block|,
+literal|63
+block|,
 literal|0
-block|,
-literal|50
-block|,
-literal|50
 block|}
 block|,
-comment|/* dark cyan */
+comment|/* dark yellow */
 block|{
-literal|50
+literal|20
 block|,
-literal|0
+literal|40
 block|,
-literal|0
+literal|64
 block|}
 block|,
-comment|/* dark red */
+comment|/* dark blue */
 block|{
 literal|50
 block|,
@@ -96,14 +96,14 @@ block|}
 block|,
 comment|/* dark magenta */
 block|{
-literal|50
-block|,
-literal|50
-block|,
 literal|0
+block|,
+literal|50
+block|,
+literal|50
 block|}
 block|,
-comment|/* brown */
+comment|/* dark cyan */
 block|{
 literal|75
 block|,
@@ -114,41 +114,14 @@ block|}
 block|,
 comment|/* light gray */
 block|{
-literal|50
+literal|18
 block|,
-literal|50
+literal|20
 block|,
-literal|50
+literal|21
 block|}
 block|,
 comment|/* dark gray */
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|100
-block|}
-block|,
-comment|/* light blue */
-block|{
-literal|0
-block|,
-literal|100
-block|,
-literal|0
-block|}
-block|,
-comment|/* light green */
-block|{
-literal|0
-block|,
-literal|100
-block|,
-literal|100
-block|}
-block|,
-comment|/* light cyan */
 block|{
 literal|100
 block|,
@@ -159,6 +132,33 @@ block|}
 block|,
 comment|/* light red */
 block|{
+literal|0
+block|,
+literal|100
+block|,
+literal|0
+block|}
+block|,
+comment|/* light green */
+block|{
+literal|100
+block|,
+literal|100
+block|,
+literal|0
+block|}
+block|,
+comment|/* light yellow */
+block|{
+literal|45
+block|,
+literal|62
+block|,
+literal|81
+block|}
+block|,
+comment|/* light blue */
+block|{
 literal|100
 block|,
 literal|0
@@ -168,14 +168,14 @@ block|}
 block|,
 comment|/* light magenta */
 block|{
-literal|100
-block|,
-literal|100
-block|,
 literal|0
+block|,
+literal|100
+block|,
+literal|100
 block|}
 block|,
-comment|/* yellow */
+comment|/* light cyan */
 block|{
 literal|100
 block|,
@@ -189,9 +189,58 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Between console's palette and VGA's one:  *   - blue and red are swapped (1<-> 4)  *   - yellow ad cyan are swapped (3<-> 6)  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|cons_to_vga_colors
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|4
+block|,
+literal|2
+block|,
+literal|6
+block|,
+literal|1
+block|,
+literal|5
+block|,
+literal|3
+block|,
+literal|7
+block|,
+literal|0
+block|,
+literal|4
+block|,
+literal|2
+block|,
+literal|6
+block|,
+literal|1
+block|,
+literal|5
+block|,
+literal|3
+block|,
+literal|7
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 parameter_list|(
 name|uint32_t
 modifier|*
@@ -258,7 +307,10 @@ index|[
 name|i
 index|]
 operator|=
+name|cons_to_vga_colors
+index|[
 name|i
+index|]
 expr_stmt|;
 break|break;
 case|case

@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rdma/ib_mad.h>
 end_include
 

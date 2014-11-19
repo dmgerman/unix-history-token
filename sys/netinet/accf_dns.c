@@ -227,9 +227,10 @@ decl_stmt|;
 comment|/* If the socket is full, we're ready. */
 if|if
 condition|(
+name|sbused
+argument_list|(
 name|sb
-operator|->
-name|sb_cc
+argument_list|)
 operator|>=
 name|sb
 operator|->
@@ -322,9 +323,10 @@ name|q
 decl_stmt|;
 if|if
 condition|(
+name|sbavail
+argument_list|(
 name|sb
-operator|->
-name|sb_cc
+argument_list|)
 operator|<
 literal|2
 condition|)
@@ -365,9 +367,10 @@ name|q
 operator|.
 name|len
 operator|=
+name|sbavail
+argument_list|(
 name|sb
-operator|->
-name|sb_cc
+argument_list|)
 expr_stmt|;
 name|GET16
 argument_list|(

@@ -183,11 +183,11 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|uint16_t
+name|uint32_t
 name|start
 decl_stmt|;
 comment|/* first register */
-name|uint16_t
+name|uint32_t
 name|end
 decl_stmt|;
 comment|/* ending register or zero */
@@ -329,6 +329,10 @@ parameter_list|,
 name|uint16_t
 modifier|*
 name|eepromdata
+parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah
 parameter_list|,
 name|HAL_STATUS
 modifier|*

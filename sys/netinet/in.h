@@ -2520,15 +2520,8 @@ begin_comment
 comment|/* int; set/get security policy */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_FAITH
-value|22
-end_define
-
 begin_comment
-comment|/* bool; accept FAITH'ed connections */
+comment|/* unused; was IP_FAITH */
 end_comment
 
 begin_define
@@ -3022,6 +3015,28 @@ end_define
 
 begin_comment
 comment|/* get RSS flowid -> bucket mapping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RECVFLOWID
+value|93
+end_define
+
+begin_comment
+comment|/* bool; receive IP flowid/flowtype w/ datagram */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_RECVRSSBUCKETID
+value|94
+end_define
+
+begin_comment
+comment|/* bool; receive IP RSS bucket id w/ datagram */
 end_comment
 
 begin_comment
@@ -3529,37 +3544,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|IPCTL_RTEXPIRE
-value|5
-end_define
-
 begin_comment
-comment|/* cloned route expiration time */
+comment|/*	IPCTL_RTEXPIRE		5	deprecated */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPCTL_RTMINEXPIRE
-value|6
-end_define
-
 begin_comment
-comment|/* min value for expiration time */
+comment|/*	IPCTL_RTMINEXPIRE	6	deprecated */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPCTL_RTMAXCACHE
-value|7
-end_define
-
 begin_comment
-comment|/* trigger level for dynamic expire */
+comment|/*	IPCTL_RTMAXCACHE	7	deprecated */
 end_comment
 
 begin_define
@@ -3639,15 +3633,8 @@ begin_comment
 comment|/* use fast IP forwarding code */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IPCTL_KEEPFAITH
-value|15
-end_define
-
 begin_comment
-comment|/* FAITH IPv4->IPv6 translater ctl */
+comment|/* 15, unused, was: IPCTL_KEEPFAITH  */
 end_comment
 
 begin_define

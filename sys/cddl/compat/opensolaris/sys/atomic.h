@@ -63,6 +63,12 @@ name|defined
 argument_list|(
 name|__mips_n32
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ARM_HAVE_ATOMIC64
+argument_list|)
 end_if
 
 begin_function_decl
@@ -386,6 +392,11 @@ name|defined
 argument_list|(
 name|__mips_n32
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ARM_HAVE_ATOMIC64
+argument_list|)
 end_if
 
 begin_function
@@ -502,6 +513,32 @@ name|atomic_add_64_nv
 argument_list|(
 name|target
 argument_list|,
+literal|1
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
+name|atomic_dec_64_nv
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|target
+parameter_list|)
+block|{
+return|return
+operator|(
+name|atomic_add_64_nv
+argument_list|(
+name|target
+argument_list|,
+operator|-
 literal|1
 argument_list|)
 operator|)

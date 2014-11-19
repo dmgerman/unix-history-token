@@ -48,12 +48,14 @@ block|,
 name|MMC_IVAR_MAX_DATA
 block|,
 name|MMC_IVAR_CARD_ID_STRING
-block|}
+block|,
+name|MMC_IVAR_CARD_SN_STRING
+block|, }
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * Simplified accessors for pci devices  */
+comment|/*  * Simplified accessors for mmc devices  */
 end_comment
 
 begin_define
@@ -198,6 +200,17 @@ argument_list|(
 argument|card_id_string
 argument_list|,
 argument|CARD_ID_STRING
+argument_list|,
+argument|const char *
+argument_list|)
+end_macro
+
+begin_macro
+name|MMC_ACCESSOR
+argument_list|(
+argument|card_sn_string
+argument_list|,
+argument|CARD_SN_STRING
 argument_list|,
 argument|const char *
 argument_list|)

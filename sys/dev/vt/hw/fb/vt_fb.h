@@ -49,18 +49,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|fb_probe
-parameter_list|(
-name|struct
-name|fb_info
-modifier|*
-name|info
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|vd_init_t
 name|vt_fb_init
@@ -74,14 +62,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vd_bitbltchr_t
-name|vt_fb_bitbltchr
+name|vd_bitblt_text_t
+name|vt_fb_bitblt_text
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vd_maskbitbltchr_t
-name|vt_fb_maskbitbltchr
+name|vd_bitblt_bmp_t
+name|vt_fb_bitblt_bitmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vd_drawrect_t
+name|vt_fb_drawrect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vd_setpixel_t
+name|vt_fb_setpixel
 decl_stmt|;
 end_decl_stmt
 

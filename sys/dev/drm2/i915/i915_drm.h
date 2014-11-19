@@ -744,6 +744,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_I915_GEM_CONTEXT_CREATE
+value|0x2d
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_I915_GEM_CONTEXT_DESTROY
+value|0x2e
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_IOCTL_I915_INIT
 value|DRM_IOW( DRM_COMMAND_BASE + DRM_I915_INIT, drm_i915_init_t)
 end_define
@@ -1040,6 +1054,20 @@ define|#
 directive|define
 name|DRM_IOCTL_I915_GET_SPRITE_COLORKEY
 value|DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_SET_SPRITE_COLORKEY, struct drm_intel_sprite_colorkey)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I915_GEM_CONTEXT_CREATE
+value|DRM_IOWR (DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_CREATE, struct drm_i915_gem_context_create)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_I915_GEM_CONTEXT_DESTROY
+value|DRM_IOW (DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_DESTROY, struct drm_i915_gem_context_destroy)
 end_define
 
 begin_comment
@@ -2154,6 +2182,7 @@ decl_stmt|;
 name|uint64_t
 name|rsvd1
 decl_stmt|;
+comment|/* now used for context info */
 name|uint64_t
 name|rsvd2
 decl_stmt|;
@@ -2254,6 +2283,37 @@ define|#
 directive|define
 name|I915_EXEC_GEN7_SOL_RESET
 value|(1<<8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I915_EXEC_CONTEXT_ID_MASK
+value|(0xffffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|i915_execbuffer2_set_context_id
+parameter_list|(
+name|eb2
+parameter_list|,
+name|context
+parameter_list|)
+define|\
+value|(eb2).rsvd1 = context& I915_EXEC_CONTEXT_ID_MASK
+end_define
+
+begin_define
+define|#
+directive|define
+name|i915_execbuffer2_get_context_id
+parameter_list|(
+name|eb2
+parameter_list|)
+define|\
+value|((eb2).rsvd1& I915_EXEC_CONTEXT_ID_MASK)
 end_define
 
 begin_struct
@@ -2819,6 +2879,35 @@ name|max_value
 decl_stmt|;
 name|uint32_t
 name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|drm_i915_gem_context_create
+block|{
+comment|/*  output: id of new context*/
+name|uint32_t
+name|ctx_id
+decl_stmt|;
+name|uint32_t
+name|pad
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|drm_i915_gem_context_destroy
+block|{
+name|uint32_t
+name|ctx_id
+decl_stmt|;
+name|uint32_t
+name|pad
 decl_stmt|;
 block|}
 struct|;

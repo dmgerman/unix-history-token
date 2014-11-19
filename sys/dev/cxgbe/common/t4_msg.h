@@ -879,6 +879,16 @@ parameter_list|)
 value|(G_TID(ntohl(OPCODE_TID(cmd))))
 end_define
 
+begin_define
+define|#
+directive|define
+name|GET_OPCODE
+parameter_list|(
+name|cmd
+parameter_list|)
+value|((cmd)->ot.opcode)
+end_define
+
 begin_comment
 comment|/* partitioning of TID fields that also carry a queue id */
 end_comment

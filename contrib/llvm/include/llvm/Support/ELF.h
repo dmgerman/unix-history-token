@@ -1837,6 +1837,10 @@ name|R_PPC_GOT16_HA
 init|=
 literal|17
 block|,
+name|R_PPC_PLTREL24
+init|=
+literal|18
+block|,
 name|R_PPC_REL32
 init|=
 literal|26

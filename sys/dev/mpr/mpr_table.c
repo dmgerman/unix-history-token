@@ -516,6 +516,12 @@ literal|0x0a
 block|}
 block|,
 block|{
+literal|"12.0Gbps"
+block|,
+literal|0x0b
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0

@@ -575,7 +575,23 @@ comment|/* number of keepalives before close */
 name|u_int
 name|t_tsomax
 decl_stmt|;
-comment|/* tso burst length limit */
+comment|/* TSO total burst length limit in bytes */
+name|u_int
+name|t_tsomaxsegcount
+decl_stmt|;
+comment|/* TSO maximum segment count */
+name|u_int
+name|t_tsomaxsegsize
+decl_stmt|;
+comment|/* TSO maximum segment size in bytes */
+name|u_int
+name|t_pmtud_saved_maxopd
+decl_stmt|;
+comment|/* pre-blackhole MSS */
+name|u_int
+name|t_flags2
+decl_stmt|;
+comment|/* More tcpcb flags storage */
 name|uint32_t
 name|t_ispare
 index|[
@@ -1109,6 +1125,43 @@ comment|/* TCP_SIGNATURE */
 end_comment
 
 begin_comment
+comment|/*  * Flags for PLPMTU handling, t_flags2  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF2_PLPMTU_BLACKHOLE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Possible PLPMTUD Black Hole. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF2_PLPMTU_PMTUD
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Allowed to attempt PLPMTUD. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF2_PLPMTU_MAXSEGSNT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Last seg sent was full seg. */
+end_comment
+
+begin_comment
 comment|/*  * Structure to hold TCP options that are only used during segment  * processing (in tcp_input), but not held in the tcpcb.  * It's basically used to reduce the number of parameters  * to tcp_dooptions and tcp_addoptions.  * The binary order of the to_flags is relevant for packing of the  * options in tcp_addoptions.  */
 end_comment
 
@@ -1262,6 +1315,12 @@ decl_stmt|;
 name|u_int
 name|tsomax
 decl_stmt|;
+name|u_int
+name|tsomaxsegcount
+decl_stmt|;
+name|u_int
+name|tsomaxsegsize
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1342,10 +1401,16 @@ argument|tcptw
 argument_list|)
 name|tw_2msl
 expr_stmt|;
-name|u_int
-name|tw_refcount
+name|void
+modifier|*
+name|tw_pspare
 decl_stmt|;
-comment|/* refcount */
+comment|/* TCP_SIGNATURE */
+name|u_int
+modifier|*
+name|tw_spare
+decl_stmt|;
+comment|/* TCP_SIGNATURE */
 block|}
 struct|;
 end_struct
@@ -2696,10 +2761,8 @@ parameter_list|(
 name|struct
 name|tcptw
 modifier|*
-name|_tw
 parameter_list|,
 name|int
-name|_reuse
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2878,11 +2941,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|tcp_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int
@@ -3142,6 +3209,49 @@ directive|ifdef
 name|TCP_SIGNATURE
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|secasvar
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|struct
+name|secasvar
+modifier|*
+name|tcp_get_sav
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tcp_signature_do_compute
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
+name|struct
+name|secasvar
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|tcp_signature_compute
@@ -3187,6 +3297,40 @@ name|tcphdr
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tcp_signature_check
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|off0
+parameter_list|,
+name|int
+name|tlen
+parameter_list|,
+name|int
+name|optlen
+parameter_list|,
+name|struct
+name|tcpopt
+modifier|*
+name|to
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+name|th
+parameter_list|,
+name|u_int
+name|tcpbflag
 parameter_list|)
 function_decl|;
 end_function_decl

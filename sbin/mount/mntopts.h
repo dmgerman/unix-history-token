@@ -17,7 +17,8 @@ name|int
 name|m_inverse
 decl_stmt|;
 comment|/* if a negative option, e.g. "atime" */
-name|int
+name|long
+name|long
 name|m_flag
 decl_stmt|;
 comment|/* bit to set, e.g. MNT_RDONLY */
@@ -152,6 +153,13 @@ name|MOPT_NFS4ACLS
 value|{ "nfsv4acls",	0, MNT_NFS4ACLS, 0 }
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOPT_AUTOMOUNTED
+value|{ "automounted",0, MNT_AUTOMOUNTED, 0 }
+end_define
+
 begin_comment
 comment|/* Control flags. */
 end_comment
@@ -225,7 +233,7 @@ name|MOPT_STDOPTS
 define|\
 value|MOPT_USERQUOTA,							\ 	MOPT_GROUPQUOTA,						\ 	MOPT_FSTAB_COMPAT,						\ 	MOPT_NOATIME,							\ 	MOPT_NOEXEC,							\ 	MOPT_SUIDDIR,
 comment|/* must be before MOPT_NOSUID */
-value|\ 	MOPT_NOSUID,							\ 	MOPT_NOSYMFOLLOW,						\ 	MOPT_RDONLY,							\ 	MOPT_UNION,							\ 	MOPT_NOCLUSTERR,						\ 	MOPT_NOCLUSTERW,						\ 	MOPT_MULTILABEL,						\ 	MOPT_ACLS,							\ 	MOPT_NFS4ACLS
+value|\ 	MOPT_NOSUID,							\ 	MOPT_NOSYMFOLLOW,						\ 	MOPT_RDONLY,							\ 	MOPT_UNION,							\ 	MOPT_NOCLUSTERR,						\ 	MOPT_NOCLUSTERW,						\ 	MOPT_MULTILABEL,						\ 	MOPT_ACLS,							\ 	MOPT_NFS4ACLS,							\ 	MOPT_AUTOMOUNTED
 end_define
 
 begin_function_decl

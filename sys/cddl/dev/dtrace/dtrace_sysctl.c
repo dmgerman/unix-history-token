@@ -316,7 +316,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_QUAD
 argument_list|(
 name|_kern_dtrace
 argument_list|,
@@ -337,7 +337,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_QUAD
 argument_list|(
 name|_kern_dtrace
 argument_list|,

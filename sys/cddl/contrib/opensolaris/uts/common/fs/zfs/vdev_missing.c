@@ -8,7 +8,7 @@ comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -126,7 +126,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vdev_missing_io_start
 parameter_list|(
 name|zio_t
@@ -143,11 +143,11 @@ argument_list|(
 name|ENOTSUP
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_CONTINUE
-operator|)
-return|;
+name|zio_execute
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

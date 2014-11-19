@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPS_DRIVER_VERSION
-value|"16.00.00.00-fbsd"
+value|"19.00.00.00-fbsd"
 end_define
 
 begin_define
@@ -1322,6 +1322,13 @@ decl_stmt|;
 name|struct
 name|timeval
 name|lastfail
+decl_stmt|;
+comment|/* StartStopUnit command handling at shutdown */
+name|uint32_t
+name|SSU_refcount
+decl_stmt|;
+name|uint8_t
+name|SSU_started
 decl_stmt|;
 block|}
 struct|;
@@ -3594,6 +3601,18 @@ name|struct
 name|mps_command
 modifier|*
 name|tm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mpssas_release_simq_reinit
+parameter_list|(
+name|struct
+name|mpssas_softc
+modifier|*
+name|sassc
 parameter_list|)
 function_decl|;
 end_function_decl

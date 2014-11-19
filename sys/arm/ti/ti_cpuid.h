@@ -239,22 +239,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHIP_OMAP_3
+name|CHIP_OMAP_4
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHIP_OMAP_4
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|CHIP_AM335X
-value|2
+value|1
 end_define
 
 begin_function
@@ -274,15 +267,6 @@ name|SOC_OMAP4
 argument_list|)
 return|return
 name|CHIP_OMAP_4
-return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|SOC_OMAP3
-argument_list|)
-return|return
-name|CHIP_OMAP_3
 return|;
 elif|#
 directive|elif

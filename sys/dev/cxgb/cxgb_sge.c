@@ -18532,7 +18532,6 @@ literal|"firmware_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_version
@@ -18578,7 +18577,6 @@ literal|"port_types"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|port_types
@@ -18735,6 +18733,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|cxgb_refresh_stats
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|parg
 operator|=
 operator|(
@@ -18755,24 +18758,6 @@ name|stats
 operator|+
 name|arg2
 operator|)
-expr_stmt|;
-name|PORT_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|t3_mac_update_stats
-argument_list|(
-operator|&
-name|p
-operator|->
-name|mac
-argument_list|)
-expr_stmt|;
-name|PORT_UNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -19385,7 +19370,7 @@ argument_list|,
 literal|"#times starved"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UAUTO
 argument_list|(
 name|ctx
 argument_list|,
@@ -19616,7 +19601,7 @@ argument_list|,
 literal|"#tunneled packet slots in use"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -19722,7 +19707,7 @@ argument_list|,
 literal|"tx queues stopped"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_ULONG
+name|SYSCTL_ADD_UAUTO
 argument_list|(
 name|ctx
 argument_list|,

@@ -43,7 +43,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 parameter_list|(
 name|uint32_t
 modifier|*

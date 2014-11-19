@@ -1468,11 +1468,7 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+break|break;
 default|default:
 name|error
 operator|=

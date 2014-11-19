@@ -378,7 +378,7 @@ comment|/* IRQs : */
 end_comment
 
 begin_comment
-comment|/*  * 0: AIC  * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: PIO Controller D  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: USART 3  * 10: MMC Interface  * 11: USB device port  * 12: Two-wirte interface  * 13: SPI  * 14: SSC  * 15: SSC  * 16: SSC  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: Timer Counter 3  * 21: Timer Counter 4  * 22: Timer Counter 6  * 23: USB Host port  * 24: Ethernet  * 25: AIC  * 26: AIC  * 27: AIC  * 28: AIC  * 29: AIC  * 30: AIC  * 31: AIC  */
+comment|/*  * 0: AIC  * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: PIO Controller D  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: USART 3  * 10: MMC Interface  * 11: USB device port  * 12: Two-wire interface  * 13: SPI  * 14: SSC  * 15: SSC  * 16: SSC  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: Timer Counter 3  * 21: Timer Counter 4  * 22: Timer Counter 5  * 23: USB Host port  * 24: Ethernet  * 25: AIC  * 26: AIC  * 27: AIC  * 28: AIC  * 29: AIC  * 30: AIC  * 31: AIC  */
 end_comment
 
 begin_define

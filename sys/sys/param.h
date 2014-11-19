@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1100028
+value|1100047
 end_define
 
 begin_comment
@@ -108,6 +108,20 @@ define|#
 directive|define
 name|P_OSREL_MAP_ANON
 value|800104
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_MAP_FSTRICT
+value|1100036
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_MAP_RENAME
+value|1100039
 end_define
 
 begin_define

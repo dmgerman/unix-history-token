@@ -9,12 +9,6 @@ directive|include
 file|"ipoib.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<linux/ethtool.h>
-end_include
-
 begin_function
 name|int
 name|ipoib_mcast_attach

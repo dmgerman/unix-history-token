@@ -99,6 +99,28 @@ begin_comment
 comment|/* if_epair(4) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NETISR_IP_DIRECT
+value|9
+end_define
+
+begin_comment
+comment|/* direct-dispatch IPv4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_IPV6_DIRECT
+value|10
+end_define
+
+begin_comment
+comment|/* direct-dispatch IPv6 */
+end_comment
+
 begin_comment
 comment|/*  * Protocol ordering and affinity policy constants.  See the detailed  * discussion of policies later in the file.  */
 end_comment

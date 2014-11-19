@@ -15,9 +15,43 @@ directive|define
 name|SYS_DEV_RANDOM_LIVE_ENTROPY_SOURCES_H_INCLUDED
 end_define
 
+begin_typedef
+typedef|typedef
+name|u_int
+name|random_live_read_func_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * Live entropy source is a source of entropy that can provide  * specified or approximate amount of entropy immediately upon request or within  * an acceptable amount of time.  */
 end_comment
+
+begin_struct
+struct|struct
+name|live_entropy_source
+block|{
+specifier|const
+name|char
+modifier|*
+name|les_ident
+decl_stmt|;
+name|enum
+name|random_entropy_source
+name|les_source
+decl_stmt|;
+name|random_live_read_func_t
+modifier|*
+name|les_read
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -27,13 +61,13 @@ name|LIST_ENTRY
 argument_list|(
 argument|live_entropy_sources
 argument_list|)
-name|entries
+name|lles_entries
 expr_stmt|;
 comment|/* list of providers */
 name|struct
-name|random_hardware_source
+name|live_entropy_source
 modifier|*
-name|rsource
+name|lles_rsource
 decl_stmt|;
 comment|/* associated random adaptor */
 block|}
@@ -50,10 +84,28 @@ end_decl_stmt
 
 begin_function_decl
 name|void
+name|live_entropy_sources_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|live_entropy_sources_deinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|live_entropy_source_register
 parameter_list|(
 name|struct
-name|random_hardware_source
+name|live_entropy_source
 modifier|*
 parameter_list|)
 function_decl|;
@@ -64,7 +116,7 @@ name|void
 name|live_entropy_source_deregister
 parameter_list|(
 name|struct
-name|random_hardware_source
+name|live_entropy_source
 modifier|*
 parameter_list|)
 function_decl|;
@@ -74,27 +126,10 @@ begin_function_decl
 name|void
 name|live_entropy_sources_feed
 parameter_list|(
-name|int
-parameter_list|,
-name|event_proc_f
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|LIVE_ENTROPY_SRC_MODULE
-parameter_list|(
-name|name
-parameter_list|,
-name|modevent
-parameter_list|,
-name|ver
-parameter_list|)
-define|\
-value|static moduledata_t name##_mod = {				\ 	#name,							\ 	modevent,						\ 	0							\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS,		\ 		   SI_ORDER_SECOND);				\     MODULE_VERSION(name, ver);					\     MODULE_DEPEND(name, random, 1, 1, 1);
-end_define
 
 begin_endif
 endif|#

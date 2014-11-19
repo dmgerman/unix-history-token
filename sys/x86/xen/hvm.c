@@ -317,18 +317,6 @@ begin_comment
 comment|/*------------------ Hypervisor Access Shared Memory Regions -----------------*/
 end_comment
 
-begin_comment
-comment|/** Hypercall table accessed via HYPERVISOR_*_op() methods. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|hypercall_page
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|shared_info_t
 modifier|*

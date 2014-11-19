@@ -73,11 +73,22 @@ directive|include
 file|<openssl/pem.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/comp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1788,6 +1799,31 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"AEAD ciphers not supported by the enc utility\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
+if|if
+condition|(
+name|cipher
+operator|&&
+operator|(
+name|EVP_CIPHER_mode
+argument_list|(
+name|cipher
+argument_list|)
+operator|==
+name|EVP_CIPH_XTS_MODE
+operator|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Ciphers in XTS mode are not supported by the enc utility\n"
 argument_list|)
 expr_stmt|;
 goto|goto

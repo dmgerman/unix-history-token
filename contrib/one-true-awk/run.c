@@ -9897,20 +9897,20 @@ break|break;
 case|case
 name|FRAND
 case|:
-comment|/* in principle, rand() returns something in 0..RAND_MAX */
+comment|/* random() returns numbers in [0..2^31-1] 		 * in order to get a number in [0, 1), divide it by 2^31 		 */
 name|u
 operator|=
-call|(
+operator|(
 name|Awkfloat
-call|)
-argument_list|(
-name|rand
+operator|)
+name|random
 argument_list|()
-operator|%
-name|RAND_MAX
-argument_list|)
 operator|/
-name|RAND_MAX
+operator|(
+literal|0x7fffffffL
+operator|+
+literal|0x1UL
+operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -9947,11 +9947,11 @@ name|tmp
 operator|=
 name|u
 expr_stmt|;
-name|srand
+name|srandom
 argument_list|(
 operator|(
 name|unsigned
-name|int
+name|long
 operator|)
 name|u
 argument_list|)

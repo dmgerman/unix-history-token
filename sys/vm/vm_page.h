@@ -921,7 +921,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the page is locked.  It is set by  * both the MI and MD VM layers.  However, kernel loadable modules should not  * directly set this flag.  They should call vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  When it  * does so, the page must be exclusive busied.  The MI VM layer must never  * access this flag directly.  Instead, it should call  * pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
+comment|/*  * The vm_page's aflags are updated using atomic operations.  To set or clear  * these flags, the functions vm_page_aflag_set() and vm_page_aflag_clear()  * must be used.  Neither these flags nor these functions are part of the KBI.  *  * PGA_REFERENCED may be cleared only if the page is locked.  It is set by  * both the MI and MD VM layers.  However, kernel loadable modules should not  * directly set this flag.  They should call vm_page_reference() instead.  *  * PGA_WRITEABLE is set exclusively on managed pages by pmap_enter().  * When it does so, the object must be locked, or the page must be  * exclusive busied.  The MI VM layer must never access this flag  * directly.  Instead, it should call pmap_page_is_write_mapped().  *  * PGA_EXECUTABLE may be set by pmap routines, and indicates that a page has  * at least one executable mapping.  It is not consumed by the MI VM layer.  */
 end_comment
 
 begin_define
@@ -2355,6 +2355,32 @@ parameter_list|)
 value|vm_page_object_lock_assert(m)
 end_define
 
+begin_function_decl
+name|void
+name|vm_page_assert_pga_writeable
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|uint8_t
+name|bits
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|VM_PAGE_ASSERT_PGA_WRITEABLE
+parameter_list|(
+name|m
+parameter_list|,
+name|bits
+parameter_list|)
+define|\
+value|vm_page_assert_pga_writeable(m, bits)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -2366,6 +2392,18 @@ directive|define
 name|VM_PAGE_OBJECT_LOCK_ASSERT
 parameter_list|(
 name|m
+parameter_list|)
+value|(void)0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_PAGE_ASSERT_PGA_WRITEABLE
+parameter_list|(
+name|m
+parameter_list|,
+name|bits
 parameter_list|)
 value|(void)0
 end_define
@@ -2524,37 +2562,11 @@ name|addr
 decl_stmt|,
 name|val
 decl_stmt|;
-comment|/* 	 * The PGA_WRITEABLE flag can only be set if the page is managed and 	 * exclusive busied.  Currently, this flag is only set by pmap_enter(). 	 */
-name|KASSERT
-argument_list|(
-operator|(
-name|bits
-operator|&
-name|PGA_WRITEABLE
-operator|)
-operator|==
-literal|0
-operator|||
-operator|(
-operator|(
-name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_UNMANAGED
-operator|)
-operator|==
-literal|0
-operator|&&
-name|vm_page_xbusied
+name|VM_PAGE_ASSERT_PGA_WRITEABLE
 argument_list|(
 name|m
-argument_list|)
-operator|)
 argument_list|,
-operator|(
-literal|"vm_page_aflag_set: PGA_WRITEABLE and not exclusive busy"
-operator|)
+name|bits
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Access the whole 32-bit word containing the aflags field with an 	 * atomic update.  Parallel non-atomic updates to the other fields 	 * within this word are handled properly by the atomic update. 	 */

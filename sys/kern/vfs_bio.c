@@ -299,8 +299,11 @@ name|unmapped_buf
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Used below and for softdep flushing threads in ufs/ffs/ffs_softdep.c */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|struct
 name|proc
 modifier|*
@@ -3000,6 +3003,24 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NSWBUF_MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NSWBUF_MIN
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3324,8 +3345,6 @@ block|}
 comment|/* 	 * swbufs are used as temporary holders for I/O, such as paging I/O. 	 * We have no less then 16 and no more then 256. 	 */
 name|nswbuf
 operator|=
-name|max
-argument_list|(
 name|min
 argument_list|(
 name|nbuf
@@ -3334,13 +3353,15 @@ literal|4
 argument_list|,
 literal|256
 argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.nswbuf"
 argument_list|,
-literal|16
+operator|&
+name|nswbuf
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NSWBUF_MIN
 if|if
 condition|(
 name|nswbuf
@@ -3351,8 +3372,6 @@ name|nswbuf
 operator|=
 name|NSWBUF_MIN
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Reserve space for the buffer cache buffers 	 */
 name|swbuf
 operator|=
@@ -12079,6 +12098,17 @@ name|b_bufobj
 operator|->
 name|bo_bsize
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bsize
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"bsize == 0, check bo->bo_bsize"
+operator|)
+argument_list|)
+expr_stmt|;
 name|offset
 operator|=
 name|blkno
@@ -12848,6 +12878,17 @@ else|:
 name|bo
 operator|->
 name|bo_bsize
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bsize
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"bsize == 0, check bo->bo_bsize"
+operator|)
+argument_list|)
 expr_stmt|;
 name|offset
 operator|=

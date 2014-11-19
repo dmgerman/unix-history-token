@@ -1147,7 +1147,7 @@ name|boot
 operator|->
 name|bpbBytesPerSec
 operator|%
-name|DOSBOOTBLOCKSIZE
+name|DOSBOOTBLOCKSIZE_REAL
 operator|!=
 literal|0
 condition|)

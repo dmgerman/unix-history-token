@@ -296,12 +296,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/in6_var.h>
 end_include
 
@@ -763,7 +757,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -771,6 +765,8 @@ name|OID_AUTO
 argument_list|,
 name|allow
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -787,7 +783,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -795,6 +791,8 @@ name|OID_AUTO
 argument_list|,
 name|preempt
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -811,7 +809,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -819,6 +817,8 @@ name|OID_AUTO
 argument_list|,
 name|log
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -835,7 +835,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -843,6 +843,8 @@ name|OID_AUTO
 argument_list|,
 name|demotion
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -861,7 +863,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -869,6 +871,8 @@ name|OID_AUTO
 argument_list|,
 name|senderr_demotion_factor
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -885,7 +889,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_carp
 argument_list|,
@@ -893,6 +897,8 @@ name|OID_AUTO
 argument_list|,
 name|ifdown_demotion_factor
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2172,18 +2178,31 @@ name|INET
 end_ifdef
 
 begin_function
-name|void
+name|int
 name|carp_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|hlen
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+init|=
+operator|*
+name|mp
+decl_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -2208,6 +2227,16 @@ name|iplen
 decl_stmt|,
 name|len
 decl_stmt|;
+name|iplen
+operator|=
+operator|*
+name|offp
+expr_stmt|;
+operator|*
+name|mp
+operator|=
+name|NULL
+expr_stmt|;
 name|CARPSTATS_INC
 argument_list|(
 name|carps_ipackets
@@ -2224,7 +2253,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* verify that the IP TTL is 255.  */
 if|if
@@ -2265,7 +2298,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 name|iplen
 operator|=
@@ -2328,7 +2365,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -2379,7 +2420,11 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 name|ip
 operator|=
@@ -2463,7 +2508,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -2486,7 +2535,11 @@ argument_list|(
 name|carps_hdrops
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 name|ip
 operator|=
@@ -2560,7 +2613,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 name|m
 operator|->
@@ -2577,6 +2634,11 @@ argument_list|,
 name|AF_INET
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 end_function
 
@@ -10165,10 +10227,6 @@ block|,
 operator|.
 name|pr_output
 operator|=
-operator|(
-name|pr_output_t
-operator|*
-operator|)
 name|rip_output
 block|,
 operator|.
@@ -10207,7 +10265,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|ip6protosw
+name|protosw
 name|in6_carp_protosw
 init|=
 block|{

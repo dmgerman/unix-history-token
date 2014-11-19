@@ -175,6 +175,7 @@ name|ctl_ua_type
 name|ctl_build_ua
 parameter_list|(
 name|ctl_ua_type
+modifier|*
 name|ua_type
 parameter_list|,
 name|struct
@@ -467,6 +468,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|ctl_set_task_aborted
+parameter_list|(
+name|struct
+name|ctl_scsiio
+modifier|*
+name|ctsio
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ctl_set_space_alloc_fail
 parameter_list|(
 name|struct
 name|ctl_scsiio

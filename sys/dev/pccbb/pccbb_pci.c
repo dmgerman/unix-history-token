@@ -2390,6 +2390,21 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* XXX: This should not be necessary, but some chipsets require it */
+name|PCI_MASK_CONFIG
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+operator||
+name|PCIM_CMD_PORTEN
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* disable Legacy IO */
 switch|switch
 condition|(

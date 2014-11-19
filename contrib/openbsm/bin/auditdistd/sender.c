@@ -3120,10 +3120,10 @@ name|adist_recv_list
 argument_list|)
 condition|)
 block|{
-name|rw_unlock
+name|mtx_unlock
 argument_list|(
 operator|&
-name|adist_remote_lock
+name|adist_recv_list_lock
 argument_list|)
 expr_stmt|;
 continue|continue;

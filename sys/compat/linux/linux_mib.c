@@ -962,7 +962,7 @@ block|,
 operator|.
 name|pr_osrelease
 operator|=
-literal|"2.6.16"
+literal|"2.6.18"
 block|,
 operator|.
 name|pr_oss_version
@@ -972,7 +972,7 @@ block|,
 operator|.
 name|pr_osrel
 operator|=
-literal|2006016
+literal|2006018
 block|}
 decl_stmt|;
 end_decl_stmt

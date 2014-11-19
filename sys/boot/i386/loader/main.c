@@ -760,6 +760,10 @@ comment|/* detect SMBIOS for future reference */
 name|smbios_detect
 argument_list|()
 expr_stmt|;
+comment|/* detect PCI BIOS for future reference */
+name|biospci_detect
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"

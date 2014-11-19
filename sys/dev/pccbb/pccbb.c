@@ -3776,7 +3776,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 		 */
 name|PCI_MASK_CONFIG
 argument_list|(
 name|brdev
@@ -7051,7 +7050,7 @@ decl_stmt|;
 name|uint32_t
 name|tmp
 decl_stmt|;
-comment|/* 	 * Some BIOSes will not save the BARs for the pci chips, so we 	 * must do it ourselves.  If the BAR is reset to 0 for an I/O 	 * device, it will read back as 0x1, so no explicit test for 	 * memory devices are needed. 	 * 	 * Note: The PCI bus code should do this automatically for us on 	 * suspend/resume, but until it does, we have to cope. 	 */
+comment|/* 	 * In the APM and early ACPI era, BIOSes saved the PCI config 	 * registers. As chips became more complicated, that functionality moved 	 * into the ACPI code / tables. We must therefore, restore the settings 	 * we made here to make sure the device come back. Transitions to Dx 	 * from D0 and back to D0 cause the bridge to lose its config space, so 	 * all the bus mappings and such are preserved. 	 * 	 * For most drivers, the PCI layer handles this saving. However, since 	 * there's much black magic and arcane art hidden in these few lines of 	 * code that would be difficult to transition into the PCI 	 * layer. chipinit was several years of trial and error to write. 	 */
 name|pci_write_config
 argument_list|(
 name|self

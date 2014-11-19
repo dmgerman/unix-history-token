@@ -979,7 +979,7 @@ block|{
 if|if
 condition|(
 name|argc
-operator|<
+operator|<=
 literal|2
 condition|)
 name|errx

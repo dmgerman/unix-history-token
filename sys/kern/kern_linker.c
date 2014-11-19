@@ -1232,7 +1232,7 @@ operator|&
 name|kld_sx
 argument_list|)
 expr_stmt|;
-name|sysctl_lock
+name|sysctl_xlock
 argument_list|()
 expr_stmt|;
 for|for
@@ -1254,7 +1254,7 @@ operator|*
 name|oidp
 argument_list|)
 expr_stmt|;
-name|sysctl_unlock
+name|sysctl_xunlock
 argument_list|()
 expr_stmt|;
 name|sx_xlock
@@ -1337,7 +1337,7 @@ operator|&
 name|kld_sx
 argument_list|)
 expr_stmt|;
-name|sysctl_lock
+name|sysctl_xlock
 argument_list|()
 expr_stmt|;
 for|for
@@ -1359,7 +1359,7 @@ operator|*
 name|oidp
 argument_list|)
 expr_stmt|;
-name|sysctl_unlock
+name|sysctl_xunlock
 argument_list|()
 expr_stmt|;
 name|sx_xlock
@@ -2441,6 +2441,18 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|lf
+operator|->
+name|ctors_addr
+operator|=
+literal|0
+expr_stmt|;
+name|lf
+operator|->
+name|ctors_size
+operator|=
+literal|0
+expr_stmt|;
 name|lf
 operator|->
 name|refs
@@ -4250,7 +4262,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|sx_xlock
+name|sx_slock
 argument_list|(
 operator|&
 name|kld_sx
@@ -4269,7 +4281,7 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-name|sx_xunlock
+name|sx_sunlock
 argument_list|(
 operator|&
 name|kld_sx

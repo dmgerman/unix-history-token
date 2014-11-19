@@ -1435,6 +1435,15 @@ name|UFTDI_DEV
 argument_list|(
 name|DRESDENELEKTRONIK
 argument_list|,
+name|DE_RFNODE
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|DRESDENELEKTRONIK
+argument_list|,
 name|LEVELSHIFTERSTICKLOWCOST
 argument_list|,
 literal|0
@@ -7535,7 +7544,7 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"Warning: unknown FTDI "
-literal|"device type, bcdDevice=0x%04x, assuming 232R"
+literal|"device type, bcdDevice=0x%04x, assuming 232R\n"
 argument_list|,
 name|uaa
 operator|->

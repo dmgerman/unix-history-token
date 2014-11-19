@@ -1027,7 +1027,7 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
-literal|"Reset timeout\n"
+literal|"reset timeout\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1356,7 +1356,7 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
-literal|"Run timeout\n"
+literal|"run timeout\n"
 argument_list|)
 expr_stmt|;
 return|return

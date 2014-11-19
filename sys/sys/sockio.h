@@ -563,6 +563,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCGI2C
+value|_IOWR('i', 61, struct ifstat)
+end_define
+
+begin_comment
+comment|/* get I2C data  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSIFPHYADDR
 value|_IOW('i', 70, struct ifaliasreq)
 end_define

@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/atomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<asm/uaccess.h>
 end_include
 

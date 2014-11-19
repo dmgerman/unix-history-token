@@ -48,7 +48,7 @@ file|"crypt.h"
 end_include
 
 begin_comment
-comment|/*  * List of supported crypt(3) formats.  The first element in the list will  * be the default.  */
+comment|/*  * List of supported crypt(3) formats.  *  * The default algorithm is the last entry in the list (second-to-last  * array element since the last is a sentinel).  The reason for placing  * the default last rather than first is that DES needs to be at the  * bottom for the algorithm guessing logic in crypt(3) to work correctly,  * and it needs to be the default for backward compatibility.  */
 end_comment
 
 begin_struct
@@ -91,16 +91,6 @@ name|crypt_formats
 index|[]
 init|=
 block|{
-comment|/* default format */
-block|{
-literal|"sha512"
-block|,
-name|crypt_sha512
-block|,
-literal|"$6$"
-block|}
-block|,
-comment|/* other supported formats */
 block|{
 literal|"md5"
 block|,
@@ -136,6 +126,14 @@ block|,
 name|crypt_sha256
 block|,
 literal|"$5$"
+block|}
+block|,
+block|{
+literal|"sha512"
+block|,
+name|crypt_sha512
+block|,
+literal|"$6$"
 block|}
 block|,
 ifdef|#
@@ -174,8 +172,15 @@ init|=
 operator|&
 name|crypt_formats
 index|[
-literal|0
-index|]
+operator|(
+sizeof|sizeof
+name|crypt_formats
+operator|/
+sizeof|sizeof
+expr|*
+name|crypt_formats
+init|)
+decl|- 2]
 decl_stmt|;
 end_decl_stmt
 

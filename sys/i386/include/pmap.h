@@ -2078,6 +2078,9 @@ name|sva
 parameter_list|,
 name|vm_offset_t
 name|eva
+parameter_list|,
+name|boolean_t
+name|force
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -825,7 +825,7 @@ condition|)
 block|{
 name|sysenv
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"smbios.system.product"
 argument_list|)

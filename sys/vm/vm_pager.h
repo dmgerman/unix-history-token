@@ -174,7 +174,7 @@ name|pgo_haspage_t
 modifier|*
 name|pgo_haspage
 decl_stmt|;
-comment|/* Does pager have page? */
+comment|/* Query page. */
 name|pgo_pageunswapped_t
 modifier|*
 name|pgo_pageunswapped
@@ -430,6 +430,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|vm_pager_free_nonreq
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_page_t
+name|ma
+index|[]
+parameter_list|,
+name|int
+name|reqpage
+parameter_list|,
+name|int
+name|npages
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  *	vm_page_get_pages:  *  *	Retrieve pages from the VM system in order to map them into an object  *	( or into VM space somewhere ).  If the pagein was successful, we  *	must fully validate it.  */
 end_comment
@@ -653,7 +673,7 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|VM_OBJECT_ASSERT_WLOCKED
+name|VM_OBJECT_ASSERT_LOCKED
 argument_list|(
 name|m
 operator|->

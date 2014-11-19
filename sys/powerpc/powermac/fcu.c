@@ -3436,8 +3436,6 @@ name|OID_AUTO
 argument_list|,
 literal|"minrpm"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -3454,10 +3452,7 @@ operator|.
 name|min_rpm
 operator|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+literal|0
 argument_list|,
 literal|"Minimum allowed RPM"
 argument_list|)
@@ -3475,8 +3470,6 @@ name|OID_AUTO
 argument_list|,
 literal|"maxrpm"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -3493,10 +3486,7 @@ operator|.
 name|max_rpm
 operator|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+literal|0
 argument_list|,
 literal|"Maximum allowed RPM"
 argument_list|)
@@ -3601,8 +3591,6 @@ name|OID_AUTO
 argument_list|,
 literal|"minpwm"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -3619,10 +3607,7 @@ operator|.
 name|min_rpm
 operator|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+literal|0
 argument_list|,
 literal|"Minimum allowed PWM in %"
 argument_list|)
@@ -3640,8 +3625,6 @@ name|OID_AUTO
 argument_list|,
 literal|"maxpwm"
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -3658,10 +3641,7 @@ operator|.
 name|max_rpm
 operator|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+literal|0
 argument_list|,
 literal|"Maximum allowed PWM in %"
 argument_list|)

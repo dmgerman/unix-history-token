@@ -2792,13 +2792,13 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
-comment|/* fcntl */
+comment|/* freebsd32_fcntl */
 case|case
 literal|92
 case|:
 block|{
 name|struct
-name|fcntl_args
+name|freebsd32_fcntl_args
 modifier|*
 name|p
 init|=
@@ -2833,7 +2833,7 @@ name|p
 operator|->
 name|arg
 expr_stmt|;
-comment|/* long */
+comment|/* int */
 operator|*
 name|n_args
 operator|=
@@ -18194,6 +18194,74 @@ break|break;
 block|}
 endif|#
 directive|endif
+comment|/* freebsd32_ppoll */
+case|case
+literal|545
+case|:
+block|{
+name|struct
+name|freebsd32_ppoll_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|fds
+expr_stmt|;
+comment|/* struct pollfd * */
+name|uarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|nfds
+expr_stmt|;
+comment|/* u_int */
+name|uarg
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|ts
+expr_stmt|;
+comment|/* const struct timespec32 * */
+name|uarg
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|set
+expr_stmt|;
+comment|/* const sigset_t * */
+operator|*
+name|n_args
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+block|}
 default|default:
 operator|*
 name|n_args
@@ -20178,7 +20246,7 @@ break|break;
 block|}
 empty_stmt|;
 break|break;
-comment|/* fcntl */
+comment|/* freebsd32_fcntl */
 case|case
 literal|92
 case|:
@@ -20208,7 +20276,7 @@ literal|2
 case|:
 name|p
 operator|=
-literal|"long"
+literal|"int"
 expr_stmt|;
 break|break;
 default|default:
@@ -31250,6 +31318,52 @@ empty_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* freebsd32_ppoll */
+case|case
+literal|545
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"struct pollfd *"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"u_int"
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|p
+operator|=
+literal|"const struct timespec32 *"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"const sigset_t *"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -32481,7 +32595,7 @@ operator|=
 literal|"int"
 expr_stmt|;
 break|break;
-comment|/* fcntl */
+comment|/* freebsd32_fcntl */
 case|case
 literal|92
 case|:
@@ -38262,6 +38376,25 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* freebsd32_ppoll */
+case|case
+literal|545
+case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}

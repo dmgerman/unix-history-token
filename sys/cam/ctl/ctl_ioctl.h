@@ -893,6 +893,8 @@ block|,
 name|CTL_LUN_OK
 block|,
 name|CTL_LUN_ERROR
+block|,
+name|CTL_LUN_WARNING
 block|}
 name|ctl_lun_status
 typedef|;

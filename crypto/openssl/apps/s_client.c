@@ -855,6 +855,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -verify_return_error - return verification errors\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -cert arg     - certificate file to use, PEM format assumed\n"
 argument_list|)
 expr_stmt|;
@@ -919,6 +926,13 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -pause        - sleep(1) after each read(2) and write(2) system call\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -prexit       - print session information even on connection failure\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -1121,6 +1135,13 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -dtls1        - just use DTLSv1\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -fallback_scsv - send TLS_FALLBACK_SCSV\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -2601,6 +2622,11 @@ name|peer
 argument_list|)
 decl_stmt|;
 name|int
+name|fallback_scsv
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|enable_timeouts
 init|=
 literal|0
@@ -3843,6 +3869,25 @@ expr_stmt|;
 name|socket_type
 operator|=
 name|SOCK_DGRAM
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-fallback_scsv"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fallback_scsv
+operator|=
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -5840,6 +5885,17 @@ name|sess
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fallback_scsv
+condition|)
+name|SSL_set_mode
+argument_list|(
+name|con
+argument_list|,
+name|SSL_MODE_SEND_FALLBACK_SCSV
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_TLSEXT

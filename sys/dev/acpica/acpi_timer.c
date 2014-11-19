@@ -177,6 +177,18 @@ literal|4
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Knob to disable acpi_timer device */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|acpi_timer_disabled
+init|=
+name|false
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -492,6 +504,8 @@ name|ACPI_Q_TIMER
 operator|)
 operator|||
 name|acpi_timer_dev
+operator|||
+name|acpi_timer_disabled
 condition|)
 name|return_VOID
 expr_stmt|;

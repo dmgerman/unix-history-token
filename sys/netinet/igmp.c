@@ -1094,7 +1094,7 @@ comment|/*  * Virtualized sysctls.  */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_STRUCT
+name|SYSCTL_STRUCT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1102,6 +1102,8 @@ name|IGMPCTL_STATS
 argument_list|,
 name|stats
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1118,7 +1120,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1126,6 +1128,8 @@ name|OID_AUTO
 argument_list|,
 name|recvifkludge
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1142,7 +1146,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1150,6 +1154,8 @@ name|OID_AUTO
 argument_list|,
 name|sendra
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1166,7 +1172,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1174,6 +1180,8 @@ name|OID_AUTO
 argument_list|,
 name|sendlocal
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1190,7 +1198,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1198,6 +1206,8 @@ name|OID_AUTO
 argument_list|,
 name|v1enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1214,7 +1224,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1222,6 +1232,8 @@ name|OID_AUTO
 argument_list|,
 name|v2enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1238,7 +1250,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1246,6 +1258,8 @@ name|OID_AUTO
 argument_list|,
 name|legacysupp
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1262,7 +1276,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1270,6 +1284,8 @@ name|OID_AUTO
 argument_list|,
 name|default_version
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -1294,7 +1310,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_igmp
 argument_list|,
@@ -1302,6 +1318,8 @@ name|OID_AUTO
 argument_list|,
 name|gsrdelay
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
@@ -5345,16 +5363,21 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|igmp_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|off
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 block|{
 name|int
@@ -5375,6 +5398,11 @@ name|ip
 modifier|*
 name|ip
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
 name|int
 name|igmplen
 decl_stmt|;
@@ -5392,10 +5420,17 @@ literal|"%s: called w/mbuf (%p,%d)"
 argument_list|,
 name|__func__
 argument_list|,
-name|m
+operator|*
+name|mp
 argument_list|,
-name|off
+operator|*
+name|offp
 argument_list|)
+expr_stmt|;
+name|m
+operator|=
+operator|*
+name|mp
 expr_stmt|;
 name|ifp
 operator|=
@@ -5404,6 +5439,11 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+expr_stmt|;
+operator|*
+name|mp
+operator|=
+name|NULL
 expr_stmt|;
 name|IGMPSTAT_INC
 argument_list|(
@@ -5423,7 +5463,8 @@ argument_list|)
 expr_stmt|;
 name|iphlen
 operator|=
-name|off
+operator|*
+name|offp
 expr_stmt|;
 name|igmplen
 operator|=
@@ -5434,7 +5475,7 @@ operator|->
 name|ip_len
 argument_list|)
 operator|-
-name|off
+name|iphlen
 expr_stmt|;
 comment|/* 	 * Validate lengths. 	 */
 if|if
@@ -5454,7 +5495,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* 	 * Always pullup to the minimum size for v1/v2 or v3 	 * to amortize calls to m_pullup(). 	 */
 name|minlen
@@ -5479,11 +5524,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|!
+name|M_WRITABLE
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
+argument_list|)
 operator|||
 name|m
 operator|->
@@ -5511,7 +5556,11 @@ argument_list|(
 name|igps_rcv_tooshort
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 name|ip
 operator|=
@@ -5568,7 +5617,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 name|m
 operator|->
@@ -5608,7 +5661,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 switch|switch
 condition|(
@@ -5670,7 +5727,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 switch|switch
 condition|(
@@ -5710,7 +5771,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 break|break;
 case|case
@@ -5746,7 +5811,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 break|break;
 case|case
@@ -5818,7 +5887,11 @@ argument_list|(
 name|igps_rcv_tooshort
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 comment|/* 				 * m_pullup() may modify m, so pullup in 				 * this scope. 				 */
 name|igmpv3len
@@ -5832,11 +5905,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|!
+name|M_WRITABLE
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
+argument_list|)
 operator|||
 name|m
 operator|->
@@ -5864,7 +5937,11 @@ argument_list|(
 name|igps_rcv_tooshort
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 name|igmpv3
 operator|=
@@ -5904,7 +5981,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 block|}
 break|break;
@@ -5938,7 +6019,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 break|break;
 case|case
@@ -5982,7 +6067,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|IPPROTO_DONE
+operator|)
+return|;
 block|}
 break|break;
 case|case
@@ -6007,13 +6096,23 @@ default|default:
 break|break;
 block|}
 comment|/* 	 * Pass all valid IGMP packets up to any process(es) listening on a 	 * raw IGMP socket. 	 */
+operator|*
+name|mp
+operator|=
+name|m
+expr_stmt|;
+return|return
+operator|(
 name|rip_input
 argument_list|(
-name|m
+name|mp
 argument_list|,
-name|off
+name|offp
+argument_list|,
+name|proto
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

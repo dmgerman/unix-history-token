@@ -947,9 +947,6 @@ decl_stmt|;
 name|bool
 name|hdr_split
 decl_stmt|;
-name|bool
-name|discard
-decl_stmt|;
 name|struct
 name|mtx
 name|rx_mtx

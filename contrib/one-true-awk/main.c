@@ -317,8 +317,12 @@ name|srand_seed
 operator|=
 literal|1
 expr_stmt|;
-name|srand
+name|srandom
 argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|srand_seed
 argument_list|)
 expr_stmt|;

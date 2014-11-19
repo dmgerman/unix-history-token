@@ -370,7 +370,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_BIG_NAME
-value|"elf64-powerpc"
+value|"elf64-powerpc-freebsd"
 end_define
 
 begin_define

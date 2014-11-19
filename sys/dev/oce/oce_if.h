@@ -659,13 +659,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|OCE_MAX_TSO_SIZE
-value|(65535 - ETHER_HDR_LEN)
-end_define
-
-begin_define
-define|#
-directive|define
 name|OCE_MAX_RX_SIZE
 value|4096
 end_define

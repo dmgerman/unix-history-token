@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -475,73 +475,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtHexCharToValue  *  * PARAMETERS:  HexChar             - Hex character in Ascii  *  * RETURN:      The binary value of the hex character  *  * DESCRIPTION: Perform ascii-to-hex translation  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|UINT8
-name|UtHexCharToValue
-parameter_list|(
-name|int
-name|HexChar
-parameter_list|)
-block|{
-if|if
-condition|(
-name|HexChar
-operator|<=
-literal|0x39
-condition|)
-block|{
-return|return
-operator|(
-call|(
-name|UINT8
-call|)
-argument_list|(
-name|HexChar
-operator|-
-literal|0x30
-argument_list|)
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|HexChar
-operator|<=
-literal|0x46
-condition|)
-block|{
-return|return
-operator|(
-call|(
-name|UINT8
-call|)
-argument_list|(
-name|HexChar
-operator|-
-literal|0x37
-argument_list|)
-operator|)
-return|;
-block|}
-return|return
-operator|(
-call|(
-name|UINT8
-call|)
-argument_list|(
-name|HexChar
-operator|-
-literal|0x57
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToHex  *  * PARAMETERS:  RawByte             - Binary data  *              Buffer              - Pointer to where the hex bytes will be  *                                    stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation. The return data is prefixed  *              with "0x"  *  ******************************************************************************/
 end_comment
 
@@ -579,16 +512,12 @@ operator|=
 operator|(
 name|UINT8
 operator|)
-name|AslHexLookup
-index|[
-operator|(
+name|AcpiUtHexToAsciiChar
+argument_list|(
 name|RawByte
-operator|>>
+argument_list|,
 literal|4
-operator|)
-operator|&
-literal|0xF
-index|]
+argument_list|)
 expr_stmt|;
 name|Buffer
 index|[
@@ -598,18 +527,18 @@ operator|=
 operator|(
 name|UINT8
 operator|)
-name|AslHexLookup
-index|[
+name|AcpiUtHexToAsciiChar
+argument_list|(
 name|RawByte
-operator|&
-literal|0xF
-index|]
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToAsmHex  *  * PARAMETERS:  RawByte             - Binary data  *              Buffer              - Pointer to where the hex bytes will be  *                                    stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation. The return data is prefixed  *              with "0x"  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtConvertByteToAsmHex  *  * PARAMETERS:  RawByte             - Binary data  *              Buffer              - Pointer to where the hex bytes will be  *                                    stored  *  * RETURN:      Ascii hex byte is stored in Buffer.  *  * DESCRIPTION: Perform hex-to-ascii translation. The return data is prefixed  *              with '0', and a trailing 'h' is added.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -639,16 +568,12 @@ operator|=
 operator|(
 name|UINT8
 operator|)
-name|AslHexLookup
-index|[
-operator|(
+name|AcpiUtHexToAsciiChar
+argument_list|(
 name|RawByte
-operator|>>
+argument_list|,
 literal|4
-operator|)
-operator|&
-literal|0xF
-index|]
+argument_list|)
 expr_stmt|;
 name|Buffer
 index|[
@@ -658,12 +583,12 @@ operator|=
 operator|(
 name|UINT8
 operator|)
-name|AslHexLookup
-index|[
+name|AcpiUtHexToAsciiChar
+argument_list|(
 name|RawByte
-operator|&
-literal|0xF
-index|]
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|Buffer
 index|[
@@ -1307,13 +1232,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    UtGetStringBuffer  *  * PARAMETERS:  Length              - Size of buffer requested  *  * RETURN:      Pointer to the buffer. Aborts on allocation failure  *  * DESCRIPTION: Allocate a string buffer. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    UtStringCacheCalloc  *  * PARAMETERS:  Length              - Size of buffer requested  *  * RETURN:      Pointer to the buffer. Aborts on allocation failure  *  * DESCRIPTION: Allocate a string buffer. Bypass the local  *              dynamic memory manager for performance reasons (This has a  *              major impact on the speed of the compiler.)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|UtGetStringBuffer
+name|UtStringCacheCalloc
 parameter_list|(
 name|UINT32
 name|Length
@@ -1323,6 +1248,30 @@ name|char
 modifier|*
 name|Buffer
 decl_stmt|;
+name|ASL_CACHE_INFO
+modifier|*
+name|Cache
+decl_stmt|;
+if|if
+condition|(
+name|Length
+operator|>
+name|ASL_STRING_CACHE_SIZE
+condition|)
+block|{
+name|Buffer
+operator|=
+name|UtLocalCalloc
+argument_list|(
+name|Length
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Buffer
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1334,24 +1283,53 @@ operator|>=
 name|Gbl_StringCacheLast
 condition|)
 block|{
-name|Gbl_StringCacheNext
+comment|/* Allocate a new buffer */
+name|Cache
 operator|=
 name|UtLocalCalloc
 argument_list|(
-name|ASL_STRING_CACHE_SIZE
-operator|+
-name|Length
+sizeof|sizeof
+argument_list|(
+name|Cache
+operator|->
+name|Next
 argument_list|)
+operator|+
+name|ASL_STRING_CACHE_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* Link new cache buffer to head of list */
+name|Cache
+operator|->
+name|Next
+operator|=
+name|Gbl_StringCacheList
+expr_stmt|;
+name|Gbl_StringCacheList
+operator|=
+name|Cache
+expr_stmt|;
+comment|/* Setup cache management pointers */
+name|Gbl_StringCacheNext
+operator|=
+name|Cache
+operator|->
+name|Buffer
 expr_stmt|;
 name|Gbl_StringCacheLast
 operator|=
 name|Gbl_StringCacheNext
 operator|+
 name|ASL_STRING_CACHE_SIZE
-operator|+
-name|Length
 expr_stmt|;
 block|}
+name|Gbl_StringCount
+operator|++
+expr_stmt|;
+name|Gbl_StringSize
+operator|+=
+name|Length
+expr_stmt|;
 name|Buffer
 operator|=
 name|Gbl_StringCacheNext
@@ -1523,6 +1501,40 @@ block|}
 end_function
 
 begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    UtFreeLineBuffers  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Free all line buffers  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|UtFreeLineBuffers
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|free
+argument_list|(
+name|Gbl_CurrentLineBuffer
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|Gbl_MainTokenBuffer
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|Gbl_MacroTokenBuffer
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|Gbl_ExpressionTokenBuffer
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    UtInternalizeName  *  * PARAMETERS:  ExternalName        - Name to convert  *              ConvertedName       - Where the converted name is returned  *  * RETURN:      Status  *  * DESCRIPTION: Convert an external (ASL) name to an internal (AML) name  *  ******************************************************************************/
 end_comment
 
@@ -1571,12 +1583,12 @@ operator|&
 name|Info
 argument_list|)
 expr_stmt|;
-comment|/* We need a segment to store the internal  name */
+comment|/* We need a segment to store the internal name */
 name|Info
 operator|.
 name|InternalName
 operator|=
-name|UtGetStringBuffer
+name|UtStringCacheCalloc
 argument_list|(
 name|Info
 operator|.
@@ -1980,7 +1992,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TBD: use version in ACPI CA main code base? */
+comment|/* TBD: use version in ACPICA main code base? */
 end_comment
 
 begin_comment

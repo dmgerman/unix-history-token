@@ -891,10 +891,6 @@ return|;
 if|if
 condition|(
 name|cswitch
-operator|<
-literal|0
-operator|||
-name|cswitch
 operator|>
 literal|100
 condition|)

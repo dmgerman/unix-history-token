@@ -1081,10 +1081,14 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do accounting. 	 */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|IEEE80211_NODE_STAT
 argument_list|(

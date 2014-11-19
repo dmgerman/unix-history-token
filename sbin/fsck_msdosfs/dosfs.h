@@ -15,11 +15,22 @@ directive|define
 name|DOSFS_H
 end_define
 
+begin_comment
+comment|/* support 4Kn disk reads */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSBOOTBLOCKSIZE_REAL
+value|512
+end_define
+
 begin_define
 define|#
 directive|define
 name|DOSBOOTBLOCKSIZE
-value|512
+value|4096
 end_define
 
 begin_typedef

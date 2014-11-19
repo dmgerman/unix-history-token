@@ -629,7 +629,7 @@ name|PAGE_SIZE
 control|)
 name|dump_va
 operator|=
-name|pmap_kenter_temp
+name|pmap_kenter_temporary
 argument_list|(
 name|pa
 operator|+
@@ -800,7 +800,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|minidumpsys
 parameter_list|(
 name|struct
@@ -993,7 +993,7 @@ block|{
 comment|/* Set bit for each valid page in this 1MB block */
 name|addr
 operator|=
-name|pmap_kenter_temp
+name|pmap_kenter_temporary
 argument_list|(
 operator|*
 name|pdp
@@ -2185,7 +2185,11 @@ argument_list|(
 literal|"\nDump complete\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|fail
 label|:
 if|if
@@ -2230,6 +2234,11 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 

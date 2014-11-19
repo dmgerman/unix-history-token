@@ -1113,6 +1113,14 @@ name|SDHCI_SPEC_300
 value|2
 end_define
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_sdhci
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|sdhci_slot

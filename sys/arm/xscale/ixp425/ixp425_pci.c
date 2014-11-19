@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -185,7 +191,7 @@ name|PCI_CONF_LOCK
 parameter_list|(
 name|s
 parameter_list|)
-value|(s) = disable_interrupts(I32_bit)
+value|(s) = disable_interrupts(PSR_I)
 end_define
 
 begin_define
@@ -1343,6 +1349,25 @@ argument_list|(
 name|bus
 argument_list|)
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
+name|rman_activate_resource
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 switch|switch
 condition|(
 name|type
@@ -1410,10 +1435,7 @@ break|break;
 block|}
 return|return
 operator|(
-name|rman_activate_resource
-argument_list|(
-name|r
-argument_list|)
+literal|0
 operator|)
 return|;
 block|}

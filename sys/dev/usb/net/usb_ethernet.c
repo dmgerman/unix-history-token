@@ -2612,10 +2612,14 @@ name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* finalize mbuf */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|m
 operator|->
@@ -2729,10 +2733,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_iqdrops
-operator|++
+argument_list|,
+name|IFCOUNTER_IQDROPS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2758,10 +2766,14 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* finalize mbuf */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|m
 operator|->

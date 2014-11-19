@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -46,13 +46,17 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIrqDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a IRQ descriptor, either Irq() or IrqNoFlags()  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIrqDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a IRQ descriptor, either Irq() or IrqNoFlags()  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmIrqDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -165,13 +169,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDmaDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a DMA descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDmaDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a DMA descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmDmaDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -262,13 +270,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmFixedDmaDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a FixedDMA descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmFixedDmaDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a FixedDMA descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmFixedDmaDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -355,13 +367,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIoDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode an IO descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmIoDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode an IO descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmIoDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -487,13 +503,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmFixedIoDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Fixed IO descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmFixedIoDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Fixed IO descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmFixedIoDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -571,13 +591,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmStartDependentDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Start Dependendent functions descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmStartDependentDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Start Dependendent functions descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmStartDependentDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -655,13 +679,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmEndDependentDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode an End Dependent functions descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmEndDependentDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode an End Dependent functions descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmEndDependentDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -697,13 +725,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmVendorSmallDescriptor  *  * PARAMETERS:  Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Vendor Small Descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmVendorSmallDescriptor  *  * PARAMETERS:  Info                - Extra resource info  *              Resource            - Pointer to the resource descriptor  *              Length              - Length of the descriptor in bytes  *              Level               - Current source code indentation level  *  * RETURN:      None  *  * DESCRIPTION: Decode a Vendor Small Descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiDmVendorSmallDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource

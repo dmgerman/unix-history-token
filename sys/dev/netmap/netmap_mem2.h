@@ -23,313 +23,9 @@ directive|define
 name|_NET_NETMAP_MEM2_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|NETMAP_BUF_MAX_NUM
-value|20*4096*2
-end_define
-
-begin_comment
-comment|/* large machine */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETMAP_POOL_MAX_NAMSZ
-value|32
-end_define
-
-begin_enum
-enum|enum
-block|{
-name|NETMAP_IF_POOL
-init|=
-literal|0
-block|,
-name|NETMAP_RING_POOL
-block|,
-name|NETMAP_BUF_POOL
-block|,
-name|NETMAP_POOLS_NR
-block|}
-enum|;
-end_enum
-
-begin_struct
-struct|struct
-name|netmap_obj_params
-block|{
-name|u_int
-name|size
-decl_stmt|;
-name|u_int
-name|num
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|netmap_obj_pool
-block|{
-name|char
-name|name
-index|[
-name|NETMAP_POOL_MAX_NAMSZ
-index|]
-decl_stmt|;
-comment|/* name of the allocator */
-comment|/* ---------------------------------------------------*/
-comment|/* these are only meaningful if the pool is finalized */
-comment|/* (see 'finalized' field in netmap_mem_d)            */
-name|u_int
-name|objtotal
-decl_stmt|;
-comment|/* actual total number of objects. */
-name|u_int
-name|memtotal
-decl_stmt|;
-comment|/* actual total memory space */
-name|u_int
-name|numclusters
-decl_stmt|;
-comment|/* actual number of clusters */
-name|u_int
-name|objfree
-decl_stmt|;
-comment|/* number of free objects. */
-name|struct
-name|lut_entry
-modifier|*
-name|lut
-decl_stmt|;
-comment|/* virt,phys addresses, objtotal entries */
-name|uint32_t
-modifier|*
-name|bitmap
-decl_stmt|;
-comment|/* one bit per buffer, 1 means free */
-name|uint32_t
-name|bitmap_slots
-decl_stmt|;
-comment|/* number of uint32 entries in bitmap */
-comment|/* ---------------------------------------------------*/
-comment|/* limits */
-name|u_int
-name|objminsize
-decl_stmt|;
-comment|/* minimum object size */
-name|u_int
-name|objmaxsize
-decl_stmt|;
-comment|/* maximum object size */
-name|u_int
-name|nummin
-decl_stmt|;
-comment|/* minimum number of objects */
-name|u_int
-name|nummax
-decl_stmt|;
-comment|/* maximum number of objects */
-comment|/* these are changed only by config */
-name|u_int
-name|_objtotal
-decl_stmt|;
-comment|/* total number of objects */
-name|u_int
-name|_objsize
-decl_stmt|;
-comment|/* object size */
-name|u_int
-name|_clustsize
-decl_stmt|;
-comment|/* cluster size */
-name|u_int
-name|_clustentries
-decl_stmt|;
-comment|/* objects per cluster */
-name|u_int
-name|_numclusters
-decl_stmt|;
-comment|/* number of clusters */
-comment|/* requested values */
-name|u_int
-name|r_objtotal
-decl_stmt|;
-name|u_int
-name|r_objsize
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|linux
-end_ifdef
-
-begin_comment
-comment|// XXX a mtx would suffice here 20130415 lr
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NMA_LOCK_T
-value|struct semaphore
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !linux */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NMA_LOCK_T
-value|struct mtx
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* linux */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|netmap_mem_config_t
-function_decl|)
-parameter_list|(
-name|struct
-name|netmap_mem_d
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|netmap_mem_finalize_t
-function_decl|)
-parameter_list|(
-name|struct
-name|netmap_mem_d
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|netmap_mem_deref_t
-function_decl|)
-parameter_list|(
-name|struct
-name|netmap_mem_d
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|uint16_t
-name|nm_memid_t
-typedef|;
-end_typedef
-
 begin_comment
 comment|/* We implement two kinds of netmap_mem_d structures:  *  * - global: used by hardware NICS;  *  * - private: used by VALE ports.  *  * In both cases, the netmap_mem_d structure has the same lifetime as the  * netmap_adapter of the corresponding NIC or port. It is the responsibility of  * the client code to delete the private allocator when the associated  * netmap_adapter is freed (this is implemented by the NAF_MEM_OWNER flag in  * netmap.c).  The 'refcount' field counts the number of active users of the  * structure. The global allocator uses this information to prevent/allow  * reconfiguration. The private allocators release all their memory when there  * are no active users.  By 'active user' we mean an existing netmap_priv  * structure holding a reference to the allocator.  */
 end_comment
-
-begin_struct
-struct|struct
-name|netmap_mem_d
-block|{
-name|NMA_LOCK_T
-name|nm_mtx
-decl_stmt|;
-comment|/* protect the allocator */
-name|u_int
-name|nm_totalsize
-decl_stmt|;
-comment|/* shorthand */
-name|u_int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|NETMAP_MEM_FINALIZED
-value|0x1
-comment|/* preallocation done */
-define|#
-directive|define
-name|NETMAP_MEM_PRIVATE
-value|0x2
-comment|/* uses private address space */
-name|int
-name|lasterr
-decl_stmt|;
-comment|/* last error for curr config */
-name|int
-name|refcount
-decl_stmt|;
-comment|/* existing priv structures */
-comment|/* the three allocators */
-name|struct
-name|netmap_obj_pool
-name|pools
-index|[
-name|NETMAP_POOLS_NR
-index|]
-decl_stmt|;
-name|netmap_mem_config_t
-name|config
-decl_stmt|;
-name|netmap_mem_finalize_t
-name|finalize
-decl_stmt|;
-name|netmap_mem_deref_t
-name|deref
-decl_stmt|;
-name|nm_memid_t
-name|nm_id
-decl_stmt|;
-comment|/* allocator identifier */
-comment|/* list of all existing allocators, sorted by nm_id */
-name|struct
-name|netmap_mem_d
-modifier|*
-name|prev
-decl_stmt|,
-modifier|*
-name|next
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 specifier|extern
@@ -338,6 +34,41 @@ name|netmap_mem_d
 name|nm_mem
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|struct
+name|lut_entry
+modifier|*
+name|netmap_mem_get_lut
+parameter_list|(
+name|struct
+name|netmap_mem_d
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|netmap_mem_get_buftotal
+parameter_list|(
+name|struct
+name|netmap_mem_d
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+name|netmap_mem_get_bufsize
+parameter_list|(
+name|struct
+name|netmap_mem_d
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|vm_paddr_t
@@ -358,6 +89,10 @@ name|netmap_mem_finalize
 parameter_list|(
 name|struct
 name|netmap_mem_d
+modifier|*
+parameter_list|,
+name|struct
+name|netmap_adapter
 modifier|*
 parameter_list|)
 function_decl|;
@@ -387,10 +122,6 @@ name|netmap_if
 modifier|*
 name|netmap_mem_if_new
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
 name|struct
 name|netmap_adapter
 modifier|*
@@ -441,6 +172,10 @@ name|netmap_mem_deref
 parameter_list|(
 name|struct
 name|netmap_mem_d
+modifier|*
+parameter_list|,
+name|struct
+name|netmap_adapter
 modifier|*
 parameter_list|)
 function_decl|;
@@ -535,12 +270,24 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|NETMAP_BDG_BUF_SIZE
-parameter_list|(
-name|n
-parameter_list|)
-value|((n)->pools[NETMAP_BUF_POOL]._objsize)
+name|NETMAP_MEM_PRIVATE
+value|0x2
 end_define
+
+begin_comment
+comment|/* allocator uses private address space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMAP_MEM_IO
+value|0x4
+end_define
+
+begin_comment
+comment|/* the underlying memory is mmapped I/O */
+end_comment
 
 begin_function_decl
 name|uint32_t

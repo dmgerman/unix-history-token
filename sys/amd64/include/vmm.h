@@ -124,6 +124,8 @@ name|VM_REG_GUEST_PDPTE2
 block|,
 name|VM_REG_GUEST_PDPTE3
 block|,
+name|VM_REG_GUEST_INTR_SHADOW
+block|,
 name|VM_REG_LAST
 block|}
 enum|;
@@ -1135,22 +1137,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|uint64_t
-modifier|*
-name|vm_guest_msrs
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|,
-name|int
-name|cpu
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|vlapic
 modifier|*
@@ -1790,6 +1776,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|vpmtmr
+modifier|*
+name|vm_pmtmr
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Inject exception 'vme' into the guest vcpu. This function returns 0 on  * success and non-zero on failure.  *  * Wrapper functions like 'vm_inject_gp()' should be preferred to calling  * this function directly because they enforce the trap-like or fault-like  * behavior of an exception.  *  * This function should only be called in the context of the thread that is  * executing this vcpu.  */
 end_comment
@@ -2419,6 +2419,12 @@ name|VM_EXITCODE_INOUT_STR
 block|,
 name|VM_EXITCODE_TASK_SWITCH
 block|,
+name|VM_EXITCODE_MONITOR
+block|,
+name|VM_EXITCODE_MWAIT
+block|,
+name|VM_EXITCODE_SVM
+block|,
 name|VM_EXITCODE_MAX
 block|}
 enum|;
@@ -2632,6 +2638,21 @@ decl_stmt|;
 block|}
 name|vmx
 struct|;
+comment|/* 		 * SVM specific payload. 		 */
+struct|struct
+block|{
+name|uint64_t
+name|exitcode
+decl_stmt|;
+name|uint64_t
+name|exitinfo1
+decl_stmt|;
+name|uint64_t
+name|exitinfo2
+decl_stmt|;
+block|}
+name|svm
+struct|;
 struct|struct
 block|{
 name|uint32_t
@@ -2720,8 +2741,8 @@ end_function_decl
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|vm_inject_ud
 parameter_list|(
 name|void
@@ -2750,8 +2771,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|vm_inject_gp
 parameter_list|(
 name|void
@@ -2780,8 +2801,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|vm_inject_ac
 parameter_list|(
 name|void
@@ -2813,8 +2834,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|vm_inject_ss
 parameter_list|(
 name|void

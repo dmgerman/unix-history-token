@@ -31,6 +31,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|fpu_kern_ctx
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -39,6 +45,13 @@ parameter_list|(
 name|pcb
 parameter_list|)
 value|(((pcb)->pcb_flags& PCB_KERNNPX) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XSAVE_AREA_ALIGN
+value|64
 end_define
 
 begin_function_decl
@@ -96,7 +109,20 @@ begin_function_decl
 name|void
 name|npxinit
 parameter_list|(
+name|bool
+name|bsp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
+name|npxresume
+parameter_list|(
+name|union
+name|savefpu
+modifier|*
+name|addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -114,7 +140,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|npxsetregs
 parameter_list|(
 name|struct
@@ -122,6 +148,44 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+name|union
+name|savefpu
+modifier|*
+name|addr
+parameter_list|,
+name|char
+modifier|*
+name|xfpustate
+parameter_list|,
+name|size_t
+name|xfpustate_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|npxsetxstate
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|char
+modifier|*
+name|xfpustate
+parameter_list|,
+name|size_t
+name|xfpustate_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|npxsuspend
+parameter_list|(
 name|union
 name|savefpu
 modifier|*
@@ -240,8 +304,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|union
+name|savefpu
+modifier|*
+name|fpu_save_area_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fpu_save_area_free
+parameter_list|(
+name|union
+name|savefpu
+modifier|*
+name|fsa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fpu_save_area_reset
+parameter_list|(
+name|union
+name|savefpu
+modifier|*
+name|fsa
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Flags for fpu_kern_enter() and fpu_kern_thread().  */
+comment|/*  * Flags for fpu_kern_alloc_ctx(), fpu_kern_enter() and fpu_kern_thread().  */
 end_comment
 
 begin_define

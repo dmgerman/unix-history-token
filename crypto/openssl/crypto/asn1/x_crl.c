@@ -1003,6 +1003,12 @@ operator|||
 operator|(
 name|nid
 operator|==
+name|NID_authority_key_identifier
+operator|)
+operator|||
+operator|(
+name|nid
+operator|==
 name|NID_delta_crl
 operator|)
 condition|)

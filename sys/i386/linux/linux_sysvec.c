@@ -2053,15 +2053,6 @@ end_function
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|_ucodesel
-decl_stmt|,
-name|_udatasel
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|unsigned
 name|long
 name|linux_sznonrtsigcode

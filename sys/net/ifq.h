@@ -72,6 +72,10 @@ begin_comment
 comment|/* struct ifqueue */
 end_comment
 
+begin_comment
+comment|/*  * Couple of ugly extra definitions that are required since ifq.h  * is splitted from if_var.h.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -108,9 +112,6 @@ name|ifq_len
 decl_stmt|;
 name|int
 name|ifq_maxlen
-decl_stmt|;
-name|int
-name|ifq_drops
 decl_stmt|;
 name|struct
 name|mtx
@@ -168,16 +169,6 @@ parameter_list|(
 name|ifq
 parameter_list|)
 value|((ifq)->ifq_len>= (ifq)->ifq_maxlen)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_IF_DROP
-parameter_list|(
-name|ifq
-parameter_list|)
-value|((ifq)->ifq_drops++)
 end_define
 
 begin_define
@@ -410,7 +401,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|do {									\ 	IF_LOCK(ifq);							\ 	if (ALTQ_IS_ENABLED(ifq))					\ 		ALTQ_ENQUEUE(ifq, m, NULL, err);			\ 	else {								\ 		if (_IF_QFULL(ifq)) {					\ 			m_freem(m);					\ 			(err) = ENOBUFS;				\ 		} else {						\ 			_IF_ENQUEUE(ifq, m);				\ 			(err) = 0;					\ 		}							\ 	}								\ 	if (err)							\ 		(ifq)->ifq_drops++;					\ 	IF_UNLOCK(ifq);							\ } while (0)
+value|do {									\ 	IF_LOCK(ifq);							\ 	if (ALTQ_IS_ENABLED(ifq))					\ 		ALTQ_ENQUEUE(ifq, m, NULL, err);			\ 	else {								\ 		if (_IF_QFULL(ifq)) {					\ 			m_freem(m);					\ 			(err) = ENOBUFS;				\ 		} else {						\ 			_IF_ENQUEUE(ifq, m);				\ 			(err) = 0;					\ 		}							\ 	}								\ 	IF_UNLOCK(ifq);							\ } while (0)
 end_define
 
 begin_define
@@ -561,16 +552,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IFQ_INC_DROPS
-parameter_list|(
-name|ifq
-parameter_list|)
-value|((ifq)->ifq_drops++)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IFQ_SET_MAXLEN
 parameter_list|(
 name|ifq
@@ -598,7 +579,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|do {									\ 	int len;							\ 	short mflags;							\ 									\ 	len = (m)->m_pkthdr.len;					\ 	mflags = (m)->m_flags;						\ 	IFQ_ENQUEUE(&(ifp)->if_snd, m, err);				\ 	if ((err) == 0) {						\ 		(ifp)->if_obytes += len + (adj);			\ 		if (mflags& M_MCAST)					\ 			(ifp)->if_omcasts++;				\ 		if (((ifp)->if_drv_flags& IFF_DRV_OACTIVE) == 0)	\ 			if_start(ifp);					\ 	}								\ } while (0)
+value|do {									\ 	int len;							\ 	short mflags;							\ 									\ 	len = (m)->m_pkthdr.len;					\ 	mflags = (m)->m_flags;						\ 	IFQ_ENQUEUE(&(ifp)->if_snd, m, err);				\ 	if ((err) == 0) {						\ 		if_inc_counter((ifp), IFCOUNTER_OBYTES, len + (adj));	\ 		if (mflags& M_MCAST)					\ 			if_inc_counter((ifp), IFCOUNTER_OMCASTS, 1);	\ 		if (((ifp)->if_drv_flags& IFF_DRV_OACTIVE) == 0)	\ 			if_start(ifp);					\ 	} else								\ 		if_inc_counter((ifp), IFCOUNTER_OQDROPS, 1);		\ } while (0)
 end_define
 
 begin_define
@@ -715,6 +696,21 @@ argument_list|,
 name|m
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|if_inc_counter
+argument_list|(
+operator|(
+name|ifp
+operator|)
+argument_list|,
+name|IFCOUNTER_OQDROPS
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -1474,126 +1470,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVICE_POLLING
-end_ifdef
-
-begin_enum
-enum|enum
-name|poll_cmd
-block|{
-name|POLL_ONLY
-block|,
-name|POLL_AND_CHECK_STATUS
-block|}
-enum|;
-end_enum
-
-begin_typedef
-typedef|typedef
-name|int
-name|poll_handler_t
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|enum
-name|poll_cmd
-name|cmd
-parameter_list|,
-name|int
-name|count
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_function_decl
-name|int
-name|ether_poll_register
-parameter_list|(
-name|poll_handler_t
-modifier|*
-name|h
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ether_poll_deregister
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* The following should be temporary, till all drivers use the driver API */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|poll_handler_drv_t
-parameter_list|(
-name|if_t
-name|ifh
-parameter_list|,
-name|enum
-name|poll_cmd
-name|cmd
-parameter_list|,
-name|int
-name|count
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_function_decl
-name|int
-name|ether_poll_register_drv
-parameter_list|(
-name|poll_handler_drv_t
-modifier|*
-name|h
-parameter_list|,
-name|if_t
-name|ifh
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ether_poll_deregister_drv
-parameter_list|(
-name|if_t
-name|ifh
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEVICE_POLLING */
-end_comment
 
 begin_endif
 endif|#

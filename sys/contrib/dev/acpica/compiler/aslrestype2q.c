@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ comment|/*  * This module contains the QWord (64-bit) address space descriptors:
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoQwordIoDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "QwordIO" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoQwordIoDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "QwordIO" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -46,12 +46,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoQwordIoDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -105,6 +102,9 @@ init|=
 literal|0
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|BOOLEAN
@@ -114,7 +114,9 @@ name|FALSE
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
@@ -126,6 +128,12 @@ name|RsGetStringDataLength
 argument_list|(
 name|InitializerOp
 argument_list|)
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -742,7 +750,9 @@ case|:
 comment|/* ResourceTag */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -889,7 +899,9 @@ name|LengthOp
 argument_list|,
 name|GranOp
 argument_list|,
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|)
 expr_stmt|;
 name|Rnode
@@ -914,7 +926,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoQwordMemoryDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "QwordMemory" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoQwordMemoryDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "QwordMemory" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -922,12 +934,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoQwordMemoryDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -981,6 +990,9 @@ init|=
 literal|0
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|BOOLEAN
@@ -990,7 +1002,9 @@ name|FALSE
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
@@ -1002,6 +1016,12 @@ name|RsGetStringDataLength
 argument_list|(
 name|InitializerOp
 argument_list|)
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -1657,7 +1677,9 @@ case|:
 comment|/* ResourceTag */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -1806,7 +1828,9 @@ name|LengthOp
 argument_list|,
 name|GranOp
 argument_list|,
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|)
 expr_stmt|;
 name|Rnode
@@ -1831,7 +1855,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoQwordSpaceDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "QwordSpace" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoQwordSpaceDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "QwordSpace" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1839,12 +1863,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoQwordSpaceDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -1898,6 +1919,9 @@ init|=
 literal|0
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|BOOLEAN
@@ -1907,7 +1931,9 @@ name|FALSE
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
@@ -1919,6 +1945,12 @@ name|RsGetStringDataLength
 argument_list|(
 name|InitializerOp
 argument_list|)
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 name|Rnode
 operator|=
@@ -2530,7 +2562,9 @@ case|:
 comment|/* ResourceTag */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -2599,7 +2633,9 @@ name|LengthOp
 argument_list|,
 name|GranOp
 argument_list|,
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|)
 expr_stmt|;
 name|Rnode

@@ -4,19 +4,13 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/include/acpi.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/accommon.h>
+file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
 begin_include
@@ -29,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<contrib/dev/acpica/include/amlcode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
 begin_include
@@ -94,62 +82,8 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*  * Older versions of Bison won't emit this external in the generated header.  * Newer versions do emit the external, so we don't need to do it.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASLCOMPILER_ASLCOMPILERPARSE_H
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|AslCompilerdebug
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-name|ACPI_STATUS
-name|NsDisplayNamespace
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|NsSetupNamespaceListing
-parameter_list|(
-name|void
-modifier|*
-name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Local prototypes */
 end_comment
-
-begin_function_decl
-specifier|static
-name|UINT32
-name|AdGetFileSize
-parameter_list|(
-name|FILE
-modifier|*
-name|File
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -340,76 +274,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiGbl_ParseOpRoot
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AdGetFileSize  *  * PARAMETERS:  File                - Open file handle  *  * RETURN:      File Size  *  * DESCRIPTION: Get current file size. Uses seek-to-EOF. File must be open.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|UINT32
-name|AdGetFileSize
-parameter_list|(
-name|FILE
-modifier|*
-name|File
-parameter_list|)
-block|{
-name|UINT32
-name|FileSize
-decl_stmt|;
-name|long
-name|Offset
-decl_stmt|;
-name|Offset
-operator|=
-name|ftell
-argument_list|(
-name|File
-argument_list|)
-expr_stmt|;
-name|fseek
-argument_list|(
-name|File
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_END
-argument_list|)
-expr_stmt|;
-name|FileSize
-operator|=
-operator|(
-name|UINT32
-operator|)
-name|ftell
-argument_list|(
-name|File
-argument_list|)
-expr_stmt|;
-comment|/* Restore file pointer */
-name|fseek
-argument_list|(
-name|File
-argument_list|,
-name|Offset
-argument_list|,
-name|SEEK_SET
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|FileSize
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AdInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: ACPICA and local initialization  *  ******************************************************************************/
@@ -425,7 +294,7 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/* ACPI CA subsystem initialization */
+comment|/* ACPICA subsystem initialization */
 name|Status
 operator|=
 name|AcpiOsInitialize
@@ -530,7 +399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdAmlDisassemble  *  * PARAMETERS:  Filename            - AML input filename  *              OutToFile           - TRUE if output should go to a file  *              Prefix              - Path prefix for output  *              OutFilename         - where the filename is returned  *              GetAllTables        - TRUE if all tables are desired  *  * RETURN:      Status  *  * DESCRIPTION: Disassemble an entire ACPI table  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdAmlDisassemble  *  * PARAMETERS:  Filename            - AML input filename  *              OutToFile           - TRUE if output should go to a file  *              Prefix              - Path prefix for output  *              OutFilename         - where the filename is returned  *  * RETURN:      Status  *  * DESCRIPTION: Disassemble an entire ACPI table  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -552,9 +421,6 @@ name|char
 modifier|*
 modifier|*
 name|OutFilename
-parameter_list|,
-name|BOOLEAN
-name|GetAllTables
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -769,11 +635,7 @@ block|{
 name|Status
 operator|=
 name|AdGetLocalTables
-argument_list|(
-name|Filename
-argument_list|,
-name|GetAllTables
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -884,7 +746,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|OutFilename
+name|DisasmFilename
 condition|)
 block|{
 name|fprintf
@@ -929,6 +791,11 @@ expr_stmt|;
 name|Status
 operator|=
 name|AE_ERROR
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|DisasmFilename
+argument_list|)
 expr_stmt|;
 goto|goto
 name|Cleanup
@@ -998,7 +865,7 @@ literal|"Formatted output:  %s - %u bytes\n"
 argument_list|,
 name|DisasmFilename
 argument_list|,
-name|AdGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|File
 argument_list|)
@@ -1123,11 +990,15 @@ name|AcpiDmGetExternalMethodCount
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* Reparse, rebuild namespace. no need to xref namespace */
+comment|/* Reparse, rebuild namespace */
 name|AcpiPsDeleteParseTree
 argument_list|(
 name|AcpiGbl_ParseOpRoot
 argument_list|)
+expr_stmt|;
+name|AcpiGbl_ParseOpRoot
+operator|=
+name|NULL
 expr_stmt|;
 name|AcpiNsDeleteNamespaceSubtree
 argument_list|(
@@ -1193,6 +1064,7 @@ operator|=
 name|AcpiNsRootInitialize
 argument_list|()
 expr_stmt|;
+comment|/* New namespace, add the external definitions first */
 name|AcpiDmAddExternalsToNamespace
 argument_list|()
 expr_stmt|;
@@ -1232,6 +1104,25 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+comment|/* Cross reference the namespace again */
+name|AcpiDmFinishNamespaceLoad
+argument_list|(
+name|AcpiGbl_ParseOpRoot
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|,
+name|OwnerId
+argument_list|)
+expr_stmt|;
+name|AcpiDmCrossReferenceNamespace
+argument_list|(
+name|AcpiGbl_ParseOpRoot
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|,
+name|OwnerId
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|AslCompilerdebug
@@ -1305,12 +1196,44 @@ literal|"ASL Output:    %s - %u bytes\n"
 argument_list|,
 name|DisasmFilename
 argument_list|,
-name|AdGetFileSize
+name|CmGetFileSize
 argument_list|(
 name|File
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_MapfileFlag
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%14s %s - %u bytes\n"
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_MAP_OUTPUT
+index|]
+operator|.
+name|ShortDescription
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_MAP_OUTPUT
+index|]
+operator|.
+name|Filename
+argument_list|,
+name|FlGetFileSize
+argument_list|(
+name|ASL_FILE_MAP_OUTPUT
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|Cleanup
@@ -1383,7 +1306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdDisassemblerHeader  *  * PARAMETERS:  Filename            - Input file for the table  *  * RETURN:      None  *  * DESCRIPTION: Create the disassembler header, including ACPI CA signon with  *              current time and date.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdDisassemblerHeader  *  * PARAMETERS:  Filename            - Input file for the table  *  * RETURN:      None  *  * DESCRIPTION: Create the disassembler header, including ACPICA signon with  *              current time and date.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1442,7 +1365,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdCreateTableHeader  *  * PARAMETERS:  Filename            - Input file for the table  *              Table               - Pointer to the raw table  *  * RETURN:      None  *  * DESCRIPTION: Create the ASL table header, including ACPI CA signon with  *              current time and date.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdCreateTableHeader  *  * PARAMETERS:  Filename            - Input file for the table  *              Table               - Pointer to the raw table  *  * RETURN:      None  *  * DESCRIPTION: Create the ASL table header, including ACPICA signon with  *              current time and date.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1687,11 +1610,16 @@ else|else
 block|{
 name|NewFilename
 operator|=
-name|ACPI_ALLOCATE_ZEROED
+name|UtStringCacheCalloc
 argument_list|(
 literal|9
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NewFilename
+condition|)
+block|{
 name|strncat
 argument_list|(
 name|NewFilename
@@ -1710,6 +1638,20 @@ argument_list|,
 literal|".aml"
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|NewFilename
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" **** Could not generate AML output filename\n"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 comment|/* Open the ASL definition block */
 name|AcpiOsPrintf
@@ -1737,11 +1679,6 @@ argument_list|,
 name|Table
 operator|->
 name|OemRevision
-argument_list|)
-expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|NewFilename
 argument_list|)
 expr_stmt|;
 block|}
@@ -1798,6 +1735,9 @@ name|AcpiGbl_ParseOpRoot
 argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
+expr_stmt|;
+name|MpEmitMappingInfo
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1870,19 +1810,14 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdGetLocalTables  *  * PARAMETERS:  Filename            - Not used  *              GetAllTables        - TRUE if all tables are desired  *  * RETURN:      Status  *  * DESCRIPTION: Get the ACPI tables from either memory or a file  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdGetLocalTables  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Get the ACPI tables from either memory or a file  *  *****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AdGetLocalTables
 parameter_list|(
-name|char
-modifier|*
-name|Filename
-parameter_list|,
-name|BOOLEAN
-name|GetAllTables
+name|void
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -1896,26 +1831,16 @@ modifier|*
 name|NewTable
 decl_stmt|;
 name|UINT32
-name|NumTables
-decl_stmt|;
-name|UINT32
-name|PointerSize
-decl_stmt|;
-name|UINT32
 name|TableIndex
 decl_stmt|;
-if|if
-condition|(
-name|GetAllTables
-condition|)
-block|{
+comment|/* Get the DSDT via table override */
 name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-name|ACPI_SIG_RSDT
+name|ACPI_SIG_DSDT
 argument_list|)
 expr_stmt|;
 name|AcpiOsTableOverride
@@ -1937,7 +1862,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Could not obtain RSDT\n"
+literal|"Could not obtain DSDT\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1946,152 +1871,6 @@ name|AE_NO_ACPI_TABLES
 operator|)
 return|;
 block|}
-else|else
-block|{
-name|AdWriteTable
-argument_list|(
-name|NewTable
-argument_list|,
-name|NewTable
-operator|->
-name|Length
-argument_list|,
-name|ACPI_SIG_RSDT
-argument_list|,
-name|NewTable
-operator|->
-name|OemTableId
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ACPI_COMPARE_NAME
-argument_list|(
-name|NewTable
-operator|->
-name|Signature
-argument_list|,
-name|ACPI_SIG_RSDT
-argument_list|)
-condition|)
-block|{
-name|PointerSize
-operator|=
-sizeof|sizeof
-argument_list|(
-name|UINT32
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|PointerSize
-operator|=
-sizeof|sizeof
-argument_list|(
-name|UINT64
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*          * Determine the number of tables pointed to by the RSDT/XSDT.          * This is defined by the ACPI Specification to be the number of          * pointers contained within the RSDT/XSDT. The size of the pointers          * is architecture-dependent.          */
-name|NumTables
-operator|=
-operator|(
-name|NewTable
-operator|->
-name|Length
-operator|-
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_HEADER
-argument_list|)
-operator|)
-operator|/
-name|PointerSize
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"There are %u tables defined in the %4.4s\n\n"
-argument_list|,
-name|NumTables
-argument_list|,
-name|NewTable
-operator|->
-name|Signature
-argument_list|)
-expr_stmt|;
-comment|/* Get the FADT */
-name|ACPI_MOVE_32_TO_32
-argument_list|(
-name|TableHeader
-operator|.
-name|Signature
-argument_list|,
-name|ACPI_SIG_FADT
-argument_list|)
-expr_stmt|;
-name|AcpiOsTableOverride
-argument_list|(
-operator|&
-name|TableHeader
-argument_list|,
-operator|&
-name|NewTable
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NewTable
-condition|)
-block|{
-name|AdWriteTable
-argument_list|(
-name|NewTable
-argument_list|,
-name|NewTable
-operator|->
-name|Length
-argument_list|,
-name|ACPI_SIG_FADT
-argument_list|,
-name|NewTable
-operator|->
-name|OemTableId
-argument_list|)
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-comment|/* Don't bother with FACS, it is usually all zeros */
-block|}
-comment|/* Always get the DSDT */
-name|ACPI_MOVE_32_TO_32
-argument_list|(
-name|TableHeader
-operator|.
-name|Signature
-argument_list|,
-name|ACPI_SIG_DSDT
-argument_list|)
-expr_stmt|;
-name|AcpiOsTableOverride
-argument_list|(
-operator|&
-name|TableHeader
-argument_list|,
-operator|&
-name|NewTable
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NewTable
-condition|)
-block|{
 name|AdWriteTable
 argument_list|(
 name|NewTable
@@ -2147,31 +1926,6 @@ name|AE_NO_ACPI_TABLES
 operator|)
 return|;
 block|}
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not obtain DSDT\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|AE_NO_ACPI_TABLES
-operator|)
-return|;
-block|}
-if|#
-directive|if
-literal|0
-comment|/* TBD: Future implementation */
-block|AcpiOsPrintf ("\n");
-comment|/* Get all SSDTs */
-block|ACPI_MOVE_32_TO_32 (TableHeader.Signature, ACPI_SIG_SSDT);     do     {         NewTable = NULL;         Status = AcpiOsTableOverride (&TableHeader,&NewTable);      } while (NewTable);
-endif|#
-directive|endif
 return|return
 operator|(
 name|AE_OK
@@ -2417,7 +2171,7 @@ name|Table
 operator|->
 name|Length
 argument_list|,
-name|ACPI_TABLE_ORIGIN_ALLOCATED
+name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
 argument_list|,
 operator|&
 name|TableIndex
@@ -2540,7 +2294,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/* Pass 3: Parse control methods and link their parse trees into the main parse tree */
+comment|/*      * Pass 3: Parse control methods and link their parse trees      * into the main parse tree      */
 name|fprintf
 argument_list|(
 name|stderr

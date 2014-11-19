@@ -89,7 +89,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"libuboot.h"
+file|<fdt_platform.h>
 end_include
 
 begin_endif

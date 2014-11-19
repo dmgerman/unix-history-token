@@ -236,14 +236,24 @@ operator|=
 name|vt_fb_blank
 block|,
 operator|.
-name|vd_bitbltchr
+name|vd_bitblt_text
 operator|=
-name|vt_fb_bitbltchr
+name|vt_fb_bitblt_text
 block|,
 operator|.
-name|vd_maskbitbltchr
+name|vd_bitblt_bmp
 operator|=
-name|vt_fb_maskbitbltchr
+name|vt_fb_bitblt_bitmap
+block|,
+operator|.
+name|vd_drawrect
+operator|=
+name|vt_fb_drawrect
+block|,
+operator|.
+name|vd_setpixel
+operator|=
+name|vt_fb_setpixel
 block|,
 operator|.
 name|vd_fb_ioctl
@@ -717,7 +727,7 @@ operator|=
 literal|0x10000000
 expr_stmt|;
 comment|/* 32-bit VGA palette */
-name|vt_generate_vga_palette
+name|vt_generate_cons_palette
 argument_list|(
 name|sc
 operator|->
@@ -729,7 +739,7 @@ name|COLOR_FORMAT_RGB
 argument_list|,
 literal|255
 argument_list|,
-literal|16
+literal|0
 argument_list|,
 literal|255
 argument_list|,
@@ -737,7 +747,7 @@ literal|8
 argument_list|,
 literal|255
 argument_list|,
-literal|0
+literal|16
 argument_list|)
 expr_stmt|;
 comment|/* Set correct graphics context */
@@ -775,12 +785,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fb_probe
+name|vt_fb_init
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|fb_info
+name|vd
 argument_list|)
 expr_stmt|;
 name|sc
@@ -792,20 +799,7 @@ operator|&=
 operator|~
 name|FB_FLAG_NOMMAP
 expr_stmt|;
-comment|/* Set wrongly by fb_probe */
-name|vt_fb_init
-argument_list|(
-name|vd
-argument_list|)
-expr_stmt|;
-comment|/* Clear the screen. */
-name|vt_fb_blank
-argument_list|(
-name|vd
-argument_list|,
-name|TC_BLACK
-argument_list|)
-expr_stmt|;
+comment|/* Set wrongly by vt_fb_init */
 return|return
 operator|(
 name|CN_INTERNAL

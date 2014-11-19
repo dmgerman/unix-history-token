@@ -293,7 +293,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|_callout_init_lock((c), ((rm != NULL) ?&(rm)->lock_object : 	\ 	    NULL, (flags))
+value|_callout_init_lock((c), ((rm) != NULL) ?&(rm)->lock_object : 	\ 	    NULL, (flags))
 end_define
 
 begin_define

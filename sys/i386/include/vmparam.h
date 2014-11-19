@@ -146,14 +146,36 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The physical address space is densely populated.  */
+comment|/*  * Choose between DENSE and SPARSE based on whether lower execution time or  * lower kernel address space consumption is desired.  Under PAE, kernel  * address space is often in short supply.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VM_PHYSSEG_SPARSE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
 name|VM_PHYSSEG_DENSE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The number of PHYSSEG entries must be one greater than the number  * of phys_avail entries because the phys_avail entry that spans the  * largest physical address that is accessible by ISA DMA is split  * into two PHYSSEG entries.   */
@@ -595,6 +617,30 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|SFBUF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFBUF_MAP
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFBUF_CPUSET
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFBUF_PROCESS_PAGE
+end_define
 
 begin_endif
 endif|#

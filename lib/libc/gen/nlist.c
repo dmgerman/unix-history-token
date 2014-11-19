@@ -1131,7 +1131,7 @@ name|shdr_size
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_PRIVATE
 argument_list|,
 name|fd
 argument_list|,
@@ -1271,7 +1271,7 @@ name|symstrsize
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_PRIVATE
 argument_list|,
 name|fd
 argument_list|,

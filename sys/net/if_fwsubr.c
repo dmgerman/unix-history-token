@@ -2346,10 +2346,14 @@ argument_list|,
 literal|"discard frame w/o interface pointer\n"
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -2524,15 +2528,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ibytes
-operator|+=
+argument_list|,
+name|IFCOUNTER_IBYTES
+argument_list|,
 name|m
 operator|->
 name|m_pkthdr
 operator|.
 name|len
+argument_list|)
 expr_stmt|;
 comment|/* Discard packet if interface is not up */
 if|if
@@ -2567,10 +2574,14 @@ operator||
 name|M_MCAST
 operator|)
 condition|)
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_imcasts
-operator|++
+argument_list|,
+name|IFCOUNTER_IMCASTS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(

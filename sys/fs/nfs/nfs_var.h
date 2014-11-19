@@ -7088,6 +7088,8 @@ name|struct
 name|nfsrv_descript
 modifier|*
 parameter_list|,
+name|vnode_t
+parameter_list|,
 name|struct
 name|nfsvattr
 modifier|*
@@ -7111,6 +7113,8 @@ parameter_list|(
 name|struct
 name|nfsrv_descript
 modifier|*
+parameter_list|,
+name|vnode_t
 parameter_list|,
 name|struct
 name|nfsvattr

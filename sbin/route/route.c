@@ -4652,14 +4652,6 @@ name|RTF_PROTO2
 expr_stmt|;
 break|break;
 case|case
-name|K_PROTO3
-case|:
-name|flags
-operator||=
-name|RTF_PROTO3
-expr_stmt|;
-break|break;
-case|case
 name|K_PROXY
 case|:
 name|nrflags
@@ -8212,12 +8204,14 @@ operator|<
 literal|0
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
 name|errno
-operator|==
-name|EPERM
 condition|)
+block|{
+case|case
+name|EPERM
+case|:
 name|err
 argument_list|(
 literal|1
@@ -8225,11 +8219,28 @@ argument_list|,
 literal|"writing to routing socket"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|ESRCH
+case|:
+name|warnx
+argument_list|(
+literal|"route has not been found"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EEXIST
+case|:
+comment|/* Handled by newroute() */
+break|break;
+default|default:
 name|warn
 argument_list|(
 literal|"writing to routing socket"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 operator|-
@@ -8394,7 +8405,7 @@ init|=
 literal|"\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE"
 literal|"\012XRESOLVE\013LLINFO\014STATIC\015BLACKHOLE"
 literal|"\017PROTO2\020PROTO1\021PRCLONING\022WASCLONED\023PROTO3"
-literal|"\025PINNED\026LOCAL\027BROADCAST\030MULTICAST\035STICKY"
+literal|"\024FIXEDMTU\025PINNED\026LOCAL\027BROADCAST\030MULTICAST\035STICKY"
 decl_stmt|;
 end_decl_stmt
 

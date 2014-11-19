@@ -537,6 +537,17 @@ begin_comment
 comment|/* 0x20 can send broadcast packets */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_NODEFAULTFLOWID
+value|0x40
+end_define
+
+begin_comment
+comment|/* Don't set the flowid from inp */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1164,11 +1175,15 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|void
+name|int
 name|rip_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int
@@ -1188,17 +1203,21 @@ name|struct
 name|socket
 modifier|*
 parameter_list|,
-name|u_long
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ipip_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int
@@ -1207,11 +1226,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|rsvp_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int
@@ -1275,7 +1298,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 function_decl|(
 modifier|*
 name|rsvp_input_p
@@ -1284,10 +1307,12 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
 parameter_list|,
 name|int
-name|off
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

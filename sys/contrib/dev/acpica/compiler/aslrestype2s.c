@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -532,7 +532,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoGpioIntDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "GpioInt" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoGpioIntDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "GpioInt" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -540,12 +540,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoGpioIntDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -579,6 +576,12 @@ init|=
 name|NULL
 decl_stmt|;
 name|UINT16
+modifier|*
+name|PinList
+init|=
+name|NULL
+decl_stmt|;
+name|UINT16
 name|ResSourceLength
 decl_stmt|;
 name|UINT16
@@ -591,15 +594,31 @@ name|UINT16
 name|DescriptorSize
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
+name|PinCount
+init|=
+literal|0
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 comment|/*      * Calculate lengths for fields that have variable length:      * 1) Resource Source string      * 2) Vendor Data buffer      * 3) PIN (interrupt) list      */
 name|ResSourceLength
@@ -701,6 +720,10 @@ argument_list|(
 name|AML_RESOURCE_GPIO
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|PinList
+operator|=
+name|InterruptList
 expr_stmt|;
 name|ResourceSource
 operator|=
@@ -1087,7 +1110,9 @@ case|:
 comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -1163,6 +1188,9 @@ expr_stmt|;
 name|InterruptList
 operator|++
 expr_stmt|;
+name|PinCount
+operator|++
+expr_stmt|;
 comment|/* Case 10: First interrupt number in list */
 if|if
 condition|(
@@ -1228,6 +1256,21 @@ name|InitializerOp
 argument_list|)
 expr_stmt|;
 block|}
+name|MpSaveGpioInfo
+argument_list|(
+name|Info
+operator|->
+name|MappingOp
+argument_list|,
+name|Descriptor
+argument_list|,
+name|PinCount
+argument_list|,
+name|PinList
+argument_list|,
+name|ResourceSource
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Rnode
@@ -1237,7 +1280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoGpioIoDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "GpioIo" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoGpioIoDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "GpioIo" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1245,12 +1288,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoGpioIoDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -1284,6 +1324,12 @@ init|=
 name|NULL
 decl_stmt|;
 name|UINT16
+modifier|*
+name|PinList
+init|=
+name|NULL
+decl_stmt|;
+name|UINT16
 name|ResSourceLength
 decl_stmt|;
 name|UINT16
@@ -1296,15 +1342,31 @@ name|UINT16
 name|DescriptorSize
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
+name|PinCount
+init|=
+literal|0
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 comment|/*      * Calculate lengths for fields that have variable length:      * 1) Resource Source string      * 2) Vendor Data buffer      * 3) PIN (interrupt) list      */
 name|ResSourceLength
@@ -1327,6 +1389,10 @@ name|RsGetInterruptDataLength
 argument_list|(
 name|InitializerOp
 argument_list|)
+expr_stmt|;
+name|PinList
+operator|=
+name|InterruptList
 expr_stmt|;
 name|DescriptorSize
 operator|=
@@ -1406,6 +1472,10 @@ argument_list|(
 name|AML_RESOURCE_GPIO
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|PinList
+operator|=
+name|InterruptList
 expr_stmt|;
 name|ResourceSource
 operator|=
@@ -1789,7 +1859,9 @@ case|:
 comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -1865,6 +1937,9 @@ expr_stmt|;
 name|InterruptList
 operator|++
 expr_stmt|;
+name|PinCount
+operator|++
+expr_stmt|;
 comment|/* Case 10: First interrupt number in list */
 if|if
 condition|(
@@ -1930,6 +2005,21 @@ name|InitializerOp
 argument_list|)
 expr_stmt|;
 block|}
+name|MpSaveGpioInfo
+argument_list|(
+name|Info
+operator|->
+name|MappingOp
+argument_list|,
+name|Descriptor
+argument_list|,
+name|PinCount
+argument_list|,
+name|PinList
+argument_list|,
+name|ResourceSource
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Rnode
@@ -1939,7 +2029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoI2cSerialBusDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "I2cSerialBus" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoI2cSerialBusDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "I2cSerialBus" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1947,12 +2037,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoI2cSerialBusDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -1989,15 +2076,26 @@ name|UINT16
 name|DescriptorSize
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 comment|/*      * Calculate lengths for fields that have variable length:      * 1) Resource Source string      * 2) Vendor Data buffer      */
 name|ResSourceLength
@@ -2411,7 +2509,9 @@ case|:
 comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -2448,6 +2548,17 @@ name|InitializerOp
 argument_list|)
 expr_stmt|;
 block|}
+name|MpSaveSerialInfo
+argument_list|(
+name|Info
+operator|->
+name|MappingOp
+argument_list|,
+name|Descriptor
+argument_list|,
+name|ResourceSource
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Rnode
@@ -2457,7 +2568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoSpiSerialBusDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "SPI Serial Bus" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoSpiSerialBusDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "SPI Serial Bus" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2465,12 +2576,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoSpiSerialBusDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -2507,15 +2615,26 @@ name|UINT16
 name|DescriptorSize
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 comment|/*      * Calculate lengths for fields that have variable length:      * 1) Resource Source string      * 2) Vendor Data buffer      */
 name|ResSourceLength
@@ -3082,7 +3201,9 @@ case|:
 comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -3119,6 +3240,17 @@ name|InitializerOp
 argument_list|)
 expr_stmt|;
 block|}
+name|MpSaveSerialInfo
+argument_list|(
+name|Info
+operator|->
+name|MappingOp
+argument_list|,
+name|Descriptor
+argument_list|,
+name|ResourceSource
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Rnode
@@ -3128,7 +3260,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsDoUartSerialBusDescriptor  *  * PARAMETERS:  Op                  - Parent resource descriptor parse node  *              CurrentByteOffset   - Offset into the resource template AML  *                                    buffer (to track references to the desc)  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "UART Serial Bus" descriptor  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsDoUartSerialBusDescriptor  *  * PARAMETERS:  Info                - Parse Op and resource template offset  *  * RETURN:      Completed resource node  *  * DESCRIPTION: Construct a long "UART Serial Bus" descriptor  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -3136,12 +3268,9 @@ name|ASL_RESOURCE_NODE
 modifier|*
 name|RsDoUartSerialBusDescriptor
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ASL_RESOURCE_INFO
 modifier|*
-name|Op
-parameter_list|,
-name|UINT32
-name|CurrentByteOffset
+name|Info
 parameter_list|)
 block|{
 name|AML_RESOURCE
@@ -3178,15 +3307,26 @@ name|UINT16
 name|DescriptorSize
 decl_stmt|;
 name|UINT32
+name|CurrentByteOffset
+decl_stmt|;
+name|UINT32
 name|i
 decl_stmt|;
 name|InitializerOp
 operator|=
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 operator|->
 name|Asl
 operator|.
 name|Child
+expr_stmt|;
+name|CurrentByteOffset
+operator|=
+name|Info
+operator|->
+name|CurrentByteOffset
 expr_stmt|;
 comment|/*      * Calculate lengths for fields that have variable length:      * 1) Resource Source string      * 2) Vendor Data buffer      */
 name|ResSourceLength
@@ -3817,7 +3957,9 @@ case|:
 comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
-name|Op
+name|Info
+operator|->
+name|DescriptorTypeOp
 argument_list|,
 name|InitializerOp
 argument_list|)
@@ -3854,6 +3996,17 @@ name|InitializerOp
 argument_list|)
 expr_stmt|;
 block|}
+name|MpSaveSerialInfo
+argument_list|(
+name|Info
+operator|->
+name|MappingOp
+argument_list|,
+name|Descriptor
+argument_list|,
+name|ResourceSource
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Rnode

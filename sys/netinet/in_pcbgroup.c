@@ -1314,16 +1314,14 @@ name|INP_IPV6
 condition|)
 name|hashkey_faddr
 operator|=
+name|INP6_PCBHASHKEY
+argument_list|(
+operator|&
 name|inp
 operator|->
 name|in6p_faddr
-operator|.
-name|s6_addr32
-index|[
-literal|3
-index|]
+argument_list|)
 expr_stmt|;
-comment|/* XXX */
 else|else
 endif|#
 directive|endif

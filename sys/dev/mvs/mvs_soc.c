@@ -580,6 +580,12 @@ index|]
 operator|.
 name|quirks
 expr_stmt|;
+name|ctlr
+operator|->
+name|ccc
+operator|=
+literal|0
+expr_stmt|;
 name|resource_int_value
 argument_list|(
 name|device_get_name

@@ -407,7 +407,7 @@ value|VNET(tcp_syncookies)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -415,6 +415,8 @@ name|OID_AUTO
 argument_list|,
 name|syncookies
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -451,7 +453,7 @@ value|VNET(tcp_syncookiesonly)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp
 argument_list|,
@@ -459,6 +461,8 @@ name|OID_AUTO
 argument_list|,
 name|syncookies_only
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -547,6 +551,12 @@ parameter_list|(
 name|struct
 name|syncache
 modifier|*
+parameter_list|,
+name|struct
+name|syncache_head
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -805,7 +815,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -813,6 +823,8 @@ name|OID_AUTO
 argument_list|,
 name|bucketlimit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -831,7 +843,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -839,6 +851,8 @@ name|OID_AUTO
 argument_list|,
 name|cachelimit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -881,7 +895,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -889,6 +903,8 @@ name|OID_AUTO
 argument_list|,
 name|hashsize
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -907,7 +923,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -915,6 +931,8 @@ name|OID_AUTO
 argument_list|,
 name|rexmtlimit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -945,7 +963,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -953,6 +971,8 @@ name|OID_AUTO
 argument_list|,
 name|rst_on_sock_fail
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2259,12 +2279,13 @@ name|M_TCPLOG
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|syncache_respond
 argument_list|(
 name|sc
+argument_list|,
+name|sch
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|TCPSTAT_INC
@@ -5180,12 +5201,6 @@ name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
@@ -5338,12 +5353,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 goto|goto
 name|done
 goto|;
@@ -5361,12 +5370,6 @@ directive|endif
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remember the IP options, if any. 	 */
@@ -5562,6 +5565,10 @@ condition|(
 name|syncache_respond
 argument_list|(
 name|sc
+argument_list|,
+name|sch
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 literal|0
@@ -5957,7 +5964,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
-comment|/* 	 * If listening socket requested TCP digests, and received SYN 	 * contains the option, flag this in the syncache so that 	 * syncache_respond() will do the right thing with the SYN+ACK. 	 * XXX: Currently we always record the option by default and will 	 * attempt to use it in syncache_respond(). 	 */
+comment|/* 	 * If listening socket requested TCP digests, OR received SYN 	 * contains the option, flag this in the syncache so that 	 * syncache_respond() will do the right thing with the SYN+ACK. 	 */
 if|if
 condition|(
 name|to
@@ -6113,6 +6120,10 @@ condition|(
 name|syncache_respond
 argument_list|(
 name|sc
+argument_list|,
+name|sch
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -6240,6 +6251,14 @@ name|struct
 name|syncache
 modifier|*
 name|sc
+parameter_list|,
+name|struct
+name|syncache_head
+modifier|*
+name|sch
+parameter_list|,
+name|int
+name|locked
 parameter_list|)
 block|{
 name|struct
@@ -6289,6 +6308,16 @@ modifier|*
 name|ip6
 init|=
 name|NULL
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|TCP_SIGNATURE
+name|struct
+name|secasvar
+modifier|*
+name|sav
 decl_stmt|;
 endif|#
 directive|endif
@@ -6916,6 +6945,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
+name|sav
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -6924,12 +6957,62 @@ name|sc_flags
 operator|&
 name|SCF_SIGNATURE
 condition|)
+block|{
+name|sav
+operator|=
+name|tcp_get_sav
+argument_list|(
+name|m
+argument_list|,
+name|IPSEC_DIR_OUTBOUND
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sav
+operator|!=
+name|NULL
+condition|)
 name|to
 operator|.
 name|to_flags
 operator||=
 name|TOF_SIGNATURE
 expr_stmt|;
+else|else
+block|{
+comment|/* 				 * We've got SCF_SIGNATURE flag 				 * inherited from listening socket, 				 * but no SADB key for given source 				 * address. Assume signature is not 				 * required and remove signature flag 				 * instead of silently dropping 				 * connection. 				 */
+if|if
+condition|(
+name|locked
+operator|==
+literal|0
+condition|)
+name|SCH_LOCK
+argument_list|(
+name|sch
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flags
+operator|&=
+operator|~
+name|SCF_SIGNATURE
+expr_stmt|;
+if|if
+condition|(
+name|locked
+operator|==
+literal|0
+condition|)
+name|SCH_UNLOCK
+argument_list|(
+name|sch
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 endif|#
 directive|endif
 name|optlen
@@ -6992,11 +7075,9 @@ name|sc_flags
 operator|&
 name|SCF_SIGNATURE
 condition|)
-name|tcp_signature_compute
+name|tcp_signature_do_compute
 argument_list|(
 name|m
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -7006,7 +7087,7 @@ name|to
 operator|.
 name|to_signature
 argument_list|,
-name|IPSEC_DIR_OUTBOUND
+name|sav
 argument_list|)
 expr_stmt|;
 endif|#

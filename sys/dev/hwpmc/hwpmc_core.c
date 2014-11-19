@@ -15380,7 +15380,7 @@ expr_stmt|;
 operator|*
 name|map
 operator|=
-name|PMC_EV_IAP_EVENT_C4H_00H
+name|PMC_EV_IAP_EVENT_3CH_00H
 expr_stmt|;
 break|break;
 case|case

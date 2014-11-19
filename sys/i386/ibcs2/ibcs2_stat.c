@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -713,9 +719,13 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kern_stat
+name|kern_statat
 argument_list|(
 name|td
+argument_list|,
+literal|0
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|path
 argument_list|,
@@ -723,6 +733,8 @@ name|UIO_SYSSPACE
 argument_list|,
 operator|&
 name|st
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|free
@@ -820,9 +832,13 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kern_lstat
+name|kern_statat
 argument_list|(
 name|td
+argument_list|,
+name|AT_SYMLINK_NOFOLLOW
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|path
 argument_list|,
@@ -830,6 +846,8 @@ name|UIO_SYSSPACE
 argument_list|,
 operator|&
 name|st
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|free

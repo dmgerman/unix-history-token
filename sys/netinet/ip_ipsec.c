@@ -184,12 +184,6 @@ directive|include
 file|<machine/in_cksum.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -208,15 +202,6 @@ directive|include
 file|<netipsec/key.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*IPSEC*/
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -225,12 +210,6 @@ name|inetsw
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -290,7 +269,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ipsec
 argument_list|,
@@ -298,6 +277,8 @@ name|OID_AUTO
 argument_list|,
 name|filtertunnel
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -313,15 +294,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
-end_comment
-
 begin_comment
 comment|/*  * Check if we have to jump over firewall processing for this packet.  * Called from ip_input().  * 1 = jump over firewall, 0 = packet goes through firewall.  */
 end_comment
@@ -336,9 +308,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC
 comment|/* 	 * Bypass packet filtering for packets previously handled by IPsec. 	 */
 if|if
 condition|(
@@ -359,8 +328,6 @@ condition|)
 return|return
 literal|1
 return|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -381,9 +348,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC
 name|struct
 name|m_tag
 modifier|*
@@ -511,9 +475,6 @@ return|return
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* IPSEC */
 return|return
 literal|0
 return|;
@@ -534,9 +495,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC
 name|struct
 name|ip
 modifier|*
@@ -701,9 +659,6 @@ return|return
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* IPSEC */
 return|return
 literal|0
 return|;
@@ -904,9 +859,6 @@ modifier|*
 name|error
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC
 name|struct
 name|secpolicy
 modifier|*
@@ -1417,12 +1369,6 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|1
-return|;
-endif|#
-directive|endif
-comment|/* IPSEC */
-return|return
-literal|0
 return|;
 block|}
 end_function

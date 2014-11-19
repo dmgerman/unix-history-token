@@ -1469,7 +1469,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1477,6 +1477,8 @@ name|KEYCTL_DEBUG_LEVEL
 argument_list|,
 name|debug
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1497,7 +1499,7 @@ comment|/* max count of trial for the decision of spi value */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1505,6 +1507,8 @@ name|KEYCTL_SPI_TRY
 argument_list|,
 name|spi_trycnt
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1525,7 +1529,7 @@ comment|/* minimum spi value to allocate automatically. */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1533,6 +1537,8 @@ name|KEYCTL_SPI_MIN_VALUE
 argument_list|,
 name|spi_minval
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1553,7 +1559,7 @@ comment|/* maximun spi value to allocate automatically. */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1561,6 +1567,8 @@ name|KEYCTL_SPI_MAX_VALUE
 argument_list|,
 name|spi_maxval
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1581,7 +1589,7 @@ comment|/* interval to initialize randseed */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1589,6 +1597,8 @@ name|KEYCTL_RANDOM_INT
 argument_list|,
 name|int_random
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1609,7 +1619,7 @@ comment|/* lifetime for larval SA */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1617,6 +1627,8 @@ name|KEYCTL_LARVAL_LIFETIME
 argument_list|,
 name|larval_lifetime
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1637,7 +1649,7 @@ comment|/* counter for blocking to send SADB_ACQUIRE to IKEd */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1645,6 +1657,8 @@ name|KEYCTL_BLOCKACQ_COUNT
 argument_list|,
 name|blockacq_count
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1665,7 +1679,7 @@ comment|/* lifetime for blocking to send SADB_ACQUIRE to IKEd */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1673,6 +1687,8 @@ name|KEYCTL_BLOCKACQ_LIFETIME
 argument_list|,
 name|blockacq_lifetime
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1693,7 +1709,7 @@ comment|/* ESP auth */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1701,6 +1717,8 @@ name|KEYCTL_ESP_AUTH
 argument_list|,
 name|esp_auth
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1721,7 +1739,7 @@ comment|/* minimum ESP key length */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1729,6 +1747,8 @@ name|KEYCTL_ESP_KEYMIN
 argument_list|,
 name|esp_keymin
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1749,7 +1769,7 @@ comment|/* minimum AH key length */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1757,6 +1777,8 @@ name|KEYCTL_AH_KEYMIN
 argument_list|,
 name|ah_keymin
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1777,7 +1799,7 @@ comment|/* perfered old SA rather than new SA */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_key
 argument_list|,
@@ -1785,6 +1807,8 @@ name|KEYCTL_PREFERED_OLDSA
 argument_list|,
 name|preferred_oldsa
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -2049,6 +2073,25 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPSEC_DEBUG2
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout
+name|key_timer
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -18298,29 +18341,12 @@ begin_function
 name|int
 name|key_ismyaddr
 parameter_list|(
-name|sa
-parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
-name|struct
-name|in_ifaddr
-modifier|*
-name|ia
-decl_stmt|;
-endif|#
-directive|endif
 name|IPSEC_ASSERT
 argument_list|(
 name|sa
@@ -18345,76 +18371,19 @@ name|INET
 case|case
 name|AF_INET
 case|:
-name|sin
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-name|sa
-expr_stmt|;
-name|IN_IFADDR_RLOCK
-argument_list|()
-expr_stmt|;
-name|TAILQ_FOREACH
-argument_list|(
-argument|ia
-argument_list|,
-argument|&V_in_ifaddrhead
-argument_list|,
-argument|ia_link
-argument_list|)
-block|{
-if|if
-condition|(
-name|sin
-operator|->
-name|sin_family
-operator|==
-name|ia
-operator|->
-name|ia_addr
-operator|.
-name|sin_family
-operator|&&
-name|sin
-operator|->
-name|sin_len
-operator|==
-name|ia
-operator|->
-name|ia_addr
-operator|.
-name|sin_len
-operator|&&
-name|sin
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|==
-name|ia
-operator|->
-name|ia_addr
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-condition|)
-block|{
-name|IN_IFADDR_RUNLOCK
-argument_list|()
-expr_stmt|;
 return|return
-literal|1
+operator|(
+name|in_localip
+argument_list|(
+name|satosin
+argument_list|(
+name|sa
+argument_list|)
+operator|->
+name|sin_addr
+argument_list|)
+operator|)
 return|;
-block|}
-block|}
-name|IN_IFADDR_RUNLOCK
-argument_list|()
-expr_stmt|;
-break|break;
 endif|#
 directive|endif
 ifdef|#
@@ -20807,10 +20776,13 @@ comment|/*  * time handler.  * scanning SPD and SAD to check status for each ent
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|key_timehandler
 parameter_list|(
 name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 name|VNET_ITERATOR_DECL
@@ -20867,22 +20839,10 @@ ifndef|#
 directive|ifndef
 name|IPSEC_DEBUG2
 comment|/* do exchange to tick time !! */
-operator|(
-name|void
-operator|)
-name|timeout
+name|callout_schedule
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|key_timehandler
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
+operator|&
+name|key_timer
 argument_list|,
 name|hz
 argument_list|)
@@ -36156,21 +36116,24 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|IPSEC_DEBUG2
-name|timeout
+name|callout_init
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|key_timehandler
+operator|&
+name|key_timer
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
+name|CALLOUT_MPSAFE
+argument_list|)
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|key_timer
 argument_list|,
 name|hz
+argument_list|,
+name|key_timehandler
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#

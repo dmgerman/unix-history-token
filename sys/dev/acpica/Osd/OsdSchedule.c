@@ -148,6 +148,38 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Track and report the system's demand for task slots.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|acpi_tasks_hiwater
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_acpi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tasks_hiwater
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|acpi_tasks_hiwater
+argument_list|,
+literal|1
+argument_list|,
+literal|"Peak demand for ACPI event task slots."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Allow the user to tune the number of task threads we start.  It seems  * some systems have problems with increased parallelism.  */
 end_comment
 
@@ -572,6 +604,22 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|i
+operator|>
+name|acpi_tasks_hiwater
+condition|)
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|acpi_tasks_hiwater
+argument_list|,
+name|acpi_tasks_hiwater
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|at

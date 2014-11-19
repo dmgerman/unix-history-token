@@ -279,12 +279,6 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
-comment|/* stub everything first */
-name|ar9300_set_stub_functions
-argument_list|(
-name|ah
-argument_list|)
-expr_stmt|;
 comment|/* Global functions */
 name|ah
 operator|->
@@ -1078,15 +1072,6 @@ name|ah_divLnaConfSet
 operator|=
 name|ar9300_ant_div_comb_set_config
 expr_stmt|;
-comment|/* Setup HAL configuration defaults */
-name|ah
-operator|->
-name|ah_config
-operator|.
-name|ath_hal_ant_ctrl_comm2g_switch_enable
-operator|=
-literal|0x000bbb88
-expr_stmt|;
 block|}
 end_function
 
@@ -1370,8 +1355,28 @@ name|struct
 name|ath_hal
 modifier|*
 name|ah
+parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah_config
 parameter_list|)
 block|{
+comment|/* Until FreeBSD's HAL does this by default - just copy */
+name|OS_MEMCPY
+argument_list|(
+operator|&
+name|ah
+operator|->
+name|ah_config
+argument_list|,
+name|ah_config
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|HAL_OPS_CONFIG
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ah
 operator|->
 name|ah_config
@@ -1860,27 +1865,12 @@ name|u_int
 name|txTries3
 parameter_list|)
 block|{
-name|ath_hal_printf
-argument_list|(
-name|ah
-argument_list|,
-literal|"%s: called, 0x%x/%d, 0x%x/%d, 0x%x/%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|txRate1
-argument_list|,
-name|txTries1
-argument_list|,
-name|txRate2
-argument_list|,
-name|txTries2
-argument_list|,
-name|txRate3
-argument_list|,
-name|txTries3
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|ath_hal_printf(ah, "%s: called, 0x%x/%d, 0x%x/%d, 0x%x/%d\n", 	    __func__, 	    txRate1, txTries1, 	    txRate2, txTries2, 	    txRate3, txTries3);
+endif|#
+directive|endif
 comment|/* XXX should only be called during probe */
 return|return
 operator|(

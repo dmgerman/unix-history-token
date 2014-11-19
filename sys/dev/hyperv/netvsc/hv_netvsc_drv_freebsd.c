@@ -691,7 +691,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -813,12 +813,6 @@ name|sc
 operator|->
 name|hn_ifp
 operator|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_ifp
-operator|=
 name|if_alloc
 argument_list|(
 name|IFT_ETHER
@@ -921,9 +915,7 @@ expr_stmt|;
 comment|/* 	 * Tell upper layers that we support full VLAN capability. 	 */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1651,10 +1643,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* if bpf&& mc_head, call bpf_mtap code */
 if|if
@@ -2097,14 +2093,6 @@ name|sc
 operator|->
 name|hn_ifp
 expr_stmt|;
-name|ifp
-operator|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_ifp
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2318,10 +2306,14 @@ name|M_VLANTAG
 expr_stmt|;
 block|}
 comment|/* 	 * Note:  Moved RX completion back to hv_nv_on_receive() so all 	 * messages (not just data messages) will trigger a response. 	 */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* We're not holding the lock here, so don't release it */
 call|(
@@ -3312,10 +3304,14 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/*???*/
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function

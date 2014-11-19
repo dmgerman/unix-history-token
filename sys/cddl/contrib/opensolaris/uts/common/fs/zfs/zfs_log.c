@@ -2527,7 +2527,7 @@ name|ZIL_MAX_LOG_DATA
 condition|)
 name|len
 operator|=
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 operator|>>
 literal|1
 expr_stmt|;

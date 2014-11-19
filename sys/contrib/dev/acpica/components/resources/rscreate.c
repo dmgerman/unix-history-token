@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -86,6 +86,11 @@ name|void
 modifier|*
 name|CurrentResourcePtr
 decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|AcpiBufferToResource
+argument_list|)
+expr_stmt|;
 comment|/*      * Note: we allow AE_AML_NO_RESOURCE_END_TAG, since an end tag      * is not required here.      */
 comment|/* Get the required length for the converted resource */
 name|Status
@@ -120,11 +125,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Allocate a buffer for the converted resource */
 name|Resource
@@ -144,11 +149,11 @@ operator|!
 name|Resource
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NO_MEMORY
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Perform the AML-to-Resource conversion */
 name|Status
@@ -201,13 +206,20 @@ operator|=
 name|Resource
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiBufferToResource
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateResourceList  *  * PARAMETERS:  AmlBuffer           - Pointer to the resource byte stream  *              OutputBuffer        - Pointer to the user's buffer  *  * RETURN:      Status: AE_OK if okay, else a valid ACPI_STATUS code  *              If OutputBuffer is not large enough, OutputBufferLength  *              indicates how large OutputBuffer should be, else it  *              indicates how may UINT8 elements of OutputBuffer are valid.  *  * DESCRIPTION: Takes the byte stream returned from a _CRS, _PRS control method  *              execution and parses the stream to create a linked list  *              of device resources.  *  ******************************************************************************/
@@ -615,7 +627,7 @@ operator|-
 literal|4
 operator|)
 expr_stmt|;
-comment|/* Each sub-package must be of length 4 */
+comment|/* Each subpackage must be of length 4 */
 if|if
 condition|(
 operator|(
@@ -656,7 +668,7 @@ name|AE_AML_PACKAGE_LIMIT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Dereference the sub-package.          * The SubObjectList will now point to an array of the four IRQ          * elements: [Address, Pin, Source, SourceIndex]          */
+comment|/*          * Dereference the subpackage.          * The SubObjectList will now point to an array of the four IRQ          * elements: [Address, Pin, Source, SourceIndex]          */
 name|SubObjectList
 operator|=
 operator|(
@@ -678,6 +690,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ObjDesc
+operator|||
 name|ObjDesc
 operator|->
 name|Common
@@ -729,6 +744,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ObjDesc
+operator|||
 name|ObjDesc
 operator|->
 name|Common
@@ -1002,6 +1020,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ObjDesc
+operator|||
 name|ObjDesc
 operator|->
 name|Common
@@ -1080,16 +1101,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateAmlResources  *  * PARAMETERS:  LinkedListBuffer        - Pointer to the resource linked list  *              OutputBuffer            - Pointer to the user's buffer  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Takes the linked list of device resources and  *              creates a bytestream to be used as input for the  *              _SRS control method.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCreateAmlResources  *  * PARAMETERS:  ResourceList            - Pointer to the resource list buffer  *              OutputBuffer            - Where the AML buffer is returned  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code.  *              If the OutputBuffer is too small, the error will be  *              AE_BUFFER_OVERFLOW and OutputBuffer->Length will point  *              to the size buffer needed.  *  * DESCRIPTION: Converts a list of device resources to an AML bytestream  *              to be used as input for the _SRS control method.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsCreateAmlResources
 parameter_list|(
-name|ACPI_RESOURCE
+name|ACPI_BUFFER
 modifier|*
-name|LinkedListBuffer
+name|ResourceList
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1109,23 +1130,32 @@ argument_list|(
 name|RsCreateAmlResources
 argument_list|)
 expr_stmt|;
+comment|/* Params already validated, no need to re-validate here */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"LinkedListBuffer = %p\n"
+literal|"ResourceList Buffer = %p\n"
 operator|,
-name|LinkedListBuffer
+name|ResourceList
+operator|->
+name|Pointer
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Params already validated, so we don't re-validate here      *      * Pass the LinkedListBuffer into a module that calculates      * the buffer size needed for the byte stream.      */
+comment|/* Get the buffer size needed for the AML byte stream */
 name|Status
 operator|=
 name|AcpiRsGetAmlLength
 argument_list|(
-name|LinkedListBuffer
+name|ResourceList
+operator|->
+name|Pointer
+argument_list|,
+name|ResourceList
+operator|->
+name|Length
 argument_list|,
 operator|&
 name|AmlSizeNeeded
@@ -1193,7 +1223,9 @@ name|Status
 operator|=
 name|AcpiRsConvertResourcesToAml
 argument_list|(
-name|LinkedListBuffer
+name|ResourceList
+operator|->
+name|Pointer
 argument_list|,
 name|AmlSizeNeeded
 argument_list|,

@@ -4439,9 +4439,7 @@ name|EOPNOTSUPP
 condition|)
 block|{
 comment|/* 			 * We conclude that this is not NAND storage 			 */
-name|nandfsdev
-operator|->
-name|nd_erasesize
+name|erasesize
 operator|=
 name|NANDFS_DEF_ERASESIZE
 expr_stmt|;

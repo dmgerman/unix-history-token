@@ -45,6 +45,12 @@ name|ib_ucontext
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vm_area_struct
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|ib_umem

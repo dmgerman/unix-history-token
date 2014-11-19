@@ -148,6 +148,12 @@ name|defined
 argument_list|(
 name|__mips_n32
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ARM_HAVE_ATOMIC64
+argument_list|)
 name|void
 name|atomic_add_64
 argument_list|(

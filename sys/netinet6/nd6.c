@@ -3679,6 +3679,8 @@ name|sockaddr
 operator|*
 operator|)
 name|addr
+argument_list|,
+name|RT_ALL_FIBS
 argument_list|)
 expr_stmt|;
 if|if
@@ -4355,11 +4357,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|RT_LOCK_ASSERT
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
 name|gateway
 operator|=
 operator|(
@@ -6664,8 +6661,6 @@ name|chain
 argument_list|,
 operator|&
 name|sin6
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * When the link-layer address of a router changes, select the 	 * best router again.  In particular, when the neighbor entry is newly 	 * created, it might affect the selection policy. 	 * Question: can we restrict the first condition to the "is_newentry" 	 * case? 	 * XXX: when we hear an RA from a new router with the link-layer 	 * address option, defrouter_select() is called twice, since 	 * defrtrlist_update called the function as well.  However, I believe 	 * we can compromise the overhead, since it only happens the first 	 * time. 	 * XXX: although defrouter_select() should not have a bad effect 	 * for those are not autoconfigured hosts, we explicitly avoid such 	 * cases for safety. 	 */
@@ -6791,7 +6786,7 @@ argument|ifp
 argument_list|,
 argument|&V_ifnet
 argument_list|,
-argument|if_list
+argument|if_link
 argument_list|)
 block|{
 if|if
@@ -8156,11 +8151,6 @@ name|struct
 name|sockaddr_in6
 modifier|*
 name|dst
-parameter_list|,
-name|struct
-name|route
-modifier|*
-name|ro
 parameter_list|)
 block|{
 name|struct
@@ -8241,7 +8231,7 @@ operator|*
 operator|)
 name|dst
 argument_list|,
-name|ro
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -8968,7 +8958,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_icmp6
 argument_list|,
@@ -8976,6 +8966,8 @@ name|ICMPV6CTL_ND6_MAXQLEN
 argument_list|,
 name|nd6_maxqueuelen
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -8992,7 +8984,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet6_icmp6
 argument_list|,
@@ -9000,6 +8992,8 @@ name|OID_AUTO
 argument_list|,
 name|nd6_gctimer
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

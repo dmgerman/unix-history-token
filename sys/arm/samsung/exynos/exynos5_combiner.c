@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -109,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/fdt.h>
 end_include
 
 begin_include
@@ -2112,6 +2100,19 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ofw_bus_status_okay
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 operator|!

@@ -3241,7 +3241,7 @@ name|smbios_ep
 operator|->
 name|minor
 operator|=
-literal|4
+literal|6
 expr_stmt|;
 name|smbios_ep
 operator|->

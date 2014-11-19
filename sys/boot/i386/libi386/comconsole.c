@@ -976,6 +976,16 @@ modifier|*
 name|string
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|NO_PCI
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 name|char
 modifier|*
 name|p
@@ -1200,6 +1210,8 @@ operator|(
 name|locator
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1212,6 +1224,16 @@ name|uint32_t
 name|locator
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|NO_PCI
+return|return
+operator|(
+name|CMD_ERROR
+operator|)
+return|;
+else|#
+directive|else
 name|char
 name|intbuf
 index|[
@@ -1329,6 +1351,8 @@ operator|(
 name|CMD_OK
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

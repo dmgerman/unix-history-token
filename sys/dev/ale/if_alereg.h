@@ -2983,9 +2983,6 @@ name|uint32_t
 name|tx_excess_colls
 decl_stmt|;
 name|uint32_t
-name|tx_abort
-decl_stmt|;
-name|uint32_t
 name|tx_underrun
 decl_stmt|;
 name|uint32_t

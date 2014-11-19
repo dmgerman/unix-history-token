@@ -74,11 +74,16 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* Signalling cipher suite value: from draft-ietf-tls-renegotiation-03.txt */
+comment|/* Signalling cipher suite value from RFC 5746  * (TLS_EMPTY_RENEGOTIATION_INFO_SCSV) */
 define|#
 directive|define
 name|SSL3_CK_SCSV
 value|0x030000FF
+comment|/* Signalling cipher suite value from draft-ietf-tls-downgrade-scsv-00  * (TLS_FALLBACK_SCSV) */
+define|#
+directive|define
+name|SSL3_CK_FALLBACK_SCSV
+value|0x03005600
 define|#
 directive|define
 name|SSL3_CK_RSA_NULL_MD5

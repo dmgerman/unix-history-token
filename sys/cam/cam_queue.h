@@ -124,16 +124,13 @@ name|int
 name|total_openings
 decl_stmt|;
 name|int
-name|devq_openings
+name|allocated
 decl_stmt|;
 name|int
 name|dev_openings
 decl_stmt|;
 name|int
 name|dev_active
-decl_stmt|;
-name|int
-name|held
 decl_stmt|;
 block|}
 struct|;
@@ -659,12 +656,7 @@ parameter_list|)
 block|{
 name|ccbq
 operator|->
-name|devq_openings
-operator|--
-expr_stmt|;
-name|ccbq
-operator|->
-name|held
+name|allocated
 operator|++
 expr_stmt|;
 block|}
@@ -702,11 +694,6 @@ name|ccbq
 operator|->
 name|queue
 decl_stmt|;
-name|ccbq
-operator|->
-name|held
-operator|--
-expr_stmt|;
 comment|/* 	 * If queue is already full, try to resize. 	 * If resize fail, push CCB with lowest priority out to the TAILQ. 	 */
 if|if
 condition|(
@@ -1099,11 +1086,6 @@ operator|->
 name|dev_openings
 operator|++
 expr_stmt|;
-name|ccbq
-operator|->
-name|held
-operator|++
-expr_stmt|;
 block|}
 end_function
 
@@ -1121,13 +1103,8 @@ parameter_list|)
 block|{
 name|ccbq
 operator|->
-name|held
+name|allocated
 operator|--
-expr_stmt|;
-name|ccbq
-operator|->
-name|devq_openings
-operator|++
 expr_stmt|;
 block|}
 end_function

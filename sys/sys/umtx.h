@@ -129,6 +129,34 @@ value|0x0002
 end_define
 
 begin_comment
+comment|/* _usem2 count field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USEM_HAS_WAITERS
+value|0x80000000U
+end_define
+
+begin_define
+define|#
+directive|define
+name|USEM_MAX_COUNT
+value|0x7fffffffU
+end_define
+
+begin_define
+define|#
+directive|define
+name|USEM_COUNT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)& USEM_MAX_COUNT)
+end_define
+
+begin_comment
 comment|/* op code for _umtx_op */
 end_comment
 
@@ -276,12 +304,20 @@ name|UMTX_OP_SEM_WAIT
 value|19
 end_define
 
+begin_comment
+comment|/* deprecated */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|UMTX_OP_SEM_WAKE
 value|20
 end_define
+
+begin_comment
+comment|/* deprecated */
+end_comment
 
 begin_define
 define|#
@@ -300,8 +336,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_MAX
+name|UMTX_OP_SEM2_WAIT
 value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_SEM2_WAKE
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|25
 end_define
 
 begin_comment

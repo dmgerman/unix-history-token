@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkupdate.c,v 1.4.18.4 2005/10/14 05:44:12 marka Exp $"
+literal|"$Id: res_mkupdate.c,v 1.10 2008/12/11 09:59:00 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,13 +484,21 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
+name|statp
+operator|->
+name|id
+operator|=
+name|res_nrandomid
+argument_list|(
+name|statp
+argument_list|)
+expr_stmt|;
 name|hp
 operator|->
 name|id
 operator|=
 name|htons
 argument_list|(
-operator|++
 name|statp
 operator|->
 name|id

@@ -920,6 +920,18 @@ comment|/* (MCI) Underrun flag */
 end_comment
 
 begin_comment
+comment|/*	TXRDY,DTIP,ENDTX,TXBUFE,RTOE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCI_SR_BITSTRING
+define|\
+value|"\020" \ 	"\001CMDRDY" \ 	"\002RXRDY" \ 	"\003TXRDY" \ 	"\004BLKE" \ 	"\005DTIP" \ 	"\006NOTBUSY" \ 	"\007ENDRX" \ 	"\010ENDTX" \ 	"\017RXBUFF" \ 	"\020TXBUFE" \ 	"\021RINDE" \ 	"\022RDIRE" \ 	"\023RCRCE" \ 	"\024RENDE" \ 	"\025RTOE" \ 	"\026DCRCE" \ 	"\027DTOE" \ 	"\037OVRE" \ 	"\040UNRE"
+end_define
+
+begin_comment
 comment|/* -------- MCI_IER : (MCI Offset: 0x44) MCI Interrupt Enable Register --------  */
 end_comment
 

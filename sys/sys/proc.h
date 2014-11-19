@@ -620,11 +620,11 @@ modifier|*
 name|td_wmesg
 decl_stmt|;
 comment|/* (t) Reason for sleep. */
-name|u_char
+name|int
 name|td_lastcpu
 decl_stmt|;
 comment|/* (t) Last cpu we were on. */
-name|u_char
+name|int
 name|td_oncpu
 decl_stmt|;
 comment|/* (t) Which cpu we are on. */
@@ -2556,6 +2556,10 @@ modifier|*
 name|p_procdesc
 decl_stmt|;
 comment|/* (e) Process descriptor, if any. */
+name|u_int
+name|p_treeflag
+decl_stmt|;
+comment|/* (e) P_TREE flags */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -2759,12 +2763,26 @@ begin_define
 define|#
 directive|define
 name|NOCPU
-value|0xff
+value|(-1)
 end_define
 
 begin_comment
 comment|/* For when we aren't on a CPU. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NOCPU_OLD
+value|(255)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXCPU_OLD
+value|(254)
+end_define
 
 begin_define
 define|#
@@ -3080,13 +3098,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_ORPHAN
+name|P_UNUSED1
 value|0x2000000
 end_define
-
-begin_comment
-comment|/* Orphaned. */
-end_comment
 
 begin_define
 define|#
@@ -3194,6 +3208,32 @@ end_define
 
 begin_comment
 comment|/* New children get P_PROTECTED. */
+end_comment
+
+begin_comment
+comment|/* Flags protected by proctree_lock, kept in p_treeflags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_TREE_ORPHANED
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Reparented, on orphan list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_TREE_FIRST_ORPHAN
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* First element of orphan 						   list */
 end_comment
 
 begin_comment
@@ -4881,6 +4921,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|proc
+modifier|*
+name|proc_realparent
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|child
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|proc_reap
 parameter_list|(
@@ -5655,18 +5709,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|thread_unsuspend_one
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|thread_unthread
 parameter_list|(
 name|struct
 name|thread

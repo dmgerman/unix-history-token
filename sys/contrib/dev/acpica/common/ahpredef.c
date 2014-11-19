@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -18,6 +18,20 @@ include|#
 directive|include
 file|<contrib/dev/acpica/include/accommon.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|ACPI_UTILITIES
+end_define
+
+begin_macro
+name|ACPI_MODULE_NAME
+argument_list|(
+literal|"ahpredef"
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * iASL only needs a partial table (short descriptions only).  * AcpiHelp needs the full table.  */
@@ -386,6 +400,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_CCA"
+argument_list|,
+literal|"Cache Coherency Attribute"
+argument_list|,
+literal|"Returns a device's support level for cache coherency"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_CDM"
 argument_list|,
 literal|"Clock Domain"
@@ -598,6 +621,15 @@ argument_list|,
 literal|"Drive Strength"
 argument_list|,
 literal|"Drive Strength setting for GPIO connection, Resource Descriptor field"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_DSD"
+argument_list|,
+literal|"Device-Specific Data"
+argument_list|,
+literal|"Returns a list of device property information"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -1057,6 +1089,15 @@ argument_list|,
 literal|"Low Level"
 argument_list|,
 literal|"Interrupt polarity, Resource Descriptor field"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_LPD"
+argument_list|,
+literal|"Low Power Dependencies"
+argument_list|,
+literal|"Returns a list of dependencies for low power idle entry"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -2420,6 +2461,67 @@ argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiAhMatchPredefinedName  *  * PARAMETERS:  Nameseg                 - Predefined name string  *  * RETURN:      ID info struct. NULL if Nameseg not found  *  * DESCRIPTION: Lookup a predefined name.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|const
+name|AH_PREDEFINED_NAME
+modifier|*
+name|AcpiAhMatchPredefinedName
+parameter_list|(
+name|char
+modifier|*
+name|Nameseg
+parameter_list|)
+block|{
+specifier|const
+name|AH_PREDEFINED_NAME
+modifier|*
+name|Info
+decl_stmt|;
+for|for
+control|(
+name|Info
+operator|=
+name|AslPredefinedInfo
+init|;
+name|Info
+operator|->
+name|Name
+condition|;
+name|Info
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Nameseg
+argument_list|,
+name|Info
+operator|->
+name|Name
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Info
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

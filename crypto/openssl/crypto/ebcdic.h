@@ -21,39 +21,35 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_comment
-comment|/* Avoid name clashes with other applications */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_define
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/* Avoid name clashes with other applications */
 define|#
 directive|define
 name|os_toascii
 value|_openssl_os_toascii
-end_define
-
-begin_define
 define|#
 directive|define
 name|os_toebcdic
 value|_openssl_os_toebcdic
-end_define
-
-begin_define
 define|#
 directive|define
 name|ebcdic2ascii
 value|_openssl_ebcdic2ascii
-end_define
-
-begin_define
 define|#
 directive|define
 name|ascii2ebcdic
 value|_openssl_ascii2ebcdic
-end_define
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|unsigned
@@ -63,9 +59,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 specifier|const
 name|unsigned
@@ -75,9 +68,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|void
 modifier|*
 name|ebcdic2ascii
@@ -95,9 +85,6 @@ name|size_t
 name|count
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|ascii2ebcdic
@@ -115,7 +102,16 @@ name|size_t
 name|count
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

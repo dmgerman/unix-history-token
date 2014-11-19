@@ -650,12 +650,16 @@ operator|.
 name|crc_error
 operator|++
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|sc
 operator|->
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -696,12 +700,16 @@ operator|.
 name|len_error
 operator|++
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|sc
 operator|->
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -1210,15 +1218,19 @@ argument_list|,
 name|vci
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|sc
 operator|->
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* this is in if_atmsubr.c */
-comment|/* sc->ifp->if_ibytes += len; */
+comment|/* if_inc_counter(sc->ifp, IFCOUNTER_IBYTES, len); */
 name|vcc
 operator|->
 name|ibytes

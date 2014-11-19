@@ -139,15 +139,6 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|int
-name|dom_rtoffset
-decl_stmt|;
-comment|/* an arg to rtattach, in bits */
-comment|/* XXX MRT. 		 * rtoffset May be 0 if the domain supplies its own rtattach(), 		 * in which case, a 0 indicates it's being called from  		 * vfs_export.c (HACK)  Only for AF_INET{,6} at this time. 		 * Temporary ABI compat hack.. fix post RELENG_7 		 */
-name|int
-name|dom_maxrtkey
-decl_stmt|;
-comment|/* for routing layer */
 name|void
 modifier|*
 function_decl|(
@@ -171,6 +162,17 @@ name|ifnet
 modifier|*
 parameter_list|,
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|dom_ifmtu
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;

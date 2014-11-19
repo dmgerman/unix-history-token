@@ -314,7 +314,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ah
 argument_list|,
@@ -322,6 +322,8 @@ name|OID_AUTO
 argument_list|,
 name|ah_enable
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -338,7 +340,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ah
 argument_list|,
@@ -346,6 +348,8 @@ name|OID_AUTO
 argument_list|,
 name|ah_cleartos
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

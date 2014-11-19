@@ -598,91 +598,122 @@ value|(1<< 0)
 end_define
 
 begin_comment
-comment|/* Table 3.2 Identifier values */
+comment|/*  * Table 3.2 Identifier values.  * Identifier constants has taken from SFF-8024 rev 2.2 table 4.1  * (as referenced by table 3.2 footer)  * */
 end_comment
 
 begin_enum
 enum|enum
 block|{
-name|SFF_8472_ID_UNKNOWN
+name|SFF_8024_ID_UNKNOWN
 init|=
 literal|0x0
 block|,
 comment|/* Unknown or unspecified */
-name|SFF_8472_ID_GBIC
+name|SFF_8024_ID_GBIC
 init|=
 literal|0x1
 block|,
 comment|/* GBIC */
-name|SFF_8472_ID_SFF
+name|SFF_8024_ID_SFF
 init|=
 literal|0x2
 block|,
 comment|/* Module soldered to motherboard (ex: SFF)*/
-name|SFF_8472_ID_SFP
+name|SFF_8024_ID_SFP
 init|=
 literal|0x3
 block|,
 comment|/* SFP or SFP âPlusâ */
-name|SFF_8472_ID_XBI
+name|SFF_8024_ID_XBI
 init|=
 literal|0x4
 block|,
-comment|/* Reserved for â300 pin XBIâ devices */
-name|SFF_8472_ID_XENPAK
+comment|/* 300 pin XBI */
+name|SFF_8024_ID_XENPAK
 init|=
 literal|0x5
 block|,
-comment|/* Reserved for âXenpakâ devices */
-name|SFF_8472_ID_XFP
+comment|/* Xenpak */
+name|SFF_8024_ID_XFP
 init|=
 literal|0x6
 block|,
-comment|/* Reserved for âXFPâ devices */
-name|SFF_8472_ID_XFF
+comment|/* XFP */
+name|SFF_8024_ID_XFF
 init|=
 literal|0x7
 block|,
-comment|/* Reserved for âXFFâ devices */
-name|SFF_8472_ID_XFPE
+comment|/* XFF */
+name|SFF_8024_ID_XFPE
 init|=
 literal|0x8
 block|,
-comment|/* Reserved for âXFP-Eâ devices */
-name|SFF_8472_ID_XPAK
+comment|/* XFP-E */
+name|SFF_8024_ID_XPAK
 init|=
 literal|0x9
 block|,
-comment|/* Reserved for âXPakâ devices */
-name|SFF_8472_ID_X2
+comment|/* XPAk */
+name|SFF_8024_ID_X2
 init|=
 literal|0xA
 block|,
-comment|/* Reserved for âX2â devices */
-name|SFF_8472_ID_DWDM_SFP
+comment|/* X2 */
+name|SFF_8024_ID_DWDM_SFP
 init|=
 literal|0xB
 block|,
-comment|/* Reserved for âDWDM-SFPâ devices */
-name|SFF_8472_ID_QSFP
+comment|/* DWDM-SFP */
+name|SFF_8024_ID_QSFP
 init|=
 literal|0xC
 block|,
-comment|/* Reserved for âQSFPâ devices */
-name|SFF_8472_ID_LAST
+comment|/* QSFP */
+name|SFF_8024_ID_QSFPPLUS
 init|=
-name|SFF_8472_ID_QSFP
+literal|0xD
+block|,
+comment|/* QSFP+ */
+name|SFF_8024_ID_CXP
+init|=
+literal|0xE
+block|,
+comment|/* CXP */
+name|SFF_8024_ID_HD4X
+init|=
+literal|0xF
+block|,
+comment|/* Shielded Mini Multilane HD 4X */
+name|SFF_8024_ID_HD8X
+init|=
+literal|0x10
+block|,
+comment|/* Shielded Mini Multilane HD 8X */
+name|SFF_8024_ID_QSFP28
+init|=
+literal|0x11
+block|,
+comment|/* QSFP28 */
+name|SFF_8024_ID_CXP2
+init|=
+literal|0x12
+block|,
+comment|/* CXP2 (aka CXP28) */
+name|SFF_8024_ID_LAST
+init|=
+name|SFF_8024_ID_CXP2
 block|}
 enum|;
 end_enum
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
-name|sff_8472_id
+name|sff_8024_id
 index|[
-name|SFF_8472_ID_LAST
+name|SFF_8024_ID_LAST
 operator|+
 literal|1
 index|]
@@ -694,7 +725,7 @@ literal|"GBIC"
 block|,
 literal|"SFF"
 block|,
-literal|"SFP"
+literal|"SFP/SFP+"
 block|,
 literal|"XBI"
 block|,
@@ -706,16 +737,185 @@ literal|"XFF"
 block|,
 literal|"XFP-E"
 block|,
-literal|"XPak"
+literal|"XPAk"
 block|,
 literal|"X2"
 block|,
 literal|"DWDM-SFP"
 block|,
 literal|"QSFP"
+block|,
+literal|"QSFP+"
+block|,
+literal|"CXP"
+block|,
+literal|"HD4X"
+block|,
+literal|"HD8X"
+block|,
+literal|"QSFP28"
+block|,
+literal|"CXP2"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Keep compability with old definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_UNKNOWN
+value|SFF_8024_ID_UNKNOWN
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_GBIC
+value|SFF_8024_ID_GBIC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_SFF
+value|SFF_8024_ID_SFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_SFP
+value|SFF_8024_ID_SFP
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_XBI
+value|SFF_8024_ID_XBI
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_XENPAK
+value|SFF_8024_ID_XENPAK
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_XFP
+value|SFF_8024_ID_XFP
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_XFF
+value|SFF_8024_ID_XFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_XFPE
+value|SFF_8024_ID_XFPE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_XPAK
+value|SFF_8024_ID_XPAK
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_X2
+value|SFF_8024_ID_X2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_DWDM_SFP
+value|SFF_8024_ID_DWDM_SFP
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_QSFP
+value|SFF_8024_ID_QSFP
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_ID_LAST
+value|SFF_8024_ID_LAST
+end_define
+
+begin_define
+define|#
+directive|define
+name|sff_8472_id
+value|sff_8024_id
+end_define
+
+begin_comment
+comment|/*  * Table 3.9 Diagnostic Monitoring Type (byte 92)  * bits described.  */
+end_comment
+
+begin_comment
+comment|/*  * Digital diagnostic monitoring implemented.  * Set to 1 for transceivers implementing DDM.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_DDM_DONE
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/*  * Measurements are internally calibrated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_DDM_INTERNAL
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/*  * Measurements are externally calibrated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_DDM_EXTERNAL
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/*  * Received power measurement type  * 0 = OMA, 1 = average power  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_8472_DDM_PMTYPE
+value|(1<< 3)
+end_define
 
 begin_comment
 comment|/* Table 3.13 and 3.14 Temperature Conversion Values */

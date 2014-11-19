@@ -23,7 +23,8 @@ modifier|*
 name|ioport_handler_func_t
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|vm
 modifier|*
 name|vm
 parameter_list|,

@@ -2820,6 +2820,12 @@ name|ctlr
 operator|->
 name|quirks
 expr_stmt|;
+name|ch
+operator|->
+name|pm_level
+operator|=
+literal|0
+expr_stmt|;
 name|resource_int_value
 argument_list|(
 name|device_get_name

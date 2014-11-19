@@ -1721,6 +1721,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_JMB368_2
+value|0x0368197b
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_MARVELL_ID
 value|0x11ab
 end_define

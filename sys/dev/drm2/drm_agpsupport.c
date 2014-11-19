@@ -1761,7 +1761,7 @@ name|type
 argument_list|,
 name|pages
 operator|<<
-name|AGP_PAGE_SHIFT
+name|PAGE_SHIFT
 argument_list|)
 return|;
 block|}

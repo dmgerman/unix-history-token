@@ -471,6 +471,41 @@ value|1
 end_define
 
 begin_comment
+comment|/* Defines specific for arm headers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_EABIMASK
+value|0xff000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_EABI_VERSION
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& EF_ARM_EABIMASK)>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_EABI_VERSION_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_EABI_FREEBSD_MIN
+value|4
+end_define
+
+begin_comment
 comment|/*  * Magic number for the elf trampoline, chosen wisely to be an immediate  * value.  */
 end_comment
 

@@ -6056,12 +6056,10 @@ operator|++
 control|)
 block|{
 name|u_int8_t
-name|err
-decl_stmt|,
+comment|/* err, */
 name|stat
 decl_stmt|;
-name|err
-operator|=
+comment|/* err = */
 name|ATA_IDX_INB
 argument_list|(
 name|ch

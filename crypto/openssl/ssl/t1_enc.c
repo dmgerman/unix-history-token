@@ -6063,9 +6063,9 @@ name|label
 argument_list|,
 name|llen
 argument_list|,
-name|p
+name|context
 argument_list|,
-name|plen
+name|contextlen
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6687,6 +6687,14 @@ case|:
 return|return
 operator|(
 name|TLS1_AD_UNKNOWN_PSK_IDENTITY
+operator|)
+return|;
+case|case
+name|SSL_AD_INAPPROPRIATE_FALLBACK
+case|:
+return|return
+operator|(
+name|TLS1_AD_INAPPROPRIATE_FALLBACK
 operator|)
 return|;
 if|#

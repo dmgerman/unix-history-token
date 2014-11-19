@@ -439,6 +439,39 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * When a vdev is added, it will be divided into approximately (but no  * more than) this number of metaslabs.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|metaslabs_per_vdev
+init|=
+literal|200
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_vdev
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|metaslabs_per_vdev
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|metaslabs_per_vdev
+argument_list|,
+literal|0
+argument_list|,
+literal|"When a vdev is added, how many metaslabs the vdev should be divided into"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Given a vdev type, return the appropriate ops vector.  */
 end_comment
 
@@ -4164,7 +4197,7 @@ operator|->
 name|vdev_ishole
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Compute the raidz-deflation ratio.  Note, we hard-code 	 * in 128k (1<< 17) because it is the current "typical" blocksize. 	 * Even if SPA_MAXBLOCKSIZE changes, this algorithm must never change, 	 * or we will inconsistently account for existing bp's. 	 */
+comment|/* 	 * Compute the raidz-deflation ratio.  Note, we hard-code 	 * in 128k (1<< 17) because it is the "typical" blocksize. 	 * Even though SPA_MAXBLOCKSIZE changed, this algorithm can not change, 	 * otherwise it would inconsistently account for existing bp's. 	 */
 name|vd
 operator|->
 name|vdev_deflate_ratio
@@ -5543,6 +5576,12 @@ name|B_FALSE
 expr_stmt|;
 name|vd
 operator|->
+name|vdev_notrim
+operator|=
+name|B_FALSE
+expr_stmt|;
+name|vd
+operator|->
 name|vdev_min_asize
 operator|=
 name|vdev_get_min_asize
@@ -5864,25 +5903,24 @@ operator|)
 return|;
 if|if
 condition|(
+name|zfs_trim_enabled
+operator|&&
+operator|!
+name|vd
+operator|->
+name|vdev_notrim
+operator|&&
 name|vd
 operator|->
 name|vdev_ops
 operator|->
 name|vdev_op_leaf
 condition|)
-block|{
-name|vd
-operator|->
-name|vdev_notrim
-operator|=
-name|B_FALSE
-expr_stmt|;
 name|trim_map_create
 argument_list|(
 name|vd
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|int
@@ -7344,7 +7382,7 @@ modifier|*
 name|vd
 parameter_list|)
 block|{
-comment|/* 	 * Aim for roughly 200 metaslabs per vdev. 	 */
+comment|/* 	 * Aim for roughly metaslabs_per_vdev (default 200) metaslabs per vdev. 	 */
 name|vd
 operator|->
 name|vdev_ms_shift
@@ -7355,7 +7393,7 @@ name|vd
 operator|->
 name|vdev_asize
 operator|/
-literal|200
+name|metaslabs_per_vdev
 argument_list|)
 expr_stmt|;
 name|vd
@@ -8536,7 +8574,7 @@ name|DTL_OUTAGE
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the vdev was resilvering and no longer has any 		 * DTLs then reset its resilvering flag. 		 */
+comment|/* 		 * If the vdev was resilvering and no longer has any 		 * DTLs then reset its resilvering flag and dirty 		 * the top level so that we persist the change. 		 */
 if|if
 condition|(
 name|vd
@@ -8569,12 +8607,21 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|vd
 operator|->
 name|vdev_resilver_txg
 operator|=
 literal|0
 expr_stmt|;
+name|vdev_config_dirty
+argument_list|(
+name|vd
+operator|->
+name|vdev_top
+argument_list|)
+expr_stmt|;
+block|}
 name|mutex_exit
 argument_list|(
 operator|&
@@ -12384,7 +12431,13 @@ operator|==
 name|vd
 operator|->
 name|vdev_top
+operator|&&
+operator|!
+name|vd
+operator|->
+name|vdev_ishole
 condition|)
+block|{
 name|vs
 operator|->
 name|vs_fragmentation
@@ -12395,6 +12448,7 @@ name|vdev_mg
 operator|->
 name|mg_fragmentation
 expr_stmt|;
+block|}
 comment|/* 	 * If we're getting stats on the root vdev, aggregate the I/O counts 	 * over all top-level vdevs (i.e. the direct children of the root). 	 */
 if|if
 condition|(

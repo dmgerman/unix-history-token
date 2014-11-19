@@ -39,6 +39,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_MD5
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISC_SOCKLEN_T
 value|socklen_t
 end_define

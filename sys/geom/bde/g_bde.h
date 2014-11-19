@@ -724,6 +724,7 @@ parameter_list|,
 name|u_int
 name|len
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|key
@@ -775,6 +776,7 @@ name|keyInstance
 modifier|*
 name|ki
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|in
@@ -837,6 +839,7 @@ name|keyInstance
 modifier|*
 name|ki
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|in

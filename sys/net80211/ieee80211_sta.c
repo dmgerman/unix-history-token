@@ -3711,10 +3711,14 @@ break|break;
 block|}
 name|err
 label|:
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|out
 label|:

@@ -287,7 +287,7 @@ name|SSL_HIGH
 block|,
 literal|0
 block|,
-literal|168
+literal|112
 block|,
 literal|168
 block|, 	}
@@ -784,6 +784,21 @@ operator|->
 name|hit
 expr_stmt|;
 break|break;
+case|case
+name|SSL_CTRL_CHECK_PROTO_VERSION
+case|:
+return|return
+name|ssl3_ctrl
+argument_list|(
+name|s
+argument_list|,
+name|SSL_CTRL_CHECK_PROTO_VERSION
+argument_list|,
+name|larg
+argument_list|,
+name|parg
+argument_list|)
+return|;
 default|default:
 break|break;
 block|}
@@ -1032,6 +1047,10 @@ literal|0xff000000
 operator|)
 operator|!=
 literal|0x02000000
+operator|&&
+name|l
+operator|!=
+name|SSL3_CK_FALLBACK_SCSV
 condition|)
 return|return
 operator|(

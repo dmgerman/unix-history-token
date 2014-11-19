@@ -591,6 +591,20 @@ operator|++
 name|exp
 control|)
 block|{
+comment|/* 			 * If the excluded region does not match given flags, 			 * continue checking with the next excluded region. 			 */
+if|if
+condition|(
+operator|(
+name|exp
+operator|->
+name|flags
+operator|&
+name|exflags
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|xstart
 operator|=
 name|exp

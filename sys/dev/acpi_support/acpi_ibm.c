@@ -783,7 +783,7 @@ modifier|*
 name|description
 decl_stmt|;
 name|int
-name|access
+name|flag_rdonly
 decl_stmt|;
 block|}
 name|acpi_ibm_sysctls
@@ -805,14 +805,7 @@ operator|.
 name|description
 operator|=
 literal|"ACPI events enable"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -829,14 +822,7 @@ operator|.
 name|description
 operator|=
 literal|"ACPI eventmask"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -855,11 +841,9 @@ operator|=
 literal|"Key Status"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -877,14 +861,7 @@ operator|.
 name|description
 operator|=
 literal|"LCD Brightness"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -901,14 +878,7 @@ operator|.
 name|description
 operator|=
 literal|"Volume"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -925,14 +895,7 @@ operator|.
 name|description
 operator|=
 literal|"Mute"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -949,14 +912,7 @@ operator|.
 name|description
 operator|=
 literal|"Thinklight enable"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -973,14 +929,7 @@ operator|.
 name|description
 operator|=
 literal|"Bluetooth enable"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -999,11 +948,9 @@ operator|=
 literal|"WLAN enable"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -1023,11 +970,9 @@ operator|=
 literal|"Fan speed"
 block|,
 operator|.
-name|access
+name|flag_rdonly
 operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RD
+literal|1
 block|}
 block|,
 block|{
@@ -1045,14 +990,7 @@ operator|.
 name|description
 operator|=
 literal|"Fan level"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 operator|.
@@ -1069,14 +1007,7 @@ operator|.
 name|description
 operator|=
 literal|"Fan enable"
-block|,
-operator|.
-name|access
-operator|=
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-block|}
+block|, 	}
 block|,
 block|{
 name|NULL
@@ -1973,6 +1904,18 @@ name|method
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|acpi_ibm_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|flag_rdonly
+operator|!=
+literal|0
+condition|)
+block|{
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|sc
@@ -1995,12 +1938,9 @@ index|]
 operator|.
 name|name
 argument_list|,
-name|acpi_ibm_sysctls
-index|[
-name|i
-index|]
-operator|.
-name|access
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RD
 argument_list|,
 name|sc
 argument_list|,
@@ -2018,6 +1958,52 @@ operator|.
 name|description
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|SYSCTL_ADD_PROC
+argument_list|(
+name|sc
+operator|->
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|sc
+operator|->
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|acpi_ibm_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+name|sc
+argument_list|,
+name|i
+argument_list|,
+name|acpi_ibm_sysctl
+argument_list|,
+literal|"I"
+argument_list|,
+name|acpi_ibm_sysctls
+index|[
+name|i
+index|]
+operator|.
+name|description
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Hook up thermal node */
 if|if
@@ -2308,24 +2294,6 @@ block|{
 name|int
 name|val
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|acpi_ibm_sysctls
-index|[
-name|i
-index|]
-operator|.
-name|access
-operator|&
-name|CTLFLAG_RD
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-continue|continue;
-block|}
 name|val
 operator|=
 name|acpi_ibm_sysctl_get
@@ -2337,22 +2305,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|acpi_ibm_sysctls
 index|[
 name|i
 index|]
 operator|.
-name|access
-operator|&
-name|CTLFLAG_WR
-operator|)
-operator|==
+name|flag_rdonly
+operator|!=
 literal|0
 condition|)
-block|{
 continue|continue;
-block|}
 name|acpi_ibm_sysctl_set
 argument_list|(
 name|sc
@@ -4223,6 +4185,12 @@ name|unsigned
 name|int
 name|handler_events
 decl_stmt|;
+name|char
+name|temp
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -4358,12 +4326,9 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* Copy out the old values to the user. */
-name|error
-operator|=
-name|SYSCTL_OUT
+name|strlcpy
 argument_list|(
-name|req
+name|temp
 argument_list|,
 name|sbuf_data
 argument_list|(
@@ -4371,10 +4336,9 @@ operator|&
 name|sb
 argument_list|)
 argument_list|,
-name|sbuf_len
+sizeof|sizeof
 argument_list|(
-operator|&
-name|sb
+name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4384,6 +4348,23 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_string
+argument_list|(
+name|oidp
+argument_list|,
+name|temp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+comment|/* Check for error or no change */
 if|if
 condition|(
 name|error
@@ -4406,13 +4387,7 @@ literal|0
 expr_stmt|;
 name|cp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|req
-operator|->
-name|newptr
+name|temp
 expr_stmt|;
 while|while
 condition|(

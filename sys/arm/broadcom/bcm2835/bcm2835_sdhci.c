@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/taskqueue.h>
 end_include
 
@@ -283,7 +289,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Arasan HC seems to have problem with Data CRC on lower frequencies.  * Use this tunable to cap initialization sequence frequency at higher  * value. Default is standard 400kHz  */
+comment|/*   * Arasan HC seems to have problem with Data CRC on lower frequencies.  * Use this tunable to cap initialization sequence frequency at higher  * value.  Default is standard 400kHz.  * HS mode brings too many problems for most of cards, so disable HS mode  * until a better fix comes up.  * HS mode still can be enabled with the tunable.  */
 end_comment
 
 begin_decl_stmt
@@ -300,7 +306,7 @@ specifier|static
 name|int
 name|bcm2835_sdhci_hs
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1404,84 +1410,36 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The Arasan HC has a bug where it may lose the content of 	 * consecutive writes to registers that are within two SD-card 	 * clock cycles of each other (a clock domain crossing problem).  	 */
 if|if
 condition|(
-operator|(
-name|off
-operator|!=
-name|SDHCI_BUFFER
-operator|&&
-name|off
-operator|!=
-name|SDHCI_INT_STATUS
-operator|&&
-name|off
-operator|!=
-name|SDHCI_CLOCK_CONTROL
-operator|)
-condition|)
-block|{
-name|int
-name|timeout
-init|=
-literal|100000
-decl_stmt|;
-while|while
-condition|(
-name|val
-operator|!=
-name|bus_space_read_4
-argument_list|(
 name|sc
 operator|->
-name|sc_bst
-argument_list|,
-name|sc
-operator|->
-name|sc_bsh
-argument_list|,
-name|off
-argument_list|)
-operator|&&
-operator|--
-name|timeout
+name|sc_slot
+operator|.
+name|clock
 operator|>
 literal|0
 condition|)
-continue|continue;
-if|if
-condition|(
-name|timeout
-operator|<=
-literal|0
-condition|)
-name|printf
+name|DELAY
 argument_list|(
-literal|"sdhci_brcm: writing 0x%X to reg 0x%X "
-literal|"always gives 0x%X\n"
-argument_list|,
-name|val
-argument_list|,
 operator|(
-name|uint32_t
+operator|(
+literal|2
+operator|*
+literal|1000000
 operator|)
-name|off
-argument_list|,
-name|bus_space_read_4
-argument_list|(
+operator|/
 name|sc
 operator|->
-name|sc_bst
-argument_list|,
-name|sc
-operator|->
-name|sc_bsh
-argument_list|,
-name|off
-argument_list|)
+name|sc_slot
+operator|.
+name|clock
+operator|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

@@ -205,6 +205,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|u_int
+name|hv_high
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|hv_vendor
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|kstack
 index|[]
@@ -507,6 +522,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|identify_cpu
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|initializecpu
 parameter_list|(
 name|void
@@ -575,6 +599,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|panicifcpuunsupported
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pagecopy
 parameter_list|(
 name|void
@@ -595,6 +628,15 @@ parameter_list|(
 name|void
 modifier|*
 name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|printcpuinfo
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -632,7 +674,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|minidumpsys
 parameter_list|(
 name|struct

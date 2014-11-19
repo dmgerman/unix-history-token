@@ -2699,6 +2699,8 @@ operator|=
 name|syscall_helper_register
 argument_list|(
 name|aio_syscalls
+argument_list|,
+name|SY_THR_STATIC_KLD
 argument_list|)
 expr_stmt|;
 if|if
@@ -2718,6 +2720,8 @@ operator|=
 name|syscall32_helper_register
 argument_list|(
 name|aio32_syscalls
+argument_list|,
+name|SY_THR_STATIC_KLD
 argument_list|)
 expr_stmt|;
 if|if

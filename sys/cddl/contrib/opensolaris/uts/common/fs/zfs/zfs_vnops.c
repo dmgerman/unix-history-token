@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013, 2014 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright 2014 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -778,39 +778,12 @@ operator|&
 name|noff
 argument_list|)
 expr_stmt|;
-comment|/* end of file? */
 if|if
 condition|(
-operator|(
 name|error
 operator|==
 name|ESRCH
-operator|)
-operator|||
-operator|(
-name|noff
-operator|>
-name|file_sz
-operator|)
 condition|)
-block|{
-comment|/* 		 * Handle the virtual hole at the end of file. 		 */
-if|if
-condition|(
-name|hole
-condition|)
-block|{
-operator|*
-name|off
-operator|=
-name|file_sz
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 return|return
 operator|(
 name|SET_ERROR
@@ -819,6 +792,23 @@ name|ENXIO
 argument_list|)
 operator|)
 return|;
+comment|/* 	 * We could find a hole that begins after the logical end-of-file, 	 * because dmu_offset_next() only works on whole blocks.  If the 	 * EOF falls mid-block, then indicate that the "virtual hole" 	 * at the end of the file begins at the logical EOF, rather than 	 * at the end of the last block. 	 */
+if|if
+condition|(
+name|noff
+operator|>
+name|file_sz
+condition|)
+block|{
+name|ASSERT
+argument_list|(
+name|hole
+argument_list|)
+expr_stmt|;
+name|noff
+operator|=
+name|file_sz
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2114,16 +2104,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|objset_t
-modifier|*
-name|os
-init|=
-name|zp
-operator|->
-name|z_zfsvfs
-operator|->
-name|z_os
-decl_stmt|;
 name|vm_object_t
 name|obj
 decl_stmt|;
@@ -2290,13 +2270,14 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|dmu_read_uio
+name|dmu_read_uio_dbuf
 argument_list|(
-name|os
-argument_list|,
+name|sa_get_db
+argument_list|(
 name|zp
 operator|->
-name|z_id
+name|z_sa_hdl
+argument_list|)
 argument_list|,
 name|uio
 argument_list|,
@@ -2400,10 +2381,6 @@ name|zp
 operator|->
 name|z_zfsvfs
 decl_stmt|;
-name|objset_t
-modifier|*
-name|os
-decl_stmt|;
 name|ssize_t
 name|n
 decl_stmt|,
@@ -2433,12 +2410,6 @@ name|ZFS_VERIFY_ZP
 argument_list|(
 name|zp
 argument_list|)
-expr_stmt|;
-name|os
-operator|=
-name|zfsvfs
-operator|->
-name|z_os
 expr_stmt|;
 if|if
 condition|(
@@ -2875,6 +2846,7 @@ argument_list|(
 name|vp
 argument_list|)
 condition|)
+block|{
 name|error
 operator|=
 name|mappedread
@@ -2886,22 +2858,26 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|error
 operator|=
-name|dmu_read_uio
+name|dmu_read_uio_dbuf
 argument_list|(
-name|os
-argument_list|,
+name|sa_get_db
+argument_list|(
 name|zp
 operator|->
-name|z_id
+name|z_sa_hdl
+argument_list|)
 argument_list|,
 name|uio
 argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -4002,6 +3978,7 @@ operator|>
 name|max_blksz
 condition|)
 block|{
+comment|/* 				 * File's blocksize is already larger than the 				 * "recordsize" property.  Only let it grow to 				 * the next power of 2. 				 */
 name|ASSERT
 argument_list|(
 operator|!
@@ -4019,7 +3996,14 @@ name|MIN
 argument_list|(
 name|end_size
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+literal|1
+operator|<<
+name|highbit64
+argument_list|(
+name|zp
+operator|->
+name|z_blksz
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -11933,6 +11917,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* FreeBSD: Reset chflags(2) flags. */
+name|vap
+operator|->
+name|va_filerev
+operator|=
+name|zp
+operator|->
+name|z_seq
+expr_stmt|;
 comment|/* 	 * Add in any requested optional attributes and the create time. 	 * Also set the corresponding bits in the returned attribute bitmap. 	 */
 if|if
 condition|(
@@ -25953,7 +25945,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getpages_args
-comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_reqpage; 		vm_ooffset_t a_offset; 	} */
+comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_reqpage; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -26848,7 +26840,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_putpages_args
-comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_sync; 		int *a_rtvals; 		vm_ooffset_t a_offset; 	} */
+comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_sync; 		int *a_rtvals; 	} */
 modifier|*
 name|ap
 decl_stmt|;

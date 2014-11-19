@@ -4724,7 +4724,7 @@ name|pp
 operator|->
 name|ki_oncpu
 operator|!=
-literal|0xff
+name|NOCPU
 condition|)
 name|sprintf
 argument_list|(
@@ -5671,7 +5671,7 @@ name|pp
 operator|->
 name|ki_oncpu
 operator|!=
-literal|0xff
+name|NOCPU
 condition|)
 name|cpu
 operator|=

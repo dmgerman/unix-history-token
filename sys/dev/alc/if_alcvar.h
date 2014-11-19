@@ -142,6 +142,10 @@ name|ALC_TX_DESC_HIWAT
 value|((ALC_TX_RING_CNT * 6) / 10)
 end_define
 
+begin_comment
+comment|/*  * AR816x controllers support up to 16 messages but this driver  * uses single message.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -713,10 +717,6 @@ name|ALC_FLAG_JUMBO
 value|0x0040
 define|#
 directive|define
-name|ALC_FLAG_ASPM_MON
-value|0x0080
-define|#
-directive|define
 name|ALC_FLAG_CMB_BUG
 value|0x0100
 define|#
@@ -735,6 +735,14 @@ define|#
 directive|define
 name|ALC_FLAG_APS
 value|0x1000
+define|#
+directive|define
+name|ALC_FLAG_AR816X_FAMILY
+value|0x2000
+define|#
+directive|define
+name|ALC_FLAG_LINK_WAR
+value|0x4000
 define|#
 directive|define
 name|ALC_FLAG_LINK

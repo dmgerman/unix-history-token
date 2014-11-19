@@ -195,18 +195,18 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|u_int
+name|lba_t
 name|apm_metadata
 parameter_list|(
 name|u_int
 name|where
+parameter_list|,
+name|lba_t
+name|blk
 parameter_list|)
 block|{
-name|u_int
-name|secs
-decl_stmt|;
-name|secs
-operator|=
+name|blk
+operator|+=
 operator|(
 name|where
 operator|==
@@ -221,7 +221,10 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|secs
+name|round_block
+argument_list|(
+name|blk
+argument_list|)
 operator|)
 return|;
 block|}

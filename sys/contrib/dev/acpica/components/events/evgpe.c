@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -798,7 +798,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"Ignore disabled registers for GPE%02X-GPE%02X: "
+literal|"Ignore disabled registers for GPE %02X-%02X: "
 literal|"RunEnable=%02X, WakeEnable=%02X\n"
 operator|,
 name|GpeRegisterInfo
@@ -884,7 +884,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"Read registers for GPE%02X-GPE%02X: Status=%02X, Enable=%02X, "
+literal|"Read registers for GPE %02X-%02X: Status=%02X, Enable=%02X, "
 literal|"RunEnable=%02X, WakeEnable=%02X\n"
 operator|,
 name|GpeRegisterInfo
@@ -1110,6 +1110,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_FREE
+argument_list|(
+name|LocalGpeEventInfo
+argument_list|)
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
@@ -1128,6 +1133,11 @@ operator|=
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|LocalGpeEventInfo
 argument_list|)
 expr_stmt|;
 name|return_VOID
@@ -1161,6 +1171,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_FREE
+argument_list|(
+name|LocalGpeEventInfo
+argument_list|)
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
@@ -1499,6 +1514,43 @@ name|AcpiGbl_GlobalEventHandlerContext
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Always disable the GPE so that it does not keep firing before      * any asynchronous activity completes (either from the execution      * of a GPE method or an asynchronous GPE handler.)      *      * If there is no handler or method to run, just disable the      * GPE and leave it disabled permanently to prevent further such      * pointless events from firing.      */
+name|Status
+operator|=
+name|AcpiHwLowSetGpe
+argument_list|(
+name|GpeEventInfo
+argument_list|,
+name|ACPI_GPE_DISABLE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_EXCEPTION
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+name|Status
+operator|,
+literal|"Unable to disable GPE %02X"
+operator|,
+name|GpeNumber
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_UINT32
+argument_list|(
+name|ACPI_INTERRUPT_NOT_HANDLED
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * If edge-triggered, clear the GPE status bit now. Note that      * level-triggered events are cleared after the GPE is serviced.      */
 if|if
 condition|(
@@ -1535,48 +1587,20 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to clear GPE%02X"
+literal|"Unable to clear GPE %02X"
 operator|,
 name|GpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_UINT32
-argument_list|(
-name|ACPI_INTERRUPT_NOT_HANDLED
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/*      * Always disable the GPE so that it does not keep firing before      * any asynchronous activity completes (either from the execution      * of a GPE method or an asynchronous GPE handler.)      *      * If there is no handler or method to run, just disable the      * GPE and leave it disabled permanently to prevent further such      * pointless events from firing.      */
-name|Status
-operator|=
+operator|(
+name|void
+operator|)
 name|AcpiHwLowSetGpe
 argument_list|(
 name|GpeEventInfo
 argument_list|,
-name|ACPI_GPE_DISABLE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_EXCEPTION
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-name|Status
-operator|,
-literal|"Unable to disable GPE%02X"
-operator|,
-name|GpeNumber
-operator|)
+name|ACPI_GPE_CONDITIONAL_ENABLE
 argument_list|)
 expr_stmt|;
 name|return_UINT32
@@ -1584,6 +1608,7 @@ argument_list|(
 name|ACPI_INTERRUPT_NOT_HANDLED
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/*      * Dispatch the GPE to either an installed handler or the control      * method associated with this GPE (_Lxx or _Exx). If a handler      * exists, we invoke it and do not attempt to run the method.      * If there is neither a handler nor a method, leave the GPE      * disabled.      */
 switch|switch
@@ -1673,7 +1698,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to queue handler for GPE%02X - event disabled"
+literal|"Unable to queue handler for GPE %02X - event disabled"
 operator|,
 name|GpeNumber
 operator|)
@@ -1688,7 +1713,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No handler or method for GPE%02X, disabling event"
+literal|"No handler or method for GPE %02X, disabling event"
 operator|,
 name|GpeNumber
 operator|)

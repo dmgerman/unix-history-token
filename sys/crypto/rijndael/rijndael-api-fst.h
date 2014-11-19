@@ -324,6 +324,7 @@ name|u_int8_t
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -355,6 +356,7 @@ parameter_list|,
 name|keyInstance
 modifier|*
 parameter_list|,
+specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -376,6 +378,7 @@ parameter_list|,
 name|keyInstance
 modifier|*
 parameter_list|,
+specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -397,6 +400,7 @@ parameter_list|,
 name|keyInstance
 modifier|*
 parameter_list|,
+specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -418,6 +422,7 @@ parameter_list|,
 name|keyInstance
 modifier|*
 parameter_list|,
+specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|,

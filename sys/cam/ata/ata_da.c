@@ -1000,7 +1000,7 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
-comment|/* 		 * Corsair Force GT SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
+comment|/* 		 * Corsair Force GT& GS SSDs 		 * 4k optimised& trim only works in 4k requests + 4k aligned 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -1008,7 +1008,7 @@ name|SIP_MEDIA_FIXED
 block|,
 literal|"*"
 block|,
-literal|"Corsair Force GT*"
+literal|"Corsair Force G*"
 block|,
 literal|"*"
 block|}
@@ -1315,6 +1315,78 @@ block|,
 literal|"*"
 block|,
 literal|"SAMSUNG SSD 830 Series*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung 840 SSDs 		 * 4k optimised 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"Samsung SSD 840*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung 843T Series SSDs 		 * 4k optimised 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"SAMSUNG MZ7WD*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung 850 SSDs 		 * 4k optimised 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"Samsung SSD 850*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* 		 * Samsung PM853T Series SSDs 		 * 4k optimised 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"SAMSUNG MZ7GE*"
 block|,
 literal|"*"
 block|}
@@ -5959,7 +6031,7 @@ argument_list|,
 name|legacy_id
 argument_list|)
 expr_stmt|;
-name|setenv
+name|kern_setenv
 argument_list|(
 name|announce_buf
 argument_list|,
@@ -6786,6 +6858,16 @@ modifier|*
 name|ataio
 parameter_list|)
 block|{
+name|struct
+name|trim_request
+modifier|*
+name|req
+init|=
+operator|&
+name|softc
+operator|->
+name|trim_req
+decl_stmt|;
 name|uint64_t
 name|lba
 init|=
@@ -6806,6 +6888,47 @@ name|params
 operator|.
 name|secsize
 decl_stmt|;
+name|bzero
+argument_list|(
+name|req
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|req
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|req
+operator|->
+name|bps
+argument_list|)
+expr_stmt|;
+name|bioq_remove
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|trim_queue
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|req
+operator|->
+name|bps
+argument_list|,
+name|bp
+argument_list|,
+name|bio_queue
+argument_list|)
+expr_stmt|;
 name|cam_fill_ataio
 argument_list|(
 name|ataio

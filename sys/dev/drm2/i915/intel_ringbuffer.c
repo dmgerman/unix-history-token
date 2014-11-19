@@ -1276,6 +1276,8 @@ operator|->
 name|cpu_page
 operator|+
 name|PAGE_SIZE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|pc
@@ -1549,6 +1551,22 @@ name|CM0_STC_EVICT_DISABLE_LRA_SNB
 operator|<<
 name|CM0_MASK_SHIFT
 argument_list|)
+expr_stmt|;
+comment|/* This is not explicitly set for GEN6, so read the register. 		 * see intel_ring_mi_set_context() for why we care. 		 * TODO: consider explicitly setting the bit for GEN5 		 */
+name|ring
+operator|->
+name|itlb_before_ctx_switch
+operator|=
+operator|!
+operator|!
+operator|(
+name|I915_READ
+argument_list|(
+name|GFX_MODE
+argument_list|)
+operator|&
+name|GFX_TLB_INVALIDATE_ALWAYS
+operator|)
 expr_stmt|;
 block|}
 if|if
@@ -4049,6 +4067,8 @@ operator|.
 name|page_addr
 operator|+
 name|PAGE_SIZE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|ring

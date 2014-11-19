@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/armreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -589,9 +595,9 @@ argument_list|)
 expr_stmt|;
 name|enable_interrupts
 argument_list|(
-name|I32_bit
+name|PSR_I
 operator||
-name|F32_bit
+name|PSR_F
 argument_list|)
 expr_stmt|;
 return|return
@@ -689,7 +695,7 @@ name|FDT
 end_ifdef
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|at91_aic
 argument_list|,
@@ -702,6 +708,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|BUS_PASS_INTERRUPT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -712,7 +720,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|EARLY_DRIVER_MODULE
 argument_list|(
 name|at91_aic
 argument_list|,
@@ -725,6 +733,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|BUS_PASS_INTERRUPT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -733,10 +743,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not yet EARLY_DRIVER_MODULE(at91_aic, simplebus, at91_aic_driver, at91_aic_devclass,     NULL, NULL, BUS_PASS_INTERRUPT); */
-end_comment
 
 end_unit
 

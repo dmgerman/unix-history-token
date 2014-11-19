@@ -246,6 +246,16 @@ comment|/* 1=ignore auth if we do not care */
 end_comment
 
 begin_decl_stmt
+name|int
+name|insecure
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Reply to special queries or not */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|timeval
 name|epoch
@@ -634,7 +644,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sqdghmAtvT:F:P:"
+literal|"isqdghmAtvT:F:P:"
 argument_list|)
 operator|)
 operator|!=
@@ -647,6 +657,13 @@ condition|(
 name|n
 condition|)
 block|{
+case|case
+literal|'i'
+case|:
+name|insecure
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'s'
 case|:

@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kstack_usage_prof.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1183,7 +1189,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_char
+name|int
 parameter_list|)
 parameter_list|,
 specifier|const
@@ -1421,7 +1427,7 @@ name|intr_event
 modifier|*
 name|ie
 parameter_list|,
-name|u_char
+name|int
 name|cpu
 parameter_list|)
 block|{
@@ -1752,10 +1758,9 @@ name|cpuset_t
 modifier|*
 name|mask
 decl_stmt|;
-name|u_char
-name|cpu
-decl_stmt|;
 name|int
+name|cpu
+decl_stmt|,
 name|n
 decl_stmt|;
 name|mask
@@ -1815,9 +1820,6 @@ operator|)
 return|;
 name|cpu
 operator|=
-operator|(
-name|u_char
-operator|)
 name|n
 expr_stmt|;
 block|}
@@ -4262,10 +4264,6 @@ expr_stmt|;
 comment|/* 	 * If any of the handlers for this ithread claim to be good 	 * sources of entropy, then gather some. 	 */
 if|if
 condition|(
-name|harvest
-operator|.
-name|interrupt
-operator|&&
 name|ie
 operator|->
 name|ie_flags
@@ -4273,23 +4271,6 @@ operator|&
 name|IE_ENTROPY
 condition|)
 block|{
-name|CTR3
-argument_list|(
-name|KTR_INTR
-argument_list|,
-literal|"%s: pid %d (%s) gathering entropy"
-argument_list|,
-name|__func__
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|td
-operator|->
-name|td_name
-argument_list|)
-expr_stmt|;
 name|entropy
 operator|.
 name|event
@@ -4917,10 +4898,6 @@ expr_stmt|;
 comment|/* 	 * If any of the handlers for this ithread claim to be good 	 * sources of entropy, then gather some. 	 */
 if|if
 condition|(
-name|harvest
-operator|.
-name|interrupt
-operator|&&
 name|ie
 operator|->
 name|ie_flags
@@ -4928,23 +4905,6 @@ operator|&
 name|IE_ENTROPY
 condition|)
 block|{
-name|CTR3
-argument_list|(
-name|KTR_INTR
-argument_list|,
-literal|"%s: pid %d (%s) gathering entropy"
-argument_list|,
-name|__func__
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|,
-name|td
-operator|->
-name|td_name
-argument_list|)
-expr_stmt|;
 name|entropy
 operator|.
 name|event
@@ -5104,7 +5064,7 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|u_char
+name|int
 name|cpu
 parameter_list|)
 block|{
@@ -5355,28 +5315,6 @@ operator|->
 name|ih_need
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|harvest
-operator|.
-name|swi
-condition|)
-block|{
-name|CTR2
-argument_list|(
-name|KTR_INTR
-argument_list|,
-literal|"swi_sched: pid %d (%s) gathering entropy"
-argument_list|,
-name|curproc
-operator|->
-name|p_pid
-argument_list|,
-name|curthread
-operator|->
-name|td_name
-argument_list|)
-expr_stmt|;
 name|entropy
 operator|.
 name|event
@@ -5407,7 +5345,6 @@ argument_list|,
 name|RANDOM_SWI
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Set ih_need for this handler so that if the ithread is already 	 * running it will execute this handler on the next pass.  Otherwise, 	 * it will execute it the next time it runs. 	 */
 name|atomic_store_rel_int
 argument_list|(
@@ -6358,6 +6295,18 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KSTACK_USAGE_PROF
+name|intr_prof_stack_use
+argument_list|(
+name|td
+argument_list|,
+name|frame
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* An interrupt with no event or handlers is a stray interrupt. */
 if|if
 condition|(

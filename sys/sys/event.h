@@ -252,6 +252,17 @@ begin_comment
 comment|/* disable event (not reported) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EV_FORCEONESHOT
+value|0x0100
+end_define
+
+begin_comment
+comment|/* enable _ONESHOT and force trigger */
+end_comment
+
 begin_comment
 comment|/* flags */
 end_comment
@@ -1073,6 +1084,11 @@ modifier|*
 name|p_lio
 decl_stmt|;
 comment|/* LIO job pointer */
+name|sbintime_t
+modifier|*
+name|p_nexttime
+decl_stmt|;
+comment|/* next timer event fires at */
 name|void
 modifier|*
 name|p_v

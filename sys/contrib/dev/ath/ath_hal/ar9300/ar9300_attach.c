@@ -2558,6 +2558,10 @@ name|uint16_t
 modifier|*
 name|eepromdata
 parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah_config
+parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|status
@@ -2597,6 +2601,8 @@ argument_list|,
 name|sh
 argument_list|,
 name|eepromdata
+argument_list|,
+name|ah_config
 argument_list|,
 name|status
 argument_list|)
@@ -2707,15 +2713,6 @@ operator|.
 name|ath_hal_intr_mitigation_rx
 operator|=
 literal|1
-expr_stmt|;
-comment|/*      * XXX what's this do? Check in the qcamain driver code      * as to what it does.      */
-name|ah
-operator|->
-name|ah_config
-operator|.
-name|ath_hal_ext_atten_margin_cfg
-operator|=
-literal|0
 expr_stmt|;
 comment|/* interrupt mitigation */
 ifdef|#
@@ -9712,6 +9709,10 @@ name|uint16_t
 modifier|*
 name|eepromdata
 parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah_config
+parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|status
@@ -9895,6 +9896,8 @@ comment|//    ath_hal_factory_defaults(AH_PRIVATE(ah), hal_conf_parm);
 name|ar9300_config_defaults_freebsd
 argument_list|(
 name|ah
+argument_list|,
+name|ah_config
 argument_list|)
 expr_stmt|;
 comment|/* XXX FreeBSD: cal is always in EEPROM */
@@ -16036,6 +16039,7 @@ operator|=
 name|DEFAULT_ANTDIV_CONFIG_GROUP
 expr_stmt|;
 block|}
+comment|/*      * XXX TODO: allow the HAL to override the rssithres and fast_div_bias      * values (eg CUS198.)      */
 block|}
 end_function
 

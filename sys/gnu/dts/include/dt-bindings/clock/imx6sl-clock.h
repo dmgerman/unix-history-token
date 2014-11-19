@@ -963,8 +963,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IMX6SL_CLK_END
+name|IMX6SL_CLK_ENET
 value|135
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMX6SL_CLK_END
+value|136
 end_define
 
 begin_endif

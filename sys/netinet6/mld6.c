@@ -845,7 +845,7 @@ comment|/*  * Virtualized sysctls.  */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet6_mld
 argument_list|,
@@ -853,6 +853,8 @@ name|OID_AUTO
 argument_list|,
 name|gsrdelay
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW

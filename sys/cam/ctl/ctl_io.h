@@ -368,6 +368,14 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
+name|CTL_LLF_FUA
+value|0x04000000
+define|#
+directive|define
+name|CTL_LLF_DPO
+value|0x08000000
+define|#
+directive|define
 name|CTL_LLF_READ
 value|0x10000000
 define|#
@@ -640,8 +648,6 @@ block|,
 name|CTL_MSG_PERS_ACTION
 block|,
 name|CTL_MSG_SYNC_FE
-block|,
-name|CTL_MSG_APS_LOCK
 block|,
 name|CTL_MSG_DATAMOVE
 block|,
@@ -1133,25 +1139,6 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * Used for CTL_MSG_APS_LOCK.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ctl_ha_msg_aps
-block|{
-name|struct
-name|ctl_ha_msg_hdr
-name|hdr
-decl_stmt|;
-name|uint8_t
-name|lock_flag
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Used for CTL_MSG_PERS_ACTION.  */
 end_comment
 
@@ -1346,10 +1333,6 @@ decl_stmt|;
 name|struct
 name|ctl_ha_msg_pr
 name|pr
-decl_stmt|;
-name|struct
-name|ctl_ha_msg_aps
-name|aps
 decl_stmt|;
 block|}
 union|;

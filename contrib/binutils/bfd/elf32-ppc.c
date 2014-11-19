@@ -30539,7 +30539,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_BIG_NAME
-value|"elf32-powerpc"
+value|"elf32-powerpc-freebsd"
 end_define
 
 begin_define

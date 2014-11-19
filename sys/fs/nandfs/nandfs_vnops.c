@@ -4979,7 +4979,7 @@ condition|(
 operator|(
 name|mode
 operator|&
-name|VWRITE
+name|VMODIFY_PERMS
 operator|)
 operator|&&
 operator|(

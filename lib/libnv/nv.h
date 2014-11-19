@@ -349,6 +349,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|nvlist_t
+modifier|*
+name|nvlist_get_parent
+parameter_list|(
+specifier|const
+name|nvlist_t
+modifier|*
+name|nvl
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * The nvlist_exists functions check if the given name (optionally of the given  * type) exists on nvlist.  */
 end_comment

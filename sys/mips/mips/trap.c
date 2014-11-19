@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_global.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 

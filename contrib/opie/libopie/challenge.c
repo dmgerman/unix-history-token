@@ -183,6 +183,8 @@ argument_list|(
 name|ss
 argument_list|,
 name|OPIE_CHALLENGE_MAX
+operator|+
+literal|1
 argument_list|,
 literal|"otp-%s %d %s ext"
 argument_list|,
@@ -203,9 +205,20 @@ name|opie_seed
 argument_list|)
 operator|>=
 name|OPIE_CHALLENGE_MAX
+operator|+
+literal|1
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|rval
+condition|)
+name|rval
+operator|=
+literal|1
+expr_stmt|;
 name|opierandomchallenge
 argument_list|(
 name|ss

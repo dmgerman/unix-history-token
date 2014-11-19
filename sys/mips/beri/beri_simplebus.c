@@ -867,7 +867,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|fdt_intr_to_rl
+name|ofw_bus_intr_to_rl
 argument_list|(
 name|dev
 argument_list|,
@@ -877,10 +877,6 @@ operator|&
 name|di
 operator|->
 name|di_res
-argument_list|,
-name|di
-operator|->
-name|di_intr_sl
 argument_list|)
 condition|)
 block|{
@@ -1682,7 +1678,7 @@ condition|)
 block|{
 name|ph
 operator|=
-name|OF_xref_phandle
+name|OF_node_from_xref
 argument_list|(
 name|iph
 argument_list|)

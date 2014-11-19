@@ -533,17 +533,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|clnt_read_vc_str
-index|[]
-init|=
-literal|"read_vc"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
 name|__no_mem_str
 index|[]
 init|=

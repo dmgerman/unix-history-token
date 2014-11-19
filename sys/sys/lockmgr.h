@@ -343,6 +343,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|lockdisableshare
+parameter_list|(
+name|struct
+name|lock
+modifier|*
+name|lk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|lockinit
 parameter_list|(
 name|struct
@@ -840,6 +852,13 @@ define|#
 directive|define
 name|LK_TIMELOCK
 value|0x001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LK_NODDLKTREAT
+value|0x002000
 end_define
 
 begin_comment

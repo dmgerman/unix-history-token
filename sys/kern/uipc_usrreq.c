@@ -3690,31 +3690,35 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"uipc_rcvd: unp == NULL"
+literal|"%s: unp == NULL"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|so
-operator|->
-name|so_type
-operator|!=
-name|SOCK_STREAM
-operator|&&
-name|so
-operator|->
-name|so_type
-operator|!=
-name|SOCK_SEQPACKET
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"uipc_rcvd socktype %d"
-argument_list|,
 name|so
 operator|->
 name|so_type
+operator|==
+name|SOCK_STREAM
+operator|||
+name|so
+operator|->
+name|so_type
+operator|==
+name|SOCK_SEQPACKET
+argument_list|,
+operator|(
+literal|"%s: socktype %d"
+operator|,
+name|__func__
+operator|,
+name|so
+operator|->
+name|so_type
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Adjust backpressure on sender and wakeup any waiting to write. 	 * 	 * The unp lock is acquired to maintain the validity of the unp_conn 	 * pointer; no lock on unp2 is required as unp2->unp_socket will be 	 * static as long as we don't permit unp2 to disconnect from unp, 	 * which is prevented by the lock on unp.  We cache values from 	 * so_rcv to avoid holding the so_rcv lock over the entire 	 * transaction on the remote so_snd. 	 */
@@ -3736,11 +3740,13 @@ name|sb_mbcnt
 expr_stmt|;
 name|sbcc
 operator|=
+name|sbavail
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 expr_stmt|;
 name|SOCKBUF_UNLOCK
 argument_list|(
@@ -3910,7 +3916,40 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"uipc_send: unp == NULL"
+literal|"%s: unp == NULL"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|so
+operator|->
+name|so_type
+operator|==
+name|SOCK_STREAM
+operator|||
+name|so
+operator|->
+name|so_type
+operator|==
+name|SOCK_DGRAM
+operator|||
+name|so
+operator|->
+name|so_type
+operator|==
+name|SOCK_SEQPACKET
+argument_list|,
+operator|(
+literal|"%s: socktype %d"
+operator|,
+name|__func__
+operator|,
+name|so
+operator|->
+name|so_type
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4118,7 +4157,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sbappendaddr_nospacecheck_locked
+name|sbappendaddr_locked
 argument_list|(
 operator|&
 name|so2
@@ -4435,15 +4474,30 @@ name|sb_mbcnt
 expr_stmt|;
 name|sbcc
 operator|=
+name|sbavail
+argument_list|(
+operator|&
 name|so2
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sbcc
+condition|)
 name|sorwakeup_locked
 argument_list|(
 name|so2
+argument_list|)
+expr_stmt|;
+else|else
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so2
+operator|->
+name|so_rcv
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The PCB lock on unp2 protects the SB_STOP flag.  Without it, 		 * it would be possible for uipc_rcvd to be called at this 		 * point, drain the receiving sockbuf, clear SB_STOP, and then 		 * we would set SB_STOP below.  That could lead to an empty 		 * sockbuf having SB_STOP set 		 */
@@ -4499,12 +4553,6 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
-default|default:
-name|panic
-argument_list|(
-literal|"uipc_send unknown socktype"
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * PRUS_EOF is equivalent to pru_send followed by pru_shutdown. 	 */
 if|if

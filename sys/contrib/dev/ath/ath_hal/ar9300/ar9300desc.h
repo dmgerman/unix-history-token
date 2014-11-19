@@ -1798,6 +1798,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_data_len_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_rx_more
 value|0x00001000
 end_define

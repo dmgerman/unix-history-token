@@ -1161,7 +1161,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_vegas
 argument_list|,
@@ -1169,6 +1169,8 @@ name|OID_AUTO
 argument_list|,
 name|alpha
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -1192,7 +1194,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_vegas
 argument_list|,
@@ -1200,6 +1202,8 @@ name|OID_AUTO
 argument_list|,
 name|beta
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW

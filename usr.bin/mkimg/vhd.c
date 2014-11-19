@@ -140,7 +140,7 @@ decl_stmt|;
 define|#
 directive|define
 name|VHD_FOOTER_COOKIE
-value|0x636f6e6563746978
+value|0x636f6e6563746978ULL
 name|uint32_t
 name|features
 decl_stmt|;
@@ -984,7 +984,7 @@ decl_stmt|;
 define|#
 directive|define
 name|VHD_HEADER_COOKIE
-value|0x6378737061727365
+value|0x6378737061727365ULL
 name|uint64_t
 name|data_offset
 decl_stmt|;

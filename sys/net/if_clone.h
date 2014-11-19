@@ -261,15 +261,6 @@ end_comment
 
 begin_function_decl
 name|void
-name|if_clone_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vnet_if_clone_init
 parameter_list|(
 name|void

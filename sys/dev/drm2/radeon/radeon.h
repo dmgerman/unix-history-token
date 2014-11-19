@@ -6910,6 +6910,9 @@ decl_stmt|;
 name|bool
 name|fictitious_range_registered
 decl_stmt|;
+name|bool
+name|fictitious_agp_range_registered
+decl_stmt|;
 name|struct
 name|radeon_surface_reg
 name|surface_regs

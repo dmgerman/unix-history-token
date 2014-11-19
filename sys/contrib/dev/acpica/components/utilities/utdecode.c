@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -157,85 +157,6 @@ comment|/* 30 Invalid          */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtHexToAsciiChar  *  * PARAMETERS:  Integer             - Contains the hex digit  *              Position            - bit position of the digit within the  *                                    integer (multiple of 4)  *  * RETURN:      The converted Ascii character  *  * DESCRIPTION: Convert a hex digit to an Ascii character  *  ******************************************************************************/
-end_comment
-
-begin_comment
-comment|/* Hex to ASCII conversion table */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|AcpiGbl_HexToAscii
-index|[]
-init|=
-block|{
-literal|'0'
-block|,
-literal|'1'
-block|,
-literal|'2'
-block|,
-literal|'3'
-block|,
-literal|'4'
-block|,
-literal|'5'
-block|,
-literal|'6'
-block|,
-literal|'7'
-block|,
-literal|'8'
-block|,
-literal|'9'
-block|,
-literal|'A'
-block|,
-literal|'B'
-block|,
-literal|'C'
-block|,
-literal|'D'
-block|,
-literal|'E'
-block|,
-literal|'F'
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|char
-name|AcpiUtHexToAsciiChar
-parameter_list|(
-name|UINT64
-name|Integer
-parameter_list|,
-name|UINT32
-name|Position
-parameter_list|)
-block|{
-return|return
-operator|(
-name|AcpiGbl_HexToAscii
-index|[
-operator|(
-name|Integer
-operator|>>
-name|Position
-operator|)
-operator|&
-literal|0xF
-index|]
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetRegionName  *  * PARAMETERS:  Space ID            - ID for the region  *  * RETURN:      Decoded region SpaceId name  *  * DESCRIPTION: Translate a Space ID into a name string (Debug only)  *  ******************************************************************************/
@@ -1103,7 +1024,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|AcpiGbl_NotifyValueNames
+name|AcpiGbl_GenericNotify
 index|[
 name|ACPI_NOTIFY_MAX
 operator|+
@@ -1141,14 +1062,95 @@ block|,
 comment|/* 09 */
 literal|"Device PLD Check"
 block|,
-comment|/* 10 */
+comment|/* 0A */
 literal|"Reserved"
 block|,
-comment|/* 11 */
+comment|/* 0B */
 literal|"System Locality Update"
 block|,
-comment|/* 12 */
+comment|/* 0C */
 literal|"Shutdown Request"
+block|,
+comment|/* 0D */
+literal|"System Resource Affinity Update"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_DeviceNotify
+index|[
+literal|4
+index|]
+init|=
+block|{
+comment|/* 80 */
+literal|"Status Change"
+block|,
+comment|/* 81 */
+literal|"Information Change"
+block|,
+comment|/* 82 */
+literal|"Device-Specific Change"
+block|,
+comment|/* 83 */
+literal|"Device-Specific Change"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ProcessorNotify
+index|[
+literal|4
+index|]
+init|=
+block|{
+comment|/* 80 */
+literal|"Performance Capability Change"
+block|,
+comment|/* 81 */
+literal|"C-State Change"
+block|,
+comment|/* 82 */
+literal|"Throttling Capability Change"
+block|,
+comment|/* 83 */
+literal|"Device-Specific Change"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_ThermalNotify
+index|[
+literal|4
+index|]
+init|=
+block|{
+comment|/* 80 */
+literal|"Thermal Status Change"
+block|,
+comment|/* 81 */
+literal|"Thermal Trip Point Change"
+block|,
+comment|/* 82 */
+literal|"Thermal Device List Change"
+block|,
+comment|/* 83 */
+literal|"Thermal Relationship Change"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1161,8 +1163,12 @@ name|AcpiUtGetNotifyName
 parameter_list|(
 name|UINT32
 name|NotifyValue
+parameter_list|,
+name|ACPI_OBJECT_TYPE
+name|Type
 parameter_list|)
 block|{
+comment|/* 00 - 0D are common to all object types */
 if|if
 condition|(
 name|NotifyValue
@@ -1172,14 +1178,14 @@ condition|)
 block|{
 return|return
 operator|(
-name|AcpiGbl_NotifyValueNames
+name|AcpiGbl_GenericNotify
 index|[
 name|NotifyValue
 index|]
 operator|)
 return|;
 block|}
-elseif|else
+comment|/* 0D - 7F are reserved */
 if|if
 condition|(
 name|NotifyValue
@@ -1193,7 +1199,70 @@ literal|"Reserved"
 operator|)
 return|;
 block|}
-elseif|else
+comment|/* 80 - 83 are per-object-type */
+if|if
+condition|(
+name|NotifyValue
+operator|<=
+literal|0x83
+condition|)
+block|{
+switch|switch
+condition|(
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_ANY
+case|:
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
+return|return
+operator|(
+name|AcpiGbl_DeviceNotify
+index|[
+name|NotifyValue
+operator|-
+literal|0x80
+index|]
+operator|)
+return|;
+case|case
+name|ACPI_TYPE_PROCESSOR
+case|:
+return|return
+operator|(
+name|AcpiGbl_ProcessorNotify
+index|[
+name|NotifyValue
+operator|-
+literal|0x80
+index|]
+operator|)
+return|;
+case|case
+name|ACPI_TYPE_THERMAL
+case|:
+return|return
+operator|(
+name|AcpiGbl_ThermalNotify
+index|[
+name|NotifyValue
+operator|-
+literal|0x80
+index|]
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|"Target object type does not support notifies"
+operator|)
+return|;
+block|}
+block|}
+comment|/* 84 - BF are device-specific */
 if|if
 condition|(
 name|NotifyValue
@@ -1203,18 +1272,16 @@ condition|)
 block|{
 return|return
 operator|(
-literal|"Device Specific"
+literal|"Device-Specific"
 operator|)
 return|;
 block|}
-else|else
-block|{
+comment|/* C0 and above are hardware-specific */
 return|return
 operator|(
-literal|"Hardware Specific"
+literal|"Hardware-Specific"
 operator|)
 return|;
-block|}
 block|}
 end_function
 

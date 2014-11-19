@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2013 Samsung Electronics Co., Ltd.  * Author: Andrzej Haja<a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Device Tree binding constants for Exynos5440 clock controller. */
+comment|/*  * Copyright (c) 2013 Samsung Electronics Co., Ltd.  * Author: Andrzej Hajda<a.hajda@samsung.com>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Device Tree binding constants for Exynos5440 clock controller. */
 end_comment
 
 begin_ifndef

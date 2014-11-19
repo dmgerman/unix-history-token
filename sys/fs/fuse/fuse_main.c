@@ -230,7 +230,7 @@ name|kernelabi_major
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|FUSE_KERNEL_VERSION
 argument_list|,
@@ -250,7 +250,7 @@ name|kernelabi_minor
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|SYSCTL_NULL_INT_PTR
 argument_list|,
 name|FUSE_KERNEL_MINOR_VERSION
 argument_list|,

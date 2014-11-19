@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -146,23 +146,24 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|GpeXruptBlock
+name|Status
 operator|=
 name|AcpiEvGetGpeXruptBlock
 argument_list|(
 name|InterruptNumber
+argument_list|,
+operator|&
+name|GpeXruptBlock
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|GpeXruptBlock
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_NO_MEMORY
-expr_stmt|;
 goto|goto
 name|UnlockAndExit
 goto|;
@@ -239,8 +240,9 @@ argument_list|)
 expr_stmt|;
 name|UnlockAndExit
 label|:
-name|Status
-operator|=
+operator|(
+name|void
+operator|)
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
@@ -631,7 +633,7 @@ operator|->
 name|BaseGpeNumber
 operator|=
 call|(
-name|UINT8
+name|UINT16
 call|)
 argument_list|(
 name|GpeBlock
@@ -653,8 +655,6 @@ name|Address
 operator|=
 name|GpeBlock
 operator|->
-name|BlockAddress
-operator|.
 name|Address
 operator|+
 name|i
@@ -667,8 +667,6 @@ name|Address
 operator|=
 name|GpeBlock
 operator|->
-name|BlockAddress
-operator|.
 name|Address
 operator|+
 name|i
@@ -685,8 +683,6 @@ name|SpaceId
 operator|=
 name|GpeBlock
 operator|->
-name|BlockAddress
-operator|.
 name|SpaceId
 expr_stmt|;
 name|ThisRegister
@@ -697,8 +693,6 @@ name|SpaceId
 operator|=
 name|GpeBlock
 operator|->
-name|BlockAddress
-operator|.
 name|SpaceId
 expr_stmt|;
 name|ThisRegister
@@ -876,14 +870,16 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|GpeDevice
 parameter_list|,
-name|ACPI_GENERIC_ADDRESS
-modifier|*
-name|GpeBlockAddress
+name|UINT64
+name|Address
+parameter_list|,
+name|UINT8
+name|SpaceId
 parameter_list|,
 name|UINT32
 name|RegisterCount
 parameter_list|,
-name|UINT8
+name|UINT16
 name|GpeBlockBaseNumber
 parameter_list|,
 name|UINT32
@@ -948,6 +944,18 @@ block|}
 comment|/* Initialize the new GPE block */
 name|GpeBlock
 operator|->
+name|Address
+operator|=
+name|Address
+expr_stmt|;
+name|GpeBlock
+operator|->
+name|SpaceId
+operator|=
+name|SpaceId
+expr_stmt|;
+name|GpeBlock
+operator|->
 name|Node
 operator|=
 name|GpeDevice
@@ -982,21 +990,6 @@ operator|->
 name|BlockBaseNumber
 operator|=
 name|GpeBlockBaseNumber
-expr_stmt|;
-name|ACPI_MEMCPY
-argument_list|(
-operator|&
-name|GpeBlock
-operator|->
-name|BlockAddress
-argument_list|,
-name|GpeBlockAddress
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_GENERIC_ADDRESS
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/*      * Create the RegisterInfo and EventInfo sub-structures      * Note: disables and clears all GPEs in the block      */
 name|Status
@@ -1132,7 +1125,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"    Initialized GPE %02X to %02X [%4.4s] %u regs on interrupt 0x%X\n"
+literal|"    Initialized GPE %02X to %02X [%4.4s] %u regs on interrupt 0x%X%s\n"
 operator|,
 operator|(
 name|UINT32
@@ -1169,6 +1162,16 @@ operator|->
 name|RegisterCount
 operator|,
 name|InterruptNumber
+operator|,
+name|InterruptNumber
+operator|==
+name|AcpiGbl_FADT
+operator|.
+name|SciInterrupt
+condition|?
+literal|" (SCI)"
+else|:
+literal|""
 operator|)
 argument_list|)
 expr_stmt|;

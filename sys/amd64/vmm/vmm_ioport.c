@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vpmtmr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vmm_ioport.h"
 end_include
 
@@ -179,6 +185,12 @@ name|IO_ELCR2
 index|]
 operator|=
 name|vatpic_elc_handler
+block|,
+index|[
+name|IO_PMTMR
+index|]
+operator|=
+name|vpmtmr_handler
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -371,15 +383,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-operator|*
-name|retu
-operator|=
-name|true
-expr_stmt|;
+comment|/* 	 * If there is no handler for the I/O port then punt to userspace. 	 */
 if|if
 condition|(
 name|vmexit
@@ -391,10 +395,8 @@ operator|.
 name|port
 operator|>=
 name|MAX_IOPORTS
-condition|)
-goto|goto
-name|done
-goto|;
+operator|||
+operator|(
 name|handler
 operator|=
 name|ioport_handler
@@ -407,16 +409,22 @@ name|inout
 operator|.
 name|port
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|handler
+operator|)
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|done
-goto|;
+block|{
+operator|*
+name|retu
+operator|=
+name|true
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|mask
 operator|=
 name|vie_size2mask
@@ -496,15 +504,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
 condition|)
 block|{
-operator|*
-name|retu
-operator|=
-name|false
-expr_stmt|;
+comment|/* 		 * The value returned by this function is also the return value 		 * of vm_run(). This needs to be a positive number otherwise it 		 * can be interpreted as a "pseudo-error" like ERESTART. 		 * 		 * Enforce this by mapping all errors to EIO. 		 */
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|vmexit
@@ -565,20 +574,22 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"emulate_ioport: error %d "
-literal|"setting guest rax register"
+literal|"emulate_ioport: error %d setting guest "
+literal|"rax register"
 operator|,
 name|error
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|done
-label|:
+operator|*
+name|retu
+operator|=
+name|false
+expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}

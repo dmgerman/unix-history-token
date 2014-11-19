@@ -44,7 +44,7 @@ file|<sys/_mutex.h>
 end_include
 
 begin_comment
-comment|/*-  * struct procdesc describes a process descriptor, and essentially consists  * of two pointers -- one to the file descriptor, and one to the process.  * When both become NULL, the process descriptor will be freed.  An important  * invariant is that there is only ever one process descriptor for a process,  * so a single file pointer will suffice.  *  * Locking key:  * (c) - Constant after initial setup.  * (p) - Protected by the process descriptor mutex.  * (r) - Atomic eference count.  * (s) - Protected by selinfo.  * (t) - Protected by the proctree_lock  */
+comment|/*-  * struct procdesc describes a process descriptor, and essentially consists  * of two pointers -- one to the file descriptor, and one to the process.  * When both become NULL, the process descriptor will be freed.  An important  * invariant is that there is only ever one process descriptor for a process,  * so a single file pointer will suffice.  *  * Locking key:  * (c) - Constant after initial setup.  * (p) - Protected by the process descriptor mutex.  * (r) - Atomic reference count.  * (s) - Protected by selinfo.  * (t) - Protected by the proctree_lock  */
 end_comment
 
 begin_struct_decl

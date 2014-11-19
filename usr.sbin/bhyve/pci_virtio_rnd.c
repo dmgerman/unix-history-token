@@ -222,6 +222,9 @@ comment|/* read virtio config */
 name|NULL
 block|,
 comment|/* write virtio config */
+name|NULL
+block|,
+comment|/* apply negotiated features */
 literal|0
 block|,
 comment|/* our capabilities */

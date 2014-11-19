@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -220,10 +226,13 @@ comment|/*  * Pre-format intrnames into an array of fixed-size strings containin
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|arm_intrnames_init
+name|intr_init
 parameter_list|(
 name|void
+modifier|*
+name|unused
 parameter_list|)
 block|{
 name|int
@@ -267,6 +276,22 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|intr_init
+argument_list|,
+name|SI_SUB_INTR
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|intr_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void

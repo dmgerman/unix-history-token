@@ -625,7 +625,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|getenv
+name|kern_getenv
 argument_list|(
 name|howto_names
 index|[

@@ -5645,9 +5645,8 @@ literal|0x04
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_RDEF
+argument|SS_TUR | SSQ_MANY | SSQ_DECREMENT_COUNT | ENXIO
 argument_list|,
-comment|/* XXX TBD */
 literal|"Logical unit not accessible, asymmetric access state transition"
 argument_list|)
 block|}
@@ -5660,9 +5659,8 @@ literal|0x04
 argument_list|,
 literal|0x0B
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | ENXIO
 argument_list|,
-comment|/* XXX TBD */
 literal|"Logical unit not accessible, target port in standby state"
 argument_list|)
 block|}
@@ -5675,9 +5673,8 @@ literal|0x04
 argument_list|,
 literal|0x0C
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | ENXIO
 argument_list|,
-comment|/* XXX TBD */
 literal|"Logical unit not accessible, target port in unavailable state"
 argument_list|)
 block|}
@@ -7976,9 +7973,8 @@ literal|0x23
 argument_list|,
 literal|0x00
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, cause not reportable"
 argument_list|)
 block|}
@@ -7991,9 +7987,8 @@ literal|0x23
 argument_list|,
 literal|0x01
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, unsupported token type"
 argument_list|)
 block|}
@@ -8006,9 +8001,8 @@ literal|0x23
 argument_list|,
 literal|0x02
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, remote token usage not supported"
 argument_list|)
 block|}
@@ -8021,9 +8015,8 @@ literal|0x23
 argument_list|,
 literal|0x03
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, remote ROD token creation not supported"
 argument_list|)
 block|}
@@ -8036,9 +8029,8 @@ literal|0x23
 argument_list|,
 literal|0x04
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token unknown"
 argument_list|)
 block|}
@@ -8051,9 +8043,8 @@ literal|0x23
 argument_list|,
 literal|0x05
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token corrupt"
 argument_list|)
 block|}
@@ -8066,9 +8057,8 @@ literal|0x23
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token revoked"
 argument_list|)
 block|}
@@ -8081,9 +8071,8 @@ literal|0x23
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token expired"
 argument_list|)
 block|}
@@ -8096,9 +8085,8 @@ literal|0x23
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token cancelled"
 argument_list|)
 block|}
@@ -8111,9 +8099,8 @@ literal|0x23
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, token deleted"
 argument_list|)
 block|}
@@ -8126,9 +8113,8 @@ literal|0x23
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid token operation, invalid token length"
 argument_list|)
 block|}
@@ -8374,9 +8360,8 @@ literal|0x26
 argument_list|,
 literal|0x06
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Too many target descriptors"
 argument_list|)
 block|}
@@ -8389,9 +8374,8 @@ literal|0x26
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Unsupported target descriptor type code"
 argument_list|)
 block|}
@@ -8404,9 +8388,8 @@ literal|0x26
 argument_list|,
 literal|0x08
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Too many segment descriptors"
 argument_list|)
 block|}
@@ -8419,9 +8402,8 @@ literal|0x26
 argument_list|,
 literal|0x09
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Unsupported segment descriptor type code"
 argument_list|)
 block|}
@@ -8434,9 +8416,8 @@ literal|0x26
 argument_list|,
 literal|0x0A
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Unexpected inexact segment"
 argument_list|)
 block|}
@@ -8449,9 +8430,8 @@ literal|0x26
 argument_list|,
 literal|0x0B
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Inline data length exceeded"
 argument_list|)
 block|}
@@ -8464,9 +8444,8 @@ literal|0x26
 argument_list|,
 literal|0x0C
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Invalid operation for copy source or destination"
 argument_list|)
 block|}
@@ -8479,9 +8458,8 @@ literal|0x26
 argument_list|,
 literal|0x0D
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | EINVAL
 argument_list|,
-comment|/* XXX TBD */
 literal|"Copy segment granularity violation"
 argument_list|)
 block|}
@@ -8668,9 +8646,8 @@ literal|0x27
 argument_list|,
 literal|0x07
 argument_list|,
-argument|SS_RDEF
+argument|SS_FATAL | ENOSPC
 argument_list|,
-comment|/* XXX TBD */
 literal|"Space allocation failed write protect"
 argument_list|)
 block|}
@@ -24527,86 +24504,36 @@ begin_function
 name|struct
 name|scsi_vpd_id_descriptor
 modifier|*
-name|scsi_get_devid
+name|scsi_get_devid_desc
 parameter_list|(
 name|struct
-name|scsi_vpd_device_id
+name|scsi_vpd_id_descriptor
 modifier|*
-name|id
+name|desc
 parameter_list|,
 name|uint32_t
-name|page_len
+name|len
 parameter_list|,
 name|scsi_devid_checkfn_t
 name|ck_fn
 parameter_list|)
 block|{
-name|struct
-name|scsi_vpd_id_descriptor
-modifier|*
-name|desc
-decl_stmt|;
-name|uint8_t
-modifier|*
-name|page_end
-decl_stmt|;
 name|uint8_t
 modifier|*
 name|desc_buf_end
 decl_stmt|;
-name|page_end
+name|desc_buf_end
 operator|=
 operator|(
 name|uint8_t
 operator|*
 operator|)
-name|id
+name|desc
 operator|+
-name|page_len
-expr_stmt|;
-if|if
-condition|(
-name|page_end
-operator|<
-name|id
-operator|->
-name|desc_list
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-name|desc_buf_end
-operator|=
-name|MIN
-argument_list|(
-name|id
-operator|->
-name|desc_list
-operator|+
-name|scsi_2btoul
-argument_list|(
-name|id
-operator|->
-name|length
-argument_list|)
-argument_list|,
-name|page_end
-argument_list|)
+name|len
 expr_stmt|;
 for|for
 control|(
-name|desc
-operator|=
-operator|(
-expr|struct
-name|scsi_vpd_id_descriptor
-operator|*
-operator|)
-name|id
-operator|->
-name|desc_list
 init|;
 name|desc
 operator|->
@@ -24668,6 +24595,84 @@ block|}
 return|return
 operator|(
 name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|scsi_vpd_id_descriptor
+modifier|*
+name|scsi_get_devid
+parameter_list|(
+name|struct
+name|scsi_vpd_device_id
+modifier|*
+name|id
+parameter_list|,
+name|uint32_t
+name|page_len
+parameter_list|,
+name|scsi_devid_checkfn_t
+name|ck_fn
+parameter_list|)
+block|{
+name|uint32_t
+name|len
+decl_stmt|;
+if|if
+condition|(
+name|page_len
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|id
+argument_list|)
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+name|len
+operator|=
+name|MIN
+argument_list|(
+name|scsi_2btoul
+argument_list|(
+name|id
+operator|->
+name|length
+argument_list|)
+argument_list|,
+name|page_len
+operator|-
+sizeof|sizeof
+argument_list|(
+operator|*
+name|id
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|scsi_get_devid_desc
+argument_list|(
+operator|(
+expr|struct
+name|scsi_vpd_id_descriptor
+operator|*
+operator|)
+name|id
+operator|->
+name|desc_list
+argument_list|,
+name|len
+argument_list|,
+name|ck_fn
+argument_list|)
 operator|)
 return|;
 block|}
@@ -27073,8 +27078,6 @@ decl_stmt|,
 name|name_len
 decl_stmt|;
 name|int
-name|is_full_id
-decl_stmt|,
 name|retval
 decl_stmt|;
 name|unsigned
@@ -27104,10 +27107,6 @@ name|scsi_transportid_iscsi_device
 modifier|*
 name|iscsi
 decl_stmt|;
-name|is_full_id
-operator|=
-literal|0
-expr_stmt|;
 name|retval
 operator|=
 literal|0

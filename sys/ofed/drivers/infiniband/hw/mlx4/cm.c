@@ -1743,6 +1743,10 @@ name|ibdev
 argument_list|,
 literal|"failed matching slave_id by gid (0x%llx)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|gid
 operator|.
 name|global

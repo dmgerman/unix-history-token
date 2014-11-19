@@ -198,34 +198,34 @@ comment|/* Table 16-6. Event Bit Field Descriptions. */
 end_comment
 
 begin_comment
-comment|/* XXX Datasheet has weird bit fields. Validate. */
+comment|/* XXX Datasheet has incorrect bit fields. Validate. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|A_ONCHIP_FIFO_MEM_CORE_EVENT_EMPTY
+name|A_ONCHIP_FIFO_MEM_CORE_EVENT_FULL
 value|(1<<0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_ONCHIP_FIFO_MEM_CORE_EVENT_FULL
+name|A_ONCHIP_FIFO_MEM_CORE_EVENT_EMPTY
 value|(1<<1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_ONCHIP_FIFO_MEM_CORE_EVENT_ALMOSTEMPTY
+name|A_ONCHIP_FIFO_MEM_CORE_EVENT_ALMOSTFULL
 value|(1<<2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_ONCHIP_FIFO_MEM_CORE_EVENT_ALMOSTFULL
+name|A_ONCHIP_FIFO_MEM_CORE_EVENT_ALMOSTEMPTY
 value|(1<<3)
 end_define
 
@@ -248,34 +248,34 @@ comment|/* Table 16-7. InterruptEnable Bit Field Descriptions. */
 end_comment
 
 begin_comment
-comment|/* XXX Datasheet has weird bit fields. Validate. */
+comment|/* XXX Datasheet has incorrect bit fields. Validate. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|A_ONCHIP_FIFO_MEM_CORE_INTR_EMPTY
+name|A_ONCHIP_FIFO_MEM_CORE_INTR_FULL
 value|(1<<0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_ONCHIP_FIFO_MEM_CORE_INTR_FULL
+name|A_ONCHIP_FIFO_MEM_CORE_INTR_EMPTY
 value|(1<<1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_ONCHIP_FIFO_MEM_CORE_INTR_ALMOSTEMPTY
+name|A_ONCHIP_FIFO_MEM_CORE_INTR_ALMOSTFULL
 value|(1<<2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|A_ONCHIP_FIFO_MEM_CORE_INTR_ALMOSTFULL
+name|A_ONCHIP_FIFO_MEM_CORE_INTR_ALMOSTEMPTY
 value|(1<<3)
 end_define
 

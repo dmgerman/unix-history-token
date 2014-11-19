@@ -1233,8 +1233,6 @@ argument_list|(
 literal|"init"
 argument_list|,
 name|LOG_CONS
-operator||
-name|LOG_ODELAY
 argument_list|,
 name|LOG_AUTH
 argument_list|)

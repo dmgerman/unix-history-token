@@ -243,7 +243,9 @@ name|lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -286,9 +288,12 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -312,6 +317,7 @@ argument_list|(
 name|uint64_t
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -459,11 +465,14 @@ name|IFM_AUTO
 operator|)
 condition|)
 return|return
+operator|(
 name|EFX_FCNTL_RESPOND
 operator||
 name|EFX_FCNTL_GENERATE
+operator|)
 return|;
 return|return
+operator|(
 operator|(
 operator|(
 name|ifm
@@ -490,6 +499,7 @@ condition|?
 name|EFX_FCNTL_GENERATE
 else|:
 literal|0
+operator|)
 operator|)
 return|;
 block|}
@@ -576,11 +586,13 @@ name|sc
 parameter_list|)
 block|{
 return|return
+operator|(
 name|sc
 operator|->
 name|port
 operator|.
 name|wanted_fc
+operator|)
 return|;
 block|}
 end_function
@@ -598,7 +610,9 @@ name|sc
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -652,6 +666,8 @@ condition|(
 name|req
 operator|->
 name|newptr
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -882,7 +898,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|u_long
+name|uint64_t
 name|sfxge_link_baudrate
 index|[
 name|EFX_LINK_NMODES
@@ -947,14 +963,9 @@ index|[
 name|EFX_LINK_10000FDX
 index|]
 operator|=
-name|MIN
-argument_list|(
 name|IF_Gbps
 argument_list|(
-literal|10ULL
-argument_list|)
-argument_list|,
-name|ULONG_MAX
+literal|10
 argument_list|)
 block|, }
 decl_stmt|;
@@ -1225,7 +1236,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 comment|/* Set multicast hash filter */
 if|if
@@ -1338,12 +1351,14 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|efx_mac_hash_set
 argument_list|(
 name|enp
 argument_list|,
 name|bucket
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1409,7 +1424,9 @@ name|lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -2083,7 +2100,9 @@ name|lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -2126,9 +2145,12 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -2152,6 +2174,7 @@ argument_list|(
 name|uint32_t
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2764,7 +2787,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -3171,7 +3196,9 @@ name|softc_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -3552,6 +3579,8 @@ block|}
 if|if
 condition|(
 name|best_mode_ifm
+operator|!=
+literal|0
 condition|)
 name|ifmedia_set
 argument_list|(
@@ -3583,7 +3612,9 @@ expr_stmt|;
 name|out
 label|:
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function

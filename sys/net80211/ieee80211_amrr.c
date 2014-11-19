@@ -931,6 +931,7 @@ operator|&=
 name|IEEE80211_RATE_VAL
 expr_stmt|;
 comment|/* pick initial rate from the rateset - HT or otherwise */
+comment|/* Pick something low that's likely to succeed */
 for|for
 control|(
 name|amn
@@ -956,7 +957,7 @@ operator|--
 control|)
 block|{
 comment|/* legacy - anything< 36mbit, stop searching */
-comment|/* 11n - stop at MCS4 / MCS12 / MCS28 */
+comment|/* 11n - stop at MCS4 */
 if|if
 condition|(
 name|amrr_node_is_11n
@@ -977,7 +978,7 @@ operator|->
 name|amn_rix
 index|]
 operator|&
-literal|0x7
+literal|0x1f
 operator|)
 operator|<
 literal|4

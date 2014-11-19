@@ -16,7 +16,7 @@ name|_DDB_DB_SYM_H_
 end_define
 
 begin_comment
-comment|/*  * 	Author: Alessandro Forin, Carnegie Mellon University  *	Date:	8/90  */
+comment|/*  *	Author: Alessandro Forin, Carnegie Mellon University  *	Date:	8/90  */
 end_comment
 
 begin_comment

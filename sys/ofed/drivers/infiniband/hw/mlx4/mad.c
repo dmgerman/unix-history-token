@@ -6069,6 +6069,10 @@ argument_list|,
 name|port_num
 argument_list|,
 name|MLX4_EQ_PORT_INFO_LID_CHANGE_MASK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6142,6 +6146,10 @@ argument_list|,
 name|port_num
 argument_list|,
 name|MLX4_EQ_PORT_INFO_CLIENT_REREG_MASK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6710,6 +6718,10 @@ argument_list|,
 name|port
 argument_list|,
 name|MLX4_EQ_PORT_INFO_GID_PFX_CHANGE_MASK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -9581,6 +9593,10 @@ argument_list|(
 literal|"Failed reposting tunnel "
 literal|"buf:%lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -9595,6 +9611,10 @@ argument_list|(
 literal|"received tunnel send completion:"
 literal|"wrid=0x%llx, status=0x%x\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -9684,6 +9704,10 @@ name|wc
 operator|.
 name|status
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -10662,6 +10686,10 @@ argument_list|(
 literal|"Failed reposting SQP "
 literal|"buf:%lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id
@@ -10692,6 +10720,10 @@ name|wc
 operator|.
 name|status
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|wc
 operator|.
 name|wr_id

@@ -217,6 +217,21 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Extern variables to set the address and size of the symtab and strtab.  * Most users should use db_fetch_symtab in order to set them from the  * boot loader provided values.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|ksymtab
+decl_stmt|,
+name|kstrtab
+decl_stmt|,
+name|ksymtab_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * There are three "command tables":  * - One for simple commands; a list of these is displayed  *   by typing 'help' at the debugger prompt.  * - One for sub-commands of 'show'; to see this type 'show'  *   without any arguments.  * - The last one for sub-commands of 'show all'; type 'show all'  *   without any argument to get a list.  */
 end_comment
 
@@ -1009,6 +1024,19 @@ parameter_list|,
 name|struct
 name|command
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|db_fetch_ksymtab
+parameter_list|(
+name|vm_offset_t
+name|ksym_start
+parameter_list|,
+name|vm_offset_t
+name|ksym_end
 parameter_list|)
 function_decl|;
 end_function_decl

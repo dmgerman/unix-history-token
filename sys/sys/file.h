@@ -74,6 +74,12 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|filedesc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|stat
 struct_decl|;
 end_struct_decl
@@ -269,6 +275,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|kinfo_file
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ucred
 struct_decl|;
 end_struct_decl
@@ -414,16 +426,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* XXX pollution? */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|sendfile_sync
-struct_decl|;
-end_struct_decl
 
 begin_typedef
 typedef|typedef
@@ -697,11 +699,6 @@ name|int
 name|kflags
 parameter_list|,
 name|struct
-name|sendfile_sync
-modifier|*
-name|sfs
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
@@ -729,6 +726,29 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|fo_fill_kinfo_t
+parameter_list|(
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|struct
+name|kinfo_file
+modifier|*
+name|kif
+parameter_list|,
+name|struct
+name|filedesc
+modifier|*
+name|fdp
 parameter_list|)
 function_decl|;
 end_typedef
@@ -792,6 +812,10 @@ name|fo_seek_t
 modifier|*
 name|fo_seek
 decl_stmt|;
+name|fo_fill_kinfo_t
+modifier|*
+name|fo_fill_kinfo
+decl_stmt|;
 name|fo_flags_t
 name|fo_flags
 decl_stmt|;
@@ -846,7 +870,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (f) protected with mtx_lock(mtx_pool_find(fp))  * (d) cdevpriv_mtx  * none	not locked  */
+comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (a) f_vnode lock required (shared allows both reads and writes)  * (f) protected with mtx_lock(mtx_pool_find(fp))  * (d) cdevpriv_mtx  * none	not locked  */
 end_comment
 
 begin_struct
@@ -926,7 +950,7 @@ comment|/* 	 *  DTYPE_VNODE specific fields. 	 */
 name|int
 name|f_seqcount
 decl_stmt|;
-comment|/* Count of sequential accesses. */
+comment|/* (a) Count of sequential accesses. */
 name|off_t
 name|f_nextoff
 decl_stmt|;
@@ -1253,55 +1277,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * The socket operations are used a couple of places.  * XXX: This is wrong, they should go through the operations vector for  * XXX: sockets instead of going directly for the individual functions. /phk  */
-end_comment
-
 begin_decl_stmt
 name|fo_rdwr_t
-name|soo_read
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|fo_rdwr_t
-name|soo_write
+name|invfo_rdwr
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|fo_truncate_t
-name|soo_truncate
+name|invfo_truncate
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|fo_ioctl_t
-name|soo_ioctl
+name|invfo_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|fo_poll_t
-name|soo_poll
+name|invfo_poll
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|fo_kqfilter_t
-name|soo_kqfilter
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|fo_stat_t
-name|soo_stat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|fo_close_t
-name|soo_close
+name|invfo_kqfilter
 decl_stmt|;
 end_decl_stmt
 
@@ -1334,6 +1336,29 @@ name|fo_seek_t
 name|vn_seek
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|fo_fill_kinfo_t
+name|vn_fill_kinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|vn_fill_kinfo_vnode
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|kinfo_file
+modifier|*
+name|kif
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -2191,11 +2216,6 @@ name|int
 name|kflags
 parameter_list|,
 name|struct
-name|sendfile_sync
-modifier|*
-name|sfs
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
@@ -2229,8 +2249,6 @@ argument_list|,
 name|flags
 argument_list|,
 name|kflags
-argument_list|,
-name|sfs
 argument_list|,
 name|td
 argument_list|)
@@ -2280,6 +2298,50 @@ argument_list|,
 name|whence
 argument_list|,
 name|td
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|fo_fill_kinfo
+parameter_list|(
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|struct
+name|kinfo_file
+modifier|*
+name|kif
+parameter_list|,
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|)
+block|{
+return|return
+operator|(
+call|(
+modifier|*
+name|fp
+operator|->
+name|f_ops
+operator|->
+name|fo_fill_kinfo
+call|)
+argument_list|(
+name|fp
+argument_list|,
+name|kif
+argument_list|,
+name|fdp
 argument_list|)
 operator|)
 return|;

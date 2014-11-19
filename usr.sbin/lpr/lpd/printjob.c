@@ -1185,8 +1185,11 @@ name|getpid
 argument_list|()
 expr_stmt|;
 comment|/* for use with lprm */
-name|setpgrp
+name|setpgid
 argument_list|(
+operator|(
+name|pid_t
+operator|)
 literal|0
 argument_list|,
 name|printpid

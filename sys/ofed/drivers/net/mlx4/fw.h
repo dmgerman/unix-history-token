@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004, 2005 Topspin Communications.  All rights reserved.  * Copyright (c) 2005, 2006, 2007, 2008 Mellanox Technologies. All rights reserved.  * Copyright (c) 2006, 2007 Cisco Systems.  All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
+comment|/*  * Copyright (c) 2004, 2005 Topspin Communications.  All rights reserved.  * Copyright (c) 2005, 2006, 2007, 2008, 2014 Mellanox Technologies. All rights reserved.  * Copyright (c) 2006, 2007 Cisco Systems.  All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -421,6 +421,9 @@ decl_stmt|;
 name|u8
 name|port_flags
 decl_stmt|;
+name|u8
+name|def_counter_index
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -429,10 +432,19 @@ begin_struct
 struct|struct
 name|mlx4_adapter
 block|{
+name|u16
+name|vsd_vendor_id
+decl_stmt|;
 name|char
 name|board_id
 index|[
 name|MLX4_BOARD_ID_LEN
+index|]
+decl_stmt|;
+name|char
+name|vsd
+index|[
+name|MLX4_VSD_LEN
 index|]
 decl_stmt|;
 name|u8
@@ -519,6 +531,13 @@ name|u8
 name|uar_page_sz
 decl_stmt|;
 comment|/* log pg sz in 4k chunks */
+name|u8
+name|mw_enable
+decl_stmt|;
+comment|/* Enable memory windows */
+name|u8
+name|fs_hash_enable_bits
+decl_stmt|;
 name|u8
 name|steering_mode
 decl_stmt|;
@@ -820,35 +839,6 @@ parameter_list|,
 name|u64
 modifier|*
 name|aux_pages
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mlx4_MAP_ICM_AUX
-parameter_list|(
-name|struct
-name|mlx4_dev
-modifier|*
-name|dev
-parameter_list|,
-name|struct
-name|mlx4_icm
-modifier|*
-name|icm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|mlx4_UNMAP_ICM_AUX
-parameter_list|(
-name|struct
-name|mlx4_dev
-modifier|*
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -89,6 +89,12 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/armreg.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -707,7 +713,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|0
 init|;
 name|walker
 operator|->
@@ -975,9 +981,9 @@ argument_list|)
 expr_stmt|;
 name|enable_interrupts
 argument_list|(
-name|I32_bit
+name|PSR_I
 operator||
-name|F32_bit
+name|PSR_F
 argument_list|)
 expr_stmt|;
 return|return

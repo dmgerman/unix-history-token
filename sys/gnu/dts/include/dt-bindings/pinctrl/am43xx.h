@@ -74,6 +74,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MUX_MODE8
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|PULL_DISABLE
 value|(1<< 16)
 end_define

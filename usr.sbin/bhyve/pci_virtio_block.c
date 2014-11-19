@@ -276,6 +276,14 @@ name|VBH_OP_WRITE
 value|1
 define|#
 directive|define
+name|VBH_OP_FLUSH
+value|4
+define|#
+directive|define
+name|VBH_OP_FLUSH_OUT
+value|5
+define|#
+directive|define
 name|VBH_OP_IDENT
 value|8
 define|#
@@ -457,6 +465,9 @@ comment|/* read PCI config */
 name|pci_vtblk_cfgwrite
 block|,
 comment|/* write PCI config */
+name|NULL
+block|,
+comment|/* apply negotiated features */
 name|VTBLK_S_HOSTCAPS
 block|,
 comment|/* our capabilities */
@@ -843,6 +854,22 @@ expr_stmt|;
 name|err
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+name|VBH_OP_FLUSH
+case|:
+case|case
+name|VBH_OP_FLUSH_OUT
+case|:
+name|err
+operator|=
+name|fsync
+argument_list|(
+name|sc
+operator|->
+name|vbsc_fd
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:

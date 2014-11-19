@@ -1769,11 +1769,6 @@ operator|==
 name|EXIDX_CANTUNWIND
 condition|)
 block|{
-name|db_printf
-argument_list|(
-literal|"Unable to unwind further\n"
-argument_list|)
-expr_stmt|;
 name|finished
 operator|=
 name|true

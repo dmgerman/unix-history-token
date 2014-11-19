@@ -206,7 +206,7 @@ value|VNET(ipfastforward_active)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_ip
 argument_list|,
@@ -214,6 +214,8 @@ name|OID_AUTO
 argument_list|,
 name|fastforwarding
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -965,7 +967,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip_doopts
+name|V_ip_doopts
 operator|==
 literal|1
 condition|)
@@ -975,7 +977,7 @@ return|;
 elseif|else
 if|if
 condition|(
-name|ip_doopts
+name|V_ip_doopts
 operator|==
 literal|2
 condition|)
@@ -1747,7 +1749,6 @@ argument_list|(
 name|ips_odropped
 argument_list|)
 expr_stmt|;
-comment|/* would send source quench here but that is depreciated */
 goto|goto
 name|drop
 goto|;
@@ -1817,22 +1818,6 @@ condition|(
 name|ip_len
 operator|<=
 name|mtu
-operator|||
-operator|(
-name|ifp
-operator|->
-name|if_hwassist
-operator|&
-name|CSUM_FRAGMENT
-operator|&&
-operator|(
-name|ip_off
-operator|&
-name|IP_DF
-operator|)
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 comment|/* 		 * Avoid confusing lower layers. 		 */

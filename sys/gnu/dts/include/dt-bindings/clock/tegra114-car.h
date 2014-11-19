@@ -1797,8 +1797,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TEGRA114_CLK_CLK_MAX
+name|TEGRA114_CLK_XUSB_SS_DIV2
 value|311
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEGRA114_CLK_CLK_MAX
+value|312
 end_define
 
 begin_endif

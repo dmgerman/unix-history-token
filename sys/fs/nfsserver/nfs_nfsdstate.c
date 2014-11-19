@@ -8354,10 +8354,29 @@ name|lfp
 operator|)
 operator|)
 condition|)
+block|{
+comment|/* 		       * NFSLCK_SETATTR should return OK rather than NFSERR_BADSTATEID 		       * The only exception is using SETATTR with SIZE. 		       * */
+if|if
+condition|(
+operator|(
+name|new_stp
+operator|->
+name|ls_flags
+operator|&
+operator|(
+name|NFSLCK_SETATTR
+operator||
+name|NFSLCK_CHECK
+operator|)
+operator|)
+operator|!=
+name|NFSLCK_SETATTR
+condition|)
 name|error
 operator|=
 name|NFSERR_BADSTATEID
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -23347,6 +23366,15 @@ condition|(
 name|remove
 condition|)
 block|{
+comment|/* 		 * If the entry in the directory was the last reference to the 		 * corresponding filesystem object, the object can be destroyed 		 * */
+if|if
+condition|(
+name|lfp
+operator|->
+name|lf_usecount
+operator|>
+literal|1
+condition|)
 name|LIST_FOREACH
 argument_list|(
 argument|stp

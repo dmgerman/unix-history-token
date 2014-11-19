@@ -401,12 +401,6 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
-name|char
-name|lock_name
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|struct
 name|nfsrvhashhead
 name|tbl

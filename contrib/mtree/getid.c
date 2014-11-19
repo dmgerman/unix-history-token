@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: getid.c,v 1.8 2013/10/16 17:27:42 christos Exp $	*/
+comment|/*	$NetBSD: getid.c,v 1.10 2014/10/27 21:46:45 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -45,7 +45,7 @@ end_include
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: getid.c,v 1.8 2013/10/16 17:27:42 christos Exp $"
+literal|"$NetBSD: getid.c,v 1.10 2014/10/27 21:46:45 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -752,8 +752,6 @@ comment|/* sanity check */
 return|return
 literal|0
 return|;
-return|return
-operator|(
 name|_gr_fp
 operator|=
 name|fopen
@@ -762,10 +760,24 @@ name|grfile
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
-condition|?
+expr_stmt|;
+if|if
+condition|(
+name|_gr_fp
+operator|!=
+name|NULL
+condition|)
+return|return
 literal|1
-else|:
+return|;
+name|warn
+argument_list|(
+literal|"Can't open `%s'"
+argument_list|,
+name|grfile
+argument_list|)
+expr_stmt|;
+return|return
 literal|0
 return|;
 block|}
@@ -868,7 +880,7 @@ block|}
 comment|/* skip comments */
 if|if
 condition|(
-name|pwline
+name|grline
 index|[
 literal|0
 index|]
@@ -1409,8 +1421,6 @@ comment|/* sanity check */
 return|return
 literal|0
 return|;
-return|return
-operator|(
 name|_pw_fp
 operator|=
 name|fopen
@@ -1419,10 +1429,24 @@ name|pwfile
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
-condition|?
+expr_stmt|;
+if|if
+condition|(
+name|_pw_fp
+operator|!=
+name|NULL
+condition|)
+return|return
 literal|1
-else|:
+return|;
+name|warn
+argument_list|(
+literal|"Can't open `%s'"
+argument_list|,
+name|pwfile
+argument_list|)
+expr_stmt|;
+return|return
 literal|0
 return|;
 block|}

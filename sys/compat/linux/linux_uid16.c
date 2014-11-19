@@ -794,9 +794,11 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kern_chown
+name|kern_fchownat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|path
 argument_list|,
@@ -815,6 +817,8 @@ name|args
 operator|->
 name|gid
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|LFREEPATH
@@ -910,9 +914,11 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|kern_lchown
+name|kern_fchownat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|path
 argument_list|,
@@ -931,6 +937,8 @@ name|args
 operator|->
 name|gid
 argument_list|)
+argument_list|,
+name|AT_SYMLINK_NOFOLLOW
 argument_list|)
 expr_stmt|;
 name|LFREEPATH

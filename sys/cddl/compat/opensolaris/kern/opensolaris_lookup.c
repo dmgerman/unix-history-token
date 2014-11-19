@@ -295,7 +295,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * tvp is NULL for *cvpp vnode, which we can't unlock. 		 */
+comment|/* 		 * tvp is NULL for *cvpp vnode, which we can't unlock. 		 * At least some callers expect the reference to be 		 * maintained to the original *cvpp 		 */
 if|if
 condition|(
 name|tvp
@@ -303,12 +303,6 @@ operator|!=
 name|NULL
 condition|)
 name|vput
-argument_list|(
-name|cvp
-argument_list|)
-expr_stmt|;
-else|else
-name|vrele
 argument_list|(
 name|cvp
 argument_list|)

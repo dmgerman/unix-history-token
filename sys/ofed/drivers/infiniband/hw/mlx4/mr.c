@@ -646,8 +646,16 @@ literal|1
 argument_list|,
 literal|"write_block: len %llx is not aligned to mtt_size %llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|len
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|mtt_size
 argument_list|)
 expr_stmt|;
@@ -1497,8 +1505,16 @@ operator|)
 argument_list|,
 literal|" misaligned total length detected (%llu, %llu)!"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|total_len
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|block_shift
 argument_list|)
 expr_stmt|;
@@ -1525,6 +1541,10 @@ literal|1
 argument_list|,
 literal|"mlx4_ib_umem_calc_optimal_mtt_size - unexpected shift %lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|block_shift
 argument_list|)
 expr_stmt|;

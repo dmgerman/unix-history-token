@@ -34,6 +34,33 @@ directive|include
 file|<sys/systeminfo.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* FreeBSD */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

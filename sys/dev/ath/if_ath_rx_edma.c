@@ -599,11 +599,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 *  	 */
+if|if
+condition|(
 name|ath_hal_stopdmarecv
 argument_list|(
 name|ah
 argument_list|)
+operator|==
+name|AH_TRUE
+condition|)
+name|sc
+operator|->
+name|sc_rx_stopped
+operator|=
+literal|1
 expr_stmt|;
+comment|/* 	 * Give the various bus FIFOs (not EDMA descriptor FIFO) 	 * time to finish flushing out data. 	 */
 name|DELAY
 argument_list|(
 literal|3000
@@ -845,7 +857,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start receive.  *  * XXX TODO: this needs to reallocate the FIFO entries when a reset  * occurs, in case the FIFO is filled up and no new descriptors get  * thrown into the FIFO.  */
+comment|/*  * Start receive.  */
 end_comment
 
 begin_function
@@ -873,25 +885,21 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Sanity check - are we being called whilst RX 	 * isn't stopped?  If so, we may end up pushing 	 * too many entries into the RX FIFO and 	 * badness occurs. 	 */
 comment|/* Enable RX FIFO */
 name|ath_hal_rxena
 argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Entries should only be written out if the 	 * FIFO is empty. 	 * 	 * XXX This isn't correct. I should be looking 	 * at the value of AR_RXDP_SIZE (0x0070) to determine 	 * how many entries are in here. 	 * 	 * A warm reset will clear the registers but not the FIFO. 	 * 	 * And I believe this is actually the address of the last 	 * handled buffer rather than the current FIFO pointer. 	 * So if no frames have been (yet) seen, we'll reinit the 	 * FIFO. 	 * 	 * I'll chase that up at some point. 	 */
+comment|/* 	 * In theory the hardware has been initialised, right? 	 */
 if|if
 condition|(
-name|ath_hal_getrxbuf
-argument_list|(
 name|sc
 operator|->
-name|sc_ah
-argument_list|,
-name|HAL_RX_QUEUE_HP
-argument_list|)
+name|sc_rx_resetted
 operator|==
-literal|0
+literal|1
 condition|)
 block|{
 name|DPRINTF
@@ -912,21 +920,6 @@ argument_list|,
 name|HAL_RX_QUEUE_HP
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|ath_hal_getrxbuf
-argument_list|(
-name|sc
-operator|->
-name|sc_ah
-argument_list|,
-name|HAL_RX_QUEUE_LP
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
 name|DPRINTF
 argument_list|(
 name|sc
@@ -945,9 +938,29 @@ argument_list|,
 name|HAL_RX_QUEUE_LP
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_rx_resetted
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: called without resetting chip?\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Add up to m_fifolen entries in each queue */
-comment|/* 	 * These must occur after the above write so the FIFO buffers 	 * are pushed/tracked in the same order as the hardware will 	 * process them. 	 */
+comment|/* 	 * These must occur after the above write so the FIFO buffers 	 * are pushed/tracked in the same order as the hardware will 	 * process them. 	 * 	 * XXX TODO: is this really necessary? We should've stopped 	 * the hardware already and reinitialised it, so it's a no-op. 	 */
 name|ath_edma_rxfifo_alloc
 argument_list|(
 name|sc
@@ -989,6 +1002,13 @@ name|ath_hal_startpcurecv
 argument_list|(
 name|ah
 argument_list|)
+expr_stmt|;
+comment|/* 	 * We're now doing RX DMA! 	 */
+name|sc
+operator|->
+name|sc_rx_stopped
+operator|=
+literal|0
 expr_stmt|;
 name|ATH_RX_UNLOCK
 argument_list|(
@@ -1386,6 +1406,39 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|1
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_rx_resetted
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* 		 * XXX We shouldn't ever be scheduled if 		 * receive has been stopped - so complain 		 * loudly! 		 */
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: sc_rx_resetted=1! Bad!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|ATH_RX_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 do|do
 block|{
 name|bf
@@ -1685,64 +1738,6 @@ argument_list|,
 literal|"ath edma rx proc: npkts=%d\n"
 argument_list|,
 name|npkts
-argument_list|)
-expr_stmt|;
-comment|/* Handle resched and kickpcu appropriately */
-name|ATH_PCU_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dosched
-operator|&&
-name|sc
-operator|->
-name|sc_kickpcu
-condition|)
-block|{
-name|ATH_KTR
-argument_list|(
-name|sc
-argument_list|,
-name|ATH_KTR_ERROR
-argument_list|,
-literal|0
-argument_list|,
-literal|"ath_edma_recv_proc_queue(): kickpcu"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|npkts
-operator|>
-literal|0
-condition|)
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"%s: handled npkts %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|npkts
-argument_list|)
-expr_stmt|;
-comment|/* 		 * XXX TODO: what should occur here? Just re-poke and 		 * re-enable the RX FIFO? 		 */
-name|sc
-operator|->
-name|sc_kickpcu
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|ATH_PCU_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return;

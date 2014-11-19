@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|BUG_REPORT_URL
-value|"http://llvm.org/bugs/"
+value|"https://bugs.freebsd.org/submit/"
 end_define
 
 begin_comment

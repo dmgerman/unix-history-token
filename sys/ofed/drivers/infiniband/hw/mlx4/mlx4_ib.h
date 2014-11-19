@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/notifier.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rdma/ib_verbs.h>
 end_include
 

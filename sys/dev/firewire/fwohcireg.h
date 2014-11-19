@@ -980,9 +980,9 @@ name|post_wr_hi
 decl_stmt|;
 comment|/* post write addr hi 0x3c */
 name|fwohcireg_t
-name|vender
+name|vendor
 decl_stmt|;
-comment|/* vender ID 0x40 */
+comment|/* vendor ID 0x40 */
 name|fwohcireg_t
 name|dummy1
 index|[
@@ -1615,7 +1615,7 @@ value|(0x1<< 9)
 end_define
 
 begin_comment
-comment|/*  * defined in OHCI 1.1   * chapter 6.1  */
+comment|/*  * defined in OHCI 1.1  * chapter 6.1  */
 end_comment
 
 begin_define

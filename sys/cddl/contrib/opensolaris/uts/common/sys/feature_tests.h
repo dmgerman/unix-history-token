@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2013 Garrett D'Amore<garrett@damore.org>  *  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -37,7 +37,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/*  * Values of _POSIX_C_SOURCE  *  *		undefined   not a POSIX compilation  *		1	    POSIX.1-1990 compilation  *		2	    POSIX.2-1992 compilation  *		199309L	    POSIX.1b-1993 compilation (Real Time)  *		199506L	    POSIX.1c-1995 compilation (POSIX Threads)  *		200112L	    POSIX.1-2001 compilation (Austin Group Revision)  */
+comment|/*  * Values of _POSIX_C_SOURCE  *  *		undefined   not a POSIX compilation  *		1	    POSIX.1-1990 compilation  *		2	    POSIX.2-1992 compilation  *		199309L	    POSIX.1b-1993 compilation (Real Time)  *		199506L	    POSIX.1c-1995 compilation (POSIX Threads)  *		200112L	    POSIX.1-2001 compilation (Austin Group Revision)  *		200809L     POSIX.1-2008 compilation  */
 if|#
 directive|if
 name|defined
@@ -56,7 +56,7 @@ name|_POSIX_C_SOURCE
 value|1
 endif|#
 directive|endif
-comment|/*  * The feature test macros __XOPEN_OR_POSIX, _STRICT_STDC, and _STDC_C99  * are Sun implementation specific macros created in order to compress  * common standards specified feature test macros for easier reading.  * These macros should not be used by the application developer as  * unexpected results may occur. Instead, the user should reference  * standards(5) for correct usage of the standards feature test macros.  *  * __XOPEN_OR_POSIX     Used in cases where a symbol is defined by both  *                      X/Open or POSIX or in the negative, when neither  *                      X/Open or POSIX defines a symbol.  *  * _STRICT_STDC         __STDC__ is specified by the C Standards and defined  *                      by the compiler. For Sun compilers the value of  *                      __STDC__ is either 1, 0, or not defined based on the  *                      compilation mode (see cc(1)). When the value of  *                      __STDC__ is 1 and in the absence of any other feature  *                      test macros, the namespace available to the application  *                      is limited to only those symbols defined by the C  *                      Standard. _STRICT_STDC provides a more readable means  *                      of identifying symbols defined by the standard, or in  *                      the negative, symbols that are extensions to the C  *                      Standard. See additional comments for GNU C differences.  *  * _STDC_C99            __STDC_VERSION__ is specified by the C standards and  *                      defined by the compiler and indicates the version of  *                      the C standard. A value of 199901L indicates a  *                      compiler that complies with ISO/IEC 9899:1999, other-  *                      wise known as the C99 standard.  */
+comment|/*  * The feature test macros __XOPEN_OR_POSIX, _STRICT_STDC, _STRICT_SYMBOLS,  * and _STDC_C99 are Sun implementation specific macros created in order to  * compress common standards specified feature test macros for easier reading.  * These macros should not be used by the application developer as  * unexpected results may occur. Instead, the user should reference  * standards(5) for correct usage of the standards feature test macros.  *  * __XOPEN_OR_POSIX     Used in cases where a symbol is defined by both  *                      X/Open or POSIX or in the negative, when neither  *                      X/Open or POSIX defines a symbol.  *  * _STRICT_STDC         __STDC__ is specified by the C Standards and defined  *                      by the compiler. For Sun compilers the value of  *                      __STDC__ is either 1, 0, or not defined based on the  *                      compilation mode (see cc(1)). When the value of  *                      __STDC__ is 1 and in the absence of any other feature  *                      test macros, the namespace available to the application  *                      is limited to only those symbols defined by the C  *                      Standard. _STRICT_STDC provides a more readable means  *                      of identifying symbols defined by the standard, or in  *                      the negative, symbols that are extensions to the C  *                      Standard. See additional comments for GNU C differences.  *  * _STDC_C99            __STDC_VERSION__ is specified by the C standards and  *                      defined by the compiler and indicates the version of  *                      the C standard. A value of 199901L indicates a  *                      compiler that complies with ISO/IEC 9899:1999, other-  *                      wise known as the C99 standard.  *  * _STRICT_SYMBOLS	Used in cases where symbol visibility is restricted  *                      by the standards, and the user has not explicitly  *                      relaxed the strictness via __EXTENSIONS__.  */
 if|#
 directive|if
 name|defined
@@ -128,6 +128,32 @@ directive|define
 name|_STDC_C99
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/*  * Use strict symbol visibility.  */
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|_STRICT_STDC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__XOPEN_OR_POSIX
+argument_list|)
+operator|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__EXTENSIONS__
+argument_list|)
+define|#
+directive|define
+name|_STRICT_SYMBOLS
 endif|#
 directive|endif
 comment|/*  * Large file interfaces:  *  *	_LARGEFILE_SOURCE  *		1		large file-related additions to POSIX  *				interfaces requested (fseeko, etc.)  *	_LARGEFILE64_SOURCE  *		1		transitional large-file-related interfaces  *				requested (seek64, stat64, etc.)  *  * The corresponding announcement macros are respectively:  *	_LFS_LARGEFILE  *	_LFS64_LARGEFILE  * (These are set in<unistd.h>.)  *  * Requesting _LARGEFILE64_SOURCE implies requesting _LARGEFILE_SOURCE as  * well.  *  * The large file interfaces are made visible regardless of the initial values  * of the feature test macros under certain circumstances:  *    -	If no explicit standards-conforming environment is requested (neither  *	of _POSIX_SOURCE nor _XOPEN_SOURCE is defined and the value of  *	__STDC__ does not imply standards conformance).  *    -	Extended system interfaces are explicitly requested (__EXTENSIONS__  * 	is defined).  *    -	Access to in-kernel interfaces is requested (_KERNEL or _KMEMUSER is  *	defined).  (Note that this dependency is an artifact of the current  *	kernel implementation and may change in future releases.)  */
@@ -249,7 +275,7 @@ directive|endif
 endif|#
 directive|endif
 comment|/* _LP64 */
-comment|/*  * Use of _XOPEN_SOURCE  *  * The following X/Open specifications are supported:  *  * X/Open Portability Guide, Issue 3 (XPG3)  * X/Open CAE Specification, Issue 4 (XPG4)  * X/Open CAE Specification, Issue 4, Version 2 (XPG4v2)  * X/Open CAE Specification, Issue 5 (XPG5)  * Open Group Technical Standard, Issue 6 (XPG6), also referred to as  *    IEEE Std. 1003.1-2001 and ISO/IEC 9945:2002.  *  * XPG4v2 is also referred to as UNIX 95 (SUS or SUSv1).  * XPG5 is also referred to as UNIX 98 or the Single Unix Specification,  *     Version 2 (SUSv2)  * XPG6 is the result of a merge of the X/Open and POSIX specifications  *     and as such is also referred to as IEEE Std. 1003.1-2001 in  *     addition to UNIX 03 and SUSv3.  *  * When writing a conforming X/Open application, as per the specification  * requirements, the appropriate feature test macros must be defined at  * compile time. These are as follows. For more info, see standards(5).  *  * Feature Test Macro				     Specification  * ------------------------------------------------  -------------  * _XOPEN_SOURCE                                         XPG3  * _XOPEN_SOURCE&& _XOPEN_VERSION = 4                   XPG4  * _XOPEN_SOURCE&& _XOPEN_SOURCE_EXTENDED = 1           XPG4v2  * _XOPEN_SOURCE = 500                                   XPG5  * _XOPEN_SOURCE = 600  (or POSIX_C_SOURCE=200112L)      XPG6  *  * In order to simplify the guards within the headers, the following  * implementation private test macros have been created. Applications  * must NOT use these private test macros as unexpected results will  * occur.  *  * Note that in general, the use of these private macros is cumulative.  * For example, the use of _XPG3 with no other restrictions on the X/Open  * namespace will make the symbols visible for XPG3 through XPG6  * compilation environments. The use of _XPG4_2 with no other X/Open  * namespace restrictions indicates that the symbols were introduced in  * XPG4v2 and are therefore visible for XPG4v2 through XPG6 compilation  * environments, but not for XPG3 or XPG4 compilation environments.  *  * _XPG3    X/Open Portability Guide, Issue 3 (XPG3)  * _XPG4    X/Open CAE Specification, Issue 4 (XPG4)  * _XPG4_2  X/Open CAE Specification, Issue 4, Version 2 (XPG4v2/UNIX 95/SUS)  * _XPG5    X/Open CAE Specification, Issue 5 (XPG5/UNIX 98/SUSv2)  * _XPG6    Open Group Technical Standard, Issue 6 (XPG6/UNIX 03/SUSv3)  */
+comment|/*  * Use of _XOPEN_SOURCE  *  * The following X/Open specifications are supported:  *  * X/Open Portability Guide, Issue 3 (XPG3)  * X/Open CAE Specification, Issue 4 (XPG4)  * X/Open CAE Specification, Issue 4, Version 2 (XPG4v2)  * X/Open CAE Specification, Issue 5 (XPG5)  * Open Group Technical Standard, Issue 6 (XPG6), also referred to as  *    IEEE Std. 1003.1-2001 and ISO/IEC 9945:2002.  * Open Group Technical Standard, Issue 7 (XPG7), also referred to as  *    IEEE Std. 1003.1-2008 and ISO/IEC 9945:2009.  *  * XPG4v2 is also referred to as UNIX 95 (SUS or SUSv1).  * XPG5 is also referred to as UNIX 98 or the Single Unix Specification,  *     Version 2 (SUSv2)  * XPG6 is the result of a merge of the X/Open and POSIX specifications  *     and as such is also referred to as IEEE Std. 1003.1-2001 in  *     addition to UNIX 03 and SUSv3.  * XPG7 is also referred to as UNIX 08 and SUSv4.  *  * When writing a conforming X/Open application, as per the specification  * requirements, the appropriate feature test macros must be defined at  * compile time. These are as follows. For more info, see standards(5).  *  * Feature Test Macro				     Specification  * ------------------------------------------------  -------------  * _XOPEN_SOURCE                                         XPG3  * _XOPEN_SOURCE&& _XOPEN_VERSION = 4                   XPG4  * _XOPEN_SOURCE&& _XOPEN_SOURCE_EXTENDED = 1           XPG4v2  * _XOPEN_SOURCE = 500                                   XPG5  * _XOPEN_SOURCE = 600  (or POSIX_C_SOURCE=200112L)      XPG6  * _XOPEN_SOURCE = 700  (or POSIX_C_SOURCE=200809L)      XPG7  *  * In order to simplify the guards within the headers, the following  * implementation private test macros have been created. Applications  * must NOT use these private test macros as unexpected results will  * occur.  *  * Note that in general, the use of these private macros is cumulative.  * For example, the use of _XPG3 with no other restrictions on the X/Open  * namespace will make the symbols visible for XPG3 through XPG6  * compilation environments. The use of _XPG4_2 with no other X/Open  * namespace restrictions indicates that the symbols were introduced in  * XPG4v2 and are therefore visible for XPG4v2 through XPG6 compilation  * environments, but not for XPG3 or XPG4 compilation environments.  *  * _XPG3    X/Open Portability Guide, Issue 3 (XPG3)  * _XPG4    X/Open CAE Specification, Issue 4 (XPG4)  * _XPG4_2  X/Open CAE Specification, Issue 4, Version 2 (XPG4v2/UNIX 95/SUS)  * _XPG5    X/Open CAE Specification, Issue 5 (XPG5/UNIX 98/SUSv2)  * _XPG6    Open Group Technical Standard, Issue 6 (XPG6/UNIX 03/SUSv3)  * _XPG7    Open Group Technical Standard, Issue 7 (XPG7/UNIX 08/SUSv4)  */
 comment|/* X/Open Portability Guide, Issue 3 */
 if|#
 directive|if
@@ -404,15 +430,78 @@ define|#
 directive|define
 name|_XOPEN_SOURCE
 value|600
+comment|/* Open Group Technical Standard, Issue 7 */
+elif|#
+directive|elif
+operator|(
+name|_XOPEN_SOURCE
+operator|-
+literal|0
+operator|==
+literal|700
+operator|)
+operator|||
+operator|(
+name|_POSIX_C_SOURCE
+operator|-
+literal|0
+operator|==
+literal|200809L
+operator|)
+define|#
+directive|define
+name|_XPG7
+define|#
+directive|define
+name|_XPG6
+define|#
+directive|define
+name|_XPG5
+define|#
+directive|define
+name|_XPG4_2
+define|#
+directive|define
+name|_XPG4
+define|#
+directive|define
+name|_XPG3
+undef|#
+directive|undef
+name|_POSIX_C_SOURCE
+define|#
+directive|define
+name|_POSIX_C_SOURCE
+value|200809L
+undef|#
+directive|undef
+name|_XOPEN_SOURCE
+define|#
+directive|define
+name|_XOPEN_SOURCE
+value|700
 endif|#
 directive|endif
-comment|/*  * _XOPEN_VERSION is defined by the X/Open specifications and is not  * normally defined by the application, except in the case of an XPG4  * application.  On the implementation side, _XOPEN_VERSION defined with  * the value of 3 indicates an XPG3 application. _XOPEN_VERSION defined  * with the value of 4 indicates an XPG4 or XPG4v2 (UNIX 95) application.  * _XOPEN_VERSION  defined with a value of 500 indicates an XPG5 (UNIX 98)  * application and with a value of 600 indicates an XPG6 (UNIX 03)  * application.  The appropriate version is determined by the use of the  * feature test macros described earlier.  The value of _XOPEN_VERSION  * defaults to 3 otherwise indicating support for XPG3 applications.  */
+comment|/*  * _XOPEN_VERSION is defined by the X/Open specifications and is not  * normally defined by the application, except in the case of an XPG4  * application.  On the implementation side, _XOPEN_VERSION defined with  * the value of 3 indicates an XPG3 application. _XOPEN_VERSION defined  * with the value of 4 indicates an XPG4 or XPG4v2 (UNIX 95) application.  * _XOPEN_VERSION  defined with a value of 500 indicates an XPG5 (UNIX 98)  * application and with a value of 600 indicates an XPG6 (UNIX 03)  * application and with a value of 700 indicates an XPG7 (UNIX 08).  * The appropriate version is determined by the use of the  * feature test macros described earlier.  The value of _XOPEN_VERSION  * defaults to 3 otherwise indicating support for XPG3 applications.  */
 ifndef|#
 directive|ifndef
 name|_XOPEN_VERSION
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_XPG7
+argument_list|)
+define|#
+directive|define
+name|_XOPEN_VERSION
+value|700
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|_XPG6
+argument_list|)
 define|#
 directive|define
 name|_XOPEN_VERSION

@@ -25,6 +25,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/armreg.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -209,50 +215,6 @@ parameter_list|()
 value|dmb()
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|I32_bit
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|I32_bit
-value|(1<< 7)
-end_define
-
-begin_comment
-comment|/* IRQ disable */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|F32_bit
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|F32_bit
-value|(1<< 6)
-end_define
-
-begin_comment
-comment|/* FIQ disable */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * It would be nice to use _HAVE_ARMv6_INSTRUCTIONS from machine/asm.h  * here, but that header can't be included here because this is C  * code.  I would like to move the _HAVE_ARMv6_INSTRUCTIONS definition  * out of asm.h so it can be used in both asm and C code. - kientzle@  */
 end_comment
@@ -307,6 +269,12 @@ argument_list|(
 name|__ARM_ARCH_6ZK__
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|ARM_HAVE_ATOMIC64
+end_define
 
 begin_function
 specifier|static
@@ -412,6 +380,76 @@ operator|(
 name|setmask
 operator|)
 operator|:
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_set_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|uint64_t
+name|tmp
+decl_stmt|;
+name|uint32_t
+name|exflag
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1:          \n"
+literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   orr      %Q[tmp], %Q[val]\n"
+literal|"   orr      %R[tmp], %R[val]\n"
+literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   teq      %[exf], #0\n"
+literal|"   it ne    \n"
+literal|"   bne      1b\n"
+operator|:
+index|[
+name|exf
+index|]
+literal|"=&r"
+operator|(
+name|exflag
+operator|)
+operator|,
+index|[
+name|tmp
+index|]
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|:
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|val
+operator|)
 operator|:
 literal|"cc"
 operator|,
@@ -530,6 +568,76 @@ operator|(
 name|setmask
 operator|)
 operator|:
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_clear_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|uint64_t
+name|tmp
+decl_stmt|;
+name|uint32_t
+name|exflag
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1:          \n"
+literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   bic      %Q[tmp], %Q[val]\n"
+literal|"   bic      %R[tmp], %R[val]\n"
+literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   teq      %[exf], #0\n"
+literal|"   it ne    \n"
+literal|"   bne      1b\n"
+operator|:
+index|[
+name|exf
+index|]
+literal|"=&r"
+operator|(
+name|exflag
+operator|)
+operator|,
+index|[
+name|tmp
+index|]
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|:
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|val
+operator|)
 operator|:
 literal|"cc"
 operator|,
@@ -671,6 +779,100 @@ end_return
 begin_function
 unit|}  static
 name|__inline
+name|int
+name|atomic_cmpset_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|cmpval
+parameter_list|,
+name|uint64_t
+name|newval
+parameter_list|)
+block|{
+name|uint64_t
+name|tmp
+decl_stmt|;
+name|uint32_t
+name|ret
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1:          \n"
+literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   teq      %Q[tmp], %Q[cmpval]\n"
+literal|"   itee eq  \n"
+literal|"   teqeq    %R[tmp], %R[cmpval]\n"
+literal|"   movne    %[ret], #0\n"
+literal|"   bne      2f\n"
+literal|"   strexd   %[ret], %[newval], [%[ptr]]\n"
+literal|"   teq      %[ret], #0\n"
+literal|"   it ne    \n"
+literal|"   bne      1b\n"
+literal|"   mov      %[ret], #1\n"
+literal|"2:          \n"
+operator|:
+index|[
+name|ret
+index|]
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+index|[
+name|tmp
+index|]
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|:
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+index|[
+name|cmpval
+index|]
+literal|"r"
+operator|(
+name|cmpval
+operator|)
+operator|,
+index|[
+name|newval
+index|]
+literal|"r"
+operator|(
+name|newval
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
 name|u_long
 name|atomic_cmpset_long
 parameter_list|(
@@ -785,6 +987,49 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|uint64_t
+name|atomic_cmpset_acq_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+specifier|volatile
+name|uint64_t
+name|cmpval
+parameter_list|,
+specifier|volatile
+name|uint64_t
+name|newval
+parameter_list|)
+block|{
+name|uint64_t
+name|ret
+init|=
+name|atomic_cmpset_64
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+decl_stmt|;
+name|__do_dmb
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|u_long
 name|atomic_cmpset_acq_long
 parameter_list|(
@@ -851,6 +1096,44 @@ expr_stmt|;
 return|return
 operator|(
 name|atomic_cmpset_32
+argument_list|(
+name|p
+argument_list|,
+name|cmpval
+argument_list|,
+name|newval
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
+name|atomic_cmpset_rel_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+specifier|volatile
+name|uint64_t
+name|cmpval
+parameter_list|,
+specifier|volatile
+name|uint64_t
+name|newval
+parameter_list|)
+block|{
+name|__do_dmb
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|atomic_cmpset_64
 argument_list|(
 name|p
 argument_list|,
@@ -952,6 +1235,76 @@ operator|(
 name|val
 operator|)
 operator|:
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_add_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|uint64_t
+name|tmp
+decl_stmt|;
+name|uint32_t
+name|exflag
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1:          \n"
+literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   adds     %Q[tmp], %Q[val]\n"
+literal|"   adc      %R[tmp], %R[val]\n"
+literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   teq      %[exf], #0\n"
+literal|"   it ne    \n"
+literal|"   bne      1b\n"
+operator|:
+index|[
+name|exf
+index|]
+literal|"=&r"
+operator|(
+name|exflag
+operator|)
+operator|,
+index|[
+name|tmp
+index|]
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|:
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|val
+operator|)
 operator|:
 literal|"cc"
 operator|,
@@ -1082,6 +1435,76 @@ begin_function
 unit|}  static
 name|__inline
 name|void
+name|atomic_subtract_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|uint64_t
+name|tmp
+decl_stmt|;
+name|uint32_t
+name|exflag
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1:          \n"
+literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   subs     %Q[tmp], %Q[val]\n"
+literal|"   sbc      %R[tmp], %R[val]\n"
+literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   teq      %[exf], #0\n"
+literal|"   it ne    \n"
+literal|"   bne      1b\n"
+operator|:
+index|[
+name|exf
+index|]
+literal|"=&r"
+operator|(
+name|exflag
+operator|)
+operator|,
+index|[
+name|tmp
+index|]
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|:
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|val
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
 name|atomic_subtract_long
 parameter_list|(
 specifier|volatile
@@ -1161,6 +1584,30 @@ argument_list|(
 argument|set
 argument_list|,
 literal|32
+argument_list|)
+name|ATOMIC_ACQ_REL
+argument_list|(
+argument|clear
+argument_list|,
+literal|64
+argument_list|)
+name|ATOMIC_ACQ_REL
+argument_list|(
+argument|add
+argument_list|,
+literal|64
+argument_list|)
+name|ATOMIC_ACQ_REL
+argument_list|(
+argument|subtract
+argument_list|,
+literal|64
+argument_list|)
+name|ATOMIC_ACQ_REL
+argument_list|(
+argument|set
+argument_list|,
+literal|64
 argument_list|)
 name|ATOMIC_ACQ_REL_LONG
 argument_list|(
@@ -1381,6 +1828,353 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|uint64_t
+name|atomic_fetchadd_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|uint64_t
+name|ret
+decl_stmt|,
+name|tmp
+decl_stmt|;
+name|uint32_t
+name|exflag
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1:          \n"
+literal|"   ldrexd   %[ret], [%[ptr]]\n"
+literal|"   adds     %Q[tmp], %Q[ret], %Q[val]\n"
+literal|"   adc      %R[tmp], %R[ret], %R[val]\n"
+literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   teq      %[exf], #0\n"
+literal|"   it ne    \n"
+literal|"   bne      1b\n"
+operator|:
+index|[
+name|ret
+index|]
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+index|[
+name|exf
+index|]
+literal|"=&r"
+operator|(
+name|exflag
+operator|)
+operator|,
+index|[
+name|tmp
+index|]
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|:
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|val
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_readandclear_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|uint64_t
+name|ret
+decl_stmt|,
+name|tmp
+decl_stmt|;
+name|uint32_t
+name|exflag
+decl_stmt|;
+asm|__asm __volatile(
+literal|"1:          \n"
+literal|"   ldrexd   %[ret], [%[ptr]]\n"
+literal|"   mov      %Q[tmp], #0\n"
+literal|"   mov      %R[tmp], #0\n"
+literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   teq      %[exf], #0\n"
+literal|"   it ne    \n"
+literal|"   bne      1b\n"
+operator|:
+index|[
+name|ret
+index|]
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+index|[
+name|exf
+index|]
+literal|"=&r"
+operator|(
+name|exflag
+operator|)
+operator|,
+index|[
+name|tmp
+index|]
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|:
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_load_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|uint64_t
+name|ret
+decl_stmt|;
+comment|/* 	 * The only way to atomically load 64 bits is with LDREXD which puts the 	 * exclusive monitor into the open state, so reset it with CLREX because 	 * we don't actually need to store anything. 	 */
+asm|__asm __volatile(
+literal|"1:          \n"
+literal|"   ldrexd   %[ret], [%[ptr]]\n"
+literal|"   clrex    \n"
+operator|:
+index|[
+name|ret
+index|]
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|:
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|uint64_t
+name|atomic_load_acq_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|uint64_t
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|atomic_load_64
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|__do_dmb
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_store_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|uint64_t
+name|tmp
+decl_stmt|;
+name|uint32_t
+name|exflag
+decl_stmt|;
+comment|/* 	 * The only way to atomically store 64 bits is with STREXD, which will 	 * succeed only if paired up with a preceeding LDREXD using the same 	 * address, so we read and discard the existing value before storing. 	 */
+asm|__asm __volatile(
+literal|"1:          \n"
+literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   strexd   %[exf], %[val], [%[ptr]]\n"
+literal|"   teq      %[exf], #0\n"
+literal|"   it ne    \n"
+literal|"   bne      1b\n"
+operator|:
+index|[
+name|tmp
+index|]
+literal|"=&r"
+operator|(
+name|tmp
+operator|)
+operator|,
+index|[
+name|exf
+index|]
+literal|"=&r"
+operator|(
+name|exflag
+operator|)
+operator|:
+index|[
+name|ptr
+index|]
+literal|"r"
+operator|(
+name|p
+operator|)
+operator|,
+index|[
+name|val
+index|]
+literal|"r"
+operator|(
+name|val
+operator|)
+operator|:
+literal|"cc"
+operator|,
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|atomic_store_rel_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+name|__do_dmb
+argument_list|()
+expr_stmt|;
+name|atomic_store_64
+argument_list|(
+name|p
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|u_long
 name|atomic_fetchadd_long
 parameter_list|(
@@ -1594,7 +2388,7 @@ parameter_list|(
 name|expr
 parameter_list|)
 define|\
-value|do {						\ 		u_int cpsr_save, tmp;			\ 							\ 		__asm __volatile(			\ 			"mrs  %0, cpsr;"		\ 			"orr  %1, %0, %2;"		\ 			"msr  cpsr_fsxc, %1;"		\ 			: "=r" (cpsr_save), "=r" (tmp)	\ 			: "I" (I32_bit | F32_bit)		\ 		        : "cc" );		\ 		(expr);				\ 		 __asm __volatile(		\ 			"msr  cpsr_fsxc, %0"	\ 			:
+value|do {						\ 		u_int cpsr_save, tmp;			\ 							\ 		__asm __volatile(			\ 			"mrs  %0, cpsr;"		\ 			"orr  %1, %0, %2;"		\ 			"msr  cpsr_fsxc, %1;"		\ 			: "=r" (cpsr_save), "=r" (tmp)	\ 			: "I" (PSR_I | PSR_F)		\ 		        : "cc" );		\ 		(expr);				\ 		 __asm __volatile(		\ 			"msr  cpsr_fsxc, %0"	\ 			:
 comment|/* no output */
 value|\ 			: "r" (cpsr_save)	\ 			: "cc" );		\ 	} while(0)
 end_define
@@ -1663,6 +2457,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|ARM_HAVE_ATOMIC64
+end_define
+
 begin_function
 unit|static
 name|__inline
@@ -1693,6 +2493,32 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|atomic_set_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|address
+parameter_list|,
+name|uint64_t
+name|setmask
+parameter_list|)
+block|{
+name|__with_interrupts_disabled
+argument_list|(
+operator|*
+name|address
+operator||=
+name|setmask
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|atomic_clear_32
 parameter_list|(
 specifier|volatile
@@ -1701,6 +2527,33 @@ modifier|*
 name|address
 parameter_list|,
 name|uint32_t
+name|clearmask
+parameter_list|)
+block|{
+name|__with_interrupts_disabled
+argument_list|(
+operator|*
+name|address
+operator|&=
+operator|~
+name|clearmask
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_clear_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|address
+parameter_list|,
+name|uint64_t
 name|clearmask
 parameter_list|)
 block|{
@@ -1759,6 +2612,46 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|u_int64_t
+name|atomic_cmpset_64
+parameter_list|(
+specifier|volatile
+name|u_int64_t
+modifier|*
+name|p
+parameter_list|,
+specifier|volatile
+name|u_int64_t
+name|cmpval
+parameter_list|,
+specifier|volatile
+name|u_int64_t
+name|newval
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|__with_interrupts_disabled
+argument_list|(
+argument|{ 	    	if (*p == cmpval) { 			*p = newval; 			ret =
+literal|1
+argument|; 		} else { 			ret =
+literal|0
+argument|; 		} 	}
+argument_list|)
+empty_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|void
 name|atomic_add_32
 parameter_list|(
@@ -1768,6 +2661,32 @@ modifier|*
 name|p
 parameter_list|,
 name|u_int32_t
+name|val
+parameter_list|)
+block|{
+name|__with_interrupts_disabled
+argument_list|(
+operator|*
+name|p
+operator|+=
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_add_64
+parameter_list|(
+specifier|volatile
+name|u_int64_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int64_t
 name|val
 parameter_list|)
 block|{
@@ -1811,6 +2730,32 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|void
+name|atomic_subtract_64
+parameter_list|(
+specifier|volatile
+name|u_int64_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int64_t
+name|val
+parameter_list|)
+block|{
+name|__with_interrupts_disabled
+argument_list|(
+operator|*
+name|p
+operator|-=
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|uint32_t
 name|atomic_fetchadd_32
 parameter_list|(
@@ -1836,6 +2781,94 @@ operator|(
 name|value
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
+name|atomic_fetchadd_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|v
+parameter_list|)
+block|{
+name|uint64_t
+name|value
+decl_stmt|;
+name|__with_interrupts_disabled
+argument_list|(
+argument|{ 	    	value = *p; 		*p += v; 	}
+argument_list|)
+empty_stmt|;
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
+name|atomic_load_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|uint64_t
+name|value
+decl_stmt|;
+name|__with_interrupts_disabled
+argument_list|(
+name|value
+operator|=
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|atomic_store_64
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|value
+parameter_list|)
+block|{
+name|__with_interrupts_disabled
+argument_list|(
+operator|*
+name|p
+operator|=
+name|value
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

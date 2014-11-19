@@ -566,7 +566,7 @@ decl_stmt|;
 name|uint32_t
 name|v
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 name|ra
@@ -653,7 +653,7 @@ expr_stmt|;
 return|return
 name|v
 index|[
-literal|1
+literal|2
 index|]
 return|;
 block|}

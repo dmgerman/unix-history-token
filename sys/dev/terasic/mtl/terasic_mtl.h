@@ -49,7 +49,7 @@ decl_stmt|;
 name|int
 name|mtl_reg_rid
 decl_stmt|;
-comment|/* 	 * Graphics frame buffer device -- mappable form userspace. 	 */
+comment|/* 	 * Graphics frame buffer device -- mappable from userspace. 	 */
 name|struct
 name|cdev
 modifier|*

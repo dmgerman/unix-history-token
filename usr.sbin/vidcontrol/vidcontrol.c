@@ -846,7 +846,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: vidcontrol [-CHPpx] [-b color] [-c appearance] [-f [size] file]"
+literal|"usage: vidcontrol [-CHPpx] [-b color] [-c appearance] [-f [[size] file]]"
 argument_list|,
 literal|"                  [-g geometry] [-h size] [-i adapter | mode]"
 argument_list|,
@@ -1836,6 +1836,47 @@ operator|(
 name|t
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Set the default vt font.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|load_default_vt4font
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|PIO_VFONT_DEFAULT
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|revert
+argument_list|()
+expr_stmt|;
+name|errc
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"loading default vt font"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6193,7 +6234,7 @@ name|vt4_mode
 condition|)
 name|opts
 operator|=
-literal|"b:Cc:f:g:h:Hi:M:m:pPr:S:s:T:t:x"
+literal|"b:Cc:fg:h:Hi:M:m:pPr:S:s:T:t:x"
 expr_stmt|;
 else|else
 name|opts
@@ -6263,10 +6304,29 @@ break|break;
 case|case
 literal|'f'
 case|:
-name|type
-operator|=
 name|optarg
+operator|=
+name|nextarg
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+operator|&
+name|optind
+argument_list|,
+literal|'f'
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|optarg
+operator|!=
+name|NULL
+condition|)
+block|{
 name|font
 operator|=
 name|nextarg
@@ -6299,6 +6359,11 @@ operator|=
 name|optarg
 expr_stmt|;
 block|}
+else|else
+name|type
+operator|=
+name|optarg
+expr_stmt|;
 name|load_font
 argument_list|(
 name|type
@@ -6306,6 +6371,22 @@ argument_list|,
 name|font
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|vt4_mode
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+comment|/* Switch syscons to ROM? */
+name|load_default_vt4font
+argument_list|()
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'g'

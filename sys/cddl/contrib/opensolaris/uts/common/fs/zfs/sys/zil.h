@@ -136,10 +136,6 @@ define|#
 directive|define
 name|ZIL_MIN_BLKSZ
 value|4096ULL
-define|#
-directive|define
-name|ZIL_MAX_BLKSZ
-value|SPA_MAXBLOCKSIZE
 comment|/*  * The words of a log block checksum.  */
 define|#
 directive|define

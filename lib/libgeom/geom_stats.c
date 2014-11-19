@@ -184,7 +184,7 @@ name|pagesize
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|statsfd
 argument_list|,
@@ -281,7 +281,7 @@ name|pagesize
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|statsfd
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -501,6 +501,12 @@ name|error
 operator|)
 return|;
 block|}
+name|vd
+operator|->
+name|vdev_notrim
+operator|=
+name|B_TRUE
+expr_stmt|;
 operator|*
 name|max_psize
 operator|=
@@ -620,7 +626,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vdev_file_io_start
 parameter_list|(
 name|zio_t
@@ -665,11 +671,12 @@ argument_list|(
 name|ENXIO
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_CONTINUE
-operator|)
-return|;
+name|zio_interrupt
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|vf
 operator|=
@@ -731,12 +738,28 @@ name|ENOTSUP
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|ZIO_PIPELINE_CONTINUE
-operator|)
-return|;
+name|zio_execute
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
+name|ASSERT
+argument_list|(
+name|zio
+operator|->
+name|io_type
+operator|==
+name|ZIO_TYPE_READ
+operator|||
+name|zio
+operator|->
+name|io_type
+operator|==
+name|ZIO_TYPE_WRITE
+argument_list|)
+expr_stmt|;
 name|zio
 operator|->
 name|io_error
@@ -802,11 +825,29 @@ argument_list|(
 name|zio
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ZIO_PIPELINE_STOP
-operator|)
-return|;
+ifdef|#
+directive|ifdef
+name|illumos
+name|VERIFY3U
+argument_list|(
+name|taskq_dispatch
+argument_list|(
+name|system_taskq
+argument_list|,
+name|vdev_file_io_strategy
+argument_list|,
+name|bp
+argument_list|,
+name|TQ_SLEEP
+argument_list|)
+argument_list|,
+operator|!=
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

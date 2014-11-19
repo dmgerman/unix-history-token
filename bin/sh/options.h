@@ -30,6 +30,12 @@ comment|/* parameter list */
 name|char
 modifier|*
 modifier|*
+name|optp
+decl_stmt|;
+comment|/* parameter list for getopts */
+name|char
+modifier|*
+modifier|*
 name|optnext
 decl_stmt|;
 comment|/* next parameter to be processed by getopts */

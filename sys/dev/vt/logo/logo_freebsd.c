@@ -14504,7 +14504,7 @@ block|,
 literal|0x00
 block|,
 literal|0x00
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -143,6 +143,18 @@ parameter_list|)
 value|do {			\ 	(Acq) = acpi_release_global_lock(&((GLptr)->GlobalLock));	\ } while (0)
 end_define
 
+begin_enum_decl
+enum_decl|enum
+name|intr_trigger
+enum_decl|;
+end_enum_decl
+
+begin_enum_decl
+enum_decl|enum
+name|intr_polarity
+enum_decl|;
+end_enum_decl
+
 begin_function_decl
 name|void
 name|acpi_SetDefaultIntrModel
@@ -200,6 +212,34 @@ name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|madt_parse_interrupt_values
+parameter_list|(
+name|void
+modifier|*
+name|entry
+parameter_list|,
+name|enum
+name|intr_trigger
+modifier|*
+name|trig
+parameter_list|,
+name|enum
+name|intr_polarity
+modifier|*
+name|pol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|madt_found_sci_override
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

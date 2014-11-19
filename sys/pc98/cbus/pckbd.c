@@ -109,6 +109,55 @@ begin_comment
 comment|/* don't install if no kbd is found */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|caddr_t
+name|KBDC
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|pckbd_state
+block|{
+name|KBDC
+name|kbdc
+decl_stmt|;
+comment|/* keyboard controller */
+name|int
+name|ks_mode
+decl_stmt|;
+comment|/* input mode (K_XLATE,K_RAW,K_CODE) */
+name|int
+name|ks_flags
+decl_stmt|;
+comment|/* flags */
+define|#
+directive|define
+name|COMPOSE
+value|(1<< 0)
+name|int
+name|ks_state
+decl_stmt|;
+comment|/* shift/lock key state */
+name|int
+name|ks_accents
+decl_stmt|;
+comment|/* accent key index (> 0) */
+name|u_int
+name|ks_composed_char
+decl_stmt|;
+comment|/* composed char code (> 0) */
+name|struct
+name|callout
+name|ks_timer
+decl_stmt|;
+block|}
+name|pckbd_state_t
+typedef|;
+end_typedef
+
 begin_decl_stmt
 specifier|static
 name|devclass_t
@@ -760,6 +809,10 @@ name|keyboard_switch_t
 modifier|*
 name|sw
 decl_stmt|;
+name|pckbd_state_t
+modifier|*
+name|state
+decl_stmt|;
 name|int
 name|args
 index|[
@@ -897,6 +950,29 @@ endif|#
 directive|endif
 comment|/* KBD_INSTALL_CDEV */
 comment|/* 	 * This is a kludge to compensate for lost keyboard interrupts. 	 * A similar code used to be in syscons. See below. XXX 	 */
+name|state
+operator|=
+operator|(
+name|pckbd_state_t
+operator|*
+operator|)
+operator|(
+operator|*
+name|kbd
+operator|)
+operator|->
+name|kb_data
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|state
+operator|->
+name|ks_timer
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|pckbd_timeout
 argument_list|(
 operator|*
@@ -936,6 +1012,10 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|pckbd_state_t
+modifier|*
+name|state
+decl_stmt|;
 name|keyboard_t
 modifier|*
 name|kbd
@@ -997,15 +1077,30 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|timeout
+name|state
+operator|=
+operator|(
+name|pckbd_state_t
+operator|*
+operator|)
+name|kbd
+operator|->
+name|kb_data
+expr_stmt|;
+name|callout_reset
 argument_list|(
-name|pckbd_timeout
-argument_list|,
-name|arg
+operator|&
+name|state
+operator|->
+name|ks_timer
 argument_list|,
 name|hz
 operator|/
 literal|10
+argument_list|,
+name|pckbd_timeout
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -1027,51 +1122,6 @@ directive|define
 name|PC98KBD_DEFAULT
 value|0
 end_define
-
-begin_typedef
-typedef|typedef
-name|caddr_t
-name|KBDC
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|pckbd_state
-block|{
-name|KBDC
-name|kbdc
-decl_stmt|;
-comment|/* keyboard controller */
-name|int
-name|ks_mode
-decl_stmt|;
-comment|/* input mode (K_XLATE,K_RAW,K_CODE) */
-name|int
-name|ks_flags
-decl_stmt|;
-comment|/* flags */
-define|#
-directive|define
-name|COMPOSE
-value|(1<< 0)
-name|int
-name|ks_state
-decl_stmt|;
-comment|/* shift/lock key state */
-name|int
-name|ks_accents
-decl_stmt|;
-comment|/* accent key index (> 0) */
-name|u_int
-name|ks_composed_char
-decl_stmt|;
-comment|/* composed char code (> 0) */
-block|}
-name|pckbd_state_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* keyboard driver declaration */
@@ -2107,9 +2157,29 @@ modifier|*
 name|kbd
 parameter_list|)
 block|{
+name|pckbd_state_t
+modifier|*
+name|state
+init|=
+operator|(
+name|pckbd_state_t
+operator|*
+operator|)
+name|kbd
+operator|->
+name|kb_data
+decl_stmt|;
 name|kbd_unregister
 argument_list|(
 name|kbd
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|state
+operator|->
+name|ks_timer
 argument_list|)
 expr_stmt|;
 return|return

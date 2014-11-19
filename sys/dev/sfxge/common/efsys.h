@@ -1626,7 +1626,7 @@ name|_y
 parameter_list|,
 name|_t
 parameter_list|)
-value|do {				\ 	const _t __x = (_t)(_x);					\ 	const _t __y = (_t)(_y);					\ 	if (!(__x _op __y))						\ 	        panic("assertion failed at %s:%u", __FILE__, __LINE__);	\ 	} while(0)
+value|do {				\ 	const _t __x = (_t)(_x);					\ 	const _t __y = (_t)(_y);					\ 	if (!(__x _op __y))						\ 		panic("assertion failed at %s:%u", __FILE__, __LINE__);	\ 	} while(0)
 define|#
 directive|define
 name|EFSYS_ASSERT3U

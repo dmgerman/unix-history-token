@@ -747,7 +747,6 @@ literal|"fw_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|ha
 operator|->
 name|fw_ver_str
@@ -3370,9 +3369,7 @@ name|if_capabilities
 expr_stmt|;
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(

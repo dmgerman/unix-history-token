@@ -4949,7 +4949,7 @@ name|opt_L
 condition|?
 name|opt_L
 else|:
-literal|"NO_NAME"
+literal|"NO NAME"
 argument_list|)
 expr_stmt|;
 name|sprintf

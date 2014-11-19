@@ -332,6 +332,13 @@ name|i
 operator|++
 control|)
 block|{
+name|printf
+argument_list|(
+literal|"# Run %d..\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|testall
 argument_list|(
 name|CMPLXL
@@ -559,6 +566,13 @@ name|i
 operator|++
 control|)
 block|{
+name|printf
+argument_list|(
+literal|"# Run %d..\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|testall
 argument_list|(
 name|CMPLXL
@@ -952,6 +966,13 @@ operator|++
 control|)
 block|{
 comment|/* XXX could check exceptions more meticulously */
+name|printf
+argument_list|(
+literal|"# Run %d..\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|test
 argument_list|(
 name|cexp
@@ -1131,6 +1152,13 @@ name|i
 operator|++
 control|)
 block|{
+name|printf
+argument_list|(
+literal|"# Run %d..\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|test
 argument_list|(
 name|cexp
@@ -1409,6 +1437,13 @@ operator|+=
 literal|4
 control|)
 block|{
+name|printf
+argument_list|(
+literal|"# Run %d..\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|a
 operator|=
 name|tests
@@ -1817,6 +1852,19 @@ argument_list|(
 literal|"ok 3 - cexp inf\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+name|printf
+argument_list|(
+literal|"not ok 4 - cexp reals # TODO: PR # 191676 fails assertion on i386\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|test_reals
 argument_list|()
 expr_stmt|;
@@ -1825,6 +1873,8 @@ argument_list|(
 literal|"ok 4 - cexp reals\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|test_imaginaries
 argument_list|()
 expr_stmt|;

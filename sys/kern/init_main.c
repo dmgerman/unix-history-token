@@ -2308,6 +2308,8 @@ operator|=
 name|fdinit
 argument_list|(
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 name|p
@@ -3173,7 +3175,7 @@ condition|(
 operator|(
 name|var
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"init_path"
 argument_list|)
@@ -3860,7 +3862,7 @@ name|kickinit
 argument_list|,
 name|SI_SUB_KTHREAD_INIT
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|kick_init
 argument_list|,

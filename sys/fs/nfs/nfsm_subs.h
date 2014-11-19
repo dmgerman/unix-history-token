@@ -42,17 +42,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFSMINOFF
-parameter_list|(
-name|m
-parameter_list|)
-define|\
-value|if (M_HASCL(m)) 					\ 			(m)->m_data = (m)->m_ext.ext_buf; 		\ 		else if ((m)->m_flags& M_PKTHDR) 			\ 			(m)->m_data = (m)->m_pktdat; 			\ 				else 					\ 			(m)->m_data = (m)->m_dat
-end_define
-
-begin_define
-define|#
-directive|define
 name|NFSMSIZ
 parameter_list|(
 name|m

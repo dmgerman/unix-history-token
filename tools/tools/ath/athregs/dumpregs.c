@@ -880,8 +880,6 @@ name|dp
 index|[
 literal|0
 index|]
-operator|>>
-literal|16
 decl_stmt|;
 comment|/* start of range */
 name|u_int
@@ -889,12 +887,13 @@ name|e
 init|=
 name|dp
 index|[
-literal|0
+literal|1
 index|]
-operator|&
-literal|0xffff
 decl_stmt|;
 comment|/* end of range */
+name|dp
+operator|++
+expr_stmt|;
 name|dp
 operator|++
 expr_stmt|;
@@ -3540,8 +3539,11 @@ block|{
 name|u_int
 name|n
 init|=
-literal|2
-operator|*
+sizeof|sizeof
+argument_list|(
+name|HAL_REGRANGE
+argument_list|)
+operator|+
 sizeof|sizeof
 argument_list|(
 name|u_int32_t

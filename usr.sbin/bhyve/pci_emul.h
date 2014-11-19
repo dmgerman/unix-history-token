@@ -1060,6 +1060,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint64_t
+name|pci_ecfg_base
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pci_bus_configured
 parameter_list|(

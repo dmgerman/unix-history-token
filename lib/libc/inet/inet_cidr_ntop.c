@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_cidr_ntop.c,v 1.4.18.3 2006/10/11 02:32:47 marka Exp $"
+literal|"$Id: inet_cidr_ntop.c,v 1.7 2006/10/11 02:18:18 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

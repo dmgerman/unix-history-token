@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Portions Copyright (C) 2004, 2005, 2008, 2009  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1996-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1985  *    The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
 comment|/*  * Portions Copyright (c) 1995 by International Business Machines, Inc.  *  * International Business Machines, Inc. (hereinafter called IBM) grants  * permission under its copyrights to use, copy, modify, and distribute this  * Software with or without fee, provided that the above copyright notice and  * all paragraphs of this notice appear in all copies, and that the name of IBM  * not be used in connection with the marketing of any product incorporating  * the Software or modifications thereof, without specific, written prior  * permission.  *  * To the extent it has a right to do so, IBM grants an immunity from suit  * under its patents, if any, for the use, sale or manufacture of products to  * the extent that such products are used for performing Domain Name System  * dynamic updates in TCP/IP networks by means of the Software.  No immunity is  * granted for any product per se or for any other function of any product.  *  * THE SOFTWARE IS PROVIDED "AS IS", AND IBM DISCLAIMS ALL WARRANTIES,  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE.  IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL,  * DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER ARISING  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE, EVEN  * IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH DAMAGES.  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_if
@@ -48,7 +48,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_debug.c,v 1.10.18.6 2008/04/03 23:15:15 marka Exp $"
+literal|"$Id: res_debug.c,v 1.19 2009/02/26 11:20:20 tbox Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2582,6 +2582,150 @@ literal|"ATM address (unimplemented)"
 block|}
 block|,
 block|{
+name|ns_t_naptr
+block|,
+literal|"NAPTR"
+block|,
+literal|"naptr"
+block|}
+block|,
+block|{
+name|ns_t_kx
+block|,
+literal|"KX"
+block|,
+literal|"key exchange"
+block|}
+block|,
+block|{
+name|ns_t_cert
+block|,
+literal|"CERT"
+block|,
+literal|"certificate"
+block|}
+block|,
+block|{
+name|ns_t_a6
+block|,
+literal|"A"
+block|,
+literal|"IPv6 address (experminental)"
+block|}
+block|,
+block|{
+name|ns_t_dname
+block|,
+literal|"DNAME"
+block|,
+literal|"non-terminal redirection"
+block|}
+block|,
+block|{
+name|ns_t_opt
+block|,
+literal|"OPT"
+block|,
+literal|"opt"
+block|}
+block|,
+block|{
+name|ns_t_apl
+block|,
+literal|"apl"
+block|,
+literal|"apl"
+block|}
+block|,
+block|{
+name|ns_t_ds
+block|,
+literal|"DS"
+block|,
+literal|"delegation signer"
+block|}
+block|,
+block|{
+name|ns_t_sshfp
+block|,
+literal|"SSFP"
+block|,
+literal|"SSH fingerprint"
+block|}
+block|,
+block|{
+name|ns_t_ipseckey
+block|,
+literal|"IPSECKEY"
+block|,
+literal|"IPSEC key"
+block|}
+block|,
+block|{
+name|ns_t_rrsig
+block|,
+literal|"RRSIG"
+block|,
+literal|"rrsig"
+block|}
+block|,
+block|{
+name|ns_t_nsec
+block|,
+literal|"NSEC"
+block|,
+literal|"nsec"
+block|}
+block|,
+block|{
+name|ns_t_dnskey
+block|,
+literal|"DNSKEY"
+block|,
+literal|"DNS key"
+block|}
+block|,
+block|{
+name|ns_t_dhcid
+block|,
+literal|"DHCID"
+block|,
+literal|"dynamic host configuration identifier"
+block|}
+block|,
+block|{
+name|ns_t_nsec3
+block|,
+literal|"NSEC3"
+block|,
+literal|"nsec3"
+block|}
+block|,
+block|{
+name|ns_t_nsec3param
+block|,
+literal|"NSEC3PARAM"
+block|,
+literal|"NSEC3 parameters"
+block|}
+block|,
+block|{
+name|ns_t_hip
+block|,
+literal|"HIP"
+block|,
+literal|"host identity protocol"
+block|}
+block|,
+block|{
+name|ns_t_spf
+block|,
+literal|"SPF"
+block|,
+literal|"sender policy framework"
+block|}
+block|,
+block|{
 name|ns_t_tkey
 block|,
 literal|"TKEY"
@@ -2699,6 +2843,14 @@ block|,
 literal|"ANY"
 block|,
 literal|"\"any\""
+block|}
+block|,
+block|{
+name|ns_t_dlv
+block|,
+literal|"DLV"
+block|,
+literal|"DNSSEC look-aside validation"
 block|}
 block|,
 block|{
@@ -5885,7 +6037,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*%  * Make dates expressed in seconds-since-Jan-1-1970 easy to read.    * SIG records are required to be printed like this, by the Secure DNS RFC.  */
+comment|/*%  * Make dates expressed in seconds-since-Jan-1-1970 easy to read.  * SIG records are required to be printed like this, by the Secure DNS RFC.  */
 end_comment
 
 begin_function

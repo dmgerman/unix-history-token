@@ -310,6 +310,8 @@ name|struct
 name|socket
 modifier|*
 name|so
+parameter_list|,
+modifier|...
 parameter_list|)
 block|{
 name|struct

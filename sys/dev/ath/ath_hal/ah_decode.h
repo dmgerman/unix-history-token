@@ -102,6 +102,12 @@ comment|/* ar*AniReset, cmd */
 name|AH_MARK_RX_CTL
 block|,
 comment|/* RX DMA control */
+name|AH_MARK_CHIP_POWER
+block|,
+comment|/* chip power control, mode */
+name|AH_MARK_CHIP_POWER_DONE
+block|,
+comment|/* chip power control done, status */
 block|}
 enum|;
 end_enum
@@ -118,6 +124,8 @@ block|,
 name|AH_MARK_RX_CTL_DMA_STOP
 block|,
 name|AH_MARK_RX_CTL_DMA_STOP_ERR
+block|,
+name|AH_MARK_RX_CTL_DMA_STOP_OK
 block|, }
 enum|;
 end_enum

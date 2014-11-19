@@ -673,80 +673,6 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * IPv6 onion peeling state.  * it will be initialized when we come into ip6_input().  * XXX do not make it a kitchen sink!  */
-end_comment
-
-begin_struct
-struct|struct
-name|ip6aux
-block|{
-name|u_int32_t
-name|ip6a_flags
-decl_stmt|;
-define|#
-directive|define
-name|IP6A_SWAP
-value|0x01
-comment|/* swapped home/care-of on packet */
-define|#
-directive|define
-name|IP6A_HASEEN
-value|0x02
-comment|/* HA was present */
-define|#
-directive|define
-name|IP6A_BRUID
-value|0x04
-comment|/* BR Unique Identifier was present */
-define|#
-directive|define
-name|IP6A_RTALERTSEEN
-value|0x08
-comment|/* rtalert present */
-comment|/* ip6.ip6_src */
-name|struct
-name|in6_addr
-name|ip6a_careof
-decl_stmt|;
-comment|/* care-of address of the peer */
-name|struct
-name|in6_addr
-name|ip6a_home
-decl_stmt|;
-comment|/* home address of the peer */
-name|u_int16_t
-name|ip6a_bruid
-decl_stmt|;
-comment|/* BR unique identifier */
-comment|/* ip6.ip6_dst */
-name|struct
-name|in6_ifaddr
-modifier|*
-name|ip6a_dstia6
-decl_stmt|;
-comment|/* my ifaddr that matches ip6_dst */
-comment|/* rtalert */
-name|u_int16_t
-name|ip6a_rtalert
-decl_stmt|;
-comment|/* rtalert option value */
-comment|/* 	 * decapsulation history will be here. 	 * with IPsec it may not be accurate. 	 */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
 comment|/* flags passed to ip6_output as last parameter */
 end_comment
 
@@ -1081,20 +1007,6 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
-name|ip6_keepfaith
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Firewall Aided Internet Translator */
-end_comment
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
 name|ip6_log_interval
 argument_list|)
 expr_stmt|;
@@ -1192,13 +1104,6 @@ define|#
 directive|define
 name|V_ip6_rfc6204w3
 value|VNET(ip6_rfc6204w3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ip6_keepfaith
-value|VNET(ip6_keepfaith)
 end_define
 
 begin_define
@@ -1477,19 +1382,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|in6_ifaddr
-modifier|*
-name|ip6_getdstifaddr
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ip6_freepcbopts
 parameter_list|(
@@ -1565,30 +1457,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__notyet__
-end_ifdef
-
-begin_function_decl
-name|struct
-name|ip6aux
-modifier|*
-name|ip6_findaux
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -2017,6 +1885,10 @@ name|rip6_output
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|socket
 modifier|*
 parameter_list|,
 modifier|...

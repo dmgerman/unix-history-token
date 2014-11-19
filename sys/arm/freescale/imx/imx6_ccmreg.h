@@ -67,6 +67,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CCM_CCGR0
+value|0x068
+end_define
+
+begin_define
+define|#
+directive|define
 name|CCM_CCGR1
 value|0x06C
 end_define

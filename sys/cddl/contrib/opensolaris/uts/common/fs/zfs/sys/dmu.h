@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2012, Joyent, Inc. All rights reserved.  * Copyright 2013 DEY Storage Systems, Inc.  * Copyright 2014 HybridCluster. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -613,8 +613,8 @@ comment|/*  * The maximum number of bytes that can be accessed as part of one  *
 define|#
 directive|define
 name|DMU_MAX_ACCESS
-value|(10<<20)
-comment|/* 10MB */
+value|(32 * 1024 * 1024)
+comment|/* 32MB */
 define|#
 directive|define
 name|DMU_MAX_DELETEBLKCNT
@@ -1108,6 +1108,10 @@ name|bonustype
 parameter_list|,
 name|int
 name|bonuslen
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|txp
 parameter_list|)
 function_decl|;
 comment|/*  * Free an object from this objset.  *  * The object's data will be freed as well (ie. you don't need to call  * dmu_free(object, 0, -1, tx)).  *  * The object need not be held in the transaction.  *  * If there are any holds on this object's buffers (via dmu_buf_hold()),  * or tx holds on the object (via dmu_tx_hold_object()), you can not  * free it; it fails and returns EBUSY.  *  * If the object is not allocated, it fails and returns ENOENT.  *  * Return 0 on success, or EBUSY or ENOENT as specified above.  */
@@ -1977,6 +1981,22 @@ name|size
 parameter_list|)
 function_decl|;
 name|int
+name|dmu_read_uio_dbuf
+parameter_list|(
+name|dmu_buf_t
+modifier|*
+name|zdb
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|uint64_t
+name|size
+parameter_list|)
+function_decl|;
+name|int
 name|dmu_write_uio
 parameter_list|(
 name|objset_t
@@ -2214,6 +2234,10 @@ specifier|extern
 name|int
 name|zfs_prefetch_disable
 decl_stmt|;
+specifier|extern
+name|int
+name|zfs_max_recordsize
+decl_stmt|;
 comment|/*  * Asynchronously try to read in the data.  */
 name|void
 name|dmu_prefetch
@@ -2263,9 +2287,12 @@ name|uint8_t
 name|doi_compress
 decl_stmt|;
 name|uint8_t
+name|doi_nblkptr
+decl_stmt|;
+name|uint8_t
 name|doi_pad
 index|[
-literal|5
+literal|4
 index|]
 decl_stmt|;
 name|uint64_t

@@ -1822,6 +1822,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|cdg_mod_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|cdg_conn_init
 parameter_list|(
@@ -1931,6 +1941,11 @@ operator|.
 name|cong_signal
 operator|=
 name|cdg_cong_signal
+block|,
+operator|.
+name|mod_destroy
+operator|=
+name|cdg_mod_destroy
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2078,6 +2093,27 @@ operator|=
 name|newreno_cc_algo
 operator|.
 name|after_idle
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|cdg_mod_destroy
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uma_zdestroy
+argument_list|(
+name|qdiffsample_zone
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -3946,7 +3982,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_cc_cdg
 argument_list|,
@@ -3954,6 +3990,8 @@ name|OID_AUTO
 argument_list|,
 name|alpha_inc
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -3971,7 +4009,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_cdg
 argument_list|,
@@ -3979,6 +4017,8 @@ name|OID_AUTO
 argument_list|,
 name|beta_delay
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -4003,7 +4043,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_cdg
 argument_list|,
@@ -4011,6 +4051,8 @@ name|OID_AUTO
 argument_list|,
 name|beta_loss
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -4035,7 +4077,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_PROC
+name|SYSCTL_PROC
 argument_list|(
 name|_net_inet_tcp_cc_cdg
 argument_list|,
@@ -4043,6 +4085,8 @@ name|OID_AUTO
 argument_list|,
 name|exp_backoff_scale
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
@@ -4066,7 +4110,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_cc_cdg
 argument_list|,
@@ -4074,6 +4118,8 @@ name|OID_AUTO
 argument_list|,
 name|smoothing_factor
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -4090,7 +4136,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_cc_cdg
 argument_list|,
@@ -4098,6 +4144,8 @@ name|OID_AUTO
 argument_list|,
 name|loss_compete_consec_cong
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -4115,7 +4163,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_cc_cdg
 argument_list|,
@@ -4123,6 +4171,8 @@ name|OID_AUTO
 argument_list|,
 name|loss_compete_hold_backoff
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&

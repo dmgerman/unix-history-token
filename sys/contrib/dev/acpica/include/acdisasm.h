@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -95,6 +95,10 @@ name|ACPI_DMTABLE_INFO
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Values for Flags field above */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -128,10 +132,6 @@ begin_comment
 comment|/* Field must be non-zero */
 end_comment
 
-begin_comment
-comment|/* TBD: Not used at this time */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -139,12 +139,31 @@ name|DT_OPTIONAL
 value|0x08
 end_define
 
+begin_comment
+comment|/* Field is optional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_DESCRIBES_OPTIONAL
+value|0x10
+end_define
+
+begin_comment
+comment|/* Field describes an optional field (length, etc.) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DT_COUNT
-value|0x10
+value|0x20
 end_define
+
+begin_comment
+comment|/* Currently not used */
+end_comment
 
 begin_comment
 comment|/*  * Values for Opcode above.  * Note: 0-7 must not change, they are used as a flag shift value. Other  * than those, new values can be added wherever appropriate.  */
@@ -256,6 +275,8 @@ name|ACPI_DMT_ASF
 block|,
 name|ACPI_DMT_DMAR
 block|,
+name|ACPI_DMT_DMAR_SCOPE
+block|,
 name|ACPI_DMT_EINJACT
 block|,
 name|ACPI_DMT_EINJINST
@@ -266,6 +287,8 @@ name|ACPI_DMT_ERSTINST
 block|,
 name|ACPI_DMT_FADTPM
 block|,
+name|ACPI_DMT_GTDT
+block|,
 name|ACPI_DMT_HEST
 block|,
 name|ACPI_DMT_HESTNTFY
@@ -274,7 +297,11 @@ name|ACPI_DMT_HESTNTYP
 block|,
 name|ACPI_DMT_IVRS
 block|,
+name|ACPI_DMT_LPIT
+block|,
 name|ACPI_DMT_MADT
+block|,
+name|ACPI_DMT_PCCT
 block|,
 name|ACPI_DMT_PMTT
 block|,
@@ -380,6 +407,10 @@ name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
 decl_stmt|;
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|MappingOp
+decl_stmt|;
 block|}
 name|ACPI_OP_WALK_INFO
 typedef|;
@@ -436,6 +467,10 @@ modifier|*
 name|ACPI_RESOURCE_HANDLER
 function_decl|)
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -701,6 +736,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoDbg2OemData
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoDbgp
 index|[]
 decl_stmt|;
@@ -758,6 +801,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoDmar3
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoDmar4
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -901,6 +952,38 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoGtdtHdr
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoGtdt0
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoGtdt0a
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoGtdt1
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoHeader
 index|[]
 decl_stmt|;
@@ -990,6 +1073,30 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoHpet
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoLpitHdr
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoLpit0
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoLpit1
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1173,6 +1280,22 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMadt13
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMadt14
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoMadtHdr
 index|[]
 decl_stmt|;
@@ -1341,7 +1464,23 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPcctHdr
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoPcct0
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPcct1
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1486,6 +1625,14 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
 name|AcpiDmTableInfoSrat2
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoSrat3
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1799,6 +1946,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiDmDumpGtdt
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiDmDumpHest
 parameter_list|(
 name|ACPI_TABLE_HEADER
@@ -1811,6 +1969,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|AcpiDmDumpIvrs
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDmDumpLpit
 parameter_list|(
 name|ACPI_TABLE_HEADER
 modifier|*
@@ -2096,6 +2265,28 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiDmDisplayTargetPathname
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDmNotifyDescription
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiDmPredefinedDescription
 parameter_list|(
 name|ACPI_PARSE_OBJECT
@@ -2296,7 +2487,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDmIsEisaId
+name|AcpiDmCheckForHardwareId
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -2307,10 +2498,21 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDmEisaId
+name|AcpiDmDecompressEisaId
 parameter_list|(
 name|UINT32
 name|EncodedId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiDmIsUuidBuffer
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2389,7 +2591,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -2404,6 +2606,29 @@ name|Type
 parameter_list|,
 name|UINT32
 name|Value
+parameter_list|,
+name|UINT16
+name|Flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDmAddNodeToExternalList
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|,
+name|UINT8
+name|Type
+parameter_list|,
+name|UINT32
+name|Value
+parameter_list|,
+name|UINT16
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2587,6 +2812,10 @@ begin_function_decl
 name|void
 name|AcpiDmWordDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2604,6 +2833,10 @@ begin_function_decl
 name|void
 name|AcpiDmDwordDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2621,6 +2854,10 @@ begin_function_decl
 name|void
 name|AcpiDmExtendedDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2638,6 +2875,10 @@ begin_function_decl
 name|void
 name|AcpiDmQwordDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2655,6 +2896,10 @@ begin_function_decl
 name|void
 name|AcpiDmMemory24Descriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2672,6 +2917,10 @@ begin_function_decl
 name|void
 name|AcpiDmMemory32Descriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2689,6 +2938,10 @@ begin_function_decl
 name|void
 name|AcpiDmFixedMemory32Descriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2706,6 +2959,10 @@ begin_function_decl
 name|void
 name|AcpiDmGenericRegisterDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2723,6 +2980,10 @@ begin_function_decl
 name|void
 name|AcpiDmInterruptDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2740,6 +3001,10 @@ begin_function_decl
 name|void
 name|AcpiDmVendorLargeDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2757,6 +3022,10 @@ begin_function_decl
 name|void
 name|AcpiDmGpioDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2774,6 +3043,10 @@ begin_function_decl
 name|void
 name|AcpiDmSerialBusDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2816,6 +3089,10 @@ begin_function_decl
 name|void
 name|AcpiDmIrqDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2833,6 +3110,10 @@ begin_function_decl
 name|void
 name|AcpiDmDmaDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2850,6 +3131,10 @@ begin_function_decl
 name|void
 name|AcpiDmFixedDmaDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2867,6 +3152,10 @@ begin_function_decl
 name|void
 name|AcpiDmIoDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2884,6 +3173,10 @@ begin_function_decl
 name|void
 name|AcpiDmFixedIoDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2901,6 +3194,10 @@ begin_function_decl
 name|void
 name|AcpiDmStartDependentDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2918,6 +3215,10 @@ begin_function_decl
 name|void
 name|AcpiDmEndDependentDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource
@@ -2935,6 +3236,10 @@ begin_function_decl
 name|void
 name|AcpiDmVendorSmallDescriptor
 parameter_list|(
+name|ACPI_OP_WALK_INFO
+modifier|*
+name|Info
+parameter_list|,
 name|AML_RESOURCE
 modifier|*
 name|Resource

@@ -138,7 +138,7 @@ name|sc
 parameter_list|,
 name|offset
 parameter_list|)
-value|bus_space_read_1(sc->bustag, sc->bushandle, offset)
+value|bus_read_1(sc->iores, offset)
 end_define
 
 begin_define
@@ -150,7 +150,7 @@ name|sc
 parameter_list|,
 name|offset
 parameter_list|)
-value|bus_space_read_2(sc->bustag, sc->bushandle, offset)
+value|bus_read_2(sc->iores, offset)
 end_define
 
 begin_define
@@ -162,7 +162,7 @@ name|sc
 parameter_list|,
 name|offset
 parameter_list|)
-value|bus_space_read_4(sc->bustag, sc->bushandle, offset)
+value|bus_read_4(sc->iores, offset)
 end_define
 
 begin_define
@@ -176,7 +176,7 @@ name|offset
 parameter_list|,
 name|value
 parameter_list|)
-value|bus_space_write_1(sc->bustag, sc->bushandle, offset, value)
+value|bus_write_1(sc->iores, offset, value)
 end_define
 
 begin_define
@@ -190,7 +190,7 @@ name|offset
 parameter_list|,
 name|value
 parameter_list|)
-value|bus_space_write_2(sc->bustag, sc->bushandle, offset, value)
+value|bus_write_2(sc->iores, offset, value)
 end_define
 
 begin_define
@@ -204,7 +204,7 @@ name|offset
 parameter_list|,
 name|value
 parameter_list|)
-value|bus_space_write_4(sc->bustag, sc->bushandle, offset, value)
+value|bus_write_4(sc->iores, offset, value)
 end_define
 
 begin_comment
@@ -460,12 +460,6 @@ name|void
 modifier|*
 name|irqcookie
 decl_stmt|;
-name|bus_space_tag_t
-name|bustag
-decl_stmt|;
-name|bus_space_handle_t
-name|bushandle
-decl_stmt|;
 name|bus_dma_tag_t
 name|adapter_dmatag
 decl_stmt|;
@@ -484,7 +478,7 @@ modifier|*
 name|device_file
 decl_stmt|;
 name|struct
-name|callout_handle
+name|callout
 name|timer
 decl_stmt|;
 name|u_int16_t

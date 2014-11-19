@@ -2943,51 +2943,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * sendfile(2) kqueue information  */
-end_comment
-
-begin_struct
-struct|struct
-name|sf_hdtr_kq
-block|{
-name|uintptr_t
-name|kq_ident
-decl_stmt|;
-comment|/* ident (from userland?) */
-name|void
-modifier|*
-name|kq_udata
-decl_stmt|;
-comment|/* user data pointer */
-name|uint32_t
-name|kq_flags
-decl_stmt|;
-comment|/* extra flags to pass in */
-name|int
-name|kq_fd
-decl_stmt|;
-comment|/* kq fd to post completion events on */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|sf_hdtr_all
-block|{
-name|struct
-name|sf_hdtr
-name|hdtr
-decl_stmt|;
-name|struct
-name|sf_hdtr_kq
-name|kq
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Sendfile-specific flag(s)  */
 end_comment
 
@@ -3010,13 +2965,6 @@ define|#
 directive|define
 name|SF_SYNC
 value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|SF_KQUEUE
-value|0x00000008
 end_define
 
 begin_ifdef

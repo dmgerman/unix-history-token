@@ -355,14 +355,11 @@ directive|ifdef
 name|DDB
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|vm_offset_t
-name|ksym_start
-decl_stmt|,
-name|ksym_end
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
 
 begin_endif
 endif|#
@@ -1144,6 +1141,17 @@ name|dtbp
 decl_stmt|,
 name|end
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+name|vm_offset_t
+name|ksym_start
+decl_stmt|;
+name|vm_offset_t
+name|ksym_end
+decl_stmt|;
+endif|#
+directive|endif
 name|kmdp
 operator|=
 name|NULL
@@ -1388,6 +1396,13 @@ argument_list|,
 name|MODINFOMD_ESYM
 argument_list|,
 name|uintptr_t
+argument_list|)
+expr_stmt|;
+name|db_fetch_ksymtab
+argument_list|(
+name|ksym_start
+argument_list|,
+name|ksym_end
 argument_list|)
 expr_stmt|;
 endif|#

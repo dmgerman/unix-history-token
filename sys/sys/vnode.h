@@ -1083,6 +1083,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_RANGELOCKED
+value|0x4000
+end_define
+
+begin_comment
+comment|/* range locked */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_SEQMAX
 value|0x7F
 end_define
@@ -1769,6 +1780,16 @@ parameter_list|)
 value|lockallowshare((vp)->v_vnlock)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VN_LOCK_DSHARE
+parameter_list|(
+name|vp
+parameter_list|)
+value|lockdisableshare((vp)->v_vnlock)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1982,7 +2003,7 @@ name|DEBUG_VFS_LOCKS
 end_ifdef
 
 begin_comment
-comment|/*  * Support code to aid in debugging VFS locking problems.  Not totally  * reliable since if the thread sleeps between changing the lock  * state and checking it with the assert, some other thread could  * change the state.  They are good enough for debugging a single  * filesystem using a single-threaded test.  */
+comment|/*  * Support code to aid in debugging VFS locking problems.  Not totally  * reliable since if the thread sleeps between changing the lock  * state and checking it with the assert, some other thread could  * change the state.  They are good enough for debugging a single  * filesystem using a single-threaded test.  Note that the unreliability is  * limited to false negatives; efforts were made to ensure that false  * positives cannot occur.  */
 end_comment
 
 begin_function_decl
@@ -4512,6 +4533,42 @@ name|vop_panic
 parameter_list|(
 name|struct
 name|vop_generic_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dead_poll
+parameter_list|(
+name|struct
+name|vop_poll_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dead_read
+parameter_list|(
+name|struct
+name|vop_read_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dead_write
+parameter_list|(
+name|struct
+name|vop_write_args
 modifier|*
 name|ap
 parameter_list|)

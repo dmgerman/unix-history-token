@@ -3065,13 +3065,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 else|else
 block|{
@@ -3098,13 +3096,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(

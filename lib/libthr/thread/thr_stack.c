@@ -682,7 +682,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Allocate a stack from usrstack. */
+comment|/* 		 * Allocate a stack from or below usrstack, depending 		 * on the LIBPTHREAD_BIGSTACK_MAIN env variable. 		 */
 if|if
 condition|(
 name|last_stack

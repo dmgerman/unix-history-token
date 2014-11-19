@@ -1691,7 +1691,7 @@ name|ch
 decl_stmt|,
 name|ld
 decl_stmt|;
-name|int
+name|pid_t
 name|httpd_group
 init|=
 literal|65534
@@ -2085,6 +2085,9 @@ name|NULL
 condition|)
 name|setpgrp
 argument_list|(
+operator|(
+name|pid_t
+operator|)
 literal|0
 argument_list|,
 name|httpd_group

@@ -1240,7 +1240,8 @@ begin_function
 name|int
 name|vatpit_handler
 parameter_list|(
-name|void
+name|struct
+name|vm
 modifier|*
 name|vm
 parameter_list|,
@@ -1618,7 +1619,8 @@ begin_function
 name|int
 name|vatpit_nmisc_handler
 parameter_list|(
-name|void
+name|struct
+name|vm
 modifier|*
 name|vm
 parameter_list|,

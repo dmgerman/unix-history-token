@@ -415,7 +415,7 @@ parameter_list|,
 name|bitindex
 parameter_list|)
 define|\
-value|{ atomic_or_long(&(BT_WIM(bitmap, bitindex)), BT_BIW(bitindex)); }
+value|{ atomic_or_ulong(&(BT_WIM(bitmap, bitindex)), BT_BIW(bitindex)); }
 define|#
 directive|define
 name|BT_ATOMIC_CLEAR
@@ -425,7 +425,7 @@ parameter_list|,
 name|bitindex
 parameter_list|)
 define|\
-value|{ atomic_and_long(&(BT_WIM(bitmap, bitindex)), ~BT_BIW(bitindex)); }
+value|{ atomic_and_ulong(&(BT_WIM(bitmap, bitindex)), ~BT_BIW(bitindex)); }
 define|#
 directive|define
 name|BT_ATOMIC_SET_EXCL

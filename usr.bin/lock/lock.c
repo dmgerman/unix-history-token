@@ -365,7 +365,7 @@ name|openlog
 argument_list|(
 literal|"lock"
 argument_list|,
-name|LOG_ODELAY
+literal|0
 argument_list|,
 name|LOG_AUTH
 argument_list|)

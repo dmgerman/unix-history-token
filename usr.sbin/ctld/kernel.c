@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2003, 2004 Silicon Graphics International Corp.  * Copyright (c) 1997-2007 Kenneth D. Merry  * Copyright (c) 2012 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Edward Tomasz Napierala  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2003, 2004 Silicon Graphics International Corp.  * Copyright (c) 1997-2007 Kenneth D. Merry  * Copyright (c) 2012 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Edward Tomasz Napierala  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -326,7 +340,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Backend LUN information.    */
+comment|/*  * Backend LUN information.  */
 end_comment
 
 begin_struct
@@ -1163,7 +1177,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{ 		 	}
+block|{
+comment|/* Nothing. */
+block|}
 else|else
 block|{
 name|struct
@@ -1850,7 +1866,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{ 		 	}
+block|{
+comment|/* Nothing. */
+block|}
 else|else
 block|{
 name|struct
@@ -3732,18 +3750,19 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|log_warnx
 argument_list|(
-literal|"error returned from LUN creation request: %s"
+literal|"LUN creation error: %s"
 argument_list|,
 name|req
 operator|.
@@ -3755,19 +3774,27 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|log_warnx
 argument_list|(
-literal|"unknown LUN creation request status %d"
+literal|"LUN creation warning: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|log_warnx
+argument_list|(
+literal|"unknown LUN creation status: %d"
 argument_list|,
 name|req
 operator|.
@@ -3901,18 +3928,19 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|log_warnx
 argument_list|(
-literal|"error returned from LUN modification request: %s"
+literal|"LUN modification error: %s"
 argument_list|,
 name|req
 operator|.
@@ -3924,19 +3952,27 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|log_warnx
 argument_list|(
-literal|"unknown LUN modification request status %d"
+literal|"LUN modification warning: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|log_warnx
+argument_list|(
+literal|"unknown LUN modification status: %d"
 argument_list|,
 name|req
 operator|.
@@ -4045,18 +4081,19 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
+switch|switch
 condition|(
 name|req
 operator|.
 name|status
-operator|==
-name|CTL_LUN_ERROR
 condition|)
 block|{
+case|case
+name|CTL_LUN_ERROR
+case|:
 name|log_warnx
 argument_list|(
-literal|"error returned from LUN removal request: %s"
+literal|"LUN removal error: %s"
 argument_list|,
 name|req
 operator|.
@@ -4068,19 +4105,27 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|req
-operator|.
-name|status
-operator|!=
-name|CTL_LUN_OK
-condition|)
-block|{
+case|case
+name|CTL_LUN_WARNING
+case|:
 name|log_warnx
 argument_list|(
-literal|"unknown LUN removal request status %d"
+literal|"LUN removal warning: %s"
+argument_list|,
+name|req
+operator|.
+name|error_str
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTL_LUN_OK
+case|:
+break|break;
+default|default:
+name|log_warnx
+argument_list|(
+literal|"unknown LUN removal status: %d"
 argument_list|,
 name|req
 operator|.

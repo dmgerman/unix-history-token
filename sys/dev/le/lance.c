@@ -731,9 +731,7 @@ expr_stmt|;
 comment|/* Claim 802.1q capability. */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1899,10 +1897,14 @@ argument_list|,
 literal|"device timeout\n"
 argument_list|)
 expr_stmt|;
-operator|++
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|lance_init_locked
 argument_list|(

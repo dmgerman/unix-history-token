@@ -12640,11 +12640,20 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KTR
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|KTR_COMPILE
+operator|&
+name|KTR_IGMPV3
+operator|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -12969,7 +12978,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !KTR */
+comment|/* !KTR || !(KTR_COMPILE& KTR_IGMPV3) */
 end_comment
 
 begin_function
@@ -12991,7 +13000,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KTR */
+comment|/* KTR&& (KTR_COMPILE& KTR_IGMPV3) */
 end_comment
 
 begin_expr_stmt

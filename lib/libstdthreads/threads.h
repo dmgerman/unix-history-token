@@ -256,6 +256,7 @@ parameter_list|,
 name|mtx_t
 modifier|*
 name|__restrict
+name|__mtx
 parameter_list|,
 specifier|const
 name|struct
@@ -263,8 +264,15 @@ name|timespec
 modifier|*
 name|__restrict
 parameter_list|)
-function_decl|;
+function_decl|__requires_exclusive
+parameter_list|(
+function_decl|*__mtx
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -275,9 +283,17 @@ modifier|*
 parameter_list|,
 name|mtx_t
 modifier|*
+name|__mtx
 parameter_list|)
-function_decl|;
+function_decl|__requires_exclusive
+parameter_list|(
+function_decl|*__mtx
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -285,9 +301,17 @@ name|mtx_destroy
 parameter_list|(
 name|mtx_t
 modifier|*
+name|__mtx
 parameter_list|)
-function_decl|;
+function_decl|__requires_unlocked
+parameter_list|(
+function_decl|*__mtx
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -295,11 +319,19 @@ name|mtx_init
 parameter_list|(
 name|mtx_t
 modifier|*
+name|__mtx
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|;
+function_decl|__requires_unlocked
+parameter_list|(
+function_decl|*__mtx
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -307,9 +339,17 @@ name|mtx_lock
 parameter_list|(
 name|mtx_t
 modifier|*
+name|__mtx
 parameter_list|)
-function_decl|;
+function_decl|__locks_exclusive
+parameter_list|(
+function_decl|*__mtx
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -318,6 +358,7 @@ parameter_list|(
 name|mtx_t
 modifier|*
 name|__restrict
+name|__mtx
 parameter_list|,
 specifier|const
 name|struct
@@ -325,8 +366,17 @@ name|timespec
 modifier|*
 name|__restrict
 parameter_list|)
-function_decl|;
+function_decl|__trylocks_exclusive
+parameter_list|(
+name|thrd_success
+parameter_list|,
+function_decl|*__mtx
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -334,9 +384,19 @@ name|mtx_trylock
 parameter_list|(
 name|mtx_t
 modifier|*
+name|__mtx
 parameter_list|)
-function_decl|;
+function_decl|__trylocks_exclusive
+parameter_list|(
+name|thrd_success
+parameter_list|,
+function_decl|*__mtx
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -344,9 +404,17 @@ name|mtx_unlock
 parameter_list|(
 name|mtx_t
 modifier|*
+name|__mtx
 parameter_list|)
-function_decl|;
+function_decl|__unlocks
+parameter_list|(
+function_decl|*__mtx
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int

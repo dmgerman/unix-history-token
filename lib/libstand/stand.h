@@ -438,6 +438,14 @@ name|splitfs_fsops
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fs_ops
+name|pkgfs_fsops
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* where values for lseek(2) */
 end_comment
@@ -2457,6 +2465,15 @@ name|fs_ops
 modifier|*
 name|file_system
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fs_ops
+modifier|*
+name|exclusive_file_system
 decl_stmt|;
 end_decl_stmt
 

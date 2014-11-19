@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/neighbour.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -523,6 +517,9 @@ name|struct
 name|c4iw_ep
 modifier|*
 name|ep
+parameter_list|,
+name|int
+name|status
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1976,6 +1973,8 @@ expr_stmt|;
 name|close_complete_upcall
 argument_list|(
 name|ep
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|__state_set
@@ -2386,7 +2385,7 @@ name|ep
 operator|->
 name|com
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|state_set
@@ -2648,6 +2647,8 @@ block|}
 name|close_complete_upcall
 argument_list|(
 name|ep
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|__state_set
@@ -2911,7 +2912,7 @@ name|CTR5
 argument_list|(
 name|KTR_IW_CXGBE
 argument_list|,
-literal|"%s: so %p, ep %p, state %s, sb_cc %d"
+literal|"%s: so %p, ep %p, state %s, sbused %d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2932,6 +2933,9 @@ operator|.
 name|state
 index|]
 argument_list|,
+name|sbused
+argument_list|(
+operator|&
 name|ep
 operator|->
 name|com
@@ -2939,8 +2943,7 @@ operator|.
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3043,6 +3046,9 @@ break|break;
 default|default:
 if|if
 condition|(
+name|sbused
+argument_list|(
+operator|&
 name|ep
 operator|->
 name|com
@@ -3050,15 +3056,14 @@ operator|.
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 condition|)
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: Unexpected streaming data.  "
-literal|"ep %p, state %d, so %p, so_state 0x%x, sb_cc %u\n"
+literal|"%s: Unexpected streaming data. ep %p, "
+literal|"state %d, so %p, so_state 0x%x, sbused %u\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3086,6 +3091,9 @@ name|so
 operator|->
 name|so_state
 argument_list|,
+name|sbused
+argument_list|(
+operator|&
 name|ep
 operator|->
 name|com
@@ -3093,8 +3101,7 @@ operator|.
 name|so
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6516,6 +6523,9 @@ name|struct
 name|c4iw_ep
 modifier|*
 name|ep
+parameter_list|,
+name|int
+name|status
 parameter_list|)
 block|{
 name|struct
@@ -6551,6 +6561,12 @@ operator|.
 name|event
 operator|=
 name|IW_CM_EVENT_CLOSE
+expr_stmt|;
+name|event
+operator|.
+name|status
+operator|=
+name|status
 expr_stmt|;
 if|if
 condition|(
@@ -6676,6 +6692,9 @@ expr_stmt|;
 name|close_complete_upcall
 argument_list|(
 name|ep
+argument_list|,
+operator|-
+name|ECONNRESET
 argument_list|)
 expr_stmt|;
 name|state_set
@@ -11117,7 +11136,7 @@ operator|-
 name|EHOSTUNREACH
 expr_stmt|;
 goto|goto
-name|fail3
+name|fail2
 goto|;
 block|}
 if|if
@@ -11128,7 +11147,7 @@ name|rt
 operator|->
 name|rt_ifp
 operator|->
-name|if_flags
+name|if_capenable
 operator|&
 name|IFCAP_TOE
 operator|)
@@ -11151,6 +11170,21 @@ literal|"%s - interface not TOE capable.\n"
 argument_list|,
 name|__func__
 argument_list|)
+expr_stmt|;
+name|close_socket
+argument_list|(
+operator|&
+name|ep
+operator|->
+name|com
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+operator|-
+name|ENOPROTOOPT
 expr_stmt|;
 goto|goto
 name|fail3
@@ -11283,6 +11317,22 @@ argument_list|)
 expr_stmt|;
 goto|goto
 name|out
+goto|;
+block|}
+else|else
+block|{
+name|close_socket
+argument_list|(
+operator|&
+name|ep
+operator|->
+name|com
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail2
 goto|;
 block|}
 name|fail3
@@ -11796,6 +11846,9 @@ expr_stmt|;
 name|close_complete_upcall
 argument_list|(
 name|ep
+argument_list|,
+operator|-
+name|EIO
 argument_list|)
 expr_stmt|;
 name|ep

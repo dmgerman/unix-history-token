@@ -2878,6 +2878,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+comment|/* 	 * When the directory vnode containing the quota file is 	 * inactivated, due to the shared lookup of the quota file 	 * vput()ing the dvp, the qsyncvp() call for the containing 	 * directory would try to acquire the quota lock exclusive. 	 * At the same time, lookup already locked the quota vnode 	 * shared.  Mark the quota vnode lock as allowing recursion 	 * and automatically converting shared locks to exclusive. 	 * 	 * Also mark quota vnode as system. 	 */
 name|vn_lock
 argument_list|(
 name|vp
@@ -2892,6 +2893,16 @@ operator|->
 name|v_vflag
 operator||=
 name|VV_SYSTEM
+expr_stmt|;
+name|VN_LOCK_AREC
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|VN_LOCK_DSHARE
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
@@ -5300,11 +5311,6 @@ decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* 	 * Check if the mount point has any quotas. 	 * If not, simply return. 	 */
-name|UFS_LOCK
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5330,11 +5336,6 @@ operator|!=
 name|NULLVP
 condition|)
 break|break;
-name|UFS_UNLOCK
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i
@@ -5501,11 +5502,6 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Check if the mount point has any quotas. 	 * If not, simply return. 	 */
-name|UFS_LOCK
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5531,11 +5527,6 @@ operator|!=
 name|NULLVP
 condition|)
 break|break;
-name|UFS_UNLOCK
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lalr.c,v 1.10 2014/02/19 00:35:17 Tom.Shields Exp $ */
+comment|/* $Id: lalr.c,v 1.11 2014/09/18 00:26:39 tom Exp $ */
 end_comment
 
 begin_include
@@ -266,6 +266,13 @@ name|reductions
 modifier|*
 modifier|*
 name|reduction_table
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Value_t
+modifier|*
+name|goto_base
 decl_stmt|;
 end_decl_stmt
 
@@ -905,6 +912,10 @@ name|k
 decl_stmt|;
 name|Value_t
 modifier|*
+name|temp_base
+decl_stmt|;
+name|Value_t
+modifier|*
 name|temp_map
 decl_stmt|;
 name|Value_t
@@ -913,7 +924,7 @@ decl_stmt|;
 name|Value_t
 name|state1
 decl_stmt|;
-name|goto_map
+name|goto_base
 operator|=
 name|NEW2
 argument_list|(
@@ -923,19 +934,27 @@ literal|1
 argument_list|,
 name|Value_t
 argument_list|)
+expr_stmt|;
+name|temp_base
+operator|=
+name|NEW2
+argument_list|(
+name|nvars
+operator|+
+literal|1
+argument_list|,
+name|Value_t
+argument_list|)
+expr_stmt|;
+name|goto_map
+operator|=
+name|goto_base
 operator|-
 name|ntokens
 expr_stmt|;
 name|temp_map
 operator|=
-name|NEW2
-argument_list|(
-name|nvars
-operator|+
-literal|1
-argument_list|,
-name|Value_t
-argument_list|)
+name|temp_base
 operator|-
 name|ntokens
 expr_stmt|;
@@ -1204,9 +1223,7 @@ block|}
 block|}
 name|FREE
 argument_list|(
-name|temp_map
-operator|+
-name|ntokens
+name|temp_base
 argument_list|)
 expr_stmt|;
 block|}

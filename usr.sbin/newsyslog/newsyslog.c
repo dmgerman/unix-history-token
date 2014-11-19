@@ -9153,7 +9153,7 @@ literal|0
 expr_stmt|;
 name|warn
 argument_list|(
-literal|"can't notify %s, pid %d"
+literal|"can't notify %s, pid %d = %s"
 argument_list|,
 name|swork
 operator|->
@@ -9165,6 +9165,10 @@ operator|)
 name|swork
 operator|->
 name|sw_pid
+argument_list|,
+name|swork
+operator|->
+name|sw_fname
 argument_list|)
 expr_stmt|;
 block|}

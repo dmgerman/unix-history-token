@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<linux/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<linux/string.h>
 end_include
 

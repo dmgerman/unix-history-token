@@ -549,6 +549,17 @@ name|V
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Invalidate all DbgValues attached to the node and remove
+comment|/// it from the Node-to-DbgValues map.
+name|void
+name|erase
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
 name|void
 name|clear
 parameter_list|()

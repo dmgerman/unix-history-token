@@ -186,14 +186,6 @@ decl_stmt|;
 name|register_t
 name|pcb_sfmask
 decl_stmt|;
-name|register_t
-name|pcb_xsmask
-decl_stmt|;
-comment|/* fpu context for suspend/resume */
-name|void
-modifier|*
-name|pcb_fpususpend
-decl_stmt|;
 name|struct
 name|savefpu
 modifier|*
@@ -202,8 +194,29 @@ decl_stmt|;
 name|uint64_t
 name|pcb_pad
 index|[
-literal|3
+literal|5
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Per-CPU state saved during suspend and resume. */
+end_comment
+
+begin_struct
+struct|struct
+name|susppcb
+block|{
+name|struct
+name|pcb
+name|sp_pcb
+decl_stmt|;
+comment|/* fpu context for suspend/resume */
+name|void
+modifier|*
+name|sp_fpususpend
 decl_stmt|;
 block|}
 struct|;

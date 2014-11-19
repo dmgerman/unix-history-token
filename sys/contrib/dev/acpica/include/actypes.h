@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -43,10 +43,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*! [Begin] no source code translation */
-end_comment
 
 begin_comment
 comment|/*  * Data type ranges  * Note: These macros are designed to be compiler independent as well as  * working around problems that some 32-bit compilers have with 64-bit  * constants.  */
@@ -111,6 +107,12 @@ begin_comment
 comment|/*******************************************************************************  *  * Common types for all compilers, all targets  *  ******************************************************************************/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_SYSTEM_INTTYPES
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -137,6 +139,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|short
+name|INT16
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|COMPILER_DEPENDENT_UINT64
 name|UINT64
 typedef|;
@@ -149,8 +158,13 @@ name|INT64
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*! [End] no source code translation !*/
+comment|/* ACPI_USE_SYSTEM_INTTYPES */
 end_comment
 
 begin_comment
@@ -176,9 +190,11 @@ operator|==
 literal|64
 end_if
 
-begin_comment
-comment|/*! [Begin] no source code translation (keep the typedefs as-is) */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_SYSTEM_INTTYPES
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -195,8 +211,13 @@ name|INT32
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*! [End] no source code translation !*/
+comment|/* ACPI_USE_SYSTEM_INTTYPES */
 end_comment
 
 begin_typedef
@@ -292,9 +313,11 @@ operator|==
 literal|32
 end_elif
 
-begin_comment
-comment|/*! [Begin] no source code translation (keep the typedefs as-is) */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_SYSTEM_INTTYPES
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -311,8 +334,13 @@ name|INT32
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*! [End] no source code translation !*/
+comment|/* ACPI_USE_SYSTEM_INTTYPES */
 end_comment
 
 begin_typedef
@@ -650,8 +678,28 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * All ACPICA functions that are available to the rest of the kernel are  * tagged with this macro which can be defined as appropriate for the host.  */
+comment|/*  * All ACPICA external functions that are available to the rest of the kernel  * are tagged with thes macros which can be defined as appropriate for the host.  *  * Notes:  * ACPI_EXPORT_SYMBOL_INIT is used for initialization and termination  * interfaces that may need special processing.  * ACPI_EXPORT_SYMBOL is used for all other public external functions.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_EXPORT_SYMBOL_INIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXPORT_SYMBOL_INIT
+parameter_list|(
+name|Symbol
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -694,6 +742,186 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*******************************************************************************  *  * Configuration  *  ******************************************************************************/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_NO_MEM_ALLOCATIONS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE
+parameter_list|(
+name|a
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_ZEROED
+parameter_list|(
+name|a
+parameter_list|)
+value|NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FREE
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_TRACKING
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ACPI_NO_MEM_ALLOCATIONS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DBG_TRACK_ALLOCATIONS
+end_ifdef
+
+begin_comment
+comment|/*  * Memory allocation tracking (used by AcpiExec to detect memory leaks)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_PARAMETERS
+value|_COMPONENT, _AcpiModuleName, __LINE__
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiUtAllocateAndTrack ((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_ZEROED
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiUtAllocateZeroedAndTrack ((ACPI_SIZE) (a), ACPI_MEM_PARAMETERS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FREE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiUtFreeAndTrack (a, ACPI_MEM_PARAMETERS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_TRACKING
+parameter_list|(
+name|a
+parameter_list|)
+value|a
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Normal memory allocation directly via the OS services layer  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiOsAllocate ((ACPI_SIZE) (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_ZEROED
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiOsAllocateZeroed ((ACPI_SIZE) (a))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FREE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiOsFree (a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_TRACKING
+parameter_list|(
+name|a
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_DBG_TRACK_ALLOCATIONS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_NO_MEM_ALLOCATIONS */
+end_comment
 
 begin_comment
 comment|/******************************************************************************  *  * ACPI Specification constants (Do not change unless the specification changes)  *  *****************************************************************************/
@@ -740,6 +968,13 @@ define|#
 directive|define
 name|ACPI_PM_TIMER_WIDTH
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESET_REGISTER_WIDTH
+value|8
 end_define
 
 begin_comment
@@ -1337,7 +1572,7 @@ name|d
 parameter_list|,
 name|f
 parameter_list|)
-value|(ACPI_SIZE) ACPI_PTR_DIFF (&(((d *)0)->f), (void *) NULL)
+value|ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) NULL)
 end_define
 
 begin_define
@@ -1801,8 +2036,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_NOTIFY_AFFINITY_UPDATE
+value|(UINT8) 0x0D
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_NOTIFY_MAX
-value|0x0C
+value|0x0D
 end_define
 
 begin_comment
@@ -2210,7 +2452,7 @@ value|ACPI_EVENT_MAX + 1
 end_define
 
 begin_comment
-comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+  * |   Bits 31:3 |2|1|0|  * +-------------+-+-+-+  *          |     | | |  *          |     | | +- Enabled?  *          |     | +--- Enabled for wake?  *          |     +----- Set?  *          +-----------<Reserved>  */
+comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+-+  * |   Bits 31:4 |3|2|1|0|  * +-------------+-+-+-+-+  *          |     | | | |  *          |     | | | +- Enabled?  *          |     | | +--- Enabled for wake?  *          |     | +----- Set?  *          |     +------- Has a handler?  *          +-------------<Reserved>  */
 end_comment
 
 begin_typedef
@@ -2246,6 +2488,13 @@ define|#
 directive|define
 name|ACPI_EVENT_FLAG_SET
 value|(ACPI_EVENT_STATUS) 0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_FLAG_HAS_HANDLER
+value|(ACPI_EVENT_STATUS) 0x08
 end_define
 
 begin_comment
@@ -2977,6 +3226,35 @@ name|ACPI_NO_BUFFER
 value|0
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_NO_MEM_ALLOCATIONS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_BUFFER
+value|(ACPI_SIZE) (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ALLOCATE_LOCAL_BUFFER
+value|(ACPI_SIZE) (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ACPI_NO_MEM_ALLOCATIONS */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2984,12 +3262,29 @@ name|ACPI_ALLOCATE_BUFFER
 value|(ACPI_SIZE) (-1)
 end_define
 
+begin_comment
+comment|/* Let ACPICA allocate buffer */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_ALLOCATE_LOCAL_BUFFER
 value|(ACPI_SIZE) (-2)
 end_define
+
+begin_comment
+comment|/* For internal use only (enables tracking) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_NO_MEM_ALLOCATIONS */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -3009,20 +3304,6 @@ block|}
 name|ACPI_BUFFER
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* Free a buffer created in an ACPI_BUFFER via ACPI_ALLOCATE_LOCAL_BUFFER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_FREE_BUFFER
-parameter_list|(
-name|b
-parameter_list|)
-value|ACPI_FREE(b.Pointer)
-end_define
 
 begin_comment
 comment|/*  * NameType for AcpiGetName  */
@@ -4176,6 +4457,56 @@ define|#
 directive|define
 name|ACPI_OSI_WIN_8
 value|0x0C
+end_define
+
+begin_comment
+comment|/* Definitions of file IO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FILE_READING
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FILE_WRITING
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FILE_BINARY
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FILE_BEGIN
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FILE_END
+value|0x02
+end_define
+
+begin_comment
+comment|/* Definitions of getopt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_OPT_END
+value|-1
 end_define
 
 begin_endif

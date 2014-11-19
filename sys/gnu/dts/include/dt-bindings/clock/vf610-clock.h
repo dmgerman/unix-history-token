@@ -1096,8 +1096,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|VF610_CLK_END
+name|VF610_CLK_FLEXCAN0_EN
 value|154
+end_define
+
+begin_define
+define|#
+directive|define
+name|VF610_CLK_FLEXCAN1_EN
+value|155
+end_define
+
+begin_define
+define|#
+directive|define
+name|VF610_CLK_END
+value|156
 end_define
 
 begin_endif

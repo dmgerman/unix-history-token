@@ -380,11 +380,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|carp_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int

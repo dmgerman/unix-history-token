@@ -353,6 +353,9 @@ name|isPPC64
 parameter_list|,
 name|bool
 name|isDarwinABI
+parameter_list|,
+name|bool
+name|isPIC
 parameter_list|)
 block|{
 if|if
@@ -374,6 +377,11 @@ name|isPPC64
 condition|?
 operator|-
 literal|16U
+else|:
+name|isPIC
+condition|?
+operator|-
+literal|12U
 else|:
 operator|-
 literal|8U

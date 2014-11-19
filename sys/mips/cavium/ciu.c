@@ -399,7 +399,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_char
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -445,7 +445,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_char
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1004,7 +1004,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_char
+name|int
 parameter_list|)
 function_decl|;
 name|mips_intrcnt_t
@@ -1674,7 +1674,7 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|u_char
+name|int
 name|target
 parameter_list|)
 block|{
@@ -1909,7 +1909,7 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|u_char
+name|int
 name|target
 parameter_list|)
 block|{

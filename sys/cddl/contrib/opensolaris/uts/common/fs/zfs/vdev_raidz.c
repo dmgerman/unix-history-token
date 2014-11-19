@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
 end_comment
 
 begin_include
@@ -7822,7 +7822,7 @@ operator|<=
 argument_list|,
 name|origoffset
 operator|+
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|)
 expr_stmt|;
 name|start
@@ -7848,7 +7848,7 @@ operator|-
 name|origoffset
 operator|)
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|origoffset
 argument_list|,
@@ -8198,7 +8198,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vdev_raidz_io_start
 parameter_list|(
 name|zio_t
@@ -8390,11 +8390,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|ZIO_PIPELINE_CONTINUE
-operator|)
-return|;
+name|zio_execute
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
@@ -8599,11 +8600,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|ZIO_PIPELINE_CONTINUE
-operator|)
-return|;
+name|zio_execute
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|ASSERT
 argument_list|(
@@ -8825,11 +8827,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-name|ZIO_PIPELINE_CONTINUE
-operator|)
-return|;
+name|zio_execute
+argument_list|(
+name|zio
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

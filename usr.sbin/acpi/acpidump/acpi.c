@@ -4435,7 +4435,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_DMAR_TYPE_ATSR
+name|ACPI_DMAR_TYPE_ROOT_ATS
 case|:
 name|acpi_handle_dmar_atsr
 argument_list|(
@@ -4444,7 +4444,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_DMAR_HARDWARE_AFFINITY
+name|ACPI_DMAR_TYPE_HARDWARE_AFFINITY
 case|:
 name|acpi_handle_dmar_rhsa
 argument_list|(

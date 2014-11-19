@@ -525,7 +525,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cancellation behaivor:  *   Thread may be canceled at start, if thread is canceled, it means it  *   did not get a wakeup from pthread_cond_signal(), otherwise, it is  *   not canceled.  *   Thread cancellation never cause wakeup from pthread_cond_signal()  *   to be lost.  */
+comment|/*  * Cancellation behavior:  *   Thread may be canceled at start, if thread is canceled, it means it  *   did not get a wakeup from pthread_cond_signal(), otherwise, it is  *   not canceled.  *   Thread cancellation never cause wakeup from pthread_cond_signal()  *   to be lost.  */
 end_comment
 
 begin_function

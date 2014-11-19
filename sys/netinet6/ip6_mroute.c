@@ -244,12 +244,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ip6protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/pim6.h>
 end_include
 
@@ -271,20 +265,6 @@ literal|"multicast forwarding cache entry"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* XXX: this is a very common idiom; move to<sys/mbuf.h> ? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|M_HASCL
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_flags& M_EXT)
-end_define
 
 begin_function_decl
 specifier|static
@@ -406,7 +386,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ip6protosw
+name|protosw
 name|in6_pim_protosw
 init|=
 block|{
@@ -4606,7 +4586,8 @@ condition|(
 name|mb0
 operator|&&
 operator|(
-name|M_HASCL
+operator|!
+name|M_WRITABLE
 argument_list|(
 name|mb0
 argument_list|)
@@ -5814,7 +5795,8 @@ condition|(
 name|mm
 operator|&&
 operator|(
-name|M_HASCL
+operator|!
+name|M_WRITABLE
 argument_list|(
 name|mm
 argument_list|)
@@ -6411,7 +6393,8 @@ condition|(
 name|mb_copy
 operator|&&
 operator|(
-name|M_HASCL
+operator|!
+name|M_WRITABLE
 argument_list|(
 name|mb_copy
 argument_list|)

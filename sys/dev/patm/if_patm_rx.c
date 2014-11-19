@@ -1224,12 +1224,16 @@ operator|&
 name|IDT_RSQE_CRC
 condition|)
 block|{
+name|if_inc_counter
+argument_list|(
 name|sc
 operator|->
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1549,15 +1553,19 @@ literal|0
 block|{ 		u_int i;  		for (i = 0; i< m->m_len; i++) { 			printf("%02x ", mtod(m, u_char *)[i]); 		} 		printf("\n"); 	}
 endif|#
 directive|endif
+name|if_inc_counter
+argument_list|(
 name|sc
 operator|->
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* this is in if_atmsubr.c */
-comment|/* sc->ifp->if_ibytes += m->m_pkthdr.len; */
+comment|/* if_inc_counter(sc->ifp, IFCOUNTER_IBYTES, m->m_pkthdr.len); */
 name|vcc
 operator|->
 name|ibytes
@@ -2693,15 +2701,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|if_inc_counter
+argument_list|(
 name|sc
 operator|->
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* this is in if_atmsubr.c */
-comment|/* sc->ifp->if_ibytes += m->m_pkthdr.len; */
+comment|/* if_inc_counter(sc->ifp, IFCOUNTER_IBYTES, m->m_pkthdr.len); */
 name|vcc
 operator|->
 name|ibytes

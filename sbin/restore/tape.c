@@ -1386,12 +1386,14 @@ if|if
 condition|(
 operator|(
 operator|(
-name|fssize
+name|TP_BSIZE
 operator|-
 literal|1
 operator|)
 operator|&
-name|fssize
+name|stbuf
+operator|.
+name|st_blksize
 operator|)
 operator|!=
 literal|0
@@ -1401,14 +1403,32 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad block size %ld\n"
+literal|"Warning: filesystem with non-multiple-of-%d "
+literal|"blocksize (%d);\n"
 argument_list|,
-name|fssize
+name|TP_BSIZE
+argument_list|,
+name|stbuf
+operator|.
+name|st_blksize
 argument_list|)
 expr_stmt|;
-name|done
+name|fssize
+operator|=
+name|roundup
 argument_list|(
-literal|1
+name|fssize
+argument_list|,
+name|TP_BSIZE
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\twriting using blocksize %ld\n"
+argument_list|,
+name|fssize
 argument_list|)
 expr_stmt|;
 block|}

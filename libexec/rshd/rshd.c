@@ -449,8 +449,6 @@ argument_list|(
 literal|"rshd"
 argument_list|,
 name|LOG_PID
-operator||
-name|LOG_ODELAY
 argument_list|,
 name|LOG_DAEMON
 argument_list|)

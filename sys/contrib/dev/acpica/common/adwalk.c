@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -1145,7 +1145,7 @@ name|NextOp
 condition|)
 block|{
 comment|/* This NamePath has no args, assume it is an integer */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1158,6 +1158,8 @@ operator|.
 name|String
 argument_list|,
 name|ACPI_TYPE_INTEGER
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1199,7 +1201,7 @@ literal|1
 condition|)
 block|{
 comment|/* One Arg means this is just a Store(Name,Target) */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1214,6 +1216,8 @@ argument_list|,
 name|ACPI_TYPE_INTEGER
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1222,7 +1226,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1237,6 +1241,8 @@ argument_list|,
 name|ACPI_TYPE_METHOD
 argument_list|,
 name|ArgCount
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1291,7 +1297,7 @@ name|NextOp
 condition|)
 block|{
 comment|/* This NamePath has no args, assume it is an integer */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1304,6 +1310,8 @@ operator|.
 name|String
 argument_list|,
 name|ACPI_TYPE_INTEGER
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1333,7 +1341,7 @@ literal|1
 condition|)
 block|{
 comment|/* One Arg means this is just a Store(Name,Target) */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1348,6 +1356,8 @@ argument_list|,
 name|ACPI_TYPE_INTEGER
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1356,7 +1366,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|ChildOp
 argument_list|,
@@ -1371,6 +1381,8 @@ argument_list|,
 name|ACPI_TYPE_METHOD
 argument_list|,
 name|ArgCount
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1513,7 +1525,7 @@ name|Op
 operator|)
 condition|)
 block|{
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|Op
 argument_list|,
@@ -1528,13 +1540,15 @@ argument_list|,
 name|ACPI_TYPE_INTEGER
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
 comment|/*              * This is a standalone namestring (not a parameter to another              * operator) - it *must* be a method invocation, nothing else is              * grammatically possible.              */
-name|AcpiDmAddToExternalList
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|Op
 argument_list|,
@@ -1549,6 +1563,8 @@ argument_list|,
 name|ACPI_TYPE_METHOD
 argument_list|,
 name|ArgCount
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2058,6 +2074,10 @@ name|ParamCount
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|Pathname
+decl_stmt|;
 name|WalkState
 operator|=
 name|Info
@@ -2124,6 +2144,16 @@ operator|.
 name|AmlOpcode
 operator|!=
 name|AML_INT_NAMEPATH_OP
+operator|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|!=
+name|AML_NOTIFY_OP
 operator|)
 condition|)
 block|{
@@ -2275,6 +2305,35 @@ name|String
 expr_stmt|;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_NOTIFY_OP
+condition|)
+block|{
+name|Path
+operator|=
+name|Op
+operator|->
+name|Common
+operator|.
+name|Value
+operator|.
+name|Arg
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+expr_stmt|;
+block|}
 else|else
 block|{
 name|Path
@@ -2299,6 +2358,10 @@ name|Exit
 goto|;
 block|}
 comment|/*      * Lookup the name in the namespace. Name must exist at this point, or it      * is an invalid reference.      *      * The namespace is also used as a lookup table for references to resource      * descriptors and the fields within them.      */
+name|Node
+operator|=
+name|NULL
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -2339,6 +2402,7 @@ name|ANOBJ_IS_EXTERNAL
 operator|)
 condition|)
 block|{
+comment|/* Node was created by an External() statement */
 name|Status
 operator|=
 name|AE_NOT_FOUND
@@ -2359,7 +2423,56 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
-name|AcpiDmAddToExternalList
+comment|/*              * Add this symbol as an external declaration, except if the              * parent is a CondRefOf operator. For this operator, we do not              * need an external, nor do we want one, since this can cause              * disassembly problems if the symbol is actually a control              * method.              */
+if|if
+condition|(
+operator|!
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Parent
+operator|->
+name|Asl
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_COND_REF_OF_OP
+operator|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|Node
+condition|)
+block|{
+name|AcpiDmAddNodeToExternalList
+argument_list|(
+name|Node
+argument_list|,
+operator|(
+name|UINT8
+operator|)
+name|ObjectType
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiDmAddOpToExternalList
 argument_list|(
 name|Op
 argument_list|,
@@ -2371,18 +2484,15 @@ operator|)
 name|ObjectType
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/*              * We could install this into the namespace, but we catch duplicate              * externals when they are added to the list.              */
-if|#
-directive|if
-literal|0
-block|Status = AcpiNsLookup (WalkState->ScopeInfo, Path, ACPI_TYPE_ANY,                        ACPI_IMODE_LOAD_PASS1, ACPI_NS_DONT_OPEN_SCOPE,                        WalkState,&Node);
-endif|#
-directive|endif
 block|}
 block|}
-comment|/*      * Found the node in external table, add it to external list      * Node->OwnerId == 0 indicates built-in ACPI Names, _OS_ etc      */
+block|}
+block|}
+comment|/*      * Found the node, but check if it came from an external table.      * Add it to external list. Note: Node->OwnerId == 0 indicates      * one of the built-in ACPI Names (_OS_ etc.) which can safely      * be ignored.      */
 elseif|else
 if|if
 condition|(
@@ -2390,6 +2500,7 @@ name|Node
 operator|->
 name|OwnerId
 operator|&&
+operator|(
 name|WalkState
 operator|->
 name|OwnerId
@@ -2397,6 +2508,7 @@ operator|!=
 name|Node
 operator|->
 name|OwnerId
+operator|)
 condition|)
 block|{
 name|ObjectType2
@@ -2440,11 +2552,28 @@ name|ParamCount
 expr_stmt|;
 block|}
 block|}
-name|AcpiDmAddToExternalList
+name|Pathname
+operator|=
+name|AcpiNsGetExternalPathname
 argument_list|(
-name|Op
-argument_list|,
-name|Path
+name|Node
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Pathname
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NO_MEMORY
+operator|)
+return|;
+block|}
+name|AcpiDmAddNodeToExternalList
+argument_list|(
+name|Node
 argument_list|,
 operator|(
 name|UINT8
@@ -2452,8 +2581,13 @@ operator|)
 name|ObjectType2
 argument_list|,
 name|ParamCount
-operator||
-literal|0x80
+argument_list|,
+name|ACPI_EXT_RESOLVED_REFERENCE
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|Pathname
 argument_list|)
 expr_stmt|;
 name|Op

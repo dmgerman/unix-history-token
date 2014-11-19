@@ -51,6 +51,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_sx.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -1096,6 +1102,17 @@ begin_comment
 comment|/* using journaled soft updates */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNT_AUTOMOUNTED
+value|0x0000000200000000ULL
+end_define
+
+begin_comment
+comment|/* mounted by automountd(8) */
+end_comment
+
 begin_comment
 comment|/*  * NFS export related mount flags.  */
 end_comment
@@ -1233,7 +1250,7 @@ begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| MNT_SUJ	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS	| \ 			MNT_NFS4ACLS)
+value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| MNT_SUJ	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS	| \ 			MNT_NFS4ACLS	| MNT_AUTOMOUNTED)
 end_define
 
 begin_comment
@@ -1244,7 +1261,7 @@ begin_define
 define|#
 directive|define
 name|MNT_UPDATEMASK
-value|(MNT_NOSUID	| MNT_NOEXEC	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| \ 			MNT_NOATIME | \ 			MNT_NOSYMFOLLOW	| MNT_IGNORE	| \ 			MNT_NOCLUSTERR	| MNT_NOCLUSTERW | MNT_SUIDDIR	| \ 			MNT_ACLS	| MNT_USER | MNT_NFS4ACLS)
+value|(MNT_NOSUID	| MNT_NOEXEC	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| \ 			MNT_NOATIME | \ 			MNT_NOSYMFOLLOW	| MNT_IGNORE	| \ 			MNT_NOCLUSTERR	| MNT_NOCLUSTERW | MNT_SUIDDIR	| \ 			MNT_ACLS	| MNT_USER	| MNT_NFS4ACLS	| \ 			MNT_AUTOMOUNTED)
 end_define
 
 begin_comment
@@ -1531,12 +1548,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNTK_UNUSED25
+name|MNTK_SUSPENDABLE
 value|0x20000000
 end_define
 
 begin_comment
-comment|/*  --available-- */
+comment|/* writes can be suspended */
 end_comment
 
 begin_define
@@ -4228,6 +4245,46 @@ name|nfs_public
 name|nfs_pub
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|vfsconf_sx
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|vfsconf_lock
+parameter_list|()
+value|sx_xlock(&vfsconf_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vfsconf_unlock
+parameter_list|()
+value|sx_xunlock(&vfsconf_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vfsconf_slock
+parameter_list|()
+value|sx_slock(&vfsconf_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vfsconf_sunlock
+parameter_list|()
+value|sx_sunlock(&vfsconf_sx)
+end_define
 
 begin_comment
 comment|/*  * Declarations for these vfs default operations are located in  * kern/vfs_default.c.  They will be automatically used to replace  * null entries in VFS ops tables when registering a new filesystem  * type in the global table.  */

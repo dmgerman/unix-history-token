@@ -302,6 +302,10 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|dev
 operator|->
 name|d_offset
@@ -1769,6 +1773,10 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|dev
 operator|->
 name|d_offset

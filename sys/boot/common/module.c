@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bootstrap.h"
 end_include
 
@@ -282,6 +288,31 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LOADER_FDT_SUPPORT
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|default_searchpath
+init|=
+literal|"/boot/kernel;/boot/modules;/boot/dtb"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -292,6 +323,11 @@ init|=
 literal|"/boot/kernel;/boot/modules"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 specifier|static
@@ -857,32 +893,11 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|COMMAND_SET
-argument_list|(
-name|unload
-argument_list|,
-literal|"unload"
-argument_list|,
-literal|"unload all modules"
-argument_list|,
-name|command_unload
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
-specifier|static
-name|int
-name|command_unload
+name|void
+name|unload
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -921,6 +936,40 @@ name|unsetenv
 argument_list|(
 literal|"kernelname"
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|COMMAND_SET
+argument_list|(
+name|unload
+argument_list|,
+literal|"unload"
+argument_list|,
+literal|"unload all modules"
+argument_list|,
+name|command_unload
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+specifier|static
+name|int
+name|command_unload
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+name|unload
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1062,7 +1111,7 @@ name|sprintf
 argument_list|(
 name|lbuf
 argument_list|,
-literal|" %p: %s (%s, 0x%lx)\n"
+literal|" %p: "
 argument_list|,
 operator|(
 name|void
@@ -1071,10 +1120,25 @@ operator|)
 name|fp
 operator|->
 name|f_addr
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|pager_output
+argument_list|(
+name|lbuf
+argument_list|)
+expr_stmt|;
+name|pager_output
+argument_list|(
 name|fp
 operator|->
 name|f_name
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|lbuf
+argument_list|,
+literal|" (%s, 0x%lx)\n"
 argument_list|,
 name|fp
 operator|->
@@ -1810,6 +1874,13 @@ argument_list|,
 name|loadaddr
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s "
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|laddr
 operator|=
 name|loadaddr
@@ -1885,6 +1956,20 @@ operator|+=
 name|got
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"size=%#jx\n"
+argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
+name|laddr
+operator|-
+name|loadaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Looks OK so far; create& populate control structure */
 name|fp
 operator|=

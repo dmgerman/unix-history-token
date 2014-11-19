@@ -190,12 +190,66 @@ directive|include
 file|<dev/atkbdc/atkbdcreg.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|timeout_t
-name|atkbd_timeout
+begin_typedef
+typedef|typedef
+struct|struct
+name|atkbd_state
+block|{
+name|KBDC
+name|kbdc
 decl_stmt|;
-end_decl_stmt
+comment|/* keyboard controller */
+name|int
+name|ks_mode
+decl_stmt|;
+comment|/* input mode (K_XLATE,K_RAW,K_CODE) */
+name|int
+name|ks_flags
+decl_stmt|;
+comment|/* flags */
+define|#
+directive|define
+name|COMPOSE
+value|(1<< 0)
+name|int
+name|ks_polling
+decl_stmt|;
+name|int
+name|ks_state
+decl_stmt|;
+comment|/* shift/lock key state */
+name|int
+name|ks_accents
+decl_stmt|;
+comment|/* accent key index (> 0) */
+name|u_int
+name|ks_composed_char
+decl_stmt|;
+comment|/* composed char code (> 0) */
+name|u_char
+name|ks_prefix
+decl_stmt|;
+comment|/* AT scan code prefix */
+name|struct
+name|callout
+name|ks_timer
+decl_stmt|;
+block|}
+name|atkbd_state_t
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|static
+name|void
+name|atkbd_timeout
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -326,6 +380,10 @@ block|{
 name|keyboard_switch_t
 modifier|*
 name|sw
+decl_stmt|;
+name|atkbd_state_t
+modifier|*
+name|state
 decl_stmt|;
 name|int
 name|args
@@ -469,6 +527,29 @@ return|;
 endif|#
 directive|endif
 comment|/* 	 * This is a kludge to compensate for lost keyboard interrupts. 	 * A similar code used to be in syscons. See below. XXX 	 */
+name|state
+operator|=
+operator|(
+name|atkbd_state_t
+operator|*
+operator|)
+operator|(
+operator|*
+name|kbd
+operator|)
+operator|->
+name|kb_data
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|state
+operator|->
+name|ks_timer
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|atkbd_timeout
 argument_list|(
 operator|*
@@ -520,6 +601,10 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|atkbd_state_t
+modifier|*
+name|state
+decl_stmt|;
 name|keyboard_t
 modifier|*
 name|kbd
@@ -580,15 +665,30 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|timeout
+name|state
+operator|=
+operator|(
+name|atkbd_state_t
+operator|*
+operator|)
+name|kbd
+operator|->
+name|kb_data
+expr_stmt|;
+name|callout_reset
 argument_list|(
-name|atkbd_timeout
-argument_list|,
-name|arg
+operator|&
+name|state
+operator|->
+name|ks_timer
 argument_list|,
 name|hz
 operator|/
 literal|10
+argument_list|,
+name|atkbd_timeout
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -604,51 +704,6 @@ directive|define
 name|ATKBD_DEFAULT
 value|0
 end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|atkbd_state
-block|{
-name|KBDC
-name|kbdc
-decl_stmt|;
-comment|/* keyboard controller */
-name|int
-name|ks_mode
-decl_stmt|;
-comment|/* input mode (K_XLATE,K_RAW,K_CODE) */
-name|int
-name|ks_flags
-decl_stmt|;
-comment|/* flags */
-define|#
-directive|define
-name|COMPOSE
-value|(1<< 0)
-name|int
-name|ks_polling
-decl_stmt|;
-name|int
-name|ks_state
-decl_stmt|;
-comment|/* shift/lock key state */
-name|int
-name|ks_accents
-decl_stmt|;
-comment|/* accent key index (> 0) */
-name|u_int
-name|ks_composed_char
-decl_stmt|;
-comment|/* composed char code (> 0) */
-name|u_char
-name|ks_prefix
-decl_stmt|;
-comment|/* AT scan code prefix */
-block|}
-name|atkbd_state_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* keyboard driver declaration */
@@ -2141,9 +2196,29 @@ modifier|*
 name|kbd
 parameter_list|)
 block|{
+name|atkbd_state_t
+modifier|*
+name|state
+init|=
+operator|(
+name|atkbd_state_t
+operator|*
+operator|)
+name|kbd
+operator|->
+name|kb_data
+decl_stmt|;
 name|kbd_unregister
 argument_list|(
 name|kbd
+argument_list|)
+expr_stmt|;
+name|callout_drain
+argument_list|(
+operator|&
+name|state
+operator|->
+name|ks_timer
 argument_list|)
 expr_stmt|;
 return|return

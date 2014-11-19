@@ -4477,8 +4477,8 @@ parameter_list|,
 name|int
 name|count
 parameter_list|,
-name|boolean_t
-name|sync
+name|int
+name|flags
 parameter_list|,
 name|int
 modifier|*
@@ -4487,11 +4487,11 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|;
-name|int
+decl_stmt|,
 name|n
-init|=
-literal|0
+decl_stmt|;
+name|boolean_t
+name|sync
 decl_stmt|;
 if|if
 condition|(
@@ -4545,6 +4545,10 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|n
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|curproc
@@ -4554,6 +4558,17 @@ condition|)
 name|sync
 operator|=
 name|TRUE
+expr_stmt|;
+else|else
+name|sync
+operator|=
+operator|(
+name|flags
+operator|&
+name|VM_PAGER_PUT_SYNC
+operator|)
+operator|!=
+literal|0
 expr_stmt|;
 comment|/* 	 * Step 2 	 * 	 * Update nsw parameters from swap_async_max sysctl values. 	 * Do not let the sysop crash the machine with bogus numbers. 	 */
 name|mtx_lock

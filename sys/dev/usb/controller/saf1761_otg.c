@@ -8701,11 +8701,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|saf1761_otg_xfer_do_complete
+argument_list|(
+name|sc
+argument_list|,
 name|xfer
-operator|->
-name|td_transfer_cache
-operator|!=
-name|NULL
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * Only enable the endpoint interrupt when we are 		 * actually waiting for data, hence we are dealing 		 * with level triggered interrupts ! 		 */
@@ -8754,15 +8757,6 @@ name|timeout
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-comment|/* catch completion, if any */
-name|saf1761_otg_interrupt_complete_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 name|USB_BUS_SPIN_UNLOCK
 argument_list|(

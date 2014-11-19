@@ -63,26 +63,12 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 name|pr_input_t
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|pr_input6_t
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
 modifier|*
 parameter_list|,
 name|int
@@ -92,10 +78,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/* XXX FIX THIS */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -109,6 +91,8 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1841,26 +1825,12 @@ begin_comment
 comment|/* interface has come back up */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PRC_QUENCH2
-value|3
-end_define
-
 begin_comment
-comment|/* DEC congestion bit says slow down */
+comment|/* was	PRC_QUENCH2		3	DEC congestion bit says slow down */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PRC_QUENCH
-value|4
-end_define
-
 begin_comment
-comment|/* some one said to slow down */
+comment|/* was	PRC_QUENCH		4	Deprecated by RFC 6633 */
 end_comment
 
 begin_define

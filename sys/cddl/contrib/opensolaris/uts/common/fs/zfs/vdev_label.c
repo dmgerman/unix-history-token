@@ -2604,6 +2604,11 @@ name|zfs_trim_enabled
 operator|&&
 name|vdev_trim_on_init
 operator|&&
+operator|!
+name|vd
+operator|->
+name|vdev_notrim
+operator|&&
 operator|(
 name|reason
 operator|==
@@ -3834,11 +3839,9 @@ name|vdev_ms_array
 operator|!=
 literal|0
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|good_writes
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4212,11 +4215,9 @@ name|io_error
 operator|==
 literal|0
 condition|)
-name|atomic_add_64
+name|atomic_inc_64
 argument_list|(
 name|good_writes
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

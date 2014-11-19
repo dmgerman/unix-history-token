@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/lockdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<asm/uaccess.h>
 end_include
 

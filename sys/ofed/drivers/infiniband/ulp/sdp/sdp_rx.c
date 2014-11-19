@@ -780,13 +780,15 @@ name|buffer_size
 expr_stmt|;
 name|bytes_in_process
 operator|+=
+name|sbused
+argument_list|(
+operator|&
 name|ssk
 operator|->
 name|socket
 operator|->
 name|so_rcv
-operator|.
-name|sb_cc
+argument_list|)
 expr_stmt|;
 return|return
 name|bytes_in_process

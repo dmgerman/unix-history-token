@@ -686,7 +686,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MAP: search key \"%s\" from 0x%jx, step 0x%jx\n"
+literal|"MAP: search %s for key \"%s\" from 0x%jx, step 0x%jx\n"
+argument_list|,
+name|cp
+operator|->
+name|geom
+operator|->
+name|name
 argument_list|,
 name|search_key
 argument_list|,
@@ -1456,8 +1462,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"MAP: %jxx%jx, data=%jxx%jx "
+literal|"MAP: %s: %jxx%jx, data=%jxx%jx "
 literal|"\"/dev/map/%s\"\n"
+argument_list|,
+name|cp
+operator|->
+name|geom
+operator|->
+name|name
 argument_list|,
 operator|(
 name|intmax_t

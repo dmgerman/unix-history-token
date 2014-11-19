@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -51,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<sys/random.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/selinfo.h>
 end_include
 
 begin_include
@@ -92,19 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/random/random_harvestq.h>
+file|<dev/random/random_adaptors.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/random/live_entropy_sources.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/random/random_adaptors.h>
 end_include
 
 begin_define
@@ -116,13 +110,13 @@ end_define
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int
 name|random_ivy_read
 parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -130,22 +124,22 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|struct
-name|random_hardware_source
+name|live_entropy_source
 name|random_ivy
 init|=
 block|{
 operator|.
-name|ident
+name|les_ident
 operator|=
-literal|"Hardware, Intel Secure Key RNG"
+literal|"Intel Secure Key RNG"
 block|,
 operator|.
-name|source
+name|les_source
 operator|=
 name|RANDOM_PURE_RDRAND
 block|,
 operator|.
-name|read
+name|les_read
 operator|=
 name|random_ivy_read
 block|}
@@ -158,7 +152,7 @@ specifier|inline
 name|int
 name|ivy_rng_store
 parameter_list|(
-name|long
+name|u_long
 modifier|*
 name|buf
 parameter_list|)
@@ -166,8 +160,8 @@ block|{
 ifdef|#
 directive|ifdef
 name|__GNUCLIKE_ASM
-name|long
-name|tmp
+name|u_long
+name|rndval
 decl_stmt|;
 name|int
 name|retry
@@ -178,35 +172,24 @@ name|RETRY_COUNT
 expr_stmt|;
 asm|__asm __volatile(
 literal|"1:\n\t"
-literal|"rdrand	%2\n\t"
-comment|/* read randomness into tmp */
-literal|"jb		2f\n\t"
+literal|"rdrand	%1\n\t"
+comment|/* read randomness into rndval */
+literal|"jc		2f\n\t"
 comment|/* CF is set on success, exit retry loop */
 literal|"dec	%0\n\t"
 comment|/* otherwise, retry-- */
 literal|"jne	1b\n\t"
 comment|/* and loop if retries are not exhausted */
-literal|"jmp	3f\n"
-comment|/* failure, retry is 0, used as return value */
-literal|"2:\n\t"
-literal|"mov	%2,%1\n\t"
-comment|/* *buf = tmp */
-literal|"3:"
+literal|"2:"
 operator|:
-literal|"+q"
+literal|"+r"
 operator|(
 name|retry
 operator|)
 operator|,
-literal|"=m"
+literal|"=r"
 operator|(
-operator|*
-name|buf
-operator|)
-operator|,
-literal|"=q"
-operator|(
-name|tmp
+name|rndval
 operator|)
 operator|:
 operator|:
@@ -214,6 +197,14 @@ literal|"cc"
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+operator|*
+name|buf
+operator|=
+name|rndval
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return
@@ -245,24 +236,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+unit|}
+comment|/* It is required that buf length is a multiple of sizeof(u_long). */
+end_comment
+
 begin_function
-unit|}  static
-name|int
+unit|static
+name|u_int
 name|random_ivy_read
 parameter_list|(
 name|void
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|u_int
 name|c
 parameter_list|)
 block|{
-name|long
+name|u_long
 modifier|*
 name|b
+decl_stmt|,
+name|rndval
 decl_stmt|;
-name|int
+name|u_int
 name|count
 decl_stmt|;
 name|KASSERT
@@ -271,7 +269,8 @@ name|c
 operator|%
 sizeof|sizeof
 argument_list|(
-name|long
+operator|*
+name|b
 argument_list|)
 operator|==
 literal|0
@@ -283,12 +282,12 @@ name|c
 operator|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
 name|b
 operator|=
 name|buf
-operator|,
+expr_stmt|;
+for|for
+control|(
 name|count
 operator|=
 name|c
@@ -301,23 +300,28 @@ name|count
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|long
-argument_list|)
-operator|,
+operator|*
 name|b
-operator|++
+argument_list|)
 control|)
 block|{
 if|if
 condition|(
 name|ivy_rng_store
 argument_list|(
-name|b
+operator|&
+name|rndval
 argument_list|)
 operator|==
 literal|0
 condition|)
 break|break;
+operator|*
+name|b
+operator|++
+operator|=
+name|rndval
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -364,31 +368,23 @@ name|cpu_feature2
 operator|&
 name|CPUID2_RDRAND
 condition|)
+block|{
 name|live_entropy_source_register
 argument_list|(
 operator|&
 name|random_ivy
 argument_list|)
 expr_stmt|;
-elseif|else
-ifndef|#
-directive|ifndef
-name|KLD_MODULE
-if|if
-condition|(
-name|bootverbose
-condition|)
-endif|#
-directive|endif
 name|printf
 argument_list|(
-literal|"%s: RDRAND is not present\n"
+literal|"random: live provider: \"%s\"\n"
 argument_list|,
 name|random_ivy
 operator|.
-name|ident
+name|les_ident
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -426,11 +422,37 @@ block|}
 end_function
 
 begin_expr_stmt
-name|LIVE_ENTROPY_SRC_MODULE
+name|DEV_MODULE
 argument_list|(
-name|random_rdrand
+name|rdrand
 argument_list|,
 name|rdrand_modevent
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|rdrand
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|rdrand
+argument_list|,
+name|randomdev
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)

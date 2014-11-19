@@ -163,16 +163,6 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
-begin_comment
-comment|/*  * Define it to get a correct behavior on per-interface statistics.  * You will need to perform an extra routing table lookup, per fragment,  * to do it.  This may, or may not be, a performance hit.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN6_IFSTAT_STRICT
-end_define
-
 begin_function_decl
 specifier|static
 name|void
@@ -513,16 +503,11 @@ decl_stmt|,
 modifier|*
 name|af6dwn
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IN6_IFSTAT_STRICT
 name|struct
 name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|offset
 init|=
@@ -645,20 +630,23 @@ name|dstifp
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IN6_IFSTAT_STRICT
 comment|/* find the destination interface of the packet. */
-if|if
-condition|(
-operator|(
 name|ia
 operator|=
-name|ip6_getdstifaddr
+name|in6ifa_ifwithaddr
 argument_list|(
-name|m
+operator|&
+name|ip6
+operator|->
+name|ip6_dst
+argument_list|,
+literal|0
+comment|/* XXX */
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ia
 operator|!=
 name|NULL
 condition|)
@@ -678,31 +666,6 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* we are violating the spec, this is not the destination interface */
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|!=
-literal|0
-condition|)
-name|dstifp
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* jumbo payload can't contain a fragment header */
 if|if
 condition|(

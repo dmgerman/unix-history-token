@@ -131,25 +131,6 @@ directive|include
 file|<sys/bus.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -444,14 +425,6 @@ begin_comment
 comment|/* XXX unit2minor compat */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800062
-end_if
-
 begin_define
 define|#
 directive|define
@@ -461,26 +434,6 @@ name|x
 parameter_list|)
 value|(x)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PCMMINOR
-parameter_list|(
-name|x
-parameter_list|)
-value|unit2minor(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * By design, limit possible channels for each direction.  */

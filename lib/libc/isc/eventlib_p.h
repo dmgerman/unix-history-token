@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2005 by Internet Systems Consortium, Inc. ("ISC")  *
 end_comment
 
 begin_comment
-comment|/*! \file   * \brief private interfaces for eventlib  * \author vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.5.18.4 2006/03/10 00:20:08 marka Exp $  * $FreeBSD$  */
+comment|/*! \file   * \brief private interfaces for eventlib  * \author vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.9 2006/03/09 23:57:56 marka Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

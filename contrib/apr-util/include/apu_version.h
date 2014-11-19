@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|APU_COPYRIGHT
-value|"Copyright (c) 2013 The Apache Software " \                       "Foundation or its licensors, as applicable."
+value|"Copyright (c) 2000-2014 The Apache Software " \                       "Foundation or its licensors, as applicable."
 end_define
 
 begin_comment
@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|APU_PATCH_VERSION
-value|3
+value|4
 end_define
 
 begin_comment

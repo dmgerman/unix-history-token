@@ -263,6 +263,7 @@ name|unit
 decl_stmt|,
 name|err
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -449,6 +450,11 @@ name|strtol
 argument_list|(
 name|np
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
 name|cp
 argument_list|,

@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2014 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -275,6 +279,20 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+comment|/*  * Swaps the contents of the two trees.  */
+specifier|extern
+name|void
+name|avl_swap
+parameter_list|(
+name|avl_tree_t
+modifier|*
+name|tree1
+parameter_list|,
+name|avl_tree_t
+modifier|*
+name|tree2
 parameter_list|)
 function_decl|;
 comment|/*  * Return the number of nodes in the tree  */

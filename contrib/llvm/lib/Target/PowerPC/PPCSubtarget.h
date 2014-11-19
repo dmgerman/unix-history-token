@@ -671,6 +671,19 @@ name|BGQ
 return|;
 block|}
 name|bool
+name|isTargetELF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSBinFormatELF
+argument_list|()
+return|;
+block|}
+comment|//  bool isTargetMachO() const { return TargetTriple.isOSBinFormatMachO(); }
+name|bool
 name|isDarwinABI
 argument_list|()
 specifier|const

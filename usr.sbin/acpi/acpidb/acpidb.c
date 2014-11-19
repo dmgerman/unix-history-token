@@ -105,6 +105,12 @@ directive|include
 file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/amlresrc.h>
+end_include
+
 begin_comment
 comment|/*  * Dummy DSDT Table Header  */
 end_comment
@@ -327,12 +333,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Stubs to simplify linkage to the ACPI CA core subsystem. */
+comment|/* Stubs to simplify linkage to the ACPICA core subsystem. */
 end_comment
 
 begin_function
 name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
+name|AcpiOsGetRootPointer
 parameter_list|(
 name|void
 parameter_list|)
@@ -357,6 +363,51 @@ name|ACPI_TABLE_HEADER
 modifier|*
 modifier|*
 name|NewTable
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|MpSaveGpioInfo
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|AML_RESOURCE
+modifier|*
+name|Resource
+parameter_list|,
+name|UINT32
+name|PinCount
+parameter_list|,
+name|UINT16
+modifier|*
+name|PinList
+parameter_list|,
+name|char
+modifier|*
+name|DeviceName
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|MpSaveSerialInfo
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|AML_RESOURCE
+modifier|*
+name|Resource
+parameter_list|,
+name|char
+modifier|*
+name|DeviceName
 parameter_list|)
 block|{ }
 end_function

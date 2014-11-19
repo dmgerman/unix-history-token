@@ -13508,9 +13508,11 @@ name|M_FLOWID
 expr_stmt|;
 endif|#
 directive|endif
-name|if_incipackets
+name|if_inc_counter
 argument_list|(
 name|ifp
+argument_list|,
+name|IFCOUNTER_IPACKETS
 argument_list|,
 literal|1
 argument_list|)
@@ -14501,9 +14503,11 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|if_incipackets
+name|if_inc_counter
 argument_list|(
 name|ifp
+argument_list|,
+name|IFCOUNTER_IPACKETS
 argument_list|,
 literal|1
 argument_list|)
@@ -20199,7 +20203,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ifmedia_ioctl_drv
+name|ifmedia_ioctl
 argument_list|(
 name|ifp
 argument_list|,
@@ -20350,7 +20354,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ether_ioctl_drv
+name|ether_ioctl
 argument_list|(
 name|ifp
 argument_list|,
@@ -25299,7 +25303,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|if_qflush_drv
+name|if_qflush
 argument_list|(
 name|ifp
 argument_list|)
@@ -52281,7 +52285,7 @@ name|link_report_flags
 argument_list|)
 condition|)
 block|{
-name|if_linkstate_change_drv
+name|if_link_state_change
 argument_list|(
 name|sc
 operator|->
@@ -52447,7 +52451,7 @@ operator|=
 literal|"none"
 expr_stmt|;
 block|}
-name|if_linkstate_change_drv
+name|if_link_state_change
 argument_list|(
 name|sc
 operator|->
@@ -53777,7 +53781,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|if_addr_rlock_drv
+name|if_addr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -53826,7 +53830,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|if_addr_runlock_drv
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -53958,7 +53962,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|if_addr_runlock_drv
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -53993,7 +53997,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|if_addr_runlock_drv
+name|if_addr_runlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -56360,7 +56364,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|if_initname_drv
+name|if_initname
 argument_list|(
 name|ifp
 argument_list|,
@@ -56404,6 +56408,13 @@ argument_list|(
 name|ifp
 argument_list|,
 name|bxe_tx_start
+argument_list|)
+expr_stmt|;
+name|if_setgetcounterfn
+argument_list|(
+name|ifp
+argument_list|,
+name|bxe_get_counter
 argument_list|)
 expr_stmt|;
 if|#
@@ -56564,7 +56575,7 @@ operator|=
 name|ifp
 expr_stmt|;
 comment|/* attach to the Ethernet interface list */
-name|ether_ifattach_drv
+name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
@@ -70379,7 +70390,6 @@ literal|"bc_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|devinfo
@@ -70427,7 +70437,6 @@ literal|"fw_version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|fw_ver_str
@@ -70525,7 +70534,6 @@ literal|"mf_mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|mf_mode_str
@@ -70573,7 +70581,6 @@ literal|"mac_addr"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|mac_addr_str
@@ -70657,7 +70664,6 @@ literal|"pci_link"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|pci_link_str
@@ -70673,7 +70679,7 @@ name|debug
 operator|=
 name|bxe_debug
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -70689,8 +70695,6 @@ operator|&
 name|sc
 operator|->
 name|debug
-argument_list|,
-literal|0
 argument_list|,
 literal|"debug logging mode"
 argument_list|)
@@ -71272,7 +71276,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ether_ifdetach_drv
+name|ether_ifdetach
 argument_list|(
 name|sc
 operator|->
@@ -71334,7 +71338,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ether_ifdetach_drv
+name|ether_ifdetach
 argument_list|(
 name|sc
 operator|->
@@ -71401,7 +71405,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ether_ifdetach_drv
+name|ether_ifdetach
 argument_list|(
 name|sc
 operator|->
@@ -71774,7 +71778,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ether_ifdetach_drv
+name|ether_ifdetach
 argument_list|(
 name|ifp
 argument_list|)
@@ -71829,7 +71833,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|if_free_drv
+name|if_free
 argument_list|(
 name|sc
 operator|->

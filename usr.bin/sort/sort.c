@@ -4202,11 +4202,13 @@ name|sprintf
 argument_list|(
 name|sopt
 argument_list|,
-literal|"-k%d.%d"
+literal|"-k%d.%d%s"
 argument_list|,
 name|f1
 argument_list|,
 name|c1
+argument_list|,
+name|sopts1
 argument_list|)
 expr_stmt|;
 name|argv

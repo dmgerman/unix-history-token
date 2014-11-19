@@ -117,7 +117,7 @@ name|bpobj_alloc
 argument_list|(
 name|os
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|tx
 argument_list|)
@@ -1684,8 +1684,18 @@ expr_stmt|;
 if|if
 condition|(
 name|err
+operator|!=
+literal|0
 condition|)
+block|{
+name|bpobj_close
+argument_list|(
+operator|&
+name|sublist
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 block|}
 name|err
 operator|=
@@ -2222,7 +2232,7 @@ name|bpo_os
 argument_list|,
 name|DMU_OT_BPOBJ_SUBOBJ
 argument_list|,
-name|SPA_MAXBLOCKSIZE
+name|SPA_OLD_MAXBLOCKSIZE
 argument_list|,
 name|DMU_OT_NONE
 argument_list|,

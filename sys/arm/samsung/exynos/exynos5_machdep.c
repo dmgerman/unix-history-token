@@ -89,12 +89,6 @@ directive|include
 file|<machine/platform.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/fdt/fdt_common.h>
-end_include
-
 begin_function
 name|vm_offset_t
 name|platform_lastaddr
@@ -157,6 +151,14 @@ comment|/* UART */
 name|arm_devmap_add_entry
 argument_list|(
 literal|0x12C00000
+argument_list|,
+literal|0x100000
+argument_list|)
+expr_stmt|;
+comment|/* DWMMC */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0x12200000
 argument_list|,
 literal|0x100000
 argument_list|)

@@ -2295,9 +2295,7 @@ name|atpic_init
 argument_list|,
 name|SI_SUB_INTR
 argument_list|,
-name|SI_ORDER_SECOND
-operator|+
-literal|1
+name|SI_ORDER_FOURTH
 argument_list|,
 name|atpic_init
 argument_list|,

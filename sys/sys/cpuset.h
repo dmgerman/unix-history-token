@@ -233,6 +233,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPU_SET_ATOMIC_ACQ
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|BIT_SET_ATOMIC_ACQ(CPU_SETSIZE, n, p)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_AND_ATOMIC
 parameter_list|(
 name|n
@@ -557,7 +569,7 @@ parameter_list|(
 name|lwpid_t
 name|id
 parameter_list|,
-name|u_char
+name|int
 name|cpu
 parameter_list|)
 function_decl|;

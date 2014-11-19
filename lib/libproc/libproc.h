@@ -35,6 +35,12 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|ctf_file
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|proc_handle
 struct_decl|;
 end_struct_decl
@@ -171,6 +177,24 @@ name|MA_NOCOREDUMP
 value|0x20
 block|}
 name|prmap_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|prsyminfo
+block|{
+name|u_int
+name|prs_lmid
+decl_stmt|;
+comment|/* Map id. */
+name|u_int
+name|prs_id
+decl_stmt|;
+comment|/* Symbol id. */
+block|}
+name|prsyminfo_t
 typedef|;
 end_typedef
 
@@ -611,6 +635,26 @@ name|char
 modifier|*
 parameter_list|,
 name|GElf_Sym
+modifier|*
+parameter_list|,
+name|prsyminfo_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ctf_file
+modifier|*
+name|proc_name2ctf
+parameter_list|(
+name|struct
+name|proc_handle
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1155,6 +1155,35 @@ else|#
 directive|else
 end_else
 
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|bxe_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|BXE_DEBUG_ECORE_DBG_BREAK_IF
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_DEBUG_ECORE_BUG
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_DEBUG_ECORE_BUG_ON
+value|0x04
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1163,7 +1192,7 @@ parameter_list|(
 name|exp
 parameter_list|)
 define|\
-value|printf("%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
+value|if (bxe_debug& BXE_DEBUG_ECORE_DBG_BREAK_IF) \         printf("%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
 end_define
 
 begin_define
@@ -1174,7 +1203,7 @@ parameter_list|(
 name|exp
 parameter_list|)
 define|\
-value|printf("%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
+value|if (bxe_debug& BXE_DEBUG_ECORE_BUG) \         printf("%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
 end_define
 
 begin_define
@@ -1185,7 +1214,7 @@ parameter_list|(
 name|exp
 parameter_list|)
 define|\
-value|printf("%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
+value|if (bxe_debug& BXE_DEBUG_ECORE_BUG_ON) \         printf("%s (%s,%d)\n", __FUNCTION__, __FILE__, __LINE__);
 end_define
 
 begin_endif

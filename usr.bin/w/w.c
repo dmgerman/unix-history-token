@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libgen.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<libutil.h>
 end_include
 
@@ -261,6 +267,12 @@ begin_include
 include|#
 directive|include
 file|<vis.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -536,19 +548,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|int
-name|this_is_uptime
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|fmt_argv
@@ -630,6 +629,9 @@ name|nlistf
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|save_p
 decl_stmt|;
 name|char
 modifier|*
@@ -690,15 +692,40 @@ operator|!=
 literal|','
 operator|)
 expr_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* Are we w(1) or uptime(1)? */
 if|if
 condition|(
-name|this_is_uptime
+name|strcmp
+argument_list|(
+name|basename
 argument_list|(
 name|argv
 index|[
 literal|0
 index|]
+argument_list|)
+argument_list|,
+literal|"uptime"
 argument_list|)
 operator|==
 literal|0
@@ -1212,6 +1239,11 @@ block|}
 name|endutxent
 argument_list|()
 expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"uptime-information"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|header
@@ -1236,6 +1268,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|xo_close_container
+argument_list|(
+literal|"uptime-information"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1275,12 +1312,9 @@ directive|define
 name|WUSED
 value|(W_DISPUSERSIZE + W_DISPLINESIZE + W_DISPHOSTSIZE + \ 		sizeof(HEADER_LOGIN_IDLE) + 3)
 comment|/* header width incl. spaces */
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*.*s %-*.*s %-*.*s  %s"
+literal|"{T:/%-*.*s} {T:/%-*.*s} {T:/%-*.*s}  {T:/%s}"
 argument_list|,
 argument|W_DISPUSERSIZE
 argument_list|,
@@ -1302,7 +1336,7 @@ argument|HEADER_FROM
 argument_list|,
 argument|HEADER_LOGIN_IDLE HEADER_WHAT
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -1712,6 +1746,16 @@ name|save
 expr_stmt|;
 block|}
 block|}
+name|xo_open_container
+argument_list|(
+literal|"user-table"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"user-entry"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ep
@@ -1785,6 +1829,13 @@ decl_stmt|;
 name|int
 name|isaddr
 decl_stmt|;
+name|xo_open_instance
+argument_list|(
+literal|"user-entry"
+argument_list|)
+expr_stmt|;
+name|save_p
+operator|=
 name|p
 operator|=
 operator|*
@@ -2120,6 +2171,16 @@ condition|(
 name|dflag
 condition|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"process-table"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"process-entry"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|dkp
@@ -2177,12 +2238,14 @@ name|ptr
 operator|=
 literal|"-"
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"\t\t%-9d %s\n"
+literal|"process-entry"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{:process-id/%-9d/%d} {:command/%s}\n"
 argument_list|,
 name|dkp
 operator|->
@@ -2191,14 +2254,26 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_close_instance
 argument_list|(
-literal|"%-*.*s %-*.*s %-*.*s "
+literal|"process-entry"
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_close_list
+argument_list|(
+literal|"process-entry"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"process-table"
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_emit
+argument_list|(
+literal|"{:user/%-*.*s/%@**@s} {:tty/%-*.*s/%@**@s} "
 argument_list|,
 name|W_DISPUSERSIZE
 argument_list|,
@@ -2264,6 +2339,28 @@ literal|3
 operator|)
 else|:
 literal|"-"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|save_p
+operator|&&
+name|save_p
+operator|!=
+name|p
+condition|)
+name|xo_attr
+argument_list|(
+literal|"address"
+argument_list|,
+literal|"%s"
+argument_list|,
+name|save_p
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:from/%-*.*s/%@**@s} "
 argument_list|,
 name|W_DISPHOSTSIZE
 argument_list|,
@@ -2307,12 +2404,9 @@ operator|->
 name|idle
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%.*s\n"
+literal|"{:command/%.*s/%@*@s}\n"
 argument_list|,
 name|argwidth
 operator|-
@@ -2325,7 +2419,30 @@ operator|->
 name|args
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"user-entry"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"user-entry"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"user-table"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"uptime-information"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2411,12 +2528,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s "
+literal|"{:time-of-day/%s} "
 argument_list|,
 name|buf
 argument_list|)
@@ -2484,12 +2598,24 @@ name|uptime
 operator|%
 literal|60
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|" up"
+argument_list|)
+expr_stmt|;
+name|xo_attr
+argument_list|(
+literal|"seconds"
+argument_list|,
+literal|"%lu"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|tp
+operator|.
+name|tv_sec
 argument_list|)
 expr_stmt|;
 if|if
@@ -2498,12 +2624,9 @@ name|days
 operator|>
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %d day%s,"
+literal|" {:uptime/%d day%s},"
 argument_list|,
 name|days
 argument_list|,
@@ -2526,12 +2649,9 @@ name|mins
 operator|>
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %2d:%02d,"
+literal|" {:uptime/%2d:%02d},"
 argument_list|,
 name|hrs
 argument_list|,
@@ -2545,12 +2665,9 @@ name|hrs
 operator|>
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %d hr%s,"
+literal|" {:uptime/%d hr%s},"
 argument_list|,
 name|hrs
 argument_list|,
@@ -2570,12 +2687,9 @@ name|mins
 operator|>
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %d min%s,"
+literal|" {:uptime/%d min%s},"
 argument_list|,
 name|mins
 argument_list|,
@@ -2589,12 +2703,9 @@ literal|""
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %d sec%s,"
+literal|" {:uptime/%d sec%s},"
 argument_list|,
 name|secs
 argument_list|,
@@ -2609,12 +2720,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Print number of users logged in to system */
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %d user%s"
+literal|" {:users/%d} {N:user%s}"
 argument_list|,
 name|nusers
 argument_list|,
@@ -2651,20 +2759,29 @@ operator|==
 operator|-
 literal|1
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|", no load average information available\n"
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|format
+index|[]
+init|=
+block|{
+literal|" {:load-average-1/%.2f}"
+block|,
+literal|" {:load-average-5/%.2f}"
+block|,
+literal|" {:load-average-15/%.2f}"
+block|, 		}
+decl_stmt|;
+name|xo_emit
 argument_list|(
 literal|", load averages:"
 argument_list|)
@@ -2707,20 +2824,17 @@ name|i
 operator|>
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|","
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %.2f"
+name|format
+index|[
+name|i
+index|]
 argument_list|,
 name|avenrun
 index|[
@@ -2729,10 +2843,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -2832,24 +2943,14 @@ if|if
 condition|(
 name|wcmd
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"usage: w [-dhin] [-M core] [-N system] [user ...]\n"
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"usage: uptime\n"
 argument_list|)
 expr_stmt|;
@@ -2858,70 +2959,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|this_is_uptime
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|)
-block|{
-specifier|const
-name|char
-modifier|*
-name|u
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|u
-operator|=
-name|strrchr
-argument_list|(
-name|s
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-operator|++
-name|u
-expr_stmt|;
-else|else
-name|u
-operator|=
-name|s
-expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|u
-argument_list|,
-literal|"uptime"
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
 end_function
 

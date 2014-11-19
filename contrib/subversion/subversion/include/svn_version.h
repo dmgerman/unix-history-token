@@ -77,7 +77,7 @@ comment|/**  * Patch number.  *  * Modify for every released patch.  *  * @since
 define|#
 directive|define
 name|SVN_VER_PATCH
-value|9
+value|10
 comment|/** @deprecated Provided for backward compatibility with the 1.0 API. */
 define|#
 directive|define
@@ -92,7 +92,7 @@ comment|/** Version tag: a string describing the version.  *  * This tag remains
 define|#
 directive|define
 name|SVN_VER_TAG
-value|" (r1591380)"
+value|" (r1615264)"
 comment|/** Number tag: a string describing the version.  *  * This tag is used to generate a version number string to identify  * the client and server in HTTP requests, for example. It must not  * contain any spaces. This value remains "-dev" in the repository.  *  * When rolling a tarball, we automatically replace this text with ""  * for final releases; in prereleases, it becomes "-alpha1, "-beta1",  * etc., as appropriate.  *  * Always change this at the same time as SVN_VER_TAG.  */
 define|#
 directive|define
@@ -102,7 +102,7 @@ comment|/** Revision number: The repository revision number of this release.  * 
 define|#
 directive|define
 name|SVN_VER_REVISION
-value|1591380
+value|1615264
 comment|/* Version strings composed from the above definitions. */
 comment|/** Version number */
 define|#

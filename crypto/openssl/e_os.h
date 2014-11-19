@@ -1255,6 +1255,31 @@ parameter_list|()
 value|(GetVersion()< 0x80000000)
 endif|#
 directive|endif
+comment|/*  * Visual Studio: inline is available in C++ only, however  * __inline is available for C, see  * http://msdn.microsoft.com/en-us/library/z8y1yy88.aspx  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+specifier|inline
+argument_list|)
+define|#
+directive|define
+name|inline
+value|__inline
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* The non-microsoft world */

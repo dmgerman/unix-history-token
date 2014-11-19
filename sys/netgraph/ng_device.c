@@ -1048,14 +1048,6 @@ name|readq
 argument_list|)
 condition|)
 block|{
-name|_IF_DROP
-argument_list|(
-operator|&
-name|priv
-operator|->
-name|readq
-argument_list|)
-expr_stmt|;
 name|IF_UNLOCK
 argument_list|(
 operator|&

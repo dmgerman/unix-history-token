@@ -373,6 +373,27 @@ end_struct
 
 begin_struct
 struct|struct
+name|usb_midi_streaming_endpoint_descriptor
+block|{
+name|uByte
+name|bLength
+decl_stmt|;
+name|uByte
+name|bDescriptorType
+decl_stmt|;
+name|uByte
+name|bDescriptorSubtype
+decl_stmt|;
+name|uByte
+name|bNumEmbMIDIJack
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|usb_audio_streaming_type1_descriptor
 block|{
 name|uByte
@@ -1539,6 +1560,13 @@ define|#
 directive|define
 name|MASTER_CHAN
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MS_GENERAL
+value|1
 end_define
 
 begin_define

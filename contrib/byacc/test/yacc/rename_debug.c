@@ -103,7 +103,7 @@ end_include
 
 begin_typedef
 typedef|typedef
-name|short
+name|int
 name|YYINT
 typedef|;
 end_typedef

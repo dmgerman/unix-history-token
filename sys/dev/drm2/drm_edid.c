@@ -588,7 +588,7 @@ condition|(
 name|csum
 condition|)
 block|{
-name|DRM_DEBUG
+name|DRM_DEBUG_KMS
 argument_list|(
 literal|"EDID checksum is invalid, remainder is %d\n"
 argument_list|,
@@ -1427,7 +1427,7 @@ name|block
 return|;
 name|carp
 label|:
-name|DRM_ERROR
+name|DRM_DEBUG_KMS
 argument_list|(
 literal|"%s: EDID block %d invalid.\n"
 argument_list|,

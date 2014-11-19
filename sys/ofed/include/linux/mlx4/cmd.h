@@ -21,6 +21,12 @@ directive|include
 file|<linux/dma-mapping.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
+
 begin_enum
 enum|enum
 block|{
@@ -283,6 +289,10 @@ name|MLX4_CMD_UNSUSPEND_QP
 init|=
 literal|0x33
 block|,
+name|MLX4_CMD_UPDATE_QP
+init|=
+literal|0x61
+block|,
 comment|/* special QP and management commands */
 name|MLX4_CMD_CONF_SPECIAL_QP
 init|=
@@ -391,15 +401,6 @@ name|MLX4_CMD_SET_IF_STAT
 init|=
 literal|0X55
 block|,
-comment|/* set port opcode modifiers */
-name|MLX4_SET_PORT_PRIO2TC
-init|=
-literal|0x8
-block|,
-name|MLX4_SET_PORT_SCHEDULER
-init|=
-literal|0x9
-block|,
 comment|/* register/delete flow steering network rules */
 name|MLX4_QP_FLOW_STEERING_ATTACH
 init|=
@@ -475,7 +476,15 @@ block|,
 name|MLX4_SET_PORT_GID_TABLE
 init|=
 literal|0x5
-block|, }
+block|,
+name|MLX4_SET_PORT_PRIO2TC
+init|=
+literal|0x8
+block|,
+name|MLX4_SET_PORT_SCHEDULER
+init|=
+literal|0x9
+block|}
 enum|;
 end_enum
 
@@ -842,6 +851,92 @@ name|setting
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|mlx4_set_vf_link_state
+parameter_list|(
+name|struct
+name|mlx4_dev
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|port
+parameter_list|,
+name|int
+name|vf
+parameter_list|,
+name|int
+name|link_state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mlx4_get_vf_link_state
+parameter_list|(
+name|struct
+name|mlx4_dev
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|port
+parameter_list|,
+name|int
+name|vf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * mlx4_get_slave_default_vlan -  * retrun true if VST ( default vlan)  * if VST will fill vlan& qos (if not NULL)  */
+end_comment
+
+begin_function_decl
+name|bool
+name|mlx4_get_slave_default_vlan
+parameter_list|(
+name|struct
+name|mlx4_dev
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|port
+parameter_list|,
+name|int
+name|slave
+parameter_list|,
+name|u16
+modifier|*
+name|vlan
+parameter_list|,
+name|u8
+modifier|*
+name|qos
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_enum
+enum|enum
+block|{
+name|IFLA_VF_LINK_STATE_AUTO
+block|,
+comment|/* link state of the uplink */
+name|IFLA_VF_LINK_STATE_ENABLE
+block|,
+comment|/* link always up */
+name|IFLA_VF_LINK_STATE_DISABLE
+block|,
+comment|/* link always down */
+name|__IFLA_VF_LINK_STATE_MAX
+block|, }
+enum|;
+end_enum
 
 begin_define
 define|#

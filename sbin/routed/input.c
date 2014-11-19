@@ -1146,6 +1146,29 @@ name|RIP_PORT
 argument_list|)
 condition|)
 block|{
+comment|/* 					 * insecure: query from non-router node 					 *> 1: allow from distant node 					 *> 0: allow from neighbor node 					 *  == 0: deny 					 */
+if|if
+condition|(
+operator|(
+name|aifp
+operator|!=
+name|NULL
+operator|&&
+name|insecure
+operator|>
+literal|0
+operator|)
+operator|||
+operator|(
+name|aifp
+operator|==
+name|NULL
+operator|&&
+name|insecure
+operator|>
+literal|1
+operator|)
+condition|)
 name|supply
 argument_list|(
 name|from
@@ -1163,6 +1186,13 @@ argument_list|,
 name|ap
 operator|!=
 literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|trace_pkt
+argument_list|(
+literal|"Warning: "
+literal|"possible attack detected"
 argument_list|)
 expr_stmt|;
 return|return;

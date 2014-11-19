@@ -131,6 +131,10 @@ name|struct
 name|ath_hal
 modifier|*
 name|ah
+parameter_list|,
+name|HAL_OPS_CONFIG
+modifier|*
+name|ah_config
 parameter_list|)
 function_decl|;
 end_function_decl

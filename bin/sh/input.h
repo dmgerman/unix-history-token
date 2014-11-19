@@ -64,19 +64,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-name|pfgets
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pgetc
 parameter_list|(
@@ -116,6 +103,7 @@ begin_function_decl
 name|void
 name|pushstring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

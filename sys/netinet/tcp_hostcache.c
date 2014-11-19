@@ -366,7 +366,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_hostcache
 argument_list|,
@@ -374,6 +374,8 @@ name|OID_AUTO
 argument_list|,
 name|cachelimit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -392,7 +394,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_hostcache
 argument_list|,
@@ -400,6 +402,8 @@ name|OID_AUTO
 argument_list|,
 name|hashsize
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -418,7 +422,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_hostcache
 argument_list|,
@@ -426,6 +430,8 @@ name|OID_AUTO
 argument_list|,
 name|bucketlimit
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -444,7 +450,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_UINT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_tcp_hostcache
 argument_list|,
@@ -452,6 +458,8 @@ name|OID_AUTO
 argument_list|,
 name|count
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -470,7 +478,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_hostcache
 argument_list|,
@@ -478,6 +486,8 @@ name|OID_AUTO
 argument_list|,
 name|expire
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -496,7 +506,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_hostcache
 argument_list|,
@@ -504,6 +514,8 @@ name|OID_AUTO
 argument_list|,
 name|prune
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -522,7 +534,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_INT
 argument_list|(
 name|_net_inet_tcp_hostcache
 argument_list|,
@@ -530,6 +542,8 @@ name|OID_AUTO
 argument_list|,
 name|purge
 argument_list|,
+name|CTLFLAG_VNET
+operator||
 name|CTLFLAG_RW
 argument_list|,
 operator|&
@@ -1119,6 +1133,7 @@ operator|&
 name|INC_ISIPV6
 condition|)
 block|{
+comment|/* XXX: check ip6_zoneid */
 if|if
 condition|(
 name|memcmp
@@ -1428,26 +1443,24 @@ name|inc_flags
 operator|&
 name|INC_ISIPV6
 condition|)
-name|bcopy
-argument_list|(
-operator|&
+block|{
+name|hc_entry
+operator|->
+name|ip6
+operator|=
 name|inc
 operator|->
 name|inc6_faddr
-argument_list|,
-operator|&
-name|hc_entry
-operator|->
-name|ip6
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hc_entry
-operator|->
-name|ip6
-argument_list|)
-argument_list|)
 expr_stmt|;
+name|hc_entry
+operator|->
+name|ip6_zoneid
+operator|=
+name|inc
+operator|->
+name|inc6_zoneid
+expr_stmt|;
+block|}
 else|else
 name|hc_entry
 operator|->

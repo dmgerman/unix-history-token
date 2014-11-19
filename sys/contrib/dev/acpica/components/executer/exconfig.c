@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -927,10 +927,11 @@ name|DdbHandle
 decl_stmt|;
 name|ACPI_TABLE_HEADER
 modifier|*
-name|Table
+name|TableHeader
 decl_stmt|;
-name|ACPI_TABLE_DESC
-name|TableDesc
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
 decl_stmt|;
 name|UINT32
 name|TableIndex
@@ -944,19 +945,6 @@ decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|ExLoadOp
-argument_list|)
-expr_stmt|;
-name|ACPI_MEMSET
-argument_list|(
-operator|&
-name|TableDesc
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_DESC
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Source Object can be either an OpRegion or a Buffer/Field */
@@ -1039,7 +1027,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Get the table header first so we can get the table length */
-name|Table
+name|TableHeader
 operator|=
 name|ACPI_ALLOCATE
 argument_list|(
@@ -1052,7 +1040,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|Table
+name|TableHeader
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -1076,19 +1064,19 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|UINT8
 argument_list|,
-name|Table
+name|TableHeader
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|Length
 operator|=
-name|Table
+name|TableHeader
 operator|->
 name|Length
 expr_stmt|;
 name|ACPI_FREE
 argument_list|(
-name|Table
+name|TableHeader
 argument_list|)
 expr_stmt|;
 if|if
@@ -1124,9 +1112,7 @@ expr_stmt|;
 block|}
 comment|/*          * The original implementation simply mapped the table, with no copy.          * However, the memory region is not guaranteed to remain stable and          * we must copy the table to a local buffer. For example, the memory          * region is corrupted after suspend on some machines. Dynamically          * loaded tables are usually small, so this overhead is minimal.          *          * The latest implementation (5/2009) does not use a mapping at all.          * We use the low-level operation region interface to read the table          * instead of the obvious optimization of using a direct mapping.          * This maintains a consistent use of operation regions across the          * entire subsystem. This is important if additional processing must          * be performed in the (possibly user-installed) operation region          * handler. For example, AcpiExec and ASLTS depend on this.          */
 comment|/* Allocate a buffer for the table */
-name|TableDesc
-operator|.
-name|Pointer
+name|Table
 operator|=
 name|ACPI_ALLOCATE
 argument_list|(
@@ -1136,9 +1122,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TableDesc
-operator|.
-name|Pointer
+name|Table
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -1160,9 +1144,7 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|UINT8
 argument_list|,
-name|TableDesc
-operator|.
-name|Pointer
+name|Table
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1176,9 +1158,7 @@ condition|)
 block|{
 name|ACPI_FREE
 argument_list|(
-name|TableDesc
-operator|.
-name|Pointer
+name|Table
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -1187,16 +1167,6 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|TableDesc
-operator|.
-name|Address
-operator|=
-name|ObjDesc
-operator|->
-name|Region
-operator|.
-name|Address
-expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER
@@ -1235,7 +1205,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the actual table length from the table header */
-name|Table
+name|TableHeader
 operator|=
 name|ACPI_CAST_PTR
 argument_list|(
@@ -1250,7 +1220,7 @@ argument_list|)
 expr_stmt|;
 name|Length
 operator|=
-name|Table
+name|TableHeader
 operator|->
 name|Length
 expr_stmt|;
@@ -1289,9 +1259,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*          * Copy the table from the buffer because the buffer could be modified          * or even deleted in the future          */
-name|TableDesc
-operator|.
-name|Pointer
+name|Table
 operator|=
 name|ACPI_ALLOCATE
 argument_list|(
@@ -1301,9 +1269,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TableDesc
-operator|.
-name|Pointer
+name|Table
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -1314,24 +1280,11 @@ expr_stmt|;
 block|}
 name|ACPI_MEMCPY
 argument_list|(
-name|TableDesc
-operator|.
-name|Pointer
-argument_list|,
 name|Table
 argument_list|,
+name|TableHeader
+argument_list|,
 name|Length
-argument_list|)
-expr_stmt|;
-name|TableDesc
-operator|.
-name|Address
-operator|=
-name|ACPI_TO_INTEGER
-argument_list|(
-name|TableDesc
-operator|.
-name|Pointer
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1342,62 +1295,49 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Validate table checksum (will not get validated in TbAddTable) */
-name|Status
-operator|=
-name|AcpiTbVerifyChecksum
-argument_list|(
-name|TableDesc
-operator|.
-name|Pointer
-argument_list|,
-name|Length
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_FREE
-argument_list|(
-name|TableDesc
-operator|.
-name|Pointer
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Complete the table descriptor */
-name|TableDesc
-operator|.
-name|Length
-operator|=
-name|Length
-expr_stmt|;
-name|TableDesc
-operator|.
-name|Flags
-operator|=
-name|ACPI_TABLE_ORIGIN_ALLOCATED
-expr_stmt|;
 comment|/* Install the new table into the local data structures */
+name|ACPI_INFO
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Dynamic OEM Table Load:"
+operator|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiUtAcquireMutex
+argument_list|(
+name|ACPI_MTX_TABLES
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
-name|AcpiTbAddTable
+name|AcpiTbInstallStandardTable
 argument_list|(
-operator|&
-name|TableDesc
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
+name|Table
+argument_list|)
+argument_list|,
+name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
 argument_list|,
 operator|&
 name|TableIndex
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_TABLES
 argument_list|)
 expr_stmt|;
 if|if
@@ -1409,12 +1349,39 @@ argument_list|)
 condition|)
 block|{
 comment|/* Delete allocated table buffer */
-name|AcpiTbDeleteTable
+name|ACPI_FREE
 argument_list|(
-operator|&
-name|TableDesc
+name|Table
 argument_list|)
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Note: Now table is "INSTALLED", it must be validated before      * loading.      */
+name|Status
+operator|=
+name|AcpiTbValidateTable
+argument_list|(
+operator|&
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
+index|[
+name|TableIndex
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1489,24 +1456,6 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_INFO
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"Dynamic OEM Table Load:"
-operator|)
-argument_list|)
-expr_stmt|;
-name|AcpiTbPrintTableHeader
-argument_list|(
-literal|0
-argument_list|,
-name|TableDesc
-operator|.
-name|Pointer
-argument_list|)
-expr_stmt|;
 comment|/* Remove the reference by added by AcpiExStore above */
 name|AcpiUtRemoveReference
 argument_list|(
@@ -1526,9 +1475,7 @@ name|AcpiGbl_TableHandler
 argument_list|(
 name|ACPI_TABLE_EVENT_LOAD
 argument_list|,
-name|TableDesc
-operator|.
-name|Pointer
+name|Table
 argument_list|,
 name|AcpiGbl_TableHandlerContext
 argument_list|)
@@ -1576,6 +1523,16 @@ decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|ExUnloadTable
+argument_list|)
+expr_stmt|;
+comment|/*      * Temporarily emit a warning so that the ASL for the machine can be      * hopefully obtained. This is to say that the Unload() operator is      * extremely rare if not completely unused.      */
+name|ACPI_WARNING
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Received request to unload an ACPI table"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Validate the handle      * Although the handle is partially validated in AcpiExReconfiguration()      * when it calls AcpiExResolveOperands(), the handle is more completely      * validated here.      *      * Handle must be a valid operand object of type reference. Also, the      * DdbHandle must still be marked valid (table has not been previously      * unloaded)      */

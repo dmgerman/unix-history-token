@@ -1,33 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_gre.h,v 1.13 2003/11/10 08:51:52 wiz Exp $ */
-end_comment
-
-begin_comment
-comment|/*	 $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved  *  * This code is derived from software contributed to The NetBSD Foundation  * by Heiko W.Rupp<hwr@pilhuhn.de>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * Copyright (c) 2014 Andrey V. Elsukov<ae@FreeBSD.org>  * All rights reserved  *  * This code is derived from software contributed to The NetBSD Foundation  * by Heiko W.Rupp<hwr@pilhuhn.de>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $NetBSD: if_gre.h,v 1.13 2003/11/10 08:51:52 wiz Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NET_IF_GRE_H
+name|_NET_IF_GRE_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NET_IF_GRE_H
+name|_NET_IF_GRE_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -35,29 +21,108 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
 begin_comment
-comment|/*  * Version of the WCCP, need to be configured manually since  * header for version 2 is the same but IP payload is prepended  * with additional 4-bytes field.  */
+comment|/* GRE header according to RFC 2784 and RFC 2890 */
 end_comment
 
-begin_typedef
-typedef|typedef
-enum|enum
+begin_struct
+struct|struct
+name|grehdr
 block|{
-name|WCCP_V1
-init|=
+name|uint16_t
+name|gre_flags
+decl_stmt|;
+comment|/* GRE flags */
+define|#
+directive|define
+name|GRE_FLAGS_CP
+value|0x8000
+comment|/* checksum present */
+define|#
+directive|define
+name|GRE_FLAGS_KP
+value|0x2000
+comment|/* key present */
+define|#
+directive|define
+name|GRE_FLAGS_SP
+value|0x1000
+comment|/* sequence present */
+define|#
+directive|define
+name|GRE_FLAGS_MASK
+value|(GRE_FLAGS_CP|GRE_FLAGS_KP|GRE_FLAGS_SP)
+name|uint16_t
+name|gre_proto
+decl_stmt|;
+comment|/* protocol type */
+name|uint32_t
+name|gre_opts
+index|[
 literal|0
-block|,
-name|WCCP_V2
+index|]
+decl_stmt|;
+comment|/* optional fields */
 block|}
-name|wccp_ver_t
-typedef|;
-end_typedef
+name|__packed
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
+begin_struct
+struct|struct
+name|greip
+block|{
+name|struct
+name|ip
+name|gi_ip
+decl_stmt|;
+name|struct
+name|grehdr
+name|gi_gre
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_struct
+struct|struct
+name|greip6
+block|{
+name|struct
+name|ip6_hdr
+name|gi6_ip6
+decl_stmt|;
+name|struct
+name|grehdr
+name|gi6_gre
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -66,59 +131,79 @@ block|{
 name|struct
 name|ifnet
 modifier|*
-name|sc_ifp
+name|gre_ifp
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|gre_softc
 argument_list|)
-name|sc_list
+name|gre_list
 expr_stmt|;
-name|int
-name|gre_unit
+name|struct
+name|rmlock
+name|gre_lock
 decl_stmt|;
 name|int
-name|gre_flags
+name|gre_family
+decl_stmt|;
+comment|/* AF of delivery header */
+name|uint32_t
+name|gre_iseq
+decl_stmt|;
+name|uint32_t
+name|gre_oseq
+decl_stmt|;
+name|uint32_t
+name|gre_key
+decl_stmt|;
+name|uint32_t
+name|gre_options
+decl_stmt|;
+name|uint32_t
+name|gre_mtu
 decl_stmt|;
 name|u_int
 name|gre_fibnum
 decl_stmt|;
-comment|/* use this fib for envelopes */
+name|u_int
+name|gre_hlen
+decl_stmt|;
+comment|/* header size */
+union|union
+block|{
+name|void
+modifier|*
+name|hdr
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
-name|in_addr
-name|g_src
+name|greip
+modifier|*
+name|gihdr
 decl_stmt|;
-comment|/* source address of gre packets */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
-name|in_addr
-name|g_dst
+name|greip6
+modifier|*
+name|gi6hdr
 decl_stmt|;
-comment|/* destination address of gre packets */
-name|struct
-name|route
-name|route
-decl_stmt|;
-comment|/* routing entry that determines, where a 				   encapsulated packet should go */
-name|u_char
-name|g_proto
-decl_stmt|;
-comment|/* protocol of encapsulator */
+endif|#
+directive|endif
+block|}
+name|gre_uhdr
+union|;
 specifier|const
 name|struct
 name|encaptab
 modifier|*
-name|encap
+name|gre_ecookie
 decl_stmt|;
-comment|/* encapsulation cookie */
-name|uint32_t
-name|key
-decl_stmt|;
-comment|/* key included in outgoing GRE packets */
-comment|/* zero means none */
-name|wccp_ver_t
-name|wccp_ver
-decl_stmt|;
-comment|/* version of the WCCP */
 block|}
 struct|;
 end_struct
@@ -130,154 +215,130 @@ name|GRE2IFP
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->sc_ifp)
-end_define
-
-begin_struct
-struct|struct
-name|gre_h
-block|{
-name|u_int16_t
-name|flags
-decl_stmt|;
-comment|/* GRE flags */
-name|u_int16_t
-name|ptype
-decl_stmt|;
-comment|/* protocol type of payload typically 				   Ether protocol type*/
-name|uint32_t
-name|options
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* optional options */
-comment|/*  *  from here on: fields are optional, presence indicated by flags  * 	u_int_16 checksum	checksum (one-complements of GRE header 				and payload 				Present if (ck_pres | rt_pres == 1). 				Valid if (ck_pres == 1). 	u_int_16 offset		offset from start of routing filed to 				first octet of active SRE (see below). 				Present if (ck_pres | rt_pres == 1). 				Valid if (rt_pres == 1). 	u_int_32 key		inserted by encapsulator e.g. for 				authentication 				Present if (key_pres ==1 ). 	u_int_32 seq_num	Sequence number to allow for packet order 				Present if (seq_pres ==1 ). 	struct gre_sre[] routing Routing fileds (see below) 				Present if (rt_pres == 1)  */
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|greip
-block|{
-name|struct
-name|ip
-name|gi_i
-decl_stmt|;
-name|struct
-name|gre_h
-name|gi_g
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|gi_pr
-value|gi_i.ip_p
+value|((sc)->gre_ifp)
 end_define
 
 begin_define
 define|#
 directive|define
-name|gi_len
-value|gi_i.ip_len
+name|GRE_LOCK_INIT
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_init(&(sc)->gre_lock, "gre softc")
 end_define
 
 begin_define
 define|#
 directive|define
-name|gi_src
-value|gi_i.ip_src
+name|GRE_LOCK_DESTROY
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_destroy(&(sc)->gre_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|gi_dst
-value|gi_i.ip_dst
+name|GRE_RLOCK_TRACKER
+value|struct rm_priotracker gre_tracker
 end_define
 
 begin_define
 define|#
 directive|define
-name|gi_ptype
-value|gi_g.ptype
+name|GRE_RLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_rlock(&(sc)->gre_lock,&gre_tracker)
 end_define
 
 begin_define
 define|#
 directive|define
-name|gi_flags
-value|gi_g.flags
+name|GRE_RUNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_runlock(&(sc)->gre_lock,&gre_tracker)
 end_define
 
 begin_define
 define|#
 directive|define
-name|gi_options
-value|gi_g.options
+name|GRE_RLOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_assert(&(sc)->gre_lock, RA_RLOCKED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GRE_CP
-value|0x8000
+name|GRE_WLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_wlock(&(sc)->gre_lock)
 end_define
-
-begin_comment
-comment|/* Checksum Present */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|GRE_RP
-value|0x4000
+name|GRE_WUNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_wunlock(&(sc)->gre_lock)
 end_define
-
-begin_comment
-comment|/* Routing Present */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|GRE_KP
-value|0x2000
+name|GRE_WLOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|rm_assert(&(sc)->gre_lock, RA_WLOCKED)
 end_define
-
-begin_comment
-comment|/* Key Present */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|GRE_SP
-value|0x1000
+name|gre_hdr
+value|gre_uhdr.hdr
 end_define
-
-begin_comment
-comment|/* Sequence Present */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|GRE_SS
-value|0x0800
+name|gre_gihdr
+value|gre_uhdr.gihdr
 end_define
 
-begin_comment
-comment|/* Strict Source Route */
-end_comment
+begin_define
+define|#
+directive|define
+name|gre_gi6hdr
+value|gre_uhdr.gi6hdr
+end_define
+
+begin_define
+define|#
+directive|define
+name|gre_oip
+value|gre_gihdr->gi_ip
+end_define
+
+begin_define
+define|#
+directive|define
+name|gre_oip6
+value|gre_gi6hdr->gi6_ip6
+end_define
 
 begin_comment
 comment|/*  * CISCO uses special type for GRE tunnel created as part of WCCP  * connection, while in fact those packets are just IPv4 encapsulated  * into GRE.  */
@@ -286,126 +347,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WCCP_PROTOCOL_TYPE
+name|ETHERTYPE_WCCP
 value|0x883E
-end_define
-
-begin_comment
-comment|/*  * gre_sre defines a Source route Entry. These are needed if packets  * should be routed over more than one tunnel hop by hop  */
-end_comment
-
-begin_struct
-struct|struct
-name|gre_sre
-block|{
-name|u_int16_t
-name|sre_family
-decl_stmt|;
-comment|/* address family */
-name|u_char
-name|sre_offset
-decl_stmt|;
-comment|/* offset to first octet of active entry */
-name|u_char
-name|sre_length
-decl_stmt|;
-comment|/* number of octets in the SRE. 				   sre_lengthl==0 -> last entry. */
-name|u_char
-modifier|*
-name|sre_rtinfo
-decl_stmt|;
-comment|/* the routing information */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|greioctl
-block|{
-name|int
-name|unit
-decl_stmt|;
-name|struct
-name|in_addr
-name|addr
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* for mobile encaps */
-end_comment
-
-begin_struct
-struct|struct
-name|mobile_h
-block|{
-name|u_int16_t
-name|proto
-decl_stmt|;
-comment|/* protocol and S-bit */
-name|u_int16_t
-name|hcrc
-decl_stmt|;
-comment|/* header checksum */
-name|u_int32_t
-name|odst
-decl_stmt|;
-comment|/* original destination address */
-name|u_int32_t
-name|osrc
-decl_stmt|;
-comment|/* original source addr, if S-bit set */
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|mobip_h
-block|{
-name|struct
-name|ip
-name|mi
-decl_stmt|;
-name|struct
-name|mobile_h
-name|mh
-decl_stmt|;
-block|}
-name|__packed
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|MOB_H_SIZ_S
-value|(sizeof(struct mobile_h) - sizeof(u_int32_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOB_H_SIZ_L
-value|(sizeof(struct mobile_h))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOB_H_SBIT
-value|0x0080
-end_define
-
-begin_define
-define|#
-directive|define
-name|GRE_TTL
-value|30
 end_define
 
 begin_endif
@@ -415,10 +358,6 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
-end_comment
-
-begin_comment
-comment|/*  * ioctls needed to manipulate the interface  */
 end_comment
 
 begin_define
@@ -477,49 +416,40 @@ name|GRESKEY
 value|_IOW('i', 108, struct ifreq)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
+begin_define
+define|#
+directive|define
+name|GREGOPTS
+value|_IOWR('i', 109, struct ifreq)
+end_define
 
-begin_expr_stmt
-name|LIST_HEAD
-argument_list|(
-name|gre_softc_head
-argument_list|,
-name|gre_softc
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_define
+define|#
+directive|define
+name|GRESOPTS
+value|_IOW('i', 110, struct ifreq)
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|gre_mtx
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GRE_ENABLE_CSUM
+value|0x0001
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|gre_softc_head
-name|gre_softc_list
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GRE_ENABLE_SEQ
+value|0x0002
+end_define
 
-begin_function_decl
-name|u_int16_t
-name|gre_in_cksum
-parameter_list|(
-name|u_int16_t
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|GRE_OPTMASK
+value|(GRE_ENABLE_CSUM|GRE_ENABLE_SEQ)
+end_define
 
 begin_endif
 endif|#
@@ -527,13 +457,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* _NET_IF_GRE_H_ */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

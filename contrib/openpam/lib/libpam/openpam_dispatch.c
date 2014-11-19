@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_dispatch.c 649 2013-03-05 17:58:33Z des $  */
+comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: openpam_dispatch.c 807 2014-09-09 09:41:32Z des $  */
 end_comment
 
 begin_ifdef
@@ -112,6 +112,8 @@ name|int
 name|err
 decl_stmt|,
 name|fail
+decl_stmt|,
+name|nsuccess
 decl_stmt|,
 name|r
 decl_stmt|;
@@ -247,13 +249,18 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* execute */
-for|for
-control|(
 name|err
 operator|=
+name|PAM_SUCCESS
+expr_stmt|;
 name|fail
 operator|=
+name|nsuccess
+operator|=
 literal|0
+expr_stmt|;
+for|for
+control|(
 init|;
 name|chain
 operator|!=
@@ -440,6 +447,9 @@ operator|==
 name|PAM_SUCCESS
 condition|)
 block|{
+operator|++
+name|nsuccess
+expr_stmt|;
 comment|/* 			 * For pam_setcred() and pam_chauthtok() with the 			 * PAM_PRELIM_CHECK flag, treat "sufficient" as 			 * "optional". 			 */
 if|if
 condition|(
@@ -492,7 +502,7 @@ if|if
 condition|(
 name|err
 operator|==
-literal|0
+name|PAM_SUCCESS
 condition|)
 name|err
 operator|=
@@ -571,6 +581,35 @@ name|err
 operator|=
 name|PAM_SUCCESS
 expr_stmt|;
+comment|/* 	 * Require the chain to be non-empty, and at least one module 	 * in the chain to be successful, so that we don't fail open. 	 */
+if|if
+condition|(
+name|err
+operator|==
+name|PAM_SUCCESS
+operator|&&
+name|nsuccess
+operator|<
+literal|1
+condition|)
+block|{
+name|openpam_log
+argument_list|(
+name|PAM_LOG_ERROR
+argument_list|,
+literal|"all modules were unsuccessful for %s()"
+argument_list|,
+name|pam_sm_func_name
+index|[
+name|primitive
+index|]
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|PAM_SYSTEM_ERR
+expr_stmt|;
+block|}
 name|RETURNC
 argument_list|(
 name|err

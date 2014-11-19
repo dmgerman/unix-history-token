@@ -219,25 +219,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<sysexits.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_POLL_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<poll.h>
+file|<unistd.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -377,6 +366,28 @@ end_define
 
 begin_comment
 comment|/* number of record route slots */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXWAIT
+value|10000
+end_define
+
+begin_comment
+comment|/* max ms to wait for response */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXALARM
+value|(60 * 60)
+end_define
+
+begin_comment
+comment|/* max seconds for alarm timeout */
 end_comment
 
 begin_define
@@ -640,6 +651,13 @@ name|F_NOUSERDATA
 value|(F_NODEADDR | F_FQDN | F_FQDNOLD | F_SUPTYPES)
 end_define
 
+begin_define
+define|#
+directive|define
+name|F_WAITTIME
+value|0x2000000
+end_define
+
 begin_decl_stmt
 name|u_int
 name|options
@@ -689,6 +707,7 @@ value|(8 * 8192)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mx_dup_ck
 init|=
@@ -697,6 +716,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|rcvd_tbl
 index|[
@@ -708,16 +728,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|addrinfo
-modifier|*
-name|res
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 name|dst
@@ -729,6 +740,7 @@ comment|/* who to ping6 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 name|src
@@ -740,13 +752,15 @@ comment|/* src addr of this packet */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|socklen_t
 name|srclen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|static
+name|size_t
 name|datalen
 init|=
 name|DEFDATALEN
@@ -754,6 +768,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|s
 decl_stmt|;
@@ -764,6 +779,7 @@ comment|/* socket file descriptor */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|outpack
 index|[
@@ -773,6 +789,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|BSPACE
 init|=
@@ -785,6 +802,7 @@ comment|/* characters written for flood */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|BBELL
 init|=
@@ -797,6 +815,7 @@ comment|/* characters written for AUDIBLE */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|DOT
 init|=
@@ -805,6 +824,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|hostname
@@ -812,6 +832,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ident
 decl_stmt|;
@@ -822,6 +843,7 @@ comment|/* process id to identify our packets */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_int8_t
 name|nonce
 index|[
@@ -835,6 +857,7 @@ comment|/* nonce field for node information */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hoplimit
 init|=
@@ -848,18 +871,7 @@ comment|/* hoplimit */
 end_comment
 
 begin_decl_stmt
-name|int
-name|pathmtu
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* path MTU for the destination.  0 = unspec. */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|u_char
 modifier|*
 name|packet
@@ -868,52 +880,12 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_POLL_H
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|pollfd
-name|fdmaskp
-index|[
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|fd_set
-modifier|*
-name|fdmaskp
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fdmasks
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* counters */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nmissedmax
 decl_stmt|;
@@ -924,6 +896,7 @@ comment|/* max value of ntransmitted - nreceived - 1 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|npackets
 decl_stmt|;
@@ -934,6 +907,7 @@ comment|/* max packets to transmit */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nreceived
 decl_stmt|;
@@ -944,6 +918,7 @@ comment|/* # of packets we got back */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nrepeats
 decl_stmt|;
@@ -954,6 +929,7 @@ comment|/* number of duplicates */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|ntransmitted
 decl_stmt|;
@@ -964,20 +940,42 @@ comment|/* sequence # for outbound packets = #sent */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|timeval
+specifier|static
+name|int
 name|interval
 init|=
-block|{
-literal|1
-block|,
-literal|0
-block|}
+literal|1000
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* interval between packets */
+comment|/* interval between packets in ms */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|waittime
+init|=
+name|MAXWAIT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timeout for each packet */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|nrcvtimeout
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of packets we got back after waittime */
 end_comment
 
 begin_comment
@@ -985,6 +983,7 @@ comment|/* timing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|timing
 decl_stmt|;
@@ -995,6 +994,7 @@ comment|/* flag to do timing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tmin
 init|=
@@ -1007,6 +1007,7 @@ comment|/* minimum round trip time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tmax
 init|=
@@ -1019,6 +1020,7 @@ comment|/* maximum round trip time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tsum
 init|=
@@ -1031,6 +1033,7 @@ comment|/* sum of all times, for doing average */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|tsumsq
 init|=
@@ -1047,6 +1050,7 @@ comment|/* for node addresses */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_short
 name|naflags
 decl_stmt|;
@@ -1057,6 +1061,7 @@ comment|/* for ancillary data(advanced API) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|msghdr
 name|smsghdr
@@ -1064,6 +1069,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|iovec
 name|smsgiov
@@ -1071,6 +1077,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|scmsg
@@ -1080,13 +1087,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|volatile
-name|sig_atomic_t
-name|seenalrm
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|seenint
@@ -1100,6 +1101,7 @@ name|SIGINFO
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|seeninfo
@@ -1125,6 +1127,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fill
 parameter_list|(
@@ -1138,6 +1141,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_hoplim
 parameter_list|(
@@ -1149,6 +1153,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_pathmtu
 parameter_list|(
@@ -1160,6 +1165,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|in6_pktinfo
 modifier|*
@@ -1173,6 +1179,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|onsignal
 parameter_list|(
@@ -1182,15 +1189,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|retransmit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|onint
 parameter_list|(
@@ -1200,6 +1199,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|pingerlen
 parameter_list|(
@@ -1209,6 +1209,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pinger
 parameter_list|(
@@ -1218,6 +1219,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1233,6 +1235,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_icmph
 parameter_list|(
@@ -1247,6 +1250,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_iph
 parameter_list|(
@@ -1258,6 +1262,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_suptypes
 parameter_list|(
@@ -1271,6 +1276,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_nodeaddr
 parameter_list|(
@@ -1284,6 +1290,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|myechoreply
 parameter_list|(
@@ -1296,6 +1303,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|mynireply
 parameter_list|(
@@ -1308,6 +1316,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|dnsdecode
@@ -1334,6 +1343,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_pack
 parameter_list|(
@@ -1350,6 +1360,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_exthdrs
 parameter_list|(
@@ -1361,6 +1372,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_ip6opt
 parameter_list|(
@@ -1373,6 +1385,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_rthdr
 parameter_list|(
@@ -1385,6 +1398,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pr_bitrange
 parameter_list|(
@@ -1398,6 +1412,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pr_retip
 parameter_list|(
@@ -1412,6 +1427,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|summary
 parameter_list|(
@@ -1421,6 +1437,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|tvsub
 parameter_list|(
@@ -1436,6 +1453,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|setpolicy
 parameter_list|(
@@ -1448,6 +1466,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|nigroup
@@ -1461,6 +1480,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -1483,12 +1503,17 @@ index|[]
 parameter_list|)
 block|{
 name|struct
-name|itimerval
-name|itimer
+name|timeval
+name|last
+decl_stmt|,
+name|intvl
 decl_stmt|;
 name|struct
 name|sockaddr_in6
 name|from
+decl_stmt|,
+modifier|*
+name|sin6
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -1499,26 +1524,16 @@ name|seed
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_POLL_H
-name|int
-name|timeout
-decl_stmt|;
-else|#
-directive|else
-name|struct
-name|timeval
-name|timeout
-decl_stmt|,
-modifier|*
-name|tv
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|addrinfo
 name|hints
+decl_stmt|,
+modifier|*
+name|res
+decl_stmt|;
+name|struct
+name|sigaction
+name|si_sa
 decl_stmt|;
 name|int
 name|cc
@@ -1526,6 +1541,8 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|int
+name|almost_done
+decl_stmt|,
 name|ch
 decl_stmt|,
 name|hold
@@ -1536,7 +1553,7 @@ name|preload
 decl_stmt|,
 name|optval
 decl_stmt|,
-name|ret_ga
+name|error
 decl_stmt|;
 name|int
 name|nig_oldmcprefix
@@ -1648,7 +1665,10 @@ decl_stmt|;
 endif|#
 directive|endif
 name|double
-name|intval
+name|t
+decl_stmt|;
+name|u_long
+name|alarmtimeout
 decl_stmt|;
 name|size_t
 name|rthlen
@@ -1690,6 +1710,8 @@ name|smsgiov
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|alarmtimeout
+operator|=
 name|preload
 operator|=
 literal|0
@@ -1741,7 +1763,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:c:DdfHg:h:I:i:l:mnNop:qrRS:s:tvwW"
+literal|"a:b:c:DdfHg:h:I:i:l:mnNop:qrRS:s:tvwWx:X:"
 name|ADDOPTS
 argument_list|)
 operator|)
@@ -1917,6 +1939,9 @@ argument_list|)
 expr_stmt|;
 name|sockbufsize
 operator|=
+operator|(
+name|int
+operator|)
 name|lsockbufsize
 expr_stmt|;
 if|if
@@ -1930,9 +1955,9 @@ operator|||
 operator|*
 name|e
 operator|||
-name|sockbufsize
-operator|!=
 name|lsockbufsize
+operator|>
+name|INT_MAX
 condition|)
 name|errx
 argument_list|(
@@ -2145,7 +2170,7 @@ case|case
 literal|'i'
 case|:
 comment|/* wait between sending packets */
-name|intval
+name|t
 operator|=
 name|strtod
 argument_list|(
@@ -2178,7 +2203,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|intval
+name|t
 operator|<
 literal|1
 operator|&&
@@ -2199,16 +2224,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|interval
+name|intvl
 operator|.
 name|tv_sec
 operator|=
 operator|(
 name|long
 operator|)
-name|intval
+name|t
 expr_stmt|;
-name|interval
+name|intvl
 operator|.
 name|tv_usec
 operator|=
@@ -2217,9 +2242,9 @@ name|long
 call|)
 argument_list|(
 operator|(
-name|intval
+name|t
 operator|-
-name|interval
+name|intvl
 operator|.
 name|tv_sec
 operator|)
@@ -2229,7 +2254,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|interval
+name|intvl
 operator|.
 name|tv_sec
 operator|<
@@ -2247,13 +2272,13 @@ expr_stmt|;
 comment|/* less than 1/hz does not make sense */
 if|if
 condition|(
-name|interval
+name|intvl
 operator|.
 name|tv_sec
 operator|==
 literal|0
 operator|&&
-name|interval
+name|intvl
 operator|.
 name|tv_usec
 operator|<
@@ -2265,7 +2290,7 @@ argument_list|(
 literal|"too small interval, raised to .000001"
 argument_list|)
 expr_stmt|;
-name|interval
+name|intvl
 operator|.
 name|tv_usec
 operator|=
@@ -2474,7 +2499,7 @@ name|ai_protocol
 operator|=
 name|IPPROTO_ICMPV6
 expr_stmt|;
-name|ret_ga
+name|error
 operator|=
 name|getaddrinfo
 argument_list|(
@@ -2491,7 +2516,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret_ga
+name|error
 condition|)
 block|{
 name|errx
@@ -2502,7 +2527,7 @@ literal|"invalid source address: %s"
 argument_list|,
 name|gai_strerror
 argument_list|(
-name|ret_ga
+name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2646,6 +2671,120 @@ expr_stmt|;
 name|options
 operator||=
 name|F_FQDNOLD
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|t
+operator|=
+name|strtod
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|e
+operator|||
+name|e
+operator|==
+name|optarg
+operator|||
+name|t
+operator|>
+operator|(
+name|double
+operator|)
+name|INT_MAX
+condition|)
+name|err
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid timing interval: `%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|options
+operator||=
+name|F_WAITTIME
+expr_stmt|;
+name|waittime
+operator|=
+operator|(
+name|int
+operator|)
+name|t
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+name|alarmtimeout
+operator|=
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|e
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|alarmtimeout
+operator|<
+literal|1
+operator|)
+operator|||
+operator|(
+name|alarmtimeout
+operator|==
+name|ULONG_MAX
+operator|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid timeout: `%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|alarmtimeout
+operator|>
+name|MAXALARM
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid timeout: `%s'> %d"
+argument_list|,
+name|optarg
+argument_list|,
+name|MAXALARM
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+operator|(
+name|int
+operator|)
+name|alarmtimeout
+argument_list|)
 expr_stmt|;
 break|break;
 ifdef|#
@@ -2935,7 +3074,7 @@ name|ai_protocol
 operator|=
 name|IPPROTO_ICMPV6
 expr_stmt|;
-name|ret_ga
+name|error
 operator|=
 name|getaddrinfo
 argument_list|(
@@ -2952,7 +3091,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret_ga
+name|error
 condition|)
 name|errx
 argument_list|(
@@ -2962,7 +3101,7 @@ literal|"%s"
 argument_list|,
 name|gai_strerror
 argument_list|(
-name|ret_ga
+name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3085,42 +3224,32 @@ condition|(
 name|gateway
 condition|)
 block|{
-name|struct
-name|addrinfo
-name|ghints
-decl_stmt|,
-modifier|*
-name|gres
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|memset
 argument_list|(
 operator|&
-name|ghints
+name|hints
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ghints
+name|hints
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ghints
+name|hints
 operator|.
 name|ai_family
 operator|=
 name|AF_INET6
 expr_stmt|;
-name|ghints
+name|hints
 operator|.
 name|ai_socktype
 operator|=
 name|SOCK_RAW
 expr_stmt|;
-name|ghints
+name|hints
 operator|.
 name|ai_protocol
 operator|=
@@ -3138,7 +3267,7 @@ operator|&
 name|hints
 argument_list|,
 operator|&
-name|gres
+name|res
 argument_list|)
 expr_stmt|;
 if|if
@@ -3163,7 +3292,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|gres
+name|res
 operator|->
 name|ai_next
 operator|&&
@@ -3188,11 +3317,11 @@ name|IPPROTO_IPV6
 argument_list|,
 name|IPV6_NEXTHOP
 argument_list|,
-name|gres
+name|res
 operator|->
 name|ai_addr
 argument_list|,
-name|gres
+name|res
 operator|->
 name|ai_addrlen
 argument_list|)
@@ -3208,7 +3337,7 @@ expr_stmt|;
 block|}
 name|freeaddrinfo
 argument_list|(
-name|gres
+name|res
 argument_list|)
 expr_stmt|;
 block|}
@@ -3685,6 +3814,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|nonce
@@ -4582,8 +4714,6 @@ block|{
 comment|/* some intermediate addrs are specified */
 name|int
 name|hops
-decl_stmt|,
-name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4721,11 +4851,25 @@ name|hops
 operator|++
 control|)
 block|{
-name|struct
-name|addrinfo
-modifier|*
-name|iaip
-decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|hints
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hints
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hints
+operator|.
+name|ai_family
+operator|=
+name|AF_INET6
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4744,7 +4888,7 @@ operator|&
 name|hints
 argument_list|,
 operator|&
-name|iaip
+name|res
 argument_list|)
 operator|)
 condition|)
@@ -4762,14 +4906,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SIN6
-argument_list|(
-name|iaip
+name|res
 operator|->
 name|ai_addr
-argument_list|)
 operator|->
-name|sin6_family
+name|sa_family
 operator|!=
 name|AF_INET6
 condition|)
@@ -4779,6 +4920,21 @@ literal|1
 argument_list|,
 literal|"bad addr family of an intermediate addr"
 argument_list|)
+expr_stmt|;
+name|sin6
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
+operator|*
+operator|)
+name|res
+operator|->
+name|ai_addr
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4790,14 +4946,7 @@ argument_list|(
 name|rthdr
 argument_list|,
 operator|&
-operator|(
-name|SIN6
-argument_list|(
-name|iaip
-operator|->
-name|ai_addr
-argument_list|)
-operator|)
+name|sin6
 operator|->
 name|sin6_addr
 argument_list|)
@@ -4816,17 +4965,10 @@ if|if
 condition|(
 name|inet6_rthdr_add
 argument_list|(
-name|scmsgp
+name|scmsg
 argument_list|,
 operator|&
-operator|(
-name|SIN6
-argument_list|(
-name|iaip
-operator|->
-name|ai_addr
-argument_list|)
-operator|)
+name|sin6
 operator|->
 name|sin6_addr
 argument_list|,
@@ -4845,7 +4987,7 @@ directive|endif
 comment|/* USE_RFC2292BIS */
 name|freeaddrinfo
 argument_list|(
-name|iaip
+name|res
 argument_list|)
 expr_stmt|;
 block|}
@@ -5217,6 +5359,9 @@ if|if
 condition|(
 name|datalen
 operator|>
+operator|(
+name|size_t
+operator|)
 name|sockbufsize
 condition|)
 name|warnx
@@ -5531,142 +5676,90 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|preload
+operator|==
+literal|0
+condition|)
+name|pinger
+argument_list|()
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|npackets
+operator|!=
+literal|0
+operator|&&
+name|preload
+operator|>
+name|npackets
+condition|)
+name|preload
+operator|=
+name|npackets
+expr_stmt|;
 while|while
 condition|(
 name|preload
 operator|--
 condition|)
-comment|/* Fire off them quickies. */
-operator|(
-name|void
-operator|)
 name|pinger
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
+block|}
+name|gettimeofday
+argument_list|(
+operator|&
+name|last
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|si_sa
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|si_sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|si_sa
+operator|.
+name|sa_handler
+operator|=
+name|onsignal
+expr_stmt|;
+if|if
+condition|(
+name|sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
-name|onsignal
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGINFO
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGINFO
-argument_list|,
-name|onsignal
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-operator|(
-name|options
 operator|&
-name|F_FLOOD
-operator|)
-operator|==
+name|si_sa
+argument_list|,
 literal|0
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|onsignal
 argument_list|)
-expr_stmt|;
-name|itimer
-operator|.
-name|it_interval
-operator|=
-name|interval
-expr_stmt|;
-name|itimer
-operator|.
-name|it_value
-operator|=
-name|interval
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setitimer
-argument_list|(
-name|ITIMER_REAL
-argument_list|,
-operator|&
-name|itimer
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ntransmitted
 operator|==
-literal|0
-condition|)
-name|retransmit
-argument_list|()
-expr_stmt|;
-block|}
-ifndef|#
-directive|ifndef
-name|HAVE_POLL_H
-name|fdmasks
-operator|=
-name|howmany
-argument_list|(
-name|s
-operator|+
+operator|-
 literal|1
-argument_list|,
-name|NFDBITS
-argument_list|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|fd_mask
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fdmaskp
-operator|=
-name|malloc
-argument_list|(
-name|fdmasks
-argument_list|)
-operator|)
-operator|==
-name|NULL
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
-literal|"malloc"
+literal|"sigaction SIGINT"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|seenalrm
-operator|=
 name|seenint
 operator|=
 literal|0
@@ -5674,18 +5767,132 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGINFO
+if|if
+condition|(
+name|sigaction
+argument_list|(
+name|SIGINFO
+argument_list|,
+operator|&
+name|si_sa
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"sigaction SIGINFO"
+argument_list|)
+expr_stmt|;
 name|seeninfo
 operator|=
 literal|0
 expr_stmt|;
 endif|#
 directive|endif
-for|for
-control|(
-init|;
-condition|;
-control|)
+if|if
+condition|(
+name|alarmtimeout
+operator|>
+literal|0
+condition|)
 block|{
+if|if
+condition|(
+name|sigaction
+argument_list|(
+name|SIGALRM
+argument_list|,
+operator|&
+name|si_sa
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"sigaction SIGALRM"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|options
+operator|&
+name|F_FLOOD
+condition|)
+block|{
+name|intvl
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|intvl
+operator|.
+name|tv_usec
+operator|=
+literal|10000
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|F_INTERVAL
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|intvl
+operator|.
+name|tv_sec
+operator|=
+name|interval
+operator|/
+literal|1000
+expr_stmt|;
+name|intvl
+operator|.
+name|tv_usec
+operator|=
+name|interval
+operator|%
+literal|1000
+operator|*
+literal|1000
+expr_stmt|;
+block|}
+name|almost_done
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|seenint
+operator|==
+literal|0
+condition|)
+block|{
+name|struct
+name|timeval
+name|now
+decl_stmt|,
+name|timeout
+decl_stmt|;
 name|struct
 name|msghdr
 name|m
@@ -5697,89 +5904,22 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* signal handling */
-if|if
-condition|(
-name|seenalrm
-condition|)
-block|{
-comment|/* last packet sent, timeout reached? */
-if|if
-condition|(
-name|npackets
-operator|&&
-name|ntransmitted
-operator|>=
-name|npackets
-condition|)
-block|{
-name|struct
-name|timeval
-name|zerotime
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|fd_set
+name|rfds
 decl_stmt|;
-name|itimer
-operator|.
-name|it_value
-operator|=
-name|zerotime
-expr_stmt|;
-name|itimer
-operator|.
-name|it_interval
-operator|=
-name|zerotime
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setitimer
-argument_list|(
-name|ITIMER_REAL
-argument_list|,
-operator|&
-name|itimer
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|seenalrm
-operator|=
-literal|0
-expr_stmt|;
-comment|/* clear flag */
-continue|continue;
-block|}
-name|retransmit
-argument_list|()
-expr_stmt|;
-name|seenalrm
-operator|=
-literal|0
-expr_stmt|;
-continue|continue;
-block|}
+name|int
+name|n
+decl_stmt|;
+comment|/* signal handling */
 if|if
 condition|(
 name|seenint
 condition|)
-block|{
 name|onint
 argument_list|(
 name|SIGINT
 argument_list|)
 expr_stmt|;
-name|seenint
-operator|=
-literal|0
-expr_stmt|;
-continue|continue;
-block|}
 ifdef|#
 directive|ifdef
 name|SIGINFO
@@ -5799,117 +5939,121 @@ continue|continue;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|options
-operator|&
-name|F_FLOOD
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|pinger
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_POLL_H
-name|timeout
-operator|=
-literal|10
-expr_stmt|;
-else|#
-directive|else
-name|timeout
-operator|.
-name|tv_sec
-operator|=
-literal|0
-expr_stmt|;
-name|timeout
-operator|.
-name|tv_usec
-operator|=
-literal|10000
-expr_stmt|;
-name|tv
-operator|=
-operator|&
-name|timeout
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|HAVE_POLL_H
-name|timeout
-operator|=
-name|INFTIM
-expr_stmt|;
-else|#
-directive|else
-name|tv
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-ifdef|#
-directive|ifdef
-name|HAVE_POLL_H
-name|fdmaskp
-index|[
-literal|0
-index|]
-operator|.
-name|fd
-operator|=
-name|s
-expr_stmt|;
-name|fdmaskp
-index|[
-literal|0
-index|]
-operator|.
-name|events
-operator|=
-name|POLLIN
-expr_stmt|;
-name|cc
-operator|=
-name|poll
+name|FD_ZERO
 argument_list|(
-name|fdmaskp
-argument_list|,
-literal|1
-argument_list|,
-name|timeout
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|memset
-argument_list|(
-name|fdmaskp
-argument_list|,
-literal|0
-argument_list|,
-name|fdmasks
+operator|&
+name|rfds
 argument_list|)
 expr_stmt|;
 name|FD_SET
 argument_list|(
 name|s
 argument_list|,
-name|fdmaskp
+operator|&
+name|rfds
 argument_list|)
 expr_stmt|;
-name|cc
+name|gettimeofday
+argument_list|(
+operator|&
+name|now
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_sec
+operator|=
+name|last
+operator|.
+name|tv_sec
+operator|+
+name|intvl
+operator|.
+name|tv_sec
+operator|-
+name|now
+operator|.
+name|tv_sec
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_usec
+operator|=
+name|last
+operator|.
+name|tv_usec
+operator|+
+name|intvl
+operator|.
+name|tv_usec
+operator|-
+name|now
+operator|.
+name|tv_usec
+expr_stmt|;
+while|while
+condition|(
+name|timeout
+operator|.
+name|tv_usec
+operator|<
+literal|0
+condition|)
+block|{
+name|timeout
+operator|.
+name|tv_usec
+operator|+=
+literal|1000000
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_sec
+operator|--
+expr_stmt|;
+block|}
+while|while
+condition|(
+name|timeout
+operator|.
+name|tv_usec
+operator|>
+literal|1000000
+condition|)
+block|{
+name|timeout
+operator|.
+name|tv_usec
+operator|-=
+literal|1000000
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_sec
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|timeout
+operator|.
+name|tv_sec
+operator|<
+literal|0
+condition|)
+name|timeout
+operator|.
+name|tv_sec
+operator|=
+name|timeout
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+name|n
 operator|=
 name|select
 argument_list|(
@@ -5917,64 +6061,32 @@ name|s
 operator|+
 literal|1
 argument_list|,
-name|fdmaskp
+operator|&
+name|rfds
 argument_list|,
 name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|tv
+operator|&
+name|timeout
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
-name|cc
+name|n
 operator|<
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|!=
-name|EINTR
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|HAVE_POLL_H
-name|warn
-argument_list|(
-literal|"poll"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|warn
-argument_list|(
-literal|"select"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 continue|continue;
-block|}
-elseif|else
+comment|/* EINTR */
 if|if
 condition|(
-name|cc
+name|n
 operator|==
-literal|0
+literal|1
 condition|)
-continue|continue;
+block|{
 name|m
 operator|.
 name|msg_name
@@ -6115,7 +6227,7 @@ block|{
 name|int
 name|mtu
 decl_stmt|;
-comment|/* 			 * receive control messages only. Process the 			 * exceptions (currently the only possibility is 			 * a path MTU notification.) 			 */
+comment|/* 				 * receive control messages only. Process the 				 * exceptions (currently the only possibility is 				 * a path MTU notification.) 				 */
 if|if
 condition|(
 operator|(
@@ -6156,7 +6268,7 @@ continue|continue;
 block|}
 else|else
 block|{
-comment|/* 			 * an ICMPv6 message (probably an echoreply) arrived. 			 */
+comment|/* 				 * an ICMPv6 message (probably an echoreply) 				 * arrived. 				 */
 name|pr_pack
 argument_list|(
 name|packet
@@ -6195,6 +6307,111 @@ name|npackets
 operator|)
 condition|)
 break|break;
+block|}
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+operator|||
+operator|(
+name|options
+operator|&
+name|F_FLOOD
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|npackets
+operator|==
+literal|0
+operator|||
+name|ntransmitted
+operator|<
+name|npackets
+condition|)
+name|pinger
+argument_list|()
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|almost_done
+condition|)
+break|break;
+name|almost_done
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 			 * If we're not transmitting any more packets, 			 * change the timer to wait two round-trip times 			 * if we've received any packets or (waittime) 			 * milliseconds if we haven't. 			 */
+name|intvl
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|nreceived
+condition|)
+block|{
+name|intvl
+operator|.
+name|tv_sec
+operator|=
+literal|2
+operator|*
+name|tmax
+operator|/
+literal|1000
+expr_stmt|;
+if|if
+condition|(
+name|intvl
+operator|.
+name|tv_sec
+operator|==
+literal|0
+condition|)
+name|intvl
+operator|.
+name|tv_sec
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|intvl
+operator|.
+name|tv_sec
+operator|=
+name|waittime
+operator|/
+literal|1000
+expr_stmt|;
+name|intvl
+operator|.
+name|tv_usec
+operator|=
+name|waittime
+operator|%
+literal|1000
+operator|*
+literal|1000
+expr_stmt|;
+block|}
+block|}
+name|gettimeofday
+argument_list|(
+operator|&
+name|last
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ntransmitted
@@ -6235,6 +6452,47 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+name|sigemptyset
+argument_list|(
+operator|&
+name|si_sa
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|si_sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|si_sa
+operator|.
+name|sa_handler
+operator|=
+name|SIG_IGN
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|si_sa
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGALRM
+argument_list|,
+operator|&
+name|si_sa
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|summary
 argument_list|()
 expr_stmt|;
@@ -6260,22 +6518,6 @@ argument_list|(
 name|packet
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|HAVE_POLL_H
-if|if
-condition|(
-name|fdmaskp
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|fdmaskp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 name|nreceived
@@ -6291,6 +6533,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|onsignal
 parameter_list|(
@@ -6304,14 +6547,10 @@ name|sig
 condition|)
 block|{
 case|case
-name|SIGALRM
-case|:
-name|seenalrm
-operator|++
-expr_stmt|;
-break|break;
-case|case
 name|SIGINT
+case|:
+case|case
+name|SIGALRM
 case|:
 name|seenint
 operator|++
@@ -6334,133 +6573,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * retransmit --  *	This routine transmits another ping6.  */
-end_comment
-
-begin_function
-name|void
-name|retransmit
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|itimerval
-name|itimer
-decl_stmt|;
-if|if
-condition|(
-name|pinger
-argument_list|()
-operator|==
-literal|0
-condition|)
-return|return;
-comment|/* 	 * If we're not transmitting any more packets, change the timer 	 * to wait two round-trip times if we've received any packets or 	 * ten seconds if we haven't. 	 */
-define|#
-directive|define
-name|MAXWAIT
-value|10
-if|if
-condition|(
-name|nreceived
-condition|)
-block|{
-name|itimer
-operator|.
-name|it_value
-operator|.
-name|tv_sec
-operator|=
-literal|2
-operator|*
-name|tmax
-operator|/
-literal|1000
-expr_stmt|;
-if|if
-condition|(
-name|itimer
-operator|.
-name|it_value
-operator|.
-name|tv_sec
-operator|==
-literal|0
-condition|)
-name|itimer
-operator|.
-name|it_value
-operator|.
-name|tv_sec
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|itimer
-operator|.
-name|it_value
-operator|.
-name|tv_sec
-operator|=
-name|MAXWAIT
-expr_stmt|;
-name|itimer
-operator|.
-name|it_interval
-operator|.
-name|tv_sec
-operator|=
-literal|0
-expr_stmt|;
-name|itimer
-operator|.
-name|it_interval
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
-name|itimer
-operator|.
-name|it_value
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|onsignal
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setitimer
-argument_list|(
-name|ITIMER_REAL
-argument_list|,
-operator|&
-name|itimer
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * pinger --  *	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in VAX  * byte-order, to compute the round-trip time.  */
 end_comment
 
 begin_function
+specifier|static
 name|size_t
 name|pingerlen
 parameter_list|(
@@ -6541,6 +6658,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pinger
 parameter_list|(
@@ -7265,6 +7383,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|myechoreply
 parameter_list|(
@@ -7297,6 +7416,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mynireply
 parameter_list|(
@@ -7351,6 +7471,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|dnsdecode
@@ -7627,6 +7748,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|l
 operator|>=
 sizeof|sizeof
@@ -7698,6 +7822,7 @@ comment|/*  * pr_pack --  *	Print out the packet, if it came from us.  This logi
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_pack
 parameter_list|(
@@ -7885,6 +8010,9 @@ if|if
 condition|(
 name|cc
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8178,6 +8306,22 @@ operator|&
 name|F_QUIET
 condition|)
 return|return;
+if|if
+condition|(
+name|options
+operator|&
+name|F_WAITTIME
+operator|&&
+name|triptime
+operator|>
+name|waittime
+condition|)
+block|{
+operator|++
+name|nrcvtimeout
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|options
@@ -9221,6 +9365,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pr_exthdrs
 parameter_list|(
@@ -9411,6 +9556,7 @@ name|USE_RFC2292BIS
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|pr_ip6opt
 parameter_list|(
@@ -9698,6 +9844,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_ip6opt
 parameter_list|(
@@ -9735,6 +9882,7 @@ name|USE_RFC2292BIS
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|pr_rthdr
 parameter_list|(
@@ -10037,6 +10185,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_rthdr
 parameter_list|(
@@ -10068,6 +10217,7 @@ comment|/* USE_RFC2292BIS */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pr_bitrange
 parameter_list|(
@@ -10256,6 +10406,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pr_suptypes
 parameter_list|(
@@ -10654,6 +10805,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pr_nodeaddr
 parameter_list|(
@@ -10933,6 +11085,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_hoplim
 parameter_list|(
@@ -11042,6 +11195,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|in6_pktinfo
 modifier|*
@@ -11152,6 +11306,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_pathmtu
 parameter_list|(
@@ -11388,6 +11543,7 @@ comment|/*  * tvsub --  *	Subtract 2 timeval structs:  out = out - in.  Out is a
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|tvsub
 parameter_list|(
@@ -11449,6 +11605,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|onint
 parameter_list|(
@@ -11457,72 +11614,26 @@ name|notused
 name|__unused
 parameter_list|)
 block|{
-name|summary
-argument_list|()
-expr_stmt|;
+comment|/* 	 * When doing reverse DNS lookups, the seenint flag might not 	 * be noticed for a while.  Just exit if we get a second SIGINT. 	 */
 if|if
 condition|(
-name|res
-operator|!=
-name|NULL
-condition|)
-name|freeaddrinfo
-argument_list|(
-name|res
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|packet
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|packet
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|HAVE_POLL_H
-if|if
-condition|(
-name|fdmaskp
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|fdmaskp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|(
-name|void
+name|options
+operator|&
+name|F_HOSTNAME
 operator|)
-name|signal
+operator|&&
+name|seenint
+operator|!=
+literal|0
+condition|)
+name|_exit
 argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|kill
-argument_list|(
-name|getpid
-argument_list|()
-argument_list|,
-name|SIGINT
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-name|exit
-argument_list|(
-literal|1
+name|nreceived
+condition|?
+literal|0
+else|:
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -11533,6 +11644,7 @@ comment|/*  * summary --  *	Print out statistics.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|summary
 parameter_list|(
@@ -11629,6 +11741,17 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|nrcvtimeout
+condition|)
+name|printf
+argument_list|(
+literal|", %ld packets out of wait time"
+argument_list|,
+name|nrcvtimeout
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -11759,6 +11882,7 @@ comment|/*  * pr_icmph --  *	Print a descriptive string about an ICMP header.  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_icmph
 parameter_list|(
@@ -12887,6 +13011,7 @@ comment|/*  * pr_iph --  *	Print an IP6 header.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_iph
 parameter_list|(
@@ -13078,6 +13203,7 @@ comment|/*  * pr_addr --  *	Return an ascii host address as a dotted quad and op
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -13159,6 +13285,7 @@ comment|/*  * pr_retip --  *	Dump some info on a returned (via ICMPv6) IPv6 pack
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pr_retip
 parameter_list|(
@@ -13189,6 +13316,10 @@ name|hlen
 decl_stmt|;
 if|if
 condition|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|end
 operator|-
 operator|(
@@ -13196,6 +13327,7 @@ name|u_char
 operator|*
 operator|)
 name|ip6
+argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -13612,6 +13744,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fill
 parameter_list|(
@@ -13787,11 +13920,13 @@ name|kk
 operator|=
 literal|0
 init|;
+operator|(
+name|size_t
+operator|)
 name|kk
 operator|<=
 name|MAXDATALEN
 operator|-
-operator|(
 literal|8
 operator|+
 sizeof|sizeof
@@ -13801,7 +13936,6 @@ name|tv32
 argument_list|)
 operator|+
 name|ii
-operator|)
 condition|;
 name|kk
 operator|+=
@@ -13903,6 +14037,7 @@ name|IPSEC_POLICY_IPSEC
 end_ifdef
 
 begin_function
+specifier|static
 name|int
 name|setpolicy
 parameter_list|(
@@ -14004,6 +14139,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|nigroup
@@ -14341,6 +14477,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -14412,7 +14549,8 @@ endif|#
 directive|endif
 literal|"\n"
 literal|"             [-p pattern] [-S sourceaddr] [-s packetsize] "
-literal|"[hops ...] host\n"
+literal|"[-x waittime]\n"
+literal|"             [-X timeout] [hops ...] host\n"
 argument_list|)
 expr_stmt|;
 name|exit

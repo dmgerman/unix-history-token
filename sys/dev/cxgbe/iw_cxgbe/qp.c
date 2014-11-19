@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/neighbour.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -8823,14 +8817,6 @@ name|free
 operator|=
 literal|1
 expr_stmt|;
-name|wake_up
-argument_list|(
-operator|&
-name|qhp
-operator|->
-name|wait
-argument_list|)
-expr_stmt|;
 name|BUG_ON
 argument_list|(
 operator|!
@@ -8840,6 +8826,14 @@ expr_stmt|;
 name|flush_qp
 argument_list|(
 name|qhp
+argument_list|)
+expr_stmt|;
+name|wake_up
+argument_list|(
+operator|&
+name|qhp
+operator|->
+name|wait
 argument_list|)
 expr_stmt|;
 name|out

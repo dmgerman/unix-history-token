@@ -100,7 +100,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|ipf_p_dns_del
 name|__P
 argument_list|(
@@ -1059,7 +1059,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ipf_p_dns_del
 parameter_list|(
 name|softc
@@ -1119,9 +1119,6 @@ name|aps_psiz
 operator|=
 literal|0
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

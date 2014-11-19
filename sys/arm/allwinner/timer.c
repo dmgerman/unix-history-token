@@ -243,11 +243,11 @@ begin_define
 define|#
 directive|define
 name|TIMER_PRESCALAR
-value|(4<<4)
+value|(0<<4)
 end_define
 
 begin_comment
-comment|/* prescalar = 16 */
+comment|/* prescalar = 1 */
 end_comment
 
 begin_define

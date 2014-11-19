@@ -1564,10 +1564,10 @@ name|ccb_ptr
 decl_stmt|;
 comment|/* pointer to ccb */
 name|struct
-name|callout_handle
-name|thandle
+name|callout
+name|timeout
 decl_stmt|;
-comment|/* handle to req timeout */
+comment|/* request timeout timer */
 name|struct
 name|tws_softc
 modifier|*

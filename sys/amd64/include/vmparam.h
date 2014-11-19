@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|VM_PHYSSEG_MAX
-value|31
+value|63
 end_define
 
 begin_comment
@@ -394,6 +394,10 @@ name|VM_MIN_ADDRESS
 value|(0)
 end_define
 
+begin_comment
+comment|/*  * XXX Allowing dmaplimit == 0 is a temporary workaround for vt(4) efifb's  * early use of PHYS_TO_DMAP before the mapping is actually setup. This works  * because the result is not actually accessed until later, but the early  * vt fb startup needs to be reworked.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -401,7 +405,7 @@ name|PHYS_TO_DMAP
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) | DMAP_MIN_ADDRESS)
+value|({						\ 	KASSERT(dmaplimit == 0 || (x)< dmaplimit,			\ 	    ("physical address %#jx not covered by the DMAP",		\ 	    (uintmax_t)x));						\ 	(x) | DMAP_MIN_ADDRESS; })
 end_define
 
 begin_define
@@ -411,7 +415,7 @@ name|DMAP_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& ~DMAP_MIN_ADDRESS)
+value|({						\ 	KASSERT((x)< (DMAP_MIN_ADDRESS + dmaplimit)&&			\ 	    (x)>= DMAP_MIN_ADDRESS,					\ 	    ("virtual address %#jx not covered by the DMAP",		\ 	    (uintmax_t)x));						\ 	(x)& ~DMAP_MIN_ADDRESS; })
 end_define
 
 begin_comment

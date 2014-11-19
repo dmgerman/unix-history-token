@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -824,6 +824,9 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|BufferDataOp
 decl_stmt|;
+name|ASL_RESOURCE_INFO
+name|Info
+decl_stmt|;
 name|UINT8
 name|State
 decl_stmt|;
@@ -876,6 +879,22 @@ name|Asl
 operator|.
 name|Next
 expr_stmt|;
+name|Info
+operator|.
+name|DescriptorTypeOp
+operator|=
+name|BufferDataOp
+operator|->
+name|Asl
+operator|.
+name|Next
+expr_stmt|;
+name|Info
+operator|.
+name|CurrentByteOffset
+operator|=
+literal|0
+expr_stmt|;
 name|State
 operator|=
 name|ACPI_RSTATE_NORMAL
@@ -884,13 +903,8 @@ name|Rnode
 operator|=
 name|RsDoOneResourceDescriptor
 argument_list|(
-name|BufferDataOp
-operator|->
-name|Asl
-operator|.
-name|Next
-argument_list|,
-literal|0
+operator|&
+name|Info
 argument_list|,
 operator|&
 name|State
@@ -1498,7 +1512,7 @@ operator|<<
 literal|16
 operator||
 operator|(
-name|UtHexCharToValue
+name|AcpiUtAsciiCharToHex
 argument_list|(
 name|InString
 index|[
@@ -1510,7 +1524,7 @@ operator|<<
 literal|12
 operator||
 operator|(
-name|UtHexCharToValue
+name|AcpiUtAsciiCharToHex
 argument_list|(
 name|InString
 index|[
@@ -1522,7 +1536,7 @@ operator|<<
 literal|8
 operator||
 operator|(
-name|UtHexCharToValue
+name|AcpiUtAsciiCharToHex
 argument_list|(
 name|InString
 index|[
@@ -1533,7 +1547,7 @@ operator|)
 operator|<<
 literal|4
 operator||
-name|UtHexCharToValue
+name|AcpiUtAsciiCharToHex
 argument_list|(
 name|InString
 index|[
@@ -1613,7 +1627,7 @@ name|char
 modifier|*
 name|InString
 decl_stmt|;
-name|char
+name|UINT8
 modifier|*
 name|Buffer
 decl_stmt|;
@@ -1682,10 +1696,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|AuConvertStringToUuid
+name|AcpiUtConvertStringToUuid
 argument_list|(
 name|InString
 argument_list|,

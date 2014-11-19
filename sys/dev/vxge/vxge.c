@@ -2900,15 +2900,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_obytes
-operator|+=
+argument_list|,
+name|IFCOUNTER_OBYTES
+argument_list|,
 name|next
 operator|->
 name|m_pkthdr
 operator|.
 name|len
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2918,10 +2921,14 @@ name|m_flags
 operator|&
 name|M_MCAST
 condition|)
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_omcasts
-operator|++
+argument_list|,
+name|IFCOUNTER_OMCASTS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* Send a copy of the frame to the BPF listener */
 name|ETHER_BPF_MTAP
@@ -3744,10 +3751,14 @@ argument_list|,
 name|t_code
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|VXGE_DRV_STATS
 argument_list|(
@@ -3766,10 +3777,14 @@ name|t_code
 argument_list|)
 expr_stmt|;
 block|}
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|txdl_priv
 operator|=
@@ -4240,10 +4255,14 @@ operator|!=
 name|VXGE_HAL_RING_RXD_T_CODE_OK
 condition|)
 block|{
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|VXGE_DRV_STATS
 argument_list|(
@@ -5888,9 +5907,7 @@ expr_stmt|;
 comment|/* IFQ_SET_READY(&ifp->if_snd); */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -14993,7 +15010,6 @@ literal|"Driver version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15020,7 +15036,6 @@ literal|"Serial number"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15047,7 +15062,6 @@ literal|"Part number"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15074,7 +15088,6 @@ literal|"Firmware version"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15101,7 +15114,6 @@ literal|"Firmware date"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15128,7 +15140,6 @@ literal|"Link width"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15162,7 +15173,6 @@ literal|"Function mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15190,7 +15200,6 @@ literal|"Interrupt type"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15217,7 +15226,6 @@ literal|"VPath(s) opened"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15244,7 +15252,6 @@ literal|"Adapter Type"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15271,7 +15278,6 @@ literal|"pmd port 0"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15307,7 +15313,6 @@ literal|"pmd port 1"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15341,7 +15346,6 @@ literal|"Port Mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15376,7 +15380,6 @@ literal|"Port Failure"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15403,7 +15406,6 @@ literal|"L2 Switch"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15432,7 +15434,6 @@ literal|"LRO mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15459,7 +15460,6 @@ literal|"RTH mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config
@@ -15486,7 +15486,6 @@ literal|"TSO mode"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
 name|vdev
 operator|->
 name|config

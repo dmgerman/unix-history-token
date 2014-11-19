@@ -347,6 +347,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GRDOM_RESET_ENABLE
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GEN6_MBCUNIT_SNPCR
 value|0x900c
 end_define
@@ -1074,6 +1081,27 @@ parameter_list|(
 name|n
 parameter_list|)
 value|((n)<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_ARB_ON_OFF
+value|MI_INSTR(0x08, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_ARB_ENABLE
+value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_ARB_DISABLE
+value|(0<<0)
 end_define
 
 begin_define
@@ -8561,6 +8589,150 @@ define|#
 directive|define
 name|CCID_EN
 value|(1<<0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CXT_SIZE
+value|0x21a0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_CXT_POWER_SIZE
+parameter_list|(
+name|cxt_reg
+parameter_list|)
+value|((cxt_reg>> 24)& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_CXT_RING_SIZE
+parameter_list|(
+name|cxt_reg
+parameter_list|)
+value|((cxt_reg>> 18)& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_CXT_RENDER_SIZE
+parameter_list|(
+name|cxt_reg
+parameter_list|)
+value|((cxt_reg>> 12)& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_CXT_EXTENDED_SIZE
+parameter_list|(
+name|cxt_reg
+parameter_list|)
+value|((cxt_reg>> 6)& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_CXT_PIPELINE_SIZE
+parameter_list|(
+name|cxt_reg
+parameter_list|)
+value|((cxt_reg>> 0)& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN6_CXT_TOTAL_SIZE
+parameter_list|(
+name|cxt_reg
+parameter_list|)
+value|(GEN6_CXT_POWER_SIZE(cxt_reg) + \ 					GEN6_CXT_RING_SIZE(cxt_reg) + \ 					GEN6_CXT_RENDER_SIZE(cxt_reg) + \ 					GEN6_CXT_EXTENDED_SIZE(cxt_reg) + \ 					GEN6_CXT_PIPELINE_SIZE(cxt_reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_CXT_SIZE
+value|0x21a8
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_CXT_POWER_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|((ctx_reg>> 25)& 0x7f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_CXT_RING_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|((ctx_reg>> 22)& 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_CXT_RENDER_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|((ctx_reg>> 16)& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_CXT_EXTENDED_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|((ctx_reg>> 9)& 0x7f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_CXT_GT1_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|((ctx_reg>> 6)& 0x7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_CXT_VFSTATE_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|((ctx_reg>> 0)& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GEN7_CXT_TOTAL_SIZE
+parameter_list|(
+name|ctx_reg
+parameter_list|)
+value|(GEN7_CXT_POWER_SIZE(ctx_reg) + \ 					 GEN7_CXT_RING_SIZE(ctx_reg) + \ 					 GEN7_CXT_RENDER_SIZE(ctx_reg) + \ 					 GEN7_CXT_EXTENDED_SIZE(ctx_reg) + \ 					 GEN7_CXT_GT1_SIZE(ctx_reg) + \ 					 GEN7_CXT_VFSTATE_SIZE(ctx_reg))
 end_define
 
 begin_comment

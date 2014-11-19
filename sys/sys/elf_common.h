@@ -1691,6 +1691,17 @@ begin_comment
 comment|/* Microprocessor series from PKU-Unity Ltd. 				   and MPRC of Peking University */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EM_AARCH64
+value|183
+end_define
+
+begin_comment
+comment|/* AArch64 (64-bit ARM) */
+end_comment
+
 begin_comment
 comment|/* Non-standard or deprecated. */
 end_comment
@@ -2620,6 +2631,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PT_DUMP_DELTA
+value|0x6fb5d000
+end_define
+
+begin_comment
+comment|/* va->pa map for kernel dumps 					   (currently arm). */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_LOSUNW
 value|0x6ffffffa
 end_define
@@ -3291,7 +3313,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DT_FEATURE_1
+name|DT_FEATURE
 value|0x6ffffdfc
 end_define
 

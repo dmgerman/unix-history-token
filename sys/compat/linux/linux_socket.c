@@ -2879,9 +2879,11 @@ operator|)
 return|;
 name|error
 operator|=
-name|kern_bind
+name|kern_bindat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|args
 operator|->
@@ -3027,9 +3029,11 @@ operator|)
 return|;
 name|error
 operator|=
-name|kern_connect
+name|kern_connectat
 argument_list|(
 name|td
+argument_list|,
+name|AT_FDCWD
 argument_list|,
 name|args
 operator|->

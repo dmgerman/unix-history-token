@@ -36377,6 +36377,9 @@ decl_stmt|;
 name|u32
 name|dma_map_addr_rx_failed_count
 decl_stmt|;
+name|u32
+name|watchdog_timeouts
+decl_stmt|;
 comment|/* Host coalescing block command register */
 name|u32
 name|hc_command

@@ -1760,6 +1760,24 @@ name|USS820_UNK1_UNKNOWN
 value|0xFF
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USS820_REG_STRIDE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|USS820_REG_STRIDE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1770,7 +1788,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1((sc)->sc_io_tag, (sc)->sc_io_hdl, reg)
+value|bus_space_read_1((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg) * USS820_REG_STRIDE)
 end_define
 
 begin_define
@@ -1785,12 +1803,18 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|bus_space_write_1((sc)->sc_io_tag, (sc)->sc_io_hdl, reg, data)
+value|bus_space_write_1((sc)->sc_io_tag, (sc)->sc_io_hdl, (reg) * USS820_REG_STRIDE, (data))
 end_define
 
 begin_struct_decl
 struct_decl|struct
 name|uss820dci_td
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|uss820dci_softc
 struct_decl|;
 end_struct_decl
 
@@ -1801,6 +1825,10 @@ function_decl|(
 name|uss820dci_cmd_t
 function_decl|)
 parameter_list|(
+name|struct
+name|uss820dci_softc
+modifier|*
+parameter_list|,
 name|struct
 name|uss820dci_td
 modifier|*
@@ -1813,12 +1841,6 @@ begin_struct
 struct|struct
 name|uss820dci_td
 block|{
-name|bus_space_tag_t
-name|io_tag
-decl_stmt|;
-name|bus_space_handle_t
-name|io_hdl
-decl_stmt|;
 name|struct
 name|uss820dci_td
 modifier|*
@@ -2065,6 +2087,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_io_hdl
 decl_stmt|;
+name|uint32_t
+name|sc_xfer_complete
+decl_stmt|;
 name|uint8_t
 name|sc_rt_addr
 decl_stmt|;
@@ -2119,17 +2144,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
+begin_decl_stmt
+name|driver_filter_t
+name|uss820dci_filter_interrupt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|driver_intr_t
 name|uss820dci_interrupt
-parameter_list|(
-name|struct
-name|uss820dci_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

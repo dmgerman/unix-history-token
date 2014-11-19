@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -70,6 +70,9 @@ parameter_list|,
 name|char
 modifier|*
 name|RegisterName
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -87,7 +90,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|AcpiTbValidateFadt
+name|AcpiTbSetupFadtRegisters
 parameter_list|(
 name|void
 parameter_list|)
@@ -96,10 +99,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|AcpiTbSetupFadtRegisters
+name|UINT64
+name|AcpiTbSelectAddress
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|RegisterName
+parameter_list|,
+name|UINT32
+name|Address32
+parameter_list|,
+name|UINT64
+name|Address64
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -130,7 +141,7 @@ name|UINT8
 name|DefaultLength
 decl_stmt|;
 name|UINT8
-name|Type
+name|Flags
 decl_stmt|;
 block|}
 name|ACPI_FADT_INFO
@@ -156,6 +167,13 @@ define|#
 directive|define
 name|ACPI_FADT_SEPARATE_LENGTH
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_GPE_REGISTER
+value|4
 end_define
 
 begin_decl_stmt
@@ -331,6 +349,8 @@ block|,
 literal|0
 block|,
 name|ACPI_FADT_SEPARATE_LENGTH
+operator||
+name|ACPI_FADT_GPE_REGISTER
 block|}
 block|,
 block|{
@@ -354,6 +374,8 @@ block|,
 literal|0
 block|,
 name|ACPI_FADT_SEPARATE_LENGTH
+operator||
+name|ACPI_FADT_GPE_REGISTER
 block|}
 block|}
 decl_stmt|;
@@ -458,7 +480,7 @@ value|(sizeof (FadtPmInfoTable) / sizeof (ACPI_FADT_PM_INFO))
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInitGenericAddress  *  * PARAMETERS:  GenericAddress      - GAS struct to be initialized  *              SpaceId             - ACPI Space ID for this register  *              ByteWidth           - Width of this register  *              Address             - Address of the register  *  * RETURN:      None  *  * DESCRIPTION: Initialize a Generic Address Structure (GAS)  *              See the ACPI specification for a full description and  *              definition of this structure.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInitGenericAddress  *  * PARAMETERS:  GenericAddress      - GAS struct to be initialized  *              SpaceId             - ACPI Space ID for this register  *              ByteWidth           - Width of this register  *              Address             - Address of the register  *              RegisterName        - ASCII name of the ACPI register  *  * RETURN:      None  *  * DESCRIPTION: Initialize a Generic Address Structure (GAS)  *              See the ACPI specification for a full description and  *              definition of this structure.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -482,12 +504,15 @@ parameter_list|,
 name|char
 modifier|*
 name|RegisterName
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|UINT8
 name|BitWidth
 decl_stmt|;
-comment|/* Bit width field in the GAS is only one byte long, 255 max */
+comment|/*      * Bit width field in the GAS is only one byte long, 255 max.      * Check for BitWidth overflow in GAS.      */
 name|BitWidth
 operator|=
 call|(
@@ -505,7 +530,18 @@ name|ByteWidth
 operator|>
 literal|31
 condition|)
-comment|/* (31*8)=248 */
+comment|/* (31*8)=248, (32*8)=256 */
+block|{
+comment|/*          * No error for GPE blocks, because we do not use the BitWidth          * for GPEs, the legacy length (ByteWidth) is used instead to          * allow for a large number of GPEs.          */
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|ACPI_FADT_GPE_REGISTER
+operator|)
+condition|)
 block|{
 name|ACPI_ERROR
 argument_list|(
@@ -527,6 +563,7 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|BitWidth
 operator|=
 literal|255
@@ -570,6 +607,107 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Access width ANY */
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbSelectAddress  *  * PARAMETERS:  RegisterName        - ASCII name of the ACPI register  *              Address32           - 32-bit address of the register  *              Address64           - 64-bit address of the register  *  * RETURN:      The resolved 64-bit address  *  * DESCRIPTION: Select between 32-bit and 64-bit versions of addresses within  *              the FADT. Used for the FACS and DSDT addresses.  *  * NOTES:  *  * Check for FACS and DSDT address mismatches. An address mismatch between  * the 32-bit and 64-bit address fields (FIRMWARE_CTRL/X_FIRMWARE_CTRL and  * DSDT/X_DSDT) could be a corrupted address field or it might indicate  * the presence of two FACS or two DSDT tables.  *  * November 2013:  * By default, as per the ACPICA specification, a valid 64-bit address is  * used regardless of the value of the 32-bit address. However, this  * behavior can be overridden via the AcpiGbl_Use32BitFadtAddresses flag.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|UINT64
+name|AcpiTbSelectAddress
+parameter_list|(
+name|char
+modifier|*
+name|RegisterName
+parameter_list|,
+name|UINT32
+name|Address32
+parameter_list|,
+name|UINT64
+name|Address64
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Address64
+condition|)
+block|{
+comment|/* 64-bit address is zero, use 32-bit address */
+return|return
+operator|(
+operator|(
+name|UINT64
+operator|)
+name|Address32
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|Address32
+operator|&&
+operator|(
+name|Address64
+operator|!=
+operator|(
+name|UINT64
+operator|)
+name|Address32
+operator|)
+condition|)
+block|{
+comment|/* Address mismatch between 32-bit and 64-bit versions */
+name|ACPI_BIOS_WARNING
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"32/64X %s address mismatch in FADT: "
+literal|"0x%8.8X/0x%8.8X%8.8X, using %u-bit address"
+operator|,
+name|RegisterName
+operator|,
+name|Address32
+operator|,
+name|ACPI_FORMAT_UINT64
+argument_list|(
+name|Address64
+argument_list|)
+operator|,
+name|AcpiGbl_Use32BitFadtAddresses
+condition|?
+literal|32
+else|:
+literal|64
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 32-bit address override */
+if|if
+condition|(
+name|AcpiGbl_Use32BitFadtAddresses
+condition|)
+block|{
+return|return
+operator|(
+operator|(
+name|UINT64
+operator|)
+name|Address32
+operator|)
+return|;
+block|}
+block|}
+comment|/* Default is to use the 64-bit address */
+return|return
+operator|(
+name|Address64
+operator|)
+return|;
 block|}
 end_function
 
@@ -656,7 +794,7 @@ name|Length
 argument_list|)
 expr_stmt|;
 comment|/* Obtain the DSDT and FACS tables via their addresses within the FADT */
-name|AcpiTbInstallTable
+name|AcpiTbInstallFixedTable
 argument_list|(
 operator|(
 name|ACPI_PHYSICAL_ADDRESS
@@ -677,7 +815,7 @@ operator|!
 name|AcpiGbl_ReducedHardware
 condition|)
 block|{
-name|AcpiTbInstallTable
+name|AcpiTbInstallFixedTable
 argument_list|(
 operator|(
 name|ACPI_PHYSICAL_ADDRESS
@@ -803,10 +941,6 @@ comment|/* Convert the local copy of the FADT to the common internal format */
 name|AcpiTbConvertFadt
 argument_list|()
 expr_stmt|;
-comment|/* Validate FADT values now, before we make any changes */
-name|AcpiTbValidateFadt
-argument_list|()
-expr_stmt|;
 comment|/* Initialize the global ACPI register structures */
 name|AcpiTbSetupFadtRegisters
 argument_list|()
@@ -815,7 +949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertFadt  *  * PARAMETERS:  None, uses AcpiGbl_FADT  *  * RETURN:      None  *  * DESCRIPTION: Converts all versions of the FADT to a common internal format.  *              Expand 32-bit addresses to 64-bit as necessary.  *  * NOTE:        AcpiGbl_FADT must be of size (ACPI_TABLE_FADT),  *              and must contain a copy of the actual FADT.  *  * Notes on 64-bit register addresses:  *  * After this FADT conversion, later ACPICA code will only use the 64-bit "X"  * fields of the FADT for all ACPI register addresses.  *  * The 64-bit "X" fields are optional extensions to the original 32-bit FADT  * V1.0 fields. Even if they are present in the FADT, they are optional and  * are unused if the BIOS sets them to zero. Therefore, we must copy/expand  * 32-bit V1.0 fields if the corresponding X field is zero.  *  * For ACPI 1.0 FADTs, all 32-bit address fields are expanded to the  * corresponding "X" fields in the internal FADT.  *  * For ACPI 2.0+ FADTs, all valid (non-zero) 32-bit address fields are expanded  * to the corresponding 64-bit X fields. For compatibility with other ACPI  * implementations, we ignore the 64-bit field if the 32-bit field is valid,  * regardless of whether the host OS is 32-bit or 64-bit.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertFadt  *  * PARAMETERS:  None - AcpiGbl_FADT is used.  *  * RETURN:      None  *  * DESCRIPTION: Converts all versions of the FADT to a common internal format.  *              Expand 32-bit addresses to 64-bit as necessary. Also validate  *              important fields within the FADT.  *  * NOTE:        AcpiGbl_FADT must be of size (ACPI_TABLE_FADT), and must  *              contain a copy of the actual BIOS-provided FADT.  *  * Notes on 64-bit register addresses:  *  * After this FADT conversion, later ACPICA code will only use the 64-bit "X"  * fields of the FADT for all ACPI register addresses.  *  * The 64-bit X fields are optional extensions to the original 32-bit FADT  * V1.0 fields. Even if they are present in the FADT, they are optional and  * are unused if the BIOS sets them to zero. Therefore, we must copy/expand  * 32-bit V1.0 fields to the 64-bit X fields if the the 64-bit X field is  * originally zero.  *  * For ACPI 1.0 FADTs (that contain no 64-bit addresses), all 32-bit address  * fields are expanded to the corresponding 64-bit X fields in the internal  * common FADT.  *  * For ACPI 2.0+ FADTs, all valid (non-zero) 32-bit address fields are expanded  * to the corresponding 64-bit X fields, if the 64-bit field is originally  * zero. Adhering to the ACPI specification, we completely ignore the 32-bit  * field if the 64-bit field is valid, regardless of whether the host OS is  * 32-bit or 64-bit.  *  * Possible additional checks:  *  (AcpiGbl_FADT.Pm1EventLength>= 4)  *  (AcpiGbl_FADT.Pm1ControlLength>= 2)  *  (AcpiGbl_FADT.PmTimerLength>= 4)  *  Gpe block lengths must be multiple of 2  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -826,6 +960,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|Name
+decl_stmt|;
 name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|Address64
@@ -833,50 +971,15 @@ decl_stmt|;
 name|UINT32
 name|Address32
 decl_stmt|;
+name|UINT8
+name|Length
+decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-comment|/*      * Expand the 32-bit FACS and DSDT addresses to 64-bit as necessary.      * Later code will always use the X 64-bit field.      */
-if|if
-condition|(
-operator|!
-name|AcpiGbl_FADT
-operator|.
-name|XFacs
-condition|)
-block|{
-name|AcpiGbl_FADT
-operator|.
-name|XFacs
-operator|=
-operator|(
-name|UINT64
-operator|)
-name|AcpiGbl_FADT
-operator|.
-name|Facs
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|AcpiGbl_FADT
-operator|.
-name|XDsdt
-condition|)
-block|{
-name|AcpiGbl_FADT
-operator|.
-name|XDsdt
-operator|=
-operator|(
-name|UINT64
-operator|)
-name|AcpiGbl_FADT
-operator|.
-name|Dsdt
-expr_stmt|;
-block|}
 comment|/*      * For ACPI 1.0 FADTs (revision 1 or 2), ensure that reserved fields which      * should be zero are indeed zero. This will workaround BIOSs that      * inadvertently place values in these fields.      *      * The ACPI 1.0 reserved fields that will be zeroed are the bytes located      * at offset 45, 55, 95, and the word located at offset 109, 110.      *      * Note: The FADT revision value is unreliable. Only the length can be      * trusted.      */
 if|if
 condition|(
@@ -926,7 +1029,50 @@ argument_list|(
 name|ACPI_TABLE_FADT
 argument_list|)
 expr_stmt|;
-comment|/*      * Expand the ACPI 1.0 32-bit addresses to the ACPI 2.0 64-bit "X"      * generic address structures as necessary. Later code will always use      * the 64-bit address structures.      *      * March 2009:      * We now always use the 32-bit address if it is valid (non-null). This      * is not in accordance with the ACPI specification which states that      * the 64-bit address supersedes the 32-bit version, but we do this for      * compatibility with other ACPI implementations. Most notably, in the      * case where both the 32 and 64 versions are non-null, we use the 32-bit      * version. This is the only address that is guaranteed to have been      * tested by the BIOS manufacturer.      */
+comment|/*      * Expand the 32-bit FACS and DSDT addresses to 64-bit as necessary.      * Later ACPICA code will always use the X 64-bit field.      */
+name|AcpiGbl_FADT
+operator|.
+name|XFacs
+operator|=
+name|AcpiTbSelectAddress
+argument_list|(
+literal|"FACS"
+argument_list|,
+name|AcpiGbl_FADT
+operator|.
+name|Facs
+argument_list|,
+name|AcpiGbl_FADT
+operator|.
+name|XFacs
+argument_list|)
+expr_stmt|;
+name|AcpiGbl_FADT
+operator|.
+name|XDsdt
+operator|=
+name|AcpiTbSelectAddress
+argument_list|(
+literal|"DSDT"
+argument_list|,
+name|AcpiGbl_FADT
+operator|.
+name|Dsdt
+argument_list|,
+name|AcpiGbl_FADT
+operator|.
+name|XDsdt
+argument_list|)
+expr_stmt|;
+comment|/* If Hardware Reduced flag is set, we are all done */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Examine all of the 64-bit extended address fields (X fields) */
 for|for
 control|(
 name|i
@@ -941,6 +1087,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/*          * Get the 32-bit and 64-bit addresses, as well as the register          * length and register name.          */
 name|Address32
 operator|=
 operator|*
@@ -976,61 +1123,57 @@ operator|.
 name|Address64
 argument_list|)
 expr_stmt|;
-comment|/*          * If both 32- and 64-bit addresses are valid (non-zero),          * they must match.          */
-if|if
-condition|(
-name|Address64
-operator|->
-name|Address
-operator|&&
-name|Address32
-operator|&&
-operator|(
-name|Address64
-operator|->
-name|Address
-operator|!=
-operator|(
-name|UINT64
-operator|)
-name|Address32
-operator|)
-condition|)
-block|{
-name|ACPI_BIOS_ERROR
+name|Length
+operator|=
+operator|*
+name|ACPI_ADD_PTR
 argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"32/64X address mismatch in FADT/%s: "
-literal|"0x%8.8X/0x%8.8X%8.8X, using 32"
-operator|,
+name|UINT8
+argument_list|,
+operator|&
+name|AcpiGbl_FADT
+argument_list|,
+name|FadtInfoTable
+index|[
+name|i
+index|]
+operator|.
+name|Length
+argument_list|)
+expr_stmt|;
+name|Name
+operator|=
 name|FadtInfoTable
 index|[
 name|i
 index|]
 operator|.
 name|Name
-operator|,
-name|Address32
-operator|,
-name|ACPI_FORMAT_UINT64
-argument_list|(
-name|Address64
-operator|->
-name|Address
-argument_list|)
-operator|)
-argument_list|)
 expr_stmt|;
-block|}
-comment|/* Always use 32-bit address if it is valid (non-null) */
+name|Flags
+operator|=
+name|FadtInfoTable
+index|[
+name|i
+index|]
+operator|.
+name|Flags
+expr_stmt|;
+comment|/*          * Expand the ACPI 1.0 32-bit addresses to the ACPI 2.0 64-bit "X"          * generic address structures as necessary. Later code will always use          * the 64-bit address structures.          *          * November 2013:          * Now always use the 64-bit address if it is valid (non-zero), in          * accordance with the ACPI specification which states that a 64-bit          * address supersedes the 32-bit version. This behavior can be          * overridden by the AcpiGbl_Use32BitFadtAddresses flag.          *          * During 64-bit address construction and verification,          * these cases are handled:          *          * Address32 zero, Address64 [don't care]   - Use Address64          *          * Address32 non-zero, Address64 zero       - Copy/use Address32          * Address32 non-zero == Address64 non-zero - Use Address64          * Address32 non-zero != Address64 non-zero - Warning, use Address64          *          * Override: if AcpiGbl_Use32BitFadtAddresses is TRUE, and:          * Address32 non-zero != Address64 non-zero - Warning, copy/use Address32          *          * Note: SpaceId is always I/O for 32-bit legacy address fields          */
 if|if
 condition|(
 name|Address32
 condition|)
 block|{
-comment|/*              * Copy the 32-bit address to the 64-bit GAS structure. The              * Space ID is always I/O for 32-bit legacy address fields              */
+if|if
+condition|(
+operator|!
+name|Address64
+operator|->
+name|Address
+condition|)
+block|{
+comment|/* 64-bit address is zero, use 32-bit address */
 name|AcpiTbInitGenericAddress
 argument_list|(
 name|Address64
@@ -1058,195 +1201,65 @@ name|UINT64
 operator|)
 name|Address32
 argument_list|,
-name|FadtInfoTable
-index|[
-name|i
-index|]
-operator|.
 name|Name
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbValidateFadt  *  * PARAMETERS:  Table           - Pointer to the FADT to be validated  *  * RETURN:      None  *  * DESCRIPTION: Validate various important fields within the FADT. If a problem  *              is found, issue a message, but no status is returned.  *              Used by both the table manager and the disassembler.  *  * Possible additional checks:  * (AcpiGbl_FADT.Pm1EventLength>= 4)  * (AcpiGbl_FADT.Pm1ControlLength>= 2)  * (AcpiGbl_FADT.PmTimerLength>= 4)  * Gpe block lengths must be multiple of 2  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|AcpiTbValidateFadt
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|Name
-decl_stmt|;
-name|ACPI_GENERIC_ADDRESS
-modifier|*
-name|Address64
-decl_stmt|;
-name|UINT8
-name|Length
-decl_stmt|;
-name|UINT32
-name|i
-decl_stmt|;
-comment|/*      * Check for FACS and DSDT address mismatches. An address mismatch between      * the 32-bit and 64-bit address fields (FIRMWARE_CTRL/X_FIRMWARE_CTRL and      * DSDT/X_DSDT) would indicate the presence of two FACS or two DSDT tables.      */
+elseif|else
 if|if
 condition|(
-name|AcpiGbl_FADT
-operator|.
-name|Facs
-operator|&&
-operator|(
-name|AcpiGbl_FADT
-operator|.
-name|XFacs
+name|Address64
+operator|->
+name|Address
 operator|!=
 operator|(
 name|UINT64
 operator|)
-name|AcpiGbl_FADT
-operator|.
-name|Facs
-operator|)
+name|Address32
 condition|)
 block|{
+comment|/* Address mismatch */
 name|ACPI_BIOS_WARNING
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"32/64X FACS address mismatch in FADT - "
-literal|"0x%8.8X/0x%8.8X%8.8X, using 32"
+literal|"32/64X address mismatch in FADT/%s: "
+literal|"0x%8.8X/0x%8.8X%8.8X, using %u-bit address"
 operator|,
-name|AcpiGbl_FADT
-operator|.
-name|Facs
+name|Name
 operator|,
-name|ACPI_FORMAT_UINT64
-argument_list|(
-name|AcpiGbl_FADT
-operator|.
-name|XFacs
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|AcpiGbl_FADT
-operator|.
-name|XFacs
-operator|=
-operator|(
-name|UINT64
-operator|)
-name|AcpiGbl_FADT
-operator|.
-name|Facs
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|AcpiGbl_FADT
-operator|.
-name|Dsdt
-operator|&&
-operator|(
-name|AcpiGbl_FADT
-operator|.
-name|XDsdt
-operator|!=
-operator|(
-name|UINT64
-operator|)
-name|AcpiGbl_FADT
-operator|.
-name|Dsdt
-operator|)
-condition|)
-block|{
-name|ACPI_BIOS_WARNING
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-literal|"32/64X DSDT address mismatch in FADT - "
-literal|"0x%8.8X/0x%8.8X%8.8X, using 32"
-operator|,
-name|AcpiGbl_FADT
-operator|.
-name|Dsdt
+name|Address32
 operator|,
 name|ACPI_FORMAT_UINT64
 argument_list|(
-name|AcpiGbl_FADT
-operator|.
-name|XDsdt
+name|Address64
+operator|->
+name|Address
 argument_list|)
+operator|,
+name|AcpiGbl_Use32BitFadtAddresses
+condition|?
+literal|32
+else|:
+literal|64
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_FADT
-operator|.
-name|XDsdt
-operator|=
-operator|(
-name|UINT64
-operator|)
-name|AcpiGbl_FADT
-operator|.
-name|Dsdt
-expr_stmt|;
-block|}
-comment|/* If Hardware Reduced flag is set, we are all done */
 if|if
 condition|(
-name|AcpiGbl_ReducedHardware
+name|AcpiGbl_Use32BitFadtAddresses
 condition|)
 block|{
-return|return;
-block|}
-comment|/* Examine all of the 64-bit extended address fields (X fields) */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ACPI_FADT_INFO_ENTRIES
-condition|;
-name|i
-operator|++
-control|)
-block|{
-comment|/*          * Generate pointer to the 64-bit address, get the register          * length (width) and the register name          */
-name|Address64
-operator|=
-name|ACPI_ADD_PTR
+comment|/* 32-bit address override */
+name|AcpiTbInitGenericAddress
 argument_list|(
-name|ACPI_GENERIC_ADDRESS
-argument_list|,
-operator|&
-name|AcpiGbl_FADT
-argument_list|,
-name|FadtInfoTable
-index|[
-name|i
-index|]
-operator|.
 name|Address64
-argument_list|)
-expr_stmt|;
-name|Length
-operator|=
+argument_list|,
+name|ACPI_ADR_SPACE_SYSTEM_IO
+argument_list|,
 operator|*
 name|ACPI_ADD_PTR
 argument_list|(
@@ -1262,16 +1275,20 @@ index|]
 operator|.
 name|Length
 argument_list|)
-expr_stmt|;
+argument_list|,
+operator|(
+name|UINT64
+operator|)
+name|Address32
+argument_list|,
 name|Name
-operator|=
-name|FadtInfoTable
-index|[
-name|i
-index|]
-operator|.
-name|Name
+argument_list|,
+name|Flags
+argument_list|)
 expr_stmt|;
+block|}
+block|}
+block|}
 comment|/*          * For each extended field, check for length mismatch between the          * legacy length field and the corresponding 64-bit X length field.          * Note: If the legacy length field is> 0xFF bits, ignore this          * check. (GPE registers can be larger than the 64-bit GAS structure          * can accomodate, 0xFF bits).          */
 if|if
 condition|(
@@ -1328,7 +1345,7 @@ index|[
 name|i
 index|]
 operator|.
-name|Type
+name|Flags
 operator|&
 name|ACPI_FADT_REQUIRED
 condition|)
@@ -1376,7 +1393,7 @@ index|[
 name|i
 index|]
 operator|.
-name|Type
+name|Flags
 operator|&
 name|ACPI_FADT_SEPARATE_LENGTH
 condition|)
@@ -1654,6 +1671,8 @@ name|Pm1RegisterByteWidth
 operator|)
 argument_list|,
 literal|"PmRegisters"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

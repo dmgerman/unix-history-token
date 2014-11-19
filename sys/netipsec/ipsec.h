@@ -204,7 +204,7 @@ define|#
 directive|define
 name|IPSEC_SPSTATE_ALIVE
 value|1
-name|u_int16_t
+name|u_int
 name|policy
 decl_stmt|;
 comment|/* policy_type per pfkeyv2.h */
@@ -1686,16 +1686,21 @@ end_struct_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|ah4_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|off
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1721,16 +1726,21 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|esp4_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|off
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1756,16 +1766,21 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|ipcomp4_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+name|mp
 parameter_list|,
 name|int
-name|off
+modifier|*
+name|offp
+parameter_list|,
+name|int
+name|proto
 parameter_list|)
 function_decl|;
 end_function_decl

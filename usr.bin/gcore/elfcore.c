@@ -3477,8 +3477,6 @@ parameter_list|)
 block|{
 name|size_t
 name|len
-decl_stmt|,
-name|oldlen
 decl_stmt|;
 name|pid_t
 name|pid

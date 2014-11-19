@@ -1868,8 +1868,8 @@ name|int
 name|index
 decl_stmt|;
 name|struct
-name|callout_handle
-name|timeout_ch
+name|callout
+name|timeout
 decl_stmt|;
 block|}
 struct|;

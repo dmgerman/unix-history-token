@@ -2804,6 +2804,14 @@ name|be_lun
 operator|->
 name|ctl_be_lun
 operator|.
+name|atomicblock
+operator|=
+name|UINT32_MAX
+expr_stmt|;
+name|be_lun
+operator|->
+name|ctl_be_lun
+operator|.
 name|be_lun
 operator|=
 name|be_lun

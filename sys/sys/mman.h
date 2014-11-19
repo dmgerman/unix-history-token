@@ -183,23 +183,23 @@ end_if
 begin_define
 define|#
 directive|define
-name|MAP_RENAME
+name|MAP_RESERVED0020
 value|0x0020
 end_define
 
 begin_comment
-comment|/* Sun: rename private pages to file */
+comment|/* previously unimplemented MAP_RENAME */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAP_NORESERVE
+name|MAP_RESERVED0040
 value|0x0040
 end_define
 
 begin_comment
-comment|/* Sun: don't reserve needed swap area */
+comment|/* previously unimplemented MAP_NORESERVE */
 end_comment
 
 begin_define
@@ -975,6 +975,9 @@ name|struct
 name|timespec
 name|shm_birthtime
 decl_stmt|;
+name|ino_t
+name|shm_ino
+decl_stmt|;
 name|struct
 name|label
 modifier|*
@@ -1066,25 +1069,6 @@ parameter_list|,
 name|void
 modifier|*
 name|mem
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|shm_path
-parameter_list|(
-name|struct
-name|shmfd
-modifier|*
-name|shmfd
-parameter_list|,
-name|char
-modifier|*
-name|path
 parameter_list|,
 name|size_t
 name|size

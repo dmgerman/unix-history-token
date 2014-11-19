@@ -2082,7 +2082,7 @@ if|if
 condition|(
 name|asoc
 operator|->
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|&&
 name|PR_SCTP_BUF_ENABLED
 argument_list|(
@@ -2746,7 +2746,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|&&
 name|PR_SCTP_TTL_ENABLED
 argument_list|(
@@ -2812,7 +2812,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_prsctp
+name|prsctp_supported
 operator|&&
 name|PR_SCTP_RTX_ENABLED
 argument_list|(
@@ -4468,7 +4468,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|peer_supports_prsctp
+name|prsctp_supported
 condition|)
 block|{
 name|struct

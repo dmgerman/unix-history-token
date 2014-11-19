@@ -88,6 +88,13 @@ name|pthread_mutex_t
 modifier|*
 name|lock
 parameter_list|)
+function|__requires_unlocked
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -109,7 +116,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -121,6 +128,13 @@ name|pthread_mutex_t
 modifier|*
 name|lock
 parameter_list|)
+function|__requires_unlocked
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -140,7 +154,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -152,6 +166,13 @@ name|pthread_mutex_t
 modifier|*
 name|lock
 parameter_list|)
+function|__locks_exclusive
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -171,7 +192,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -183,6 +204,15 @@ name|pthread_mutex_t
 modifier|*
 name|lock
 parameter_list|)
+function|__trylocks_exclusive
+parameter_list|(
+name|true
+parameter_list|,
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -213,7 +243,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -225,6 +255,13 @@ name|pthread_mutex_t
 modifier|*
 name|lock
 parameter_list|)
+function|__unlocks
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -244,7 +281,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -280,6 +317,13 @@ name|pthread_rwlock_t
 modifier|*
 name|lock
 parameter_list|)
+function|__requires_unlocked
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -301,7 +345,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -313,6 +357,13 @@ name|pthread_rwlock_t
 modifier|*
 name|lock
 parameter_list|)
+function|__requires_unlocked
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -332,7 +383,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -344,6 +395,13 @@ name|pthread_rwlock_t
 modifier|*
 name|lock
 parameter_list|)
+function|__locks_shared
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -363,7 +421,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -375,6 +433,13 @@ name|pthread_rwlock_t
 modifier|*
 name|lock
 parameter_list|)
+function|__locks_exclusive
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -394,7 +459,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -406,6 +471,13 @@ name|pthread_rwlock_t
 modifier|*
 name|lock
 parameter_list|)
+function|__unlocks
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -425,7 +497,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -525,6 +597,13 @@ name|pthread_mutex_t
 modifier|*
 name|lock
 parameter_list|)
+function|__requires_exclusive
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|int
 name|error
@@ -546,7 +625,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -565,6 +644,13 @@ parameter_list|,
 name|int
 name|timeout
 parameter_list|)
+function|__requires_exclusive
+parameter_list|(
+function|*lock
+end_function
+
+begin_block
+unit|)
 block|{
 name|struct
 name|timespec
@@ -647,7 +733,7 @@ name|ETIMEDOUT
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static

@@ -47,23 +47,6 @@ directive|include
 file|<machine/sysarch.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_global.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Executing statements with interrupts disabled.  */
 end_comment

@@ -1050,24 +1050,6 @@ operator|->
 name|dom_rtattach
 argument_list|)
 expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"dom_rtoffset: %d   "
-argument_list|,
-name|d
-operator|->
-name|dom_rtoffset
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"dom_maxrtkey: %d\n"
-argument_list|,
-name|d
-operator|->
-name|dom_maxrtkey
-argument_list|)
-expr_stmt|;
 name|db_print_indent
 argument_list|(
 name|indent

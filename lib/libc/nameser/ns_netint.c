@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_netint.c,v 1.2.18.1 2005/04/27 05:01:08 sra Exp $"
+literal|"$Id: ns_netint.c,v 1.3 2005/04/27 04:56:40 sra Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Import. */

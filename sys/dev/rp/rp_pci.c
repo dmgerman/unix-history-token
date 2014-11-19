@@ -902,8 +902,10 @@ modifier|*
 name|ctlp
 parameter_list|)
 block|{
-name|rp_untimeout
-argument_list|()
+name|rp_releaseresource
+argument_list|(
+name|ctlp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -989,11 +991,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|rp_releaseresource
-argument_list|(
-name|ctlp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

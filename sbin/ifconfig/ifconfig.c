@@ -245,7 +245,7 @@ file|"ifconfig.h"
 end_include
 
 begin_comment
-comment|/*  * Since "struct ifreq" is composed of various union members, callers  * should pay special attention to interprete the value.  * (.e.g. little/big endian difference in the structure.)  */
+comment|/*  * Since "struct ifreq" is composed of various union members, callers  * should pay special attention to interpret the value.  * (.e.g. little/big endian difference in the structure.)  */
 end_comment
 
 begin_decl_stmt
@@ -5166,6 +5166,22 @@ argument_list|,
 name|ifs
 operator|.
 name|ascii
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|>
+literal|0
+condition|)
+name|sfp_status
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|ifr
+argument_list|,
+name|verbose
 argument_list|)
 expr_stmt|;
 name|close

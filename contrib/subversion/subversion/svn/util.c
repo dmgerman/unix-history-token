@@ -1693,7 +1693,7 @@ name|svn_stringbuf_appendcstr
 argument_list|(
 name|default_msg
 argument_list|,
-literal|"> PR:            If a GNATS PR is affected by the change."
+literal|"> PR:            If a Bugzilla PR is affected by the change."
 name|APR_EOL_STR
 argument_list|)
 expr_stmt|;

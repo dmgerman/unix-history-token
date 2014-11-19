@@ -1066,7 +1066,7 @@ name|cipher
 condition|)
 name|cipher_nid
 operator|=
-name|EVP_CIPHER_type
+name|EVP_CIPHER_nid
 argument_list|(
 name|cipher
 argument_list|)

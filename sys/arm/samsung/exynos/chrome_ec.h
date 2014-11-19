@@ -31,6 +31,20 @@ name|EC_CMD_VERSION0
 value|0xdc
 end_define
 
+begin_define
+define|#
+directive|define
+name|EC_CMD_RESEND_RESPONSE
+value|0xdb
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_CMD_GET_COMMS_STATUS
+value|0x09
+end_define
+
 begin_function_decl
 name|int
 name|ec_command

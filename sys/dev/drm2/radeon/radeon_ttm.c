@@ -2719,9 +2719,6 @@ expr_stmt|;
 if|#
 directive|if
 name|__OS_HAS_AGP
-ifdef|#
-directive|ifdef
-name|DUMBBELL_WIP
 if|if
 condition|(
 name|rdev
@@ -2752,9 +2749,6 @@ name|dummy_read_page
 argument_list|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* DUMBBELL_WIP */
 endif|#
 directive|endif
 name|gtt
@@ -2965,9 +2959,6 @@ expr_stmt|;
 if|#
 directive|if
 name|__OS_HAS_AGP
-ifdef|#
-directive|ifdef
-name|DUMBBELL_WIP
 if|if
 condition|(
 name|rdev
@@ -2984,9 +2975,6 @@ name|ttm
 argument_list|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* DUMBBELL_WIP */
 endif|#
 directive|endif
 ifdef|#
@@ -3234,9 +3222,6 @@ expr_stmt|;
 if|#
 directive|if
 name|__OS_HAS_AGP
-ifdef|#
-directive|ifdef
-name|DUMBBELL_WIP
 if|if
 condition|(
 name|rdev
@@ -3253,9 +3238,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* DUMBBELL_WIP */
 endif|#
 directive|endif
 ifdef|#

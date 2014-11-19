@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2007 Mellanox Technologies. All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  *  */
+comment|/*  * Copyright (c) 2007, 2014 Mellanox Technologies. All rights reserved.  *  * This software is available to you under a choice of one of two  * licenses.  You may choose to be licensed under the terms of the GNU  * General Public License (GPL) Version 2, available from the file  * COPYING in the main directory of this source tree, or the  * OpenIB.org BSD license below:  *  *     Redistribution and use in source and binary forms, with or  *     without modification, are permitted provided that the following  *     conditions are met:  *  *      - Redistributions of source code must retain the above  *        copyright notice, this list of conditions and the following  *        disclaimer.  *  *      - Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials  *        provided with the distribution.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS  * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  * SOFTWARE.  *  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<linux/netdevice.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/slab.h>
 end_include
 
 begin_include
@@ -116,22 +122,6 @@ comment|/*  * Device scope module parameters  */
 end_comment
 
 begin_comment
-comment|/* Enable RSS TCP traffic */
-end_comment
-
-begin_expr_stmt
-name|MLX4_EN_PARM_INT
-argument_list|(
-name|tcp_rss
-argument_list|,
-literal|1
-argument_list|,
-literal|"Enable RSS for incomming TCP traffic or disabled (0)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Enable RSS UDP traffic */
 end_comment
 
@@ -142,39 +132,7 @@ name|udp_rss
 argument_list|,
 literal|1
 argument_list|,
-literal|"Enable RSS for incomming UDP traffic or disabled (0)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Number of LRO sessions per Rx ring (rounded up to a power of two) */
-end_comment
-
-begin_expr_stmt
-name|MLX4_EN_PARM_INT
-argument_list|(
-name|num_lro
-argument_list|,
-name|MLX4_EN_MAX_LRO_DESCRIPTORS
-argument_list|,
-literal|"Number of LRO sessions per ring or disabled (0)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* Allow reassembly of fragmented IP packets */
-end_comment
-
-begin_expr_stmt
-name|MLX4_EN_PARM_INT
-argument_list|(
-name|ip_reasm
-argument_list|,
-literal|1
-argument_list|,
-literal|"Allow reassembly of fragmented IP packets (!0)"
+literal|"Enable RSS for incoming UDP traffic"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -209,6 +167,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|MAX_PFC_TX
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_PFC_RX
+value|0xff
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -235,15 +207,22 @@ name|i
 decl_stmt|;
 name|params
 operator|->
-name|tcp_rss
+name|udp_rss
 operator|=
-name|tcp_rss
+name|udp_rss
 expr_stmt|;
 name|params
 operator|->
-name|udp_rss
+name|num_tx_rings_p_up
 operator|=
-name|udp_rss
+name|min_t
+argument_list|(
+name|int
+argument_list|,
+name|mp_ncpus
+argument_list|,
+name|MLX4_EN_MAX_TX_RING_P_UP
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -279,25 +258,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|params
-operator|->
-name|num_lro
-operator|=
-name|min_t
-argument_list|(
-name|int
-argument_list|,
-name|num_lro
-argument_list|,
-name|MLX4_EN_MAX_LRO_DESCRIPTORS
-argument_list|)
-expr_stmt|;
-name|params
-operator|->
-name|ip_reasm
-operator|=
-name|ip_reasm
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -387,17 +347,22 @@ index|]
 operator|.
 name|tx_ring_num
 operator|=
-name|MLX4_EN_NUM_HASH_RINGS
-operator|+
-literal|1
-operator|+
-operator|(
-operator|!
-operator|!
-name|pfcrx
-operator|)
+name|params
+operator|->
+name|num_tx_rings_p_up
 operator|*
-name|MLX4_EN_NUM_PPP_RINGS
+name|MLX4_EN_NUM_UP
+expr_stmt|;
+name|params
+operator|->
+name|prof
+index|[
+name|i
+index|]
+operator|.
+name|rss_rings
+operator|=
+literal|0
 expr_stmt|;
 block|}
 return|return
@@ -410,7 +375,7 @@ begin_function
 specifier|static
 name|void
 modifier|*
-name|get_netdev
+name|mlx4_en_get_netdev
 parameter_list|(
 name|struct
 name|mlx4_dev
@@ -548,6 +513,13 @@ literal|"Internal error detected, restarting device\n"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|MLX4_DEV_EVENT_SLAVE_INIT
+case|:
+case|case
+name|MLX4_DEV_EVENT_SLAVE_SHUTDOWN
+case|:
+break|break;
 default|default:
 if|if
 condition|(
@@ -614,6 +586,8 @@ name|endev_ptr
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|mutex_lock
 argument_list|(
@@ -678,6 +652,8 @@ operator|->
 name|workqueue
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|mlx4_mr_free
 argument_list|(
 name|dev
@@ -686,6 +662,24 @@ operator|&
 name|mdev
 operator|->
 name|mr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+name|mlx4_err
+argument_list|(
+name|mdev
+argument_list|,
+literal|"Error deregistering MR. The system may have become unstable."
+argument_list|)
+expr_stmt|;
+name|iounmap
+argument_list|(
+name|mdev
+operator|->
+name|uar_map
 argument_list|)
 expr_stmt|;
 name|mlx4_uar_free
@@ -705,26 +699,6 @@ argument_list|,
 name|mdev
 operator|->
 name|priv_pdn
-argument_list|)
-expr_stmt|;
-name|sx_destroy
-argument_list|(
-operator|&
-name|mdev
-operator|->
-name|state_lock
-operator|.
-name|sx
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|mdev
-operator|->
-name|uar_lock
-operator|.
-name|m
 argument_list|)
 expr_stmt|;
 name|kfree
@@ -747,10 +721,6 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|mlx4_en_version_printed
-decl_stmt|;
 name|struct
 name|mlx4_en_dev
 modifier|*
@@ -762,13 +732,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|mlx4_en_version_printed
-condition|)
-block|{
-name|printk
+name|printk_once
 argument_list|(
 name|KERN_INFO
 literal|"%s"
@@ -776,10 +740,6 @@ argument_list|,
 name|mlx4_en_version
 argument_list|)
 expr_stmt|;
-name|mlx4_en_version_printed
-operator|++
-expr_stmt|;
-block|}
 name|mdev
 operator|=
 name|kzalloc
@@ -849,28 +809,15 @@ condition|)
 goto|goto
 name|err_pd
 goto|;
-name|mtx_init
-argument_list|(
-operator|&
-name|mdev
-operator|->
-name|uar_lock
-operator|.
-name|m
-argument_list|,
-literal|"mlx4 uar"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|mdev
 operator|->
 name|uar_map
 operator|=
 name|ioremap
 argument_list|(
+operator|(
+name|phys_addr_t
+operator|)
 name|mdev
 operator|->
 name|priv_uar
@@ -892,6 +839,14 @@ condition|)
 goto|goto
 name|err_uar
 goto|;
+name|spin_lock_init
+argument_list|(
+operator|&
+name|mdev
+operator|->
+name|uar_lock
+argument_list|)
+expr_stmt|;
 name|mdev
 operator|->
 name|dev
@@ -1000,7 +955,7 @@ literal|"Failed allocating memory region\n"
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err_uar
+name|err_map
 goto|;
 block|}
 if|if
@@ -1053,7 +1008,7 @@ goto|goto
 name|err_mr
 goto|;
 block|}
-comment|/* Configure wich ports to start according to module parameters */
+comment|/* Configure which ports to start according to module parameters */
 name|mdev
 operator|->
 name|port_cnt
@@ -1073,7 +1028,6 @@ operator|->
 name|port_cnt
 operator|++
 expr_stmt|;
-comment|/* If we did not receive an explicit number of Rx rings, default to 	 * the number of completion vectors populated by the mlx4_core */
 name|mlx4_foreach_port
 argument_list|(
 argument|i
@@ -1083,12 +1037,16 @@ argument_list|,
 argument|MLX4_PORT_TYPE_ETH
 argument_list|)
 block|{
-name|mlx4_info
-argument_list|(
-name|mdev
-argument_list|,
-literal|"Using %d tx rings for port:%d\n"
-argument_list|,
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|caps
+operator|.
+name|comp_pool
+condition|)
+block|{
 name|mdev
 operator|->
 name|profile
@@ -1098,11 +1056,34 @@ index|[
 name|i
 index|]
 operator|.
-name|tx_ring_num
+name|rx_ring_num
+operator|=
+name|rounddown_pow_of_two
+argument_list|(
+name|max_t
+argument_list|(
+name|int
 argument_list|,
-name|i
+name|MIN_RX_RINGS
+argument_list|,
+name|min_t
+argument_list|(
+name|int
+argument_list|,
+name|dev
+operator|->
+name|caps
+operator|.
+name|num_comp_vectors
+argument_list|,
+name|DEF_RX_RINGS
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|mdev
 operator|->
 name|profile
@@ -1124,32 +1105,23 @@ name|dev
 operator|->
 name|caps
 operator|.
-name|num_comp_vectors
-argument_list|,
-name|MAX_RX_RINGS
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|mlx4_info
-argument_list|(
-name|mdev
-argument_list|,
-literal|"Defaulting to %d rx rings for port:%d\n"
-argument_list|,
-name|mdev
+name|comp_pool
+operator|/
+name|dev
 operator|->
-name|profile
+name|caps
 operator|.
-name|prof
-index|[
-name|i
-index|]
-operator|.
-name|rx_ring_num
+name|num_ports
+operator|-
+literal|1
 argument_list|,
-name|i
+name|MAX_MSIX_P_PORT
+operator|-
+literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Create our own workqueue for reset/multicast tasks 	 * Note: we cannot use the shared workqueue because of deadlocks caused 	 *       by the rtnl lock */
 name|mdev
@@ -1179,16 +1151,12 @@ name|err_mr
 goto|;
 block|}
 comment|/* At this stage all non-port specific tasks are complete: 	 * mark the card state as up */
-name|sx_init
+name|mutex_init
 argument_list|(
 operator|&
 name|mdev
 operator|->
 name|state_lock
-operator|.
-name|sx
-argument_list|,
-literal|"mlxen state"
 argument_list|)
 expr_stmt|;
 name|mdev
@@ -1236,7 +1204,6 @@ name|i
 index|]
 argument_list|)
 condition|)
-block|{
 name|mdev
 operator|->
 name|pndev
@@ -1246,84 +1213,14 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-goto|goto
-name|err_free_netdev
-goto|;
-block|}
 block|}
 return|return
 name|mdev
 return|;
-name|err_free_netdev
-label|:
-name|mlx4_foreach_port
-argument_list|(
-argument|i
-argument_list|,
-argument|dev
-argument_list|,
-argument|MLX4_PORT_TYPE_ETH
-argument_list|)
-block|{
-if|if
-condition|(
-name|mdev
-operator|->
-name|pndev
-index|[
-name|i
-index|]
-condition|)
-name|mlx4_en_destroy_netdev
-argument_list|(
-name|mdev
-operator|->
-name|pndev
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|mutex_lock
-argument_list|(
-operator|&
-name|mdev
-operator|->
-name|state_lock
-argument_list|)
-expr_stmt|;
-name|mdev
-operator|->
-name|device_up
-operator|=
-name|false
-expr_stmt|;
-name|mutex_unlock
-argument_list|(
-operator|&
-name|mdev
-operator|->
-name|state_lock
-argument_list|)
-expr_stmt|;
-name|flush_workqueue
-argument_list|(
-name|mdev
-operator|->
-name|workqueue
-argument_list|)
-expr_stmt|;
-comment|/* Stop event queue before we drop down to release shared SW state */
-name|destroy_workqueue
-argument_list|(
-name|mdev
-operator|->
-name|workqueue
-argument_list|)
-expr_stmt|;
 name|err_mr
 label|:
+name|err
+operator|=
 name|mlx4_mr_free
 argument_list|(
 name|dev
@@ -1334,18 +1231,34 @@ operator|->
 name|mr
 argument_list|)
 expr_stmt|;
-name|err_uar
-label|:
-name|mtx_destroy
+if|if
+condition|(
+name|err
+condition|)
+name|mlx4_err
 argument_list|(
-operator|&
 name|mdev
-operator|->
-name|uar_lock
-operator|.
-name|m
+argument_list|,
+literal|"Error deregistering MR. The system may have become unstable."
 argument_list|)
 expr_stmt|;
+name|err_map
+label|:
+if|if
+condition|(
+name|mdev
+operator|->
+name|uar_map
+condition|)
+name|iounmap
+argument_list|(
+name|mdev
+operator|->
+name|uar_map
+argument_list|)
+expr_stmt|;
+name|err_uar
+label|:
 name|mlx4_uar_free
 argument_list|(
 name|dev
@@ -1382,147 +1295,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|enum
-name|mlx4_query_reply
-name|mlx4_en_query
-parameter_list|(
-name|void
-modifier|*
-name|endev_ptr
-parameter_list|,
-name|void
-modifier|*
-name|int_dev
-parameter_list|)
-block|{
-name|struct
-name|mlx4_en_dev
-modifier|*
-name|mdev
-init|=
-name|endev_ptr
-decl_stmt|;
-name|struct
-name|net_device
-modifier|*
-name|netdev
-init|=
-name|int_dev
-decl_stmt|;
-name|int
-name|p
-decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
-literal|1
-init|;
-name|p
-operator|<=
-name|MLX4_MAX_PORTS
-condition|;
-operator|++
-name|p
-control|)
-if|if
-condition|(
-name|mdev
-operator|->
-name|pndev
-index|[
-name|p
-index|]
-operator|==
-name|netdev
-condition|)
-return|return
-name|p
-return|;
-return|return
-name|MLX4_QUERY_NOT_MINE
-return|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static struct pci_device_id mlx4_en_pci_table[] = { 	{ PCI_VDEVICE(MELLANOX, 0x6340) },
-comment|/* MT25408 "Hermon" SDR */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x634a) },
-comment|/* MT25408 "Hermon" DDR */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x6354) },
-comment|/* MT25408 "Hermon" QDR */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x6732) },
-comment|/* MT25408 "Hermon" DDR PCIe gen2 */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x673c) },
-comment|/* MT25408 "Hermon" QDR PCIe gen2 */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x6368) },
-comment|/* MT25408 "Hermon" EN 10GigE */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x6750) },
-comment|/* MT25408 "Hermon" EN 10GigE PCIe gen2 */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x6372) },
-comment|/* MT25458 ConnectX EN 10GBASE-T 10GigE */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x675a) },
-comment|/* MT25458 ConnectX EN 10GBASE-T+Gen2 10GigE */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x6764) },
-comment|/* MT26468 ConnectX EN 10GigE PCIe gen2 */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x6746) },
-comment|/* MT26438 ConnectX VPI PCIe 2.0 5GT/s - IB QDR / 10GigE Virt+ */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x676e) },
-comment|/* MT26478 ConnectX EN 40GigE PCIe 2.0 5GT/s */
-end_comment
-
-begin_comment
-unit|{ PCI_VDEVICE(MELLANOX, 0x6778) },
-comment|/* MT26488 ConnectX VPI PCIe 2.0 5GT/s - IB DDR / 10GigE Virt+ */
-end_comment
-
-begin_endif
-unit|{ PCI_VDEVICE(MELLANOX, 0x1000) }, 	{ PCI_VDEVICE(MELLANOX, 0x1001) }, 	{ PCI_VDEVICE(MELLANOX, 0x1002) }, 	{ PCI_VDEVICE(MELLANOX, 0x1003) }, 	{ PCI_VDEVICE(MELLANOX, 0x1004) }, 	{ PCI_VDEVICE(MELLANOX, 0x1005) }, 	{ PCI_VDEVICE(MELLANOX, 0x1006) }, 	{ PCI_VDEVICE(MELLANOX, 0x1007) }, 	{ PCI_VDEVICE(MELLANOX, 0x1008) }, 	{ PCI_VDEVICE(MELLANOX, 0x1009) }, 	{ PCI_VDEVICE(MELLANOX, 0x100a) }, 	{ PCI_VDEVICE(MELLANOX, 0x100b) }, 	{ PCI_VDEVICE(MELLANOX, 0x100c) }, 	{ PCI_VDEVICE(MELLANOX, 0x100d) }, 	{ PCI_VDEVICE(MELLANOX, 0x100e) }, 	{ PCI_VDEVICE(MELLANOX, 0x100f) }, 	{ 0, } };  MODULE_DEVICE_TABLE(pci, mlx4_en_pci_table);
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1546,14 +1318,9 @@ operator|=
 name|mlx4_en_event
 block|,
 operator|.
-name|query
-operator|=
-name|mlx4_en_query
-block|,
-operator|.
 name|get_dev
 operator|=
-name|get_netdev
+name|mlx4_en_get_netdev
 block|,
 operator|.
 name|protocol
@@ -1565,6 +1332,61 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|void
+name|mlx4_en_verify_params
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|pfctx
+operator|>
+name|MAX_PFC_TX
+condition|)
+block|{
+name|pr_warn
+argument_list|(
+literal|"mlx4_en: WARNING: illegal module parameter pfctx 0x%x - "
+literal|"should be in range 0-0x%x, will be changed to default (0)\n"
+argument_list|,
+name|pfctx
+argument_list|,
+name|MAX_PFC_TX
+argument_list|)
+expr_stmt|;
+name|pfctx
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pfcrx
+operator|>
+name|MAX_PFC_RX
+condition|)
+block|{
+name|pr_warn
+argument_list|(
+literal|"mlx4_en: WARNING: illegal module parameter pfcrx 0x%x - "
+literal|"should be in range 0-0x%x, will be changed to default (0)\n"
+argument_list|,
+name|pfcrx
+argument_list|,
+name|MAX_PFC_RX
+argument_list|)
+expr_stmt|;
+name|pfcrx
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|__init
 name|mlx4_en_init
@@ -1572,6 +1394,34 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|mlx4_en_verify_params
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_FS
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
+name|err
+operator|=
+name|mlx4_en_register_debugfs
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|pr_err
+argument_list|(
+name|KERN_ERR
+literal|"Failed to register debugfs\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|mlx4_register_interface
 argument_list|(
@@ -1597,6 +1447,14 @@ operator|&
 name|mlx4_en_interface
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_FS
+name|mlx4_en_unregister_debugfs
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

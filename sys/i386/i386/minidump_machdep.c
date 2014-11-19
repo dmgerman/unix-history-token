@@ -787,7 +787,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|minidumpsys
 parameter_list|(
 name|struct
@@ -1986,7 +1986,11 @@ argument_list|(
 literal|"\nDump complete\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|fail
 label|:
 if|if
@@ -2031,6 +2035,11 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 

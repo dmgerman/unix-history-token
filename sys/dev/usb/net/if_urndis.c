@@ -4244,10 +4244,14 @@ name|ether_header
 argument_list|)
 condition|)
 block|{
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -4285,10 +4289,14 @@ operator|)
 name|MCLBYTES
 condition|)
 block|{
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -4410,10 +4418,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|offset
@@ -4609,10 +4621,14 @@ argument_list|,
 name|aframes
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
@@ -4712,10 +4728,14 @@ argument_list|(
 literal|"Too big packet\n"
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* Free buffer */
 name|m_freem
@@ -4881,10 +4901,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* count output errors */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
-operator|++
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

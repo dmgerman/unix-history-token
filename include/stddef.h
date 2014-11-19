@@ -33,12 +33,29 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PTRDIFF_T_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|__ptrdiff_t
 name|ptrdiff_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_PTRDIFF_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

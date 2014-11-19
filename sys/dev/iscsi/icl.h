@@ -84,7 +84,7 @@ begin_function_decl
 name|struct
 name|icl_pdu
 modifier|*
-name|icl_pdu_new_bhs
+name|icl_pdu_new
 parameter_list|(
 name|struct
 name|icl_conn
@@ -379,18 +379,6 @@ name|ic
 parameter_list|,
 name|int
 name|fd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|icl_conn_shutdown
-parameter_list|(
-name|struct
-name|icl_conn
-modifier|*
-name|ic
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -371,13 +371,16 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|ip4_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
-name|m
+modifier|*
+parameter_list|,
+name|int
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)

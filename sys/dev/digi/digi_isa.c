@@ -1446,7 +1446,7 @@ name|sc
 operator|->
 name|win_size
 argument_list|,
-name|RF_ALLOCATED
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

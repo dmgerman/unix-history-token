@@ -1916,6 +1916,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -verify_return_error - return verification errors\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -cert arg     - certificate file to use\n"
 argument_list|)
 expr_stmt|;
@@ -2329,6 +2336,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -hack         - workaround for early Netscape code\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -www          - Respond to a 'GET /' with a status page\n"
 argument_list|)
 expr_stmt|;
@@ -2491,6 +2505,34 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -keymatexportlen len  - Export len bytes of keying material (default 20)\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -status           - respond to certificate status requests\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -status_verbose   - enable status request verbose printout\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -status_timeout n - status request responder timeout\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -status_url URL   - status request fallback URL\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3474,7 +3516,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|servername
 argument_list|,
@@ -7043,6 +7085,31 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_DTLS1
+if|if
+condition|(
+name|www
+operator|&&
+name|socket_type
+operator|==
+name|SOCK_DGRAM
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Can't use -HTTP, -www or -WWW with DTLS\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
+endif|#
+directive|endif
 if|#
 directive|if
 operator|!

@@ -1889,6 +1889,7 @@ name|rmask
 init|=
 name|NULL
 decl_stmt|;
+comment|/* Try to find a src_node if none was given and this 	   is a sticky-address rule. */
 if|if
 condition|(
 operator|*
@@ -1916,7 +1917,6 @@ operator|)
 operator|!=
 name|PF_POOL_NONE
 condition|)
-block|{
 operator|*
 name|sn
 operator|=
@@ -1931,6 +1931,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* If a src_node was found or explicitly given and it has a non-zero 	   route address, use this address. A zeroed address is found if the 	   src node was created just a moment ago in pf_create_state and it 	   needs to be filled in with routing decision calculated here. */
 if|if
 condition|(
 operator|*
@@ -2017,7 +2018,7 @@ literal|0
 operator|)
 return|;
 block|}
-block|}
+comment|/* Find the route using chosen algorithm. Store the found route 	   in src_node if it was given or found. */
 if|if
 condition|(
 name|rpool

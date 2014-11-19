@@ -176,13 +176,13 @@ name|ct
 operator|->
 name|dow
 operator|<
-literal|1
+literal|0
 operator|||
 name|ct
 operator|->
 name|dow
 operator|>
-literal|7
+literal|6
 argument_list|,
 literal|"day of week"
 argument_list|)
@@ -450,8 +450,10 @@ index|]
 operator|&
 literal|0x7
 operator|)
+operator|-
+literal|1
 expr_stmt|;
-comment|/* Day of week field is 1..7 */
+comment|/* Day of week field is 0..6 */
 name|ct
 operator|.
 name|day
@@ -699,6 +701,8 @@ argument_list|(
 name|ct
 operator|.
 name|dow
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|reg
@@ -725,6 +729,13 @@ operator|.
 name|mon
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OCTEON_BOARD_CAPK_0100ND
+argument_list|)
 if|if
 condition|(
 name|ct
@@ -743,6 +754,8 @@ operator||=
 literal|0x80
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|reg
 index|[
 literal|6

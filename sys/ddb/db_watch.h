@@ -4,7 +4,7 @@ comment|/*-  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * 	Author: David B. Golub, Carnegie Mellon University  *	Date:	10/90  */
+comment|/*  *	Author: David B. Golub, Carnegie Mellon University  *	Date:	10/90  */
 end_comment
 
 begin_ifndef

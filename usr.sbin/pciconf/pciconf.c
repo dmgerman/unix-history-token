@@ -3557,7 +3557,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3610,6 +3610,13 @@ condition|(
 name|cp
 operator|==
 name|name
+operator|||
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|cp
+argument_list|)
 condition|)
 name|errx
 argument_list|(
@@ -3645,7 +3652,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Device name i2s too long"
+literal|"Device name is too long"
 argument_list|)
 expr_stmt|;
 name|memcpy

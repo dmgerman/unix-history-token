@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -777,6 +777,9 @@ decl_stmt|;
 name|UINT16
 name|ResourceLength
 decl_stmt|;
+name|UINT16
+name|PinNumberIndex
+decl_stmt|;
 name|UINT8
 name|FieldFlags
 decl_stmt|;
@@ -1456,6 +1459,10 @@ name|ACPI_GENERIC_ADDRESS
 name|EnableAddress
 decl_stmt|;
 comment|/* Address of enable reg */
+name|UINT16
+name|BaseGpeNumber
+decl_stmt|;
+comment|/* Base GPE number for this register */
 name|UINT8
 name|EnableForWake
 decl_stmt|;
@@ -1464,10 +1471,6 @@ name|UINT8
 name|EnableForRun
 decl_stmt|;
 comment|/* GPEs to keep enabled when running */
-name|UINT8
-name|BaseGpeNumber
-decl_stmt|;
-comment|/* Base GPE number for this register */
 block|}
 name|ACPI_GPE_REGISTER_INFO
 typedef|;
@@ -1512,8 +1515,8 @@ modifier|*
 name|EventInfo
 decl_stmt|;
 comment|/* One for each GPE */
-name|ACPI_GENERIC_ADDRESS
-name|BlockAddress
+name|UINT64
+name|Address
 decl_stmt|;
 comment|/* Base address of the block */
 name|UINT32
@@ -1524,10 +1527,13 @@ name|UINT16
 name|GpeCount
 decl_stmt|;
 comment|/* Number of individual GPEs in block */
-name|UINT8
+name|UINT16
 name|BlockBaseNumber
 decl_stmt|;
 comment|/* Base GPE number for this block */
+name|UINT8
+name|SpaceId
+decl_stmt|;
 name|BOOLEAN
 name|Initialized
 decl_stmt|;
@@ -2422,8 +2428,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_DASM_EISAID
+name|ACPI_DASM_UUID
 value|0x05
+end_define
+
+begin_comment
+comment|/* Buffer is a UUID/GUID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_EISAID
+value|0x06
 end_define
 
 begin_comment
@@ -2434,7 +2451,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_MATCHOP
-value|0x06
+value|0x07
 end_define
 
 begin_comment
@@ -2445,7 +2462,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_PREFIX
-value|0x07
+value|0x08
 end_define
 
 begin_comment
@@ -2456,7 +2473,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DASM_LNOT_SUFFIX
-value|0x08
+value|0x09
 end_define
 
 begin_comment
@@ -2466,8 +2483,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_DASM_HID_STRING
+value|0x0A
+end_define
+
+begin_comment
+comment|/* String is a _HID or _CID */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_DASM_IGNORE
-value|0x09
+value|0x0B
 end_define
 
 begin_comment
@@ -3672,17 +3700,11 @@ decl_stmt|;
 name|UINT16
 name|Length
 decl_stmt|;
-name|UINT8
-name|Type
-decl_stmt|;
-name|UINT8
+name|UINT16
 name|Flags
 decl_stmt|;
-name|BOOLEAN
-name|Resolved
-decl_stmt|;
-name|BOOLEAN
-name|Emitted
+name|UINT8
+name|Type
 decl_stmt|;
 block|}
 name|ACPI_EXTERNAL_LIST
@@ -3696,16 +3718,46 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_IPATH_ALLOCATED
+name|ACPI_EXT_RESOLVED_REFERENCE
 value|0x01
 end_define
+
+begin_comment
+comment|/* Object was resolved during cross ref */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_FROM_REFERENCE_FILE
+name|ACPI_EXT_ORIGIN_FROM_FILE
 value|0x02
 end_define
+
+begin_comment
+comment|/* External came from a file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXT_INTERNAL_PATH_ALLOCATED
+value|0x04
+end_define
+
+begin_comment
+comment|/* Deallocate internal path on completion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXT_EXTERNAL_EMITTED
+value|0x08
+end_define
+
+begin_comment
+comment|/* External() statement has been emitted */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -3773,7 +3825,7 @@ decl_stmt|;
 name|char
 name|Pathname
 index|[
-literal|128
+name|ACPI_DB_LINE_BUFFER_SIZE
 index|]
 decl_stmt|;
 name|char
@@ -3840,6 +3892,13 @@ block|}
 name|ACPI_INTEGRITY_INFO
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_DB_DISABLE_OUTPUT
+value|0x00
+end_define
 
 begin_define
 define|#
@@ -3980,6 +4039,42 @@ endif|#
 directive|endif
 block|}
 name|AH_PREDEFINED_NAME
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ah_device_id
+block|{
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+block|}
+name|AH_DEVICE_ID
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ah_uuid
+block|{
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+name|char
+modifier|*
+name|String
+decl_stmt|;
+block|}
+name|AH_UUID
 typedef|;
 end_typedef
 

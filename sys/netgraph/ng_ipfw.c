@@ -364,11 +364,11 @@ name|ng_ipfw
 argument_list|,
 name|ipfw
 argument_list|,
-literal|2
+literal|3
 argument_list|,
-literal|2
+literal|3
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt

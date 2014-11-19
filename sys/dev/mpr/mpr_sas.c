@@ -5333,6 +5333,16 @@ operator|=
 literal|600000
 expr_stmt|;
 break|break;
+case|case
+literal|0x0b
+case|:
+name|sas
+operator|->
+name|bitrate
+operator|=
+literal|1200000
+expr_stmt|;
+break|break;
 default|default:
 name|sas
 operator|->

@@ -2966,6 +2966,16 @@ name|dprintf_print_all
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|dprintf_string
+operator|!=
+name|NULL
+condition|)
+name|zfs_flags
+operator||=
+name|ZFS_DEBUG_DPRINTF
+expr_stmt|;
 block|}
 end_function
 
@@ -3104,7 +3114,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ul "
+literal|"%lu "
 argument_list|,
 name|thr_self
 argument_list|()

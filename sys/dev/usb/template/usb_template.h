@@ -344,6 +344,15 @@ name|usb_template_mtp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|usb_temp_device_desc
+name|usb_template_phone
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|usb_error_t
 name|usb_temp_setup

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -118,6 +118,18 @@ name|UINT16
 name|Opcode
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG_OUTPUT
+specifier|const
+name|char
+modifier|*
+name|OpcodeName
+init|=
+literal|"Unknown AML opcode"
+decl_stmt|;
+endif|#
+directive|endif
 name|ACPI_FUNCTION_NAME
 argument_list|(
 name|PsGetOpcodeInfo
@@ -192,13 +204,107 @@ index|]
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|defined
+name|ACPI_ASL_COMPILER
+operator|&&
+name|defined
+name|ACPI_DEBUG_OUTPUT
+include|#
+directive|include
+file|<contrib/dev/acpica/compiler/asldefine.h>
+switch|switch
+condition|(
+name|Opcode
+condition|)
+block|{
+case|case
+name|AML_RAW_DATA_BYTE
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Byte-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_WORD
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Word-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_DWORD
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Dword-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_QWORD
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Qword-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_BUFFER
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Buffer-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_RAW_DATA_CHAIN
+case|:
+name|OpcodeName
+operator|=
+literal|"-Raw Data Buffer Chain-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_PACKAGE_LENGTH
+case|:
+name|OpcodeName
+operator|=
+literal|"-Package Length-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_UNASSIGNED_OPCODE
+case|:
+name|OpcodeName
+operator|=
+literal|"-Unassigned Opcode-"
+expr_stmt|;
+break|break;
+case|case
+name|AML_DEFAULT_ARG_OP
+case|:
+name|OpcodeName
+operator|=
+literal|"-Default Arg-"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+endif|#
+directive|endif
 comment|/* Unknown AML opcode */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Unknown AML opcode [%4.4X]\n"
+literal|"%s [%4.4X]\n"
+operator|,
+name|OpcodeName
 operator|,
 name|Opcode
 operator|)

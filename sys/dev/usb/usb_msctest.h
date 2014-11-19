@@ -32,6 +32,8 @@ name|MSC_EJECT_CMOTECH
 block|,
 name|MSC_EJECT_HUAWEI
 block|,
+name|MSC_EJECT_HUAWEI2
+block|,
 name|MSC_EJECT_TCT
 block|, }
 enum|;

@@ -66,6 +66,9 @@ parameter_list|,
 name|boolean_t
 name|embedok
 parameter_list|,
+name|boolean_t
+name|large_block_ok
+parameter_list|,
 ifdef|#
 directive|ifdef
 name|illumos
@@ -144,16 +147,20 @@ parameter_list|,
 name|uint64_t
 name|fromsnap
 parameter_list|,
-ifdef|#
-directive|ifdef
-name|illumos
 name|boolean_t
 name|embedok
 parameter_list|,
+name|boolean_t
+name|large_block_ok
+parameter_list|,
+ifdef|#
+directive|ifdef
+name|illumos
 name|int
 name|outfd
 parameter_list|,
-name|vnode_t
+name|struct
+name|vnode
 modifier|*
 name|vp
 parameter_list|,
@@ -170,9 +177,6 @@ directive|else
 end_else
 
 begin_decl_stmt
-name|boolean_t
-name|embedok
-decl_stmt|,
 name|int
 name|outfd
 decl_stmt|, struct

@@ -1810,9 +1810,7 @@ expr_stmt|;
 comment|/* 	 * Tell the upper layer(s) we support long frames/checksum offloads. 	 */
 name|ifp
 operator|->
-name|if_data
-operator|.
-name|ifi_hdrlen
+name|if_hdrlen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -2415,10 +2413,12 @@ operator|->
 name|sc_ifp
 expr_stmt|;
 comment|/* 	 * Unload collision counters 	 */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_collisions
-operator|+=
+argument_list|,
+name|IFCOUNTER_COLLISIONS
+argument_list|,
 name|HME_MAC_READ_4
 argument_list|(
 name|sc
@@ -2445,6 +2445,7 @@ argument_list|(
 name|sc
 argument_list|,
 name|HME_MACI_LTCNT
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * then clear the hardware counters. 	 */
@@ -5362,10 +5363,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|hme_discard_rxbuf
 argument_list|(
@@ -5413,10 +5418,14 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * hme_add_rxbuf will leave the old buffer in the ring until 		 * it is sure that a new buffer can be mapped. If it can not, 		 * drop the packet, but leave the interface up. 		 */
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_iqdrops
-operator|++
+argument_list|,
+name|IFCOUNTER_IQDROPS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|hme_discard_rxbuf
 argument_list|(
@@ -5427,10 +5436,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ipackets
-operator|++
+argument_list|,
+name|IFCOUNTER_IPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|m
 operator|->
@@ -5960,10 +5973,14 @@ operator|->
 name|htx_dmamap
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_opackets
-operator|++
+argument_list|,
+name|IFCOUNTER_OPACKETS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -6562,10 +6579,14 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_ierrors
-operator|++
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|hme_discard_rxbuf
 argument_list|(
@@ -6941,10 +6962,14 @@ argument_list|,
 literal|"device timeout (no link)\n"
 argument_list|)
 expr_stmt|;
-operator|++
+name|if_inc_counter
+argument_list|(
 name|ifp
-operator|->
-name|if_oerrors
+argument_list|,
+name|IFCOUNTER_OERRORS
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->

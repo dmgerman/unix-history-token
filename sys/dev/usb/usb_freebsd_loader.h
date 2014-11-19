@@ -156,6 +156,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_DISABLE_ENUM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_CALLOUT_ZERO_TICKS
 value|1
 end_define

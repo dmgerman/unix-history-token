@@ -919,11 +919,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -1155,6 +1155,15 @@ name|AR9280_DEVID_PCIE
 case|:
 case|case
 name|AR9285_DEVID_PCIE
+case|:
+case|case
+name|AR9287_DEVID_PCI
+case|:
+case|case
+name|AR9287_DEVID_PCIE
+case|:
+case|case
+name|AR9300_DEVID_AR9330
 case|:
 name|state
 operator|.

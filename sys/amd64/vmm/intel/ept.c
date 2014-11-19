@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vmx_msr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ept.h"
 end_include
 

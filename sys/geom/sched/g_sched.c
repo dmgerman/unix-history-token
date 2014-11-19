@@ -6601,7 +6601,7 @@ condition|)
 break|break;
 name|taste_names
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"geom.sched.taste"
 argument_list|)
@@ -6706,7 +6706,7 @@ expr_stmt|;
 comment|/* look up the provider name in the list */
 name|s
 operator|=
-name|getenv
+name|kern_getenv
 argument_list|(
 literal|"geom.sched.algo"
 argument_list|)

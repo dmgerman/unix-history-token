@@ -24,11 +24,15 @@ name|_NET_IF_STF_H_
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|in_stf_input
 parameter_list|(
 name|struct
 name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|,
 name|int

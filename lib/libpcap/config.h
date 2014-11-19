@@ -837,6 +837,17 @@ comment|/* #undef PCAP_SUPPORT_USB */
 end_comment
 
 begin_comment
+comment|/* target host supports netmap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCAP_SUPPORT_NETMAP
+value|1
+end_define
+
+begin_comment
 comment|/* include ACN support */
 end_comment
 

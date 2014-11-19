@@ -2589,7 +2589,7 @@ name|printf
 argument_list|(
 literal|"VQ: %s - size=%d; free=%d; used=%d; queued=%d; "
 literal|"desc_head_idx=%d; avail.idx=%d; used_cons_idx=%d; "
-literal|"used.idx=%d; avail.flags=0x%x; used.flags=0x%x\n"
+literal|"used.idx=%d; used_event_idx=%d; avail.flags=0x%x; used.flags=0x%x\n"
 argument_list|,
 name|vq
 operator|->
@@ -2635,6 +2635,14 @@ operator|.
 name|used
 operator|->
 name|idx
+argument_list|,
+name|vring_used_event
+argument_list|(
+operator|&
+name|vq
+operator|->
+name|vq_ring
+argument_list|)
 argument_list|,
 name|vq
 operator|->

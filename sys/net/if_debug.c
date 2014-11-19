@@ -320,15 +320,6 @@ argument_list|)
 expr_stmt|;
 name|IF_DB_PRINTF
 argument_list|(
-literal|"%d"
-argument_list|,
-name|if_snd
-operator|.
-name|ifq_drops
-argument_list|)
-expr_stmt|;
-name|IF_DB_PRINTF
-argument_list|(
 literal|"%p"
 argument_list|,
 name|if_snd

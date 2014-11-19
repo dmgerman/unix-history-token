@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2013, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_comment
@@ -104,32 +104,16 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|AcpiGbl_DebugFile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|AcpiGbl_OutputFile
+name|BOOLEAN
+name|AcpiGbl_DebugTimeout
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Upcalls to AcpiExec */
 end_comment
-
-begin_function_decl
-name|ACPI_PHYSICAL_ADDRESS
-name|AeLocalGetRootPointer
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -173,8 +157,280 @@ name|ACPI_VPRINTF_BUFFER_SIZE
 value|512
 end_define
 
+begin_define
+define|#
+directive|define
+name|_ASCII_NEWLINE
+value|'\n'
+end_define
+
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsInitialize, AcpiOsTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init and terminate. Nothing to do.  *  *****************************************************************************/
+comment|/* Terminal support for AcpiExec only */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_EXEC_APP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_decl_stmt
+name|struct
+name|termios
+name|OriginalTermAttributes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|TermAttributesWereSet
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtReadLine
+parameter_list|(
+name|char
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|BufferLength
+parameter_list|,
+name|UINT32
+modifier|*
+name|BytesRead
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OsEnterLineEditMode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|OsExitLineEditMode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    OsEnterLineEditMode, OsExitLineEditMode  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Enter/Exit the raw character input mode for the terminal.  *  * Interactive line-editing support for the AML debugger. Used with the  * common/acgetline module.  *  * readline() is not used because of non-portability. It is not available  * on all systems, and if it is, often the package must be manually installed.  *  * Therefore, we use the POSIX tcgetattr/tcsetattr and do the minimal line  * editing that we need in AcpiOsGetLine.  *  * If the POSIX tcgetattr/tcsetattr interfaces are unavailable, these  * calls will also work:  *     For OsEnterLineEditMode: system ("stty cbreak -echo")  *     For OsExitLineEditMode:  system ("stty cooked echo")  *  *****************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|OsEnterLineEditMode
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|termios
+name|LocalTermAttributes
+decl_stmt|;
+name|TermAttributesWereSet
+operator|=
+literal|0
+expr_stmt|;
+comment|/* STDIN must be a terminal */
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Get and keep the original attributes */
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+operator|&
+name|OriginalTermAttributes
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not get terminal attributes!\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Set the new attributes to enable raw character input */
+name|memcpy
+argument_list|(
+operator|&
+name|LocalTermAttributes
+argument_list|,
+operator|&
+name|OriginalTermAttributes
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|termios
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|LocalTermAttributes
+operator|.
+name|c_lflag
+operator|&=
+operator|~
+operator|(
+name|ICANON
+operator||
+name|ECHO
+operator|)
+expr_stmt|;
+name|LocalTermAttributes
+operator|.
+name|c_cc
+index|[
+name|VMIN
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|LocalTermAttributes
+operator|.
+name|c_cc
+index|[
+name|VTIME
+index|]
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|tcsetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|LocalTermAttributes
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not set terminal attributes!\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|TermAttributesWereSet
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|OsExitLineEditMode
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|TermAttributesWereSet
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Set terminal attributes back to the original values */
+if|if
+condition|(
+name|tcsetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|OriginalTermAttributes
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not restore terminal attributes!\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* These functions are not needed for other ACPICA utilities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OsEnterLineEditMode
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|OsExitLineEditMode
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsInitialize, AcpiOsTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Initialize and terminate this module.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -184,10 +440,38 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|AcpiGbl_OutputFile
 operator|=
 name|stdout
 expr_stmt|;
+name|OsEnterLineEditMode
+argument_list|()
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiOsCreateLock
+argument_list|(
+operator|&
+name|AcpiGbl_PrintLock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|AE_OK
@@ -203,6 +487,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|OsExitLineEditMode
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK
@@ -210,6 +497,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_NATIVE_RSDP_POINTER
+end_ifndef
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetRootPointer  *  * PARAMETERS:  None  *  * RETURN:      RSDP physical address  *  * DESCRIPTION: Gets the ACPI root pointer (RSDP)  *  *****************************************************************************/
@@ -224,12 +517,16 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|AeLocalGetRootPointer
-argument_list|()
+literal|0
 operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPredefinedOverride  *  * PARAMETERS:  InitVal             - Initial value of the predefined object  *              NewVal              - The new value for the object  *  * RETURN:      Status, pointer to value. Null pointer returned if not  *              overriding.  *  * DESCRIPTION: Allow the OS to override predefined names  *  *****************************************************************************/
@@ -586,8 +883,14 @@ block|}
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_EXEC_APP
+end_ifndef
+
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetLine  *  * PARAMETERS:  Buffer              - Where to return the command line  *              BufferLength        - Maximum length of Buffer  *              BytesRead           - Where the actual byte count is returned  *  * RETURN:      Status and actual bytes read  *  * DESCRIPTION: Formatted input with argument list pointer  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetLine  *  * PARAMETERS:  Buffer              - Where to return the command line  *              BufferLength        - Maximum length of Buffer  *              BytesRead           - Where the actual byte count is returned  *  * RETURN:      Status and actual bytes read  *  * DESCRIPTION: Get the next input line from the terminal. NOTE: For the  *              AcpiExec utility, we use the acgetline module instead to  *              provide line-editing and history support.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -607,25 +910,26 @@ name|BytesRead
 parameter_list|)
 block|{
 name|int
-name|Temp
+name|InputChar
 decl_stmt|;
 name|UINT32
-name|i
+name|EndOfLine
 decl_stmt|;
+comment|/* Standard AcpiOsGetLine for all utilities except AcpiExec */
 for|for
 control|(
-name|i
+name|EndOfLine
 operator|=
 literal|0
 init|;
 condition|;
-name|i
+name|EndOfLine
 operator|++
 control|)
 block|{
 if|if
 condition|(
-name|i
+name|EndOfLine
 operator|>=
 name|BufferLength
 condition|)
@@ -639,7 +943,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|Temp
+name|InputChar
 operator|=
 name|getchar
 argument_list|()
@@ -657,30 +961,30 @@ block|}
 if|if
 condition|(
 operator|!
-name|Temp
+name|InputChar
 operator|||
-name|Temp
+name|InputChar
 operator|==
-literal|'\n'
+name|_ASCII_NEWLINE
 condition|)
 block|{
 break|break;
 block|}
 name|Buffer
 index|[
-name|i
+name|EndOfLine
 index|]
 operator|=
 operator|(
 name|char
 operator|)
-name|Temp
+name|InputChar
 expr_stmt|;
 block|}
 comment|/* Null terminate the buffer */
 name|Buffer
 index|[
-name|i
+name|EndOfLine
 index|]
 operator|=
 literal|0
@@ -694,7 +998,7 @@ block|{
 operator|*
 name|BytesRead
 operator|=
-name|i
+name|EndOfLine
 expr_stmt|;
 block|}
 return|return
@@ -704,6 +1008,17 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_USE_NATIVE_MEMORY_MAPPING
+end_ifndef
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsMapMemory  *  * PARAMETERS:  where               - Physical address of memory to be mapped  *              length              - How much memory to map  *  * RETURN:      Pointer to mapped memory. Null on error.  *  * DESCRIPTION: Map physical memory into caller's address space  *  *****************************************************************************/
@@ -755,6 +1070,11 @@ return|return;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsAllocate  *  * PARAMETERS:  Size                - Amount to allocate, in bytes  *  * RETURN:      Pointer to the new allocation. Null on error.  *  * DESCRIPTION: Allocate memory. Algorithm is dependent on the OS.  *  *****************************************************************************/
 end_comment
@@ -793,6 +1113,58 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_NATIVE_ALLOCATE_ZEROED
+end_ifdef
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsAllocateZeroed  *  * PARAMETERS:  Size                - Amount to allocate, in bytes  *  * RETURN:      Pointer to the new allocation. Null on error.  *  * DESCRIPTION: Allocate and zero memory. Algorithm is dependent on the OS.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|void
+modifier|*
+name|AcpiOsAllocateZeroed
+parameter_list|(
+name|ACPI_SIZE
+name|size
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|Mem
+decl_stmt|;
+name|Mem
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|size
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Mem
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsFree  *  * PARAMETERS:  mem                 - Pointer to previously allocated memory  *  * RETURN:      None.  *  * DESCRIPTION: Free memory allocated via AcpiOsAllocate  *  *****************************************************************************/
@@ -1779,7 +2151,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              Register            - Device Register  *              Value               - Buffer where value is placed  *              Width               - Number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Read data from PCI configuration space  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              PciRegister         - Device Register  *              Value               - Buffer where value is placed  *              Width               - Number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Read data from PCI configuration space  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1791,7 +2163,7 @@ modifier|*
 name|PciId
 parameter_list|,
 name|UINT32
-name|Register
+name|PciRegister
 parameter_list|,
 name|UINT64
 modifier|*
@@ -1815,7 +2187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWritePciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              Register            - Device Register  *              Value               - Value to be written  *              Width               - Number of bits  *  * RETURN:      Status.  *  * DESCRIPTION: Write data to PCI configuration space  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWritePciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              PciRegister         - Device Register  *              Value               - Value to be written  *              Width               - Number of bits  *  * RETURN:      Status.  *  * DESCRIPTION: Write data to PCI configuration space  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1827,7 +2199,7 @@ modifier|*
 name|PciId
 parameter_list|,
 name|UINT32
-name|Register
+name|PciRegister
 parameter_list|,
 name|UINT64
 name|Value
@@ -2068,7 +2440,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSignal  *  * PARAMETERS:  Function            - ACPI CA signal function code  *              Info                - Pointer to function-dependent structure  *  * RETURN:      Status  *  * DESCRIPTION: Miscellaneous functions. Example implementation only.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSignal  *  * PARAMETERS:  Function            - ACPI A signal function code  *              Info                - Pointer to function-dependent structure  *  * RETURN:      Status  *  * DESCRIPTION: Miscellaneous functions. Example implementation only.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -2203,6 +2575,58 @@ block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ACPI_SINGLE_THREADED */
+end_comment
+
+begin_function
+name|ACPI_THREAD_ID
+name|AcpiOsGetThreadId
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_STATUS
+name|AcpiOsExecute
+parameter_list|(
+name|ACPI_EXECUTE_TYPE
+name|Type
+parameter_list|,
+name|ACPI_OSD_EXEC_CALLBACK
+name|Function
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+name|Function
+argument_list|(
+name|Context
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
 operator|)
 return|;
 block|}

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -108,11 +108,16 @@ define|#
 directive|define
 name|DB_RF_CACHED
 value|(1<< 5)
-comment|/*  * The simplified state transition diagram for dbufs looks like:  *  *		+----> READ ----+  *		|		|  *		|		V  *  (alloc)-->UNCACHED	     CACHED-->EVICTING-->(free)  *		|		^	 ^  *		|		|	 |  *		+----> FILL ----+	 |  *		|			 |  *		|			 |  *		+--------> NOFILL -------+  */
+comment|/*  * The simplified state transition diagram for dbufs looks like:  *  *		+----> READ ----+  *		|		|  *		|		V  *  (alloc)-->UNCACHED	     CACHED-->EVICTING-->(free)  *		|		^	 ^  *		|		|	 |  *		+----> FILL ----+	 |  *		|			 |  *		|			 |  *		+--------> NOFILL -------+  *  * DB_SEARCH is an invalid state for a dbuf. It is used by dbuf_free_range  * to find all dbufs in a range of a dnode and must be less than any other  * dbuf_states_t (see comment on dn_dbufs in dnode.h).  */
 typedef|typedef
 enum|enum
 name|dbuf_states
 block|{
+name|DB_SEARCH
+init|=
+operator|-
+literal|1
+block|,
 name|DB_UNCACHED
 block|,
 name|DB_FILL
@@ -311,7 +316,7 @@ modifier|*
 name|db_last_dirty
 decl_stmt|;
 comment|/* 	 * Our link on the owner dnodes's dn_dbufs list. 	 * Protected by its dn_dbufs_mtx. 	 */
-name|list_node_t
+name|avl_node_t
 name|db_link
 decl_stmt|;
 comment|/* Data which is unique to data (leaf) blocks: */

@@ -581,7 +581,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* IRQs :  * 0: AIC   * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A,B  * 3: PIO Controller C,D  * 4: SMD Soft Modem  * 5: USART 0  * 6: USART 1  * 7: USART 2  * 8: USART 3  * 9: Two-wirte interface  * 10: Two-wirte interface  * 11: Two-wirte interface  * 12: HSMCI Interface  * 13: SPI 0  * 14: SPI 1  * 15: UART0  * 16: UART1  * 17: Timer Counter 0,1  * 18: PWM  * 19: ADC  * 20: DMAC 0  * 21: DMAC 1  * 22: UHPHS - USB Host controller  * 23: UDPHS - USB Device Controller  * 24: EMAC0  * 25: LCD controller or Image Sensor Interface  * 26: HSMCI1  * 27: EMAC1  * 28: SSC  * 29: CAN0  * 30: CAN1  * 31: AIC IRQ0  */
+comment|/* IRQs :  * 0: AIC   * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A,B  * 3: PIO Controller C,D  * 4: SMD Soft Modem  * 5: USART 0  * 6: USART 1  * 7: USART 2  * 8: USART 3  * 9: Two-wire interface  * 10: Two-wire interface  * 11: Two-wire interface  * 12: HSMCI Interface  * 13: SPI 0  * 14: SPI 1  * 15: UART0  * 16: UART1  * 17: Timer Counter 0,1  * 18: PWM  * 19: ADC  * 20: DMAC 0  * 21: DMAC 1  * 22: UHPHS - USB Host controller  * 23: UDPHS - USB Device Controller  * 24: EMAC0  * 25: LCD controller or Image Sensor Interface  * 26: HSMCI1  * 27: EMAC1  * 28: SSC  * 29: CAN0  * 30: CAN1  * 31: AIC IRQ0  */
 end_comment
 
 begin_define

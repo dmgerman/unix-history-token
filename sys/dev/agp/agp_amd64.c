@@ -1132,9 +1132,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-name|agp_flush_cache
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
