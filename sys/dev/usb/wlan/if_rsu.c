@@ -595,6 +595,13 @@ argument_list|,
 name|LW154
 argument_list|)
 block|,
+name|RSU_DEV_HT
+argument_list|(
+name|TRENDNET
+argument_list|,
+name|TEW646UBH
+argument_list|)
+block|,
 undef|#
 directive|undef
 name|RSU_DEV_HT
