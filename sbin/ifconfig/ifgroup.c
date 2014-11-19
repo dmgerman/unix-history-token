@@ -396,12 +396,6 @@ name|ifg_req
 modifier|*
 name|ifg
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|verbose
-condition|)
-return|return;
 name|memset
 argument_list|(
 operator|&
@@ -616,6 +610,13 @@ condition|)
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ifgr
+operator|.
+name|ifgr_groups
 argument_list|)
 expr_stmt|;
 block|}
