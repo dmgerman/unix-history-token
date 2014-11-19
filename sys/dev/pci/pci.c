@@ -18110,10 +18110,20 @@ name|pci_devinfo
 modifier|*
 name|dinfo
 decl_stmt|;
+name|device_t
+name|pcib
+decl_stmt|;
 name|int
 name|dstate
 decl_stmt|;
 comment|/* 	 * Set the device to the given state.  If the firmware suggests 	 * a different power state, use it instead.  If power management 	 * is not present, the firmware is responsible for managing 	 * device power.  Skip children who aren't attached since they 	 * are handled separately. 	 */
+name|pcib
+operator|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|dinfo
 operator|=
 name|device_get_ivars
@@ -18134,7 +18144,7 @@ argument_list|)
 operator|&&
 name|PCIB_POWER_FOR_SLEEP
 argument_list|(
-name|dev
+name|pcib
 argument_list|,
 name|child
 argument_list|,
