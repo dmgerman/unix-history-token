@@ -5762,7 +5762,13 @@ operator||=
 name|M_EOR
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|resid
+operator|>
+literal|0
+condition|)
 block|{
 comment|/* 				 * Copy the data from userland into a mbuf 				 * chain.  If no data is to be copied in, 				 * a single empty mbuf is returned. 				 */
 name|top
