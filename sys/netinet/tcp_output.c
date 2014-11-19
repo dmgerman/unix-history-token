@@ -2957,9 +2957,6 @@ if|if
 condition|(
 name|len
 operator|>
-operator|(
-name|u_int
-operator|)
 name|max_len
 condition|)
 block|{
@@ -2969,9 +2966,6 @@ literal|1
 expr_stmt|;
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|max_len
 expr_stmt|;
 block|}
@@ -3013,9 +3007,6 @@ name|mb
 operator|!=
 name|NULL
 operator|&&
-operator|(
-name|u_int
-operator|)
 name|max_len
 operator|<
 name|len
@@ -3115,9 +3106,6 @@ if|if
 condition|(
 name|len
 operator|>
-operator|(
-name|u_int
-operator|)
 name|max_len
 condition|)
 block|{
@@ -3127,9 +3115,6 @@ literal|1
 expr_stmt|;
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|max_len
 expr_stmt|;
 block|}
@@ -3164,9 +3149,6 @@ name|moff
 operator|=
 name|len
 operator|%
-operator|(
-name|u_int
-operator|)
 name|max_len
 expr_stmt|;
 if|if
@@ -3191,17 +3173,11 @@ if|if
 condition|(
 name|len
 operator|<=
-operator|(
-name|u_int
-operator|)
 name|max_len
 condition|)
 block|{
 name|len
 operator|=
-operator|(
-name|u_int
-operator|)
 name|max_len
 expr_stmt|;
 name|sendalot

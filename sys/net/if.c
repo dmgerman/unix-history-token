@@ -3509,32 +3509,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * If the "if_hw_tsomax" limit is set, check if it is 		 * too small: 		 */
-name|KASSERT
-argument_list|(
-name|ifp
-operator|->
-name|if_hw_tsomax
-operator|==
-literal|0
-operator|||
-name|ifp
-operator|->
-name|if_hw_tsomax
-operator|>=
-operator|(
-name|IP_MAXPACKET
-operator|/
-literal|8
-operator|)
-argument_list|,
-operator|(
-literal|"%s: if_hw_tsomax is outside of range"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 block|}
