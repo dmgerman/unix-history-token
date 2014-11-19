@@ -713,10 +713,10 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+comment|/* 	 * Network adapter TSO limits: 	 * =========================== 	 * 	 * If the "if_hw_tsomax" field is zero the maximum segment 	 * length limit does not apply. If the "if_hw_tsomaxsegcount" 	 * or the "if_hw_tsomaxsegsize" field is zero the TSO segment 	 * count limit does not apply. If all three fields are zero, 	 * there is no TSO limit. 	 * 	 * NOTE: The TSO limits only apply to the data payload part of 	 * a TCP/IP packet. That means there is no need to subtract 	 * space for ethernet-, vlan-, IP- or TCP- headers from the 	 * TSO limits unless the hardware driver in question requires 	 * so. 	 */
 name|u_int
 name|if_hw_tsomax
 decl_stmt|;
-comment|/* TSO total burst length 					 * limit in bytes. A value of 					 * zero means no limit. Have 					 * to find a better place for 					 * it eventually. */
 name|int
 name|if_ispare
 index|[
