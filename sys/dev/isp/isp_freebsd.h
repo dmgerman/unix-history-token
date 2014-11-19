@@ -1471,7 +1471,7 @@ name|ISP_LOCK
 parameter_list|(
 name|isp
 parameter_list|)
-value|mtx_lock(&isp->isp_osinfo.lock)
+value|mtx_lock(&(isp)->isp_osinfo.lock)
 end_define
 
 begin_define
@@ -1481,7 +1481,7 @@ name|ISP_UNLOCK
 parameter_list|(
 name|isp
 parameter_list|)
-value|mtx_unlock(&isp->isp_osinfo.lock)
+value|mtx_unlock(&(isp)->isp_osinfo.lock)
 end_define
 
 begin_define
@@ -1491,7 +1491,7 @@ name|ISP_ASSERT_LOCKED
 parameter_list|(
 name|isp
 parameter_list|)
-value|mtx_assert(&isp->isp_osinfo.lock, MA_OWNED)
+value|mtx_assert(&(isp)->isp_osinfo.lock, MA_OWNED)
 end_define
 
 begin_comment
