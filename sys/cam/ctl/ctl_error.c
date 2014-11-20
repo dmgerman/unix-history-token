@@ -1558,6 +1558,19 @@ operator|=
 literal|0x09
 expr_stmt|;
 break|break;
+case|case
+name|CTL_UA_THIN_PROV_THRES
+case|:
+comment|/* 38h/07n  THIN PROVISIONING SOFT THRESHOLD REACHED */
+name|asc
+operator|=
+literal|0x38
+expr_stmt|;
+name|ascq
+operator|=
+literal|0x07
+expr_stmt|;
+break|break;
 default|default:
 name|panic
 argument_list|(
