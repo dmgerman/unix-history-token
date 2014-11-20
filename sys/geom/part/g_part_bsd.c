@@ -2990,9 +2990,7 @@ name|p
 argument_list|,
 name|data
 argument_list|,
-name|basetable
-operator|->
-name|gpt_entries
+name|MAXPARTITIONS
 argument_list|)
 operator|)
 return|;
