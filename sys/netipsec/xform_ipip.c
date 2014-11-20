@@ -1988,19 +1988,6 @@ name|IPV6_VERSION
 expr_stmt|;
 name|ip6o
 operator|->
-name|ip6_plen
-operator|=
-name|htons
-argument_list|(
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-argument_list|)
-expr_stmt|;
-name|ip6o
-operator|->
 name|ip6_hlim
 operator|=
 name|IPV6_DEFHLIM
@@ -2029,7 +2016,6 @@ name|sin6
 operator|.
 name|sin6_addr
 expr_stmt|;
-comment|/* Fix payload length */
 name|ip6o
 operator|->
 name|ip6_plen
