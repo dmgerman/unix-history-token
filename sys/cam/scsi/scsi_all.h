@@ -6582,7 +6582,7 @@ name|SID_QUAL_IS_VENDOR_UNIQUE
 parameter_list|(
 name|inq_data
 parameter_list|)
-value|((SID_QUAL(inq_data)& 0x08) != 0)
+value|((SID_QUAL(inq_data)& 0x04) != 0)
 name|u_int8_t
 name|dev_qual2
 decl_stmt|;
