@@ -2156,13 +2156,6 @@ name|status
 operator||=
 name|CAM_SIM_QUEUED
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX Need a timeout handler */
-block|ccb->ccb_h.timeout_ch = timeout(trmtimeout, (caddr_t)srb, (ccb->ccb_h.timeout * hz) / 1000);
-endif|#
-directive|endif
 name|trm_SendSRB
 argument_list|(
 name|pACB
