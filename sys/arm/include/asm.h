@@ -363,7 +363,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|PIC
+name|__PIC__
 argument_list|)
 end_if
 
@@ -558,7 +558,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PIC */
+comment|/* __PIC__ */
 end_comment
 
 begin_undef

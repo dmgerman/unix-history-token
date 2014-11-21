@@ -22,7 +22,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PIC
+name|__PIC__
 end_ifndef
 
 begin_undef
@@ -87,7 +87,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !PIC */
+comment|/* !__PIC__ */
 end_comment
 
 begin_function

@@ -10,7 +10,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PIC
+name|__PIC__
 end_ifdef
 
 begin_comment
@@ -675,7 +675,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PIC */
+comment|/* __PIC__ */
 end_comment
 
 end_unit

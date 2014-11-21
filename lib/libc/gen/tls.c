@@ -361,7 +361,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PIC
+name|__PIC__
 end_ifndef
 
 begin_define
@@ -469,7 +469,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PIC
+name|__PIC__
 end_ifndef
 
 begin_ifdef
@@ -1208,7 +1208,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PIC */
+comment|/* __PIC__ */
 end_comment
 
 begin_decl_stmt
@@ -1227,7 +1227,7 @@ parameter_list|()
 block|{
 ifndef|#
 directive|ifndef
-name|PIC
+name|__PIC__
 name|Elf_Addr
 modifier|*
 name|sp

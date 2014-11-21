@@ -399,7 +399,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PIC
+name|__PIC__
 end_ifdef
 
 begin_expr_stmt

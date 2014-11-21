@@ -139,7 +139,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PIC
+name|__PIC__
 end_ifdef
 
 begin_function_decl
@@ -455,7 +455,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PIC */
+comment|/* __PIC__ */
 end_comment
 
 begin_function
@@ -869,16 +869,16 @@ directive|ifdef
 name|_PTHREAD_FORCED_UNWIND
 ifdef|#
 directive|ifdef
-name|PIC
+name|__PIC__
 name|thread_uw_init
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* PIC */
+comment|/* __PIC__ */
 ifdef|#
 directive|ifdef
-name|PIC
+name|__PIC__
 if|if
 condition|(
 name|uwl_forcedunwind

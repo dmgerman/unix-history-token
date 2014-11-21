@@ -550,7 +550,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PIC
+name|__PIC__
 end_ifndef
 
 begin_expr_stmt

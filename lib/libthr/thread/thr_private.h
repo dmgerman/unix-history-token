@@ -369,7 +369,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PIC
+name|__PIC__
 end_ifdef
 
 begin_define
