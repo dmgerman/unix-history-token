@@ -1489,7 +1489,7 @@ name|CTL_FLAG_REAL_SYNC
 init|=
 literal|0x02
 block|,
-name|CTL_FLAG_MASTER_SHELF
+name|CTL_FLAG_ACTIVE_SHELF
 init|=
 literal|0x04
 block|}
@@ -1591,6 +1591,18 @@ name|flags
 decl_stmt|;
 name|ctl_ha_mode
 name|ha_mode
+decl_stmt|;
+name|int
+name|ha_id
+decl_stmt|;
+name|int
+name|ha_state
+decl_stmt|;
+name|int
+name|is_single
+decl_stmt|;
+name|int
+name|port_offset
 decl_stmt|;
 name|int
 name|inquiry_pq_no_lun

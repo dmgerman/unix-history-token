@@ -942,12 +942,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|softc
-operator|->
-name|flags
-operator||=
-name|CTL_FLAG_MASTER_SHELF
-expr_stmt|;
 name|STAILQ_INIT
 argument_list|(
 operator|&
@@ -1065,14 +1059,6 @@ condition|(
 name|ctl_port_register
 argument_list|(
 name|port
-argument_list|,
-operator|(
-name|softc
-operator|->
-name|flags
-operator|&
-name|CTL_FLAG_MASTER_SHELF
-operator|)
 argument_list|)
 operator|!=
 literal|0

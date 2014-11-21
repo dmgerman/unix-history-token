@@ -9705,9 +9705,6 @@ operator|=
 name|ctl_port_register
 argument_list|(
 name|port
-argument_list|,
-comment|/*master_SC*/
-literal|1
 argument_list|)
 expr_stmt|;
 if|if

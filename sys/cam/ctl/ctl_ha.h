@@ -16,13 +16,15 @@ name|_CTL_HA_H_
 end_define
 
 begin_comment
-comment|/*  * CTL High Availability Modes:  *  * CTL_HA_MODE_SER_ONLY:  Commands are serialized to the other side.  Write  *			  mirroring and read re-direction are assumed to  * 			  happen in the back end.  * CTL_HA_MODE_XFER:	  Commands are serialized and data is transferred  *			  for write mirroring and read re-direction.  */
+comment|/*  * CTL High Availability Modes:  *  * CTL_HA_MODE_ACT_STBY:  One side is in Active state and processing commands,  *			  the other side is in Standby state, returning errors.  * CTL_HA_MODE_SER_ONLY:  Commands are serialized to the other side.  Write  *			  mirroring and read re-direction are assumed to  * 			  happen in the back end.  * CTL_HA_MODE_XFER:	  Commands are serialized and data is transferred  *			  for write mirroring and read re-direction.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|CTL_HA_MODE_ACT_STBY
+block|,
 name|CTL_HA_MODE_SER_ONLY
 block|,
 name|CTL_HA_MODE_XFER
