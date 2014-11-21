@@ -158,14 +158,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * When polling for the AC bit, the number of times we have to not see it  * before assuming JTAG has disappeared on us.  By default, one second.  */
+comment|/*  * When polling for the AC bit, the number of times we have to not see it  * before assuming JTAG has disappeared on us.  By default, two seconds.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AJU_JTAG_MAXMISS
-value|5
+value|10
 end_define
 
 begin_comment
@@ -866,6 +866,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 			 * XXXRW: There is a slight race here in which we test 			 * for writability, drop the lock, get the character 			 * from the tty layer, re-acquire the lock, and then 			 * write.  It's possible for other code -- 			 * specifically, the low-level console -- to have 			 * written in the mean time, which might mean that 			 * there is no longer space.  The BERI memory bus will 			 * cause this write to block, wedging the processor 			 * until space is available -- which could be a while 			 * if JTAG is not attached! 			 * 			 * The 'easy' fix is to drop the character if WSPACE 			 * has become unset.  Not sure what the 'hard' fix is. 			 */
 name|aju_data_write
 argument_list|(
 name|sc
