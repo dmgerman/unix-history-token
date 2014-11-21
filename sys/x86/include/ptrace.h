@@ -22,7 +22,7 @@ name|__HAVE_PTRACE_MACHDEP
 end_define
 
 begin_comment
-comment|/*  * On amd64 (PT_FIRSTMACH + 0) and (PT_FIRSTMACH + 1) are old values for  * PT_GETXSTATE and PT_SETXSTATE.  They should not be (re)used.  */
+comment|/*  * On amd64 (PT_FIRSTMACH + 0) and (PT_FIRSTMACH + 1) are old values for  * PT_GETXSTATE_OLD and PT_SETXSTATE_OLD.  They should not be (re)used.  */
 end_comment
 
 begin_ifdef
@@ -50,19 +50,69 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|PT_GETXSTATE
+name|PT_GETXSTATE_OLD
 value|(PT_FIRSTMACH + 2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PT_SETXSTATE
+name|PT_SETXSTATE_OLD
 value|(PT_FIRSTMACH + 3)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|PT_GETXSTATE_INFO
+value|(PT_FIRSTMACH + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_GETXSTATE
+value|(PT_FIRSTMACH + 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_SETXSTATE
+value|(PT_FIRSTMACH + 6)
+end_define
+
+begin_comment
+comment|/* Argument structure for PT_GETXSTATE_INFO. */
+end_comment
+
+begin_struct
+struct|struct
+name|ptrace_xstate_info
+block|{
+name|uint64_t
+name|xsave_mask
+decl_stmt|;
+name|uint32_t
+name|xsave_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

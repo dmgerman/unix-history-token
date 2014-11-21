@@ -3912,6 +3912,17 @@ begin_comment
 comment|/* Procstat auxv data. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NT_X86_XSTATE
+value|0x202
+end_define
+
+begin_comment
+comment|/* x86 XSAVE extended state. */
+end_comment
+
 begin_comment
 comment|/* Symbol Binding - ELFNN_ST_BIND - st_info */
 end_comment
