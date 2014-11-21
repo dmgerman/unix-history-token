@@ -1598,7 +1598,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* 	 * Pass the mbuf to enc0 for bpf and pfil. We will filter the IPIP 	 * packet later after it has been decapsulated. 	 */
+comment|/* Pass the mbuf to enc0 for bpf and pfil. */
 name|ipsec_bpf
 argument_list|(
 name|m
@@ -1612,12 +1612,6 @@ operator||
 name|ENC_BEFORE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|prot
-operator|!=
-name|IPPROTO_IPIP
-condition|)
 if|if
 condition|(
 operator|(
@@ -3066,7 +3060,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* 	 * Pass the mbuf to enc0 for bpf and pfil. We will filter the IPIP 	 * packet later after it has been decapsulated. 	 */
+comment|/* Pass the mbuf to enc0 for bpf and pfil. */
 name|ipsec_bpf
 argument_list|(
 name|m
@@ -3080,13 +3074,6 @@ operator||
 name|ENC_BEFORE
 argument_list|)
 expr_stmt|;
-comment|/* XXX-BZ does not make sense. */
-if|if
-condition|(
-name|prot
-operator|!=
-name|IPPROTO_IPIP
-condition|)
 if|if
 condition|(
 operator|(
