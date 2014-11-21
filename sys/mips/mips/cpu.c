@@ -198,9 +198,14 @@ decl_stmt|;
 name|u_int32_t
 name|cfg1
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|CPU_CNMIPS
 name|u_int32_t
 name|cfg2
 decl_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
