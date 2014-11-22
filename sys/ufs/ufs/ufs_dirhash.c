@@ -5511,7 +5511,7 @@ name|memwanted
 operator|=
 name|ufs_dirhashmem
 operator|*
-name|ufs_dirhash_reclaimpercent
+name|ufs_dirhashreclaimpercent
 operator|/
 literal|100
 expr_stmt|;
