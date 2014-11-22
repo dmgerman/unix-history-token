@@ -129,13 +129,6 @@ directive|include
 file|<net80211/ieee80211_radiotap.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|PCCARD_API_LEVEL
-value|6
-end_define
-
 begin_include
 include|#
 directive|include
