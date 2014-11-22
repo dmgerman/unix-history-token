@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tree.c,v 1.50 2013/12/24 19:11:46 schwarze Exp $ */
+comment|/*	$Id: tree.c,v 1.53 2014/07/02 07:10:38 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -138,10 +138,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|void
 name|tree_mdoc
@@ -169,10 +165,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|void
@@ -260,9 +252,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_ROOT
-operator|)
 case|:
 name|t
 operator|=
@@ -270,9 +260,7 @@ literal|"root"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_BLOCK
-operator|)
 case|:
 name|t
 operator|=
@@ -280,9 +268,7 @@ literal|"block"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_HEAD
-operator|)
 case|:
 name|t
 operator|=
@@ -290,9 +276,7 @@ literal|"block-head"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_BODY
-operator|)
 case|:
 if|if
 condition|(
@@ -311,9 +295,7 @@ literal|"block-body"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_TAIL
-operator|)
 case|:
 name|t
 operator|=
@@ -321,9 +303,7 @@ literal|"block-tail"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_ELEM
-operator|)
 case|:
 name|t
 operator|=
@@ -331,9 +311,7 @@ literal|"elem"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_TEXT
-operator|)
 case|:
 name|t
 operator|=
@@ -341,15 +319,11 @@ literal|"text"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_TBL
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_EQN
-operator|)
 case|:
 break|break;
 default|default:
@@ -366,9 +340,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_TEXT
-operator|)
 case|:
 name|p
 operator|=
@@ -378,9 +350,7 @@ name|string
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_BODY
-operator|)
 case|:
 name|p
 operator|=
@@ -393,9 +363,7 @@ index|]
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_HEAD
-operator|)
 case|:
 name|p
 operator|=
@@ -408,9 +376,7 @@ index|]
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_TAIL
-operator|)
 case|:
 name|p
 operator|=
@@ -423,9 +389,7 @@ index|]
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_ELEM
-operator|)
 case|:
 name|p
 operator|=
@@ -462,9 +426,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-operator|(
 name|MDOC_BLOCK
-operator|)
 case|:
 name|p
 operator|=
@@ -501,21 +463,15 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-operator|(
 name|MDOC_TBL
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_EQN
-operator|)
 case|:
 break|break;
 case|case
-operator|(
 name|MDOC_ROOT
-operator|)
 case|:
 name|p
 operator|=
@@ -746,6 +702,8 @@ argument_list|,
 name|n
 operator|->
 name|pos
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -848,9 +806,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MAN_ROOT
-operator|)
 case|:
 name|t
 operator|=
@@ -858,9 +814,7 @@ literal|"root"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_ELEM
-operator|)
 case|:
 name|t
 operator|=
@@ -868,9 +822,7 @@ literal|"elem"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_TEXT
-operator|)
 case|:
 name|t
 operator|=
@@ -878,9 +830,7 @@ literal|"text"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_BLOCK
-operator|)
 case|:
 name|t
 operator|=
@@ -888,9 +838,7 @@ literal|"block"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_HEAD
-operator|)
 case|:
 name|t
 operator|=
@@ -898,9 +846,7 @@ literal|"block-head"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_BODY
-operator|)
 case|:
 name|t
 operator|=
@@ -908,9 +854,7 @@ literal|"block-body"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_TAIL
-operator|)
 case|:
 name|t
 operator|=
@@ -918,15 +862,11 @@ literal|"block-tail"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_TBL
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MAN_EQN
-operator|)
 case|:
 break|break;
 default|default:
@@ -943,9 +883,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|MAN_TEXT
-operator|)
 case|:
 name|p
 operator|=
@@ -955,33 +893,23 @@ name|string
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_ELEM
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MAN_BLOCK
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MAN_HEAD
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MAN_TAIL
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MAN_BODY
-operator|)
 case|:
 name|p
 operator|=
@@ -994,9 +922,7 @@ index|]
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_ROOT
-operator|)
 case|:
 name|p
 operator|=
@@ -1004,15 +930,11 @@ literal|"root"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MAN_TBL
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MAN_EQN
-operator|)
 case|:
 break|break;
 default|default:
@@ -1102,11 +1024,29 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s (%s) %d:%d\n"
+literal|"%s (%s) "
 argument_list|,
 name|p
 argument_list|,
 name|t
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MAN_LINE
+operator|&
+name|n
+operator|->
+name|flags
+condition|)
+name|putchar
+argument_list|(
+literal|'*'
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%d:%d\n"
 argument_list|,
 name|n
 operator|->
@@ -1115,6 +1055,8 @@ argument_list|,
 name|n
 operator|->
 name|pos
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1213,9 +1155,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|EQN_ROOT
-operator|)
 case|:
 name|t
 operator|=
@@ -1223,9 +1163,7 @@ literal|"eqn-root"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|EQN_LIST
-operator|)
 case|:
 name|t
 operator|=
@@ -1233,9 +1171,7 @@ literal|"eqn-list"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|EQN_SUBEXPR
-operator|)
 case|:
 name|t
 operator|=
@@ -1243,9 +1179,7 @@ literal|"eqn-expr"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|EQN_TEXT
-operator|)
 case|:
 name|t
 operator|=
@@ -1253,9 +1187,7 @@ literal|"eqn-text"
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|EQN_MATRIX
-operator|)
 case|:
 name|t
 operator|=
@@ -1289,6 +1221,8 @@ argument_list|,
 name|ep
 operator|->
 name|pos
+operator|+
+literal|1
 argument_list|,
 name|ep
 operator|->
@@ -1406,9 +1340,7 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_SPAN_HORIZ
-operator|)
 case|:
 name|putchar
 argument_list|(
@@ -1417,9 +1349,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-operator|(
 name|TBL_SPAN_DHORIZ
-operator|)
 case|:
 name|putchar
 argument_list|(
@@ -1455,15 +1385,11 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_DATA_HORIZ
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_DATA_NHORIZ
-operator|)
 case|:
 name|putchar
 argument_list|(
@@ -1472,15 +1398,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-operator|(
 name|TBL_DATA_DHORIZ
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_DATA_NDHORIZ
-operator|)
 case|:
 name|putchar
 argument_list|(

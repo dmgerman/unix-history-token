@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libman.h,v 1.56 2012/11/17 00:26:33 schwarze Exp $ */
+comment|/*	$Id: libman.h,v 1.63 2014/08/01 21:24:17 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -43,14 +43,13 @@ name|parse
 decl_stmt|;
 comment|/* parse pointer */
 name|int
+name|quick
+decl_stmt|;
+comment|/* abort parse early */
+name|int
 name|flags
 decl_stmt|;
 comment|/* parse flags */
-define|#
-directive|define
-name|MAN_HALT
-value|(1<< 0)
-comment|/* badness happened: die */
 define|#
 directive|define
 name|MAN_ELINE
@@ -63,18 +62,9 @@ value|(1<< 2)
 comment|/* Next-line block scope. */
 define|#
 directive|define
-name|MAN_ILINE
-value|(1<< 3)
-comment|/* Ignored in next-line scope. */
-define|#
-directive|define
 name|MAN_LITERAL
 value|(1<< 4)
 comment|/* Literal input. */
-define|#
-directive|define
-name|MAN_BPLINE
-value|(1<< 5)
 define|#
 directive|define
 name|MAN_NEWLINE
@@ -180,32 +170,6 @@ end_decl_stmt
 
 begin_function_decl
 name|__BEGIN_DECLS
-define|#
-directive|define
-name|man_pmsg
-parameter_list|(
-name|man
-parameter_list|,
-name|l
-parameter_list|,
-name|p
-parameter_list|,
-name|t
-parameter_list|)
-define|\
-value|mandoc_msg((t), (man)->parse, (l), (p), NULL)
-define|#
-directive|define
-name|man_nmsg
-parameter_list|(
-name|man
-parameter_list|,
-name|n
-parameter_list|,
-name|t
-parameter_list|)
-define|\
-value|mandoc_msg((t), (man)->parse, (n)->line, (n)->pos, NULL)
 name|int
 name|man_word_alloc
 parameter_list|(
@@ -374,21 +338,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|man_valid_pre
-parameter_list|(
-name|struct
-name|man
-modifier|*
-parameter_list|,
-name|struct
-name|man_node
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|man_unscope
 parameter_list|(
 name|struct
@@ -399,9 +348,6 @@ specifier|const
 name|struct
 name|man_node
 modifier|*
-parameter_list|,
-name|enum
-name|mandocerr
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_data.c,v 1.27 2013/06/01 04:56:50 schwarze Exp $ */
+comment|/*	$Id: tbl_data.c,v 1.31 2014/04/23 16:08:33 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -63,6 +63,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mandoc_aux.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libmandoc.h"
 end_include
 
@@ -75,7 +81,7 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|data
+name|getdata
 parameter_list|(
 name|struct
 name|tbl_node
@@ -120,7 +126,7 @@ end_function_decl
 begin_function
 specifier|static
 name|int
-name|data
+name|getdata
 parameter_list|(
 name|struct
 name|tbl_node
@@ -203,7 +209,7 @@ name|layout
 operator|->
 name|first
 expr_stmt|;
-comment|/*  	 * Skip over spanners, since 	 * we want to match data with data layout cells in the header. 	 */
+comment|/* 	 * Skip over spanners, since 	 * we want to match data with data layout cells in the header. 	 */
 while|while
 condition|(
 name|cp
@@ -665,10 +671,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|tbl_cdata
@@ -758,7 +760,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-name|data
+name|getdata
 argument_list|(
 name|tbl
 argument_list|,
@@ -843,6 +845,9 @@ argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strlcat
 argument_list|(
 name|dat
@@ -854,6 +859,9 @@ argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strlcat
 argument_list|(
 name|dat
@@ -1098,7 +1106,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*  	 * Choose a layout row: take the one following the last parsed 	 * span's.  If that doesn't exist, use the last parsed span's. 	 * If there's no last parsed span, use the first row.  Lastly, 	 * if the last span was a horizontal line, use the same layout 	 * (it doesn't "consume" the layout). 	 */
+comment|/* 	 * Choose a layout row: take the one following the last parsed 	 * span's.  If that doesn't exist, use the last parsed span's. 	 * If there's no last parsed span, use the first row.  Lastly, 	 * if the last span was a horizontal line, use the same layout 	 * (it doesn't "consume" the layout). 	 */
 if|if
 condition|(
 name|tbl
@@ -1161,9 +1169,7 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_CELL_HORIZ
-operator|)
 case|:
 name|dp
 operator|=
@@ -1184,9 +1190,7 @@ name|TBL_SPAN_HORIZ
 expr_stmt|;
 continue|continue;
 case|case
-operator|(
 name|TBL_CELL_DHORIZ
-operator|)
 case|:
 name|dp
 operator|=
@@ -1325,7 +1329,7 @@ condition|)
 if|if
 condition|(
 operator|!
-name|data
+name|getdata
 argument_list|(
 name|tbl
 argument_list|,

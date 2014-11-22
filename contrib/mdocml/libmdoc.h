@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libmdoc.h,v 1.82 2013/10/21 23:47:58 schwarze Exp $ */
+comment|/*	$Id: libmdoc.h,v 1.88 2014/08/01 17:40:34 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -42,20 +42,20 @@ modifier|*
 name|parse
 decl_stmt|;
 comment|/* parse pointer */
+specifier|const
 name|char
 modifier|*
 name|defos
 decl_stmt|;
 comment|/* default argument for .Os */
 name|int
+name|quick
+decl_stmt|;
+comment|/* abort parse early */
+name|int
 name|flags
 decl_stmt|;
 comment|/* parse flags */
-define|#
-directive|define
-name|MDOC_HALT
-value|(1<< 0)
-comment|/* error in parse: halt */
 define|#
 directive|define
 name|MDOC_LITERAL
@@ -118,6 +118,12 @@ modifier|*
 name|first
 decl_stmt|;
 comment|/* the first node parsed */
+name|struct
+name|mdoc_node
+modifier|*
+name|last_es
+decl_stmt|;
+comment|/* the most recent Es node */
 name|struct
 name|mdoc_meta
 name|meta
@@ -275,32 +281,6 @@ end_decl_stmt
 
 begin_function_decl
 name|__BEGIN_DECLS
-define|#
-directive|define
-name|mdoc_pmsg
-parameter_list|(
-name|mdoc
-parameter_list|,
-name|l
-parameter_list|,
-name|p
-parameter_list|,
-name|t
-parameter_list|)
-define|\
-value|mandoc_msg((t), (mdoc)->parse, (l), (p), NULL)
-define|#
-directive|define
-name|mdoc_nmsg
-parameter_list|(
-name|mdoc
-parameter_list|,
-name|n
-parameter_list|,
-name|t
-parameter_list|)
-define|\
-value|mandoc_msg((t), (mdoc)->parse, (n)->line, (n)->pos, NULL)
 name|int
 name|mdoc_macro
 parameter_list|(

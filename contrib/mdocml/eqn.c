@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: eqn.c,v 1.38 2011/07/25 15:37:00 kristaps Exp $ */
+comment|/*	$Id: eqn.c,v 1.44 2014/07/06 19:09:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -1696,10 +1702,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|enum
 name|rofferr
@@ -1797,9 +1799,9 @@ operator|(
 name|er
 operator|)
 return|;
-name|mandoc_msg
+name|mandoc_vmsg
 argument_list|(
-name|MANDOCERR_ARGSLOST
+name|MANDOCERR_ARG_SKIP
 argument_list|,
 name|ep
 operator|->
@@ -1809,7 +1811,9 @@ name|ln
 argument_list|,
 name|pos
 argument_list|,
-name|NULL
+literal|"EN %s"
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -2382,21 +2386,15 @@ name|pile
 condition|)
 block|{
 case|case
-operator|(
 name|EQNPILE_LCOL
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|EQNPILE_CCOL
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|EQNPILE_RCOL
-operator|)
 case|:
 continue|continue;
 default|default:
@@ -3785,6 +3783,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|sym
@@ -4514,7 +4515,7 @@ name|q
 condition|)
 name|EQN_MSG
 argument_list|(
-name|MANDOCERR_BADQUOTE
+name|MANDOCERR_ARG_QUOTE
 argument_list|,
 name|ep
 argument_list|)
@@ -4948,7 +4949,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*  	 * Search for a key that already exists.  	 * Create a new key if none is found. 	 */
+comment|/* 	 * Search for a key that already exists. 	 * Create a new key if none is found. 	 */
 if|if
 condition|(
 name|NULL
@@ -5021,7 +5022,7 @@ name|ep
 operator|->
 name|defs
 operator|=
-name|mandoc_realloc
+name|mandoc_reallocarray
 argument_list|(
 name|ep
 operator|->
@@ -5030,7 +5031,7 @@ argument_list|,
 name|ep
 operator|->
 name|defsz
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct

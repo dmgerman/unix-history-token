@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: chars.c,v 1.54 2013/06/20 22:39:30 schwarze Exp $ */
+comment|/*	$Id: chars.c,v 1.58 2014/07/23 15:00:08 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -57,6 +57,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mandoc_aux.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libmandoc.h"
 end_include
 
@@ -104,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|LINES_MAX
-value|329
+value|330
 end_define
 
 begin_define
@@ -472,7 +478,6 @@ argument_list|(
 name|i
 argument_list|)
 condition|?
-comment|/* LINTED */
 name|i
 else|:
 literal|'\0'
@@ -519,7 +524,7 @@ operator|(
 literal|'\0'
 operator|)
 return|;
-comment|/* FIXME: make sure we're not in a bogus range. */
+comment|/* 	 * Security warning: 	 * Never extend the range of accepted characters 	 * to overlap with the ASCII range, 0x00-0x7F 	 * without re-auditing the callers of this function. 	 * Some callers might relay on the fact that we never 	 * return ASCII characters for their escaping decisions. 	 * 	 * XXX Code is missing here to exclude bogus ranges. 	 */
 return|return
 operator|(
 name|i

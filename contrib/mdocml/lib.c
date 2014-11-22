@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: lib.c,v 1.9 2011/03/22 14:33:05 kristaps Exp $ */
+comment|/*	$Id: lib.c,v 1.10 2014/03/23 11:25:26 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -27,31 +27,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mdoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mandoc.h"
 end_include
 
 begin_include

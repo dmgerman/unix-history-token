@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ps.c,v 1.54 2011/10/16 12:20:34 schwarze Exp $ */
+comment|/*	$Id: term_ps.c,v 1.62 2014/08/01 19:25:52 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -87,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mandoc_aux.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"out.h"
 end_include
 
@@ -126,7 +132,6 @@ name|p
 parameter_list|,
 name|x
 parameter_list|)
-comment|/* LINTED */
 define|\
 value|(size_t)((double)(x) * (1000.0 / (double)(p)->ps->scale))
 end_define
@@ -144,7 +149,6 @@ name|p
 parameter_list|,
 name|x
 parameter_list|)
-comment|/* LINTED */
 define|\
 value|((double)(x) / (1000.0 / (double)(p)->ps->scale))
 end_define
@@ -269,6 +273,10 @@ name|size_t
 name|width
 decl_stmt|;
 comment|/* page width (AFM units) */
+name|size_t
+name|lastwidth
+decl_stmt|;
+comment|/* page width before last ll */
 name|size_t
 name|left
 decl_stmt|;
@@ -467,6 +475,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|-
+literal|0
+operator|>=
+literal|4
+end_if
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(__format__ (__printf__,
+literal|2
+argument|,
+literal|3
+argument|))
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -510,6 +544,22 @@ modifier|*
 parameter_list|,
 name|enum
 name|termfont
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ps_setwidth
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1920,6 +1970,12 @@ name|ps_letter
 expr_stmt|;
 name|p
 operator|->
+name|setwidth
+operator|=
+name|ps_setwidth
+expr_stmt|;
+name|p
+operator|->
 name|width
 operator|=
 name|ps_width
@@ -1967,9 +2023,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-operator|(
 literal|0
-operator|)
 case|:
 name|pp
 operator|=
@@ -2116,7 +2170,7 @@ name|pp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * This MUST be defined before any PNT2AFM or AFM2PNT 	 * calculations occur. 	 */
+comment|/* 	 * This MUST be defined before any PNT2AFM or AFM2PNT 	 * calculations occur. 	 */
 name|p
 operator|->
 name|ps
@@ -2161,7 +2215,6 @@ expr_stmt|;
 comment|/* Margins are 1/9 the page x and y. */
 name|marginx
 operator|=
-comment|/* LINTED */
 call|(
 name|size_t
 call|)
@@ -2176,7 +2229,6 @@ argument_list|)
 expr_stmt|;
 name|marginy
 operator|=
-comment|/* LINTED */
 call|(
 name|size_t
 call|)
@@ -2215,6 +2267,12 @@ operator|->
 name|ps
 operator|->
 name|width
+operator|=
+name|p
+operator|->
+name|ps
+operator|->
+name|lastwidth
 operator|=
 operator|(
 name|size_t
@@ -2321,6 +2379,91 @@ operator|(
 name|p
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ps_setwidth
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|iop
+parameter_list|,
+name|size_t
+name|width
+parameter_list|)
+block|{
+name|size_t
+name|lastwidth
+decl_stmt|;
+name|lastwidth
+operator|=
+name|p
+operator|->
+name|ps
+operator|->
+name|width
+expr_stmt|;
+if|if
+condition|(
+literal|0
+operator|<
+name|iop
+condition|)
+name|p
+operator|->
+name|ps
+operator|->
+name|width
+operator|+=
+name|width
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+literal|0
+operator|>
+name|iop
+condition|)
+name|p
+operator|->
+name|ps
+operator|->
+name|width
+operator|-=
+name|width
+expr_stmt|;
+else|else
+name|p
+operator|->
+name|ps
+operator|->
+name|width
+operator|=
+name|width
+condition|?
+name|width
+else|:
+name|p
+operator|->
+name|ps
+operator|->
+name|lastwidth
+expr_stmt|;
+name|p
+operator|->
+name|ps
+operator|->
+name|lastwidth
+operator|=
+name|lastwidth
+expr_stmt|;
 block|}
 end_function
 
@@ -2464,7 +2607,6 @@ name|ps
 operator|->
 name|pdfbytes
 operator|+=
-comment|/* LINTED */
 name|len
 operator|<
 literal|0
@@ -2478,7 +2620,7 @@ name|len
 expr_stmt|;
 return|return;
 block|}
-comment|/*  	 * XXX: I assume that the in-margin print won't exceed 	 * PS_BUFSLOP (128 bytes), which is reasonable but still an 	 * assumption that will cause pukeage if it's not the case. 	 */
+comment|/* 	 * XXX: I assume that the in-margin print won't exceed 	 * PS_BUFSLOP (128 bytes), which is reasonable but still an 	 * assumption that will cause pukeage if it's not the case. 	 */
 name|ps_growbuf
 argument_list|(
 name|p
@@ -2571,7 +2713,6 @@ name|flags
 operator|)
 condition|)
 block|{
-comment|/* LINTED */
 name|putchar
 argument_list|(
 name|c
@@ -2683,7 +2824,7 @@ name|ps
 operator|->
 name|pdfobjs
 operator|=
-name|realloc
+name|mandoc_reallocarray
 argument_list|(
 name|p
 operator|->
@@ -2696,38 +2837,13 @@ operator|->
 name|ps
 operator|->
 name|pdfobjsz
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|size_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|p
-operator|->
-name|ps
-operator|->
-name|pdfobjs
-condition|)
-block|{
-name|perror
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|(
-name|int
-operator|)
-name|MANDOCLEVEL_SYSERR
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|p
 operator|->
@@ -3054,10 +3170,6 @@ name|PS_NEWPAGE
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -3483,7 +3595,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*  	 * Print margins into margin buffer.  Nothing gets output to the 	 * screen yet, so we don't need to initialise the primary state. 	 */
+comment|/* 	 * Print margins into margin buffer.  Nothing gets output to the 	 * screen yet, so we don't need to initialise the primary state. 	 */
 if|if
 condition|(
 name|p
@@ -3677,7 +3789,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Print header and initialise page state.  Following this, 	 * stuff gets printed to the screen, so make sure we're sane. 	 */
+comment|/* 	 * Print header and initialise page state.  Following this, 	 * stuff gets printed to the screen, so make sure we're sane. 	 */
 name|t
 operator|=
 name|time
@@ -3914,7 +4026,7 @@ name|ps_printf
 argument_list|(
 name|p
 argument_list|,
-literal|"/Name /F%zu\n"
+literal|"/Name /F%d\n"
 argument_list|,
 name|i
 argument_list|)
@@ -4303,21 +4415,15 @@ name|c
 condition|)
 block|{
 case|case
-operator|(
 literal|'('
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|')'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'\\'
-operator|)
 case|:
 name|ps_putchar
 argument_list|(
@@ -4348,45 +4454,16 @@ name|c
 operator|<=
 literal|32
 operator|||
-operator|(
 name|c
 operator|-
 literal|32
 operator|>=
 name|MAXCHAR
-operator|)
 condition|)
-block|{
-name|ps_putchar
-argument_list|(
-name|p
-argument_list|,
-literal|' '
-argument_list|)
+name|c
+operator|=
+literal|32
 expr_stmt|;
-name|p
-operator|->
-name|ps
-operator|->
-name|pscol
-operator|+=
-operator|(
-name|size_t
-operator|)
-name|fonts
-index|[
-name|f
-index|]
-operator|.
-name|gly
-index|[
-literal|0
-index|]
-operator|.
-name|wx
-expr_stmt|;
-return|return;
-block|}
 name|ps_putchar
 argument_list|(
 name|p
@@ -4436,7 +4513,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|/*  	 * Spit out that we're exiting a word context (this is a 	 * "partial close" because we don't check the last-char buffer 	 * or anything). 	 */
+comment|/* 	 * Spit out that we're exiting a word context (this is a 	 * "partial close" because we don't check the last-char buffer 	 * or anything). 	 */
 if|if
 condition|(
 operator|!
@@ -4596,7 +4673,6 @@ name|cc
 decl_stmt|,
 name|c
 decl_stmt|;
-comment|/* LINTED */
 name|c
 operator|=
 name|arg
@@ -4863,7 +4939,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're in the margin, don't try to recalculate our current 	 * row.  XXX: if the column tries to be fancy with multiple 	 * lines, we'll do nasty stuff.  	 */
+comment|/* 	 * If we're in the margin, don't try to recalculate our current 	 * row.  XXX: if the column tries to be fancy with multiple 	 * lines, we'll do nasty stuff. 	 */
 if|if
 condition|(
 name|PS_MARGINS
@@ -5039,10 +5115,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|size_t
@@ -5070,27 +5142,11 @@ literal|32
 operator|>=
 name|MAXCHAR
 condition|)
-return|return
-operator|(
-operator|(
-name|size_t
-operator|)
-name|fonts
-index|[
-operator|(
-name|int
-operator|)
-name|TERMFONT_NONE
-index|]
-operator|.
-name|gly
-index|[
+name|c
+operator|=
 literal|0
-index|]
-operator|.
-name|wx
-operator|)
-return|;
+expr_stmt|;
+else|else
 name|c
 operator|-=
 literal|32
@@ -5149,9 +5205,7 @@ name|unit
 condition|)
 block|{
 case|case
-operator|(
 name|SCALE_CM
-operator|)
 case|:
 name|r
 operator|=
@@ -5168,9 +5222,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_IN
-operator|)
 case|:
 name|r
 operator|=
@@ -5182,14 +5234,12 @@ name|su
 operator|->
 name|scale
 operator|*
-literal|72
+literal|72.0
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_PC
-operator|)
 case|:
 name|r
 operator|=
@@ -5201,14 +5251,12 @@ name|su
 operator|->
 name|scale
 operator|*
-literal|12
+literal|12.0
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_PT
-operator|)
 case|:
 name|r
 operator|=
@@ -5220,14 +5268,12 @@ name|su
 operator|->
 name|scale
 operator|*
-literal|100
+literal|100.0
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_EM
-operator|)
 case|:
 name|r
 operator|=
@@ -5254,9 +5300,7 @@ name|wx
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_MM
-operator|)
 case|:
 name|r
 operator|=
@@ -5273,9 +5317,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_EN
-operator|)
 case|:
 name|r
 operator|=
@@ -5302,9 +5344,7 @@ name|wx
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_VS
-operator|)
 case|:
 name|r
 operator|=
