@@ -1358,6 +1358,37 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|autofs_flush
+parameter_list|(
+name|struct
+name|autofs_mount
+modifier|*
+name|amp
+parameter_list|)
+block|{
+comment|/* 	 * XXX: This will do for now, but ideally we should iterate 	 * 	over all the nodes. 	 */
+name|amp
+operator|->
+name|am_root
+operator|->
+name|an_cached
+operator|=
+name|false
+expr_stmt|;
+name|AUTOFS_DEBUG
+argument_list|(
+literal|"%s flushed"
+argument_list|,
+name|amp
+operator|->
+name|am_mountpoint
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * The set/restore sigmask functions are used to (temporarily) overwrite  * the thread td_sigmask during triggering.  */
 end_comment

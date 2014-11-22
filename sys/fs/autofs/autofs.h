@@ -482,6 +482,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|autofs_flush
+parameter_list|(
+name|struct
+name|autofs_mount
+modifier|*
+name|amp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|bool
 name|autofs_ignore_thread
 parameter_list|(
