@@ -9659,6 +9659,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|sb
+operator|==
+name|NULL
+operator|||
 operator|*
 name|sizep
 operator|==
