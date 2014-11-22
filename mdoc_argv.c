@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_argv.c,v 1.89 2013/12/25 00:50:05 schwarze Exp $ */
+comment|/*	$Id: mdoc_argv.c,v 1.95 2014/07/06 19:09:00 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -741,7 +747,7 @@ block|}
 block|,
 comment|/* Op */
 block|{
-name|ARGSFL_NONE
+name|ARGSFL_DELIM
 block|,
 name|NULL
 block|}
@@ -1231,7 +1237,7 @@ block|}
 block|,
 comment|/* Hf */
 block|{
-name|ARGSFL_NONE
+name|ARGSFL_DELIM
 block|,
 name|NULL
 block|}
@@ -1308,7 +1314,7 @@ block|}
 block|,
 comment|/* Es */
 block|{
-name|ARGSFL_NONE
+name|ARGSFL_DELIM
 block|,
 name|NULL
 block|}
@@ -1356,6 +1362,13 @@ name|NULL
 block|}
 block|,
 comment|/* Ta */
+block|{
+name|ARGSFL_NONE
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ll */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1526,7 +1539,7 @@ literal|1
 index|]
 condition|)
 break|break;
-comment|/*  	 * We want to nil-terminate the word to look it up (it's easier 	 * that way).  But we may not have a flag, in which case we need 	 * to restore the line as-is.  So keep around the stray byte, 	 * which we'll reset upon exiting (if necessary). 	 */
+comment|/* 	 * We want to nil-terminate the word to look it up (it's easier 	 * that way).  But we may not have a flag, in which case we need 	 * to restore the line as-is.  So keep around the stray byte, 	 * which we'll reset upon exiting (if necessary). 	 */
 if|if
 condition|(
 literal|'\0'
@@ -1626,7 +1639,7 @@ operator|.
 name|arg
 condition|)
 block|{
-comment|/*  		 * The flag was not found. 		 * Restore saved zeroed byte and return as a word. 		 */
+comment|/* 		 * The flag was not found. 		 * Restore saved zeroed byte and return as a word. 		 */
 if|if
 condition|(
 name|sv
@@ -1681,9 +1694,7 @@ index|]
 condition|)
 block|{
 case|case
-operator|(
 name|ARGV_SINGLE
-operator|)
 case|:
 if|if
 condition|(
@@ -1709,9 +1720,7 @@ operator|)
 return|;
 break|break;
 case|case
-operator|(
 name|ARGV_MULTI
-operator|)
 case|:
 if|if
 condition|(
@@ -1737,9 +1746,7 @@ operator|)
 return|;
 break|break;
 case|case
-operator|(
 name|ARGV_NONE
-operator|)
 case|:
 break|break;
 block|}
@@ -1779,7 +1786,7 @@ name|arg
 operator|->
 name|argv
 operator|=
-name|mandoc_realloc
+name|mandoc_reallocarray
 argument_list|(
 name|arg
 operator|->
@@ -1788,7 +1795,7 @@ argument_list|,
 name|arg
 operator|->
 name|argc
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2306,16 +2313,20 @@ name|mdoc
 operator|->
 name|flags
 condition|)
-name|mdoc_pmsg
+name|mandoc_msg
 argument_list|(
+name|MANDOCERR_ARG_QUOTE
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|line
 argument_list|,
 operator|*
 name|pos
 argument_list|,
-name|MANDOCERR_BADQUOTE
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mdoc
@@ -2469,7 +2480,7 @@ name|rc
 operator|=
 name|ARGS_PHRASE
 expr_stmt|;
-comment|/*  		 * Adjust new-buffer position to be beyond delimiter 		 * mark (e.g., Ta -> end + 2). 		 */
+comment|/* 		 * Adjust new-buffer position to be beyond delimiter 		 * mark (e.g., Ta -> end + 2). 		 */
 if|if
 condition|(
 name|p
@@ -2581,16 +2592,20 @@ operator|-
 literal|1
 operator|)
 condition|)
-name|mdoc_pmsg
+name|mandoc_msg
 argument_list|(
+name|MANDOCERR_SPACE_EOL
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|line
 argument_list|,
 operator|*
 name|pos
 argument_list|,
-name|MANDOCERR_EOLNSPACE
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2859,16 +2874,20 @@ operator|(
 name|ARGS_QWORD
 operator|)
 return|;
-name|mdoc_pmsg
+name|mandoc_msg
 argument_list|(
+name|MANDOCERR_ARG_QUOTE
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|line
 argument_list|,
 operator|*
 name|pos
 argument_list|,
-name|MANDOCERR_BADQUOTE
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -2936,16 +2955,20 @@ operator|*
 name|pos
 index|]
 condition|)
-name|mdoc_pmsg
+name|mandoc_msg
 argument_list|(
+name|MANDOCERR_SPACE_EOL
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|line
 argument_list|,
 operator|*
 name|pos
 argument_list|,
-name|MANDOCERR_EOLNSPACE
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -2989,7 +3012,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Check if the string consists only of space-separated closing  * delimiters.  This is a bit of a dance: the first must be a close  * delimiter, but it may be followed by middle delimiters.  Arbitrary  * whitespace may separate these tokens.  */
+comment|/*  * Check if the string consists only of space-separated closing  * delimiters.  This is a bit of a dance: the first must be a close  * delimiter, but it may be followed by middle delimiters.  Arbitrary  * whitespace may separate these tokens.  */
 end_comment
 
 begin_function
@@ -3323,20 +3346,18 @@ name|v
 operator|->
 name|value
 operator|=
-name|mandoc_realloc
+name|mandoc_reallocarray
 argument_list|(
 name|v
 operator|->
 name|value
 argument_list|,
-operator|(
 name|v
 operator|->
 name|sz
 operator|+
 name|MULTI_STEP
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char

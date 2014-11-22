@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_term.c,v 1.25 2013/05/31 21:37:17 schwarze Exp $ */
+comment|/*	$Id: tbl_term.c,v 1.27 2014/04/20 16:46:05 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -508,7 +508,11 @@ block|}
 comment|/* Vertical frame at the start of each row. */
 if|if
 condition|(
+operator|(
 name|TBL_OPT_BOX
+operator||
+name|TBL_OPT_DBOX
+operator|)
 operator|&
 name|sp
 operator|->
@@ -516,13 +520,11 @@ name|opts
 operator|->
 name|opts
 operator|||
-name|TBL_OPT_DBOX
-operator|&
 name|sp
 operator|->
-name|opts
+name|head
 operator|->
-name|opts
+name|vert
 condition|)
 name|term_word
 argument_list|(
@@ -554,15 +556,11 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_SPAN_HORIZ
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_SPAN_DHORIZ
-operator|)
 case|:
 name|tbl_hrule
 argument_list|(
@@ -573,9 +571,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_SPAN_DATA
-operator|)
 case|:
 comment|/* Iterate over template headers. */
 name|dp
@@ -605,7 +601,7 @@ operator|->
 name|next
 control|)
 block|{
-comment|/*  			 * If the current data header is invoked during 			 * a spanner ("spans"> 0), don't emit anything 			 * at all. 			 */
+comment|/* 			 * If the current data header is invoked during 			 * a spanner ("spans"> 0), don't emit anything 			 * at all. 			 */
 if|if
 condition|(
 operator|--
@@ -657,7 +653,7 @@ argument_list|,
 name|col
 argument_list|)
 expr_stmt|;
-comment|/*  			 * Go to the next data cell and assign the 			 * number of subsequent spans, if applicable. 			 */
+comment|/* 			 * Go to the next data cell and assign the 			 * number of subsequent spans, if applicable. 			 */
 if|if
 condition|(
 name|dp
@@ -682,7 +678,11 @@ block|}
 comment|/* Vertical frame at the end of each row. */
 if|if
 condition|(
+operator|(
 name|TBL_OPT_BOX
+operator||
+name|TBL_OPT_DBOX
+operator|)
 operator|&
 name|sp
 operator|->
@@ -690,13 +690,11 @@ name|opts
 operator|->
 name|opts
 operator|||
-name|TBL_OPT_DBOX
-operator|&
 name|sp
 operator|->
-name|opts
+name|layout
 operator|->
-name|opts
+name|vert
 condition|)
 name|term_word
 argument_list|(
@@ -1188,9 +1186,7 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_DATA_NONE
-operator|)
 case|:
 name|tbl_char
 argument_list|(
@@ -1205,15 +1201,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-operator|(
 name|TBL_DATA_HORIZ
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_DATA_NHORIZ
-operator|)
 case|:
 name|tbl_char
 argument_list|(
@@ -1228,15 +1220,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-operator|(
 name|TBL_DATA_NDHORIZ
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_DATA_DHORIZ
-operator|)
 case|:
 name|tbl_char
 argument_list|(
@@ -1263,9 +1251,7 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_CELL_HORIZ
-operator|)
 case|:
 name|tbl_char
 argument_list|(
@@ -1280,9 +1266,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_CELL_DHORIZ
-operator|)
 case|:
 name|tbl_char
 argument_list|(
@@ -1297,27 +1281,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_CELL_LONG
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_CENTRE
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_LEFT
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_RIGHT
-operator|)
 case|:
 name|tbl_literal
 argument_list|(
@@ -1330,9 +1306,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_CELL_NUMBER
-operator|)
 case|:
 name|tbl_number
 argument_list|(
@@ -1347,9 +1321,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_CELL_DOWN
-operator|)
 case|:
 name|tbl_char
 argument_list|(
@@ -1650,9 +1622,7 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_CELL_LONG
-operator|)
 case|:
 name|padl
 operator|=
@@ -1677,9 +1647,7 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_CELL_CENTRE
-operator|)
 case|:
 if|if
 condition|(
@@ -1700,9 +1668,7 @@ name|padl
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_CELL_RIGHT
-operator|)
 case|:
 name|padl
 operator|=

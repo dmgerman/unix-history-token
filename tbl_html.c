@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_html.c,v 1.10 2012/05/27 17:54:54 schwarze Exp $ */
+comment|/*	$Id: tbl_html.c,v 1.11 2014/04/20 16:46:05 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -111,10 +111,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|size_t
@@ -135,10 +131,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -490,15 +482,11 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_SPAN_HORIZ
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_SPAN_DHORIZ
-operator|)
 case|:
 name|PAIR_INIT
 argument_list|(

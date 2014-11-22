@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_layout.c,v 1.23 2012/05/27 17:54:54 schwarze Exp $ */
+comment|/*	$Id: tbl_layout.c,v 1.26 2014/04/20 16:46:05 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -23,12 +23,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
 
 begin_include
 include|#
@@ -58,6 +52,12 @@ begin_include
 include|#
 directive|include
 file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -313,21 +313,15 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_CELL_DOWN
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_HORIZ
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_DHORIZ
-operator|)
 case|:
 return|return
 operator|(
@@ -339,7 +333,7 @@ break|break;
 block|}
 name|mod
 label|:
-comment|/*  	 * XXX: since, at least for now, modifiers are non-conflicting 	 * (are separable by value, regardless of position), we let 	 * modifiers come in any order.  The existing tbl doesn't let 	 * this happen. 	 */
+comment|/* 	 * XXX: since, at least for now, modifiers are non-conflicting 	 * (are separable by value, regardless of position), we let 	 * modifiers come in any order.  The existing tbl doesn't let 	 * this happen. 	 */
 switch|switch
 condition|(
 name|p
@@ -350,33 +344,27 @@ index|]
 condition|)
 block|{
 case|case
-operator|(
 literal|'\0'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|' '
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'\t'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|','
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'.'
-operator|)
+case|:
+comment|/* FALLTHROUGH */
+case|case
+literal|'|'
 case|:
 return|return
 operator|(
@@ -613,9 +601,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-operator|(
 literal|'z'
-operator|)
 case|:
 name|cp
 operator|->
@@ -627,9 +613,7 @@ goto|goto
 name|mod
 goto|;
 case|case
-operator|(
 literal|'u'
-operator|)
 case|:
 name|cp
 operator|->
@@ -641,9 +625,7 @@ goto|goto
 name|mod
 goto|;
 case|case
-operator|(
 literal|'e'
-operator|)
 case|:
 name|cp
 operator|->
@@ -655,9 +637,7 @@ goto|goto
 name|mod
 goto|;
 case|case
-operator|(
 literal|'t'
-operator|)
 case|:
 name|cp
 operator|->
@@ -669,9 +649,7 @@ goto|goto
 name|mod
 goto|;
 case|case
-operator|(
 literal|'d'
-operator|)
 case|:
 name|cp
 operator|->
@@ -683,36 +661,26 @@ goto|goto
 name|mod
 goto|;
 case|case
-operator|(
 literal|'w'
-operator|)
 case|:
 comment|/* XXX for now, ignore minimal column width */
 goto|goto
 name|mod
 goto|;
 case|case
-operator|(
 literal|'f'
-operator|)
 case|:
 break|break;
 case|case
-operator|(
 literal|'r'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'b'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'i'
-operator|)
 case|:
 operator|(
 operator|*
@@ -766,15 +734,11 @@ argument_list|)
 condition|)
 block|{
 case|case
-operator|(
 literal|'3'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'b'
-operator|)
 case|:
 name|cp
 operator|->
@@ -786,15 +750,11 @@ goto|goto
 name|mod
 goto|;
 case|case
-operator|(
 literal|'2'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'i'
-operator|)
 case|:
 name|cp
 operator|->
@@ -806,15 +766,11 @@ goto|goto
 name|mod
 goto|;
 case|case
-operator|(
 literal|'1'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'r'
-operator|)
 case|:
 goto|goto
 name|mod
@@ -923,6 +879,38 @@ name|pos
 operator|)
 operator|++
 expr_stmt|;
+comment|/* Handle trailing vertical lines */
+if|if
+condition|(
+literal|'.'
+operator|==
+name|p
+index|[
+operator|*
+name|pos
+index|]
+operator|||
+literal|'\0'
+operator|==
+name|p
+index|[
+operator|*
+name|pos
+index|]
+condition|)
+block|{
+name|rp
+operator|->
+name|vert
+operator|=
+name|vert
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* Parse the column position (`c', `l', `r', ...). */
 for|for
 control|(
@@ -1054,14 +1042,11 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_CELL_HORIZ
-operator|)
 case|:
+comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_DHORIZ
-operator|)
 case|:
 name|mandoc_msg
 argument_list|(

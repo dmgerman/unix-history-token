@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.h,v 1.112 2013/12/30 18:30:32 schwarze Exp $ */
+comment|/*	$Id: mandoc.h,v 1.152 2014/08/06 15:09:05 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -39,6 +39,17 @@ end_define
 
 begin_comment
 comment|/* breakable hyphen */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASCII_BREAK
+value|29
+end_define
+
+begin_comment
+comment|/* breakable zero-width space */
 end_comment
 
 begin_comment
@@ -89,156 +100,197 @@ name|MANDOCERR_WARNING
 block|,
 comment|/* ===== start of warnings ===== */
 comment|/* related to the prologue */
-name|MANDOCERR_NOTITLE
+name|MANDOCERR_DT_NOTITLE
 block|,
-comment|/* no title in document */
-name|MANDOCERR_UPPERCASE
+comment|/* missing manual title, using UNTITLED: line */
+name|MANDOCERR_TH_NOTITLE
 block|,
-comment|/* document title should be all caps */
-name|MANDOCERR_BADMSEC
+comment|/* missing manual title, using "": [macro] */
+name|MANDOCERR_TITLE_CASE
 block|,
-comment|/* unknown manual section */
-name|MANDOCERR_BADVOLARCH
+comment|/* lower case character in document title */
+name|MANDOCERR_MSEC_MISSING
 block|,
-comment|/* unknown manual volume or arch */
-name|MANDOCERR_NODATE
+comment|/* missing manual section, using "": macro */
+name|MANDOCERR_MSEC_BAD
 block|,
-comment|/* date missing, using today's date */
-name|MANDOCERR_BADDATE
+comment|/* unknown manual section: Dt ... section */
+name|MANDOCERR_ARCH_BAD
 block|,
-comment|/* cannot parse date, using it verbatim */
-name|MANDOCERR_PROLOGOOO
+comment|/* unknown manual volume or arch: Dt ... volume */
+name|MANDOCERR_DATE_MISSING
 block|,
-comment|/* prologue macros out of order */
-name|MANDOCERR_PROLOGREP
+comment|/* missing date, using today's date */
+name|MANDOCERR_DATE_BAD
 block|,
-comment|/* duplicate prologue macro */
-name|MANDOCERR_BADPROLOG
+comment|/* cannot parse date, using it verbatim: date */
+name|MANDOCERR_OS_MISSING
 block|,
-comment|/* macro not allowed in prologue */
-name|MANDOCERR_BADBODY
+comment|/* missing Os macro, using "" */
+name|MANDOCERR_PROLOG_REP
 block|,
-comment|/* macro not allowed in body */
+comment|/* duplicate prologue macro: macro */
+name|MANDOCERR_PROLOG_LATE
+block|,
+comment|/* late prologue macro: macro */
+name|MANDOCERR_DT_LATE
+block|,
+comment|/* skipping late title macro: Dt args */
+name|MANDOCERR_PROLOG_ORDER
+block|,
+comment|/* prologue macros out of order: macros */
 comment|/* related to document structure */
 name|MANDOCERR_SO
 block|,
-comment|/* .so is fragile, better use ln(1) */
-name|MANDOCERR_NAMESECFIRST
+comment|/* .so is fragile, better use ln(1): so path */
+name|MANDOCERR_DOC_EMPTY
 block|,
-comment|/* NAME section must come first */
-name|MANDOCERR_BADNAMESEC
+comment|/* no document body */
+name|MANDOCERR_SEC_BEFORE
 block|,
-comment|/* bad NAME section contents */
-name|MANDOCERR_SECOOO
+comment|/* content before first section header: macro */
+name|MANDOCERR_NAMESEC_FIRST
 block|,
-comment|/* sections out of conventional order */
-name|MANDOCERR_SECREP
+comment|/* first section is not NAME: Sh title */
+name|MANDOCERR_NAMESEC_BAD
 block|,
-comment|/* duplicate section name */
-name|MANDOCERR_SECMSEC
+comment|/* bad NAME section contents: macro */
+name|MANDOCERR_SEC_ORDER
 block|,
-comment|/* section header suited to sections ... */
+comment|/* sections out of conventional order: Sh title */
+name|MANDOCERR_SEC_REP
+block|,
+comment|/* duplicate section title: Sh title */
+name|MANDOCERR_SEC_MSEC
+block|,
+comment|/* unexpected section: Sh title for ... only */
 comment|/* related to macros and nesting */
-name|MANDOCERR_MACROOBS
+name|MANDOCERR_MACRO_OBS
 block|,
-comment|/* skipping obsolete macro */
-name|MANDOCERR_IGNPAR
+comment|/* obsolete macro: macro */
+name|MANDOCERR_PAR_SKIP
 block|,
-comment|/* skipping paragraph macro */
-name|MANDOCERR_MOVEPAR
+comment|/* skipping paragraph macro: macro ... */
+name|MANDOCERR_PAR_MOVE
 block|,
-comment|/* moving paragraph macro out of list */
-name|MANDOCERR_IGNNS
+comment|/* moving paragraph macro out of list: macro */
+name|MANDOCERR_NS_SKIP
 block|,
 comment|/* skipping no-space macro */
-name|MANDOCERR_SCOPENEST
+name|MANDOCERR_BLK_NEST
 block|,
-comment|/* blocks badly nested */
-name|MANDOCERR_CHILD
+comment|/* blocks badly nested: macro ... */
+name|MANDOCERR_BD_NEST
 block|,
-comment|/* child violates parent syntax */
-name|MANDOCERR_NESTEDDISP
+comment|/* nested displays are not portable: macro ... */
+name|MANDOCERR_BL_MOVE
 block|,
-comment|/* nested displays are not portable */
-name|MANDOCERR_SCOPEREP
+comment|/* moving content out of list: macro */
+name|MANDOCERR_VT_CHILD
 block|,
-comment|/* already in literal mode */
-name|MANDOCERR_LINESCOPE
+comment|/* .Vt block has child macro: macro */
+name|MANDOCERR_FI_SKIP
 block|,
-comment|/* line scope broken */
-comment|/* related to missing macro arguments */
-name|MANDOCERR_MACROEMPTY
+comment|/* fill mode already enabled, skipping: fi */
+name|MANDOCERR_NF_SKIP
 block|,
-comment|/* skipping empty macro */
+comment|/* fill mode already disabled, skipping: nf */
+name|MANDOCERR_BLK_LINE
+block|,
+comment|/* line scope broken: macro breaks macro */
+comment|/* related to missing arguments */
+name|MANDOCERR_REQ_EMPTY
+block|,
+comment|/* skipping empty request: request */
+name|MANDOCERR_COND_EMPTY
+block|,
+comment|/* conditional request controls empty scope */
+name|MANDOCERR_MACRO_EMPTY
+block|,
+comment|/* skipping empty macro: macro */
+name|MANDOCERR_ARG_EMPTY
+block|,
+comment|/* empty argument, using 0n: macro arg */
 name|MANDOCERR_ARGCWARN
 block|,
 comment|/* argument count wrong */
-name|MANDOCERR_DISPTYPE
+name|MANDOCERR_BD_NOTYPE
 block|,
-comment|/* missing display type */
-name|MANDOCERR_LISTFIRST
+comment|/* missing display type, using -ragged: Bd */
+name|MANDOCERR_BL_LATETYPE
 block|,
-comment|/* list type must come first */
-name|MANDOCERR_NOWIDTHARG
+comment|/* list type is not the first argument: Bl arg */
+name|MANDOCERR_BL_NOWIDTH
 block|,
-comment|/* tag lists require a width argument */
-name|MANDOCERR_FONTTYPE
+comment|/* missing -width in -tag list, using 8n */
+name|MANDOCERR_EX_NONAME
 block|,
-comment|/* missing font type */
-name|MANDOCERR_WNOSCOPE
+comment|/* missing utility name, using "": Ex */
+name|MANDOCERR_IT_NOHEAD
 block|,
-comment|/* skipping end of block that is not open */
-comment|/* related to bad macro arguments */
-name|MANDOCERR_IGNARGV
+comment|/* empty head in list item: Bl -type It */
+name|MANDOCERR_IT_NOBODY
 block|,
-comment|/* skipping argument */
-name|MANDOCERR_ARGVREP
+comment|/* empty list item: Bl -type It */
+name|MANDOCERR_BF_NOFONT
 block|,
-comment|/* duplicate argument */
-name|MANDOCERR_DISPREP
+comment|/* missing font type, using \fR: Bf */
+name|MANDOCERR_BF_BADFONT
 block|,
-comment|/* duplicate display type */
-name|MANDOCERR_LISTREP
+comment|/* unknown font type, using \fR: Bf font */
+name|MANDOCERR_ARG_STD
 block|,
-comment|/* duplicate list type */
-name|MANDOCERR_BADATT
+comment|/* missing -std argument, adding it: macro */
+comment|/* related to bad arguments */
+name|MANDOCERR_ARG_QUOTE
 block|,
-comment|/* unknown AT&T UNIX version */
-name|MANDOCERR_BADBOOL
+comment|/* unterminated quoted argument */
+name|MANDOCERR_ARG_REP
 block|,
-comment|/* bad Boolean value */
-name|MANDOCERR_BADFONT
+comment|/* duplicate argument: macro arg */
+name|MANDOCERR_AN_REP
 block|,
-comment|/* unknown font */
-name|MANDOCERR_BADSTANDARD
+comment|/* skipping duplicate argument: An -arg */
+name|MANDOCERR_BD_REP
 block|,
-comment|/* unknown standard specifier */
-name|MANDOCERR_BADWIDTH
+comment|/* skipping duplicate display type: Bd -type */
+name|MANDOCERR_BL_REP
 block|,
-comment|/* bad width argument */
+comment|/* skipping duplicate list type: Bl -type */
+name|MANDOCERR_BL_SKIPW
+block|,
+comment|/* skipping -width argument: Bl -type */
+name|MANDOCERR_AT_BAD
+block|,
+comment|/* unknown AT&T UNIX version: At version */
+name|MANDOCERR_RS_BAD
+block|,
+comment|/* invalid content in Rs block: macro */
+name|MANDOCERR_SM_BAD
+block|,
+comment|/* invalid Boolean argument: macro arg */
+name|MANDOCERR_FT_BAD
+block|,
+comment|/* unknown font, skipping request: ft font */
 comment|/* related to plain text */
-name|MANDOCERR_NOBLANKLN
+name|MANDOCERR_FI_BLANK
 block|,
-comment|/* blank line in non-literal context */
-name|MANDOCERR_BADTAB
+comment|/* blank line in fill mode, using .sp */
+name|MANDOCERR_FI_TAB
 block|,
-comment|/* tab in non-literal context */
-name|MANDOCERR_EOLNSPACE
+comment|/* tab in filled text */
+name|MANDOCERR_SPACE_EOL
 block|,
-comment|/* end of line whitespace */
-name|MANDOCERR_BADCOMMENT
+comment|/* whitespace at end of input line */
+name|MANDOCERR_COMMENT_BAD
 block|,
 comment|/* bad comment style */
-name|MANDOCERR_BADESCAPE
+name|MANDOCERR_ESC_BAD
 block|,
-comment|/* unknown escape sequence */
-name|MANDOCERR_BADQUOTE
+comment|/* invalid escape sequence: esc */
+name|MANDOCERR_STR_UNDEF
 block|,
-comment|/* unterminated quoted string */
-comment|/* related to equations */
-name|MANDOCERR_EQNQUOTE
-block|,
-comment|/* unexpected literal in equation */
+comment|/* undefined string, using "": name */
 name|MANDOCERR_ERROR
 block|,
 comment|/* ===== start of errors ===== */
@@ -283,100 +335,84 @@ comment|/* data block still open */
 name|MANDOCERR_TBLEXTRADAT
 block|,
 comment|/* ignoring extra data cells */
+comment|/* related to document structure and macros */
 name|MANDOCERR_ROFFLOOP
 block|,
 comment|/* input stack limit exceeded, infinite loop? */
 name|MANDOCERR_BADCHAR
 block|,
-comment|/* skipping bad character */
-name|MANDOCERR_NAMESC
-block|,
-comment|/* escaped character not allowed in a name */
-name|MANDOCERR_NONAME
-block|,
-comment|/* manual name not yet set */
-name|MANDOCERR_NOTEXT
-block|,
-comment|/* skipping text before the first section header */
+comment|/* skipping bad character: number */
 name|MANDOCERR_MACRO
 block|,
-comment|/* skipping unknown macro */
-name|MANDOCERR_REQUEST
+comment|/* skipping unknown macro: macro */
+name|MANDOCERR_IT_STRAY
 block|,
-comment|/* NOT IMPLEMENTED: skipping request */
+comment|/* skipping item outside list: It ... */
+name|MANDOCERR_TA_STRAY
+block|,
+comment|/* skipping column outside column list: Ta */
+name|MANDOCERR_BLK_NOTOPEN
+block|,
+comment|/* skipping end of block that is not open */
+name|MANDOCERR_BLK_BROKEN
+block|,
+comment|/* inserting missing end of block: macro ... */
+name|MANDOCERR_BLK_NOEND
+block|,
+comment|/* appending missing end of block: macro */
+comment|/* related to request and macro arguments */
+name|MANDOCERR_NAMESC
+block|,
+comment|/* escaped character not allowed in a name: name */
 name|MANDOCERR_ARGCOUNT
 block|,
 comment|/* argument count wrong */
-name|MANDOCERR_STRAYTA
+name|MANDOCERR_BL_NOTYPE
 block|,
-comment|/* skipping column outside column list */
-name|MANDOCERR_NOSCOPE
+comment|/* missing list type, using -item: Bl */
+name|MANDOCERR_NM_NONAME
 block|,
-comment|/* skipping end of block that is not open */
-name|MANDOCERR_SCOPEBROKEN
+comment|/* missing manual name, using "": Nm */
+name|MANDOCERR_OS_UNAME
 block|,
-comment|/* missing end of block */
-name|MANDOCERR_SCOPEEXIT
+comment|/* uname(3) system call failed, using UNKNOWN */
+name|MANDOCERR_ST_BAD
 block|,
-comment|/* scope open on exit */
-name|MANDOCERR_UNAME
+comment|/* unknown standard specifier: St standard */
+name|MANDOCERR_IT_NONUM
 block|,
-comment|/* uname(3) system call failed */
-comment|/* FIXME: merge following with MANDOCERR_ARGCOUNT */
-name|MANDOCERR_NOARGS
+comment|/* skipping request without numeric argument */
+name|MANDOCERR_ARG_SKIP
 block|,
-comment|/* macro requires line argument(s) */
-name|MANDOCERR_NOBODY
+comment|/* skipping all arguments: macro args */
+name|MANDOCERR_ARG_EXCESS
 block|,
-comment|/* macro requires body argument(s) */
-name|MANDOCERR_NOARGV
-block|,
-comment|/* macro requires argument(s) */
-name|MANDOCERR_NUMERIC
-block|,
-comment|/* request requires a numeric argument */
-name|MANDOCERR_LISTTYPE
-block|,
-comment|/* missing list type */
-name|MANDOCERR_ARGSLOST
-block|,
-comment|/* line argument(s) will be lost */
-name|MANDOCERR_BODYLOST
-block|,
-comment|/* body argument(s) will be lost */
+comment|/* skipping excess arguments: macro ... args */
 name|MANDOCERR_FATAL
 block|,
 comment|/* ===== start of fatal errors ===== */
-name|MANDOCERR_NOTMANUAL
+name|MANDOCERR_TOOLARGE
 block|,
-comment|/* manual isn't really a manual */
-name|MANDOCERR_COLUMNS
+comment|/* input too large */
+name|MANDOCERR_BD_FILE
 block|,
-comment|/* column syntax is inconsistent */
-name|MANDOCERR_BADDISP
-block|,
-comment|/* NOT IMPLEMENTED: .Bd -file */
-name|MANDOCERR_SYNTARGVCOUNT
-block|,
-comment|/* argument count wrong, violates syntax */
-name|MANDOCERR_SYNTCHILD
-block|,
-comment|/* child violates parent syntax */
-name|MANDOCERR_SYNTARGCOUNT
-block|,
-comment|/* argument count wrong, violates syntax */
-name|MANDOCERR_SOPATH
+comment|/* NOT IMPLEMENTED: Bd -file */
+name|MANDOCERR_SO_PATH
 block|,
 comment|/* NOT IMPLEMENTED: .so with absolute path or ".." */
-name|MANDOCERR_NODOCBODY
+name|MANDOCERR_SO_FAIL
 block|,
-comment|/* no document body */
-name|MANDOCERR_NODOCPROLOG
+comment|/* .so request failed */
+comment|/* ===== system errors ===== */
+name|MANDOCERR_SYSOPEN
 block|,
-comment|/* no document prologue */
-name|MANDOCERR_MEM
+comment|/* cannot open file */
+name|MANDOCERR_SYSSTAT
 block|,
-comment|/* static buffer exhausted */
+comment|/* cannot stat file */
+name|MANDOCERR_SYSREAD
+block|,
+comment|/* cannot read file */
 name|MANDOCERR_MAX
 block|}
 enum|;
@@ -596,6 +632,10 @@ name|tbl_cell
 modifier|*
 name|last
 decl_stmt|;
+name|int
+name|vert
+decl_stmt|;
+comment|/* trailing vertical line */
 block|}
 struct|;
 end_struct
@@ -946,7 +986,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * An equation consists of a tree of expressions starting at a given  * line and position.   */
+comment|/*  * An equation consists of a tree of expressions starting at a given  * line and position.  */
 end_comment
 
 begin_struct
@@ -977,24 +1017,52 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The type of parse sequence.  This value is usually passed via the  * mandoc(1) command line of -man and -mdoc.  It's almost exclusively  * -mandoc but the others have been retained for compatibility.  */
+comment|/*  * Parse options.  */
 end_comment
 
-begin_enum
-enum|enum
-name|mparset
-block|{
-name|MPARSE_AUTO
-block|,
-comment|/* magically determine the document type */
+begin_define
+define|#
+directive|define
 name|MPARSE_MDOC
-block|,
+value|1
+end_define
+
+begin_comment
 comment|/* assume -mdoc */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MPARSE_MAN
+value|2
+end_define
+
+begin_comment
 comment|/* assume -man */
-block|}
-enum|;
-end_enum
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPARSE_SO
+value|4
+end_define
+
+begin_comment
+comment|/* honour .so requests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPARSE_QUICK
+value|8
+end_define
+
+begin_comment
+comment|/* abort the parse early */
+end_comment
 
 begin_enum
 enum|enum
@@ -1099,18 +1167,6 @@ end_struct_decl
 
 begin_function_decl
 name|__BEGIN_DECLS
-name|void
-modifier|*
-name|mandoc_calloc
-parameter_list|(
-name|size_t
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|enum
 name|mandoc_esc
 name|mandoc_escape
@@ -1127,55 +1183,6 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|mandoc_malloc
-parameter_list|(
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|mandoc_realloc
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|mandoc_strdup
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|mandoc_strndup
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1275,17 +1282,14 @@ name|mparse
 modifier|*
 name|mparse_alloc
 parameter_list|(
-name|enum
-name|mparset
+name|int
 parameter_list|,
 name|enum
 name|mandoclevel
 parameter_list|,
 name|mandocmsg
 parameter_list|,
-name|void
-modifier|*
-parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1380,6 +1384,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|man
+modifier|*
+modifier|*
+parameter_list|,
+name|char
 modifier|*
 modifier|*
 parameter_list|)

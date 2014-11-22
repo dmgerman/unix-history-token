@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_opts.c,v 1.12 2011/09/18 14:14:15 schwarze Exp $ */
+comment|/*	$Id: tbl_opts.c,v 1.13 2014/04/20 16:46:05 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -431,9 +431,7 @@ name|key
 condition|)
 block|{
 case|case
-operator|(
 name|KEY_DELIM
-operator|)
 case|:
 if|if
 condition|(
@@ -513,9 +511,7 @@ return|;
 block|}
 break|break;
 case|case
-operator|(
 name|KEY_TAB
-operator|)
 case|:
 if|if
 condition|(
@@ -563,9 +559,7 @@ literal|0
 operator|)
 return|;
 case|case
-operator|(
 name|KEY_LINESIZE
-operator|)
 case|:
 for|for
 control|(
@@ -670,9 +664,7 @@ literal|0
 operator|)
 return|;
 case|case
-operator|(
 name|KEY_DPOINT
-operator|)
 case|:
 if|if
 condition|(
@@ -807,7 +799,7 @@ decl_stmt|;
 comment|/* 	 * Parse individual options from the stream as surrounded by 	 * this goto.  Each pass through the routine parses out a single 	 * option and registers it.  Option arguments are processed in 	 * the arg() function. 	 */
 name|again
 label|:
-comment|/* 	 * EBNF describing this section: 	 * 	 * options	::= option_list [:space:]* [;][\n] 	 * option_list	::= option option_tail 	 * option_tail	::= [:space:]+ option_list | 	 * 		::= epsilon 	 * option	::= [:alpha:]+ args 	 * args		::= [:space:]* [(] [:alpha:]+ [)] 	 */
+comment|/* 	 * EBNF describing this section: 	 * 	 * options	::= option_list [:space:]* [;][\n] 	 * option_list	::= option option_tail 	 * option_tail	::= [:space:]+ option_list | 	 *		::= epsilon 	 * option	::= [:alpha:]+ args 	 * args		::= [:space:]* [(] [:alpha:]+ [)] 	 */
 while|while
 condition|(
 name|isspace
@@ -963,7 +955,7 @@ name|pos
 operator|)
 operator|++
 expr_stmt|;
-comment|/*  	 * Look through all of the available keys to find one that 	 * matches the input.  FIXME: hashtable this. 	 */
+comment|/* 	 * Look through all of the available keys to find one that 	 * matches the input.  FIXME: hashtable this. 	 */
 for|for
 control|(
 name|i
@@ -1041,7 +1033,7 @@ condition|)
 return|return;
 break|break;
 block|}
-comment|/*  	 * Allow us to recover from bad options by continuing to another 	 * parse sequence. 	 */
+comment|/* 	 * Allow us to recover from bad options by continuing to another 	 * parse sequence. 	 */
 if|if
 condition|(
 name|KEY_MAXKEYS

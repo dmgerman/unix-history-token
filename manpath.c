@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: manpath.c,v 1.12 2013/11/21 01:49:18 schwarze Exp $ */
+comment|/*	$Id: manpath.c,v 1.15 2014/04/23 21:06:41 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mandoc.h"
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -728,20 +728,18 @@ name|dirs
 operator|->
 name|paths
 operator|=
-name|mandoc_realloc
+name|mandoc_reallocarray
 argument_list|(
 name|dirs
 operator|->
 name|paths
 argument_list|,
-operator|(
 name|dirs
 operator|->
 name|sz
 operator|+
 literal|1
-operator|)
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char

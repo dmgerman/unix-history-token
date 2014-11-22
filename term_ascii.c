@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term_ascii.c,v 1.21 2013/06/01 14:27:20 schwarze Exp $ */
+comment|/*	$Id: term_ascii.c,v 1.27 2014/08/01 19:25:52 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -28,12 +28,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
 end_include
 
 begin_ifdef
@@ -98,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -267,6 +267,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ascii_setwidth
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -389,6 +405,10 @@ name|p
 operator|->
 name|defrmargin
 operator|=
+name|p
+operator|->
+name|lastrmargin
+operator|=
 literal|78
 expr_stmt|;
 name|p
@@ -438,6 +458,12 @@ operator|->
 name|letter
 operator|=
 name|ascii_letter
+expr_stmt|;
+name|p
+operator|->
+name|setwidth
+operator|=
+name|ascii_setwidth
 expr_stmt|;
 name|p
 operator|->
@@ -573,9 +599,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-operator|(
 literal|0
-operator|)
 case|:
 name|p
 operator|->
@@ -591,9 +615,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|1
-operator|)
 case|:
 name|p
 operator|->
@@ -609,9 +631,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|2
-operator|)
 case|:
 comment|/* 			 * Temporary, undocumented mode 			 * to imitate mdoc(7) output style. 			 */
 name|p
@@ -722,9 +742,91 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
+begin_function
+specifier|static
+name|void
+name|ascii_setwidth
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|iop
+parameter_list|,
+name|size_t
+name|width
+parameter_list|)
+block|{
+name|p
+operator|->
+name|rmargin
+operator|=
+name|p
+operator|->
+name|defrmargin
+expr_stmt|;
+if|if
+condition|(
+literal|0
+operator|<
+name|iop
+condition|)
+name|p
+operator|->
+name|defrmargin
+operator|+=
+name|width
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+literal|0
+operator|>
+name|iop
+condition|)
+name|p
+operator|->
+name|defrmargin
+operator|-=
+name|width
+expr_stmt|;
+else|else
+name|p
+operator|->
+name|defrmargin
+operator|=
+name|width
+condition|?
+name|width
+else|:
+name|p
+operator|->
+name|lastrmargin
+expr_stmt|;
+name|p
+operator|->
+name|lastrmargin
+operator|=
+name|p
+operator|->
+name|rmargin
+expr_stmt|;
+name|p
+operator|->
+name|rmargin
+operator|=
+name|p
+operator|->
+name|maxrmargin
+operator|=
+name|p
+operator|->
+name|defrmargin
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -770,10 +872,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -853,10 +951,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -875,10 +969,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -918,10 +1008,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|double
@@ -952,73 +1038,63 @@ name|unit
 condition|)
 block|{
 case|case
-operator|(
 name|SCALE_CM
-operator|)
 case|:
 name|r
 operator|=
-literal|4
-operator|*
 name|su
 operator|->
 name|scale
+operator|*
+literal|4.0
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_IN
-operator|)
 case|:
 name|r
 operator|=
-literal|10
-operator|*
 name|su
 operator|->
 name|scale
+operator|*
+literal|10.0
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_PC
-operator|)
 case|:
 name|r
 operator|=
 operator|(
-literal|10
-operator|*
 name|su
 operator|->
 name|scale
+operator|*
+literal|10.0
 operator|)
 operator|/
-literal|6
+literal|6.0
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_PT
-operator|)
 case|:
 name|r
 operator|=
 operator|(
-literal|10
-operator|*
 name|su
 operator|->
 name|scale
+operator|*
+literal|10.0
 operator|)
 operator|/
-literal|72
+literal|72.0
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_MM
-operator|)
 case|:
 name|r
 operator|=
@@ -1026,13 +1102,11 @@ name|su
 operator|->
 name|scale
 operator|/
-literal|1000
+literal|1000.0
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|SCALE_VS
-operator|)
 case|:
 name|r
 operator|=
@@ -1040,9 +1114,9 @@ name|su
 operator|->
 name|scale
 operator|*
-literal|2
+literal|2.0
 operator|-
-literal|1
+literal|1.0
 expr_stmt|;
 break|break;
 default|default:
@@ -1068,10 +1142,6 @@ directive|ifdef
 name|USE_WCHAR
 end_ifdef
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|size_t
@@ -1090,30 +1160,40 @@ block|{
 name|int
 name|rc
 decl_stmt|;
-return|return
-operator|(
-operator|(
+if|if
+condition|(
+name|c
+operator|==
+name|ASCII_NBRSP
+condition|)
+name|c
+operator|=
+literal|' '
+expr_stmt|;
 name|rc
 operator|=
 name|wcwidth
 argument_list|(
 name|c
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
 operator|<
 literal|0
-condition|?
+condition|)
+name|rc
+operator|=
 literal|0
-else|:
+expr_stmt|;
+return|return
+operator|(
 name|rc
 operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -1154,10 +1234,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -1177,10 +1253,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static

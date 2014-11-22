@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc.h,v 1.125 2013/12/24 19:11:45 schwarze Exp $ */
+comment|/*	$Id: mdoc.h,v 1.131 2014/07/29 13:58:18 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -269,6 +269,8 @@ name|MDOC__U
 block|,
 name|MDOC_Ta
 block|,
+name|MDOC_ll
+block|,
 name|MDOC_MAX
 block|}
 enum|;
@@ -390,7 +392,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*   * Section (named/unnamed) of `Sh'.   Note that these appear in the  * conventional order imposed by mdoc.7.  In the case of SEC_NONE, no  * section has been invoked (this shouldn't happen).  SEC_CUSTOM refers  * to other sections.  */
+comment|/*  * Section (named/unnamed) of `Sh'.   Note that these appear in the  * conventional order imposed by mdoc.7.  In the case of SEC_NONE, no  * section has been invoked (this shouldn't happen).  SEC_CUSTOM refers  * to other sections.  */
 end_comment
 
 begin_enum
@@ -413,6 +415,9 @@ comment|/* SYNOPSIS */
 name|SEC_DESCRIPTION
 block|,
 comment|/* DESCRIPTION */
+name|SEC_CONTEXT
+block|,
+comment|/* CONTEXT */
 name|SEC_IMPLEMENTATION
 block|,
 comment|/* IMPLEMENTATION NOTES */
@@ -512,7 +517,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * An argument to a macro (multiple values = `-column xxx yyy').   */
+comment|/*  * An argument to a macro (multiple values = `-column xxx yyy').  */
 end_comment
 
 begin_struct
@@ -643,7 +648,7 @@ name|DISP__NONE
 init|=
 literal|0
 block|,
-name|DISP_centred
+name|DISP_centered
 block|,
 comment|/* -centered */
 name|DISP_ragged
@@ -828,6 +833,11 @@ name|mdoc_bl
 name|Bl
 decl_stmt|;
 name|struct
+name|mdoc_node
+modifier|*
+name|Es
+decl_stmt|;
+name|struct
 name|mdoc_rs
 name|Rs
 decl_stmt|;
@@ -836,7 +846,7 @@ union|;
 end_union
 
 begin_comment
-comment|/*   * Single node in tree-linked AST.   */
+comment|/*  * Single node in tree-linked AST.  */
 end_comment
 
 begin_struct
@@ -1076,6 +1086,22 @@ parameter_list|(
 specifier|const
 name|struct
 name|mdoc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mdoc_deroff
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|mdoc_node
 modifier|*
 parameter_list|)
 function_decl|;

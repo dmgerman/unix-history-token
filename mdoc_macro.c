@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc_macro.c,v 1.125 2013/12/24 20:45:27 schwarze Exp $ */
+comment|/*	$Id: mdoc_macro.c,v 1.139 2014/08/01 17:27:44 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -178,16 +178,6 @@ begin_function_decl
 specifier|static
 name|int
 name|in_line
-parameter_list|(
-name|MACRO_PROT_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|obsolete
 parameter_list|(
 name|MACRO_PROT_ARGS
 parameter_list|)
@@ -567,6 +557,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Cd */
@@ -662,6 +654,8 @@ block|,
 name|MDOC_CALLABLE
 operator||
 name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ic */
@@ -711,9 +705,11 @@ block|}
 block|,
 comment|/* Op */
 block|{
-name|obsolete
+name|in_line
 block|,
-literal|0
+name|MDOC_CALLABLE
+operator||
+name|MDOC_PARSED
 block|}
 block|,
 comment|/* Ot */
@@ -1401,9 +1397,11 @@ block|}
 block|,
 comment|/* Hf */
 block|{
-name|obsolete
+name|in_line
 block|,
-literal|0
+name|MDOC_CALLABLE
+operator||
+name|MDOC_PARSED
 block|}
 block|,
 comment|/* Fr */
@@ -1491,16 +1489,22 @@ block|}
 block|,
 comment|/* %C */
 block|{
-name|obsolete
+name|in_line_argn
 block|,
-literal|0
+name|MDOC_CALLABLE
+operator||
+name|MDOC_PARSED
 block|}
 block|,
 comment|/* Es */
 block|{
-name|obsolete
+name|blk_part_imp
 block|,
-literal|0
+name|MDOC_CALLABLE
+operator||
+name|MDOC_PARSED
+operator||
+name|MDOC_JOIN
 block|}
 block|,
 comment|/* En */
@@ -1552,6 +1556,13 @@ name|MDOC_JOIN
 block|}
 block|,
 comment|/* Ta */
+block|{
+name|in_line_eoln
+block|,
+literal|0
+block|}
+block|,
+comment|/* ll */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1638,13 +1649,28 @@ index|]
 operator|.
 name|flags
 condition|)
-name|mdoc_nmsg
+name|mandoc_msg
 argument_list|(
+name|MANDOCERR_BLK_NOEND
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|n
+operator|->
+name|line
 argument_list|,
-name|MANDOCERR_SCOPEEXIT
+name|n
+operator|->
+name|pos
+argument_list|,
+name|mdoc_macronames
+index|[
+name|n
+operator|->
+name|tok
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* Rewind to the first. */
@@ -1811,7 +1837,6 @@ name|next
 operator|=
 name|MDOC_NEXT_SIBLING
 expr_stmt|;
-comment|/* LINTED */
 while|while
 condition|(
 name|mdoc
@@ -1903,9 +1928,7 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_Ac
-operator|)
 case|:
 return|return
 operator|(
@@ -1913,9 +1936,7 @@ name|MDOC_Ao
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Bc
-operator|)
 case|:
 return|return
 operator|(
@@ -1923,9 +1944,7 @@ name|MDOC_Bo
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Brc
-operator|)
 case|:
 return|return
 operator|(
@@ -1933,9 +1952,7 @@ name|MDOC_Bro
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Dc
-operator|)
 case|:
 return|return
 operator|(
@@ -1943,9 +1960,7 @@ name|MDOC_Do
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Ec
-operator|)
 case|:
 return|return
 operator|(
@@ -1953,9 +1968,7 @@ name|MDOC_Eo
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Ed
-operator|)
 case|:
 return|return
 operator|(
@@ -1963,9 +1976,7 @@ name|MDOC_Bd
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Ef
-operator|)
 case|:
 return|return
 operator|(
@@ -1973,9 +1984,7 @@ name|MDOC_Bf
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Ek
-operator|)
 case|:
 return|return
 operator|(
@@ -1983,9 +1992,7 @@ name|MDOC_Bk
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_El
-operator|)
 case|:
 return|return
 operator|(
@@ -1993,9 +2000,7 @@ name|MDOC_Bl
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Fc
-operator|)
 case|:
 return|return
 operator|(
@@ -2003,9 +2008,7 @@ name|MDOC_Fo
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Oc
-operator|)
 case|:
 return|return
 operator|(
@@ -2013,9 +2016,7 @@ name|MDOC_Oo
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Pc
-operator|)
 case|:
 return|return
 operator|(
@@ -2023,9 +2024,7 @@ name|MDOC_Po
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Qc
-operator|)
 case|:
 return|return
 operator|(
@@ -2033,9 +2032,7 @@ name|MDOC_Qo
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Re
-operator|)
 case|:
 return|return
 operator|(
@@ -2043,9 +2040,7 @@ name|MDOC_Rs
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Sc
-operator|)
 case|:
 return|return
 operator|(
@@ -2053,9 +2048,7 @@ name|MDOC_So
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Xc
-operator|)
 case|:
 return|return
 operator|(
@@ -2127,7 +2120,7 @@ else|:
 name|REWIND_NONE
 operator|)
 return|;
-comment|/* 	 * When starting to rewind, skip plain text  	 * and nodes that have already been rewound. 	 */
+comment|/* 	 * When starting to rewind, skip plain text 	 * and nodes that have already been rewound. 	 */
 if|if
 condition|(
 name|MDOC_TEXT
@@ -2196,16 +2189,14 @@ operator|(
 name|REWIND_MORE
 operator|)
 return|;
-comment|/* 	 * Blocks delimited by our target token get REWIND_MORE. 	 * Blocks delimiting our target token get REWIND_NONE.  	 */
+comment|/* 	 * Blocks delimited by our target token get REWIND_MORE. 	 * Blocks delimiting our target token get REWIND_NONE. 	 */
 switch|switch
 condition|(
 name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_Bl
-operator|)
 case|:
 if|if
 condition|(
@@ -2222,9 +2213,7 @@ operator|)
 return|;
 break|break;
 case|case
-operator|(
 name|MDOC_It
-operator|)
 case|:
 if|if
 condition|(
@@ -2248,9 +2237,7 @@ return|;
 break|break;
 comment|/* 	 * XXX Badly nested block handling still fails badly 	 * when one block is breaking two blocks of the same type. 	 * This is an incomplete and extremely ugly workaround, 	 * required to let the OpenBSD tree build. 	 */
 case|case
-operator|(
 name|MDOC_Oo
-operator|)
 case|:
 if|if
 condition|(
@@ -2267,9 +2254,7 @@ operator|)
 return|;
 break|break;
 case|case
-operator|(
 name|MDOC_Nm
-operator|)
 case|:
 return|return
 operator|(
@@ -2277,15 +2262,11 @@ name|REWIND_NONE
 operator|)
 return|;
 case|case
-operator|(
 name|MDOC_Nd
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Ss
-operator|)
 case|:
 if|if
 condition|(
@@ -2308,10 +2289,23 @@ operator|)
 return|;
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Sh
-operator|)
 case|:
+if|if
+condition|(
+name|MDOC_ROOT
+operator|==
+name|p
+operator|->
+name|parent
+operator|->
+name|type
+condition|)
+return|return
+operator|(
+name|REWIND_THIS
+operator|)
+return|;
 if|if
 condition|(
 name|MDOC_Nd
@@ -2617,7 +2611,7 @@ name|breaker
 expr_stmt|;
 name|mandoc_vmsg
 argument_list|(
-name|MANDOCERR_SCOPENEST
+name|MANDOCERR_BLK_NEST
 argument_list|,
 name|mdoc
 operator|->
@@ -2711,9 +2705,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-operator|(
 name|REWIND_NONE
-operator|)
 case|:
 return|return
 operator|(
@@ -2721,9 +2713,7 @@ literal|1
 operator|)
 return|;
 case|case
-operator|(
 name|REWIND_THIS
-operator|)
 case|:
 name|n
 operator|->
@@ -2753,13 +2743,11 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|REWIND_FORCE
-operator|)
 case|:
 name|mandoc_vmsg
 argument_list|(
-name|MANDOCERR_SCOPEBROKEN
+name|MANDOCERR_BLK_BROKEN
 argument_list|,
 name|mdoc
 operator|->
@@ -2786,9 +2774,7 @@ argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|REWIND_MORE
-operator|)
 case|:
 name|n
 operator|->
@@ -2816,9 +2802,7 @@ name|parent
 expr_stmt|;
 continue|continue;
 case|case
-operator|(
 name|REWIND_LATER
-operator|)
 case|:
 if|if
 condition|(
@@ -2846,19 +2830,24 @@ operator|)
 return|;
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|REWIND_ERROR
-operator|)
 case|:
-name|mdoc_pmsg
+name|mandoc_msg
 argument_list|(
+name|MANDOCERR_BLK_NOTOPEN
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|MANDOCERR_NOSCOPE
+name|mdoc_macronames
+index|[
+name|tok
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -3263,8 +3252,6 @@ name|strlen
 argument_list|(
 name|p
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 name|mdoc
@@ -3285,7 +3272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close out block partial/full explicit.    */
+comment|/*  * Close out block partial/full explicit.  */
 end_comment
 
 begin_function
@@ -3353,9 +3340,7 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_Ec
-operator|)
 case|:
 name|maxargs
 operator|=
@@ -3363,9 +3348,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Ek
-operator|)
 case|:
 name|mdoc
 operator|->
@@ -3488,7 +3471,7 @@ operator|==
 name|later
 condition|)
 break|break;
-comment|/*  			 * When there is a pending sub block, 			 * postpone closing out the current block 			 * until the rew_sub() closing out the sub-block. 			 */
+comment|/* 			 * When there is a pending sub block, 			 * postpone closing out the current block 			 * until the rew_sub() closing out the sub-block. 			 */
 name|make_pending
 argument_list|(
 name|later
@@ -3562,7 +3545,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|MDOC_CALLABLE
+name|MDOC_PARSED
 operator|&
 name|mdoc_macros
 index|[
@@ -3573,24 +3556,39 @@ name|flags
 operator|)
 condition|)
 block|{
-comment|/* FIXME: do this in validate */
 if|if
 condition|(
+literal|'\0'
+operator|!=
 name|buf
 index|[
 operator|*
 name|pos
 index|]
 condition|)
-name|mdoc_pmsg
+name|mandoc_vmsg
 argument_list|(
+name|MANDOCERR_ARG_SKIP
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|MANDOCERR_ARGSLOST
+literal|"%s %s"
+argument_list|,
+name|mdoc_macronames
+index|[
+name|tok
+index|]
+argument_list|,
+name|buf
+operator|+
+operator|*
+name|pos
 argument_list|)
 expr_stmt|;
 if|if
@@ -4009,39 +4007,27 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_An
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Ar
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Fl
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Mt
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Nm
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Pa
-operator|)
 case|:
 name|nc
 operator|=
@@ -4200,7 +4186,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/*  		 * In this case, we've located a submacro and must 		 * execute it.  Close out scope, if open.  If no 		 * elements have been generated, either create one (nc) 		 * or raise a warning. 		 */
+comment|/* 		 * In this case, we've located a submacro and must 		 * execute it.  Close out scope, if open.  If no 		 * elements have been generated, either create one (nc) 		 * or raise a warning. 		 */
 if|if
 condition|(
 name|MDOC_MAX
@@ -4289,15 +4275,22 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|mdoc_pmsg
+name|mandoc_msg
 argument_list|(
+name|MANDOCERR_MACRO_EMPTY
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|MANDOCERR_MACROEMPTY
+name|mdoc_macronames
+index|[
+name|tok
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -4349,7 +4342,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/*  		 * Non-quote-enclosed punctuation.  Set up our scope, if 		 * a word; rewind the scope, if a delimiter; then append 		 * the word.  		 */
+comment|/* 		 * Non-quote-enclosed punctuation.  Set up our scope, if 		 * a word; rewind the scope, if a delimiter; then append 		 * the word. 		 */
 name|d
 operator|=
 name|ARGS_QWORD
@@ -4644,15 +4637,22 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|mdoc_pmsg
+name|mandoc_msg
 argument_list|(
+name|MANDOCERR_MACRO_EMPTY
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|MANDOCERR_MACROEMPTY
+name|mdoc_macronames
+index|[
+name|tok
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -4750,6 +4750,99 @@ name|mdoc
 operator|->
 name|flags
 expr_stmt|;
+comment|/* Skip items outside lists. */
+if|if
+condition|(
+name|tok
+operator|==
+name|MDOC_It
+condition|)
+block|{
+for|for
+control|(
+name|n
+operator|=
+name|mdoc
+operator|->
+name|last
+init|;
+name|n
+condition|;
+name|n
+operator|=
+name|n
+operator|->
+name|parent
+control|)
+if|if
+condition|(
+name|n
+operator|->
+name|tok
+operator|==
+name|MDOC_Bl
+condition|)
+break|break;
+if|if
+condition|(
+name|n
+operator|==
+name|NULL
+condition|)
+block|{
+name|mandoc_vmsg
+argument_list|(
+name|MANDOCERR_IT_STRAY
+argument_list|,
+name|mdoc
+operator|->
+name|parse
+argument_list|,
+name|line
+argument_list|,
+name|ppos
+argument_list|,
+literal|"It %s"
+argument_list|,
+name|buf
+operator|+
+operator|*
+name|pos
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mdoc_elem_alloc
+argument_list|(
+name|mdoc
+argument_list|,
+name|line
+argument_list|,
+name|ppos
+argument_list|,
+name|MDOC_br
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+name|rew_elem
+argument_list|(
+name|mdoc
+argument_list|,
+name|MDOC_br
+argument_list|)
+operator|)
+return|;
+block|}
+block|}
 comment|/* Close out prior implicit scope. */
 if|if
 condition|(
@@ -5160,7 +5253,7 @@ name|last
 expr_stmt|;
 break|break;
 block|}
-comment|/*  		 * Emit leading punctuation (i.e., punctuation before 		 * the MDOC_HEAD) for non-phrase types. 		 */
+comment|/* 		 * Emit leading punctuation (i.e., punctuation before 		 * the MDOC_HEAD) for non-phrase types. 		 */
 if|if
 condition|(
 name|NULL
@@ -6068,96 +6161,6 @@ operator|->
 name|last
 expr_stmt|;
 block|}
-for|for
-control|(
-name|n
-operator|=
-name|body
-operator|->
-name|child
-init|;
-name|n
-operator|&&
-name|n
-operator|->
-name|next
-condition|;
-name|n
-operator|=
-name|n
-operator|->
-name|next
-control|)
-comment|/* Do nothing. */
-empty_stmt|;
-comment|/*  	 * End of sentence spacing: if the last node is a text node and 	 * has a trailing period, then mark it as being end-of-sentence. 	 */
-if|if
-condition|(
-name|n
-operator|&&
-name|MDOC_TEXT
-operator|==
-name|n
-operator|->
-name|type
-operator|&&
-name|n
-operator|->
-name|string
-condition|)
-if|if
-condition|(
-name|mandoc_eos
-argument_list|(
-name|n
-operator|->
-name|string
-argument_list|,
-name|strlen
-argument_list|(
-name|n
-operator|->
-name|string
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-name|n
-operator|->
-name|flags
-operator||=
-name|MDOC_EOS
-expr_stmt|;
-comment|/* Up-propagate the end-of-space flag. */
-if|if
-condition|(
-name|n
-operator|&&
-operator|(
-name|MDOC_EOS
-operator|&
-name|n
-operator|->
-name|flags
-operator|)
-condition|)
-block|{
-name|body
-operator|->
-name|flags
-operator||=
-name|MDOC_EOS
-expr_stmt|;
-name|body
-operator|->
-name|parent
-operator|->
-name|flags
-operator||=
-name|MDOC_EOS
-expr_stmt|;
-block|}
 comment|/* 	 * If there is an open sub-block requiring explicit close-out, 	 * postpone closing out the current block 	 * until the rew_sub() call closing out the sub-block. 	 */
 for|for
 control|(
@@ -6258,37 +6261,15 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*  	 * If we can't rewind to our body, then our scope has already 	 * been closed by another macro (like `Oc' closing `Op').  This 	 * is ugly behaviour nodding its head to OpenBSD's overwhelming 	 * crufty use of `Op' breakage. 	 */
-if|if
-condition|(
-name|n
-operator|!=
-name|body
-condition|)
-name|mandoc_vmsg
+name|assert
 argument_list|(
-name|MANDOCERR_SCOPENEST
-argument_list|,
-name|mdoc
-operator|->
-name|parse
-argument_list|,
-name|line
-argument_list|,
-name|ppos
-argument_list|,
-literal|"%s broken"
-argument_list|,
-name|mdoc_macronames
-index|[
-name|tok
-index|]
+name|n
+operator|==
+name|body
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|&&
 operator|!
 name|rew_sub
 argument_list|(
@@ -6333,8 +6314,6 @@ return|;
 comment|/* Rewind scope, if applicable. */
 if|if
 condition|(
-name|n
-operator|&&
 operator|!
 name|rew_sub
 argument_list|(
@@ -6908,10 +6887,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -6967,27 +6942,19 @@ name|tok
 condition|)
 block|{
 case|case
-operator|(
 name|MDOC_Ap
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_No
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Ns
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|MDOC_Ux
-operator|)
 case|:
 name|maxargs
 operator|=
@@ -6995,15 +6962,15 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|MDOC_Bx
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
+name|MDOC_Es
+case|:
+comment|/* FALLTHROUGH */
+case|case
 name|MDOC_Xr
-operator|)
 case|:
 name|maxargs
 operator|=
@@ -7218,7 +7185,7 @@ name|mdoc
 argument_list|,
 name|line
 argument_list|,
-name|la
+name|ppos
 argument_list|,
 name|tok
 argument_list|,
@@ -7428,7 +7395,7 @@ name|mdoc
 argument_list|,
 name|line
 argument_list|,
-name|la
+name|ppos
 argument_list|,
 name|tok
 argument_list|,
@@ -7796,10 +7763,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -7921,37 +7884,6 @@ name|pos
 argument_list|,
 name|buf
 argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|obsolete
-parameter_list|(
-name|MACRO_PROT_ARGS
-parameter_list|)
-block|{
-name|mdoc_pmsg
-argument_list|(
-name|mdoc
-argument_list|,
-name|line
-argument_list|,
-name|ppos
-argument_list|,
-name|MANDOCERR_MACROOBS
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
 operator|)
 return|;
 block|}
@@ -8140,10 +8072,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -8214,15 +8142,19 @@ operator|.
 name|type
 condition|)
 block|{
-name|mdoc_pmsg
+name|mandoc_msg
 argument_list|(
+name|MANDOCERR_TA_STRAY
+argument_list|,
 name|mdoc
+operator|->
+name|parse
 argument_list|,
 name|line
 argument_list|,
 name|ppos
 argument_list|,
-name|MANDOCERR_STRAYTA
+literal|"Ta"
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.h,v 1.15 2011/10/06 22:29:12 kristaps Exp $ */
+comment|/*	$Id: main.h,v 1.16 2014/04/20 16:46:04 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ value|((void *)(uintptr_t)(const void *)(a))
 end_define
 
 begin_comment
-comment|/*   * Definitions for main.c-visible output device functions, e.g., -Thtml  * and -Tascii.  Note that ascii_alloc() is named as such in  * anticipation of latin1_alloc() and so on, all of which map into the  * terminal output routines with different character settings.  */
+comment|/*  * Definitions for main.c-visible output device functions, e.g., -Thtml  * and -Tascii.  Note that ascii_alloc() is named as such in  * anticipation of latin1_alloc() and so on, all of which map into the  * terminal output routines with different character settings.  */
 end_comment
 
 begin_function_decl

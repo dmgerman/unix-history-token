@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: eqn_html.c,v 1.2 2011/07/24 10:09:03 kristaps Exp $ */
+comment|/*	$Id: eqn_html.c,v 1.3 2014/04/20 16:46:04 schwarze Exp $ */
 end_comment
 
 begin_comment

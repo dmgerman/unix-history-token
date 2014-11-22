@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.c,v 1.152 2013/08/08 20:07:47 schwarze Exp $ */
+comment|/*	$Id: html.c,v 1.159 2014/07/23 15:00:08 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -82,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -522,6 +528,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|print_escape
+parameter_list|(
+name|char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|print_encode
 parameter_list|(
 name|struct
@@ -713,9 +729,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-operator|(
 literal|0
-operator|)
 case|:
 name|h
 operator|->
@@ -725,9 +739,7 @@ name|v
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|1
-operator|)
 case|:
 name|h
 operator|->
@@ -737,9 +749,7 @@ name|v
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|2
-operator|)
 case|:
 name|h
 operator|->
@@ -749,9 +759,7 @@ name|v
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|3
-operator|)
 case|:
 name|h
 operator|->
@@ -1129,9 +1137,7 @@ name|deco
 condition|)
 block|{
 case|case
-operator|(
 name|ESCAPE_FONTPREV
-operator|)
 case|:
 name|font
 operator|=
@@ -1141,9 +1147,7 @@ name|metal
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|ESCAPE_FONTITALIC
-operator|)
 case|:
 name|font
 operator|=
@@ -1151,9 +1155,7 @@ name|HTMLFONT_ITALIC
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|ESCAPE_FONTBOLD
-operator|)
 case|:
 name|font
 operator|=
@@ -1161,9 +1163,7 @@ name|HTMLFONT_BOLD
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|ESCAPE_FONTBI
-operator|)
 case|:
 name|font
 operator|=
@@ -1171,15 +1171,11 @@ name|HTMLFONT_BI
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|ESCAPE_FONT
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|ESCAPE_FONTROMAN
-operator|)
 case|:
 name|font
 operator|=
@@ -1235,9 +1231,7 @@ name|font
 condition|)
 block|{
 case|case
-operator|(
 name|HTMLFONT_ITALIC
-operator|)
 case|:
 name|h
 operator|->
@@ -1256,9 +1250,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|HTMLFONT_BOLD
-operator|)
 case|:
 name|h
 operator|->
@@ -1277,9 +1269,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|HTMLFONT_BI
-operator|)
 case|:
 name|h
 operator|->
@@ -1407,9 +1397,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-operator|(
 name|ESCAPE_ERROR
-operator|)
 case|:
 return|return
 operator|(
@@ -1417,21 +1405,15 @@ name|sz
 operator|)
 return|;
 case|case
-operator|(
 name|ESCAPE_UNICODE
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|ESCAPE_NUMBERED
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|ESCAPE_SPECIAL
-operator|)
 case|:
 if|if
 condition|(
@@ -1447,9 +1429,7 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|ESCAPE_SKIPCHAR
-operator|)
 case|:
 name|skip
 operator|=
@@ -1463,6 +1443,93 @@ block|}
 return|return
 operator|(
 name|sz
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|print_escape
+parameter_list|(
+name|char
+name|c
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'<'
+case|:
+name|printf
+argument_list|(
+literal|"&lt;"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'>'
+case|:
+name|printf
+argument_list|(
+literal|"&gt;"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'&'
+case|:
+name|printf
+argument_list|(
+literal|"&amp;"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'"'
+case|:
+name|printf
+argument_list|(
+literal|"&quot;"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ASCII_NBRSP
+case|:
+name|putchar
+argument_list|(
+literal|'-'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ASCII_HYPH
+case|:
+name|putchar
+argument_list|(
+literal|'-'
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|ASCII_BREAK
+case|:
+break|break;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}
@@ -1511,7 +1578,7 @@ specifier|const
 name|char
 name|rejs
 index|[
-literal|6
+literal|9
 index|]
 init|=
 block|{
@@ -1523,7 +1590,13 @@ literal|'>'
 block|,
 literal|'&'
 block|,
+literal|'"'
+block|,
+name|ASCII_NBRSP
+block|,
 name|ASCII_HYPH
+block|,
+name|ASCII_BREAK
 block|,
 literal|'\0'
 block|}
@@ -1601,60 +1674,16 @@ operator|*
 name|p
 condition|)
 break|break;
-switch|switch
+if|if
 condition|(
+name|print_escape
+argument_list|(
 operator|*
 name|p
 operator|++
+argument_list|)
 condition|)
-block|{
-case|case
-operator|(
-literal|'<'
-operator|)
-case|:
-name|printf
-argument_list|(
-literal|"&lt;"
-argument_list|)
-expr_stmt|;
 continue|continue;
-case|case
-operator|(
-literal|'>'
-operator|)
-case|:
-name|printf
-argument_list|(
-literal|"&gt;"
-argument_list|)
-expr_stmt|;
-continue|continue;
-case|case
-operator|(
-literal|'&'
-operator|)
-case|:
-name|printf
-argument_list|(
-literal|"&amp;"
-argument_list|)
-expr_stmt|;
-continue|continue;
-case|case
-operator|(
-name|ASCII_HYPH
-operator|)
-case|:
-name|putchar
-argument_list|(
-literal|'-'
-argument_list|)
-expr_stmt|;
-continue|continue;
-default|default:
-break|break;
-block|}
 name|esc
 operator|=
 name|mandoc_escape
@@ -1682,39 +1711,27 @@ name|esc
 condition|)
 block|{
 case|case
-operator|(
 name|ESCAPE_FONT
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|ESCAPE_FONTPREV
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|ESCAPE_FONTBOLD
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|ESCAPE_FONTITALIC
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|ESCAPE_FONTBI
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|ESCAPE_FONTROMAN
-operator|)
 case|:
 if|if
 condition|(
@@ -1731,9 +1748,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
-operator|(
 name|ESCAPE_SKIPCHAR
-operator|)
 case|:
 name|h
 operator|->
@@ -1769,11 +1784,9 @@ name|esc
 condition|)
 block|{
 case|case
-operator|(
 name|ESCAPE_UNICODE
-operator|)
 case|:
-comment|/* Skip passed "u" header. */
+comment|/* Skip past "u" header. */
 name|c
 operator|=
 name|mchars_num2uc
@@ -1802,9 +1815,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|ESCAPE_NUMBERED
-operator|)
 case|:
 name|c
 operator|=
@@ -1817,9 +1828,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 literal|'\0'
-operator|!=
+operator|==
 name|c
+operator|||
+name|print_escape
+argument_list|(
+name|c
+argument_list|)
+operator|)
 condition|)
 name|putchar
 argument_list|(
@@ -1828,9 +1847,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|ESCAPE_SPECIAL
-operator|)
 case|:
 name|c
 operator|=
@@ -1869,6 +1886,13 @@ operator|&&
 literal|1
 operator|==
 name|len
+operator|&&
+operator|!
+name|print_escape
+argument_list|(
+operator|*
+name|seq
+argument_list|)
 condition|)
 name|putchar
 argument_list|(
@@ -1881,9 +1905,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|ESCAPE_NOSPACE
-operator|)
 case|:
 if|if
 condition|(
@@ -2248,9 +2270,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|HTML_XHTML_1_0_STRICT
-operator|)
 case|:
 name|putchar
 argument_list|(
@@ -2387,9 +2407,7 @@ name|type
 condition|)
 block|{
 case|case
-operator|(
 name|HTML_HTML_4_01_STRICT
-operator|)
 case|:
 name|name
 operator|=
@@ -2522,9 +2540,7 @@ name|metac
 condition|)
 block|{
 case|case
-operator|(
 name|HTMLFONT_ITALIC
-operator|)
 case|:
 name|h
 operator|->
@@ -2543,9 +2559,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|HTMLFONT_BOLD
-operator|)
 case|:
 name|h
 operator|->
@@ -2564,9 +2578,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|HTMLFONT_BI
-operator|)
 case|:
 name|h
 operator|->
@@ -2711,7 +2723,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/*  		 * Remember to close out and nullify the current 		 * meta-font and table, if applicable. 		 */
+comment|/* 		 * Remember to close out and nullify the current 		 * meta-font and table, if applicable. 		 */
 if|if
 condition|(
 name|tag
@@ -2822,7 +2834,7 @@ operator|==
 name|suntil
 condition|)
 return|return;
-comment|/*  		 * Remember to close out and nullify the current 		 * meta-font and table, if applicable. 		 */
+comment|/* 		 * Remember to close out and nullify the current 		 * meta-font and table, if applicable. 		 */
 if|if
 condition|(
 name|tag
@@ -2973,6 +2985,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+comment|/* 	 * XXX This is broken and not easy to fix. 	 * When using the -Oincludes option, buffmt_includes() 	 * may pass in strings overrunning BUFSIZ, causing a crash. 	 */
 name|h
 operator|->
 name|buflen
@@ -3204,9 +3217,7 @@ operator|)
 condition|)
 block|{
 case|case
-operator|(
 literal|'I'
-operator|)
 case|:
 name|bufcat
 argument_list|(
@@ -3331,9 +3342,7 @@ operator|)
 condition|)
 block|{
 case|case
-operator|(
 literal|'S'
-operator|)
 case|:
 name|bufcat
 argument_list|(
@@ -3348,13 +3357,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'N'
-operator|)
 case|:
 name|bufcat_fmt
 argument_list|(
 name|h
+argument_list|,
+literal|"%s"
 argument_list|,
 name|name
 argument_list|)

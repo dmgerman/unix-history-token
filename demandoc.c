@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: demandoc.c,v 1.7 2012/05/31 22:27:14 schwarze Exp $ */
+comment|/*	$Id: demandoc.c,v 1.10 2014/03/19 22:20:43 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -350,11 +350,9 @@ name|mp
 operator|=
 name|mparse_alloc
 argument_list|(
-name|MPARSE_AUTO
+name|MPARSE_SO
 argument_list|,
 name|MANDOCLEVEL_FATAL
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -525,6 +523,8 @@ name|mdoc
 argument_list|,
 operator|&
 name|man
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|line

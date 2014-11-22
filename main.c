@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: main.c,v 1.167 2012/11/19 17:22:26 schwarze Exp $ */
+comment|/*	$Id: main.c,v 1.177 2014/06/21 22:24:01 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2011, 2012 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010, 2011, 2012, 2014 Ingo Schwarze<schwarze@openbsd.org>  * Copyright (c) 2010 Joerg Sonnenberger<joerg@netbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -280,8 +286,7 @@ specifier|static
 name|int
 name|moptions
 parameter_list|(
-name|enum
-name|mparset
+name|int
 modifier|*
 parameter_list|,
 name|char
@@ -431,9 +436,8 @@ name|struct
 name|curparse
 name|curp
 decl_stmt|;
-name|enum
-name|mparset
-name|type
+name|int
+name|options
 decl_stmt|;
 name|enum
 name|mandoclevel
@@ -486,9 +490,9 @@ name|curparse
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|type
+name|options
 operator|=
-name|MPARSE_AUTO
+name|MPARSE_SO
 expr_stmt|;
 name|curp
 operator|.
@@ -506,7 +510,6 @@ name|defos
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* LINTED */
 while|while
 condition|(
 operator|-
@@ -531,9 +534,7 @@ name|c
 condition|)
 block|{
 case|case
-operator|(
 literal|'I'
-operator|)
 case|:
 if|if
 condition|(
@@ -551,7 +552,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-I%s: Bad argument\n"
+literal|"%s: -I%s: Bad argument\n"
+argument_list|,
+name|progname
 argument_list|,
 name|optarg
 argument_list|)
@@ -574,7 +577,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-I%s: Duplicate argument\n"
+literal|"%s: -I%s: Duplicate argument\n"
+argument_list|,
+name|progname
 argument_list|,
 name|optarg
 argument_list|)
@@ -599,9 +604,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'m'
-operator|)
 case|:
 if|if
 condition|(
@@ -609,7 +612,7 @@ operator|!
 name|moptions
 argument_list|(
 operator|&
-name|type
+name|options
 argument_list|,
 name|optarg
 argument_list|)
@@ -624,9 +627,7 @@ operator|)
 return|;
 break|break;
 case|case
-operator|(
 literal|'O'
-operator|)
 case|:
 operator|(
 name|void
@@ -658,9 +659,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'T'
-operator|)
 case|:
 if|if
 condition|(
@@ -683,9 +682,7 @@ operator|)
 return|;
 break|break;
 case|case
-operator|(
 literal|'W'
-operator|)
 case|:
 if|if
 condition|(
@@ -708,9 +705,7 @@ operator|)
 return|;
 break|break;
 case|case
-operator|(
 literal|'V'
-operator|)
 case|:
 name|version
 argument_list|()
@@ -728,16 +723,13 @@ name|mp
 operator|=
 name|mparse_alloc
 argument_list|(
-name|type
+name|options
 argument_list|,
 name|curp
 operator|.
 name|wlevel
 argument_list|,
 name|mmsg
-argument_list|,
-operator|&
-name|curp
 argument_list|,
 name|defos
 argument_list|)
@@ -1048,9 +1040,7 @@ name|outtype
 condition|)
 block|{
 case|case
-operator|(
 name|OUTT_XHTML
-operator|)
 case|:
 name|curp
 operator|->
@@ -1071,9 +1061,7 @@ name|html_free
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|OUTT_HTML
-operator|)
 case|:
 name|curp
 operator|->
@@ -1094,9 +1082,7 @@ name|html_free
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|OUTT_UTF8
-operator|)
 case|:
 name|curp
 operator|->
@@ -1117,9 +1103,7 @@ name|ascii_free
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|OUTT_LOCALE
-operator|)
 case|:
 name|curp
 operator|->
@@ -1140,9 +1124,7 @@ name|ascii_free
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|OUTT_ASCII
-operator|)
 case|:
 name|curp
 operator|->
@@ -1163,9 +1145,7 @@ name|ascii_free
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|OUTT_PDF
-operator|)
 case|:
 name|curp
 operator|->
@@ -1186,9 +1166,7 @@ name|pspdf_free
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|OUTT_PS
-operator|)
 case|:
 name|curp
 operator|->
@@ -1219,15 +1197,11 @@ name|outtype
 condition|)
 block|{
 case|case
-operator|(
 name|OUTT_HTML
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|OUTT_XHTML
-operator|)
 case|:
 name|curp
 operator|->
@@ -1243,9 +1217,7 @@ name|html_mdoc
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|OUTT_TREE
-operator|)
 case|:
 name|curp
 operator|->
@@ -1261,9 +1233,7 @@ name|tree_mdoc
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|OUTT_MAN
-operator|)
 case|:
 name|curp
 operator|->
@@ -1279,33 +1249,23 @@ name|man_man
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|OUTT_PDF
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|OUTT_ASCII
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|OUTT_UTF8
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|OUTT_LOCALE
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|OUTT_PS
-operator|)
 case|:
 name|curp
 operator|->
@@ -1335,6 +1295,8 @@ name|mdoc
 argument_list|,
 operator|&
 name|man
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Execute the out device, if it exists. */
@@ -1411,10 +1373,9 @@ specifier|static
 name|int
 name|moptions
 parameter_list|(
-name|enum
-name|mparset
+name|int
 modifier|*
-name|tflags
+name|options
 parameter_list|,
 name|char
 modifier|*
@@ -1433,8 +1394,8 @@ literal|"doc"
 argument_list|)
 condition|)
 operator|*
-name|tflags
-operator|=
+name|options
+operator||=
 name|MPARSE_MDOC
 expr_stmt|;
 elseif|else
@@ -1449,11 +1410,8 @@ argument_list|,
 literal|"andoc"
 argument_list|)
 condition|)
-operator|*
-name|tflags
-operator|=
-name|MPARSE_AUTO
-expr_stmt|;
+comment|/* nothing to do */
+empty_stmt|;
 elseif|else
 if|if
 condition|(
@@ -1467,8 +1425,8 @@ literal|"an"
 argument_list|)
 condition|)
 operator|*
-name|tflags
-operator|=
+name|options
+operator||=
 name|MPARSE_MAN
 expr_stmt|;
 else|else
@@ -1477,7 +1435,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Bad argument\n"
+literal|"%s: -m%s: Bad argument\n"
+argument_list|,
+name|progname
 argument_list|,
 name|arg
 argument_list|)
@@ -1704,7 +1664,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Bad argument\n"
+literal|"%s: -T%s: Bad argument\n"
+argument_list|,
+name|progname
 argument_list|,
 name|arg
 argument_list|)
@@ -1823,9 +1785,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-operator|(
 literal|0
-operator|)
 case|:
 name|curp
 operator|->
@@ -1835,15 +1795,11 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|1
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|2
-operator|)
 case|:
 name|curp
 operator|->
@@ -1853,9 +1809,7 @@ name|MANDOCLEVEL_WARNING
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|3
-operator|)
 case|:
 name|curp
 operator|->
@@ -1865,9 +1819,7 @@ name|MANDOCLEVEL_ERROR
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|4
-operator|)
 case|:
 name|curp
 operator|->
@@ -1881,7 +1833,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-W%s: Bad argument\n"
+literal|"%s: -W%s: Bad argument\n"
+argument_list|,
+name|progname
 argument_list|,
 name|o
 argument_list|)
@@ -1931,29 +1885,71 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|mparse_msg
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:%d:%d: %s: %s"
+literal|"%s: %s:"
+argument_list|,
+name|progname
 argument_list|,
 name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|line
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%d:%d:"
 argument_list|,
 name|line
 argument_list|,
 name|col
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" %s"
 argument_list|,
 name|mparse_strlevel
 argument_list|(
 name|lvl
 argument_list|)
-argument_list|,
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NULL
+operator|!=
+operator|(
+name|mparse_msg
+operator|=
 name|mparse_strerror
 argument_list|(
 name|t
 argument_list|)
+operator|)
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|": %s"
+argument_list|,
+name|mparse_msg
 argument_list|)
 expr_stmt|;
 if|if

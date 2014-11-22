@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.c,v 1.74 2013/12/30 18:30:32 schwarze Exp $ */
+comment|/*	$Id: mandoc.c,v 1.83 2014/07/06 19:09:00 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifdef
@@ -82,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -222,9 +228,7 @@ condition|)
 block|{
 comment|/* 	 * First the glyphs.  There are several different forms of 	 * these, but each eventually returns a substring of the glyph 	 * name. 	 */
 case|case
-operator|(
 literal|'('
-operator|)
 case|:
 name|gly
 operator|=
@@ -237,9 +241,7 @@ literal|2
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'['
-operator|)
 case|:
 name|gly
 operator|=
@@ -278,9 +280,7 @@ literal|']'
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'C'
-operator|)
 case|:
 if|if
 condition|(
@@ -340,26 +340,20 @@ expr_stmt|;
 break|break;
 comment|/* 	 * Escapes taking no arguments at all. 	 */
 case|case
-operator|(
 literal|'d'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'u'
-operator|)
 case|:
 return|return
 operator|(
 name|ESCAPE_IGNORE
 operator|)
 return|;
-comment|/* 	 * The \z escape is supposed to output the following 	 * character without advancing the cursor position.   	 * Since we are mostly dealing with terminal mode, 	 * let us just skip the next character. 	 */
+comment|/* 	 * The \z escape is supposed to output the following 	 * character without advancing the cursor position. 	 * Since we are mostly dealing with terminal mode, 	 * let us just skip the next character. 	 */
 case|case
-operator|(
 literal|'z'
-operator|)
 case|:
 return|return
 operator|(
@@ -368,51 +362,35 @@ operator|)
 return|;
 comment|/* 	 * Handle all triggers matching \X(xy, \Xx, and \X[xxxx], where 	 * 'X' is the trigger.  These have opaque sub-strings. 	 */
 case|case
-operator|(
 literal|'F'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'g'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'k'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'M'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'m'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'n'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'V'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'Y'
-operator|)
 case|:
 name|gly
 operator|=
@@ -420,9 +398,7 @@ name|ESCAPE_IGNORE
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'f'
-operator|)
 case|:
 if|if
 condition|(
@@ -442,9 +418,7 @@ name|start
 condition|)
 block|{
 case|case
-operator|(
 literal|'('
-operator|)
 case|:
 operator|*
 name|start
@@ -460,9 +434,7 @@ literal|2
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'['
-operator|)
 case|:
 operator|*
 name|start
@@ -485,64 +457,38 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-comment|/* 	 * These escapes are of the form \X'Y', where 'X' is the trigger 	 * and 'Y' is any string.  These have opaque sub-strings. 	 */
+comment|/* 	 * These escapes are of the form \X'Y', where 'X' is the trigger 	 * and 'Y' is any string.  These have opaque sub-strings. 	 * The \B and \w escapes are handled in roff.c, roff_res(). 	 */
 case|case
-operator|(
 literal|'A'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'b'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
-literal|'B'
-operator|)
-case|:
-comment|/* FALLTHROUGH */
-case|case
-operator|(
 literal|'D'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'o'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'R'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
-literal|'w'
-operator|)
-case|:
-comment|/* FALLTHROUGH */
-case|case
-operator|(
 literal|'X'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'Z'
-operator|)
 case|:
 if|if
 condition|(
-literal|'\''
-operator|!=
+literal|'\0'
+operator|==
 operator|*
 operator|*
 name|start
@@ -556,76 +502,79 @@ name|gly
 operator|=
 name|ESCAPE_IGNORE
 expr_stmt|;
+name|term
+operator|=
+operator|*
+operator|*
+name|start
+expr_stmt|;
 operator|*
 name|start
 operator|=
 operator|++
 operator|*
 name|end
-expr_stmt|;
-name|term
-operator|=
-literal|'\''
 expr_stmt|;
 break|break;
 comment|/* 	 * These escapes are of the form \X'N', where 'X' is the trigger 	 * and 'N' resolves to a numerical expression. 	 */
 case|case
-operator|(
 literal|'h'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'H'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'L'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'l'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'S'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'v'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'x'
-operator|)
 case|:
 if|if
 condition|(
-literal|'\''
-operator|!=
+name|strchr
+argument_list|(
+literal|" %&()*+-./0123456789:<=>"
+argument_list|,
 operator|*
 operator|*
 name|start
+argument_list|)
 condition|)
+block|{
+operator|++
+operator|*
+name|end
+expr_stmt|;
 return|return
 operator|(
 name|ESCAPE_ERROR
 operator|)
 return|;
+block|}
 name|gly
 operator|=
 name|ESCAPE_IGNORE
+expr_stmt|;
+name|term
+operator|=
+operator|*
+operator|*
+name|start
 expr_stmt|;
 operator|*
 name|start
@@ -634,16 +583,10 @@ operator|++
 operator|*
 name|end
 expr_stmt|;
-name|term
-operator|=
-literal|'\''
-expr_stmt|;
 break|break;
 comment|/* 	 * Special handling for the numbered character escape. 	 * XXX Do any other escapes need similar handling? 	 */
 case|case
-operator|(
 literal|'N'
-operator|)
 case|:
 if|if
 condition|(
@@ -742,11 +685,9 @@ operator|(
 name|ESCAPE_NUMBERED
 operator|)
 return|;
-comment|/*  	 * Sizes get a special category of their own. 	 */
+comment|/* 	 * Sizes get a special category of their own. 	 */
 case|case
-operator|(
 literal|'s'
-operator|)
 case|:
 name|gly
 operator|=
@@ -787,9 +728,7 @@ name|end
 condition|)
 block|{
 case|case
-operator|(
 literal|'('
-operator|)
 case|:
 operator|*
 name|start
@@ -805,9 +744,7 @@ literal|2
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'['
-operator|)
 case|:
 operator|*
 name|start
@@ -822,9 +759,7 @@ literal|']'
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'\''
-operator|)
 case|:
 operator|*
 name|start
@@ -899,9 +834,7 @@ name|end
 condition|)
 block|{
 case|case
-operator|(
 literal|'\0'
-operator|)
 case|:
 return|return
 operator|(
@@ -909,9 +842,7 @@ name|ESCAPE_ERROR
 operator|)
 return|;
 case|case
-operator|(
 literal|'\\'
-operator|)
 case|:
 operator|(
 operator|*
@@ -1004,9 +935,7 @@ name|gly
 condition|)
 block|{
 case|case
-operator|(
 name|ESCAPE_FONT
-operator|)
 case|:
 if|if
 condition|(
@@ -1087,15 +1016,11 @@ name|start
 condition|)
 block|{
 case|case
-operator|(
 literal|'3'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'B'
-operator|)
 case|:
 name|gly
 operator|=
@@ -1103,15 +1028,11 @@ name|ESCAPE_FONTBOLD
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'2'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'I'
-operator|)
 case|:
 name|gly
 operator|=
@@ -1119,9 +1040,7 @@ name|ESCAPE_FONTITALIC
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'P'
-operator|)
 case|:
 name|gly
 operator|=
@@ -1129,15 +1048,11 @@ name|ESCAPE_FONTPREV
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'1'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'R'
-operator|)
 case|:
 name|gly
 operator|=
@@ -1147,9 +1062,7 @@ break|break;
 block|}
 break|break;
 case|case
-operator|(
 name|ESCAPE_SPECIAL
-operator|)
 case|:
 if|if
 condition|(
@@ -1175,265 +1088,6 @@ block|}
 return|return
 operator|(
 name|gly
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-modifier|*
-name|mandoc_calloc
-parameter_list|(
-name|size_t
-name|num
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-block|{
-name|void
-modifier|*
-name|ptr
-decl_stmt|;
-name|ptr
-operator|=
-name|calloc
-argument_list|(
-name|num
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|ptr
-condition|)
-block|{
-name|perror
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|(
-name|int
-operator|)
-name|MANDOCLEVEL_SYSERR
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|ptr
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-modifier|*
-name|mandoc_malloc
-parameter_list|(
-name|size_t
-name|size
-parameter_list|)
-block|{
-name|void
-modifier|*
-name|ptr
-decl_stmt|;
-name|ptr
-operator|=
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|ptr
-condition|)
-block|{
-name|perror
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|(
-name|int
-operator|)
-name|MANDOCLEVEL_SYSERR
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|ptr
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-modifier|*
-name|mandoc_realloc
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-block|{
-name|ptr
-operator|=
-name|realloc
-argument_list|(
-name|ptr
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|ptr
-condition|)
-block|{
-name|perror
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|(
-name|int
-operator|)
-name|MANDOCLEVEL_SYSERR
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|ptr
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
-name|mandoc_strndup
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|ptr
-parameter_list|,
-name|size_t
-name|sz
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|p
-operator|=
-name|mandoc_malloc
-argument_list|(
-name|sz
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|p
-argument_list|,
-name|ptr
-argument_list|,
-name|sz
-argument_list|)
-expr_stmt|;
-name|p
-index|[
-operator|(
-name|int
-operator|)
-name|sz
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-return|return
-operator|(
-name|p
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
-name|mandoc_strdup
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|p
-operator|=
-name|strdup
-argument_list|(
-name|ptr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|p
-condition|)
-block|{
-name|perror
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|(
-name|int
-operator|)
-name|MANDOCLEVEL_SYSERR
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|p
 operator|)
 return|;
 block|}
@@ -1565,9 +1219,7 @@ index|]
 condition|)
 block|{
 case|case
-operator|(
 literal|'t'
-operator|)
 case|:
 name|cp
 index|[
@@ -1578,9 +1230,7 @@ literal|'\t'
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'\\'
-operator|)
 case|:
 name|pairs
 operator|++
@@ -1590,9 +1240,7 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|' '
-operator|)
 case|:
 comment|/* Skip escaped blanks. */
 if|if
@@ -1684,7 +1332,7 @@ name|quoted
 condition|)
 name|mandoc_msg
 argument_list|(
-name|MANDOCERR_BADQUOTE
+name|MANDOCERR_ARG_QUOTE
 argument_list|,
 name|parse
 argument_list|,
@@ -1780,7 +1428,7 @@ operator|)
 condition|)
 name|mandoc_msg
 argument_list|(
-name|MANDOCERR_EOLNSPACE
+name|MANDOCERR_SPACE_EOL
 argument_list|,
 name|parse
 argument_list|,
@@ -2104,7 +1752,7 @@ condition|)
 block|{
 name|mandoc_msg
 argument_list|(
-name|MANDOCERR_NODATE
+name|MANDOCERR_DATE_MISSING
 argument_list|,
 name|parse
 argument_list|,
@@ -2168,7 +1816,7 @@ condition|)
 block|{
 name|mandoc_msg
 argument_list|(
-name|MANDOCERR_BADDATE
+name|MANDOCERR_DATE_BAD
 argument_list|,
 name|parse
 argument_list|,
@@ -2176,7 +1824,7 @@ name|ln
 argument_list|,
 name|pos
 argument_list|,
-name|NULL
+name|in
 argument_list|)
 expr_stmt|;
 name|t
@@ -2221,9 +1869,6 @@ name|p
 parameter_list|,
 name|size_t
 name|sz
-parameter_list|,
-name|int
-name|enclosed
 parameter_list|)
 block|{
 specifier|const
@@ -2232,6 +1877,8 @@ modifier|*
 name|q
 decl_stmt|;
 name|int
+name|enclosed
+decl_stmt|,
 name|found
 decl_stmt|;
 if|if
@@ -2246,6 +1893,8 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * End-of-sentence recognition must include situations where 	 * some symbols, such as `)', allow prior EOS punctuation to 	 * propagate outward. 	 */
+name|enclosed
+operator|=
 name|found
 operator|=
 literal|0
@@ -2278,27 +1927,19 @@ name|q
 condition|)
 block|{
 case|case
-operator|(
 literal|'\"'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'\''
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|']'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|')'
-operator|)
 case|:
 if|if
 condition|(
@@ -2312,21 +1953,15 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'.'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'!'
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 literal|'?'
-operator|)
 case|:
 name|found
 operator|=

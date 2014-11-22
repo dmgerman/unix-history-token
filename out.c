@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: out.c,v 1.46 2013/10/05 20:30:05 schwarze Exp $ */
+comment|/*	$Id: out.c,v 1.49 2014/08/01 19:25:52 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -152,7 +158,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * Convert a `scaling unit' to a consistent form, or fail.  Scaling  * units are documented in groff.7, mdoc.7, man.7.  */
+comment|/*  * Convert a `scaling unit' to a consistent form, or fail.  Scaling  * units are documented in groff.7, mdoc.7, man.7.  */
 end_comment
 
 begin_function
@@ -214,18 +220,14 @@ name|src
 condition|)
 block|{
 case|case
-operator|(
 literal|'+'
-operator|)
 case|:
 name|src
 operator|++
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'-'
-operator|)
 case|:
 name|buf
 index|[
@@ -342,9 +344,7 @@ name|src
 condition|)
 block|{
 case|case
-operator|(
 literal|'c'
-operator|)
 case|:
 name|unit
 operator|=
@@ -352,9 +352,7 @@ name|SCALE_CM
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'i'
-operator|)
 case|:
 name|unit
 operator|=
@@ -362,9 +360,7 @@ name|SCALE_IN
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'P'
-operator|)
 case|:
 name|unit
 operator|=
@@ -372,9 +368,7 @@ name|SCALE_PC
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'p'
-operator|)
 case|:
 name|unit
 operator|=
@@ -382,9 +376,7 @@ name|SCALE_PT
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'f'
-operator|)
 case|:
 name|unit
 operator|=
@@ -392,9 +384,7 @@ name|SCALE_FS
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'v'
-operator|)
 case|:
 name|unit
 operator|=
@@ -402,9 +392,7 @@ name|SCALE_VS
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'m'
-operator|)
 case|:
 name|unit
 operator|=
@@ -412,9 +400,7 @@ name|SCALE_EM
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'\0'
-operator|)
 case|:
 if|if
 condition|(
@@ -433,9 +419,7 @@ name|SCALE_BU
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'u'
-operator|)
 case|:
 name|unit
 operator|=
@@ -443,9 +427,7 @@ name|SCALE_BU
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'M'
-operator|)
 case|:
 name|unit
 operator|=
@@ -453,9 +435,7 @@ name|SCALE_MM
 expr_stmt|;
 break|break;
 case|case
-operator|(
 literal|'n'
-operator|)
 case|:
 name|unit
 operator|=
@@ -483,13 +463,13 @@ name|buf
 argument_list|)
 operator|)
 operator|<
-literal|0
+literal|0.0
 condition|)
 name|dst
 operator|->
 name|scale
 operator|=
-literal|0
+literal|0.0
 expr_stmt|;
 name|dst
 operator|->
@@ -719,15 +699,11 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_CELL_HORIZ
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_DHORIZ
-operator|)
 case|:
 name|sz
 operator|=
@@ -761,27 +737,19 @@ name|sz
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_CELL_LONG
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_CENTRE
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_LEFT
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_CELL_RIGHT
-operator|)
 case|:
 name|tblcalc_literal
 argument_list|(
@@ -794,9 +762,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_CELL_NUMBER
-operator|)
 case|:
 name|tblcalc_number
 argument_list|(
@@ -811,9 +777,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-operator|(
 name|TBL_CELL_DOWN
-operator|)
 case|:
 break|break;
 default|default:

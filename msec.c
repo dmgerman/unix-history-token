@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msec.c,v 1.10 2011/12/02 01:37:14 schwarze Exp $ */
+comment|/*	$Id: msec.c,v 1.11 2014/03/23 11:25:26 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
 
 begin_include
 include|#

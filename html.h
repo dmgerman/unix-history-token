@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: html.h,v 1.49 2013/08/08 20:07:47 schwarze Exp $ */
+comment|/*	$Id: html.h,v 1.51 2014/04/20 16:46:04 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -537,6 +537,32 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|-
+literal|0
+operator|>=
+literal|4
+end_if
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(__format__ (__printf__,
+literal|2
+argument|,
+literal|3
+argument|))
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

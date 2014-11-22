@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: term.h,v 1.97 2013/12/25 00:39:31 schwarze Exp $ */
+comment|/*	$Id: term.h,v 1.101 2014/04/20 16:46:05 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2011, 2012, 2013, 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -146,6 +146,10 @@ name|defrmargin
 decl_stmt|;
 comment|/* Right margin of the device. */
 name|size_t
+name|lastrmargin
+decl_stmt|;
+comment|/* Right margin before the last ll. */
+name|size_t
 name|rmargin
 decl_stmt|;
 comment|/* Current right margin. */
@@ -230,28 +234,33 @@ value|(1<< 8)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_DANGLE
+name|TERMP_BRIND
 value|(1<< 9)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_HANG
+name|TERMP_DANGLE
 value|(1<< 10)
 comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_NOSPLIT
+name|TERMP_HANG
 value|(1<< 11)
-comment|/* See termp_an_pre/post(). */
+comment|/* See term_flushln(). */
 define|#
 directive|define
-name|TERMP_SPLIT
+name|TERMP_NOSPLIT
 value|(1<< 12)
 comment|/* See termp_an_pre/post(). */
 define|#
 directive|define
-name|TERMP_ANPREC
+name|TERMP_SPLIT
 value|(1<< 13)
+comment|/* See termp_an_pre/post(). */
+define|#
+directive|define
+name|TERMP_ANPREC
+value|(1<< 14)
 comment|/* See termp_an_pre(). */
 name|int
 modifier|*
@@ -349,6 +358,21 @@ parameter_list|(
 name|struct
 name|termp
 modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|setwidth
+function_decl|)
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|size_t
 parameter_list|)
@@ -515,6 +539,21 @@ name|term_end
 parameter_list|(
 name|struct
 name|termp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|term_setwidth
+parameter_list|(
+name|struct
+name|termp
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;

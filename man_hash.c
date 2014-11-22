@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man_hash.c,v 1.25 2011/07/24 18:15:14 kristaps Exp $ */
+comment|/*	$Id: man_hash.c,v 1.27 2014/04/20 16:46:04 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -46,12 +46,6 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -146,7 +140,6 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-comment|/* LINTED */
 name|MAN_MAX
 operator|<
 name|UCHAR_MAX

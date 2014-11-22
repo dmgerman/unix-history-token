@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl.c,v 1.27 2013/05/31 22:08:09 schwarze Exp $ */
+comment|/*	$Id: tbl.c,v 1.29 2014/04/20 16:46:05 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -58,6 +58,12 @@ begin_include
 include|#
 directive|include
 file|"mandoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mandoc_aux.h"
 end_include
 
 begin_include
@@ -157,9 +163,7 @@ name|part
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_PART_OPTS
-operator|)
 case|:
 return|return
 operator|(
@@ -178,9 +182,7 @@ name|ROFF_ERR
 operator|)
 return|;
 case|case
-operator|(
 name|TBL_PART_LAYOUT
-operator|)
 case|:
 return|return
 operator|(
@@ -199,9 +201,7 @@ name|ROFF_ERR
 operator|)
 return|;
 case|case
-operator|(
 name|TBL_PART_CDATA
-operator|)
 case|:
 return|return
 operator|(
