@@ -340,6 +340,20 @@ argument_list|,
 name|commandname
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|arg0
+condition|)
+name|outfmt
+argument_list|(
+name|out2
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|arg0
+argument_list|)
+expr_stmt|;
 name|doformat
 argument_list|(
 name|out2
