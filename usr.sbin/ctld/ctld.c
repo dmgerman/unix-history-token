@@ -3601,7 +3601,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 			 * XXX: We should verify UTF-8 normalisation, as defined 			 * 	by 3.2.6.2: iSCSI Name Encoding. 			 */
+comment|/* 			 * XXX: We should verify UTF-8 normalisation, as defined 			 *      by 3.2.6.2: iSCSI Name Encoding. 			 */
 if|if
 condition|(
 name|isalnum
@@ -6076,7 +6076,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * XXX: If target or lun removal fails, we should somehow "move" 	 * 	the old lun or target into newconf, so that subsequent 	 * 	conf_apply() would try to remove them again.  That would 	 * 	be somewhat hairy, though, and lun deletion failures don't 	 * 	really happen, so leave it as it is for now. 	 */
+comment|/* 	 * XXX: If target or lun removal fails, we should somehow "move" 	 *      the old lun or target into newconf, so that subsequent 	 *      conf_apply() would try to remove them again.  That would 	 *      be somewhat hairy, though, and lun deletion failures don't 	 *      really happen, so leave it as it is for now. 	 */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|oldtarg
