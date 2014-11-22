@@ -67,6 +67,13 @@ name|CONN_MUTUAL_CHALLENGE_LEN
 value|1024
 end_define
 
+begin_define
+define|#
+directive|define
+name|SOCKBUF_SIZE
+value|1048576
+end_define
+
 begin_struct
 struct|struct
 name|connection
