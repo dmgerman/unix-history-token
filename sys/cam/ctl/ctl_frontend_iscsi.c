@@ -4596,6 +4596,8 @@ name|int
 name|error
 decl_stmt|,
 name|last
+decl_stmt|,
+name|wait
 decl_stmt|;
 if|if
 condition|(
@@ -4860,6 +4862,27 @@ name|cs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for CTL to terminate all the tasks. 	 */
+name|wait
+operator|=
+name|cs
+operator|->
+name|cs_outstanding_ctl_pdus
+expr_stmt|;
+if|if
+condition|(
+name|wait
+operator|>
+literal|0
+condition|)
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"waiting for CTL to terminate %d tasks"
+argument_list|,
+name|wait
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4891,18 +4914,6 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|CFISCSI_SESSION_WARN
-argument_list|(
-name|cs
-argument_list|,
-literal|"waiting for CTL to terminate tasks, "
-literal|"%d remaining"
-argument_list|,
-name|cs
-operator|->
-name|cs_outstanding_ctl_pdus
-argument_list|)
-expr_stmt|;
 name|tsleep
 argument_list|(
 name|__DEVOLATILE
@@ -4926,6 +4937,19 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|wait
+operator|>
+literal|0
+condition|)
+name|CFISCSI_SESSION_WARN
+argument_list|(
+name|cs
+argument_list|,
+literal|"tasks terminated"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
