@@ -231,13 +231,6 @@ name|uint32_t
 name|b_vflags
 decl_stmt|;
 comment|/* (V) BV_* flags */
-name|TAILQ_ENTRY
-argument_list|(
-argument|buf
-argument_list|)
-name|b_freelist
-expr_stmt|;
-comment|/* (Q) Free list position inactive. */
 name|unsigned
 name|short
 name|b_qindex
@@ -312,14 +305,50 @@ name|b_saveaddr
 decl_stmt|;
 comment|/* Original b_addr for physio. */
 union|union
-name|pager_info
 block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|buf
+argument_list|)
+name|bu_freelist
+expr_stmt|;
+comment|/* (Q) */
+struct|struct
+block|{
+name|void
+function_decl|(
+modifier|*
+name|pg_iodone
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|vm_page_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 name|int
 name|pg_reqpage
 decl_stmt|;
 block|}
-name|b_pager
+name|bu_pager
+struct|;
+block|}
+name|b_union
 union|;
+define|#
+directive|define
+name|b_freelist
+value|b_union.bu_freelist
+define|#
+directive|define
+name|b_pager
+value|b_union.bu_pager
 union|union
 name|cluster_info
 block|{
