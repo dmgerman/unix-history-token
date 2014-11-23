@@ -306,7 +306,7 @@ begin_function_decl
 name|void
 name|mipsNN_sdcache_wbinv_range_32
 parameter_list|(
-name|vm_paddr_t
+name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -317,7 +317,7 @@ begin_function_decl
 name|void
 name|mipsNN_sdcache_wbinv_range_index_32
 parameter_list|(
-name|vm_paddr_t
+name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -328,7 +328,7 @@ begin_function_decl
 name|void
 name|mipsNN_sdcache_inv_range_32
 parameter_list|(
-name|vm_paddr_t
+name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -339,7 +339,7 @@ begin_function_decl
 name|void
 name|mipsNN_sdcache_wb_range_32
 parameter_list|(
-name|vm_paddr_t
+name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -359,7 +359,7 @@ begin_function_decl
 name|void
 name|mipsNN_sdcache_wbinv_range_128
 parameter_list|(
-name|vm_paddr_t
+name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -370,7 +370,7 @@ begin_function_decl
 name|void
 name|mipsNN_sdcache_wbinv_range_index_128
 parameter_list|(
-name|vm_paddr_t
+name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -381,7 +381,7 @@ begin_function_decl
 name|void
 name|mipsNN_sdcache_inv_range_128
 parameter_list|(
-name|vm_paddr_t
+name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -392,7 +392,7 @@ begin_function_decl
 name|void
 name|mipsNN_sdcache_wb_range_128
 parameter_list|(
-name|vm_paddr_t
+name|vm_offset_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
