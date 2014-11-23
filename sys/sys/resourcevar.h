@@ -201,12 +201,17 @@ name|u_int
 name|ui_ref
 decl_stmt|;
 comment|/* (b) reference count */
+ifdef|#
+directive|ifdef
+name|RACCT
 name|struct
 name|racct
 modifier|*
 name|ui_racct
 decl_stmt|;
 comment|/* (a) resource accounting */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -743,6 +748,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RACCT
+end_ifdef
+
 begin_function_decl
 name|void
 name|ui_racct_foreach
@@ -777,6 +788,11 @@ name|arg3
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

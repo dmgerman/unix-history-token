@@ -6048,6 +6048,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RACCT
+end_ifdef
+
 begin_function
 name|void
 name|ui_racct_foreach
@@ -6147,6 +6153,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Change the count associated with number of processes  * a given user is using.  When 'max' is 0, don't enforce a limit  */
