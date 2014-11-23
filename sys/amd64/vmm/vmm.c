@@ -1692,7 +1692,7 @@ name|vmspace
 operator|=
 name|VMSPACE_ALLOC
 argument_list|(
-name|VM_MIN_ADDRESS
+literal|0
 argument_list|,
 name|VM_MAXUSER_ADDRESS
 argument_list|)
