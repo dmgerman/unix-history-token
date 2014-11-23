@@ -4572,7 +4572,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"unhandled swap_pager_getpages() error %d\n"
+literal|"unhandled swap_pager_getpages() error %d"
 argument_list|,
 name|r
 argument_list|)
