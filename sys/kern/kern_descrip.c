@@ -14246,6 +14246,14 @@ argument_list|(
 name|fflags
 argument_list|)
 expr_stmt|;
+name|cap_rights_init
+argument_list|(
+operator|&
+name|kif
+operator|->
+name|kf_cap_rights
+argument_list|)
+expr_stmt|;
 name|kif
 operator|->
 name|kf_fd
