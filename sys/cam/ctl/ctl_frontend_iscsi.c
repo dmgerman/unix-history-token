@@ -4733,6 +4733,12 @@ name|task_action
 operator|=
 name|CTL_TASK_I_T_NEXUS_RESET
 expr_stmt|;
+name|wait
+operator|=
+name|cs
+operator|->
+name|cs_outstanding_ctl_pdus
+expr_stmt|;
 name|refcount_acquire
 argument_list|(
 operator|&
@@ -4862,12 +4868,6 @@ name|cs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for CTL to terminate all the tasks. 	 */
-name|wait
-operator|=
-name|cs
-operator|->
-name|cs_outstanding_ctl_pdus
-expr_stmt|;
 if|if
 condition|(
 name|wait
