@@ -2449,7 +2449,7 @@ return|return;
 block|}
 name|io
 operator|=
-name|ctl_alloc_io
+name|ctl_alloc_io_nowait
 argument_list|(
 name|softc
 operator|->
@@ -2918,7 +2918,7 @@ return|return;
 block|}
 name|io
 operator|=
-name|ctl_alloc_io
+name|ctl_alloc_io_nowait
 argument_list|(
 name|softc
 operator|->
@@ -3394,7 +3394,7 @@ return|return;
 block|}
 name|io
 operator|=
-name|ctl_alloc_io
+name|ctl_alloc_io_nowait
 argument_list|(
 name|softc
 operator|->
