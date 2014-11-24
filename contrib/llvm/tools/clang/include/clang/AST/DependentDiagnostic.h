@@ -499,7 +499,7 @@ argument_list|()
 operator|:
 name|Ptr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|explicit
@@ -708,10 +708,10 @@ unit|};
 specifier|inline
 name|DeclContext
 operator|::
-name|ddiag_iterator
+name|ddiag_range
 name|DeclContext
 operator|::
-name|ddiag_begin
+name|ddiags
 argument_list|()
 specifier|const
 block|{
@@ -747,42 +747,30 @@ operator|!
 name|Map
 condition|)
 return|return
-name|ddiag_iterator
+name|ddiag_range
 argument_list|()
 return|;
 end_expr_stmt
 
 begin_return
 return|return
+name|ddiag_range
+argument_list|(
 name|ddiag_iterator
 argument_list|(
 name|Map
 operator|->
 name|FirstDiagnostic
 argument_list|)
+argument_list|,
+name|ddiag_iterator
+argument_list|()
+argument_list|)
 return|;
 end_return
 
-begin_expr_stmt
-unit|}  inline
-name|DeclContext
-operator|::
-name|ddiag_iterator
-name|DeclContext
-operator|::
-name|ddiag_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ddiag_iterator
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
 begin_endif
-unit|}
+unit|}  }
 endif|#
 directive|endif
 end_endif

@@ -187,11 +187,19 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Returns \c true if \c this is a base kind of (or same as) \c Other.
+comment|/// \param Distance If non-null, used to return the distance between \c this
+comment|/// and \c Other in the class hierarchy.
 name|bool
 name|isBaseOf
 argument_list|(
 name|ASTNodeKind
 name|Other
+argument_list|,
+name|unsigned
+operator|*
+name|Distance
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -201,6 +209,26 @@ name|asStringRef
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Strict weak ordering for ASTNodeKind.
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|ASTNodeKind
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|KindId
+operator|<
+name|Other
+operator|.
+name|KindId
+return|;
+block|}
 name|private
 label|:
 comment|/// \brief Kind ids.
@@ -281,6 +309,8 @@ argument_list|)
 block|{}
 comment|/// \brief Returns \c true if \c Base is a base kind of (or same as) \c
 comment|///   Derived.
+comment|/// \param Distance If non-null, used to return the distance between \c Base
+comment|/// and \c Derived in the class hierarchy.
 specifier|static
 name|bool
 name|isBaseOf
@@ -290,6 +320,10 @@ name|Base
 parameter_list|,
 name|NodeKindId
 name|Derived
+parameter_list|,
+name|unsigned
+modifier|*
+name|Distance
 parameter_list|)
 function_decl|;
 comment|/// \brief Helper meta-function to convert a kind T to its enum value.
@@ -423,6 +457,31 @@ file|"clang/AST/TypeNodes.def"
 undef|#
 directive|undef
 name|KIND_TO_KIND_ID
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+name|ASTNodeKind
+name|K
+operator|)
+block|{
+name|OS
+operator|<<
+name|K
+operator|.
+name|asStringRef
+argument_list|()
+block|;
+return|return
+name|OS
+return|;
+block|}
 comment|/// \brief A dynamically typed AST node container.
 comment|///
 comment|/// Stores an AST node in a type safe way. This allows writing code that
@@ -606,16 +665,25 @@ name|Other
 operator|)
 specifier|const
 block|{
-comment|// Nodes with different types cannot be equal.
 if|if
 condition|(
 operator|!
 name|NodeKind
 operator|.
-name|isSame
+name|isBaseOf
 argument_list|(
 name|Other
 operator|.
+name|NodeKind
+argument_list|)
+operator|&&
+operator|!
+name|Other
+operator|.
+name|NodeKind
+operator|.
+name|isBaseOf
+argument_list|(
 name|NodeKind
 argument_list|)
 condition|)
@@ -777,7 +845,7 @@ operator|)
 operator|)
 return|;
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 specifier|static
@@ -874,7 +942,7 @@ name|Storage
 operator|)
 return|;
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 specifier|static
@@ -978,7 +1046,7 @@ name|Storage
 operator|)
 return|;
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -1123,11 +1191,11 @@ operator|<
 name|T
 operator|,
 name|typename
-name|llvm
+name|std
 operator|::
 name|enable_if
 operator|<
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
@@ -1135,7 +1203,9 @@ name|Decl
 operator|,
 name|T
 operator|>
-expr|>
+operator|::
+name|value
+operator|>
 operator|::
 name|type
 operator|>
@@ -1165,11 +1235,11 @@ operator|<
 name|T
 operator|,
 name|typename
-name|llvm
+name|std
 operator|::
 name|enable_if
 operator|<
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
@@ -1177,7 +1247,9 @@ name|Stmt
 operator|,
 name|T
 operator|>
-expr|>
+operator|::
+name|value
+operator|>
 operator|::
 name|type
 operator|>
@@ -1207,11 +1279,11 @@ operator|<
 name|T
 operator|,
 name|typename
-name|llvm
+name|std
 operator|::
 name|enable_if
 operator|<
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
@@ -1219,7 +1291,9 @@ name|Type
 operator|,
 name|T
 operator|>
-expr|>
+operator|::
+name|value
+operator|>
 operator|::
 name|type
 operator|>
@@ -1580,7 +1654,7 @@ end_elseif
 
 begin_return
 return|return
-name|NULL
+name|nullptr
 return|;
 end_return
 

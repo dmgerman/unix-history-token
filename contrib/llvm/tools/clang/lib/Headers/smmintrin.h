@@ -288,7 +288,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m128d __V1 = (V1); \   __m128d __V2 = (V2); \   (__m128d) __builtin_ia32_blendpd ((__v2df)__V1, (__v2df)__V2, (M)); })
+value|__extension__ ({ \   __m128d __V1 = (V1); \   __m128d __V2 = (V2); \   (__m128d)__builtin_shufflevector((__v2df)__V1, (__v2df)__V2, \                                    (((M)& 0x01) ? 2 : 0), \                                    (((M)& 0x02) ? 3 : 1)); })
 end_define
 
 begin_define
@@ -302,7 +302,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m128 __V1 = (V1); \   __m128 __V2 = (V2); \   (__m128) __builtin_ia32_blendps ((__v4sf)__V1, (__v4sf)__V2, (M)); })
+value|__extension__ ({ \   __m128 __V1 = (V1); \   __m128 __V2 = (V2); \   (__m128)__builtin_shufflevector((__v4sf)__V1, (__v4sf)__V2, \                                   (((M)& 0x01) ? 4 : 0), \                                   (((M)& 0x02) ? 5 : 1), \                                   (((M)& 0x04) ? 6 : 2), \                                   (((M)& 0x08) ? 7 : 3)); })
 end_define
 
 begin_decl_stmt
@@ -463,7 +463,7 @@ name|V2
 parameter_list|,
 name|M
 parameter_list|)
-value|__extension__ ({ \   __m128i __V1 = (V1); \   __m128i __V2 = (V2); \   (__m128i) __builtin_ia32_pblendw128 ((__v8hi)__V1, (__v8hi)__V2, (M)); })
+value|__extension__ ({ \   __m128i __V1 = (V1); \   __m128i __V2 = (V2); \   (__m128i)__builtin_shufflevector((__v8hi)__V1, (__v8hi)__V2, \                                    (((M)& 0x01) ?  8 : 0), \                                    (((M)& 0x02) ?  9 : 1), \                                    (((M)& 0x04) ? 10 : 2), \                                    (((M)& 0x08) ? 11 : 3), \                                    (((M)& 0x10) ? 12 : 4), \                                    (((M)& 0x20) ? 13 : 5), \                                    (((M)& 0x40) ? 14 : 6), \                                    (((M)& 0x80) ? 15 : 7)); })
 end_define
 
 begin_comment

@@ -194,9 +194,6 @@ comment|/// Indicates that the object is not owned and controlled by the
 comment|/// Garbage collector.
 name|GCNotOwnedSymbol
 block|,
-comment|/// Indicates that the object is not owned and controlled by ARC.
-name|ARCNotOwnedSymbol
-block|,
 comment|/// Indicates that the return value is an owned object when the
 comment|/// receiver is also a tracked object.
 name|OwnedWhenTrackedReceiver
@@ -296,10 +293,6 @@ return|return
 name|K
 operator|==
 name|NotOwnedSymbol
-operator|||
-name|K
-operator|==
-name|ARCNotOwnedSymbol
 return|;
 block|}
 name|bool
@@ -400,20 +393,6 @@ return|;
 block|}
 specifier|static
 name|RetEffect
-name|MakeARCNotOwned
-parameter_list|()
-block|{
-return|return
-name|RetEffect
-argument_list|(
-name|ARCNotOwnedSymbol
-argument_list|,
-name|ObjC
-argument_list|)
-return|;
-block|}
-specifier|static
-name|RetEffect
 name|MakeNoRet
 parameter_list|()
 block|{
@@ -481,8 +460,6 @@ block|{}
 name|public
 operator|:
 comment|/// Returns the argument effects for a call.
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|ArgEffect

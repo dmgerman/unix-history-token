@@ -255,7 +255,7 @@ argument_list|(
 name|S
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool

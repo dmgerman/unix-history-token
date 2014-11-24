@@ -181,52 +181,60 @@ comment|// ExternalASTSource.
 comment|//===--------------------------------------------------------------------===//
 comment|/// \brief Resolve a declaration ID into a declaration, potentially
 comment|/// building a new declaration.
-name|virtual
 name|Decl
 operator|*
 name|GetExternalDecl
 argument_list|(
 argument|uint32_t ID
 argument_list|)
+name|override
+block|;
+comment|/// \brief Complete the redeclaration chain if it's been extended since the
+comment|/// previous generation of the AST source.
+name|void
+name|CompleteRedeclChain
+argument_list|(
+argument|const Decl *D
+argument_list|)
+name|override
 block|;
 comment|/// \brief Resolve a selector ID into a selector.
-name|virtual
 name|Selector
 name|GetExternalSelector
 argument_list|(
 argument|uint32_t ID
 argument_list|)
+name|override
 block|;
 comment|/// \brief Returns the number of selectors known to the external AST
 comment|/// source.
-name|virtual
 name|uint32_t
 name|GetNumExternalSelectors
 argument_list|()
+name|override
 block|;
 comment|/// \brief Resolve the offset of a statement in the decl stream into
 comment|/// a statement.
-name|virtual
 name|Stmt
 operator|*
 name|GetExternalDeclStmt
 argument_list|(
 argument|uint64_t Offset
 argument_list|)
+name|override
 block|;
 comment|/// \brief Resolve the offset of a set of C++ base specifiers in the decl
 comment|/// stream into an array of specifiers.
-name|virtual
 name|CXXBaseSpecifier
 operator|*
 name|GetExternalCXXBaseSpecifiers
 argument_list|(
 argument|uint64_t Offset
 argument_list|)
+name|override
 block|;
 comment|/// \brief Find all declarations with the given name in the
 comment|/// given context.
-name|virtual
 name|bool
 name|FindExternalVisibleDeclsByName
 argument_list|(
@@ -234,18 +242,16 @@ argument|const DeclContext *DC
 argument_list|,
 argument|DeclarationName Name
 argument_list|)
+name|override
 block|;
 comment|/// \brief Ensures that the table of all visible declarations inside this
 comment|/// context is up to date.
-name|virtual
 name|void
 name|completeVisibleDeclsMap
 argument_list|(
-specifier|const
-name|DeclContext
-operator|*
-name|DC
+argument|const DeclContext *DC
 argument_list|)
+name|override
 block|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext, after applying an optional filter predicate.
@@ -255,34 +261,16 @@ comment|/// declaration kind is one we are looking for. If NULL, all declaration
 comment|/// are returned.
 comment|///
 comment|/// \return an indication of whether the load succeeded or failed.
-name|virtual
 name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
-specifier|const
-name|DeclContext
-operator|*
-name|DC
+argument|const DeclContext *DC
 argument_list|,
-name|bool
-argument_list|(
-operator|*
-name|isKindWeWant
-argument_list|)
-argument_list|(
-name|Decl
-operator|::
-name|Kind
-argument_list|)
+argument|bool (*isKindWeWant)(Decl::Kind)
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|Decl
-operator|*
-operator|>
-operator|&
-name|Result
+argument|SmallVectorImpl<Decl*>&Result
 argument_list|)
+name|override
 block|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext.
@@ -301,7 +289,7 @@ name|FindExternalLexicalDecls
 argument_list|(
 name|DC
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 name|Result
 argument_list|)
@@ -336,7 +324,6 @@ block|}
 comment|/// \brief Get the decls that are contained in a file in the Offset/Length
 comment|/// range. \p Length can be 0 to indicate a point at \p Offset instead of
 comment|/// a range.
-name|virtual
 name|void
 name|FindFileRegionDecls
 argument_list|(
@@ -348,17 +335,16 @@ argument|unsigned Length
 argument_list|,
 argument|SmallVectorImpl<Decl *>&Decls
 argument_list|)
+name|override
 block|;
 comment|/// \brief Gives the external AST source an opportunity to complete
 comment|/// an incomplete type.
-name|virtual
 name|void
 name|CompleteType
 argument_list|(
-name|TagDecl
-operator|*
-name|Tag
+argument|TagDecl *Tag
 argument_list|)
+name|override
 block|;
 comment|/// \brief Gives the external AST source an opportunity to complete an
 comment|/// incomplete Objective-C class.
@@ -366,53 +352,49 @@ comment|///
 comment|/// This routine will only be invoked if the "externally completed" bit is
 comment|/// set on the ObjCInterfaceDecl via the function
 comment|/// \c ObjCInterfaceDecl::setExternallyCompleted().
-name|virtual
 name|void
 name|CompleteType
 argument_list|(
-name|ObjCInterfaceDecl
-operator|*
-name|Class
+argument|ObjCInterfaceDecl *Class
 argument_list|)
+name|override
 block|;
 comment|/// \brief Loads comment ranges.
-name|virtual
 name|void
 name|ReadComments
 argument_list|()
+name|override
 block|;
 comment|/// \brief Notify ExternalASTSource that we started deserialization of
 comment|/// a decl or type so until FinishedDeserializing is called there may be
 comment|/// decls that are initializing. Must be paired with FinishedDeserializing.
-name|virtual
 name|void
 name|StartedDeserializing
 argument_list|()
+name|override
 block|;
 comment|/// \brief Notify ExternalASTSource that we finished the deserialization of
 comment|/// a decl or type. Must be paired with StartedDeserializing.
-name|virtual
 name|void
 name|FinishedDeserializing
 argument_list|()
+name|override
 block|;
 comment|/// \brief Function that will be invoked when we begin parsing a new
 comment|/// translation unit involving this external AST source.
-name|virtual
 name|void
 name|StartTranslationUnit
 argument_list|(
-name|ASTConsumer
-operator|*
-name|Consumer
+argument|ASTConsumer *Consumer
 argument_list|)
+name|override
 block|;
 comment|/// \brief Print any statistics that have been gathered regarding
 comment|/// the external AST source.
-name|virtual
 name|void
 name|PrintStats
 argument_list|()
+name|override
 block|;
 comment|/// \brief Perform layout on the given record.
 comment|///
@@ -441,72 +423,38 @@ comment|/// (either direct or not). If any bases are not given offsets, the base
 comment|/// be laid out according to the ABI.
 comment|///
 comment|/// \returns true if the record layout was provided, false otherwise.
-name|virtual
 name|bool
 name|layoutRecordType
 argument_list|(
-specifier|const
-name|RecordDecl
-operator|*
-name|Record
+argument|const RecordDecl *Record
 argument_list|,
-name|uint64_t
-operator|&
-name|Size
+argument|uint64_t&Size
 argument_list|,
-name|uint64_t
-operator|&
-name|Alignment
+argument|uint64_t&Alignment
 argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|FieldDecl
-operator|*
+argument|llvm::DenseMap<const FieldDecl *
 argument_list|,
-name|uint64_t
-operator|>
-operator|&
-name|FieldOffsets
+argument|uint64_t>&FieldOffsets
 argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
+argument|llvm::DenseMap<const CXXRecordDecl *
 argument_list|,
-name|CharUnits
-operator|>
-operator|&
-name|BaseOffsets
+argument|CharUnits>&BaseOffsets
 argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
+argument|llvm::DenseMap<const CXXRecordDecl *
 argument_list|,
-name|CharUnits
-operator|>
-operator|&
-name|VirtualBaseOffsets
+argument|CharUnits>&VirtualBaseOffsets
 argument_list|)
+name|override
 block|;
 comment|/// Return the amount of memory used by memory buffers, breaking down
 comment|/// by heap-backed versus mmap'ed memory.
-name|virtual
 name|void
 name|getMemoryBufferSizes
 argument_list|(
 argument|MemoryBufferSizes&sizes
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// ExternalSemaSource.
@@ -514,63 +462,47 @@ comment|//===-------------------------------------------------------------------
 comment|/// \brief Initialize the semantic source with the Sema instance
 comment|/// being used to perform semantic analysis on the abstract syntax
 comment|/// tree.
-name|virtual
 name|void
 name|InitializeSema
 argument_list|(
-name|Sema
-operator|&
-name|S
+argument|Sema&S
 argument_list|)
+name|override
 block|;
 comment|/// \brief Inform the semantic consumer that Sema is no longer available.
-name|virtual
 name|void
 name|ForgetSema
 argument_list|()
+name|override
 block|;
 comment|/// \brief Load the contents of the global method pool for a given
 comment|/// selector.
-name|virtual
 name|void
 name|ReadMethodPool
 argument_list|(
 argument|Selector Sel
 argument_list|)
+name|override
 block|;
 comment|/// \brief Load the set of namespaces that are known to the external source,
 comment|/// which will be used during typo correction.
-name|virtual
 name|void
 name|ReadKnownNamespaces
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|NamespaceDecl
-operator|*
-operator|>
-operator|&
-name|Namespaces
+argument|SmallVectorImpl<NamespaceDecl*>&Namespaces
 argument_list|)
+name|override
 block|;
 comment|/// \brief Load the set of used but not defined functions or variables with
 comment|/// internal linkage, or used but not defined inline functions.
-name|virtual
 name|void
 name|ReadUndefinedButUsed
 argument_list|(
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|NamedDecl
-operator|*
+argument|llvm::DenseMap<NamedDecl*
 argument_list|,
-name|SourceLocation
-operator|>
-operator|&
-name|Undefined
+argument|SourceLocation>&Undefined
 argument_list|)
+name|override
 block|;
 comment|/// \brief Do last resort, unqualified lookup on a LookupResult that
 comment|/// Sema cannot find.
@@ -580,18 +512,14 @@ comment|///
 comment|/// \param S the Scope of the identifier occurrence.
 comment|///
 comment|/// \return true to tell Sema to recover using the LookupResult.
-name|virtual
 name|bool
 name|LookupUnqualified
 argument_list|(
-name|LookupResult
-operator|&
-name|R
+argument|LookupResult&R
 argument_list|,
-name|Scope
-operator|*
-name|S
+argument|Scope *S
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of tentative definitions known to the external Sema
 comment|/// source.
@@ -600,18 +528,12 @@ comment|/// The external source should append its own tentative definitions to t
 comment|/// given vector of tentative definitions. Note that this routine may be
 comment|/// invoked multiple times; the external source should take care not to
 comment|/// introduce the same declarations repeatedly.
-name|virtual
 name|void
 name|ReadTentativeDefinitions
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|VarDecl
-operator|*
-operator|>
-operator|&
-name|Defs
+argument|SmallVectorImpl<VarDecl*>&Defs
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of unused file-scope declarations known to the
 comment|/// external Sema source.
@@ -620,19 +542,12 @@ comment|/// The external source should append its own unused, filed-scope to the
 comment|/// given vector of declarations. Note that this routine may be
 comment|/// invoked multiple times; the external source should take care not to
 comment|/// introduce the same declarations repeatedly.
-name|virtual
 name|void
 name|ReadUnusedFileScopedDecls
 argument_list|(
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|DeclaratorDecl
-operator|*
-operator|>
-operator|&
-name|Decls
+argument|SmallVectorImpl<const DeclaratorDecl*>&Decls
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of delegating constructors known to the
 comment|/// external Sema source.
@@ -641,18 +556,12 @@ comment|/// The external source should append its own delegating constructors to
 comment|/// given vector of declarations. Note that this routine may be
 comment|/// invoked multiple times; the external source should take care not to
 comment|/// introduce the same declarations repeatedly.
-name|virtual
 name|void
 name|ReadDelegatingConstructors
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|CXXConstructorDecl
-operator|*
-operator|>
-operator|&
-name|Decls
+argument|SmallVectorImpl<CXXConstructorDecl*>&Decls
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of ext_vector type declarations known to the
 comment|/// external Sema source.
@@ -661,18 +570,12 @@ comment|/// The external source should append its own ext_vector type declaratio
 comment|/// the given vector of declarations. Note that this routine may be
 comment|/// invoked multiple times; the external source should take care not to
 comment|/// introduce the same declarations repeatedly.
-name|virtual
 name|void
 name|ReadExtVectorDecls
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|TypedefNameDecl
-operator|*
-operator|>
-operator|&
-name|Decls
+argument|SmallVectorImpl<TypedefNameDecl*>&Decls
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of dynamic classes known to the external Sema source.
 comment|///
@@ -680,18 +583,12 @@ comment|/// The external source should append its own dynamic classes to
 comment|/// the given vector of declarations. Note that this routine may be
 comment|/// invoked multiple times; the external source should take care not to
 comment|/// introduce the same declarations repeatedly.
-name|virtual
 name|void
 name|ReadDynamicClasses
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|CXXRecordDecl
-operator|*
-operator|>
-operator|&
-name|Decls
+argument|SmallVectorImpl<CXXRecordDecl*>&Decls
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of locally-scoped extern "C" declarations known to the
 comment|/// external Sema source.
@@ -700,18 +597,12 @@ comment|/// The external source should append its own locally-scoped external
 comment|/// declarations to the given vector of declarations. Note that this routine
 comment|/// may be invoked multiple times; the external source should take care not
 comment|/// to introduce the same declarations repeatedly.
-name|virtual
 name|void
 name|ReadLocallyScopedExternCDecls
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|NamedDecl
-operator|*
-operator|>
-operator|&
-name|Decls
+argument|SmallVectorImpl<NamedDecl*>&Decls
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of referenced selectors known to the
 comment|/// external Sema source.
@@ -720,24 +611,14 @@ comment|/// The external source should append its own referenced selectors to th
 comment|/// given vector of selectors. Note that this routine
 comment|/// may be invoked multiple times; the external source should take care not
 comment|/// to introduce the same selectors repeatedly.
-name|virtual
 name|void
 name|ReadReferencedSelectors
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|Selector
+argument|SmallVectorImpl<std::pair<Selector
 argument_list|,
-name|SourceLocation
-operator|>
-expr|>
-operator|&
-name|Sels
+argument|SourceLocation>>&Sels
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of weak, undeclared identifiers known to the
 comment|/// external Sema source.
@@ -746,42 +627,26 @@ comment|/// The external source should append its own weak, undeclared identifie
 comment|/// the given vector. Note that this routine may be invoked multiple times;
 comment|/// the external source should take care not to introduce the same identifiers
 comment|/// repeatedly.
-name|virtual
 name|void
 name|ReadWeakUndeclaredIdentifiers
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|IdentifierInfo
-operator|*
+argument|SmallVectorImpl<std::pair<IdentifierInfo*
 argument_list|,
-name|WeakInfo
-operator|>
-expr|>
-operator|&
-name|WI
+argument|WeakInfo>>&WI
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of used vtables known to the external Sema source.
 comment|///
 comment|/// The external source should append its own used vtables to the given
 comment|/// vector. Note that this routine may be invoked multiple times; the external
 comment|/// source should take care not to introduce the same vtables repeatedly.
-name|virtual
 name|void
 name|ReadUsedVTables
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|ExternalVTableUse
-operator|>
-operator|&
-name|VTables
+argument|SmallVectorImpl<ExternalVTableUse>&VTables
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of pending instantiations known to the external
 comment|/// Sema source.
@@ -790,25 +655,14 @@ comment|/// The external source should append its own pending instantiations to 
 comment|/// given vector. Note that this routine may be invoked multiple times; the
 comment|/// external source should take care not to introduce the same instantiations
 comment|/// repeatedly.
-name|virtual
 name|void
 name|ReadPendingInstantiations
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|ValueDecl
-operator|*
+argument|SmallVectorImpl<std::pair<ValueDecl*
 argument_list|,
-name|SourceLocation
-operator|>
-expr|>
-operator|&
-name|Pending
+argument|SourceLocation>>& Pending
 argument_list|)
+name|override
 block|;
 comment|/// \brief Read the set of late parsed template functions for this source.
 comment|///
@@ -816,28 +670,17 @@ comment|/// The external source should insert its own late parsed template funct
 comment|/// into the map. Note that this routine may be invoked multiple times; the
 comment|/// external source should take care not to introduce the same map entries
 comment|/// repeatedly.
-name|virtual
 name|void
 name|ReadLateParsedTemplates
 argument_list|(
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|FunctionDecl
-operator|*
+argument|llvm::DenseMap<const FunctionDecl *
 argument_list|,
-name|LateParsedTemplate
-operator|*
-operator|>
-operator|&
-name|LPTMap
+argument|LateParsedTemplate *>&LPTMap
 argument_list|)
+name|override
 block|;
 comment|/// \copydoc ExternalSemaSource::CorrectTypo
 comment|/// \note Returns the first nonempty correction.
-name|virtual
 name|TypoCorrection
 name|CorrectTypo
 argument_list|(
@@ -857,6 +700,7 @@ argument|bool EnteringContext
 argument_list|,
 argument|const ObjCObjectPointerType *OPT
 argument_list|)
+name|override
 block|;
 comment|/// \brief Produces a diagnostic note if one of the attached sources
 comment|/// contains a complete definition for \p T. Queries the sources in list
@@ -868,7 +712,6 @@ comment|///
 comment|/// \param T the \c QualType that should have been complete at \p Loc
 comment|///
 comment|/// \return true if a diagnostic was produced, false otherwise.
-name|virtual
 name|bool
 name|MaybeDiagnoseMissingCompleteType
 argument_list|(
@@ -876,6 +719,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|QualType T
 argument_list|)
+name|override
 block|;
 comment|// isa/cast/dyn_cast support
 specifier|static

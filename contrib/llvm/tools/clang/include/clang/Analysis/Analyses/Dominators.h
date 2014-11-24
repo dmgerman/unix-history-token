@@ -80,20 +80,36 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/DominatorInternals.h"
+file|"llvm/Support/GenericDomTree.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Dominators.h"
+file|"llvm/Support/GenericDomTreeConstruction.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/IR/Module.h"
-end_include
+begin_comment
+comment|// FIXME: There is no good reason for the domtree to require a print method
+end_comment
+
+begin_comment
+comment|// which accepts an LLVM Module, so remove this (and the method's argument that
+end_comment
+
+begin_comment
+comment|// needs it) when that is fixed.
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|Module
+decl_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -722,7 +738,7 @@ name|Module
 operator|*
 name|M
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -748,39 +764,8 @@ name|cfg
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-unit|};
-specifier|inline
-name|void
-name|WriteAsOperand
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-specifier|const
-name|CFGBlock
-modifier|*
-name|BB
-parameter_list|,
-name|bool
-name|t
-parameter_list|)
-block|{
-name|OS
-operator|<<
-literal|"BB#"
-operator|<<
-name|BB
-operator|->
-name|getBlockID
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace clang
 end_comment
 

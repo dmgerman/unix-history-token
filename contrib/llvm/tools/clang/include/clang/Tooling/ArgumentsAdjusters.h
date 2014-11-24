@@ -147,15 +147,12 @@ range|:
 name|public
 name|ArgumentsAdjuster
 block|{
-name|virtual
 name|CommandLineArguments
 name|Adjust
 argument_list|(
-specifier|const
-name|CommandLineArguments
-operator|&
-name|Args
+argument|const CommandLineArguments&Args
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 comment|/// \brief An argument adjuster which removes output-related command line
@@ -166,15 +163,12 @@ range|:
 name|public
 name|ArgumentsAdjuster
 block|{
-name|virtual
 name|CommandLineArguments
 name|Adjust
 argument_list|(
-specifier|const
-name|CommandLineArguments
-operator|&
-name|Args
+argument|const CommandLineArguments&Args
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

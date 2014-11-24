@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/Linkage.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/Specifiers.h"
 end_include
 
@@ -87,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -132,6 +132,15 @@ decl_stmt|;
 name|class
 name|FunctionDecl
 decl_stmt|;
+name|class
+name|FunctionType
+decl_stmt|;
+enum_decl|enum
+name|Linkage
+enum_decl|:
+name|unsigned
+name|char
+enum_decl|;
 name|class
 name|LinkageComputer
 decl_stmt|;
@@ -191,81 +200,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-comment|// DeclContext* is only 4-byte aligned on 32-bit systems.
-name|template
-operator|<
-operator|>
-name|class
-name|PointerLikeTypeTraits
-operator|<
 name|clang
-operator|::
-name|DeclContext
-operator|*
-operator|>
-block|{
-typedef|typedef
-name|clang
-operator|::
-name|DeclContext
-operator|*
-name|PT
-expr_stmt|;
-name|public
-operator|:
-specifier|static
-specifier|inline
-name|void
-operator|*
-name|getAsVoidPointer
-argument_list|(
-argument|PT P
-argument_list|)
-block|{
-return|return
-name|P
-return|;
-block|}
-specifier|static
-specifier|inline
-name|PT
-name|getFromVoidPointer
-argument_list|(
-argument|void *P
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|PT
-operator|>
-operator|(
-name|P
-operator|)
-return|;
-block|}
-block|enum
-block|{
-name|NumLowBitsAvailable
-operator|=
-literal|2
-block|}
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-unit|}  namespace
-name|clang
-end_macro
-
-begin_block
 block|{
 comment|/// \brief Captures the result of checking the availability of a
 comment|/// declaration.
@@ -759,10 +694,73 @@ name|friend
 name|class
 name|Redeclarable
 expr_stmt|;
+comment|/// \brief Allocate memory for a deserialized declaration.
+comment|///
+comment|/// This routine must be used to allocate memory for any declaration that is
+comment|/// deserialized from a module file.
+comment|///
+comment|/// \param Size The size of the allocated object.
+comment|/// \param Ctx The context in which we will allocate memory.
+comment|/// \param ID The global ID of the deserialized declaration.
+comment|/// \param Extra The amount of extra space to allocate after the object.
+name|void
+modifier|*
+name|operator
+name|new
+argument_list|(
+name|std
+operator|::
+name|size_t
+name|Size
+argument_list|,
+specifier|const
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|,
+name|unsigned
+name|ID
+argument_list|,
+name|std
+operator|::
+name|size_t
+name|Extra
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+comment|/// \brief Allocate memory for a non-deserialized declaration.
+name|void
+modifier|*
+name|operator
+name|new
+argument_list|(
+name|std
+operator|::
+name|size_t
+name|Size
+argument_list|,
+specifier|const
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|,
+name|DeclContext
+operator|*
+name|Parent
+argument_list|,
+name|std
+operator|::
+name|size_t
+name|Extra
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 name|private
 label|:
-name|void
-name|CheckAccessDeclContext
+name|bool
+name|AccessDeclContextSanity
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -941,31 +939,6 @@ operator|~
 name|Decl
 argument_list|()
 expr_stmt|;
-comment|/// \brief Allocate memory for a deserialized declaration.
-comment|///
-comment|/// This routine must be used to allocate memory for any declaration that is
-comment|/// deserialized from a module file.
-comment|///
-comment|/// \param Context The context in which we will allocate memory.
-comment|/// \param ID The global ID of the deserialized declaration.
-comment|/// \param Size The size of the allocated object.
-specifier|static
-name|void
-modifier|*
-name|AllocateDeserializedDecl
-parameter_list|(
-specifier|const
-name|ASTContext
-modifier|&
-name|Context
-parameter_list|,
-name|unsigned
-name|ID
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
 comment|/// \brief Update a potentially out-of-date declaration.
 name|void
 name|updateOutOfDate
@@ -1236,6 +1209,11 @@ name|isInAnonymousNamespace
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|isInStdNamespace
+argument_list|()
+specifier|const
+expr_stmt|;
 name|ASTContext
 operator|&
 name|getASTContext
@@ -1254,28 +1232,24 @@ name|Access
 operator|=
 name|AS
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|CheckAccessDeclContext
+name|assert
+argument_list|(
+name|AccessDeclContextSanity
 argument_list|()
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|AccessSpecifier
 name|getAccess
 argument_list|()
 specifier|const
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|CheckAccessDeclContext
+name|assert
+argument_list|(
+name|AccessDeclContextSanity
 argument_list|()
+argument_list|)
 block|;
-endif|#
-directive|endif
 return|return
 name|AccessSpecifier
 argument_list|(
@@ -1402,8 +1376,31 @@ operator|::
 name|const_iterator
 name|attr_iterator
 expr_stmt|;
-comment|// FIXME: Do not rely on iterators having comparable singular values.
-comment|//        Note that this should error out if they do not.
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|attr_iterator
+operator|>
+name|attr_range
+expr_stmt|;
+name|attr_range
+name|attrs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|attr_range
+argument_list|(
+name|attr_begin
+argument_list|()
+argument_list|,
+name|attr_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|attr_iterator
 name|attr_begin
 argument_list|()
@@ -1419,7 +1416,7 @@ operator|.
 name|begin
 argument_list|()
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|attr_iterator
@@ -1437,7 +1434,7 @@ operator|.
 name|end
 argument_list|()
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|template
@@ -1512,6 +1509,49 @@ operator|<
 name|typename
 name|T
 operator|>
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_attr_iterator
+operator|<
+name|T
+operator|>>
+name|specific_attrs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|specific_attr_iterator
+operator|<
+name|T
+operator|>>
+operator|(
+name|specific_attr_begin
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+operator|,
+name|specific_attr_end
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+operator|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 name|specific_attr_iterator
 operator|<
 name|T
@@ -1579,7 +1619,7 @@ name|getAttrs
 argument_list|()
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|template
@@ -1888,7 +1928,7 @@ name|string
 operator|*
 name|Message
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1906,7 +1946,7 @@ name|string
 operator|*
 name|Message
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -1933,7 +1973,7 @@ name|string
 operator|*
 name|Message
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -2012,7 +2052,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Retrieve the global ID of the module that owns this particular
@@ -2083,7 +2123,7 @@ name|isFromASTFile
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 end_expr_stmt
 
@@ -2342,7 +2382,7 @@ return|return
 name|getParentFunctionOrMethod
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -2480,7 +2520,7 @@ begin_function
 name|virtual
 name|Decl
 modifier|*
-name|getNextRedeclaration
+name|getNextRedeclarationImpl
 parameter_list|()
 block|{
 return|return
@@ -2505,7 +2545,7 @@ name|getPreviousDeclImpl
 parameter_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_function
@@ -2589,7 +2629,7 @@ argument_list|()
 operator|:
 name|Current
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|explicit
@@ -2656,7 +2696,7 @@ name|Next
 operator|=
 name|Current
 operator|->
-name|getNextRedeclaration
+name|getNextRedeclarationImpl
 argument_list|()
 block|;
 name|assert
@@ -2672,11 +2712,11 @@ operator|(
 name|Next
 operator|!=
 name|Starter
+operator|)
 condition|?
 name|Next
 else|:
-literal|0
-operator|)
+name|nullptr
 block|;
 return|return
 operator|*
@@ -2762,14 +2802,45 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
+begin_typedef
 unit|};
-comment|/// \brief Returns iterator for all the redeclarations of the same decl.
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|redecl_iterator
+operator|>
+name|redecl_range
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief Returns an iterator range for all the redeclarations of the same
 end_comment
 
 begin_comment
-comment|/// It will iterate at least once (when this decl is the only one).
+comment|/// decl. It will iterate at least once (when this decl is the only one).
 end_comment
+
+begin_expr_stmt
+name|redecl_range
+name|redecls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|redecl_range
+argument_list|(
+name|redecls_begin
+argument_list|()
+argument_list|,
+name|redecls_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 name|redecl_iterator
@@ -2873,7 +2944,7 @@ return|return
 name|getPreviousDecl
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -2952,7 +3023,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -2984,7 +3055,7 @@ return|return
 name|getBody
 argument_list|()
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -3101,7 +3172,68 @@ name|bool
 name|isFunctionOrFunctionTemplate
 argument_list|()
 specifier|const
+block|{
+return|return
+operator|(
+name|DeclKind
+operator|>=
+name|Decl
+operator|::
+name|firstFunction
+operator|&&
+name|DeclKind
+operator|<=
+name|Decl
+operator|::
+name|lastFunction
+operator|)
+operator|||
+name|DeclKind
+operator|==
+name|FunctionTemplate
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Returns the function itself, or the templated function if this is a
+end_comment
+
+begin_comment
+comment|/// function template.
+end_comment
+
+begin_expr_stmt
+name|FunctionDecl
+operator|*
+name|getAsFunction
+argument_list|()
+name|LLVM_READONLY
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|FunctionDecl
+operator|*
+name|getAsFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getAsFunction
+argument_list|()
+return|;
+block|}
 end_expr_stmt
 
 begin_comment
@@ -3639,7 +3771,6 @@ comment|// Debuggers don't usually respect default arguments.
 end_comment
 
 begin_expr_stmt
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
@@ -3652,7 +3783,6 @@ comment|// Same as dump(), but forces color printing.
 end_comment
 
 begin_expr_stmt
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dumpColor
 argument_list|()
@@ -3667,6 +3797,33 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|Out
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Looks through the Decl's underlying type to extract a FunctionType
+end_comment
+
+begin_comment
+comment|/// when possible. Will return null if the type underlying the Decl does not
+end_comment
+
+begin_comment
+comment|/// have a FunctionType.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|FunctionType
+modifier|*
+name|getFunctionType
+argument_list|(
+name|bool
+name|BlocksToo
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3848,21 +4005,19 @@ argument_list|(
 argument|Msg
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|MutableArrayRef
 operator|<
 name|NamedDecl
@@ -4072,19 +4227,19 @@ argument_list|)
 operator|,
 name|LookupPtr
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|false
 argument_list|)
 operator|,
 name|FirstDecl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|LastDecl
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -4417,6 +4572,11 @@ name|Namespace
 return|;
 block|}
 name|bool
+name|isStdNamespace
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|isInlineNamespace
 argument_list|()
 specifier|const
@@ -4714,7 +4874,7 @@ argument_list|()
 operator|:
 name|Current
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|explicit
@@ -4847,6 +5007,18 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|decl_iterator
+operator|>
+name|decl_range
+expr_stmt|;
+end_typedef
+
 begin_comment
 comment|/// decls_begin/decls_end - Iterate over the declarations stored in
 end_comment
@@ -4854,6 +5026,25 @@ end_comment
 begin_comment
 comment|/// this context.
 end_comment
+
+begin_expr_stmt
+name|decl_range
+name|decls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|decl_range
+argument_list|(
+name|decls_begin
+argument_list|()
+argument_list|,
+name|decls_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 name|decl_iterator
@@ -4897,11 +5088,37 @@ comment|/// from an external source.
 end_comment
 
 begin_expr_stmt
+name|decl_range
+name|noload_decls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|decl_range
+argument_list|(
+name|noload_decls_begin
+argument_list|()
+argument_list|,
+name|noload_decls_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|decl_iterator
 name|noload_decls_begin
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+return|return
+name|decl_iterator
+argument_list|(
+name|FirstDecl
+argument_list|)
+return|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
@@ -5997,6 +6214,34 @@ name|all_lookups_iterator
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|all_lookups_iterator
+operator|>
+name|lookups_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|lookups_range
+name|lookups
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|lookups_range
+name|noload_lookups
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// \brief Iterators over all possible lookups within this context.
 end_comment
@@ -6045,74 +6290,27 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/// udir_iterator - Iterates through the using-directives stored
-end_comment
-
-begin_comment
-comment|/// within this context.
-end_comment
-
 begin_typedef
 typedef|typedef
-name|UsingDirectiveDecl
-modifier|*
-specifier|const
-modifier|*
-name|udir_iterator
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|std
+name|llvm
 operator|::
-name|pair
+name|iterator_range
 operator|<
-name|udir_iterator
-operator|,
-name|udir_iterator
+name|UsingDirectiveDecl
+operator|*
+specifier|const
+operator|*
 operator|>
-name|udir_iterator_range
+name|udir_range
 expr_stmt|;
 end_typedef
 
 begin_expr_stmt
-name|udir_iterator_range
-name|getUsingDirectives
+name|udir_range
+name|using_directives
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|udir_iterator
-name|using_directives_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getUsingDirectives
-argument_list|()
-operator|.
-name|first
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|udir_iterator
-name|using_directives_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getUsingDirectives
-argument_list|()
-operator|.
-name|second
-return|;
-block|}
 end_expr_stmt
 
 begin_comment
@@ -6125,19 +6323,24 @@ name|ddiag_iterator
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|inline
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|DeclContext
+operator|::
 name|ddiag_iterator
-name|ddiag_begin
-argument_list|()
-specifier|const
+operator|>
+name|ddiag_range
 expr_stmt|;
-end_expr_stmt
+end_typedef
 
 begin_expr_stmt
 specifier|inline
-name|ddiag_iterator
-name|ddiag_end
+name|ddiag_range
+name|ddiags
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -6386,7 +6589,6 @@ block|}
 end_function
 
 begin_expr_stmt
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dumpDeclContext
 argument_list|()
@@ -6395,7 +6597,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dumpLookups
 argument_list|()
@@ -6404,7 +6605,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dumpLookups
 argument_list|(
@@ -6423,12 +6623,13 @@ name|private
 label|:
 end_label
 
-begin_function_decl
+begin_expr_stmt
 name|void
 name|reconcileExternalVisibleStorage
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|void
@@ -6596,7 +6797,7 @@ name|bool
 name|IsKnownSubtype
 operator|=
 operator|::
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<

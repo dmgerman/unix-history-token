@@ -549,7 +549,7 @@ operator|&&
 name|getScopeRep
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// A scope specifier is present, and it refers to a real scope.
@@ -565,7 +565,7 @@ operator|&&
 name|getScopeRep
 argument_list|()
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Indicate that this nested-name-specifier is invalid.
@@ -633,7 +633,7 @@ return|return
 name|getScopeRep
 argument_list|()
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|void
@@ -1108,78 +1108,6 @@ init|=
 name|clang
 operator|::
 name|TST_atomic
-decl_stmt|;
-specifier|static
-specifier|const
-name|TST
-name|TST_image1d_t
-init|=
-name|clang
-operator|::
-name|TST_image1d_t
-decl_stmt|;
-specifier|static
-specifier|const
-name|TST
-name|TST_image1d_array_t
-init|=
-name|clang
-operator|::
-name|TST_image1d_array_t
-decl_stmt|;
-specifier|static
-specifier|const
-name|TST
-name|TST_image1d_buffer_t
-init|=
-name|clang
-operator|::
-name|TST_image1d_buffer_t
-decl_stmt|;
-specifier|static
-specifier|const
-name|TST
-name|TST_image2d_t
-init|=
-name|clang
-operator|::
-name|TST_image2d_t
-decl_stmt|;
-specifier|static
-specifier|const
-name|TST
-name|TST_image2d_array_t
-init|=
-name|clang
-operator|::
-name|TST_image2d_array_t
-decl_stmt|;
-specifier|static
-specifier|const
-name|TST
-name|TST_image3d_t
-init|=
-name|clang
-operator|::
-name|TST_image3d_t
-decl_stmt|;
-specifier|static
-specifier|const
-name|TST
-name|TST_sampler_t
-init|=
-name|clang
-operator|::
-name|TST_sampler_t
-decl_stmt|;
-specifier|static
-specifier|const
-name|TST
-name|TST_event_t
-init|=
-name|clang
-operator|::
-name|TST_event_t
 decl_stmt|;
 specifier|static
 specifier|const
@@ -1673,7 +1601,7 @@ argument_list|)
 operator|,
 name|ProtocolQualifiers
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumProtocolQualifiers
@@ -1683,7 +1611,7 @@ argument_list|)
 operator|,
 name|ProtocolLocs
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|writtenBS
@@ -1691,7 +1619,7 @@ argument_list|()
 operator|,
 name|ObjCQualifiers
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{   }
 operator|~
@@ -2153,6 +2081,11 @@ name|DeclSpec
 operator|::
 name|TST
 name|T
+argument_list|,
+specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
 argument_list|)
 decl_stmt|;
 specifier|static
@@ -2554,6 +2487,11 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|DiagID
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2594,6 +2532,11 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|DiagID
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2654,6 +2597,11 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|DiagID
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2677,6 +2625,11 @@ name|DiagID
 parameter_list|,
 name|ParsedType
 name|Rep
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2704,6 +2657,11 @@ name|Rep
 parameter_list|,
 name|bool
 name|Owned
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2730,6 +2688,11 @@ name|DiagID
 parameter_list|,
 name|ParsedType
 name|Rep
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2760,6 +2723,11 @@ name|Rep
 parameter_list|,
 name|bool
 name|Owned
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2784,6 +2752,11 @@ parameter_list|,
 name|Expr
 modifier|*
 name|Rep
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2804,6 +2777,11 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|DiagID
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2824,6 +2802,11 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|DiagID
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -2844,6 +2827,11 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|DiagID
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 name|bool
@@ -3199,22 +3187,6 @@ name|AL
 argument_list|)
 expr_stmt|;
 block|}
-name|void
-name|setAttributes
-parameter_list|(
-name|AttributeList
-modifier|*
-name|AL
-parameter_list|)
-block|{
-name|Attrs
-operator|.
-name|set
-argument_list|(
-name|AL
-argument_list|)
-expr_stmt|;
-block|}
 name|bool
 name|hasAttributes
 argument_list|()
@@ -3244,17 +3216,6 @@ name|getAttributes
 argument_list|()
 specifier|const
 block|{
-return|return
-name|Attrs
-return|;
-block|}
-comment|/// \brief Return the current attribute list and remove them from
-comment|/// the DeclSpec so that it doesn't own them.
-name|ParsedAttributes
-name|takeAttributes
-parameter_list|()
-block|{
-comment|// The non-const "copy" constructor clears the operand automatically.
 return|return
 name|Attrs
 return|;
@@ -3352,6 +3313,11 @@ parameter_list|,
 name|Preprocessor
 modifier|&
 name|PP
+parameter_list|,
+specifier|const
+name|PrintingPolicy
+modifier|&
+name|Policy
 parameter_list|)
 function_decl|;
 specifier|const
@@ -3514,12 +3480,12 @@ argument_list|)
 operator|,
 name|GetterName
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SetterName
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|ObjCDeclQualifier
@@ -3649,8 +3615,8 @@ expr_stmt|;
 block|}
 name|private
 label|:
-comment|// FIXME: These two are unrelated and mutially exclusive. So perhaps
-comment|// we can put them in a union to reflect their mutual exclusiveness
+comment|// FIXME: These two are unrelated and mutually exclusive. So perhaps
+comment|// we can put them in a union to reflect their mutual exclusivity
 comment|// (space saving is negligible).
 name|ObjCDeclQualifier
 name|objcDeclQualifier
@@ -3667,12 +3633,12 @@ name|IdentifierInfo
 modifier|*
 name|GetterName
 decl_stmt|;
-comment|// getter name of NULL if no getter
+comment|// getter name or NULL if no getter
 name|IdentifierInfo
 modifier|*
 name|SetterName
 decl_stmt|;
-comment|// setter name of NULL if no setter
+comment|// setter name or NULL if no setter
 block|}
 empty_stmt|;
 comment|/// \brief Represents a C++ unqualified-id that has been parsed.
@@ -3816,7 +3782,7 @@ argument_list|)
 operator|,
 name|Identifier
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 comment|/// \brief Clear out this unqualified-id, setting it to default (invalid)
@@ -3831,7 +3797,7 @@ name|IK_Identifier
 block|;
 name|Identifier
 operator|=
-literal|0
+name|nullptr
 block|;
 name|StartLocation
 operator|=
@@ -4321,7 +4287,8 @@ block|{}
 block|}
 decl_stmt|;
 comment|/// ParamInfo - An array of paraminfo objects is allocated whenever a function
-comment|/// declarator is parsed.  There are two interesting styles of arguments here:
+comment|/// declarator is parsed.  There are two interesting styles of parameters
+comment|/// here:
 comment|/// K&R-style identifier lists and parameter type lists.  K&R-style identifier
 comment|/// lists will have information about the identifier, but no type information.
 comment|/// Parameter type lists will have type info (if the actions module provides
@@ -4360,8 +4327,7 @@ argument|SourceLocation iloc
 argument_list|,
 argument|Decl *param
 argument_list|,
-argument|CachedTokens *DefArgTokens =
-literal|0
+argument|CachedTokens *DefArgTokens = nullptr
 argument_list|)
 block|:
 name|Ident
@@ -4403,7 +4369,7 @@ range|:
 name|TypeInfoCommon
 block|{
 comment|/// hasPrototype - This is true if the function had at least one typed
-comment|/// argument.  If the function is () or (a,b,c), then it has no prototype,
+comment|/// parameter.  If the function is () or (a,b,c), then it has no prototype,
 comment|/// and is treated as a K&R-style function.
 name|unsigned
 name|hasPrototype
@@ -4444,9 +4410,9 @@ name|ExceptionSpecType
 operator|:
 literal|3
 block|;
-comment|/// DeleteArgInfo - If this is true, we need to delete[] ArgInfo.
+comment|/// DeleteParams - If this is true, we need to delete[] Params.
 name|unsigned
-name|DeleteArgInfo
+name|DeleteParams
 operator|:
 literal|1
 block|;
@@ -4469,10 +4435,10 @@ comment|/// The location of the right parenthesis in the source.
 name|unsigned
 name|RParenLoc
 block|;
-comment|/// NumArgs - This is the number of formal arguments provided for the
+comment|/// NumParams - This is the number of formal parameters specified by the
 comment|/// declarator.
 name|unsigned
-name|NumArgs
+name|NumParams
 block|;
 comment|/// NumExceptions - This is the number of types in the dynamic-exception-
 comment|/// decl, if the function has one.
@@ -4506,12 +4472,12 @@ comment|/// \brief The location of the keyword introducing the spec, if any.
 name|unsigned
 name|ExceptionSpecLoc
 block|;
-comment|/// ArgInfo - This is a pointer to a new[]'d array of ParamInfo objects that
-comment|/// describe the arguments for this function declarator.  This is null if
-comment|/// there are no arguments specified.
+comment|/// Params - This is a pointer to a new[]'d array of ParamInfo objects that
+comment|/// describe the parameters specified by this function declarator.  null if
+comment|/// there are no parameters specified.
 name|ParamInfo
 operator|*
-name|ArgInfo
+name|Params
 block|;
 expr|union
 block|{
@@ -4534,28 +4500,61 @@ comment|/// type specified.
 name|UnionParsedType
 name|TrailingReturnType
 block|;
-comment|/// \brief Reset the argument list to having zero arguments.
+comment|/// \brief Reset the parameter list to having zero parameters.
 comment|///
 comment|/// This is used in various places for error recovery.
 name|void
-name|freeArgs
+name|freeParams
 argument_list|()
 block|{
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|;
+name|I
+operator|<
+name|NumParams
+condition|;
+operator|++
+name|I
+control|)
+block|{
+name|delete
+name|Params
+index|[
+name|I
+index|]
+operator|.
+name|DefaultArgTokens
+expr_stmt|;
+name|Params
+index|[
+name|I
+index|]
+operator|.
+name|DefaultArgTokens
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
 if|if
 condition|(
-name|DeleteArgInfo
+name|DeleteParams
 condition|)
 block|{
 name|delete
 index|[]
-name|ArgInfo
+name|Params
 decl_stmt|;
-name|DeleteArgInfo
+name|DeleteParams
 operator|=
 name|false
 expr_stmt|;
 block|}
-name|NumArgs
+name|NumParams
 operator|=
 literal|0
 expr_stmt|;
@@ -4566,11 +4565,11 @@ argument_list|()
 block|{
 if|if
 condition|(
-name|DeleteArgInfo
+name|DeleteParams
 condition|)
 name|delete
 index|[]
-name|ArgInfo
+name|Params
 decl_stmt|;
 if|if
 condition|(
@@ -4586,7 +4585,7 @@ decl_stmt|;
 block|}
 comment|/// isKNRPrototype - Return true if this is a K&R style identifier list,
 comment|/// like "void foo(a,b,c)".  In a function definition, this will be followed
-comment|/// by the argument type definitions.
+comment|/// by the parameter type definitions.
 name|bool
 name|isKNRPrototype
 argument_list|()
@@ -4596,7 +4595,7 @@ return|return
 operator|!
 name|hasPrototype
 operator|&&
-name|NumArgs
+name|NumParams
 operator|!=
 literal|0
 return|;
@@ -5100,7 +5099,7 @@ name|Ptr
 operator|.
 name|AttrList
 operator|=
-literal|0
+name|nullptr
 block|;
 return|return
 name|I
@@ -5163,7 +5162,7 @@ name|Ref
 operator|.
 name|AttrList
 operator|=
-literal|0
+name|nullptr
 block|;
 return|return
 name|I
@@ -5214,7 +5213,7 @@ name|Arr
 operator|.
 name|AttrList
 operator|=
-literal|0
+name|nullptr
 block|;
 name|I
 operator|.
@@ -5258,15 +5257,15 @@ specifier|static
 name|DeclaratorChunk
 name|getFunction
 argument_list|(
-argument|bool hasProto
+argument|bool HasProto
 argument_list|,
-argument|bool isAmbiguous
+argument|bool IsAmbiguous
 argument_list|,
 argument|SourceLocation LParenLoc
 argument_list|,
-argument|ParamInfo *ArgInfo
+argument|ParamInfo *Params
 argument_list|,
-argument|unsigned NumArgs
+argument|unsigned NumParams
 argument_list|,
 argument|SourceLocation EllipsisLoc
 argument_list|,
@@ -5344,7 +5343,7 @@ name|Cls
 operator|.
 name|AttrList
 operator|=
-literal|0
+name|nullptr
 block|;
 return|return
 name|I
@@ -5390,7 +5389,7 @@ name|Mem
 operator|.
 name|AttrList
 operator|=
-literal|0
+name|nullptr
 block|;
 name|new
 argument_list|(
@@ -5442,7 +5441,7 @@ name|Common
 operator|.
 name|AttrList
 operator|=
-literal|0
+name|nullptr
 block|;
 return|return
 name|I
@@ -5731,7 +5730,7 @@ argument_list|)
 block|,
 name|AsmLabel
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|InlineParamsUsed
@@ -6084,7 +6083,7 @@ argument_list|()
 block|;
 name|AsmLabel
 operator|=
-literal|0
+name|nullptr
 block|;
 name|InlineParamsUsed
 operator|=
@@ -6616,7 +6615,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -6957,7 +6956,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -7031,7 +7030,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -8151,7 +8150,7 @@ argument_list|)
 operator|,
 name|BitfieldSize
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 block|}
@@ -8206,6 +8205,17 @@ argument_list|,
 argument|const char *&PrevSpec
 argument_list|)
 expr_stmt|;
+name|bool
+name|isUnset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Specifiers
+operator|==
+literal|0
+return|;
+block|}
 name|bool
 name|isOverrideSpecified
 argument_list|()
@@ -8310,10 +8320,14 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// \brief An individual capture in a lambda introducer.
+comment|/// \brief Represents a complete lambda introducer.
 end_comment
 
 begin_struct
+struct|struct
+name|LambdaIntroducer
+block|{
+comment|/// \brief An individual capture in a lambda introducer.
 struct|struct
 name|LambdaCapture
 block|{
@@ -8342,7 +8356,7 @@ argument|LambdaCaptureKind Kind
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|IdentifierInfo* Id
+argument|IdentifierInfo *Id
 argument_list|,
 argument|SourceLocation EllipsisLoc
 argument_list|,
@@ -8383,16 +8397,6 @@ argument_list|)
 block|{}
 block|}
 struct|;
-end_struct
-
-begin_comment
-comment|/// \brief Represents a complete lambda introducer.
-end_comment
-
-begin_struct
-struct|struct
-name|LambdaIntroducer
-block|{
 name|SourceRange
 name|Range
 decl_stmt|;

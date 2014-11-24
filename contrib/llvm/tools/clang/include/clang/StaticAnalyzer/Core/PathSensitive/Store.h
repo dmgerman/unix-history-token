@@ -780,7 +780,7 @@ argument_list|)
 block|,
 name|Binding
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|First
@@ -799,6 +799,7 @@ argument|const MemRegion* R
 argument_list|,
 argument|SVal val
 argument_list|)
+name|override
 block|;
 name|LLVM_EXPLICIT
 name|operator

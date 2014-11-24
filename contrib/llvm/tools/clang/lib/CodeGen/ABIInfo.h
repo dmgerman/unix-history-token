@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Type.h"
+file|"llvm/IR/CallingConv.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/CallingConv.h"
+file|"llvm/IR/Type.h"
 end_include
 
 begin_decl_stmt

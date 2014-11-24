@@ -135,7 +135,9 @@ name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MangleContext
 operator|>
@@ -212,40 +214,6 @@ argument_list|(
 argument|QualType T
 argument_list|)
 expr_stmt|;
-comment|// FIXME: Every place that calls getVTT{Decl,Value} is something
-comment|// that needs to be abstracted properly.
-name|ImplicitParamDecl
-modifier|*
-modifier|&
-name|getVTTDecl
-parameter_list|(
-name|CodeGenFunction
-modifier|&
-name|CGF
-parameter_list|)
-block|{
-return|return
-name|CGF
-operator|.
-name|CXXStructorImplicitParamDecl
-return|;
-block|}
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|&
-name|getVTTValue
-argument_list|(
-argument|CodeGenFunction&CGF
-argument_list|)
-block|{
-return|return
-name|CGF
-operator|.
-name|CXXStructorImplicitParamValue
-return|;
-block|}
 name|ImplicitParamDecl
 modifier|*
 modifier|&
@@ -278,21 +246,8 @@ operator|.
 name|CXXStructorImplicitParamValue
 return|;
 block|}
-comment|/// Build a parameter variable suitable for 'this'.
-name|void
-name|BuildThisParam
-parameter_list|(
-name|CodeGenFunction
-modifier|&
-name|CGF
-parameter_list|,
-name|FunctionArgList
-modifier|&
-name|Params
-parameter_list|)
-function_decl|;
 comment|/// Perform prolog initialization of the parameter variable suitable
-comment|/// for 'this' emitted by BuildThisParam.
+comment|/// for 'this' emitted by buildThisParam.
 name|void
 name|EmitThisParam
 parameter_list|(
@@ -374,15 +329,15 @@ return|return
 name|false
 return|;
 block|}
-comment|/// Returns true if the given record type should be returned indirectly.
+comment|/// If the C++ ABI requires the given type be returned in a particular way,
+comment|/// this method sets RetAI and returns true.
 name|virtual
 name|bool
-name|isReturnTypeIndirect
+name|classifyReturnType
 argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
+name|CGFunctionInfo
+operator|&
+name|FI
 argument_list|)
 decl|const
 init|=
@@ -407,6 +362,18 @@ comment|/// Pass it as a pointer to temporary memory.
 name|RAA_Indirect
 block|}
 enum|;
+comment|/// Returns true if C++ allows us to copy the memory of an object of type RD
+comment|/// when it is passed as an argument.
+name|bool
+name|canCopyArgument
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Returns how an argument of the given record type should be passed.
 name|virtual
 name|RecordArgABI
@@ -421,6 +388,18 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// Returns true if the implicit 'sret' parameter comes after the implicit
+comment|/// 'this' parameter of C++ instance methods.
+name|virtual
+name|bool
+name|isSRetParameterAfterThis
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Find the LLVM type used to represent the given member pointer
 comment|/// type.
 name|virtual
@@ -449,6 +428,11 @@ argument_list|(
 name|CodeGenFunction
 operator|&
 name|CGF
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|E
 argument_list|,
 name|llvm
 operator|::
@@ -480,6 +464,11 @@ argument_list|(
 name|CodeGenFunction
 operator|&
 name|CGF
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|E
 argument_list|,
 name|llvm
 operator|::
@@ -712,6 +701,124 @@ expr_stmt|;
 name|virtual
 name|llvm
 operator|::
+name|Constant
+operator|*
+name|getAddrOfRTTIDescriptor
+argument_list|(
+argument|QualType Ty
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|bool
+name|shouldTypeidBeNullChecked
+parameter_list|(
+name|bool
+name|IsDeref
+parameter_list|,
+name|QualType
+name|SrcRecordTy
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|void
+name|EmitBadTypeidCall
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitTypeid
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|QualType SrcRecordTy
+argument_list|,
+argument|llvm::Value *ThisPtr
+argument_list|,
+argument|llvm::Type *StdTypeInfoPtrTy
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|bool
+name|shouldDynamicCastCallBeNullChecked
+parameter_list|(
+name|bool
+name|SrcIsPtr
+parameter_list|,
+name|QualType
+name|SrcRecordTy
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitDynamicCastCall
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|llvm::Value *Value
+argument_list|,
+argument|QualType SrcRecordTy
+argument_list|,
+argument|QualType DestTy
+argument_list|,
+argument|QualType DestRecordTy
+argument_list|,
+argument|llvm::BasicBlock *CastEnd
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitDynamicCastToVoid
+argument_list|(
+argument|CodeGenFunction&CGF
+argument_list|,
+argument|llvm::Value *Value
+argument_list|,
+argument|QualType SrcRecordTy
+argument_list|,
+argument|QualType DestTy
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+name|bool
+name|EmitBadCastCall
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|llvm
+operator|::
 name|Value
 operator|*
 name|GetVirtualBaseClassOffset
@@ -907,35 +1014,51 @@ argument_list|()
 return|;
 block|}
 comment|/// Perform ABI-specific "this" argument adjustment required prior to
-comment|/// a virtual function call.
+comment|/// a call of a virtual function.
+comment|/// The "VirtualCall" argument is true iff the call itself is virtual.
 name|virtual
 name|llvm
 operator|::
 name|Value
 operator|*
-name|adjustThisArgumentForVirtualCall
+name|adjustThisArgumentForVirtualFunctionCall
 argument_list|(
 argument|CodeGenFunction&CGF
 argument_list|,
 argument|GlobalDecl GD
 argument_list|,
 argument|llvm::Value *This
+argument_list|,
+argument|bool VirtualCall
 argument_list|)
 block|{
 return|return
 name|This
 return|;
 block|}
-comment|/// Build the ABI-specific portion of the parameter list for a
-comment|/// function.  This generally involves a 'this' parameter and
-comment|/// possibly some extra data for constructors and destructors.
+comment|/// Build a parameter variable suitable for 'this'.
+name|void
+name|buildThisParam
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+name|FunctionArgList
+modifier|&
+name|Params
+parameter_list|)
+function_decl|;
+comment|/// Insert any ABI-specific implicit parameters into the parameter list for a
+comment|/// function.  This generally involves extra data for constructors and
+comment|/// destructors.
 comment|///
 comment|/// ABIs may also choose to override the return type, which has been
 comment|/// initialized with the type of 'this' if HasThisReturn(CGF.CurGD) is true or
 comment|/// the formal return type of the function otherwise.
 name|virtual
 name|void
-name|BuildInstanceFunctionParams
+name|addImplicitStructorParams
 parameter_list|(
 name|CodeGenFunction
 modifier|&
@@ -984,21 +1107,54 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Emit the constructor call. Return the function that is called.
+comment|/// Add any ABI-specific implicit arguments needed to call a constructor.
+comment|///
+comment|/// \return The number of args added to the call, which is typically zero or
+comment|/// one.
+name|virtual
+name|unsigned
+name|addImplicitConstructorArgs
+parameter_list|(
+name|CodeGenFunction
+modifier|&
+name|CGF
+parameter_list|,
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|D
+parameter_list|,
+name|CXXCtorType
+name|Type
+parameter_list|,
+name|bool
+name|ForVirtualBase
+parameter_list|,
+name|bool
+name|Delegating
+parameter_list|,
+name|CallArgList
+modifier|&
+name|Args
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Emit the destructor call.
 name|virtual
 name|void
-name|EmitConstructorCall
+name|EmitDestructorCall
 argument_list|(
 name|CodeGenFunction
 operator|&
 name|CGF
 argument_list|,
 specifier|const
-name|CXXConstructorDecl
+name|CXXDestructorDecl
 operator|*
-name|D
+name|DD
 argument_list|,
-name|CXXCtorType
+name|CXXDtorType
 name|Type
 argument_list|,
 name|bool
@@ -1012,16 +1168,6 @@ operator|::
 name|Value
 operator|*
 name|This
-argument_list|,
-name|CallExpr
-operator|::
-name|const_arg_iterator
-name|ArgBeg
-argument_list|,
-name|CallExpr
-operator|::
-name|const_arg_iterator
-name|ArgEnd
 argument_list|)
 init|=
 literal|0
@@ -1190,6 +1336,12 @@ name|Thunk
 argument_list|,
 name|bool
 name|ForVTable
+argument_list|,
+name|GlobalDecl
+name|GD
+argument_list|,
+name|bool
+name|ReturnAdjustment
 argument_list|)
 init|=
 literal|0
@@ -1275,17 +1427,6 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Returns true iff static data members that are initialized in the
-comment|/// class definition should have linkonce linkage.
-name|virtual
-name|bool
-name|isInlineInitializedStaticDataMemberLinkOnce
-parameter_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/**************************** Array cookies ******************************/
 comment|/// Returns the extra size required in order to store the array
 comment|/// cookie for the given new-expression.  May return 0 to indicate that no
@@ -1511,8 +1652,6 @@ name|virtual
 name|void
 name|EmitThreadLocalInitFuncs
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|std
@@ -1543,16 +1682,19 @@ comment|/// triggering the initialization of all thread_local variables in its
 comment|/// translation unit).
 name|virtual
 name|LValue
-name|EmitThreadLocalDeclRefExpr
+name|EmitThreadLocalVarDeclLValue
 parameter_list|(
 name|CodeGenFunction
 modifier|&
 name|CGF
 parameter_list|,
 specifier|const
-name|DeclRefExpr
+name|VarDecl
 modifier|*
-name|DRE
+name|VD
+parameter_list|,
+name|QualType
+name|LValType
 parameter_list|)
 function_decl|;
 block|}

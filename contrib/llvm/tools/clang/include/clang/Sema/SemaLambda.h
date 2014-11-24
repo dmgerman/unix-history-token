@@ -83,21 +83,21 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|// Given a lambda's call operator and a variable (or null for 'this'),
-comment|// compute the nearest enclosing lambda that is capture-ready (i.e
-comment|// the enclosing context is not dependent, and all intervening lambdas can
-comment|// either implicitly or explicitly capture Var)
-comment|//
-comment|// Return the CallOperator of the capturable lambda and set function scope
-comment|// index to the correct index within the function scope stack to correspond
-comment|// to the capturable lambda.
-comment|// If VarDecl *VD is null, we check for 'this' capture.
-name|CXXMethodDecl
-modifier|*
-name|GetInnermostEnclosingCapturableLambda
+comment|/// \brief Examines the FunctionScopeInfo stack to determine the nearest
+comment|/// enclosing lambda (to the current lambda) that is 'capture-capable' for
+comment|/// the variable referenced in the current lambda (i.e. \p VarToCapture).
+comment|/// If successful, returns the index into Sema's FunctionScopeInfo stack
+comment|/// of the capture-capable lambda's LambdaScopeInfo.
+comment|/// See Implementation for more detailed comments.
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getStackIndexOfNearestEnclosingCaptureCapableLambda
 argument_list|(
 name|ArrayRef
 operator|<
+specifier|const
 name|sema
 operator|::
 name|FunctionScopeInfo
@@ -105,24 +105,15 @@ operator|*
 operator|>
 name|FunctionScopes
 argument_list|,
-name|unsigned
-operator|&
-name|FunctionScopeIndex
-argument_list|,
-name|DeclContext
-operator|*
-specifier|const
-name|CurContext
-argument_list|,
 name|VarDecl
 operator|*
-name|VD
+name|VarToCapture
 argument_list|,
 name|Sema
 operator|&
 name|S
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 end_decl_stmt
 

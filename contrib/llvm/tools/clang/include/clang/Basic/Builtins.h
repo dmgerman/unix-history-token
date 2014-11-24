@@ -400,7 +400,7 @@ argument_list|,
 literal|'c'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Return true if we know this builtin never throws an exception.
@@ -425,7 +425,7 @@ argument_list|,
 literal|'n'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Return true if we know this builtin never returns.
@@ -450,7 +450,7 @@ argument_list|,
 literal|'r'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Return true if we know this builtin can return twice.
@@ -475,7 +475,7 @@ argument_list|,
 literal|'j'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Returns true if this builtin does not perform the side-effects
@@ -501,7 +501,7 @@ argument_list|,
 literal|'u'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Return true if this is a builtin for a libc/libm function,
@@ -527,7 +527,7 @@ argument_list|,
 literal|'F'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Determines whether this builtin is a predefined libc/libm
@@ -554,7 +554,7 @@ argument_list|,
 literal|'f'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Determines whether this builtin is a predefined compiler-rt/libgcc
@@ -581,7 +581,7 @@ argument_list|,
 literal|'i'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Determines whether this builtin has custom typechecking.
@@ -606,7 +606,7 @@ argument_list|,
 literal|'t'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Completely forget that the given ID was ever considered a builtin,
@@ -704,7 +704,7 @@ argument_list|,
 literal|'e'
 argument_list|)
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|private
@@ -735,6 +735,28 @@ name|LangOptions
 operator|&
 name|LangOpts
 argument_list|)
+decl_stmt|;
+comment|/// \brief Helper function for isPrintfLike and isScanfLike.
+name|bool
+name|isLike
+argument_list|(
+name|unsigned
+name|ID
+argument_list|,
+name|unsigned
+operator|&
+name|FormatIdx
+argument_list|,
+name|bool
+operator|&
+name|HasVAListArg
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Fmt
+argument_list|)
+decl|const
 decl_stmt|;
 block|}
 empty_stmt|;

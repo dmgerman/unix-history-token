@@ -75,6 +75,8 @@ comment|/// \brief Specifies which overload candidates to display when overload
 comment|/// resolution fails.
 enum|enum
 name|OverloadsShown
+enum|:
+name|unsigned
 block|{
 name|Ovl_All
 block|,
@@ -211,6 +213,18 @@ operator|::
 name|string
 operator|>
 name|Warnings
+block|;
+comment|/// The list of -R... options used to alter the diagnostic mappings, with the
+comment|/// prefixes removed.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Remarks
 block|;
 name|public
 operator|:

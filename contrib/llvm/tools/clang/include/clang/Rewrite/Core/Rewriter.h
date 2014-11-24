@@ -536,12 +536,12 @@ argument_list|()
 operator|:
 name|SourceMgr
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|LangOpts
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|void
@@ -995,7 +995,7 @@ operator|.
 name|end
 argument_list|()
 condition|?
-literal|0
+name|nullptr
 else|:
 operator|&
 name|I

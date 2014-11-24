@@ -127,6 +127,28 @@ init|=
 name|RECORD_FIXIT
 block|}
 enum|;
+comment|/// A stable version of DiagnosticIDs::Level.
+comment|///
+comment|/// Do not change the order of values in this enum, and please increment the
+comment|/// serialized diagnostics version number when you add to it.
+enum|enum
+name|Level
+block|{
+name|Ignored
+init|=
+literal|0
+block|,
+name|Note
+block|,
+name|Warning
+block|,
+name|Error
+block|,
+name|Fatal
+block|,
+name|Remark
+block|}
+enum|;
 comment|/// \brief Returns a DiagnosticConsumer that serializes diagnostics to
 comment|///  a bitcode file.
 comment|///

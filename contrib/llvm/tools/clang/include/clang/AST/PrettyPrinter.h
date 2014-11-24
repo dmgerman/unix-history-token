@@ -205,9 +205,28 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|Half
+argument_list|(
+name|LO
+operator|.
+name|Half
+argument_list|)
+operator|,
 name|MSWChar
 argument_list|(
-argument|LO.MicrosoftExt&& !LO.WChar
+name|LO
+operator|.
+name|MicrosoftExt
+operator|&&
+operator|!
+name|LO
+operator|.
+name|WChar
+argument_list|)
+operator|,
+name|IncludeNewlines
+argument_list|(
+argument|true
 argument_list|)
 block|{ }
 comment|/// \brief What language we're printing.
@@ -317,7 +336,7 @@ literal|1
 decl_stmt|;
 comment|/// \brief When printing an anonymous tag name, also print the location of
 comment|/// that entity (e.g., "enum<anonymous at t.h:10:5>"). Otherwise, just
-comment|/// prints "<anonymous>" for the name.
+comment|/// prints "(anonymous)" for the name.
 name|bool
 name|AnonymousTagLocations
 range|:
@@ -362,10 +381,23 @@ name|PolishForDeclaration
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief When true, print the half-precision floating-point type as 'half'
+comment|/// instead of '__fp16'
+name|unsigned
+name|Half
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief When true, print the built-in wchar_t type as __wchar_t. For use in
 comment|/// Microsoft mode when wchar_t is not available.
 name|unsigned
 name|MSWChar
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief When true, include newlines after statements like "break", etc.
+name|unsigned
+name|IncludeNewlines
 range|:
 literal|1
 decl_stmt|;

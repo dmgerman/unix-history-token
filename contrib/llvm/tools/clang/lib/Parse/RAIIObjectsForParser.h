@@ -150,7 +150,7 @@ argument_list|)
 operator|,
 name|DiagnosticPool
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{
 if|if
@@ -197,7 +197,7 @@ name|PopParsingDeclaration
 argument_list|(
 name|State
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 name|Active
@@ -337,7 +337,7 @@ argument_list|)
 operator|,
 name|DiagnosticPool
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{
 name|push
@@ -398,7 +398,7 @@ argument_list|)
 operator|,
 name|DiagnosticPool
 argument_list|(
-argument|other ? other->DiagnosticPool.getParent() : NULL
+argument|other ? other->DiagnosticPool.getParent() : nullptr
 argument_list|)
 block|{
 if|if
@@ -476,7 +476,7 @@ parameter_list|()
 block|{
 name|pop
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 block|}
@@ -510,7 +510,7 @@ parameter_list|()
 block|{
 name|pop
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1559,7 +1559,7 @@ block|}
 name|bool
 name|expectAndConsume
 argument_list|(
-argument|unsigned DiagID
+argument|unsigned DiagID = diag::err_expected
 argument_list|,
 argument|const char *Msg =
 literal|""

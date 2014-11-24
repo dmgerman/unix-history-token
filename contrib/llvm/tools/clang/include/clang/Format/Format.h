@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/system_error.h"
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -97,22 +97,110 @@ decl_stmt|;
 name|namespace
 name|format
 block|{
+name|enum
+name|class
+name|ParseError
+block|{
+name|Success
+operator|=
+literal|0
+operator|,
+name|Error
+operator|,
+name|Unsuitable
+block|}
+empty_stmt|;
+name|class
+name|ParseErrorCategory
+name|final
+range|:
+name|public
+name|std
+operator|::
+name|error_category
+block|{
+name|public
+operator|:
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|()
+specifier|const
+name|LLVM_NOEXCEPT
+name|override
+block|;
+name|std
+operator|::
+name|string
+name|message
+argument_list|(
+argument|int EV
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
+specifier|const
+name|std
+operator|::
+name|error_category
+operator|&
+name|getParseCategory
+argument_list|()
+expr_stmt|;
+name|std
+operator|::
+name|error_code
+name|make_error_code
+argument_list|(
+argument|ParseError e
+argument_list|)
+expr_stmt|;
 comment|/// \brief The \c FormatStyle is used to configure the formatting to follow
 comment|/// specific guidelines.
 struct|struct
 name|FormatStyle
 block|{
+comment|/// \brief Supported languages. When stored in a configuration file, specifies
+comment|/// the language, that the configuration targets. When passed to the
+comment|/// reformat() function, enables syntax features specific to the language.
+enum|enum
+name|LanguageKind
+block|{
+comment|/// Do not use.
+name|LK_None
+block|,
+comment|/// Should be used for C, C++, ObjectiveC, ObjectiveC++.
+name|LK_Cpp
+block|,
+comment|/// Should be used for JavaScript.
+name|LK_JavaScript
+block|,
+comment|/// Should be used for Protocol Buffers
+comment|/// (https://developers.google.com/protocol-buffers/).
+name|LK_Proto
+block|}
+enum|;
+comment|/// \brief Language, this format style is targeted at.
+name|LanguageKind
+name|Language
+decl_stmt|;
 comment|/// \brief The column limit.
 comment|///
 comment|/// A column limit of \c 0 means that there is no column limit. In this case,
 comment|/// clang-format will respect the input's line breaking decisions within
-comment|/// statements.
+comment|/// statements unless they contradict other rules.
 name|unsigned
 name|ColumnLimit
 decl_stmt|;
 comment|/// \brief The maximum number of consecutive empty lines to keep.
 name|unsigned
 name|MaxEmptyLinesToKeep
+decl_stmt|;
+comment|/// \brief If true, empty lines at the start of blocks are kept.
+name|bool
+name|KeepEmptyLinesAtTheStartOfBlocks
 decl_stmt|;
 comment|/// \brief The penalty for each line break introduced inside a comment.
 name|unsigned
@@ -134,13 +222,28 @@ comment|/// \brief The penalty for breaking a function call after "call(".
 name|unsigned
 name|PenaltyBreakBeforeFirstCallParameter
 decl_stmt|;
-comment|/// \brief Set whether& and * bind to the type as opposed to the variable.
-name|bool
-name|PointerBindsToType
+comment|/// \brief The& and * alignment style.
+enum|enum
+name|PointerAlignmentStyle
+block|{
+comment|/// Align pointer to the left.
+name|PAS_Left
+block|,
+comment|/// Align pointer to the right.
+name|PAS_Right
+block|,
+comment|/// Align pointer in the middle.
+name|PAS_Middle
+block|}
+enum|;
+comment|/// Pointer and reference alignment style.
+name|PointerAlignmentStyle
+name|PointerAlignment
 decl_stmt|;
-comment|/// \brief If \c true, analyze the formatted file for the most common binding.
+comment|/// \brief If \c true, analyze the formatted file for the most common
+comment|/// alignment of& and *. \c PointerAlignment is then used only as fallback.
 name|bool
-name|DerivePointerBinding
+name|DerivePointerAlignment
 decl_stmt|;
 comment|/// \brief The extra indent or outdent of access modifiers, e.g. \c public:.
 name|int
@@ -173,6 +276,11 @@ comment|/// Switch statement body is always indented one level more than case la
 name|bool
 name|IndentCaseLabels
 decl_stmt|;
+comment|/// \brief Indent if a function definition or declaration is wrapped after the
+comment|/// type.
+name|bool
+name|IndentWrappedFunctionNames
+decl_stmt|;
 comment|/// \brief Different ways to indent namespace contents.
 enum|enum
 name|NamespaceIndentationKind
@@ -191,7 +299,11 @@ comment|/// \brief The indentation used for namespaces.
 name|NamespaceIndentationKind
 name|NamespaceIndentation
 decl_stmt|;
-comment|/// \brief The number of spaces to before trailing line comments.
+comment|/// \brief The number of spaces before trailing line comments
+comment|/// (\c // - comments).
+comment|///
+comment|/// This does not affect trailing block comments (\c /**/ - comments) as those
+comment|/// commonly have different usage patterns and a number of special cases.
 name|unsigned
 name|SpacesBeforeTrailingComments
 decl_stmt|;
@@ -233,6 +345,12 @@ comment|/// the commas with the colon.
 name|bool
 name|BreakConstructorInitializersBeforeComma
 decl_stmt|;
+comment|/// \brief Allows contracting simple braced statements to a single line.
+comment|///
+comment|/// E.g., this allows<tt>if (a) { return; }</tt> to be put on a single line.
+name|bool
+name|AllowShortBlocksOnASingleLine
+decl_stmt|;
 comment|/// \brief If \c true,<tt>if (a) return;</tt> can be put on a single
 comment|/// line.
 name|bool
@@ -242,6 +360,31 @@ comment|/// \brief If \c true,<tt>while (true) continue;</tt> can be put on a
 comment|/// single line.
 name|bool
 name|AllowShortLoopsOnASingleLine
+decl_stmt|;
+comment|/// \brief Different styles for merging short functions containing at most one
+comment|/// statement.
+enum|enum
+name|ShortFunctionStyle
+block|{
+comment|/// \brief Never merge functions into a single line.
+name|SFS_None
+block|,
+comment|/// \brief Only merge functions defined inside a class.
+name|SFS_Inline
+block|,
+comment|/// \brief Merge all functions fitting on a single line.
+name|SFS_All
+block|,   }
+enum|;
+comment|/// \brief Dependent on the value,<tt>int f() { return 0; }</tt> can be put
+comment|/// on a single line.
+name|ShortFunctionStyle
+name|AllowShortFunctionsOnASingleLine
+decl_stmt|;
+comment|/// \brief Add a space after \c @property in Objective-C, i.e. use
+comment|///<tt>\@property (readonly)</tt> instead of<tt>\@property(readonly)</tt>.
+name|bool
+name|ObjCSpaceAfterProperty
 decl_stmt|;
 comment|/// \brief Add a space in front of an Objective-C protocol list, i.e. use
 comment|///<tt>Foo<Protocol></tt> instead of \c Foo<Protocol>.
@@ -322,6 +465,11 @@ name|BS_Stroustrup
 block|,
 comment|/// Always break before braces.
 name|BS_Allman
+block|,
+comment|/// Always break before braces and add an extra level of indentation to
+comment|/// braces of control statements, not to those of class, function
+comment|/// or other definitions.
+name|BS_GNU
 block|}
 enum|;
 comment|/// \brief The brace breaking style to use.
@@ -344,11 +492,6 @@ comment|/// a zero-length name is assumed.
 name|bool
 name|Cpp11BracedListStyle
 decl_stmt|;
-comment|/// \brief If \c true, indent when breaking function declarations which
-comment|/// are not also definitions after the type.
-name|bool
-name|IndentFunctionDeclarationAfterType
-decl_stmt|;
 comment|/// \brief If \c true, spaces will be inserted after '(' and before ')'.
 name|bool
 name|SpacesInParentheses
@@ -358,18 +501,40 @@ comment|/// template argument lists
 name|bool
 name|SpacesInAngles
 decl_stmt|;
-comment|/// \brief If \c false, spaces may be inserted into '()'.
+comment|/// \brief If \c true, spaces may be inserted into '()'.
 name|bool
 name|SpaceInEmptyParentheses
 decl_stmt|;
-comment|/// \brief If \c false, spaces may be inserted into C style casts.
+comment|/// \brief If \c true, spaces are inserted inside container literals (e.g.
+comment|/// ObjC and Javascript array and dict literals).
+name|bool
+name|SpacesInContainerLiterals
+decl_stmt|;
+comment|/// \brief If \c true, spaces may be inserted into C style casts.
 name|bool
 name|SpacesInCStyleCastParentheses
 decl_stmt|;
-comment|/// \brief If \c true, spaces will be inserted between 'for'/'if'/'while'/...
-comment|/// and '('.
-name|bool
-name|SpaceAfterControlStatementKeyword
+comment|/// \brief Different ways to put a space before opening parentheses.
+enum|enum
+name|SpaceBeforeParensOptions
+block|{
+comment|/// Never put a space before opening parentheses.
+name|SBPO_Never
+block|,
+comment|/// Put a space before opening parentheses only after control statement
+comment|/// keywords (<tt>for/if/while...</tt>).
+name|SBPO_ControlStatements
+block|,
+comment|/// Always put a space before opening parentheses, except when it's
+comment|/// prohibited by the syntax rules (in function-like macro definitions) or
+comment|/// when determined by other style rules (after unary operators, opening
+comment|/// parentheses, etc.)
+name|SBPO_Always
+block|}
+enum|;
+comment|/// \brief Defines in which cases to put a space before opening parentheses.
+name|SpaceBeforeParensOptions
+name|SpaceBeforeParens
 decl_stmt|;
 comment|/// \brief If \c false, spaces will be removed before assignment operators.
 name|bool
@@ -379,6 +544,37 @@ comment|/// \brief Indent width for line continuations.
 name|unsigned
 name|ContinuationIndentWidth
 decl_stmt|;
+comment|/// \brief A regular expression that describes comments with special meaning,
+comment|/// which should not be split into lines or otherwise changed.
+name|std
+operator|::
+name|string
+name|CommentPragmas
+expr_stmt|;
+comment|/// \brief Disables formatting at all.
+name|bool
+name|DisableFormat
+decl_stmt|;
+comment|/// \brief A vector of macros that should be interpreted as foreach loops
+comment|/// instead of as function calls.
+comment|///
+comment|/// These are expected to be macros of the form:
+comment|/// \code
+comment|/// FOREACH(<variable-declaration>, ...)
+comment|///<loop-body>
+comment|/// \endcode
+comment|///
+comment|/// For example: BOOST_FOREACH.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ForEachMacros
+expr_stmt|;
 name|bool
 name|operator
 operator|==
@@ -421,6 +617,18 @@ name|R
 operator|.
 name|AllowAllParametersOfDeclarationOnNextLine
 operator|&&
+name|AllowShortFunctionsOnASingleLine
+operator|==
+name|R
+operator|.
+name|AllowShortFunctionsOnASingleLine
+operator|&&
+name|AllowShortBlocksOnASingleLine
+operator|==
+name|R
+operator|.
+name|AllowShortBlocksOnASingleLine
+operator|&&
 name|AllowShortIfStatementsOnASingleLine
 operator|==
 name|R
@@ -487,11 +695,11 @@ name|R
 operator|.
 name|ConstructorInitializerAllOnOneLineOrOnePerLine
 operator|&&
-name|DerivePointerBinding
+name|DerivePointerAlignment
 operator|==
 name|R
 operator|.
-name|DerivePointerBinding
+name|DerivePointerAlignment
 operator|&&
 name|ExperimentalAutoDetectBinPacking
 operator|==
@@ -505,11 +713,11 @@ name|R
 operator|.
 name|IndentCaseLabels
 operator|&&
-name|IndentFunctionDeclarationAfterType
+name|IndentWrappedFunctionNames
 operator|==
 name|R
 operator|.
-name|IndentFunctionDeclarationAfterType
+name|IndentWrappedFunctionNames
 operator|&&
 name|IndentWidth
 operator|==
@@ -517,17 +725,35 @@ name|R
 operator|.
 name|IndentWidth
 operator|&&
+name|Language
+operator|==
+name|R
+operator|.
+name|Language
+operator|&&
 name|MaxEmptyLinesToKeep
 operator|==
 name|R
 operator|.
 name|MaxEmptyLinesToKeep
 operator|&&
+name|KeepEmptyLinesAtTheStartOfBlocks
+operator|==
+name|R
+operator|.
+name|KeepEmptyLinesAtTheStartOfBlocks
+operator|&&
 name|NamespaceIndentation
 operator|==
 name|R
 operator|.
 name|NamespaceIndentation
+operator|&&
+name|ObjCSpaceAfterProperty
+operator|==
+name|R
+operator|.
+name|ObjCSpaceAfterProperty
 operator|&&
 name|ObjCSpaceBeforeProtocolList
 operator|==
@@ -565,11 +791,11 @@ name|R
 operator|.
 name|PenaltyReturnTypeOnItsOwnLine
 operator|&&
-name|PointerBindsToType
+name|PointerAlignment
 operator|==
 name|R
 operator|.
-name|PointerBindsToType
+name|PointerAlignment
 operator|&&
 name|SpacesBeforeTrailingComments
 operator|==
@@ -619,17 +845,23 @@ name|R
 operator|.
 name|SpaceInEmptyParentheses
 operator|&&
+name|SpacesInContainerLiterals
+operator|==
+name|R
+operator|.
+name|SpacesInContainerLiterals
+operator|&&
 name|SpacesInCStyleCastParentheses
 operator|==
 name|R
 operator|.
 name|SpacesInCStyleCastParentheses
 operator|&&
-name|SpaceAfterControlStatementKeyword
+name|SpaceBeforeParens
 operator|==
 name|R
 operator|.
-name|SpaceAfterControlStatementKeyword
+name|SpaceBeforeParens
 operator|&&
 name|SpaceBeforeAssignmentOperators
 operator|==
@@ -642,6 +874,18 @@ operator|==
 name|R
 operator|.
 name|ContinuationIndentWidth
+operator|&&
+name|CommentPragmas
+operator|==
+name|R
+operator|.
+name|CommentPragmas
+operator|&&
+name|ForEachMacros
+operator|==
+name|R
+operator|.
+name|ForEachMacros
 return|;
 block|}
 block|}
@@ -652,18 +896,30 @@ name|FormatStyle
 name|getLLVMStyle
 parameter_list|()
 function_decl|;
-comment|/// \brief Returns a format style complying with Google's C++ style guide:
+comment|/// \brief Returns a format style complying with one of Google's style guides:
 comment|/// http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml.
+comment|/// http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml.
+comment|/// https://developers.google.com/protocol-buffers/docs/style.
 name|FormatStyle
 name|getGoogleStyle
-parameter_list|()
-function_decl|;
+argument_list|(
+name|FormatStyle
+operator|::
+name|LanguageKind
+name|Language
+argument_list|)
+decl_stmt|;
 comment|/// \brief Returns a format style complying with Chromium's style guide:
 comment|/// http://www.chromium.org/developers/coding-style.
 name|FormatStyle
 name|getChromiumStyle
-parameter_list|()
-function_decl|;
+argument_list|(
+name|FormatStyle
+operator|::
+name|LanguageKind
+name|Language
+argument_list|)
+decl_stmt|;
 comment|/// \brief Returns a format style complying with Mozilla's style guide:
 comment|/// https://developer.mozilla.org/en-US/docs/Developer_Guide/Coding_Style.
 name|FormatStyle
@@ -676,7 +932,18 @@ name|FormatStyle
 name|getWebKitStyle
 parameter_list|()
 function_decl|;
-comment|/// \brief Gets a predefined style by name.
+comment|/// \brief Returns a format style complying with GNU Coding Standards:
+comment|/// http://www.gnu.org/prep/standards/standards.html
+name|FormatStyle
+name|getGNUStyle
+parameter_list|()
+function_decl|;
+comment|/// \brief Returns style indicating formatting should be not applied at all.
+name|FormatStyle
+name|getNoStyle
+parameter_list|()
+function_decl|;
+comment|/// \brief Gets a predefined style for the specified language by name.
 comment|///
 comment|/// Currently supported names: LLVM, Google, Chromium, Mozilla. Names are
 comment|/// compared case-insensitively.
@@ -684,17 +951,28 @@ comment|///
 comment|/// Returns \c true if the Style has been set.
 name|bool
 name|getPredefinedStyle
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|,
+argument_list|,
 name|FormatStyle
-modifier|*
+operator|::
+name|LanguageKind
+name|Language
+argument_list|,
+name|FormatStyle
+operator|*
 name|Style
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Parse configuration from YAML-formatted text.
-name|llvm
+comment|///
+comment|/// Style->Language is used to get the base style, if the \c BasedOnStyle
+comment|/// option is present.
+comment|///
+comment|/// When \c BasedOnStyle is not present, options not present in the YAML
+comment|/// document, are retained in \p Style.
+name|std
 operator|::
 name|error_code
 name|parseConfiguration
@@ -810,6 +1088,8 @@ comment|/// \param[in] StyleName Style name to interpret according to the descri
 comment|/// above.
 comment|/// \param[in] FileName Path to start search for .clang-format if \c StyleName
 comment|/// == "file".
+comment|/// \param[in] FallbackStyle The name of a predefined style used to fallback to
+comment|/// in case the style can't be determined from \p StyleName.
 comment|///
 comment|/// \returns FormatStyle as specified by \c StyleName. If no style could be
 comment|/// determined, the default is LLVM Style (see getLLVMStyle()).
@@ -821,6 +1101,9 @@ name|StyleName
 parameter_list|,
 name|StringRef
 name|FileName
+parameter_list|,
+name|StringRef
+name|FallbackStyle
 parameter_list|)
 function_decl|;
 block|}
@@ -831,6 +1114,31 @@ end_decl_stmt
 begin_comment
 comment|// end namespace clang
 end_comment
+
+begin_decl_stmt
+name|namespace
+name|std
+block|{
+name|template
+operator|<
+operator|>
+expr|struct
+name|is_error_code_enum
+operator|<
+name|clang
+operator|::
+name|format
+operator|::
+name|ParseError
+operator|>
+operator|:
+name|std
+operator|::
+name|true_type
+block|{}
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -205,6 +205,12 @@ name|IndexHeaderMapHeader
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether this file had been looked up as a header.
+name|unsigned
+name|IsValid
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief The number of times the file has been included already.
 name|unsigned
 name|short
@@ -288,6 +294,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|IsValid
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|NumIncludes
 argument_list|(
 literal|0
@@ -300,7 +311,7 @@ argument_list|)
 operator|,
 name|ControllingMacro
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// \brief Retrieve the controlling macro for this header file, if
@@ -432,6 +443,10 @@ name|HeaderSearchOptions
 operator|>
 name|HSOpts
 expr_stmt|;
+name|DiagnosticsEngine
+modifier|&
+name|Diags
+decl_stmt|;
 name|FileManager
 modifier|&
 name|FileMgr
@@ -498,25 +513,71 @@ name|HeaderFileInfo
 operator|>
 name|FileInfo
 expr_stmt|;
-comment|/// \brief Keeps track of each lookup performed by LookupFile.
-comment|///
-comment|/// The first part of the value is the starting index in SearchDirs
-comment|/// that the cached search was performed from.  If there is a hit and
-comment|/// this value doesn't match the current query, the cache has to be
-comment|/// ignored.  The second value is the entry in SearchDirs that satisfied
-comment|/// the query.
+comment|/// Keeps track of each lookup performed by LookupFile.
+struct|struct
+name|LookupFileCacheInfo
+block|{
+comment|/// Starting index in SearchDirs that the cached search was performed from.
+comment|/// If there is a hit and this value doesn't match the current query, the
+comment|/// cache has to be ignored.
+name|unsigned
+name|StartIdx
+decl_stmt|;
+comment|/// The entry in SearchDirs that satisfied the query.
+name|unsigned
+name|HitIdx
+decl_stmt|;
+comment|/// This is non-null if the original filename was mapped to a framework
+comment|/// include via a headermap.
+specifier|const
+name|char
+modifier|*
+name|MappedName
+decl_stmt|;
+comment|/// Default constructor -- Initialize all members with zero.
+name|LookupFileCacheInfo
+argument_list|()
+operator|:
+name|StartIdx
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|HitIdx
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|MappedName
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|void
+name|reset
+argument_list|(
+argument|unsigned StartIdx
+argument_list|)
+block|{
+name|this
+operator|->
+name|StartIdx
+operator|=
+name|StartIdx
+block|;
+name|this
+operator|->
+name|MappedName
+operator|=
+name|nullptr
+block|;     }
+block|}
+struct|;
 name|llvm
 operator|::
 name|StringMap
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
+name|LookupFileCacheInfo
 operator|,
 name|llvm
 operator|::
@@ -556,7 +617,9 @@ name|BumpPtrAllocator
 operator|>
 name|IncludeAliasMap
 expr_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|IncludeAliasMap
 operator|>
@@ -635,6 +698,9 @@ name|unsigned
 name|NumFrameworkLookups
 decl_stmt|,
 name|NumSubFrameworkLookups
+decl_stmt|;
+name|bool
+name|EnabledModules
 decl_stmt|;
 comment|// HeaderSearch doesn't support default or copy construction.
 name|HeaderSearch
@@ -862,10 +928,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|bool
+operator|)
 name|IncludeAliases
-operator|.
-name|isValid
-argument_list|()
 return|;
 block|}
 comment|/// \brief Map the source include name to the dest include name.
@@ -1061,13 +1127,15 @@ comment|///
 comment|/// \returns If successful, this returns 'UsedDir', the DirectoryLookup member
 comment|/// the file was found in, or null if not applicable.
 comment|///
+comment|/// \param IncludeLoc Used for diagnostics if valid.
+comment|///
 comment|/// \param isAngled indicates whether the file reference is a<> reference.
 comment|///
 comment|/// \param CurDir If non-null, the file was found in the specified directory
 comment|/// search location.  This is used to implement \#include_next.
 comment|///
-comment|/// \param CurFileEnt If non-null, indicates where the \#including file is, in
-comment|/// case a relative search is needed.
+comment|/// \param Includers Indicates where the \#including file(s) are, in case
+comment|/// relative searches are needed. In reverse order of inclusion.
 comment|///
 comment|/// \param SearchPath If non-null, will be set to the search path relative
 comment|/// to which the file was found. If the include path is absolute, SearchPath
@@ -1088,6 +1156,9 @@ argument_list|(
 name|StringRef
 name|Filename
 argument_list|,
+name|SourceLocation
+name|IncludeLoc
+argument_list|,
 name|bool
 name|isAngled
 argument_list|,
@@ -1102,10 +1173,13 @@ operator|*
 operator|&
 name|CurDir
 argument_list|,
+name|ArrayRef
+operator|<
 specifier|const
 name|FileEntry
 operator|*
-name|CurFileEnt
+operator|>
+name|Includers
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -1406,6 +1480,16 @@ modifier|*
 name|FE
 parameter_list|)
 function_decl|;
+comment|/// Returns true if modules are enabled.
+name|bool
+name|enabledModules
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EnabledModules
+return|;
+block|}
 comment|/// \brief Retrieve the name of the module file that should be used to
 comment|/// load the given module.
 comment|///
@@ -1428,6 +1512,9 @@ comment|/// load a module with the given name.
 comment|///
 comment|/// \param ModuleName The module whose module file name will be returned.
 comment|///
+comment|/// \param ModuleMapPath A path that when combined with \c ModuleName
+comment|/// uniquely identifies this module. See Module::ModuleMap.
+comment|///
 comment|/// \returns The name of the module file that corresponds to this module,
 comment|/// or an empty string if this module does not correspond to any module file.
 name|std
@@ -1436,6 +1523,8 @@ name|string
 name|getModuleFileName
 argument_list|(
 argument|StringRef ModuleName
+argument_list|,
+argument|StringRef ModuleMapPath
 argument_list|)
 expr_stmt|;
 comment|/// \brief Lookup a module Search for a module with the given name.
@@ -1460,6 +1549,22 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+comment|/// \brief Try to find a module map file in the given directory, returning
+comment|/// \c nullptr if none is found.
+specifier|const
+name|FileEntry
+modifier|*
+name|lookupModuleMapFile
+parameter_list|(
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|Dir
+parameter_list|,
+name|bool
+name|IsFramework
+parameter_list|)
+function_decl|;
 name|void
 name|IncrementFrameworkLookupCount
 parameter_list|()
@@ -1470,6 +1575,7 @@ expr_stmt|;
 block|}
 comment|/// \brief Determine whether there is a module map that may map the header
 comment|/// with the given file name to a (sub)module.
+comment|/// Always returns false if modules are disabled.
 comment|///
 comment|/// \param Filename The name of the file.
 comment|///
@@ -1582,30 +1688,6 @@ modifier|&
 name|SearchDir
 parameter_list|)
 function_decl|;
-name|public
-label|:
-comment|/// \brief Retrieve the module map.
-name|ModuleMap
-modifier|&
-name|getModuleMap
-parameter_list|()
-block|{
-return|return
-name|ModMap
-return|;
-block|}
-name|unsigned
-name|header_file_size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|FileInfo
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
 comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry.
 specifier|const
 name|HeaderFileInfo
@@ -1635,6 +1717,46 @@ name|FE
 argument_list|)
 return|;
 block|}
+name|public
+label|:
+comment|/// \brief Retrieve the module map.
+name|ModuleMap
+modifier|&
+name|getModuleMap
+parameter_list|()
+block|{
+return|return
+name|ModMap
+return|;
+block|}
+name|unsigned
+name|header_file_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileInfo
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// \brief Get a \c HeaderFileInfo structure for the specified \c FileEntry,
+comment|/// if one exists.
+name|bool
+name|tryGetFileInfo
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|FE
+argument_list|,
+name|HeaderFileInfo
+operator|&
+name|Result
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Used by external tools
 typedef|typedef
 name|std
@@ -1811,11 +1933,24 @@ comment|/// invalid.
 name|LMM_InvalidModuleMap
 block|}
 enum|;
+name|LoadModuleMapResult
+name|loadModuleMapFileImpl
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|,
+name|bool
+name|IsSystem
+parameter_list|)
+function_decl|;
 comment|/// \brief Try to load the module map file in the given directory.
 comment|///
 comment|/// \param DirName The name of the directory where we will look for a module
 comment|/// map file.
 comment|/// \param IsSystem Whether this is a system header directory.
+comment|/// \param IsFramework Whether this is a framework directory.
 comment|///
 comment|/// \returns The result of attempting to load the module map file from the
 comment|/// named directory.
@@ -1827,12 +1962,16 @@ name|DirName
 parameter_list|,
 name|bool
 name|IsSystem
+parameter_list|,
+name|bool
+name|IsFramework
 parameter_list|)
 function_decl|;
 comment|/// \brief Try to load the module map file in the given directory.
 comment|///
 comment|/// \param Dir The directory where we will look for a module map file.
 comment|/// \param IsSystem Whether this is a system header directory.
+comment|/// \param IsFramework Whether this is a framework directory.
 comment|///
 comment|/// \returns The result of attempting to load the module map file from the
 comment|/// named directory.
@@ -1846,6 +1985,9 @@ name|Dir
 parameter_list|,
 name|bool
 name|IsSystem
+parameter_list|,
+name|bool
+name|IsFramework
 parameter_list|)
 function_decl|;
 comment|/// \brief Return the HeaderFileInfo structure for the specified FileEntry.

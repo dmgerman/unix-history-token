@@ -288,7 +288,7 @@ comment|/// \brief Creates a Replacement of the range [Start, Start+Length) with
 comment|/// ReplacementText.
 name|Replacement
 argument_list|(
-argument|SourceManager&Sources
+argument|const SourceManager&Sources
 argument_list|,
 argument|SourceLocation Start
 argument_list|,
@@ -300,7 +300,7 @@ empty_stmt|;
 comment|/// \brief Creates a Replacement of the given range with ReplacementText.
 name|Replacement
 argument_list|(
-argument|SourceManager&Sources
+argument|const SourceManager&Sources
 argument_list|,
 argument|const CharSourceRange&Range
 argument_list|,
@@ -315,7 +315,7 @@ name|Node
 operator|>
 name|Replacement
 argument_list|(
-argument|SourceManager&Sources
+argument|const SourceManager&Sources
 argument_list|,
 argument|const Node&NodeToReplace
 argument_list|,
@@ -398,6 +398,7 @@ label|:
 name|void
 name|setFromSourceLocation
 parameter_list|(
+specifier|const
 name|SourceManager
 modifier|&
 name|Sources
@@ -415,6 +416,7 @@ function_decl|;
 name|void
 name|setFromSourceRange
 parameter_list|(
+specifier|const
 name|SourceManager
 modifier|&
 name|Sources
@@ -724,7 +726,7 @@ name|Replacement
 operator|::
 name|Replacement
 argument_list|(
-argument|SourceManager&Sources
+argument|const SourceManager&Sources
 argument_list|,
 argument|const Node&NodeToReplace
 argument_list|,

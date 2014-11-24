@@ -132,10 +132,10 @@ range|:
 name|public
 name|PreprocessorLexer
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Constant configuration values for this lexer.
@@ -368,6 +368,7 @@ name|IndirectLex
 argument_list|(
 argument|Token&Result
 argument_list|)
+name|override
 block|{
 name|Lex
 argument_list|(
@@ -530,7 +531,7 @@ operator|>
 operator|*
 name|Result
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 comment|/// Diag - Forwarding function for diagnostics.  This translate a source
@@ -561,6 +562,7 @@ comment|/// the current file.
 name|SourceLocation
 name|getSourceLocation
 argument_list|()
+name|override
 block|{
 return|return
 name|getSourceLocation
@@ -648,7 +650,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 comment|/// getSpelling() - Return the 'spelling' of the Tok token.  The spelling of a
@@ -681,7 +683,7 @@ name|bool
 operator|*
 name|Invalid
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 comment|/// getSpelling - This method is used to get the spelling of the
@@ -704,8 +706,7 @@ argument|const SourceManager&SourceMgr
 argument_list|,
 argument|const LangOptions&LangOpts
 argument_list|,
-argument|bool *invalid =
-literal|0
+argument|bool *invalid = nullptr
 argument_list|)
 block|;
 comment|/// MeasureTokenLength - Relex the token at the specified location and return
@@ -813,8 +814,7 @@ argument|const SourceManager&SM
 argument_list|,
 argument|const LangOptions&LangOpts
 argument_list|,
-argument|SourceLocation *MacroBegin =
-literal|0
+argument|SourceLocation *MacroBegin = nullptr
 argument_list|)
 block|;
 comment|/// \brief Returns true if the given MacroID location points at the last
@@ -832,8 +832,7 @@ argument|const SourceManager&SM
 argument_list|,
 argument|const LangOptions&LangOpts
 argument_list|,
-argument|SourceLocation *MacroEnd =
-literal|0
+argument|SourceLocation *MacroEnd = nullptr
 argument_list|)
 block|;
 comment|/// \brief Accepts a range and returns a character range with file locations.
@@ -884,8 +883,7 @@ argument|const SourceManager&SM
 argument_list|,
 argument|const LangOptions&LangOpts
 argument_list|,
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 block|;
 comment|/// \brief Retrieve the name of the immediate macro expansion.
@@ -1369,7 +1367,7 @@ name|Token
 modifier|*
 name|Tok
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// getEscapedNewLineSize - Return the size of the specified escaped newline,
@@ -1710,6 +1708,49 @@ parameter_list|,
 name|Token
 modifier|*
 name|Tok
+parameter_list|)
+function_decl|;
+comment|/// \brief Try to consume a UCN as part of an identifier at the current
+comment|/// location.
+comment|/// \param CurPtr Initially points to the range of characters in the source
+comment|///               buffer containing the '\'. Updated to point past the end of
+comment|///               the UCN on success.
+comment|/// \param Size The number of characters occupied by the '\' (including
+comment|///             trigraphs and escaped newlines).
+comment|/// \param Result The token being produced. Marked as containing a UCN on
+comment|///               success.
+comment|/// \return \c true if a UCN was lexed and it produced an acceptable
+comment|///         identifier character, \c false otherwise.
+name|bool
+name|tryConsumeIdentifierUCN
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|CurPtr
+parameter_list|,
+name|unsigned
+name|Size
+parameter_list|,
+name|Token
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
+comment|/// \brief Try to consume an identifier character encoded in UTF-8.
+comment|/// \param CurPtr Points to the start of the (potential) UTF-8 code unit
+comment|///        sequence. On success, updated to point past the end of it.
+comment|/// \return \c true if a UTF-8 sequence mapping to an acceptable identifier
+comment|///         character was lexed, \c false otherwise.
+name|bool
+name|tryConsumeIdentifierUTF8Char
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|CurPtr
 parameter_list|)
 function_decl|;
 block|}

@@ -787,6 +787,22 @@ operator|==
 name|AS_private
 return|;
 block|}
+comment|/// \brief Matches a declaration that has been implicitly added
+comment|/// by the compiler (eg. implicit default/copy constructors).
+name|AST_MATCHER
+argument_list|(
+argument|Decl
+argument_list|,
+argument|isImplicit
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|isImplicit
+argument_list|()
+return|;
+block|}
 comment|/// \brief Matches classTemplateSpecializations that have at least one
 comment|/// TemplateArgument matching the given InnerMatcher.
 comment|///
@@ -799,32 +815,29 @@ comment|/// \endcode
 comment|/// classTemplateSpecializationDecl(hasAnyTemplateArgument(
 comment|///     refersToType(asString("int"))))
 comment|///   matches the specialization \c A<int>
-name|AST_MATCHER_P
+name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
-argument|ClassTemplateSpecializationDecl
-argument_list|,
 argument|hasAnyTemplateArgument
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(ClassTemplateSpecializationDecl,                                       TemplateSpecializationType)
 argument_list|,
 argument|internal::Matcher<TemplateArgument>
 argument_list|,
 argument|InnerMatcher
 argument_list|)
 block|{
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|TemplateArgument
 operator|>
 name|List
 operator|=
+name|internal
+operator|::
+name|getTemplateSpecializationArgs
+argument_list|(
 name|Node
-operator|.
-name|getTemplateArgs
-argument_list|()
-operator|.
-name|asArray
-argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 name|matchesFirstInRange
@@ -1006,11 +1019,11 @@ comment|/// \endcode
 comment|/// classTemplateSpecializationDecl(hasTemplateArgument(
 comment|///     1, refersToType(asString("int"))))
 comment|///   matches the specialization \c A<bool, int>
-name|AST_MATCHER_P2
+name|AST_POLYMORPHIC_MATCHER_P2
 argument_list|(
-argument|ClassTemplateSpecializationDecl
-argument_list|,
 argument|hasTemplateArgument
+argument_list|,
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES_2(ClassTemplateSpecializationDecl,                                       TemplateSpecializationType)
 argument_list|,
 argument|unsigned
 argument_list|,
@@ -1021,16 +1034,19 @@ argument_list|,
 argument|InnerMatcher
 argument_list|)
 block|{
-specifier|const
-name|TemplateArgumentList
-modifier|&
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
 name|List
-init|=
+operator|=
+name|internal
+operator|::
+name|getTemplateSpecializationArgs
+argument_list|(
 name|Node
-operator|.
-name|getTemplateArgs
-argument_list|()
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|List
@@ -1049,11 +1065,9 @@ operator|.
 name|matches
 argument_list|(
 name|List
-operator|.
-name|get
-argument_list|(
+index|[
 name|N
-argument_list|)
+index|]
 argument_list|,
 name|Finder
 argument_list|,
@@ -1113,7 +1127,8 @@ name|Builder
 argument_list|)
 return|;
 block|}
-comment|/// \brief Matches a TemplateArgument that refers to a certain declaration.
+comment|/// \brief Matches a canonical TemplateArgument that refers to a certain
+comment|/// declaration.
 comment|///
 comment|/// Given
 comment|/// \code
@@ -1156,6 +1171,60 @@ operator|*
 name|Node
 operator|.
 name|getAsDecl
+argument_list|()
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+return|return
+name|false
+return|;
+block|}
+comment|/// \brief Matches a sugar TemplateArgument that refers to a certain expression.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   template<typename T> struct A {};
+comment|///   struct B { B* next; };
+comment|///   A<&B::next> a;
+comment|/// \endcode
+comment|/// templateSpecializationType(hasAnyTemplateArgument(
+comment|///   isExpr(hasDescendant(declRefExpr(to(fieldDecl(hasName("next"))))))))
+comment|///   matches the specialization \c A<&B::next> with \c fieldDecl(...) matching
+comment|///     \c B::next
+name|AST_MATCHER_P
+argument_list|(
+argument|TemplateArgument
+argument_list|,
+argument|isExpr
+argument_list|,
+argument|internal::Matcher<Expr>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+if|if
+condition|(
+name|Node
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|TemplateArgument
+operator|::
+name|Expression
+condition|)
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Node
+operator|.
+name|getAsExpr
 argument_list|()
 argument_list|,
 name|Finder
@@ -1251,7 +1320,7 @@ comment|/// \brief Matches method declarations.
 comment|///
 comment|/// Example matches y
 comment|/// \code
-comment|///   class X { void y() };
+comment|///   class X { void y(); };
 comment|/// \endcode
 specifier|const
 name|internal
@@ -1468,6 +1537,24 @@ name|CXXMemberCallExpr
 operator|>
 name|memberCallExpr
 expr_stmt|;
+comment|/// \brief Matches expressions that introduce cleanups to be run at the end
+comment|/// of the sub-expression's evaluation.
+comment|///
+comment|/// Example matches std::string()
+comment|/// \code
+comment|///   const std::string str = std::string();
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Stmt
+operator|,
+name|ExprWithCleanups
+operator|>
+name|exprWithCleanups
+expr_stmt|;
 comment|/// \brief Matches init list expressions.
 comment|///
 comment|/// Given
@@ -1476,7 +1563,7 @@ comment|///   int a[] = { 1, 2 };
 comment|///   struct B { int x, y; };
 comment|///   B b = { 5, 6 };
 comment|/// \endcode
-comment|/// initList()
+comment|/// initListExpr()
 comment|///   matches "{ 1, 2 }" and "{ 5, 6 }"
 specifier|const
 name|internal
@@ -1488,6 +1575,27 @@ operator|,
 name|InitListExpr
 operator|>
 name|initListExpr
+expr_stmt|;
+comment|/// \brief Matches substitutions of non-type template parameters.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   template<int N>
+comment|///   struct A { static const int n = N; };
+comment|///   struct B : public A<42> {};
+comment|/// \endcode
+comment|/// substNonTypeTemplateParmExpr()
+comment|///   matches "N" in the right-hand side of "static const int n = N;"
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Stmt
+operator|,
+name|SubstNonTypeTemplateParmExpr
+operator|>
+name|substNonTypeTemplateParmExpr
 expr_stmt|;
 comment|/// \brief Matches using declarations.
 comment|///
@@ -1508,6 +1616,26 @@ operator|,
 name|UsingDecl
 operator|>
 name|usingDecl
+expr_stmt|;
+comment|/// \brief Matches using namespace declarations.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   namespace X { int x; }
+comment|///   using namespace X;
+comment|/// \endcode
+comment|/// usingDirectiveDecl()
+comment|///   matches \code using namespace X \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|UsingDirectiveDecl
+operator|>
+name|usingDirectiveDecl
 expr_stmt|;
 comment|/// \brief Matches unresolved using value declarations.
 comment|///
@@ -1812,24 +1940,6 @@ name|ForStmt
 operator|>
 name|forStmt
 expr_stmt|;
-comment|/// \brief Matches range-based for statements.
-comment|///
-comment|/// forRangeStmt() matches 'for (auto a : i)'
-comment|/// \code
-comment|///   int i[] =  {1, 2, 3}; for (auto a : i);
-comment|///   for(int j = 0; j< 5; ++j);
-comment|/// \endcode
-specifier|const
-name|internal
-operator|::
-name|VariadicDynCastAllOfMatcher
-operator|<
-name|Stmt
-operator|,
-name|CXXForRangeStmt
-operator|>
-name|forRangeStmt
-expr_stmt|;
 comment|/// \brief Matches the increment statement of a for loop.
 comment|///
 comment|/// Example:
@@ -1864,7 +1974,7 @@ return|return
 operator|(
 name|Increment
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -1914,7 +2024,125 @@ return|return
 operator|(
 name|Init
 operator|!=
-name|NULL
+name|nullptr
+operator|&&
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Init
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/// \brief Matches range-based for statements.
+comment|///
+comment|/// forRangeStmt() matches 'for (auto a : i)'
+comment|/// \code
+comment|///   int i[] =  {1, 2, 3}; for (auto a : i);
+comment|///   for(int j = 0; j< 5; ++j);
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Stmt
+operator|,
+name|CXXForRangeStmt
+operator|>
+name|forRangeStmt
+expr_stmt|;
+comment|/// \brief Matches the initialization statement of a for loop.
+comment|///
+comment|/// Example:
+comment|///     forStmt(hasLoopVariable(anything()))
+comment|/// matches 'int x' in
+comment|/// \code
+comment|///     for (int x : a) { }
+comment|/// \endcode
+name|AST_MATCHER_P
+argument_list|(
+argument|CXXForRangeStmt
+argument_list|,
+argument|hasLoopVariable
+argument_list|,
+argument|internal::Matcher<VarDecl>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+specifier|const
+name|VarDecl
+modifier|*
+specifier|const
+name|Var
+init|=
+name|Node
+operator|.
+name|getLoopVariable
+argument_list|()
+decl_stmt|;
+return|return
+operator|(
+name|Var
+operator|!=
+name|nullptr
+operator|&&
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Var
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/// \brief Matches the range initialization statement of a for loop.
+comment|///
+comment|/// Example:
+comment|///     forStmt(hasRangeInit(anything()))
+comment|/// matches 'a' in
+comment|/// \code
+comment|///     for (int x : a) { }
+comment|/// \endcode
+name|AST_MATCHER_P
+argument_list|(
+argument|CXXForRangeStmt
+argument_list|,
+argument|hasRangeInit
+argument_list|,
+argument|internal::Matcher<Expr>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+specifier|const
+name|Expr
+modifier|*
+specifier|const
+name|Init
+init|=
+name|Node
+operator|.
+name|getRangeInit
+argument_list|()
+decl_stmt|;
+return|return
+operator|(
+name|Init
+operator|!=
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -2694,6 +2922,11 @@ specifier|const
 name|internal
 operator|::
 name|VariadicOperatorMatcherFunc
+operator|<
+literal|2
+operator|,
+name|UINT_MAX
+operator|>
 name|eachOf
 operator|=
 block|{
@@ -2709,6 +2942,11 @@ specifier|const
 name|internal
 operator|::
 name|VariadicOperatorMatcherFunc
+operator|<
+literal|2
+operator|,
+name|UINT_MAX
+operator|>
 name|anyOf
 operator|=
 block|{
@@ -2724,6 +2962,11 @@ specifier|const
 name|internal
 operator|::
 name|VariadicOperatorMatcherFunc
+operator|<
+literal|2
+operator|,
+name|UINT_MAX
+operator|>
 name|allOf
 operator|=
 block|{
@@ -3063,7 +3306,7 @@ comment|/// \c operatorCallExpr(hasOverloadedOperatorName("<<"))) matches the sp
 comment|/// line and \c recordDecl(hasMethod(hasOverloadedOperatorName("*"))) matches
 comment|/// the declaration of \c A.
 comment|///
-comment|/// Usable as: Matcher<CXXOperatorCallExpr>, Matcher<CXXMethodDecl>
+comment|/// Usable as: Matcher<CXXOperatorCallExpr>, Matcher<FunctionDecl>
 specifier|inline
 name|internal
 operator|::
@@ -3079,7 +3322,7 @@ name|AST_POLYMORPHIC_SUPPORTED_TYPES_2
 argument_list|(
 name|CXXOperatorCallExpr
 argument_list|,
-name|CXXMethodDecl
+name|FunctionDecl
 argument_list|)
 operator|>
 name|hasOverloadedOperatorName
@@ -3102,7 +3345,7 @@ name|AST_POLYMORPHIC_SUPPORTED_TYPES_2
 argument_list|(
 name|CXXOperatorCallExpr
 argument_list|,
-name|CXXMethodDecl
+name|FunctionDecl
 argument_list|)
 operator|>
 operator|(
@@ -3586,42 +3829,23 @@ comment|///   class Y {};
 comment|/// \endcode
 comment|///
 comment|/// Usable as: Any Matcher
-name|template
-operator|<
-name|typename
-name|M
-operator|>
+specifier|const
 name|internal
 operator|::
-name|PolymorphicMatcherWithParam1
+name|VariadicOperatorMatcherFunc
 operator|<
-name|internal
-operator|::
-name|NotMatcher
+literal|1
 operator|,
-name|M
+literal|1
 operator|>
 name|unless
-argument_list|(
-argument|const M&InnerMatcher
-argument_list|)
+operator|=
 block|{
-return|return
 name|internal
 operator|::
-name|PolymorphicMatcherWithParam1
-operator|<
-name|internal
-operator|::
-name|NotMatcher
-operator|,
-name|M
-operator|>
-operator|(
-name|InnerMatcher
-operator|)
-return|;
+name|NotUnaryOperator
 block|}
+expr_stmt|;
 comment|/// \brief Matches a node if the declaration associated with that node
 comment|/// matches the given matcher.
 comment|///
@@ -3733,7 +3957,7 @@ return|return
 operator|(
 name|ExprNode
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -3790,7 +4014,7 @@ return|return
 operator|(
 name|ExprNode
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -4263,7 +4487,7 @@ return|return
 operator|(
 name|ExprNode
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -4402,7 +4626,7 @@ return|return
 operator|(
 name|DeclNode
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -4576,7 +4800,7 @@ return|return
 operator|(
 name|Initializer
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -4590,6 +4814,55 @@ argument_list|,
 name|Builder
 argument_list|)
 operator|)
+return|;
+block|}
+comment|/// \brief Matches a variable declaration that has function scope and is a
+comment|/// non-static local variable.
+comment|///
+comment|/// Example matches x (matcher = varDecl(hasLocalStorage())
+comment|/// \code
+comment|/// void f() {
+comment|///   int x;
+comment|///   static int y;
+comment|/// }
+comment|/// int z;
+comment|/// \endcode
+name|AST_MATCHER
+argument_list|(
+argument|VarDecl
+argument_list|,
+argument|hasLocalStorage
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|hasLocalStorage
+argument_list|()
+return|;
+block|}
+comment|/// \brief Matches a variable declaration that does not have local storage.
+comment|///
+comment|/// Example matches y and z (matcher = varDecl(hasGlobalStorage())
+comment|/// \code
+comment|/// void f() {
+comment|///   int x;
+comment|///   static int y;
+comment|/// }
+comment|/// int z;
+comment|/// \endcode
+name|AST_MATCHER
+argument_list|(
+argument|VarDecl
+argument_list|,
+argument|hasGlobalStorage
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|hasGlobalStorage
+argument_list|()
 return|;
 block|}
 comment|/// \brief Checks that a call expression or a constructor call expression has
@@ -4895,7 +5168,7 @@ return|return
 operator|(
 name|NodeAsDecl
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -4949,7 +5222,7 @@ return|return
 operator|(
 name|NodeAsExpr
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -4989,22 +5262,6 @@ return|return
 name|Node
 operator|.
 name|isWritten
-argument_list|()
-return|;
-block|}
-comment|/// \brief Matches a constructor declaration that has been implicitly added
-comment|/// by the compiler (eg. implicit default/copy constructors).
-name|AST_MATCHER
-argument_list|(
-argument|CXXConstructorDecl
-argument_list|,
-argument|isImplicit
-argument_list|)
-block|{
-return|return
-name|Node
-operator|.
-name|isImplicit
 argument_list|()
 return|;
 block|}
@@ -5096,6 +5353,21 @@ block|}
 block|}
 return|return
 name|false
+return|;
+block|}
+comment|/// \brief Matches a constructor call expression which uses list initialization.
+name|AST_MATCHER
+argument_list|(
+argument|CXXConstructExpr
+argument_list|,
+argument|isListInitialization
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|isListInitialization
+argument_list|()
 return|;
 block|}
 comment|/// \brief Matches the n'th parameter of a function declaration.
@@ -5250,7 +5522,7 @@ name|matches
 argument_list|(
 name|Node
 operator|.
-name|getResultType
+name|getReturnType
 argument_list|()
 argument_list|,
 name|Finder
@@ -5316,7 +5588,7 @@ return|return
 operator|(
 name|Condition
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -5332,50 +5604,104 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|namespace
-name|internal
-block|{
-struct|struct
-name|NotEqualsBoundNodePredicate
-block|{
-name|bool
-name|operator
-argument_list|()
-operator|(
-specifier|const
-name|internal
-operator|::
-name|BoundNodesMap
-operator|&
-name|Nodes
-operator|)
-specifier|const
-block|{
-return|return
-name|Nodes
-operator|.
-name|getNode
+comment|/// \brief Matches the then-statement of an if statement.
+comment|///
+comment|/// Examples matches the if statement
+comment|///   (matcher = ifStmt(hasThen(boolLiteral(equals(true)))))
+comment|/// \code
+comment|///   if (false) true; else false;
+comment|/// \endcode
+name|AST_MATCHER_P
 argument_list|(
-name|ID
+argument|IfStmt
+argument_list|,
+argument|hasThen
+argument_list|,
+argument|internal::Matcher<Stmt>
+argument_list|,
+argument|InnerMatcher
 argument_list|)
-operator|!=
+block|{
+specifier|const
+name|Stmt
+modifier|*
+specifier|const
+name|Then
+init|=
 name|Node
+operator|.
+name|getThen
+argument_list|()
+decl_stmt|;
+return|return
+operator|(
+name|Then
+operator|!=
+name|nullptr
+operator|&&
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Then
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+operator|)
 return|;
 block|}
-name|std
-operator|::
-name|string
-name|ID
-expr_stmt|;
-name|ast_type_traits
-operator|::
-name|DynTypedNode
+comment|/// \brief Matches the else-statement of an if statement.
+comment|///
+comment|/// Examples matches the if statement
+comment|///   (matcher = ifStmt(hasElse(boolLiteral(equals(true)))))
+comment|/// \code
+comment|///   if (false) false; else true;
+comment|/// \endcode
+name|AST_MATCHER_P
+argument_list|(
+argument|IfStmt
+argument_list|,
+argument|hasElse
+argument_list|,
+argument|internal::Matcher<Stmt>
+argument_list|,
+argument|InnerMatcher
+argument_list|)
+block|{
+specifier|const
+name|Stmt
+modifier|*
+specifier|const
+name|Else
+init|=
 name|Node
-expr_stmt|;
+operator|.
+name|getElse
+argument_list|()
+decl_stmt|;
+return|return
+operator|(
+name|Else
+operator|!=
+name|nullptr
+operator|&&
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Else
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+operator|)
+return|;
 block|}
-struct|;
-block|}
-comment|// namespace internal
 comment|/// \brief Matches if a node equals a previously bound node.
 comment|///
 comment|/// Matches a node if it equals the node previously bound to \p ID.
@@ -5480,7 +5806,7 @@ decl_stmt|;
 return|return
 name|DeclarationStatement
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -5609,7 +5935,7 @@ name|AST_POLYMORPHIC_MATCHER_P
 argument_list|(
 argument|hasBody
 argument_list|,
-argument|AST_POLYMORPHIC_SUPPORTED_TYPES_3(DoStmt, ForStmt, WhileStmt)
+argument|AST_POLYMORPHIC_SUPPORTED_TYPES_4(DoStmt, ForStmt,                                                             WhileStmt,                                                             CXXForRangeStmt)
 argument_list|,
 argument|internal::Matcher<Stmt>
 argument_list|,
@@ -5631,7 +5957,7 @@ return|return
 operator|(
 name|Statement
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -5827,7 +6153,7 @@ return|return
 operator|(
 name|LeftHandSide
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -5873,7 +6199,7 @@ return|return
 operator|(
 name|RightHandSide
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -5950,7 +6276,7 @@ return|return
 operator|(
 name|Operand
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -5999,7 +6325,7 @@ return|return
 operator|(
 name|SubExpression
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -6113,7 +6439,7 @@ return|return
 operator|(
 name|Expression
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -6159,7 +6485,7 @@ return|return
 operator|(
 name|Expression
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -6244,7 +6570,7 @@ return|return
 operator|(
 name|Parent
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -6281,6 +6607,30 @@ return|return
 name|Node
 operator|.
 name|isVirtual
+argument_list|()
+return|;
+block|}
+comment|/// \brief Matches if the given method declaration is pure.
+comment|///
+comment|/// Given
+comment|/// \code
+comment|///   class A {
+comment|///    public:
+comment|///     virtual void x() = 0;
+comment|///   };
+comment|/// \endcode
+comment|///   matches A::x
+name|AST_MATCHER
+argument_list|(
+argument|CXXMethodDecl
+argument_list|,
+argument|isPure
+argument_list|)
+block|{
+return|return
+name|Node
+operator|.
+name|isPure
 argument_list|()
 return|;
 block|}
@@ -6689,16 +7039,17 @@ return|;
 block|}
 comment|/// \brief Matches \c TypeLocs for which the given inner
 comment|/// QualType-matcher matches.
-specifier|inline
-name|internal
-operator|::
-name|BindableMatcher
-operator|<
-name|TypeLoc
-operator|>
-name|loc
+name|AST_MATCHER_FUNCTION_P_OVERLOAD
 argument_list|(
-argument|const internal::Matcher<QualType>&InnerMatcher
+argument|internal::BindableMatcher<TypeLoc>
+argument_list|,
+argument|loc
+argument_list|,
+argument|internal::Matcher<QualType>
+argument_list|,
+argument|InnerMatcher
+argument_list|,
+literal|0
 argument_list|)
 block|{
 return|return
@@ -7491,16 +7842,17 @@ name|nestedNameSpecifierLoc
 expr_stmt|;
 comment|/// \brief Matches \c NestedNameSpecifierLocs for which the given inner
 comment|/// NestedNameSpecifier-matcher matches.
-specifier|inline
-name|internal
-operator|::
-name|BindableMatcher
-operator|<
-name|NestedNameSpecifierLoc
-operator|>
-name|loc
+name|AST_MATCHER_FUNCTION_P_OVERLOAD
 argument_list|(
-argument|const internal::Matcher<NestedNameSpecifier>&InnerMatcher
+argument|internal::BindableMatcher<NestedNameSpecifierLoc>
+argument_list|,
+argument|loc
+argument_list|,
+argument|internal::Matcher<NestedNameSpecifier>
+argument_list|,
+argument|InnerMatcher
+argument_list|,
+literal|1
 argument_list|)
 block|{
 return|return
@@ -7549,12 +7901,11 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|Node
 operator|.
 name|getAsType
 argument_list|()
-operator|==
-name|NULL
 condition|)
 return|return
 name|false
@@ -7603,6 +7954,8 @@ argument|InnerMatcher
 argument_list|)
 block|{
 return|return
+name|Node
+operator|&&
 name|InnerMatcher
 operator|.
 name|matches
@@ -7651,9 +8004,8 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|NextNode
-operator|==
-name|NULL
 condition|)
 return|return
 name|false
@@ -7746,12 +8098,11 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|Node
 operator|.
 name|getAsNamespace
 argument_list|()
-operator|==
-name|NULL
 condition|)
 return|return
 name|false
@@ -7785,7 +8136,7 @@ argument|Decl
 argument_list|,
 argument|equalsNode
 argument_list|,
-argument|Decl*
+argument|const Decl*
 argument_list|,
 argument|Other
 argument_list|,
@@ -7809,7 +8160,7 @@ argument|Stmt
 argument_list|,
 argument|equalsNode
 argument_list|,
-argument|Stmt*
+argument|const Stmt*
 argument_list|,
 argument|Other
 argument_list|,
@@ -7959,29 +8310,15 @@ name|false
 decl_stmt|;
 for|for
 control|(
-name|CXXConstructorDecl
-operator|::
-name|init_const_iterator
+specifier|const
+specifier|auto
+modifier|*
 name|I
-operator|=
+range|:
 name|Node
 operator|.
-name|init_begin
+name|inits
 argument_list|()
-operator|,
-name|E
-operator|=
-name|Node
-operator|.
-name|init_end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
 control|)
 block|{
 name|BoundNodesTreeBuilder
@@ -7997,7 +8334,6 @@ name|InnerMatcher
 operator|.
 name|matches
 argument_list|(
-operator|*
 operator|*
 name|I
 argument_list|,

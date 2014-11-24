@@ -132,6 +132,7 @@ argument|DefinedSVal Cond
 argument_list|,
 argument|bool Assumption
 argument_list|)
+name|override
 block|;
 name|ProgramStateRef
 name|assume
@@ -287,6 +288,7 @@ argument_list|(
 argument|SVal X
 argument_list|)
 specifier|const
+name|override
 block|;
 name|ProgramStateRef
 name|assumeAux

@@ -487,8 +487,27 @@ name|getAnalysisDeclContext
 argument_list|()
 return|;
 block|}
-comment|/// \brief If the given node corresponds to a PostStore program point, retrieve
-comment|/// the location region as it was uttered in the code.
+comment|/// \brief Get the blockID.
+name|unsigned
+name|getBlockID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NB
+operator|.
+name|getContext
+argument_list|()
+operator|.
+name|getBlock
+argument_list|()
+operator|->
+name|getBlockID
+argument_list|()
+return|;
+block|}
+comment|/// \brief If the given node corresponds to a PostStore program point,
+comment|/// retrieve the location region as it was uttered in the code.
 comment|///
 comment|/// This utility can be useful for generating extensive diagnostics, for
 comment|/// example, for finding variables that the given symbol was assigned to.
@@ -544,7 +563,7 @@ argument_list|()
 operator|)
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Get the value of arbitrary expressions at this point in the path.
@@ -587,14 +606,14 @@ parameter_list|(
 name|ProgramStateRef
 name|State
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|ProgramPointTag
 modifier|*
 name|Tag
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -609,7 +628,7 @@ argument_list|()
 argument_list|,
 name|false
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 name|Tag
 argument_list|)
@@ -638,7 +657,7 @@ name|ProgramPointTag
 modifier|*
 name|Tag
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -663,20 +682,20 @@ parameter_list|(
 name|ProgramStateRef
 name|State
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|ExplodedNode
 modifier|*
 name|Pred
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|ProgramPointTag
 modifier|*
 name|Tag
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -780,7 +799,7 @@ argument_list|()
 return|;
 else|else
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Get the name of the called function (path-sensitive).
@@ -870,14 +889,14 @@ name|ExplodedNode
 modifier|*
 name|P
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|ProgramPointTag
 modifier|*
 name|Tag
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 if|if

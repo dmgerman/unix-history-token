@@ -81,6 +81,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+struct_decl|struct
+name|DeducedPack
+struct_decl|;
 name|class
 name|TemplateArgumentList
 decl_stmt|;
@@ -146,7 +149,7 @@ argument_list|)
 block|:
 name|Deduced
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Loc
@@ -161,9 +164,9 @@ argument_list|)
 operator|,
 name|Expression
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief Returns the location at which template argument is
 comment|/// occurring.
 name|SourceLocation
@@ -189,7 +192,7 @@ name|Deduced
 decl_stmt|;
 name|Deduced
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 name|Result
@@ -459,6 +462,18 @@ name|Expr
 modifier|*
 name|Expression
 decl_stmt|;
+comment|/// \brief Information on packs that we're currently expanding.
+comment|///
+comment|/// FIXME: This should be kept internal to SemaTemplateDeduction.
+name|SmallVector
+operator|<
+name|DeducedPack
+operator|*
+operator|,
+literal|8
+operator|>
+name|PendingDeducedPacks
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

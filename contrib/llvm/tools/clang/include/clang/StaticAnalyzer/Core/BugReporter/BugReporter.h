@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/StaticAnalyzer/Core/CheckerManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState.h"
 end_include
 
@@ -471,7 +477,7 @@ argument_list|)
 operator|,
 name|DeclWithIssue
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Description
@@ -512,7 +518,7 @@ argument_list|)
 operator|,
 name|DeclWithIssue
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ShortDescription
@@ -542,7 +548,7 @@ argument_list|)
 block|{}
 name|BugReport
 argument_list|(
-argument|BugType& bt
+argument|BugType&bt
 argument_list|,
 argument|StringRef desc
 argument_list|,
@@ -556,7 +562,7 @@ argument_list|)
 operator|,
 name|DeclWithIssue
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Description
@@ -571,7 +577,7 @@ argument_list|)
 operator|,
 name|ErrorNode
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ConfigurationChangeToken
@@ -611,7 +617,7 @@ argument_list|)
 operator|,
 name|DeclWithIssue
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Description
@@ -1809,6 +1815,43 @@ name|Decl
 operator|*
 name|DeclWithIssue
 argument_list|,
+specifier|const
+name|CheckerBase
+operator|*
+name|Checker
+argument_list|,
+name|StringRef
+name|BugName
+argument_list|,
+name|StringRef
+name|BugCategory
+argument_list|,
+name|StringRef
+name|BugStr
+argument_list|,
+name|PathDiagnosticLocation
+name|Loc
+argument_list|,
+name|ArrayRef
+operator|<
+name|SourceRange
+operator|>
+name|Ranges
+operator|=
+name|None
+argument_list|)
+decl_stmt|;
+name|void
+name|EmitBasicReport
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|DeclWithIssue
+argument_list|,
+name|CheckName
+name|CheckName
+argument_list|,
 name|StringRef
 name|BugName
 argument_list|,
@@ -1847,6 +1890,9 @@ name|BugType
 modifier|*
 name|getBugTypeForName
 parameter_list|(
+name|CheckName
+name|CheckName
+parameter_list|,
 name|StringRef
 name|name
 parameter_list|,
@@ -1930,26 +1976,16 @@ comment|/// guaranteed.
 comment|///
 comment|/// \return True if the report was valid and a path was generated,
 comment|///         false if the reports should be considered invalid.
-name|virtual
 name|bool
 name|generatePathDiagnostic
 argument_list|(
-name|PathDiagnostic
-operator|&
-name|PD
+argument|PathDiagnostic&PD
 argument_list|,
-name|PathDiagnosticConsumer
-operator|&
-name|PC
+argument|PathDiagnosticConsumer&PC
 argument_list|,
-name|ArrayRef
-operator|<
-name|BugReport
-operator|*
-operator|>
-operator|&
-name|bugReports
+argument|ArrayRef<BugReport*>&bugReports
 argument_list|)
+name|override
 block|;
 comment|/// classof - Used by isa<>, cast<>, and dyn_cast<>.
 specifier|static

@@ -130,17 +130,6 @@ name|unsigned
 operator|>
 name|ManglingNumbers
 block|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|IdentifierInfo
-operator|*
-block|,
-name|unsigned
-operator|>
-name|TagManglingNumbers
-block|;
 name|public
 operator|:
 name|virtual
@@ -170,30 +159,41 @@ operator|*
 name|BD
 argument_list|)
 block|;
-comment|/// \brief Retrieve the mangling number of a static local variable within
-comment|/// this context.
-name|virtual
+comment|/// Static locals are numbered by source order.
 name|unsigned
-name|getManglingNumber
+name|getStaticLocalNumber
 argument_list|(
 specifier|const
 name|VarDecl
 operator|*
 name|VD
 argument_list|)
+block|;
+comment|/// \brief Retrieve the mangling number of a static local variable within
+comment|/// this context.
+name|virtual
+name|unsigned
+name|getManglingNumber
+argument_list|(
+argument|const VarDecl *VD
+argument_list|,
+argument|unsigned MSLocalManglingNumber
+argument_list|)
 operator|=
 literal|0
 block|;
 comment|/// \brief Retrieve the mangling number of a static local variable within
 comment|/// this context.
+name|virtual
 name|unsigned
 name|getManglingNumber
 argument_list|(
-specifier|const
-name|TagDecl
-operator|*
-name|TD
+argument|const TagDecl *TD
+argument_list|,
+argument|unsigned MSLocalManglingNumber
 argument_list|)
+operator|=
+literal|0
 block|; }
 decl_stmt|;
 block|}

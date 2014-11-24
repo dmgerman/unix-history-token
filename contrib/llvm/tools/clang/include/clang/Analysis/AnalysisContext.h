@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Allocator.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -192,7 +192,9 @@ modifier|*
 specifier|const
 name|D
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|CFG
 operator|>
@@ -200,7 +202,9 @@ name|cfg
 operator|,
 name|completeCFG
 expr_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|CFGStmtMap
 operator|>
@@ -224,19 +228,25 @@ name|builtCFG
 decl_stmt|,
 name|builtCompleteCFG
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ParentMap
 operator|>
 name|PM
 expr_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PseudoConstantAnalysis
 operator|>
 name|PCA
 expr_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|CFGReverseBlockReachabilityAnalysis
 operator|>
@@ -893,7 +903,6 @@ literal|""
 argument_list|)
 specifier|const
 block|;
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dumpStack
 argument_list|()
@@ -1009,17 +1018,17 @@ name|Block
 return|;
 block|}
 comment|/// Return true if the current LocationContext has no caller context.
-name|virtual
 name|bool
 name|inTopFrame
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getParent
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 name|unsigned
@@ -1034,12 +1043,9 @@ block|}
 name|void
 name|Profile
 argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|llvm::FoldingSetNodeID&ID
 argument_list|)
+name|override
 block|;
 specifier|static
 name|void
@@ -1158,12 +1164,9 @@ block|{}
 name|void
 name|Profile
 argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|llvm::FoldingSetNodeID&ID
 argument_list|)
+name|override
 block|;
 specifier|static
 name|void
@@ -1302,12 +1305,9 @@ block|}
 name|void
 name|Profile
 argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|llvm::FoldingSetNodeID&ID
 argument_list|)
+name|override
 block|;
 specifier|static
 name|void
@@ -1524,6 +1524,8 @@ argument_list|,
 argument|bool synthesizeBodies = false
 argument_list|,
 argument|bool addStaticInitBranches = false
+argument_list|,
+argument|bool addCXXNewAllocator = true
 argument_list|)
 block|;
 operator|~
@@ -1626,11 +1628,11 @@ argument_list|(
 name|D
 argument_list|)
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|)

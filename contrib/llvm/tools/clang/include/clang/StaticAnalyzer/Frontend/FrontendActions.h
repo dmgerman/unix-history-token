@@ -67,7 +67,6 @@ name|ASTFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -76,6 +75,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|void

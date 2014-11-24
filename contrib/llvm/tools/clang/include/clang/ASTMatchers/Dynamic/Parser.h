@@ -80,7 +80,7 @@ comment|/// Grammar for the expressions supported:
 end_comment
 
 begin_comment
-comment|///<Expression>        :=<Literal> |<MatcherExpression>
+comment|///<Expression>        :=<Literal> |<NamedValue> |<MatcherExpression>
 end_comment
 
 begin_comment
@@ -96,15 +96,19 @@ comment|///<Unsigned>          := [0-9]+
 end_comment
 
 begin_comment
-comment|///<MatcherExpression> :=<MatcherName>(<ArgumentList>) |
+comment|///<NamedValue>        :=<Identifier>
 end_comment
 
 begin_comment
-comment|///<MatcherName>(<ArgumentList>).bind(<StringLiteral>)
+comment|///<MatcherExpression> :=<Identifier>(<ArgumentList>) |
 end_comment
 
 begin_comment
-comment|///<MatcherName>       := [a-zA-Z]+
+comment|///<Identifier>(<ArgumentList>).bind(<StringLiteral>)
+end_comment
+
+begin_comment
+comment|///<Identifier>        := [a-zA-Z]+
 end_comment
 
 begin_comment
@@ -139,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|"clang/ASTMatchers/Dynamic/Diagnostics.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/ASTMatchers/Dynamic/Registry.h"
 end_include
 
 begin_include
@@ -207,11 +217,28 @@ operator|~
 name|Sema
 argument_list|()
 expr_stmt|;
+comment|/// \brief Lookup a value by name.
+comment|///
+comment|/// This can be used in the Sema layer to declare known constants or to
+comment|/// allow to split an expression in pieces.
+comment|///
+comment|/// \param Name The name of the value to lookup.
+comment|///
+comment|/// \return The named value. It could be any type that VariantValue
+comment|///   supports. An empty value means that the name is not recognized.
+name|virtual
+name|VariantValue
+name|getNamedValue
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
 comment|/// \brief Process a matcher expression.
 comment|///
 comment|/// All the arguments passed here have already been processed.
 comment|///
-comment|/// \param MatcherName The matcher name found by the parser.
+comment|/// \param Ctor A matcher constructor looked up by lookupMatcherCtor.
 comment|///
 comment|/// \param NameRange The location of the name in the matcher source.
 comment|///   Useful for error reporting.
@@ -228,8 +255,8 @@ name|virtual
 name|VariantMatcher
 name|actOnMatcherExpression
 argument_list|(
-name|StringRef
-name|MatcherName
+name|MatcherCtor
+name|Ctor
 argument_list|,
 specifier|const
 name|SourceRange
@@ -252,8 +279,73 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// \brief Look up a matcher by name.
+comment|///
+comment|/// \param MatcherName The matcher name found by the parser.
+comment|///
+comment|/// \return The matcher constructor, or Optional<MatcherCtor>() if not
+comment|/// found.
+name|virtual
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|MatcherCtor
+operator|>
+name|lookupMatcherCtor
+argument_list|(
+argument|StringRef MatcherName
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
+comment|/// \brief Sema implementation that uses the matcher registry to process the
+comment|///   tokens.
+name|class
+name|RegistrySema
+range|:
+name|public
+name|Parser
+operator|::
+name|Sema
+block|{
+name|public
+operator|:
+name|virtual
+operator|~
+name|RegistrySema
+argument_list|()
+block|;
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|MatcherCtor
+operator|>
+name|lookupMatcherCtor
+argument_list|(
+argument|StringRef MatcherName
+argument_list|)
+name|override
+block|;
+name|VariantMatcher
+name|actOnMatcherExpression
+argument_list|(
+argument|MatcherCtor Ctor
+argument_list|,
+argument|const SourceRange&NameRange
+argument_list|,
+argument|StringRef BindID
+argument_list|,
+argument|ArrayRef<ParserValue> Args
+argument_list|,
+argument|Diagnostics *Error
+argument_list|)
+name|override
+block|;   }
+decl_stmt|;
 comment|/// \brief Parse a matcher expression, creating matchers from the registry.
 comment|///
 comment|/// This overload creates matchers calling directly into the registry. If the
@@ -352,11 +444,32 @@ modifier|*
 name|Error
 parameter_list|)
 function_decl|;
+comment|/// \brief Complete an expression at the given offset.
+comment|///
+comment|/// \return The list of completions, which may be empty if there are no
+comment|/// available completions or if an error occurred.
+specifier|static
+name|std
+operator|::
+name|vector
+operator|<
+name|MatcherCompletion
+operator|>
+name|completeExpression
+argument_list|(
+argument|StringRef Code
+argument_list|,
+argument|unsigned CompletionOffset
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 name|class
 name|CodeTokenizer
 decl_stmt|;
+struct_decl|struct
+name|ScopedContextEntry
+struct_decl|;
 struct_decl|struct
 name|TokenInfo
 struct_decl|;
@@ -386,10 +499,42 @@ function_decl|;
 name|bool
 name|parseMatcherExpressionImpl
 parameter_list|(
+specifier|const
+name|TokenInfo
+modifier|&
+name|NameToken
+parameter_list|,
 name|VariantValue
 modifier|*
 name|Value
 parameter_list|)
+function_decl|;
+name|bool
+name|parseIdentifierPrefixImpl
+parameter_list|(
+name|VariantValue
+modifier|*
+name|Value
+parameter_list|)
+function_decl|;
+name|void
+name|addCompletion
+parameter_list|(
+specifier|const
+name|TokenInfo
+modifier|&
+name|CompToken
+parameter_list|,
+name|StringRef
+name|TypedText
+parameter_list|,
+name|StringRef
+name|Decl
+parameter_list|)
+function_decl|;
+name|void
+name|addExpressionCompletions
+parameter_list|()
 function_decl|;
 name|CodeTokenizer
 modifier|*
@@ -406,6 +551,33 @@ modifier|*
 specifier|const
 name|Error
 decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MatcherCtor
+operator|,
+name|unsigned
+operator|>
+expr|>
+name|ContextStackTy
+expr_stmt|;
+name|ContextStackTy
+name|ContextStack
+decl_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|MatcherCompletion
+operator|>
+name|Completions
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

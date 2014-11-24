@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<memory>
 end_include
 
 begin_include
@@ -122,82 +122,113 @@ name|MultiplexConsumer
 argument_list|()
 block|;
 comment|// ASTConsumer
-name|virtual
 name|void
 name|Initialize
 argument_list|(
-name|ASTContext
-operator|&
-name|Context
+argument|ASTContext&Context
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|HandleCXXStaticMemberVarInstantiation
 argument_list|(
-name|VarDecl
-operator|*
-name|VD
+argument|VarDecl *VD
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|HandleTopLevelDecl
 argument_list|(
 argument|DeclGroupRef D
 argument_list|)
+name|override
 block|;
-name|virtual
+name|void
+name|HandleInlineMethodDefinition
+argument_list|(
+argument|CXXMethodDecl *D
+argument_list|)
+name|override
+block|;
 name|void
 name|HandleInterestingDecl
 argument_list|(
 argument|DeclGroupRef D
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|HandleTranslationUnit
 argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
+argument|ASTContext&Ctx
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|HandleTagDeclDefinition
 argument_list|(
-name|TagDecl
-operator|*
-name|D
+argument|TagDecl *D
 argument_list|)
+name|override
 block|;
-name|virtual
+name|void
+name|HandleTagDeclRequiredDefinition
+argument_list|(
+argument|const TagDecl *D
+argument_list|)
+name|override
+block|;
 name|void
 name|HandleCXXImplicitFunctionInstantiation
 argument_list|(
-name|FunctionDecl
-operator|*
-name|D
+argument|FunctionDecl *D
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|HandleTopLevelDeclInObjCContainer
 argument_list|(
 argument|DeclGroupRef D
 argument_list|)
+name|override
 block|;
-name|virtual
+name|void
+name|HandleImplicitImportDecl
+argument_list|(
+argument|ImportDecl *D
+argument_list|)
+name|override
+block|;
+name|void
+name|HandleLinkerOptionPragma
+argument_list|(
+argument|llvm::StringRef Opts
+argument_list|)
+name|override
+block|;
+name|void
+name|HandleDetectMismatch
+argument_list|(
+argument|llvm::StringRef Name
+argument_list|,
+argument|llvm::StringRef Value
+argument_list|)
+name|override
+block|;
+name|void
+name|HandleDependentLibrary
+argument_list|(
+argument|llvm::StringRef Lib
+argument_list|)
+name|override
+block|;
 name|void
 name|CompleteTentativeDefinition
 argument_list|(
-name|VarDecl
-operator|*
-name|D
+argument|VarDecl *D
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|HandleVTable
 argument_list|(
@@ -205,38 +236,37 @@ argument|CXXRecordDecl *RD
 argument_list|,
 argument|bool DefinitionRequired
 argument_list|)
+name|override
 block|;
-name|virtual
 name|ASTMutationListener
 operator|*
 name|GetASTMutationListener
 argument_list|()
+name|override
 block|;
-name|virtual
 name|ASTDeserializationListener
 operator|*
 name|GetASTDeserializationListener
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|PrintStats
 argument_list|()
+name|override
 block|;
 comment|// SemaConsumer
-name|virtual
 name|void
 name|InitializeSema
 argument_list|(
-name|Sema
-operator|&
-name|S
+argument|Sema&S
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ForgetSema
 argument_list|()
+name|override
 block|;
 name|private
 operator|:
@@ -250,13 +280,17 @@ operator|>
 name|Consumers
 block|;
 comment|// Owns these.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MultiplexASTMutationListener
 operator|>
 name|MutationListener
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MultiplexASTDeserializationListener
 operator|>

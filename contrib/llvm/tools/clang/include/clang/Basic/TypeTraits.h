@@ -67,9 +67,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-comment|/// \brief Names for the unary type traits.
+comment|/// \brief Names for traits that operate specifically on types.
 enum|enum
-name|UnaryTypeTrait
+name|TypeTrait
 block|{
 name|UTT_HasNothrowAssign
 block|,
@@ -107,6 +107,8 @@ name|UTT_IsCompound
 block|,
 name|UTT_IsConst
 block|,
+name|UTT_IsDestructible
+block|,
 name|UTT_IsEmpty
 block|,
 name|UTT_IsEnum
@@ -132,6 +134,8 @@ block|,
 name|UTT_IsMemberObjectPointer
 block|,
 name|UTT_IsMemberPointer
+block|,
+name|UTT_IsNothrowDestructible
 block|,
 name|UTT_IsObject
 block|,
@@ -164,12 +168,11 @@ block|,
 name|UTT_IsVoid
 block|,
 name|UTT_IsVolatile
-block|}
-enum|;
-comment|/// \brief Names for the binary type traits.
-enum|enum
-name|BinaryTypeTrait
-block|{
+block|,
+name|UTT_Last
+init|=
+name|UTT_IsVolatile
+block|,
 name|BTT_IsBaseOf
 block|,
 name|BTT_IsConvertible
@@ -180,7 +183,19 @@ name|BTT_IsSame
 block|,
 name|BTT_TypeCompatible
 block|,
+name|BTT_IsNothrowAssignable
+block|,
 name|BTT_IsTriviallyAssignable
+block|,
+name|BTT_Last
+init|=
+name|BTT_IsTriviallyAssignable
+block|,
+name|TT_IsConstructible
+block|,
+name|TT_IsNothrowConstructible
+block|,
+name|TT_IsTriviallyConstructible
 block|}
 enum|;
 comment|/// \brief Names for the array type traits.
@@ -201,13 +216,6 @@ block|,
 name|UETT_AlignOf
 block|,
 name|UETT_VecStep
-block|}
-enum|;
-comment|/// \brief Names for type traits that operate specifically on types.
-enum|enum
-name|TypeTrait
-block|{
-name|TT_IsTriviallyConstructible
 block|}
 enum|;
 block|}

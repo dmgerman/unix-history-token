@@ -206,6 +206,20 @@ name|Module
 modifier|*
 name|Parent
 decl_stmt|;
+comment|/// \brief The module map file that (along with the module name) uniquely
+comment|/// identifies this module.
+comment|///
+comment|/// The particular module that \c Name refers to may depend on how the module
+comment|/// was found in header search. However, the combination of \c Name and
+comment|/// \c ModuleMap will be globally unique for top-level modules. In the case of
+comment|/// inferred modules, \c ModuleMap will contain the module map that allowed
+comment|/// the inference (e.g. contained 'Module *') rather than the virtual
+comment|/// inferred module map file.
+specifier|const
+name|FileEntry
+modifier|*
+name|ModuleMap
+decl_stmt|;
 comment|/// \brief The umbrella header or directory.
 name|llvm
 operator|::
@@ -311,8 +325,6 @@ operator|>
 name|ExcludedHeaders
 expr_stmt|;
 comment|/// \brief The headers that are private to this module.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 specifier|const
@@ -322,6 +334,34 @@ operator|,
 literal|2
 operator|>
 name|PrivateHeaders
+expr_stmt|;
+comment|/// \brief Information about a header directive as found in the module map
+comment|/// file.
+struct|struct
+name|HeaderDirective
+block|{
+name|SourceLocation
+name|FileNameLoc
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|FileName
+expr_stmt|;
+name|bool
+name|IsUmbrella
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Headers that are mentioned in the module map file but could not be
+comment|/// found on the file system.
+name|SmallVector
+operator|<
+name|HeaderDirective
+operator|,
+literal|1
+operator|>
+name|MissingHeaders
 expr_stmt|;
 comment|/// \brief An individual requirement: a feature name and a flag indicating
 comment|/// the required state of that feature.
@@ -350,8 +390,16 @@ literal|2
 operator|>
 name|Requirements
 expr_stmt|;
-comment|/// \brief Whether this module is available in the current
-comment|/// translation unit.
+comment|/// \brief Whether this module is missing a feature from \c Requirements.
+name|unsigned
+name|IsMissingRequirement
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this module is available in the current translation unit.
+comment|///
+comment|/// If the module is missing headers or does not meet all requirements then
+comment|/// this bit will be 0.
 name|unsigned
 name|IsAvailable
 range|:
@@ -379,6 +427,20 @@ comment|/// \brief Whether this is a "system" module (which assumes that all
 comment|/// headers in it are system headers).
 name|unsigned
 name|IsSystem
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this is an 'extern "C"' module (which implicitly puts all
+comment|/// headers in it within an 'extern "C"' block, and allows the module to be
+comment|/// imported within such a block).
+name|unsigned
+name|IsExternC
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this is an inferred submodule (module * { ... }).
+name|unsigned
+name|IsInferred
 range|:
 literal|1
 decl_stmt|;
@@ -431,9 +493,13 @@ comment|/// \brief All of the names in this module are visible.
 name|AllVisible
 block|}
 enum|;
-comment|///\ brief The visibility of names within this particular module.
+comment|/// \brief The visibility of names within this particular module.
 name|NameVisibilityKind
 name|NameVisibility
+decl_stmt|;
+comment|/// \brief The location at which macros within this module became visible.
+name|SourceLocation
+name|MacroVisibilityLoc
 decl_stmt|;
 comment|/// \brief The location of the inferred submodule.
 name|SourceLocation
@@ -647,91 +713,9 @@ name|Conflict
 operator|>
 name|Conflicts
 expr_stmt|;
-comment|/// \brief Construct a top-level module.
-name|explicit
-name|Module
-argument_list|(
-argument|StringRef Name
-argument_list|,
-argument|SourceLocation DefinitionLoc
-argument_list|,
-argument|bool IsFramework
-argument_list|)
-block|:
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-operator|,
-name|DefinitionLoc
-argument_list|(
-name|DefinitionLoc
-argument_list|)
-operator|,
-name|Parent
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Umbrella
-argument_list|()
-operator|,
-name|ASTFile
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|IsAvailable
-argument_list|(
-name|true
-argument_list|)
-operator|,
-name|IsFromModuleFile
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IsFramework
-argument_list|(
-name|IsFramework
-argument_list|)
-operator|,
-name|IsExplicit
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|IsSystem
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|InferSubmodules
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|InferExplicitSubmodules
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|InferExportWildcard
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ConfigMacrosExhaustive
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|NameVisibility
-argument_list|(
-argument|Hidden
-argument_list|)
-block|{ }
 comment|/// \brief Construct a new module or submodule.
+comment|///
+comment|/// For an explanation of \p ModuleMap, see Module::ModuleMap.
 name|Module
 argument_list|(
 argument|StringRef Name
@@ -740,11 +724,13 @@ argument|SourceLocation DefinitionLoc
 argument_list|,
 argument|Module *Parent
 argument_list|,
+argument|const FileEntry *ModuleMap
+argument_list|,
 argument|bool IsFramework
 argument_list|,
 argument|bool IsExplicit
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|Module
 argument_list|()
@@ -787,6 +773,10 @@ argument_list|,
 name|Requirement
 operator|&
 name|Req
+argument_list|,
+name|HeaderDirective
+operator|&
+name|MissingHeader
 argument_list|)
 decl|const
 decl_stmt|;
@@ -799,7 +789,7 @@ block|{
 return|return
 name|Parent
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Determine whether this module is a submodule of the given other
@@ -807,6 +797,7 @@ comment|/// module.
 name|bool
 name|isSubModuleOf
 argument_list|(
+specifier|const
 name|Module
 operator|*
 name|Other
@@ -958,10 +949,14 @@ block|{
 name|assert
 argument_list|(
 operator|(
+name|File
+operator|==
+name|nullptr
+operator|||
 name|getASTFile
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 operator|||
 name|getASTFile
 argument_list|()
@@ -1120,6 +1115,16 @@ modifier|&
 name|Target
 parameter_list|)
 function_decl|;
+comment|/// \brief Mark this module and all of its submodules as unavailable.
+name|void
+name|markUnavailable
+parameter_list|(
+name|bool
+name|MissingRequirement
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// \brief Find the submodule with the given name.
 comment|///
 comment|/// \returns The submodule if found, or NULL otherwise.
@@ -1134,6 +1139,10 @@ decl|const
 decl_stmt|;
 comment|/// \brief Determine whether the specified module would be visible to
 comment|/// a lookup at the end of this module.
+comment|///
+comment|/// FIXME: This may return incorrect results for (submodules of) the
+comment|/// module currently being built, if it's queried before we see all
+comment|/// of its imports.
 name|bool
 name|isModuleVisible
 argument_list|(

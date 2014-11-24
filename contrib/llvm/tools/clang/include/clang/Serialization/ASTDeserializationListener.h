@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/IdentifierTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
@@ -94,15 +100,13 @@ decl_stmt|;
 name|class
 name|ASTDeserializationListener
 block|{
-name|protected
+name|public
 label|:
 name|virtual
 operator|~
 name|ASTDeserializationListener
 argument_list|()
 expr_stmt|;
-name|public
-label|:
 comment|/// \brief The ASTReader was initialized.
 name|virtual
 name|void

@@ -150,6 +150,9 @@ comment|///< Only execute frontend initialization.
 name|ModuleFileInfo
 block|,
 comment|///< Dump information about a module file.
+name|VerifyPCH
+block|,
+comment|///< Load and verify that a PCH file is usable.
 name|ParseSyntaxOnly
 block|,
 comment|///< Parse and perform semantic analysis.
@@ -248,7 +251,7 @@ argument_list|()
 operator|:
 name|Buffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Kind
@@ -275,7 +278,7 @@ argument_list|)
 operator|,
 name|Buffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Kind
@@ -343,7 +346,7 @@ argument_list|()
 operator|&&
 name|Buffer
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool
@@ -365,7 +368,7 @@ block|{
 return|return
 name|Buffer
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|StringRef
@@ -596,6 +599,11 @@ name|ObjCMT_NsAtomicIOSOnlyProperty
 init|=
 literal|0x400
 block|,
+comment|/// \brief Enable inferring NS_DESIGNATED_INITIALIZER for ObjC methods.
+name|ObjCMT_DesignatedInitializer
+init|=
+literal|0x800
+block|,
 name|ObjCMT_MigrateDecls
 init|=
 operator|(
@@ -612,6 +620,8 @@ operator||
 name|ObjCMT_ProtocolConformance
 operator||
 name|ObjCMT_NsAtomicIOSOnlyProperty
+operator||
+name|ObjCMT_DesignatedInitializer
 operator|)
 block|,
 name|ObjCMT_MigrateAll

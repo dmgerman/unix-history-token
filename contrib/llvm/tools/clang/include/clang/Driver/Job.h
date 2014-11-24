@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -65,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Option/Option.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -248,7 +248,6 @@ operator|&
 name|_Arguments
 argument_list|)
 block|;
-name|virtual
 name|void
 name|Print
 argument_list|(
@@ -261,6 +260,7 @@ argument_list|,
 argument|bool CrashReport = false
 argument_list|)
 specifier|const
+name|override
 block|;
 name|virtual
 name|int
@@ -296,6 +296,17 @@ specifier|const
 block|{
 return|return
 name|Creator
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getExecutable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Executable
 return|;
 block|}
 specifier|const
@@ -375,7 +386,6 @@ operator|*
 name|Fallback_
 argument_list|)
 block|;
-name|virtual
 name|void
 name|Print
 argument_list|(
@@ -388,8 +398,8 @@ argument_list|,
 argument|bool CrashReport = false
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|int
 name|Execute
 argument_list|(
@@ -400,6 +410,7 @@ argument_list|,
 argument|bool *ExecutionFailed
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -419,7 +430,9 @@ return|;
 block|}
 name|private
 operator|:
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Command
 operator|>
@@ -478,7 +491,6 @@ operator|~
 name|JobList
 argument_list|()
 expr_stmt|;
-name|virtual
 name|void
 name|Print
 argument_list|(
@@ -502,6 +514,7 @@ operator|=
 name|false
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// Add a job to the list (taking ownership).
 name|void

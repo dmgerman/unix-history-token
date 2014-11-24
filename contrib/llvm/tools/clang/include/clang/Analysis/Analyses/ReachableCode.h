@@ -97,6 +97,9 @@ decl_stmt|;
 name|class
 name|CFGBlock
 decl_stmt|;
+name|class
+name|Preprocessor
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -119,6 +122,19 @@ block|{
 name|namespace
 name|reachable_code
 block|{
+comment|/// Classifications of unreachable code.
+enum|enum
+name|UnreachableKind
+block|{
+name|UK_Return
+block|,
+name|UK_Break
+block|,
+name|UK_Loop_Increment
+block|,
+name|UK_Other
+block|}
+enum|;
 name|class
 name|Callback
 block|{
@@ -138,7 +154,11 @@ name|virtual
 name|void
 name|HandleUnreachable
 argument_list|(
+argument|UnreachableKind UK
+argument_list|,
 argument|SourceLocation L
+argument_list|,
+argument|SourceRange ConditionVal
 argument_list|,
 argument|SourceRange R1
 argument_list|,
@@ -172,6 +192,10 @@ parameter_list|(
 name|AnalysisDeclContext
 modifier|&
 name|AC
+parameter_list|,
+name|Preprocessor
+modifier|&
+name|PP
 parameter_list|,
 name|Callback
 modifier|&

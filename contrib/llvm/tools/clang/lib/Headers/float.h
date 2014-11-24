@@ -35,11 +35,6 @@ argument_list|)
 operator|)
 operator|&&
 expr|\
-name|defined
-argument_list|(
-name|__has_include_next
-argument_list|)
-operator|&&
 name|__has_include_next
 argument_list|(
 operator|<
