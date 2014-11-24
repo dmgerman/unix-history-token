@@ -73,21 +73,15 @@ range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
-name|virtual
 name|void
 name|Initialize
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
+name|override
 block|;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
@@ -97,14 +91,14 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Describe a TLS variable address within debug info.
-name|virtual
 specifier|const
 name|MCExpr
 operator|*
@@ -113,6 +107,7 @@ argument_list|(
 argument|const MCSymbol *Sym
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 block|}

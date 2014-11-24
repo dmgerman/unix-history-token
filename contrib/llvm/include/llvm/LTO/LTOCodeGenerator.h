@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -164,13 +170,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ArrayRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Linker.h"
+file|"llvm/Linker/Linker.h"
 end_include
 
 begin_include
@@ -199,6 +199,9 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
+name|DiagnosticInfo
+decl_stmt|;
+name|class
 name|GlobalValue
 decl_stmt|;
 name|class
@@ -216,26 +219,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|/// LTOCodeGenerator - C++ class which implements the opaque lto_code_gen_t
-end_comment
-
-begin_comment
-comment|/// type.
-end_comment
-
-begin_comment
+comment|/// C++ class which implements the opaque lto_code_gen_t type.
 comment|///
-end_comment
-
-begin_struct
 struct|struct
 name|LTOCodeGenerator
 block|{
@@ -270,13 +256,11 @@ argument_list|)
 decl_stmt|;
 name|void
 name|setTargetOptions
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|TargetOptions
 name|options
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|void
 name|setDebugInfo
 parameter_list|(
@@ -304,6 +288,20 @@ name|mCpu
 expr_stmt|;
 block|}
 name|void
+name|setAttr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|mAttr
+parameter_list|)
+block|{
+name|MAttr
+operator|=
+name|mAttr
+expr_stmt|;
+block|}
+name|void
 name|addMustPreserveSymbol
 parameter_list|(
 specifier|const
@@ -324,7 +322,6 @@ comment|// To pass options to the driver and optimization passes. These options 
 comment|// not necessarily for debugging purpose (The function name is misleading).
 comment|// This function should be called before LTOCodeGenerator::compilexxx(),
 comment|// and LTOCodeGenerator::writeMergedModules().
-comment|//
 name|void
 name|setCodeGenDebugOptions
 parameter_list|(
@@ -365,7 +362,6 @@ comment|//
 comment|// NOTE that it is up to the linker to remove the intermediate object file.
 comment|//  Do not try to remove the object file in LTOCodeGenerator's destructor
 comment|//  as we don't who (LTOCodeGenerator or the obj file) will last longer.
-comment|//
 name|bool
 name|compile_to_file
 argument_list|(
@@ -396,7 +392,6 @@ comment|// single object file. Instead of returning the object-file-path to the 
 comment|// (linker), it brings the object to a buffer, and return the buffer to the
 comment|// caller. This function should delete intermediate object file once its content
 comment|// is brought to memory. Return NULL if the compilation was not successful.
-comment|//
 specifier|const
 name|void
 modifier|*
@@ -422,6 +417,15 @@ operator|&
 name|errMsg
 argument_list|)
 decl_stmt|;
+name|void
+name|setDiagnosticHandler
+parameter_list|(
+name|lto_diagnostic_handler_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|void
@@ -431,8 +435,6 @@ function_decl|;
 name|bool
 name|generateObjectFile
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|out
@@ -460,19 +462,13 @@ function_decl|;
 name|void
 name|applyRestriction
 argument_list|(
-name|llvm
-operator|::
 name|GlobalValue
 operator|&
 name|GV
 argument_list|,
 specifier|const
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
-name|llvm
-operator|::
 name|StringRef
 operator|>
 operator|&
@@ -489,12 +485,8 @@ operator|>
 operator|&
 name|MustPreserveList
 argument_list|,
-name|llvm
-operator|::
 name|SmallPtrSet
 operator|<
-name|llvm
-operator|::
 name|GlobalValue
 operator|*
 argument_list|,
@@ -503,8 +495,6 @@ operator|>
 operator|&
 name|AsmUsed
 argument_list|,
-name|llvm
-operator|::
 name|Mangler
 operator|&
 name|Mangler
@@ -520,32 +510,47 @@ operator|&
 name|errMsg
 argument_list|)
 decl_stmt|;
+specifier|static
+name|void
+name|DiagnosticHandler
+parameter_list|(
+specifier|const
+name|DiagnosticInfo
+modifier|&
+name|DI
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+name|void
+name|DiagnosticHandler2
+parameter_list|(
+specifier|const
+name|DiagnosticInfo
+modifier|&
+name|DI
+parameter_list|)
+function_decl|;
 typedef|typedef
-name|llvm
-operator|::
 name|StringMap
 operator|<
 name|uint8_t
 operator|>
 name|StringSet
 expr_stmt|;
-name|llvm
-operator|::
 name|LLVMContext
-operator|&
+modifier|&
 name|Context
-expr_stmt|;
-name|llvm
-operator|::
+decl_stmt|;
 name|Linker
-name|Linker
-expr_stmt|;
-name|llvm
-operator|::
+name|IRLinker
+decl_stmt|;
 name|TargetMachine
-operator|*
+modifier|*
 name|TargetMach
-expr_stmt|;
+decl_stmt|;
 name|bool
 name|EmitDwarfDebugInfo
 decl_stmt|;
@@ -561,12 +566,10 @@ decl_stmt|;
 name|StringSet
 name|AsmUndefinedRefs
 decl_stmt|;
-name|llvm
-operator|::
 name|MemoryBuffer
-operator|*
+modifier|*
 name|NativeObjectFile
-expr_stmt|;
+decl_stmt|;
 name|std
 operator|::
 name|vector
@@ -584,16 +587,27 @@ expr_stmt|;
 name|std
 operator|::
 name|string
+name|MAttr
+expr_stmt|;
+name|std
+operator|::
+name|string
 name|NativeObjectPath
 expr_stmt|;
-name|llvm
-operator|::
 name|TargetOptions
 name|Options
-expr_stmt|;
+decl_stmt|;
+name|lto_diagnostic_handler_t
+name|DiagHandler
+decl_stmt|;
+name|void
+modifier|*
+name|DiagContext
+decl_stmt|;
 block|}
 struct|;
-end_struct
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#

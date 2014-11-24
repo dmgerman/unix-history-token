@@ -84,9 +84,9 @@ name|explicit
 name|MipsSelectionDAGInfo
 argument_list|(
 specifier|const
-name|MipsTargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~

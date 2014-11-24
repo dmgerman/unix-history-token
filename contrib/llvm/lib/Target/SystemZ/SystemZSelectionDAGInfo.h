@@ -84,16 +84,15 @@ name|explicit
 name|SystemZSelectionDAGInfo
 argument_list|(
 specifier|const
-name|SystemZTargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~
 name|SystemZSelectionDAGInfo
 argument_list|()
 block|;
-name|virtual
 name|SDValue
 name|EmitTargetCodeForMemcpy
 argument_list|(
@@ -120,9 +119,8 @@ argument_list|,
 argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|SDValue
 name|EmitTargetCodeForMemset
 argument_list|(
@@ -145,9 +143,8 @@ argument_list|,
 argument|MachinePointerInfo DstPtrInfo
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|pair
@@ -175,9 +172,8 @@ argument_list|,
 argument|MachinePointerInfo Op2PtrInfo
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|pair
@@ -203,9 +199,8 @@ argument_list|,
 argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|pair
@@ -233,9 +228,8 @@ argument_list|,
 argument|bool isStpcpy
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|pair
@@ -261,9 +255,8 @@ argument_list|,
 argument|MachinePointerInfo Op2PtrInfo
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|pair
@@ -285,9 +278,8 @@ argument_list|,
 argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|pair
@@ -311,11 +303,15 @@ argument_list|,
 argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// end namespace llvm
+end_comment
 
 begin_endif
 endif|#

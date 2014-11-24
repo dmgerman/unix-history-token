@@ -119,14 +119,19 @@ block|{}
 name|explicit
 name|APSInt
 argument_list|(
-argument|const APInt&I
+argument|APInt I
 argument_list|,
 argument|bool isUnsigned = true
 argument_list|)
 operator|:
 name|APInt
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|I
+argument_list|)
 argument_list|)
 block|,
 name|IsUnsigned
@@ -139,39 +144,7 @@ operator|&
 name|operator
 operator|=
 operator|(
-specifier|const
-name|APSInt
-operator|&
-name|RHS
-operator|)
-block|{
 name|APInt
-operator|::
-name|operator
-operator|=
-operator|(
-name|RHS
-operator|)
-block|;
-name|IsUnsigned
-operator|=
-name|RHS
-operator|.
-name|IsUnsigned
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|APSInt
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|APInt
-operator|&
 name|RHS
 operator|)
 block|{
@@ -181,7 +154,12 @@ operator|::
 name|operator
 operator|=
 operator|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|RHS
+argument_list|)
 operator|)
 block|;
 return|return
@@ -277,7 +255,7 @@ argument_list|()
 argument_list|)
 block|;   }
 comment|/// toString - Converts an APInt to a std::string.  This is an inefficient
-comment|/// method, your should prefer passing in a SmallString instead.
+comment|/// method; you should prefer passing in a SmallString instead.
 name|std
 operator|::
 name|string

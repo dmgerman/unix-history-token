@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ValueMap.h"
+file|"llvm/IR/ValueMap.h"
 end_include
 
 begin_decl_stmt
@@ -232,13 +232,13 @@ name|ValueMapTypeRemapper
 modifier|*
 name|TypeMapper
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|ValueMaterializer
 modifier|*
 name|Materializer
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -261,13 +261,13 @@ name|ValueMapTypeRemapper
 modifier|*
 name|TypeMapper
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|ValueMaterializer
 modifier|*
 name|Materializer
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// MapValue - provide versions that preserve type safety for MDNode and
@@ -295,13 +295,13 @@ name|ValueMapTypeRemapper
 modifier|*
 name|TypeMapper
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|ValueMaterializer
 modifier|*
 name|Materializer
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -353,13 +353,13 @@ name|ValueMapTypeRemapper
 modifier|*
 name|TypeMapper
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|ValueMaterializer
 modifier|*
 name|Materializer
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return

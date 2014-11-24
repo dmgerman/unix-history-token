@@ -492,6 +492,13 @@ name|LLVMExecutionEngineRef
 name|EE
 parameter_list|)
 function_decl|;
+name|LLVMTargetMachineRef
+name|LLVMGetExecutionEngineTargetMachine
+parameter_list|(
+name|LLVMExecutionEngineRef
+name|EE
+parameter_list|)
+function_decl|;
 name|void
 name|LLVMAddGlobalMapping
 parameter_list|(

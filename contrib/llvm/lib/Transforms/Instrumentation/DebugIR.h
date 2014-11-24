@@ -70,12 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -134,6 +128,7 @@ operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"DebugIR"
@@ -247,12 +242,9 @@ block|;
 name|bool
 name|runOnModule
 argument_list|(
-name|llvm
-operator|::
-name|Module
-operator|&
-name|M
+argument|llvm::Module&M
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -289,9 +281,9 @@ comment|/// Generate a temporary filename and open an fd
 name|void
 name|generateFilename
 argument_list|(
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 name|int
 operator|>
@@ -309,9 +301,9 @@ name|Module
 operator|&
 name|M
 argument_list|,
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 name|llvm
 operator|::
@@ -343,7 +335,7 @@ name|int
 operator|*
 name|fd
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|; }
 decl_stmt|;

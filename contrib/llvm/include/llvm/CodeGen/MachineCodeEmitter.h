@@ -74,13 +74,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/IR/DebugLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -1174,7 +1174,7 @@ name|BufferEnd
 expr_stmt|;
 name|Result
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 else|else

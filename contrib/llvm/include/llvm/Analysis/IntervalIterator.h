@@ -144,13 +144,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Function.h"
+file|"llvm/IR/CFG.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CFG.h"
+file|"llvm/IR/Function.h"
 end_include
 
 begin_include

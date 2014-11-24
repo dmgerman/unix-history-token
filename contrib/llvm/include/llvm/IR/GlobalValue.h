@@ -92,6 +92,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Comdat
+decl_stmt|;
+name|class
 name|PointerType
 decl_stmt|;
 name|class
@@ -144,18 +147,6 @@ comment|///< Rename collisions when linking (static functions).
 name|PrivateLinkage
 block|,
 comment|///< Like Internal, but omit from symbol table.
-name|LinkerPrivateLinkage
-block|,
-comment|///< Like Private, but linker removes.
-name|LinkerPrivateWeakLinkage
-block|,
-comment|///< Like LinkerPrivate, but weak.
-name|DLLImportLinkage
-block|,
-comment|///< Function to be imported from DLL
-name|DLLExportLinkage
-block|,
-comment|///< Function to be accessible from DLL.
 name|ExternalWeakLinkage
 block|,
 comment|///< ExternalWeak linkage description.
@@ -179,28 +170,47 @@ name|ProtectedVisibility
 comment|///< The GV is protected
 block|}
 block|;
+comment|/// @brief Storage classes of global values for PE targets.
+block|enum
+name|DLLStorageClassTypes
+block|{
+name|DefaultStorageClass
+operator|=
+literal|0
+block|,
+name|DLLImportStorageClass
+operator|=
+literal|1
+block|,
+comment|///< Function to be imported from DLL
+name|DLLExportStorageClass
+operator|=
+literal|2
+comment|///< Function to be accessible from DLL.
+block|}
+block|;
 name|protected
 operator|:
 name|GlobalValue
 argument_list|(
-argument|Type *ty
+argument|Type *Ty
 argument_list|,
-argument|ValueTy vty
+argument|ValueTy VTy
 argument_list|,
 argument|Use *Ops
 argument_list|,
 argument|unsigned NumOps
 argument_list|,
-argument|LinkageTypes linkage
+argument|LinkageTypes Linkage
 argument_list|,
 argument|const Twine&Name
 argument_list|)
 operator|:
 name|Constant
 argument_list|(
-name|ty
+name|Ty
 argument_list|,
-name|vty
+name|VTy
 argument_list|,
 name|Ops
 argument_list|,
@@ -209,7 +219,7 @@ argument_list|)
 block|,
 name|Linkage
 argument_list|(
-name|linkage
+name|Linkage
 argument_list|)
 block|,
 name|Visibility
@@ -217,19 +227,24 @@ argument_list|(
 name|DefaultVisibility
 argument_list|)
 block|,
-name|Alignment
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|UnnamedAddr
 argument_list|(
 literal|0
 argument_list|)
 block|,
+name|DllStorageClass
+argument_list|(
+name|DefaultStorageClass
+argument_list|)
+block|,
+name|ThreadLocal
+argument_list|(
+name|NotThreadLocal
+argument_list|)
+block|,
 name|Parent
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|setName
@@ -252,30 +267,90 @@ literal|2
 block|;
 comment|// The visibility style of this global
 name|unsigned
-name|Alignment
-operator|:
-literal|16
-block|;
-comment|// Alignment of this symbol, must be power of two
-name|unsigned
 name|UnnamedAddr
 operator|:
 literal|1
 block|;
 comment|// This value's address is not significant
+name|unsigned
+name|DllStorageClass
+operator|:
+literal|2
+block|;
+comment|// DLL storage class
+name|unsigned
+name|ThreadLocal
+operator|:
+literal|3
+block|;
+comment|// Is this symbol "Thread Local", if so, what is
+comment|// the desired model?
+name|private
+operator|:
+comment|// Give subclasses access to what otherwise would be wasted padding.
+comment|// (19 + 3 + 2 + 1 + 2 + 5) == 32.
+name|unsigned
+name|SubClassData
+operator|:
+literal|19
+block|;
+name|protected
+operator|:
+name|unsigned
+name|getGlobalValueSubClassData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubClassData
+return|;
+block|}
+name|void
+name|setGlobalValueSubClassData
+argument_list|(
+argument|unsigned V
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|V
+operator|<
+operator|(
+literal|1
+operator|<<
+literal|19
+operator|)
+operator|&&
+literal|"It will not fit"
+argument_list|)
+block|;
+name|SubClassData
+operator|=
+name|V
+block|;   }
 name|Module
 operator|*
 name|Parent
 block|;
 comment|// The containing module.
-name|std
-operator|::
-name|string
-name|Section
-block|;
-comment|// Section to emit this into, empty mean default
 name|public
 operator|:
+expr|enum
+name|ThreadLocalMode
+block|{
+name|NotThreadLocal
+operator|=
+literal|0
+block|,
+name|GeneralDynamicTLSModel
+block|,
+name|LocalDynamicTLSModel
+block|,
+name|InitialExecTLSModel
+block|,
+name|LocalExecTLSModel
+block|}
+block|;
 operator|~
 name|GlobalValue
 argument_list|()
@@ -289,22 +364,6 @@ name|unsigned
 name|getAlignment
 argument_list|()
 specifier|const
-block|{
-return|return
-operator|(
-literal|1u
-operator|<<
-name|Alignment
-operator|)
-operator|>>
-literal|1
-return|;
-block|}
-name|void
-name|setAlignment
-argument_list|(
-argument|unsigned Align
-argument_list|)
 block|;
 name|bool
 name|hasUnnamedAddr
@@ -325,6 +384,44 @@ name|UnnamedAddr
 operator|=
 name|Val
 block|; }
+name|bool
+name|hasComdat
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getComdat
+argument_list|()
+operator|!=
+name|nullptr
+return|;
+block|}
+name|Comdat
+operator|*
+name|getComdat
+argument_list|()
+block|;
+specifier|const
+name|Comdat
+operator|*
+name|getComdat
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|GlobalValue
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getComdat
+argument_list|()
+return|;
+block|}
 name|VisibilityTypes
 name|getVisibility
 argument_list|()
@@ -376,9 +473,135 @@ argument_list|(
 argument|VisibilityTypes V
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|(
+operator|!
+name|hasLocalLinkage
+argument_list|()
+operator|||
+name|V
+operator|==
+name|DefaultVisibility
+operator|)
+operator|&&
+literal|"local linkage requires default visibility"
+argument_list|)
+block|;
 name|Visibility
 operator|=
 name|V
+block|;   }
+comment|/// If the value is "Thread Local", its value isn't shared by the threads.
+name|bool
+name|isThreadLocal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getThreadLocalMode
+argument_list|()
+operator|!=
+name|NotThreadLocal
+return|;
+block|}
+name|void
+name|setThreadLocal
+argument_list|(
+argument|bool Val
+argument_list|)
+block|{
+name|setThreadLocalMode
+argument_list|(
+name|Val
+operator|?
+name|GeneralDynamicTLSModel
+operator|:
+name|NotThreadLocal
+argument_list|)
+block|;   }
+name|void
+name|setThreadLocalMode
+argument_list|(
+argument|ThreadLocalMode Val
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Val
+operator|==
+name|NotThreadLocal
+operator|||
+name|getValueID
+argument_list|()
+operator|!=
+name|Value
+operator|::
+name|FunctionVal
+argument_list|)
+block|;
+name|ThreadLocal
+operator|=
+name|Val
+block|;   }
+name|ThreadLocalMode
+name|getThreadLocalMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ThreadLocalMode
+operator|>
+operator|(
+name|ThreadLocal
+operator|)
+return|;
+block|}
+name|DLLStorageClassTypes
+name|getDLLStorageClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DLLStorageClassTypes
+argument_list|(
+name|DllStorageClass
+argument_list|)
+return|;
+block|}
+name|bool
+name|hasDLLImportStorageClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DllStorageClass
+operator|==
+name|DLLImportStorageClass
+return|;
+block|}
+name|bool
+name|hasDLLExportStorageClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DllStorageClass
+operator|==
+name|DLLExportStorageClass
+return|;
+block|}
+name|void
+name|setDLLStorageClass
+argument_list|(
+argument|DLLStorageClassTypes C
+argument_list|)
+block|{
+name|DllStorageClass
+operator|=
+name|C
 block|; }
 name|bool
 name|hasSection
@@ -387,45 +610,30 @@ specifier|const
 block|{
 return|return
 operator|!
-name|Section
+name|StringRef
+argument_list|(
+name|getSection
+argument_list|()
+argument_list|)
 operator|.
 name|empty
 argument_list|()
 return|;
 block|}
+comment|// It is unfortunate that we have to use "char *" in here since this is
+comment|// always non NULL, but:
+comment|// * The C API expects a null terminated string, so we cannot use StringRef.
+comment|// * The C API expects us to own it, so we cannot use a std:string.
+comment|// * For GlobalAliases we can fail to find the section and we have to
+comment|//   return "", so we cannot use a "const std::string&".
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|char
+operator|*
 name|getSection
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Section
-return|;
-block|}
-name|void
-name|setSection
-argument_list|(
-argument|StringRef S
-argument_list|)
-block|{
-name|Section
-operator|=
-name|S
-block|; }
-comment|/// If the usage is empty (except transitively dead constants), then this
-comment|/// global value can be safely deleted since the destructor will
-comment|/// delete the dead constants as well.
-comment|/// @brief Determine if the usage of this global value is empty except
-comment|/// for transitively dead constants.
-name|bool
-name|use_empty_except_constants
-argument_list|()
 block|;
-comment|/// getType - Global values are always pointers.
+comment|/// Global values are always pointers.
 specifier|inline
 name|PointerType
 operator|*
@@ -455,9 +663,9 @@ argument_list|)
 block|{
 return|return
 name|ODR
-operator|?
+condition|?
 name|LinkOnceODRLinkage
-operator|:
+else|:
 name|LinkOnceAnyLinkage
 return|;
 block|}
@@ -504,6 +712,19 @@ return|;
 block|}
 specifier|static
 name|bool
+name|isLinkOnceODRLinkage
+argument_list|(
+argument|LinkageTypes Linkage
+argument_list|)
+block|{
+return|return
+name|Linkage
+operator|==
+name|LinkOnceODRLinkage
+return|;
+block|}
+specifier|static
+name|bool
 name|isLinkOnceLinkage
 argument_list|(
 argument|LinkageTypes Linkage
@@ -521,7 +742,7 @@ return|;
 block|}
 specifier|static
 name|bool
-name|isWeakLinkage
+name|isWeakAnyLinkage
 argument_list|(
 argument|LinkageTypes Linkage
 argument_list|)
@@ -530,10 +751,38 @@ return|return
 name|Linkage
 operator|==
 name|WeakAnyLinkage
-operator|||
+return|;
+block|}
+specifier|static
+name|bool
+name|isWeakODRLinkage
+argument_list|(
+argument|LinkageTypes Linkage
+argument_list|)
+block|{
+return|return
 name|Linkage
 operator|==
 name|WeakODRLinkage
+return|;
+block|}
+specifier|static
+name|bool
+name|isWeakLinkage
+argument_list|(
+argument|LinkageTypes Linkage
+argument_list|)
+block|{
+return|return
+name|isWeakAnyLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+operator|||
+name|isWeakODRLinkage
+argument_list|(
+name|Linkage
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -577,32 +826,6 @@ return|;
 block|}
 specifier|static
 name|bool
-name|isLinkerPrivateLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
-block|{
-return|return
-name|Linkage
-operator|==
-name|LinkerPrivateLinkage
-return|;
-block|}
-specifier|static
-name|bool
-name|isLinkerPrivateWeakLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
-block|{
-return|return
-name|Linkage
-operator|==
-name|LinkerPrivateWeakLinkage
-return|;
-block|}
-specifier|static
-name|bool
 name|isLocalLinkage
 argument_list|(
 argument|LinkageTypes Linkage
@@ -618,42 +841,6 @@ name|isPrivateLinkage
 argument_list|(
 name|Linkage
 argument_list|)
-operator|||
-name|isLinkerPrivateLinkage
-argument_list|(
-name|Linkage
-argument_list|)
-operator|||
-name|isLinkerPrivateWeakLinkage
-argument_list|(
-name|Linkage
-argument_list|)
-return|;
-block|}
-specifier|static
-name|bool
-name|isDLLImportLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
-block|{
-return|return
-name|Linkage
-operator|==
-name|DLLImportLinkage
-return|;
-block|}
-specifier|static
-name|bool
-name|isDLLExportLinkage
-argument_list|(
-argument|LinkageTypes Linkage
-argument_list|)
-block|{
-return|return
-name|Linkage
-operator|==
-name|DLLExportLinkage
 return|;
 block|}
 specifier|static
@@ -682,8 +869,8 @@ operator|==
 name|CommonLinkage
 return|;
 block|}
-comment|/// isDiscardableIfUnused - Whether the definition of this global may be
-comment|/// discarded if it is not used in its compilation unit.
+comment|/// Whether the definition of this global may be discarded if it is not used
+comment|/// in its compilation unit.
 specifier|static
 name|bool
 name|isDiscardableIfUnused
@@ -703,9 +890,9 @@ name|Linkage
 argument_list|)
 return|;
 block|}
-comment|/// mayBeOverridden - Whether the definition of this global may be replaced
-comment|/// by something non-equivalent at link time.  For example, if a function has
-comment|/// weak linkage then the code defining it may be replaced by different code.
+comment|/// Whether the definition of this global may be replaced by something
+comment|/// non-equivalent at link time. For example, if a function has weak linkage
+comment|/// then the code defining it may be replaced by different code.
 specifier|static
 name|bool
 name|mayBeOverridden
@@ -729,16 +916,12 @@ operator|||
 name|Linkage
 operator|==
 name|ExternalWeakLinkage
-operator|||
-name|Linkage
-operator|==
-name|LinkerPrivateWeakLinkage
 return|;
 block|}
-comment|/// isWeakForLinker - Whether the definition of this global may be replaced at
-comment|/// link time.  NB: Using this method outside of the code generators is almost
-comment|/// always a mistake: when working at the IR level use mayBeOverridden instead
-comment|/// as it knows about ODR semantics.
+comment|/// Whether the definition of this global may be replaced at link time.  NB:
+comment|/// Using this method outside of the code generators is almost always a
+comment|/// mistake: when working at the IR level use mayBeOverridden instead as it
+comment|/// knows about ODR semantics.
 specifier|static
 name|bool
 name|isWeakForLinker
@@ -774,10 +957,6 @@ operator|||
 name|Linkage
 operator|==
 name|ExternalWeakLinkage
-operator|||
-name|Linkage
-operator|==
-name|LinkerPrivateWeakLinkage
 return|;
 block|}
 name|bool
@@ -829,6 +1008,30 @@ argument_list|)
 return|;
 block|}
 name|bool
+name|hasWeakAnyLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isWeakAnyLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+return|;
+block|}
+name|bool
+name|hasWeakODRLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isWeakODRLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+return|;
+block|}
+name|bool
 name|hasAppendingLinkage
 argument_list|()
 specifier|const
@@ -865,60 +1068,12 @@ argument_list|)
 return|;
 block|}
 name|bool
-name|hasLinkerPrivateLinkage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isLinkerPrivateLinkage
-argument_list|(
-name|Linkage
-argument_list|)
-return|;
-block|}
-name|bool
-name|hasLinkerPrivateWeakLinkage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isLinkerPrivateWeakLinkage
-argument_list|(
-name|Linkage
-argument_list|)
-return|;
-block|}
-name|bool
 name|hasLocalLinkage
 argument_list|()
 specifier|const
 block|{
 return|return
 name|isLocalLinkage
-argument_list|(
-name|Linkage
-argument_list|)
-return|;
-block|}
-name|bool
-name|hasDLLImportLinkage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isDLLImportLinkage
-argument_list|(
-name|Linkage
-argument_list|)
-return|;
-block|}
-name|bool
-name|hasDLLExportLinkage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|isDLLExportLinkage
 argument_list|(
 name|Linkage
 argument_list|)
@@ -954,10 +1109,21 @@ argument_list|(
 argument|LinkageTypes LT
 argument_list|)
 block|{
+if|if
+condition|(
+name|isLocalLinkage
+argument_list|(
+name|LT
+argument_list|)
+condition|)
+name|Visibility
+operator|=
+name|DefaultVisibility
+expr_stmt|;
 name|Linkage
 operator|=
 name|LT
-block|; }
+block|;   }
 name|LinkageTypes
 name|getLinkage
 argument_list|()
@@ -1003,27 +1169,28 @@ name|Linkage
 argument_list|)
 return|;
 block|}
-comment|/// copyAttributesFrom - copy all additional attributes (those not needed to
-comment|/// create a GlobalValue) from the GlobalValue Src to this one.
+comment|/// Copy all additional attributes (those not needed to create a GlobalValue)
+comment|/// from the GlobalValue Src to this one.
 name|virtual
 name|void
 name|copyAttributesFrom
-argument_list|(
+parameter_list|(
 specifier|const
 name|GlobalValue
-operator|*
+modifier|*
 name|Src
-argument_list|)
-block|;
-comment|/// getRealLinkageName - If special LLVM prefix that is used to inform the asm
-comment|/// printer to not emit usual symbol prefix before the symbol name is used
-comment|/// then return linkage name after skipping this special LLVM prefix.
+parameter_list|)
+function_decl|;
+comment|/// If special LLVM prefix that is used to inform the asm printer to not emit
+comment|/// usual symbol prefix before the symbol name is used then return linkage
+comment|/// name after skipping this special LLVM prefix.
 specifier|static
 name|StringRef
 name|getRealLinkageName
-argument_list|(
-argument|StringRef Name
-argument_list|)
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1057,25 +1224,25 @@ comment|/// Materialization is used to construct functions only as they're neede
 comment|/// is useful to reduce memory usage in LLVM or parsing work done by the
 comment|/// BitcodeReader to load the Module.
 comment|/// @{
-comment|/// isMaterializable - If this function's Module is being lazily streamed in
-comment|/// functions from disk or some other source, this method can be used to check
-comment|/// to see if the function has been read in yet or not.
+comment|/// If this function's Module is being lazily streamed in functions from disk
+comment|/// or some other source, this method can be used to check to see if the
+comment|/// function has been read in yet or not.
 name|bool
 name|isMaterializable
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isDematerializable - Returns true if this function was loaded from a
-comment|/// GVMaterializer that's still attached to its Module and that knows how to
-comment|/// dematerialize the function.
+comment|/// Returns true if this function was loaded from a GVMaterializer that's
+comment|/// still attached to its Module and that knows how to dematerialize the
+comment|/// function.
 name|bool
 name|isDematerializable
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Materialize - make sure this GlobalValue is fully read.  If the module is
-comment|/// corrupt, this returns true and fills in the optional string with
-comment|/// information about the problem.  If successful, this returns false.
+comment|/// Make sure this GlobalValue is fully read. If the module is corrupt, this
+comment|/// returns true and fills in the optional string with information about the
+comment|/// problem.  If successful, this returns false.
 name|bool
 name|Materialize
 argument_list|(
@@ -1085,32 +1252,32 @@ name|string
 operator|*
 name|ErrInfo
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// Dematerialize - If this GlobalValue is read in, and if the GVMaterializer
-comment|/// supports it, release the memory for the function, and set it up to be
-comment|/// materialized lazily.  If !isDematerializable(), this method is a noop.
+comment|/// If this GlobalValue is read in, and if the GVMaterializer supports it,
+comment|/// release the memory for the function, and set it up to be materialized
+comment|/// lazily. If !isDematerializable(), this method is a noop.
 name|void
 name|Dematerialize
 parameter_list|()
 function_decl|;
 comment|/// @}
 comment|/// Override from Constant class.
-name|virtual
 name|void
 name|destroyConstant
-parameter_list|()
-function_decl|;
-comment|/// isDeclaration - Return true if the primary definition of this global
-comment|/// value is outside of the current translation unit.
+argument_list|()
+name|override
+expr_stmt|;
+comment|/// Return true if the primary definition of this global value is outside of
+comment|/// the current translation unit.
 name|bool
 name|isDeclaration
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// removeFromParent - This method unlinks 'this' from the containing module,
-comment|/// but does not delete it.
+comment|/// This method unlinks 'this' from the containing module, but does not delete
+comment|/// it.
 name|virtual
 name|void
 name|removeFromParent
@@ -1118,8 +1285,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// eraseFromParent - This method unlinks 'this' from the containing module
-comment|/// and deletes it.
+comment|/// This method unlinks 'this' from the containing module and deletes it.
 name|virtual
 name|void
 name|eraseFromParent
@@ -1127,8 +1293,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// getParent - Get the module that this global value is contained inside
-comment|/// of...
+comment|/// Get the module that this global value is contained inside of...
 specifier|inline
 name|Module
 modifier|*
@@ -1151,6 +1316,13 @@ return|return
 name|Parent
 return|;
 block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

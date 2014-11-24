@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"SparcSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -90,11 +84,6 @@ range|:
 name|public
 name|TargetFrameLowering
 block|{
-specifier|const
-name|SparcSubtarget
-operator|&
-name|SubTarget
-block|;
 name|public
 operator|:
 name|explicit
@@ -105,39 +94,7 @@ name|SparcSubtarget
 operator|&
 name|ST
 argument_list|)
-operator|:
-name|TargetFrameLowering
-argument_list|(
-name|TargetFrameLowering
-operator|::
-name|StackGrowsDown
-argument_list|,
-name|ST
-operator|.
-name|is64Bit
-argument_list|()
-condition|?
-literal|16
-else|:
-literal|8
-argument_list|,
-literal|0
-argument_list|,
-name|ST
-operator|.
-name|is64Bit
-argument_list|()
-condition|?
-literal|16
-else|:
-literal|8
-argument_list|)
-block|,
-name|SubTarget
-argument_list|(
-argument|ST
-argument_list|)
-block|{}
+block|;
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
 comment|/// the function.
 name|void
@@ -146,6 +103,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|emitEpilogue
@@ -155,6 +113,7 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateCallFramePseudoInstr
@@ -166,6 +125,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasReservedCallFrame
@@ -173,6 +133,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasFP
@@ -180,15 +141,17 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|processFunctionBeforeCalleeSavedScan
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/TargetFolder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/ValueTracking.h"
 end_include
 
@@ -59,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/IRBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/InstVisitor.h"
 end_include
 
 begin_include
@@ -76,19 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/InstVisitor.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Pass.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/TargetFolder.h"
 end_include
 
 begin_include
@@ -96,6 +96,13 @@ include|#
 directive|include
 file|"llvm/Transforms/Utils/SimplifyLibCalls.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|DEBUG_TYPE
+value|"instcombine"
+end_define
 
 begin_decl_stmt
 name|namespace
@@ -135,7 +142,10 @@ block|,
 name|SPF_SMAX
 block|,
 name|SPF_UMAX
-comment|//SPF_ABS - TODO.
+block|,
+name|SPF_ABS
+block|,
+name|SPF_NABS
 block|}
 enum|;
 comment|/// getComplexity:  Assign a complexity or rank value to LLVM Values...
@@ -230,6 +240,72 @@ else|:
 literal|2
 return|;
 block|}
+comment|/// AddOne - Add one to a Constant
+specifier|static
+specifier|inline
+name|Constant
+modifier|*
+name|AddOne
+parameter_list|(
+name|Constant
+modifier|*
+name|C
+parameter_list|)
+block|{
+return|return
+name|ConstantExpr
+operator|::
+name|getAdd
+argument_list|(
+name|C
+argument_list|,
+name|ConstantInt
+operator|::
+name|get
+argument_list|(
+name|C
+operator|->
+name|getType
+argument_list|()
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// SubOne - Subtract one from a Constant
+specifier|static
+specifier|inline
+name|Constant
+modifier|*
+name|SubOne
+parameter_list|(
+name|Constant
+modifier|*
+name|C
+parameter_list|)
+block|{
+return|return
+name|ConstantExpr
+operator|::
+name|getSub
+argument_list|(
+name|C
+argument_list|,
+name|ConstantInt
+operator|::
+name|get
+argument_list|(
+name|C
+operator|->
+name|getType
+argument_list|()
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// InstCombineIRInserter - This is an IRBuilder insertion helper that works
 comment|/// just like the normal insertion helper, but also adds any new instructions
 comment|/// to the instcombine worklist.
@@ -316,9 +392,10 @@ name|Instruction
 modifier|*
 decl|>
 block|{
+specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 name|TargetLibraryInfo
 modifier|*
@@ -370,14 +447,14 @@ argument_list|(
 name|ID
 argument_list|)
 operator|,
-name|TD
+name|DL
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Builder
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|MinimizeSize
@@ -395,14 +472,12 @@ argument_list|)
 block|;   }
 name|public
 operator|:
-name|virtual
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 expr_stmt|;
 name|bool
 name|DoOneIteration
@@ -415,7 +490,6 @@ name|unsigned
 name|ItNum
 parameter_list|)
 function_decl|;
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
@@ -424,7 +498,9 @@ operator|&
 name|AU
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
+specifier|const
 name|DataLayout
 operator|*
 name|getDataLayout
@@ -432,7 +508,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TD
+name|DL
 return|;
 block|}
 name|TargetLibraryInfo
@@ -522,7 +598,7 @@ name|Instruction
 modifier|*
 name|FMulOrDiv
 parameter_list|,
-name|ConstantFP
+name|Constant
 modifier|*
 name|C
 parameter_list|,
@@ -815,7 +891,7 @@ name|ConstantInt
 modifier|*
 name|AndCst
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|Instruction
@@ -948,7 +1024,7 @@ name|Value
 modifier|*
 name|Op0
 parameter_list|,
-name|ConstantInt
+name|Constant
 modifier|*
 name|Op1
 parameter_list|,
@@ -1287,6 +1363,15 @@ parameter_list|)
 function_decl|;
 name|Instruction
 modifier|*
+name|visitInsertValueInst
+parameter_list|(
+name|InsertValueInst
+modifier|&
+name|IV
+parameter_list|)
+function_decl|;
+name|Instruction
+modifier|*
 name|visitInsertElementInst
 parameter_list|(
 name|InsertElementInst
@@ -1341,7 +1426,7 @@ name|I
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|private
@@ -1458,7 +1543,7 @@ parameter_list|,
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 parameter_list|)
 function_decl|;
 name|bool
@@ -1513,6 +1598,18 @@ parameter_list|)
 function_decl|;
 name|bool
 name|WillNotOverflowSignedAdd
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|)
+function_decl|;
+name|bool
+name|WillNotOverflowUnsignedAdd
 parameter_list|(
 name|Value
 modifier|*
@@ -1582,12 +1679,11 @@ name|assert
 argument_list|(
 name|New
 operator|&&
+operator|!
 name|New
 operator|->
 name|getParent
 argument_list|()
-operator|==
-literal|0
 operator|&&
 literal|"New instruction already inserted into a basic block!"
 argument_list|)
@@ -1853,12 +1949,12 @@ operator|=
 name|true
 expr_stmt|;
 return|return
-literal|0
+name|nullptr
 return|;
 comment|// Don't do anything with FI
 block|}
 name|void
-name|ComputeMaskedBits
+name|computeKnownBits
 argument_list|(
 name|Value
 operator|*
@@ -1882,7 +1978,7 @@ block|{
 return|return
 name|llvm
 operator|::
-name|ComputeMaskedBits
+name|computeKnownBits
 argument_list|(
 name|V
 argument_list|,
@@ -1890,7 +1986,7 @@ name|KnownZero
 argument_list|,
 name|KnownOne
 argument_list|,
-name|TD
+name|DL
 argument_list|,
 name|Depth
 argument_list|)
@@ -1924,7 +2020,7 @@ name|V
 argument_list|,
 name|Mask
 argument_list|,
-name|TD
+name|DL
 argument_list|,
 name|Depth
 argument_list|)
@@ -1951,7 +2047,7 @@ name|ComputeNumSignBits
 argument_list|(
 name|Op
 argument_list|,
-name|TD
+name|DL
 argument_list|,
 name|Depth
 argument_list|)
@@ -2088,6 +2184,15 @@ name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+name|Value
+modifier|*
+name|SimplifyVectorOp
+parameter_list|(
+name|BinaryOperator
+modifier|&
+name|Inst
 parameter_list|)
 function_decl|;
 comment|// FoldOpIntoPhi - Given a binary operator, cast instruction, or select
@@ -2301,6 +2406,12 @@ end_decl_stmt
 begin_comment
 comment|// end namespace llvm.
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEBUG_TYPE
+end_undef
 
 begin_endif
 endif|#

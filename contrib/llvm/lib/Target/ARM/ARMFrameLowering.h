@@ -62,18 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARM.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -107,26 +95,7 @@ name|ARMSubtarget
 operator|&
 name|sti
 argument_list|)
-operator|:
-name|TargetFrameLowering
-argument_list|(
-name|StackGrowsDown
-argument_list|,
-name|sti
-operator|.
-name|getStackAlignment
-argument_list|()
-argument_list|,
-literal|0
-argument_list|,
-literal|8
-argument_list|)
-block|,
-name|STI
-argument_list|(
-argument|sti
-argument_list|)
-block|{   }
+block|;
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
 comment|/// the function.
 name|void
@@ -135,6 +104,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|emitEpilogue
@@ -144,6 +114,7 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|spillCalleeSavedRegisters
@@ -157,6 +128,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|restoreCalleeSavedRegisters
@@ -170,6 +142,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasFP
@@ -177,6 +150,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasReservedCallFrame
@@ -184,6 +158,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|canSimplifyCallFramePseudos
@@ -191,6 +166,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int
 name|getFrameIndexReference
@@ -202,6 +178,7 @@ argument_list|,
 argument|unsigned&FrameReg
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int
 name|ResolveFrameIndexReference
@@ -224,6 +201,7 @@ argument_list|,
 argument|int FI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|processFunctionBeforeCalleeSavedScan
@@ -233,6 +211,15 @@ argument_list|,
 argument|RegScavenger *RS
 argument_list|)
 specifier|const
+name|override
+block|;
+name|void
+name|adjustForSegmentedStacks
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -283,7 +270,6 @@ argument|unsigned NumAlignedDPRCS2Regs
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -294,6 +280,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

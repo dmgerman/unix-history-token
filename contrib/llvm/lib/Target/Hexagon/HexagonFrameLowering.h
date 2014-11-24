@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"HexagonSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -73,11 +67,6 @@ name|TargetFrameLowering
 block|{
 name|private
 operator|:
-specifier|const
-name|HexagonSubtarget
-operator|&
-name|STI
-block|;
 name|void
 name|determineFrameLayout
 argument_list|(
@@ -89,27 +78,17 @@ name|public
 operator|:
 name|explicit
 name|HexagonFrameLowering
-argument_list|(
-specifier|const
-name|HexagonSubtarget
-operator|&
-name|sti
-argument_list|)
+argument_list|()
 operator|:
 name|TargetFrameLowering
 argument_list|(
-name|StackGrowsDown
+argument|StackGrowsDown
 argument_list|,
 literal|8
 argument_list|,
 literal|0
 argument_list|)
-block|,
-name|STI
-argument_list|(
-argument|sti
-argument_list|)
-block|{   }
+block|{}
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
 comment|/// the function.
 name|void
@@ -118,6 +97,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|emitEpilogue
@@ -127,8 +107,8 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|spillCalleeSavedRegisters
 argument_list|(
@@ -141,6 +121,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateCallFramePseudoInstr
@@ -152,8 +133,8 @@ argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|restoreCalleeSavedRegisters
 argument_list|(
@@ -166,6 +147,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int
 name|getFrameIndexOffset
@@ -175,6 +157,7 @@ argument_list|,
 argument|int FI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasFP
@@ -182,6 +165,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasTailCall

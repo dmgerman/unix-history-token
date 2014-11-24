@@ -85,12 +85,6 @@ directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/ValueTypes.h"
-end_include
-
 begin_comment
 comment|//
 end_comment
@@ -119,6 +113,9 @@ decl_stmt|;
 name|class
 name|SDNode
 decl_stmt|;
+struct_decl|struct
+name|EVT
+struct_decl|;
 comment|/// Hexagon_CCAssignFn - This function assigns a location for Val, updating
 comment|/// State to reflect the change.
 typedef|typedef

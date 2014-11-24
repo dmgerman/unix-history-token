@@ -190,6 +190,38 @@ name|SUnit
 modifier|*
 parameter_list|)
 block|{}
+comment|/// PreEmitNoops - This callback is invoked prior to emitting an instruction.
+comment|/// It should return the number of noops to emit prior to the provided
+comment|/// instruction.
+comment|/// Note: This is only used during PostRA scheduling. EmitNoop is not called
+comment|/// for these noops.
+name|virtual
+name|unsigned
+name|PreEmitNoops
+parameter_list|(
+name|SUnit
+modifier|*
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// ShouldPreferAnother - This callback may be invoked if getHazardType
+comment|/// returns NoHazard. If, even though there is no hazard, it would be better to
+comment|/// schedule another available instruction, this callback should return true.
+name|virtual
+name|bool
+name|ShouldPreferAnother
+parameter_list|(
+name|SUnit
+modifier|*
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// AdvanceCycle - This callback is invoked whenever the next top-down
 comment|/// instruction to be scheduled cannot issue in the current cycle, either
 comment|/// because of latency or resource conflicts.  This should increment the

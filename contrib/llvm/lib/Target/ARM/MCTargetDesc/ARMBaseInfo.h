@@ -810,7 +810,7 @@ block|{
 default|default:
 name|llvm_unreachable
 argument_list|(
-literal|"Unkown memory operation"
+literal|"Unknown memory operation"
 argument_list|)
 expr_stmt|;
 case|case
@@ -1196,41 +1196,56 @@ block|{
 comment|//===------------------------------------------------------------------===//
 comment|// ARM Specific MachineOperand flags.
 name|MO_NO_FLAG
+init|=
+literal|0
 block|,
 comment|/// MO_LO16 - On a symbol operand, this represents a relocation containing
 comment|/// lower 16 bit of the address. Used only via movw instruction.
 name|MO_LO16
+init|=
+literal|0x1
 block|,
 comment|/// MO_HI16 - On a symbol operand, this represents a relocation containing
 comment|/// higher 16 bit of the address. Used only via movt instruction.
 name|MO_HI16
-block|,
-comment|/// MO_LO16_NONLAZY - On a symbol operand "FOO", this represents a
-comment|/// relocation containing lower 16 bit of the non-lazy-ptr indirect symbol,
-comment|/// i.e. "FOO$non_lazy_ptr".
-comment|/// Used only via movw instruction.
-name|MO_LO16_NONLAZY
-block|,
-comment|/// MO_HI16_NONLAZY - On a symbol operand "FOO", this represents a
-comment|/// relocation containing lower 16 bit of the non-lazy-ptr indirect symbol,
-comment|/// i.e. "FOO$non_lazy_ptr". Used only via movt instruction.
-name|MO_HI16_NONLAZY
-block|,
-comment|/// MO_LO16_NONLAZY_PIC - On a symbol operand "FOO", this represents a
-comment|/// relocation containing lower 16 bit of the PC relative address of the
-comment|/// non-lazy-ptr indirect symbol, i.e. "FOO$non_lazy_ptr - LABEL".
-comment|/// Used only via movw instruction.
-name|MO_LO16_NONLAZY_PIC
-block|,
-comment|/// MO_HI16_NONLAZY_PIC - On a symbol operand "FOO", this represents a
-comment|/// relocation containing lower 16 bit of the PC relative address of the
-comment|/// non-lazy-ptr indirect symbol, i.e. "FOO$non_lazy_ptr - LABEL".
-comment|/// Used only via movt instruction.
-name|MO_HI16_NONLAZY_PIC
+init|=
+literal|0x2
 block|,
 comment|/// MO_PLT - On a symbol operand, this represents an ELF PLT reference on a
 comment|/// call operand.
 name|MO_PLT
+init|=
+literal|0x3
+block|,
+comment|/// MO_OPTION_MASK - Most flags are mutually exclusive; this mask selects
+comment|/// just that part of the flag set.
+name|MO_OPTION_MASK
+init|=
+literal|0x3f
+block|,
+comment|/// MO_DLLIMPORT - On a symbol operand, this represents that the reference
+comment|/// to the symbol is for an import stub.  This is used for DLL import
+comment|/// storage class indication on Windows.
+name|MO_DLLIMPORT
+init|=
+literal|0x40
+block|,
+comment|/// MO_NONLAZY - This is an independent flag, on a symbol operand "FOO" it
+comment|/// represents a symbol which, if indirect, will get special Darwin mangling
+comment|/// as a non-lazy-ptr indirect symbol (i.e. "L_FOO$non_lazy_ptr"). Can be
+comment|/// combined with MO_LO16, MO_HI16 or MO_NO_FLAG (in a constant-pool, for
+comment|/// example).
+name|MO_NONLAZY
+init|=
+literal|0x80
+block|,
+comment|// It's undefined behaviour if an enum overflows the range between its
+comment|// smallest and largest values, but since these are |ed together, it can
+comment|// happen. Put a sentinel in (values of this enum are stored as "unsigned
+comment|// char").
+name|MO_UNUSED_MAXIMUM
+init|=
+literal|0xff
 block|}
 enum|;
 enum|enum

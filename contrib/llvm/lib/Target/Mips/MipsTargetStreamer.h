@@ -55,42 +55,313 @@ directive|include
 file|"llvm/MC/MCStreamer.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MCTargetDesc/MipsABIFlagsSection.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|MipsABIFlagsSection
+struct_decl|;
 name|class
 name|MipsTargetStreamer
 range|:
 name|public
 name|MCTargetStreamer
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|public
 operator|:
-name|virtual
-name|void
-name|emitMipsHackELFFlags
+name|MipsTargetStreamer
 argument_list|(
-argument|unsigned Flags
+name|MCStreamer
+operator|&
+name|S
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|void
-name|emitMipsHackSTOCG
+name|emitDirectiveSetMicroMips
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetNoMicroMips
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips16
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetNoMips16
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetReorder
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetNoReorder
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMacro
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetNoMacro
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetAt
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetNoAt
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveEnd
 argument_list|(
-argument|MCSymbol *Sym
-argument_list|,
-argument|unsigned Val
+argument|StringRef Name
 argument_list|)
+block|;
+name|virtual
+name|void
+name|emitDirectiveEnt
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|&
+name|Symbol
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitDirectiveAbiCalls
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveNaN2008
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveNaNLegacy
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveOptionPic0
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveOptionPic2
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitFrame
+argument_list|(
+argument|unsigned StackReg
+argument_list|,
+argument|unsigned StackSize
+argument_list|,
+argument|unsigned ReturnReg
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitMask
+argument_list|(
+argument|unsigned CPUBitmask
+argument_list|,
+argument|int CPUTopSavedRegOff
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitFMask
+argument_list|(
+argument|unsigned FPUBitmask
+argument_list|,
+argument|int FPUTopSavedRegOff
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips32R2
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips64
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips64R2
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetDsp
+argument_list|()
+block|;
+comment|// PIC support
+name|virtual
+name|void
+name|emitDirectiveCpload
+argument_list|(
+argument|unsigned RegNo
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitDirectiveCpsetup
+argument_list|(
+argument|unsigned RegNo
+argument_list|,
+argument|int RegOrOffset
+argument_list|,
+argument|const MCSymbol&Sym
+argument_list|,
+argument|bool IsReg
+argument_list|)
+block|;
+comment|/// Emit a '.module fp=value' directive using the given values.
+comment|/// Updates the .MIPS.abiflags section
+name|virtual
+name|void
+name|emitDirectiveModuleFP
+argument_list|(
+argument|MipsABIFlagsSection::FpABIKind Value
+argument_list|,
+argument|bool Is32BitABI
+argument_list|)
+block|{
+name|ABIFlagsSection
+operator|.
+name|setFpABI
+argument_list|(
+name|Value
+argument_list|,
+name|Is32BitABI
+argument_list|)
+block|;   }
+comment|/// Emit a '.module fp=value' directive using the current values of the
+comment|/// .MIPS.abiflags section.
+name|void
+name|emitDirectiveModuleFP
+argument_list|()
+block|{
+name|emitDirectiveModuleFP
+argument_list|(
+name|ABIFlagsSection
+operator|.
+name|getFpABI
+argument_list|()
+argument_list|,
+name|ABIFlagsSection
+operator|.
+name|Is32BitABI
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|emitDirectiveModuleOddSPReg
+argument_list|(
+argument|bool Enabled
+argument_list|,
+argument|bool IsO32ABI
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetFp
+argument_list|(
+argument|MipsABIFlagsSection::FpABIKind Value
+argument_list|)
+block|{}
+block|;
+name|virtual
+name|void
+name|emitMipsAbiFlags
+argument_list|()
+block|{}
+block|;
+name|void
+name|setCanHaveModuleDir
+argument_list|(
+argument|bool Can
+argument_list|)
+block|{
+name|canHaveModuleDirective
 operator|=
-literal|0
+name|Can
+block|; }
+name|bool
+name|getCanHaveModuleDir
+argument_list|()
+block|{
+return|return
+name|canHaveModuleDirective
+return|;
+block|}
+comment|// This method enables template classes to set internal abi flags
+comment|// structure values.
+name|template
+operator|<
+name|class
+name|PredicateLibrary
+operator|>
+name|void
+name|updateABIInfo
+argument_list|(
+argument|const PredicateLibrary&P
+argument_list|)
+block|{
+name|ABIFlagsSection
+operator|.
+name|setAllFromPredicates
+argument_list|(
+name|P
+argument_list|)
+block|;   }
+name|MipsABIFlagsSection
+operator|&
+name|getABIFlagsSection
+argument_list|()
+block|{
+return|return
+name|ABIFlagsSection
+return|;
+block|}
+name|protected
+operator|:
+name|MipsABIFlagsSection
+name|ABIFlagsSection
+block|;
+name|private
+operator|:
+name|bool
+name|canHaveModuleDirective
 block|; }
 decl_stmt|;
 comment|// This part is for ascii assembly output
@@ -108,26 +379,204 @@ name|public
 operator|:
 name|MipsTargetAsmStreamer
 argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|,
 name|formatted_raw_ostream
 operator|&
 name|OS
 argument_list|)
 block|;
+name|void
+name|emitDirectiveSetMicroMips
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoMicroMips
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips16
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoMips16
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetReorder
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoReorder
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMacro
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoMacro
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetAt
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoAt
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveEnd
+argument_list|(
+argument|StringRef Name
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveEnt
+argument_list|(
+argument|const MCSymbol&Symbol
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveAbiCalls
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveNaN2008
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveNaNLegacy
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveOptionPic0
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveOptionPic2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitFrame
+argument_list|(
+argument|unsigned StackReg
+argument_list|,
+argument|unsigned StackSize
+argument_list|,
+argument|unsigned ReturnReg
+argument_list|)
+name|override
+block|;
+name|void
+name|emitMask
+argument_list|(
+argument|unsigned CPUBitmask
+argument_list|,
+argument|int CPUTopSavedRegOff
+argument_list|)
+name|override
+block|;
+name|void
+name|emitFMask
+argument_list|(
+argument|unsigned FPUBitmask
+argument_list|,
+argument|int FPUTopSavedRegOff
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips32R2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips64
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips64R2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetDsp
+argument_list|()
+name|override
+block|;
+comment|// PIC support
 name|virtual
 name|void
-name|emitMipsHackELFFlags
+name|emitDirectiveCpload
 argument_list|(
-argument|unsigned Flags
+argument|unsigned RegNo
 argument_list|)
 block|;
-name|virtual
 name|void
-name|emitMipsHackSTOCG
+name|emitDirectiveCpsetup
 argument_list|(
-argument|MCSymbol *Sym
+argument|unsigned RegNo
 argument_list|,
-argument|unsigned Val
+argument|int RegOrOffset
+argument_list|,
+argument|const MCSymbol&Sym
+argument_list|,
+argument|bool IsReg
 argument_list|)
+name|override
+block|;
+comment|// ABI Flags
+name|void
+name|emitDirectiveModuleFP
+argument_list|(
+argument|MipsABIFlagsSection::FpABIKind Value
+argument_list|,
+argument|bool Is32BitABI
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveModuleOddSPReg
+argument_list|(
+argument|bool Enabled
+argument_list|,
+argument|bool IsO32ABI
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveSetFp
+argument_list|(
+argument|MipsABIFlagsSection::FpABIKind Value
+argument_list|)
+name|override
+block|;
+name|void
+name|emitMipsAbiFlags
+argument_list|()
+name|override
 block|; }
 decl_stmt|;
 comment|// This part is for ELF object output
@@ -137,31 +586,292 @@ range|:
 name|public
 name|MipsTargetStreamer
 block|{
+name|bool
+name|MicroMipsEnabled
+block|;
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+block|;
+name|bool
+name|Pic
+block|;
 name|public
 operator|:
+name|bool
+name|isMicroMipsEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MicroMipsEnabled
+return|;
+block|}
 name|MCELFStreamer
 operator|&
 name|getStreamer
 argument_list|()
 block|;
-name|virtual
-name|void
-name|emitMipsHackELFFlags
+name|MipsTargetELFStreamer
 argument_list|(
-argument|unsigned Flags
+name|MCStreamer
+operator|&
+name|S
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
 argument_list|)
 block|;
+name|void
+name|emitLabel
+argument_list|(
+argument|MCSymbol *Symbol
+argument_list|)
+name|override
+block|;
+name|void
+name|emitAssignment
+argument_list|(
+argument|MCSymbol *Symbol
+argument_list|,
+argument|const MCExpr *Value
+argument_list|)
+name|override
+block|;
+name|void
+name|finish
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMicroMips
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoMicroMips
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips16
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoMips16
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetReorder
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoReorder
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMacro
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoMacro
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetAt
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetNoAt
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveEnd
+argument_list|(
+argument|StringRef Name
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveEnt
+argument_list|(
+argument|const MCSymbol&Symbol
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveAbiCalls
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveNaN2008
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveNaNLegacy
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveOptionPic0
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveOptionPic2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitFrame
+argument_list|(
+argument|unsigned StackReg
+argument_list|,
+argument|unsigned StackSize
+argument_list|,
+argument|unsigned ReturnReg
+argument_list|)
+name|override
+block|;
+name|void
+name|emitMask
+argument_list|(
+argument|unsigned CPUBitmask
+argument_list|,
+argument|int CPUTopSavedRegOff
+argument_list|)
+name|override
+block|;
+name|void
+name|emitFMask
+argument_list|(
+argument|unsigned FPUBitmask
+argument_list|,
+argument|int FPUTopSavedRegOff
+argument_list|)
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips32R2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips64
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips64R2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetDsp
+argument_list|()
+name|override
+block|;
+comment|// PIC support
 name|virtual
 name|void
-name|emitMipsHackSTOCG
+name|emitDirectiveCpload
 argument_list|(
-argument|MCSymbol *Sym
-argument_list|,
-argument|unsigned Val
+argument|unsigned RegNo
 argument_list|)
-block|; }
-decl_stmt|;
+block|;
+name|void
+name|emitDirectiveCpsetup
+argument_list|(
+argument|unsigned RegNo
+argument_list|,
+argument|int RegOrOffset
+argument_list|,
+argument|const MCSymbol&Sym
+argument_list|,
+argument|bool IsReg
+argument_list|)
+name|override
+block|;
+comment|// ABI Flags
+name|void
+name|emitDirectiveModuleOddSPReg
+argument_list|(
+argument|bool Enabled
+argument_list|,
+argument|bool IsO32ABI
+argument_list|)
+name|override
+block|;
+name|void
+name|emitMipsAbiFlags
+argument_list|()
+name|override
+block|;
+name|protected
+operator|:
+name|bool
+name|isO32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|STI
+operator|.
+name|getFeatureBits
+argument_list|()
+operator|&
+name|Mips
+operator|::
+name|FeatureO32
+return|;
 block|}
+name|bool
+name|isN32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|STI
+operator|.
+name|getFeatureBits
+argument_list|()
+operator|&
+name|Mips
+operator|::
+name|FeatureN32
+return|;
+block|}
+name|bool
+name|isN64
+argument_list|()
+specifier|const
+block|{
+return|return
+name|STI
+operator|.
+name|getFeatureBits
+argument_list|()
+operator|&
+name|Mips
+operator|::
+name|FeatureN64
+return|;
+block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_endif

@@ -32,163 +32,167 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// This interface is used to build and manipulate a call graph, which is a very
+comment|///
 end_comment
 
 begin_comment
-comment|// useful tool for interprocedural optimization.
+comment|/// This file provides interfaces used to build and manipulate a call graph,
 end_comment
 
 begin_comment
-comment|//
+comment|/// which is a very useful tool for interprocedural optimization.
 end_comment
 
 begin_comment
-comment|// Every function in a module is represented as a node in the call graph.  The
+comment|///
 end_comment
 
 begin_comment
-comment|// callgraph node keeps track of which functions the are called by the function
+comment|/// Every function in a module is represented as a node in the call graph.  The
 end_comment
 
 begin_comment
-comment|// corresponding to the node.
+comment|/// callgraph node keeps track of which functions are called by the function
 end_comment
 
 begin_comment
-comment|//
+comment|/// corresponding to the node.
 end_comment
 
 begin_comment
-comment|// A call graph may contain nodes where the function that they correspond to is
+comment|///
 end_comment
 
 begin_comment
-comment|// null.  These 'external' nodes are used to represent control flow that is not
+comment|/// A call graph may contain nodes where the function that they correspond to
 end_comment
 
 begin_comment
-comment|// represented (or analyzable) in the module.  In particular, this analysis
+comment|/// is null.  These 'external' nodes are used to represent control flow that is
 end_comment
 
 begin_comment
-comment|// builds one external node such that:
+comment|/// not represented (or analyzable) in the module.  In particular, this
 end_comment
 
 begin_comment
-comment|//   1. All functions in the module without internal linkage will have edges
+comment|/// analysis builds one external node such that:
 end_comment
 
 begin_comment
-comment|//      from this external node, indicating that they could be called by
+comment|///   1. All functions in the module without internal linkage will have edges
 end_comment
 
 begin_comment
-comment|//      functions outside of the module.
+comment|///      from this external node, indicating that they could be called by
 end_comment
 
 begin_comment
-comment|//   2. All functions whose address is used for something more than a direct
+comment|///      functions outside of the module.
 end_comment
 
 begin_comment
-comment|//      call, for example being stored into a memory location will also have an
+comment|///   2. All functions whose address is used for something more than a direct
 end_comment
 
 begin_comment
-comment|//      edge from this external node.  Since they may be called by an unknown
+comment|///      call, for example being stored into a memory location will also have
 end_comment
 
 begin_comment
-comment|//      caller later, they must be tracked as such.
+comment|///      an edge from this external node.  Since they may be called by an
 end_comment
 
 begin_comment
-comment|//
+comment|///      unknown caller later, they must be tracked as such.
 end_comment
 
 begin_comment
-comment|// There is a second external node added for calls that leave this module.
+comment|///
 end_comment
 
 begin_comment
-comment|// Functions have a call edge to the external node iff:
+comment|/// There is a second external node added for calls that leave this module.
 end_comment
 
 begin_comment
-comment|//   1. The function is external, reflecting the fact that they could call
+comment|/// Functions have a call edge to the external node iff:
 end_comment
 
 begin_comment
-comment|//      anything without internal linkage or that has its address taken.
+comment|///   1. The function is external, reflecting the fact that they could call
 end_comment
 
 begin_comment
-comment|//   2. The function contains an indirect function call.
+comment|///      anything without internal linkage or that has its address taken.
 end_comment
 
 begin_comment
-comment|//
+comment|///   2. The function contains an indirect function call.
 end_comment
 
 begin_comment
-comment|// As an extension in the future, there may be multiple nodes with a null
+comment|///
 end_comment
 
 begin_comment
-comment|// function.  These will be used when we can prove (through pointer analysis)
+comment|/// As an extension in the future, there may be multiple nodes with a null
 end_comment
 
 begin_comment
-comment|// that an indirect call site can call only a specific set of functions.
+comment|/// function.  These will be used when we can prove (through pointer analysis)
 end_comment
 
 begin_comment
-comment|//
+comment|/// that an indirect call site can call only a specific set of functions.
 end_comment
 
 begin_comment
-comment|// Because of these properties, the CallGraph captures a conservative superset
+comment|///
 end_comment
 
 begin_comment
-comment|// of all of the caller-callee relationships, which is useful for
+comment|/// Because of these properties, the CallGraph captures a conservative superset
 end_comment
 
 begin_comment
-comment|// transformations.
+comment|/// of all of the caller-callee relationships, which is useful for
 end_comment
 
 begin_comment
-comment|//
+comment|/// transformations.
 end_comment
 
 begin_comment
-comment|// The CallGraph class also attempts to figure out what the root of the
+comment|///
 end_comment
 
 begin_comment
-comment|// CallGraph is, which it currently does by looking for a function named 'main'.
+comment|/// The CallGraph class also attempts to figure out what the root of the
 end_comment
 
 begin_comment
-comment|// If no function named 'main' is found, the external node is used as the entry
+comment|/// CallGraph is, which it currently does by looking for a function named
 end_comment
 
 begin_comment
-comment|// node, reflecting the fact that any function without internal linkage could
+comment|/// 'main'. If no function named 'main' is found, the external node is used as
 end_comment
 
 begin_comment
-comment|// be called into (which is common for libraries).
+comment|/// the entry node, reflecting the fact that any function without internal
 end_comment
 
 begin_comment
-comment|//
+comment|/// linkage could be called into (which is common for libraries).
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -222,7 +226,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/CallSite.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Function.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
@@ -234,19 +250,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CallSite.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/IncludeFile.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include
@@ -268,20 +272,18 @@ decl_stmt|;
 name|class
 name|CallGraphNode
 decl_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|// CallGraph class definition
-comment|//
+comment|/// \brief The basic data container for the call graph of a \c Module of IR.
+comment|///
+comment|/// This class exposes both the interface to the call graph for a module of IR.
+comment|///
+comment|/// The core call graph itself can also be updated to reflect changes to the IR.
 name|class
 name|CallGraph
-range|:
-name|public
-name|ModulePass
 block|{
 name|Module
-operator|*
-name|Mod
-block|;
-comment|// The module this call graph represents
+modifier|&
+name|M
+decl_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -296,34 +298,33 @@ operator|*
 operator|>
 name|FunctionMapTy
 expr_stmt|;
+comment|/// \brief A map from \c Function* to \c CallGraphNode*.
 name|FunctionMapTy
 name|FunctionMap
 decl_stmt|;
-comment|// Map from a function to its node
-comment|// Root is root of the call graph, or the external node if a 'main' function
-comment|// couldn't be found.
-comment|//
+comment|/// \brief Root is root of the call graph, or the external node if a 'main'
+comment|/// function couldn't be found.
 name|CallGraphNode
 modifier|*
 name|Root
 decl_stmt|;
-comment|// ExternalCallingNode - This node has edges to all external functions and
-comment|// those internal functions that have their address taken.
+comment|/// \brief This node has edges to all external functions and those internal
+comment|/// functions that have their address taken.
 name|CallGraphNode
 modifier|*
 name|ExternalCallingNode
 decl_stmt|;
-comment|// CallsExternalNode - This node has edges to it from all functions making
-comment|// indirect calls or calling an external function.
+comment|/// \brief This node has edges to it from all functions making indirect calls
+comment|/// or calling an external function.
 name|CallGraphNode
 modifier|*
 name|CallsExternalNode
 decl_stmt|;
-comment|/// Replace the function represented by this node by another.
+comment|/// \brief Replace the function represented by this node by another.
+comment|///
 comment|/// This does not rescan the body of the function, so it is suitable when
 comment|/// splicing the body of one function to another while also updating all
 comment|/// callers from the old function to the new.
-comment|///
 name|void
 name|spliceFunction
 parameter_list|(
@@ -338,8 +339,8 @@ modifier|*
 name|To
 parameter_list|)
 function_decl|;
-comment|// Add a function to the call graph, and link the node to all of the functions
-comment|// that it calls.
+comment|/// \brief Add a function to the call graph, and link the node to all of the
+comment|/// functions that it calls.
 name|void
 name|addToCallGraph
 parameter_list|(
@@ -350,14 +351,31 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-specifier|static
-name|char
-name|ID
+name|CallGraph
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+expr_stmt|;
+operator|~
+name|CallGraph
+argument_list|()
+expr_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
 decl_stmt|;
-comment|// Class identification, replacement for typeinfo
-comment|//===---------------------------------------------------------------------
-comment|// Accessors.
-comment|//
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 typedef|typedef
 name|FunctionMapTy
 operator|::
@@ -370,8 +388,7 @@ operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
-comment|/// getModule - Return the module the call graph corresponds to.
-comment|///
+comment|/// \brief Returns the module the call graph corresponds to.
 name|Module
 operator|&
 name|getModule
@@ -379,8 +396,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|*
-name|Mod
+name|M
 return|;
 block|}
 specifier|inline
@@ -433,8 +449,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|// Subscripting operators, return the call graph node for the provided
-comment|// function
+comment|/// \brief Returns the call graph node for the provided function.
 specifier|inline
 specifier|const
 name|CallGraphNode
@@ -477,6 +492,7 @@ operator|->
 name|second
 return|;
 block|}
+comment|/// \brief Returns the call graph node for the provided function.
 specifier|inline
 name|CallGraphNode
 modifier|*
@@ -517,8 +533,8 @@ operator|->
 name|second
 return|;
 block|}
-comment|/// Returns the CallGraphNode which is used to represent undetermined calls
-comment|/// into the callgraph.
+comment|/// \brief Returns the \c CallGraphNode which is used to represent
+comment|/// undetermined calls into the callgraph.
 name|CallGraphNode
 operator|*
 name|getExternalCallingNode
@@ -539,38 +555,16 @@ return|return
 name|CallsExternalNode
 return|;
 block|}
-comment|/// Return the root/main method in the module, or some other root node, such
-comment|/// as the externalcallingnode.
-name|CallGraphNode
-modifier|*
-name|getRoot
-parameter_list|()
-block|{
-return|return
-name|Root
-return|;
-block|}
-specifier|const
-name|CallGraphNode
-operator|*
-name|getRoot
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Root
-return|;
-block|}
 comment|//===---------------------------------------------------------------------
 comment|// Functions to keep a call graph up to date with a function that has been
 comment|// modified.
 comment|//
-comment|/// removeFunctionFromModule - Unlink the function from this module, returning
-comment|/// it.  Because this removes the function from the module, the call graph
-comment|/// node is destroyed.  This is only valid if the function does not call any
-comment|/// other functions (ie, there are no edges in it's CGN).  The easiest way to
-comment|/// do this is to dropAllReferences before calling this.
+comment|/// \brief Unlink the function from this module, returning it.
 comment|///
+comment|/// Because this removes the function from the module, the call graph node is
+comment|/// destroyed.  This is only valid if the function does not call any other
+comment|/// functions (ie, there are no edges in it's CGN).  The easiest way to do
+comment|/// this is to dropAllReferences before calling this.
 name|Function
 modifier|*
 name|removeFunctionFromModule
@@ -580,9 +574,8 @@ modifier|*
 name|CGN
 parameter_list|)
 function_decl|;
-comment|/// getOrInsertFunction - This method is identical to calling operator[], but
-comment|/// it will insert a new CallGraphNode for the specified function if one does
-comment|/// not already exist.
+comment|/// \brief Similar to operator[], but this will insert a new CallGraphNode for
+comment|/// \c F if one does not already exist.
 name|CallGraphNode
 modifier|*
 name|getOrInsertFunction
@@ -593,94 +586,19 @@ modifier|*
 name|F
 parameter_list|)
 function_decl|;
-name|CallGraph
-argument_list|()
-expr_stmt|;
-name|virtual
-operator|~
-name|CallGraph
-argument_list|()
-block|{
-name|releaseMemory
-argument_list|()
-block|; }
-name|virtual
-name|void
-name|getAnalysisUsage
-argument_list|(
-argument|AnalysisUsage&AU
-argument_list|)
-specifier|const
-expr_stmt|;
-name|virtual
-name|bool
-name|runOnModule
-parameter_list|(
-name|Module
-modifier|&
-name|M
-parameter_list|)
-function_decl|;
-name|virtual
-name|void
-name|releaseMemory
-parameter_list|()
-function_decl|;
-name|void
-name|print
-argument_list|(
-name|raw_ostream
-operator|&
-name|o
-argument_list|,
-specifier|const
-name|Module
-operator|*
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|dump
-argument_list|()
-specifier|const
-expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
-comment|// CallGraphNode class definition.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_decl_stmt
+comment|/// \brief A node in the call graph for a module.
+comment|///
+comment|/// Typically represents a function in the call graph. There are also special
+comment|/// "null" nodes used to represent theoretical entries in the call graph.
 name|class
 name|CallGraphNode
 block|{
-name|friend
-name|class
-name|CallGraph
-decl_stmt|;
-name|AssertingVH
-operator|<
-name|Function
-operator|>
-name|F
-expr_stmt|;
-comment|// CallRecord - This is a pair of the calling instruction (a call or invoke)
-comment|// and the callgraph node being called.
 name|public
 label|:
+comment|/// \brief A pair of the calling instruction (a call or invoke)
+comment|/// and the call graph node being called.
 typedef|typedef
 name|std
 operator|::
@@ -693,53 +611,6 @@ operator|*
 operator|>
 name|CallRecord
 expr_stmt|;
-name|private
-label|:
-name|std
-operator|::
-name|vector
-operator|<
-name|CallRecord
-operator|>
-name|CalledFunctions
-expr_stmt|;
-comment|/// NumReferences - This is the number of times that this CallGraphNode occurs
-comment|/// in the CalledFunctions array of this or other CallGraphNodes.
-name|unsigned
-name|NumReferences
-decl_stmt|;
-name|CallGraphNode
-argument_list|(
-argument|const CallGraphNode&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-specifier|const
-name|CallGraphNode
-operator|&
-operator|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
-name|void
-name|DropRef
-parameter_list|()
-block|{
-operator|--
-name|NumReferences
-expr_stmt|;
-block|}
-name|void
-name|AddRef
-parameter_list|()
-block|{
-operator|++
-name|NumReferences
-expr_stmt|;
-block|}
 name|public
 label|:
 typedef|typedef
@@ -751,18 +622,18 @@ name|CallRecord
 operator|>
 name|CalledFunctionsVector
 expr_stmt|;
-comment|// CallGraphNode ctor - Create a node for the specified function.
+comment|/// \brief Creates a node for the specified function.
 specifier|inline
 name|CallGraphNode
 argument_list|(
 name|Function
 operator|*
-name|f
+name|F
 argument_list|)
 operator|:
 name|F
 argument_list|(
-name|f
+name|F
 argument_list|)
 operator|,
 name|NumReferences
@@ -783,9 +654,6 @@ operator|&&
 literal|"Node deleted while references remain"
 argument_list|)
 block|;   }
-comment|//===---------------------------------------------------------------------
-comment|// Accessor methods.
-comment|//
 typedef|typedef
 name|std
 operator|::
@@ -808,7 +676,7 @@ operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
-comment|// getFunction - Return the function that this call graph node represents.
+comment|/// \brief Returns the function that this call graph node represents.
 name|Function
 operator|*
 name|getFunction
@@ -898,8 +766,8 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/// getNumReferences - Return the number of other CallGraphNodes in this
-comment|/// CallGraph that reference this node in their callee list.
+comment|/// \brief Returns the number of other CallGraphNodes in this CallGraph that
+comment|/// reference this node in their callee list.
 name|unsigned
 name|getNumReferences
 argument_list|()
@@ -909,8 +777,7 @@ return|return
 name|NumReferences
 return|;
 block|}
-comment|// Subscripting operator - Return the i'th called function.
-comment|//
+comment|/// \brief Returns the i'th called function.
 name|CallGraphNode
 modifier|*
 name|operator
@@ -942,8 +809,7 @@ operator|.
 name|second
 return|;
 block|}
-comment|/// dump - Print out this call graph node.
-comment|///
+comment|/// \brief Print out this call graph node.
 name|void
 name|dump
 argument_list|()
@@ -962,8 +828,8 @@ comment|//===-------------------------------------------------------------------
 comment|// Methods to keep a call graph up to date with a function that has been
 comment|// modified
 comment|//
-comment|/// removeAllCalledFunctions - As the name implies, this removes all edges
-comment|/// from this CallGraphNode to any functions it calls.
+comment|/// \brief Removes all edges from this CallGraphNode to any functions it
+comment|/// calls.
 name|void
 name|removeAllCalledFunctions
 parameter_list|()
@@ -994,8 +860,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/// stealCalledFunctionsFrom - Move all the callee information from N to this
-comment|/// node.
+comment|/// \brief Moves all the callee information from N to this node.
 name|void
 name|stealCalledFunctionsFrom
 parameter_list|(
@@ -1026,8 +891,7 @@ name|CalledFunctions
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// addCalledFunction - Add a function to the list of functions called by this
-comment|/// one.
+comment|/// \brief Adds a function to the list of functions called by this one.
 name|void
 name|addCalledFunction
 parameter_list|(
@@ -1114,9 +978,9 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// removeCallEdgeFor - This method removes the edge in the node for the
-comment|/// specified call site.  Note that this method takes linear time, so it
-comment|/// should be used sparingly.
+comment|/// \brief Removes the edge in the node for the specified call site.
+comment|///
+comment|/// Note that this method takes linear time, so it should be used sparingly.
 name|void
 name|removeCallEdgeFor
 parameter_list|(
@@ -1124,9 +988,11 @@ name|CallSite
 name|CS
 parameter_list|)
 function_decl|;
-comment|/// removeAnyCallEdgeTo - This method removes all call edges from this node
-comment|/// to the specified callee function.  This takes more time to execute than
-comment|/// removeCallEdgeTo, so it should not be used unless necessary.
+comment|/// \brief Removes all call edges from this node to the specified callee
+comment|/// function.
+comment|///
+comment|/// This takes more time to execute than removeCallEdgeTo, so it should not
+comment|/// be used unless necessary.
 name|void
 name|removeAnyCallEdgeTo
 parameter_list|(
@@ -1135,8 +1001,8 @@ modifier|*
 name|Callee
 parameter_list|)
 function_decl|;
-comment|/// removeOneAbstractEdgeTo - Remove one edge associated with a null callsite
-comment|/// from this node to the specified callee function.
+comment|/// \brief Removes one edge associated with a null callsite from this node to
+comment|/// the specified callee function.
 name|void
 name|removeOneAbstractEdgeTo
 parameter_list|(
@@ -1145,9 +1011,10 @@ modifier|*
 name|Callee
 parameter_list|)
 function_decl|;
-comment|/// replaceCallEdge - This method replaces the edge in the node for the
-comment|/// specified call site with a new one.  Note that this method takes linear
-comment|/// time, so it should be used sparingly.
+comment|/// \brief Replaces the edge in the node for the specified call site with a
+comment|/// new one.
+comment|///
+comment|/// Note that this method takes linear time, so it should be used sparingly.
 name|void
 name|replaceCallEdge
 parameter_list|(
@@ -1162,8 +1029,64 @@ modifier|*
 name|NewNode
 parameter_list|)
 function_decl|;
-comment|/// allReferencesDropped - This is a special function that should only be
-comment|/// used by the CallGraph class.
+name|private
+label|:
+name|friend
+name|class
+name|CallGraph
+decl_stmt|;
+name|AssertingVH
+operator|<
+name|Function
+operator|>
+name|F
+expr_stmt|;
+name|std
+operator|::
+name|vector
+operator|<
+name|CallRecord
+operator|>
+name|CalledFunctions
+expr_stmt|;
+comment|/// \brief The number of times that this CallGraphNode occurs in the
+comment|/// CalledFunctions array of this or other CallGraphNodes.
+name|unsigned
+name|NumReferences
+decl_stmt|;
+name|CallGraphNode
+argument_list|(
+argument|const CallGraphNode&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|CallGraphNode
+operator|&
+operator|)
+name|LLVM_DELETED_FUNCTION
+decl_stmt|;
+name|void
+name|DropRef
+parameter_list|()
+block|{
+operator|--
+name|NumReferences
+expr_stmt|;
+block|}
+name|void
+name|AddRef
+parameter_list|()
+block|{
+operator|++
+name|NumReferences
+expr_stmt|;
+block|}
+comment|/// \brief A special function that should only be used by the CallGraph class.
 name|void
 name|allReferencesDropped
 parameter_list|()
@@ -1173,6 +1096,372 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
+empty_stmt|;
+comment|/// \brief An analysis pass to compute the \c CallGraph for a \c Module.
+comment|///
+comment|/// This class implements the concept of an analysis pass used by the \c
+comment|/// ModuleAnalysisManager to run an analysis over a module and cache the
+comment|/// resulting data.
+name|class
+name|CallGraphAnalysis
+block|{
+name|public
+label|:
+comment|/// \brief A formulaic typedef to inform clients of the result type.
+typedef|typedef
+name|CallGraph
+name|Result
+typedef|;
+specifier|static
+name|void
+modifier|*
+name|ID
+parameter_list|()
+block|{
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|PassID
+return|;
+block|}
+comment|/// \brief Compute the \c CallGraph for the module \c M.
+comment|///
+comment|/// The real work here is done in the \c CallGraph constructor.
+name|CallGraph
+name|run
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|)
+block|{
+return|return
+name|CallGraph
+argument_list|(
+operator|*
+name|M
+argument_list|)
+return|;
+block|}
+name|private
+label|:
+specifier|static
+name|char
+name|PassID
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// \brief The \c ModulePass which wraps up a \c CallGraph and the logic to
+comment|/// build it.
+comment|///
+comment|/// This class exposes both the interface to the call graph container and the
+comment|/// module pass which runs over a module of IR and produces the call graph. The
+comment|/// call graph interface is entirelly a wrapper around a \c CallGraph object
+comment|/// which is stored internally for each module.
+name|class
+name|CallGraphWrapperPass
+range|:
+name|public
+name|ModulePass
+block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|CallGraph
+operator|>
+name|G
+block|;
+name|public
+operator|:
+specifier|static
+name|char
+name|ID
+block|;
+comment|// Class identification, replacement for typeinfo
+name|CallGraphWrapperPass
+argument_list|()
+block|;
+name|virtual
+operator|~
+name|CallGraphWrapperPass
+argument_list|()
+block|;
+comment|/// \brief The internal \c CallGraph around which the rest of this interface
+comment|/// is wrapped.
+specifier|const
+name|CallGraph
+operator|&
+name|getCallGraph
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|G
+return|;
+block|}
+name|CallGraph
+operator|&
+name|getCallGraph
+argument_list|()
+block|{
+return|return
+operator|*
+name|G
+return|;
+block|}
+typedef|typedef
+name|CallGraph
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+typedef|typedef
+name|CallGraph
+operator|::
+name|const_iterator
+name|const_iterator
+expr_stmt|;
+comment|/// \brief Returns the module the call graph corresponds to.
+name|Module
+operator|&
+name|getModule
+argument_list|()
+specifier|const
+block|{
+return|return
+name|G
+operator|->
+name|getModule
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|G
+operator|->
+name|begin
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|G
+operator|->
+name|end
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|G
+operator|->
+name|begin
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|G
+operator|->
+name|end
+argument_list|()
+return|;
+block|}
+comment|/// \brief Returns the call graph node for the provided function.
+specifier|inline
+specifier|const
+name|CallGraphNode
+modifier|*
+name|operator
+index|[]
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|F
+argument_list|)
+decl|const
+block|{
+return|return
+operator|(
+operator|*
+name|G
+operator|)
+index|[
+name|F
+index|]
+return|;
+block|}
+comment|/// \brief Returns the call graph node for the provided function.
+specifier|inline
+name|CallGraphNode
+modifier|*
+name|operator
+function|[]
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|*
+name|G
+operator|)
+index|[
+name|F
+index|]
+return|;
+block|}
+comment|/// \brief Returns the \c CallGraphNode which is used to represent
+comment|/// undetermined calls into the callgraph.
+name|CallGraphNode
+operator|*
+name|getExternalCallingNode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|G
+operator|->
+name|getExternalCallingNode
+argument_list|()
+return|;
+block|}
+name|CallGraphNode
+operator|*
+name|getCallsExternalNode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|G
+operator|->
+name|getCallsExternalNode
+argument_list|()
+return|;
+block|}
+comment|//===---------------------------------------------------------------------
+comment|// Functions to keep a call graph up to date with a function that has been
+comment|// modified.
+comment|//
+comment|/// \brief Unlink the function from this module, returning it.
+comment|///
+comment|/// Because this removes the function from the module, the call graph node is
+comment|/// destroyed.  This is only valid if the function does not call any other
+comment|/// functions (ie, there are no edges in it's CGN).  The easiest way to do
+comment|/// this is to dropAllReferences before calling this.
+name|Function
+modifier|*
+name|removeFunctionFromModule
+parameter_list|(
+name|CallGraphNode
+modifier|*
+name|CGN
+parameter_list|)
+block|{
+return|return
+name|G
+operator|->
+name|removeFunctionFromModule
+argument_list|(
+name|CGN
+argument_list|)
+return|;
+block|}
+comment|/// \brief Similar to operator[], but this will insert a new CallGraphNode for
+comment|/// \c F if one does not already exist.
+name|CallGraphNode
+modifier|*
+name|getOrInsertFunction
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+block|{
+return|return
+name|G
+operator|->
+name|getOrInsertFunction
+argument_list|(
+name|F
+argument_list|)
+return|;
+block|}
+comment|//===---------------------------------------------------------------------
+comment|// Implementation of the ModulePass interface needed here.
+comment|//
+name|void
+name|getAnalysisUsage
+argument_list|(
+name|AnalysisUsage
+operator|&
+name|AU
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|bool
+name|runOnModule
+argument_list|(
+name|Module
+operator|&
+name|M
+argument_list|)
+name|override
+decl_stmt|;
+name|void
+name|releaseMemory
+argument_list|()
+name|override
+expr_stmt|;
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|o
+argument_list|,
+specifier|const
+name|Module
+operator|*
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 

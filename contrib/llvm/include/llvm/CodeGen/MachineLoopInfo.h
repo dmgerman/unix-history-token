@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineBasicBlock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
@@ -458,19 +464,17 @@ return|;
 block|}
 comment|/// runOnFunction - Calculate the natural loop information.
 comment|///
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|F
+argument|MachineFunction&F
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|releaseMemory
 parameter_list|()
+function|override
 block|{
 name|LI
 operator|.
@@ -478,7 +482,6 @@ name|releaseMemory
 argument_list|()
 expr_stmt|;
 block|}
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
@@ -487,6 +490,7 @@ operator|&
 name|AU
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// removeLoop - This removes the specified top-level loop from this loop info
 comment|/// object.  The loop is not deleted, as it will presumably be inserted into

@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"llvm/CodeGen/MachineBranchProbabilityInfo.h"
 end_include
 
 begin_include
@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineBranchProbabilityInfo.h"
+file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_define
@@ -105,6 +105,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|EVT
+struct_decl|;
 name|class
 name|HexagonInstrInfo
 range|:
@@ -143,7 +146,6 @@ comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).
 comment|///
-name|virtual
 specifier|const
 name|HexagonRegisterInfo
 operator|&
@@ -160,7 +162,6 @@ comment|/// load from a stack slot, return the virtual or physical register numb
 comment|/// the destination along with the FrameIndex of the loaded stack slot.  If
 comment|/// not, return 0.  This predicate must return 0 if the instruction has
 comment|/// any side effects other than loading from the stack slot.
-name|virtual
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
@@ -174,13 +175,13 @@ operator|&
 name|FrameIndex
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 comment|/// isStoreToStackSlot - If the specified machine instruction is a direct
 comment|/// store to a stack slot, return the virtual or physical register number of
 comment|/// the source reg along with the FrameIndex of the loaded stack slot.  If
 comment|/// not, return 0.  This predicate must return 0 if the instruction has
 comment|/// any side effects other than storing to the stack slot.
-name|virtual
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
@@ -194,8 +195,8 @@ operator|&
 name|FrameIndex
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|AnalyzeBranch
 argument_list|(
@@ -224,8 +225,8 @@ name|bool
 name|AllowModify
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|unsigned
 name|RemoveBranch
 argument_list|(
@@ -234,8 +235,8 @@ operator|&
 name|MBB
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
@@ -263,8 +264,8 @@ name|DebugLoc
 name|DL
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|analyzeCompare
 argument_list|(
@@ -290,8 +291,8 @@ operator|&
 name|Value
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|copyPhysReg
 argument_list|(
@@ -317,8 +318,8 @@ name|bool
 name|KillSrc
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
@@ -351,8 +352,8 @@ operator|*
 name|TRI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|storeRegToAddr
 argument_list|(
@@ -388,7 +389,6 @@ name|NewMIs
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
@@ -418,8 +418,8 @@ operator|*
 name|TRI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|loadRegFromAddr
 argument_list|(
@@ -452,7 +452,6 @@ name|NewMIs
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|MachineInstr
 modifier|*
 name|foldMemoryOperandImpl
@@ -477,8 +476,8 @@ name|int
 name|FrameIndex
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|MachineInstr
 modifier|*
 name|foldMemoryOperandImpl
@@ -504,9 +503,10 @@ operator|*
 name|LoadMI
 argument_list|)
 decl|const
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|unsigned
@@ -521,7 +521,6 @@ name|VT
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|isBranch
 argument_list|(
@@ -532,7 +531,6 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|isPredicable
 argument_list|(
@@ -541,8 +539,8 @@ operator|*
 name|MI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|PredicateInstruction
 argument_list|(
@@ -559,8 +557,8 @@ operator|&
 name|Cond
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
@@ -580,8 +578,8 @@ operator|&
 name|Probability
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
@@ -611,8 +609,8 @@ operator|&
 name|Probability
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|isPredicated
 argument_list|(
@@ -622,8 +620,8 @@ operator|*
 name|MI
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|isPredicated
 argument_list|(
@@ -632,7 +630,6 @@ name|Opcode
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|isPredicatedTrue
 argument_list|(
@@ -643,7 +640,6 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|isPredicatedTrue
 argument_list|(
@@ -652,7 +648,6 @@ name|Opcode
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|isPredicatedNew
 argument_list|(
@@ -663,7 +658,6 @@ name|MI
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|isPredicatedNew
 argument_list|(
@@ -672,7 +666,6 @@ name|Opcode
 argument_list|)
 decl|const
 decl_stmt|;
-name|virtual
 name|bool
 name|DefinesPredicate
 argument_list|(
@@ -690,8 +683,8 @@ operator|&
 name|Pred
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|SubsumesPredicate
 argument_list|(
@@ -712,8 +705,8 @@ operator|&
 name|Pred2
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|ReverseBranchCondition
 argument_list|(
@@ -725,8 +718,8 @@ operator|&
 name|Cond
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|isProfitableToDupForIfCvt
 argument_list|(
@@ -743,8 +736,8 @@ operator|&
 name|Probability
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|DFAPacketizer
 modifier|*
 name|CreateTargetScheduleState
@@ -760,8 +753,8 @@ operator|*
 name|DAG
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|isSchedulingBoundary
 argument_list|(
@@ -781,6 +774,7 @@ operator|&
 name|MF
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|bool
 name|isValidOffset

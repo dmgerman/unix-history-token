@@ -84,7 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ValueMap.h"
+file|"llvm/IR/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/ValueMap.h"
 end_include
 
 begin_include
@@ -103,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include
@@ -193,8 +193,18 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
+name|namespace
+name|object
+block|{
+name|class
+name|Archive
+decl_stmt|;
+name|class
+name|ObjectFile
+decl_stmt|;
+block|}
 comment|/// \brief Helper class for helping synchronize access to the global address map
-comment|/// table.
+comment|/// table.  Access to this class should be serialized under a mutex.
 name|class
 name|ExecutionEngineState
 block|{
@@ -316,11 +326,7 @@ expr_stmt|;
 name|GlobalAddressMapTy
 modifier|&
 name|getGlobalAddressMap
-parameter_list|(
-specifier|const
-name|MutexGuard
-modifier|&
-parameter_list|)
+parameter_list|()
 block|{
 return|return
 name|GlobalAddressMap
@@ -341,9 +347,7 @@ operator|>
 expr|>
 operator|&
 name|getGlobalAddressReverseMap
-argument_list|(
-argument|const MutexGuard&
-argument_list|)
+argument_list|()
 block|{
 return|return
 name|GlobalAddressReverseMap
@@ -356,10 +360,6 @@ name|void
 modifier|*
 name|RemoveMapping
 parameter_list|(
-specifier|const
-name|MutexGuard
-modifier|&
-parameter_list|,
 specifier|const
 name|GlobalValue
 modifier|*
@@ -401,7 +401,7 @@ comment|/// The target data for the platform for which execution is being perfor
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 comment|/// Whether lazy JIT compilation is enabled.
 name|bool
@@ -415,6 +415,10 @@ comment|/// Whether the JIT should perform lookups of external symbols (e.g.,
 comment|/// using dlsym).
 name|bool
 name|SymbolSearchingDisabled
+decl_stmt|;
+comment|/// Whether the JIT should verify IR modules during compilation.
+name|bool
+name|VerifyModules
 decl_stmt|;
 name|friend
 name|class
@@ -440,12 +444,12 @@ parameter_list|(
 specifier|const
 name|DataLayout
 modifier|*
-name|td
+name|Val
 parameter_list|)
 block|{
-name|TD
+name|DL
 operator|=
-name|td
+name|Val
 expr_stmt|;
 block|}
 comment|/// getMemoryforGV - Allocate memory for a global variable.
@@ -596,8 +600,7 @@ argument|Module *M
 argument_list|,
 argument|bool ForceInterpreter = false
 argument_list|,
-argument|std::string *ErrorStr =
-literal|0
+argument|std::string *ErrorStr = nullptr
 argument_list|,
 argument|CodeGenOpt::Level OptLevel =                                  CodeGenOpt::Default
 argument_list|,
@@ -617,11 +620,9 @@ name|createJIT
 argument_list|(
 argument|Module *M
 argument_list|,
-argument|std::string *ErrorStr =
-literal|0
+argument|std::string *ErrorStr = nullptr
 argument_list|,
-argument|JITMemoryManager *JMM =
-literal|0
+argument|JITMemoryManager *JMM = nullptr
 argument_list|,
 argument|CodeGenOpt::Level OptLevel =                                     CodeGenOpt::Default
 argument_list|,
@@ -649,6 +650,51 @@ argument_list|(
 name|M
 argument_list|)
 block|;   }
+comment|/// addObjectFile - Add an ObjectFile to the execution engine.
+comment|///
+comment|/// This method is only supported by MCJIT.  MCJIT will immediately load the
+comment|/// object into memory and adds its symbols to the list used to resolve
+comment|/// external symbols while preparing other objects for execution.
+comment|///
+comment|/// Objects added using this function will not be made executable until
+comment|/// needed by another object.
+comment|///
+comment|/// MCJIT will take ownership of the ObjectFile.
+name|virtual
+name|void
+name|addObjectFile
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|object
+operator|::
+name|ObjectFile
+operator|>
+name|O
+argument_list|)
+argument_list|;
+comment|/// addArchive - Add an Archive to the execution engine.
+comment|///
+comment|/// This method is only supported by MCJIT.  MCJIT will use the archive to
+comment|/// resolve external symbols in objects it is loading.  If a symbol is found
+comment|/// in the Archive the contained object file will be extracted (in memory)
+comment|/// and loaded for possible execution.
+comment|///
+comment|/// MCJIT will take ownership of the Archive.
+name|virtual
+name|void
+name|addArchive
+argument_list|(
+argument|object::Archive *A
+argument_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"ExecutionEngine subclass doesn't implement addArchive."
+argument_list|)
+block|;   }
 comment|//===--------------------------------------------------------------------===//
 specifier|const
 name|DataLayout
@@ -658,7 +704,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TD
+name|DL
 return|;
 block|}
 comment|/// removeModule - Remove a Module from the list of modules.  Returns true if
@@ -1059,7 +1105,7 @@ parameter_list|,
 name|MachineCodeInfo
 modifier|*
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{ }
 comment|/// getGlobalValueAtAddress - Return the LLVM global value object that starts
@@ -1205,6 +1251,42 @@ literal|"No support for an object cache"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// setProcessAllSections (MCJIT Only): By default, only sections that are
+comment|/// "required for execution" are passed to the RTDyldMemoryManager, and other
+comment|/// sections are discarded. Passing 'true' to this method will cause
+comment|/// RuntimeDyld to pass all sections to its RTDyldMemoryManager regardless
+comment|/// of whether they are "required to execute" in the usual sense.
+comment|///
+comment|/// Rationale: Some MCJIT clients want to be able to inspect metadata
+comment|/// sections (e.g. Dwarf, Stack-maps) to enable functionality or analyze
+comment|/// performance. Passing these sections to the memory manager allows the
+comment|/// client to make policy about the relevant sections, rather than having
+comment|/// MCJIT do it.
+name|virtual
+name|void
+name|setProcessAllSections
+parameter_list|(
+name|bool
+name|ProcessAllSections
+parameter_list|)
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"No support for ProcessAllSections option"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Return the target machine (if available).
+name|virtual
+name|TargetMachine
+modifier|*
+name|getTargetMachine
+parameter_list|()
+block|{
+return|return
+name|nullptr
+return|;
+block|}
 comment|/// DisableLazyCompilation - When lazy compilation is off (the default), the
 comment|/// JIT will eagerly compile every function reachable from the argument to
 comment|/// getPointerToFunction.  If lazy compilation is turned on, the JIT will only
@@ -1304,6 +1386,31 @@ specifier|const
 block|{
 return|return
 name|SymbolSearchingDisabled
+return|;
+block|}
+comment|/// Enable/Disable IR module verification.
+comment|///
+comment|/// Note: Module verification is enabled by default in Debug builds, and
+comment|/// disabled by default in Release. Use this method to override the default.
+name|void
+name|setVerifyModules
+parameter_list|(
+name|bool
+name|Verify
+parameter_list|)
+block|{
+name|VerifyModules
+operator|=
+name|Verify
+expr_stmt|;
+block|}
+name|bool
+name|getVerifyModules
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VerifyModules
 return|;
 block|}
 comment|/// InstallLazyFunctionCreator - If an unknown function is needed, the
@@ -1506,61 +1613,14 @@ expr_stmt|;
 name|bool
 name|UseMCJIT
 decl_stmt|;
+name|bool
+name|VerifyModules
+decl_stmt|;
 comment|/// InitEngine - Does the common initialization of default options.
 name|void
 name|InitEngine
 parameter_list|()
-block|{
-name|WhichEngine
-operator|=
-name|EngineKind
-operator|::
-name|Either
-expr_stmt|;
-name|ErrorStr
-operator|=
-name|NULL
-expr_stmt|;
-name|OptLevel
-operator|=
-name|CodeGenOpt
-operator|::
-name|Default
-expr_stmt|;
-name|MCJMM
-operator|=
-name|NULL
-expr_stmt|;
-name|JMM
-operator|=
-name|NULL
-expr_stmt|;
-name|Options
-operator|=
-name|TargetOptions
-argument_list|()
-expr_stmt|;
-name|AllocateGVsWithCode
-operator|=
-name|false
-expr_stmt|;
-name|RelocModel
-operator|=
-name|Reloc
-operator|::
-name|Default
-expr_stmt|;
-name|CMModel
-operator|=
-name|CodeModel
-operator|::
-name|JITDefault
-expr_stmt|;
-name|UseMCJIT
-operator|=
-name|false
-expr_stmt|;
-block|}
+function_decl|;
 name|public
 label|:
 comment|/// EngineBuilder - Constructor for EngineBuilder.  If create() is called and
@@ -1620,7 +1680,7 @@ name|mcjmm
 expr_stmt|;
 name|JMM
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 return|return
 operator|*
@@ -1645,7 +1705,7 @@ parameter_list|)
 block|{
 name|MCJMM
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 name|JMM
 operator|=
@@ -1858,6 +1918,25 @@ block|{
 name|UseMCJIT
 operator|=
 name|Value
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// setVerifyModules - Set whether the JIT implementation should verify
+comment|/// IR modules during compilation.
+name|EngineBuilder
+modifier|&
+name|setVerifyModules
+parameter_list|(
+name|bool
+name|Verify
+parameter_list|)
+block|{
+name|VerifyModules
+operator|=
+name|Verify
 expr_stmt|;
 return|return
 operator|*

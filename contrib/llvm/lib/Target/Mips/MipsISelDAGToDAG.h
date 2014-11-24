@@ -138,30 +138,28 @@ argument_list|)
 block|,
 name|Subtarget
 argument_list|(
-argument|TM.getSubtarget<MipsSubtarget>()
+argument|nullptr
 argument_list|)
 block|{}
 comment|// Pass Name
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"MIPS DAG->DAG Pattern Instruction Selection"
 return|;
 block|}
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -174,7 +172,7 @@ comment|/// Keep a pointer to the MipsSubtarget around so that we can make the r
 comment|/// decision when generating code for different targets.
 specifier|const
 name|MipsSubtarget
-operator|&
+operator|*
 name|Subtarget
 block|;
 name|private
@@ -240,6 +238,19 @@ block|;
 name|virtual
 name|bool
 name|selectIntAddrMM
+argument_list|(
+argument|SDValue Addr
+argument_list|,
+argument|SDValue&Base
+argument_list|,
+argument|SDValue&Offset
+argument_list|)
+specifier|const
+block|;
+comment|/// Match addr+simm10 and addr
+name|virtual
+name|bool
+name|selectIntAddrMSA
 argument_list|(
 argument|SDValue Addr
 argument_list|,
@@ -410,15 +421,13 @@ argument|SDValue&Imm
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDNode
 operator|*
 name|Select
 argument_list|(
-name|SDNode
-operator|*
-name|N
+argument|SDNode *N
 argument_list|)
+name|override
 block|;
 name|virtual
 name|std
@@ -476,7 +485,6 @@ argument_list|)
 operator|=
 literal|0
 block|;
-name|virtual
 name|bool
 name|SelectInlineAsmMemoryOperand
 argument_list|(
@@ -486,6 +494,7 @@ argument|char ConstraintCode
 argument_list|,
 argument|std::vector<SDValue>&OutOps
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 comment|/// createMipsISelDag - This pass converts a legalized DAG into a

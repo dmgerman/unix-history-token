@@ -84,34 +84,21 @@ range|:
 name|public
 name|TargetSelectionDAGInfo
 block|{
-comment|/// Subtarget - Keep a pointer to the X86Subtarget around so that we can
-comment|/// make the right decision when generating code for different targets.
-specifier|const
-name|X86Subtarget
-operator|*
-name|Subtarget
-block|;
-specifier|const
-name|X86TargetLowering
-operator|&
-name|TLI
-block|;
 name|public
 operator|:
 name|explicit
 name|X86SelectionDAGInfo
 argument_list|(
 specifier|const
-name|X86TargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~
 name|X86SelectionDAGInfo
 argument_list|()
 block|;
-name|virtual
 name|SDValue
 name|EmitTargetCodeForMemset
 argument_list|(
@@ -134,8 +121,8 @@ argument_list|,
 argument|MachinePointerInfo DstPtrInfo
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|EmitTargetCodeForMemcpy
 argument_list|(
@@ -162,6 +149,7 @@ argument_list|,
 argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -117,6 +117,9 @@ block|,
 comment|// cp relative address
 name|CPRelativeWrapper
 block|,
+comment|// Load word from stack
+name|LDWSP
+block|,
 comment|// Store word to stack
 name|STWSP
 block|,
@@ -147,6 +150,13 @@ block|,
 comment|// Jumptable branch using long branches for each entry.
 name|BR_JT32
 block|,
+comment|// Offset from frame pointer to the first (possible) on-stack argument
+name|FRAME_TO_ARGS_OFFSET
+block|,
+comment|// Exception handler return. The stack is restored to the first
+comment|// followed by a jump to the second argument.
+name|EH_RETURN
+block|,
 comment|// Memory barrier.
 name|MEMBARRIER
 block|}
@@ -166,7 +176,8 @@ operator|:
 name|explicit
 name|XCoreTargetLowering
 argument_list|(
-name|XCoreTargetMachine
+specifier|const
+name|TargetMachine
 operator|&
 name|TM
 argument_list|)
@@ -176,7 +187,6 @@ name|TargetLowering
 operator|::
 name|isZExtFree
 block|;
-name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
@@ -185,20 +195,21 @@ argument_list|,
 argument|EVT VT2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getJumpTableEncoding
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|MVT
@@ -207,7 +218,6 @@ name|i32
 return|;
 block|}
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -216,11 +226,11 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
 comment|///
-name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
@@ -231,10 +241,10 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getTargetNodeName - This method returns the name of a target specific
 comment|//  DAG node.
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -243,8 +253,8 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -254,8 +264,8 @@ argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isLegalAddressingMode
 argument_list|(
@@ -264,11 +274,12 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
 specifier|const
-name|XCoreTargetMachine
+name|TargetMachine
 operator|&
 name|TM
 block|;
@@ -313,27 +324,6 @@ argument_list|,
 argument|const SmallVectorImpl<ISD::OutputArg>&Outs
 argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
-argument_list|,
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|SDLoc dl
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|SmallVectorImpl<SDValue>&InVals
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerCallResult
-argument_list|(
-argument|SDValue Chain
-argument_list|,
-argument|SDValue InFlag
-argument_list|,
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool isVarArg
 argument_list|,
 argument|const SmallVectorImpl<ISD::InputArg>&Ins
 argument_list|,
@@ -398,6 +388,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerEH_RETURN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerGlobalAddress
 argument_list|(
 argument|SDValue Op
@@ -435,15 +434,6 @@ specifier|const
 block|;
 name|SDValue
 name|LowerBR_JT
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSELECT_CC
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -497,6 +487,24 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerFRAME_TO_ARGS_OFFSET
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerRETURNADDR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerINIT_TRAMPOLINE
 argument_list|(
 argument|SDValue Op
@@ -532,6 +540,24 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|LowerATOMIC_LOAD
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerATOMIC_STORE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 comment|// Inline asm support
 name|std
 operator|::
@@ -550,6 +576,7 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Expand specifics
 name|SDValue
@@ -570,7 +597,6 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|PerformDAGCombine
 argument_list|(
@@ -579,10 +605,10 @@ argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
-name|computeMaskedBitsForTargetNode
+name|computeKnownBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
@@ -596,8 +622,8 @@ argument|unsigned Depth =
 literal|0
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -616,8 +642,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -626,8 +652,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -646,8 +672,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|CanLowerReturn
 argument_list|(
@@ -662,6 +688,7 @@ argument_list|,
 argument|LLVMContext&Context
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 block|}

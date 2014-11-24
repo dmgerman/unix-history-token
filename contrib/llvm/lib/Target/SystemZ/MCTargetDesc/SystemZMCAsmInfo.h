@@ -77,7 +77,6 @@ argument|StringRef TT
 argument_list|)
 block|;
 comment|// Override MCAsmInfo;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
@@ -86,14 +85,14 @@ argument_list|(
 argument|MCContext&Ctx
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

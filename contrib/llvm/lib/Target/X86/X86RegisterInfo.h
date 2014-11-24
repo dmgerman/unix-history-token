@@ -88,19 +88,21 @@ name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
-name|X86TargetMachine
+name|X86Subtarget
 decl_stmt|;
 name|class
 name|X86RegisterInfo
+name|final
 range|:
 name|public
 name|X86GenRegisterInfo
 block|{
 name|public
 operator|:
-name|X86TargetMachine
+specifier|const
+name|X86Subtarget
 operator|&
-name|TM
+name|Subtarget
 block|;
 name|private
 operator|:
@@ -139,9 +141,10 @@ name|public
 operator|:
 name|X86RegisterInfo
 argument_list|(
-name|X86TargetMachine
+specifier|const
+name|X86Subtarget
 operator|&
-name|tm
+name|STI
 argument_list|)
 block|;
 comment|// FIXME: This should be tablegen'd like getDwarfRegNum is
@@ -152,31 +155,19 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|;
-comment|/// getCompactUnwindRegNum - This function maps the register to the number for
-comment|/// compact unwind encoding. Return -1 if the register isn't valid.
-name|int
-name|getCompactUnwindRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
 comment|/// Code Generation virtual methods...
 comment|///
-name|virtual
 name|bool
 name|trackLivenessAfterRegAlloc
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getMatchingSuperRegClass - Return a subclass of the specified register
 comment|/// class A so that each register in it has a sub-register of the
 comment|/// specified sub-register index which is in the specified register class B.
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -189,8 +180,8 @@ argument_list|,
 argument|unsigned Idx
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -201,6 +192,7 @@ argument_list|,
 argument|unsigned Idx
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|TargetRegisterClass
@@ -210,6 +202,7 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getPointerRegClass - Returns a TargetRegisterClass used for pointer
 comment|/// values.
@@ -224,6 +217,7 @@ argument|unsigned Kind =
 literal|0
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getCrossCopyRegClass - Returns a legal register class to copy a register
 comment|/// in the specified class to or from. Returns NULL if it is possible to copy
@@ -236,6 +230,7 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getRegPressureLimit
@@ -245,18 +240,19 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getCalleeSavedRegs - Return a null-terminated list of all of the
 comment|/// callee-save registers on this target.
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction* MF =
-literal|0
+argument|const MachineFunction* MF
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|uint32_t
@@ -266,6 +262,7 @@ argument_list|(
 argument|CallingConv::ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|uint32_t
@@ -284,6 +281,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasBasePointer
@@ -305,6 +303,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasReservedSpillSlot
@@ -316,6 +315,7 @@ argument_list|,
 argument|int&FrameIdx
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateFrameIndex
@@ -326,9 +326,10 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Debug information queries.
 name|unsigned
@@ -337,6 +338,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getStackRegister

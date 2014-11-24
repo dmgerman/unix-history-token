@@ -444,6 +444,14 @@ name|FPEXT_F16_F32
 block|,
 name|FPROUND_F32_F16
 block|,
+name|FPROUND_F64_F16
+block|,
+name|FPROUND_F80_F16
+block|,
+name|FPROUND_F128_F16
+block|,
+name|FPROUND_PPCF128_F16
+block|,
 name|FPROUND_F64_F32
 block|,
 name|FPROUND_F80_F32

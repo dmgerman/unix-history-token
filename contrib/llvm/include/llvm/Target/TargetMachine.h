@@ -109,6 +109,9 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
+name|Mangler
+decl_stmt|;
+name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
@@ -116,6 +119,9 @@ name|MCCodeGenInfo
 decl_stmt|;
 name|class
 name|MCContext
+decl_stmt|;
+name|class
+name|MCSymbol
 decl_stmt|;
 name|class
 name|Target
@@ -256,32 +262,7 @@ modifier|*
 name|AsmInfo
 decl_stmt|;
 name|unsigned
-name|MCRelaxAll
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|MCNoExecStack
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|MCSaveTempLabels
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|MCUseLoc
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|MCUseCFI
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|MCUseDwarfDirectory
+name|RequireStructuredCFG
 range|:
 literal|1
 decl_stmt|;
@@ -344,7 +325,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|mutable
@@ -380,7 +361,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -392,7 +373,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -404,7 +385,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -416,7 +397,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -428,7 +409,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getMCAsmInfo - Return target specific asm information.
@@ -486,7 +467,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getIntrinsicInfo - If intrinsic information is available, return it.  If
@@ -501,7 +482,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getJITInfo - If this target supports a JIT, return information for it,
@@ -514,7 +495,7 @@ name|getJITInfo
 parameter_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getInstrItineraryData - Returns instruction itinerary data for the target
@@ -529,149 +510,26 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-comment|/// hasMCRelaxAll - Check whether all machine code instructions should be
-comment|/// relaxed.
 name|bool
-name|hasMCRelaxAll
+name|requiresStructuredCFG
 argument_list|()
 specifier|const
 block|{
 return|return
-name|MCRelaxAll
+name|RequireStructuredCFG
 return|;
 block|}
-comment|/// setMCRelaxAll - Set whether all machine code instructions should be
-comment|/// relaxed.
 name|void
-name|setMCRelaxAll
+name|setRequiresStructuredCFG
 parameter_list|(
 name|bool
 name|Value
 parameter_list|)
 block|{
-name|MCRelaxAll
-operator|=
-name|Value
-expr_stmt|;
-block|}
-comment|/// hasMCSaveTempLabels - Check whether temporary labels will be preserved
-comment|/// (i.e., not treated as temporary).
-name|bool
-name|hasMCSaveTempLabels
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCSaveTempLabels
-return|;
-block|}
-comment|/// setMCSaveTempLabels - Set whether temporary labels will be preserved
-comment|/// (i.e., not treated as temporary).
-name|void
-name|setMCSaveTempLabels
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|MCSaveTempLabels
-operator|=
-name|Value
-expr_stmt|;
-block|}
-comment|/// hasMCNoExecStack - Check whether an executable stack is not needed.
-name|bool
-name|hasMCNoExecStack
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCNoExecStack
-return|;
-block|}
-comment|/// setMCNoExecStack - Set whether an executabel stack is not needed.
-name|void
-name|setMCNoExecStack
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|MCNoExecStack
-operator|=
-name|Value
-expr_stmt|;
-block|}
-comment|/// hasMCUseLoc - Check whether we should use dwarf's .loc directive.
-name|bool
-name|hasMCUseLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCUseLoc
-return|;
-block|}
-comment|/// setMCUseLoc - Set whether all we should use dwarf's .loc directive.
-name|void
-name|setMCUseLoc
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|MCUseLoc
-operator|=
-name|Value
-expr_stmt|;
-block|}
-comment|/// hasMCUseCFI - Check whether we should use dwarf's .cfi_* directives.
-name|bool
-name|hasMCUseCFI
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCUseCFI
-return|;
-block|}
-comment|/// setMCUseCFI - Set whether all we should use dwarf's .cfi_* directives.
-name|void
-name|setMCUseCFI
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|MCUseCFI
-operator|=
-name|Value
-expr_stmt|;
-block|}
-comment|/// hasMCUseDwarfDirectory - Check whether we should use .file directives with
-comment|/// explicit directories.
-name|bool
-name|hasMCUseDwarfDirectory
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MCUseDwarfDirectory
-return|;
-block|}
-comment|/// setMCUseDwarfDirectory - Set whether all we should use .file directives
-comment|/// with explicit directories.
-name|void
-name|setMCUseDwarfDirectory
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|MCUseDwarfDirectory
+name|RequireStructuredCFG
 operator|=
 name|Value
 expr_stmt|;
@@ -752,14 +610,13 @@ return|;
 block|}
 comment|/// getAsmVerbosityDefault - Returns the default value of asm verbosity.
 comment|///
-specifier|static
 name|bool
 name|getAsmVerbosityDefault
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// setAsmVerbosityDefault - Set the default value of asm verbosity. Default
 comment|/// is false.
-specifier|static
 name|void
 name|setAsmVerbosityDefault
 parameter_list|(
@@ -768,20 +625,19 @@ parameter_list|)
 function_decl|;
 comment|/// getDataSections - Return true if data objects should be emitted into their
 comment|/// own section, corresponds to -fdata-sections.
-specifier|static
 name|bool
 name|getDataSections
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getFunctionSections - Return true if functions should be emitted into
 comment|/// their own section, corresponding to -ffunction-sections.
-specifier|static
 name|bool
 name|getFunctionSections
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// setDataSections - Set if the data are emit into separate sections.
-specifier|static
 name|void
 name|setDataSections
 parameter_list|(
@@ -790,7 +646,6 @@ parameter_list|)
 function_decl|;
 comment|/// setFunctionSections - Set if the functions are emit into separate
 comment|/// sections.
-specifier|static
 name|void
 name|setFunctionSections
 parameter_list|(
@@ -844,12 +699,12 @@ parameter_list|,
 name|AnalysisID
 comment|/*StartAfter*/
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|AnalysisID
 comment|/*StopAfter*/
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -911,6 +766,47 @@ return|return
 name|true
 return|;
 block|}
+name|void
+name|getNameWithPrefix
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Name
+argument_list|,
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|Mangler
+operator|&
+name|Mang
+argument_list|,
+name|bool
+name|MayAlwaysUsePrivate
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+name|MCSymbol
+modifier|*
+name|getSymbol
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|Mangler
+operator|&
+name|Mang
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// LLVMTargetMachine - This class describes a target machine that is
@@ -953,14 +849,12 @@ operator|:
 comment|/// \brief Register analysis passes for this target with a pass manager.
 comment|///
 comment|/// This registers target independent analysis passes.
-name|virtual
 name|void
 name|addAnalysisPasses
 argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
+argument|PassManagerBase&PM
 argument_list|)
+name|override
 block|;
 comment|/// createPassConfig - Create a pass configuration object to be used by
 comment|/// addPassToEmitX methods for generating a pipeline of CodeGen passes.
@@ -977,7 +871,6 @@ block|;
 comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
 comment|/// specified file emitted.  Typically this will involve several steps of code
 comment|/// generation.
-name|virtual
 name|bool
 name|addPassesToEmitFile
 argument_list|(
@@ -989,12 +882,11 @@ argument|CodeGenFileType FileType
 argument_list|,
 argument|bool DisableVerify = true
 argument_list|,
-argument|AnalysisID StartAfter =
-literal|0
+argument|AnalysisID StartAfter = nullptr
 argument_list|,
-argument|AnalysisID StopAfter =
-literal|0
+argument|AnalysisID StopAfter = nullptr
 argument_list|)
+name|override
 block|;
 comment|/// addPassesToEmitMachineCode - Add passes to the specified pass manager to
 comment|/// get machine code emitted.  This uses a JITCodeEmitter object to handle
@@ -1002,7 +894,6 @@ comment|/// actually outputting the machine code and resolving things like the a
 comment|/// of functions.  This method returns true if machine code emission is
 comment|/// not supported.
 comment|///
-name|virtual
 name|bool
 name|addPassesToEmitMachineCode
 argument_list|(
@@ -1012,13 +903,13 @@ argument|JITCodeEmitter&MCE
 argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
+name|override
 block|;
 comment|/// addPassesToEmitMC - Add passes to the specified pass manager to get
 comment|/// machine code emitted with the MCJIT. This method returns true if machine
 comment|/// code is not supported. It fills the MCContext Ctx pointer which can be
 comment|/// used to build custom MCStreamer.
 comment|///
-name|virtual
 name|bool
 name|addPassesToEmitMC
 argument_list|(
@@ -1030,6 +921,7 @@ argument|raw_ostream&OS
 argument_list|,
 argument|bool DisableVerify = true
 argument_list|)
+name|override
 block|;
 comment|/// addCodeEmitter - This pass should be overridden by the target to add a
 comment|/// code emitter, if supported.  If this is not supported, 'true' should be

@@ -96,6 +96,15 @@ parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createMipsOptimizePICCallPass
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createMipsDelaySlotFillerPass
 parameter_list|(
 name|MipsTargetMachine

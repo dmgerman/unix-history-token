@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARM.h"
+file|"MCTargetDesc/ARMBaseInfo.h"
 end_include
 
 begin_include
@@ -183,6 +183,9 @@ case|:
 case|case
 name|R11
 case|:
+case|case
+name|R12
+case|:
 comment|// For iOS we want r7 and lr to be next to each other.
 return|return
 operator|!
@@ -226,6 +229,9 @@ name|R10
 case|:
 case|case
 name|R11
+case|:
+case|case
+name|R12
 case|:
 comment|// iOS has this second area.
 return|return
@@ -381,14 +387,14 @@ name|public
 operator|:
 comment|/// Code Generation virtual methods...
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|uint32_t
@@ -398,6 +404,7 @@ argument_list|(
 argument|CallingConv::ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|uint32_t
@@ -429,6 +436,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|TargetRegisterClass
@@ -441,6 +449,7 @@ argument|unsigned Kind =
 literal|0
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|TargetRegisterClass
@@ -450,6 +459,7 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|TargetRegisterClass
@@ -459,6 +469,7 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getRegPressureLimit
@@ -468,6 +479,7 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|getRegAllocationHints
@@ -483,6 +495,7 @@ argument_list|,
 argument|const VirtRegMap *VRM
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|UpdateRegAllocHint
@@ -494,14 +507,15 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|avoidWriteAfterWrite
 argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasBasePointer
@@ -523,6 +537,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int64_t
 name|getFrameIndexInstrOffset
@@ -532,6 +547,7 @@ argument_list|,
 argument|int Idx
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|needsFrameBaseReg
@@ -541,6 +557,7 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|materializeFrameBaseRegister
@@ -554,17 +571,19 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|resolveFrameIndex
 argument_list|(
-argument|MachineBasicBlock::iterator I
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned BaseReg
 argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isFrameOffsetLegal
@@ -574,6 +593,7 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|cannotEliminateFrame
@@ -589,6 +609,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getBaseRegister
@@ -634,39 +655,44 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Code Generation virtual methods...
-name|virtual
+name|bool
+name|mayOverrideLocalAssignment
+argument_list|()
+specifier|const
+name|override
+block|;
 name|bool
 name|requiresRegisterScavenging
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|trackLivenessAfterRegAlloc
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|requiresFrameIndexScavenging
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|requiresVirtualBaseRegisters
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|eliminateFrameIndex
 argument_list|(
@@ -676,9 +702,29 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
+block|;
+comment|/// \brief SrcRC and DstRC will be morphed into NewRC if this returns true
+name|bool
+name|shouldCoalesce
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|const TargetRegisterClass *SrcRC
+argument_list|,
+argument|unsigned SubReg
+argument_list|,
+argument|const TargetRegisterClass *DstRC
+argument_list|,
+argument|unsigned DstSubReg
+argument_list|,
+argument|const TargetRegisterClass *NewRC
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

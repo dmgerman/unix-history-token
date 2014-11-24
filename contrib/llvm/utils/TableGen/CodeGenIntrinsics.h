@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -116,6 +116,12 @@ name|string
 name|GCCBuiltinName
 expr_stmt|;
 comment|// Name of the corresponding GCC builtin, or "".
+name|std
+operator|::
+name|string
+name|MSBuiltinName
+expr_stmt|;
+comment|// Name of the corresponding MS builtin, or "".
 name|std
 operator|::
 name|string
@@ -211,6 +217,10 @@ decl_stmt|;
 comment|/// canThrow - True if the intrinsic can throw.
 name|bool
 name|canThrow
+decl_stmt|;
+comment|/// isNoDuplicate - True if the intrinsic is marked as noduplicate.
+name|bool
+name|isNoDuplicate
 decl_stmt|;
 comment|/// isNoReturn - True if the intrinsic is no-return.
 name|bool

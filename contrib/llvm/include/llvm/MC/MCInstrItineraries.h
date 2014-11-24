@@ -286,22 +286,22 @@ argument_list|)
 operator|,
 name|Stages
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|OperandCycles
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Forwardings
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Itineraries
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|InstrItineraryData
@@ -362,7 +362,7 @@ block|{
 return|return
 name|Itineraries
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// isEndMarker - Returns true if the index is for the end marker

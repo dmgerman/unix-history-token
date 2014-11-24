@@ -111,7 +111,6 @@ comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).
 comment|///
-name|virtual
 specifier|const
 name|TargetRegisterInfo
 operator|&
@@ -128,7 +127,6 @@ comment|/// load from a stack slot, return the virtual or physical register numb
 comment|/// the destination along with the FrameIndex of the loaded stack slot.  If
 comment|/// not, return 0.  This predicate must return 0 if the instruction has
 comment|/// any side effects other than loading from the stack slot.
-name|virtual
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
@@ -137,13 +135,13 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isStoreToStackSlot - If the specified machine instruction is a direct
 comment|/// store to a stack slot, return the virtual or physical register number of
 comment|/// the source reg along with the FrameIndex of the loaded stack slot.  If
 comment|/// not, return 0.  This predicate must return 0 if the instruction has
 comment|/// any side effects other than storing to the stack slot.
-name|virtual
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
@@ -152,8 +150,8 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|AnalyzeBranch
 argument_list|(
@@ -168,8 +166,8 @@ argument_list|,
 argument|bool AllowModify
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
@@ -184,16 +182,16 @@ argument_list|,
 argument|DebugLoc DL
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|RemoveBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|copyPhysReg
 argument_list|(
@@ -210,8 +208,8 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
@@ -230,8 +228,8 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
@@ -248,12 +246,30 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|ReverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|// Emit code before MBBI to load immediate value into physical register Reg.
+comment|// Returns an iterator to the new instruction.
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|loadImmediate
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|uint64_t Value
 argument_list|)
 specifier|const
 block|; }

@@ -90,53 +90,6 @@ range|:
 name|public
 name|XCoreGenRegisterInfo
 block|{
-name|private
-operator|:
-name|void
-name|loadConstant
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|,
-argument|unsigned DstReg
-argument_list|,
-argument|int64_t Value
-argument_list|,
-argument|DebugLoc dl
-argument_list|)
-specifier|const
-block|;
-name|void
-name|storeToStack
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|int Offset
-argument_list|,
-argument|DebugLoc dl
-argument_list|)
-specifier|const
-block|;
-name|void
-name|loadFromStack
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator I
-argument_list|,
-argument|unsigned DstReg
-argument_list|,
-argument|int Offset
-argument_list|,
-argument|DebugLoc dl
-argument_list|)
-specifier|const
-block|;
 name|public
 operator|:
 name|XCoreRegisterInfo
@@ -144,14 +97,14 @@ argument_list|()
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF =nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 name|BitVector
 name|getReservedRegs
@@ -159,6 +112,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|requiresRegisterScavenging
@@ -166,6 +120,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|trackLivenessAfterRegAlloc
@@ -173,6 +128,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|useFPForScavengingIndex
@@ -180,6 +136,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateFrameIndex
@@ -190,9 +147,10 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Debug information queries.
 name|unsigned
@@ -201,6 +159,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|//! Return whether to emit frame moves
 specifier|static

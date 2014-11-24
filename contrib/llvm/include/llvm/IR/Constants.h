@@ -114,13 +114,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/OperandTraits.h"
+file|"llvm/IR/DerivedTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DerivedTypes.h"
+file|"llvm/IR/OperandTraits.h"
 end_include
 
 begin_decl_stmt
@@ -191,10 +191,10 @@ range|:
 name|public
 name|Constant
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|void
 operator|*
@@ -725,10 +725,10 @@ block|{
 name|APFloat
 name|Val
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|void
 operator|*
@@ -843,7 +843,7 @@ name|V
 argument_list|)
 block|;
 specifier|static
-name|ConstantFP
+name|Constant
 operator|*
 name|getNegativeZero
 argument_list|(
@@ -853,7 +853,7 @@ name|Ty
 argument_list|)
 block|;
 specifier|static
-name|ConstantFP
+name|Constant
 operator|*
 name|getInfinity
 argument_list|(
@@ -1042,7 +1042,7 @@ argument|ty
 argument_list|,
 argument|ConstantAggregateZeroVal
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -1082,10 +1082,10 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
 comment|/// getSequentialElement - If this CAZ has array or vector type, return a zero
 comment|/// with the right element type.
@@ -1234,27 +1234,21 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -1476,27 +1470,21 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -1644,27 +1632,21 @@ name|getSplatValue
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -1749,7 +1731,7 @@ argument|T
 argument_list|,
 argument|Value::ConstantPointerNullVal
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -1790,10 +1772,10 @@ operator|*
 name|T
 argument_list|)
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
 comment|/// getType - Specialize the getType() method to always return an PointerType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
@@ -1906,7 +1888,7 @@ name|ty
 argument_list|,
 name|VT
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -1918,7 +1900,7 @@ argument_list|)
 block|,
 name|Next
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~
@@ -2149,10 +2131,10 @@ name|getRawDataValues
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 comment|///
@@ -2220,10 +2202,10 @@ argument|const ConstantDataArray&
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|friend
 name|class
@@ -2464,10 +2446,10 @@ argument|const ConstantDataVector&
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|friend
 name|class
@@ -2762,6 +2744,21 @@ operator|*
 name|BB
 argument_list|)
 block|;
+comment|/// \brief Lookup an existing \c BlockAddress constant for the given
+comment|/// BasicBlock.
+comment|///
+comment|/// \returns 0 if \c !BB->hasAddressTaken(), otherwise the \c BlockAddress.
+specifier|static
+name|BlockAddress
+operator|*
+name|lookup
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -2812,27 +2809,21 @@ name|get
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -4393,27 +4384,21 @@ operator|*
 name|getAsInstruction
 argument_list|()
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -4525,7 +4510,7 @@ argument|T
 argument_list|,
 argument|UndefValueVal
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -4606,10 +4591,10 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static

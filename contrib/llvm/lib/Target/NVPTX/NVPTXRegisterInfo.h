@@ -71,6 +71,12 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sstream>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -81,18 +87,6 @@ begin_include
 include|#
 directive|include
 file|"NVPTXGenRegisterInfo.inc"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sstream>
 end_include
 
 begin_decl_stmt
@@ -135,39 +129,24 @@ comment|//------------------------------------------------------
 comment|// Pure virtual functions from TargetRegisterInfo
 comment|//------------------------------------------------------
 comment|// NVPTX callee saved registers
-name|virtual
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
-comment|// NVPTX callee saved register classes
-name|virtual
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|getCalleeSavedRegClasses
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|BitVector
 name|getReservedRegs
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|eliminateFrameIndex
 argument_list|(
@@ -177,33 +156,18 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
-name|int
-name|getDwarfRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|unsigned
 name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
-block|;
-name|virtual
-name|unsigned
-name|getRARegister
-argument_list|()
-specifier|const
+name|override
 block|;
 name|ManagedStringPool
 operator|*

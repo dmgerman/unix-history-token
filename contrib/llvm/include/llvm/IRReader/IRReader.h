@@ -85,27 +85,6 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
-comment|/// If the given MemoryBuffer holds a bitcode image, return a Module for it
-comment|/// which does lazy deserialization of function bodies.  Otherwise, attempt to
-comment|/// parse it as LLVM Assembly and return a fully populated Module. This
-comment|/// function *always* takes ownership of the given MemoryBuffer.
-name|Module
-modifier|*
-name|getLazyIRModule
-parameter_list|(
-name|MemoryBuffer
-modifier|*
-name|Buffer
-parameter_list|,
-name|SMDiagnostic
-modifier|&
-name|Err
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
 comment|/// If the given file holds a bitcode image, return a Module
 comment|/// for it which does lazy deserialization of function bodies.  Otherwise,
 comment|/// attempt to parse it as LLVM Assembly and return a fully populated
@@ -132,8 +111,7 @@ argument_list|)
 decl_stmt|;
 comment|/// If the given MemoryBuffer holds a bitcode image, return a Module
 comment|/// for it.  Otherwise, attempt to parse it as LLVM Assembly and return
-comment|/// a Module for it. This function *always* takes ownership of the given
-comment|/// MemoryBuffer.
+comment|/// a Module for it. This function *never* takes ownership of Buffer.
 name|Module
 modifier|*
 name|ParseIR

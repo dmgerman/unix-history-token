@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
@@ -120,9 +114,12 @@ decl_stmt|;
 name|uint16_t
 name|LastCostChange
 decl_stmt|;
-name|OwningArrayPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MCPhysReg
+index|[]
 operator|>
 name|Order
 expr_stmt|;
@@ -178,9 +175,12 @@ block|}
 block|}
 struct|;
 comment|// Brief cached information for each register class.
-name|OwningArrayPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|RCInfo
+index|[]
 operator|>
 name|RegClass
 expr_stmt|;
@@ -202,7 +202,7 @@ decl_stmt|;
 comment|// Callee saved registers of last MF. Assumed to be valid until the next
 comment|// runOnFunction() call.
 specifier|const
-name|uint16_t
+name|MCPhysReg
 modifier|*
 name|CalleeSaved
 decl_stmt|;
@@ -219,9 +219,12 @@ comment|// Reserved registers in the current MF.
 name|BitVector
 name|Reserved
 decl_stmt|;
-name|OwningArrayPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|unsigned
+index|[]
 operator|>
 name|PSetLimits
 expr_stmt|;

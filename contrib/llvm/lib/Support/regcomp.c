@@ -2890,7 +2890,7 @@ operator|=
 name|HERE
 argument_list|()
 expr_stmt|;
-comment|/* repetion op, if any, covers from here */
+comment|/* repetition op, if any, covers from here */
 name|assert
 argument_list|(
 name|MORE

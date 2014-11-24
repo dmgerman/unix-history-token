@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/CallSite.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/DataLayout.h"
 end_include
 
@@ -86,13 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/InstVisitor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/CallSite.h"
+file|"llvm/IR/InstVisitor.h"
 end_include
 
 begin_include
@@ -456,12 +456,11 @@ name|string
 operator|*
 name|ErrorStr
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// run - Start execution with the specified function and arguments.
 comment|///
-name|virtual
 name|GenericValue
 name|runFunction
 argument_list|(
@@ -479,8 +478,8 @@ operator|>
 operator|&
 name|ArgValues
 argument_list|)
+name|override
 decl_stmt|;
-name|virtual
 name|void
 modifier|*
 name|getPointerToNamedFunction
@@ -497,16 +496,16 @@ name|AbortOnFailure
 operator|=
 name|true
 argument_list|)
+name|override
 block|{
 comment|// FIXME: not implemented.
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// recompileAndRelinkFunction - For the interpreter, functions are always
 comment|/// up-to-date.
 comment|///
-name|virtual
 name|void
 modifier|*
 name|recompileAndRelinkFunction
@@ -515,6 +514,7 @@ name|Function
 modifier|*
 name|F
 parameter_list|)
+function|override
 block|{
 return|return
 name|getPointerToFunction
@@ -532,6 +532,7 @@ name|Function
 modifier|*
 name|F
 parameter_list|)
+function|override
 block|{ }
 comment|// Methods used to execute code:
 comment|// Place a call on the stack
@@ -1015,6 +1016,7 @@ name|Function
 modifier|*
 name|F
 parameter_list|)
+function|override
 block|{
 return|return
 operator|(
@@ -1032,6 +1034,7 @@ name|BasicBlock
 modifier|*
 name|BB
 parameter_list|)
+function|override
 block|{
 return|return
 operator|(

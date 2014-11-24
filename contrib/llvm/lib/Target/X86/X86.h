@@ -66,25 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"MCTargetDesc/X86BaseInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MCTargetDesc/X86MCTargetDesc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_decl_stmt
@@ -95,11 +77,26 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
+name|ImmutablePass
+decl_stmt|;
+name|class
 name|JITCodeEmitter
 decl_stmt|;
 name|class
 name|X86TargetMachine
 decl_stmt|;
+comment|/// createX86AtomicExpandPass - This pass expands atomic operations that cannot
+comment|/// be handled natively in terms of a loop using cmpxchg.
+name|FunctionPass
+modifier|*
+name|createX86AtomicExpandPass
+parameter_list|(
+specifier|const
+name|X86TargetMachine
+modifier|*
+name|TM
+parameter_list|)
+function_decl|;
 comment|/// createX86ISelDag - This pass converts a legalized DAG into a
 comment|/// X86-specific DAG, ready for instruction scheduling.
 comment|///
@@ -117,11 +114,11 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
-comment|/// createGlobalBaseRegPass - This pass initializes a global base
+comment|/// createX86GlobalBaseRegPass - This pass initializes a global base
 comment|/// register for PIC on x86-32.
 name|FunctionPass
 modifier|*
-name|createGlobalBaseRegPass
+name|createX86GlobalBaseRegPass
 parameter_list|()
 function_decl|;
 comment|/// createCleanupLocalDynamicTLSPass() - This pass combines multiple accesses

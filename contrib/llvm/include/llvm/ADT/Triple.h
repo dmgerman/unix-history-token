@@ -112,10 +112,22 @@ name|UnknownArch
 block|,
 name|arm
 block|,
-comment|// ARM: arm, armv.*, xscale
+comment|// ARM (little endian): arm, armv.*, xscale
+name|armeb
+block|,
+comment|// ARM (big endian): armeb
+name|arm64
+block|,
+comment|// ARM64 (little endian): arm64
+name|arm64_be
+block|,
+comment|// ARM64 (big endian): arm64_be
 name|aarch64
 block|,
-comment|// AArch64: aarch64
+comment|// AArch64 (little endian): aarch64
+name|aarch64_be
+block|,
+comment|// AArch64 (big endian): aarch64_be
 name|hexagon
 block|,
 comment|// Hexagon: hexagon
@@ -160,7 +172,10 @@ block|,
 comment|// TCE (http://tce.cs.tut.fi/): tce
 name|thumb
 block|,
-comment|// Thumb: thumb, thumbv.*
+comment|// Thumb (little endian): thumb, thumbv.*
+name|thumbeb
+block|,
+comment|// Thumb (big endian): thumbeb
 name|x86
 block|,
 comment|// X86: i[3-9]86
@@ -186,7 +201,38 @@ name|spir
 block|,
 comment|// SPIR: standard portable IR for OpenCL 32-bit version
 name|spir64
+block|,
 comment|// SPIR: standard portable IR for OpenCL 64-bit version
+name|kalimba
+comment|// Kalimba: generic kalimba
+block|}
+enum|;
+enum|enum
+name|SubArchType
+block|{
+name|NoSubArch
+block|,
+name|ARMSubArch_v8
+block|,
+name|ARMSubArch_v7
+block|,
+name|ARMSubArch_v7em
+block|,
+name|ARMSubArch_v7m
+block|,
+name|ARMSubArch_v7s
+block|,
+name|ARMSubArch_v6
+block|,
+name|ARMSubArch_v6m
+block|,
+name|ARMSubArch_v6t2
+block|,
+name|ARMSubArch_v5
+block|,
+name|ARMSubArch_v5te
+block|,
+name|ARMSubArch_v4t
 block|}
 enum|;
 enum|enum
@@ -208,7 +254,13 @@ name|Freescale
 block|,
 name|IBM
 block|,
+name|ImaginationTechnologies
+block|,
+name|MipsTechnologies
+block|,
 name|NVIDIA
+block|,
+name|CSR
 block|}
 enum|;
 enum|enum
@@ -284,14 +336,32 @@ name|GNUEABIHF
 block|,
 name|GNUX32
 block|,
+name|CODE16
+block|,
 name|EABI
 block|,
-name|MachO
+name|EABIHF
 block|,
 name|Android
 block|,
+name|MSVC
+block|,
+name|Itanium
+block|,
+name|Cygnus
+block|,   }
+enum|;
+enum|enum
+name|ObjectFormatType
+block|{
+name|UnknownObjectFormat
+block|,
+name|COFF
+block|,
 name|ELF
-block|}
+block|,
+name|MachO
+block|,   }
 enum|;
 name|private
 label|:
@@ -304,6 +374,10 @@ comment|/// The parsed arch type.
 name|ArchType
 name|Arch
 decl_stmt|;
+comment|/// The parsed subarchitecture type.
+name|SubArchType
+name|SubArch
+decl_stmt|;
 comment|/// The parsed vendor type.
 name|VendorType
 name|Vendor
@@ -315,6 +389,10 @@ decl_stmt|;
 comment|/// The parsed Environment type.
 name|EnvironmentType
 name|Environment
+decl_stmt|;
+comment|/// The object format type.
+name|ObjectFormatType
+name|ObjectFormat
 decl_stmt|;
 name|public
 label|:
@@ -338,6 +416,9 @@ name|OS
 argument_list|()
 operator|,
 name|Environment
+argument_list|()
+operator|,
+name|ObjectFormat
 argument_list|()
 block|{}
 name|explicit
@@ -419,6 +500,16 @@ return|return
 name|Arch
 return|;
 block|}
+comment|/// getSubArch - get the parsed subarchitecture type for this triple.
+name|SubArchType
+name|getSubArch
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubArch
+return|;
+block|}
 comment|/// getVendor - Get the parsed vendor type of this triple.
 name|VendorType
 name|getVendor
@@ -461,6 +552,16 @@ specifier|const
 block|{
 return|return
 name|Environment
+return|;
+block|}
+comment|/// getFormat - Get the object format for this triple.
+name|ObjectFormatType
+name|getObjectFormat
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjectFormat
 return|;
 block|}
 comment|/// getOSVersion - Parse the version number from the OS name component of the
@@ -871,9 +972,94 @@ name|isiOS
 argument_list|()
 return|;
 block|}
-comment|/// \brief Tests for either Cygwin or MinGW OS
 name|bool
-name|isOSCygMing
+name|isOSFreeBSD
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|FreeBSD
+return|;
+block|}
+name|bool
+name|isWindowsMSVCEnvironment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Win32
+operator|&&
+operator|(
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|UnknownEnvironment
+operator|||
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MSVC
+operator|)
+return|;
+block|}
+name|bool
+name|isKnownWindowsMSVCEnvironment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Win32
+operator|&&
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MSVC
+return|;
+block|}
+name|bool
+name|isWindowsItaniumEnvironment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Win32
+operator|&&
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Itanium
+return|;
+block|}
+name|bool
+name|isWindowsCygwinEnvironment
 argument_list|()
 specifier|const
 block|{
@@ -885,17 +1071,25 @@ name|Triple
 operator|::
 name|Cygwin
 operator|||
+operator|(
 name|getOS
 argument_list|()
 operator|==
 name|Triple
 operator|::
-name|MinGW32
+name|Win32
+operator|&&
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|Cygnus
+operator|)
 return|;
 block|}
-comment|/// \brief Is this a "Windows" OS targeting a "MSVCRT.dll" environment.
 name|bool
-name|isOSMSVCRT
+name|isWindowsGNUEnvironment
 argument_list|()
 specifier|const
 block|{
@@ -905,14 +1099,51 @@ argument_list|()
 operator|==
 name|Triple
 operator|::
-name|Win32
+name|MinGW32
 operator|||
+operator|(
 name|getOS
 argument_list|()
 operator|==
 name|Triple
 operator|::
-name|MinGW32
+name|Win32
+operator|&&
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|GNU
+operator|)
+return|;
+block|}
+comment|/// \brief Tests for either Cygwin or MinGW OS
+name|bool
+name|isOSCygMing
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isWindowsCygwinEnvironment
+argument_list|()
+operator|||
+name|isWindowsGNUEnvironment
+argument_list|()
+return|;
+block|}
+comment|/// \brief Is this a "Windows" OS targeting a "MSVCRT.dll" environment.
+name|bool
+name|isOSMSVCRT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isWindowsMSVCEnvironment
+argument_list|()
+operator|||
+name|isWindowsGNUEnvironment
+argument_list|()
 return|;
 block|}
 comment|/// \brief Tests whether the OS is Windows.
@@ -970,13 +1201,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|isOSDarwin
+name|getObjectFormat
 argument_list|()
-operator|&&
-operator|!
-name|isOSWindows
-argument_list|()
+operator|==
+name|Triple
+operator|::
+name|ELF
 return|;
 block|}
 comment|/// \brief Tests whether the OS uses the COFF binary format.
@@ -986,27 +1216,27 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|isOSWindows
+name|getObjectFormat
 argument_list|()
+operator|==
+name|Triple
+operator|::
+name|COFF
 return|;
 block|}
 comment|/// \brief Tests whether the environment is MachO.
-comment|// FIXME: Should this be an OSBinFormat predicate?
 name|bool
-name|isEnvironmentMachO
+name|isOSBinFormatMachO
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getEnvironment
+name|getObjectFormat
 argument_list|()
 operator|==
 name|Triple
 operator|::
 name|MachO
-operator|||
-name|isOSDarwin
-argument_list|()
 return|;
 block|}
 comment|/// @}
@@ -1045,6 +1275,14 @@ name|void
 name|setEnvironment
 parameter_list|(
 name|EnvironmentType
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// setObjectFormat - Set the object file format
+name|void
+name|setObjectFormat
+parameter_list|(
+name|ObjectFormatType
 name|Kind
 parameter_list|)
 function_decl|;
@@ -1140,6 +1378,23 @@ name|get64BitArchVariant
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Get the (LLVM) name of the minimum ARM CPU for the arch we are targeting.
+comment|///
+comment|/// \param Arch the architecture name (e.g., "armv7s"). If it is an empty
+comment|/// string then the triple's arch name is used.
+specifier|const
+name|char
+modifier|*
+name|getARMCPUForArch
+argument_list|(
+name|StringRef
+name|Arch
+operator|=
+name|StringRef
+argument_list|()
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// @}
 comment|/// @name Static helpers for IDs.
 comment|/// @{

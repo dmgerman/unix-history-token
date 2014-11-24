@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorOr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -90,13 +96,14 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// getLazyBitcodeModule - Read the header of the specified bitcode buffer
-comment|/// and prepare for lazy deserialization of function bodies.  If successful,
-comment|/// this takes ownership of 'buffer' and returns a non-null pointer.  On
-comment|/// error, this returns null, *does not* take ownership of Buffer, and fills
-comment|/// in *ErrMsg with an error description if ErrMsg is non-null.
+comment|/// Read the header of the specified bitcode buffer and prepare for lazy
+comment|/// deserialization of function bodies.  If successful, this takes ownership
+comment|/// of 'buffer. On error, this *does not* take ownership of Buffer.
+name|ErrorOr
+operator|<
 name|Module
-modifier|*
+operator|*
+operator|>
 name|getLazyBitcodeModule
 argument_list|(
 name|MemoryBuffer
@@ -106,16 +113,8 @@ argument_list|,
 name|LLVMContext
 operator|&
 name|Context
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
-operator|=
-literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// getStreamedBitcodeModule - Read the header of the specified stream
 comment|/// and prepare for lazy deserialization and streaming of function bodies.
 comment|/// On error, this returns null, and fills in *ErrMsg with an error
@@ -145,14 +144,12 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// getBitcodeTargetTriple - Read the header of the specified bitcode
-comment|/// buffer and extract just the triple information. If successful,
-comment|/// this returns a string and *does not* take ownership
-comment|/// of 'buffer'. On error, this returns "", and fills in *ErrMsg
-comment|/// if ErrMsg is non-null.
+comment|/// Read the header of the specified bitcode buffer and extract just the
+comment|/// triple information. If successful, this returns a string and *does not*
+comment|/// take ownership of 'buffer'. On error, this returns "".
 name|std
 operator|::
 name|string
@@ -165,22 +162,16 @@ argument_list|,
 name|LLVMContext
 operator|&
 name|Context
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
-operator|=
-literal|0
 argument_list|)
 expr_stmt|;
-comment|/// ParseBitcodeFile - Read the specified bitcode file, returning the module.
-comment|/// If an error occurs, this returns null and fills in *ErrMsg if it is
-comment|/// non-null.  This method *never* takes ownership of Buffer.
+comment|/// Read the specified bitcode file, returning the module.
+comment|/// This method *never* takes ownership of Buffer.
+name|ErrorOr
+operator|<
 name|Module
-modifier|*
-name|ParseBitcodeFile
+operator|*
+operator|>
+name|parseBitcodeFile
 argument_list|(
 name|MemoryBuffer
 operator|*
@@ -189,16 +180,8 @@ argument_list|,
 name|LLVMContext
 operator|&
 name|Context
-argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
-operator|=
-literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// WriteBitcodeToFile - Write the specified module to the specified
 comment|/// raw output stream.  For streams where it matters, the given stream
 comment|/// should be in "binary" mode.
@@ -213,17 +196,6 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|Out
-parameter_list|)
-function_decl|;
-comment|/// createBitcodeWriterPass - Create and return a pass that writes the module
-comment|/// to the specified ostream.
-name|ModulePass
-modifier|*
-name|createBitcodeWriterPass
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|Str
 parameter_list|)
 function_decl|;
 comment|/// isBitcodeWrapper - Return true if the given bytes are the magic bytes

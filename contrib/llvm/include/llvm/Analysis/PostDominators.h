@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Dominators.h"
+file|"llvm/IR/Dominators.h"
 end_include
 
 begin_decl_stmt
@@ -122,22 +122,20 @@ operator|~
 name|PostDominatorTree
 argument_list|()
 block|;
-name|virtual
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|{
 name|AU
 operator|.
@@ -345,17 +343,35 @@ name|B
 argument_list|)
 return|;
 block|}
-name|virtual
+comment|/// Get all nodes post-dominated by R, including R itself.
+name|void
+name|getDescendants
+argument_list|(
+argument|BasicBlock *R
+argument_list|,
+argument|SmallVectorImpl<BasicBlock *>&Result
+argument_list|)
+specifier|const
+block|{
+name|DT
+operator|->
+name|getDescendants
+argument_list|(
+name|R
+argument_list|,
+name|Result
+argument_list|)
+block|;   }
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|{
 name|DT
 operator|->
 name|releaseMemory
 argument_list|()
 block|;   }
-name|virtual
 name|void
 name|print
 argument_list|(
@@ -364,6 +380,7 @@ argument_list|,
 argument|const Module*
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 name|FunctionPass

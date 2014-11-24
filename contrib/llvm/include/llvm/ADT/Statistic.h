@@ -216,7 +216,7 @@ literal|0
 expr_stmt|;
 name|Initialized
 operator|=
-literal|0
+name|false
 expr_stmt|;
 block|}
 comment|// Allow use of this class as the value itself.

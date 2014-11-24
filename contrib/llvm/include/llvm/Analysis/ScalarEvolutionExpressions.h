@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -522,6 +528,13 @@ specifier|const
 modifier|*
 name|op_iterator
 typedef|;
+typedef|typedef
+name|iterator_range
+operator|<
+name|op_iterator
+operator|>
+name|op_range
+expr_stmt|;
 name|op_iterator
 name|op_begin
 argument_list|()
@@ -540,6 +553,22 @@ return|return
 name|Operands
 operator|+
 name|NumOperands
+return|;
+block|}
+name|op_range
+name|operands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|op_begin
+argument_list|()
+argument_list|,
+name|op_end
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|Type
@@ -1088,8 +1117,8 @@ name|FlagAnyWrap
 argument_list|)
 return|;
 block|}
-comment|/// isAffine - Return true if this is an affine AddRec (i.e., it represents
-comment|/// an expressions A+B*x where A and B are loop invariant values.
+comment|/// isAffine - Return true if this represents an expression
+comment|/// A + B*x where A and B are loop invariant values.
 name|bool
 name|isAffine
 argument_list|()
@@ -1104,9 +1133,9 @@ operator|==
 literal|2
 return|;
 block|}
-comment|/// isQuadratic - Return true if this is an quadratic AddRec (i.e., it
-comment|/// represents an expressions A+B*x+C*x^2 where A, B and C are loop
-comment|/// invariant values.  This corresponds to an addrec of the form {L,+,M,+,N}
+comment|/// isQuadratic - Return true if this represents an expression
+comment|/// A + B*x + C*x^2 where A, B and C are loop invariant values.
+comment|/// This corresponds to an addrec of the form {L,+,M,+,N}
 name|bool
 name|isQuadratic
 argument_list|()
@@ -1232,12 +1261,93 @@ operator|==
 name|scAddRecExpr
 return|;
 block|}
-comment|/// Splits the SCEV into two vectors of SCEVs representing the subscripts
-comment|/// and sizes of an array access. Returns the remainder of the
-comment|/// delinearization that is the offset start of the array.
+comment|/// Collect parametric terms occurring in step expressions.
+name|void
+name|collectParametricTerms
+argument_list|(
+argument|ScalarEvolution&SE
+argument_list|,
+argument|SmallVectorImpl<const SCEV *>&Terms
+argument_list|)
 specifier|const
-name|SCEV
-operator|*
+block|;
+comment|/// Return in Subscripts the access functions for each dimension in Sizes.
+name|void
+name|computeAccessFunctions
+argument_list|(
+argument|ScalarEvolution&SE
+argument_list|,
+argument|SmallVectorImpl<const SCEV *>&Subscripts
+argument_list|,
+argument|SmallVectorImpl<const SCEV *>&Sizes
+argument_list|)
+specifier|const
+block|;
+comment|/// Split this SCEVAddRecExpr into two vectors of SCEVs representing the
+comment|/// subscripts and sizes of an array access.
+comment|///
+comment|/// The delinearization is a 3 step process: the first two steps compute the
+comment|/// sizes of each subscript and the third step computes the access functions
+comment|/// for the delinearized array:
+comment|///
+comment|/// 1. Find the terms in the step functions
+comment|/// 2. Compute the array size
+comment|/// 3. Compute the access function: divide the SCEV by the array size
+comment|///    starting with the innermost dimensions found in step 2. The Quotient
+comment|///    is the SCEV to be divided in the next step of the recursion. The
+comment|///    Remainder is the subscript of the innermost dimension. Loop over all
+comment|///    array dimensions computed in step 2.
+comment|///
+comment|/// To compute a uniform array size for several memory accesses to the same
+comment|/// object, one can collect in step 1 all the step terms for all the memory
+comment|/// accesses, and compute in step 2 a unique array shape. This guarantees
+comment|/// that the array shape will be the same across all memory accesses.
+comment|///
+comment|/// FIXME: We could derive the result of steps 1 and 2 from a description of
+comment|/// the array shape given in metadata.
+comment|///
+comment|/// Example:
+comment|///
+comment|/// A[][n][m]
+comment|///
+comment|/// for i
+comment|///   for j
+comment|///     for k
+comment|///       A[j+k][2i][5i] =
+comment|///
+comment|/// The initial SCEV:
+comment|///
+comment|/// A[{{{0,+,2*m+5}_i, +, n*m}_j, +, n*m}_k]
+comment|///
+comment|/// 1. Find the different terms in the step functions:
+comment|/// -> [2*m, 5, n*m, n*m]
+comment|///
+comment|/// 2. Compute the array size: sort and unique them
+comment|/// -> [n*m, 2*m, 5]
+comment|/// find the GCD of all the terms = 1
+comment|/// divide by the GCD and erase constant terms
+comment|/// -> [n*m, 2*m]
+comment|/// GCD = m
+comment|/// divide by GCD -> [n, 2]
+comment|/// remove constant terms
+comment|/// -> [n]
+comment|/// size of the array is A[unknown][n][m]
+comment|///
+comment|/// 3. Compute the access function
+comment|/// a. Divide {{{0,+,2*m+5}_i, +, n*m}_j, +, n*m}_k by the innermost size m
+comment|/// Quotient: {{{0,+,2}_i, +, n}_j, +, n}_k
+comment|/// Remainder: {{{0,+,5}_i, +, 0}_j, +, 0}_k
+comment|/// The remainder is the subscript of the innermost array dimension: [5i].
+comment|///
+comment|/// b. Divide Quotient: {{{0,+,2}_i, +, n}_j, +, n}_k by next outer size n
+comment|/// Quotient: {{{0,+,0}_i, +, 1}_j, +, 1}_k
+comment|/// Remainder: {{{0,+,2}_i, +, 0}_j, +, 0}_k
+comment|/// The Remainder is the subscript of the next array dimension: [2i].
+comment|///
+comment|/// The subscript of the outermost dimension is the Quotient: [j+k].
+comment|///
+comment|/// Overall, we have: A[][n][m], and the access function: A[j+k][2i][5i].
+name|void
 name|delinearize
 argument_list|(
 argument|ScalarEvolution&SE
@@ -1245,6 +1355,8 @@ argument_list|,
 argument|SmallVectorImpl<const SCEV *>&Subscripts
 argument_list|,
 argument|SmallVectorImpl<const SCEV *>&Sizes
+argument_list|,
+argument|const SCEV *ElementSize
 argument_list|)
 specifier|const
 block|;   }
@@ -1404,19 +1516,17 @@ name|class
 name|ScalarEvolution
 block|;
 comment|// Implement CallbackVH.
-name|virtual
 name|void
 name|deleted
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|allUsesReplacedWith
 argument_list|(
-name|Value
-operator|*
-name|New
+argument|Value *New
 argument_list|)
+name|override
 block|;
 comment|/// SE - The parent ScalarEvolution value. This is used to update
 comment|/// the parent's maps when the value associated with a SCEVUnknown
@@ -2200,6 +2310,8 @@ argument_list|,
 argument|ScalarEvolution&SE
 argument_list|,
 argument|ValueToValueMap&Map
+argument_list|,
+argument|bool InterpretConsts = false
 argument_list|)
 block|{
 name|SCEVParameterRewriter
@@ -2208,6 +2320,8 @@ argument_list|(
 name|SE
 argument_list|,
 name|Map
+argument_list|,
+name|InterpretConsts
 argument_list|)
 block|;
 return|return
@@ -2221,13 +2335,11 @@ return|;
 block|}
 name|SCEVParameterRewriter
 argument_list|(
-name|ScalarEvolution
-operator|&
-name|S
+argument|ScalarEvolution&S
 argument_list|,
-name|ValueToValueMap
-operator|&
-name|M
+argument|ValueToValueMap&M
+argument_list|,
+argument|bool C
 argument_list|)
 operator|:
 name|SE
@@ -2237,7 +2349,12 @@ argument_list|)
 block|,
 name|Map
 argument_list|(
-argument|M
+name|M
+argument_list|)
+block|,
+name|InterpretConsts
+argument_list|(
+argument|C
 argument_list|)
 block|{}
 specifier|const
@@ -2739,17 +2856,51 @@ argument_list|(
 name|V
 argument_list|)
 condition|)
+block|{
+name|Value
+modifier|*
+name|NV
+init|=
+name|Map
+index|[
+name|V
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|InterpretConsts
+operator|&&
+name|isa
+operator|<
+name|ConstantInt
+operator|>
+operator|(
+name|NV
+operator|)
+condition|)
+return|return
+name|SE
+operator|.
+name|getConstant
+argument_list|(
+name|cast
+operator|<
+name|ConstantInt
+operator|>
+operator|(
+name|NV
+operator|)
+argument_list|)
+return|;
 return|return
 name|SE
 operator|.
 name|getUnknown
 argument_list|(
-name|Map
-index|[
-name|V
-index|]
+name|NV
 argument_list|)
 return|;
+block|}
 return|return
 name|Expr
 return|;
@@ -2775,6 +2926,9 @@ block|;
 name|ValueToValueMap
 operator|&
 name|Map
+block|;
+name|bool
+name|InterpretConsts
 block|;   }
 block|;
 typedef|typedef

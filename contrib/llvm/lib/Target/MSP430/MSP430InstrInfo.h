@@ -88,7 +88,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MSP430TargetMachine
+name|MSP430Subtarget
 decl_stmt|;
 comment|/// MSP430II - This namespace holds all of the target specific flags that
 comment|/// instruction info tracks.
@@ -160,16 +160,15 @@ operator|:
 name|explicit
 name|MSP430InstrInfo
 argument_list|(
-name|MSP430TargetMachine
+name|MSP430Subtarget
 operator|&
-name|TM
+name|STI
 argument_list|)
 block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).
 comment|///
-name|virtual
 specifier|const
 name|TargetRegisterInfo
 operator|&
@@ -197,8 +196,8 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
@@ -217,8 +216,8 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
@@ -235,6 +234,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|GetInstSizeInBytes
@@ -250,6 +250,7 @@ argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isUnpredicatedTerminator
@@ -257,6 +258,7 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|AnalyzeBranch
@@ -272,6 +274,7 @@ argument_list|,
 argument|bool AllowModify
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|RemoveBranch
@@ -279,6 +282,7 @@ argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|InsertBranch
@@ -294,6 +298,7 @@ argument_list|,
 argument|DebugLoc DL
 argument_list|)
 specifier|const
+name|override
 block|;  }
 decl_stmt|;
 block|}

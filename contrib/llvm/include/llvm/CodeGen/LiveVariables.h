@@ -530,15 +530,15 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
-name|virtual
 name|bool
 name|runOnMachineFunction
-parameter_list|(
+argument_list|(
 name|MachineFunction
-modifier|&
+operator|&
 name|MF
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// RegisterDefIsDead - Return true if the specified instruction defines the
 comment|/// specified register, but that definition is dead.
 name|bool
@@ -919,11 +919,12 @@ operator|&
 name|AU
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|void
 name|releaseMemory
 parameter_list|()
+function|override
 block|{
 name|VirtRegInfo
 operator|.

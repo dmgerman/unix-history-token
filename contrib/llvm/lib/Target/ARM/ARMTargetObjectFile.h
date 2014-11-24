@@ -82,22 +82,17 @@ argument_list|()
 block|,
 name|AttributesSection
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|Initialize
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
+name|override
 block|;
 specifier|const
 name|MCExpr
@@ -106,30 +101,32 @@ name|getTTypeGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler *Mang
+argument|unsigned Encoding
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
-argument_list|,
-argument|unsigned Encoding
 argument_list|,
 argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
+comment|/// \brief Describe a TLS variable address within debug info.
 specifier|const
-name|MCSection
+name|MCExpr
 operator|*
-name|getAttributesSection
-argument_list|()
+name|getDebugThreadLocalSymbol
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|)
 specifier|const
-block|{
-return|return
-name|AttributesSection
-return|;
+name|override
+block|; }
+decl_stmt|;
 block|}
-expr|}
-block|;  }
 end_decl_stmt
 
 begin_comment

@@ -771,13 +771,6 @@ name|set_
 block|;
 name|public
 operator|:
-typedef|typedef
-name|typename
-name|UnaryPredicate
-operator|::
-name|argument_type
-name|argument_type
-expr_stmt|;
 name|TestAndEraseFromSet
 argument_list|(
 argument|UnaryPredicate P
@@ -789,17 +782,24 @@ name|P
 argument_list|(
 name|P
 argument_list|)
-operator|,
+block|,
 name|set_
 argument_list|(
 argument|set_
 argument_list|)
 block|{}
+name|template
+operator|<
+name|typename
+name|ArgumentT
+operator|>
 name|bool
 name|operator
 argument_list|()
 operator|(
-name|argument_type
+specifier|const
+name|ArgumentT
+operator|&
 name|Arg
 operator|)
 block|{
@@ -822,20 +822,14 @@ return|return
 name|true
 return|;
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
-
-begin_empty_stmt
-unit|}   }
-empty_stmt|;
-end_empty_stmt
+block|}
+end_expr_stmt
 
 begin_decl_stmt
+unit|};
 name|set_type
 name|set_
 decl_stmt|;

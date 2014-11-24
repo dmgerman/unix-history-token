@@ -77,6 +77,12 @@ directive|include
 file|<cstring>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -104,41 +110,6 @@ name|ValueTy
 operator|>
 name|class
 name|StringMapEntry
-expr_stmt|;
-comment|/// StringMapEntryInitializer - This datatype can be partially specialized for
-comment|/// various datatypes in a stringmap to allow them to be initialized when an
-comment|/// entry is default constructed for the map.
-name|template
-operator|<
-name|typename
-name|ValueTy
-operator|>
-name|class
-name|StringMapEntryInitializer
-block|{
-name|public
-operator|:
-name|template
-operator|<
-name|typename
-name|InitTy
-operator|>
-specifier|static
-name|void
-name|Initialize
-argument_list|(
-argument|StringMapEntry<ValueTy>&T
-argument_list|,
-argument|InitTy InitVal
-argument_list|)
-block|{
-name|T
-operator|.
-name|second
-operator|=
-name|InitVal
-block|;   }
-block|}
 expr_stmt|;
 comment|/// StringMapEntryBase - Shared base class of StringMapEntry instances.
 name|class
@@ -206,39 +177,111 @@ argument_list|(
 argument|unsigned itemSize
 argument_list|)
 block|:
+name|TheTable
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+comment|// Initialize the map with zero buckets to allocation.
+name|NumBuckets
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumItems
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumTombstones
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|ItemSize
 argument_list|(
 argument|itemSize
 argument_list|)
+block|{}
+name|StringMapImpl
+argument_list|(
+name|StringMapImpl
+operator|&&
+name|RHS
+argument_list|)
+operator|:
+name|TheTable
+argument_list|(
+name|RHS
+operator|.
+name|TheTable
+argument_list|)
+operator|,
+name|NumBuckets
+argument_list|(
+name|RHS
+operator|.
+name|NumBuckets
+argument_list|)
+operator|,
+name|NumItems
+argument_list|(
+name|RHS
+operator|.
+name|NumItems
+argument_list|)
+operator|,
+name|NumTombstones
+argument_list|(
+name|RHS
+operator|.
+name|NumTombstones
+argument_list|)
+operator|,
+name|ItemSize
+argument_list|(
+argument|RHS.ItemSize
+argument_list|)
 block|{
-comment|// Initialize the map with zero buckets to allocation.
+name|RHS
+operator|.
 name|TheTable
 operator|=
-literal|0
-expr_stmt|;
+name|nullptr
+block|;
+name|RHS
+operator|.
 name|NumBuckets
 operator|=
 literal|0
-expr_stmt|;
+block|;
+name|RHS
+operator|.
 name|NumItems
 operator|=
 literal|0
-expr_stmt|;
+block|;
+name|RHS
+operator|.
 name|NumTombstones
 operator|=
 literal|0
-expr_stmt|;
-block|}
+block|;   }
 name|StringMapImpl
 argument_list|(
 argument|unsigned InitSize
 argument_list|,
 argument|unsigned ItemSize
 argument_list|)
-empty_stmt|;
-name|void
+expr_stmt|;
+name|unsigned
 name|RehashTable
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|BucketNo
+init|=
+literal|0
+parameter_list|)
 function_decl|;
 comment|/// LookupBucketFor - Look up the bucket that the specified string should end
 comment|/// up in.  If it already exists as a key in the map, the Item pointer for the
@@ -445,7 +488,7 @@ name|StringMapEntry
 argument_list|(
 argument|unsigned strLen
 argument_list|,
-argument|const ValueTy&V
+argument|ValueTy V
 argument_list|)
 operator|:
 name|StringMapEntryBase
@@ -455,7 +498,7 @@ argument_list|)
 block|,
 name|second
 argument_list|(
-argument|V
+argument|std::move(V)
 argument_list|)
 block|{}
 name|StringRef
@@ -559,9 +602,7 @@ name|StringMapEntry
 operator|*
 name|Create
 argument_list|(
-argument|const char *KeyStart
-argument_list|,
-argument|const char *KeyEnd
+argument|StringRef Key
 argument_list|,
 argument|AllocatorTy&Allocator
 argument_list|,
@@ -571,18 +612,12 @@ block|{
 name|unsigned
 name|KeyLength
 operator|=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
-name|KeyEnd
-operator|-
-name|KeyStart
-operator|)
+name|Key
+operator|.
+name|size
+argument_list|()
 block|;
-comment|// Okay, the item doesn't already exist, and 'Bucket' is the bucket to fill
-comment|// in.  Allocate a new item with space for the string at the end and a null
+comment|// Allocate a new item with space for the string at the end and a null
 comment|// terminator.
 name|unsigned
 name|AllocSize
@@ -640,6 +675,13 @@ argument_list|)
 name|StringMapEntry
 argument_list|(
 name|KeyLength
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|InitVal
+argument_list|)
 argument_list|)
 block|;
 comment|// Copy the string information.
@@ -663,7 +705,10 @@ name|memcpy
 argument_list|(
 name|StrBuffer
 argument_list|,
-name|KeyStart
+name|Key
+operator|.
+name|data
+argument_list|()
 argument_list|,
 name|KeyLength
 argument_list|)
@@ -676,20 +721,6 @@ operator|=
 literal|0
 block|;
 comment|// Null terminate for convenience of clients.
-comment|// Initialize the value if the client wants to.
-name|StringMapEntryInitializer
-operator|<
-name|ValueTy
-operator|>
-operator|::
-name|Initialize
-argument_list|(
-operator|*
-name|NewItem
-argument_list|,
-name|InitVal
-argument_list|)
-block|;
 return|return
 name|NewItem
 return|;
@@ -704,9 +735,7 @@ name|StringMapEntry
 operator|*
 name|Create
 argument_list|(
-argument|const char *KeyStart
-argument_list|,
-argument|const char *KeyEnd
+argument|StringRef Key
 argument_list|,
 argument|AllocatorTy&Allocator
 argument_list|)
@@ -714,13 +743,12 @@ block|{
 return|return
 name|Create
 argument_list|(
-name|KeyStart
-argument_list|,
-name|KeyEnd
+name|Key
 argument_list|,
 name|Allocator
 argument_list|,
-literal|0
+name|ValueTy
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -735,9 +763,7 @@ name|StringMapEntry
 operator|*
 name|Create
 argument_list|(
-argument|const char *KeyStart
-argument_list|,
-argument|const char *KeyEnd
+argument|StringRef Key
 argument_list|,
 argument|InitType InitVal
 argument_list|)
@@ -748,13 +774,16 @@ block|;
 return|return
 name|Create
 argument_list|(
-name|KeyStart
-argument_list|,
-name|KeyEnd
+name|Key
 argument_list|,
 name|A
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|InitVal
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -763,17 +792,13 @@ name|StringMapEntry
 operator|*
 name|Create
 argument_list|(
-argument|const char *KeyStart
-argument_list|,
-argument|const char *KeyEnd
+argument|StringRef Key
 argument_list|)
 block|{
 return|return
 name|Create
 argument_list|(
-name|KeyStart
-argument_list|,
-name|KeyEnd
+name|Key
 argument_list|,
 name|ValueTy
 argument_list|()
@@ -925,6 +950,25 @@ argument|AllocatorTy&Allocator
 argument_list|)
 block|{
 comment|// Free memory referenced by the item.
+name|unsigned
+name|AllocSize
+operator|=
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+sizeof|sizeof
+argument_list|(
+name|StringMapEntry
+argument_list|)
+operator|)
+operator|+
+name|getKeyLength
+argument_list|()
+operator|+
+literal|1
+block|;
 name|this
 operator|->
 expr|~
@@ -935,7 +979,16 @@ name|Allocator
 operator|.
 name|Deallocate
 argument_list|(
+name|static_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
 name|this
+operator|)
+argument_list|,
+name|AllocSize
 argument_list|)
 block|;   }
 comment|/// Destroy this object, releasing memory back to the malloc allocator.
@@ -1061,90 +1114,71 @@ argument_list|)
 block|{}
 name|StringMap
 argument_list|(
-specifier|const
 name|StringMap
-operator|&
+operator|&&
 name|RHS
 argument_list|)
 operator|:
 name|StringMapImpl
 argument_list|(
-argument|static_cast<unsigned>(sizeof(MapEntryTy))
-argument_list|)
-block|{
-name|assert
+name|std
+operator|::
+name|move
 argument_list|(
 name|RHS
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"Copy ctor from non-empty stringmap not implemented yet!"
 argument_list|)
-block|;
-operator|(
-name|void
-operator|)
-name|RHS
-block|;   }
-name|void
+argument_list|)
+block|,
+name|Allocator
+argument_list|(
+argument|std::move(RHS.Allocator)
+argument_list|)
+block|{}
+name|StringMap
+operator|&
 name|operator
 operator|=
 operator|(
-specifier|const
 name|StringMap
-operator|&
 name|RHS
 operator|)
 block|{
-name|assert
+name|StringMapImpl
+operator|::
+name|swap
 argument_list|(
 name|RHS
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"assignment from non-empty stringmap not implemented yet!"
 argument_list|)
 block|;
-operator|(
-name|void
-operator|)
+name|std
+operator|::
+name|swap
+argument_list|(
+name|Allocator
+argument_list|,
 name|RHS
+operator|.
+name|Allocator
+argument_list|)
 block|;
-name|clear
-argument_list|()
-block|;   }
-typedef|typedef
-name|typename
-name|ReferenceAdder
-operator|<
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|// FIXME: Implement copy operations if/when they're needed.
 name|AllocatorTy
-operator|>
-operator|::
-name|result
-name|AllocatorRefTy
-expr_stmt|;
-typedef|typedef
-name|typename
-name|ReferenceAdder
-operator|<
-specifier|const
-name|AllocatorTy
-operator|>
-operator|::
-name|result
-name|AllocatorCRefTy
-expr_stmt|;
-name|AllocatorRefTy
+operator|&
 name|getAllocator
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Allocator
 return|;
 block|}
-name|AllocatorCRefTy
+specifier|const
+name|AllocatorTy
+operator|&
 name|getAllocator
 argument_list|()
 specifier|const
@@ -1379,6 +1413,7 @@ name|getValue
 argument_list|()
 return|;
 block|}
+comment|/// count - Return 1 if the element is in the map, 0 otherwise.
 name|size_type
 name|count
 argument_list|(
@@ -1479,7 +1514,148 @@ return|return
 name|true
 return|;
 block|}
+comment|/// insert - Inserts the specified key/value pair into the map if the key
+comment|/// isn't already in the map. The bool component of the returned pair is true
+comment|/// if and only if the insertion takes place, and the iterator component of
+comment|/// the pair points to the element with key equivalent to the key of the pair.
+name|std
+operator|::
+name|pair
+operator|<
+name|iterator
+operator|,
+name|bool
+operator|>
+name|insert
+argument_list|(
+argument|std::pair<StringRef
+argument_list|,
+argument|ValueTy> KV
+argument_list|)
+block|{
+name|unsigned
+name|BucketNo
+operator|=
+name|LookupBucketFor
+argument_list|(
+name|KV
+operator|.
+name|first
+argument_list|)
+block|;
+name|StringMapEntryBase
+operator|*
+operator|&
+name|Bucket
+operator|=
+name|TheTable
+index|[
+name|BucketNo
+index|]
+block|;
+if|if
+condition|(
+name|Bucket
+operator|&&
+name|Bucket
+operator|!=
+name|getTombstoneVal
+argument_list|()
+condition|)
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|iterator
+argument_list|(
+name|TheTable
+operator|+
+name|BucketNo
+argument_list|,
+name|false
+argument_list|)
+argument_list|,
+name|false
+argument_list|)
+return|;
+comment|// Already exists in map.
+if|if
+condition|(
+name|Bucket
+operator|==
+name|getTombstoneVal
+argument_list|()
+condition|)
+operator|--
+name|NumTombstones
+expr_stmt|;
+name|Bucket
+operator|=
+name|MapEntryTy
+operator|::
+name|Create
+argument_list|(
+name|KV
+operator|.
+name|first
+argument_list|,
+name|Allocator
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|KV
+operator|.
+name|second
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|++
+name|NumItems
+expr_stmt|;
+name|assert
+argument_list|(
+name|NumItems
+operator|+
+name|NumTombstones
+operator|<=
+name|NumBuckets
+argument_list|)
+expr_stmt|;
+name|BucketNo
+operator|=
+name|RehashTable
+argument_list|(
+name|BucketNo
+argument_list|)
+expr_stmt|;
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|iterator
+argument_list|(
+name|TheTable
+operator|+
+name|BucketNo
+argument_list|,
+name|false
+argument_list|)
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|// clear - Empties out the StringMap
+end_comment
+
+begin_function
 name|void
 name|clear
 parameter_list|()
@@ -1548,7 +1724,7 @@ expr_stmt|;
 block|}
 name|Bucket
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|NumItems
@@ -1560,9 +1736,21 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// GetOrCreateValue - Look up the specified key in the table.  If a value
+end_comment
+
+begin_comment
 comment|/// exists, return it.  Otherwise, default construct a value, insert it, and
+end_comment
+
+begin_comment
 comment|/// return.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1577,104 +1765,29 @@ argument_list|,
 argument|InitTy Val
 argument_list|)
 block|{
-name|unsigned
-name|BucketNo
-operator|=
-name|LookupBucketFor
-argument_list|(
-name|Key
-argument_list|)
-block|;
-name|StringMapEntryBase
-operator|*
-operator|&
-name|Bucket
-operator|=
-name|TheTable
-index|[
-name|BucketNo
-index|]
-block|;
-if|if
-condition|(
-name|Bucket
-operator|&&
-name|Bucket
-operator|!=
-name|getTombstoneVal
-argument_list|()
-condition|)
 return|return
 operator|*
-name|static_cast
-operator|<
-name|MapEntryTy
-operator|*
-operator|>
-operator|(
-name|Bucket
-operator|)
-return|;
-name|MapEntryTy
-operator|*
-name|NewItem
-operator|=
-name|MapEntryTy
+name|insert
+argument_list|(
+name|std
 operator|::
-name|Create
+name|make_pair
 argument_list|(
 name|Key
-operator|.
-name|begin
-argument_list|()
 argument_list|,
-name|Key
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|Allocator
-argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|Val
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Bucket
-operator|==
-name|getTombstoneVal
-argument_list|()
-condition|)
-operator|--
-name|NumTombstones
-expr_stmt|;
-operator|++
-name|NumItems
-expr_stmt|;
-name|assert
-argument_list|(
-name|NumItems
-operator|+
-name|NumTombstones
-operator|<=
-name|NumBuckets
 argument_list|)
-expr_stmt|;
-comment|// Fill in the bucket for the hash table.  The FullHashValue was already
-comment|// filled in by LookupBucketFor.
-name|Bucket
-operator|=
-name|NewItem
-expr_stmt|;
-name|RehashTable
-argument_list|()
-expr_stmt|;
-return|return
-operator|*
-name|NewItem
+argument_list|)
+operator|.
+name|first
 return|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_function
 name|MapEntryTy
@@ -1795,18 +1908,86 @@ operator|~
 name|StringMap
 argument_list|()
 block|{
-name|clear
+comment|// Delete all the elements in the map, but don't reset the elements
+comment|// to default values.  This is a copy of clear(), but avoids unnecessary
+comment|// work not required in the destructor.
+if|if
+condition|(
+operator|!
+name|empty
 argument_list|()
-block|;
+condition|)
+block|{
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|,
+name|E
+init|=
+name|NumBuckets
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+block|{
+name|StringMapEntryBase
+modifier|*
+name|Bucket
+init|=
+name|TheTable
+index|[
+name|I
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|Bucket
+operator|&&
+name|Bucket
+operator|!=
+name|getTombstoneVal
+argument_list|()
+condition|)
+block|{
+name|static_cast
+operator|<
+name|MapEntryTy
+operator|*
+operator|>
+operator|(
+name|Bucket
+operator|)
+operator|->
+name|Destroy
+argument_list|(
+name|Allocator
+argument_list|)
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}     }
 name|free
 argument_list|(
 name|TheTable
 argument_list|)
-block|;   }
+expr_stmt|;
 end_expr_stmt
 
+begin_empty_stmt
+unit|} }
+empty_stmt|;
+end_empty_stmt
+
 begin_expr_stmt
-unit|};
 name|template
 operator|<
 name|typename
@@ -1836,7 +2017,7 @@ argument_list|()
 operator|:
 name|Ptr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|explicit
@@ -2028,7 +2209,7 @@ condition|(
 operator|*
 name|Ptr
 operator|==
-literal|0
+name|nullptr
 operator|||
 operator|*
 name|Ptr

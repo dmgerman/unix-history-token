@@ -123,6 +123,9 @@ comment|// cheaply refer to either the full address or the anchor point
 comment|// as a register base.
 name|PCREL_OFFSET
 block|,
+comment|// Integer absolute.
+name|IABS
+block|,
 comment|// Integer comparisons.  There are three operands: the two values
 comment|// to compare, and an integer of type SystemZICMP.
 name|ICMP
@@ -220,6 +223,9 @@ block|,
 comment|// Store the CC value in bits 29 and 28 of an integer.
 name|IPM
 block|,
+comment|// Perform a serialization operation.  (BCR 15,0 or BCR 14,0.)
+name|SERIALIZE
+block|,
 comment|// Wrappers around the inner loop of an 8- or 16-bit ATOMIC_SWAP or
 comment|// ATOMIC_LOAD_<op>.
 comment|//
@@ -293,6 +299,7 @@ name|PCREL_OFFSET
 return|;
 block|}
 block|}
+comment|// end namespace SystemZISD
 name|namespace
 name|SystemZICMP
 block|{
@@ -308,6 +315,7 @@ name|SignedOnly
 block|}
 enum|;
 block|}
+comment|// end namespace SystemZICMP
 name|class
 name|SystemZSubtarget
 decl_stmt|;
@@ -325,20 +333,20 @@ operator|:
 name|explicit
 name|SystemZTargetLowering
 argument_list|(
-name|SystemZTargetMachine
+specifier|const
+name|TargetMachine
 operator|&
 name|TM
 argument_list|)
 block|;
 comment|// Override TargetLowering.
-name|virtual
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|MVT
@@ -346,7 +354,6 @@ operator|::
 name|i32
 return|;
 block|}
-name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
@@ -355,18 +362,16 @@ argument_list|,
 argument|EVT
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isFMAFasterThanFMulAndFAdd
 argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isFPImmLegal
 argument_list|(
@@ -375,9 +380,8 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isLegalAddressingMode
 argument_list|(
@@ -386,20 +390,20 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
+argument|unsigned AS
+argument_list|,
 argument|bool *Fast
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
@@ -408,9 +412,8 @@ argument_list|,
 argument|Type *
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
@@ -419,9 +422,8 @@ argument_list|,
 argument|EVT
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -430,9 +432,8 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|pair
@@ -450,9 +451,8 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|TargetLowering
 operator|::
 name|ConstraintType
@@ -461,9 +461,8 @@ argument_list|(
 argument|const std::string&Constraint
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|TargetLowering
 operator|::
 name|ConstraintWeight
@@ -474,9 +473,8 @@ argument_list|,
 argument|const char *constraint
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
@@ -489,9 +487,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -501,9 +498,8 @@ argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -512,9 +508,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|allowTruncateForTailCall
 argument_list|(
@@ -523,18 +518,16 @@ argument_list|,
 argument|Type *
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|mayBeEmittedAsTailCall
 argument_list|(
 argument|CallInst *CI
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -553,9 +546,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -564,9 +556,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -585,7 +576,29 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
+block|;
+name|SDValue
+name|prepareVolatileOrAtomicLoad
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|PerformDAGCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -593,11 +606,6 @@ specifier|const
 name|SystemZSubtarget
 operator|&
 name|Subtarget
-block|;
-specifier|const
-name|SystemZTargetMachine
-operator|&
-name|TM
 block|;
 comment|// Implement LowerOperation for individual opcodes.
 name|SDValue
@@ -759,13 +767,49 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerATOMIC_STORE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerATOMIC_LOAD_OP
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|,
 argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|lowerATOMIC_LOAD_SUB
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|lowerATOMIC_CMP_SWAP
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerLOAD_SEQUENCE_POINT
 argument_list|(
 argument|SDValue Op
 argument_list|,

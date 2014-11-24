@@ -133,7 +133,7 @@ argument_list|()
 operator|:
 name|Prev
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 expr|}
@@ -218,7 +218,7 @@ argument_list|()
 operator|:
 name|Next
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -250,7 +250,7 @@ name|getNext
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Prev
@@ -284,7 +284,7 @@ name|getNext
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Prev
@@ -313,7 +313,7 @@ name|getNext
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Next
@@ -345,7 +345,7 @@ name|getNext
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Next

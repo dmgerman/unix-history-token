@@ -178,6 +178,9 @@ parameter_list|,
 name|bool
 name|Is64Bit
 parameter_list|,
+name|bool
+name|IsLittleEndian
+parameter_list|,
 name|uint8_t
 name|OSABI
 parameter_list|)

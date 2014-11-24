@@ -94,10 +94,10 @@ init|=
 literal|8
 block|,
 comment|// Shift value for STV_* flags.
-name|ELF_Other_Shift
+name|ELF_STO_Shift
 init|=
 literal|10
-comment|// Shift value for other flags.
+comment|// Shift value for STO_* flags.
 block|}
 enum|;
 enum|enum
@@ -223,6 +223,16 @@ operator|<<
 name|ELF_STT_Shift
 operator|)
 block|,
+name|ELF_STT_GnuIFunc
+init|=
+operator|(
+name|ELF
+operator|::
+name|STT_GNU_IFUNC
+operator|<<
+name|ELF_STT_Shift
+operator|)
+block|,
 name|ELF_STT_Loproc
 init|=
 operator|(
@@ -281,22 +291,6 @@ operator|::
 name|STV_PROTECTED
 operator|<<
 name|ELF_STV_Shift
-operator|)
-block|,
-name|ELF_Other_Weakref
-init|=
-operator|(
-literal|1
-operator|<<
-name|ELF_Other_Shift
-operator|)
-block|,
-name|ELF_Other_ThumbFunc
-init|=
-operator|(
-literal|2
-operator|<<
-name|ELF_Other_Shift
 operator|)
 block|}
 enum|;

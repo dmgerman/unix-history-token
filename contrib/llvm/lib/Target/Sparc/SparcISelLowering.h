@@ -175,7 +175,6 @@ operator|&
 name|TM
 argument_list|)
 block|;
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -184,13 +183,13 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-comment|/// computeMaskedBitsForTargetNode - Determine which of the bits specified
+comment|/// computeKnownBitsForTargetNode - Determine which of the bits specified
 comment|/// in Mask are known to be either zero or one and return them in the
 comment|/// KnownZero/KnownOne bitsets.
-name|virtual
 name|void
-name|computeMaskedBitsForTargetNode
+name|computeKnownBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
@@ -204,8 +203,8 @@ argument|unsigned Depth =
 literal|0
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -215,8 +214,8 @@ argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -225,6 +224,7 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
 name|ConstraintType
 name|getConstraintType
@@ -232,6 +232,7 @@ argument_list|(
 argument|const std::string&Constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 name|ConstraintWeight
 name|getSingleConstraintMatchWeight
@@ -241,6 +242,7 @@ argument_list|,
 argument|const char *constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|LowerAsmOperandForConstraint
@@ -254,6 +256,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 name|std
 operator|::
@@ -272,22 +275,23 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|MVT
@@ -296,7 +300,6 @@ name|i32
 return|;
 block|}
 comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
-name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
@@ -305,8 +308,8 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -325,6 +328,7 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerFormalArguments_32
@@ -364,7 +368,6 @@ argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -373,6 +376,7 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerCall_32
@@ -392,7 +396,6 @@ argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -411,6 +414,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerReturn_32
@@ -577,6 +581,7 @@ argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|{
 comment|// Do not shrink FP constpool if VT == MVT::f128.
 comment|// (ldd, call _Q_fdtoq) is more expensive than two ldds.
@@ -588,7 +593,6 @@ operator|::
 name|f128
 return|;
 block|}
-name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
@@ -599,6 +603,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 name|MachineBasicBlock
 operator|*

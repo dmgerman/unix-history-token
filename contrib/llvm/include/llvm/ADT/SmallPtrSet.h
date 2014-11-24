@@ -40,7 +40,7 @@ comment|// This file defines the SmallPtrSet class.  See the doxygen comment for
 end_comment
 
 begin_comment
-comment|// SmallPtrSetImpl for more details on the algorithm used.
+comment|// SmallPtrSetImplBase for more details on the algorithm used.
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ block|{
 name|class
 name|SmallPtrSetIteratorImpl
 decl_stmt|;
-comment|/// SmallPtrSetImpl - This is the common code shared among all the
+comment|/// SmallPtrSetImplBase - This is the common code shared among all the
 comment|/// SmallPtrSet<>'s, which is almost everything.  SmallPtrSet has two modes, one
 comment|/// for small and one for large sets.
 comment|///
@@ -131,7 +131,7 @@ comment|/// (-2), to allow deletion.  The hash table is resized when the table i
 comment|/// more.  When this happens, the table is doubled in size.
 comment|///
 name|class
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 block|{
 name|friend
 name|class
@@ -165,8 +165,8 @@ decl_stmt|;
 name|unsigned
 name|NumTombstones
 decl_stmt|;
-comment|// Helper to copy construct a SmallPtrSet.
-name|SmallPtrSetImpl
+comment|// Helpers to copy and move construct a SmallPtrSet.
+name|SmallPtrSetImplBase
 argument_list|(
 specifier|const
 name|void
@@ -175,13 +175,22 @@ operator|*
 name|SmallStorage
 argument_list|,
 specifier|const
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 operator|&
 name|that
 argument_list|)
 expr_stmt|;
+name|SmallPtrSetImplBase
+argument_list|(
+argument|const void **SmallStorage
+argument_list|,
+argument|unsigned SmallSize
+argument_list|,
+argument|SmallPtrSetImplBase&&that
+argument_list|)
+empty_stmt|;
 name|explicit
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 argument_list|(
 argument|const void **SmallStorage
 argument_list|,
@@ -226,11 +235,15 @@ name|clear
 argument_list|()
 block|;   }
 operator|~
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 argument_list|()
 expr_stmt|;
 name|public
 label|:
+typedef|typedef
+name|unsigned
+name|size_type
+typedef|;
 name|bool
 name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|empty
@@ -244,7 +257,7 @@ operator|==
 literal|0
 return|;
 block|}
-name|unsigned
+name|size_type
 name|size
 argument_list|()
 specifier|const
@@ -483,7 +496,7 @@ name|operator
 init|=
 operator|(
 specifier|const
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 operator|&
 name|RHS
 operator|)
@@ -496,7 +509,7 @@ comment|/// Note: This method assumes that both sets have the same small size.
 name|void
 name|swap
 parameter_list|(
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 modifier|&
 name|RHS
 parameter_list|)
@@ -505,11 +518,22 @@ name|void
 name|CopyFrom
 parameter_list|(
 specifier|const
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 modifier|&
 name|RHS
 parameter_list|)
 function_decl|;
+name|void
+name|MoveFrom
+argument_list|(
+name|unsigned
+name|SmallSize
+argument_list|,
+name|SmallPtrSetImplBase
+operator|&&
+name|RHS
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// SmallPtrSetIteratorImpl - This is the common base class shared between all
@@ -630,7 +654,7 @@ operator|(
 operator|*
 name|Bucket
 operator|==
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 operator|::
 name|getEmptyMarker
 argument_list|()
@@ -638,7 +662,7 @@ operator|||
 operator|*
 name|Bucket
 operator|==
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 operator|::
 name|getTombstoneMarker
 argument_list|()
@@ -926,58 +950,37 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// SmallPtrSet - This class implements a set which is optimized for holding
+comment|/// \brief A templated base class for \c SmallPtrSet which provides the
 end_comment
 
 begin_comment
-comment|/// SmallSize or less elements.  This internally rounds up SmallSize to the next
+comment|/// typesafe interface that is common across all small sizes.
 end_comment
 
 begin_comment
-comment|/// power of two if it is not already a power of two.  See the comments above
+comment|///
 end_comment
 
 begin_comment
-comment|/// SmallPtrSetImpl for details of the algorithm.
+comment|/// This is particularly useful for passing around between interface boundaries
+end_comment
+
+begin_comment
+comment|/// to avoid encoding a particular small size in the interface boundary.
 end_comment
 
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|PtrType
-operator|,
-name|unsigned
-name|SmallSize
 operator|>
 name|class
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|:
 name|public
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 block|{
-comment|// Make sure that SmallSize is a power of two, round up if not.
-block|enum
-block|{
-name|SmallSizePowTwo
-operator|=
-name|RoundUpToPowerOfTwo
-operator|<
-name|SmallSize
-operator|>
-operator|::
-name|Val
-block|}
-block|;
-comment|/// SmallStorage - Fixed size storage used in 'small mode'.
-specifier|const
-name|void
-operator|*
-name|SmallStorage
-index|[
-name|SmallSizePowTwo
-index|]
-block|;
 typedef|typedef
 name|PointerLikeTypeTraits
 operator|<
@@ -985,59 +988,65 @@ name|PtrType
 operator|>
 name|PtrTraits
 expr_stmt|;
-name|public
+name|protected
 operator|:
-name|SmallPtrSet
-argument_list|()
-operator|:
+comment|// Constructors that forward to the base.
 name|SmallPtrSetImpl
 argument_list|(
-argument|SmallStorage
-argument_list|,
-argument|SmallSizePowTwo
-argument_list|)
-block|{}
-name|SmallPtrSet
-argument_list|(
 specifier|const
-name|SmallPtrSet
+name|void
+operator|*
+operator|*
+name|SmallStorage
+argument_list|,
+specifier|const
+name|SmallPtrSetImpl
 operator|&
 name|that
 argument_list|)
 operator|:
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 argument_list|(
 argument|SmallStorage
 argument_list|,
 argument|that
 argument_list|)
 block|{}
-name|template
-operator|<
-name|typename
-name|It
-operator|>
-name|SmallPtrSet
+name|SmallPtrSetImpl
 argument_list|(
-argument|It I
+argument|const void **SmallStorage
 argument_list|,
-argument|It E
+argument|unsigned SmallSize
+argument_list|,
+argument|SmallPtrSetImpl&&that
 argument_list|)
 operator|:
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 argument_list|(
 argument|SmallStorage
 argument_list|,
-argument|SmallSizePowTwo
-argument_list|)
-block|{
-name|insert
-argument_list|(
-name|I
+argument|SmallSize
 argument_list|,
-name|E
+argument|std::move(that)
 argument_list|)
-block|;   }
+block|{}
+name|explicit
+name|SmallPtrSetImpl
+argument_list|(
+argument|const void **SmallStorage
+argument_list|,
+argument|unsigned SmallSize
+argument_list|)
+operator|:
+name|SmallPtrSetImplBase
+argument_list|(
+argument|SmallStorage
+argument_list|,
+argument|SmallSize
+argument_list|)
+block|{}
+name|public
+operator|:
 comment|/// insert - This returns true if the pointer was new to the set, false if it
 comment|/// was already in the set.
 name|bool
@@ -1091,11 +1100,11 @@ block|}
 end_function
 
 begin_comment
-comment|/// count - Return true if the specified pointer is in the set.
+comment|/// count - Return 1 if the specified pointer is in the set, 0 otherwise.
 end_comment
 
 begin_decl_stmt
-name|bool
+name|size_type
 name|count
 argument_list|(
 name|PtrType
@@ -1113,6 +1122,10 @@ argument_list|(
 name|Ptr
 argument_list|)
 argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 return|;
 block|}
 end_decl_stmt
@@ -1213,15 +1226,152 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// Allow assignment from any smallptrset with the same element type even if it
+unit|};
+comment|/// SmallPtrSet - This class implements a set which is optimized for holding
 end_comment
 
 begin_comment
-comment|// doesn't have the same smallsize.
+comment|/// SmallSize or less elements.  This internally rounds up SmallSize to the next
+end_comment
+
+begin_comment
+comment|/// power of two if it is not already a power of two.  See the comments above
+end_comment
+
+begin_comment
+comment|/// SmallPtrSetImplBase for details of the algorithm.
 end_comment
 
 begin_expr_stmt
+name|template
+operator|<
+name|class
+name|PtrType
+operator|,
+name|unsigned
+name|SmallSize
+operator|>
+name|class
+name|SmallPtrSet
+operator|:
+name|public
+name|SmallPtrSetImpl
+operator|<
+name|PtrType
+operator|>
+block|{
+typedef|typedef
+name|SmallPtrSetImpl
+operator|<
+name|PtrType
+operator|>
+name|BaseT
+expr_stmt|;
+comment|// Make sure that SmallSize is a power of two, round up if not.
+block|enum
+block|{
+name|SmallSizePowTwo
+operator|=
+name|RoundUpToPowerOfTwo
+operator|<
+name|SmallSize
+operator|>
+operator|::
+name|Val
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// SmallStorage - Fixed size storage used in 'small mode'.
+end_comment
+
+begin_decl_stmt
 specifier|const
+name|void
+modifier|*
+name|SmallStorage
+index|[
+name|SmallSizePowTwo
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_expr_stmt
+name|SmallPtrSet
+argument_list|()
+operator|:
+name|BaseT
+argument_list|(
+argument|SmallStorage
+argument_list|,
+argument|SmallSizePowTwo
+argument_list|)
+block|{}
+name|SmallPtrSet
+argument_list|(
+specifier|const
+name|SmallPtrSet
+operator|&
+name|that
+argument_list|)
+operator|:
+name|BaseT
+argument_list|(
+argument|SmallStorage
+argument_list|,
+argument|that
+argument_list|)
+block|{}
+name|SmallPtrSet
+argument_list|(
+name|SmallPtrSet
+operator|&&
+name|that
+argument_list|)
+operator|:
+name|BaseT
+argument_list|(
+argument|SmallStorage
+argument_list|,
+argument|SmallSizePowTwo
+argument_list|,
+argument|std::move(that)
+argument_list|)
+block|{}
+name|template
+operator|<
+name|typename
+name|It
+operator|>
+name|SmallPtrSet
+argument_list|(
+argument|It I
+argument_list|,
+argument|It E
+argument_list|)
+operator|:
+name|BaseT
+argument_list|(
+argument|SmallStorage
+argument_list|,
+argument|SmallSizePowTwo
+argument_list|)
+block|{
+name|this
+operator|->
+name|insert
+argument_list|(
+name|I
+argument_list|,
+name|E
+argument_list|)
+block|;   }
 name|SmallPtrSet
 operator|<
 name|PtrType
@@ -1243,37 +1393,98 @@ operator|&
 name|RHS
 operator|)
 block|{
+if|if
+condition|(
+operator|&
+name|RHS
+operator|!=
+name|this
+condition|)
+name|this
+operator|->
 name|CopyFrom
 argument_list|(
 name|RHS
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|*
 name|this
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_comment
-comment|/// swap - Swaps the elements of two sets.
-end_comment
-
-begin_decl_stmt
-name|void
-name|swap
-argument_list|(
-name|SmallPtrSet
+begin_expr_stmt
+unit|}    SmallPtrSet
 operator|<
 name|PtrType
-argument_list|,
+operator|,
 name|SmallSize
 operator|>
 operator|&
+name|operator
+operator|=
+operator|(
+name|SmallPtrSet
+operator|<
+name|PtrType
+operator|,
+name|SmallSize
+operator|>
+operator|&&
+name|RHS
+operator|)
+block|{
+if|if
+condition|(
+operator|&
+name|RHS
+operator|!=
+name|this
+condition|)
+name|this
+operator|->
+name|MoveFrom
+argument_list|(
+name|SmallSizePowTwo
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|RHS
 argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|*
+name|this
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// swap - Swaps the elements of two sets.
+end_comment
+
+begin_macro
+unit|void
+name|swap
+argument_list|(
+argument|SmallPtrSet<PtrType
+argument_list|,
+argument|SmallSize>&RHS
+argument_list|)
+end_macro
+
+begin_block
 block|{
-name|SmallPtrSetImpl
+name|SmallPtrSetImplBase
 operator|::
 name|swap
 argument_list|(
@@ -1281,7 +1492,7 @@ name|RHS
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_block
 
 begin_macro
 unit|};  }  namespace

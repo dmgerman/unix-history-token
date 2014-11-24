@@ -80,6 +80,9 @@ decl_stmt|;
 name|class
 name|LPPassManager
 decl_stmt|;
+name|class
+name|Pass
+decl_stmt|;
 name|bool
 name|UnrollLoop
 parameter_list|(
@@ -102,6 +105,10 @@ parameter_list|,
 name|LoopInfo
 modifier|*
 name|LI
+parameter_list|,
+name|Pass
+modifier|*
+name|PP
 parameter_list|,
 name|LPPassManager
 modifier|*

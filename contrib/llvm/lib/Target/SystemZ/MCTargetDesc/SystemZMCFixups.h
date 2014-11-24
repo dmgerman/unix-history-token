@@ -81,6 +81,7 @@ name|FirstTargetFixupKind
 block|}
 enum|;
 block|}
+comment|// end namespace SystemZ
 block|}
 end_decl_stmt
 

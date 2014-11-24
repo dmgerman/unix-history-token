@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -220,7 +214,9 @@ comment|/// This is used for dynamic disassembly (see RawMemoryObject).
 name|void
 name|setFallbackRegion
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MemoryObject
 operator|>
@@ -234,7 +230,7 @@ name|reset
 argument_list|(
 name|Region
 operator|.
-name|take
+name|release
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -335,7 +331,9 @@ modifier|*
 name|MOS
 decl_stmt|;
 comment|/// \brief The fallback memory region, outside the object file.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MemoryObject
 operator|>
@@ -463,19 +461,19 @@ name|getEffectiveLoadAddr
 argument_list|(
 argument|uint64_t Addr
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|uint64_t
 name|getOriginalLoadAddr
 argument_list|(
 argument|uint64_t EffectiveAddr
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|uint64_t
 name|getEntrypoint
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|ArrayRef
 operator|<
@@ -483,7 +481,7 @@ name|uint64_t
 operator|>
 name|getStaticInitFunctions
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|ArrayRef
 operator|<
@@ -491,7 +489,7 @@ name|uint64_t
 operator|>
 name|getStaticExitFunctions
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|; }
 decl_stmt|;
 block|}
