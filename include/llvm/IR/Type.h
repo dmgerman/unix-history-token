@@ -66,19 +66,31 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm-c/Core.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/APFloat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/CBindingWrapping.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
@@ -91,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm-c/Core.h"
 end_include
 
 begin_decl_stmt
@@ -206,18 +212,7 @@ name|PointerTyID
 block|,
 comment|///< 14: Pointers
 name|VectorTyID
-block|,
 comment|///< 15: SIMD 'packed' format, or other vector type
-name|NumTypeIDs
-block|,
-comment|// Must remain as last defined ID
-name|LastPrimitiveTyID
-init|=
-name|X86_MMXTyID
-block|,
-name|FirstDerivedTyID
-init|=
-name|IntegerTyID
 block|}
 enum|;
 name|private
@@ -265,7 +260,7 @@ argument_list|)
 operator|,
 name|ContainedTys
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|setTypeID
@@ -815,33 +810,6 @@ name|isEmptyTy
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Here are some useful little methods to query what type derived types are
-comment|/// Note that all other types can just compare to see if this == Type::xxxTy;
-comment|///
-name|bool
-name|isPrimitiveType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTypeID
-argument_list|()
-operator|<=
-name|LastPrimitiveTyID
-return|;
-block|}
-name|bool
-name|isDerivedType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTypeID
-argument_list|()
-operator|>=
-name|FirstDerivedTyID
-return|;
-block|}
 comment|/// isFirstClassType - Return true if the type is "first class", meaning it
 comment|/// is a valid type for a Value.
 comment|///
@@ -872,30 +840,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|getTypeID
+name|isFloatingPointTy
 argument_list|()
-operator|!=
-name|VoidTyID
-operator|&&
-name|isPrimitiveType
-argument_list|()
-operator|)
 operator|||
-name|getTypeID
+name|isX86_MMXTy
 argument_list|()
-operator|==
-name|IntegerTyID
 operator|||
-name|getTypeID
+name|isIntegerTy
 argument_list|()
-operator|==
-name|PointerTyID
 operator|||
-name|getTypeID
+name|isPointerTy
 argument_list|()
-operator|==
-name|VectorTyID
+operator|||
+name|isVectorTy
+argument_list|()
 return|;
 block|}
 comment|/// isAggregateType - Return true if the type is an aggregate type. This
@@ -926,8 +884,21 @@ comment|/// DataLayout subsystem to do this.
 comment|///
 name|bool
 name|isSized
-argument_list|()
+argument_list|(
+name|SmallPtrSet
+operator|<
 specifier|const
+name|Type
+operator|*
+argument_list|,
+literal|4
+operator|>
+operator|*
+name|Visited
+operator|=
+name|nullptr
+argument_list|)
+decl|const
 block|{
 comment|// If it's a primitive, it is always sized.
 if|if
@@ -978,7 +949,9 @@ return|;
 comment|// Otherwise we have to try harder to decide.
 return|return
 name|isSizedDerivedType
-argument_list|()
+argument_list|(
+name|Visited
+argument_list|)
 return|;
 block|}
 comment|/// getPrimitiveSizeInBits - Return the basic size of this type if it is a
@@ -995,14 +968,17 @@ name|unsigned
 name|getPrimitiveSizeInBits
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 comment|/// getScalarSizeInBits - If this is a vector type, return the
 comment|/// getPrimitiveSizeInBits value for the element type. Otherwise return the
 comment|/// getPrimitiveSizeInBits value for this type.
 name|unsigned
 name|getScalarSizeInBits
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+expr_stmt|;
 comment|/// getFPMantissaWidth - Return the width of the mantissa of this type.  This
 comment|/// is only valid on floating point types.  If the FP type does not
 comment|/// have a stable mantissa (e.g. ppc long double), this method returns -1.
@@ -1019,12 +995,14 @@ operator|*
 name|getScalarType
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 name|Type
-modifier|*
+operator|*
 name|getScalarType
-parameter_list|()
-function_decl|;
+argument_list|()
+name|LLVM_READONLY
+expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Type Iteration support.
 comment|//
@@ -1641,21 +1619,25 @@ comment|/// iff all of the members of the type are sized as well.  Since asking 
 comment|/// their size is relatively uncommon, move this operation out of line.
 name|bool
 name|isSizedDerivedType
-argument_list|()
+argument_list|(
+name|SmallPtrSet
+operator|<
 specifier|const
-expr_stmt|;
+name|Type
+operator|*
+argument_list|,
+literal|4
+operator|>
+operator|*
+name|Visited
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|// Printing of types.
-end_comment
-
-begin_expr_stmt
 specifier|static
 specifier|inline
 name|raw_ostream
@@ -1683,13 +1665,7 @@ return|return
 name|OS
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// allow isa<PointerType>(x) to work without DerivedTypes.h included.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1720,22 +1696,11 @@ operator|::
 name|PointerTyID
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Provide specializations of GraphTraits to be able to treat a type as a
-end_comment
-
-begin_comment
 comment|// graph of sub types.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1750,25 +1715,86 @@ typedef|typedef
 name|Type
 name|NodeType
 typedef|;
-end_expr_stmt
-
-begin_typedef
 typedef|typedef
 name|Type
 operator|::
 name|subtype_iterator
 name|ChildIteratorType
 expr_stmt|;
-end_typedef
-
-begin_function
+specifier|static
+specifier|inline
+name|NodeType
+operator|*
+name|getEntryNode
+argument_list|(
+argument|Type *T
+argument_list|)
+block|{
+return|return
+name|T
+return|;
+block|}
+specifier|static
+specifier|inline
+name|ChildIteratorType
+name|child_begin
+argument_list|(
+argument|NodeType *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|subtype_begin
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+name|ChildIteratorType
+name|child_end
+argument_list|(
+argument|NodeType *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|subtype_end
+argument_list|()
+return|;
+block|}
+block|}
+empty_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|GraphTraits
+operator|<
+specifier|const
+name|Type
+operator|*
+operator|>
+block|{
+typedef|typedef
+specifier|const
+name|Type
+name|NodeType
+typedef|;
+typedef|typedef
+name|Type
+operator|::
+name|subtype_iterator
+name|ChildIteratorType
+expr_stmt|;
 specifier|static
 specifier|inline
 name|NodeType
 modifier|*
 name|getEntryNode
 parameter_list|(
-name|Type
+name|NodeType
 modifier|*
 name|T
 parameter_list|)
@@ -1777,9 +1803,6 @@ return|return
 name|T
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|ChildIteratorType
@@ -1797,9 +1820,6 @@ name|subtype_begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|ChildIteratorType
@@ -1817,97 +1837,14 @@ name|subtype_end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
-unit|};
-name|template
-operator|<
-operator|>
-expr|struct
-name|GraphTraits
-operator|<
-specifier|const
-name|Type
-operator|*
-operator|>
-block|{
-typedef|typedef
-specifier|const
-name|Type
-name|NodeType
-typedef|;
-end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|Type
-operator|::
-name|subtype_iterator
-name|ChildIteratorType
-expr_stmt|;
-end_typedef
-
-begin_function
-specifier|static
-specifier|inline
-name|NodeType
-modifier|*
-name|getEntryNode
-parameter_list|(
-name|NodeType
-modifier|*
-name|T
-parameter_list|)
-block|{
-return|return
-name|T
-return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-specifier|static
-specifier|inline
-name|ChildIteratorType
-name|child_begin
-parameter_list|(
-name|NodeType
-modifier|*
-name|N
-parameter_list|)
-block|{
-return|return
-name|N
-operator|->
-name|subtype_begin
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|ChildIteratorType
-name|child_end
-parameter_list|(
-name|NodeType
-modifier|*
-name|N
-parameter_list|)
-block|{
-return|return
-name|N
-operator|->
-name|subtype_end
-argument_list|()
-return|;
-block|}
-end_function
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|// Create wrappers for C Binding types (see CBindingWrapping.h).
 end_comment
 

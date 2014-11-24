@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/type_traits.h"
 end_include
 
@@ -263,9 +269,11 @@ operator|,
 name|From
 operator|,
 name|typename
+name|std
+operator|::
 name|enable_if
 operator|<
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
@@ -273,7 +281,9 @@ name|To
 operator|,
 name|From
 operator|>
-expr|>
+operator|::
+name|value
+operator|>
 operator|::
 name|type
 operator|>
@@ -712,6 +722,7 @@ operator|,
 name|class
 name|Y
 operator|>
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 specifier|inline
 name|bool
 name|isa
@@ -1212,6 +1223,8 @@ specifier|const
 name|bool
 name|value
 operator|=
+name|std
+operator|::
 name|is_same
 operator|<
 name|X
@@ -1269,7 +1282,9 @@ name|Y
 operator|>
 specifier|inline
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 operator|!
 name|is_simple_type
@@ -1482,6 +1497,7 @@ operator|,
 name|class
 name|Y
 operator|>
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 specifier|inline
 name|typename
 name|cast_retty
@@ -1500,12 +1516,11 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|Val
-operator|==
-literal|0
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|assert
 argument_list|(
@@ -1572,9 +1587,12 @@ operator|,
 name|class
 name|Y
 operator|>
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 specifier|inline
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 operator|!
 name|is_simple_type
@@ -1619,7 +1637,7 @@ operator|(
 name|Val
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -1633,6 +1651,7 @@ operator|,
 name|class
 name|Y
 operator|>
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 specifier|inline
 name|typename
 name|cast_retty
@@ -1665,7 +1684,7 @@ operator|(
 name|Val
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -1679,6 +1698,7 @@ operator|,
 name|class
 name|Y
 operator|>
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 specifier|inline
 name|typename
 name|cast_retty
@@ -1712,7 +1732,7 @@ operator|(
 name|Val
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -1738,6 +1758,7 @@ operator|,
 name|class
 name|Y
 operator|>
+name|LLVM_ATTRIBUTE_UNUSED_RESULT
 specifier|inline
 name|typename
 name|cast_retty
@@ -1775,7 +1796,7 @@ operator|(
 name|Val
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt

@@ -100,7 +100,13 @@ name|class
 name|MCRelocationInfo
 decl_stmt|;
 name|class
+name|MCStreamer
+decl_stmt|;
+name|class
 name|Target
+decl_stmt|;
+name|class
+name|Triple
 decl_stmt|;
 name|class
 name|StringRef
@@ -259,7 +265,7 @@ function_decl|;
 name|unsigned
 name|getDwarfRegFlavour
 parameter_list|(
-name|StringRef
+name|Triple
 name|TT
 parameter_list|,
 name|bool
@@ -356,6 +362,34 @@ name|TT
 parameter_list|,
 name|StringRef
 name|CPU
+parameter_list|)
+function_decl|;
+comment|/// createX86WinCOFFStreamer - Construct an X86 Windows COFF machine code
+comment|/// streamer which will generate PE/COFF format object files.
+comment|///
+comment|/// Takes ownership of \p AB and \p CE.
+name|MCStreamer
+modifier|*
+name|createX86WinCOFFStreamer
+parameter_list|(
+name|MCContext
+modifier|&
+name|C
+parameter_list|,
+name|MCAsmBackend
+modifier|&
+name|AB
+parameter_list|,
+name|MCCodeEmitter
+modifier|*
+name|CE
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|bool
+name|RelaxAll
 parameter_list|)
 function_decl|;
 comment|/// createX86MachObjectWriter - Construct an X86 Mach-O object writer.

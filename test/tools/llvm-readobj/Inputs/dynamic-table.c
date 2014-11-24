@@ -4,7 +4,15 @@ comment|// clang -target mipsel-linux-gnu -shared -fPIC -lc dynamic-table.c \
 end_comment
 
 begin_comment
-comment|//       -o dynamic-table.mips
+comment|//       -o dynamic-table-so.mips
+end_comment
+
+begin_comment
+comment|// clang -target mipsel-linux-gnu -lc dynamic-table.c \
+end_comment
+
+begin_comment
+comment|//       -o dynamic-table-exe.mips
 end_comment
 
 begin_function_decl
@@ -19,8 +27,8 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|void
-name|foo
+name|int
+name|main
 parameter_list|(
 name|void
 parameter_list|)

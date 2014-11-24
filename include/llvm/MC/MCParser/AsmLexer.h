@@ -110,9 +110,7 @@ name|char
 operator|*
 name|CurPtr
 block|;
-specifier|const
-name|MemoryBuffer
-operator|*
+name|StringRef
 name|CurBuf
 block|;
 name|bool
@@ -137,10 +135,10 @@ block|;
 name|protected
 operator|:
 comment|/// LexToken - Read the next token and return its code.
-name|virtual
 name|AsmToken
 name|LexToken
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -159,27 +157,27 @@ block|;
 name|void
 name|setBuffer
 argument_list|(
-specifier|const
-name|MemoryBuffer
-operator|*
-name|buf
+argument|StringRef Buf
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|ptr
-operator|=
-name|NULL
+argument|const char *ptr = nullptr
 argument_list|)
 block|;
-name|virtual
 name|StringRef
 name|LexUntilEndOfStatement
 argument_list|()
+name|override
 block|;
 name|StringRef
 name|LexUntilEndOfLine
 argument_list|()
+block|;
+specifier|const
+name|AsmToken
+name|peekTok
+argument_list|(
+argument|bool ShouldSkipSpace = true
+argument_list|)
+name|override
 block|;
 name|bool
 name|isAtStartOfComment

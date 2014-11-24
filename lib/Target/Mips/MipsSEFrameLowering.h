@@ -85,14 +85,7 @@ name|MipsSubtarget
 operator|&
 name|STI
 argument_list|)
-operator|:
-name|MipsFrameLowering
-argument_list|(
-argument|STI
-argument_list|,
-argument|STI.stackAlignment()
-argument_list|)
-block|{}
+block|;
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
 comment|/// the function.
 name|void
@@ -101,6 +94,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|emitEpilogue
@@ -110,6 +104,7 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateCallFramePseudoInstr
@@ -121,6 +116,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|spillCalleeSavedRegisters
@@ -134,6 +130,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasReservedCallFrame
@@ -141,6 +138,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|processFunctionBeforeCalleeSavedScan
@@ -150,6 +148,7 @@ argument_list|,
 argument|RegScavenger *RS
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|ehDataReg

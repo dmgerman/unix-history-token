@@ -193,36 +193,6 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
-comment|// createDSAAPass - This pass implements simple context sensitive alias
-comment|// analysis.
-comment|//
-name|ModulePass
-modifier|*
-name|createDSAAPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createDSOptPass - This pass uses DSA to do a series of simple
-comment|// optimizations.
-comment|//
-name|ModulePass
-modifier|*
-name|createDSOptPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createSteensgaardPass - This pass uses the data structure graphs to do a
-comment|// simple context insensitive alias analysis.
-comment|//
-name|ModulePass
-modifier|*
-name|createSteensgaardPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
 comment|/// createLazyValueInfoPass - This creates an instance of the LazyValueInfo
 comment|/// pass.
 name|FunctionPass
@@ -293,6 +263,13 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createMemDepPrinter
+parameter_list|()
+function_decl|;
+comment|// createJumpInstrTableInfoPass - This creates a pass that stores information
+comment|// about the jump tables created by JumpInstrTables
+name|ImmutablePass
+modifier|*
+name|createJumpInstrTableInfoPass
 parameter_list|()
 function_decl|;
 block|}

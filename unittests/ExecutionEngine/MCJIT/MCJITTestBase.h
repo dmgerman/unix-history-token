@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCJITTestAPICommon.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Config/config.h"
 end_include
 
@@ -119,12 +125,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/CodeGen.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MCJITTestAPICommon.h"
 end_include
 
 begin_decl_stmt
@@ -927,7 +927,9 @@ comment|// Module B { Extern FA, Function FB1, Function FB2 which calls FA },
 name|void
 name|createCrossModuleRecursiveCase
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -939,7 +941,9 @@ operator|*
 operator|&
 name|FA
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1059,7 +1063,9 @@ comment|// Module C { Extern FB, Function FC which calls FB },
 name|void
 name|createThreeModuleChainedCallsCase
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1071,7 +1077,9 @@ operator|*
 operator|&
 name|FA
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1083,7 +1091,9 @@ operator|*
 operator|&
 name|FB
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1211,7 +1221,9 @@ comment|// Module B { Function FB }
 name|void
 name|createTwoModuleCase
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1223,7 +1235,9 @@ operator|*
 operator|&
 name|FA
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1282,7 +1296,9 @@ comment|// Module B { Extern FA, Function FB which calls FA }
 name|void
 name|createTwoModuleExternCase
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1294,7 +1310,9 @@ operator|*
 operator|&
 name|FA
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1378,7 +1396,9 @@ comment|// Module C { Extern FB, Function FC which calls FA },
 name|void
 name|createThreeModuleCase
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1390,7 +1410,9 @@ operator|*
 operator|&
 name|FA
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1402,7 +1424,9 @@ operator|*
 operator|&
 name|FB
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>
@@ -1685,6 +1709,15 @@ name|Triple
 operator|::
 name|Darwin
 argument_list|)
+block|;
+name|UnsupportedEnvironments
+operator|.
+name|push_back
+argument_list|(
+name|Triple
+operator|::
+name|Cygnus
+argument_list|)
 block|;   }
 name|void
 name|createJIT
@@ -1830,7 +1863,9 @@ literal|1
 operator|>
 name|MAttrs
 expr_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ExecutionEngine
 operator|>
@@ -1840,7 +1875,9 @@ name|RTDyldMemoryManager
 modifier|*
 name|MM
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Module
 operator|>

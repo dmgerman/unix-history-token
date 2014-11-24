@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/InlineAsm.h"
 end_include
 
@@ -168,6 +162,12 @@ name|MachineModuleInfo
 decl_stmt|;
 name|class
 name|MachineRegisterInfo
+decl_stmt|;
+name|class
+name|SelectionDAG
+decl_stmt|;
+name|class
+name|MVT
 decl_stmt|;
 name|class
 name|TargetLowering
@@ -436,6 +436,10 @@ argument_list|,
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|SelectionDAG
+operator|*
+name|DAG
 argument_list|)
 expr_stmt|;
 comment|/// clear - Clear out all the function-specific state. This returns this
@@ -541,7 +545,7 @@ name|Reg
 argument_list|)
 condition|)
 return|return
-name|NULL
+name|nullptr
 return|;
 specifier|const
 name|LiveOutInfo
@@ -562,7 +566,7 @@ operator|->
 name|IsValid
 condition|)
 return|return
-name|NULL
+name|nullptr
 return|;
 return|return
 name|LOI

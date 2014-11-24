@@ -172,7 +172,7 @@ argument_list|)
 operator|:
 name|CommentStream
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|MAI

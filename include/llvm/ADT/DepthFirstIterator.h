@@ -138,6 +138,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/GraphTraits.h"
 end_include
 
@@ -1029,6 +1035,49 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|// Provide an accessor method to use them in range-based patterns.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|iterator_range
+operator|<
+name|df_iterator
+operator|<
+name|T
+operator|>>
+name|depth_first
+argument_list|(
+argument|const T& G
+argument_list|)
+block|{
+return|return
+name|iterator_range
+operator|<
+name|df_iterator
+operator|<
+name|T
+operator|>>
+operator|(
+name|df_begin
+argument_list|(
+name|G
+argument_list|)
+operator|,
+name|df_end
+argument_list|(
+name|G
+argument_list|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|// Provide global definitions of external depth first iterators...
 end_comment
 
@@ -1331,6 +1380,49 @@ operator|(
 name|G
 operator|)
 argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Provide an accessor method to use them in range-based patterns.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|iterator_range
+operator|<
+name|idf_iterator
+operator|<
+name|T
+operator|>>
+name|inverse_depth_first
+argument_list|(
+argument|const T& G
+argument_list|)
+block|{
+return|return
+name|iterator_range
+operator|<
+name|idf_iterator
+operator|<
+name|T
+operator|>>
+operator|(
+name|idf_begin
+argument_list|(
+name|G
+argument_list|)
+operator|,
+name|idf_end
+argument_list|(
+name|G
+argument_list|)
+operator|)
 return|;
 block|}
 end_expr_stmt

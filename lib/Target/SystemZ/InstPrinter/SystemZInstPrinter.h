@@ -166,7 +166,6 @@ name|O
 argument_list|)
 block|;
 comment|// Override MCInstPrinter.
-name|virtual
 name|void
 name|printRegName
 argument_list|(
@@ -175,9 +174,8 @@ argument_list|,
 argument|unsigned RegNo
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|printInst
 argument_list|(
@@ -187,7 +185,7 @@ argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|private
 operator|:

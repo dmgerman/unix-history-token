@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Bitcode/BitCodes.h"
 end_include
 
@@ -165,7 +159,9 @@ block|}
 struct|;
 name|private
 label|:
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|StreamableMemoryObject
 operator|>
@@ -478,7 +474,7 @@ name|i
 index|]
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|BlockInfo
@@ -753,14 +749,14 @@ argument_list|()
 operator|:
 name|BitStream
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NextChar
 argument_list|(
 literal|0
 argument_list|)
-block|{   }
+block|{}
 name|BitstreamCursor
 argument_list|(
 specifier|const
@@ -771,7 +767,7 @@ argument_list|)
 operator|:
 name|BitStream
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NextChar
@@ -1966,7 +1962,7 @@ name|unsigned
 modifier|*
 name|NumWordsP
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|bool
@@ -2175,7 +2171,7 @@ name|StringRef
 operator|*
 name|Blob
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//

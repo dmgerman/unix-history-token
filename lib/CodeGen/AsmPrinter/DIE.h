@@ -74,19 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Dwarf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCExpr.h"
 end_include
 
 begin_include
@@ -103,13 +91,16 @@ name|class
 name|AsmPrinter
 decl_stmt|;
 name|class
+name|MCExpr
+decl_stmt|;
+name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|MCSymbolRefExpr
+name|raw_ostream
 decl_stmt|;
 name|class
-name|raw_ostream
+name|DwarfTypeUnit
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// DIEAbbrevData - Dwarf abbreviation data, describes one attribute of a
@@ -195,6 +186,11 @@ range|:
 name|public
 name|FoldingSetNode
 block|{
+comment|/// Unique number for node.
+comment|///
+name|unsigned
+name|Number
+block|;
 comment|/// Tag - Dwarf tag code.
 comment|///
 name|dwarf
@@ -202,15 +198,12 @@ operator|::
 name|Tag
 name|Tag
 block|;
-comment|/// ChildrenFlag - Dwarf children flag.
+comment|/// Children - Whether or not this node has children.
 comment|///
-name|uint16_t
-name|ChildrenFlag
-block|;
-comment|/// Unique number for node.
-comment|///
-name|unsigned
-name|Number
+comment|// This cheats a bit in all of the uses since the values in the standard
+comment|// are 0 and 1 for no children and children respectively.
+name|bool
+name|Children
 block|;
 comment|/// Data - Raw data bytes for abbreviation.
 comment|///
@@ -228,7 +221,7 @@ name|DIEAbbrev
 argument_list|(
 argument|dwarf::Tag T
 argument_list|,
-argument|uint16_t C
+argument|bool C
 argument_list|)
 operator|:
 name|Tag
@@ -236,7 +229,7 @@ argument_list|(
 name|T
 argument_list|)
 block|,
-name|ChildrenFlag
+name|Children
 argument_list|(
 name|C
 argument_list|)
@@ -265,13 +258,13 @@ return|return
 name|Number
 return|;
 block|}
-name|uint16_t
-name|getChildrenFlag
+name|bool
+name|hasChildren
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ChildrenFlag
+name|Children
 return|;
 block|}
 specifier|const
@@ -291,12 +284,12 @@ block|}
 name|void
 name|setChildrenFlag
 argument_list|(
-argument|uint16_t CF
+argument|bool hasChild
 argument_list|)
 block|{
-name|ChildrenFlag
+name|Children
 operator|=
-name|CF
+name|hasChild
 block|; }
 name|void
 name|setNumber
@@ -329,7 +322,7 @@ argument_list|,
 name|Form
 argument_list|)
 argument_list|)
-block|;     }
+block|;   }
 comment|/// Profile - Used to gather unique data for the abbreviation folding set.
 comment|///
 name|void
@@ -395,13 +388,22 @@ name|Abbrev
 decl_stmt|;
 comment|/// Children DIEs.
 comment|///
+comment|// This can't be a vector<DIE> because pointer validity is requirent for the
+comment|// Parent pointer and DIEEntry.
+comment|// It can't be a list<DIE> because some clients need pointer validity before
+comment|// the object has been added to any child list
+comment|// (eg: DwarfUnit::constructVariableDIE). These aren't insurmountable, but may
+comment|// be more convoluted than beneficial.
 name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DIE
-operator|*
-operator|>
+operator|>>
 name|Children
 expr_stmt|;
 name|DIE
@@ -419,14 +421,48 @@ literal|12
 operator|>
 name|Values
 expr_stmt|;
-name|public
+name|protected
 label|:
+name|DIE
+argument_list|()
+operator|:
+name|Offset
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Abbrev
+argument_list|(
+operator|(
+name|dwarf
+operator|::
+name|Tag
+operator|)
+literal|0
+argument_list|,
+name|dwarf
+operator|::
+name|DW_CHILDREN_no
+argument_list|)
+operator|,
+name|Parent
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|public
+operator|:
 name|explicit
 name|DIE
 argument_list|(
-argument|unsigned Tag
+argument|dwarf::Tag Tag
 argument_list|)
-block|:
+operator|:
 name|Offset
 argument_list|(
 literal|0
@@ -453,19 +489,14 @@ argument_list|)
 operator|,
 name|Parent
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
-name|virtual
-operator|~
-name|DIE
-argument_list|()
-expr_stmt|;
 comment|// Accessors.
 name|DIEAbbrev
-modifier|&
+operator|&
 name|getAbbrev
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Abbrev
@@ -531,9 +562,12 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DIE
-operator|*
-operator|>
+operator|>>
 operator|&
 name|getChildren
 argument_list|()
@@ -568,21 +602,21 @@ return|return
 name|Parent
 return|;
 block|}
-comment|/// Climb up the parent chain to get the compile unit DIE this DIE belongs
-comment|/// to.
+comment|/// Climb up the parent chain to get the compile or type unit DIE this DIE
+comment|/// belongs to.
 specifier|const
 name|DIE
 operator|*
-name|getCompileUnit
+name|getUnit
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Similar to getCompileUnit, returns null when DIE is not added to an
+comment|/// Similar to getUnit, returns null when DIE is not added to an
 comment|/// owner yet.
 specifier|const
 name|DIE
 operator|*
-name|getCompileUnitOrNull
+name|getUnitOrNull
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -651,11 +685,15 @@ comment|/// addChild - Add a child to the DIE.
 comment|///
 name|void
 name|addChild
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DIE
-modifier|*
+operator|>
 name|Child
-parameter_list|)
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -675,30 +713,38 @@ operator|::
 name|DW_CHILDREN_yes
 argument_list|)
 expr_stmt|;
-name|Children
-operator|.
-name|push_back
-argument_list|(
-name|Child
-argument_list|)
-expr_stmt|;
 name|Child
 operator|->
 name|Parent
 operator|=
 name|this
 expr_stmt|;
+name|Children
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Child
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
-comment|/// findAttribute - Find a value in the DIE with the attribute given, returns NULL
-comment|/// if no such attribute exists.
+comment|/// findAttribute - Find a value in the DIE with the attribute given,
+comment|/// returns NULL if no such attribute exists.
 name|DIEValue
 modifier|*
 name|findAttribute
-parameter_list|(
-name|uint16_t
+argument_list|(
+name|dwarf
+operator|::
 name|Attribute
-parameter_list|)
-function_decl|;
+name|Attribute
+argument_list|)
+decl|const
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
@@ -725,7 +771,8 @@ directive|endif
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEValue - A debug information entry value.
+comment|/// DIEValue - A debug information entry value. Some of these roughly correlate
+comment|/// to DWARF attribute classes.
 comment|///
 name|class
 name|DIEValue
@@ -738,6 +785,7 @@ function_decl|;
 name|public
 label|:
 enum|enum
+name|Type
 block|{
 name|isInteger
 block|,
@@ -751,25 +799,29 @@ name|isDelta
 block|,
 name|isEntry
 block|,
+name|isTypeSignature
+block|,
 name|isBlock
-block|}
+block|,
+name|isLoc
+block|,
+name|isLocList
+block|,   }
 enum|;
 name|protected
 label|:
-comment|/// Type - Type of data stored in the value.
+comment|/// Ty - Type of data stored in the value.
 comment|///
-name|unsigned
 name|Type
+name|Ty
 decl_stmt|;
-name|public
-label|:
 name|explicit
 name|DIEValue
 argument_list|(
-argument|unsigned T
+argument|Type T
 argument_list|)
 block|:
-name|Type
+name|Ty
 argument_list|(
 argument|T
 argument_list|)
@@ -779,14 +831,16 @@ operator|~
 name|DIEValue
 argument_list|()
 block|{}
+name|public
+operator|:
 comment|// Accessors
-name|unsigned
+name|Type
 name|getType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Type
+name|Ty
 return|;
 block|}
 comment|/// EmitValue - Emit value via the Dwarf writer.
@@ -1004,7 +1058,6 @@ return|;
 block|}
 comment|/// EmitValue - Emit integer of appropriate size.
 comment|///
-name|virtual
 name|void
 name|EmitValue
 argument_list|(
@@ -1013,6 +1066,7 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 name|uint64_t
 name|getValue
@@ -1025,7 +1079,6 @@ return|;
 block|}
 comment|/// SizeOf - Determine size of integer value in bytes.
 comment|///
-name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
@@ -1034,6 +1087,7 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
@@ -1055,13 +1109,13 @@ block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 endif|#
 directive|endif
@@ -1104,7 +1158,6 @@ argument_list|)
 block|{}
 comment|/// EmitValue - Emit expression value.
 comment|///
-name|virtual
 name|void
 name|EmitValue
 argument_list|(
@@ -1113,6 +1166,7 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getValue - Get MCExpr.
 comment|///
@@ -1129,7 +1183,6 @@ return|;
 block|}
 comment|/// SizeOf - Determine size of expression value in bytes.
 comment|///
-name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
@@ -1138,6 +1191,7 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
@@ -1159,13 +1213,13 @@ block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 endif|#
 directive|endif
@@ -1208,7 +1262,6 @@ argument_list|)
 block|{}
 comment|/// EmitValue - Emit label value.
 comment|///
-name|virtual
 name|void
 name|EmitValue
 argument_list|(
@@ -1217,6 +1270,7 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getValue - Get MCSymbol.
 comment|///
@@ -1233,7 +1287,6 @@ return|;
 block|}
 comment|/// SizeOf - Determine size of label value in bytes.
 comment|///
-name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
@@ -1242,6 +1295,7 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
@@ -1263,13 +1317,13 @@ block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 endif|#
 directive|endif
@@ -1326,7 +1380,6 @@ argument_list|)
 block|{}
 comment|/// EmitValue - Emit delta value.
 comment|///
-name|virtual
 name|void
 name|EmitValue
 argument_list|(
@@ -1335,10 +1388,10 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// SizeOf - Determine size of delta value in bytes.
 comment|///
-name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
@@ -1347,6 +1400,7 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
@@ -1368,13 +1422,13 @@ block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 endif|#
 directive|endif
@@ -1434,7 +1488,6 @@ return|;
 block|}
 comment|/// EmitValue - Emit delta value.
 comment|///
-name|virtual
 name|void
 name|EmitValue
 argument_list|(
@@ -1443,10 +1496,10 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// SizeOf - Determine size of delta value in bytes.
 comment|///
-name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
@@ -1455,6 +1508,7 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
@@ -1476,13 +1530,13 @@ block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 endif|#
 directive|endif
@@ -1499,8 +1553,7 @@ name|public
 name|DIEValue
 block|{
 name|DIE
-operator|*
-specifier|const
+operator|&
 name|Entry
 block|;
 name|public
@@ -1509,7 +1562,7 @@ name|explicit
 name|DIEEntry
 argument_list|(
 name|DIE
-operator|*
+operator|&
 name|E
 argument_list|)
 operator|:
@@ -1522,16 +1575,9 @@ name|Entry
 argument_list|(
 argument|E
 argument_list|)
-block|{
-name|assert
-argument_list|(
-name|E
-operator|&&
-literal|"Cannot construct a DIEEntry with a null DIE"
-argument_list|)
-block|;     }
+block|{   }
 name|DIE
-operator|*
+operator|&
 name|getEntry
 argument_list|()
 specifier|const
@@ -1542,7 +1588,6 @@ return|;
 block|}
 comment|/// EmitValue - Emit debug information entry offset.
 comment|///
-name|virtual
 name|void
 name|EmitValue
 argument_list|(
@@ -1551,10 +1596,10 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// SizeOf - Determine size of debug information entry in bytes.
 comment|///
-name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
@@ -1563,6 +1608,7 @@ argument_list|,
 argument|dwarf::Form Form
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Form
@@ -1612,12 +1658,118 @@ block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
+specifier|const
+name|override
+block|;
+endif|#
+directive|endif
+block|}
+decl_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|/// \brief A signature reference to a type unit.
+name|class
+name|DIETypeSignature
+range|:
+name|public
+name|DIEValue
+block|{
+specifier|const
+name|DwarfTypeUnit
+operator|&
+name|Unit
+block|;
+name|public
+operator|:
+name|explicit
+name|DIETypeSignature
+argument_list|(
+specifier|const
+name|DwarfTypeUnit
+operator|&
+name|Unit
+argument_list|)
+operator|:
+name|DIEValue
+argument_list|(
+name|isTypeSignature
+argument_list|)
+block|,
+name|Unit
+argument_list|(
+argument|Unit
+argument_list|)
+block|{}
+comment|/// \brief Emit type unit signature.
+name|void
+name|EmitValue
+argument_list|(
+argument|AsmPrinter *Asm
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Returns size of a ref_sig8 entry.
+name|unsigned
+name|SizeOf
+argument_list|(
+argument|AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+name|override
+block|{
+name|assert
+argument_list|(
+name|Form
+operator|==
+name|dwarf
+operator|::
+name|DW_FORM_ref_sig8
+argument_list|)
+block|;
+return|return
+literal|8
+return|;
+block|}
+comment|// \brief Implement isa/cast/dyncast.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DIEValue *E
+argument_list|)
+block|{
+return|return
+name|E
+operator|->
+name|getType
+argument_list|()
+operator|==
+name|isTypeSignature
+return|;
+block|}
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|dump
+argument_list|()
 specifier|const
 block|;
 endif|#
@@ -1625,8 +1777,209 @@ directive|endif
 block|}
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
-comment|/// DIEBlock - A block of values.  Primarily used for location expressions.
+comment|/// DIELoc - Represents an expression location.
 comment|//
+name|class
+name|DIELoc
+range|:
+name|public
+name|DIEValue
+decl_stmt|,
+name|public
+name|DIE
+block|{
+name|mutable
+name|unsigned
+name|Size
+decl_stmt|;
+comment|// Size in bytes excluding size header.
+name|public
+label|:
+name|DIELoc
+argument_list|()
+operator|:
+name|DIEValue
+argument_list|(
+name|isLoc
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// ComputeSize - Calculate the size of the location expression.
+comment|///
+name|unsigned
+name|ComputeSize
+argument_list|(
+argument|AsmPrinter *AP
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// BestForm - Choose the best form for data.
+comment|///
+name|dwarf
+operator|::
+name|Form
+name|BestForm
+argument_list|(
+argument|unsigned DwarfVersion
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|DwarfVersion
+operator|>
+literal|3
+condition|)
+return|return
+name|dwarf
+operator|::
+name|DW_FORM_exprloc
+return|;
+comment|// Pre-DWARF4 location expressions were blocks and not exprloc.
+if|if
+condition|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|Size
+operator|==
+name|Size
+condition|)
+return|return
+name|dwarf
+operator|::
+name|DW_FORM_block1
+return|;
+if|if
+condition|(
+operator|(
+name|unsigned
+name|short
+operator|)
+name|Size
+operator|==
+name|Size
+condition|)
+return|return
+name|dwarf
+operator|::
+name|DW_FORM_block2
+return|;
+if|if
+condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
+name|Size
+operator|==
+name|Size
+condition|)
+return|return
+name|dwarf
+operator|::
+name|DW_FORM_block4
+return|;
+return|return
+name|dwarf
+operator|::
+name|DW_FORM_block
+return|;
+block|}
+comment|/// EmitValue - Emit location data.
+comment|///
+name|void
+name|EmitValue
+argument_list|(
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|dwarf
+operator|::
+name|Form
+name|Form
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+comment|/// SizeOf - Determine size of location data in bytes.
+comment|///
+name|unsigned
+name|SizeOf
+argument_list|(
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|dwarf
+operator|::
+name|Form
+name|Form
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+comment|// Implement isa/cast/dyncast.
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|DIEValue
+modifier|*
+name|E
+parameter_list|)
+block|{
+return|return
+name|E
+operator|->
+name|getType
+argument_list|()
+operator|==
+name|isLoc
+return|;
+block|}
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// DIEBlock - Represents a block of values.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_decl_stmt
 name|class
 name|DIEBlock
 range|:
@@ -1636,6 +1989,7 @@ decl_stmt|,
 name|public
 name|DIE
 block|{
+name|mutable
 name|unsigned
 name|Size
 decl_stmt|;
@@ -1650,25 +2004,19 @@ argument_list|(
 name|isBlock
 argument_list|)
 operator|,
-name|DIE
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|Size
 argument_list|(
 literal|0
 argument_list|)
 block|{}
-comment|/// ComputeSize - calculate the size of the block.
+comment|/// ComputeSize - Calculate the size of the location expression.
 comment|///
 name|unsigned
 name|ComputeSize
 argument_list|(
-name|AsmPrinter
-operator|*
-name|AP
+argument|AsmPrinter *AP
 argument_list|)
+specifier|const
 expr_stmt|;
 comment|/// BestForm - Choose the best form for data.
 comment|///
@@ -1730,9 +2078,17 @@ operator|::
 name|DW_FORM_block
 return|;
 block|}
-comment|/// EmitValue - Emit block data.
+end_decl_stmt
+
+begin_comment
+comment|/// EmitValue - Emit location data.
+end_comment
+
+begin_comment
 comment|///
-name|virtual
+end_comment
+
+begin_decl_stmt
 name|void
 name|EmitValue
 argument_list|(
@@ -1746,10 +2102,19 @@ name|Form
 name|Form
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-comment|/// SizeOf - Determine size of block data in bytes.
+end_decl_stmt
+
+begin_comment
+comment|/// SizeOf - Determine size of location data in bytes.
+end_comment
+
+begin_comment
 comment|///
-name|virtual
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|SizeOf
 argument_list|(
@@ -1763,8 +2128,15 @@ name|Form
 name|Form
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Implement isa/cast/dyncast.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -1784,10 +2156,15 @@ operator|==
 name|isBlock
 return|;
 block|}
+end_function
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|virtual
+end_ifndef
+
+begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -1796,15 +2173,127 @@ operator|&
 name|O
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+unit|};
+comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// DIELocList - Represents a pointer to a location list in the debug_loc
+end_comment
+
+begin_comment
+comment|/// section.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_decl_stmt
+name|class
+name|DIELocList
+range|:
+name|public
+name|DIEValue
+block|{
+comment|// Index into the .debug_loc vector.
+name|size_t
+name|Index
+block|;
+name|public
+operator|:
+name|DIELocList
+argument_list|(
+argument|size_t I
+argument_list|)
+operator|:
+name|DIEValue
+argument_list|(
+name|isLocList
+argument_list|)
+block|,
+name|Index
+argument_list|(
+argument|I
+argument_list|)
+block|{}
+comment|/// getValue - Grab the current index out.
+name|size_t
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Index
+return|;
+block|}
+comment|/// EmitValue - Emit location data.
+comment|///
+name|void
+name|EmitValue
+argument_list|(
+argument|AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// SizeOf - Determine size of location data in bytes.
+comment|///
+name|unsigned
+name|SizeOf
+argument_list|(
+argument|AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|// Implement isa/cast/dyncast.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const DIEValue *E
+argument_list|)
+block|{
+return|return
+name|E
+operator|->
+name|getType
+argument_list|()
+operator|==
+name|isLocList
+return|;
+block|}
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+name|override
+block|;
 endif|#
 directive|endif
 block|}
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 unit|}

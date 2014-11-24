@@ -78,10 +78,10 @@ range|:
 name|public
 name|MCAsmInfoELF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -90,7 +90,35 @@ name|SparcELFMCAsmInfo
 argument_list|(
 argument|StringRef TT
 argument_list|)
-block|;   }
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|getExprForPersonalitySymbol
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|,
+argument|unsigned Encoding
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|MCExpr
+operator|*
+name|getExprForFDESymbol
+argument_list|(
+argument|const MCSymbol *Sym
+argument_list|,
+argument|unsigned Encoding
+argument_list|,
+argument|MCStreamer&Streamer
+argument_list|)
+specifier|const
+name|override
+block|;  }
 decl_stmt|;
 block|}
 end_decl_stmt

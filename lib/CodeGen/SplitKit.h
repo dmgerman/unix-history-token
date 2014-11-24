@@ -973,7 +973,7 @@ name|Idx
 parameter_list|)
 function_decl|;
 comment|/// enterIntvAtEnd - Enter the open interval at the end of MBB.
-comment|/// Use the open interval from he inserted copy to the MBB end.
+comment|/// Use the open interval from the inserted copy to the MBB end.
 comment|/// Return the beginning of the new live range.
 name|SlotIndex
 name|enterIntvAtEnd
@@ -1068,7 +1068,7 @@ operator|>
 operator|*
 name|LRMap
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// dump - print the current interval maping to dbgs().

@@ -84,14 +84,42 @@ name|explicit
 name|XCoreSelectionDAGInfo
 argument_list|(
 specifier|const
-name|XCoreTargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~
 name|XCoreSelectionDAGInfo
 argument_list|()
+block|;
+name|SDValue
+name|EmitTargetCodeForMemcpy
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Op1
+argument_list|,
+argument|SDValue Op2
+argument_list|,
+argument|SDValue Op3
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool isVolatile
+argument_list|,
+argument|bool AlwaysInline
+argument_list|,
+argument|MachinePointerInfo DstPtrInfo
+argument_list|,
+argument|MachinePointerInfo SrcPtrInfo
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

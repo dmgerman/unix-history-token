@@ -93,6 +93,9 @@ name|class
 name|PPCTargetMachine
 decl_stmt|;
 name|class
+name|PassRegistry
+decl_stmt|;
+name|class
 name|FunctionPass
 decl_stmt|;
 name|class
@@ -132,6 +135,21 @@ directive|endif
 name|FunctionPass
 modifier|*
 name|createPPCEarlyReturnPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createPPCVSXCopyPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createPPCVSXCopyCleanupPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createPPCVSXFMAMutatePass
 parameter_list|()
 function_decl|;
 name|FunctionPass
@@ -192,6 +210,18 @@ modifier|*
 name|TM
 parameter_list|)
 function_decl|;
+name|void
+name|initializePPCVSXFMAMutatePass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|PPCVSXFMAMutateID
+decl_stmt|;
 name|namespace
 name|PPCII
 block|{
@@ -203,10 +233,11 @@ comment|//===------------------------------------------------------------------=
 comment|// PPC Specific MachineOperand flags.
 name|MO_NO_FLAG
 block|,
-comment|/// MO_DARWIN_STUB - On a symbol operand "FOO", this indicates that the
-comment|/// reference is actually to the "FOO$stub" symbol.  This is used for calls
-comment|/// and jumps to external functions on Tiger and earlier.
-name|MO_DARWIN_STUB
+comment|/// MO_PLT_OR_STUB - On a symbol operand "FOO", this indicates that the
+comment|/// reference is actually to the "FOO$stub" or "FOO@plt" symbol.  This is
+comment|/// used for calls and jumps to external functions on Tiger and earlier, and
+comment|/// for PIC calls on Linux and ELF systems.
+name|MO_PLT_OR_STUB
 init|=
 literal|1
 block|,

@@ -62,7 +62,43 @@ end_define
 begin_include
 include|#
 directive|include
+file|"PPCFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"PPCInstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"PPCISelLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"PPCJITInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"PPCSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -156,6 +192,8 @@ name|DIR_PWR6X
 block|,
 name|DIR_PWR7
 block|,
+name|DIR_PWR8
+block|,
 name|DIR_64
 block|}
 enum|;
@@ -196,6 +234,9 @@ name|Has64BitSupport
 block|;
 name|bool
 name|Use64BitRegs
+block|;
+name|bool
+name|UseCRBits
 block|;
 name|bool
 name|IsPPC64
@@ -270,6 +311,31 @@ comment|/// TargetTriple - What processor and OS we're targeting.
 name|Triple
 name|TargetTriple
 block|;
+comment|/// OptLevel - What default optimization level we're emitting code for.
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+block|;
+name|PPCFrameLowering
+name|FrameLowering
+block|;
+specifier|const
+name|DataLayout
+name|DL
+block|;
+name|PPCInstrInfo
+name|InstrInfo
+block|;
+name|PPCJITInfo
+name|JITInfo
+block|;
+name|PPCTargetLowering
+name|TLInfo
+block|;
+name|PPCSelectionDAGInfo
+name|TSInfo
+block|;
 name|public
 operator|:
 comment|/// This constructor initializes the data members to match that
@@ -283,7 +349,11 @@ argument|const std::string&CPU
 argument_list|,
 argument|const std::string&FS
 argument_list|,
+argument|PPCTargetMachine&TM
+argument_list|,
 argument|bool is64Bit
+argument_list|,
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
 block|;
 comment|/// ParseSubtargetFeatures - Parses features string setting specified
@@ -325,7 +395,7 @@ return|return
 name|DarwinDirective
 return|;
 block|}
-comment|/// getInstrItins - Return the instruction itineraies based on subtarget
+comment|/// getInstrItins - Return the instruction itineraries based on subtarget
 comment|/// selection.
 specifier|const
 name|InstrItineraryData
@@ -338,16 +408,94 @@ return|return
 name|InstrItins
 return|;
 block|}
+specifier|const
+name|PPCFrameLowering
+operator|*
+name|getFrameLowering
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|FrameLowering
+return|;
+block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|DL
+return|;
+block|}
+specifier|const
+name|PPCInstrInfo
+operator|*
+name|getInstrInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|InstrInfo
+return|;
+block|}
+name|PPCJITInfo
+operator|*
+name|getJITInfo
+argument_list|()
+block|{
+return|return
+operator|&
+name|JITInfo
+return|;
+block|}
+specifier|const
+name|PPCTargetLowering
+operator|*
+name|getTargetLowering
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TLInfo
+return|;
+block|}
+specifier|const
+name|PPCSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
+return|;
+block|}
+comment|/// initializeSubtargetDependencies - Initializes using a CPU and feature string
+comment|/// so that we can use initializer lists for subtarget initialization.
+name|PPCSubtarget
+operator|&
+name|initializeSubtargetDependencies
+argument_list|(
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|;
 comment|/// \brief Reset the features for the PowerPC target.
-name|virtual
 name|void
 name|resetSubtargetFeatures
 argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
+argument|const MachineFunction *MF
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -397,6 +545,17 @@ specifier|const
 block|{
 return|return
 name|Use64BitRegs
+return|;
+block|}
+comment|/// useCRBits - Return true if we should store and manipulate i1 values in
+comment|/// the individual condition register bits.
+name|bool
+name|useCRBits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseCRBits
 return|;
 block|}
 comment|/// hasLazyResolverStub - Return true if accesses to the specified global have
@@ -550,6 +709,15 @@ name|HasQPX
 return|;
 block|}
 name|bool
+name|hasVSX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVSX
+return|;
+block|}
+name|bool
 name|hasMFOCRF
 argument_list|()
 specifier|const
@@ -636,23 +804,6 @@ name|isMacOSX
 argument_list|()
 return|;
 block|}
-comment|/// isBGP - True if this is a BG/P platform.
-name|bool
-name|isBGP
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetTriple
-operator|.
-name|getVendor
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|BGP
-return|;
-block|}
 comment|/// isBGQ - True if this is a BG/Q platform.
 name|bool
 name|isBGQ
@@ -668,6 +819,30 @@ operator|==
 name|Triple
 operator|::
 name|BGQ
+return|;
+block|}
+name|bool
+name|isTargetELF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSBinFormatELF
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetMachO
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSBinFormatMachO
+argument_list|()
 return|;
 block|}
 name|bool
@@ -691,23 +866,61 @@ name|isDarwin
 argument_list|()
 return|;
 block|}
-comment|/// enablePostRAScheduler - True at 'More' optimization.
+comment|/// FIXME: Should use a command-line option.
 name|bool
-name|enablePostRAScheduler
-argument_list|(
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|TargetSubtargetInfo::AntiDepBreakMode& Mode
-argument_list|,
-argument|RegClassVector& CriticalPathRCs
-argument_list|)
+name|isELFv2ABI
+argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|isPPC64
+argument_list|()
+operator|&&
+name|isSVR4ABI
+argument_list|()
+operator|&&
+name|isLittleEndian
+argument_list|()
+return|;
+block|}
+name|bool
+name|enableEarlyIfConversion
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|hasISEL
+argument_list|()
+return|;
+block|}
 comment|// Scheduling customization.
 name|bool
 name|enableMachineScheduler
 argument_list|()
 specifier|const
+name|override
+block|;
+comment|// This overrides the PostRAScheduler bit in the SchedModel for each CPU.
+name|bool
+name|enablePostMachineScheduler
+argument_list|()
+specifier|const
+name|override
+block|;
+name|AntiDepBreakMode
+name|getAntiDepBreakMode
+argument_list|()
+specifier|const
+name|override
+block|;
+name|void
+name|getCriticalPathRCs
+argument_list|(
+argument|RegClassVector&CriticalPathRCs
+argument_list|)
+specifier|const
+name|override
 block|;
 name|void
 name|overrideSchedPolicy
@@ -721,11 +934,13 @@ argument_list|,
 argument|unsigned NumRegionInstrs
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|useAA
 argument_list|()
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

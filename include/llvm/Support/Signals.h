@@ -103,7 +103,7 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// This function removes a file from the list of files to be removed on

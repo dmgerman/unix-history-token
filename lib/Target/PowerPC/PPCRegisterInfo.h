@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"PPC.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"PPC.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_define
@@ -131,7 +131,6 @@ argument_list|)
 block|;
 comment|/// getPointerRegClass - Return the register class to use to hold pointers.
 comment|/// This is used for addressing modes.
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -143,6 +142,7 @@ argument|unsigned Kind=
 literal|0
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getRegPressureLimit
@@ -152,17 +152,28 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
+block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getLargestLegalSuperClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+name|override
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction* MF =
-literal|0
+argument|const MachineFunction* MF =nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|uint32_t
@@ -172,6 +183,7 @@ argument_list|(
 argument|CallingConv::ID CC
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|uint32_t
@@ -186,6 +198,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// We require the register scavenger.
 name|bool
@@ -194,6 +207,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -205,6 +219,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -216,18 +231,19 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|requiresVirtualBaseRegisters
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -251,6 +267,24 @@ specifier|const
 block|;
 name|void
 name|lowerCRRestore
+argument_list|(
+argument|MachineBasicBlock::iterator II
+argument_list|,
+argument|unsigned FrameIndex
+argument_list|)
+specifier|const
+block|;
+name|void
+name|lowerCRBitSpilling
+argument_list|(
+argument|MachineBasicBlock::iterator II
+argument_list|,
+argument|unsigned FrameIndex
+argument_list|)
+specifier|const
+block|;
+name|void
+name|lowerCRBitRestore
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
@@ -286,6 +320,7 @@ argument_list|,
 argument|int&FrameIdx
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateFrameIndex
@@ -296,9 +331,10 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Support for virtual base registers.
 name|bool
@@ -309,6 +345,7 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|materializeFrameBaseRegister
@@ -322,17 +359,19 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|resolveFrameIndex
 argument_list|(
-argument|MachineBasicBlock::iterator I
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned BaseReg
 argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isFrameOffsetLegal
@@ -342,6 +381,7 @@ argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Debug information queries.
 name|unsigned
@@ -350,6 +390,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Base pointer (stack realignment) support.
 name|unsigned
@@ -379,6 +420,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

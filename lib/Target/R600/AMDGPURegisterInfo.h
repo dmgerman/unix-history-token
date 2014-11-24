@@ -102,7 +102,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AMDGPUTargetMachine
+name|AMDGPUSubtarget
 decl_stmt|;
 name|class
 name|TargetInstrInfo
@@ -113,29 +113,31 @@ range|:
 name|public
 name|AMDGPUGenRegisterInfo
 block|{
-name|TargetMachine
-operator|&
-name|TM
-block|;
 specifier|static
 specifier|const
-name|uint16_t
+name|MCPhysReg
 name|CalleeSavedReg
+block|;
+specifier|const
+name|AMDGPUSubtarget
+operator|&
+name|ST
 block|;
 name|AMDGPURegisterInfo
 argument_list|(
-name|TargetMachine
+specifier|const
+name|AMDGPUSubtarget
 operator|&
-name|tm
+name|st
 argument_list|)
 block|;
-name|virtual
 name|BitVector
 name|getReservedRegs
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -146,29 +148,6 @@ block|;
 return|return
 name|BitVector
 argument_list|()
-return|;
-block|}
-comment|/// \param RC is an AMDIL reg class.
-comment|///
-comment|/// \returns The ISA reg class that is equivalent to \p RC.
-name|virtual
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getISARegClass
-argument_list|(
-argument|const TargetRegisterClass * RC
-argument_list|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-literal|"Unimplemented"
-argument_list|)
-block|;
-return|return
-name|NULL
 return|;
 block|}
 name|virtual
@@ -188,7 +167,7 @@ literal|"Unimplemented"
 argument_list|)
 block|;
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -219,14 +198,16 @@ argument_list|)
 specifier|const
 block|;
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
 argument|const MachineFunction *MF
 argument_list|)
 specifier|const
+name|override
 block|;
+name|virtual
 name|void
 name|eliminateFrameIndex
 argument_list|(
@@ -239,6 +220,7 @@ argument_list|,
 argument|RegScavenger *RS
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getFrameRegister
@@ -246,6 +228,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getIndirectSubReg

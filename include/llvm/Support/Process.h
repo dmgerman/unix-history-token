@@ -130,12 +130,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/system_error.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -143,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/TimeValue.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -292,28 +292,28 @@ argument_list|()
 block|;
 name|public
 operator|:
-name|virtual
 name|id_type
 name|get_id
 argument_list|()
+name|override
 block|;
-name|virtual
 name|TimeValue
 name|get_user_time
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|TimeValue
 name|get_system_time
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|TimeValue
 name|get_wall_time
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \name Process configuration (sysconf on POSIX)
 comment|/// @{
@@ -410,10 +410,40 @@ argument_list|(
 argument|StringRef name
 argument_list|)
 expr_stmt|;
+comment|/// This function searches for an existing file in the list of directories
+comment|/// in a PATH like environment variable, and returns the first file found,
+comment|/// according to the order of the entries in the PATH like environment
+comment|/// variable.
+specifier|static
+name|Optional
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|FindInEnvPath
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|EnvName
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FileName
+argument_list|)
+expr_stmt|;
 comment|/// This function returns a SmallVector containing the arguments passed from
 comment|/// the operating system to the program.  This function expects to be handed
 comment|/// the vector passed in from main.
 specifier|static
+name|std
+operator|::
 name|error_code
 name|GetArgumentVector
 argument_list|(
@@ -441,7 +471,7 @@ operator|>
 operator|&
 name|ArgAllocator
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// This function determines if the standard input is connected directly
 comment|/// to a user's input (keyboard probably), rather than coming from a file
 comment|/// or pipe.

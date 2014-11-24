@@ -72,6 +72,7 @@ name|NTPOFF
 block|}
 enum|;
 block|}
+comment|// end namespace SystemZCP
 comment|/// A SystemZ-specific constant pool value.  At present, the only
 comment|/// defined constant pool values are offsets of thread-local variables
 comment|/// (written x@NTPOFF).
@@ -113,14 +114,12 @@ argument|SystemZCP::SystemZCPModifier Modifier
 argument_list|)
 block|;
 comment|// Override MachineConstantPoolValue.
-name|virtual
 name|unsigned
 name|getRelocationInfo
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|int
 name|getExistingMachineCPValue
 argument_list|(
@@ -128,24 +127,22 @@ argument|MachineConstantPool *CP
 argument_list|,
 argument|unsigned Alignment
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|addSelectionDAGCSEId
 argument_list|(
 argument|FoldingSetNodeID&ID
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|// Access SystemZ-specific fields.
 specifier|const
@@ -175,7 +172,7 @@ block|;  }
 end_decl_stmt
 
 begin_comment
-comment|// End llvm namespace
+comment|// end namespace llvm
 end_comment
 
 begin_endif

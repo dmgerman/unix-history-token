@@ -66,6 +66,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
 name|MCAsmLayout
 decl_stmt|;
 name|class
@@ -79,6 +82,9 @@ name|MCSection
 decl_stmt|;
 name|class
 name|MCSectionData
+decl_stmt|;
+name|class
+name|MCStreamer
 decl_stmt|;
 name|class
 name|MCSymbol
@@ -211,6 +217,9 @@ name|Addrs
 argument_list|,
 name|bool
 name|InSet
+argument_list|,
+name|bool
+name|ForceVarExpansion
 argument_list|)
 decl|const
 decl_stmt|;
@@ -325,7 +334,27 @@ name|Res
 argument_list|,
 specifier|const
 name|MCAsmLayout
+operator|*
+name|Layout
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Try to evaluate the expression to the form (a - b + constant) where
+comment|/// neither a nor b are variables.
+comment|///
+comment|/// This is a more aggressive variant of EvaluateAsRelocatable. The intended
+comment|/// use is for when relocations are not available, like the symbol value in
+comment|/// the symbol table.
+name|bool
+name|EvaluateAsValue
+argument_list|(
+name|MCValue
 operator|&
+name|Res
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|*
 name|Layout
 argument_list|)
 decl|const
@@ -496,31 +525,42 @@ name|VK_DTPOFF
 block|,
 name|VK_TLVP
 block|,
-comment|// Mach-O thread local variable relocation
+comment|// Mach-O thread local variable relocations
+name|VK_TLVPPAGE
+block|,
+name|VK_TLVPPAGEOFF
+block|,
+name|VK_PAGE
+block|,
+name|VK_PAGEOFF
+block|,
+name|VK_GOTPAGE
+block|,
+name|VK_GOTPAGEOFF
+block|,
 name|VK_SECREL
 block|,
-comment|// FIXME: We'd really like to use the generic Kinds listed above for these.
+name|VK_WEAKREF
+block|,
+comment|// The link between the symbols in .weakref foo, bar
 name|VK_ARM_NONE
-block|,
-name|VK_ARM_PLT
-block|,
-comment|// ARM-style PLT references. i.e., (PLT) instead of @PLT
-name|VK_ARM_TLSGD
-block|,
-comment|//   ditto for TLSGD, GOT, GOTOFF, TPOFF and GOTTPOFF
-name|VK_ARM_GOT
-block|,
-name|VK_ARM_GOTOFF
-block|,
-name|VK_ARM_TPOFF
-block|,
-name|VK_ARM_GOTTPOFF
 block|,
 name|VK_ARM_TARGET1
 block|,
 name|VK_ARM_TARGET2
 block|,
 name|VK_ARM_PREL31
+block|,
+name|VK_ARM_TLSLDO
+block|,
+comment|// symbol(tlsldo)
+name|VK_ARM_TLSCALL
+block|,
+comment|// symbol(tlscall)
+name|VK_ARM_TLSDESC
+block|,
+comment|// symbol(tlsdesc)
+name|VK_ARM_TLSDESCSEQ
 block|,
 name|VK_PPC_LO
 block|,
@@ -723,6 +763,10 @@ name|VK_Mips_CALL_HI16
 block|,
 name|VK_Mips_CALL_LO16
 block|,
+name|VK_Mips_PCREL_HI16
+block|,
+name|VK_Mips_PCREL_LO16
+block|,
 name|VK_COFF_IMGREL32
 comment|// symbol@imgrel (image-relative)
 block|}
@@ -740,12 +784,20 @@ specifier|const
 name|VariantKind
 name|Kind
 block|;
+comment|/// MCAsmInfo that is used to print symbol variants correctly.
+specifier|const
+name|MCAsmInfo
+operator|*
+name|MAI
+block|;
 name|explicit
 name|MCSymbolRefExpr
 argument_list|(
 argument|const MCSymbol *_Symbol
 argument_list|,
 argument|VariantKind _Kind
+argument_list|,
+argument|const MCAsmInfo *_MAI
 argument_list|)
 operator|:
 name|MCExpr
@@ -762,12 +814,22 @@ argument_list|)
 block|,
 name|Kind
 argument_list|(
-argument|_Kind
+name|_Kind
+argument_list|)
+block|,
+name|MAI
+argument_list|(
+argument|_MAI
 argument_list|)
 block|{
 name|assert
 argument_list|(
 name|Symbol
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|MAI
 argument_list|)
 block|;   }
 name|public
@@ -837,6 +899,18 @@ block|{
 return|return
 operator|*
 name|Symbol
+return|;
+block|}
+specifier|const
+name|MCAsmInfo
+operator|&
+name|getMCAsmInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|MAI
 return|;
 block|}
 name|VariantKind
@@ -1813,9 +1887,9 @@ literal|0
 block|;
 name|virtual
 name|void
-name|AddValueSymbols
+name|visitUsedExpr
 argument_list|(
-argument|MCAssembler *
+argument|MCStreamer& Streamer
 argument_list|)
 specifier|const
 operator|=

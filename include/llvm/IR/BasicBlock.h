@@ -313,13 +313,13 @@ name|Function
 modifier|*
 name|Parent
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|BasicBlock
 modifier|*
 name|InsertBefore
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|public
@@ -381,13 +381,13 @@ name|Function
 modifier|*
 name|Parent
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|BasicBlock
 modifier|*
 name|InsertBefore
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -429,6 +429,13 @@ return|return
 name|Parent
 return|;
 block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Returns the terminator instruction if the block is well formed or
 comment|/// null if the block is not well formed.
 name|TerminatorInst
@@ -588,8 +595,8 @@ modifier|*
 name|MovePos
 parameter_list|)
 function_decl|;
-comment|/// \brief Return this block if it has a single predecessor block. Otherwise
-comment|/// return a null pointer.
+comment|/// \brief Return the predecessor of this block if it has a single predecessor
+comment|/// block. Otherwise return a null pointer.
 name|BasicBlock
 modifier|*
 name|getSinglePredecessor
@@ -616,7 +623,8 @@ name|getSinglePredecessor
 argument_list|()
 return|;
 block|}
-comment|/// \brief Return this block if it has a unique predecessor block. Otherwise return a null pointer.
+comment|/// \brief Return the predecessor of this block if it has a unique predecessor
+comment|/// block. Otherwise return a null pointer.
 comment|///
 comment|/// Note that unique predecessor doesn't mean single edge, there can be
 comment|/// multiple edges from the unique predecessor to this block (for example a

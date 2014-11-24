@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -94,9 +100,6 @@ name|APFloat
 decl_stmt|;
 name|class
 name|APInt
-decl_stmt|;
-name|class
-name|BumpPtrAllocator
 decl_stmt|;
 comment|/// This folding set used for two purposes:
 comment|///   1. Given information about a node we want to create, look up the unique
@@ -240,7 +243,7 @@ argument_list|()
 operator|:
 name|NextInFoldingSetBucket
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|// Accessors
@@ -689,7 +692,7 @@ argument_list|()
 operator|:
 name|Data
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Size
@@ -729,6 +732,25 @@ name|FoldingSetNodeIDRef
 operator|)
 specifier|const
 expr_stmt|;
+name|bool
+name|operator
+operator|!=
+operator|(
+name|FoldingSetNodeIDRef
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
 comment|/// Used to compare the "ordering" of two nodes as defined by the
 comment|/// profiled bits and their ordering defined by memcmp().
 name|bool
@@ -953,6 +975,47 @@ name|RHS
 operator|)
 specifier|const
 expr_stmt|;
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|FoldingSetNodeID
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|FoldingSetNodeIDRef
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
 comment|/// Used to compare the "ordering" of two nodes as defined by the
 comment|/// profiled bits and their ordering defined by memcmp().
 name|bool
@@ -1217,7 +1280,6 @@ name|private
 operator|:
 comment|/// GetNodeProfile - Each instantiatation of the FoldingSet needs to provide a
 comment|/// way to convert nodes into a unique specifier.
-name|virtual
 name|void
 name|GetNodeProfile
 argument_list|(
@@ -1226,6 +1288,7 @@ argument_list|,
 argument|FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|{
 name|T
 operator|*
@@ -1255,7 +1318,6 @@ argument_list|)
 block|;   }
 comment|/// NodeEquals - Instantiations may optionally provide a way to compare a
 comment|/// node with a specified ID.
-name|virtual
 name|bool
 name|NodeEquals
 argument_list|(
@@ -1268,6 +1330,7 @@ argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|)
 specifier|const
+name|override
 block|{
 name|T
 operator|*
@@ -1303,7 +1366,6 @@ return|;
 block|}
 comment|/// ComputeNodeHash - Instantiations may optionally provide a way to compute a
 comment|/// hash value directly from a node.
-name|virtual
 name|unsigned
 name|ComputeNodeHash
 argument_list|(
@@ -1312,6 +1374,7 @@ argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|)
 specifier|const
+name|override
 block|{
 name|T
 operator|*
@@ -1610,7 +1673,6 @@ name|Context
 block|;
 comment|/// GetNodeProfile - Each instantiatation of the FoldingSet needs to provide a
 comment|/// way to convert nodes into a unique specifier.
-name|virtual
 name|void
 name|GetNodeProfile
 argument_list|(
@@ -1619,6 +1681,7 @@ argument_list|,
 argument|FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|{
 name|T
 operator|*
@@ -1650,7 +1713,6 @@ argument_list|,
 name|Context
 argument_list|)
 block|;   }
-name|virtual
 name|bool
 name|NodeEquals
 argument_list|(
@@ -1663,6 +1725,7 @@ argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|)
 specifier|const
+name|override
 block|{
 name|T
 operator|*
@@ -1700,7 +1763,6 @@ name|Context
 argument_list|)
 return|;
 block|}
-name|virtual
 name|unsigned
 name|ComputeNodeHash
 argument_list|(
@@ -1709,6 +1771,7 @@ argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|)
 specifier|const
+name|override
 block|{
 name|T
 operator|*
@@ -3497,6 +3560,61 @@ operator|.
 name|AddPointer
 argument_list|(
 name|X
+argument_list|)
+block|;   }
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T1
+operator|,
+name|typename
+name|T2
+operator|>
+expr|struct
+name|FoldingSetTrait
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|T1
+operator|,
+name|T2
+operator|>>
+block|{
+specifier|static
+specifier|inline
+name|void
+name|Profile
+argument_list|(
+argument|const std::pair<T1
+argument_list|,
+argument|T2>&P
+argument_list|,
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|ID
+operator|.
+name|Add
+argument_list|(
+name|P
+operator|.
+name|first
+argument_list|)
+block|;
+name|ID
+operator|.
+name|Add
+argument_list|(
+name|P
+operator|.
+name|second
 argument_list|)
 block|;   }
 block|}

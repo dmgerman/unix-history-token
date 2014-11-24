@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -93,9 +99,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MemoryBuffer
-decl_stmt|;
 name|class
 name|SourceMgr
 decl_stmt|;
@@ -202,6 +205,8 @@ name|XSRL
 block|,
 name|XSHL
 block|,
+name|XListConcat
+block|,
 name|XStrConcat
 block|,
 name|XCast
@@ -247,9 +252,7 @@ name|char
 modifier|*
 name|CurPtr
 decl_stmt|;
-specifier|const
-name|MemoryBuffer
-modifier|*
+name|StringRef
 name|CurBuf
 decl_stmt|;
 comment|// Information about the current token.
@@ -275,7 +278,7 @@ decl_stmt|;
 comment|// This is valid for INTVAL.
 comment|/// CurBuffer - This is the current buffer index we're lexing from as managed
 comment|/// by the SourceMgr object.
-name|int
+name|unsigned
 name|CurBuffer
 decl_stmt|;
 name|public

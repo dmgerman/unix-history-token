@@ -65,21 +65,22 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MemoryBuffer
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|OwningPtr
-expr_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
@@ -105,7 +106,7 @@ name|StatusOK
 block|,
 name|StatusUnsupported
 block|,
-comment|// zlib is unavaliable
+comment|// zlib is unavailable
 name|StatusOutOfMemory
 block|,
 comment|// there was not enough memory
@@ -129,9 +130,9 @@ argument_list|(
 name|StringRef
 name|InputBuffer
 argument_list|,
-name|OwningPtr
+name|SmallVectorImpl
 operator|<
-name|MemoryBuffer
+name|char
 operator|>
 operator|&
 name|CompressedBuffer
@@ -148,9 +149,9 @@ argument_list|(
 name|StringRef
 name|InputBuffer
 argument_list|,
-name|OwningPtr
+name|SmallVectorImpl
 operator|<
-name|MemoryBuffer
+name|char
 operator|>
 operator|&
 name|UncompressedBuffer

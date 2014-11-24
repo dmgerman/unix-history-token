@@ -66,19 +66,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist_node.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/User.h"
+file|"llvm/IR/DebugLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
+file|"llvm/IR/User.h"
 end_include
 
 begin_decl_stmt
@@ -159,11 +165,11 @@ operator|~
 name|Instruction
 argument_list|()
 expr_stmt|;
-comment|/// use_back - Specialize the methods defined in Value, as we know that an
+comment|/// user_back - Specialize the methods defined in Value, as we know that an
 comment|/// instruction can only be used by other instructions.
 name|Instruction
 modifier|*
-name|use_back
+name|user_back
 parameter_list|()
 block|{
 return|return
@@ -173,7 +179,7 @@ name|Instruction
 operator|>
 operator|(
 operator|*
-name|use_begin
+name|user_begin
 argument_list|()
 operator|)
 return|;
@@ -181,7 +187,7 @@ block|}
 specifier|const
 name|Instruction
 operator|*
-name|use_back
+name|user_back
 argument_list|()
 specifier|const
 block|{
@@ -192,7 +198,7 @@ name|Instruction
 operator|>
 operator|(
 operator|*
-name|use_begin
+name|user_begin
 argument_list|()
 operator|)
 return|;
@@ -219,6 +225,13 @@ return|return
 name|Parent
 return|;
 block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing basic
 comment|/// block, but does not delete it.
 comment|///
@@ -519,7 +532,7 @@ name|hasMetadata
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|getMetadataImpl
@@ -546,7 +559,7 @@ name|hasMetadata
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|getMetadataImpl
@@ -647,6 +660,79 @@ modifier|*
 name|Node
 parameter_list|)
 function_decl|;
+comment|/// \brief Drop unknown metadata.
+comment|/// Passes are required to drop metadata they don't understand. This is a
+comment|/// convenience method for passes to do so.
+name|void
+name|dropUnknownMetadata
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|KnownIDs
+argument_list|)
+decl_stmt|;
+name|void
+name|dropUnknownMetadata
+parameter_list|()
+block|{
+return|return
+name|dropUnknownMetadata
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+argument_list|)
+return|;
+block|}
+name|void
+name|dropUnknownMetadata
+parameter_list|(
+name|unsigned
+name|ID1
+parameter_list|)
+block|{
+return|return
+name|dropUnknownMetadata
+argument_list|(
+name|makeArrayRef
+argument_list|(
+name|ID1
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|void
+name|dropUnknownMetadata
+parameter_list|(
+name|unsigned
+name|ID1
+parameter_list|,
+name|unsigned
+name|ID2
+parameter_list|)
+block|{
+name|unsigned
+name|IDs
+index|[]
+init|=
+block|{
+name|ID1
+block|,
+name|ID2
+block|}
+decl_stmt|;
+return|return
+name|dropUnknownMetadata
+argument_list|(
+name|IDs
+argument_list|)
+return|;
+block|}
 comment|/// setDebugLoc - Set the debug location information for this instruction.
 name|void
 name|setDebugLoc
@@ -1467,8 +1553,7 @@ argument|Use *Ops
 argument_list|,
 argument|unsigned NumOps
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 empty_stmt|;
 name|Instruction

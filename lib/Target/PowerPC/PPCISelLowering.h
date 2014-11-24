@@ -84,19 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"PPCSubtarget.h"
+file|"llvm/CodeGen/CallingConvLower.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/CallingConvLower.h"
 end_include
 
 begin_include
@@ -178,18 +172,13 @@ name|Lo
 block|,
 name|TOC_ENTRY
 block|,
-comment|/// The following three target-specific nodes are used for calls through
+comment|/// The following two target-specific nodes are used for calls through
 comment|/// function pointers in the 64-bit SVR4 ABI.
-comment|/// Restore the TOC from the TOC save area of the current stack frame.
-comment|/// This is basically a hard coded load instruction which additionally
-comment|/// takes/produces a flag.
-name|TOC_RESTORE
-block|,
 comment|/// Like a regular LOAD but additionally taking/producing a flag.
 name|LOAD
 block|,
-comment|/// LOAD into r2 (also taking/producing a flag). Like TOC_RESTORE, this is
-comment|/// a hard coded load instruction.
+comment|/// Like LOAD (taking/producing a flag), but using r2 as hard-coded
+comment|/// destination.
 name|LOAD_TOC
 block|,
 comment|/// OPRC, CHAIN = DYNALLOC(CHAIN, NEGSIZE, FRAME_INDEX)
@@ -232,6 +221,14 @@ comment|/// R32 = MFOCRF(CRREG, INFLAG) - Represents the MFOCRF instruction.
 comment|/// This copies the bits corresponding to the specified CRREG into the
 comment|/// resultant GPR.  Bits corresponding to other CR regs are undefined.
 name|MFOCRF
+block|,
+comment|// FIXME: Remove these once the ANDI glue bug is fixed:
+comment|/// i1 = ANDIo_1_[EQ|GT]_BIT(i32 or i64 x) - Represents the result of the
+comment|/// eq or gt bit of CR0 after executing andi. x, 1. This is used to
+comment|/// implement truncation of i32 or i64 to i1.
+name|ANDIo_1_EQ_BIT
+block|,
+name|ANDIo_1_GT_BIT
 block|,
 comment|// EH_SJLJ_SETJMP - SjLj exception handling setjmp.
 name|EH_SJLJ_SETJMP
@@ -291,6 +288,10 @@ comment|/// ch, gl = CR6[UN]SET ch, inglue - Toggle CR bit 6 for SVR4 vararg cal
 name|CR6SET
 block|,
 name|CR6UNSET
+block|,
+comment|/// GPRC = address of _GLOBAL_OFFSET_TABLE_. Used by initial-exec TLS
+comment|/// on PPC32.
+name|PPC32_GOT
 block|,
 comment|/// G8RC = ADDIS_GOT_TPREL_HA %X2, Symbol - Used by the initial-exec
 comment|/// TLS model, produces an ADDIS8 instruction that adds the GOT
@@ -421,8 +422,12 @@ name|ShuffleVectorSDNode
 modifier|*
 name|N
 parameter_list|,
-name|bool
-name|isUnary
+name|unsigned
+name|ShuffleKind
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
 parameter_list|)
 function_decl|;
 comment|/// isVPKUWUMShuffleMask - Return true if this is the shuffle mask for a
@@ -434,8 +439,12 @@ name|ShuffleVectorSDNode
 modifier|*
 name|N
 parameter_list|,
-name|bool
-name|isUnary
+name|unsigned
+name|ShuffleKind
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
 parameter_list|)
 function_decl|;
 comment|/// isVMRGLShuffleMask - Return true if this is a shuffle mask suitable for
@@ -450,8 +459,12 @@ parameter_list|,
 name|unsigned
 name|UnitSize
 parameter_list|,
-name|bool
-name|isUnary
+name|unsigned
+name|ShuffleKind
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
 parameter_list|)
 function_decl|;
 comment|/// isVMRGHShuffleMask - Return true if this is a shuffle mask suitable for
@@ -466,12 +479,16 @@ parameter_list|,
 name|unsigned
 name|UnitSize
 parameter_list|,
-name|bool
-name|isUnary
+name|unsigned
+name|ShuffleKind
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
 parameter_list|)
 function_decl|;
-comment|/// isVSLDOIShuffleMask - If this is a vsldoi shuffle mask, return the shift
-comment|/// amount, otherwise return -1.
+comment|/// isVSLDOIShuffleMask - If this is a vsldoi shuffle mask, return the
+comment|/// shift amount, otherwise return -1.
 name|int
 name|isVSLDOIShuffleMask
 parameter_list|(
@@ -479,8 +496,12 @@ name|SDNode
 modifier|*
 name|N
 parameter_list|,
-name|bool
-name|isUnary
+name|unsigned
+name|ShuffleKind
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
 parameter_list|)
 function_decl|;
 comment|/// isSplatShuffleMask - Return true if the specified VECTOR_SHUFFLE operand
@@ -518,6 +539,10 @@ name|N
 parameter_list|,
 name|unsigned
 name|EltSize
+parameter_list|,
+name|SelectionDAG
+modifier|&
+name|DAG
 parameter_list|)
 function_decl|;
 comment|/// get_VSPLTI_elt - If this is a build_vector of constants which can be
@@ -541,6 +566,9 @@ parameter_list|)
 function_decl|;
 block|}
 name|class
+name|PPCSubtarget
+decl_stmt|;
+name|class
 name|PPCTargetLowering
 range|:
 name|public
@@ -549,7 +577,7 @@ block|{
 specifier|const
 name|PPCSubtarget
 operator|&
-name|PPCSubTarget
+name|Subtarget
 block|;
 name|public
 operator|:
@@ -563,7 +591,6 @@ argument_list|)
 block|;
 comment|/// getTargetNodeName() - This method returns the name of a target specific
 comment|/// DAG node.
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -572,14 +599,15 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|MVT
@@ -588,7 +616,6 @@ name|i32
 return|;
 block|}
 comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
-name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
@@ -597,11 +624,11 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getPreIndexedAddressParts - returns true by value, base pointer and
 comment|/// offset pointer and addressing mode by reference if the node's address
 comment|/// can be legally represented as pre-indexed load / store address.
-name|virtual
 name|bool
 name|getPreIndexedAddressParts
 argument_list|(
@@ -616,6 +643,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// SelectAddressRegReg - Given the specified addressed, check to see if it
 comment|/// can be represented as an indexed [r+r] operation.  Returns false if it
@@ -675,10 +703,10 @@ argument_list|(
 argument|SDNode *N
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
 comment|///
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -687,11 +715,11 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
 comment|///
-name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
@@ -702,8 +730,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|PerformDAGCombine
 argument_list|(
@@ -712,10 +740,20 @@ argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
+name|unsigned
+name|getRegisterByName
+argument_list|(
+argument|const char* RegName
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
 name|void
-name|computeMaskedBitsForTargetNode
+name|computeKnownBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
@@ -729,8 +767,8 @@ argument|unsigned Depth =
 literal|0
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -740,6 +778,7 @@ argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|MachineBasicBlock
 operator|*
@@ -795,6 +834,7 @@ argument_list|(
 argument|const std::string&Constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Examine constraint string and operand type and determine a weight value.
 comment|/// The operand object must already have been set up with the operand type.
@@ -806,6 +846,7 @@ argument_list|,
 argument|const char *constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 name|std
 operator|::
@@ -824,6 +865,7 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
 comment|/// function arguments in the caller parameter area.  This is the actual
@@ -834,10 +876,10 @@ argument_list|(
 argument|Type *Ty
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
 comment|/// vector.  If it is invalid, don't add anything to Ops.
-name|virtual
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
@@ -850,10 +892,10 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isLegalAddressingMode - Return true if the addressing mode represented
 comment|/// by AM is legal for this target, for a load/store of the specified type.
-name|virtual
 name|bool
 name|isLegalAddressingMode
 argument_list|(
@@ -862,14 +904,74 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
+comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
+comment|/// icmp immediate, that is the target has icmp instructions which can
+comment|/// compare a register against the immediate without having to materialize
+comment|/// the immediate into a register.
+name|bool
+name|isLegalICmpImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
+comment|/// add immediate, that is the target has add instructions which can
+comment|/// add a register and the immediate without having to materialize
+comment|/// the immediate into a register.
+name|bool
+name|isLegalAddImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// isTruncateFree - Return true if it's free to truncate a value of
+comment|/// type Ty1 to type Ty2. e.g. On PPC it's free to truncate a i64 value in
+comment|/// register X1 to i32 by referencing its sub-register R1.
+name|bool
+name|isTruncateFree
+argument_list|(
+argument|Type *Ty1
+argument_list|,
+argument|Type *Ty2
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isTruncateFree
+argument_list|(
+argument|EVT VT1
+argument_list|,
+argument|EVT VT2
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// \brief Returns true if it is beneficial to convert a load of a constant
+comment|/// to just the constant itself.
+name|bool
+name|shouldConvertConstantLoadToIntImm
+argument_list|(
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getOptimalMemOpType - Returns the target specific optimal type for load
 comment|/// and store operations as a result of memset, memcpy, and memmove
@@ -882,7 +984,6 @@ comment|/// means it's a memset of zero. 'MemcpyStrSrc' indicates whether the me
 comment|/// source is constant so it does not need to be loaded.
 comment|/// It returns EVT::Other if the type should be determined using generic
 comment|/// target-independent logic.
-name|virtual
 name|EVT
 name|getOptimalMemOpType
 argument_list|(
@@ -901,35 +1002,47 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Is unaligned memory access allowed for the given type, and is it fast
 comment|/// relative to software emulation.
-name|virtual
 name|bool
 name|allowsUnalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
-argument|bool *Fast =
-literal|0
+argument|unsigned AddrSpace
+argument_list|,
+argument|bool *Fast = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isFMAFasterThanFMulAndFAdd - Return true if an FMA operation is faster
 comment|/// than a pair of fmul and fadd instructions. fmuladd intrinsics will be
 comment|/// expanded to FMAs when this method returns true, otherwise fmuladd is
 comment|/// expanded to fmul + fadd.
-name|virtual
 name|bool
 name|isFMAFasterThanFMulAndFAdd
 argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
+block|;
+comment|// Should we expand the build vector with shuffles?
+name|bool
+name|shouldExpandBuildVectorWithShuffles
+argument_list|(
+argument|EVT VT
+argument_list|,
+argument|unsigned DefinedValues
+argument_list|)
+specifier|const
+name|override
 block|;
 comment|/// createFastISel - This method returns a target-specific FastISel object,
 comment|/// or null if the target does not support "fast" instruction selection.
-name|virtual
 name|FastISel
 operator|*
 name|createFastISel
@@ -939,7 +1052,36 @@ argument_list|,
 argument|const TargetLibraryInfo *LibInfo
 argument_list|)
 specifier|const
+name|override
 block|;
+comment|/// \brief Returns true if an argument of type Ty needs to be passed in a
+comment|/// contiguous block of registers in calling convention CallConv.
+name|bool
+name|functionArgumentNeedsConsecutiveRegisters
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// We support any array type as "consecutive" block in the parameter
+comment|// save area.  The element type defines the alignment requirement and
+comment|// whether the argument should go in GPRs, FPRs, or VRs if available.
+comment|//
+comment|// Note that clang uses this capability both to implement the ELFv2
+comment|// homogeneous float/vector aggregate ABI, and to avoid having to use
+comment|// "byval" when passing aggregates that might fully fit in registers.
+return|return
+name|Ty
+operator|->
+name|isArrayTy
+argument_list|()
+return|;
+block|}
 name|private
 operator|:
 name|SDValue
@@ -1136,6 +1278,33 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerLOAD
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSTORE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerTRUNCATE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerSELECT_CC
 argument_list|(
 argument|SDValue Op
@@ -1237,6 +1406,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerSIGN_EXTEND_INREG
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerMUL
 argument_list|(
 argument|SDValue Op
@@ -1302,7 +1480,6 @@ argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -1321,8 +1498,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -1331,8 +1508,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|CanLowerReturn
 argument_list|(
@@ -1347,8 +1524,8 @@ argument_list|,
 argument|LLVMContext&Context
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -1367,6 +1544,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|extendArgForPPC64
@@ -1380,21 +1558,6 @@ argument_list|,
 argument|SDValue ArgVal
 argument_list|,
 argument|SDLoc dl
-argument_list|)
-specifier|const
-block|;
-name|void
-name|setMinReservedArea
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|,
-argument|unsigned nAltivecParamsAtEnd
-argument_list|,
-argument|unsigned MinReservedArea
-argument_list|,
-argument|bool isPPC64
 argument_list|)
 specifier|const
 block|;
@@ -1568,6 +1731,24 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|DAGCombineExtBoolTrunc
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|DAGCombineTruncBoolExt
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;

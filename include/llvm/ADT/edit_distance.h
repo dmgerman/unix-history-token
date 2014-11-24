@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<algorithm>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<algorithm>
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -173,11 +173,12 @@ index|[
 name|SmallBufferSize
 index|]
 block|;
-name|llvm
+name|std
 operator|::
-name|OwningArrayPtr
+name|unique_ptr
 operator|<
 name|unsigned
+index|[]
 operator|>
 name|Allocated
 block|;

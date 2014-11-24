@@ -49,6 +49,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -102,12 +108,12 @@ argument_list|()
 operator|:
 name|Impl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|head
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~
@@ -167,6 +173,17 @@ comment|/// RunSafely has returned false. Clients can use getBacktrace() to retr
 comment|/// the backtrace of the crash on failures.
 name|bool
 name|RunSafely
+argument_list|(
+name|function_ref
+operator|<
+name|void
+argument_list|()
+operator|>
+name|Fn
+argument_list|)
+decl_stmt|;
+name|bool
+name|RunSafely
 parameter_list|(
 name|void
 function_decl|(
@@ -182,12 +199,47 @@ name|void
 modifier|*
 name|UserData
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|RunSafely
+argument_list|(
+index|[
+operator|&
+index|]
+operator|(
+operator|)
+block|{
+name|Fn
+argument_list|(
+name|UserData
+argument_list|)
+block|; }
+argument_list|)
+return|;
+block|}
 comment|/// \brief Execute the provide callback function (with the given arguments) in
 comment|/// a protected context which is run in another thread (optionally with a
 comment|/// requested stack size).
 comment|///
 comment|/// See RunSafely() and llvm_execute_on_thread().
+comment|///
+comment|/// On Darwin, if PRIO_DARWIN_BG is set on the calling thread, it will be
+comment|/// propagated to the new thread as well.
+name|bool
+name|RunSafelyOnThread
+argument_list|(
+name|function_ref
+operator|<
+name|void
+argument_list|()
+operator|>
+argument_list|,
+name|unsigned
+name|RequestedStackSize
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 name|bool
 name|RunSafelyOnThread
 parameter_list|(
@@ -210,7 +262,26 @@ name|RequestedStackSize
 init|=
 literal|0
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|RunSafelyOnThread
+argument_list|(
+index|[
+operator|&
+index|]
+operator|(
+operator|)
+block|{
+name|Fn
+argument_list|(
+name|UserData
+argument_list|)
+block|; }
+argument_list|,
+name|RequestedStackSize
+argument_list|)
+return|;
+block|}
 comment|/// \brief Explicitly trigger a crash recovery in the current process, and
 comment|/// return failure from RunSafely(). This function does not return.
 name|void

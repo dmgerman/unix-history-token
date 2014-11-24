@@ -117,23 +117,58 @@ name|class
 name|MCContext
 decl_stmt|;
 name|namespace
+name|WinEH
+block|{
+name|enum
+name|class
+name|EncodingType
+block|{
+name|ET_Invalid
+operator|,
+comment|/// Invalid
+name|ET_Alpha
+operator|,
+comment|/// Windows Alpha
+name|ET_Alpha64
+operator|,
+comment|/// Windows AXP64
+name|ET_ARM
+operator|,
+comment|/// Windows NT (Windows on ARM)
+name|ET_CE
+operator|,
+comment|/// Windows CE ARM, PowerPC, SH3, SH4
+name|ET_Itanium
+operator|,
+comment|/// Windows x64, Windows Itanium (IA-64)
+name|ET_MIPS
+operator|=
+name|ET_Alpha
+operator|,
+block|}
+empty_stmt|;
+block|}
+name|enum
+name|class
 name|ExceptionHandling
 block|{
-enum|enum
-name|ExceptionsType
-block|{
 name|None
-block|,
+operator|,
+comment|/// No exception support
 name|DwarfCFI
-block|,
+operator|,
+comment|/// DWARF-like instruction based exceptions
 name|SjLj
-block|,
+operator|,
+comment|/// setjmp/longjmp based exceptions
 name|ARM
-block|,
-name|Win64
+operator|,
+comment|/// ARM EHABI
+name|WinEH
+operator|,
+comment|/// Windows Exception Handling
 block|}
-enum|;
-block|}
+empty_stmt|;
 name|namespace
 name|LCOMM
 block|{
@@ -148,7 +183,7 @@ name|Log2Alignment
 block|}
 enum|;
 block|}
-comment|/// MCAsmInfo - This class is intended to be used as a base class for asm
+comment|/// This class is intended to be used as a base class for asm
 comment|/// properties and features specific to the target.
 name|class
 name|MCAsmInfo
@@ -158,451 +193,381 @@ label|:
 comment|//===------------------------------------------------------------------===//
 comment|// Properties to be set by the target writer, used to configure asm printer.
 comment|//
-comment|/// PointerSize - Pointer size in bytes.
-comment|///               Default is 4.
+comment|/// Pointer size in bytes.  Default is 4.
 name|unsigned
 name|PointerSize
 decl_stmt|;
-comment|/// CalleeSaveStackSlotSize - Size of the stack slot reserved for
-comment|///                           callee-saved registers, in bytes.
-comment|///                           Default is same as pointer size.
+comment|/// Size of the stack slot reserved for callee-saved registers, in bytes.
+comment|/// Default is same as pointer size.
 name|unsigned
 name|CalleeSaveStackSlotSize
 decl_stmt|;
-comment|/// IsLittleEndian - True if target is little endian.
-comment|///                  Default is true.
+comment|/// True if target is little endian.  Default is true.
 name|bool
 name|IsLittleEndian
 decl_stmt|;
-comment|/// StackGrowsUp - True if target stack grow up.
-comment|///                Default is false.
+comment|/// True if target stack grow up.  Default is false.
 name|bool
 name|StackGrowsUp
 decl_stmt|;
-comment|/// HasSubsectionsViaSymbols - True if this target has the MachO
-comment|/// .subsections_via_symbols directive.
+comment|/// True if this target has the MachO .subsections_via_symbols directive.
+comment|/// Default is false.
 name|bool
 name|HasSubsectionsViaSymbols
 decl_stmt|;
-comment|// Default is false.
-comment|/// HasMachoZeroFillDirective - True if this is a MachO target that supports
-comment|/// the macho-specific .zerofill directive for emitting BSS Symbols.
+comment|/// True if this is a MachO target that supports the macho-specific .zerofill
+comment|/// directive for emitting BSS Symbols.  Default is false.
 name|bool
 name|HasMachoZeroFillDirective
 decl_stmt|;
-comment|// Default is false.
-comment|/// HasMachoTBSSDirective - True if this is a MachO target that supports
-comment|/// the macho-specific .tbss directive for emitting thread local BSS Symbols
+comment|/// True if this is a MachO target that supports the macho-specific .tbss
+comment|/// directive for emitting thread local BSS Symbols.  Default is false.
 name|bool
 name|HasMachoTBSSDirective
 decl_stmt|;
-comment|// Default is false.
-comment|/// HasStaticCtorDtorReferenceInStaticMode - True if the compiler should
-comment|/// emit a ".reference .constructors_used" or ".reference .destructors_used"
-comment|/// directive after the a static ctor/dtor list.  This directive is only
-comment|/// emitted in Static relocation model.
+comment|/// True if the compiler should emit a ".reference .constructors_used" or
+comment|/// ".reference .destructors_used" directive after the a static ctor/dtor
+comment|/// list.  This directive is only emitted in Static relocation model.  Default
+comment|/// is false.
 name|bool
 name|HasStaticCtorDtorReferenceInStaticMode
 decl_stmt|;
-comment|// Default is false.
-comment|/// LinkerRequiresNonEmptyDwarfLines - True if the linker has a bug and
-comment|/// requires that the debug_line section be of a minimum size. In practice
-comment|/// such a linker requires a non empty line sequence if a file is present.
+comment|/// True if the linker has a bug and requires that the debug_line section be
+comment|/// of a minimum size. In practice such a linker requires a non-empty line
+comment|/// sequence if a file is present.  Default to false.
 name|bool
 name|LinkerRequiresNonEmptyDwarfLines
 decl_stmt|;
-comment|// Default to false.
-comment|/// MaxInstLength - This is the maximum possible length of an instruction,
-comment|/// which is needed to compute the size of an inline asm.
+comment|/// This is the maximum possible length of an instruction, which is needed to
+comment|/// compute the size of an inline asm.  Defaults to 4.
 name|unsigned
 name|MaxInstLength
 decl_stmt|;
-comment|// Defaults to 4.
-comment|/// MinInstAlignment - Every possible instruction length is a multiple of
-comment|/// this value.  Factored out in .debug_frame and .debug_line.
+comment|/// Every possible instruction length is a multiple of this value.  Factored
+comment|/// out in .debug_frame and .debug_line.  Defaults to 1.
 name|unsigned
 name|MinInstAlignment
 decl_stmt|;
-comment|// Defaults to 1.
-comment|/// DollarIsPC - The '$' token, when not referencing an identifier or
-comment|/// constant, refers to the current PC.
+comment|/// The '$' token, when not referencing an identifier or constant, refers to
+comment|/// the current PC.  Defaults to false.
 name|bool
 name|DollarIsPC
 decl_stmt|;
-comment|// Defaults to false.
-comment|/// SeparatorString - This string, if specified, is used to separate
-comment|/// instructions from each other when on the same line.
+comment|/// This string, if specified, is used to separate instructions from each
+comment|/// other when on the same line.  Defaults to ';'
 specifier|const
 name|char
 modifier|*
 name|SeparatorString
 decl_stmt|;
-comment|// Defaults to ';'
-comment|/// CommentColumn - This indicates the comment num (zero-based) at
-comment|/// which asm comments should be printed.
-name|unsigned
-name|CommentColumn
-decl_stmt|;
-comment|// Defaults to 40
-comment|/// CommentString - This indicates the comment character used by the
-comment|/// assembler.
+comment|/// This indicates the comment character used by the assembler.  Defaults to
+comment|/// "#"
 specifier|const
 name|char
 modifier|*
 name|CommentString
 decl_stmt|;
-comment|// Defaults to "#"
-comment|/// LabelSuffix - This is appended to emitted labels.
+comment|/// This is appended to emitted labels.  Defaults to ":"
 specifier|const
 name|char
 modifier|*
 name|LabelSuffix
 decl_stmt|;
-comment|// Defaults to ":"
-comment|/// LabelSuffix - This is appended to emitted labels.
-specifier|const
-name|char
-modifier|*
-name|DebugLabelSuffix
+comment|// Print the EH begin symbol with an assignment. Defaults to false.
+name|bool
+name|UseAssignmentForEHBegin
 decl_stmt|;
-comment|// Defaults to ":"
-comment|/// GlobalPrefix - If this is set to a non-empty string, it is prepended
-comment|/// onto all global symbols.  This is often used for "_" or ".".
-specifier|const
-name|char
-modifier|*
-name|GlobalPrefix
-decl_stmt|;
-comment|// Defaults to ""
-comment|/// PrivateGlobalPrefix - This prefix is used for globals like constant
-comment|/// pool entries that are completely private to the .s file and should not
-comment|/// have names in the .o file.  This is often "." or "L".
+comment|/// This prefix is used for globals like constant pool entries that are
+comment|/// completely private to the .s file and should not have names in the .o
+comment|/// file.  Defaults to "L"
 specifier|const
 name|char
 modifier|*
 name|PrivateGlobalPrefix
 decl_stmt|;
-comment|// Defaults to "."
-comment|/// LinkerPrivateGlobalPrefix - This prefix is used for symbols that should
-comment|/// be passed through the assembler but be removed by the linker.  This
-comment|/// is "l" on Darwin, currently used for some ObjC metadata.
+comment|/// This prefix is used for symbols that should be passed through the
+comment|/// assembler but be removed by the linker.  This is 'l' on Darwin, currently
+comment|/// used for some ObjC metadata.  The default of "" meast that for this system
+comment|/// a plain private symbol should be used.  Defaults to "".
 specifier|const
 name|char
 modifier|*
 name|LinkerPrivateGlobalPrefix
 decl_stmt|;
-comment|// Defaults to ""
-comment|/// InlineAsmStart/End - If these are nonempty, they contain a directive to
-comment|/// emit before and after an inline assembly statement.
+comment|/// If these are nonempty, they contain a directive to emit before and after
+comment|/// an inline assembly statement.  Defaults to "#APP\n", "#NO_APP\n"
 specifier|const
 name|char
 modifier|*
 name|InlineAsmStart
 decl_stmt|;
-comment|// Defaults to "#APP\n"
 specifier|const
 name|char
 modifier|*
 name|InlineAsmEnd
 decl_stmt|;
-comment|// Defaults to "#NO_APP\n"
-comment|/// Code16Directive, Code32Directive, Code64Directive - These are assembly
-comment|/// directives that tells the assembler to interpret the following
-comment|/// instructions differently.
+comment|/// These are assembly directives that tells the assembler to interpret the
+comment|/// following instructions differently.  Defaults to ".code16", ".code32",
+comment|/// ".code64".
 specifier|const
 name|char
 modifier|*
 name|Code16Directive
 decl_stmt|;
-comment|// Defaults to ".code16"
 specifier|const
 name|char
 modifier|*
 name|Code32Directive
 decl_stmt|;
-comment|// Defaults to ".code32"
 specifier|const
 name|char
 modifier|*
 name|Code64Directive
 decl_stmt|;
-comment|// Defaults to ".code64"
-comment|/// AssemblerDialect - Which dialect of an assembler variant to use.
+comment|/// Which dialect of an assembler variant to use.  Defaults to 0
 name|unsigned
 name|AssemblerDialect
 decl_stmt|;
-comment|// Defaults to 0
-comment|/// \brief This is true if the assembler allows @ characters in symbol
-comment|/// names. Defaults to false.
+comment|/// This is true if the assembler allows @ characters in symbol names.
+comment|/// Defaults to false.
 name|bool
 name|AllowAtInName
 decl_stmt|;
-comment|/// UseDataRegionDirectives - This is true if data region markers should
-comment|/// be printed as ".data_region/.end_data_region" directives. If false,
-comment|/// use "$d/$a" labels instead.
+comment|/// This is true if data region markers should be printed as
+comment|/// ".data_region/.end_data_region" directives. If false, use "$d/$a" labels
+comment|/// instead.
 name|bool
 name|UseDataRegionDirectives
 decl_stmt|;
 comment|//===--- Data Emission Directives -------------------------------------===//
-comment|/// ZeroDirective - this should be set to the directive used to get some
-comment|/// number of zero bytes emitted to the current section.  Common cases are
-comment|/// "\t.zero\t" and "\t.space\t".  If this is set to null, the
-comment|/// Data*bitsDirective's will be used to emit zero bytes.
+comment|/// This should be set to the directive used to get some number of zero bytes
+comment|/// emitted to the current section.  Common cases are "\t.zero\t" and
+comment|/// "\t.space\t".  If this is set to null, the Data*bitsDirective's will be
+comment|/// used to emit zero bytes.  Defaults to "\t.zero\t"
 specifier|const
 name|char
 modifier|*
 name|ZeroDirective
 decl_stmt|;
-comment|// Defaults to "\t.zero\t"
-comment|/// AsciiDirective - This directive allows emission of an ascii string with
-comment|/// the standard C escape characters embedded into it.
+comment|/// This directive allows emission of an ascii string with the standard C
+comment|/// escape characters embedded into it.  Defaults to "\t.ascii\t"
 specifier|const
 name|char
 modifier|*
 name|AsciiDirective
 decl_stmt|;
-comment|// Defaults to "\t.ascii\t"
-comment|/// AscizDirective - If not null, this allows for special handling of
-comment|/// zero terminated strings on this target.  This is commonly supported as
-comment|/// ".asciz".  If a target doesn't support this, it can be set to null.
+comment|/// If not null, this allows for special handling of zero terminated strings
+comment|/// on this target.  This is commonly supported as ".asciz".  If a target
+comment|/// doesn't support this, it can be set to null.  Defaults to "\t.asciz\t"
 specifier|const
 name|char
 modifier|*
 name|AscizDirective
 decl_stmt|;
-comment|// Defaults to "\t.asciz\t"
-comment|/// DataDirectives - These directives are used to output some unit of
-comment|/// integer data to the current section.  If a data directive is set to
-comment|/// null, smaller data directives will be used to emit the large sizes.
+comment|/// These directives are used to output some unit of integer data to the
+comment|/// current section.  If a data directive is set to null, smaller data
+comment|/// directives will be used to emit the large sizes.  Defaults to "\t.byte\t",
+comment|/// "\t.short\t", "\t.long\t", "\t.quad\t"
 specifier|const
 name|char
 modifier|*
 name|Data8bitsDirective
 decl_stmt|;
-comment|// Defaults to "\t.byte\t"
 specifier|const
 name|char
 modifier|*
 name|Data16bitsDirective
 decl_stmt|;
-comment|// Defaults to "\t.short\t"
 specifier|const
 name|char
 modifier|*
 name|Data32bitsDirective
 decl_stmt|;
-comment|// Defaults to "\t.long\t"
 specifier|const
 name|char
 modifier|*
 name|Data64bitsDirective
 decl_stmt|;
-comment|// Defaults to "\t.quad\t"
-comment|/// GPRel64Directive - if non-null, a directive that is used to emit a word
-comment|/// which should be relocated as a 64-bit GP-relative offset, e.g. .gpdword
-comment|/// on Mips.
+comment|/// If non-null, a directive that is used to emit a word which should be
+comment|/// relocated as a 64-bit GP-relative offset, e.g. .gpdword on Mips.  Defaults
+comment|/// to NULL.
 specifier|const
 name|char
 modifier|*
 name|GPRel64Directive
 decl_stmt|;
-comment|// Defaults to NULL.
-comment|/// GPRel32Directive - if non-null, a directive that is used to emit a word
-comment|/// which should be relocated as a 32-bit GP-relative offset, e.g. .gpword
-comment|/// on Mips or .gprel32 on Alpha.
+comment|/// If non-null, a directive that is used to emit a word which should be
+comment|/// relocated as a 32-bit GP-relative offset, e.g. .gpword on Mips or .gprel32
+comment|/// on Alpha.  Defaults to NULL.
 specifier|const
 name|char
 modifier|*
 name|GPRel32Directive
 decl_stmt|;
-comment|// Defaults to NULL.
-comment|/// SunStyleELFSectionSwitchSyntax - This is true if this target uses "Sun
-comment|/// Style" syntax for section switching ("#alloc,#write" etc) instead of the
-comment|/// normal ELF syntax (,"a,w") in .section directives.
+comment|/// This is true if this target uses "Sun Style" syntax for section switching
+comment|/// ("#alloc,#write" etc) instead of the normal ELF syntax (,"a,w") in
+comment|/// .section directives.  Defaults to false.
 name|bool
 name|SunStyleELFSectionSwitchSyntax
 decl_stmt|;
-comment|// Defaults to false.
-comment|/// UsesELFSectionDirectiveForBSS - This is true if this target uses ELF
-comment|/// '.section' directive before the '.bss' one. It's used for PPC/Linux
-comment|/// which doesn't support the '.bss' directive only.
+comment|/// This is true if this target uses ELF '.section' directive before the
+comment|/// '.bss' one. It's used for PPC/Linux which doesn't support the '.bss'
+comment|/// directive only.  Defaults to false.
 name|bool
 name|UsesELFSectionDirectiveForBSS
 decl_stmt|;
-comment|// Defaults to false.
-comment|/// HasMicrosoftFastStdCallMangling - True if this target uses microsoft
-comment|/// style mangling for functions with X86_StdCall/X86_FastCall calling
-comment|/// convention.
-name|bool
-name|HasMicrosoftFastStdCallMangling
-decl_stmt|;
-comment|// Defaults to false.
 name|bool
 name|NeedsDwarfSectionOffsetDirective
 decl_stmt|;
 comment|//===--- Alignment Information ----------------------------------------===//
-comment|/// AlignDirective - The directive used to emit round up to an alignment
-comment|/// boundary.
-comment|///
-specifier|const
-name|char
-modifier|*
-name|AlignDirective
-decl_stmt|;
-comment|// Defaults to "\t.align\t"
-comment|/// AlignmentIsInBytes - If this is true (the default) then the asmprinter
-comment|/// emits ".align N" directives, where N is the number of bytes to align to.
-comment|/// Otherwise, it emits ".align log2(N)", e.g. 3 to align to an 8 byte
-comment|/// boundary.
+comment|/// If this is true (the default) then the asmprinter emits ".align N"
+comment|/// directives, where N is the number of bytes to align to.  Otherwise, it
+comment|/// emits ".align log2(N)", e.g. 3 to align to an 8 byte boundary.  Defaults
+comment|/// to true.
 name|bool
 name|AlignmentIsInBytes
 decl_stmt|;
-comment|// Defaults to true
-comment|/// TextAlignFillValue - If non-zero, this is used to fill the executable
-comment|/// space created as the result of a alignment directive.
+comment|/// If non-zero, this is used to fill the executable space created as the
+comment|/// result of a alignment directive.  Defaults to 0
 name|unsigned
 name|TextAlignFillValue
 decl_stmt|;
-comment|// Defaults to 0
 comment|//===--- Global Variable Emission Directives --------------------------===//
-comment|/// GlobalDirective - This is the directive used to declare a global entity.
-comment|///
+comment|/// This is the directive used to declare a global entity.  Defaults to NULL.
 specifier|const
 name|char
 modifier|*
 name|GlobalDirective
 decl_stmt|;
-comment|// Defaults to NULL.
-comment|/// HasSetDirective - True if the assembler supports the .set directive.
+comment|/// True if the assembler supports the .set directive.  Defaults to true.
 name|bool
 name|HasSetDirective
 decl_stmt|;
-comment|// Defaults to true.
-comment|/// HasAggressiveSymbolFolding - False if the assembler requires that we use
-comment|/// Lc = a - b
-comment|/// .long Lc
+comment|/// False if the assembler requires that we use
+comment|/// \code
+comment|///   Lc = a - b
+comment|///   .long Lc
+comment|/// \endcode
+comment|//
 comment|/// instead of
-comment|/// .long a - b
+comment|//
+comment|/// \code
+comment|///   .long a - b
+comment|/// \endcode
+comment|///
+comment|///  Defaults to true.
 name|bool
 name|HasAggressiveSymbolFolding
 decl_stmt|;
-comment|// Defaults to true.
-comment|/// COMMDirectiveAlignmentIsInBytes - True is .comm's and .lcomms optional
-comment|/// alignment is to be specified in bytes instead of log2(n).
+comment|/// True is .comm's and .lcomms optional alignment is to be specified in bytes
+comment|/// instead of log2(n).  Defaults to true.
 name|bool
 name|COMMDirectiveAlignmentIsInBytes
 decl_stmt|;
-comment|// Defaults to true;
-comment|/// LCOMMDirectiveAlignment - Describes if the .lcomm directive for the
-comment|/// target supports an alignment argument and how it is interpreted.
+comment|/// Describes if the .lcomm directive for the target supports an alignment
+comment|/// argument and how it is interpreted.  Defaults to NoAlignment.
 name|LCOMM
 operator|::
 name|LCOMMType
 name|LCOMMDirectiveAlignmentType
 expr_stmt|;
-comment|// Defaults to NoAlignment.
-comment|/// HasDotTypeDotSizeDirective - True if the target has .type and .size
-comment|/// directives, this is true for most ELF targets.
+comment|/// True if the target has .type and .size directives, this is true for most
+comment|/// ELF targets.  Defaults to true.
 name|bool
 name|HasDotTypeDotSizeDirective
 decl_stmt|;
-comment|// Defaults to true.
-comment|/// HasSingleParameterDotFile - True if the target has a single parameter
-comment|/// .file directive, this is true for ELF targets.
+comment|/// True if the target has a single parameter .file directive, this is true
+comment|/// for ELF targets.  Defaults to true.
 name|bool
 name|HasSingleParameterDotFile
 decl_stmt|;
-comment|// Defaults to true.
-comment|/// hasIdentDirective - True if the target has a .ident directive, this is
-comment|/// true for ELF targets.
+comment|/// True if the target has a .ident directive, this is true for ELF targets.
+comment|/// Defaults to false.
 name|bool
 name|HasIdentDirective
 decl_stmt|;
-comment|// Defaults to false.
-comment|/// HasNoDeadStrip - True if this target supports the MachO .no_dead_strip
-comment|/// directive.
+comment|/// True if this target supports the MachO .no_dead_strip directive.  Defaults
+comment|/// to false.
 name|bool
 name|HasNoDeadStrip
 decl_stmt|;
-comment|// Defaults to false.
-comment|/// WeakRefDirective - This directive, if non-null, is used to declare a
-comment|/// global as being a weak undefined symbol.
+comment|/// This directive, if non-null, is used to declare a global as being a weak
+comment|/// undefined symbol.  Defaults to NULL.
 specifier|const
 name|char
 modifier|*
 name|WeakRefDirective
 decl_stmt|;
-comment|// Defaults to NULL.
-comment|/// True if we have a directive to declare a global as being a weak
-comment|/// defined symbol.
+comment|/// True if we have a directive to declare a global as being a weak defined
+comment|/// symbol.  Defaults to false.
 name|bool
 name|HasWeakDefDirective
 decl_stmt|;
-comment|// Defaults to false.
-comment|/// True if we have a directive to declare a global as being a weak
-comment|/// defined symbol that can be hidden (unexported).
+comment|/// True if we have a directive to declare a global as being a weak defined
+comment|/// symbol that can be hidden (unexported).  Defaults to false.
 name|bool
 name|HasWeakDefCanBeHiddenDirective
 decl_stmt|;
-comment|// Defaults to false.
 comment|/// True if we have a .linkonce directive.  This is used on cygwin/mingw.
+comment|/// Defaults to false.
 name|bool
 name|HasLinkOnceDirective
 decl_stmt|;
-comment|// Defaults to false.
-comment|/// HiddenVisibilityAttr - This attribute, if not MCSA_Invalid, is used to
-comment|/// declare a symbol as having hidden visibility.
+comment|/// This attribute, if not MCSA_Invalid, is used to declare a symbol as having
+comment|/// hidden visibility.  Defaults to MCSA_Hidden.
 name|MCSymbolAttr
 name|HiddenVisibilityAttr
 decl_stmt|;
-comment|// Defaults to MCSA_Hidden.
-comment|/// HiddenDeclarationVisibilityAttr - This attribute, if not MCSA_Invalid,
-comment|/// is used to declare an undefined symbol as having hidden visibility.
+comment|/// This attribute, if not MCSA_Invalid, is used to declare an undefined
+comment|/// symbol as having hidden visibility. Defaults to MCSA_Hidden.
 name|MCSymbolAttr
 name|HiddenDeclarationVisibilityAttr
 decl_stmt|;
-comment|// Defaults to MCSA_Hidden.
-comment|/// ProtectedVisibilityAttr - This attribute, if not MCSA_Invalid, is used
-comment|/// to declare a symbol as having protected visibility.
+comment|/// This attribute, if not MCSA_Invalid, is used to declare a symbol as having
+comment|/// protected visibility.  Defaults to MCSA_Protected
 name|MCSymbolAttr
 name|ProtectedVisibilityAttr
 decl_stmt|;
-comment|// Defaults to MCSA_Protected
 comment|//===--- Dwarf Emission Directives -----------------------------------===//
-comment|/// HasLEB128 - True if target asm supports leb128 directives.
+comment|/// True if target asm supports leb128 directives.  Defaults to false.
 name|bool
 name|HasLEB128
 decl_stmt|;
-comment|// Defaults to false.
-comment|/// SupportsDebugInformation - True if target supports emission of debugging
-comment|/// information.
+comment|/// True if target supports emission of debugging information.  Defaults to
+comment|/// false.
 name|bool
 name|SupportsDebugInformation
 decl_stmt|;
-comment|// Defaults to false.
-comment|/// SupportsExceptionHandling - True if target supports exception handling.
+comment|/// Exception handling format for the target.  Defaults to None.
 name|ExceptionHandling
+name|ExceptionsType
+decl_stmt|;
+comment|/// Windows exception handling data (.pdata) encoding.  Defaults to Invalid.
+name|WinEH
 operator|::
-name|ExceptionsType
-name|ExceptionsType
+name|EncodingType
+name|WinEHEncodingType
 expr_stmt|;
-comment|// Defaults to None
-comment|/// DwarfUsesRelocationsAcrossSections - True if Dwarf2 output generally
-comment|/// uses relocations for references to other .debug_* sections.
+comment|/// True if Dwarf2 output generally uses relocations for references to other
+comment|/// .debug_* sections.
 name|bool
 name|DwarfUsesRelocationsAcrossSections
 decl_stmt|;
-comment|/// DwarfFDESymbolsUseAbsDiff - true if DWARF FDE symbol reference
-comment|/// relocations should be replaced by an absolute difference.
+comment|/// True if DWARF FDE symbol reference relocations should be replaced by an
+comment|/// absolute difference.
 name|bool
 name|DwarfFDESymbolsUseAbsDiff
 decl_stmt|;
-comment|/// DwarfRegNumForCFI - True if dwarf register numbers are printed
-comment|/// instead of symbolic register names in .cfi_* directives.
+comment|/// True if dwarf register numbers are printed instead of symbolic register
+comment|/// names in .cfi_* directives.  Defaults to false.
 name|bool
 name|DwarfRegNumForCFI
 decl_stmt|;
-comment|// Defaults to false;
+comment|/// True if target uses parens to indicate the symbol variant instead of @.
+comment|/// For example, foo(plt) instead of foo@plt.  Defaults to false.
+name|bool
+name|UseParensForSymbolVariant
+decl_stmt|;
 comment|//===--- Prologue State ----------------------------------------------===//
 name|std
 operator|::
@@ -612,6 +577,19 @@ name|MCCFIInstruction
 operator|>
 name|InitialFrameState
 expr_stmt|;
+comment|//===--- Integrated Assembler State ----------------------------------===//
+comment|/// Should we use the integrated assembler?
+comment|/// The integrated assembler should be enabled by default (by the
+comment|/// constructors) when failing to parse a valid piece of assembly (inline
+comment|/// or otherwise) is considered a bug. It may then be overridden after
+comment|/// construction (see LLVMTargetMachine::initAsmInfo()).
+name|bool
+name|UseIntegratedAssembler
+decl_stmt|;
+comment|/// Compress DWARF debug sections. Defaults to false.
+name|bool
+name|CompressDebugSections
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -623,24 +601,7 @@ operator|~
 name|MCAsmInfo
 argument_list|()
 expr_stmt|;
-comment|// FIXME: move these methods to DwarfPrinter when the JIT stops using them.
-specifier|static
-name|unsigned
-name|getSLEB128Size
-parameter_list|(
-name|int64_t
-name|Value
-parameter_list|)
-function_decl|;
-specifier|static
-name|unsigned
-name|getULEB128Size
-parameter_list|(
-name|uint64_t
-name|Value
-parameter_list|)
-function_decl|;
-comment|/// getPointerSize - Get the pointer size in bytes.
+comment|/// Get the pointer size in bytes.
 name|unsigned
 name|getPointerSize
 argument_list|()
@@ -650,7 +611,7 @@ return|return
 name|PointerSize
 return|;
 block|}
-comment|/// getCalleeSaveStackSlotSize - Get the callee-saved register stack slot
+comment|/// Get the callee-saved register stack slot
 comment|/// size in bytes.
 name|unsigned
 name|getCalleeSaveStackSlotSize
@@ -661,7 +622,7 @@ return|return
 name|CalleeSaveStackSlotSize
 return|;
 block|}
-comment|/// isLittleEndian - True if the target is little endian.
+comment|/// True if the target is little endian.
 name|bool
 name|isLittleEndian
 argument_list|()
@@ -671,7 +632,7 @@ return|return
 name|IsLittleEndian
 return|;
 block|}
-comment|/// isStackGrowthDirectionUp - True if target stack grow up.
+comment|/// True if target stack grow up.
 name|bool
 name|isStackGrowthDirectionUp
 argument_list|()
@@ -691,7 +652,6 @@ name|HasSubsectionsViaSymbols
 return|;
 block|}
 comment|// Data directive accessors.
-comment|//
 specifier|const
 name|char
 operator|*
@@ -758,9 +718,9 @@ return|return
 name|GPRel32Directive
 return|;
 block|}
-comment|/// getNonexecutableStackSection - Targets can implement this method to
-comment|/// specify a section to switch to if the translation unit doesn't have any
-comment|/// trampolines that require an executable stack.
+comment|/// Targets can implement this method to specify a section to switch to if the
+comment|/// translation unit doesn't have any trampolines that require an executable
+comment|/// stack.
 name|virtual
 specifier|const
 name|MCSection
@@ -774,7 +734,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -797,6 +757,7 @@ name|Streamer
 argument_list|)
 decl|const
 decl_stmt|;
+name|virtual
 specifier|const
 name|MCExpr
 modifier|*
@@ -835,15 +796,6 @@ name|UsesELFSectionDirectiveForBSS
 return|;
 block|}
 name|bool
-name|hasMicrosoftFastStdCallMangling
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasMicrosoftFastStdCallMangling
-return|;
-block|}
-name|bool
 name|needsDwarfSectionOffsetDirective
 argument_list|()
 specifier|const
@@ -853,7 +805,6 @@ name|NeedsDwarfSectionOffsetDirective
 return|;
 block|}
 comment|// Accessors.
-comment|//
 name|bool
 name|hasMachoZeroFillDirective
 argument_list|()
@@ -928,13 +879,15 @@ return|return
 name|SeparatorString
 return|;
 block|}
+comment|/// This indicates the column (zero-based) at which asm comments should be
+comment|/// printed.
 name|unsigned
 name|getCommentColumn
 argument_list|()
 specifier|const
 block|{
 return|return
-name|CommentColumn
+literal|40
 return|;
 block|}
 specifier|const
@@ -959,26 +912,13 @@ return|return
 name|LabelSuffix
 return|;
 block|}
-specifier|const
-name|char
-operator|*
-name|getDebugLabelSuffix
+name|bool
+name|useAssignmentForEHBegin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DebugLabelSuffix
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getGlobalPrefix
-argument_list|()
-specifier|const
-block|{
-return|return
-name|GlobalPrefix
+name|UseAssignmentForEHBegin
 return|;
 block|}
 specifier|const
@@ -992,6 +932,20 @@ return|return
 name|PrivateGlobalPrefix
 return|;
 block|}
+name|bool
+name|hasLinkerPrivateGlobalPrefix
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LinkerPrivateGlobalPrefix
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+return|;
+block|}
 specifier|const
 name|char
 operator|*
@@ -999,8 +953,17 @@ name|getLinkerPrivateGlobalPrefix
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|hasLinkerPrivateGlobalPrefix
+argument_list|()
+condition|)
 return|return
 name|LinkerPrivateGlobalPrefix
+return|;
+return|return
+name|getPrivateGlobalPrefix
+argument_list|()
 return|;
 block|}
 specifier|const
@@ -1116,17 +1079,6 @@ specifier|const
 block|{
 return|return
 name|AscizDirective
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|getAlignDirective
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AlignDirective
 return|;
 block|}
 name|bool
@@ -1329,14 +1281,23 @@ name|None
 return|;
 block|}
 name|ExceptionHandling
-operator|::
-name|ExceptionsType
 name|getExceptionHandlingType
 argument_list|()
 specifier|const
 block|{
 return|return
 name|ExceptionsType
+return|;
+block|}
+name|WinEH
+operator|::
+name|EncodingType
+name|getWinEHEncodingType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WinEHEncodingType
 return|;
 block|}
 name|bool
@@ -1358,11 +1319,12 @@ name|ExceptionHandling
 operator|::
 name|ARM
 operator|||
+comment|// Windows handler data still uses DWARF LSDA encoding.
 name|ExceptionsType
 operator|==
 name|ExceptionHandling
 operator|::
-name|Win64
+name|WinEH
 operator|)
 return|;
 block|}
@@ -1391,6 +1353,15 @@ specifier|const
 block|{
 return|return
 name|DwarfRegNumForCFI
+return|;
+block|}
+name|bool
+name|useParensForSymbolVariant
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseParensForSymbolVariant
 return|;
 block|}
 name|void
@@ -1426,12 +1397,62 @@ return|return
 name|InitialFrameState
 return|;
 block|}
+comment|/// Return true if assembly (inline or otherwise) should be parsed.
+name|bool
+name|useIntegratedAssembler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseIntegratedAssembler
+return|;
 block|}
-empty_stmt|;
+comment|/// Set whether assembly (inline or otherwise) should be parsed.
+name|virtual
+name|void
+name|setUseIntegratedAssembler
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|UseIntegratedAssembler
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|bool
+name|compressDebugSections
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CompressDebugSections
+return|;
+block|}
+name|void
+name|setCompressDebugSections
+parameter_list|(
+name|bool
+name|CompressDebugSections
+parameter_list|)
+block|{
+name|this
+operator|->
+name|CompressDebugSections
+operator|=
+name|CompressDebugSections
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

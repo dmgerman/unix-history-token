@@ -179,15 +179,10 @@ init|=
 literal|1000000
 block|,
 comment|///< One Million
-name|NANOSECONDS_PER_POSIX_TICK
-init|=
-literal|100
-block|,
-comment|///< Posix tick is 100 Hz (10ms)
 name|NANOSECONDS_PER_WIN32_TICK
 init|=
 literal|100
-comment|///< Win32 tick is 100 Hz (10ms)
+comment|///< Win32 tick is 10^7 Hz (10ns)
 block|}
 enum|;
 comment|/// @}
@@ -745,31 +740,6 @@ name|nanos_
 operator|/
 name|NANOSECONDS_PER_MILLISECOND
 operator|)
-return|;
-block|}
-comment|/// Converts the TimeValue into the corresponding number of "ticks" for
-comment|/// Posix, correcting for the difference in Posix zero time.
-comment|/// @brief Convert to unix time (100 nanoseconds since 12:00:00a Jan 1,1970)
-name|uint64_t
-name|toPosixTime
-argument_list|()
-specifier|const
-block|{
-name|uint64_t
-name|result
-operator|=
-name|seconds_
-operator|-
-name|PosixZeroTimeSeconds
-block|;
-name|result
-operator|+=
-name|nanos_
-operator|/
-name|NANOSECONDS_PER_POSIX_TICK
-block|;
-return|return
-name|result
 return|;
 block|}
 comment|/// Converts the TimeValue into the corresponding number of seconds

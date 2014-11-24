@@ -73,35 +73,28 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|AMDGPUTargetMachine
-decl_stmt|;
 name|struct
 name|SIRegisterInfo
 range|:
 name|public
 name|AMDGPURegisterInfo
 block|{
-name|AMDGPUTargetMachine
-operator|&
-name|TM
-block|;
 name|SIRegisterInfo
 argument_list|(
-name|AMDGPUTargetMachine
+specifier|const
+name|AMDGPUSubtarget
 operator|&
-name|tm
+name|st
 argument_list|)
 block|;
-name|virtual
 name|BitVector
 name|getReservedRegs
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getRegPressureLimit
 argument_list|(
@@ -110,23 +103,32 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-comment|/// \param RC is an AMDIL reg class.
-comment|///
-comment|/// \returns the SI register class that is equivalent to \p RC.
-name|virtual
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getISARegClass
+name|bool
+name|requiresRegisterScavenging
 argument_list|(
-argument|const TargetRegisterClass *RC
+argument|const MachineFunction&Fn
 argument_list|)
 specifier|const
+name|override
+block|;
+name|void
+name|eliminateFrameIndex
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|int SPAdj
+argument_list|,
+argument|unsigned FIOperandNum
+argument_list|,
+argument|RegScavenger *RS
+argument_list|)
+specifier|const
+name|override
 block|;
 comment|/// \brief get the register class of the specified type to use in the
 comment|/// CFGStructurizer
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -135,14 +137,15 @@ argument_list|(
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getHWRegIndex
 argument_list|(
 argument|unsigned Reg
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the 'base' register class for this register.
 comment|/// e.g. SGPR0 => SReg_32, VGPR => VReg_32 SGPR0_SGPR1 -> SReg_32, etc.
@@ -194,7 +197,62 @@ argument_list|,
 argument|unsigned SubIdx
 argument_list|)
 specifier|const
-block|; }
+block|;
+comment|/// \p Channel This is the register channel (e.g. a value from 0-16), not the
+comment|///            SubReg index.
+comment|/// \returns The sub-register of Reg that is in Channel.
+name|unsigned
+name|getPhysRegSubReg
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|const TargetRegisterClass *SubRC
+argument_list|,
+argument|unsigned Channel
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns True if operands defined with this register class can accept
+comment|/// inline immediates.
+name|bool
+name|regClassCanUseImmediate
+argument_list|(
+argument|int RCID
+argument_list|)
+specifier|const
+block|;
+comment|/// \returns True if operands defined with this register class can accept
+comment|/// inline immediates.
+name|bool
+name|regClassCanUseImmediate
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;    enum
+name|PreloadedValue
+block|{
+name|TGID_X
+block|,
+name|TGID_Y
+block|,
+name|TGID_Z
+block|,
+name|SCRATCH_WAVE_OFFSET
+block|,
+name|SCRATCH_PTR
+block|}
+block|;
+comment|/// \brief Returns the physical register that \p Value is stored in.
+name|unsigned
+name|getPreloadedValue
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|enum PreloadedValue Value
+argument_list|)
+specifier|const
+block|;  }
 decl_stmt|;
 block|}
 end_decl_stmt

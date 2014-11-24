@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CFG.h"
+file|"llvm/IR/CFG.h"
 end_include
 
 begin_decl_stmt
@@ -85,6 +85,9 @@ name|llvm
 block|{
 name|class
 name|AliasAnalysis
+decl_stmt|;
+name|class
+name|DominatorTree
 decl_stmt|;
 name|class
 name|Instruction
@@ -129,7 +132,7 @@ name|Pass
 modifier|*
 name|P
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// DeleteDeadPHIs - Examine each PHI in the given block and delete it if it
@@ -149,7 +152,7 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// MergeBlockIntoPredecessor - Attempts to merge a block into its predecessor,
@@ -165,7 +168,7 @@ name|Pass
 modifier|*
 name|P
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|// ReplaceInstWithValue - Replace all uses of an instruction (specified by BI)
@@ -263,7 +266,7 @@ name|Pass
 modifier|*
 name|P
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|bool
 name|MergeIdenticalEdges
@@ -297,7 +300,7 @@ name|Pass
 modifier|*
 name|P
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -337,7 +340,7 @@ name|Pass
 modifier|*
 name|P
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 name|bool
@@ -427,7 +430,7 @@ name|Pass
 modifier|*
 name|P
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|bool
 name|MergeIdenticalEdges
@@ -578,7 +581,7 @@ name|Pass
 operator|*
 name|P
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// SplitLandingPadPredecessors - This method transforms the landing pad,
@@ -654,31 +657,37 @@ name|Pred
 parameter_list|)
 function_decl|;
 comment|/// SplitBlockAndInsertIfThen - Split the containing block at the
-comment|/// specified instruction - everything before and including Cmp stays
-comment|/// in the old basic block, and everything after Cmp is moved to a
+comment|/// specified instruction - everything before and including SplitBefore stays
+comment|/// in the old basic block, and everything after SplitBefore is moved to a
 comment|/// new block. The two blocks are connected by a conditional branch
 comment|/// (with value of Cmp being the condition).
 comment|/// Before:
 comment|///   Head
-comment|///   Cmp
+comment|///   SplitBefore
 comment|///   Tail
 comment|/// After:
 comment|///   Head
-comment|///   Cmp
-comment|///   if (Cmp)
+comment|///   if (Cond)
 comment|///     ThenBlock
+comment|///   SplitBefore
 comment|///   Tail
 comment|///
 comment|/// If Unreachable is true, then ThenBlock ends with
 comment|/// UnreachableInst, otherwise it branches to Tail.
 comment|/// Returns the NewBasicBlock's terminator.
+comment|///
+comment|/// Updates DT if given.
 name|TerminatorInst
 modifier|*
 name|SplitBlockAndInsertIfThen
 parameter_list|(
+name|Value
+modifier|*
+name|Cond
+parameter_list|,
 name|Instruction
 modifier|*
-name|Cmp
+name|SplitBefore
 parameter_list|,
 name|bool
 name|Unreachable
@@ -687,7 +696,55 @@ name|MDNode
 modifier|*
 name|BranchWeights
 init|=
-literal|0
+name|nullptr
+parameter_list|,
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// SplitBlockAndInsertIfThenElse is similar to SplitBlockAndInsertIfThen,
+comment|/// but also creates the ElseBlock.
+comment|/// Before:
+comment|///   Head
+comment|///   SplitBefore
+comment|///   Tail
+comment|/// After:
+comment|///   Head
+comment|///   if (Cond)
+comment|///     ThenBlock
+comment|///   else
+comment|///     ElseBlock
+comment|///   SplitBefore
+comment|///   Tail
+name|void
+name|SplitBlockAndInsertIfThenElse
+parameter_list|(
+name|Value
+modifier|*
+name|Cond
+parameter_list|,
+name|Instruction
+modifier|*
+name|SplitBefore
+parameter_list|,
+name|TerminatorInst
+modifier|*
+modifier|*
+name|ThenTerm
+parameter_list|,
+name|TerminatorInst
+modifier|*
+modifier|*
+name|ElseTerm
+parameter_list|,
+name|MDNode
+modifier|*
+name|BranchWeights
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|///

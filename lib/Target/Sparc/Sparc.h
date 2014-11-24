@@ -94,6 +94,15 @@ decl_stmt|;
 name|class
 name|formatted_raw_ostream
 decl_stmt|;
+name|class
+name|AsmPrinter
+decl_stmt|;
+name|class
+name|MCInst
+decl_stmt|;
+name|class
+name|MachineInstr
+decl_stmt|;
 name|FunctionPass
 modifier|*
 name|createSparcISelDag
@@ -125,6 +134,23 @@ modifier|&
 name|JCE
 parameter_list|)
 function_decl|;
+name|void
+name|LowerSparcMachineInstrToMCInst
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|MCInst
+modifier|&
+name|OutMI
+parameter_list|,
+name|AsmPrinter
+modifier|&
+name|AP
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -144,8 +170,16 @@ block|{
 enum|enum
 name|CondCodes
 block|{
-comment|//ICC_A   =  8   ,  // Always
-comment|//ICC_N   =  0   ,  // Never
+name|ICC_A
+init|=
+literal|8
+block|,
+comment|// Always
+name|ICC_N
+init|=
+literal|0
+block|,
+comment|// Never
 name|ICC_NE
 init|=
 literal|9
@@ -216,8 +250,20 @@ init|=
 literal|7
 block|,
 comment|// Overflow Set
-comment|//FCC_A   =  8+16,  // Always
-comment|//FCC_N   =  0+16,  // Never
+name|FCC_A
+init|=
+literal|8
+operator|+
+literal|16
+block|,
+comment|// Always
+name|FCC_N
+init|=
+literal|0
+operator|+
+literal|16
+block|,
+comment|// Never
 name|FCC_U
 init|=
 literal|7
@@ -339,6 +385,22 @@ block|{
 case|case
 name|SPCC
 operator|::
+name|ICC_A
+case|:
+return|return
+literal|"a"
+return|;
+case|case
+name|SPCC
+operator|::
+name|ICC_N
+case|:
+return|return
+literal|"n"
+return|;
+case|case
+name|SPCC
+operator|::
 name|ICC_NE
 case|:
 return|return
@@ -447,6 +509,22 @@ name|ICC_VS
 case|:
 return|return
 literal|"vs"
+return|;
+case|case
+name|SPCC
+operator|::
+name|FCC_A
+case|:
+return|return
+literal|"a"
+return|;
+case|case
+name|SPCC
+operator|::
+name|FCC_N
+case|:
+return|return
+literal|"n"
 return|;
 case|case
 name|SPCC

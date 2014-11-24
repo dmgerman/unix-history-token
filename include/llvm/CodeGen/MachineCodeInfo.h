@@ -107,7 +107,7 @@ argument_list|)
 operator|,
 name|Address
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|void

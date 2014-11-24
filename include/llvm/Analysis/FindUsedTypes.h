@@ -148,6 +148,7 @@ argument_list|,
 argument|const Module *M
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -179,19 +180,18 @@ comment|/// run - This incorporates all types used by the specified module
 name|bool
 name|runOnModule
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|override
 block|;
 comment|/// getAnalysisUsage - We do not modify anything.
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|{
 name|AU
 operator|.

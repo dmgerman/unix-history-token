@@ -145,12 +145,6 @@ block|}
 enum|;
 block|}
 name|class
-name|MSP430Subtarget
-decl_stmt|;
-name|class
-name|MSP430TargetMachine
-decl_stmt|;
-name|class
 name|MSP430TargetLowering
 range|:
 name|public
@@ -161,18 +155,19 @@ operator|:
 name|explicit
 name|MSP430TargetLowering
 argument_list|(
-name|MSP430TargetMachine
+specifier|const
+name|TargetMachine
 operator|&
 name|TM
 argument_list|)
 block|;
-name|virtual
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|MVT
@@ -181,7 +176,6 @@ name|i8
 return|;
 block|}
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -190,10 +184,10 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getTargetNodeName - This method returns the name of a target specific
 comment|/// DAG node.
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -202,6 +196,7 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerShifts
@@ -326,6 +321,7 @@ argument_list|(
 argument|const std::string&Constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 name|std
 operator|::
@@ -344,11 +340,11 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isTruncateFree - Return true if it's free to truncate a value of type
 comment|/// Ty1 to type Ty2. e.g. On msp430 it's free to truncate a i16 value in
 comment|/// register R15W to i8 by referencing its sub-register R15B.
-name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
@@ -357,8 +353,8 @@ argument_list|,
 argument|Type *Ty2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
@@ -367,6 +363,7 @@ argument_list|,
 argument|EVT VT2
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isZExtFree - Return true if any actual instruction that defines a value
 comment|/// of type Ty1 implicit zero-extends the value to Ty2 in the result
@@ -376,7 +373,6 @@ comment|/// registers. Also, if isTruncateFree(Ty2, Ty1) is true, this does not
 comment|/// necessarily apply to truncate instructions. e.g. on msp430, all
 comment|/// instructions that define 8-bit values implicit zero-extend the result
 comment|/// out to 16 bits.
-name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
@@ -385,8 +381,8 @@ argument_list|,
 argument|Type *Ty2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
@@ -395,8 +391,8 @@ argument_list|,
 argument|EVT VT2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
@@ -405,6 +401,7 @@ argument_list|,
 argument|EVT VT2
 argument_list|)
 specifier|const
+name|override
 block|;
 name|MachineBasicBlock
 operator|*
@@ -415,6 +412,7 @@ argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|MachineBasicBlock
 operator|*
@@ -495,7 +493,6 @@ argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -514,8 +511,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -524,8 +521,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -544,8 +541,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|getPostIndexedAddressParts
 argument_list|(
@@ -562,16 +559,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
-block|;
-specifier|const
-name|MSP430Subtarget
-operator|&
-name|Subtarget
-block|;
-specifier|const
-name|DataLayout
-operator|*
-name|TD
+name|override
 block|;   }
 decl_stmt|;
 block|}

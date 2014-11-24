@@ -119,10 +119,10 @@ argument|const Constant&
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -181,6 +181,12 @@ name|isZeroValue
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Return true if the value is the smallest signed value.
+name|bool
+name|isMinSignedValue
+argument_list|()
+specifier|const
+block|;
 comment|/// canTrap - Return true if evaluation of this constant could trap.  This is
 comment|/// true for things like constant expressions that could divide by zero.
 name|bool
@@ -191,6 +197,12 @@ block|;
 comment|/// isThreadDependent - Return true if the value can vary between threads.
 name|bool
 name|isThreadDependent
+argument_list|()
+specifier|const
+block|;
+comment|/// Return true if the value is dependent on a dllimport variable.
+name|bool
+name|isDLLImportDependent
 argument_list|()
 specifier|const
 block|;
@@ -403,9 +415,48 @@ name|void
 name|removeDeadConstantUsers
 argument_list|()
 specifier|const
-block|; }
-decl_stmt|;
+block|;
+name|Constant
+operator|*
+name|stripPointerCasts
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|Constant
+operator|>
+operator|(
+name|Value
+operator|::
+name|stripPointerCasts
+argument_list|()
+operator|)
+return|;
 block|}
+specifier|const
+name|Constant
+operator|*
+name|stripPointerCasts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Constant
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|stripPointerCasts
+argument_list|()
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

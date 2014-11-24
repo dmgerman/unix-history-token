@@ -173,7 +173,7 @@ operator|>
 operator|*
 name|InsertedPHIs
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 operator|~

@@ -179,7 +179,13 @@ block|,
 name|MODULE_CODE_GCNAME
 init|=
 literal|11
+block|,
 comment|// GCNAME: [strchr x N]
+name|MODULE_CODE_COMDAT
+init|=
+literal|12
+block|,
+comment|// COMDAT: [selection_kind, name]
 block|}
 enum|;
 comment|/// PARAMATTR blocks have code for defining a parameter attribute set.
@@ -841,7 +847,7 @@ name|FUNC_CODE_INST_ALLOCA
 init|=
 literal|19
 block|,
-comment|// ALLOCA:     [instty, op, align]
+comment|// ALLOCA:     [instty, opty, op, align]
 name|FUNC_CODE_INST_LOAD
 init|=
 literal|20
@@ -906,7 +912,7 @@ name|FUNC_CODE_INST_CALL
 init|=
 literal|34
 block|,
-comment|// CALL:       [attr, fnty, fnid, args...]
+comment|// CALL:    [attr, cc, fnty, fnid, args...]
 name|FUNC_CODE_DEBUG_LOC
 init|=
 literal|35
@@ -1113,7 +1119,47 @@ block|,
 name|ATTR_KIND_OPTIMIZE_NONE
 init|=
 literal|37
+block|,
+name|ATTR_KIND_IN_ALLOCA
+init|=
+literal|38
+block|,
+name|ATTR_KIND_NON_NULL
+init|=
+literal|39
+block|,
+name|ATTR_KIND_JUMP_TABLE
+init|=
+literal|40
+block|,
+name|ATTR_KIND_DEREFERENCEABLE
+init|=
+literal|41
 block|}
+enum|;
+enum|enum
+name|ComdatSelectionKindCodes
+block|{
+name|COMDAT_SELECTION_KIND_ANY
+init|=
+literal|1
+block|,
+name|COMDAT_SELECTION_KIND_EXACT_MATCH
+init|=
+literal|2
+block|,
+name|COMDAT_SELECTION_KIND_LARGEST
+init|=
+literal|3
+block|,
+name|COMDAT_SELECTION_KIND_NO_DUPLICATES
+init|=
+literal|4
+block|,
+name|COMDAT_SELECTION_KIND_SAME_SIZE
+init|=
+literal|5
+block|,   }
 enum|;
 block|}
 comment|// End bitc namespace

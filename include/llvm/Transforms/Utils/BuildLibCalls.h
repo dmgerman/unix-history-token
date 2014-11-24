@@ -436,6 +436,38 @@ operator|&
 name|Attrs
 argument_list|)
 decl_stmt|;
+comment|/// EmitUnaryFloatFnCall - Emit a call to the binary function named 'Name'
+comment|/// (e.g. 'fmin').  This function is known to take type matching 'Op1' and
+comment|/// 'Op2' and return one value with the same type.  If 'Op1/Op2' are long
+comment|/// double, 'l' is added as the suffix of name, if 'Op1/Op2' are float, we
+comment|/// add a 'f' suffix.
+name|Value
+modifier|*
+name|EmitBinaryFloatFnCall
+argument_list|(
+name|Value
+operator|*
+name|Op1
+argument_list|,
+name|Value
+operator|*
+name|Op2
+argument_list|,
+name|StringRef
+name|Name
+argument_list|,
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|,
+specifier|const
+name|AttributeSet
+operator|&
+name|Attrs
+argument_list|)
+decl_stmt|;
 comment|/// EmitPutChar - Emit a call to the putchar function.  This assumes that Char
 comment|/// is an integer.
 name|Value

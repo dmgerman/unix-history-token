@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DepthFirstIterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PostOrderIterator.h"
 end_include
 
@@ -79,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Analysis/LoopInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Dominators.h"
 end_include
 
 begin_decl_stmt
@@ -261,7 +273,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -449,7 +461,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -636,7 +648,7 @@ operator|!
 name|Out
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 end_expr_stmt
 
@@ -690,7 +702,7 @@ name|Out
 argument_list|)
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 end_if
 
@@ -756,7 +768,7 @@ name|BlockT
 operator|*
 name|Out
 operator|=
-literal|0
+name|nullptr
 block|;
 comment|// Loop over the predecessors of the header node...
 name|BlockT
@@ -841,7 +853,7 @@ operator|!=
 name|N
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 comment|// Multiple predecessors outside the loop
 name|Out
@@ -957,7 +969,7 @@ name|BlockT
 modifier|*
 name|Latch
 init|=
-literal|0
+name|nullptr
 decl_stmt|;
 end_decl_stmt
 
@@ -996,7 +1008,7 @@ condition|(
 name|Latch
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|Latch
 operator|=
@@ -1104,12 +1116,11 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
+operator|!
 name|LIB
 index|[
 name|NewBB
 index|]
-operator|==
-literal|0
 operator|&&
 literal|"BasicBlock already in the loop!"
 argument_list|)
@@ -1214,11 +1225,10 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
+operator|!
 name|NewChild
 operator|->
 name|ParentLoop
-operator|==
-literal|0
 operator|&&
 literal|"NewChild already has a parent!"
 argument_list|)
@@ -1273,7 +1283,7 @@ name|OldChild
 operator|->
 name|ParentLoop
 operator|=
-literal|0
+name|nullptr
 block|;
 name|NewChild
 operator|->
@@ -1623,31 +1633,14 @@ argument_list|()
 decl_stmt|;
 for|for
 control|(
-name|df_iterator
-operator|<
 name|BlockT
-operator|*
-operator|>
-name|NI
-operator|=
-name|df_begin
+modifier|*
+name|CB
+range|:
+name|depth_first
 argument_list|(
 name|EntryBB
 argument_list|)
-operator|,
-name|NE
-operator|=
-name|df_end
-argument_list|(
-name|EntryBB
-argument_list|)
-init|;
-name|NI
-operator|!=
-name|NE
-condition|;
-operator|++
-name|NI
 control|)
 for|for
 control|(
@@ -1672,8 +1665,7 @@ name|i
 control|)
 name|assert
 argument_list|(
-operator|*
-name|NI
+name|CB
 operator|!=
 name|OutsideLoopPreds
 index|[
@@ -2019,11 +2011,11 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|WriteAsOperand
+name|BB
+operator|->
+name|printAsOperand
 argument_list|(
 name|OS
-argument_list|,
-name|BB
 argument_list|,
 name|false
 argument_list|)

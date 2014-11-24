@@ -280,8 +280,6 @@ name|printf
 argument_list|(
 literal|"%s @0x%08"
 name|PRIx64
-literal|"/0x%08"
-name|PRIx64
 literal|" +%"
 name|PRIu64
 literal|" (%s)\n"
@@ -292,11 +290,6 @@ name|sym
 argument_list|)
 argument_list|,
 name|LLVMGetSymbolAddress
-argument_list|(
-name|sym
-argument_list|)
-argument_list|,
-name|LLVMGetSymbolFileOffset
 argument_list|(
 name|sym
 argument_list|)

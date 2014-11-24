@@ -143,11 +143,6 @@ name|MCAsmBackend
 argument_list|()
 expr_stmt|;
 name|unsigned
-name|HasReliableSymbolDifference
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
 name|HasDataInCodeSupport
 range|:
 literal|1
@@ -195,25 +190,6 @@ literal|"createELFObjectTargetWriter is not supported by asm "
 literal|"backend"
 argument_list|)
 block|;   }
-comment|/// hasReliableSymbolDifference - Check whether this target implements
-comment|/// accurate relocations for differences between symbols. If not, differences
-comment|/// between symbols will always be relocatable expressions and any references
-comment|/// to temporary symbols will be assumed to be in the same atom, unless they
-comment|/// reside in a different section.
-comment|///
-comment|/// This should always be true (since it results in fewer relocations with no
-comment|/// loss of functionality), but is currently supported as a way to maintain
-comment|/// exact object compatibility with Darwin 'as' (on non-x86_64). It should
-comment|/// eventually should be eliminated.
-name|bool
-name|hasReliableSymbolDifference
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasReliableSymbolDifference
-return|;
-block|}
 comment|/// hasDataInCodeSupport - Check whether this target implements data-in-code
 comment|/// markers. If not, data region directives will be ignored.
 name|bool
@@ -311,6 +287,7 @@ name|MCFragment
 modifier|*
 name|DF
 parameter_list|,
+specifier|const
 name|MCValue
 modifier|&
 name|Target
@@ -324,7 +301,6 @@ modifier|&
 name|IsResolved
 parameter_list|)
 block|{}
-comment|/// @}
 comment|/// applyFixup - Apply the \p Value for given \p Fixup into the provided
 comment|/// data fragment, at the offset specified by the fixup and following the
 comment|/// fixup kind as appropriate.
@@ -346,6 +322,9 @@ name|DataSize
 argument_list|,
 name|uint64_t
 name|Value
+argument_list|,
+name|bool
+name|IsPCRel
 argument_list|)
 decl|const
 init|=

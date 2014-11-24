@@ -131,7 +131,6 @@ operator|~
 name|TargetLoweringObjectFileELF
 argument_list|()
 block|{}
-name|virtual
 name|void
 name|emitPersonalityValue
 argument_list|(
@@ -142,20 +141,22 @@ argument_list|,
 argument|const MCSymbol *Sym
 argument_list|)
 specifier|const
+name|override
 block|;
-comment|/// getSectionForConstant - Given a constant with the SectionKind, return a
-comment|/// section that it should be placed in.
-name|virtual
+comment|/// Given a constant with the SectionKind, return a section that it should be
+comment|/// placed in.
 specifier|const
 name|MCSection
 operator|*
 name|getSectionForConstant
 argument_list|(
 argument|SectionKind Kind
+argument_list|,
+argument|const Constant *C
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
@@ -165,13 +166,13 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
@@ -181,15 +182,15 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
 block|;
-comment|/// getTTypeGlobalReference - Return an MCExpr to use for a reference to the
-comment|/// specified type info global variable from exception handling information.
-name|virtual
+comment|/// Return an MCExpr to use for a reference to the specified type info global
+comment|/// variable from exception handling information.
 specifier|const
 name|MCExpr
 operator|*
@@ -197,29 +198,34 @@ name|getTTypeGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler *Mang
+argument|unsigned Encoding
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
-argument_list|,
-argument|unsigned Encoding
 argument_list|,
 argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|;
-comment|// getCFIPersonalitySymbol - The symbol that gets passed to .cfi_personality.
-name|virtual
+comment|// The symbol that gets passed to .cfi_personality.
 name|MCSymbol
 operator|*
 name|getCFIPersonalitySymbol
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|InitializeELF
@@ -227,27 +233,29 @@ argument_list|(
 argument|bool UseInitArray_
 argument_list|)
 block|;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
 name|getStaticCtorSection
 argument_list|(
-argument|unsigned Priority =
-literal|65535
+argument|unsigned Priority
+argument_list|,
+argument|const MCSymbol *KeySym
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
 name|getStaticDtorSection
 argument_list|(
-argument|unsigned Priority =
-literal|65535
+argument|unsigned Priority
+argument_list|,
+argument|const MCSymbol *KeySym
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -263,9 +271,17 @@ operator|~
 name|TargetLoweringObjectFileMachO
 argument_list|()
 block|{}
-comment|/// emitModuleFlags - Emit the module flags that specify the garbage
-comment|/// collection information.
-name|virtual
+comment|/// Extract the dependent library name from a linker option string. Returns
+comment|/// StringRef() if the option does not specify a library.
+name|StringRef
+name|getDepLibFromLinkerOpt
+argument_list|(
+argument|StringRef LinkerOption
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Emit the module flags that specify the garbage collection information.
 name|void
 name|emitModuleFlags
 argument_list|(
@@ -273,13 +289,21 @@ argument|MCStreamer&Streamer
 argument_list|,
 argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
+name|bool
+name|isSectionAtomizableBySymbols
+argument_list|(
+argument|const MCSection&Section
+argument_list|)
+specifier|const
+name|override
+block|;
 specifier|const
 name|MCSection
 operator|*
@@ -289,13 +313,13 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
@@ -305,38 +329,26 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
 name|getSectionForConstant
 argument_list|(
 argument|SectionKind Kind
-argument_list|)
-specifier|const
-block|;
-comment|/// shouldEmitUsedDirectiveFor - This hook allows targets to selectively
-comment|/// decide not to emit the UsedDirective for some symbols in llvm.used.
-comment|/// FIXME: REMOVE this (rdar://7071300)
-name|virtual
-name|bool
-name|shouldEmitUsedDirectiveFor
-argument_list|(
-argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler *
+argument|const Constant *C
 argument_list|)
 specifier|const
+name|override
 block|;
-comment|/// getTTypeGlobalReference - The mach-o version of this method
-comment|/// defaults to returning a stub reference.
-name|virtual
+comment|/// The mach-o version of this method defaults to returning a stub reference.
 specifier|const
 name|MCExpr
 operator|*
@@ -344,29 +356,34 @@ name|getTTypeGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler *Mang
+argument|unsigned Encoding
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
-argument_list|,
-argument|unsigned Encoding
 argument_list|,
 argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|;
-comment|// getCFIPersonalitySymbol - The symbol that gets passed to .cfi_personality.
-name|virtual
+comment|// The symbol that gets passed to .cfi_personality.
 name|MCSymbol
 operator|*
 name|getCFIPersonalitySymbol
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -382,7 +399,6 @@ operator|~
 name|TargetLoweringObjectFileCOFF
 argument_list|()
 block|{}
-name|virtual
 specifier|const
 name|MCSection
 operator|*
@@ -392,13 +408,13 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|MCSection
 operator|*
@@ -408,15 +424,25 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
 block|;
-comment|/// emitModuleFlags - Emit Obj-C garbage collection and linker options.  Only
-comment|/// linker option emission is implemented for COFF.
-name|virtual
+comment|/// Extract the dependent library name from a linker option string. Returns
+comment|/// StringRef() if the option does not specify a library.
+name|StringRef
+name|getDepLibFromLinkerOpt
+argument_list|(
+argument|StringRef LinkerOption
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Emit Obj-C garbage collection and linker options. Only linker option
+comment|/// emission is implemented for COFF.
 name|void
 name|emitModuleFlags
 argument_list|(
@@ -424,11 +450,36 @@ argument|MCStreamer&Streamer
 argument_list|,
 argument|ArrayRef<Module::ModuleFlagEntry> ModuleFlags
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
+block|;
+specifier|const
+name|MCSection
+operator|*
+name|getStaticCtorSection
+argument_list|(
+argument|unsigned Priority
+argument_list|,
+argument|const MCSymbol *KeySym
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|MCSection
+operator|*
+name|getStaticDtorSection
+argument_list|(
+argument|unsigned Priority
+argument_list|,
+argument|const MCSymbol *KeySym
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

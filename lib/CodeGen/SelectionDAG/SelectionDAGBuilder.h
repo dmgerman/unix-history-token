@@ -86,19 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/IR/CallSite.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/IR/Constants.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/CallSite.h"
 end_include
 
 begin_include
@@ -211,6 +205,9 @@ name|class
 name|MDNode
 decl_stmt|;
 name|class
+name|MVT
+decl_stmt|;
+name|class
 name|PHINode
 decl_stmt|;
 name|class
@@ -321,7 +318,7 @@ argument_list|()
 operator|:
 name|DI
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|dl
@@ -460,17 +457,17 @@ argument_list|()
 operator|:
 name|Low
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|High
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|BB
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ExtraWeight
@@ -1280,7 +1277,7 @@ comment|///
 comment|///   1. Preserve the architecture independence of stack protector generation.
 comment|///
 comment|///   2. Preserve the normal IR level stack protector check for platforms like
-comment|///      OpenBSD for which we support platform specific stack protector
+comment|///      OpenBSD for which we support platform-specific stack protector
 comment|///      generation.
 comment|///
 comment|/// The main problem that guided the present solution is that one can not
@@ -1298,7 +1295,7 @@ comment|///      put the relevant callinst into the stack protector check succes
 comment|///      basic block (where the return inst is placed) and then move it back
 comment|///      later at SelectionDAG/MI time before the stack protector check if the
 comment|///      tail call optimization failed. The MI level option was nixed
-comment|///      immediately since it would require platform specific pattern
+comment|///      immediately since it would require platform-specific pattern
 comment|///      matching. The SelectionDAG level option was nixed because
 comment|///      SelectionDAG only processes one IR level basic block at a time
 comment|///      implying one could not create a DAG Combine to move the callinst.
@@ -1364,22 +1361,22 @@ argument_list|()
 operator|:
 name|ParentMBB
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SuccessMBB
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|FailureMBB
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Guard
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 operator|~
@@ -1489,11 +1486,11 @@ parameter_list|()
 block|{
 name|ParentMBB
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|SuccessMBB
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 comment|/// Reset state that only changes when we switch functions.
@@ -1511,11 +1508,11 @@ parameter_list|()
 block|{
 name|FailureMBB
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|Guard
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|MachineBasicBlock
@@ -1607,7 +1604,7 @@ name|MachineBasicBlock
 modifier|*
 name|SuccMBB
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}
@@ -1621,6 +1618,15 @@ name|TM
 decl_stmt|;
 name|public
 label|:
+comment|/// Lowest valid SDNodeOrder. The special case 0 is reserved for scheduling
+comment|/// nodes without a corresponding SDNode.
+specifier|static
+specifier|const
+name|unsigned
+name|LowestSDNodeOrder
+init|=
+literal|1
+decl_stmt|;
 name|SelectionDAG
 modifier|&
 name|DAG
@@ -1628,7 +1634,7 @@ decl_stmt|;
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 name|AliasAnalysis
 modifier|*
@@ -1741,12 +1747,12 @@ argument_list|)
 block|:
 name|CurInst
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|SDNodeOrder
 argument_list|(
-literal|0
+name|LowestSDNodeOrder
 argument_list|)
 operator|,
 name|TM
@@ -1968,12 +1974,11 @@ index|]
 decl_stmt|;
 name|assert
 argument_list|(
+operator|!
 name|N
 operator|.
 name|getNode
 argument_list|()
-operator|==
-literal|0
 operator|&&
 literal|"Already set a value for this node!"
 argument_list|)
@@ -2006,12 +2011,11 @@ index|]
 decl_stmt|;
 name|assert
 argument_list|(
+operator|!
 name|N
 operator|.
 name|getNode
 argument_list|()
-operator|==
-literal|0
 operator|&&
 literal|"Already set a value for this node!"
 argument_list|)
@@ -2047,6 +2051,12 @@ name|SwitchBB
 parameter_list|,
 name|unsigned
 name|Opc
+parameter_list|,
+name|uint32_t
+name|TW
+parameter_list|,
+name|uint32_t
+name|FW
 parameter_list|)
 function_decl|;
 name|void
@@ -2072,6 +2082,12 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|SwitchBB
+parameter_list|,
+name|uint32_t
+name|TW
+parameter_list|,
+name|uint32_t
+name|FW
 parameter_list|)
 function_decl|;
 name|bool
@@ -2136,7 +2152,7 @@ name|MachineBasicBlock
 modifier|*
 name|LandingPad
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|std
@@ -2161,7 +2177,7 @@ argument|bool useVoidTy = false
 argument_list|)
 expr_stmt|;
 comment|/// UpdateSplitBlock - When an MBB was split during scheduling, update the
-comment|/// references that ned to refer to the last resulting block.
+comment|/// references that need to refer to the last resulting block.
 name|void
 name|UpdateSplitBlock
 parameter_list|(
@@ -2221,9 +2237,7 @@ name|UnreachableInst
 modifier|&
 name|I
 parameter_list|)
-block|{
-comment|/* noop */
-block|}
+function_decl|;
 comment|// Helpers for visitSwitch
 name|bool
 name|handleSmallSwitchRange
@@ -3345,6 +3359,9 @@ name|Variable
 parameter_list|,
 name|int64_t
 name|Offset
+parameter_list|,
+name|bool
+name|IsIndirect
 parameter_list|,
 specifier|const
 name|SDValue

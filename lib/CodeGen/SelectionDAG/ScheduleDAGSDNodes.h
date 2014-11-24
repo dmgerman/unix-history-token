@@ -574,7 +574,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|dumpNode
 argument_list|(
@@ -584,6 +583,7 @@ operator|*
 name|SU
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
@@ -596,7 +596,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|std
 operator|::
 name|string
@@ -605,17 +604,18 @@ argument_list|(
 argument|const SUnit *SU
 argument_list|)
 specifier|const
+name|override
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|std
 operator|::
 name|string
 name|getDAGName
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -694,7 +694,7 @@ block|{
 return|return
 name|Node
 operator|!=
-name|NULL
+name|nullptr
 return|;
 block|}
 name|MVT

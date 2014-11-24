@@ -627,6 +627,16 @@ define|\
 value|namespace GTEST_CASE_NAMESPACE_(CaseName) { \   template<typename gtest_TypeParam_> \   class TestName : public CaseName<gtest_TypeParam_> { \    private: \     typedef CaseName<gtest_TypeParam_> TestFixture; \     typedef gtest_TypeParam_ TypeParam; \     virtual void TestBody(); \   }; \   static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ = \       GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(\           __FILE__, __LINE__, #CaseName, #TestName); \   } \   template<typename gtest_TypeParam_> \   void GTEST_CASE_NAMESPACE_(CaseName)::TestName<gtest_TypeParam_>::TestBody()
 end_define
 
+begin_comment
+comment|// Silencing C99 build warnings
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -639,6 +649,11 @@ parameter_list|)
 define|\
 value|namespace GTEST_CASE_NAMESPACE_(CaseName) { \   typedef ::testing::internal::Templates<__VA_ARGS__>::type gtest_AllTests_; \   } \   static const char* const GTEST_REGISTERED_TEST_NAMES_(CaseName) = \       GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).VerifyRegisteredTestNames(\           __FILE__, __LINE__, #__VA_ARGS__)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// The 'Types' template argument below must have spaces around it

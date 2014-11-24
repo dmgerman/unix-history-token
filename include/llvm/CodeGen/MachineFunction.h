@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -97,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ArrayRecycler.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DebugLoc.h"
 end_include
 
 begin_include
@@ -402,9 +402,9 @@ comment|/// about the control flow of such functions.
 name|bool
 name|ExposesReturnsTwice
 decl_stmt|;
-comment|/// True if the function includes MS-style inline assembly.
+comment|/// True if the function includes any inline assembly.
 name|bool
-name|HasMSInlineAsm
+name|HasInlineAsm
 decl_stmt|;
 name|MachineFunction
 argument_list|(
@@ -690,26 +690,25 @@ operator|=
 name|B
 expr_stmt|;
 block|}
-comment|/// Returns true if the function contains any MS-style inline assembly.
+comment|/// Returns true if the function contains any inline assembly.
 name|bool
-name|hasMSInlineAsm
+name|hasInlineAsm
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasMSInlineAsm
+name|HasInlineAsm
 return|;
 block|}
-comment|/// Set a flag that indicates that the function contains MS-style inline
-comment|/// assembly.
+comment|/// Set a flag that indicates that the function contains inline assembly.
 name|void
-name|setHasMSInlineAsm
+name|setHasInlineAsm
 parameter_list|(
 name|bool
 name|B
 parameter_list|)
 block|{
-name|HasMSInlineAsm
+name|HasInlineAsm
 operator|=
 name|B
 expr_stmt|;
@@ -732,42 +731,11 @@ condition|(
 operator|!
 name|MFInfo
 condition|)
-block|{
-comment|// This should be just `new (Allocator.Allocate<Ty>()) Ty(*this)', but
-comment|// that apparently breaks GCC 3.3.
-name|Ty
-modifier|*
-name|Loc
-init|=
-name|static_cast
-operator|<
-name|Ty
-operator|*
-operator|>
-operator|(
-name|Allocator
-operator|.
-name|Allocate
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|Ty
-argument_list|)
-argument_list|,
-name|AlignOf
-operator|<
-name|Ty
-operator|>
-operator|::
-name|Alignment
-argument_list|)
-operator|)
-decl_stmt|;
 name|MFInfo
 operator|=
 name|new
 argument_list|(
-argument|Loc
+argument|Allocator.Allocate<Ty>()
 argument_list|)
 name|Ty
 argument_list|(
@@ -775,7 +743,6 @@ operator|*
 name|this
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|static_cast
 operator|<
@@ -860,6 +827,11 @@ name|N
 index|]
 return|;
 block|}
+comment|/// Should we be emitting segmented stack stuff for the function
+name|bool
+name|shouldSplitStack
+parameter_list|()
+function_decl|;
 comment|/// getNumBlockIDs - Return the number of MBB ID's allocated.
 comment|///
 name|unsigned
@@ -889,7 +861,7 @@ name|MachineBasicBlock
 modifier|*
 name|MBBFrom
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// print - Print out the MachineFunction in a format suitable for debugging
@@ -905,7 +877,7 @@ argument_list|,
 name|SlotIndexes
 operator|*
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -946,14 +918,14 @@ name|Pass
 operator|*
 name|p
 operator|=
-name|NULL
+name|nullptr
 argument_list|,
 specifier|const
 name|char
 operator|*
 name|Banner
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1368,7 +1340,7 @@ index|[
 name|N
 index|]
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 comment|/// CreateMachineInstr - Allocate a new MachineInstr. Use this instead
@@ -1430,7 +1402,7 @@ name|BasicBlock
 modifier|*
 name|bb
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// DeleteMachineBasicBlock - Delete the given MachineBasicBlock.
@@ -1467,14 +1439,14 @@ name|MDNode
 modifier|*
 name|TBAAInfo
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|MDNode
 modifier|*
 name|Ranges
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// getMachineMemOperand - Allocate a new MachineMemOperand by copying
@@ -1550,6 +1522,65 @@ argument_list|,
 name|Array
 argument_list|)
 expr_stmt|;
+block|}
+comment|/// \brief Allocate and initialize a register mask with @p NumRegister bits.
+name|uint32_t
+modifier|*
+name|allocateRegisterMask
+parameter_list|(
+name|unsigned
+name|NumRegister
+parameter_list|)
+block|{
+name|unsigned
+name|Size
+init|=
+operator|(
+name|NumRegister
+operator|+
+literal|31
+operator|)
+operator|/
+literal|32
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|Mask
+init|=
+name|Allocator
+operator|.
+name|Allocate
+operator|<
+name|uint32_t
+operator|>
+operator|(
+name|Size
+operator|)
+decl_stmt|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|!=
+name|Size
+condition|;
+operator|++
+name|i
+control|)
+name|Mask
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|Mask
+return|;
 block|}
 comment|/// allocateMemRefsArray - Allocate an array to hold MachineMemOperand
 comment|/// pointers.  This array is owned by the MachineFunction.
@@ -1636,15 +1667,45 @@ argument_list|()
 specifier|const
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// GraphTraits specializations for function basic block graphs (CFGs)
+end_comment
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Provide specializations of GraphTraits to be able to treat a
+end_comment
+
+begin_comment
 comment|// machine function as a graph of machine basic blocks... these are
+end_comment
+
+begin_comment
 comment|// the same as the machine basic block iterators, except that the root
+end_comment
+
+begin_comment
 comment|// node is implicitly the first node of the function.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1678,19 +1739,30 @@ name|front
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// nodes_iterator/begin/end - Allow iteration over all nodes in the graph
+end_comment
+
+begin_typedef
 typedef|typedef
 name|MachineFunction
 operator|::
 name|iterator
 name|nodes_iterator
 expr_stmt|;
+end_typedef
+
+begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_begin
-argument_list|(
-argument|MachineFunction *F
-argument_list|)
+parameter_list|(
+name|MachineFunction
+modifier|*
+name|F
+parameter_list|)
 block|{
 return|return
 name|F
@@ -1699,12 +1771,17 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_end
-argument_list|(
-argument|MachineFunction *F
-argument_list|)
+parameter_list|(
+name|MachineFunction
+modifier|*
+name|F
+parameter_list|)
 block|{
 return|return
 name|F
@@ -1713,12 +1790,17 @@ name|end
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|unsigned
 name|size
-argument_list|(
-argument|MachineFunction *F
-argument_list|)
+parameter_list|(
+name|MachineFunction
+modifier|*
+name|F
+parameter_list|)
 block|{
 return|return
 name|F
@@ -1727,8 +1809,10 @@ name|size
 argument_list|()
 return|;
 block|}
-block|}
-empty_stmt|;
+end_function
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -1764,19 +1848,31 @@ name|front
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// nodes_iterator/begin/end - Allow iteration over all nodes in the graph
+end_comment
+
+begin_typedef
 typedef|typedef
 name|MachineFunction
 operator|::
 name|const_iterator
 name|nodes_iterator
 expr_stmt|;
+end_typedef
+
+begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_begin
-argument_list|(
-argument|const MachineFunction *F
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|*
+name|F
+parameter_list|)
 block|{
 return|return
 name|F
@@ -1785,12 +1881,18 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|nodes_iterator
 name|nodes_end
-argument_list|(
-argument|const MachineFunction *F
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|*
+name|F
+parameter_list|)
 block|{
 return|return
 name|F
@@ -1799,12 +1901,18 @@ name|end
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|unsigned
 name|size
-argument_list|(
-argument|const MachineFunction *F
-argument_list|)
+parameter_list|(
+specifier|const
+name|MachineFunction
+modifier|*
+name|F
+parameter_list|)
 block|{
 return|return
 name|F
@@ -1813,13 +1921,30 @@ name|size
 argument_list|()
 return|;
 block|}
-block|}
-empty_stmt|;
+end_function
+
+begin_comment
+unit|};
 comment|// Provide specializations of GraphTraits to be able to treat a function as a
+end_comment
+
+begin_comment
 comment|// graph of basic blocks... and to walk it in inverse order.  Inverse order for
+end_comment
+
+begin_comment
 comment|// a function is considered to be when traversing the predecessor edges of a BB
+end_comment
+
+begin_comment
 comment|// instead of the successor edges.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -1861,8 +1986,10 @@ name|front
 argument_list|()
 return|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 operator|>
@@ -1906,11 +2033,10 @@ name|front
 argument_list|()
 return|;
 block|}
-expr|}
-block|;  }
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

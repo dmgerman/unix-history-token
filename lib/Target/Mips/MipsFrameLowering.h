@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MipsSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -129,10 +123,6 @@ name|MipsFrameLowering
 operator|*
 name|create
 argument_list|(
-name|MipsTargetMachine
-operator|&
-name|TM
-argument_list|,
 specifier|const
 name|MipsSubtarget
 operator|&
@@ -145,6 +135,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|protected
 operator|:

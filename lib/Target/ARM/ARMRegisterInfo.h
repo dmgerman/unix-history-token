@@ -62,19 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARM.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARMBaseRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_decl_stmt

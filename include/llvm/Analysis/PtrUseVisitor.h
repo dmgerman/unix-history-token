@@ -118,13 +118,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/IntrinsicInst.h"
+file|"llvm/IR/InstVisitor.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/InstVisitor.h"
+file|"llvm/IR/IntrinsicInst.h"
 end_include
 
 begin_include
@@ -166,14 +166,14 @@ argument_list|()
 operator|:
 name|AbortedInfo
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 name|false
 argument_list|)
 operator|,
 name|EscapedInfo
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|false
 argument_list|)
@@ -187,7 +187,7 @@ name|AbortedInfo
 operator|.
 name|setPointer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|AbortedInfo
@@ -201,7 +201,7 @@ name|EscapedInfo
 operator|.
 name|setPointer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|EscapedInfo
@@ -278,7 +278,7 @@ name|Instruction
 modifier|*
 name|I
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 name|AbortedInfo
@@ -305,7 +305,7 @@ name|Instruction
 modifier|*
 name|I
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 name|EscapedInfo
@@ -334,7 +334,7 @@ name|Instruction
 modifier|*
 name|I
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 name|setEscaped
@@ -670,7 +670,9 @@ name|IsOffsetKnown
 condition|)
 name|Offset
 operator|=
-name|llvm_move
+name|std
+operator|::
+name|move
 argument_list|(
 name|ToVisit
 operator|.

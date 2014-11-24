@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ARM.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARMBaseRegisterInfo.h"
 end_include
 
@@ -115,6 +109,7 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|TargetRegisterClass
@@ -127,6 +122,7 @@ argument|unsigned Kind =
 literal|0
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// emitLoadConstPool - Emits a load from constpool to materialize the
 comment|/// specified immediate.
@@ -153,6 +149,7 @@ argument_list|,
 argument|unsigned MIFlags = MachineInstr::NoFlags
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// rewrite MI to access 'Offset' bytes from the FP. Update Offset to be
 comment|// however much remains to be handled. Return 'true' if no further
@@ -175,13 +172,14 @@ block|;
 name|void
 name|resolveFrameIndex
 argument_list|(
-argument|MachineBasicBlock::iterator I
+argument|MachineInstr&MI
 argument_list|,
 argument|unsigned BaseReg
 argument_list|,
 argument|int64_t Offset
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|saveScavengerRegister
@@ -197,6 +195,7 @@ argument_list|,
 argument|unsigned Reg
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateFrameIndex
@@ -207,9 +206,10 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

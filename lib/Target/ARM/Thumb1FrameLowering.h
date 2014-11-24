@@ -50,31 +50,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__THUMB_FRAMEINFO_H_
+name|LLVM_ARM_THUMB1FRAMELOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__THUMB_FRAMEINFO_H_
+name|LLVM_ARM_THUMB1FRAMELOWERING_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"ARM.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARMFrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARMSubtarget.h"
 end_include
 
 begin_include
@@ -100,9 +88,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|ARMSubtarget
-decl_stmt|;
-name|class
 name|Thumb1FrameLowering
 range|:
 name|public
@@ -118,12 +103,7 @@ name|ARMSubtarget
 operator|&
 name|sti
 argument_list|)
-operator|:
-name|ARMFrameLowering
-argument_list|(
-argument|sti
-argument_list|)
-block|{   }
+block|;
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
 comment|/// the function.
 name|void
@@ -132,6 +112,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|emitEpilogue
@@ -141,6 +122,7 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|spillCalleeSavedRegisters
@@ -154,6 +136,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|restoreCalleeSavedRegisters
@@ -167,6 +150,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasReservedCallFrame
@@ -174,6 +158,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateCallFramePseudoInstr
@@ -185,6 +170,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

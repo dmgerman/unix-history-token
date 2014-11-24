@@ -111,7 +111,6 @@ begin_extern
 extern|extern
 literal|"C"
 block|{
-name|LLVM_ATTRIBUTE_WEAK
 name|void
 name|AnnotateHappensAfter
 parameter_list|(
@@ -130,7 +129,6 @@ modifier|*
 name|cv
 parameter_list|)
 function_decl|;
-name|LLVM_ATTRIBUTE_WEAK
 name|void
 name|AnnotateHappensBefore
 parameter_list|(
@@ -149,7 +147,6 @@ modifier|*
 name|cv
 parameter_list|)
 function_decl|;
-name|LLVM_ATTRIBUTE_WEAK
 name|void
 name|AnnotateIgnoreWritesBegin
 parameter_list|(
@@ -162,7 +159,6 @@ name|int
 name|line
 parameter_list|)
 function_decl|;
-name|LLVM_ATTRIBUTE_WEAK
 name|void
 name|AnnotateIgnoreWritesEnd
 parameter_list|(

@@ -171,7 +171,7 @@ name|string
 operator|*
 name|errMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// This function permanently loads the dynamic library at the given path.
@@ -194,7 +194,7 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|{
 return|return

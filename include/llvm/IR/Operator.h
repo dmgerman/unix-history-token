@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/GetElementPtrTypeIterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instruction.h"
 end_include
 
@@ -91,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/GetElementPtrTypeIterator.h"
 end_include
 
 begin_decl_stmt
@@ -1009,6 +1009,22 @@ argument_list|()
 block|;
 name|setAllowReciprocal
 argument_list|()
+block|;   }
+name|void
+name|operator
+operator|&=
+operator|(
+specifier|const
+name|FastMathFlags
+operator|&
+name|OtherFlags
+operator|)
+block|{
+name|Flags
+operator|&=
+name|OtherFlags
+operator|.
+name|Flags
 block|;   }
 expr|}
 block|;
@@ -2087,7 +2103,105 @@ name|true
 return|;
 block|}
 expr|}
-block|;  }
+block|;
+name|class
+name|PtrToIntOperator
+operator|:
+name|public
+name|ConcreteOperator
+operator|<
+name|Operator
+block|,
+name|Instruction
+operator|::
+name|PtrToInt
+operator|>
+block|{
+name|friend
+name|class
+name|PtrToInt
+block|;
+name|friend
+name|class
+name|ConstantExpr
+block|;
+name|public
+operator|:
+name|Value
+operator|*
+name|getPointerOperand
+argument_list|()
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|const
+name|Value
+operator|*
+name|getPointerOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getPointerOperandIndex
+argument_list|()
+block|{
+return|return
+literal|0U
+return|;
+comment|// get index for modifying correct operand
+block|}
+comment|/// getPointerOperandType - Method to return the pointer operand as a
+comment|/// PointerType.
+name|Type
+operator|*
+name|getPointerOperandType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPointerOperand
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
+comment|/// getPointerAddressSpace - Method to return the address space of the
+comment|/// pointer operand.
+name|unsigned
+name|getPointerAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|getPointerOperandType
+argument_list|()
+operator|)
+operator|->
+name|getAddressSpace
+argument_list|()
+return|;
+block|}
+expr|}
+block|;   }
 end_decl_stmt
 
 begin_comment

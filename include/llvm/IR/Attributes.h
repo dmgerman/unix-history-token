@@ -197,6 +197,9 @@ comment|///< nobuiltin attribute on its declaration.
 name|ByVal
 block|,
 comment|///< Pass structure by value
+name|InAlloca
+block|,
+comment|///< Pass structure in an alloca
 name|Cold
 block|,
 comment|///< Marks function as being in a cold path.
@@ -206,6 +209,9 @@ comment|///< Source said inlining was desirable
 name|InReg
 block|,
 comment|///< Force argument to be passed in register
+name|JumpTable
+block|,
+comment|///< Build jump-instruction tables and replace refs.
 name|MinSize
 block|,
 comment|///< Function must be optimized for size first
@@ -237,6 +243,12 @@ name|NonLazyBind
 block|,
 comment|///< Function is called early and/or
 comment|///< often, so lazy binding isn't worthwhile
+name|NonNull
+block|,
+comment|///< Pointer is known to be not null
+name|Dereferenceable
+block|,
+comment|///< Pointer is known to be dereferenceable
 name|NoRedZone
 block|,
 comment|///< Disable redzone
@@ -329,7 +341,7 @@ argument_list|()
 operator|:
 name|pImpl
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|//===--------------------------------------------------------------------===//
@@ -392,6 +404,18 @@ name|uint64_t
 name|Align
 parameter_list|)
 function_decl|;
+specifier|static
+name|Attribute
+name|getWithDereferenceableBytes
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|,
+name|uint64_t
+name|Bytes
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attribute Accessors
 comment|//===--------------------------------------------------------------------===//
@@ -401,9 +425,9 @@ name|isEnumAttribute
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Return true if the attribute is an alignment attribute.
+comment|/// \brief Return true if the attribute is an integer attribute.
 name|bool
-name|isAlignAttribute
+name|isIntAttribute
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -473,6 +497,13 @@ comment|/// \brief Returns the stack alignment field of an attribute as a byte
 comment|/// alignment value.
 name|unsigned
 name|getStackAlignment
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Returns the number of dereferenceable bytes from the
+comment|/// dereferenceable attribute (or zero if unknown).
+name|uint64_t
+name|getDereferenceableBytes
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -564,23 +595,21 @@ name|AttributeSet
 block|{
 name|public
 label|:
-name|enum
+enum|enum
 name|AttrIndex
-name|LLVM_ENUM_INT_TYPE
-parameter_list|(
+enum|:
 name|unsigned
-parameter_list|)
 block|{
 name|ReturnIndex
-operator|=
+init|=
 literal|0U
-operator|,
+block|,
 name|FunctionIndex
-operator|=
+init|=
 operator|~
 literal|0U
 block|}
-empty_stmt|;
+enum|;
 name|private
 label|:
 name|friend
@@ -705,7 +734,7 @@ argument_list|()
 operator|:
 name|pImpl
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|//===--------------------------------------------------------------------===//
@@ -758,6 +787,7 @@ parameter_list|,
 name|unsigned
 name|Index
 parameter_list|,
+specifier|const
 name|AttrBuilder
 modifier|&
 name|B
@@ -988,6 +1018,15 @@ decl_stmt|;
 comment|/// \brief Get the stack alignment.
 name|unsigned
 name|getStackAlignment
+argument_list|(
+name|unsigned
+name|Index
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Get the number of dereferenceable bytes (or zero if unknown).
+name|uint64_t
+name|getDereferenceableBytes
 argument_list|(
 name|unsigned
 name|Index
@@ -1328,6 +1367,9 @@ block|;
 name|uint64_t
 name|StackAlignment
 block|;
+name|uint64_t
+name|DerefBytes
+block|;
 name|public
 operator|:
 name|AttrBuilder
@@ -1344,6 +1386,11 @@ literal|0
 argument_list|)
 block|,
 name|StackAlignment
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DerefBytes
 argument_list|(
 literal|0
 argument_list|)
@@ -1365,6 +1412,11 @@ literal|0
 argument_list|)
 block|,
 name|StackAlignment
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DerefBytes
 argument_list|(
 literal|0
 argument_list|)
@@ -1396,6 +1448,11 @@ name|StackAlignment
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|DerefBytes
+argument_list|(
+literal|0
+argument_list|)
 block|{
 name|addAttribute
 argument_list|(
@@ -1409,50 +1466,6 @@ argument_list|,
 argument|unsigned Idx
 argument_list|)
 block|;
-name|AttrBuilder
-argument_list|(
-specifier|const
-name|AttrBuilder
-operator|&
-name|B
-argument_list|)
-operator|:
-name|Attrs
-argument_list|(
-name|B
-operator|.
-name|Attrs
-argument_list|)
-block|,
-name|TargetDepAttrs
-argument_list|(
-name|B
-operator|.
-name|TargetDepAttrs
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|B
-operator|.
-name|TargetDepAttrs
-operator|.
-name|end
-argument_list|()
-argument_list|)
-block|,
-name|Alignment
-argument_list|(
-name|B
-operator|.
-name|Alignment
-argument_list|)
-block|,
-name|StackAlignment
-argument_list|(
-argument|B.StackAlignment
-argument_list|)
-block|{}
 name|void
 name|clear
 argument_list|()
@@ -1601,6 +1614,17 @@ return|return
 name|StackAlignment
 return|;
 block|}
+comment|/// \brief Retrieve the number of dereferenceable bytes, if the dereferenceable
+comment|/// attribute exists (zero is returned otherwise).
+name|uint64_t
+name|getDereferenceableBytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DerefBytes
+return|;
+block|}
 comment|/// \brief This turns an int alignment (which must be a power of 2) into the
 comment|/// form used internally in Attribute.
 name|AttrBuilder
@@ -1617,6 +1641,15 @@ operator|&
 name|addStackAlignmentAttr
 argument_list|(
 argument|unsigned Align
+argument_list|)
+block|;
+comment|/// \brief This turns the number of dereferenceable bytes into the form used
+comment|/// internally in Attribute.
+name|AttrBuilder
+operator|&
+name|addDereferenceableAttr
+argument_list|(
+argument|uint64_t Bytes
 argument_list|)
 block|;
 comment|/// \brief Return true if the builder contains no target-independent
@@ -1683,6 +1716,24 @@ operator|::
 name|const_iterator
 name|td_const_iterator
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|td_iterator
+operator|>
+name|td_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|td_const_iterator
+operator|>
+name|td_const_range
+expr_stmt|;
 name|td_iterator
 name|td_begin
 parameter_list|()
@@ -1727,6 +1778,37 @@ name|TargetDepAttrs
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+name|td_range
+name|td_attrs
+parameter_list|()
+block|{
+return|return
+name|td_range
+argument_list|(
+name|td_begin
+argument_list|()
+argument_list|,
+name|td_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|td_const_range
+name|td_attrs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|td_const_range
+argument_list|(
+name|td_begin
+argument_list|()
+argument_list|,
+name|td_end
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|bool

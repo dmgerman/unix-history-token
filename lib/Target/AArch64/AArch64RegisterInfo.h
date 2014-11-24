@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//==- AArch64RegisterInfo.h - AArch64 Register Information Impl -*- C++ -*-===//
+comment|//==- AArch64RegisterInfo.h - AArch64 Register Information Impl --*- C++ -*-==//
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file contains the AArch64 implementation of the MCRegisterInfo class.
+comment|// This file contains the AArch64 implementation of the MRegisterInfo class.
 end_comment
 
 begin_comment
@@ -50,20 +50,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_AARCH64REGISTERINFO_H
+name|LLVM_TARGET_AArch64REGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_AARCH64REGISTERINFO_H
+name|LLVM_TARGET_AArch64REGISTERINFO_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
-end_include
 
 begin_define
 define|#
@@ -87,24 +81,67 @@ decl_stmt|;
 name|class
 name|AArch64Subtarget
 decl_stmt|;
+name|class
+name|MachineFunction
+decl_stmt|;
+name|class
+name|RegScavenger
+decl_stmt|;
+name|class
+name|TargetRegisterClass
+decl_stmt|;
 name|struct
 name|AArch64RegisterInfo
 range|:
 name|public
 name|AArch64GenRegisterInfo
 block|{
-name|AArch64RegisterInfo
-argument_list|()
+name|private
+operator|:
+specifier|const
+name|AArch64InstrInfo
+operator|*
+name|TII
 block|;
 specifier|const
-name|uint16_t
+name|AArch64Subtarget
+operator|*
+name|STI
+block|;
+name|public
+operator|:
+name|AArch64RegisterInfo
+argument_list|(
+specifier|const
+name|AArch64InstrInfo
+operator|*
+name|tii
+argument_list|,
+specifier|const
+name|AArch64Subtarget
+operator|*
+name|sti
+argument_list|)
+block|;
+name|bool
+name|isReservedReg
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+comment|/// Code Generation virtual methods...
+specifier|const
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|uint32_t
@@ -114,12 +151,45 @@ argument_list|(
 argument|CallingConv::ID
 argument_list|)
 specifier|const
+name|override
 block|;
+name|unsigned
+name|getCSRFirstUseCost
+argument_list|()
+specifier|const
+name|override
+block|{
+comment|// The cost will be compared against BlockFrequency where entry has the
+comment|// value of 1<< 14. A value of 5 will choose to spill or split really
+comment|// cold path instead of using a callee-saved register.
+return|return
+literal|5
+return|;
+block|}
+comment|// Calls involved in thread-local variable lookup save more registers than
+comment|// normal calls, so they need a different mask to represent this.
 specifier|const
 name|uint32_t
 operator|*
-name|getTLSDescCallPreservedMask
+name|getTLSCallPreservedMask
 argument_list|()
+specifier|const
+block|;
+comment|/// getThisReturnPreservedMask - Returns a call preserved mask specific to the
+comment|/// case that 'returned' is on an i64 first argument if the calling convention
+comment|/// is one that can (partially) model this attribute with a preserved mask
+comment|/// (i.e. it is a calling convention that uses the same register for the first
+comment|/// i64 argument and an i64 return value)
+comment|///
+comment|/// Should return NULL in the case that the calling convention does not have
+comment|/// this property
+specifier|const
+name|uint32_t
+operator|*
+name|getThisReturnPreservedMask
+argument_list|(
+argument|CallingConv::ID
+argument_list|)
 specifier|const
 block|;
 name|BitVector
@@ -128,13 +198,100 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|unsigned
-name|getFrameRegister
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getPointerRegClass
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|unsigned Kind =
+literal|0
+argument_list|)
+specifier|const
+name|override
+block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getCrossCopyRegClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|requiresRegisterScavenging
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
+block|;
+name|bool
+name|useFPForScavengingIndex
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|requiresFrameIndexScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|needsFrameBaseReg
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isFrameOffsetLegal
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|materializeFrameBaseRegister
+argument_list|(
+argument|MachineBasicBlock *MBB
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int FrameIdx
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|resolveFrameIndex
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+name|override
 block|;
 name|void
 name|eliminateFrameIndex
@@ -145,99 +302,62 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *Rs = NULL
+argument|RegScavenger *RS = nullptr
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|cannotEliminateFrame
+argument_list|(
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-comment|/// getCrossCopyRegClass - Returns a legal register class to copy a register
-comment|/// in the specified class to or from. Returns original class if it is
-comment|/// possible to copy between a two registers of the specified class.
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getCrossCopyRegClass
+name|bool
+name|requiresVirtualBaseRegisters
 argument_list|(
-argument|const TargetRegisterClass *RC
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|hasBasePointer
+argument_list|(
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-comment|/// getLargestLegalSuperClass - Returns the largest super class of RC that is
-comment|/// legal to use in the current sub-target and has the same spill size.
+name|unsigned
+name|getBaseRegister
+argument_list|()
 specifier|const
-name|TargetRegisterClass
-operator|*
-name|getLargestLegalSuperClass
+block|;
+comment|// Debug information queries.
+name|unsigned
+name|getFrameRegister
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getRegPressureLimit
 argument_list|(
 argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
-block|{
-if|if
-condition|(
-name|RC
-operator|==
-operator|&
-name|AArch64
-operator|::
-name|tcGPR64RegClass
-condition|)
-return|return
-operator|&
-name|AArch64
-operator|::
-name|GPR64RegClass
-return|;
-return|return
-name|RC
-return|;
-block|}
-name|bool
-name|requiresRegisterScavenging
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|bool
-name|requiresFrameIndexScavenging
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|bool
-name|useFPForScavengingIndex
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
+name|override
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 
@@ -247,7 +367,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// LLVM_TARGET_AARCH64REGISTERINFO_H
+comment|// LLVM_TARGET_AArch64REGISTERINFO_H
 end_comment
 
 end_unit

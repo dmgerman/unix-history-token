@@ -180,7 +180,7 @@ name|llvm
 operator|::
 name|createBURRListDAGScheduler
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|,
 name|llvm
 operator|::
@@ -196,7 +196,7 @@ name|llvm
 operator|::
 name|createSourceListDAGScheduler
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|,
 name|llvm
 operator|::
@@ -212,7 +212,7 @@ name|llvm
 operator|::
 name|createHybridListDAGScheduler
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|,
 name|llvm
 operator|::
@@ -228,7 +228,7 @@ name|llvm
 operator|::
 name|createFastDAGScheduler
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|,
 name|llvm
 operator|::
@@ -244,7 +244,7 @@ name|llvm
 operator|::
 name|createDefaultScheduler
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|,
 name|llvm
 operator|::
@@ -260,7 +260,7 @@ name|llvm
 operator|::
 name|createVLIWDAGScheduler
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|,
 name|llvm
 operator|::

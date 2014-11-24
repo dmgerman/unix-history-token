@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"MSP430Subtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -82,9 +76,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MSP430Subtarget
-decl_stmt|;
-name|class
 name|MSP430FrameLowering
 range|:
 name|public
@@ -92,39 +83,22 @@ name|TargetFrameLowering
 block|{
 name|protected
 operator|:
-specifier|const
-name|MSP430Subtarget
-operator|&
-name|STI
-block|;
 name|public
 operator|:
 name|explicit
 name|MSP430FrameLowering
-argument_list|(
-specifier|const
-name|MSP430Subtarget
-operator|&
-name|sti
-argument_list|)
+argument_list|()
 operator|:
 name|TargetFrameLowering
 argument_list|(
-name|TargetFrameLowering
-operator|::
-name|StackGrowsDown
+argument|TargetFrameLowering::StackGrowsDown
 argument_list|,
 literal|2
 argument_list|,
-operator|-
+argument|-
 literal|2
 argument_list|,
 literal|2
-argument_list|)
-block|,
-name|STI
-argument_list|(
-argument|sti
 argument_list|)
 block|{}
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
@@ -135,6 +109,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|emitEpilogue
@@ -144,6 +119,7 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|eliminateCallFramePseudoInstr
@@ -155,6 +131,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|spillCalleeSavedRegisters
@@ -168,6 +145,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|restoreCalleeSavedRegisters
@@ -181,6 +159,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasFP
@@ -188,6 +167,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasReservedCallFrame
@@ -195,15 +175,17 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|processFunctionBeforeFrameFinalized
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

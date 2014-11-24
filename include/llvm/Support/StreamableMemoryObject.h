@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -64,7 +58,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MemoryObject.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -105,12 +117,11 @@ block|;
 comment|/// getBase         - Returns the lowest valid address in the region.
 comment|///
 comment|/// @result         - The lowest valid address.
-name|virtual
 name|uint64_t
 name|getBase
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 operator|=
 literal|0
 block|;
@@ -120,12 +131,11 @@ comment|///                   is getBase() + getExtent() - 1).
 comment|///                   May block until all bytes in the stream have been read
 comment|///
 comment|/// @result         - The size of the region.
-name|virtual
 name|uint64_t
 name|getExtent
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 operator|=
 literal|0
 block|;
@@ -135,7 +145,6 @@ comment|/// @param address  - The address of the byte, in the same space as getB
 comment|/// @param ptr      - A pointer to a byte to be filled in.  Must be non-NULL.
 comment|/// @result         - 0 if successful; -1 if not.  Failure may be due to a
 comment|///                   bounds violation or an implementation-specific error.
-name|virtual
 name|int
 name|readByte
 argument_list|(
@@ -144,7 +153,7 @@ argument_list|,
 argument|uint8_t *ptr
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 operator|=
 literal|0
 block|;
@@ -162,7 +171,6 @@ comment|/// @param buf      - A pointer to a buffer to be filled in.  Must be no
 comment|///                   and large enough to hold size bytes.
 comment|/// @result         - 0 if successful; -1 if not.  Failure may be due to a
 comment|///                   bounds violation or an implementation-specific error.
-name|virtual
 name|int
 name|readBytes
 argument_list|(
@@ -173,7 +181,7 @@ argument_list|,
 argument|uint8_t *buf
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 operator|=
 literal|0
 block|;
@@ -248,25 +256,22 @@ operator|*
 name|streamer
 argument_list|)
 block|;
-name|virtual
 name|uint64_t
 name|getBase
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 literal|0
 return|;
 block|}
-name|virtual
 name|uint64_t
 name|getExtent
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|int
 name|readByte
 argument_list|(
@@ -275,9 +280,8 @@ argument_list|,
 argument|uint8_t *ptr
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|int
 name|readBytes
 argument_list|(
@@ -288,9 +292,8 @@ argument_list|,
 argument|uint8_t *buf
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 specifier|const
 name|uint8_t
 operator|*
@@ -301,40 +304,36 @@ argument_list|,
 argument|uint64_t size
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 comment|// This could be fixed by ensuring the bytes are fetched and making a copy,
 comment|// requiring that the bitcode size be known, or otherwise ensuring that
 comment|// the memory doesn't go away/get reallocated, but it's
 comment|// not currently necessary. Users that need the pointer don't stream.
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"getPointer in streaming memory objects not allowed"
 argument_list|)
 block|;
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
-name|virtual
 name|bool
 name|isValidAddress
 argument_list|(
 argument|uint64_t address
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|isObjectEnd
 argument_list|(
 argument|uint64_t address
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|/// Drop s bytes from the front of the stream, pushing the positions of the
 comment|/// remaining bytes down by s. This is used to skip past the bitcode header,
@@ -376,7 +375,9 @@ name|char
 operator|>
 name|Bytes
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|DataStreamer
 operator|>
@@ -468,17 +469,16 @@ operator|<
 name|kChunkSize
 condition|)
 block|{
-if|if
-condition|(
-name|ObjectSize
-operator|&&
-name|BytesRead
-operator|<
-name|Pos
-condition|)
 name|assert
 argument_list|(
-literal|0
+operator|(
+operator|!
+name|ObjectSize
+operator|||
+name|BytesRead
+operator|>=
+name|Pos
+operator|)
 operator|&&
 literal|"Unexpected short read fetching bitcode"
 argument_list|)

@@ -200,9 +200,12 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|GCFunctionInfo
-operator|*
-operator|>
+operator|>>
 name|list_type
 expr_stmt|;
 typedef|typedef
@@ -270,7 +273,7 @@ name|virtual
 operator|~
 name|GCStrategy
 argument_list|()
-expr_stmt|;
+block|{}
 comment|/// getName - The name of the GC strategy, for debugging.
 comment|///
 specifier|const

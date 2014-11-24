@@ -350,6 +350,7 @@ name|MRI_NoteNewVirtualRegister
 argument_list|(
 argument|unsigned VReg
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
@@ -391,7 +392,7 @@ name|Delegate
 operator|*
 name|delegate
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|Parent
@@ -698,7 +699,7 @@ argument_list|)
 operator|,
 name|OrigMI
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 block|}

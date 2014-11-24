@@ -166,13 +166,6 @@ modifier|*
 name|P
 parameter_list|)
 function_decl|;
-comment|/// All pass subclasses must in their finalizePass routine call popTTIStack
-comment|/// to update the pointers tracking the previous TTI instance in the analysis
-comment|/// group's stack, and the top of the analysis group's stack.
-name|void
-name|popTTIStack
-parameter_list|()
-function_decl|;
 comment|/// All pass subclasses must call TargetTransformInfo::getAnalysisUsage.
 name|virtual
 name|void
@@ -259,7 +252,7 @@ name|Type
 operator|*
 name|OpTy
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -482,12 +475,30 @@ comment|/// to UINT_MAX to disable).
 name|unsigned
 name|OptSizeThreshold
 decl_stmt|;
+comment|/// The cost threshold for the unrolled loop, like Threshold, but used
+comment|/// for partial/runtime unrolling (set to UINT_MAX to disable).
+name|unsigned
+name|PartialThreshold
+decl_stmt|;
+comment|/// The cost threshold for the unrolled loop when optimizing for size, like
+comment|/// OptSizeThreshold, but used for partial/runtime unrolling (set to UINT_MAX
+comment|/// to disable).
+name|unsigned
+name|PartialOptSizeThreshold
+decl_stmt|;
 comment|/// A forced unrolling factor (the number of concatenated bodies of the
 comment|/// original loop in the unrolled loop body). When set to 0, the unrolling
 comment|/// transformation will select an unrolling factor based on the current cost
 comment|/// threshold and other factors.
 name|unsigned
 name|Count
+decl_stmt|;
+comment|// Set the maximum unrolling factor. The unrolling factor may be selected
+comment|// using the appropriate cost threshold, but may not exceed this number
+comment|// (set to UINT_MAX to disable). This does not apply in cases where the
+comment|// loop is being fully unrolled.
+name|unsigned
+name|MaxCount
 decl_stmt|;
 comment|/// Allow partial unrolling (unrolling of loops to expand the size of the
 comment|/// loop body, not only to eliminate small constant-trip-count loops).
@@ -540,10 +551,9 @@ block|,
 name|PSK_FastHardware
 block|}
 enum|;
-comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
-comment|/// add immediate, that is the target has add instructions which can add
-comment|/// a register with the immediate without having to materialize the
-comment|/// immediate into a register.
+comment|/// \brief Return true if the specified immediate is legal add immediate, that
+comment|/// is the target has add instructions which can add a register with the
+comment|/// immediate without having to materialize the immediate into a register.
 name|virtual
 name|bool
 name|isLegalAddImmediate
@@ -553,10 +563,10 @@ name|Imm
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
-comment|/// icmp immediate, that is the target has icmp instructions which can compare
-comment|/// a register against the immediate without having to materialize the
-comment|/// immediate into a register.
+comment|/// \brief Return true if the specified immediate is legal icmp immediate,
+comment|/// that is the target has icmp instructions which can compare a register
+comment|/// against the immediate without having to materialize the immediate into a
+comment|/// register.
 name|virtual
 name|bool
 name|isLegalICmpImmediate
@@ -566,8 +576,8 @@ name|Imm
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isLegalAddressingMode - Return true if the addressing mode represented by
-comment|/// AM is legal for this target, for a load/store of the specified type.
+comment|/// \brief Return true if the addressing mode represented by AM is legal for
+comment|/// this target, for a load/store of the specified type.
 comment|/// The type may be VoidTy, in which case only return true if the addressing
 comment|/// mode is legal for a load/store of any legal type.
 comment|/// TODO: Handle pre/postinc as well.
@@ -623,9 +633,9 @@ name|Scale
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isTruncateFree - Return true if it's free to truncate a value of
-comment|/// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
-comment|/// register EAX to i16 by referencing its sub-register AX.
+comment|/// \brief Return true if it's free to truncate a value of type Ty1 to type
+comment|/// Ty2. e.g. On x86 it's free to truncate a i32 value in register EAX to i16
+comment|/// by referencing its sub-register AX.
 name|virtual
 name|bool
 name|isTruncateFree
@@ -640,7 +650,7 @@ name|Ty2
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Is this type legal.
+comment|/// \brief Return true if this type is legal.
 name|virtual
 name|bool
 name|isTypeLegal
@@ -651,29 +661,29 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getJumpBufAlignment - returns the target's jmp_buf alignment in bytes
+comment|/// \brief Returns the target's jmp_buf alignment in bytes.
 name|virtual
 name|unsigned
 name|getJumpBufAlignment
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getJumpBufSize - returns the target's jmp_buf size in bytes.
+comment|/// \brief Returns the target's jmp_buf size in bytes.
 name|virtual
 name|unsigned
 name|getJumpBufSize
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// shouldBuildLookupTables - Return true if switches should be turned into
-comment|/// lookup tables for the target.
+comment|/// \brief Return true if switches should be turned into lookup tables for the
+comment|/// target.
 name|virtual
 name|bool
 name|shouldBuildLookupTables
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getPopcntSupport - Return hardware support for population count.
+comment|/// \brief Return hardware support for population count.
 name|virtual
 name|PopcntSupportKind
 name|getPopcntSupport
@@ -683,8 +693,7 @@ name|IntTyWidthInBit
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// haveFastSqrt -- Return true if the hardware has a fast square-root
-comment|/// instruction.
+comment|/// \brief Return true if the hardware has a fast square-root instruction.
 name|virtual
 name|bool
 name|haveFastSqrt
@@ -695,12 +704,59 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getIntImmCost - Return the expected cost of materializing the given
-comment|/// integer immediate of the specified type.
+comment|/// \brief Return the expected cost of materializing for the given integer
+comment|/// immediate of the specified type.
 name|virtual
 name|unsigned
 name|getIntImmCost
 argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|Imm
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Return the expected cost of materialization for the given integer
+comment|/// immediate of the specified type for a given instruction. The cost can be
+comment|/// zero if the immediate can be folded into the specified instruction.
+name|virtual
+name|unsigned
+name|getIntImmCost
+argument_list|(
+name|unsigned
+name|Opc
+argument_list|,
+name|unsigned
+name|Idx
+argument_list|,
+specifier|const
+name|APInt
+operator|&
+name|Imm
+argument_list|,
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|unsigned
+name|getIntImmCost
+argument_list|(
+name|Intrinsic
+operator|::
+name|ID
+name|IID
+argument_list|,
+name|unsigned
+name|Idx
+argument_list|,
 specifier|const
 name|APInt
 operator|&
@@ -725,6 +781,9 @@ comment|///< Broadcast element 0 to all other elements.
 name|SK_Reverse
 block|,
 comment|///< Reverse the order of the vector.
+name|SK_Alternate
+block|,
+comment|///< Choose alternate elements from vector.
 name|SK_InsertSubvector
 block|,
 comment|///< InsertSubvector. Index indicates start offset.
@@ -743,7 +802,10 @@ name|OK_UniformValue
 block|,
 comment|// Operand is uniform (splat of a value).
 name|OK_UniformConstantValue
+block|,
 comment|// Operand is uniform constant.
+name|OK_NonUniformConstantValue
+comment|// Operand is a non uniform constant value.
 block|}
 enum|;
 comment|/// \return The number of scalar or vector registers that the target has.
@@ -824,7 +886,7 @@ name|Type
 operator|*
 name|SubTp
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -874,7 +936,7 @@ name|Type
 operator|*
 name|CondTy
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;

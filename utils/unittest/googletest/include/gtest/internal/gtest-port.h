@@ -344,6 +344,10 @@ comment|//   GTEST_OS_CYGWIN   - Cygwin
 end_comment
 
 begin_comment
+comment|//   GTEST_OS_FREEBSD  - FreeBSD
+end_comment
+
+begin_comment
 comment|//   GTEST_OS_HAIKU    - Haiku
 end_comment
 
@@ -1010,6 +1014,20 @@ begin_define
 define|#
 directive|define
 name|GTEST_OS_MAC
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__FreeBSD__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GTEST_OS_FREEBSD
 value|1
 end_define
 
@@ -1996,7 +2014,7 @@ begin_define
 define|#
 directive|define
 name|GTEST_HAS_PTHREAD
-value|(GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_HPUX)
+value|(GTEST_OS_LINUX || GTEST_OS_MAC || \           GTEST_OS_HPUX || GTEST_OS_FREEBSD)
 end_define
 
 begin_endif
@@ -2631,7 +2649,10 @@ name|GTEST_OS_WINDOWS_MINGW
 operator|||
 name|GTEST_OS_AIX
 operator|||
+expr|\
 name|GTEST_OS_HPUX
+operator|||
+name|GTEST_OS_FREEBSD
 operator|)
 end_if
 

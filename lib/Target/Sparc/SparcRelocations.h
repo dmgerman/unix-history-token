@@ -103,6 +103,31 @@ comment|// reloc_sparc_pc22 - pc rel. 19 bits for branch with icc/xcc
 name|reloc_sparc_pc19
 init|=
 literal|5
+block|,
+comment|// reloc_sparc_h44 - 43-22 bits
+name|reloc_sparc_h44
+init|=
+literal|6
+block|,
+comment|// reloc_sparc_m44 - 21-12 bits
+name|reloc_sparc_m44
+init|=
+literal|7
+block|,
+comment|// reloc_sparc_l44 - lower 12 bits
+name|reloc_sparc_l44
+init|=
+literal|8
+block|,
+comment|// reloc_sparc_hh - 63-42 bits
+name|reloc_sparc_hh
+init|=
+literal|9
+block|,
+comment|// reloc_sparc_hm - 41-32 bits
+name|reloc_sparc_hm
+init|=
+literal|10
 block|}
 enum|;
 block|}

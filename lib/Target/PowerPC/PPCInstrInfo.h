@@ -205,9 +205,9 @@ range|:
 name|public
 name|PPCGenInstrInfo
 block|{
-name|PPCTargetMachine
+name|PPCSubtarget
 operator|&
-name|TM
+name|Subtarget
 block|;
 specifier|const
 name|PPCRegisterInfo
@@ -265,16 +265,15 @@ operator|:
 name|explicit
 name|PPCInstrInfo
 argument_list|(
-name|PPCTargetMachine
+name|PPCSubtarget
 operator|&
-name|TM
+name|STI
 argument_list|)
 block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
 comment|/// always be able to get register info as well (through this method).
 comment|///
-name|virtual
 specifier|const
 name|PPCRegisterInfo
 operator|&
@@ -290,11 +289,12 @@ name|ScheduleHazardRecognizer
 operator|*
 name|CreateTargetHazardRecognizer
 argument_list|(
-argument|const TargetMachine *TM
+argument|const TargetSubtargetInfo *STI
 argument_list|,
 argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 name|ScheduleHazardRecognizer
 operator|*
@@ -305,7 +305,57 @@ argument_list|,
 argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
+name|override
 block|;
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *UseMI
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+name|override
+block|;
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|SDNode *DefNode
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|SDNode *UseNode
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|PPCGenInstrInfo
+operator|::
+name|getOperandLatency
+argument_list|(
+name|ItinData
+argument_list|,
+name|DefNode
+argument_list|,
+name|DefIdx
+argument_list|,
+name|UseNode
+argument_list|,
+name|UseIdx
+argument_list|)
+return|;
+block|}
 name|bool
 name|isCoalescableExtInstr
 argument_list|(
@@ -318,6 +368,7 @@ argument_list|,
 argument|unsigned&SubIdx
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|isLoadFromStackSlot
@@ -327,6 +378,7 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|isStoreToStackSlot
@@ -336,10 +388,10 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// commuteInstruction - We can commute rlwimi instructions, but only if the
 comment|// rotate amt is zero.  We also have to munge the immediates a bit.
-name|virtual
 name|MachineInstr
 operator|*
 name|commuteInstruction
@@ -349,8 +401,20 @@ argument_list|,
 argument|bool NewMI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
+name|bool
+name|findCommutedOpIndices
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned&SrcOpIdx1
+argument_list|,
+argument|unsigned&SrcOpIdx2
+argument_list|)
+specifier|const
+name|override
+block|;
 name|void
 name|insertNoop
 argument_list|(
@@ -359,9 +423,9 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Branch analysis.
-name|virtual
 name|bool
 name|AnalyzeBranch
 argument_list|(
@@ -376,16 +440,16 @@ argument_list|,
 argument|bool AllowModify
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|RemoveBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
@@ -400,9 +464,9 @@ argument_list|,
 argument|DebugLoc DL
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Select analysis.
-name|virtual
 name|bool
 name|canInsertSelect
 argument_list|(
@@ -421,8 +485,8 @@ argument_list|,
 argument|int&
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|insertSelect
 argument_list|(
@@ -441,8 +505,8 @@ argument_list|,
 argument|unsigned FalseReg
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|copyPhysReg
 argument_list|(
@@ -459,8 +523,8 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
@@ -479,8 +543,8 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
@@ -497,16 +561,16 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|ReverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|FoldImmediate
 argument_list|(
@@ -519,11 +583,11 @@ argument_list|,
 argument|MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// If conversion by predication (only supported by some branch instructions).
 comment|// All of the profitability checks always return true; it is always
 comment|// profitable to use the predicated branches.
-name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
@@ -536,12 +600,12 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
@@ -560,8 +624,8 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isProfitableToDupForIfCvt
 argument_list|(
@@ -572,12 +636,12 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|isProfitableToUnpredicate
 argument_list|(
@@ -586,6 +650,7 @@ argument_list|,
 argument|MachineBasicBlock&FMBB
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -598,16 +663,16 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isUnpredicatedTerminator
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|PredicateInstruction
 argument_list|(
@@ -616,8 +681,8 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Pred
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|SubsumesPredicate
 argument_list|(
@@ -626,8 +691,8 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Pred2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|DefinesPredicate
 argument_list|(
@@ -636,17 +701,17 @@ argument_list|,
 argument|std::vector<MachineOperand>&Pred
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isPredicable
 argument_list|(
 argument|MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Comparison optimization.
-name|virtual
 name|bool
 name|analyzeCompare
 argument_list|(
@@ -661,8 +726,8 @@ argument_list|,
 argument|int&Value
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|optimizeCompareInstr
 argument_list|(
@@ -679,11 +744,11 @@ argument_list|,
 argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// GetInstSize - Return the number of bytes of code the specified
 comment|/// instruction may be.  This returns the maximum number of bytes.
 comment|///
-name|virtual
 name|unsigned
 name|GetInstSizeInBytes
 argument_list|(

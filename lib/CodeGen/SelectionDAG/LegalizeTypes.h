@@ -67,13 +67,6 @@ directive|define
 name|SELECTIONDAG_LEGALIZETYPES_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEBUG_TYPE
-value|"legalize-types"
-end_define
-
 begin_include
 include|#
 directive|include
@@ -704,7 +697,7 @@ name|SDValue
 name|Bool
 parameter_list|,
 name|EVT
-name|VT
+name|ValVT
 parameter_list|)
 function_decl|;
 name|void
@@ -969,11 +962,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
-name|PromoteIntRes_Atomic2
+name|PromoteIntRes_AtomicCmpSwap
 parameter_list|(
 name|AtomicSDNode
 modifier|*
 name|N
+parameter_list|,
+name|unsigned
+name|ResNo
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -1105,7 +1101,7 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
-name|PromoteIntRes_FP32_TO_FP16
+name|PromoteIntRes_FP_TO_FP16
 parameter_list|(
 name|SDNode
 modifier|*
@@ -2494,7 +2490,7 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
-name|SoftenFloatRes_FP16_TO_FP32
+name|SoftenFloatRes_FP16_TO_FP
 parameter_list|(
 name|SDNode
 modifier|*
@@ -2658,6 +2654,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|SoftenFloatOp_FP_EXTEND
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|SoftenFloatOp_FP_ROUND
 parameter_list|(
 name|SDNode
@@ -2675,14 +2679,6 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|SoftenFloatOp_FP_TO_UINT
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-name|SDValue
-name|SoftenFloatOp_FP32_TO_FP16
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3616,9 +3612,28 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|ScalarizeVecOp_VSELECT
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|ScalarizeVecOp_STORE
 parameter_list|(
 name|StoreSDNode
+modifier|*
+name|N
+parameter_list|,
+name|unsigned
+name|OpNo
+parameter_list|)
+function_decl|;
+name|SDValue
+name|ScalarizeVecOp_FP_ROUND
+parameter_list|(
+name|SDNode
 modifier|*
 name|N
 parameter_list|,
@@ -3822,6 +3837,22 @@ parameter_list|)
 function_decl|;
 name|void
 name|SplitVecRes_EXTRACT_SUBVECTOR
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|SDValue
+modifier|&
+name|Lo
+parameter_list|,
+name|SDValue
+modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+name|void
+name|SplitVecRes_INSERT_SUBVECTOR
 parameter_list|(
 name|SDNode
 modifier|*
@@ -4352,6 +4383,14 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
+name|WidenVecOp_EXTEND
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
 name|WidenVecOp_EXTRACT_VECTOR_ELT
 parameter_list|(
 name|SDNode
@@ -4439,7 +4478,7 @@ name|ExtType
 argument_list|)
 decl_stmt|;
 comment|/// Helper genWidenVectorStores - Helper function to generate a set of
-comment|/// stores to store a widen vector into non widen memory
+comment|/// stores to store a widen vector into non-widen memory
 comment|///   StChain: list of chains for the stores we have generated
 comment|///   ST:      store of a widen value
 name|void
@@ -4458,7 +4497,7 @@ name|ST
 argument_list|)
 decl_stmt|;
 comment|/// Helper genWidenVectorTruncStores - Helper function to generate a set of
-comment|/// stores to store a truncate widen vector into non widen memory
+comment|/// stores to store a truncate widen vector into non-widen memory
 comment|///   StChain: list of chains for the stores we have generated
 comment|///   ST:      store of a widen value
 name|void

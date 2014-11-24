@@ -81,7 +81,7 @@ comment|/// For example, the LibCallInfo may be set up to model the behavior of
 comment|/// standard libm functions.  The location that they may be interested in is
 comment|/// an abstract location that represents errno for the current target.  In
 comment|/// this case, a location for errno is anything such that the predicate
-comment|/// returns true.  On Mac OS/X, this predicate would return true if the
+comment|/// returns true.  On Mac OS X, this predicate would return true if the
 comment|/// pointer is the result of a call to "__error()".
 comment|///
 comment|/// Locations can also be defined in a constant-sensitive way.  For example,
@@ -246,12 +246,12 @@ argument_list|()
 operator|:
 name|Impl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Locations
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumLocations

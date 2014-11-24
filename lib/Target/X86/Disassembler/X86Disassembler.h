@@ -299,39 +299,11 @@ directive|define
 name|X86DISASSEMBLER_H
 end_define
 
-begin_define
-define|#
-directive|define
-name|INSTRUCTION_SPECIFIER_FIELDS
-define|\
-value|uint16_t operands;
-end_define
-
-begin_define
-define|#
-directive|define
-name|INSTRUCTION_IDS
-define|\
-value|uint16_t instructionIDs;
-end_define
-
 begin_include
 include|#
 directive|include
 file|"X86DisassemblerDecoderCommon.h"
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|INSTRUCTION_SPECIFIER_FIELDS
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|INSTRUCTION_IDS
-end_undef
 
 begin_include
 include|#
@@ -370,30 +342,39 @@ range|:
 name|public
 name|MCDisassembler
 block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
 specifier|const
 name|MCInstrInfo
-operator|*
+operator|>
 name|MII
 block|;
 name|public
 operator|:
 comment|/// Constructor     - Initializes the disassembler.
 comment|///
-comment|/// @param mode     - The X86 architecture mode to decode for.
 name|X86GenericDisassembler
 argument_list|(
-argument|const MCSubtargetInfo&STI
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
 argument_list|,
-argument|DisassemblerMode mode
+name|MCContext
+operator|&
+name|Ctx
 argument_list|,
-argument|const MCInstrInfo *MII
+name|std
+operator|::
+name|unique_ptr
+operator|<
+specifier|const
+name|MCInstrInfo
+operator|>
+name|MII
 argument_list|)
-block|;
-name|private
-operator|:
-operator|~
-name|X86GenericDisassembler
-argument_list|()
 block|;
 name|public
 operator|:
@@ -414,6 +395,7 @@ argument_list|,
 argument|raw_ostream&cStream
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:

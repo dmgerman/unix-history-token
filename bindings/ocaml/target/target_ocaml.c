@@ -1737,7 +1737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetMachine.t -> bool -> unit */
+comment|/* bool -> TargetMachine.t -> unit */
 end_comment
 
 begin_function
@@ -1746,10 +1746,10 @@ name|value
 name|llvm_targetmachine_set_verbose_asm
 parameter_list|(
 name|value
-name|Machine
+name|Verb
 parameter_list|,
 name|value
-name|Verb
+name|Machine
 parameter_list|)
 block|{
 name|LLVMSetTargetMachineAsmVerbosity

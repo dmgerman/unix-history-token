@@ -147,7 +147,6 @@ name|char
 operator|*
 name|Scanned
 block|;
-name|virtual
 name|void
 name|write_impl
 argument_list|(
@@ -155,16 +154,15 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|/// current_pos - Return the current position within the stream,
 comment|/// not counting the bytes currently in the buffer.
-name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 comment|// Our current position in the stream is all the contents which have been
 comment|// written to the underlying stream (*not* the current position of the
@@ -211,7 +209,7 @@ argument_list|()
 block|,
 name|TheStream
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|DeleteStream
@@ -242,7 +240,7 @@ argument_list|()
 block|,
 name|TheStream
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|DeleteStream
@@ -259,7 +257,7 @@ argument_list|)
 block|{
 name|Scanned
 operator|=
-literal|0
+name|nullptr
 block|;   }
 operator|~
 name|formatted_raw_ostream
@@ -321,7 +319,7 @@ argument_list|()
 block|;
 name|Scanned
 operator|=
-literal|0
+name|nullptr
 block|;   }
 comment|/// PadToColumn - Align the output to some column number.  If the current
 comment|/// column is already equal to or more than NewCol, PadToColumn inserts one
@@ -361,6 +359,7 @@ name|raw_ostream
 modifier|&
 name|resetColor
 parameter_list|()
+function|override
 block|{
 name|TheStream
 operator|->
@@ -376,6 +375,7 @@ name|raw_ostream
 modifier|&
 name|reverseColor
 parameter_list|()
+function|override
 block|{
 name|TheStream
 operator|->
@@ -401,6 +401,7 @@ parameter_list|,
 name|bool
 name|BG
 parameter_list|)
+function|override
 block|{
 name|TheStream
 operator|->
@@ -422,6 +423,7 @@ name|bool
 name|is_displayed
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|TheStream

@@ -610,7 +610,7 @@ expr|>
 operator|*
 name|Ops
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// analyzePhysReg - Analyze how the current instruction or bundle uses a

@@ -150,6 +150,7 @@ argument_list|,
 argument|unsigned Kind
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getRegPressureLimit
@@ -159,16 +160,17 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
-name|uint16_t
+name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =
-literal|0
+argument|const MachineFunction *MF = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|uint32_t
@@ -178,6 +180,7 @@ argument_list|(
 argument|CallingConv::ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 specifier|const
@@ -192,22 +195,23 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|requiresRegisterScavenging
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|trackLivenessAfterRegAlloc
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Stack Frame Processing Methods
 name|void
@@ -219,16 +223,17 @@ argument|int SPAdj
 argument_list|,
 argument|unsigned FIOperandNum
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|processFunctionBeforeFrameFinalized
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -239,6 +244,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Return GPR register class.
 name|virtual

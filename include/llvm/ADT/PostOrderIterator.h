@@ -466,7 +466,7 @@ operator|(
 name|NodeType
 operator|*
 operator|)
-literal|0
+name|nullptr
 argument_list|,
 name|BB
 argument_list|)
@@ -530,7 +530,7 @@ operator|(
 name|NodeType
 operator|*
 operator|)
-literal|0
+name|nullptr
 argument_list|,
 name|BB
 argument_list|)

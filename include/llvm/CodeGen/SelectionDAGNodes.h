@@ -82,6 +82,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
@@ -142,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
@@ -149,12 +167,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DebugLoc.h"
 end_include
 
 begin_include
@@ -218,6 +230,70 @@ operator|>
 expr|struct
 name|ilist_traits
 expr_stmt|;
+comment|/// isBinOpWithFlags - Returns true if the opcode is a binary operation
+comment|/// with flags.
+specifier|static
+name|bool
+name|isBinOpWithFlags
+parameter_list|(
+name|unsigned
+name|Opcode
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|Opcode
+condition|)
+block|{
+case|case
+name|ISD
+operator|::
+name|SDIV
+case|:
+case|case
+name|ISD
+operator|::
+name|UDIV
+case|:
+case|case
+name|ISD
+operator|::
+name|SRA
+case|:
+case|case
+name|ISD
+operator|::
+name|SRL
+case|:
+case|case
+name|ISD
+operator|::
+name|MUL
+case|:
+case|case
+name|ISD
+operator|::
+name|ADD
+case|:
+case|case
+name|ISD
+operator|::
+name|SUB
+case|:
+case|case
+name|ISD
+operator|::
+name|SHL
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
 name|void
 name|checkForCycles
 parameter_list|(
@@ -225,6 +301,18 @@ specifier|const
 name|SDNode
 modifier|*
 name|N
+parameter_list|,
+specifier|const
+name|SelectionDAG
+modifier|*
+name|DAG
+init|=
+name|nullptr
+parameter_list|,
+name|bool
+name|force
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// SDVTList - This represents a list of ValueType's that has been intern'd by
@@ -264,6 +352,17 @@ comment|/// isBuildVectorAllZeros - Return true if the specified node is a
 comment|/// BUILD_VECTOR where all of the elements are 0 or undef.
 name|bool
 name|isBuildVectorAllZeros
+parameter_list|(
+specifier|const
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// \brief Return true if the specified node is a BUILD_VECTOR node of
+comment|/// all ConstantSDNode or undef.
+name|bool
+name|isBuildVectorOfConstantSDNodes
 parameter_list|(
 specifier|const
 name|SDNode
@@ -326,7 +425,7 @@ argument_list|()
 operator|:
 name|Node
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ResNo
@@ -456,25 +555,39 @@ operator|)
 specifier|const
 block|{
 return|return
+name|std
+operator|::
+name|tie
+argument_list|(
 name|Node
-operator|<
-name|O
-operator|.
-name|Node
-operator|||
-operator|(
-name|Node
-operator|==
-name|O
-operator|.
-name|Node
-operator|&&
+argument_list|,
 name|ResNo
+argument_list|)
 operator|<
+name|std
+operator|::
+name|tie
+argument_list|(
+name|O
+operator|.
+name|Node
+argument_list|,
 name|O
 operator|.
 name|ResNo
-operator|)
+argument_list|)
+return|;
+block|}
+name|LLVM_EXPLICIT
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Node
+operator|!=
+name|nullptr
 return|;
 block|}
 name|SDValue
@@ -535,6 +648,22 @@ specifier|const
 block|{
 return|return
 name|getValueType
+argument_list|()
+operator|.
+name|getSizeInBits
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getScalarValueSizeInBits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getValueType
+argument_list|()
+operator|.
+name|getScalarType
 argument_list|()
 operator|.
 name|getSizeInBits
@@ -962,17 +1091,17 @@ argument_list|()
 operator|,
 name|User
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|Prev
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|Next
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// Normally SDUse will just implicitly convert to an SDValue that it holds.
@@ -1517,7 +1646,7 @@ block|{
 return|return
 name|UseList
 operator|==
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|/// hasOneUse - Return true if there is exactly one use of this node.
@@ -1532,7 +1661,7 @@ operator|!
 name|use_empty
 argument_list|()
 operator|&&
-name|llvm
+name|std
 operator|::
 name|next
 argument_list|(
@@ -1734,7 +1863,7 @@ argument_list|()
 operator|:
 name|Op
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|bool
@@ -1785,7 +1914,7 @@ block|{
 return|return
 name|Op
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 comment|// Iterator traversal: forward iteration only.
@@ -1956,11 +2085,62 @@ block|{
 return|return
 name|use_iterator
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+specifier|inline
+name|iterator_range
+operator|<
+name|use_iterator
+operator|>
+name|uses
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|use_iterator
+operator|>
+operator|(
+name|use_begin
+argument_list|()
+operator|,
+name|use_end
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|iterator_range
+operator|<
+name|use_iterator
+operator|>
+name|uses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|use_iterator
+operator|>
+operator|(
+name|use_begin
+argument_list|()
+operator|,
+name|use_end
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// hasNUsesOfValue - Return true if there are exactly NUSES uses of the
@@ -2282,6 +2462,28 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|ArrayRef
+operator|<
+name|SDUse
+operator|>
+name|ops
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|op_begin
+argument_list|()
+argument_list|,
+name|op_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SDVTList
 name|getVTList
 argument_list|()
@@ -2355,7 +2557,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -2484,7 +2686,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -2658,8 +2860,7 @@ operator|::
 name|string
 name|getOperationName
 argument_list|(
-argument|const SelectionDAG *G =
-literal|0
+argument|const SelectionDAG *G = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -2727,7 +2928,7 @@ name|SelectionDAG
 operator|*
 name|G
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2746,7 +2947,7 @@ name|SelectionDAG
 operator|*
 name|G
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2789,7 +2990,7 @@ name|SelectionDAG
 operator|*
 name|G
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2832,7 +3033,7 @@ name|SelectionDAG
 operator|*
 name|G
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|unsigned
 name|depth
@@ -2946,7 +3147,7 @@ name|SelectionDAG
 operator|*
 name|G
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2981,7 +3182,7 @@ name|SelectionDAG
 operator|*
 name|G
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|unsigned
 name|depth
@@ -3083,9 +3284,7 @@ argument|const DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
-argument|const SDValue *Ops
-argument_list|,
-argument|unsigned NumOps
+argument|ArrayRef<SDValue> Ops
 argument_list|)
 end_macro
 
@@ -3119,8 +3318,7 @@ argument_list|)
 operator|,
 name|OperandList
 argument_list|(
-argument|NumOps ? new SDUse[NumOps] :
-literal|0
+argument|Ops.size() ? new SDUse[Ops.size()] : nullptr
 argument_list|)
 operator|,
 name|ValueList
@@ -3132,12 +3330,15 @@ argument_list|)
 operator|,
 name|UseList
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|NumOperands
 argument_list|(
-name|NumOps
+name|Ops
+operator|.
+name|size
+argument_list|()
 argument_list|)
 operator|,
 name|NumValues
@@ -3166,7 +3367,10 @@ literal|0
 init|;
 name|i
 operator|!=
-name|NumOps
+name|Ops
+operator|.
+name|size
+argument_list|()
 condition|;
 operator|++
 name|i
@@ -3257,7 +3461,7 @@ argument_list|)
 operator|,
 name|OperandList
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ValueList
@@ -3269,7 +3473,7 @@ argument_list|)
 operator|,
 name|UseList
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|NumOperands
@@ -3741,7 +3945,7 @@ argument_list|()
 operator|:
 name|Ptr
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|IROrder
@@ -3839,7 +4043,7 @@ literal|0
 operator|||
 name|Ptr
 operator|==
-name|NULL
+name|nullptr
 condition|)
 block|{
 return|return
@@ -3879,9 +4083,8 @@ parameter_list|()
 block|{
 if|if
 condition|(
+operator|!
 name|Ptr
-operator|==
-name|NULL
 condition|)
 block|{
 return|return
@@ -4463,17 +4666,216 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// TernarySDNode - This class is used for three-operand SDNodes. This is solely
+comment|/// BinaryWithFlagsSDNode - This class is an extension of BinarySDNode
 end_comment
 
 begin_comment
-comment|/// to allow co-allocation of node operands with the node itself.
+comment|/// used from those opcodes that have associated extra flags.
 end_comment
 
 begin_decl_stmt
 name|class
-name|TernarySDNode
+name|BinaryWithFlagsSDNode
 range|:
+name|public
+name|BinarySDNode
+block|{   enum
+block|{
+name|NUW
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+name|NSW
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+name|EXACT
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|}
+block|;
+name|public
+operator|:
+name|BinaryWithFlagsSDNode
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|unsigned Order
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDVTList VTs
+argument_list|,
+argument|SDValue X
+argument_list|,
+argument|SDValue Y
+argument_list|)
+operator|:
+name|BinarySDNode
+argument_list|(
+argument|Opc
+argument_list|,
+argument|Order
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTs
+argument_list|,
+argument|X
+argument_list|,
+argument|Y
+argument_list|)
+block|{}
+comment|/// getRawSubclassData - Return the SubclassData value, which contains an
+comment|/// encoding of the flags.
+comment|/// This function should be used to add subclass data to the NodeID value.
+name|unsigned
+name|getRawSubclassData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubclassData
+return|;
+block|}
+name|void
+name|setHasNoUnsignedWrap
+argument_list|(
+argument|bool b
+argument_list|)
+block|{
+name|SubclassData
+operator|=
+operator|(
+name|SubclassData
+operator|&
+operator|~
+name|NUW
+operator|)
+operator||
+operator|(
+name|b
+operator|?
+name|NUW
+operator|:
+literal|0
+operator|)
+block|;   }
+name|void
+name|setHasNoSignedWrap
+argument_list|(
+argument|bool b
+argument_list|)
+block|{
+name|SubclassData
+operator|=
+operator|(
+name|SubclassData
+operator|&
+operator|~
+name|NSW
+operator|)
+operator||
+operator|(
+name|b
+condition|?
+name|NSW
+else|:
+literal|0
+operator|)
+block|;   }
+name|void
+name|setIsExact
+argument_list|(
+argument|bool b
+argument_list|)
+block|{
+name|SubclassData
+operator|=
+operator|(
+name|SubclassData
+operator|&
+operator|~
+name|EXACT
+operator|)
+operator||
+operator|(
+name|b
+condition|?
+name|EXACT
+else|:
+literal|0
+operator|)
+block|;   }
+name|bool
+name|hasNoUnsignedWrap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubclassData
+operator|&
+name|NUW
+return|;
+block|}
+name|bool
+name|hasNoSignedWrap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubclassData
+operator|&
+name|NSW
+return|;
+block|}
+name|bool
+name|isExact
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubclassData
+operator|&
+name|EXACT
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SDNode *N
+argument_list|)
+block|{
+return|return
+name|isBinOpWithFlags
+argument_list|(
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// TernarySDNode - This class is used for three-operand SDNodes. This is solely
+comment|/// to allow co-allocation of node operands with the node itself.
+name|class
+name|TernarySDNode
+operator|:
 name|public
 name|SDNode
 block|{
@@ -4525,29 +4927,14 @@ name|Z
 argument_list|)
 block|;   }
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// HandleSDNode - This class is used to form a handle around another node that
-end_comment
-
-begin_comment
 comment|/// is persistent and is updated across invocations of replaceAllUsesWith on its
-end_comment
-
-begin_comment
 comment|/// operand.  This node should be directly created by end-users and not added to
-end_comment
-
-begin_comment
 comment|/// the AllNodes list.
-end_comment
-
-begin_decl_stmt
 name|class
 name|HandleSDNode
-range|:
+operator|:
 name|public
 name|SDNode
 block|{
@@ -4714,9 +5101,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
-argument|const SDValue *Ops
-argument_list|,
-argument|unsigned NumOps
+argument|ArrayRef<SDValue> Ops
 argument_list|,
 argument|EVT MemoryVT
 argument_list|,
@@ -4867,21 +5252,7 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// Returns the SrcValue and offset that describes the location of the access
-specifier|const
-name|Value
-operator|*
-name|getSrcValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|MMO
-operator|->
-name|getValue
-argument_list|()
-return|;
-block|}
+comment|// Returns the offset from the location of the access.
 name|int64_t
 name|getSrcValueOffset
 argument_list|()
@@ -5021,9 +5392,9 @@ operator|==
 name|ISD
 operator|::
 name|STORE
-operator|?
+condition|?
 literal|2
-operator|:
+else|:
 literal|1
 argument_list|)
 return|;
@@ -5074,6 +5445,15 @@ operator|==
 name|ISD
 operator|::
 name|ATOMIC_CMP_SWAP
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|ATOMIC_CMP_SWAP_WITH_SUCCESS
 operator|||
 name|N
 operator|->
@@ -5214,10 +5594,17 @@ index|[
 literal|4
 index|]
 block|;
+comment|/// For cmpxchg instructions, the ordering requirements when a store does not
+comment|/// occur.
+name|AtomicOrdering
+name|FailureOrdering
+block|;
 name|void
 name|InitAtomic
 argument_list|(
-argument|AtomicOrdering Ordering
+argument|AtomicOrdering SuccessOrdering
+argument_list|,
+argument|AtomicOrdering FailureOrdering
 argument_list|,
 argument|SynchronizationScope SynchScope
 argument_list|)
@@ -5226,12 +5613,25 @@ comment|// This must match encodeMemSDNodeFlags() in SelectionDAG.cpp.
 name|assert
 argument_list|(
 operator|(
-name|Ordering
+name|SuccessOrdering
 operator|&
 literal|15
 operator|)
 operator|==
-name|Ordering
+name|SuccessOrdering
+operator|&&
+literal|"Ordering may not require more than 4 bits!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|FailureOrdering
+operator|&
+literal|15
+operator|)
+operator|==
+name|FailureOrdering
 operator|&&
 literal|"Ordering may not require more than 4 bits!"
 argument_list|)
@@ -5251,7 +5651,7 @@ argument_list|)
 block|;
 name|SubclassData
 operator||=
-name|Ordering
+name|SuccessOrdering
 operator|<<
 literal|8
 block|;
@@ -5261,12 +5661,28 @@ name|SynchScope
 operator|<<
 literal|12
 block|;
+name|this
+operator|->
+name|FailureOrdering
+operator|=
+name|FailureOrdering
+block|;
 name|assert
 argument_list|(
-name|getOrdering
+name|getSuccessOrdering
 argument_list|()
 operator|==
-name|Ordering
+name|SuccessOrdering
+operator|&&
+literal|"Ordering encoding error!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getFailureOrdering
+argument_list|()
+operator|==
+name|FailureOrdering
 operator|&&
 literal|"Ordering encoding error!"
 argument_list|)
@@ -5337,6 +5753,8 @@ name|InitAtomic
 argument_list|(
 name|Ordering
 argument_list|,
+name|Ordering
+argument_list|,
 name|SynchScope
 argument_list|)
 block|;
@@ -5397,6 +5815,8 @@ name|InitAtomic
 argument_list|(
 name|Ordering
 argument_list|,
+name|Ordering
+argument_list|,
 name|SynchScope
 argument_list|)
 block|;
@@ -5453,6 +5873,8 @@ name|InitAtomic
 argument_list|(
 name|Ordering
 argument_list|,
+name|Ordering
+argument_list|,
 name|SynchScope
 argument_list|)
 block|;
@@ -5477,7 +5899,7 @@ argument|SDVTList VTL
 argument_list|,
 argument|EVT MemVT
 argument_list|,
-argument|SDValue* AllOps
+argument|const SDValue* AllOps
 argument_list|,
 argument|SDUse *DynOps
 argument_list|,
@@ -5485,7 +5907,9 @@ argument|unsigned NumOps
 argument_list|,
 argument|MachineMemOperand *MMO
 argument_list|,
-argument|AtomicOrdering Ordering
+argument|AtomicOrdering SuccessOrdering
+argument_list|,
+argument|AtomicOrdering FailureOrdering
 argument_list|,
 argument|SynchronizationScope SynchScope
 argument_list|)
@@ -5507,7 +5931,9 @@ argument_list|)
 block|{
 name|InitAtomic
 argument_list|(
-name|Ordering
+name|SuccessOrdering
+argument_list|,
+name|FailureOrdering
 argument_list|,
 name|SynchScope
 argument_list|)
@@ -5569,6 +5995,27 @@ literal|2
 argument_list|)
 return|;
 block|}
+name|AtomicOrdering
+name|getSuccessOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOrdering
+argument_list|()
+return|;
+block|}
+comment|// Not quite enough room in SubclassData for everything, so failure gets its
+comment|// own field.
+name|AtomicOrdering
+name|getFailureOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FailureOrdering
+return|;
+block|}
 name|bool
 name|isCompareAndSwap
 argument_list|()
@@ -5586,6 +6033,12 @@ operator|==
 name|ISD
 operator|::
 name|ATOMIC_CMP_SWAP
+operator|||
+name|Op
+operator|==
+name|ISD
+operator|::
+name|ATOMIC_CMP_SWAP_WITH_SUCCESS
 return|;
 block|}
 comment|// Methods to support isa and dyn_cast
@@ -5605,6 +6058,15 @@ operator|==
 name|ISD
 operator|::
 name|ATOMIC_CMP_SWAP
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|ATOMIC_CMP_SWAP_WITH_SUCCESS
 operator|||
 name|N
 operator|->
@@ -5748,9 +6210,7 @@ argument|DebugLoc dl
 argument_list|,
 argument|SDVTList VTs
 argument_list|,
-argument|const SDValue *Ops
-argument_list|,
-argument|unsigned NumOps
+argument|ArrayRef<SDValue> Ops
 argument_list|,
 argument|EVT MemoryVT
 argument_list|,
@@ -5768,8 +6228,6 @@ argument_list|,
 argument|VTs
 argument_list|,
 argument|Ops
-argument_list|,
-argument|NumOps
 argument_list|,
 argument|MemoryVT
 argument_list|,
@@ -6089,6 +6547,8 @@ name|ConstantSDNode
 argument_list|(
 argument|bool isTarget
 argument_list|,
+argument|bool isOpaque
+argument_list|,
 argument|const ConstantInt *val
 argument_list|,
 argument|EVT VT
@@ -6121,7 +6581,14 @@ name|Value
 argument_list|(
 argument|val
 argument_list|)
-block|{   }
+block|{
+name|SubclassData
+operator||=
+operator|(
+name|uint16_t
+operator|)
+name|isOpaque
+block|;   }
 name|public
 operator|:
 specifier|const
@@ -6207,6 +6674,17 @@ name|Value
 operator|->
 name|isAllOnesValue
 argument_list|()
+return|;
+block|}
+name|bool
+name|isOpaque
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubclassData
+operator|&
+literal|1
 return|;
 block|}
 specifier|static
@@ -7323,6 +7801,49 @@ literal|0
 argument_list|,
 argument|bool isBigEndian = false
 argument_list|)
+specifier|const
+block|;
+comment|/// \brief Returns the splatted value or a null value if this is not a splat.
+comment|///
+comment|/// If passed a non-null UndefElements bitvector, it will resize it to match
+comment|/// the vector width and set the bits where elements are undef.
+name|SDValue
+name|getSplatValue
+argument_list|(
+argument|BitVector *UndefElements = nullptr
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Returns the splatted constant or null if this is not a constant
+comment|/// splat.
+comment|///
+comment|/// If passed a non-null UndefElements bitvector, it will resize it to match
+comment|/// the vector width and set the bits where elements are undef.
+name|ConstantSDNode
+operator|*
+name|getConstantSplatNode
+argument_list|(
+argument|BitVector *UndefElements = nullptr
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Returns the splatted constant FP or null if this is not a constant
+comment|/// FP splat.
+comment|///
+comment|/// If passed a non-null UndefElements bitvector, it will resize it to match
+comment|/// the vector width and set the bits where elements are undef.
+name|ConstantFPSDNode
+operator|*
+name|getConstantFPSplatNode
+argument_list|(
+argument|BitVector *UndefElements = nullptr
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isConstant
+argument_list|()
+specifier|const
 block|;
 specifier|static
 specifier|inline
@@ -8103,9 +8624,7 @@ argument|unsigned Order
 argument_list|,
 argument|DebugLoc dl
 argument_list|,
-argument|const SDValue *Ops
-argument_list|,
-argument|unsigned NumOps
+argument|ArrayRef<SDValue> Ops
 argument_list|,
 argument|ISD::CvtCode Code
 argument_list|)
@@ -8126,8 +8645,6 @@ name|VT
 argument_list|)
 argument_list|,
 name|Ops
-argument_list|,
-name|NumOps
 argument_list|)
 block|,
 name|CvtCode
@@ -8137,7 +8654,10 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-name|NumOps
+name|Ops
+operator|.
+name|size
+argument_list|()
 operator|==
 literal|5
 operator|&&
@@ -8828,12 +9348,12 @@ argument_list|)
 block|,
 name|MemRefs
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|MemRefsEnd
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// LocalOperands - Operands for this instruction, if they fit here. If
