@@ -4460,9 +4460,8 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|int
 name|i
-init|=
+operator|=
 literal|0
 init|;
 name|i
