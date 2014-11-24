@@ -68,7 +68,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error-re {{array initializer must be an initializer list$}}
+comment|// expected-error-re {{array initializer must be an initializer list{{$}}}}
 end_comment
 
 begin_comment
@@ -85,7 +85,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error-re {{array initializer must be an initializer list$}}
+comment|// expected-error-re {{array initializer must be an initializer list{{$}}}}
 end_comment
 
 end_unit

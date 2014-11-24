@@ -333,6 +333,10 @@ argument|int x3 = __alignof int;
 comment|// expected-error {{expected parentheses around type name in __alignof expression}}
 argument|int x4 = _Alignof int;
 comment|// expected-error {{expected parentheses around type name in _Alignof expression}}
+argument|}  void callee(double, double); void test8() {   callee(foobar,
+comment|// expected-error {{use of undeclared identifier 'foobar'}}
+argument|fizbin);
+comment|// expected-error {{use of undeclared identifier 'fizbin'}}
 argument|}
 end_function
 

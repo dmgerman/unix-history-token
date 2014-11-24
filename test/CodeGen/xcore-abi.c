@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: xcore-registered-target
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple xcore -verify %s
 end_comment
 
@@ -70,12 +74,31 @@ comment|// RUN: %clang_cc1 -triple xcore-unknown-unknown -fno-signed-char -fno-c
 end_comment
 
 begin_comment
-comment|// CHECK: target datalayout = "e-p:32:32:32-a0:0:32-n32-i1:8:32-i8:8:32-i16:16:32-i32:32:32-i64:32:32-f16:16:32-f32:32:32-f64:32:32"
+comment|// CHECK: target triple = "xcore-unknown-unknown"
 end_comment
 
 begin_comment
-comment|// CHECK: target triple = "xcore-unknown-unknown"
+comment|// CHECK: @cgx = external constant i32, section ".cp.rodata"
 end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|cgx
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|fcgx
+parameter_list|()
+block|{
+return|return
+name|cgx
+return|;
+block|}
+end_function
 
 begin_comment
 comment|// CHECK: @g1 = global i32 0, align 4
@@ -84,6 +107,17 @@ end_comment
 begin_decl_stmt
 name|int
 name|g1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: @cg1 = constant i32 0, section ".cp.rodata", align 4
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|int
+name|cg1
 decl_stmt|;
 end_decl_stmt
 
@@ -251,7 +285,7 @@ expr|struct
 name|x
 argument_list|)
 decl_stmt|;
-comment|// typical agregate type
+comment|// typical aggregate type
 name|f
 argument_list|(
 operator|&
@@ -282,7 +316,7 @@ literal|4
 index|]
 argument_list|)
 decl_stmt|;
-comment|// an unusual agregate type
+comment|// an unusual aggregate type
 name|f
 argument_list|(
 name|v6
@@ -340,12 +374,14 @@ comment|// CHECK: call i32 @llvm.xcore.getid()
 comment|// CHECK: call i32 @llvm.xcore.getps(i32 {{%[a-z0-9]+}})
 comment|// CHECK: call i32 @llvm.xcore.bitrev(i32 {{%[a-z0-9]+}})
 comment|// CHECK: call void @llvm.xcore.setps(i32 {{%[a-z0-9]+}}, i32 {{%[a-z0-9]+}})
+specifier|volatile
 name|int
 name|i
 init|=
 name|__builtin_getid
 argument_list|()
 decl_stmt|;
+specifier|volatile
 name|unsigned
 name|int
 name|ui
@@ -367,6 +403,34 @@ argument_list|(
 name|i
 argument_list|,
 name|ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store volatile i32 0, i32* {{%[a-z0-9]+}}, align 4
+comment|// CHECK: store volatile i32 1, i32* {{%[a-z0-9]+}}, align 4
+comment|// CHECK: store volatile i32 -1, i32* {{%[a-z0-9]+}}, align 4
+specifier|volatile
+name|int
+name|res
+decl_stmt|;
+name|res
+operator|=
+name|__builtin_eh_return_data_regno
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|res
+operator|=
+name|__builtin_eh_return_data_regno
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|res
+operator|=
+name|__builtin_eh_return_data_regno
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 block|}

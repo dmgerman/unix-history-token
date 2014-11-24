@@ -677,6 +677,31 @@ name|ls
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{length modifier 'll' results in undefined behavior or no effect with '[' conversion specifier}}
+comment|// PR19559
+name|scanf
+argument_list|(
+literal|"%[]% ]"
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|scanf
+argument_list|(
+literal|"%[^]% ]"
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|scanf
+argument_list|(
+literal|"%[a^]% ]"
+argument_list|,
+name|sp
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{invalid conversion specifier ' '}}
 block|}
 end_function
 
@@ -790,7 +815,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|// expected-warning-re{{format specifies type 'wchar_t \*\*' \(aka '[^']+'\) but the argument has type 'float \*'}}
+comment|// expected-warning-re{{format specifies type 'wchar_t **' (aka '{{[^']+}}') but the argument has type 'float *'}}
 name|scanf
 argument_list|(
 literal|"%mc"
@@ -806,7 +831,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|// expected-warning-re{{format specifies type 'wchar_t \*\*' \(aka '[^']+'\) but the argument has type 'float \*'}}
+comment|// expected-warning-re{{format specifies type 'wchar_t **' (aka '{{[^']+}}') but the argument has type 'float *'}}
 name|scanf
 argument_list|(
 literal|"%m[abc]"

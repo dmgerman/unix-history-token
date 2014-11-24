@@ -79,6 +79,14 @@ begin_comment
 comment|// disallowed initially in C11/C++11, always in C99/C++03
 end_comment
 
+begin_extern
+extern|extern char \u0D61;
+end_extern
+
+begin_comment
+comment|// C99, C11, C++03, C++11
+end_comment
+
 begin_comment
 comment|// Disallowed everywhere
 end_comment

@@ -60,55 +60,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// gcc-as
+comment|// gnu-as
 end_comment
 
 begin_comment
-comment|// CHECK: gcc{{[^"]*}}"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "-mlinker-version=10"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "-Xclang"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "foo-bar"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "-Wall"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "-Wdocumentation"
-end_comment
-
-begin_comment
-comment|// CHECK: -march
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "-mlinker-version=10"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "-Xclang"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "foo-bar"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "-Wall"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "-Wdocumentation"
+comment|// CHECK: as{{[^"]*}}"
 end_comment
 
 begin_comment

@@ -57,8 +57,22 @@ name|v1
 expr_stmt|;
 comment|// expected-error {{invalid conversion between vector type \
 literal|'t2'
+operator|(
+name|vector
+name|of
+literal|16
+literal|'char'
+name|values
+operator|)
 name|and
 literal|'t1'
+operator|(
+name|vector
+name|of
+literal|1
+literal|'long long'
+name|value
+operator|)
 name|of
 name|different
 name|size
@@ -81,8 +95,22 @@ end_comment
 
 begin_expr_stmt
 literal|'t1'
+operator|(
+name|vector
+name|of
+literal|1
+literal|'long long'
+name|value
+operator|)
 name|and
 literal|'t2'
+operator|(
+name|vector
+name|of
+literal|16
+literal|'char'
+name|values
+operator|)
 name|of
 name|different
 name|size
@@ -120,6 +148,13 @@ end_comment
 begin_expr_stmt
 name|type
 literal|'t1'
+operator|(
+name|vector
+name|of
+literal|1
+literal|'long long'
+name|value
+operator|)
 name|and
 name|scalar
 name|type
@@ -161,6 +196,13 @@ end_comment
 begin_expr_stmt
 name|type
 literal|'t1'
+operator|(
+name|vector
+name|of
+literal|1
+literal|'long long'
+name|value
+operator|)
 name|and
 name|integer
 name|type
@@ -202,6 +244,13 @@ end_comment
 begin_expr_stmt
 name|type
 literal|'t1'
+operator|(
+name|vector
+name|of
+literal|1
+literal|'long long'
+name|value
+operator|)
 name|and
 name|integer
 name|type
@@ -232,6 +281,13 @@ end_comment
 begin_expr_stmt
 name|type
 literal|'t1'
+operator|(
+name|vector
+name|of
+literal|1
+literal|'long long'
+name|value
+operator|)
 name|and
 name|scalar
 name|type
@@ -267,7 +323,85 @@ argument_list|(
 name|Y
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types passing 't3' to parameter of type 't2'}}
+comment|// expected-warning {{incompatible vector types passing 't3' (vector of 4 'float' values) to parameter of type 't2' (vector of 16 'char' values)}}
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+name|float
+name|float2
+name|__attribute__
+typedef|((
+name|vector_size
+typedef|(8)));
+end_typedef
+
+begin_function
+name|void
+name|f4
+parameter_list|()
+block|{
+name|float2
+name|f2
+decl_stmt|;
+name|double
+name|d
+decl_stmt|;
+name|f2
+operator|+=
+name|d
+expr_stmt|;
+name|d
+operator|+=
+name|f2
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// rdar://15931426
+end_comment
+
+begin_comment
+comment|// Don't permit a lax conversion to and from a pointer type.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|short
+name|short_sizeof_pointer
+name|__attribute__
+typedef|((
+name|vector_size
+typedef|(sizeof(
+name|void
+modifier|*
+typedef|))));
+end_typedef
+
+begin_function
+name|void
+name|f5
+parameter_list|()
+block|{
+name|short_sizeof_pointer
+name|v
+decl_stmt|;
+name|void
+modifier|*
+name|ptr
+decl_stmt|;
+name|v
+operator|=
+name|ptr
+expr_stmt|;
+comment|// expected-error-re {{assigning to 'short_sizeof_pointer' (vector of {{[0-9]+}} 'short' values) from incompatible type 'void *'}}
+name|ptr
+operator|=
+name|v
+expr_stmt|;
+comment|// expected-error {{assigning to 'void *' from incompatible type 'short_sizeof_pointer'}}
 block|}
 end_function
 

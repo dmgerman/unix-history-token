@@ -77,6 +77,81 @@ end_function
 
 begin_function
 name|void
+name|nop
+parameter_list|()
+block|{
+name|__builtin_arm_nop
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call {{.*}} @llvm.arm.hint(i32 0)
+end_comment
+
+begin_function
+name|void
+name|yield
+parameter_list|()
+block|{
+name|__builtin_arm_yield
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call {{.*}} @llvm.arm.hint(i32 1)
+end_comment
+
+begin_function
+name|void
+name|wfe
+parameter_list|()
+block|{
+name|__builtin_arm_wfe
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call {{.*}} @llvm.arm.hint(i32 2)
+end_comment
+
+begin_function
+name|void
+name|wfi
+parameter_list|()
+block|{
+name|__builtin_arm_wfi
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call {{.*}} @llvm.arm.hint(i32 3)
+end_comment
+
+begin_function
+name|void
+name|sev
+parameter_list|()
+block|{
+name|__builtin_arm_sev
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call {{.*}} @llvm.arm.hint(i32 4)
+end_comment
+
+begin_function
+name|void
 name|sevl
 parameter_list|()
 block|{
@@ -87,7 +162,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: call {{.*}} @llvm.arm.sevl
+comment|// CHECK: call {{.*}} @llvm.arm.hint(i32 5)
 end_comment
 
 begin_function
@@ -107,6 +182,33 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|//CHECK: call {{.*}} @llvm.arm.dsb(i32 2)
+name|__builtin_arm_isb
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+comment|//CHECK: call {{.*}} @llvm.arm.isb(i32 3)
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call {{.*}} @llvm.arm.rbit(i32 %a)
+end_comment
+
+begin_function
+name|unsigned
+name|rbit
+parameter_list|(
+name|unsigned
+name|a
+parameter_list|)
+block|{
+return|return
+name|__builtin_arm_rbit
+argument_list|(
+name|a
+argument_list|)
+return|;
 block|}
 end_function
 

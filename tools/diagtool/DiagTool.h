@@ -249,7 +249,7 @@ parameter_list|,
 name|CLSNAME
 parameter_list|)
 define|\
-value|namespace {\ class CLSNAME : public diagtool::DiagTool {\ public:\   CLSNAME() : DiagTool(NAME, DESC) {}\   virtual ~CLSNAME() {}\   virtual int run(unsigned argc, char *argv[], llvm::raw_ostream&out);\ };\ diagtool::RegisterDiagTool<CLSNAME> Register##CLSNAME;\ }
+value|namespace {\ class CLSNAME : public diagtool::DiagTool {\ public:\   CLSNAME() : DiagTool(NAME, DESC) {}\   virtual ~CLSNAME() {}\   int run(unsigned argc, char *argv[], llvm::raw_ostream&out) override;\ };\ diagtool::RegisterDiagTool<CLSNAME> Register##CLSNAME;\ }
 end_define
 
 begin_endif

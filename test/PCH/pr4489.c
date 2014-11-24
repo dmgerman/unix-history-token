@@ -12,26 +12,6 @@ comment|// RUN: %clang -include %t -x c %t.empty.c -emit-llvm -S -o -
 end_comment
 
 begin_comment
-comment|// FIXME: This test is forcibly disabled, it is flaky on the clang-i686-xp-msvc9
-end_comment
-
-begin_comment
-comment|// buildbot.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// RUN: false
-end_comment
-
-begin_comment
-comment|// XFAIL: *
-end_comment
-
-begin_comment
 comment|// PR 4489: Crash with PCH
 end_comment
 

@@ -502,5 +502,48 @@ comment|// expected-error{{only allowed in __finally block}}
 block|}
 end_function
 
+begin_function
+name|void
+name|test_seh_leave_stmt
+parameter_list|()
+block|{
+name|__leave
+expr_stmt|;
+comment|// expected-error{{'__leave' statement not in __try block}}
+name|__try
+block|{
+name|__leave
+expr_stmt|;
+name|__leave
+literal|4
+expr_stmt|;
+comment|// expected-error{{expected ';' after __leave statement}}
+block|}
+name|__except
+argument_list|(
+literal|1
+argument_list|)
+block|{
+name|__leave
+expr_stmt|;
+comment|// expected-error{{'__leave' statement not in __try block}}
+block|}
+name|__try
+block|{
+name|__leave
+expr_stmt|;
+block|}
+name|__finally
+block|{
+name|__leave
+expr_stmt|;
+comment|// expected-error{{'__leave' statement not in __try block}}
+block|}
+name|__leave
+expr_stmt|;
+comment|// expected-error{{'__leave' statement not in __try block}}
+block|}
+end_function
+
 end_unit
 

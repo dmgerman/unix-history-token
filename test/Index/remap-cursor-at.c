@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: c-index-test -cursor-at=%s:1:15 -cursor-at=%s:2:21 -remap-file="%s;%S/Inputs/remap-load-to.c" %s | FileCheck %s
+comment|// RUN: c-index-test -cursor-at=%s:1:15 -cursor-at=%s:2:21 -remap-file="%s,%S/Inputs/remap-load-to.c" %s | FileCheck %s
 end_comment
 
 begin_comment

@@ -113,7 +113,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* expected-warning {{unknown __declspec attribute 'aligned' ignored}} */
+comment|/* expected-warning {{__declspec attribute 'aligned' is not supported}} */
 end_comment
 
 begin_struct
@@ -129,6 +129,26 @@ end_struct
 
 begin_comment
 comment|/* expected-warning {{__declspec attribute 'appdomain' is not supported}} */
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|__noreturn__
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|f7
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* expected-warning {{__declspec attribute '__noreturn__' is not supported}} */
 end_comment
 
 end_unit

@@ -71,6 +71,9 @@ comment|/// \brief Describes the different kinds of linkage
 comment|/// (C++ [basic.link], C99 6.2.2) that an entity may have.
 enum|enum
 name|Linkage
+enum|:
+name|unsigned
+name|char
 block|{
 comment|/// \brief No linkage, which means that the entity is unique and
 comment|/// can only be referred to from within its scope.
@@ -121,15 +124,13 @@ name|GVALinkage
 block|{
 name|GVA_Internal
 block|,
-name|GVA_C99Inline
+name|GVA_AvailableExternally
 block|,
-name|GVA_CXXInline
+name|GVA_DiscardableODR
 block|,
 name|GVA_StrongExternal
 block|,
-name|GVA_TemplateInstantiation
-block|,
-name|GVA_ExplicitTemplateInstantiation
+name|GVA_StrongODR
 block|}
 enum|;
 specifier|inline

@@ -208,7 +208,19 @@ comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -O1 -disable-llvm-opt
 end_comment
 
 begin_comment
+comment|// CHECK4-LABEL: define weak_odr i32 @ei()
+end_comment
+
+begin_comment
 comment|// CHECK4-LABEL: define i32 @bar()
+end_comment
+
+begin_comment
+comment|// CHECK4-NOT: unreferenced1
+end_comment
+
+begin_comment
+comment|// CHECK4-LABEL: define weak_odr void @unreferenced2()
 end_comment
 
 begin_comment
@@ -221,14 +233,6 @@ end_comment
 
 begin_comment
 comment|// CHECK4-LABEL: define linkonce_odr i32 @foo()
-end_comment
-
-begin_comment
-comment|// CHECK4-NOT: unreferenced
-end_comment
-
-begin_comment
-comment|// CHECK4-LABEL: define linkonce_odr i32 @ei()
 end_comment
 
 begin_function

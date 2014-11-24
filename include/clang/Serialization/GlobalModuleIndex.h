@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -185,9 +185,9 @@ name|GlobalModuleIndex
 block|{
 comment|/// \brief Buffer containing the index file, which is lazily accessed so long
 comment|/// as the global module index is live.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 name|llvm
 operator|::
@@ -473,6 +473,11 @@ function_decl|;
 comment|/// \brief Print statistics to standard error.
 name|void
 name|printStats
+parameter_list|()
+function_decl|;
+comment|/// \brief Print debugging view to standard error.
+name|void
+name|dump
 parameter_list|()
 function_decl|;
 comment|/// \brief Write a global index into the given

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fno-rtti -emit-llvm-only -triple i686-pc-win32 -cxx-abi microsoft -fdump-record-layouts %s 2>/dev/null \
+comment|// RUN: %clang_cc1 -fno-rtti -emit-llvm-only -triple i686-pc-win32 -fms-extensions -fdump-record-layouts %s 2>/dev/null \
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|// RUN:            | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fno-rtti -emit-llvm-only -triple x86_64-pc-win32 -cxx-abi microsoft -fdump-record-layouts %s 2>/dev/null \
+comment|// RUN: %clang_cc1 -fno-rtti -emit-llvm-only -triple x86_64-pc-win32 -fms-extensions -fdump-record-layouts %s 2>/dev/null \
 end_comment
 
 begin_comment
@@ -410,6 +410,46 @@ end_comment
 
 begin_comment
 comment|// CHECK:   FieldOffsets: [0, 16, 16, 16]>
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|I
+block|{
+name|short
+label|:
+literal|8
+expr_stmt|;
+name|__declspec
+argument_list|(
+argument|align(
+literal|16
+argument|)
+argument_list|)
+name|short
+label|:
+literal|8
+expr_stmt|;
+block|}
+name|I
+typedef|;
+end_typedef
+
+begin_comment
+comment|// CHECK: Type: struct I
+end_comment
+
+begin_comment
+comment|// CHECK:   Size:16
+end_comment
+
+begin_comment
+comment|// CHECK:   Alignment:16
+end_comment
+
+begin_comment
+comment|// CHECK:   FieldOffsets: [0, 8]
 end_comment
 
 begin_pragma
@@ -820,6 +860,46 @@ begin_comment
 comment|// CHECK:   FieldOffsets: [0, 32, 32, 32]>
 end_comment
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|I1
+block|{
+name|short
+label|:
+literal|8
+expr_stmt|;
+name|__declspec
+argument_list|(
+argument|align(
+literal|16
+argument|)
+argument_list|)
+name|short
+label|:
+literal|8
+expr_stmt|;
+block|}
+name|I1
+typedef|;
+end_typedef
+
+begin_comment
+comment|// CHECK: Type: struct I1
+end_comment
+
+begin_comment
+comment|// CHECK:   Size:16
+end_comment
+
+begin_comment
+comment|// CHECK:   Alignment:8
+end_comment
+
+begin_comment
+comment|// CHECK:   FieldOffsets: [0, 8]
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -875,6 +955,11 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
+name|I
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
 name|A1
 argument_list|)
 operator|+
@@ -911,6 +996,11 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|H1
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|I1
 argument_list|)
 operator|+
 literal|0

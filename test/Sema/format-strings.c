@@ -7,17 +7,23 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wformat-nonliteral -isystem %S/Inputs -fno-signed-char %s
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__need_wint_t
-end_define
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|__need_wint_t
+end_define
 
 begin_include
 include|#
@@ -3579,6 +3585,92 @@ comment|// expected-warning{{format specifies}}
 block|}
 end_function
 
+begin_function
+name|void
+name|pr18905
+parameter_list|()
+block|{
+specifier|const
+name|char
+name|s1
+index|[]
+init|=
+literal|"s\0%s"
+decl_stmt|;
+comment|// expected-note{{format string is defined here}}
+specifier|const
+name|char
+name|s2
+index|[
+literal|1
+index|]
+init|=
+literal|"s"
+decl_stmt|;
+comment|// expected-note{{format string is defined here}}
+specifier|const
+name|char
+name|s3
+index|[
+literal|2
+index|]
+init|=
+literal|"s\0%s"
+decl_stmt|;
+comment|// expected-warning{{initializer-string for char array is too long}}
+specifier|const
+name|char
+name|s4
+index|[
+literal|10
+index|]
+init|=
+literal|"s"
+decl_stmt|;
+specifier|const
+name|char
+name|s5
+index|[
+literal|0
+index|]
+init|=
+literal|"%s"
+decl_stmt|;
+comment|// expected-warning{{initializer-string for char array is too long}}
+comment|// expected-note@-1{{format string is defined here}}
+name|printf
+argument_list|(
+name|s1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format string contains '\0' within the string body}}
+name|printf
+argument_list|(
+name|s2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format string is not null-terminated}}
+name|printf
+argument_list|(
+name|s3
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+name|s4
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+name|s5
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{format string is not null-terminated}}
+block|}
+end_function
+
 begin_decl_stmt
 name|void
 name|__attribute__
@@ -3671,7 +3763,7 @@ argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
-comment|// no-warning (using strftime non literal is not unsafe)
+comment|// no-warning (using strftime non-literal is not unsafe)
 block|}
 end_function
 

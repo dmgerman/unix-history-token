@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This is the source level debug info generator for llvm translation.
+comment|// This is the source-level debug info generator for llvm translation.
 end_comment
 
 begin_comment
@@ -98,25 +98,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/DIBuilder.h"
+file|"llvm/IR/DIBuilder.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/DebugInfo.h"
+file|"llvm/IR/DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_decl_stmt
@@ -174,11 +174,11 @@ name|CGDebugInfo
 block|{
 name|friend
 name|class
-name|NoLocation
+name|ArtificialLocation
 decl_stmt|;
 name|friend
 name|class
-name|ArtificialLocation
+name|SaveAndRestoreLocation
 decl_stmt|;
 name|CodeGenModule
 modifier|&
@@ -261,6 +261,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
+specifier|const
 name|void
 operator|*
 operator|,
@@ -270,26 +271,60 @@ name|WeakVH
 operator|>
 name|TypeCache
 expr_stmt|;
+struct|struct
+name|ObjCInterfaceCacheEntry
+block|{
+specifier|const
+name|ObjCInterfaceType
+modifier|*
+name|Type
+decl_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|Decl
+expr_stmt|;
+name|llvm
+operator|::
+name|DIFile
+name|Unit
+expr_stmt|;
+name|ObjCInterfaceCacheEntry
+argument_list|(
+argument|const ObjCInterfaceType *Type
+argument_list|,
+argument|llvm::DIType Decl
+argument_list|,
+argument|llvm::DIFile Unit
+argument_list|)
+block|:
+name|Type
+argument_list|(
+name|Type
+argument_list|)
+operator|,
+name|Decl
+argument_list|(
+name|Decl
+argument_list|)
+operator|,
+name|Unit
+argument_list|(
+argument|Unit
+argument_list|)
+block|{}
+block|}
+struct|;
 comment|/// ObjCInterfaceCache - Cache of previously constructed interfaces
-comment|/// which may change. Storing a pair of DIType and checksum.
+comment|/// which may change.
 name|llvm
 operator|::
-name|DenseMap
+name|SmallVector
 operator|<
-name|void
-operator|*
+name|ObjCInterfaceCacheEntry
 operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|llvm
-operator|::
-name|WeakVH
-operator|,
-name|unsigned
+literal|32
 operator|>
-expr|>
 name|ObjCInterfaceCache
 expr_stmt|;
 comment|/// RetainedTypes - list of interfaces we want to keep even if orphaned.
@@ -302,20 +337,6 @@ operator|*
 operator|>
 name|RetainedTypes
 expr_stmt|;
-comment|/// CompleteTypeCache - Cache of previously constructed complete RecordTypes.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|void
-operator|*
-operator|,
-name|llvm
-operator|::
-name|WeakVH
-operator|>
-name|CompletedTypeCache
-expr_stmt|;
 comment|/// ReplaceMap - Cache of forward declared types to RAUW at the end of
 comment|/// compilation.
 name|std
@@ -326,14 +347,14 @@ name|std
 operator|::
 name|pair
 operator|<
-name|void
+specifier|const
+name|TagType
 operator|*
 operator|,
 name|llvm
 operator|::
 name|WeakVH
-operator|>
-expr|>
+operator|>>
 name|ReplaceMap
 expr_stmt|;
 comment|// LexicalBlockStack - Keep track of our current nested lexical block.
@@ -530,6 +551,16 @@ operator|::
 name|DIType
 name|CreateType
 argument_list|(
+argument|const TemplateSpecializationType *Ty
+argument_list|,
+argument|llvm::DIFile Fg
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|CreateType
+argument_list|(
 argument|const ObjCObjectPointerType *Ty
 argument_list|,
 argument|llvm::DIFile F
@@ -625,6 +656,16 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
+name|CreateTypeDefinition
+argument_list|(
+argument|const ObjCInterfaceType *Ty
+argument_list|,
+argument|llvm::DIFile F
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
 name|CreateType
 argument_list|(
 argument|const ObjCObjectType *Ty
@@ -706,6 +747,17 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
+name|CreateTypeDefinition
+argument_list|(
+specifier|const
+name|EnumType
+operator|*
+name|Ty
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
 name|CreateSelfType
 argument_list|(
 argument|const QualType&QualTy
@@ -717,15 +769,6 @@ name|llvm
 operator|::
 name|DIType
 name|getTypeOrNull
-argument_list|(
-specifier|const
-name|QualType
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-name|getCompletedTypeOrNull
 argument_list|(
 specifier|const
 name|QualType
@@ -799,7 +842,7 @@ operator|::
 name|DIType
 name|CreatePointerLikeType
 argument_list|(
-argument|unsigned Tag
+argument|llvm::dwarf::Tag Tag
 argument_list|,
 argument|const Type *Ty
 argument_list|,
@@ -1137,11 +1180,19 @@ parameter_list|)
 function_decl|;
 comment|/// EmitFunctionStart - Emit a call to llvm.dbg.function.start to indicate
 comment|/// start of a new function.
+comment|/// \param Loc       The location of the function header.
+comment|/// \param ScopeLoc  The location of the function body.
 name|void
 name|EmitFunctionStart
 argument_list|(
 name|GlobalDecl
 name|GD
+argument_list|,
+name|SourceLocation
+name|Loc
+argument_list|,
+name|SourceLocation
+name|ScopeLoc
 argument_list|,
 name|QualType
 name|FnType
@@ -1307,21 +1358,6 @@ operator|*
 name|Decl
 argument_list|)
 decl_stmt|;
-comment|/// EmitGlobalVariable - Emit information about an objective-c interface.
-name|void
-name|EmitGlobalVariable
-argument_list|(
-name|llvm
-operator|::
-name|GlobalVariable
-operator|*
-name|GV
-argument_list|,
-name|ObjCInterfaceDecl
-operator|*
-name|Decl
-argument_list|)
-decl_stmt|;
 comment|/// EmitGlobalVariable - Emit global variable's debug info.
 name|void
 name|EmitGlobalVariable
@@ -1397,6 +1433,15 @@ name|void
 name|completeType
 parameter_list|(
 specifier|const
+name|EnumDecl
+modifier|*
+name|ED
+parameter_list|)
+function_decl|;
+name|void
+name|completeType
+parameter_list|(
+specifier|const
 name|RecordDecl
 modifier|*
 name|RD
@@ -1420,9 +1465,20 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
+name|void
+name|completeTemplateDefinition
+parameter_list|(
+specifier|const
+name|ClassTemplateSpecializationDecl
+modifier|&
+name|SD
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// EmitDeclare - Emit call to llvm.dbg.declare for a variable declaration.
+comment|/// Tag accepts custom types DW_TAG_arg_variable and DW_TAG_auto_variable,
+comment|/// otherwise would be of type llvm::dwarf::Tag.
 name|void
 name|EmitDeclare
 argument_list|(
@@ -1431,7 +1487,11 @@ name|VarDecl
 operator|*
 name|decl
 argument_list|,
-name|unsigned
+name|llvm
+operator|::
+name|dwarf
+operator|::
+name|LLVMConstants
 name|Tag
 argument_list|,
 name|llvm
@@ -1602,11 +1662,11 @@ argument_list|,
 argument|uint64_t *Offset
 argument_list|)
 expr_stmt|;
-comment|/// \brief Retrieve the DIDescriptor, if any, for the canonical form of this
+comment|/// \brief Retrieve the DIScope, if any, for the canonical form of this
 comment|/// declaration.
 name|llvm
 operator|::
-name|DIDescriptor
+name|DIScope
 name|getDeclarationOrDefinition
 argument_list|(
 specifier|const
@@ -1639,6 +1699,26 @@ specifier|const
 name|VarDecl
 operator|*
 name|D
+argument_list|)
+expr_stmt|;
+comment|/// Return a global variable that represents one of the collection of
+comment|/// global variables created for an anonmyous union.
+name|llvm
+operator|::
+name|DIGlobalVariable
+name|CollectAnonRecordDecls
+argument_list|(
+argument|const RecordDecl *RD
+argument_list|,
+argument|llvm::DIFile Unit
+argument_list|,
+argument|unsigned LineNo
+argument_list|,
+argument|StringRef LinkageName
+argument_list|,
+argument|llvm::GlobalVariable *Var
+argument_list|,
+argument|llvm::DIDescriptor DContext
 argument_list|)
 expr_stmt|;
 comment|/// getFunctionName - Get function name for the given FunctionDecl. If the
@@ -1813,12 +1893,13 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// NoLocation - An RAII object that temporarily disables debug
-comment|/// locations. This is useful for emitting instructions that should be
-comment|/// counted towards the function prologue.
+comment|/// SaveAndRestoreLocation - An RAII object saves the current location
+comment|/// and automatically restores it to the original value.
 name|class
-name|NoLocation
+name|SaveAndRestoreLocation
 block|{
+name|protected
+label|:
 name|SourceLocation
 name|SavedLoc
 decl_stmt|;
@@ -1832,7 +1913,7 @@ name|Builder
 decl_stmt|;
 name|public
 label|:
-name|NoLocation
+name|SaveAndRestoreLocation
 argument_list|(
 name|CodeGenFunction
 operator|&
@@ -1843,13 +1924,41 @@ operator|&
 name|B
 argument_list|)
 expr_stmt|;
-comment|/// ~NoLocation - Autorestore everything back to normal.
+comment|/// Autorestore everything back to normal.
 operator|~
-name|NoLocation
+name|SaveAndRestoreLocation
 argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
+comment|/// NoLocation - An RAII object that temporarily disables debug
+comment|/// locations. This is useful for emitting instructions that should be
+comment|/// counted towards the function prologue.
+name|class
+name|NoLocation
+range|:
+name|public
+name|SaveAndRestoreLocation
+block|{
+name|public
+operator|:
+name|NoLocation
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|CGBuilderTy
+operator|&
+name|B
+argument_list|)
+block|;
+comment|/// Autorestore everything back to normal.
+operator|~
+name|NoLocation
+argument_list|()
+block|; }
+decl_stmt|;
 comment|/// ArtificialLocation - An RAII object that temporarily switches to
 comment|/// an artificial debug location that has a valid scope, but no line
 comment|/// information. This is useful when emitting compiler-generated
@@ -1863,20 +1972,12 @@ comment|/// CGDebugInfo::setLocation() will result in the last valid location
 comment|/// being reused.
 name|class
 name|ArtificialLocation
-block|{
-name|SourceLocation
-name|SavedLoc
-decl_stmt|;
-name|CGDebugInfo
-modifier|*
-name|DI
-decl_stmt|;
-name|CGBuilderTy
-modifier|&
-name|Builder
-decl_stmt|;
+range|:
 name|public
-label|:
+name|SaveAndRestoreLocation
+block|{
+name|public
+operator|:
 name|ArtificialLocation
 argument_list|(
 name|CodeGenFunction
@@ -1887,20 +1988,19 @@ name|CGBuilderTy
 operator|&
 name|B
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// Set the current location to line 0, but within the current scope
 comment|/// (= the top of the LexicalBlockStack).
 name|void
 name|Emit
-parameter_list|()
-function_decl|;
-comment|/// ~ArtificialLocation - Autorestore everything back to normal.
+argument_list|()
+block|;
+comment|/// Autorestore everything back to normal.
 operator|~
 name|ArtificialLocation
 argument_list|()
-expr_stmt|;
-block|}
-empty_stmt|;
+block|; }
+decl_stmt|;
 block|}
 comment|// namespace CodeGen
 block|}

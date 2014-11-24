@@ -52,7 +52,7 @@ comment|// REQUIRES: shell
 end_comment
 
 begin_comment
-comment|// RUN: not env FORCE_CLANG_DIAGNOSTICS_CRASH=1 %clang -fsyntax-only -x c /dev/null 2>&1 | FileCheck %s
+comment|// RUN: not env FORCE_CLANG_DIAGNOSTICS_CRASH=1 %clang -fsyntax-only -x c /dev/null -lstdc++ 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
@@ -137,6 +137,10 @@ end_comment
 
 begin_comment
 comment|// CHECKSH-NOT: -dwarf-debug-flags
+end_comment
+
+begin_comment
+comment|// CHECKSH: crash-report-{{[^ ]*}}.c
 end_comment
 
 end_unit

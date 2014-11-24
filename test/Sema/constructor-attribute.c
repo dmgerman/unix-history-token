@@ -68,7 +68,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no more than 1 argument}}
+comment|// expected-error {{'constructor' attribute takes no more than 1 argument}}
 end_comment
 
 begin_function_decl
@@ -88,7 +88,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{'constructor' attribute requires parameter 1 to be an integer constant}}
+comment|// expected-error {{'constructor' attribute requires an integer constant}}
 end_comment
 
 begin_decl_stmt
@@ -156,7 +156,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no more than 1 argument}}
+comment|// expected-error {{'destructor' attribute takes no more than 1 argument}}
 end_comment
 
 begin_function_decl
@@ -176,7 +176,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{'destructor' attribute requires parameter 1 to be an integer constant}}
+comment|// expected-error {{'destructor' attribute requires an integer constant}}
 end_comment
 
 end_unit

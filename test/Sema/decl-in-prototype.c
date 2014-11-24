@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1_only -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_decl_stmt
@@ -25,6 +25,7 @@ block|}
 name|E
 argument_list|)
 block|{
+comment|// expected-warning {{will not be visible outside of this function}}
 return|return
 name|BB
 return|;
@@ -46,6 +47,7 @@ block|}
 name|E
 argument_list|)
 block|{
+comment|// expected-warning {{will not be visible outside of this function}}
 return|return
 name|AA
 return|;
@@ -193,6 +195,39 @@ literal|4
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pr19018_1
+argument_list|(
+expr|enum
+name|e19018
+block|{
+name|qq
+block|}
+name|x
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{declaration of 'enum e19018' will not be visible outside of this function}}
+end_comment
+
+begin_decl_stmt
+name|enum
+name|e19018
+name|qq
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//expected-error{{tentative definition has type 'enum e19018' that is never completed}} \
+end_comment
+
+begin_comment
+comment|//expected-note{{forward declaration of 'enum e19018'}}
+end_comment
 
 end_unit
 

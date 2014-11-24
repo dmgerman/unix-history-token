@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/SmallString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -158,7 +158,7 @@ name|Info
 argument_list|(
 argument|info
 argument_list|)
-block|{ }
+block|{}
 name|virtual
 operator|~
 name|TargetCodeGenInfo
@@ -201,7 +201,32 @@ operator|&
 name|M
 argument_list|)
 decl|const
-block|{ }
+block|{}
+comment|/// EmitTargetMD - Provides a convenient hook to handle extra
+comment|/// target-specific metadata for the given global.
+name|virtual
+name|void
+name|emitTargetMD
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|CodeGen
+operator|::
+name|CodeGenModule
+operator|&
+name|M
+argument_list|)
+decl|const
+block|{}
 comment|/// Determines the size of struct _Unwind_Exception on this platform,
 comment|/// in 8-bit units.  The Itanium ABI defines this as:
 comment|///   struct _Unwind_Exception {
@@ -340,12 +365,24 @@ argument|CodeGen::CodeGenFunction&CGF
 argument_list|,
 argument|StringRef Constraint
 argument_list|,
-argument|llvm::Type* Ty
+argument|llvm::Type *Ty
 argument_list|)
 specifier|const
 block|{
 return|return
 name|Ty
+return|;
+block|}
+comment|/// doesReturnSlotInterfereWithArgs - Return true if the target uses an
+comment|/// argument slot for an 'sret' type.
+name|virtual
+name|bool
+name|doesReturnSlotInterfereWithArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
 return|;
 block|}
 comment|/// Retrieve the address of a function to call immediately before
@@ -382,7 +419,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// Determine whether a call to an unprototyped functions under
@@ -417,7 +454,7 @@ comment|///
 comment|/// However, some platforms make the conventions identical except
 comment|/// for passing additional out-of-band information to a variadic
 comment|/// function: for example, x86-64 passes the number of SSE
-comment|/// arguments in %al.  On these platforms, it is desireable to
+comment|/// arguments in %al.  On these platforms, it is desirable to
 comment|/// call unprototyped functions using the variadic convention so
 comment|/// that unprototyped calls to varargs functions still succeed.
 comment|///

@@ -69,11 +69,7 @@ typedef|(16)));
 end_typedef
 
 begin_comment
-comment|// This header should only be included in a hosted environment as it depends on
-end_comment
-
-begin_comment
-comment|// a standard library to provide allocation routines.
+comment|/* This header should only be included in a hosted environment as it depends on  * a standard library to provide allocation routines. */
 end_comment
 
 begin_if
@@ -3249,7 +3245,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Microsoft specific.
+comment|/* Microsoft specific. */
 end_comment
 
 begin_decl_stmt
@@ -3747,6 +3743,12 @@ name|_MM_HINT_NTA
 value|0
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MSC_VER
+end_ifndef
+
 begin_comment
 comment|/* FIXME: We have to #define this because "sel" must be a constant integer, and    Sema doesn't do any form of constant propagation yet. */
 end_comment
@@ -3762,6 +3764,11 @@ name|sel
 parameter_list|)
 value|(__builtin_prefetch((void *)(a), 0, (sel)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -5008,7 +5015,7 @@ name|__a
 argument_list|)
 expr_stmt|;
 return|return
-name|_mm_packs_pi16
+name|_mm_packs_pi32
 argument_list|(
 name|__b
 argument_list|,

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// REQUIRES: clang-driver
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -S -fasm -fblocks -fbuiltin -fno-math-errno -fcommon -fpascal-strings -fno-blocks -fno-builtin -fmath-errno -fno-common -fno-pascal-strings -fblocks -fbuiltin -fmath-errno -fcommon -fpascal-strings -fsplit-stack %s 2>&1 | FileCheck -check-prefix=CHECK-OPTIONS1 %s
 end_comment
 
@@ -24,11 +28,11 @@ comment|// CHECK-OPTIONS1: -fpascal-strings
 end_comment
 
 begin_comment
-comment|// CHECK_OPTIONS2: -fno-gnu-keywords
+comment|// CHECK-OPTIONS2: -fmath-errno
 end_comment
 
 begin_comment
-comment|// CHECK-OPTIONS2: -fmath-errno
+comment|// CHECK-OPTIONS2: -fno-gnu-keywords
 end_comment
 
 begin_comment
@@ -56,10 +60,6 @@ comment|// RUN: %clang -### -S -Wwrite-strings %s 2>&1 | FileCheck -check-prefix
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -S -Weverything %s 2>&1 | FileCheck -check-prefix=WRITE-STRINGS1 %s
-end_comment
-
-begin_comment
 comment|// WRITE-STRINGS1: -fconst-strings
 end_comment
 
@@ -68,11 +68,15 @@ comment|// RUN: %clang -### -S -Wwrite-strings -Wno-write-strings %s 2>&1 | File
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -S -Wwrite-strings -w %s 2>&1 | FileCheck -check-prefix=WRITE-STRINGS2 %s
+comment|// WRITE-STRINGS2-NOT: -fconst-strings
 end_comment
 
 begin_comment
-comment|// WRITE-STRINGS2-NOT: -fconst-strings
+comment|// RUN: %clang -### -S -Wwrite-strings -w %s 2>&1 | FileCheck -check-prefix=WRITE-STRINGS3 %s
+end_comment
+
+begin_comment
+comment|// WRITE-STRINGS3-NOT: -fconst-strings
 end_comment
 
 begin_comment
@@ -185,6 +189,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-SAMPLE-PROFILE: "-fprofile-sample-use={{.*}}/file.prof"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fauto-profile=%S/Inputs/file.prof %s 2>&1 | FileCheck -check-prefix=CHECK-AUTO-PROFILE %s
+end_comment
+
+begin_comment
+comment|// CHECK-AUTO-PROFILE: "-fprofile-sample-use={{.*}}/file.prof"
 end_comment
 
 begin_comment
@@ -304,6 +316,50 @@ comment|// RUN: %clang -### -S -ftree-slp-vectorize -fno-slp-vectorize %s 2>&1 |
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -S -O %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -O2 %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -Os %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -Oz %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -O3 %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fno-slp-vectorize -O3 %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -O1 -fslp-vectorize %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -Ofast %s 2>&1 | FileCheck -check-prefix=CHECK-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S %s 2>&1 | FileCheck -check-prefix=CHECK-NO-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -O0 %s 2>&1 | FileCheck -check-prefix=CHECK-NO-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -O1 %s 2>&1 | FileCheck -check-prefix=CHECK-NO-SLP-VECTORIZE %s
+end_comment
+
+begin_comment
 comment|// CHECK-SLP-VECTORIZE: "-vectorize-slp"
 end_comment
 
@@ -388,7 +444,15 @@ comment|// RUN: %clang -S -O20 -o /dev/null %s 2>&1 | FileCheck -check-prefix=CH
 end_comment
 
 begin_comment
-comment|// CHECK-INVALID-O: warning: optimization level '-O20' is unsupported; using '-O3' instead
+comment|// CHECK-INVALID-O: warning: optimization level '-O20' is not supported; using '-O3' instead
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -finput-charset=iso-8859-1 -o /dev/null %s 2>&1 | FileCheck -check-prefix=CHECK-INVALID-CHARSET %s
+end_comment
+
+begin_comment
+comment|// CHECK-INVALID-CHARSET: error: invalid value 'iso-8859-1' in '-finput-charset=iso-8859-1'
 end_comment
 
 begin_comment
@@ -436,6 +500,10 @@ comment|// RUN:     -fimplicit-templates -fno-implicit-templates                
 end_comment
 
 begin_comment
+comment|// RUN:     -finput-charset=UTF-8                                             \
+end_comment
+
+begin_comment
 comment|// RUN:     -fivopts -fno-ivopts                                              \
 end_comment
 
@@ -445,6 +513,10 @@ end_comment
 
 begin_comment
 comment|// RUN:     -fpermissive -fno-permissive                                      \
+end_comment
+
+begin_comment
+comment|// RUN:     -fdefer-pop -fno-defer-pop                                        \
 end_comment
 
 begin_comment
@@ -512,11 +584,291 @@ comment|// RUN:     -fstrength-reduce -fno-strength-reduce                      
 end_comment
 
 begin_comment
+comment|// RUN:     -finline-limit=1000                                               \
+end_comment
+
+begin_comment
+comment|// RUN:     -finline-limit                                                    \
+end_comment
+
+begin_comment
 comment|// RUN:     %s 2>&1 | FileCheck --check-prefix=IGNORE %s
 end_comment
 
 begin_comment
 comment|// IGNORE-NOT: error: unknown argument
+end_comment
+
+begin_comment
+comment|// Test that the warning is displayed on these.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -###                                                           \
+end_comment
+
+begin_comment
+comment|// RUN: -finline-limit=1000                                                   \
+end_comment
+
+begin_comment
+comment|// RUN: -finline-limit                                                        \
+end_comment
+
+begin_comment
+comment|// RUN: -fexpensive-optimizations                                             \
+end_comment
+
+begin_comment
+comment|// RUN: -fno-expensive-optimizations                                          \
+end_comment
+
+begin_comment
+comment|// RUN: -fno-defer-pop                                                        \
+end_comment
+
+begin_comment
+comment|// RUN: -finline-functions                                                    \
+end_comment
+
+begin_comment
+comment|// RUN: -fno-keep-inline-functions                                            \
+end_comment
+
+begin_comment
+comment|// RUN: -freorder-blocks                                                      \
+end_comment
+
+begin_comment
+comment|// RUN: -fprofile-dir=/rand/dir                                               \
+end_comment
+
+begin_comment
+comment|// RUN: -fprofile-use                                                         \
+end_comment
+
+begin_comment
+comment|// RUN: -fprofile-use=/rand/dir                                               \
+end_comment
+
+begin_comment
+comment|// RUN: -falign-functions                                                     \
+end_comment
+
+begin_comment
+comment|// RUN: -falign-functions=1                                                   \
+end_comment
+
+begin_comment
+comment|// RUN: -ffloat-store                                                         \
+end_comment
+
+begin_comment
+comment|// RUN: -fgcse                                                                \
+end_comment
+
+begin_comment
+comment|// RUN: -fivopts                                                              \
+end_comment
+
+begin_comment
+comment|// RUN: -fprefetch-loop-arrays                                                \
+end_comment
+
+begin_comment
+comment|// RUN: -fprofile-correction                                                  \
+end_comment
+
+begin_comment
+comment|// RUN: -fprofile-values                                                      \
+end_comment
+
+begin_comment
+comment|// RUN: -frounding-math                                                       \
+end_comment
+
+begin_comment
+comment|// RUN: -fschedule-insns                                                      \
+end_comment
+
+begin_comment
+comment|// RUN: -fsignaling-nans                                                      \
+end_comment
+
+begin_comment
+comment|// RUN: -fstrength-reduce                                                     \
+end_comment
+
+begin_comment
+comment|// RUN: -ftracer                                                              \
+end_comment
+
+begin_comment
+comment|// RUN: -funroll-all-loops                                                    \
+end_comment
+
+begin_comment
+comment|// RUN: -funswitch-loops                                                      \
+end_comment
+
+begin_comment
+comment|// RUN: %s 2>&1 | FileCheck --check-prefix=CHECK-WARNING %s
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-finline-limit=1000' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-finline-limit' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fexpensive-optimizations' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fno-expensive-optimizations' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fno-defer-pop' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-finline-functions' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fno-keep-inline-functions' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-freorder-blocks' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fprofile-dir=/rand/dir' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fprofile-use' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fprofile-use=/rand/dir' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-falign-functions' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-falign-functions=1' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-ffloat-store' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fgcse' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fivopts' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fprefetch-loop-arrays' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fprofile-correction' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fprofile-values' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-frounding-math' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fschedule-insns' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fsignaling-nans' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-fstrength-reduce' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-ftracer' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-funroll-all-loops' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-WARNING-DAG: optimization flag '-funswitch-loops' is not supported
+end_comment
+
+begin_comment
+comment|// Test that we mute the warning on these
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -finline-limit=1000 -Wno-invalid-command-line-argument              \
+end_comment
+
+begin_comment
+comment|// RUN:     %s 2>&1 | FileCheck --check-prefix=CHECK-NO-WARNING1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -finline-limit -Wno-invalid-command-line-argument                   \
+end_comment
+
+begin_comment
+comment|// RUN:     %s 2>&1 | FileCheck --check-prefix=CHECK-NO-WARNING2 %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-WARNING1-NOT: optimization flag '-finline-limit=1000' is not supported
+end_comment
+
+begin_comment
+comment|// CHECK-NO-WARNING2-NOT: optimization flag '-finline-limit' is not supported
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fshort-wchar -fno-short-wchar %s 2>&1 | FileCheck -check-prefix=CHECK-WCHAR1 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-short-wchar -fshort-wchar %s 2>&1 | FileCheck -check-prefix=CHECK-WCHAR2 %s
+end_comment
+
+begin_comment
+comment|// CHECK-WCHAR1: -fno-short-wchar
+end_comment
+
+begin_comment
+comment|// CHECK-WCHAR1-NOT: -fshort-wchar
+end_comment
+
+begin_comment
+comment|// CHECK-WCHAR2: -fshort-wchar
+end_comment
+
+begin_comment
+comment|// CHECK-WCHAR2-NOT: -fno-short-wchar
 end_comment
 
 end_unit

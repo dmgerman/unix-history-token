@@ -429,7 +429,7 @@ name|i
 parameter_list|)
 block|{
 comment|// CHECK: @fi4
-comment|// CHECK: cmpxchg i32*
+comment|// CHECK: cmpxchg weak i32*
 name|int
 name|cmp
 init|=
@@ -1315,66 +1315,6 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK-NOT: atomic
 comment|// CHECK: }
-block|}
-end_function
-
-begin_comment
-comment|// CHECK: @invalid_atomic
-end_comment
-
-begin_function
-name|void
-name|invalid_atomic
-parameter_list|(
-atomic|_Atomic
-argument_list|(
-name|int
-argument_list|)
-modifier|*
-name|i
-parameter_list|)
-block|{
-name|__c11_atomic_store
-argument_list|(
-name|i
-argument_list|,
-literal|1
-argument_list|,
-name|memory_order_consume
-argument_list|)
-expr_stmt|;
-name|__c11_atomic_store
-argument_list|(
-name|i
-argument_list|,
-literal|1
-argument_list|,
-name|memory_order_acquire
-argument_list|)
-expr_stmt|;
-name|__c11_atomic_store
-argument_list|(
-name|i
-argument_list|,
-literal|1
-argument_list|,
-name|memory_order_acq_rel
-argument_list|)
-expr_stmt|;
-name|__c11_atomic_load
-argument_list|(
-name|i
-argument_list|,
-name|memory_order_release
-argument_list|)
-expr_stmt|;
-name|__c11_atomic_load
-argument_list|(
-name|i
-argument_list|,
-name|memory_order_acq_rel
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

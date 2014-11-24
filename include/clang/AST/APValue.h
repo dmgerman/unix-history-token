@@ -297,7 +297,7 @@ argument_list|()
 operator|:
 name|Elts
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumElts
@@ -405,47 +405,48 @@ struct|;
 struct_decl|struct
 name|MemberPointerData
 struct_decl|;
-enum|enum
-block|{
-name|MaxSize
-init|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|ComplexAPSInt
-argument_list|)
-operator|>
-sizeof|sizeof
-argument_list|(
-name|ComplexAPFloat
-argument_list|)
-condition|?
-sizeof|sizeof
-argument_list|(
-name|ComplexAPSInt
-argument_list|)
-else|:
-sizeof|sizeof
-argument_list|(
-name|ComplexAPFloat
-argument_list|)
-operator|)
-block|}
-enum|;
-union|union
-block|{
+comment|// We ensure elsewhere that Data is big enough for LV and MemberPointerData.
+typedef|typedef
+name|llvm
+operator|::
+name|AlignedCharArrayUnion
+operator|<
 name|void
-modifier|*
-name|Aligner
+operator|*
+operator|,
+name|APSInt
+operator|,
+name|APFloat
+operator|,
+name|ComplexAPSInt
+operator|,
+name|ComplexAPFloat
+operator|,
+name|Vec
+operator|,
+name|Arr
+operator|,
+name|StructData
+operator|,
+name|UnionData
+operator|,
+name|AddrLabelDiffData
+operator|>
+name|DataType
+expr_stmt|;
+specifier|static
+specifier|const
+name|size_t
+name|DataSize
+init|=
+sizeof|sizeof
+argument_list|(
+name|DataType
+argument_list|)
 decl_stmt|;
-name|char
+name|DataType
 name|Data
-index|[
-name|MaxSize
-index|]
 decl_stmt|;
-block|}
-union|;
 name|public
 label|:
 name|APValue
@@ -459,10 +460,7 @@ block|{}
 name|explicit
 name|APValue
 argument_list|(
-specifier|const
-name|APSInt
-operator|&
-name|I
+argument|APSInt I
 argument_list|)
 operator|:
 name|Kind
@@ -475,16 +473,18 @@ argument_list|()
 block|;
 name|setInt
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|I
+argument_list|)
 argument_list|)
 block|;   }
 name|explicit
 name|APValue
 argument_list|(
-specifier|const
-name|APFloat
-operator|&
-name|F
+argument|APFloat F
 argument_list|)
 operator|:
 name|Kind
@@ -497,7 +497,12 @@ argument_list|()
 block|;
 name|setFloat
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|F
+argument_list|)
 argument_list|)
 block|;   }
 name|explicit
@@ -525,15 +530,9 @@ argument_list|)
 block|;   }
 name|APValue
 argument_list|(
-specifier|const
-name|APSInt
-operator|&
-name|R
+argument|APSInt R
 argument_list|,
-specifier|const
-name|APSInt
-operator|&
-name|I
+argument|APSInt I
 argument_list|)
 operator|:
 name|Kind
@@ -546,22 +545,26 @@ argument_list|()
 block|;
 name|setComplexInt
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|R
+argument_list|)
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|I
+argument_list|)
 argument_list|)
 block|;   }
 name|APValue
 argument_list|(
-specifier|const
-name|APFloat
-operator|&
-name|R
+argument|APFloat R
 argument_list|,
-specifier|const
-name|APFloat
-operator|&
-name|I
+argument|APFloat I
 argument_list|)
 operator|:
 name|Kind
@@ -574,9 +577,19 @@ argument_list|()
 block|;
 name|setComplexFloat
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|R
+argument_list|)
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|I
+argument_list|)
 argument_list|)
 block|;   }
 name|APValue
@@ -589,6 +602,23 @@ argument_list|)
 expr_stmt|;
 name|APValue
 argument_list|(
+name|APValue
+operator|&&
+name|RHS
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+argument|Uninitialized
+argument_list|)
+block|{
+name|swap
+argument_list|(
+name|RHS
+argument_list|)
+block|; }
+name|APValue
+argument_list|(
 argument|LValueBase B
 argument_list|,
 argument|const CharUnits&O
@@ -597,7 +627,7 @@ argument|NoLValuePath N
 argument_list|,
 argument|unsigned CallIndex
 argument_list|)
-block|:
+operator|:
 name|Kind
 argument_list|(
 argument|Uninitialized
@@ -605,7 +635,7 @@ argument_list|)
 block|{
 name|MakeLValue
 argument_list|()
-expr_stmt|;
+block|;
 name|setLValue
 argument_list|(
 name|B
@@ -616,8 +646,7 @@ name|N
 argument_list|,
 name|CallIndex
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|APValue
 argument_list|(
 argument|LValueBase B
@@ -630,7 +659,7 @@ argument|bool OnePastTheEnd
 argument_list|,
 argument|unsigned CallIndex
 argument_list|)
-block|:
+operator|:
 name|Kind
 argument_list|(
 argument|Uninitialized
@@ -638,7 +667,7 @@ argument_list|)
 block|{
 name|MakeLValue
 argument_list|()
-expr_stmt|;
+block|;
 name|setLValue
 argument_list|(
 name|B
@@ -651,8 +680,7 @@ name|OnePastTheEnd
 argument_list|,
 name|CallIndex
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|APValue
 argument_list|(
 argument|UninitArray
@@ -661,7 +689,7 @@ argument|unsigned InitElts
 argument_list|,
 argument|unsigned Size
 argument_list|)
-block|:
+operator|:
 name|Kind
 argument_list|(
 argument|Uninitialized
@@ -673,8 +701,7 @@ name|InitElts
 argument_list|,
 name|Size
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|APValue
 argument_list|(
 argument|UninitStruct
@@ -683,7 +710,7 @@ argument|unsigned B
 argument_list|,
 argument|unsigned M
 argument_list|)
-block|:
+operator|:
 name|Kind
 argument_list|(
 argument|Uninitialized
@@ -695,8 +722,7 @@ name|B
 argument_list|,
 name|M
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|explicit
 name|APValue
 argument_list|(
@@ -1012,6 +1038,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 return|;
 block|}
 specifier|const
@@ -1059,6 +1087,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 return|;
 block|}
 specifier|const
@@ -1106,6 +1136,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Real
@@ -1156,6 +1188,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Imag
@@ -1206,6 +1240,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Real
@@ -1256,6 +1292,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Imag
@@ -1374,6 +1412,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Elts
@@ -1434,6 +1474,8 @@ name|void
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|NumElts
@@ -1476,6 +1518,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Elts
@@ -1555,6 +1599,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Elts
@@ -1611,6 +1657,8 @@ name|void
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|NumElts
@@ -1642,6 +1690,8 @@ name|void
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|ArrSize
@@ -1673,6 +1723,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|NumBases
@@ -1704,6 +1756,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|NumFields
@@ -1736,6 +1790,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Elts
@@ -1771,6 +1827,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Elts
@@ -1862,6 +1920,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Field
@@ -1892,6 +1952,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Value
@@ -1968,6 +2030,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|LHSExpr
@@ -2001,6 +2065,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|RHSExpr
@@ -2009,9 +2075,7 @@ block|}
 name|void
 name|setInt
 parameter_list|(
-specifier|const
 name|APSInt
-modifier|&
 name|I
 parameter_list|)
 block|{
@@ -2033,16 +2097,21 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|I
+argument_list|)
 expr_stmt|;
 block|}
 name|void
 name|setFloat
 parameter_list|(
-specifier|const
 name|APFloat
-modifier|&
 name|F
 parameter_list|)
 block|{
@@ -2064,8 +2133,15 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|F
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -2098,6 +2174,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Elts
@@ -2118,6 +2196,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|NumElts
@@ -2148,6 +2228,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Elts
@@ -2164,14 +2246,10 @@ block|}
 name|void
 name|setComplexInt
 parameter_list|(
-specifier|const
 name|APSInt
-modifier|&
 name|R
 parameter_list|,
-specifier|const
 name|APSInt
-modifier|&
 name|I
 parameter_list|)
 block|{
@@ -2208,11 +2286,18 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Real
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|R
+argument_list|)
 expr_stmt|;
 operator|(
 operator|(
@@ -2224,24 +2309,27 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Imag
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|I
+argument_list|)
 expr_stmt|;
 block|}
 name|void
 name|setComplexFloat
 parameter_list|(
-specifier|const
 name|APFloat
-modifier|&
 name|R
 parameter_list|,
-specifier|const
 name|APFloat
-modifier|&
 name|I
 parameter_list|)
 block|{
@@ -2280,11 +2368,18 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Real
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|R
+argument_list|)
 expr_stmt|;
 operator|(
 operator|(
@@ -2296,11 +2391,18 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Imag
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|I
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -2376,6 +2478,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Field
@@ -2393,6 +2497,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|Value
@@ -2424,6 +2530,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|LHSExpr
@@ -2440,6 +2548,8 @@ name|char
 operator|*
 operator|)
 name|Data
+operator|.
+name|buffer
 operator|)
 operator|->
 name|RHSExpr
@@ -2501,7 +2611,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(void*)Data
+argument|(void*)Data.buffer
 argument_list|)
 name|APSInt
 argument_list|(
@@ -2527,7 +2637,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(void*)(char*)Data
+argument|(void*)(char*)Data.buffer
 argument_list|)
 name|APFloat
 argument_list|(
@@ -2553,7 +2663,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(void*)(char*)Data
+argument|(void*)(char*)Data.buffer
 argument_list|)
 name|Vec
 argument_list|()
@@ -2577,7 +2687,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(void*)(char*)Data
+argument|(void*)(char*)Data.buffer
 argument_list|)
 name|ComplexAPSInt
 argument_list|()
@@ -2601,7 +2711,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(void*)(char*)Data
+argument|(void*)(char*)Data.buffer
 argument_list|)
 name|ComplexAPFloat
 argument_list|()
@@ -2645,7 +2755,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(void*)(char*)Data
+argument|(void*)(char*)Data.buffer
 argument_list|)
 name|StructData
 argument_list|(
@@ -2673,7 +2783,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(void*)(char*)Data
+argument|(void*)(char*)Data.buffer
 argument_list|)
 name|UnionData
 argument_list|()
@@ -2717,7 +2827,7 @@ argument_list|)
 expr_stmt|;
 name|new
 argument_list|(
-argument|(void*)(char*)Data
+argument|(void*)(char*)Data.buffer
 argument_list|)
 name|AddrLabelDiffData
 argument_list|()

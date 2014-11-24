@@ -673,5 +673,52 @@ comment|// CHECK: call i32 @b(i8* null)
 block|}
 end_function
 
+begin_comment
+comment|// Make sure we emit dereferenceable or nonnull when the static keyword is
+end_comment
+
+begin_comment
+comment|// provided.
+end_comment
+
+begin_function
+name|void
+name|test8
+parameter_list|(
+name|int
+name|a
+index|[
+specifier|static
+literal|3
+index|]
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// CHECK: define void @test8(i32* dereferenceable(12) %a)
+end_comment
+
+begin_function
+name|void
+name|test9
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+name|int
+name|a
+index|[
+specifier|static
+name|n
+index|]
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// CHECK: define void @test9(i32 %n, i32* nonnull %a)
+end_comment
+
 end_unit
 

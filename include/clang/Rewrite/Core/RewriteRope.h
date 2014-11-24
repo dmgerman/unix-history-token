@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -172,7 +178,7 @@ argument_list|()
 operator|:
 name|StrData
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|StartOffs
@@ -469,12 +475,12 @@ argument_list|()
 operator|:
 name|CurNode
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|CurPiece
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|CurChar
@@ -603,10 +609,36 @@ return|;
 block|}
 end_expr_stmt
 
-begin_label
-name|private
-label|:
-end_label
+begin_expr_stmt
+name|llvm
+operator|::
+name|StringRef
+name|piece
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|StringRef
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|CurPiece
+operator|)
+index|[
+literal|0
+index|]
+argument_list|,
+name|CurPiece
+operator|->
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_function_decl
 name|void
@@ -794,7 +826,7 @@ argument_list|()
 operator|:
 name|AllocBuffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|AllocOffs
@@ -819,7 +851,7 @@ argument_list|)
 operator|,
 name|AllocBuffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|AllocOffs

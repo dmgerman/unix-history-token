@@ -29,7 +29,7 @@ name|void
 name|bar
 parameter_list|()
 block|{
-comment|// CHECK:  FunctionDecl {{.*}}<line:{{.*}}, line:{{.*}}> bar 'void ()'
+comment|// CHECK:  FunctionDecl {{.*}}<line:{{.*}}, line:{{.*}}> line:{{.*}} bar 'void ()'
 name|foo1
 argument_list|(
 literal|0

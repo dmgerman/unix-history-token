@@ -3,6 +3,18 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -triple aarch64-none-linux-gnu -target-feature +neon -fsyntax-only -verify
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple aarch64-none-linux-gnu -target-feature +neon -DUSE_LONG -fsyntax-only -verify
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple arm64-none-linux-gnu -target-feature +neon -fsyntax-only -verify
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple arm64-none-linux-gnu -target-feature +neon -DUSE_LONG -fsyntax-only -verify
+end_comment
+
 begin_typedef
 typedef|typedef
 name|float
@@ -26,12 +38,66 @@ name|poly16_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|// Both "long" and "long long" should work for 64-bit arch like aarch64.
+end_comment
+
+begin_comment
+comment|// stdint.h in gnu libc is using "long" for 64-bit arch.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|USE_LONG
+end_if
+
+begin_typedef
+typedef|typedef
+name|long
+name|int64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|uint64_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|int64_t
+typedef|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 name|unsigned
 name|long
 name|long
 name|uint64_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|poly64_t
 typedef|;
 end_typedef
 
@@ -62,6 +128,32 @@ argument|))
 argument_list|)
 name|int
 name|int32x4_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(neon_vector_type(
+literal|1
+argument|))
+argument_list|)
+name|int64_t
+name|int64x1_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(neon_vector_type(
+literal|2
+argument|))
+argument_list|)
+name|int64_t
+name|int64x2_t
 typedef|;
 end_typedef
 
@@ -140,6 +232,32 @@ argument|))
 argument_list|)
 name|poly16_t
 name|poly16x8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(neon_polyvector_type(
+literal|1
+argument|))
+argument_list|)
+name|poly64_t
+name|poly64x1_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(neon_polyvector_type(
+literal|2
+argument|))
+argument_list|)
+name|poly64_t
+name|poly64x2_t
 typedef|;
 end_typedef
 

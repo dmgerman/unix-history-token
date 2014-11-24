@@ -4,7 +4,7 @@ comment|// REQUIRES: aarch64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -target-feature +neon \
+comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl1_s8
+comment|// CHECK-LABEL: test_vtbl1_s8
 return|return
 name|vtbl1_s8
 argument_list|(
@@ -41,7 +41,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -56,7 +56,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl1_s8
+comment|// CHECK-LABEL: test_vqtbl1_s8
 return|return
 name|vqtbl1_s8
 argument_list|(
@@ -65,7 +65,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -80,7 +80,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl2_s8
+comment|// CHECK-LABEL: test_vtbl2_s8
 return|return
 name|vtbl2_s8
 argument_list|(
@@ -89,7 +89,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -104,7 +104,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl2_s8
+comment|// CHECK-LABEL: test_vqtbl2_s8
 return|return
 name|vqtbl2_s8
 argument_list|(
@@ -113,7 +113,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -128,7 +128,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl3_s8
+comment|// CHECK-LABEL: test_vtbl3_s8
 return|return
 name|vtbl3_s8
 argument_list|(
@@ -137,7 +137,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -152,7 +152,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl3_s8
+comment|// CHECK-LABEL: test_vqtbl3_s8
 return|return
 name|vqtbl3_s8
 argument_list|(
@@ -161,7 +161,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -176,7 +176,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl4_s8
+comment|// CHECK-LABEL: test_vtbl4_s8
 return|return
 name|vtbl4_s8
 argument_list|(
@@ -185,7 +185,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -200,7 +200,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl4_s8
+comment|// CHECK-LABEL: test_vqtbl4_s8
 return|return
 name|vqtbl4_s8
 argument_list|(
@@ -209,7 +209,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -224,7 +224,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl1q_s8
+comment|// CHECK-LABEL: test_vqtbl1q_s8
 return|return
 name|vqtbl1q_s8
 argument_list|(
@@ -233,7 +233,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -248,7 +248,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl2q_s8
+comment|// CHECK-LABEL: test_vqtbl2q_s8
 return|return
 name|vqtbl2q_s8
 argument_list|(
@@ -257,7 +257,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -272,7 +272,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl3q_s8
+comment|// CHECK-LABEL: test_vqtbl3q_s8
 return|return
 name|vqtbl3q_s8
 argument_list|(
@@ -281,7 +281,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -296,7 +296,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl4q_s8
+comment|// CHECK-LABEL: test_vqtbl4q_s8
 return|return
 name|vqtbl4q_s8
 argument_list|(
@@ -305,7 +305,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -323,7 +323,7 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx1_s8
+comment|// CHECK-LABEL: test_vtbx1_s8
 return|return
 name|vtbx1_s8
 argument_list|(
@@ -334,9 +334,9 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+}}.8b, #0
+comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
 comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
@@ -356,7 +356,7 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx2_s8
+comment|// CHECK-LABEL: test_vtbx2_s8
 return|return
 name|vtbx2_s8
 argument_list|(
@@ -367,7 +367,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -385,7 +385,7 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx3_s8
+comment|// CHECK-LABEL: test_vtbx3_s8
 return|return
 name|vtbx3_s8
 argument_list|(
@@ -396,9 +396,9 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+}}.8b, #0
+comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
 comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
@@ -418,7 +418,7 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx4_s8
+comment|// CHECK-LABEL: test_vtbx4_s8
 return|return
 name|vtbx4_s8
 argument_list|(
@@ -429,7 +429,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -447,7 +447,7 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx1_s8
+comment|// CHECK-LABEL: test_vqtbx1_s8
 return|return
 name|vqtbx1_s8
 argument_list|(
@@ -458,7 +458,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -476,7 +476,7 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx2_s8
+comment|// CHECK-LABEL: test_vqtbx2_s8
 return|return
 name|vqtbx2_s8
 argument_list|(
@@ -487,7 +487,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -505,7 +505,7 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx3_s8
+comment|// CHECK-LABEL: test_vqtbx3_s8
 return|return
 name|vqtbx3_s8
 argument_list|(
@@ -516,7 +516,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -534,7 +534,7 @@ name|int8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx4_s8
+comment|// CHECK-LABEL: test_vqtbx4_s8
 return|return
 name|vqtbx4_s8
 argument_list|(
@@ -545,7 +545,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -563,7 +563,7 @@ name|int8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx1q_s8
+comment|// CHECK-LABEL: test_vqtbx1q_s8
 return|return
 name|vqtbx1q_s8
 argument_list|(
@@ -574,7 +574,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -592,7 +592,7 @@ name|int8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx2q_s8
+comment|// CHECK-LABEL: test_vqtbx2q_s8
 return|return
 name|vqtbx2q_s8
 argument_list|(
@@ -603,7 +603,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -621,7 +621,7 @@ name|int8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx3q_s8
+comment|// CHECK-LABEL: test_vqtbx3q_s8
 return|return
 name|vqtbx3q_s8
 argument_list|(
@@ -632,7 +632,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -650,7 +650,7 @@ name|int8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx4q_s8
+comment|// CHECK-LABEL: test_vqtbx4q_s8
 return|return
 name|vqtbx4q_s8
 argument_list|(
@@ -661,7 +661,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -676,7 +676,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl1_u8
+comment|// CHECK-LABEL: test_vtbl1_u8
 return|return
 name|vtbl1_u8
 argument_list|(
@@ -685,7 +685,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -700,7 +700,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl1_u8
+comment|// CHECK-LABEL: test_vqtbl1_u8
 return|return
 name|vqtbl1_u8
 argument_list|(
@@ -709,7 +709,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -724,7 +724,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl2_u8
+comment|// CHECK-LABEL: test_vtbl2_u8
 return|return
 name|vtbl2_u8
 argument_list|(
@@ -733,7 +733,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -748,7 +748,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl2_u8
+comment|// CHECK-LABEL: test_vqtbl2_u8
 return|return
 name|vqtbl2_u8
 argument_list|(
@@ -757,7 +757,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -772,7 +772,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl3_u8
+comment|// CHECK-LABEL: test_vtbl3_u8
 return|return
 name|vtbl3_u8
 argument_list|(
@@ -781,7 +781,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -796,7 +796,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl3_u8
+comment|// CHECK-LABEL: test_vqtbl3_u8
 return|return
 name|vqtbl3_u8
 argument_list|(
@@ -805,7 +805,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -820,7 +820,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl4_u8
+comment|// CHECK-LABEL: test_vtbl4_u8
 return|return
 name|vtbl4_u8
 argument_list|(
@@ -829,7 +829,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -844,7 +844,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl4_u8
+comment|// CHECK-LABEL: test_vqtbl4_u8
 return|return
 name|vqtbl4_u8
 argument_list|(
@@ -853,7 +853,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -868,7 +868,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl1q_u8
+comment|// CHECK-LABEL: test_vqtbl1q_u8
 return|return
 name|vqtbl1q_u8
 argument_list|(
@@ -877,7 +877,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -892,7 +892,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl2q_u8
+comment|// CHECK-LABEL: test_vqtbl2q_u8
 return|return
 name|vqtbl2q_u8
 argument_list|(
@@ -901,7 +901,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -916,7 +916,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl3q_u8
+comment|// CHECK-LABEL: test_vqtbl3q_u8
 return|return
 name|vqtbl3q_u8
 argument_list|(
@@ -925,7 +925,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -940,7 +940,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl4q_u8
+comment|// CHECK-LABEL: test_vqtbl4q_u8
 return|return
 name|vqtbl4q_u8
 argument_list|(
@@ -949,7 +949,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -967,7 +967,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx1_u8
+comment|// CHECK-LABEL: test_vtbx1_u8
 return|return
 name|vtbx1_u8
 argument_list|(
@@ -978,9 +978,9 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+}}.8b, #0
+comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
 comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
@@ -1000,7 +1000,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx2_u8
+comment|// CHECK-LABEL: test_vtbx2_u8
 return|return
 name|vtbx2_u8
 argument_list|(
@@ -1011,7 +1011,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1029,7 +1029,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx3_u8
+comment|// CHECK-LABEL: test_vtbx3_u8
 return|return
 name|vtbx3_u8
 argument_list|(
@@ -1040,9 +1040,9 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+}}.8b, #0
+comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
 comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
@@ -1062,7 +1062,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx4_u8
+comment|// CHECK-LABEL: test_vtbx4_u8
 return|return
 name|vtbx4_u8
 argument_list|(
@@ -1073,7 +1073,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1091,7 +1091,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx1_u8
+comment|// CHECK-LABEL: test_vqtbx1_u8
 return|return
 name|vqtbx1_u8
 argument_list|(
@@ -1102,7 +1102,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1120,7 +1120,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx2_u8
+comment|// CHECK-LABEL: test_vqtbx2_u8
 return|return
 name|vqtbx2_u8
 argument_list|(
@@ -1131,7 +1131,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1149,7 +1149,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx3_u8
+comment|// CHECK-LABEL: test_vqtbx3_u8
 return|return
 name|vqtbx3_u8
 argument_list|(
@@ -1160,7 +1160,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1178,7 +1178,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx4_u8
+comment|// CHECK-LABEL: test_vqtbx4_u8
 return|return
 name|vqtbx4_u8
 argument_list|(
@@ -1189,7 +1189,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1207,7 +1207,7 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx1q_u8
+comment|// CHECK-LABEL: test_vqtbx1q_u8
 return|return
 name|vqtbx1q_u8
 argument_list|(
@@ -1218,7 +1218,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1236,7 +1236,7 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx2q_u8
+comment|// CHECK-LABEL: test_vqtbx2q_u8
 return|return
 name|vqtbx2q_u8
 argument_list|(
@@ -1247,7 +1247,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1265,7 +1265,7 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx3q_u8
+comment|// CHECK-LABEL: test_vqtbx3q_u8
 return|return
 name|vqtbx3q_u8
 argument_list|(
@@ -1276,7 +1276,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1294,7 +1294,7 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx4q_u8
+comment|// CHECK-LABEL: test_vqtbx4q_u8
 return|return
 name|vqtbx4q_u8
 argument_list|(
@@ -1305,7 +1305,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1320,7 +1320,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl1_p8
+comment|// CHECK-LABEL: test_vtbl1_p8
 return|return
 name|vtbl1_p8
 argument_list|(
@@ -1329,7 +1329,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1344,7 +1344,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl1_p8
+comment|// CHECK-LABEL: test_vqtbl1_p8
 return|return
 name|vqtbl1_p8
 argument_list|(
@@ -1353,7 +1353,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1368,7 +1368,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl2_p8
+comment|// CHECK-LABEL: test_vtbl2_p8
 return|return
 name|vtbl2_p8
 argument_list|(
@@ -1377,7 +1377,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1392,7 +1392,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl2_p8
+comment|// CHECK-LABEL: test_vqtbl2_p8
 return|return
 name|vqtbl2_p8
 argument_list|(
@@ -1401,7 +1401,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1416,7 +1416,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl3_p8
+comment|// CHECK-LABEL: test_vtbl3_p8
 return|return
 name|vtbl3_p8
 argument_list|(
@@ -1425,7 +1425,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1440,7 +1440,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl3_p8
+comment|// CHECK-LABEL: test_vqtbl3_p8
 return|return
 name|vqtbl3_p8
 argument_list|(
@@ -1449,7 +1449,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1464,7 +1464,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbl4_p8
+comment|// CHECK-LABEL: test_vtbl4_p8
 return|return
 name|vtbl4_p8
 argument_list|(
@@ -1473,7 +1473,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1488,7 +1488,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl4_p8
+comment|// CHECK-LABEL: test_vqtbl4_p8
 return|return
 name|vqtbl4_p8
 argument_list|(
@@ -1497,7 +1497,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1512,7 +1512,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl1q_p8
+comment|// CHECK-LABEL: test_vqtbl1q_p8
 return|return
 name|vqtbl1q_p8
 argument_list|(
@@ -1521,7 +1521,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1536,7 +1536,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl2q_p8
+comment|// CHECK-LABEL: test_vqtbl2q_p8
 return|return
 name|vqtbl2q_p8
 argument_list|(
@@ -1545,7 +1545,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1560,7 +1560,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl3q_p8
+comment|// CHECK-LABEL: test_vqtbl3q_p8
 return|return
 name|vqtbl3q_p8
 argument_list|(
@@ -1569,7 +1569,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1584,7 +1584,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbl4q_p8
+comment|// CHECK-LABEL: test_vqtbl4q_p8
 return|return
 name|vqtbl4q_p8
 argument_list|(
@@ -1593,7 +1593,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbl {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1611,7 +1611,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx1_p8
+comment|// CHECK-LABEL: test_vtbx1_p8
 return|return
 name|vtbx1_p8
 argument_list|(
@@ -1622,9 +1622,9 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+}}.8b, #0
+comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
 comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
@@ -1644,7 +1644,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx2_p8
+comment|// CHECK-LABEL: test_vtbx2_p8
 return|return
 name|vtbx2_p8
 argument_list|(
@@ -1655,7 +1655,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1673,7 +1673,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx3_p8
+comment|// CHECK-LABEL: test_vtbx3_p8
 return|return
 name|vtbx3_p8
 argument_list|(
@@ -1684,9 +1684,9 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: movi {{v[0-9]+}}.8b, #0
+comment|// CHECK: movi {{v[0-9]+.8b|d[0-9]+}}, #0
 comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
-comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbl {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 comment|// CHECK: cmhs {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 comment|// CHECK: bsl {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b
 block|}
@@ -1706,7 +1706,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vtbx4_p8
+comment|// CHECK-LABEL: test_vtbx4_p8
 return|return
 name|vtbx4_p8
 argument_list|(
@@ -1717,7 +1717,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1735,7 +1735,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx1_p8
+comment|// CHECK-LABEL: test_vqtbx1_p8
 return|return
 name|vqtbx1_p8
 argument_list|(
@@ -1746,7 +1746,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1764,7 +1764,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx2_p8
+comment|// CHECK-LABEL: test_vqtbx2_p8
 return|return
 name|vqtbx2_p8
 argument_list|(
@@ -1775,7 +1775,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1793,7 +1793,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx3_p8
+comment|// CHECK-LABEL: test_vqtbx3_p8
 return|return
 name|vqtbx3_p8
 argument_list|(
@@ -1804,7 +1804,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1822,7 +1822,7 @@ name|uint8x8_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx4_p8
+comment|// CHECK-LABEL: test_vqtbx4_p8
 return|return
 name|vqtbx4_p8
 argument_list|(
@@ -1833,7 +1833,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.8b
+comment|// CHECK: tbx {{v[0-9]+}}.8b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.8b
 block|}
 end_function
 
@@ -1851,7 +1851,7 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx1q_p8
+comment|// CHECK-LABEL: test_vqtbx1q_p8
 return|return
 name|vqtbx1q_p8
 argument_list|(
@@ -1862,7 +1862,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1880,7 +1880,7 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx2q_p8
+comment|// CHECK-LABEL: test_vqtbx2q_p8
 return|return
 name|vqtbx2q_p8
 argument_list|(
@@ -1891,7 +1891,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1909,7 +1909,7 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx3q_p8
+comment|// CHECK-LABEL: test_vqtbx3q_p8
 return|return
 name|vqtbx3q_p8
 argument_list|(
@@ -1920,7 +1920,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 
@@ -1938,7 +1938,7 @@ name|uint8x16_t
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: test_vqtbx4q_p8
+comment|// CHECK-LABEL: test_vqtbx4q_p8
 return|return
 name|vqtbx4q_p8
 argument_list|(
@@ -1949,7 +1949,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b}, {{v[0-9]+}}.16b
+comment|// CHECK: tbx {{v[0-9]+}}.16b, {{{ ?v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b, v[0-9]+.16b ?}}}, {{v[0-9]+}}.16b
 block|}
 end_function
 

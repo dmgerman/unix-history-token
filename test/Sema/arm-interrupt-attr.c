@@ -60,7 +60,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// expected-error {{attribute takes no more than 1 argument}}
+comment|// expected-error {{'interrupt' attribute takes no more than 1 argument}}
 end_comment
 
 begin_macro

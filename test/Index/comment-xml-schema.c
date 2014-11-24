@@ -48,6 +48,10 @@ comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-sche
 end_comment
 
 begin_comment
+comment|// RUN: xmllint --noout --relaxng %S/../../bindings/xml/comment-xml-schema.rng %S/Inputs/CommentXML/valid-function-10.xml
+end_comment
+
+begin_comment
 comment|//
 end_comment
 

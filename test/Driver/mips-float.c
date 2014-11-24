@@ -248,11 +248,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-DEF-MIPS16 %s
 end_comment
 
 begin_comment
-comment|// CHECK-DEF-MIPS16: "-mfloat-abi" "soft"
+comment|// CHECK-DEF-MIPS16: "-target-feature" "+mips16"
 end_comment
 
 begin_comment
-comment|// CHECK-DEF-MIPS16: "-mllvm" "-mips16-hard-float"
+comment|// CHECK-DEF-MIPS16: "-mfloat-abi" "hard"
 end_comment
 
 begin_comment
@@ -276,19 +276,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-HARD-MIPS16 %s
 end_comment
 
 begin_comment
-comment|// CHECK-HARD-MIPS16: "-target-feature" "+soft-float"
+comment|// CHECK-HARD-MIPS16: "-target-feature" "+mips16"
 end_comment
 
 begin_comment
-comment|// CHECK-HARD-MIPS16: "-msoft-float"
-end_comment
-
-begin_comment
-comment|// CHECK-HARD-MIPS16: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
-comment|// CHECK-HARD-MIPS16: "-mllvm" "-mips16-hard-float"
+comment|// CHECK-HARD-MIPS16: "-mfloat-abi" "hard"
 end_comment
 
 begin_comment
@@ -313,6 +305,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-SOFT-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-SOFT-MIPS16: "-target-feature" "+mips16"
 end_comment
 
 begin_comment
@@ -344,19 +340,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ABI-HARD-MIPS16 %s
 end_comment
 
 begin_comment
-comment|// CHECK-ABI-HARD-MIPS16: "-target-feature" "+soft-float"
+comment|// CHECK-ABI-HARD-MIPS16: "-target-feature" "+mips16"
 end_comment
 
 begin_comment
-comment|// CHECK-ABI-HARD-MIPS16: "-msoft-float"
-end_comment
-
-begin_comment
-comment|// CHECK-ABI-HARD-MIPS16: "-mfloat-abi" "soft"
-end_comment
-
-begin_comment
-comment|// CHECK-ABI-HARD-MIPS16: "-mllvm" "-mips16-hard-float"
+comment|// CHECK-ABI-HARD-MIPS16: "-mfloat-abi" "hard"
 end_comment
 
 begin_comment
@@ -381,6 +369,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-ABI-SOFT-MIPS16: "-target-feature" "+soft-float"
+end_comment
+
+begin_comment
+comment|// CHECK-ABI-SOFT-MIPS16: "-target-feature" "+mips16"
 end_comment
 
 begin_comment

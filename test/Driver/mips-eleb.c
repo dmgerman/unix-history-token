@@ -24,7 +24,11 @@ comment|// MIPS32-EL: "{{.*}}clang{{.*}}" "-cc1" "-triple" "mipsel-unknown-linux
 end_comment
 
 begin_comment
-comment|// MIPS32-EL: "{{.*}}as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EL"
+comment|// MIPS32-EL: "{{.*}}as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32"
+end_comment
+
+begin_comment
+comment|// MIPS32-EL: "-EL"
 end_comment
 
 begin_comment
@@ -52,7 +56,11 @@ comment|// MIPS64-EL: "{{.*}}clang{{.*}}" "-cc1" "-triple" "mips64el-unknown-lin
 end_comment
 
 begin_comment
-comment|// MIPS64-EL: "{{.*}}as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EL"
+comment|// MIPS64-EL: "{{.*}}as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64"
+end_comment
+
+begin_comment
+comment|// MIPS64-EL: "-EL"
 end_comment
 
 begin_comment
@@ -80,7 +88,11 @@ comment|// MIPS32-EB: "{{.*}}clang{{.*}}" "-cc1" "-triple" "mips-unknown-linux-g
 end_comment
 
 begin_comment
-comment|// MIPS32-EB: "{{.*}}as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB"
+comment|// MIPS32-EB: "{{.*}}as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32"
+end_comment
+
+begin_comment
+comment|// MIPS32-EB: "-EB"
 end_comment
 
 begin_comment
@@ -108,7 +120,11 @@ comment|// MIPS64-EB: "{{.*}}clang{{.*}}" "-cc1" "-triple" "mips64-unknown-linux
 end_comment
 
 begin_comment
-comment|// MIPS64-EB: "{{.*}}as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EB"
+comment|// MIPS64-EB: "{{.*}}as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64"
+end_comment
+
+begin_comment
+comment|// MIPS64-EB: "-EB"
 end_comment
 
 begin_comment

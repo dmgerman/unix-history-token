@@ -17,7 +17,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{used attribute ignored}}
+comment|// expected-warning {{'used' attribute ignored}}
 end_comment
 
 begin_decl_stmt
@@ -34,7 +34,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{used attribute ignored}}
+comment|// expected-warning {{'used' attribute ignored}}
 end_comment
 
 begin_struct
@@ -105,7 +105,7 @@ name|used
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{used attribute ignored}}
+comment|// expected-warning {{'used' attribute ignored}}
 block|}
 end_function
 

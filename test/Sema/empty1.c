@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -Wc++-compat
+comment|// RUN: %clang_cc1 %s -triple %itanium_abi_triple -fsyntax-only -verify -Wc++-compat
+end_comment
+
+begin_comment
+comment|// Note: Empty C structs are 4 bytes in the Microsoft ABI.
 end_comment
 
 begin_struct

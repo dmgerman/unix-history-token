@@ -1015,7 +1015,7 @@ operator|::
 name|ObjCDictionaryElement
 operator|>
 operator|:
-name|llvm
+name|std
 operator|::
 name|true_type
 block|{}
@@ -1177,7 +1177,7 @@ operator|!
 name|HasPackExpansions
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|reinterpret_cast
@@ -1206,7 +1206,7 @@ operator|!
 name|HasPackExpansions
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|reinterpret_cast
@@ -3280,7 +3280,7 @@ name|ResultType
 operator|=
 name|Getter
 operator|->
-name|getResultType
+name|getReturnType
 argument_list|()
 expr_stmt|;
 else|else
@@ -3310,7 +3310,7 @@ name|ResultType
 operator|=
 name|Getter
 operator|->
-name|getResultType
+name|getReturnType
 argument_list|()
 expr_stmt|;
 comment|// with reference!
@@ -3627,7 +3627,7 @@ name|SetterAndMethodRefFlags
 operator|.
 name|setPointer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|SetterAndMethodRefFlags
@@ -4857,7 +4857,7 @@ argument_list|()
 operator|)
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|const
@@ -4967,7 +4967,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -5284,7 +5284,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -5312,7 +5312,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 

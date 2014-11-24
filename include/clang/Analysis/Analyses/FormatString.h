@@ -309,7 +309,7 @@ argument_list|()
 operator|:
 name|Position
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|kind
@@ -563,12 +563,12 @@ argument_list|)
 operator|,
 name|Position
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|EndScanList
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|kind
@@ -597,7 +597,7 @@ argument_list|)
 operator|,
 name|EndScanList
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|kind
@@ -840,8 +840,7 @@ name|ArgType
 argument_list|(
 argument|Kind k = UnknownTy
 argument_list|,
-argument|const char *n =
-literal|0
+argument|const char *n = nullptr
 argument_list|)
 block|:
 name|K
@@ -863,8 +862,7 @@ name|ArgType
 argument_list|(
 argument|QualType t
 argument_list|,
-argument|const char *n =
-literal|0
+argument|const char *n = nullptr
 argument_list|)
 operator|:
 name|K
@@ -904,7 +902,7 @@ argument_list|)
 operator|,
 name|Name
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Ptr
@@ -1071,7 +1069,7 @@ argument_list|)
 operator|:
 name|start
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|length
@@ -1516,7 +1514,7 @@ name|ConversionSpecifier
 argument_list|(
 argument|true
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 argument|InvalidSpecifier
 argument_list|)
@@ -2059,7 +2057,7 @@ name|ConversionSpecifier
 argument_list|(
 argument|false
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 argument|InvalidSpecifier
 argument_list|)
@@ -2236,6 +2234,8 @@ name|bool
 name|fixType
 argument_list|(
 argument|QualType QT
+argument_list|,
+argument|QualType RawQT
 argument_list|,
 argument|const LangOptions&LangOpt
 argument_list|,

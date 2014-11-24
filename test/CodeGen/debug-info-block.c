@@ -4,10 +4,6 @@ comment|// RUN: %clang_cc1 -fblocks -g -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// APPLE LOCAL file 5939894 */
-end_comment
-
-begin_comment
 comment|// Verify that the desired debugging type is generated for a structure
 end_comment
 

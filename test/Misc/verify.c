@@ -51,7 +51,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error-re {{tentative definition has type 'struct s' that is never completed}}
+comment|// expected-error    {{tentative definition has type 'struct s' that is never completed}}
 end_comment
 
 begin_decl_stmt
@@ -62,7 +62,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error-re {{tentative definition has type '.*[[:space:]]*.*' that is never completed}}
+comment|// expected-error-re {{tentative definition has type '{{.*[[:space:]]*.*}}' that is never completed}}
 end_comment
 
 begin_decl_stmt
@@ -73,7 +73,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error-re {{tentative definition has type '(.*)[[:space:]]*(.*)' that is never completed}}
+comment|// expected-error-re {{tentative definition has type '{{(.*)[[:space:]]*(.*)}}' that is never completed}}
 end_comment
 
 begin_decl_stmt
@@ -84,7 +84,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error-re {{^tentative}}
+comment|// expected-error-re {{{{^}}tentative}}
 end_comment
 
 begin_decl_stmt
@@ -95,7 +95,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error-re {{completed$}}
+comment|// expected-error-re {{completed{{$}}}}
 end_comment
 
 end_unit

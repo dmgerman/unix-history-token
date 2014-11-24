@@ -151,7 +151,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note {{'ATSFontGetName' declared here}}
+comment|// expected-note {{'ATSFontGetName' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function_decl
@@ -188,7 +188,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note {{function has been explicitly marked unavailable here}}
+comment|// expected-note {{'ATSFontGetPostScriptName' has been explicitly marked unavailable here}}
 end_comment
 
 begin_function

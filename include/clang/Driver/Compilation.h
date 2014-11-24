@@ -199,6 +199,10 @@ modifier|*
 modifier|*
 name|Redirects
 decl_stmt|;
+comment|/// Whether we're compiling for diagnostic purposes.
+name|bool
+name|ForDiagnostics
+decl_stmt|;
 name|public
 label|:
 name|Compilation
@@ -633,6 +637,15 @@ name|void
 name|initCompilationForDiagnostics
 parameter_list|()
 function_decl|;
+comment|/// Return true if we're compiling for diagnostics.
+name|bool
+name|isForDiagnostics
+parameter_list|()
+block|{
+return|return
+name|ForDiagnostics
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

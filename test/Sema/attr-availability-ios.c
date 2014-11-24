@@ -31,7 +31,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note {{'f0' declared here}}
+comment|// expected-note {{'f0' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function_decl
@@ -85,7 +85,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note {{'f2' declared here}}
+comment|// expected-note {{'f2' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function_decl
@@ -200,7 +200,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-note {{'f5' declared here}}
+comment|// expected-note {{'f5' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function_decl
@@ -250,7 +250,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note {{'f6' declared here}}
+comment|// expected-note {{'f6' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function

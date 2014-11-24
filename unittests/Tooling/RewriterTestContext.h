@@ -213,7 +213,6 @@ argument_list|,
 argument|StringRef Content
 argument_list|)
 block|{
-specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
@@ -255,15 +254,13 @@ argument_list|(
 name|Entry
 argument_list|,
 name|Source
-argument_list|,
-name|true
 argument_list|)
 block|;
 name|assert
 argument_list|(
 name|Entry
 operator|!=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 return|return
@@ -303,7 +300,7 @@ expr_stmt|;
 name|int
 name|FD
 decl_stmt|;
-name|llvm
+name|std
 operator|::
 name|error_code
 name|EC
@@ -371,7 +368,7 @@ name|assert
 argument_list|(
 name|File
 operator|!=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|StringRef
@@ -539,15 +536,29 @@ comment|// a FileEntry, as otherwise we'd read through an already opened file
 comment|// descriptor, which might not see the changes made.
 comment|// FIXME: Figure out whether there is a way to get the SourceManger to
 comment|// reopen the file.
-return|return
+name|std
+operator|::
+name|unique_ptr
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|>
+name|FileBuffer
+argument_list|(
 name|Files
 operator|.
 name|getBufferForFile
 argument_list|(
 name|Path
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|)
+argument_list|)
+block|;
+return|return
+name|FileBuffer
 operator|->
 name|getBuffer
 argument_list|()

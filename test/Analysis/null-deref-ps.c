@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,alpha.deadcode.IdempotentOperations,alpha.core -std=gnu99 -analyzer-store=region -analyzer-constraints=range -analyzer-purge=none -verify %s -Wno-error=return-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,alpha.core -std=gnu99 -analyzer-store=region -analyzer-constraints=range -analyzer-purge=none -verify %s -Wno-error=return-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,alpha.deadcode.IdempotentOperations,alpha.core -std=gnu99 -analyzer-store=region -analyzer-constraints=range -verify %s -Wno-error=return-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,alpha.core -std=gnu99 -analyzer-store=region -analyzer-constraints=range -verify %s -Wno-error=return-type
 end_comment
 
 begin_typedef
@@ -286,7 +286,6 @@ index|]
 operator|)
 condition|)
 block|{
-comment|// expected-warning{{Both operands to '==' always have the same value}}
 name|p
 operator|=
 literal|0
@@ -1409,7 +1408,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|// We use path sensitivity to get the function declaration. Even when the
-comment|// function pointer is cast to non pointer-to-const parameter type, we can
+comment|// function pointer is cast to non-pointer-to-const parameter type, we can
 comment|// find the right function declaration.
 if|if
 condition|(

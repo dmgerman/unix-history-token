@@ -391,19 +391,16 @@ name|friend
 name|class
 name|ASTWriter
 decl_stmt|;
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|unsigned
-function|)
 block|{
 name|MacroIDBit
-operator|=
+init|=
 literal|1U
 operator|<<
 literal|31
 block|}
-empty_stmt|;
+enum_decl|;
 name|public
 label|:
 name|SourceLocation
@@ -704,7 +701,6 @@ name|SM
 argument_list|)
 decl|const
 decl_stmt|;
-name|LLVM_ATTRIBUTE_USED
 name|std
 operator|::
 name|string
@@ -807,7 +803,7 @@ name|getRawEncoding
 argument_list|()
 return|;
 block|}
-comment|/// \brief A trival tuple used to represent a source range.
+comment|/// \brief A trivial tuple used to represent a source range.
 name|class
 name|SourceRange
 block|{
@@ -1244,7 +1240,7 @@ argument_list|()
 operator|:
 name|SrcMgr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|explicit
@@ -1303,32 +1299,28 @@ block|;
 name|unsigned
 name|getExpansionLineNumber
 argument_list|(
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getExpansionColumnNumber
 argument_list|(
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getSpellingLineNumber
 argument_list|(
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|getSpellingColumnNumber
 argument_list|(
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -1337,8 +1329,7 @@ name|char
 operator|*
 name|getCharacterData
 argument_list|(
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -1349,8 +1340,7 @@ name|MemoryBuffer
 operator|*
 name|getBuffer
 argument_list|(
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -1359,8 +1349,7 @@ comment|/// specified FileID.
 name|StringRef
 name|getBufferData
 argument_list|(
-argument|bool *Invalid =
-literal|0
+argument|bool *Invalid = nullptr
 argument_list|)
 specifier|const
 block|;
@@ -1480,7 +1469,6 @@ block|;
 comment|/// \brief Prints information about this FullSourceLoc to stderr.
 comment|///
 comment|/// This is useful for debugging.
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
@@ -1581,7 +1569,7 @@ argument_list|()
 operator|:
 name|Filename
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|PresumedLoc
@@ -1627,7 +1615,7 @@ block|{
 return|return
 name|Filename
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool
@@ -1638,7 +1626,7 @@ block|{
 return|return
 name|Filename
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Return the presumed filename of this location.

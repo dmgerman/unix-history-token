@@ -16,7 +16,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{'overloadable' attribute can only be applied to a function}}
+comment|// expected-error{{'overloadable' attribute only applies to functions}}
 end_comment
 
 begin_function_decl

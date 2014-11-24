@@ -66,5 +66,11 @@ parameter_list|)
 value|(x+y)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|TOP_OTHER_DEF_RIGHT_UNDEF
+end_undef
+
 end_unit
 

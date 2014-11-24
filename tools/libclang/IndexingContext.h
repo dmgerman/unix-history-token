@@ -188,11 +188,11 @@ name|name
 operator|=
 name|USR
 operator|=
-literal|0
+name|nullptr
 block|;
 name|attributes
 operator|=
-literal|0
+name|nullptr
 block|;
 name|numAttributes
 operator|=
@@ -288,7 +288,7 @@ name|isContainer
 block|;
 name|attributes
 operator|=
-literal|0
+name|nullptr
 block|;
 name|numAttributes
 operator|=
@@ -300,7 +300,7 @@ name|semanticContainer
 operator|=
 name|lexicalContainer
 operator|=
-literal|0
+name|nullptr
 block|;
 name|flags
 operator|=
@@ -342,7 +342,7 @@ name|isContainer
 block|;
 name|attributes
 operator|=
-literal|0
+name|nullptr
 block|;
 name|numAttributes
 operator|=
@@ -354,7 +354,7 @@ name|semanticContainer
 operator|=
 name|lexicalContainer
 operator|=
-literal|0
+name|nullptr
 block|;
 name|flags
 operator|=
@@ -520,8 +520,7 @@ comment|/*isForwardRef=*/
 argument|false
 argument_list|,
 comment|/*isRedeclaration=*/
-argument|D->getPreviousDecl() !=
-literal|0
+argument|D->getPreviousDecl() != nullptr
 argument_list|,
 comment|/*isImplementation=*/
 argument|false
@@ -809,7 +808,7 @@ name|IBCollInfo
 operator|.
 name|objcClass
 operator|=
-literal|0
+name|nullptr
 block|;   }
 name|IBOutletCollectionInfo
 argument_list|(
@@ -934,7 +933,7 @@ name|empty
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|CXAttrs
@@ -1081,15 +1080,15 @@ specifier|const
 name|Decl
 operator|*
 operator|>
-name|RefFileOccurence
+name|RefFileOccurrence
 expr_stmt|;
 name|llvm
 operator|::
 name|DenseSet
 operator|<
-name|RefFileOccurence
+name|RefFileOccurrence
 operator|>
-name|RefFileOccurences
+name|RefFileOccurrences
 block|;
 name|std
 operator|::
@@ -1285,7 +1284,7 @@ argument_list|)
 operator|:
 name|Ctx
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|ClientData
@@ -1309,10 +1308,7 @@ name|cxTU
 argument_list|)
 block|,
 name|StrScratch
-argument_list|(
-comment|/*size=*/
-literal|1024
-argument_list|)
+argument_list|()
 block|,
 name|StrAdapterCount
 argument_list|(
@@ -1486,7 +1482,7 @@ name|DeclContext
 operator|*
 name|DC
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|void
@@ -1496,8 +1492,7 @@ argument|TypeLoc TL
 argument_list|,
 argument|const NamedDecl *Parent
 argument_list|,
-argument|const DeclContext *DC =
-literal|0
+argument|const DeclContext *DC = nullptr
 argument_list|)
 block|;
 name|void
@@ -1507,8 +1502,7 @@ argument|NestedNameSpecifierLoc NNS
 argument_list|,
 argument|const NamedDecl *Parent
 argument_list|,
-argument|const DeclContext *DC =
-literal|0
+argument|const DeclContext *DC = nullptr
 argument_list|)
 block|;
 name|void
@@ -1538,7 +1532,7 @@ name|DeclContext
 operator|*
 name|DC
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|void
@@ -1741,8 +1735,7 @@ argument|const NamedDecl *Parent
 argument_list|,
 argument|const DeclContext *DC
 argument_list|,
-argument|const Expr *E =
-literal|0
+argument|const Expr *E = nullptr
 argument_list|,
 argument|CXIdxEntityRefKind Kind = CXIdxEntityRef_Direct
 argument_list|)
@@ -1758,8 +1751,7 @@ argument|const NamedDecl *Parent
 argument_list|,
 argument|const DeclContext *DC
 argument_list|,
-argument|const Expr *E =
-literal|0
+argument|const Expr *E = nullptr
 argument_list|,
 argument|CXIdxEntityRefKind Kind = CXIdxEntityRef_Direct
 argument_list|)
@@ -1872,8 +1864,7 @@ argument|CXCursor Cursor
 argument_list|,
 argument|DeclInfo&DInfo
 argument_list|,
-argument|const DeclContext *LexicalDC =
-literal|0
+argument|const DeclContext *LexicalDC = nullptr
 argument_list|)
 block|;
 name|bool

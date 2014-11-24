@@ -37,11 +37,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: fix-it:"{{.*}}":{8:10-8:13}:"///<"
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-4]]:10-[[@LINE-4]]:13}:"///<"
 end_comment
 
 begin_comment
-comment|// CHECK: fix-it:"{{.*}}":{9:10-9:13}:"/**<"
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-4]]:10-[[@LINE-4]]:13}:"/**<"
 end_comment
 
 end_unit

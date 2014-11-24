@@ -192,7 +192,7 @@ if|if
 condition|(
 name|FindResultReviewer
 operator|!=
-name|NULL
+name|nullptr
 condition|)
 block|{
 operator|*
@@ -225,7 +225,7 @@ block|}
 name|void
 name|onEndOfTranslationUnit
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|{
 if|if
 condition|(
@@ -281,15 +281,32 @@ block|;
 name|MatchFinder
 name|Finder
 block|;
+name|VerifyMatch
+name|VerifyFound
+argument_list|(
+name|nullptr
+argument_list|,
+operator|&
+name|Found
+argument_list|)
+block|;
 name|Finder
 operator|.
 name|addMatcher
 argument_list|(
-argument|AMatcher
+name|AMatcher
 argument_list|,
-argument|new VerifyMatch(
-literal|0
-argument|,&Found)
+operator|&
+name|VerifyFound
+argument_list|)
+block|;
+name|VerifyMatch
+name|VerifyDynamicFound
+argument_list|(
+name|nullptr
+argument_list|,
+operator|&
+name|DynamicFound
 argument_list|)
 block|;
 if|if
@@ -299,11 +316,10 @@ name|Finder
 operator|.
 name|addDynamicMatcher
 argument_list|(
-argument|AMatcher
+name|AMatcher
 argument_list|,
-argument|new VerifyMatch(
-literal|0
-argument|,&DynamicFound)
+operator|&
+name|VerifyDynamicFound
 argument_list|)
 condition|)
 return|return
@@ -314,7 +330,9 @@ argument_list|()
 operator|<<
 literal|"Could not add dynamic matcher"
 return|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|FrontendActionFactory
 operator|>
@@ -521,7 +539,9 @@ argument_list|,
 argument|bool ExpectResult
 argument_list|)
 block|{
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|BoundNodesCallback
 operator|>
@@ -538,16 +558,28 @@ block|;
 name|MatchFinder
 name|Finder
 block|;
+name|VerifyMatch
+name|VerifyVerifiedResult
+argument_list|(
+name|FindResultVerifier
+argument_list|,
+operator|&
+name|VerifiedResult
+argument_list|)
+block|;
 name|Finder
 operator|.
 name|addMatcher
 argument_list|(
-argument|AMatcher
+name|AMatcher
 argument_list|,
-argument|new VerifyMatch(FindResultVerifier,&VerifiedResult)
+operator|&
+name|VerifyVerifiedResult
 argument_list|)
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|FrontendActionFactory
 operator|>
@@ -652,7 +684,9 @@ name|VerifiedResult
 operator|=
 name|false
 expr_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ASTUnit
 operator|>

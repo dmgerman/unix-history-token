@@ -4,7 +4,7 @@ comment|// REQUIRES: aarch64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -target-feature +neon \
+comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment

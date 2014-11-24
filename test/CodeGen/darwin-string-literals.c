@@ -8,15 +8,15 @@ comment|// CHECK-LSB: @.str = private unnamed_addr constant [8 x i8] c"string0\0
 end_comment
 
 begin_comment
-comment|// CHECK-LSB: @.str1 = linker_private unnamed_addr constant [8 x i8] c"string1\00"
+comment|// CHECK-LSB: @.str1 = private unnamed_addr constant [8 x i8] c"string1\00"
 end_comment
 
 begin_comment
-comment|// CHECK-LSB: @.str2 = internal unnamed_addr constant [18 x i16] [i16 104, i16 101, i16 108, i16 108, i16 111, i16 32, i16 8594, i16 32, i16 9731, i16 32, i16 8592, i16 32, i16 119, i16 111, i16 114, i16 108, i16 100, i16 0], align 2
+comment|// CHECK-LSB: @.str2 = private unnamed_addr constant [18 x i16] [i16 104, i16 101, i16 108, i16 108, i16 111, i16 32, i16 8594, i16 32, i16 9731, i16 32, i16 8592, i16 32, i16 119, i16 111, i16 114, i16 108, i16 100, i16 0], section "__TEXT,__ustring", align 2
 end_comment
 
 begin_comment
-comment|// CHECK-LSB: @.str4 = internal unnamed_addr constant [6 x i16] [i16 116, i16 101, i16 115, i16 116, i16 8482, i16 0], align 2
+comment|// CHECK-LSB: @.str4 = private unnamed_addr constant [6 x i16] [i16 116, i16 101, i16 115, i16 116, i16 8482, i16 0], section "__TEXT,__ustring", align 2
 end_comment
 
 begin_comment
@@ -28,15 +28,15 @@ comment|// CHECK-MSB: @.str = private unnamed_addr constant [8 x i8] c"string0\0
 end_comment
 
 begin_comment
-comment|// CHECK-MSB: @.str1 = linker_private unnamed_addr constant [8 x i8] c"string1\00"
+comment|// CHECK-MSB: @.str1 = private unnamed_addr constant [8 x i8] c"string1\00"
 end_comment
 
 begin_comment
-comment|// CHECK-MSB: @.str2 = internal unnamed_addr constant [18 x i16] [i16 104, i16 101, i16 108, i16 108, i16 111, i16 32, i16 8594, i16 32, i16 9731, i16 32, i16 8592, i16 32, i16 119, i16 111, i16 114, i16 108, i16 100, i16 0], align 2
+comment|// CHECK-MSB: @.str2 = private unnamed_addr constant [18 x i16] [i16 104, i16 101, i16 108, i16 108, i16 111, i16 32, i16 8594, i16 32, i16 9731, i16 32, i16 8592, i16 32, i16 119, i16 111, i16 114, i16 108, i16 100, i16 0], section "__TEXT,__ustring", align 2
 end_comment
 
 begin_comment
-comment|// CHECK-MSB: @.str4 = internal unnamed_addr constant [6 x i16] [i16 116, i16 101, i16 115, i16 116, i16 8482, i16 0], align 2
+comment|// CHECK-MSB: @.str4 = private unnamed_addr constant [6 x i16] [i16 116, i16 101, i16 115, i16 116, i16 8482, i16 0], section "__TEXT,__ustring", align 2
 end_comment
 
 begin_decl_stmt

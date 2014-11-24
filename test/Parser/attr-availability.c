@@ -263,6 +263,32 @@ begin_comment
 comment|// expected-error {{expected string literal for optional message in 'availability' attribute}}
 end_comment
 
+begin_function_decl
+name|void
+name|f8
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(availability
+parameter_list|(
+name|macosx
+parameter_list|,
+name|message
+init|=
+literal|"a"
+literal|L"b"
+parameter_list|)
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error {{expected string literal for optional message in 'availability' attribute}}
+end_comment
+
 begin_comment
 comment|// rdar://10095131
 end_comment

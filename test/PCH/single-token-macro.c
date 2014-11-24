@@ -39,6 +39,27 @@ directive|define
 name|HEADER
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__stdcall
+end_ifdef
+
+begin_comment
+comment|// __stdcall is defined as __attribute__((__stdcall__)) for targeting mingw32.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|__stdcall
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

@@ -271,7 +271,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note{{'c5' declared here}}
+comment|// expected-note{{'c5' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function

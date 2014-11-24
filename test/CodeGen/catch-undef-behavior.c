@@ -72,15 +72,15 @@ comment|// PR6805
 end_comment
 
 begin_comment
-comment|// CHECK: @foo
+comment|// CHECK-LABEL: @foo
 end_comment
 
 begin_comment
-comment|// CHECK-NULL: @foo
+comment|// CHECK-NULL-LABEL: @foo
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @foo
+comment|// CHECK-TRAP-LABEL: @foo
 end_comment
 
 begin_function
@@ -113,7 +113,7 @@ comment|// CHECK-TRAP:      %[[PTRTOINT:.*]] = ptrtoint {{.*}}* %[[PTR]] to i64
 comment|// CHECK-TRAP-NEXT: %[[MISALIGN:.*]] = and i64 %[[PTRTOINT]], 3
 comment|// CHECK-TRAP-NEXT: %[[CHECK2:.*]] = icmp eq i64 %[[MISALIGN]], 0
 comment|// CHECK:      %[[OK:.*]] = and i1 %[[CHECK01]], %[[CHECK2]]
-comment|// CHECK-NEXT: br i1 %[[OK]], {{.*}} !prof ![[WEIGHT_MD:.*]]
+comment|// CHECK-NEXT: br i1 %[[OK]], {{.*}} !prof ![[WEIGHT_MD:.*]], !nosanitize
 comment|// CHECK-TRAP:      %[[OK:.*]] = and i1 %[[CHECK01]], %[[CHECK2]]
 comment|// CHECK-TRAP-NEXT: br i1 %[[OK]], {{.*}}
 comment|// CHECK:      %[[ARG:.*]] = ptrtoint {{.*}} %[[PTR]] to i64
@@ -137,11 +137,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @bar
+comment|// CHECK-LABEL: @bar
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @bar
+comment|// CHECK-TRAP-LABEL: @bar
 end_comment
 
 begin_function
@@ -178,7 +178,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @addr_space
+comment|// CHECK-LABEL: @addr_space
 end_comment
 
 begin_decl_stmt
@@ -208,11 +208,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @lsh_overflow
+comment|// CHECK-LABEL: @lsh_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @lsh_overflow
+comment|// CHECK-TRAP-LABEL: @lsh_overflow
 end_comment
 
 begin_function
@@ -265,11 +265,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @rsh_inbounds
+comment|// CHECK-LABEL: @rsh_inbounds
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @rsh_inbounds
+comment|// CHECK-TRAP-LABEL: @rsh_inbounds
 end_comment
 
 begin_function
@@ -308,11 +308,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @load
+comment|// CHECK-LABEL: @load
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @load
+comment|// CHECK-TRAP-LABEL: @load
 end_comment
 
 begin_function
@@ -338,11 +338,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @store
+comment|// CHECK-LABEL: @store
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @store
+comment|// CHECK-TRAP-LABEL: @store
 end_comment
 
 begin_function
@@ -383,11 +383,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: @member_access
+comment|// CHECK-LABEL: @member_access
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @member_access
+comment|// CHECK-TRAP-LABEL: @member_access
 end_comment
 
 begin_function
@@ -417,11 +417,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @signed_overflow
+comment|// CHECK-LABEL: @signed_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @signed_overflow
+comment|// CHECK-TRAP-LABEL: @signed_overflow
 end_comment
 
 begin_function
@@ -452,11 +452,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @no_return
+comment|// CHECK-LABEL: @no_return
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @no_return
+comment|// CHECK-TRAP-LABEL: @no_return
 end_comment
 
 begin_function
@@ -477,7 +477,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @vla_bound
+comment|// CHECK-LABEL: @vla_bound
 end_comment
 
 begin_function
@@ -507,7 +507,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @int_float_no_overflow
+comment|// CHECK-LABEL: @int_float_no_overflow
 end_comment
 
 begin_function
@@ -526,11 +526,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @int_float_overflow
+comment|// CHECK-LABEL: @int_float_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @int_float_overflow
+comment|// CHECK-TRAP-LABEL: @int_float_overflow
 end_comment
 
 begin_function
@@ -556,11 +556,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @int_fp16_overflow
+comment|// CHECK-LABEL: @int_fp16_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @int_fp16_overflow
+comment|// CHECK-TRAP-LABEL: @int_fp16_overflow
 end_comment
 
 begin_function
@@ -594,11 +594,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @float_int_overflow
+comment|// CHECK-LABEL: @float_int_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @float_int_overflow
+comment|// CHECK-TRAP-LABEL: @float_int_overflow
 end_comment
 
 begin_function
@@ -628,11 +628,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @long_double_int_overflow
+comment|// CHECK-LABEL: @long_double_int_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @long_double_int_overflow
+comment|// CHECK-TRAP-LABEL: @long_double_int_overflow
 end_comment
 
 begin_function
@@ -648,7 +648,7 @@ comment|// CHECK: alloca x86_fp80
 comment|// CHECK: %[[GE:.*]] = fcmp ogt x86_fp80 %[[F:.*]], 0xKC01E8000000100000000
 comment|// CHECK: %[[LE:.*]] = fcmp olt x86_fp80 %[[F]], 0xK401E8000000000000000
 comment|// CHECK: and i1 %[[GE]], %[[LE]]
-comment|// CHECK: store x86_fp80 %[[F]], x86_fp80* %[[ALLOCA:.*]]
+comment|// CHECK: store x86_fp80 %[[F]], x86_fp80* %[[ALLOCA:.*]], !nosanitize
 comment|// CHECK: %[[ARG:.*]] = ptrtoint x86_fp80* %[[ALLOCA]] to i64
 comment|// CHECK: call void @__ubsan_handle_float_cast_overflow({{.*}}, i64 %[[ARG]]
 comment|// CHECK-TRAP: %[[GE:.*]] = fcmp ogt x86_fp80 %[[F:.*]], 0xKC01E800000010000000
@@ -664,11 +664,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @float_uint_overflow
+comment|// CHECK-LABEL: @float_uint_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @float_uint_overflow
+comment|// CHECK-TRAP-LABEL: @float_uint_overflow
 end_comment
 
 begin_function
@@ -696,11 +696,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @fp16_char_overflow
+comment|// CHECK-LABEL: @fp16_char_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @fp16_char_overflow
+comment|// CHECK-TRAP-LABEL: @fp16_char_overflow
 end_comment
 
 begin_function
@@ -731,11 +731,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @float_float_overflow
+comment|// CHECK-LABEL: @float_float_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-TRAP: @float_float_overflow
+comment|// CHECK-TRAP-LABEL: @float_float_overflow
 end_comment
 
 begin_function
@@ -766,11 +766,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:          @int_divide_overflow
+comment|// CHECK-LABEL:          @int_divide_overflow
 end_comment
 
 begin_comment
-comment|// CHECK-OVERFLOW: @int_divide_overflow
+comment|// CHECK-OVERFLOW-LABEL: @int_divide_overflow
 end_comment
 
 begin_function
@@ -815,7 +815,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @sour_bool
+comment|// CHECK-LABEL: @sour_bool
 end_comment
 
 begin_function

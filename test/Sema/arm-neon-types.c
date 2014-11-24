@@ -84,7 +84,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// expected-error {{argument should be a value from 1 to 32}} expected-error {{incompatible result type}}
+comment|// expected-error {{argument should be a value from 1 to 32}}
 block|}
 end_function
 

@@ -114,18 +114,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|BumpPtrAllocator
-decl_stmt|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -406,10 +402,10 @@ range|:
 name|public
 name|SymExpr
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 specifier|const
 name|SymbolID
@@ -549,12 +545,12 @@ argument_list|(
 name|R
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& profile
 argument_list|)
+name|override
 block|{
 name|Profile
 argument_list|(
@@ -563,18 +559,19 @@ argument_list|,
 name|R
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 name|QualType
 name|getType
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|// Implement isa<T> support.
 specifier|static
@@ -709,14 +706,15 @@ name|QualType
 name|getType
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -780,12 +778,12 @@ argument_list|(
 name|SymbolTag
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& profile
 argument_list|)
+name|override
 block|{
 name|Profile
 argument_list|(
@@ -890,14 +888,15 @@ name|QualType
 name|getType
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -934,12 +933,12 @@ argument_list|(
 name|parent
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& profile
 argument_list|)
+name|override
 block|{
 name|Profile
 argument_list|(
@@ -1020,14 +1019,15 @@ name|QualType
 name|getType
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -1055,12 +1055,12 @@ argument_list|(
 name|R
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& profile
 argument_list|)
+name|override
 block|{
 name|Profile
 argument_list|(
@@ -1215,14 +1215,15 @@ name|QualType
 name|getType
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -1286,12 +1287,12 @@ argument_list|(
 name|Tag
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& profile
 argument_list|)
+name|override
 block|{
 name|Profile
 argument_list|(
@@ -1383,6 +1384,7 @@ name|QualType
 name|getType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|ToTy
@@ -1399,13 +1401,13 @@ return|return
 name|Operand
 return|;
 block|}
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -1456,6 +1458,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
+name|override
 block|{
 name|Profile
 argument_list|(
@@ -1537,6 +1540,7 @@ name|QualType
 name|getType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|T
@@ -1633,13 +1637,13 @@ argument_list|(
 argument|rhs
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|SymExpr
@@ -1724,6 +1728,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
+name|override
 block|{
 name|Profile
 argument_list|(
@@ -1811,13 +1816,13 @@ argument_list|(
 argument|rhs
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|SymExpr
@@ -1902,6 +1907,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
+name|override
 block|{
 name|Profile
 argument_list|(
@@ -2009,13 +2015,13 @@ return|return
 name|RHS
 return|;
 block|}
-name|virtual
 name|void
 name|dumpToStream
 argument_list|(
 argument|raw_ostream&os
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|void
@@ -2075,6 +2081,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|)
+name|override
 block|{
 name|Profile
 argument_list|(
@@ -2240,8 +2247,7 @@ argument|QualType T
 argument_list|,
 argument|unsigned VisitCount
 argument_list|,
-argument|const void *SymbolTag =
-literal|0
+argument|const void *SymbolTag = nullptr
 argument_list|)
 block|;
 specifier|const
@@ -2255,8 +2261,7 @@ argument|const LocationContext *LCtx
 argument_list|,
 argument|unsigned VisitCount
 argument_list|,
-argument|const void *SymbolTag =
-literal|0
+argument|const void *SymbolTag = nullptr
 argument_list|)
 block|{
 return|return
@@ -2307,7 +2312,7 @@ name|SymbolMetadata
 operator|*
 name|getMetadataSymbol
 argument_list|(
-argument|const MemRegion* R
+argument|const MemRegion *R
 argument_list|,
 argument|const Stmt *S
 argument_list|,
@@ -2315,8 +2320,7 @@ argument|QualType T
 argument_list|,
 argument|unsigned VisitCount
 argument_list|,
-argument|const void *SymbolTag =
-literal|0
+argument|const void *SymbolTag = nullptr
 argument_list|)
 block|;
 specifier|const
@@ -2584,7 +2588,7 @@ argument_list|)
 block|,
 name|reapedStore
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|storeMgr
 argument_list|)

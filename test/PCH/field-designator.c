@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 %s -include %s
+comment|// RUN: %clang_cc1 %s -include %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 %s -emit-pch -o %t.pch
+comment|// RUN: %clang_cc1 %s -emit-pch -o %t.pch
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -cc1 %s -include-pch %t.pch
+comment|// RUN: %clang_cc1 %s -include-pch %t.pch
 end_comment
 
 begin_comment

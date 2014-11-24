@@ -72,11 +72,11 @@ block|}
 end_function
 
 begin_comment
-comment|// Currently we suggest to replace only 'float' here because we don't store
+comment|// TODO: Store qualifier source locations for return types so
 end_comment
 
 begin_comment
-comment|// enough source locations.
+comment|// we can replace the full type with this fix-it.
 end_comment
 
 begin_comment
@@ -124,11 +124,15 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|// expected-error@+2 {{conflicting types for 'main}}
+comment|// expected-error@+3 {{conflicting types for 'main}}
 end_comment
 
 begin_comment
-comment|// expected-warning@+1 {{return type of 'main' is not 'int'}}
+comment|// expected-warning@+2 {{return type of 'main' is not 'int'}}
+end_comment
+
+begin_comment
+comment|// expected-note@+1 {{change return type to 'int'}}
 end_comment
 
 begin_function
@@ -136,6 +140,7 @@ name|fptr
 name|main
 parameter_list|()
 block|{
+comment|// CHECK: fix-it:"{{.*}}":{[[@LINE-1]]:1-[[@LINE-1]]:5}:"int"
 return|return
 operator|(
 name|fptr

@@ -3,6 +3,14 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple=powerpc-apple-darwin8 -faltivec -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple=powerpc64-unknown-linux-gnu -faltivec -fsyntax-only -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple=powerpc64le-unknown-linux-gnu -faltivec -fsyntax-only -verify %s
+end_comment
+
 begin_decl_stmt
 name|__vector
 name|char
@@ -873,12 +881,12 @@ name|gv8
 operator|=
 name|gccv
 expr_stmt|;
-comment|// expected-error {{assigning to '__attribute__((__vector_size__(2 * sizeof(unsigned int)))) unsigned int' from incompatible type '__attribute__((__vector_size__(4 * sizeof(unsigned int)))) unsigned int'}}
+comment|// expected-error {{assigning to '__attribute__((__vector_size__(2 * sizeof(unsigned int)))) unsigned int' (vector of 2 'unsigned int' values) from incompatible type '__attribute__((__vector_size__(4 * sizeof(unsigned int)))) unsigned int' (vector of 4 'unsigned int' values)}}
 name|av
 operator|=
 name|gv8
 expr_stmt|;
-comment|// expected-error {{assigning to '__vector unsigned int' from incompatible type '__attribute__((__vector_size__(2 * sizeof(unsigned int)))) unsigned int'}}
+comment|// expected-error {{assigning to '__vector unsigned int' (vector of 4 'unsigned int' values) from incompatible type '__attribute__((__vector_size__(2 * sizeof(unsigned int)))) unsigned int' (vector of 2 'unsigned int' values)}}
 name|v
 operator|=
 name|gccv

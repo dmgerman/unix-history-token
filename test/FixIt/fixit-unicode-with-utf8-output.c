@@ -16,6 +16,10 @@ comment|// RUN: not %clang_cc1 -fsyntax-only %S/fixit-unicode.c 2>&1 | FileCheck
 end_comment
 
 begin_comment
+comment|// REQUIRES: utf8-capable-terminal
+end_comment
+
+begin_comment
 comment|// CHECK: warning: format specifies type 'int' but the argument has type 'long'
 end_comment
 

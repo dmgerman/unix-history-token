@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: not %clang_cc1 -fsyntax-only -ast-dump %s | FileCheck %s
+end_comment
+
 begin_function
 name|void
 name|f
@@ -23,7 +27,7 @@ literal|10
 argument_list|)
 decl_stmt|;
 comment|// expected-warning{{implicitly declaring library function 'malloc' with type}} \
-comment|// expected-note{{please include the header<stdlib.h> or explicitly provide a declaration for 'malloc'}} \
+comment|// expected-note{{include the header<stdlib.h> or explicitly provide a declaration for 'malloc'}} \
 comment|// expected-note{{'malloc' is a builtin with type 'void *}}
 block|}
 end_function
@@ -270,6 +274,46 @@ name|float
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_struct
+struct|struct
+name|__jmp_buf_tag
+block|{}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|sigsetjmp
+parameter_list|(
+name|struct
+name|__jmp_buf_tag
+type|[
+function_decl|1]
+operator|,
+function_decl|int
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-warning{{declaration of built-in function 'sigsetjmp' requires inclusion of the header<setjmp.h>}}
+end_comment
+
+begin_comment
+comment|// CHECK:     FunctionDecl {{.*}}<line:[[@LINE-2]]:1, col:44> col:6 sigsetjmp '
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: FunctionDecl
+end_comment
+
+begin_comment
+comment|// CHECK:     ReturnsTwiceAttr {{.*}}<{{.*}}> Implicit
+end_comment
 
 end_unit
 

@@ -769,5 +769,45 @@ comment|// CHECK: and i16 {{.*}}, -1024
 block|}
 end_function
 
+begin_comment
+comment|// CHECK-LABEL: @PR20473
+end_comment
+
+begin_function
+name|void
+name|PR20473
+parameter_list|()
+block|{
+comment|// CHECK: memcpy{{.*}}([2 x i8]* @
+name|bar
+argument_list|(
+operator|(
+name|char
+index|[
+literal|2
+index|]
+operator|)
+block|{
+literal|""
+block|}
+argument_list|)
+expr_stmt|;
+comment|// CHECK: memcpy{{.*}}([3 x i8]* @
+name|bar
+argument_list|(
+operator|(
+name|char
+index|[
+literal|3
+index|]
+operator|)
+block|{
+literal|""
+block|}
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

@@ -2238,13 +2238,10 @@ literal|4
 block|,
 name|nonconst_value
 argument_list|()
+comment|// expected-error{{initializer element is not a compile-time constant}}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// expected-error{{initializer element is not a compile-time constant}}
-end_comment
 
 begin_comment
 comment|//<rdar://problem/10636946>

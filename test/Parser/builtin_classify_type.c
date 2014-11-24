@@ -54,7 +54,7 @@ name|a
 argument_list|)
 index|]
 decl_stmt|;
-comment|// expected-error{{variable length array declaration can not have 'static' storage duration}}
+comment|// expected-error{{variable length array declaration cannot have 'static' storage duration}}
 specifier|static
 name|int
 name|ary3

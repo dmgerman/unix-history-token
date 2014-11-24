@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: x86-64-registered-target
+comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
@@ -116,7 +116,9 @@ literal|2
 expr_stmt|;
 asm|__asm {
 asm|lea ebx, foo
+asm|{
 asm|mov eax, [ebx].foo.a
+asm|}
 asm|mov [ebx].foo.b, ecx
 asm|}
 return|return

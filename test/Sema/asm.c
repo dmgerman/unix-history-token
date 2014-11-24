@@ -25,6 +25,10 @@ asm|asm ("foo\n" : "=a" (i) : "[foo" (i));
 comment|// expected-error {{invalid input constraint '[foo' in asm}}
 asm|asm ("foo\n" : "=a" (i) : "[symbolic_name]" (i));
 comment|// expected-error {{invalid input constraint '[symbolic_name]' in asm}}
+asm|asm ("foo\n" : : "" (i));
+comment|// expected-error {{invalid input constraint '' in asm}}
+asm|asm ("foo\n" : "=a" (i) : "" (i));
+comment|// expected-error {{invalid input constraint '' in asm}}
 block|}
 end_function
 
@@ -231,21 +235,6 @@ comment|// expected-error{{invalid input constraint '[foo]1' in asm}}
 block|}
 end_function
 
-begin_decl_stmt
-specifier|register
-name|int
-name|g
-name|asm
-argument_list|(
-literal|"dx"
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-error{{global register variables are not supported}}
-end_comment
-
 begin_function
 name|void
 name|test10
@@ -448,6 +437,73 @@ asm|__asm("0.0":"=g"(ret));
 comment|// no-error
 return|return
 name|ret
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// PR19837
+end_comment
+
+begin_struct
+struct|struct
+name|foo
+block|{
+name|int
+name|a
+decl_stmt|;
+name|char
+name|b
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|foo
+name|bar
+name|asm
+argument_list|(
+literal|"sp"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{bad type for named register variable}}
+end_comment
+
+begin_decl_stmt
+specifier|register
+name|float
+name|baz
+name|asm
+argument_list|(
+literal|"sp"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{bad type for named register variable}}
+end_comment
+
+begin_function
+name|double
+name|f_output_constraint
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|double
+name|result
+decl_stmt|;
+asm|__asm("foo1": "=f" (result));
+comment|// expected-error {{invalid output constraint '=f' in asm}}
+return|return
+name|result
 return|;
 block|}
 end_function

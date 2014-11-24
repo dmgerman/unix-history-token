@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm-only  -triple i386-apple-darwin9 %s
+comment|// RUN: %clang_cc1 -emit-llvm-only  -triple i386-apple-darwin9 -fdump-record-layouts %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -660,6 +660,114 @@ argument_list|)
 operator|==
 literal|48
 operator|)
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// rdar://15926990
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|2
+name|)
+end_pragma
+
+begin_struct
+struct|struct
+name|test0
+block|{
+name|unsigned
+name|long
+name|a
+range|:
+literal|8
+decl_stmt|;
+name|unsigned
+name|long
+name|b
+range|:
+literal|8
+decl_stmt|;
+name|unsigned
+name|long
+name|c
+range|:
+literal|8
+decl_stmt|;
+name|unsigned
+name|long
+name|d
+range|:
+literal|10
+decl_stmt|;
+name|unsigned
+name|long
+name|e
+range|:
+literal|1
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__ms_struct__
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_comment
+comment|// CHECK:      Type: struct test0
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: Record:
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: Layout:
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   Size:64
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   DataSize:64
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   Alignment:16
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:   FieldOffsets: [0, 8, 16, 32, 42]>
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|test0
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|test0
+argument_list|)
+operator|==
+literal|8
+operator|)
+condition|?
+literal|1
+else|:
 operator|-
 literal|1
 index|]

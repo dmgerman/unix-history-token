@@ -144,7 +144,8 @@ argument_list|,
 literal|1976
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i32* %val, i32 4, i32 1976 seq_cst
+comment|// CHECK: [[PAIR:%[a-z0-9_.]+]] = cmpxchg i32* %val, i32 4, i32 1976 seq_cst
+comment|// CHECK: extractvalue { i32, i1 } [[PAIR]], 0
 name|old
 operator|=
 name|__sync_bool_compare_and_swap
@@ -157,7 +158,8 @@ argument_list|,
 literal|1976
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i32* %val, i32 4, i32 1976 seq_cst
+comment|// CHECK: [[PAIR:%[a-z0-9_.]+]] = cmpxchg i32* %val, i32 4, i32 1976 seq_cst
+comment|// CHECK: extractvalue { i32, i1 } [[PAIR]], 1
 name|old
 operator|=
 name|__sync_fetch_and_and
@@ -268,7 +270,8 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i32* null, i32 0, i32 0 seq_cst
+comment|// CHECK: [[PAIR:%[a-z0-9_.]+]] = cmpxchg i32* null, i32 0, i32 0 seq_cst
+comment|// CHECK: extractvalue { i32, i1 } [[PAIR]], 0
 if|if
 condition|(
 name|__sync_val_compare_and_swap
@@ -282,7 +285,9 @@ literal|1
 argument_list|)
 condition|)
 block|{
-comment|// CHECK: cmpxchg i8* %valb, i8 0, i8 1 seq_cst
+comment|// CHECK: [[PAIR:%[a-z0-9_.]+]] = cmpxchg i8* %valb, i8 0, i8 1 seq_cst
+comment|// CHECK: [[VAL:%[a-z0-9_.]+]] = extractvalue { i8, i1 } [[PAIR]], 0
+comment|// CHECK: trunc i8 [[VAL]] to i1
 name|old
 operator|=
 literal|42

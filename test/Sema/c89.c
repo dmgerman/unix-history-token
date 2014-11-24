@@ -605,6 +605,18 @@ begin_comment
 comment|/* expected-error {{'main' must return 'int'}} */
 end_comment
 
+begin_function
+specifier|const
+name|int
+name|main
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|/* expected-error {{'main' must return 'int'}} */
+end_comment
+
 begin_decl_stmt
 name|long
 name|long

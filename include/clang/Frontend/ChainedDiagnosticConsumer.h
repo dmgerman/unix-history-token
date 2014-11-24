@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -77,13 +77,17 @@ name|void
 name|anchor
 argument_list|()
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|DiagnosticConsumer
 operator|>
 name|Primary
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|DiagnosticConsumer
 operator|>
@@ -112,7 +116,6 @@ argument_list|(
 name|_Secondary
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|BeginSourceFile
 argument_list|(
@@ -120,6 +123,7 @@ argument|const LangOptions&LO
 argument_list|,
 argument|const Preprocessor *PP
 argument_list|)
+name|override
 block|{
 name|Primary
 operator|->
@@ -139,10 +143,10 @@ argument_list|,
 name|PP
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|EndSourceFile
 argument_list|()
+name|override
 block|{
 name|Secondary
 operator|->
@@ -154,10 +158,10 @@ operator|->
 name|EndSourceFile
 argument_list|()
 block|;   }
-name|virtual
 name|void
 name|finish
 argument_list|()
+name|override
 block|{
 name|Secondary
 operator|->
@@ -169,11 +173,11 @@ operator|->
 name|finish
 argument_list|()
 block|;   }
-name|virtual
 name|bool
 name|IncludeInDiagnosticCounts
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Primary
@@ -182,7 +186,6 @@ name|IncludeInDiagnosticCounts
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -190,6 +193,7 @@ argument|DiagnosticsEngine::Level DiagLevel
 argument_list|,
 argument|const Diagnostic&Info
 argument_list|)
+name|override
 block|{
 comment|// Default implementation (Warnings/errors count).
 name|DiagnosticConsumer

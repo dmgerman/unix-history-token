@@ -596,7 +596,7 @@ comment|// SHA-NOT: #define __SSE3__ 1
 end_comment
 
 begin_comment
-comment|// run: %clang -target i386-unknown-unknown -march=pentiumpro -msha -mno-sha -x c -e -dm -o - %s | filecheck --check-prefix=SHANOSHA %s
+comment|// RUN: %clang -target i386-unknown-unknown -march=pentiumpro -msha -mno-sha -x c -E -dM -o - %s | FileCheck --check-prefix=SHANOSHA %s
 end_comment
 
 begin_comment
@@ -608,19 +608,19 @@ comment|// SHANOSHA-NOT: #define __SSE2__ 1
 end_comment
 
 begin_comment
-comment|// run: %clang -target i386-unknown-unknown -march=pentiumpro -msha -mno-sse2 -x c -e -dm -o - %s | filecheck --check-prefix=SHANOSSE2 %s
+comment|// RUN: %clang -target i386-unknown-unknown -march=pentiumpro -msha -mno-sse2 -x c -E -dM -o - %s | FileCheck --check-prefix=SHANOSSE2 %s
 end_comment
 
 begin_comment
-comment|// SHANOSSSE2-NOT: #define __SHA__ 1
+comment|// SHANOSSE2-NOT: #define __SHA__ 1
 end_comment
 
 begin_comment
-comment|// SHANOSSSE2-NOT: #define __SSE2__ 1
+comment|// SHANOSSE2-NOT: #define __SSE2__ 1
 end_comment
 
 begin_comment
-comment|// SHANOSSSE2-NOT: #define __SSE3__ 1
+comment|// SHANOSSE2-NOT: #define __SSE3__ 1
 end_comment
 
 begin_comment

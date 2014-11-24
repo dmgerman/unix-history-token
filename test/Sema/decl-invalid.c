@@ -119,20 +119,5 @@ begin_comment
 comment|// expected-error {{illegal storage class on file-scoped variable}}
 end_comment
 
-begin_decl_stmt
-specifier|register
-name|int
-name|test2
-name|__asm__
-argument_list|(
-literal|"edi"
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-error {{global register variables are not supported}}
-end_comment
-
 end_unit
 

@@ -24,7 +24,7 @@ file|"d.h"
 end_include
 
 begin_comment
-comment|// expected-error {{use of a module not declared used}}
+comment|// expected-error {{does not depend on a module exporting}}
 end_comment
 
 begin_include

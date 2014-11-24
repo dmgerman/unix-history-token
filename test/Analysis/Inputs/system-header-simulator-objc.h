@@ -534,19 +534,36 @@ operator|<
 name|NSCopying
 decl_stmt|,
 name|NSCoding
-decl|>  -
+decl|> +
 argument_list|(
-name|void
+name|NSValue
+operator|*
 argument_list|)
-name|getValue
+name|valueWithPointer
 range|:
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+operator|-
+operator|(
+name|void
+operator|)
+name|getValue
+operator|:
 operator|(
 name|void
 operator|*
 operator|)
 name|value
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 unit|@

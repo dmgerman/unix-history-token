@@ -12,7 +12,7 @@ comment|// RUN: %clang -arch armv7em -dM -E %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -arch armv7 -target thumbv7-apple-darwin-eabi -dM -E %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple thumbv7m-apple-unknown-macho -dM -E %s | FileCheck %s
 end_comment
 
 begin_comment

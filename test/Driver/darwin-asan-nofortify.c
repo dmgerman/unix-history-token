@@ -4,11 +4,7 @@ comment|// Make sure AddressSanitizer disables _FORTIFY_SOURCE on Darwin.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -faddress-sanitizer %s -E -dM -target x86_64-darwin - | FileCheck %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang -fsanitize=address  %s -E -dM -target x86_64-darwin - | FileCheck %s
+comment|// RUN: %clang -fsanitize=address  %s -E -dM -target x86_64-darwin | FileCheck %s
 end_comment
 
 begin_comment

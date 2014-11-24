@@ -40,7 +40,7 @@ comment|// CHECK-RECORD: Layout:<CGRecordLayout
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:   LLVMType:%struct.s0 = type<{ [3 x i8] }>
+comment|// CHECK-RECORD:   LLVMType:%struct.s0 = type { [3 x i8] }
 end_comment
 
 begin_comment
@@ -255,7 +255,7 @@ comment|// CHECK-RECORD: Layout:<CGRecordLayout
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:   LLVMType:%struct.s1 = type<{ [3 x i8] }>
+comment|// CHECK-RECORD:   LLVMType:%struct.s1 = type { [3 x i8] }
 end_comment
 
 begin_comment
@@ -526,7 +526,7 @@ comment|// CHECK-RECORD: Layout:<CGRecordLayout
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:   LLVMType:%union.u2 = type<{ i8 }>
+comment|// CHECK-RECORD:   LLVMType:%union.u2 = type { i8 }
 end_comment
 
 begin_comment
@@ -1522,7 +1522,7 @@ comment|// CHECK-RECORD: Layout:<CGRecordLayout
 end_comment
 
 begin_comment
-comment|// CHECK-RECORD:   LLVMType:%struct.s7 = type { i32, i32, i32, i8, [3 x i8], [4 x i8], [12 x i8] }
+comment|// CHECK-RECORD:   LLVMType:%struct.s7 = type { i32, i32, i32, i8, i32, [12 x i8] }
 end_comment
 
 begin_comment

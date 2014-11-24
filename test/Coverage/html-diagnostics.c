@@ -12,6 +12,10 @@ comment|// RUN: cat %t/*.html | FileCheck %s
 end_comment
 
 begin_comment
+comment|// REQUIRES: staticanalyzer
+end_comment
+
+begin_comment
 comment|// Because of the glob (*.html)
 end_comment
 

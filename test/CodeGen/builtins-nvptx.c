@@ -4,10 +4,6 @@ comment|// REQUIRES: nvptx-registered-target
 end_comment
 
 begin_comment
-comment|// REQUIRES: nvptx64-registered-target
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -triple nvptx-unknown-unknown -S -emit-llvm -o - %s | FileCheck %s
 end_comment
 

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64 -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple arm64-linux-gnu -emit-llvm -o - %s | FileCheck --check-prefix=CHECK --check-prefix=CHECK-LE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm64_be-linux-gnu -emit-llvm -o - %s | FileCheck --check-prefix=CHECK --check-prefix=CHECK-BE %s
 end_comment
 
 begin_include
@@ -50,12 +54,18 @@ comment|// CHECK: br i1 [[INREG]], label %[[VAARG_IN_REG:[a-z_.0-9]+]], label %[
 comment|// CHECK: [[VAARG_IN_REG]]
 comment|// CHECK: [[REG_TOP:%[a-z_0-9]+]] = load i8** getelementptr inbounds (%struct.__va_list* @the_list, i32 0, i32 1)
 comment|// CHECK: [[REG_ADDR:%[a-z_0-9]+]] = getelementptr i8* [[REG_TOP]], i32 [[GR_OFFS]]
+comment|// CHECK-BE: [[REG_ADDR_VAL:%[0-9]+]] = ptrtoint i8* [[REG_ADDR]] to i64
+comment|// CHECK-BE: [[REG_ADDR_VAL_ALIGNED:%[a-z_0-9]*]] = add i64 [[REG_ADDR_VAL]], 4
+comment|// CHECK-BE: [[REG_ADDR:%[0-9]+]] = inttoptr i64 [[REG_ADDR_VAL_ALIGNED]] to i8*
 comment|// CHECK: [[FROMREG_ADDR:%[a-z_0-9]+]] = bitcast i8* [[REG_ADDR]] to i32*
 comment|// CHECK: br label %[[VAARG_END:[a-z._0-9]+]]
 comment|// CHECK: [[VAARG_ON_STACK]]
 comment|// CHECK: [[STACK:%[a-z_0-9]+]] = load i8** getelementptr inbounds (%struct.__va_list* @the_list, i32 0, i32 0)
 comment|// CHECK: [[NEW_STACK:%[a-z_0-9]+]] = getelementptr i8* [[STACK]], i32 8
 comment|// CHECK: store i8* [[NEW_STACK]], i8** getelementptr inbounds (%struct.__va_list* @the_list, i32 0, i32 0)
+comment|// CHECK-BE: [[STACK_VAL:%[0-9]+]] = ptrtoint i8* [[STACK]] to i64
+comment|// CHECK-BE: [[STACK_VAL_ALIGNED:%[a-z_0-9]*]] = add i64 [[STACK_VAL]], 4
+comment|// CHECK-BE: [[STACK:%[0-9]+]] = inttoptr i64 [[STACK_VAL_ALIGNED]] to i8*
 comment|// CHECK: [[FROMSTACK_ADDR:%[a-z_0-9]+]] = bitcast i8* [[STACK]] to i32*
 comment|// CHECK: br label %[[VAARG_END]]
 comment|// CHECK: [[VAARG_END]]
@@ -248,7 +258,7 @@ argument_list|)
 return|;
 comment|// CHECK: [[VR_OFFS:%[a-z_0-9]+]] = load i32* getelementptr inbounds (%struct.__va_list* @the_list, i32 0, i32 4)
 comment|// CHECK: [[EARLY_ONSTACK:%[a-z_0-9]+]] = icmp sge i32 [[VR_OFFS]], 0
-comment|// CHECK: br i1 [[EARLY_ONSTACK]], label %[[VAARG_ON_STACK]], label %[[VAARG_MAYBE_REG]]
+comment|// CHECK: br i1 [[EARLY_ONSTACK]], label %[[VAARG_ON_STACK:[a-z_.0-9]+]], label %[[VAARG_MAYBE_REG]]
 comment|// CHECK: [[VAARG_MAYBE_REG]]
 comment|// CHECK: [[NEW_REG_OFFS:%[a-z_0-9]+]] = add i32 [[VR_OFFS]], 16
 comment|// CHECK: store i32 [[NEW_REG_OFFS]], i32* getelementptr inbounds (%struct.__va_list* @the_list, i32 0, i32 4)
@@ -257,8 +267,11 @@ comment|// CHECK: br i1 [[INREG]], label %[[VAARG_IN_REG:[a-z_.0-9]+]], label %[
 comment|// CHECK: [[VAARG_IN_REG]]
 comment|// CHECK: [[REG_TOP:%[a-z_0-9]+]] = load i8** getelementptr inbounds (%struct.__va_list* @the_list, i32 0, i32 2)
 comment|// CHECK: [[REG_ADDR:%[a-z_0-9]+]] = getelementptr i8* [[REG_TOP]], i32 [[VR_OFFS]]
+comment|// CHECK-BE: [[REG_ADDR_VAL:%[0-9]+]] = ptrtoint i8* [[REG_ADDR]] to i64
+comment|// CHECK-BE: [[REG_ADDR_VAL_ALIGNED:%[a-z_0-9]*]] = add i64 [[REG_ADDR_VAL]], 8
+comment|// CHECK-BE: [[REG_ADDR:%[0-9]+]] = inttoptr i64 [[REG_ADDR_VAL_ALIGNED]] to i8*
 comment|// CHECK: [[FROMREG_ADDR:%[a-z_0-9]+]] = bitcast i8* [[REG_ADDR]] to double*
-comment|// CHECK: br label %[[VAARG_END]]
+comment|// CHECK: br label %[[VAARG_END:[a-z._0-9]+]]
 comment|// CHECK: [[VAARG_ON_STACK]]
 comment|// CHECK: [[STACK:%[a-z_0-9]+]] = load i8** getelementptr inbounds (%struct.__va_list* @the_list, i32 0, i32 0)
 comment|// CHECK: [[NEW_STACK:%[a-z_0-9]+]] = getelementptr i8* [[STACK]], i32 8
@@ -314,12 +327,14 @@ comment|// CHECK: br i1 [[INREG]], label %[[VAARG_IN_REG:[a-z_.0-9]+]], label %[
 comment|// CHECK: [[VAARG_IN_REG]]
 comment|// CHECK: [[REG_TOP:%[a-z_0-9]+]] = load i8** getelementptr inbounds (%struct.__va_list* @the_list, i32 0, i32 2)
 comment|// CHECK: [[FIRST_REG:%[a-z_0-9]+]] = getelementptr i8* [[REG_TOP]], i32 [[VR_OFFS]]
-comment|// CHECK: [[EL_ADDR:%[a-z_0-9]+]] = getelementptr i8* [[FIRST_REG]], i32 0
+comment|// CHECK-LE: [[EL_ADDR:%[a-z_0-9]+]] = getelementptr i8* [[FIRST_REG]], i32 0
+comment|// CHECK-BE: [[EL_ADDR:%[a-z_0-9]+]] = getelementptr i8* [[FIRST_REG]], i32 12
 comment|// CHECK: [[EL_TYPED:%[a-z_0-9]+]] = bitcast i8* [[EL_ADDR]] to float*
 comment|// CHECK: [[EL_TMPADDR:%[a-z_0-9]+]] = getelementptr inbounds [2 x float]* %[[TMP_HFA:[a-z_.0-9]+]], i32 0, i32 0
 comment|// CHECK: [[EL:%[a-z_0-9]+]] = load float* [[EL_TYPED]]
 comment|// CHECK: store float [[EL]], float* [[EL_TMPADDR]]
-comment|// CHECK: [[EL_ADDR:%[a-z_0-9]+]] = getelementptr i8* [[FIRST_REG]], i32 16
+comment|// CHECK-LE: [[EL_ADDR:%[a-z_0-9]+]] = getelementptr i8* [[FIRST_REG]], i32 16
+comment|// CHECK-BE: [[EL_ADDR:%[a-z_0-9]+]] = getelementptr i8* [[FIRST_REG]], i32 28
 comment|// CHECK: [[EL_TYPED:%[a-z_0-9]+]] = bitcast i8* [[EL_ADDR]] to float*
 comment|// CHECK: [[EL_TMPADDR:%[a-z_0-9]+]] = getelementptr inbounds [2 x float]* %[[TMP_HFA]], i32 0, i32 1
 comment|// CHECK: [[EL:%[a-z_0-9]+]] = load float* [[EL_TYPED]]

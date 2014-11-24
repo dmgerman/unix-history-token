@@ -189,7 +189,7 @@ literal|1
 condition|)
 name|CurrentID
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|public
@@ -277,7 +277,7 @@ literal|1
 condition|)
 name|CurrentID
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 operator|*

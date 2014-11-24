@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: c-index-test -test-load-source all -remap-file="%s;%S/Inputs/remap-load-to.c" %s | FileCheck -check-prefix=CHECK %s
+comment|// RUN: c-index-test -test-load-source all -remap-file="%s,%S/Inputs/remap-load-to.c" %s | FileCheck -check-prefix=CHECK %s
 end_comment
 
 begin_comment

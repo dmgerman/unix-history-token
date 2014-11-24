@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: ppc32-registered-target,ppc64-registered-target,mips-registered-target
-end_comment
-
-begin_comment
 comment|// RUN: %clang -no-canonical-prefixes \
 end_comment
 
@@ -20,7 +16,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-PPC %s
 end_comment
 
 begin_comment
-comment|// CHECK-PPC: clang{{.*}}" "-cc1" "-triple" "powerpc-pc-freebsd8"
+comment|// CHECK-PPC: "-cc1" "-triple" "powerpc-pc-freebsd8"
 end_comment
 
 begin_comment
@@ -52,7 +48,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-PPC64 %s
 end_comment
 
 begin_comment
-comment|// CHECK-PPC64: clang{{.*}}" "-cc1" "-triple" "powerpc64-pc-freebsd8"
+comment|// CHECK-PPC64: "-cc1" "-triple" "powerpc64-pc-freebsd8"
 end_comment
 
 begin_comment
@@ -92,7 +88,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-LIB32 %s
 end_comment
 
 begin_comment
-comment|// CHECK-LIB32: clang{{.*}}" "-cc1" "-triple" "i386-pc-freebsd8"
+comment|// CHECK-LIB32: "-cc1" "-triple" "i386-pc-freebsd8"
 end_comment
 
 begin_comment
@@ -244,7 +240,7 @@ comment|// CHECK-MIPSEL-NOT: "--hash-style={{gnu|both}}"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang %s -### 2>&1 \
 end_comment
 
 begin_comment
@@ -268,7 +264,7 @@ comment|// CHECK-MIPS64-NOT: "--hash-style={{gnu|both}}"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+comment|// RUN: %clang %s -### 2>&1 \
 end_comment
 
 begin_comment
@@ -376,7 +372,7 @@ comment|// CHECK-NORMAL: crtbegin.o
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -### -o %t.o -target arm-unknown-freebsd10.0 2>&1 \
+comment|// RUN: %clang %s -### -target arm-unknown-freebsd10.0 -no-integrated-as 2>&1 \
 end_comment
 
 begin_comment
@@ -384,7 +380,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ARM %s
 end_comment
 
 begin_comment
-comment|// CHECK-ARM: clang{{.*}}" "-cc1"{{.*}}" "-fsjlj-exceptions"
+comment|// CHECK-ARM: "-cc1"{{.*}}" "-fsjlj-exceptions"
 end_comment
 
 begin_comment
@@ -392,7 +388,11 @@ comment|// CHECK-ARM: as{{.*}}" "-mfpu=softvfp"{{.*}}"-matpcs"
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -### -o %t.o -target arm-gnueabi-freebsd10.0 2>&1 \
+comment|// CHECK-ARM-EABI-NOT: as{{.*}}" "-mfpu=vfp"
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -target arm-gnueabi-freebsd10.0 -no-integrated-as 2>&1 \
 end_comment
 
 begin_comment
@@ -400,7 +400,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-ARM-EABI %s
 end_comment
 
 begin_comment
-comment|// CHECK-ARM-EABI-NOT: clang{{.*}}" "-cc1"{{.*}}" "-fsjlj-exceptions"
+comment|// CHECK-ARM-EABI-NOT: "-cc1"{{.*}}" "-fsjlj-exceptions"
 end_comment
 
 begin_comment
@@ -408,11 +408,39 @@ comment|// CHECK-ARM-EABI: as{{.*}}" "-mfpu=softvfp" "-meabi=5"
 end_comment
 
 begin_comment
+comment|// CHECK-ARM-EABI-NOT: as{{.*}}" "-mfpu=vfp"
+end_comment
+
+begin_comment
 comment|// CHECK-ARM-EABI-NOT: as{{.*}}" "-matpcs"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-pc-freebsd8 %s -### -flto -o %t.o 2>&1 \
+comment|// RUN: %clang %s -### -target arm-gnueabihf-freebsd10.0 -no-integrated-as 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ARM-EABIHF %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-EABIHF-NOT: "-cc1"{{.*}}" "-fsjlj-exceptions"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-EABIHF: as{{.*}}" "-mfpu=vfp" "-meabi=5"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-EABIHF-NOT: as{{.*}}" "-mfpu=softvfp"
+end_comment
+
+begin_comment
+comment|// CHECK-ARM-EABIHF-NOT: as{{.*}}" "-matpcs"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-pc-freebsd8 %s -### -flto 2>&1 \
 end_comment
 
 begin_comment
@@ -421,6 +449,34 @@ end_comment
 
 begin_comment
 comment|// CHECK-LTO: ld{{.*}}" "-plugin{{.*}}LLVMgold.so
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target sparc-unknown-freebsd8 %s -### -fpic 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SPARC-PIE %s
+end_comment
+
+begin_comment
+comment|// CHECK-SPARC-PIE: as{{.*}}" "-KPIC
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=ultrasparc -target sparc64-unknown-freebsd8 %s -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SPARC-CPU %s
+end_comment
+
+begin_comment
+comment|// CHECK-SPARC-CPU: cc1{{.*}}" "-target-cpu" "ultrasparc"
+end_comment
+
+begin_comment
+comment|// CHECK-SPARC-CPU: as{{.*}}" "-Av9a
 end_comment
 
 end_unit

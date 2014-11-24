@@ -338,7 +338,9 @@ argument_list|,
 name|this
 argument_list|)
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|tooling
 operator|::

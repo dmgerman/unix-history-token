@@ -24,15 +24,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: @.str = linker_private unnamed_addr constant [14 x i8] c"Hello, World!\00", align 1
+comment|// CHECK: @.str = private unnamed_addr constant [14 x i8] c"Hello, World!\00", section "__TEXT,__cstring,cstring_literals", align 1
 end_comment
 
 begin_comment
-comment|// CHECK: @.str1 = linker_private unnamed_addr constant [7 x i8] c"yo joe\00", align 1
+comment|// CHECK: @.str1 = private unnamed_addr constant [7 x i8] c"yo joe\00", section "__TEXT,__cstring,cstring_literals", align 1
 end_comment
 
 begin_comment
-comment|// CHECK: @.str3 = linker_private unnamed_addr constant [16 x i8] c"Goodbye, World!\00", align 1
+comment|// CHECK: @.str3 = private unnamed_addr constant [16 x i8] c"Goodbye, World!\00", section "__TEXT,__cstring,cstring_literals", align 1
 end_comment
 
 begin_define

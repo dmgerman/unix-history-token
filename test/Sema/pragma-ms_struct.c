@@ -109,7 +109,7 @@ operator|)
 argument_list|)
 name|d
 decl_stmt|;
-comment|// expected-warning {{'ms_struct' attribute ignored}}
+comment|// expected-warning {{'ms_struct' attribute only applies to struct or union}}
 name|unsigned
 name|long
 name|bf_1
@@ -160,7 +160,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|// expected-warning {{'ms_struct' attribute ignored}}
+comment|// expected-warning {{'ms_struct' attribute only applies to struct or union}}
 end_comment
 
 begin_comment
@@ -242,6 +242,19 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|ms_struct
+argument_list|)
+name|bad
+block|{
+comment|// expected-warning {{__declspec attribute 'ms_struct' is not supported}}
+block|}
+struct|;
+end_struct
 
 end_unit
 

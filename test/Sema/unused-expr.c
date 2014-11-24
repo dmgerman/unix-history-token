@@ -60,7 +60,7 @@ name|VP
 operator|<
 name|P
 expr_stmt|;
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{relational comparison result unused}}
 operator|(
 name|void
 operator|)
@@ -86,7 +86,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{relational comparison result unused}}
 name|foo
 argument_list|(
 literal|1
@@ -286,13 +286,13 @@ name|b
 operator|<
 literal|1
 expr_stmt|;
-comment|// expected-warning{{expression result unused}}
+comment|// expected-warning{{relational comparison result unused}}
 else|else
 name|b
 operator|<
 literal|2
 expr_stmt|;
-comment|// expected-warning{{expression result unused}}
+comment|// expected-warning{{relational comparison result unused}}
 while|while
 condition|(
 literal|1
@@ -301,13 +301,13 @@ name|b
 operator|<
 literal|3
 expr_stmt|;
-comment|// expected-warning{{expression result unused}}
+comment|// expected-warning{{relational comparison result unused}}
 do|do
 name|b
 operator|<
 literal|4
 expr_stmt|;
-comment|// expected-warning{{expression result unused}}
+comment|// expected-warning{{relational comparison result unused}}
 do|while
 condition|(
 literal|1
@@ -322,7 +322,7 @@ name|b
 operator|<
 literal|5
 expr_stmt|;
-comment|// expected-warning{{expression result unused}}
+comment|// expected-warning{{relational comparison result unused}}
 for|for
 control|(
 name|b
@@ -332,7 +332,7 @@ init|;
 condition|;
 control|)
 block|{}
-comment|// expected-warning{{expression result unused}}
+comment|// expected-warning{{relational comparison result unused}}
 for|for
 control|(
 init|;
@@ -351,7 +351,7 @@ operator|<
 literal|1
 control|)
 block|{}
-comment|// expected-warning{{expression result unused}}
+comment|// expected-warning{{relational comparison result unused}}
 block|}
 end_function
 
@@ -484,7 +484,7 @@ literal|42
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{ignoring return value of function declared with const attribute}}
-name|__builtin_fabsf
+name|__builtin_abs
 argument_list|(
 literal|0
 argument_list|)

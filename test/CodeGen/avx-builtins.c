@@ -571,5 +571,57 @@ return|;
 block|}
 end_function
 
+begin_function
+name|__m256d
+name|test_256_blend_pd
+parameter_list|(
+name|__m256d
+name|__a
+parameter_list|,
+name|__m256d
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_256_blend_pd
+comment|// CHECK: shufflevector<4 x double> %{{.*}},<4 x double> %{{.*}},<4 x i32><i32 4, i32 1, i32 6, i32 3>
+return|return
+name|_mm256_blend_pd
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+literal|0x35
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256
+name|test_256_blend_ps
+parameter_list|(
+name|__m256
+name|__a
+parameter_list|,
+name|__m256
+name|__b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_256_blend_ps
+comment|// CHECK: shufflevector<8 x float> %{{.*}},<8 x float> %{{.*}},<8 x i32><i32 8, i32 1, i32 10, i32 3, i32 12, i32 13, i32 6, i32 7>
+return|return
+name|_mm256_blend_ps
+argument_list|(
+name|__a
+argument_list|,
+name|__b
+argument_list|,
+literal|0x35
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

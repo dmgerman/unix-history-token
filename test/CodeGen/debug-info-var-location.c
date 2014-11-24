@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -S -g -fverbose-asm %s -o - | FileCheck %s
+comment|// FIXME: Check IR rather than asm, then triple is not needed.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -Xclang -triple=%itanium_abi_triple -S -g -fverbose-asm %s -o - | FileCheck %s
 end_comment
 
 begin_comment

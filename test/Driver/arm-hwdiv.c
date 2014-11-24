@@ -119,5 +119,21 @@ begin_comment
 comment|// CHECK-ALT: "-target-feature" "-hwdiv"
 end_comment
 
+begin_comment
+comment|// RUN: %clang -### -target arm %s --mhwdiv=arm -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ALT-EQ %s
+end_comment
+
+begin_comment
+comment|// CHECK-ALT-EQ: "-target-feature" "+hwdiv-arm"
+end_comment
+
+begin_comment
+comment|// CHECK-ALT-EQ: "-target-feature" "-hwdiv"
+end_comment
+
 end_unit
 

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple %itanium_abi_triple -emit-llvm -o - %s | FileCheck %s --check-prefix=CHECK --check-prefix=ITANIUM
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple %ms_abi_triple -emit-llvm -o - %s | FileCheck %s --check-prefix=CHECK --check-prefix=MSABI
 end_comment
 
 begin_comment
@@ -16,11 +20,19 @@ comment|// CHECK: @align = global i8 [[ALIGN:[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK: @.str = private unnamed_addr constant [6 x i8] c"hello\00"
+comment|// ITANIUM: @.str = private unnamed_addr constant [6 x i8] c"hello\00"
 end_comment
 
 begin_comment
-comment|// CHECK: @f1.x = internal global i8* getelementptr inbounds ([6 x i8]* @.str, i32 0, i32 0)
+comment|// MSABI: @"\01??_C@_05CJBACGMB@hello?$AA@" = linkonce_odr unnamed_addr constant [6 x i8] c"hello\00", align 1
+end_comment
+
+begin_comment
+comment|// ITANIUM: @f1.x = internal global i8* getelementptr inbounds ([6 x i8]* @.str, i32 0, i32 0)
+end_comment
+
+begin_comment
+comment|// MSABI: @f1.x = internal global i8* getelementptr inbounds ([6 x i8]* @"\01??_C@_05CJBACGMB@hello?$AA@", i32 0, i32 0)
 end_comment
 
 begin_comment
@@ -32,7 +44,11 @@ comment|// CHECK: @f3.x = internal global [8 x i8] c"hello\00\00\00", align [[AL
 end_comment
 
 begin_comment
-comment|// CHECK: @f4.x = internal global %struct.s { i8* getelementptr inbounds ([6 x i8]* @.str, i32 0, i32 0) }
+comment|// ITANIUM: @f4.x = internal global %struct.s { i8* getelementptr inbounds ([6 x i8]* @.str, i32 0, i32 0) }
+end_comment
+
+begin_comment
+comment|// MSABI: @f4.x = internal global %struct.s { i8* getelementptr inbounds ([6 x i8]* @"\01??_C@_05CJBACGMB@hello?$AA@", i32 0, i32 0) }
 end_comment
 
 begin_comment
@@ -101,7 +117,8 @@ argument_list|(
 literal|"hello"
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @bar({{.*}} @.str
+comment|// ITANIUM: call void @bar({{.*}} @.str
+comment|// MSABI: call void @bar({{.*}} @"\01??_C@_05CJBACGMB@hello?$AA@"
 block|}
 end_function
 

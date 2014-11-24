@@ -85,7 +85,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous definition}}
+comment|// expected-note{{previous declaration}}
 end_comment
 
 begin_decl_stmt
@@ -107,7 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note{{previous definition}}
+comment|// expected-note{{previous declaration}}
 end_comment
 
 begin_decl_stmt
@@ -164,7 +164,7 @@ specifier|extern
 name|int
 name|g8
 decl_stmt|;
-comment|// expected-note{{previous definition}}
+comment|// expected-note{{previous declaration}}
 name|int
 name|g8
 decl_stmt|;
@@ -181,7 +181,7 @@ name|__private_extern__
 name|int
 name|g9
 decl_stmt|;
-comment|// expected-note{{previous definition}}
+comment|// expected-note{{previous declaration}}
 name|int
 name|g9
 decl_stmt|;

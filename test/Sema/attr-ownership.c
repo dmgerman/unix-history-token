@@ -49,7 +49,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes no more than 1 argument}}
+comment|// expected-error {{'ownership_returns' attribute takes no more than 1 argument}}
 end_comment
 
 begin_function_decl
@@ -116,7 +116,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes at least 2 arguments}}
+comment|// expected-error {{'ownership_holds' attribute takes at least 2 arguments}}
 end_comment
 
 begin_function_decl
@@ -167,7 +167,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{attribute takes at least 2 arguments}}
+comment|// expected-error {{'ownership_takes' attribute takes at least 2 arguments}}
 end_comment
 
 begin_function_decl

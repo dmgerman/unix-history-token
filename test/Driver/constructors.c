@@ -227,5 +227,37 @@ begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -fsyntax-only 2>&1       \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm64-none-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -fsyntax-only 2>&1       \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm64-none-none-eabi \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-INIT-ARRAY %s
+end_comment
+
 end_unit
 

@@ -245,6 +245,11 @@ comment|/// \brief The type of the object or reference being initialized.
 name|QualType
 name|Type
 decl_stmt|;
+comment|/// \brief The mangling number for the next reference temporary to be created.
+name|mutable
+name|unsigned
+name|ManglingNumber
+decl_stmt|;
 struct|struct
 name|LN
 block|{
@@ -325,7 +330,12 @@ block|}
 union|;
 name|InitializedEntity
 argument_list|()
-block|{ }
+operator|:
+name|ManglingNumber
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 comment|/// \brief Create the initialization entity for a variable.
 name|InitializedEntity
 argument_list|(
@@ -341,7 +351,7 @@ argument_list|)
 operator|,
 name|Parent
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Type
@@ -350,6 +360,11 @@ name|Var
 operator|->
 name|getType
 argument_list|()
+argument_list|)
+operator|,
+name|ManglingNumber
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|VariableOrMember
@@ -378,12 +393,17 @@ argument_list|)
 operator|,
 name|Parent
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Type
 argument_list|(
-argument|Type
+name|Type
+argument_list|)
+operator|,
+name|ManglingNumber
+argument_list|(
+literal|0
 argument_list|)
 block|{
 name|LocAndNRVO
@@ -432,6 +452,11 @@ name|getType
 argument_list|()
 argument_list|)
 operator|,
+name|ManglingNumber
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|VariableOrMember
 argument_list|(
 argument|Member
@@ -464,12 +489,17 @@ argument_list|)
 operator|,
 name|Parent
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Type
 argument_list|(
-argument|FieldType
+name|FieldType
+argument_list|)
+operator|,
+name|ManglingNumber
+argument_list|(
+literal|0
 argument_list|)
 block|{
 name|Capture
@@ -598,7 +628,7 @@ name|Entity
 operator|.
 name|Parent
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|Entity
 operator|.
@@ -667,7 +697,7 @@ name|Entity
 operator|.
 name|Parent
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|Entity
 operator|.
@@ -811,7 +841,7 @@ name|Result
 operator|.
 name|TypeInfo
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 name|Result
@@ -938,7 +968,7 @@ name|InitializedEntity
 modifier|*
 name|Parent
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -964,7 +994,7 @@ name|InitializedEntity
 modifier|*
 name|Parent
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -1125,7 +1155,7 @@ return|return
 name|TypeInfo
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Retrieve the name of the entity being initialized.
@@ -1313,6 +1343,35 @@ name|Location
 argument_list|)
 return|;
 block|}
+comment|/// \brief If this is an array, vector, or complex number element, get the
+comment|/// element's index.
+name|unsigned
+name|getElementIndex
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|getKind
+argument_list|()
+operator|==
+name|EK_ArrayElement
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|EK_VectorElement
+operator|||
+name|getKind
+argument_list|()
+operator|==
+name|EK_ComplexElement
+argument_list|)
+block|;
+return|return
+name|Index
+return|;
+block|}
 comment|/// \brief If this is already the initializer for an array or vector
 comment|/// element, sets the element index.
 name|void
@@ -1408,6 +1467,16 @@ name|Kind
 operator|=
 name|EK_Parameter_CF_Audited
 expr_stmt|;
+block|}
+name|unsigned
+name|allocateManglingNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|++
+name|ManglingNumber
+return|;
 block|}
 comment|/// Dump a representation of the initialized entity to standard error,
 comment|/// for debugging purposes.
@@ -2118,6 +2187,9 @@ block|,
 comment|/// \brief Perform a qualification conversion, producing an lvalue.
 name|SK_QualificationConversionLValue
 block|,
+comment|/// \brief Perform a conversion adding _Atomic to a type.
+name|SK_AtomicConversion
+block|,
 comment|/// \brief Perform a load from a glvalue, producing an rvalue.
 name|SK_LValueToRValue
 block|,
@@ -2127,11 +2199,8 @@ block|,
 comment|/// \brief Perform an implicit conversion sequence without narrowing.
 name|SK_ConversionSequenceNoNarrowing
 block|,
-comment|/// \brief Perform list-initialization without a constructor
+comment|/// \brief Perform list-initialization without a constructor.
 name|SK_ListInitialization
-block|,
-comment|/// \brief Perform list-initialization with a constructor.
-name|SK_ListConstructorCall
 block|,
 comment|/// \brief Unwrap the single-element initializer list for a reference.
 name|SK_UnwrapInitList
@@ -2141,6 +2210,10 @@ name|SK_RewrapInitList
 block|,
 comment|/// \brief Perform initialization via a constructor.
 name|SK_ConstructorInitialization
+block|,
+comment|/// \brief Perform initialization via a constructor, taking arguments from
+comment|/// a single InitListExpr.
+name|SK_ConstructorInitializationFromList
 block|,
 comment|/// \brief Zero-initialize the object
 name|SK_ZeroInitialization
@@ -2174,6 +2247,10 @@ name|SK_ProduceObjCObject
 block|,
 comment|/// \brief Construct a std::initializer_list from an initializer list.
 name|SK_StdInitializerList
+block|,
+comment|/// \brief Perform initialization via a constructor taking a single
+comment|/// std::initializer_list argument.
+name|SK_StdInitializerListConstructorCall
 block|,
 comment|/// \brief Initialize an OpenCL sampler from an integer.
 name|SK_OCLSamplerInit
@@ -2415,9 +2492,9 @@ comment|/// \param Kind the kind of initialization being performed.
 comment|///
 comment|/// \param Args the argument(s) provided for initialization.
 comment|///
-comment|/// \param InInitList true if we are initializing from an expression within
-comment|///        an initializer list. This disallows narrowing conversions in C++11
-comment|///        onwards.
+comment|/// \param TopLevelOfInitList true if we are initializing from an expression
+comment|///        at the top level inside an initializer list. This disallows
+comment|///        narrowing conversions in C++11 onwards.
 name|InitializationSequence
 argument_list|(
 argument|Sema&S
@@ -2428,7 +2505,7 @@ argument|const InitializationKind&Kind
 argument_list|,
 argument|MultiExprArg Args
 argument_list|,
-argument|bool InInitList = false
+argument|bool TopLevelOfInitList = false
 argument_list|)
 empty_stmt|;
 name|void
@@ -2452,7 +2529,7 @@ name|MultiExprArg
 name|Args
 parameter_list|,
 name|bool
-name|InInitList
+name|TopLevelOfInitList
 parameter_list|)
 function_decl|;
 operator|~
@@ -2504,7 +2581,7 @@ name|QualType
 modifier|*
 name|ResultType
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Diagnose an potentially-invalid initialization sequence.
@@ -2765,6 +2842,15 @@ name|Ty
 parameter_list|,
 name|ExprValueKind
 name|Category
+parameter_list|)
+function_decl|;
+comment|/// \brief Add a new step that performs conversion from non-atomic to atomic
+comment|/// type.
+name|void
+name|AddAtomicConversionStep
+parameter_list|(
+name|QualType
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a new step that performs a load of the given type.

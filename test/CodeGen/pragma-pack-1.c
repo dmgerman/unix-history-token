@@ -173,7 +173,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: [[struct_ref:%[a-zA-Z0-9_.]+]] = type<{ [[struct_ref]]* }>
+comment|// CHECK: [[struct_ref:%[a-zA-Z0-9_.]+]] = type { [[struct_ref]]* }
 end_comment
 
 begin_comment
@@ -189,7 +189,7 @@ comment|// CHECK: [[struct_T2]] = type { i8, i32 }
 end_comment
 
 begin_comment
-comment|// CHECK: %struct.S3 = type<{ [3 x i8], i8, %struct.T3, [2 x i8], %struct.T32 }>
+comment|// CHECK: %struct.S3 = type { [3 x i8], i8, %struct.T3, %struct.T32 }
 end_comment
 
 begin_comment

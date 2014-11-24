@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: not %clang_cc1 -O1 %s -emit-llvm
+comment|// RUN: %clang_cc1 -triple=x86_64-apple-darwin -fsyntax-only -verify %s
 end_comment
 
 begin_comment
 comment|// PR6913
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_function
 name|int
@@ -36,7 +30,6 @@ index|[]
 operator|=
 name|x
 expr_stmt|;
-comment|// expected-error {{invalid use of array with unspecified bounds}
 name|int
 name|i
 decl_stmt|;
@@ -64,6 +57,7 @@ index|]
 operator|=
 name|i
 expr_stmt|;
+comment|// expected-error {{subscript of pointer to incomplete type 'int []'}}
 block|}
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm %s -o %t
+comment|// RUN: %clang_cc1 -triple %itanium_abi_triple -emit-llvm %s -o %t
 end_comment
 
 begin_comment
@@ -153,7 +153,10 @@ end_comment
 begin_function
 name|void
 name|test3
-parameter_list|()
+parameter_list|(
+name|int
+name|size
+parameter_list|)
 block|{
 name|int
 name|arr
@@ -171,6 +174,12 @@ block|,
 literal|5
 block|}
 decl_stmt|;
+name|int
+name|vla_arr
+index|[
+name|size
+index|]
+decl_stmt|;
 pragma|#
 directive|pragma
 name|clang
@@ -182,14 +191,56 @@ index|[
 literal|2
 index|]
 operator|=
-name|arr
+name|vla_arr
 index|[
+name|size
+operator|-
 literal|1
 index|]
 expr_stmt|;
 block|}
 comment|// CHECK-3: test3
 comment|// CHECK-3: alloca [5 x i32]
+comment|// CHECK-3: call void @__captured_stmt
+block|}
+end_function
+
+begin_comment
+comment|// Capture VLA array
+end_comment
+
+begin_function
+name|void
+name|test4
+parameter_list|(
+name|int
+name|size
+parameter_list|,
+name|int
+name|vla_arr
+index|[
+name|size
+index|]
+parameter_list|)
+block|{
+pragma|#
+directive|pragma
+name|clang
+name|__debug
+name|captured
+block|{
+name|vla_arr
+index|[
+literal|0
+index|]
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|// CHECK-3: test4([[INT:i.+]] {{.*}}[[SIZE:%.+]], [[INT]]*
+comment|// CHECK-3: store [[INT]] {{.*}}[[SIZE]], [[INT]]* [[SIZE_ADDR:%.+]],
+comment|// CHECK-3: [[REF:%.+]] = getelementptr inbounds
+comment|// CHECK-3: store [[INT]]* [[SIZE_ADDR]], [[INT]]** [[REF]]
 comment|// CHECK-3: call void @__captured_stmt
 block|}
 end_function

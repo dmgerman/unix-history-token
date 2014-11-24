@@ -26,7 +26,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note {{function has been explicitly marked unavailable here}}
+comment|// expected-note {{'foo' has been explicitly marked unavailable here}}
 end_comment
 
 begin_function_decl
@@ -48,7 +48,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note 2 {{function has been explicitly marked unavailable here}}
+comment|// expected-note 2 {{'dfoo' has been explicitly marked unavailable here}}
 end_comment
 
 begin_function_decl
@@ -263,7 +263,7 @@ name|a
 init|=
 literal|1
 block|,
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'a' has been explicitly marked deprecated here}}
 name|b
 name|__attribute__
 argument_list|(
@@ -275,7 +275,7 @@ argument_list|)
 init|=
 literal|2
 block|,
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'b' has been explicitly marked deprecated here}}
 name|c
 init|=
 literal|3
@@ -294,12 +294,12 @@ begin_enum
 enum|enum
 name|fee
 block|{
-comment|// expected-note {{declaration has been explicitly marked unavailable here}}
+comment|// expected-note {{'fee' has been explicitly marked unavailable here}}
 name|r
 init|=
 literal|1
 block|,
-comment|// expected-note {{declaration has been explicitly marked unavailable here}}
+comment|// expected-note {{'r' has been explicitly marked unavailable here}}
 name|s
 init|=
 literal|2

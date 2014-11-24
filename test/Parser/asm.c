@@ -80,5 +80,21 @@ begin_comment
 comment|// expected-error {{cannot use wide string literal in 'asm'}}
 end_comment
 
+begin_asm
+asm|asm()
+comment|// expected-error {{expected string literal in 'asm'}}
+comment|// expected-error@-1 {{expected ';' after top-level asm block}}
+asm|asm(;
+comment|// expected-error {{expected string literal in 'asm'}}
+asm|asm("")
+comment|// expected-error {{expected ';' after top-level asm block}}
+comment|// Unterminated asm strings at the end of the file were causing us to crash, so
+comment|// this needs to be last. rdar://15624081
+comment|// expected-warning@+3 {{missing terminating '"' character}}
+comment|// expected-error@+2 {{expected string literal in 'asm'}}
+comment|// expected-error@+1 {{expected ';' after top-level asm block}}
+asm|asm("
+end_asm
+
 end_unit
 

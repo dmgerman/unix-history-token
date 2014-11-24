@@ -4,7 +4,7 @@ comment|// REQUIRES: aarch64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -target-feature +neon \
+comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon -target-cpu cyclone \
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vmuls_lane_f32
+comment|// CHECK-LABEL: test_vmuls_lane_f32
 return|return
 name|vmuls_lane_f32
 argument_list|(
@@ -58,7 +58,7 @@ name|float64x1_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vmuld_lane_f64
+comment|// CHECK-LABEL: test_vmuld_lane_f64
 return|return
 name|vmuld_lane_f64
 argument_list|(
@@ -69,7 +69,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: fmul {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+}}.d[0]
+comment|// CHECK: fmul {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+.d\[0\]|d[0-9]+}}
 block|}
 end_function
 
@@ -84,7 +84,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vmuls_laneq_f32
+comment|// CHECK-LABEL: test_vmuls_laneq_f32
 return|return
 name|vmuls_laneq_f32
 argument_list|(
@@ -110,7 +110,7 @@ name|float64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vmuld_laneq_f64
+comment|// CHECK-LABEL: test_vmuld_laneq_f64
 return|return
 name|vmuld_laneq_f64
 argument_list|(
@@ -136,7 +136,7 @@ name|float64_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vmul_n_f64
+comment|// CHECK-LABEL: test_vmul_n_f64
 return|return
 name|vmul_n_f64
 argument_list|(
@@ -145,7 +145,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: fmul {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+}}.d[0]
+comment|// CHECK: fmul {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+.d\[0\]|d[0-9]+}}
 block|}
 end_function
 
@@ -160,7 +160,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vmulxs_lane_f32
+comment|// CHECK-LABEL: test_vmulxs_lane_f32
 return|return
 name|vmulxs_lane_f32
 argument_list|(
@@ -186,7 +186,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vmulxs_laneq_f32
+comment|// CHECK-LABEL: test_vmulxs_laneq_f32
 return|return
 name|vmulxs_laneq_f32
 argument_list|(
@@ -212,7 +212,7 @@ name|float64x1_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vmulxd_lane_f64
+comment|// CHECK-LABEL: test_vmulxd_lane_f64
 return|return
 name|vmulxd_lane_f64
 argument_list|(
@@ -223,7 +223,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: fmulx {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+}}.d[0]
+comment|// CHECK: fmulx {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+.d\[0\]|d[0-9]+}}
 block|}
 end_function
 
@@ -238,7 +238,7 @@ name|float64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vmulxd_laneq_f64
+comment|// CHECK-LABEL: test_vmulxd_laneq_f64
 return|return
 name|vmulxd_laneq_f64
 argument_list|(
@@ -254,7 +254,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vmulx_lane_f64
+comment|// CHECK-LABEL: test_vmulx_lane_f64
 end_comment
 
 begin_function
@@ -278,12 +278,12 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: fmulx {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+}}.d[0]
+comment|// CHECK: fmulx {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+.d\[0\]|d[0-9]+}}
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vmulx_laneq_f64_0
+comment|// CHECK-LABEL: test_vmulx_laneq_f64_0
 end_comment
 
 begin_function
@@ -312,7 +312,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vmulx_laneq_f64_1
+comment|// CHECK-LABEL: test_vmulx_laneq_f64_1
 end_comment
 
 begin_function
@@ -341,7 +341,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vfmas_lane_f32
+comment|// CHECK-LABEL: test_vfmas_lane_f32
 end_comment
 
 begin_function
@@ -375,7 +375,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vfmad_lane_f64
+comment|// CHECK-LABEL: test_vfmad_lane_f64
 end_comment
 
 begin_function
@@ -404,12 +404,12 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: fmla {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+}}.d[0]
+comment|// CHECK: {{fmla|fmadd}} {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+.d\[0\]|d[0-9]+}}
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vfmad_laneq_f64
+comment|// CHECK-LABEL: test_vfmad_laneq_f64
 end_comment
 
 begin_function
@@ -443,7 +443,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vfmss_lane_f32
+comment|// CHECK-LABEL: test_vfmss_lane_f32
 end_comment
 
 begin_function
@@ -477,7 +477,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vfma_lane_f64
+comment|// CHECK-LABEL: test_vfma_lane_f64
 end_comment
 
 begin_function
@@ -506,12 +506,12 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: fmla {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+}}.d[0]
+comment|// CHECK: {{fmla|fmadd}} {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+.d\[0\]|d[0-9]+}}
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vfms_lane_f64
+comment|// CHECK-LABEL: test_vfms_lane_f64
 end_comment
 
 begin_function
@@ -540,12 +540,12 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-comment|// CHECK: fmls {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+}}.d[0]
+comment|// CHECK: {{fmls|fmsub}} {{d[0-9]+}}, {{d[0-9]+}}, {{v[0-9]+.d\[0\]|d[0-9]+}}
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vfma_laneq_f64
+comment|// CHECK-LABEL: test_vfma_laneq_f64
 end_comment
 
 begin_function
@@ -579,7 +579,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vfms_laneq_f64
+comment|// CHECK-LABEL: test_vfms_laneq_f64
 end_comment
 
 begin_function
@@ -613,7 +613,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmullh_lane_s16
+comment|// CHECK-LABEL: test_vqdmullh_lane_s16
 end_comment
 
 begin_function
@@ -637,12 +637,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: sqdmull {{s[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[3]
+comment|// CHECK: sqdmull {{s[0-9]+|v[0-9]+.4s}}, {{h[0-9]+|v[0-9].4h}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmulls_lane_s32
+comment|// CHECK-LABEL: test_vqdmulls_lane_s32
 end_comment
 
 begin_function
@@ -671,7 +671,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmullh_laneq_s16
+comment|// CHECK-LABEL: test_vqdmullh_laneq_s16
 end_comment
 
 begin_function
@@ -695,12 +695,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: sqdmull {{s[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[7]
+comment|// CHECK: sqdmull {{s[0-9]+|v[0-9]+.4s}}, {{h[0-9]+|v[0-9]+.4h}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmulls_laneq_s32
+comment|// CHECK-LABEL: test_vqdmulls_laneq_s32
 end_comment
 
 begin_function
@@ -729,7 +729,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmulhh_lane_s16
+comment|// CHECK-LABEL: test_vqdmulhh_lane_s16
 end_comment
 
 begin_function
@@ -753,12 +753,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: sqdmulh {{h[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[3]
+comment|// CHECK: sqdmulh {{h[0-9]+|v[0-9]+.4h}}, {{h[0-9]+|v[0-9]+.4h}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmulhs_lane_s32
+comment|// CHECK-LABEL: test_vqdmulhs_lane_s32
 end_comment
 
 begin_function
@@ -787,7 +787,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmulhh_laneq_s16
+comment|// CHECK-LABEL: test_vqdmulhh_laneq_s16
 end_comment
 
 begin_function
@@ -811,12 +811,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: sqdmulh {{h[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[7]
+comment|// CHECK: sqdmulh {{h[0-9]+|v[0-9]+.4h}}, {{h[0-9]+|v[0-9]+.4h}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmulhs_laneq_s32
+comment|// CHECK-LABEL: test_vqdmulhs_laneq_s32
 end_comment
 
 begin_function
@@ -845,7 +845,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqrdmulhh_lane_s16
+comment|// CHECK-LABEL: test_vqrdmulhh_lane_s16
 end_comment
 
 begin_function
@@ -869,12 +869,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: sqrdmulh {{h[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[3]
+comment|// CHECK: sqrdmulh {{h[0-9]+|v[0-9]+.4h}}, {{h[0-9]+|v[0-9]+.4h}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqrdmulhs_lane_s32
+comment|// CHECK-LABEL: test_vqrdmulhs_lane_s32
 end_comment
 
 begin_function
@@ -903,7 +903,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqrdmulhh_laneq_s16
+comment|// CHECK-LABEL: test_vqrdmulhh_laneq_s16
 end_comment
 
 begin_function
@@ -927,12 +927,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: sqrdmulh {{h[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[7]
+comment|// CHECK: sqrdmulh {{h[0-9]+|v[0-9]+.4h}}, {{h[0-9]+|v[0-9]+.4h}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqrdmulhs_laneq_s32
+comment|// CHECK-LABEL: test_vqrdmulhs_laneq_s32
 end_comment
 
 begin_function
@@ -961,7 +961,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmlalh_lane_s16
+comment|// CHECK-LABEL: test_vqdmlalh_lane_s16
 end_comment
 
 begin_function
@@ -990,12 +990,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: sqdmlal {{s[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[3]
+comment|// CHECK: sqdmlal {{s[0-9]+|v[0-9]+.4s}}, {{h[0-9]+|v[0-9]+.4h}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmlals_lane_s32
+comment|// CHECK-LABEL: test_vqdmlals_lane_s32
 end_comment
 
 begin_function
@@ -1029,7 +1029,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmlalh_laneq_s16
+comment|// CHECK-LABEL: test_vqdmlalh_laneq_s16
 end_comment
 
 begin_function
@@ -1058,12 +1058,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: sqdmlal {{s[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[7]
+comment|// CHECK: sqdmlal {{s[0-9]+|v[0-9]+.4s}}, {{h[0-9]+|v[0-9]+.4h}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmlals_laneq_s32
+comment|// CHECK-LABEL: test_vqdmlals_laneq_s32
 end_comment
 
 begin_function
@@ -1097,7 +1097,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmlslh_lane_s16
+comment|// CHECK-LABEL: test_vqdmlslh_lane_s16
 end_comment
 
 begin_function
@@ -1126,12 +1126,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: sqdmlsl {{s[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[3]
+comment|// CHECK: sqdmlsl {{s[0-9]+|v[0-9]+.4s}}, {{h[0-9]+|v[0-9]+.4h}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmlsls_lane_s32
+comment|// CHECK-LABEL: test_vqdmlsls_lane_s32
 end_comment
 
 begin_function
@@ -1165,7 +1165,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmlslh_laneq_s16
+comment|// CHECK-LABEL: test_vqdmlslh_laneq_s16
 end_comment
 
 begin_function
@@ -1194,12 +1194,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: sqdmlsl {{s[0-9]+}}, {{h[0-9]+}}, {{v[0-9]+}}.h[7]
+comment|// CHECK: sqdmlsl {{s[0-9]+|v[0-9]+.4s}}, {{h[0-9]+|v[0-9]+.4h}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vqdmlsls_laneq_s32
+comment|// CHECK-LABEL: test_vqdmlsls_laneq_s32
 end_comment
 
 begin_function
@@ -1229,6 +1229,152 @@ literal|3
 argument_list|)
 return|;
 comment|// CHECK: sqdmlsl {{d[0-9]+}}, {{s[0-9]+}}, {{v[0-9]+}}.s[3]
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: test_vmulx_lane_f64_0:
+end_comment
+
+begin_function
+name|float64x1_t
+name|test_vmulx_lane_f64_0
+parameter_list|()
+block|{
+name|float64x1_t
+name|arg1
+decl_stmt|;
+name|float64x1_t
+name|arg2
+decl_stmt|;
+name|float64x1_t
+name|result
+decl_stmt|;
+name|float64_t
+name|sarg1
+decl_stmt|,
+name|sarg2
+decl_stmt|,
+name|sres
+decl_stmt|;
+name|arg1
+operator|=
+name|vcreate_f64
+argument_list|(
+name|UINT64_C
+argument_list|(
+literal|0x3fd6304bc43ab5c2
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|arg2
+operator|=
+name|vcreate_f64
+argument_list|(
+name|UINT64_C
+argument_list|(
+literal|0x3fee211e215aeef3
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|vmulx_lane_f64
+argument_list|(
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: adrp x[[ADDRLO:[0-9]+]]
+comment|// CHECK: ldr d0, [x[[ADDRLO]],
+comment|// CHECK: adrp x[[ADDRLO:[0-9]+]]
+comment|// CHECK: ldr d1, [x[[ADDRLO]],
+comment|// CHECK: fmulx d0, d1, d0
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: test_vmulx_laneq_f64_2:
+end_comment
+
+begin_function
+name|float64x1_t
+name|test_vmulx_laneq_f64_2
+parameter_list|()
+block|{
+name|float64x1_t
+name|arg1
+decl_stmt|;
+name|float64x1_t
+name|arg2
+decl_stmt|;
+name|float64x2_t
+name|arg3
+decl_stmt|;
+name|float64x1_t
+name|result
+decl_stmt|;
+name|float64_t
+name|sarg1
+decl_stmt|,
+name|sarg2
+decl_stmt|,
+name|sres
+decl_stmt|;
+name|arg1
+operator|=
+name|vcreate_f64
+argument_list|(
+name|UINT64_C
+argument_list|(
+literal|0x3fd6304bc43ab5c2
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|arg2
+operator|=
+name|vcreate_f64
+argument_list|(
+name|UINT64_C
+argument_list|(
+literal|0x3fee211e215aeef3
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|arg3
+operator|=
+name|vcombine_f64
+argument_list|(
+name|arg1
+argument_list|,
+name|arg2
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|vmulx_laneq_f64
+argument_list|(
+name|arg1
+argument_list|,
+name|arg3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK: adrp x[[ADDRLO:[0-9]+]]
+comment|// CHECK: ldr d0, [x[[ADDRLO]],
+comment|// CHECK: adrp x[[ADDRLO:[0-9]+]]
+comment|// CHECK: ldr d1, [x[[ADDRLO]],
+comment|// CHECK: fmulx d0, d1, d0
+return|return
+name|result
+return|;
 block|}
 end_function
 

@@ -16,7 +16,7 @@ comment|// RUN:   -Xlinker one -Xlinker --no-demangle \
 end_comment
 
 begin_comment
-comment|// RUN:   -Wl,two,--no-demangle,three -Xlinker four %s 2> %t
+comment|// RUN:   -Wl,two,--no-demangle,three -Xlinker four -z five %s 2> %t
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// RUN:   -Xlinker one -Xlinker --no-demangle \
 end_comment
 
 begin_comment
-comment|// RUN:   -Wl,two,--no-demangle,three -Xlinker four %s 2> %t
+comment|// RUN:   -Wl,two,--no-demangle,three -Xlinker four -z five %s 2> %t
 end_comment
 
 begin_comment
@@ -52,11 +52,11 @@ comment|// DARWIN-NOT: --no-demangle
 end_comment
 
 begin_comment
-comment|// DARWIN: "one" "two" "three" "four"
+comment|// DARWIN: "one" "two" "three" "four" "-z" "five"
 end_comment
 
 begin_comment
-comment|// LINUX: "--no-demangle" "one" "two" "three" "four"
+comment|// LINUX: "--no-demangle" "one" "two" "three" "four" "-z" "five"
 end_comment
 
 begin_comment

@@ -276,7 +276,7 @@ argument_list|)
 operator|:
 name|Start
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Stop
@@ -340,7 +340,7 @@ block|{
 return|return
 name|Start
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|const

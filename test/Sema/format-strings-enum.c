@@ -114,7 +114,7 @@ argument_list|,
 name|input
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{format specifies type 'long long' but the argument has type 'TestEnum'}}
+comment|// expected-warning-re{{format specifies type 'long long' but the argument has underlying type '{{(unsigned)?}} int'}}
 name|printf
 argument_list|(
 literal|"%lld"
@@ -154,7 +154,7 @@ argument_list|,
 name|input
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{format specifies type 'unsigned int' but the argument has type 'LongEnum'}}
+comment|// expected-warning{{format specifies type 'unsigned int' but the argument has underlying type}}
 name|printf
 argument_list|(
 literal|"%u"

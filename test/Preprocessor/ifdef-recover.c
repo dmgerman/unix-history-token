@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: not %clang_cc1 -E %s 2>&1>/dev/null | grep error: | count 3  */
+comment|/* RUN: %clang_cc1 -E -verify %s  */
+end_comment
+
+begin_comment
+comment|/* expected-error@+1 {{macro name missing}} */
 end_comment
 
 begin_ifdef
@@ -14,11 +18,41 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* End of function-like macro invocation in #ifdef */
+comment|/* expected-error@+1 {{macro name must be an identifier}} */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|!
+end_ifdef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* expected-error@+1 {{macro name missing}} */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* PR1936 */
+end_comment
+
+begin_comment
+comment|/* expected-error@+2 {{unterminated function-like macro invocation}} expected-error@+2 {{expected value in expression}} expected-note@+1 {{macro 'f' defined here}} */
 end_comment
 
 begin_define

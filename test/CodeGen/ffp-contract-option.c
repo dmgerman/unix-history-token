@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -O3 -ffp-contract=fast -triple=powerpc-apple-darwin10
 end_comment
 
 begin_comment
-comment|// REQUIRES: ppc32-registered-target
+comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_function

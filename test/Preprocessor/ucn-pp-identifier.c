@@ -143,7 +143,7 @@ value|ufffe
 end_define
 
 begin_comment
-comment|// expected-error {{macro names must be identifiers}}
+comment|// expected-error {{macro name must be an identifier}}
 end_comment
 
 begin_define
@@ -154,7 +154,7 @@ value|U10000000
 end_define
 
 begin_comment
-comment|// expected-error {{macro names must be identifiers}}
+comment|// expected-error {{macro name must be an identifier}}
 end_comment
 
 begin_define
@@ -165,7 +165,7 @@ value|u0061
 end_define
 
 begin_comment
-comment|// expected-error {{character 'a' cannot be specified by a universal character name}} expected-error {{macro names must be identifiers}}
+comment|// expected-error {{character 'a' cannot be specified by a universal character name}} expected-error {{macro name must be an identifier}}
 end_comment
 
 begin_comment

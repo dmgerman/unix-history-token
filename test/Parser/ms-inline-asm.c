@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: disabled
+comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
@@ -148,6 +148,43 @@ block|{
 asm|__asm nop
 asm|__asm nop ;
 asm|__asm nop
+block|}
+end_function
+
+begin_function
+name|void
+name|t10
+parameter_list|()
+block|{
+asm|__asm {
+asm|mov eax, 0
+asm|__asm {
+asm|mov eax, 1
+asm|{
+asm|mov eax, 2
+asm|}
+asm|}
+asm|}
+block|}
+end_function
+
+begin_function
+name|void
+name|t11
+parameter_list|()
+block|{
+do|do
+block|{
+asm|__asm mov eax, 0
+asm|__asm {
+asm|__asm mov edx, 1
+asm|}
+block|}
+do|while
+condition|(
+literal|0
+condition|)
+do|;
 block|}
 end_function
 

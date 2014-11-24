@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -Os -o - %s |
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -Os -std=c99 -o - %s | FileCheck %s
+end_comment
+
+begin_comment
 comment|// CHECK: define signext i8 @f0(i32 %x) [[NUW:#[0-9]+]]
 end_comment
 
@@ -639,6 +643,50 @@ name|void
 parameter_list|)
 block|{
 name|setjmp
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @f20()
+end_comment
+
+begin_comment
+comment|// CHECK: {
+end_comment
+
+begin_comment
+comment|// CHECK: call i32 @_setjmp(i32* null)
+end_comment
+
+begin_comment
+comment|// CHECK: [[RT_CALL]]
+end_comment
+
+begin_comment
+comment|// CHECK: ret void
+end_comment
+
+begin_function_decl
+name|int
+name|_setjmp
+parameter_list|(
+name|jmp_buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f20
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|_setjmp
 argument_list|(
 literal|0
 argument_list|)

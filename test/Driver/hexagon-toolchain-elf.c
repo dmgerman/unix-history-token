@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: hexagon-registered-target
-end_comment
-
-begin_comment
 comment|// -----------------------------------------------------------------------------
 end_comment
 
@@ -484,7 +480,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK011 %s
 end_comment
 
 begin_comment
-comment|// CHECK011: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK011: "-cc1"
 end_comment
 
 begin_comment
@@ -576,7 +572,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK012 %s
 end_comment
 
 begin_comment
-comment|// CHECK012: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK012: "-cc1"
 end_comment
 
 begin_comment
@@ -676,7 +672,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK013 %s
 end_comment
 
 begin_comment
-comment|// CHECK013: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK013: "-cc1"
 end_comment
 
 begin_comment
@@ -768,7 +764,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK014 %s
 end_comment
 
 begin_comment
-comment|// CHECK014: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK014: "-cc1"
 end_comment
 
 begin_comment
@@ -848,7 +844,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK015 %s
 end_comment
 
 begin_comment
-comment|// CHECK015: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK015: "-cc1"
 end_comment
 
 begin_comment
@@ -964,7 +960,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK016 %s
 end_comment
 
 begin_comment
-comment|// CHECK016: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK016: "-cc1"
 end_comment
 
 begin_comment
@@ -1088,7 +1084,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK017 %s
 end_comment
 
 begin_comment
-comment|// CHECK017: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK017: "-cc1"
 end_comment
 
 begin_comment
@@ -1188,7 +1184,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK018 %s
 end_comment
 
 begin_comment
-comment|// CHECK018: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK018: "-cc1"
 end_comment
 
 begin_comment
@@ -1288,7 +1284,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK019 %s
 end_comment
 
 begin_comment
-comment|// CHECK019: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK019: "-cc1"
 end_comment
 
 begin_comment
@@ -1400,7 +1396,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK020 %s
 end_comment
 
 begin_comment
-comment|// CHECK020: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK020: "-cc1"
 end_comment
 
 begin_comment
@@ -1496,7 +1492,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK021 %s
 end_comment
 
 begin_comment
-comment|// CHECK021: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK021: "-cc1"
 end_comment
 
 begin_comment
@@ -1620,7 +1616,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK022 %s
 end_comment
 
 begin_comment
-comment|// CHECK022: "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK022: "-cc1"
 end_comment
 
 begin_comment
@@ -1724,7 +1720,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK023 %s
 end_comment
 
 begin_comment
-comment|// CHECK023:      "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK023:      "-cc1"
 end_comment
 
 begin_comment
@@ -1812,7 +1808,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK024 %s
 end_comment
 
 begin_comment
-comment|// CHECK024:      "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK024:      "-cc1"
 end_comment
 
 begin_comment
@@ -1904,7 +1900,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK025 %s
 end_comment
 
 begin_comment
-comment|// CHECK025:      "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK025:      "-cc1"
 end_comment
 
 begin_comment
@@ -1964,7 +1960,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK026 %s
 end_comment
 
 begin_comment
-comment|// CHECK026:      "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK026:      "-cc1"
 end_comment
 
 begin_comment
@@ -2000,7 +1996,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK027 %s
 end_comment
 
 begin_comment
-comment|// CHECK027:      "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK027:      "-cc1"
 end_comment
 
 begin_comment
@@ -2044,7 +2040,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK028 %s
 end_comment
 
 begin_comment
-comment|// CHECK028:      "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK028:      "-cc1"
 end_comment
 
 begin_comment
@@ -2104,7 +2100,7 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK029 %s
 end_comment
 
 begin_comment
-comment|// CHECK029:      "{{.*}}clang{{.*}}" "-cc1"
+comment|// CHECK029:      "-cc1"
 end_comment
 
 begin_comment

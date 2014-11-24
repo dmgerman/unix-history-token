@@ -560,7 +560,7 @@ comment|// Darwin is a beautiful and unique snowflake when it comes to these fla
 end_comment
 
 begin_comment
-comment|// When targetting a 32-bit darwin system, the -fno-* flag variants work and
+comment|// When targeting a 32-bit darwin system, the -fno-* flag variants work and
 end_comment
 
 begin_comment
@@ -812,7 +812,47 @@ comment|// On OpenBSD, PIE is enabled by default, but can be disabled.
 end_comment
 
 begin_comment
+comment|// RUN: %clang -c %s -target amd64-pc-openbsd -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE1
+end_comment
+
+begin_comment
 comment|// RUN: %clang -c %s -target i386-pc-openbsd -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target mips64-unknown-openbsd -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target mips64el-unknown-openbsd -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target powerpc-unknown-openbsd -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target sparc64-unknown-openbsd -### 2>&1 \
 end_comment
 
 begin_comment
@@ -841,6 +881,54 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NOPIE-LD
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// On Android PIC is enabled by default
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target i686-linux-android -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target arm-linux-androideabi -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target mipsel-linux-android -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target aarch64-linux-android -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -c %s -target arm64-linux-android -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC1
 end_comment
 
 end_unit

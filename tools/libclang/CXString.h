@@ -92,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -274,6 +274,30 @@ name|CXString
 name|str
 parameter_list|)
 function_decl|;
+block|}
+specifier|static
+specifier|inline
+name|StringRef
+name|getContents
+parameter_list|(
+specifier|const
+name|CXUnsavedFile
+modifier|&
+name|UF
+parameter_list|)
+block|{
+return|return
+name|StringRef
+argument_list|(
+name|UF
+operator|.
+name|Contents
+argument_list|,
+name|UF
+operator|.
+name|Length
+argument_list|)
+return|;
 block|}
 block|}
 end_decl_stmt

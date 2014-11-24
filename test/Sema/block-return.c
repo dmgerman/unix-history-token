@@ -565,7 +565,7 @@ comment|// expected-warning{{implicitly declaring library function 'printf' with
 end_comment
 
 begin_comment
-comment|// expected-note{{please include the header<stdio.h> or explicitly provide a declaration for 'printf'}}
+comment|// expected-note{{include the header<stdio.h> or explicitly provide a declaration for 'printf'}}
 end_comment
 
 begin_function_decl

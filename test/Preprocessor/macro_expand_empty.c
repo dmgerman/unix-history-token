@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only %s
+comment|// RUN: %clang_cc1 -E %s | FileCheck --strict-whitespace %s
 end_comment
 
 begin_comment
@@ -111,6 +111,34 @@ begin_macro
 name|IDENTITY0
 argument_list|()
 end_macro
+
+begin_define
+define|#
+directive|define
+name|FOO
+parameter_list|()
+value|BAR() second
+end_define
+
+begin_define
+define|#
+directive|define
+name|BAR
+parameter_list|()
+end_define
+
+begin_expr_stmt
+name|first
+comment|// CHECK: {{^}}first{{$}}
+name|FOO
+argument_list|()
+comment|// CHECK: {{^}} second{{$}}
+name|third
+end_expr_stmt
+
+begin_comment
+comment|// CHECK: {{^}}third{{$}}
+end_comment
 
 end_unit
 

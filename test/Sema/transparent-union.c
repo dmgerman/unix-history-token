@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -fsyntax-only -Xclang -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_typedef
@@ -408,7 +408,7 @@ block|{
 name|int4
 name|vec
 decl_stmt|;
-comment|// expected-warning{{first field of a transparent union cannot have vector type 'int4'; transparent_union attribute ignored}}
+comment|// expected-warning{{first field of a transparent union cannot have vector type 'int4' (vector of 4 'int' values); transparent_union attribute ignored}}
 block|}
 name|TU5
 name|__attribute__
@@ -416,6 +416,93 @@ typedef|((
 name|transparent_union
 typedef|));
 end_typedef
+
+begin_union
+union|union
+name|pr15134
+block|{
+name|unsigned
+name|int
+name|u
+decl_stmt|;
+struct|struct
+block|{
+name|unsigned
+name|int
+name|expo
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
+name|int
+name|mant
+range|:
+literal|30
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+struct|;
+comment|// The packed attribute is acceptable because it defines a less strict
+comment|// alignment than required by the first field of the transparent union.
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|transparent_union
+operator|)
+argument_list|)
+union|;
+end_union
+
+begin_union
+union|union
+name|pr15134v2
+block|{
+struct|struct
+block|{
+comment|// expected-note {{alignment of first field is 32 bits}}
+name|unsigned
+name|int
+name|u1
+decl_stmt|;
+name|unsigned
+name|int
+name|u2
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+block|{
+comment|// expected-warning {{alignment of field '' (64 bits) does not match the alignment of the first field in transparent union; transparent_union attribute ignored}}
+name|unsigned
+name|int
+name|u3
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|aligned
+argument_list|(
+literal|8
+argument_list|)
+operator|)
+argument_list|)
+struct|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|transparent_union
+operator|)
+argument_list|)
+union|;
+end_union
 
 end_unit
 

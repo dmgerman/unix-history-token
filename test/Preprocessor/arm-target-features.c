@@ -36,7 +36,7 @@ comment|// CHECK-V7: __ARM_ARCH_7A__ 1
 end_comment
 
 begin_comment
-comment|// CHECK-NOT-V7: __ARM_FEATURE_CRC32
+comment|// CHECK-V7-NOT: __ARM_FEATURE_CRC32
 end_comment
 
 begin_comment
@@ -204,6 +204,34 @@ comment|// THUMBV8A-EABI:#define __ARM_ARCH_EXT_IDIV__ 1
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm-none-linux-gnu -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-DEFS %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEFS:#define __ARM_SIZEOF_MINIMAL_ENUM 4
+end_comment
+
+begin_comment
+comment|// CHECK-DEFS:#define __ARM_SIZEOF_WCHAR_T 4
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-none-linux-gnu -fshort-wchar -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-SHORTWCHAR %s
+end_comment
+
+begin_comment
+comment|// CHECK-SHORTWCHAR:#define __ARM_SIZEOF_WCHAR_T 2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-none-linux-gnu -fshort-enums -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-SHORTENUMS %s
+end_comment
+
+begin_comment
+comment|// CHECK-SHORTENUMS:#define __ARM_SIZEOF_MINIMAL_ENUM 1
+end_comment
+
+begin_comment
 comment|// Test that -mhwdiv has the right effect for a target CPU which has hwdiv enabled by default.
 end_comment
 
@@ -272,6 +300,110 @@ comment|// DEFAULTHWDIV-NONEHWDIV-THUMB-NOT:#define __ARM_ARCH_EXT_IDIV__
 end_comment
 
 begin_comment
+comment|// Check that -mfpu works properly for Cortex-A7 (enabled by default).
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a7 -x c -E -dM %s -o - | FileCheck --check-prefix=DEFAULTFPU-A7 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a7 -x c -E -dM %s -o - | FileCheck --check-prefix=DEFAULTFPU-A7 %s
+end_comment
+
+begin_comment
+comment|// DEFAULTFPU-A7:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// DEFAULTFPU-A7:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a7 -mfpu=none -x c -E -dM %s -o - | FileCheck --check-prefix=FPUNONE-A7 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a7 -mfpu=none -x c -E -dM %s -o - | FileCheck --check-prefix=FPUNONE-A7 %s
+end_comment
+
+begin_comment
+comment|// FPUNONE-A7-NOT:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// FPUNONE-A7-NOT:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a7 -mfpu=vfp4 -x c -E -dM %s -o - | FileCheck --check-prefix=NONEON-A7 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a7 -mfpu=vfp4 -x c -E -dM %s -o - | FileCheck --check-prefix=NONEON-A7 %s
+end_comment
+
+begin_comment
+comment|// NONEON-A7-NOT:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// NONEON-A7:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// Check that -mfpu works properly for Cortex-A5 (enabled by default).
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a5 -x c -E -dM %s -o - | FileCheck --check-prefix=DEFAULTFPU-A5 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a5 -x c -E -dM %s -o - | FileCheck --check-prefix=DEFAULTFPU-A5 %s
+end_comment
+
+begin_comment
+comment|// DEFAULTFPU-A5:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// DEFAULTFPU-A5:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a5 -mfpu=none -x c -E -dM %s -o - | FileCheck --check-prefix=FPUNONE-A5 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a5 -mfpu=none -x c -E -dM %s -o - | FileCheck --check-prefix=FPUNONE-A5 %s
+end_comment
+
+begin_comment
+comment|// FPUNONE-A5-NOT:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// FPUNONE-A5-NOT:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a5 -mfpu=vfp3-d16 -x c -E -dM %s -o - | FileCheck --check-prefix=NONEON-A5 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a5 -mfpu=vfp3-d16 -x c -E -dM %s -o - | FileCheck --check-prefix=NONEON-A5 %s
+end_comment
+
+begin_comment
+comment|// NONEON-A5-NOT:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// NONEON-A5:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
 comment|// FIXME: add check for further predefines
 end_comment
 
@@ -293,6 +425,54 @@ end_comment
 
 begin_comment
 comment|// A5-THUMB-NOT:#define __ARM_ARCH_EXT_IDIV__
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mcpu=cortex-a5 -x c -E -dM %s -o - | FileCheck --check-prefix=A5 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-a5 -x c -E -dM %s -o - | FileCheck --check-prefix=A5 %s
+end_comment
+
+begin_comment
+comment|// A5:#define __ARM_ARCH 7
+end_comment
+
+begin_comment
+comment|// A5:#define __ARM_ARCH_7A__ 1
+end_comment
+
+begin_comment
+comment|// A5:#define __ARM_ARCH_PROFILE 'A'
+end_comment
+
+begin_comment
+comment|// Test whether predefines are as expected when targeting cortex-a7.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mcpu=cortex-a7 -x c -E -dM %s -o - | FileCheck --check-prefix=A7 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-a7 -x c -E -dM %s -o - | FileCheck --check-prefix=A7 %s
+end_comment
+
+begin_comment
+comment|// A7:#define __ARM_ARCH 7
+end_comment
+
+begin_comment
+comment|// A7:#define __ARM_ARCH_7A__ 1
+end_comment
+
+begin_comment
+comment|// A7:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// A7:#define __ARM_ARCH_PROFILE 'A'
 end_comment
 
 begin_comment
@@ -333,6 +513,70 @@ end_comment
 
 begin_comment
 comment|// A9-THUMB-NOT:#define __ARM_ARCH_EXT_IDIV__
+end_comment
+
+begin_comment
+comment|// Check that -mfpu works properly for Cortex-A12 (enabled by default).
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a12 -x c -E -dM %s -o - | FileCheck --check-prefix=DEFAULTFPU-A12 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a12 -x c -E -dM %s -o - | FileCheck --check-prefix=DEFAULTFPU-A12 %s
+end_comment
+
+begin_comment
+comment|// DEFAULTFPU-A12:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// DEFAULTFPU-A12:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a12 -mfpu=none -x c -E -dM %s -o - | FileCheck --check-prefix=FPUNONE-A12 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a12 -mfpu=none -x c -E -dM %s -o - | FileCheck --check-prefix=FPUNONE-A12 %s
+end_comment
+
+begin_comment
+comment|// FPUNONE-A12-NOT:#define __ARM_NEON__ 1
+end_comment
+
+begin_comment
+comment|// FPUNONE-A12-NOT:#define __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// Test whether predefines are as expected when targeting cortex-a12.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mcpu=cortex-a12 -x c -E -dM %s -o - | FileCheck --check-prefix=A12 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-a12 -x c -E -dM %s -o - | FileCheck --check-prefix=A12 %s
+end_comment
+
+begin_comment
+comment|// A12:#define __ARM_ARCH 7
+end_comment
+
+begin_comment
+comment|// A12:#define __ARM_ARCH_7A__ 1
+end_comment
+
+begin_comment
+comment|// A12:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// A12:#define __ARM_ARCH_PROFILE 'A'
 end_comment
 
 begin_comment
@@ -449,6 +693,34 @@ end_comment
 
 begin_comment
 comment|// M4-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// Test whether predefines are as expected when targeting krait.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mcpu=krait -x c -E -dM %s -o - | FileCheck --check-prefix=KRAIT-ARM %s
+end_comment
+
+begin_comment
+comment|// KRAIT-ARM:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// KRAIT-ARM:#define  __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=krait -x c -E -dM %s -o - | FileCheck --check-prefix=KRAIT-THUMB %s
+end_comment
+
+begin_comment
+comment|// KRAIT-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// KRAIT-THUMB:#define  __ARM_VFPV4__ 1
 end_comment
 
 end_unit

@@ -7,6 +7,14 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -DTEST1 -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -fsyntax-only -verify %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -DTEST1 -fsyntax-only -verify %s
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

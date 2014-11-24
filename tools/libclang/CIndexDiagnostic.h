@@ -385,74 +385,73 @@ name|CXStoredDiagnostic
 argument_list|()
 block|{}
 comment|/// \brief Return the severity of the diagnostic.
-name|virtual
 name|CXDiagnosticSeverity
 name|getSeverity
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the location of the diagnostic.
-name|virtual
 name|CXSourceLocation
 name|getLocation
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the spelling of the diagnostic.
-name|virtual
 name|CXString
 name|getSpelling
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the text for the diagnostic option.
-name|virtual
 name|CXString
 name|getDiagnosticOption
 argument_list|(
 argument|CXString *Disable
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the category of the diagnostic.
-name|virtual
 name|unsigned
 name|getCategory
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the category string of the diagnostic.
-name|virtual
 name|CXString
 name|getCategoryText
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the number of source ranges for the diagnostic.
-name|virtual
 name|unsigned
 name|getNumRanges
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the source ranges for the diagnostic.
-name|virtual
 name|CXSourceRange
 name|getRange
 argument_list|(
 argument|unsigned Range
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the number of FixIts.
-name|virtual
 name|unsigned
 name|getNumFixIts
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Return the FixIt information (source range and inserted text).
-name|virtual
 name|CXString
 name|getFixIt
 argument_list|(
@@ -461,6 +460,7 @@ argument_list|,
 argument|CXSourceRange *ReplacementRange
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool

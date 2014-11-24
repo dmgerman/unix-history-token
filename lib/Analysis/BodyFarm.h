@@ -95,6 +95,12 @@ name|class
 name|FunctionDecl
 decl_stmt|;
 name|class
+name|ObjCMethodDecl
+decl_stmt|;
+name|class
+name|ObjCPropertyDecl
+decl_stmt|;
+name|class
 name|Stmt
 decl_stmt|;
 name|class
@@ -125,6 +131,17 @@ operator|*
 name|D
 argument_list|)
 expr_stmt|;
+comment|/// Factory method for creating bodies for Objective-C properties.
+name|Stmt
+modifier|*
+name|getBody
+parameter_list|(
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 name|private
 label|:
 typedef|typedef

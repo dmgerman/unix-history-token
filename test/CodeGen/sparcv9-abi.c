@@ -101,6 +101,26 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK-LABEL: define fp128 @f_ld(fp128 %x)
+end_comment
+
+begin_function
+name|long
+name|double
+name|f_ld
+parameter_list|(
+name|long
+name|double
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+return|;
+block|}
+end_function
+
+begin_comment
 comment|// Small structs are passed in registers.
 end_comment
 

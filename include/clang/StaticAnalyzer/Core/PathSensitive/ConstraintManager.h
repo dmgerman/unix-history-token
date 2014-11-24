@@ -297,7 +297,7 @@ argument_list|(
 operator|(
 name|ProgramStateRef
 operator|)
-name|NULL
+name|nullptr
 argument_list|,
 name|State
 argument_list|)
@@ -332,7 +332,7 @@ argument_list|,
 operator|(
 name|ProgramStateRef
 operator|)
-name|NULL
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -365,7 +365,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual

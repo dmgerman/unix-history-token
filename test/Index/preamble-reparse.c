@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -test-load-source-reparse 5 local "-remap-file=%S/Inputs/preamble-reparse-1.c;%S/Inputs/preamble-reparse-2.c" %S/Inputs/preamble-reparse-1.c | FileCheck %s
+comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -test-load-source-reparse 5 local "-remap-file=%S/Inputs/preamble-reparse-1.c,%S/Inputs/preamble-reparse-2.c" %S/Inputs/preamble-reparse-1.c | FileCheck %s
 end_comment
 
 begin_comment

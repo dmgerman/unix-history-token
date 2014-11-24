@@ -98,13 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Sema/Sema.h"
+file|"clang/Sema/LoopHint.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"clang/Sema/Sema.h"
 end_include
 
 begin_include
@@ -129,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/SaveAndRestore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -175,9 +181,6 @@ name|class
 name|ParsingFieldDeclarator
 decl_stmt|;
 name|class
-name|PragmaUnusedHandler
-decl_stmt|;
-name|class
 name|ColonProtectionRAIIObject
 decl_stmt|;
 name|class
@@ -202,10 +205,6 @@ range|:
 name|public
 name|CodeCompletionHandler
 block|{
-name|friend
-name|class
-name|PragmaUnusedHandler
-block|;
 name|friend
 name|class
 name|ColonProtectionRAIIObject
@@ -390,12 +389,13 @@ name|IdentifierInfo
 operator|*
 name|Ident_override
 block|;
-comment|// C++ type trait keywords that have can be reverted to identifiers and
-comment|// still used as type traits.
+comment|// Some token kinds such as C++ type traits can be reverted to identifiers and
+comment|// still get used as keywords depending on context.
 name|llvm
 operator|::
 name|SmallDenseMap
 operator|<
+specifier|const
 name|IdentifierInfo
 operator|*
 block|,
@@ -403,91 +403,207 @@ name|tok
 operator|::
 name|TokenKind
 operator|>
-name|RevertableTypeTraits
+name|ContextualKeywords
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|AlignHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|GCCVisibilityHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|OptionsHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|PackHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|MSStructHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|UnusedHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|WeakHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|RedefineExtnameHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|FPContractHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|OpenCLExtensionHandler
 block|;
-name|OwningPtr
-operator|<
-name|CommentHandler
-operator|>
-name|CommentSemaHandler
-block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|OpenMPHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|MSCommentHandler
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|PragmaHandler
 operator|>
 name|MSDetectMismatchHandler
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSPointersToMembers
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSVtorDisp
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSInitSeg
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSDataSeg
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSBSSSeg
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSConstSeg
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSCodeSeg
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|MSSection
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|OptimizeHandler
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|LoopHintHandler
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|PragmaHandler
+operator|>
+name|UnrollHintHandler
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|CommentHandler
+operator|>
+name|CommentSemaHandler
 block|;
 comment|/// Whether the '>' token acts as an operator or not. This will be
 comment|/// true except when we are parsing an expression within a C++
@@ -503,7 +619,7 @@ comment|/// ColonProtectionRAIIObject RAII object.
 name|bool
 name|ColonIsSacred
 block|;
-comment|/// \brief When true, we are directly inside an Objective-C messsage
+comment|/// \brief When true, we are directly inside an Objective-C message
 comment|/// send expression.
 comment|///
 comment|/// This is managed by the \c InMessageExpressionRAIIObject class, and
@@ -565,6 +681,20 @@ name|Depth
 block|;
 operator|++
 name|AddedLevels
+block|;     }
+name|void
+name|addDepth
+argument_list|(
+argument|unsigned D
+argument_list|)
+block|{
+name|Depth
+operator|+=
+name|D
+block|;
+name|AddedLevels
+operator|+=
+name|D
 block|;     }
 name|unsigned
 name|getDepth
@@ -714,6 +844,18 @@ name|getCurScope
 argument_list|()
 return|;
 block|}
+name|void
+name|incrementMSLocalManglingNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Actions
+operator|.
+name|incrementMSLocalManglingNumber
+argument_list|()
+return|;
+block|}
 name|Decl
 operator|*
 name|getObjCDeclContext
@@ -789,8 +931,6 @@ modifier|*
 name|ExprArg
 typedef|;
 typedef|typedef
-name|llvm
-operator|::
 name|MutableArrayRef
 operator|<
 name|Stmt
@@ -880,58 +1020,37 @@ modifier|&
 name|Result
 parameter_list|)
 function_decl|;
+name|bool
+name|ParseTopLevelDecl
+parameter_list|()
+block|{
+name|DeclGroupPtrTy
+name|Result
+decl_stmt|;
+return|return
+name|ParseTopLevelDecl
+argument_list|(
+name|Result
+argument_list|)
+return|;
+block|}
 comment|/// ConsumeToken - Consume the current 'peek token' and lex the next one.
-comment|/// This does not work with all kinds of tokens: strings and specific other
-comment|/// tokens must be consumed with custom methods below.  This returns the
-comment|/// location of the consumed token.
+comment|/// This does not work with special tokens: string literals, code completion
+comment|/// and balanced tokens must be handled using the specific consume methods.
+comment|/// Returns the location of the consumed token.
 name|SourceLocation
 name|ConsumeToken
-parameter_list|(
-name|bool
-name|ConsumeCodeCompletionTok
-init|=
-name|false
-parameter_list|)
+parameter_list|()
 block|{
 name|assert
 argument_list|(
 operator|!
-name|isTokenStringLiteral
-argument_list|()
-operator|&&
-operator|!
-name|isTokenParen
-argument_list|()
-operator|&&
-operator|!
-name|isTokenBracket
-argument_list|()
-operator|&&
-operator|!
-name|isTokenBrace
+name|isTokenSpecial
 argument_list|()
 operator|&&
 literal|"Should consume special tokens with Consume*Token"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ConsumeCodeCompletionTok
-operator|&&
-name|Tok
-operator|.
-name|is
-argument_list|(
-name|tok
-operator|::
-name|code_completion
-argument_list|)
-condition|)
-return|return
-name|handleUnexpectedCodeCompletionToken
-argument_list|()
-return|;
 name|PrevTokLocation
 operator|=
 name|Tok
@@ -948,6 +1067,86 @@ argument_list|)
 expr_stmt|;
 return|return
 name|PrevTokLocation
+return|;
+block|}
+name|bool
+name|TryConsumeToken
+argument_list|(
+name|tok
+operator|::
+name|TokenKind
+name|Expected
+argument_list|)
+block|{
+if|if
+condition|(
+name|Tok
+operator|.
+name|isNot
+argument_list|(
+name|Expected
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+name|assert
+argument_list|(
+operator|!
+name|isTokenSpecial
+argument_list|()
+operator|&&
+literal|"Should consume special tokens with Consume*Token"
+argument_list|)
+expr_stmt|;
+name|PrevTokLocation
+operator|=
+name|Tok
+operator|.
+name|getLocation
+argument_list|()
+expr_stmt|;
+name|PP
+operator|.
+name|Lex
+argument_list|(
+name|Tok
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|TryConsumeToken
+argument_list|(
+name|tok
+operator|::
+name|TokenKind
+name|Expected
+argument_list|,
+name|SourceLocation
+operator|&
+name|Loc
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|TryConsumeToken
+argument_list|(
+name|Expected
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+name|Loc
+operator|=
+name|PrevTokLocation
+expr_stmt|;
+return|return
+name|true
 return|;
 block|}
 name|private
@@ -1034,7 +1233,6 @@ name|r_brace
 return|;
 block|}
 comment|/// isTokenStringLiteral - True if this token is a string-literal.
-comment|///
 name|bool
 name|isTokenStringLiteral
 argument_list|()
@@ -1049,6 +1247,35 @@ name|Tok
 operator|.
 name|getKind
 argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// isTokenSpecial - True if this token requires special consumption methods.
+name|bool
+name|isTokenSpecial
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isTokenStringLiteral
+argument_list|()
+operator|||
+name|isTokenParen
+argument_list|()
+operator|||
+name|isTokenBracket
+argument_list|()
+operator|||
+name|isTokenBrace
+argument_list|()
+operator|||
+name|Tok
+operator|.
+name|is
+argument_list|(
+name|tok
+operator|::
+name|code_completion
 argument_list|)
 return|;
 block|}
@@ -1079,7 +1306,6 @@ return|return
 name|ConsumeParen
 argument_list|()
 return|;
-elseif|else
 if|if
 condition|(
 name|isTokenBracket
@@ -1089,7 +1315,6 @@ return|return
 name|ConsumeBracket
 argument_list|()
 return|;
-elseif|else
 if|if
 condition|(
 name|isTokenBrace
@@ -1099,7 +1324,6 @@ return|return
 name|ConsumeBrace
 argument_list|()
 return|;
-elseif|else
 if|if
 condition|(
 name|isTokenStringLiteral
@@ -1109,12 +1333,29 @@ return|return
 name|ConsumeStringToken
 argument_list|()
 return|;
-else|else
+if|if
+condition|(
+name|Tok
+operator|.
+name|is
+argument_list|(
+name|tok
+operator|::
+name|code_completion
+argument_list|)
+condition|)
+return|return
+name|ConsumeCodeCompletionTok
+condition|?
+name|ConsumeCodeCompletionToken
+argument_list|()
+else|:
+name|handleUnexpectedCodeCompletionToken
+argument_list|()
+return|;
 return|return
 name|ConsumeToken
-argument_list|(
-name|ConsumeCodeCompletionTok
-argument_list|)
+argument_list|()
 return|;
 block|}
 comment|/// ConsumeParen - This consume method keeps the paren count up-to-date.
@@ -1318,8 +1559,9 @@ return|;
 block|}
 comment|/// \brief Consume the current code-completion token.
 comment|///
-comment|/// This routine should be called to consume the code-completion token once
-comment|/// a code-completion action has already been invoked.
+comment|/// This routine can be called to consume the code-completion token and
+comment|/// continue processing in special cases where \c cutOffParsing() isn't
+comment|/// desired, such as token caching or completion with lookahead.
 name|SourceLocation
 name|ConsumeCodeCompletionToken
 parameter_list|()
@@ -1392,6 +1634,58 @@ name|eof
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Determine if we're at the end of the file or at a transition
+comment|/// between modules.
+name|bool
+name|isEofOrEom
+parameter_list|()
+block|{
+name|tok
+operator|::
+name|TokenKind
+name|Kind
+operator|=
+name|Tok
+operator|.
+name|getKind
+argument_list|()
+expr_stmt|;
+return|return
+name|Kind
+operator|==
+name|tok
+operator|::
+name|eof
+operator|||
+name|Kind
+operator|==
+name|tok
+operator|::
+name|annot_module_begin
+operator|||
+name|Kind
+operator|==
+name|tok
+operator|::
+name|annot_module_end
+operator|||
+name|Kind
+operator|==
+name|tok
+operator|::
+name|annot_module_include
+return|;
+block|}
+comment|/// \brief Initialize all pragma handlers.
+name|void
+name|initializePragmaHandlers
+parameter_list|()
+function_decl|;
+comment|/// \brief Destroy and reset all pragma handlers.
+name|void
+name|resetPragmaHandlers
+parameter_list|()
+function_decl|;
 comment|/// \brief Handle the annotation token produced for #pragma unused(...)
 name|void
 name|HandlePragmaUnused
@@ -1420,6 +1714,48 @@ comment|/// #pragma comment...
 name|void
 name|HandlePragmaMSComment
 parameter_list|()
+function_decl|;
+name|void
+name|HandlePragmaMSPointersToMembers
+parameter_list|()
+function_decl|;
+name|void
+name|HandlePragmaMSVtorDisp
+parameter_list|()
+function_decl|;
+name|void
+name|HandlePragmaMSPragma
+parameter_list|()
+function_decl|;
+name|bool
+name|HandlePragmaMSSection
+parameter_list|(
+name|StringRef
+name|PragmaName
+parameter_list|,
+name|SourceLocation
+name|PragmaLocation
+parameter_list|)
+function_decl|;
+name|bool
+name|HandlePragmaMSSegment
+parameter_list|(
+name|StringRef
+name|PragmaName
+parameter_list|,
+name|SourceLocation
+name|PragmaLocation
+parameter_list|)
+function_decl|;
+name|bool
+name|HandlePragmaMSInitSeg
+parameter_list|(
+name|StringRef
+name|PragmaName
+parameter_list|,
+name|SourceLocation
+name|PragmaLocation
+parameter_list|)
 function_decl|;
 comment|/// \brief Handle the annotation token produced for
 comment|/// #pragma align...
@@ -1461,6 +1797,12 @@ comment|/// \brief Handle the annotation token produced for
 comment|/// #pragma clang __debug captured
 name|StmtResult
 name|HandlePragmaCaptured
+parameter_list|()
+function_decl|;
+comment|/// \brief Handle the annotation token produced for
+comment|/// #pragma clang loop and #pragma unroll.
+name|LoopHint
+name|HandlePragmaLoopHint
 parameter_list|()
 function_decl|;
 comment|/// GetLookAheadToken - This peeks ahead N tokens and returns that token
@@ -1697,7 +2039,7 @@ name|CorrectionCandidateCallback
 modifier|*
 name|CCC
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Push a tok::annot_cxxscope token onto the token stream.
@@ -1859,6 +2201,14 @@ parameter_list|(
 name|bool
 name|DisableKeyword
 parameter_list|)
+function_decl|;
+comment|/// TryIdentKeywordUpgrade - Convert the current identifier token back to
+comment|/// its original kind and return true if it was disabled by
+comment|/// TryKeywordIdentFallback(), otherwise return false. Use this to
+comment|/// contextually enable keywords.
+name|bool
+name|TryIdentKeywordUpgrade
+parameter_list|()
 function_decl|;
 comment|/// \brief Get the TemplateIdAnnotation from the token.
 name|TemplateIdAnnotation
@@ -2115,8 +2465,7 @@ name|WithinObjCContainer
 argument_list|(
 argument|P.ParsingInObjCContainer
 argument_list|,
-argument|DC !=
-literal|0
+argument|DC != nullptr
 argument_list|)
 block|{
 if|if
@@ -2168,8 +2517,10 @@ empty_stmt|;
 comment|/// ExpectAndConsume - The parser expects that 'ExpectedTok' is next in the
 comment|/// input.  If so, it is consumed and false is returned.
 comment|///
-comment|/// If the input is malformed, this emits the specified diagnostic.  Next, if
-comment|/// SkipToTok is specified, it calls SkipUntil(SkipToTok).  Finally, true is
+comment|/// If a trivial punctuator misspelling is encountered, a FixIt error
+comment|/// diagnostic is issued and false is returned after recovery.
+comment|///
+comment|/// If the input is malformed, this emits the specified diagnostic and true is
 comment|/// returned.
 name|bool
 name|ExpectAndConsume
@@ -2181,22 +2532,15 @@ name|ExpectedTok
 argument_list|,
 name|unsigned
 name|Diag
+operator|=
+name|diag
+operator|::
+name|err_expected
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|DiagMsg
 operator|=
 literal|""
-argument_list|,
-name|tok
-operator|::
-name|TokenKind
-name|SkipToTok
-operator|=
-name|tok
-operator|::
-name|unknown
 argument_list|)
 decl_stmt|;
 comment|/// \brief The parser expects a semicolon and, if present, will consume it.
@@ -2282,15 +2626,16 @@ name|public
 label|:
 comment|// ParseScope - Construct a new object to manage a scope in the
 comment|// parser Self where the new Scope is created with the flags
-comment|// ScopeFlags, but only when ManageScope is true (the default). If
-comment|// ManageScope is false, this object does nothing.
+comment|// ScopeFlags, but only when we aren't about to enter a compound statement.
 name|ParseScope
 argument_list|(
 argument|Parser *Self
 argument_list|,
 argument|unsigned ScopeFlags
 argument_list|,
-argument|bool ManageScope = true
+argument|bool EnteredScope = true
+argument_list|,
+argument|bool BeforeCompoundStmt = false
 argument_list|)
 block|:
 name|Self
@@ -2300,7 +2645,10 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|ManageScope
+name|EnteredScope
+operator|&&
+operator|!
+name|BeforeCompoundStmt
 condition|)
 name|Self
 operator|->
@@ -2310,12 +2658,23 @@ name|ScopeFlags
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|BeforeCompoundStmt
+condition|)
+name|Self
+operator|->
+name|incrementMSLocalManglingNumber
+argument_list|()
+expr_stmt|;
 name|this
 operator|->
 name|Self
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
+block|}
 block|}
 comment|// Exit - Exit the scope associated with this object now, rather
 comment|// than waiting until the object is destroyed.
@@ -2335,7 +2694,7 @@ argument_list|()
 expr_stmt|;
 name|Self
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 block|}
@@ -2779,25 +3138,25 @@ operator|~
 name|LateParsedClass
 argument_list|()
 block|;
-name|virtual
 name|void
 name|ParseLexedMethodDeclarations
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|ParseLexedMemberInitializers
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|ParseLexedMethodDefs
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|ParseLexedAttributes
 argument_list|()
+name|override
 block|;
 name|private
 operator|:
@@ -2870,10 +3229,10 @@ argument_list|(
 argument|Loc
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|ParseLexedAttributes
 argument_list|()
+name|override
 block|;
 name|void
 name|addDecl
@@ -2982,10 +3341,10 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|ParseLexedMethodDefs
 argument_list|()
+name|override
 block|;   }
 decl_stmt|;
 comment|/// LateParsedDefaultArgument - Keeps track of a parameter that may
@@ -3006,7 +3365,7 @@ name|CachedTokens
 operator|*
 name|Toks
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|Param
@@ -3073,13 +3432,13 @@ argument_list|)
 block|,
 name|ExceptionSpecTokens
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{ }
-name|virtual
+block|{}
 name|void
 name|ParseLexedMethodDeclarations
 argument_list|()
+name|override
 block|;
 name|Parser
 operator|*
@@ -3146,10 +3505,10 @@ argument_list|(
 argument|FD
 argument_list|)
 block|{ }
-name|virtual
 name|void
 name|ParseLexedMemberInitializers
 argument_list|()
+name|override
 block|;
 name|Parser
 operator|*
@@ -3390,7 +3749,7 @@ argument_list|)
 operator|,
 name|TemplateParams
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|TemplateLoc
@@ -3439,7 +3798,7 @@ argument_list|)
 operator|,
 name|TemplateParams
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ExternLoc
@@ -3836,7 +4195,7 @@ name|ParsingDeclSpec
 modifier|*
 name|DS
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|bool
@@ -3863,7 +4222,7 @@ name|ParsingDeclSpec
 modifier|*
 name|DS
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|AccessSpecifier
 name|AS
@@ -3906,7 +4265,7 @@ name|LateParsedAttrList
 modifier|*
 name|LateParsedAttrs
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -3926,7 +4285,7 @@ name|SourceLocation
 modifier|*
 name|EndLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|ExprResult
@@ -4622,13 +4981,13 @@ operator|>
 name|Args
 argument_list|)
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|Expr
 operator|*
 name|Data
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// ParseSimpleExpressionList - A simple comma-separated list of expressions,
@@ -4705,6 +5064,10 @@ parameter_list|,
 name|BalancedDelimiterTracker
 modifier|&
 name|Tracker
+parameter_list|,
+name|ColonProtectionRAIIObject
+modifier|&
+name|ColonProt
 parameter_list|)
 function_decl|;
 name|ExprResult
@@ -4801,7 +5164,7 @@ name|bool
 modifier|*
 name|MayBePseudoDestructor
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|bool
 name|IsTypename
@@ -4813,7 +5176,7 @@ modifier|*
 modifier|*
 name|LastII
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -4845,7 +5208,7 @@ name|bool
 operator|*
 name|SkippedInits
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|bool
@@ -5308,7 +5671,7 @@ name|SourceLocation
 modifier|*
 name|TrailingElseLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|StmtResult
@@ -5325,7 +5688,7 @@ name|SourceLocation
 modifier|*
 name|TrailingElseLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|StmtResult
@@ -5494,6 +5857,25 @@ name|ParseMicrosoftAsmStatement
 parameter_list|(
 name|SourceLocation
 name|AsmLoc
+parameter_list|)
+function_decl|;
+name|StmtResult
+name|ParsePragmaLoopHint
+parameter_list|(
+name|StmtVector
+modifier|&
+name|Stmts
+parameter_list|,
+name|bool
+name|OnlyStatement
+parameter_list|,
+name|SourceLocation
+modifier|*
+name|TrailingElseLoc
+parameter_list|,
+name|ParsedAttributesWithRange
+modifier|&
+name|Attrs
 parameter_list|)
 function_decl|;
 comment|/// \brief Describes the behavior that should be taken for an __if_exists
@@ -5668,6 +6050,10 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
+name|StmtResult
+name|ParseSEHLeaveStatement
+parameter_list|()
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Objective-C Statements
 name|StmtResult
@@ -5725,10 +6111,65 @@ comment|// C++ type-specifier-seq or C specifier-qualifier-list
 name|DSC_trailing
 block|,
 comment|// C++11 trailing-type-specifier in a trailing return type
+name|DSC_alias_declaration
+block|,
+comment|// C++11 type-specifier-seq in an alias-declaration
 name|DSC_top_level
+block|,
 comment|// top-level/namespace declaration context
+name|DSC_template_type_arg
+comment|// template type argument context
 block|}
 enum|;
+comment|/// Is this a context in which we are parsing just a type-specifier (or
+comment|/// trailing-type-specifier)?
+specifier|static
+name|bool
+name|isTypeSpecifier
+parameter_list|(
+name|DeclSpecContext
+name|DSC
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|DSC
+condition|)
+block|{
+case|case
+name|DSC_normal
+case|:
+case|case
+name|DSC_class
+case|:
+case|case
+name|DSC_top_level
+case|:
+return|return
+name|false
+return|;
+case|case
+name|DSC_template_type_arg
+case|:
+case|case
+name|DSC_type_specifier
+case|:
+case|case
+name|DSC_trailing
+case|:
+case|case
+name|DSC_alias_declaration
+case|:
+return|return
+name|true
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Missing DeclSpecContext case"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// Information on a C++0x for-range-initializer found while parsing a
 comment|/// declaration which turns out to be a for-range-declaration.
 struct|struct
@@ -5798,7 +6239,7 @@ name|ForRangeInit
 modifier|*
 name|FRI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|bool
@@ -5825,13 +6266,13 @@ name|SourceLocation
 modifier|*
 name|DeclEnd
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|ForRangeInit
 modifier|*
 name|FRI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|Decl
@@ -5874,6 +6315,12 @@ name|TemplateInfo
 init|=
 name|ParsedTemplateInfo
 argument_list|()
+parameter_list|,
+name|ForRangeInit
+modifier|*
+name|FRI
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 name|Decl
@@ -5973,7 +6420,7 @@ name|LateParsedAttrList
 modifier|*
 name|LateAttrs
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|bool
@@ -5993,7 +6440,7 @@ name|LateParsedAttrList
 modifier|*
 name|LateAttrs
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -6169,7 +6616,6 @@ operator|==
 name|TPResult
 operator|::
 name|True
-argument_list|()
 return|;
 return|return
 name|isDeclarationSpecifier
@@ -6232,6 +6678,11 @@ name|true
 argument_list|)
 return|;
 block|}
+comment|/// \brief Determine whether this is a C++1z for-range-identifier.
+name|bool
+name|isForRangeIdentifier
+parameter_list|()
+function_decl|;
 comment|/// \brief Determine whether we are currently at the start of an Objective-C
 comment|/// class message that appears to be missing the open bracket '['.
 name|bool
@@ -6243,7 +6694,10 @@ comment|/// template-id that refers to the current class, determine whether
 comment|/// this is a constructor declarator.
 name|bool
 name|isConstructorDeclarator
-parameter_list|()
+parameter_list|(
+name|bool
+name|Unqualified
+parameter_list|)
 function_decl|;
 comment|/// \brief Specifies the context in which type-id/expression
 comment|/// disambiguation will occur.
@@ -6251,6 +6705,8 @@ enum|enum
 name|TentativeCXXTypeIdContext
 block|{
 name|TypeIdInParens
+block|,
+name|TypeIdUnambiguous
 block|,
 name|TypeIdAsTemplateArgument
 block|}
@@ -6304,6 +6760,36 @@ name|isAmbiguous
 argument_list|)
 return|;
 block|}
+comment|/// \brief Checks if the current tokens form type-id or expression.
+comment|/// It is similar to isTypeIdInParens but does not suppose that type-id
+comment|/// is in parenthesis.
+name|bool
+name|isTypeIdUnambiguously
+parameter_list|()
+block|{
+name|bool
+name|IsAmbiguous
+decl_stmt|;
+if|if
+condition|(
+name|getLangOpts
+argument_list|()
+operator|.
+name|CPlusPlus
+condition|)
+return|return
+name|isCXXTypeId
+argument_list|(
+name|TypeIdUnambiguous
+argument_list|,
+name|IsAmbiguous
+argument_list|)
+return|;
+return|return
+name|isTypeSpecifierQualifier
+argument_list|()
+return|;
+block|}
 comment|/// isCXXDeclarationStatement - C++-specialized function that disambiguates
 comment|/// between a declaration or an expression statement, when parsing function
 comment|/// bodies. Returns true for declaration, false for expression.
@@ -6337,7 +6823,7 @@ name|bool
 modifier|*
 name|IsAmbiguous
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// isCXXConditionDeclaration - Disambiguates between a declaration or an
@@ -6380,112 +6866,17 @@ return|;
 block|}
 comment|/// TPResult - Used as the result value for functions whose purpose is to
 comment|/// disambiguate C++ constructs by "tentatively parsing" them.
-comment|/// This is a class instead of a simple enum because the implicit enum-to-bool
-comment|/// conversions may cause subtle bugs.
+name|enum
 name|class
 name|TPResult
 block|{
-enum|enum
-name|Result
-block|{
-name|TPR_true
-block|,
-name|TPR_false
-block|,
-name|TPR_ambiguous
-block|,
-name|TPR_error
-block|}
-enum|;
-name|Result
-name|Res
-decl_stmt|;
-name|TPResult
-argument_list|(
-argument|Result result
-argument_list|)
-block|:
-name|Res
-argument_list|(
-argument|result
-argument_list|)
-block|{}
-name|public
-label|:
-specifier|static
-name|TPResult
 name|True
-parameter_list|()
-block|{
-return|return
-name|TPR_true
-return|;
-block|}
-specifier|static
-name|TPResult
+operator|,
 name|False
-parameter_list|()
-block|{
-return|return
-name|TPR_false
-return|;
-block|}
-specifier|static
-name|TPResult
+operator|,
 name|Ambiguous
-parameter_list|()
-block|{
-return|return
-name|TPR_ambiguous
-return|;
-block|}
-specifier|static
-name|TPResult
+operator|,
 name|Error
-parameter_list|()
-block|{
-return|return
-name|TPR_error
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|TPResult
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-name|Res
-operator|==
-name|RHS
-operator|.
-name|Res
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|TPResult
-operator|&
-name|RHS
-operator|)
-specifier|const
-block|{
-return|return
-name|Res
-operator|!=
-name|RHS
-operator|.
-name|Res
-return|;
-block|}
 block|}
 empty_stmt|;
 comment|/// \brief Based only on the given token kind, determine whether we know that
@@ -6507,10 +6898,10 @@ name|TokenKind
 name|Kind
 argument_list|)
 decl_stmt|;
-comment|/// isCXXDeclarationSpecifier - Returns TPResult::True() if it is a
-comment|/// declaration specifier, TPResult::False() if it is not,
-comment|/// TPResult::Ambiguous() if it could be either a decl-specifier or a
-comment|/// function-style cast, and TPResult::Error() if a parsing error was
+comment|/// isCXXDeclarationSpecifier - Returns TPResult::True if it is a
+comment|/// declaration specifier, TPResult::False if it is not,
+comment|/// TPResult::Ambiguous if it could be either a decl-specifier or a
+comment|/// function-style cast, and TPResult::Error if a parsing error was
 comment|/// encountered. If it could be a braced C++11 function-style cast, returns
 comment|/// BracedCastResult.
 comment|/// Doesn't consume tokens.
@@ -6523,13 +6914,12 @@ init|=
 name|TPResult
 operator|::
 name|False
-argument_list|()
 parameter_list|,
 name|bool
 modifier|*
 name|HasMissingTypename
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Given that isCXXDeclarationSpecifier returns \c TPResult::True or
@@ -6551,9 +6941,9 @@ name|II
 parameter_list|)
 function_decl|;
 comment|// "Tentative parsing" functions, used for disambiguation. If a parsing error
-comment|// is encountered they will return TPResult::Error().
-comment|// Returning TPResult::True()/False() indicates that the ambiguity was
-comment|// resolved and tentative parsing may stop. TPResult::Ambiguous() indicates
+comment|// is encountered they will return TPResult::Error.
+comment|// Returning TPResult::True/False indicates that the ambiguity was
+comment|// resolved and tentative parsing may stop. TPResult::Ambiguous indicates
 comment|// that more tentative parsing is necessary for disambiguation.
 comment|// They all consume tokens, so backtracking should be used after calling them.
 name|TPResult
@@ -6602,7 +6992,7 @@ name|bool
 modifier|*
 name|InvalidAsDeclaration
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|bool
 name|VersusTemplateArg
@@ -6631,7 +7021,7 @@ name|SourceRange
 operator|*
 name|Range
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|Declarator
 operator|::
@@ -6652,13 +7042,13 @@ operator|*
 operator|*
 name|OwnedType
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|ParsedAttributes
 operator|*
 name|Attrs
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 name|private
@@ -6839,12 +7229,53 @@ modifier|&
 name|attrs
 parameter_list|)
 function_decl|;
+comment|/// \brief Skip C++11 attributes and return the end location of the last one.
+comment|/// \returns SourceLocation() if there are no attributes.
+name|SourceLocation
+name|SkipCXX11Attributes
+parameter_list|()
+function_decl|;
 comment|/// \brief Diagnose and skip C++11 attributes that appear in syntactic
 comment|/// locations where attributes are not allowed.
 name|void
 name|DiagnoseAndSkipCXX11Attributes
 parameter_list|()
 function_decl|;
+comment|/// \brief Parses syntax-generic attribute arguments for attributes which are
+comment|/// known to the implementation, and adds them to the given ParsedAttributes
+comment|/// list with the given attribute syntax. Returns the number of arguments
+comment|/// parsed for the attribute.
+name|unsigned
+name|ParseAttributeArgsCommon
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|AttrName
+argument_list|,
+name|SourceLocation
+name|AttrNameLoc
+argument_list|,
+name|ParsedAttributes
+operator|&
+name|Attrs
+argument_list|,
+name|SourceLocation
+operator|*
+name|EndLoc
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|ScopeName
+argument_list|,
+name|SourceLocation
+name|ScopeLoc
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|Syntax
+argument_list|)
+decl_stmt|;
 name|void
 name|MaybeParseGNUAttributes
 parameter_list|(
@@ -6856,7 +7287,7 @@ name|LateParsedAttrList
 modifier|*
 name|LateAttrs
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 if|if
@@ -6888,6 +7319,9 @@ operator|&
 name|endLoc
 argument_list|,
 name|LateAttrs
+argument_list|,
+operator|&
+name|D
 argument_list|)
 expr_stmt|;
 name|D
@@ -6912,13 +7346,13 @@ name|SourceLocation
 modifier|*
 name|endLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|LateParsedAttrList
 modifier|*
 name|LateAttrs
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 if|if
@@ -6953,13 +7387,19 @@ name|SourceLocation
 modifier|*
 name|endLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|LateParsedAttrList
 modifier|*
 name|LateAttrs
 init|=
-literal|0
+name|nullptr
+parameter_list|,
+name|Declarator
+modifier|*
+name|D
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -6991,6 +7431,10 @@ name|AttributeList
 operator|::
 name|Syntax
 name|Syntax
+argument_list|,
+name|Declarator
+operator|*
+name|D
 argument_list|)
 decl_stmt|;
 name|IdentifierLoc
@@ -7056,7 +7500,7 @@ name|SourceLocation
 modifier|*
 name|endLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 if|if
@@ -7103,7 +7547,7 @@ name|SourceLocation
 modifier|*
 name|endLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|bool
 name|OuterMightBeMessageSend
@@ -7144,7 +7588,7 @@ name|SourceLocation
 modifier|*
 name|EndLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -7158,7 +7602,35 @@ name|SourceLocation
 modifier|*
 name|EndLoc
 init|=
-literal|0
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// \brief Parses a C++-style attribute argument list. Returns true if this
+comment|/// results in adding an attribute to the ParsedAttributes list.
+name|bool
+name|ParseCXX11AttributeArgs
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|AttrName
+parameter_list|,
+name|SourceLocation
+name|AttrNameLoc
+parameter_list|,
+name|ParsedAttributes
+modifier|&
+name|Attrs
+parameter_list|,
+name|SourceLocation
+modifier|*
+name|EndLoc
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|ScopeName
+parameter_list|,
+name|SourceLocation
+name|ScopeLoc
 parameter_list|)
 function_decl|;
 name|IdentifierInfo
@@ -7181,7 +7653,7 @@ name|SourceLocation
 modifier|*
 name|endLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 if|if
@@ -7219,7 +7691,7 @@ name|SourceLocation
 modifier|*
 name|endLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -7231,30 +7703,7 @@ name|Attrs
 parameter_list|)
 function_decl|;
 name|bool
-name|IsSimpleMicrosoftDeclSpec
-parameter_list|(
-name|IdentifierInfo
-modifier|*
-name|Ident
-parameter_list|)
-function_decl|;
-name|void
-name|ParseComplexMicrosoftDeclSpec
-parameter_list|(
-name|IdentifierInfo
-modifier|*
-name|Ident
-parameter_list|,
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|ParsedAttributes
-modifier|&
-name|Attrs
-parameter_list|)
-function_decl|;
-name|void
-name|ParseMicrosoftDeclSpecWithSingleArg
+name|ParseMicrosoftDeclSpecArgs
 parameter_list|(
 name|IdentifierInfo
 modifier|*
@@ -7303,9 +7752,9 @@ function_decl|;
 name|void
 name|ParseOpenCLQualifiers
 parameter_list|(
-name|DeclSpec
+name|ParsedAttributes
 modifier|&
-name|DS
+name|Attrs
 parameter_list|)
 function_decl|;
 name|VersionTuple
@@ -7318,87 +7767,128 @@ parameter_list|)
 function_decl|;
 name|void
 name|ParseAvailabilityAttribute
-parameter_list|(
+argument_list|(
 name|IdentifierInfo
-modifier|&
+operator|&
 name|Availability
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|AvailabilityLoc
-parameter_list|,
+argument_list|,
 name|ParsedAttributes
-modifier|&
+operator|&
 name|attrs
-parameter_list|,
+argument_list|,
 name|SourceLocation
-modifier|*
+operator|*
 name|endLoc
-parameter_list|)
-function_decl|;
-name|bool
-name|IsThreadSafetyAttribute
-parameter_list|(
-name|StringRef
-name|AttrName
-parameter_list|)
-function_decl|;
-name|void
-name|ParseThreadSafetyAttribute
-parameter_list|(
+argument_list|,
 name|IdentifierInfo
-modifier|&
-name|AttrName
-parameter_list|,
+operator|*
+name|ScopeName
+argument_list|,
 name|SourceLocation
-name|AttrNameLoc
-parameter_list|,
+name|ScopeLoc
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|Syntax
+argument_list|)
+decl_stmt|;
+name|void
+name|ParseObjCBridgeRelatedAttribute
+argument_list|(
+name|IdentifierInfo
+operator|&
+name|ObjCBridgeRelated
+argument_list|,
+name|SourceLocation
+name|ObjCBridgeRelatedLoc
+argument_list|,
 name|ParsedAttributes
-modifier|&
-name|Attrs
-parameter_list|,
+operator|&
+name|attrs
+argument_list|,
 name|SourceLocation
-modifier|*
-name|EndLoc
-parameter_list|)
-function_decl|;
+operator|*
+name|endLoc
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|ScopeName
+argument_list|,
+name|SourceLocation
+name|ScopeLoc
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|Syntax
+argument_list|)
+decl_stmt|;
 name|void
 name|ParseTypeTagForDatatypeAttribute
-parameter_list|(
+argument_list|(
 name|IdentifierInfo
-modifier|&
+operator|&
 name|AttrName
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|AttrNameLoc
-parameter_list|,
+argument_list|,
 name|ParsedAttributes
-modifier|&
+operator|&
 name|Attrs
-parameter_list|,
+argument_list|,
 name|SourceLocation
-modifier|*
+operator|*
 name|EndLoc
-parameter_list|)
-function_decl|;
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|ScopeName
+argument_list|,
+name|SourceLocation
+name|ScopeLoc
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|Syntax
+argument_list|)
+decl_stmt|;
 name|void
 name|ParseAttributeWithTypeArg
-parameter_list|(
+argument_list|(
 name|IdentifierInfo
-modifier|&
+operator|&
 name|AttrName
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|AttrNameLoc
-parameter_list|,
+argument_list|,
 name|ParsedAttributes
-modifier|&
+operator|&
 name|Attrs
-parameter_list|,
+argument_list|,
 name|SourceLocation
-modifier|*
+operator|*
 name|EndLoc
-parameter_list|)
-function_decl|;
+argument_list|,
+name|IdentifierInfo
+operator|*
+name|ScopeName
+argument_list|,
+name|SourceLocation
+name|ScopeLoc
+argument_list|,
+name|AttributeList
+operator|::
+name|Syntax
+name|Syntax
+argument_list|)
+decl_stmt|;
 name|void
 name|ParseTypeofSpecifier
 parameter_list|(
@@ -7468,7 +7958,7 @@ name|SourceLocation
 modifier|*
 name|endLoc
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|VirtSpecifiers
@@ -7820,6 +8310,14 @@ modifier|&
 name|D
 parameter_list|)
 function_decl|;
+name|void
+name|ParseMisplacedBracketDeclarator
+parameter_list|(
+name|Declarator
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C++ 7: Declarations [dcl.dcl]
 comment|/// The kind of attribute specifier we have found.
@@ -7962,7 +8460,7 @@ modifier|*
 modifier|*
 name|OwnedType
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|Decl
@@ -8013,7 +8511,7 @@ modifier|*
 modifier|*
 name|OwnedType
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|Decl
@@ -8124,6 +8622,26 @@ name|EqualLoc
 parameter_list|)
 function_decl|;
 name|void
+name|ParseCXXMemberDeclaratorBeforeInitializer
+parameter_list|(
+name|Declarator
+modifier|&
+name|DeclaratorInfo
+parameter_list|,
+name|VirtSpecifiers
+modifier|&
+name|VS
+parameter_list|,
+name|ExprResult
+modifier|&
+name|BitfieldSize
+parameter_list|,
+name|LateParsedAttrList
+modifier|&
+name|LateAttrs
+parameter_list|)
+function_decl|;
+name|void
 name|ParseCXXClassMemberDeclaration
 parameter_list|(
 name|AccessSpecifier
@@ -8145,7 +8663,7 @@ name|ParsingDeclRAIIObject
 modifier|*
 name|DiagsFromTParams
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|void
@@ -8293,9 +8811,16 @@ name|AllowScopeSpecifier
 argument_list|)
 decl_stmt|;
 comment|/// \brief Parses declarative or executable directive.
+comment|///
+comment|/// \param StandAloneAllowed true if allowed stand-alone directives,
+comment|/// false - otherwise
+comment|///
 name|StmtResult
 name|ParseOpenMPDeclarativeOrExecutableDirective
-parameter_list|()
+parameter_list|(
+name|bool
+name|StandAloneAllowed
+parameter_list|)
 function_decl|;
 comment|/// \brief Parses clause of kind \a CKind for directive of a kind \a Kind.
 comment|///
@@ -8337,6 +8862,31 @@ comment|///
 name|OMPClause
 modifier|*
 name|ParseOpenMPSimpleClause
+parameter_list|(
+name|OpenMPClauseKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// \brief Parses clause with a single expression and an additional argument
+comment|/// of a kind \a Kind.
+comment|///
+comment|/// \param Kind Kind of current clause.
+comment|///
+name|OMPClause
+modifier|*
+name|ParseOpenMPSingleExprWithArgClause
+parameter_list|(
+name|OpenMPClauseKind
+name|Kind
+parameter_list|)
+function_decl|;
+comment|/// \brief Parses clause without any additional arguments.
+comment|///
+comment|/// \param Kind Kind of current clause.
+comment|///
+name|OMPClause
+modifier|*
+name|ParseOpenMPClause
 parameter_list|(
 name|OpenMPClauseKind
 name|Kind
@@ -8409,7 +8959,7 @@ name|AttributeList
 modifier|*
 name|AccessAttrs
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|Decl
@@ -8460,7 +9010,7 @@ name|AttributeList
 modifier|*
 name|AccessAttrs
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|bool
@@ -8547,6 +9097,33 @@ name|Depth
 parameter_list|,
 name|unsigned
 name|Position
+parameter_list|)
+function_decl|;
+name|void
+name|DiagnoseMisplacedEllipsis
+parameter_list|(
+name|SourceLocation
+name|EllipsisLoc
+parameter_list|,
+name|SourceLocation
+name|CorrectLoc
+parameter_list|,
+name|bool
+name|AlreadyHasEllipsis
+parameter_list|,
+name|bool
+name|IdentifierHasName
+parameter_list|)
+function_decl|;
+name|void
+name|DiagnoseMisplacedEllipsisInDeclarator
+parameter_list|(
+name|SourceLocation
+name|EllipsisLoc
+parameter_list|,
+name|Declarator
+modifier|&
+name|D
 parameter_list|)
 function_decl|;
 comment|// C++ 14.3: Template arguments [temp.arg]
@@ -8688,15 +9265,7 @@ name|AtLoc
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
-comment|// GNU G++: Type Traits [Type-Traits.html in the GCC manual]
-name|ExprResult
-name|ParseUnaryTypeTrait
-parameter_list|()
-function_decl|;
-name|ExprResult
-name|ParseBinaryTypeTrait
-parameter_list|()
-function_decl|;
+comment|// C++11/G++: Type Traits [Type-Traits.html in the GCC manual]
 name|ExprResult
 name|ParseTypeTrait
 parameter_list|()
@@ -8713,53 +9282,53 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Preprocessor code-completion pass-through
-name|virtual
 name|void
 name|CodeCompleteDirective
-parameter_list|(
+argument_list|(
 name|bool
 name|InConditional
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|CodeCompleteInConditionalExclusion
-parameter_list|()
-function_decl|;
-name|virtual
+argument_list|()
+name|override
+expr_stmt|;
 name|void
 name|CodeCompleteMacroName
-parameter_list|(
+argument_list|(
 name|bool
 name|IsDefinition
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|CodeCompletePreprocessorExpression
-parameter_list|()
-function_decl|;
-name|virtual
+argument_list|()
+name|override
+expr_stmt|;
 name|void
 name|CodeCompleteMacroArgument
-parameter_list|(
+argument_list|(
 name|IdentifierInfo
-modifier|*
+operator|*
 name|Macro
-parameter_list|,
+argument_list|,
 name|MacroInfo
-modifier|*
+operator|*
 name|MacroInfo
-parameter_list|,
+argument_list|,
 name|unsigned
 name|ArgumentIndex
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|CodeCompleteNaturalLanguage
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 block|}
 end_decl_stmt
 

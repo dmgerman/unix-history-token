@@ -71,6 +71,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Regex.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -180,17 +186,30 @@ name|DebugInfoKind
 block|{
 name|NoDebugInfo
 block|,
-comment|// Don't generate debug info.
+comment|/// Don't generate debug info.
+name|LocTrackingOnly
+block|,
+comment|/// Emit location information but do not generate
+comment|/// debug info in the output. This is useful in
+comment|/// cases where the backend wants to track source
+comment|/// locations for instructions without actually
+comment|/// emitting debug info for them (e.g., when -Rpass
+comment|/// is used).
 name|DebugLineTablesOnly
 block|,
-comment|// Emit only debug info necessary for generating
-comment|// line number tables (-gline-tables-only).
+comment|/// Emit only debug info necessary for generating
+comment|/// line number tables (-gline-tables-only).
 name|LimitedDebugInfo
 block|,
-comment|// Limit generated debug info to reduce size
-comment|// (-flimit-debug-info).
+comment|/// Limit generated debug info to reduce size
+comment|/// (-fno-standalone-debug). This emits
+comment|/// forward decls for types that could be
+comment|/// replaced with forward decls in the source
+comment|/// code. For dynamic C++ classes type info
+comment|/// is only emitted int the module that
+comment|/// contains the classe's vtable.
 name|FullDebugInfo
-comment|// Generate complete debug info.
+comment|/// Generate complete debug info.
 block|}
 block|;    enum
 name|TLSModel
@@ -346,6 +365,58 @@ name|std
 operator|::
 name|string
 name|SampleProfileFile
+block|;
+comment|/// Name of the profile file to use as input for -fprofile-instr-use
+name|std
+operator|::
+name|string
+name|InstrProfileInput
+block|;
+comment|/// Regular expression to select optimizations for which we should enable
+comment|/// optimization remarks. Transformation passes whose name matches this
+comment|/// expression (and support this feature), will emit a diagnostic
+comment|/// whenever they perform a transformation. This is enabled by the
+comment|/// -Rpass=regexp flag.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|llvm
+operator|::
+name|Regex
+operator|>
+name|OptimizationRemarkPattern
+block|;
+comment|/// Regular expression to select optimizations for which we should enable
+comment|/// missed optimization remarks. Transformation passes whose name matches this
+comment|/// expression (and support this feature), will emit a diagnostic
+comment|/// whenever they tried but failed to perform a transformation. This is
+comment|/// enabled by the -Rpass-missed=regexp flag.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|llvm
+operator|::
+name|Regex
+operator|>
+name|OptimizationRemarkMissedPattern
+block|;
+comment|/// Regular expression to select optimizations for which we should enable
+comment|/// optimization analyses. Transformation passes whose name matches this
+comment|/// expression (and support this feature), will emit a diagnostic
+comment|/// whenever they want to explain why they decided to apply or not apply
+comment|/// a given transformation. This is enabled by the -Rpass-analysis=regexp
+comment|/// flag.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|llvm
+operator|::
+name|Regex
+operator|>
+name|OptimizationRemarkAnalysisPattern
 block|;
 name|public
 operator|:

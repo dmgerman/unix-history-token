@@ -60,6 +60,10 @@ comment|// ASAN: "{{.*}}clang_rt.asan-i386.lib"
 end_comment
 
 begin_comment
+comment|// ASAN: "{{.*}}clang_rt.asan_cxx-i386.lib"
+end_comment
+
+begin_comment
 comment|// ASAN: "{{.*}}cl-link{{.*}}.obj"
 end_comment
 
@@ -109,6 +113,18 @@ end_comment
 
 begin_comment
 comment|// ASAN-DLL: "{{.*}}cl-link{{.*}}.obj"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Zi /Tc%s -### 2>&1 | FileCheck --check-prefix=DEBUG %s
+end_comment
+
+begin_comment
+comment|// DEBUG: link.exe
+end_comment
+
+begin_comment
+comment|// DEBUG: "-debug"
 end_comment
 
 end_unit

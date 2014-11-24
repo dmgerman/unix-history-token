@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 %s -o - -emit-llvm | FileCheck %s
 end_comment
 
 begin_comment
-comment|// XFAIL: aarch64
+comment|// XFAIL: aarch64, arm64
 end_comment
 
 begin_comment

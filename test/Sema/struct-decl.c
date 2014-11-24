@@ -313,5 +313,30 @@ decl_stmt|;
 block|}
 end_function
 
+begin_struct
+struct|struct
+name|PreserveAttributes
+block|{}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|__attribute__
+argument_list|(
+operator|(
+name|noreturn
+operator|)
+argument_list|)
+name|PreserveAttributes
+name|PreserveAttributes_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-warning {{'noreturn' attribute only applies to functions and methods}}
+end_comment
+
 end_unit
 

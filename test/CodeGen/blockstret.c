@@ -8,11 +8,15 @@ comment|// RUN: %clang_cc1 -fblocks -triple i686-apple-darwin9 %s -emit-llvm -o 
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -fblocks -triple arm64-apple-darwin %s -emit-llvm -o - | FileCheck %s -check-prefix=ARM64
+end_comment
+
+begin_comment
 comment|// X64:   internal constant {{.*}} { i8** @_NSConcreteGlobalBlock, i32 1879048192
 end_comment
 
 begin_comment
-comment|// X64:     store i32 1610612736, i32* %want
+comment|// X64:   store i32 1610612736, i32* %want
 end_comment
 
 begin_comment
@@ -25,6 +29,18 @@ end_comment
 
 begin_comment
 comment|// rdar://7677537
+end_comment
+
+begin_comment
+comment|// ARM64: @_NSConcreteGlobalBlock, i32 1342177280, i32 0,
+end_comment
+
+begin_comment
+comment|// ARM64: store i32 1610612736, i32* %want
+end_comment
+
+begin_comment
+comment|// rdar://9757126
 end_comment
 
 begin_function_decl

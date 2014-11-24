@@ -33,11 +33,11 @@ name|)
 end_pragma
 
 begin_comment
-comment|// CHECK: !llvm.module.flags = !{!0}
+comment|// CHECK: !llvm.module.flags = !{{{.*}}}
 end_comment
 
 begin_comment
-comment|// CHECK: !0 = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
+comment|// CHECK: !{{[0-9]+}} = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
 end_comment
 
 begin_comment

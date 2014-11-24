@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fopenmp -verify -DFOPENMP -o - %s
+comment|// RUN: %clang_cc1 -fopenmp=libiomp5 -verify -DFOPENMP -o - %s
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ name|FOPENMP
 end_ifdef
 
 begin_comment
-comment|// -fopenmp option is specified
+comment|// -fopenmp=libiomp5 option is specified
 end_comment
 
 begin_ifndef
@@ -34,7 +34,7 @@ literal|"No _OPENMP macro is defined with -fopenmp option"
 end_error
 
 begin_empty
-empty|#elsif _OPENMP != 201107
+empty|#elsif _OPENMP != 201307
 end_empty
 
 begin_error
@@ -58,7 +58,7 @@ directive|else
 end_else
 
 begin_comment
-comment|// No -fopenmp option is specified
+comment|// No -fopenmp=libiomp5 option is specified
 end_comment
 
 begin_ifdef
@@ -92,7 +92,7 @@ comment|// FOPENMP
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fopenmp -verify -DFOPENMP -o - %s
+comment|// RUN: %clang_cc1 -fopenmp=libiomp5 -verify -DFOPENMP -o - %s
 end_comment
 
 begin_comment
@@ -110,7 +110,7 @@ name|FOPENMP
 end_ifdef
 
 begin_comment
-comment|// -fopenmp option is specified
+comment|// -fopenmp=libiomp5 option is specified
 end_comment
 
 begin_ifndef
@@ -126,7 +126,7 @@ literal|"No _OPENMP macro is defined with -fopenmp option"
 end_error
 
 begin_empty
-empty|#elsif _OPENMP != 201107
+empty|#elsif _OPENMP != 201307
 end_empty
 
 begin_error
@@ -150,7 +150,7 @@ directive|else
 end_else
 
 begin_comment
-comment|// No -fopenmp option is specified
+comment|// No -fopenmp=libiomp5 option is specified
 end_comment
 
 begin_ifdef

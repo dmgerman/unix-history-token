@@ -44,6 +44,46 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -x c++ -std=c++1z -E -dM< /dev/null | FileCheck -check-prefix CXX1Z %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CXX1Z:#define __GNUG__
+end_comment
+
+begin_comment
+comment|// CXX1Z:#define __GXX_EXPERIMENTAL_CXX0X__ 1
+end_comment
+
+begin_comment
+comment|// CXX1Z:#define __GXX_RTTI 1
+end_comment
+
+begin_comment
+comment|// CXX1Z:#define __GXX_WEAK__ 1
+end_comment
+
+begin_comment
+comment|// CXX1Z:#define __cplusplus 201406L
+end_comment
+
+begin_comment
+comment|// CXX1Z:#define __private_extern__ extern
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -x c++ -std=c++1y -E -dM< /dev/null | FileCheck -check-prefix CXX1Y %s
 end_comment
 
@@ -68,7 +108,7 @@ comment|// CXX1Y:#define __GXX_WEAK__ 1
 end_comment
 
 begin_comment
-comment|// CXX1Y:#define __cplusplus 201305L
+comment|// CXX1Y:#define __cplusplus 201402L
 end_comment
 
 begin_comment
@@ -348,6 +388,38 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -x c++ -std=gnu++1z -E -dM< /dev/null | FileCheck -check-prefix GXX1Z %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// GXX1Z:#define __GNUG__
+end_comment
+
+begin_comment
+comment|// GXX1Z:#define __GXX_WEAK__ 1
+end_comment
+
+begin_comment
+comment|// GXX1Z:#define __cplusplus 201406L
+end_comment
+
+begin_comment
+comment|// GXX1Z:#define __private_extern__ extern
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -x c++ -std=gnu++1y -E -dM< /dev/null | FileCheck -check-prefix GXX1Y %s
 end_comment
 
@@ -364,7 +436,7 @@ comment|// GXX1Y:#define __GXX_WEAK__ 1
 end_comment
 
 begin_comment
-comment|// GXX1Y:#define __cplusplus 201305L
+comment|// GXX1Y:#define __cplusplus 201402L
 end_comment
 
 begin_comment
@@ -792,6 +864,18 @@ comment|// RUN: %clang_cc1 -E -dM -fshort-wchar< /dev/null | FileCheck -check-pr
 end_comment
 
 begin_comment
+comment|// wchar_t is u16 for targeting Win32.
+end_comment
+
+begin_comment
+comment|// FIXME: Implement and check x86_64-cygwin.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -fno-short-wchar -triple=x86_64-w64-mingw32< /dev/null | FileCheck -check-prefix SHORTWCHAR %s
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -800,7 +884,7 @@ comment|// SHORTWCHAR: #define __SIZEOF_WCHAR_T__ 2
 end_comment
 
 begin_comment
-comment|// SHORTWCHAR: #define __WCHAR_MAX__ 65535U
+comment|// SHORTWCHAR: #define __WCHAR_MAX__ 65535
 end_comment
 
 begin_comment
@@ -813,6 +897,2318 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -fno-short-wchar -triple=i686-unknown-unknown< /dev/null | FileCheck -check-prefix SHORTWCHAR2 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -fno-short-wchar -triple=x86_64-unknown-unknown< /dev/null | FileCheck -check-prefix SHORTWCHAR2 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// SHORTWCHAR2: #define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// SHORTWCHAR2: #define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// Other definitions vary from platform to platform
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=aarch64-none-none< /dev/null | FileCheck -check-prefix AARCH64 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm64-none-none< /dev/null | FileCheck -check-prefix AARCH64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// AARCH64:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NOT:#define __AARCH64EB__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __AARCH64EL__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NOT:#define __AARCH_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __ARM_64BIT_STATE 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __ARM_ARCH 8
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __ARM_ARCH_ISA_A64 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NOT:#define __ARM_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __DECIMAL_DIG__ 36
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT64_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTMAX_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTMAX_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTMAX_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTMAX_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_DENORM_MIN__ 6.47517511943802511092443895822764655e-4966L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_DIG__ 33
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_EPSILON__ 1.92592994438723585305597794258492732e-34L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_MANT_DIG__ 113
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_MAX_10_EXP__ 4932
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_MAX_EXP__ 16384
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_MAX__ 1.18973149535723176508575932662800702e+4932L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_MIN_10_EXP__ (-4931)
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_MIN_EXP__ (-16381)
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LDBL_MIN__ 3.36210314311209350626267781732175260e-4932L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LONG_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __LP64__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __POINTER_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __PTRDIFF_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __PTRDIFF_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_INT128__ 16
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_LONG_DOUBLE__ 16
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_LONG__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_POINTER__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_PTRDIFF_T__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_SIZE_T__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZE_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT64_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINTMAX_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __USER_LABEL_PREFIX__ _
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __WCHAR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __WCHAR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __WCHAR_UNSIGNED__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64:#define __aarch64__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=aarch64_be-none-none< /dev/null | FileCheck -check-prefix AARCH64-BE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm64_be-none-none< /dev/null | FileCheck -check-prefix AARCH64-BE %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __AARCH64EB__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE-NOT:#define __AARCH64EL__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __AARCH_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __ARM_64BIT_STATE 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __ARM_ARCH 8
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __ARM_ARCH_ISA_A64 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __ARM_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __DECIMAL_DIG__ 36
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT64_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTMAX_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTMAX_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTMAX_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTMAX_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_DENORM_MIN__ 6.47517511943802511092443895822764655e-4966L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_DIG__ 33
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_EPSILON__ 1.92592994438723585305597794258492732e-34L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_MANT_DIG__ 113
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_MAX_10_EXP__ 4932
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_MAX_EXP__ 16384
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_MAX__ 1.18973149535723176508575932662800702e+4932L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_MIN_10_EXP__ (-4931)
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_MIN_EXP__ (-16381)
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LDBL_MIN__ 3.36210314311209350626267781732175260e-4932L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LONG_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __LP64__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __POINTER_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __PTRDIFF_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __PTRDIFF_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_INT128__ 16
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_LONG_DOUBLE__ 16
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_LONG__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_POINTER__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_PTRDIFF_T__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_SIZE_T__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZE_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT64_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINTMAX_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __USER_LABEL_PREFIX__ _
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __WCHAR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __WCHAR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __WCHAR_UNSIGNED__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64-BE:#define __aarch64__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=aarch64-netbsd< /dev/null | FileCheck -check-prefix AARCH64-NETBSD %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD-NOT:#define __AARCH64EB__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __AARCH64EL__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD-NOT:#define __AARCH_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __ARM_64BIT_STATE 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __ARM_ARCH 8
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __ARM_ARCH_ISA_A64 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD-NOT:#define __ARM_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __DECIMAL_DIG__ 36
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __ELF__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTMAX_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_DENORM_MIN__ 6.47517511943802511092443895822764655e-4966L
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_DIG__ 33
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_EPSILON__ 1.92592994438723585305597794258492732e-34L
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_MANT_DIG__ 113
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_MAX_10_EXP__ 4932
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_MAX_EXP__ 16384
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_MAX__ 1.18973149535723176508575932662800702e+4932L
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_MIN_10_EXP__ (-4931)
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_MIN_EXP__ (-16381)
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LDBL_MIN__ 3.36210314311209350626267781732175260e-4932L
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LONG_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __LP64__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __NetBSD__ 1
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __POINTER_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __PTRDIFF_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __PTRDIFF_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_LONG_DOUBLE__ 16
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_LONG__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_POINTER__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_PTRDIFF_T__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_SIZE_T__ 8
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZE_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __SIZE_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __USER_LABEL_PREFIX__
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __WCHAR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// AARCH64-NETBSD:#define __aarch64__ 1
 end_comment
 
 begin_comment
@@ -832,11 +3228,19 @@ comment|// ARM:#define __APCS_32__ 1
 end_comment
 
 begin_comment
+comment|// ARM-NOT:#define __ARMEB__ 1
+end_comment
+
+begin_comment
 comment|// ARM:#define __ARMEL__ 1
 end_comment
 
 begin_comment
 comment|// ARM:#define __ARM_ARCH_6J__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NOT:#define __ARM_BIG_ENDIAN 1
 end_comment
 
 begin_comment
@@ -972,7 +3376,39 @@ comment|// ARM:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// ARM:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// ARM:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -984,11 +3420,51 @@ comment|// ARM:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// ARM:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// ARM:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// ARM:#define __INT8_TYPE__ char
+comment|// ARM:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARM:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// ARM:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -1004,11 +3480,151 @@ comment|// ARM:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// ARM:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// ARM:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// ARM:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -1108,6 +3724,10 @@ comment|// ARM:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// ARM:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// ARM:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -1176,7 +3796,143 @@ comment|// ARM:#define __THUMB_INTERWORK__ 1
 end_comment
 
 begin_comment
+comment|// ARM:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// ARM:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARM:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -1212,6 +3968,762 @@ comment|// ARM:#define __arm__ 1
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=armeb-none-none< /dev/null | FileCheck -check-prefix ARM-BE %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ARM-BE-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __APCS_32__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __ARMEB__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE-NOT:#define __ARMEL__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __ARM_ARCH_6J__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __ARM_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __BYTE_ORDER__ __ORDER_BIG_ENDIAN__
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __DECIMAL_DIG__ 17
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTMAX_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_MAX__ 1.7976931348623157e+308L
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LDBL_MIN__ 2.2250738585072014e-308L
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __LONG_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// ARM-BE-NOT:#define __LP64__
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __POINTER_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __PTRDIFF_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __USER_LABEL_PREFIX__ _
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __WCHAR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __WCHAR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __arm 1
+end_comment
+
+begin_comment
+comment|// ARM-BE:#define __arm__ 1
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-none-linux-gnueabi -target-feature +soft-float -target-feature +soft-float-abi< /dev/null | FileCheck -check-prefix ARMEABISOFTFP %s
 end_comment
 
@@ -1220,11 +4732,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM-NOT:#define _LP64
+comment|// ARMEABISOFTFP-NOT:#define _LP64
 end_comment
 
 begin_comment
 comment|// ARMEABISOFTFP:#define __APCS_32__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP-NOT:#define __ARMEB__ 1
 end_comment
 
 begin_comment
@@ -1237,6 +4753,10 @@ end_comment
 
 begin_comment
 comment|// ARMEABISOFTFP:#define __ARM_ARCH_6J__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP-NOT:#define __ARM_BIG_ENDIAN 1
 end_comment
 
 begin_comment
@@ -1384,7 +4904,39 @@ comment|// ARMEABISOFTFP:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// ARMEABISOFTFP:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// ARMEABISOFTFP:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -1396,11 +4948,51 @@ comment|// ARMEABISOFTFP:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// ARMEABISOFTFP:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// ARMEABISOFTFP:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// ARMEABISOFTFP:#define __INT8_TYPE__ char
+comment|// ARMEABISOFTFP:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -1416,11 +5008,151 @@ comment|// ARMEABISOFTFP:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// ARMEABISOFTFP:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// ARMEABISOFTFP:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// ARMEABISOFTFP:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -1520,6 +5252,10 @@ comment|// ARMEABISOFTFP:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// ARMEABISOFTFP:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// ARMEABISOFTFP:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -1592,7 +5328,143 @@ comment|// ARMEABISOFTFP:#define __THUMB_INTERWORK__ 1
 end_comment
 
 begin_comment
+comment|// ARMEABISOFTFP:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// ARMEABISOFTFP:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARMEABISOFTFP:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -1636,11 +5508,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM-NOT:#define _LP64
+comment|// ARMEABIHARDFP-NOT:#define _LP64
 end_comment
 
 begin_comment
 comment|// ARMEABIHARDFP:#define __APCS_32__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP-NOT:#define __ARMEB__ 1
 end_comment
 
 begin_comment
@@ -1653,6 +5529,10 @@ end_comment
 
 begin_comment
 comment|// ARMEABIHARDFP:#define __ARM_ARCH_6J__ 1
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP-NOT:#define __ARM_BIG_ENDIAN 1
 end_comment
 
 begin_comment
@@ -1800,7 +5680,39 @@ comment|// ARMEABIHARDFP:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// ARMEABIHARDFP:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// ARMEABIHARDFP:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -1812,11 +5724,51 @@ comment|// ARMEABIHARDFP:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// ARMEABIHARDFP:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// ARMEABIHARDFP:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// ARMEABIHARDFP:#define __INT8_TYPE__ char
+comment|// ARMEABIHARDFP:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -1832,11 +5784,151 @@ comment|// ARMEABIHARDFP:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// ARMEABIHARDFP:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// ARMEABIHARDFP:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// ARMEABIHARDFP:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -1936,6 +6028,10 @@ comment|// ARMEABIHARDFP:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// ARMEABIHARDFP:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// ARMEABIHARDFP:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -2008,7 +6104,143 @@ comment|// ARMEABIHARDFP:#define __THUMB_INTERWORK__ 1
 end_comment
 
 begin_comment
+comment|// ARMEABIHARDFP:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// ARMEABIHARDFP:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARMEABIHARDFP:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -2041,6 +6273,770 @@ end_comment
 
 begin_comment
 comment|// ARMEABIHARDFP:#define __arm__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=arm-netbsd-eabi< /dev/null | FileCheck -check-prefix ARM-NETBSD %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __APCS_32__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD-NOT:#define __ARMEB__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __ARMEL__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __ARM_ARCH_6J__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __ARM_DWARF_EH__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __ARM_EABI__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD-NOT:#define __ARM_BIG_ENDIAN 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __DECIMAL_DIG__ 17
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTMAX_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTMAX_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_DENORM_MIN__ 4.9406564584124654e-324L
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_EPSILON__ 2.2204460492503131e-16L
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_MAX__ 1.7976931348623157e+308L
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LDBL_MIN__ 2.2250738585072014e-308L
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __LONG_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD-NOT:#define __LP64__
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __POINTER_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __PTRDIFF_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_LONG_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __USER_LABEL_PREFIX__
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __WCHAR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __arm 1
+end_comment
+
+begin_comment
+comment|// ARM-NETBSD:#define __arm__ 1
 end_comment
 
 begin_comment
@@ -2117,6 +7113,102 @@ end_comment
 
 begin_comment
 comment|// ARMHWDIV-THUMB-FALSE-NOT:#define __ARM_ARCH_EXT_IDIV__
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=armv8-none-none< /dev/null | FileCheck -check-prefix ARMv8 %s
+end_comment
+
+begin_comment
+comment|// ARMv8: #define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// ARMv8-NOT: #define __thumb2__
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=armebv8-none-none< /dev/null | FileCheck -check-prefix ARMebv8 %s
+end_comment
+
+begin_comment
+comment|// ARMebv8: #define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// ARMebv8-NOT: #define __thumb2__
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=thumbv8< /dev/null | FileCheck -check-prefix Thumbv8 %s
+end_comment
+
+begin_comment
+comment|// Thumbv8: #define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// Thumbv8: #define __thumb2__
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=thumbebv8< /dev/null | FileCheck -check-prefix Thumbebv8 %s
+end_comment
+
+begin_comment
+comment|// Thumbebv8: #define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// Thumbebv8: #define __thumb2__
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=thumbv5< /dev/null | FileCheck -check-prefix Thumbv5 %s
+end_comment
+
+begin_comment
+comment|// Thumbv5: #define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// Thumbv5-NOT: #define __thumb2__
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=thumbv6t2< /dev/null | FileCheck -check-prefix Thumbv6t2 %s
+end_comment
+
+begin_comment
+comment|// Thumbv6t2: #define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// Thumbv6t2: #define __thumb2__
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=thumbv7< /dev/null | FileCheck -check-prefix Thumbv7 %s
+end_comment
+
+begin_comment
+comment|// Thumbv7: #define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// Thumbv7: #define __thumb2__
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=thumbebv7< /dev/null | FileCheck -check-prefix Thumbebv7 %s
+end_comment
+
+begin_comment
+comment|// Thumbebv7: #define __THUMB_INTERWORK__ 1
+end_comment
+
+begin_comment
+comment|// Thumbebv7: #define __thumb2__
 end_comment
 
 begin_comment
@@ -2268,7 +7360,39 @@ comment|// I386:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// I386:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// I386:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// I386:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -2280,11 +7404,51 @@ comment|// I386:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// I386:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// I386:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// I386:#define __INT8_TYPE__ char
+comment|// I386:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// I386:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// I386:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// I386:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -2300,11 +7464,151 @@ comment|// I386:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// I386:#define __INTPTR_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386:#define __INTPTR_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386:#define __INTPTR_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// I386:#define __INTPTR_TYPE__ int
 end_comment
 
 begin_comment
 comment|// I386:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// I386:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -2408,6 +7712,10 @@ comment|// I386:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// I386:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// I386:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -2472,7 +7780,143 @@ comment|// I386:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// I386:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// I386:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// I386:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// I386:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// I386:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// I386:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -2660,7 +8104,39 @@ comment|// I386-LINUX:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// I386-LINUX:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// I386-LINUX:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -2672,11 +8148,51 @@ comment|// I386-LINUX:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// I386-LINUX:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// I386-LINUX:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// I386-LINUX:#define __INT8_TYPE__ char
+comment|// I386-LINUX:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -2692,11 +8208,151 @@ comment|// I386-LINUX:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// I386-LINUX:#define __INTPTR_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INTPTR_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INTPTR_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// I386-LINUX:#define __INTPTR_TYPE__ int
 end_comment
 
 begin_comment
 comment|// I386-LINUX:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -2800,6 +8456,10 @@ comment|// I386-LINUX:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// I386-LINUX:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// I386-LINUX:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -2864,7 +8524,143 @@ comment|// I386-LINUX:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// I386-LINUX:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// I386-LINUX:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// I386-LINUX:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -3052,7 +8848,39 @@ comment|// I386-NETBSD:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// I386-NETBSD:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// I386-NETBSD:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -3064,11 +8892,51 @@ comment|// I386-NETBSD:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// I386-NETBSD:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// I386-NETBSD:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// I386-NETBSD:#define __INT8_TYPE__ char
+comment|// I386-NETBSD:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -3084,11 +8952,151 @@ comment|// I386-NETBSD:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// I386-NETBSD:#define __INTPTR_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INTPTR_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INTPTR_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// I386-NETBSD:#define __INTPTR_TYPE__ int
 end_comment
 
 begin_comment
 comment|// I386-NETBSD:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -3192,6 +9200,10 @@ comment|// I386-NETBSD:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// I386-NETBSD:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// I386-NETBSD:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -3256,7 +9268,143 @@ comment|// I386-NETBSD:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// I386-NETBSD:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// I386-NETBSD:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// I386-NETBSD:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -3352,11 +9500,11 @@ comment|// MIPS32BE:#define _MIPSEB 1
 end_comment
 
 begin_comment
-comment|// MIPS32BE:#define _MIPS_ARCH "mips32"
+comment|// MIPS32BE:#define _MIPS_ARCH "mips32r2"
 end_comment
 
 begin_comment
-comment|// MIPS32BE:#define _MIPS_ARCH_MIPS32 1
+comment|// MIPS32BE:#define _MIPS_ARCH_MIPS32R2 1
 end_comment
 
 begin_comment
@@ -3377,6 +9525,10 @@ end_comment
 
 begin_comment
 comment|// MIPS32BE:#define _MIPS_SZPTR 32
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __BIG_ENDIAN__ 1
 end_comment
 
 begin_comment
@@ -3516,7 +9668,39 @@ comment|// MIPS32BE:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// MIPS32BE:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -3528,11 +9712,51 @@ comment|// MIPS32BE:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// MIPS32BE:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// MIPS32BE:#define __INT8_TYPE__ char
+comment|// MIPS32BE:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -3548,11 +9772,151 @@ comment|// MIPS32BE:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// MIPS32BE:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// MIPS32BE:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -3660,6 +10024,10 @@ comment|// MIPS32BE:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// MIPS32BE:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -3736,7 +10104,143 @@ comment|// MIPS32BE:#define __STDC__ 1
 end_comment
 
 begin_comment
+comment|// MIPS32BE:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// MIPS32BE:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS32BE:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -3772,7 +10276,7 @@ comment|// MIPS32BE:#define __llvm__ 1
 end_comment
 
 begin_comment
-comment|// MIPS32BE:#define __mips 1
+comment|// MIPS32BE:#define __mips 32
 end_comment
 
 begin_comment
@@ -3828,11 +10332,11 @@ comment|// MIPS32EL:#define _MIPSEL 1
 end_comment
 
 begin_comment
-comment|// MIPS32EL:#define _MIPS_ARCH "mips32"
+comment|// MIPS32EL:#define _MIPS_ARCH "mips32r2"
 end_comment
 
 begin_comment
-comment|// MIPS32EL:#define _MIPS_ARCH_MIPS32 1
+comment|// MIPS32EL:#define _MIPS_ARCH_MIPS32R2 1
 end_comment
 
 begin_comment
@@ -3992,7 +10496,39 @@ comment|// MIPS32EL:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// MIPS32EL:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// MIPS32EL:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -4004,11 +10540,51 @@ comment|// MIPS32EL:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// MIPS32EL:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// MIPS32EL:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// MIPS32EL:#define __INT8_TYPE__ char
+comment|// MIPS32EL:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -4024,11 +10600,151 @@ comment|// MIPS32EL:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// MIPS32EL:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// MIPS32EL:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// MIPS32EL:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -4088,6 +10804,10 @@ comment|// MIPS32EL:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
+comment|// MIPS32EL:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
 comment|// MIPS32EL:#define __LONG_LONG_MAX__ 9223372036854775807LL
 end_comment
 
@@ -4133,6 +10853,10 @@ end_comment
 
 begin_comment
 comment|// MIPS32EL:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __SIG_ATOMIC_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -4200,7 +10924,143 @@ comment|// MIPS32EL:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// MIPS32EL:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// MIPS32EL:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS32EL:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -4236,7 +11096,7 @@ comment|// MIPS32EL:#define __llvm__ 1
 end_comment
 
 begin_comment
-comment|// MIPS32EL:#define __mips 1
+comment|// MIPS32EL:#define __mips 32
 end_comment
 
 begin_comment
@@ -4292,11 +11152,11 @@ comment|// MIPS64BE:#define _MIPSEB 1
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define _MIPS_ARCH "mips64"
+comment|// MIPS64BE:#define _MIPS_ARCH "mips64r2"
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define _MIPS_ARCH_MIPS64 1
+comment|// MIPS64BE:#define _MIPS_ARCH_MIPS64R2 1
 end_comment
 
 begin_comment
@@ -4317,6 +11177,10 @@ end_comment
 
 begin_comment
 comment|// MIPS64BE:#define _MIPS_SZPTR 64
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __BIG_ENDIAN__ 1
 end_comment
 
 begin_comment
@@ -4456,7 +11320,39 @@ comment|// MIPS64BE:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// MIPS64BE:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// MIPS64BE:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -4468,11 +11364,51 @@ comment|// MIPS64BE:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// MIPS64BE:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// MIPS64BE:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __INT8_TYPE__ char
+comment|// MIPS64BE:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -4488,11 +11424,151 @@ comment|// MIPS64BE:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// MIPS64BE:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// MIPS64BE:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// MIPS64BE:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -4600,6 +11676,10 @@ comment|// MIPS64BE:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// MIPS64BE:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// MIPS64BE:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -4664,7 +11744,143 @@ comment|// MIPS64BE:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// MIPS64BE:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// MIPS64BE:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS64BE:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -4700,7 +11916,7 @@ comment|// MIPS64BE:#define __llvm__ 1
 end_comment
 
 begin_comment
-comment|// MIPS64BE:#define __mips 1
+comment|// MIPS64BE:#define __mips 64
 end_comment
 
 begin_comment
@@ -4764,11 +11980,11 @@ comment|// MIPS64EL:#define _MIPSEL 1
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define _MIPS_ARCH "mips64"
+comment|// MIPS64EL:#define _MIPS_ARCH "mips64r2"
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define _MIPS_ARCH_MIPS64 1
+comment|// MIPS64EL:#define _MIPS_ARCH_MIPS64R2 1
 end_comment
 
 begin_comment
@@ -4928,7 +12144,39 @@ comment|// MIPS64EL:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// MIPS64EL:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// MIPS64EL:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -4940,11 +12188,51 @@ comment|// MIPS64EL:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// MIPS64EL:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// MIPS64EL:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __INT8_TYPE__ char
+comment|// MIPS64EL:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -4960,11 +12248,151 @@ comment|// MIPS64EL:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// MIPS64EL:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// MIPS64EL:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// MIPS64EL:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -5024,6 +12452,10 @@ comment|// MIPS64EL:#define __LDBL_MIN__ 3.36210314311209350626267781732175260e-
 end_comment
 
 begin_comment
+comment|// MIPS64EL:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
 comment|// MIPS64EL:#define __LONG_LONG_MAX__ 9223372036854775807LL
 end_comment
 
@@ -5069,6 +12501,10 @@ end_comment
 
 begin_comment
 comment|// MIPS64EL:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __SIG_ATOMIC_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -5136,7 +12572,143 @@ comment|// MIPS64EL:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// MIPS64EL:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// MIPS64EL:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MIPS64EL:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -5172,7 +12744,7 @@ comment|// MIPS64EL:#define __llvm__ 1
 end_comment
 
 begin_comment
-comment|// MIPS64EL:#define __mips 1
+comment|// MIPS64EL:#define __mips 64
 end_comment
 
 begin_comment
@@ -5205,6 +12777,230 @@ end_comment
 
 begin_comment
 comment|// MIPS64EL:#define mips 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Check MIPS arch and isa macros
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips-none-none \
+end_comment
+
+begin_comment
+comment|// RUN:< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-ARCH-DEF32 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-DEF32:#define _MIPS_ARCH "mips32r2"
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-DEF32:#define _MIPS_ARCH_MIPS32R2 1
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-DEF32:#define _MIPS_ISA _MIPS_ISA_MIPS32
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-DEF32:#define __mips_isa_rev 2
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips-none-nones \
+end_comment
+
+begin_comment
+comment|// RUN:            -target-cpu mips32< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-ARCH-32 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32:#define _MIPS_ARCH "mips32"
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32:#define _MIPS_ARCH_MIPS32 1
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32:#define _MIPS_ISA _MIPS_ISA_MIPS32
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32:#define __mips_isa_rev 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips-none-none \
+end_comment
+
+begin_comment
+comment|// RUN:            -target-cpu mips32r2< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-ARCH-32R2 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32R2:#define _MIPS_ARCH "mips32r2"
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32R2:#define _MIPS_ARCH_MIPS32R2 1
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32R2:#define _MIPS_ISA _MIPS_ISA_MIPS32
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-32R2:#define __mips_isa_rev 2
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips64-none-none \
+end_comment
+
+begin_comment
+comment|// RUN:< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-ARCH-DEF64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-DEF64:#define _MIPS_ARCH "mips64r2"
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-DEF64:#define _MIPS_ARCH_MIPS64R2 1
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-DEF64:#define _MIPS_ISA _MIPS_ISA_MIPS64
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-DEF64:#define __mips_isa_rev 2
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips64-none-none \
+end_comment
+
+begin_comment
+comment|// RUN:            -target-cpu mips64< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-ARCH-64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64:#define _MIPS_ARCH "mips64"
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64:#define _MIPS_ARCH_MIPS64 1
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64:#define _MIPS_ISA _MIPS_ISA_MIPS64
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64:#define __mips_isa_rev 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=mips64-none-none \
+end_comment
+
+begin_comment
+comment|// RUN:            -target-cpu mips64r2< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-ARCH-64R2 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64R2:#define _MIPS_ARCH "mips64r2"
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64R2:#define _MIPS_ARCH_MIPS64R2 1
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64R2:#define _MIPS_ISA _MIPS_ISA_MIPS64
+end_comment
+
+begin_comment
+comment|// MIPS-ARCH-64R2:#define __mips_isa_rev 2
 end_comment
 
 begin_comment
@@ -5612,6 +13408,46 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -target-cpu mips32r6 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips-none-none< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-XXR6 %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -target-cpu mips64r6 \
+end_comment
+
+begin_comment
+comment|// RUN:   -E -dM -triple=mips64-none-none< /dev/null \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix MIPS-XXR6 %s
+end_comment
+
+begin_comment
+comment|// MIPS-XXR6:#define _MIPS_FPSET 32
+end_comment
+
+begin_comment
+comment|// MIPS-XXR6:#define __mips_fpr 64
+end_comment
+
+begin_comment
+comment|// MIPS-XXR6:#define __mips_nan2008 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=msp430-none-none< /dev/null | FileCheck -check-prefix MSP430 %s
 end_comment
 
@@ -5760,6 +13596,22 @@ comment|// MSP430:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// MSP430:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// MSP430:#define __INT16_TYPE__ short
 end_comment
 
@@ -5768,11 +13620,71 @@ comment|// MSP430:#define __INT32_C_SUFFIX__ L
 end_comment
 
 begin_comment
+comment|// MSP430:#define __INT32_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT32_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT32_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// MSP430:#define __INT32_TYPE__ long int
 end_comment
 
 begin_comment
-comment|// MSP430:#define __INT8_TYPE__ char
+comment|// MSP430:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -5788,11 +13700,151 @@ comment|// MSP430:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// MSP430:#define __INTPTR_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INTPTR_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INTPTR_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// MSP430:#define __INTPTR_TYPE__ int
 end_comment
 
 begin_comment
 comment|// MSP430:#define __INTPTR_WIDTH__ 16
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST32_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST32_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST32_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST32_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST32_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST32_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST32_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST32_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// MSP430:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -5852,6 +13904,10 @@ comment|// MSP430:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
+comment|// MSP430:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
 comment|// MSP430:#define __LONG_LONG_MAX__ 9223372036854775807LL
 end_comment
 
@@ -5885,6 +13941,10 @@ end_comment
 
 begin_comment
 comment|// MSP430:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// MSP430:#define __SIG_ATOMIC_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -5940,7 +14000,7 @@ comment|// MSP430:#define __SIZEOF_WINT_T__ 2
 end_comment
 
 begin_comment
-comment|// MSP430:#define __SIZE_MAX__ 65535U
+comment|// MSP430:#define __SIZE_MAX__ 65535
 end_comment
 
 begin_comment
@@ -5952,7 +14012,143 @@ comment|// MSP430:#define __SIZE_WIDTH__ 16
 end_comment
 
 begin_comment
+comment|// MSP430:#define __UINT16_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT32_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT32_MAX__ 4294967295UL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT32_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// MSP430:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINTPTR_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINTPTR_WIDTH__ 16
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_FAST32_MAX__ 4294967295UL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_FAST32_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_LEAST32_MAX__ 4294967295UL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_LEAST32_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// MSP430:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -6140,7 +14336,39 @@ comment|// NVPTX32:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// NVPTX32:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// NVPTX32:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -6152,11 +14380,51 @@ comment|// NVPTX32:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// NVPTX32:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// NVPTX32:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __INT8_TYPE__ char
+comment|// NVPTX32:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -6172,11 +14440,151 @@ comment|// NVPTX32:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
-comment|// NVPTX32:#define __INTPTR_TYPE__ unsigned int
+comment|// NVPTX32:#define __INTPTR_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTPTR_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTPTR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INTPTR_TYPE__ int
 end_comment
 
 begin_comment
 comment|// NVPTX32:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -6236,6 +14644,10 @@ comment|// NVPTX32:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
+comment|// NVPTX32:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
 comment|// NVPTX32:#define __LONG_LONG_MAX__ 9223372036854775807LL
 end_comment
 
@@ -6277,6 +14689,10 @@ end_comment
 
 begin_comment
 comment|// NVPTX32:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __SIG_ATOMIC_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -6344,7 +14760,143 @@ comment|// NVPTX32:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// NVPTX32:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// NVPTX32:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// NVPTX32:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -6528,7 +15080,39 @@ comment|// NVPTX64:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// NVPTX64:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// NVPTX64:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -6540,11 +15124,51 @@ comment|// NVPTX64:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// NVPTX64:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// NVPTX64:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// NVPTX64:#define __INT8_TYPE__ char
+comment|// NVPTX64:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -6560,11 +15184,151 @@ comment|// NVPTX64:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
-comment|// NVPTX64:#define __INTPTR_TYPE__ long long unsigned int
+comment|// NVPTX64:#define __INTPTR_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTPTR_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTPTR_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INTPTR_TYPE__ long long int
 end_comment
 
 begin_comment
 comment|// NVPTX64:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -6624,6 +15388,10 @@ comment|// NVPTX64:#define __LDBL_MIN__ 2.2250738585072014e-308L
 end_comment
 
 begin_comment
+comment|// NVPTX64:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
 comment|// NVPTX64:#define __LONG_LONG_MAX__ 9223372036854775807LL
 end_comment
 
@@ -6665,6 +15433,10 @@ end_comment
 
 begin_comment
 comment|// NVPTX64:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __SIG_ATOMIC_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -6732,7 +15504,143 @@ comment|// NVPTX64:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// NVPTX64:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// NVPTX64:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINTPTR_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINTPTR_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// NVPTX64:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -6932,7 +15840,39 @@ comment|// PPC603E:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// PPC603E:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// PPC603E:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -6944,11 +15884,51 @@ comment|// PPC603E:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// PPC603E:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// PPC603E:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// PPC603E:#define __INT8_TYPE__ char
+comment|// PPC603E:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -6964,11 +15944,151 @@ comment|// PPC603E:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC603E:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// PPC603E:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// PPC603E:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -7080,6 +16200,10 @@ comment|// PPC603E:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PPC603E:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// PPC603E:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -7144,7 +16268,143 @@ comment|// PPC603E:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// PPC603E:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// PPC603E:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC603E:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -7372,7 +16632,39 @@ comment|// PPC64:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// PPC64:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// PPC64:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -7384,11 +16676,51 @@ comment|// PPC64:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
+comment|// PPC64:#define __INT64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// PPC64:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
-comment|// PPC64:#define __INT8_TYPE__ char
+comment|// PPC64:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INTMAX_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INTMAX_FMTi__ "li"
 end_comment
 
 begin_comment
@@ -7404,11 +16736,151 @@ comment|// PPC64:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC64:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// PPC64:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// PPC64:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC64:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -7524,6 +16996,10 @@ comment|// PPC64:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PPC64:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// PPC64:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -7588,7 +17064,143 @@ comment|// PPC64:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC64:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT64_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINTMAX_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
 comment|// PPC64:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC64:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -7673,6 +17285,10 @@ end_comment
 
 begin_comment
 comment|// PPC64LE:#define _ARCH_PWR7 1
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define _CALL_ELF 2
 end_comment
 
 begin_comment
@@ -7820,7 +17436,39 @@ comment|// PPC64LE:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// PPC64LE:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// PPC64LE:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -7832,11 +17480,51 @@ comment|// PPC64LE:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
+comment|// PPC64LE:#define __INT64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// PPC64LE:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
-comment|// PPC64LE:#define __INT8_TYPE__ char
+comment|// PPC64LE:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INTMAX_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INTMAX_FMTi__ "li"
 end_comment
 
 begin_comment
@@ -7852,11 +17540,151 @@ comment|// PPC64LE:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC64LE:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// PPC64LE:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// PPC64LE:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -7976,6 +17804,10 @@ comment|// PPC64LE:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PPC64LE:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// PPC64LE:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -8040,7 +17872,143 @@ comment|// PPC64LE:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC64LE:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT64_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINTMAX_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
 comment|// PPC64LE:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC64LE:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -8720,6 +18688,118 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu pwr8 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPWR8 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PWR6 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PWR6X 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PWR7 1
+end_comment
+
+begin_comment
+comment|// PPCPWR8:#define _ARCH_PWR8 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-none-none -target-cpu power8 -fno-signed-char< /dev/null | FileCheck -check-prefix PPCPOWER8 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PPC 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PPC64 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PPCGR 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PPCSQ 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PWR4 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PWR5 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PWR5X 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PWR6 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PWR6X 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PWR7 1
+end_comment
+
+begin_comment
+comment|// PPCPOWER8:#define _ARCH_PWR8 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=powerpc64-unknown-linux-gnu -fno-signed-char< /dev/null | FileCheck -check-prefix PPC64-LINUX %s
 end_comment
 
@@ -8884,7 +18964,39 @@ comment|// PPC64-LINUX:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// PPC64-LINUX:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// PPC64-LINUX:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -8896,11 +19008,51 @@ comment|// PPC64-LINUX:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
+comment|// PPC64-LINUX:#define __INT64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// PPC64-LINUX:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
-comment|// PPC64-LINUX:#define __INT8_TYPE__ char
+comment|// PPC64-LINUX:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INTMAX_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INTMAX_FMTi__ "li"
 end_comment
 
 begin_comment
@@ -8916,11 +19068,151 @@ comment|// PPC64-LINUX:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC64-LINUX:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// PPC64-LINUX:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// PPC64-LINUX:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -9036,6 +19328,10 @@ comment|// PPC64-LINUX:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PPC64-LINUX:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// PPC64-LINUX:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -9100,7 +19396,143 @@ comment|// PPC64-LINUX:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC64-LINUX:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT64_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINTMAX_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
 comment|// PPC64-LINUX:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC64-LINUX:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -9312,7 +19744,39 @@ comment|// PPC:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// PPC:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// PPC:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -9324,11 +19788,51 @@ comment|// PPC:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// PPC:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// PPC:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// PPC:#define __INT8_TYPE__ char
+comment|// PPC:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// PPC:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -9344,11 +19848,151 @@ comment|// PPC:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// PPC:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// PPC:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -9460,6 +20104,10 @@ comment|// PPC:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PPC:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// PPC:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -9524,7 +20172,143 @@ comment|// PPC:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// PPC:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// PPC:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -9720,7 +20504,39 @@ comment|// PPC-LINUX:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// PPC-LINUX:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// PPC-LINUX:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -9732,11 +20548,51 @@ comment|// PPC-LINUX:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// PPC-LINUX:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// PPC-LINUX:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// PPC-LINUX:#define __INT8_TYPE__ char
+comment|// PPC-LINUX:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -9752,11 +20608,151 @@ comment|// PPC-LINUX:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC-LINUX:#define __INTPTR_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INTPTR_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INTPTR_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// PPC-LINUX:#define __INTPTR_TYPE__ int
 end_comment
 
 begin_comment
 comment|// PPC-LINUX:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -9868,6 +20864,10 @@ comment|// PPC-LINUX:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PPC-LINUX:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// PPC-LINUX:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -9932,7 +20932,143 @@ comment|// PPC-LINUX:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// PPC-LINUX:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// PPC-LINUX:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC-LINUX:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -10128,7 +21264,39 @@ comment|// PPC-DARWIN:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// PPC-DARWIN:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// PPC-DARWIN:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -10140,11 +21308,51 @@ comment|// PPC-DARWIN:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// PPC-DARWIN:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// PPC-DARWIN:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// PPC-DARWIN:#define __INT8_TYPE__ char
+comment|// PPC-DARWIN:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -10160,11 +21368,151 @@ comment|// PPC-DARWIN:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// PPC-DARWIN:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// PPC-DARWIN:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// PPC-DARWIN:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -10288,6 +21636,10 @@ comment|// PPC-DARWIN:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// PPC-DARWIN:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// PPC-DARWIN:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -10364,7 +21716,143 @@ comment|// PPC-DARWIN:#define __STDC__ 1
 end_comment
 
 begin_comment
+comment|// PPC-DARWIN:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// PPC-DARWIN:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// PPC-DARWIN:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -10544,7 +22032,39 @@ comment|// S390X:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// S390X:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// S390X:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -10552,7 +22072,19 @@ comment|// S390X:#define __INT32_TYPE__ int
 end_comment
 
 begin_comment
-comment|// S390X:#define __INT64_C_SUFFIX__ L
+comment|// S390X:#define __INT64_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT64_MAX__ 9223372036854775807LL
 end_comment
 
 begin_comment
@@ -10560,7 +22092,35 @@ comment|// S390X:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// S390X:#define __INT8_TYPE__ char
+comment|// S390X:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// S390X:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// S390X:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -10576,11 +22136,151 @@ comment|// S390X:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// S390X:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// S390X:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// S390X:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// S390X:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -10672,6 +22372,10 @@ comment|// S390X:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// S390X:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// S390X:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -10732,7 +22436,143 @@ comment|// S390X:#define __SIZE_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// S390X:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// S390X:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// S390X:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -10781,6 +22621,10 @@ end_comment
 
 begin_comment
 comment|// SPARC-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// SPARC:#define __BIG_ENDIAN__ 1
 end_comment
 
 begin_comment
@@ -10916,7 +22760,39 @@ comment|// SPARC:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// SPARC:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// SPARC:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -10928,11 +22804,51 @@ comment|// SPARC:#define __INT64_C_SUFFIX__ LL
 end_comment
 
 begin_comment
+comment|// SPARC:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
 comment|// SPARC:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
-comment|// SPARC:#define __INT8_TYPE__ char
+comment|// SPARC:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INTMAX_FMTi__ "lli"
 end_comment
 
 begin_comment
@@ -10948,11 +22864,151 @@ comment|// SPARC:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// SPARC:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
 comment|// SPARC:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// SPARC:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// SPARC:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -11048,6 +23104,10 @@ comment|// SPARC:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// SPARC:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// SPARC:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -11112,7 +23172,143 @@ comment|// SPARC:#define __SIZE_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// SPARC:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
 comment|// SPARC:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// SPARC:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -11173,6 +23369,10 @@ end_comment
 
 begin_comment
 comment|// TCE-NOT:#define _LP64
+end_comment
+
+begin_comment
+comment|// TCE:#define __BIG_ENDIAN__ 1
 end_comment
 
 begin_comment
@@ -11308,7 +23508,39 @@ comment|// TCE:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// TCE:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// TCE:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -11316,7 +23548,35 @@ comment|// TCE:#define __INT32_TYPE__ int
 end_comment
 
 begin_comment
-comment|// TCE:#define __INT8_TYPE__ char
+comment|// TCE:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// TCE:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// TCE:#define __INTMAX_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INTMAX_FMTi__ "li"
 end_comment
 
 begin_comment
@@ -11332,11 +23592,119 @@ comment|// TCE:#define __INTMAX_WIDTH__ 32
 end_comment
 
 begin_comment
+comment|// TCE:#define __INTPTR_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INTPTR_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INTPTR_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// TCE:#define __INTPTR_TYPE__ int
 end_comment
 
 begin_comment
 comment|// TCE:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// TCE:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -11428,6 +23796,10 @@ comment|// TCE:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// TCE:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// TCE:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -11500,7 +23872,115 @@ comment|// TCE:#define __TCE__ 1
 end_comment
 
 begin_comment
+comment|// TCE:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINTMAX_MAX__ 4294967295UL
+end_comment
+
+begin_comment
 comment|// TCE:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINTMAX_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// TCE:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -11553,6 +24033,10 @@ end_comment
 
 begin_comment
 comment|// X86_64:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// X86_64-NOT:#define _LP32 1
 end_comment
 
 begin_comment
@@ -11688,7 +24172,39 @@ comment|// X86_64:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// X86_64:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// X86_64:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -11700,11 +24216,51 @@ comment|// X86_64:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
+comment|// X86_64:#define __INT64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// X86_64:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
-comment|// X86_64:#define __INT8_TYPE__ char
+comment|// X86_64:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INTMAX_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INTMAX_FMTi__ "li"
 end_comment
 
 begin_comment
@@ -11720,11 +24276,151 @@ comment|// X86_64:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// X86_64:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// X86_64:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// X86_64:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X86_64:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -11800,6 +24496,10 @@ comment|// X86_64:#define __LP64__ 1
 end_comment
 
 begin_comment
+comment|// X86_64-NOT:#define __ILP32__ 1
+end_comment
+
+begin_comment
 comment|// X86_64:#define __MMX__ 1
 end_comment
 
@@ -11829,6 +24529,10 @@ end_comment
 
 begin_comment
 comment|// X86_64:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X86_64:#define __SIG_ATOMIC_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -11912,7 +24616,143 @@ comment|// X86_64:#define __SSE__ 1
 end_comment
 
 begin_comment
+comment|// X86_64:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT64_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINTMAX_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
 comment|// X86_64:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X86_64:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -11953,6 +24793,782 @@ end_comment
 
 begin_comment
 comment|// X86_64:#define __x86_64__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=x86_64-none-none-gnux32< /dev/null | FileCheck -check-prefix X32 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// X32:#define _ILP32 1
+end_comment
+
+begin_comment
+comment|// X32-NOT:#define _LP64 1
+end_comment
+
+begin_comment
+comment|// X32:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// X32:#define __CHAR16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X32:#define __CHAR32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __CHAR_BIT__ 8
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_DENORM_MIN__ 4.9406564584124654e-324
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_DIG__ 15
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_EPSILON__ 2.2204460492503131e-16
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_MANT_DIG__ 53
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_MAX_10_EXP__ 308
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_MAX_EXP__ 1024
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_MAX__ 1.7976931348623157e+308
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_MIN_10_EXP__ (-307)
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_MIN_EXP__ (-1021)
+end_comment
+
+begin_comment
+comment|// X32:#define __DBL_MIN__ 2.2250738585072014e-308
+end_comment
+
+begin_comment
+comment|// X32:#define __DECIMAL_DIG__ 21
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_DENORM_MIN__ 1.40129846e-45F
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_DIG__ 6
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_EPSILON__ 1.19209290e-7F
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_EVAL_METHOD__ 0
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_MANT_DIG__ 24
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_MAX_10_EXP__ 38
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_MAX_EXP__ 128
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_MAX__ 3.40282347e+38F
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_MIN_10_EXP__ (-37)
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_MIN_EXP__ (-125)
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_MIN__ 1.17549435e-38F
+end_comment
+
+begin_comment
+comment|// X32:#define __FLT_RADIX__ 2
+end_comment
+
+begin_comment
+comment|// X32:#define __ILP32__ 1
+end_comment
+
+begin_comment
+comment|// X32-NOT:#define __LP64__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X32:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X32:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X32:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X32:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X32:#define __INT32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X32:#define __INT64_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// X32:#define __INT64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X32:#define __INT64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// X32:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X32:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X32:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// X32:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
+comment|// X32:#define __INTMAX_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// X32:#define __INTMAX_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// X32:#define __INTMAX_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X32:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// X32:#define __INTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X32:#define __INTPTR_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X32:#define __INTPTR_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X32:#define __INTPTR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X32:#define __INTPTR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X32:#define __INTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST64_FMTd__ "lld"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST64_FMTi__ "lli"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_LEAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// X32:#define __INT_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_DENORM_MIN__ 3.64519953188247460253e-4951L
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_DIG__ 18
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_EPSILON__ 1.08420217248550443401e-19L
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_HAS_DENORM__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_HAS_INFINITY__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_HAS_QUIET_NAN__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_MANT_DIG__ 64
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_MAX_10_EXP__ 4932
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_MAX_EXP__ 16384
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_MAX__ 1.18973149535723176502e+4932L
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_MIN_10_EXP__ (-4931)
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_MIN_EXP__ (-16381)
+end_comment
+
+begin_comment
+comment|// X32:#define __LDBL_MIN__ 3.36210314311209350626e-4932L
+end_comment
+
+begin_comment
+comment|// X32:#define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __LONG_LONG_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// X32:#define __LONG_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// X32:#define __MMX__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __NO_MATH_INLINES 1
+end_comment
+
+begin_comment
+comment|// X32:#define __POINTER_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// X32:#define __PTRDIFF_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X32:#define __PTRDIFF_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// X32:#define __REGISTER_PREFIX__
+end_comment
+
+begin_comment
+comment|// X32:#define __SCHAR_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X32:#define __SHRT_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X32:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X32:#define __SIG_ATOMIC_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_DOUBLE__ 8
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_FLOAT__ 4
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_INT__ 4
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_LONG_DOUBLE__ 16
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_LONG_LONG__ 8
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_LONG__ 4
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_POINTER__ 4
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_PTRDIFF_T__ 4
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_SHORT__ 2
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_SIZE_T__ 4
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_WCHAR_T__ 4
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZEOF_WINT_T__ 4
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZE_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZE_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __SIZE_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// X32:#define __SSE2_MATH__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __SSE2__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __SSE_MATH__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __SSE__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT64_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// X32:#define __UINTMAX_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// X32:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// X32:#define __UINTMAX_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X32:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X32:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X32:#define __UINT_LEAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// X32:#define __USER_LABEL_PREFIX__ _
+end_comment
+
+begin_comment
+comment|// X32:#define __WCHAR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X32:#define __WCHAR_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X32:#define __WCHAR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// X32:#define __WINT_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X32:#define __WINT_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// X32:#define __amd64 1
+end_comment
+
+begin_comment
+comment|// X32:#define __amd64__ 1
+end_comment
+
+begin_comment
+comment|// X32:#define __x86_64 1
+end_comment
+
+begin_comment
+comment|// X32:#define __x86_64__ 1
 end_comment
 
 begin_comment
@@ -12104,7 +25720,39 @@ comment|// X86_64-LINUX:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// X86_64-LINUX:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// X86_64-LINUX:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -12116,11 +25764,51 @@ comment|// X86_64-LINUX:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
+comment|// X86_64-LINUX:#define __INT64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// X86_64-LINUX:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
-comment|// X86_64-LINUX:#define __INT8_TYPE__ char
+comment|// X86_64-LINUX:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INTMAX_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INTMAX_FMTi__ "li"
 end_comment
 
 begin_comment
@@ -12136,11 +25824,151 @@ comment|// X86_64-LINUX:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// X86_64-LINUX:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// X86_64-LINUX:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// X86_64-LINUX:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -12248,6 +26076,10 @@ comment|// X86_64-LINUX:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// X86_64-LINUX:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// X86_64-LINUX:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -12328,7 +26160,143 @@ comment|// X86_64-LINUX:#define __SSE__ 1
 end_comment
 
 begin_comment
+comment|// X86_64-LINUX:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT64_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINTMAX_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
 comment|// X86_64-LINUX:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X86_64-LINUX:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -12544,7 +26512,39 @@ comment|// X86_64-NETBSD:#define __FLT_RADIX__ 2
 end_comment
 
 begin_comment
+comment|// X86_64-NETBSD:#define __INT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
 comment|// X86_64-NETBSD:#define __INT16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT32_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT32_MAX__ 2147483647
 end_comment
 
 begin_comment
@@ -12556,11 +26556,51 @@ comment|// X86_64-NETBSD:#define __INT64_C_SUFFIX__ L
 end_comment
 
 begin_comment
+comment|// X86_64-NETBSD:#define __INT64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// X86_64-NETBSD:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
-comment|// X86_64-NETBSD:#define __INT8_TYPE__ char
+comment|// X86_64-NETBSD:#define __INT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INTMAX_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INTMAX_FMTi__ "li"
 end_comment
 
 begin_comment
@@ -12576,11 +26616,151 @@ comment|// X86_64-NETBSD:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
+comment|// X86_64-NETBSD:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INTPTR_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
 comment|// X86_64-NETBSD:#define __INTPTR_TYPE__ long int
 end_comment
 
 begin_comment
 comment|// X86_64-NETBSD:#define __INTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_FAST8_TYPE__ signed char
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST16_FMTd__ "hd"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST16_FMTi__ "hi"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST32_FMTd__ "d"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST32_FMTi__ "i"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST64_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST64_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST64_MAX__ 9223372036854775807L
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST64_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST8_FMTd__ "hhd"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST8_FMTi__ "hhi"
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __INT_LEAST8_TYPE__ signed char
 end_comment
 
 begin_comment
@@ -12688,6 +26868,10 @@ comment|// X86_64-NETBSD:#define __SHRT_MAX__ 32767
 end_comment
 
 begin_comment
+comment|// X86_64-NETBSD:#define __SIG_ATOMIC_MAX__ 2147483647
+end_comment
+
+begin_comment
 comment|// X86_64-NETBSD:#define __SIG_ATOMIC_WIDTH__ 32
 end_comment
 
@@ -12768,7 +26952,143 @@ comment|// X86_64-NETBSD:#define __SSE__ 1
 end_comment
 
 begin_comment
+comment|// X86_64-NETBSD:#define __UINT16_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT64_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT8_C_SUFFIX__ {{$}}
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINTMAX_C_SUFFIX__ UL
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINTMAX_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
 comment|// X86_64-NETBSD:#define __UINTMAX_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINTMAX_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINTPTR_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINTPTR_WIDTH__ 64
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_FAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_FAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_FAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_FAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_LEAST16_MAX__ 65535
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_LEAST64_MAX__ 18446744073709551615UL
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_LEAST64_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_LEAST8_MAX__ 255
+end_comment
+
+begin_comment
+comment|// X86_64-NETBSD:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment
@@ -12824,6 +27144,10 @@ comment|// SPARCV9:#define __INT64_TYPE__ long int
 end_comment
 
 begin_comment
+comment|// SPARCV9:#define __INTMAX_C_SUFFIX__ L
+end_comment
+
+begin_comment
 comment|// SPARCV9:#define __INTMAX_TYPE__ long int
 end_comment
 
@@ -12848,6 +27172,10 @@ comment|// SPARCV9:#define __SIZEOF_POINTER__ 8
 end_comment
 
 begin_comment
+comment|// SPARCV9:#define __UINTPTR_TYPE__ long unsigned int
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -12860,7 +27188,15 @@ comment|// SPARC64-OBSD:#define __INT64_TYPE__ long long int
 end_comment
 
 begin_comment
+comment|// SPARC64-OBSD:#define __INTMAX_C_SUFFIX__ LL
+end_comment
+
+begin_comment
 comment|// SPARC64-OBSD:#define __INTMAX_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// SPARC64-OBSD:#define __UINTMAX_C_SUFFIX__ ULL
 end_comment
 
 begin_comment
@@ -12961,6 +27297,14 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=xcore-none-none< /dev/null | FileCheck -check-prefix XCORE %s
+end_comment
+
+begin_comment
+comment|// XCORE:#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+end_comment
+
+begin_comment
+comment|// XCORE:#define __LITTLE_ENDIAN__ 1
 end_comment
 
 begin_comment

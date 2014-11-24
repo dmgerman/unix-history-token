@@ -8,7 +8,7 @@ comment|// RUN:   not c-index-test -test-load-source-reparse 1 local \
 end_comment
 
 begin_comment
-comment|// RUN:   -remap-file="%s;%S/Inputs/crash-recovery-code-complete-remap.c" \
+comment|// RUN:   -remap-file="%s,%S/Inputs/crash-recovery-code-complete-remap.c" \
 end_comment
 
 begin_comment
@@ -21,14 +21,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-CODE-COMPLETE-CRASH: Unable to reparse translation unit
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// XFAIL: win32
 end_comment
 
 begin_warning

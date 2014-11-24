@@ -1050,11 +1050,11 @@ block|{ }
 end_function
 
 begin_comment
-comment|// APCS-GNU-LABEL: define void @f33(%struct.s33* byval %s)
+comment|// APCS-GNU-LABEL: define void @f33(%struct.s33* byval align 1 %s)
 end_comment
 
 begin_comment
-comment|// AAPCS-LABEL: define arm_aapcscc void @f33(%struct.s33* byval %s)
+comment|// AAPCS-LABEL: define arm_aapcscc void @f33(%struct.s33* byval align 1 %s)
 end_comment
 
 begin_comment
@@ -1248,7 +1248,7 @@ block|}
 end_function
 
 begin_comment
-comment|// APCS-GNU-LABEL: define<4 x float> @f35(i32 %i, %struct.s35* byval, %struct.s35* byval)
+comment|// APCS-GNU-LABEL: define<4 x float> @f35(i32 %i, %struct.s35* byval align 16, %struct.s35* byval align 16)
 end_comment
 
 begin_comment
@@ -1276,7 +1276,7 @@ comment|// APCS-GNU: load<4 x float>* %[[d]], align 16
 end_comment
 
 begin_comment
-comment|// AAPCS-LABEL: define arm_aapcscc<4 x float> @f35(i32 %i, %struct.s35* byval, %struct.s35* byval)
+comment|// AAPCS-LABEL: define arm_aapcscc<4 x float> @f35(i32 %i, %struct.s35* byval align 16, %struct.s35* byval align 16)
 end_comment
 
 begin_comment

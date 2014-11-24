@@ -5545,6 +5545,8 @@ name|v16i8_r
 operator|=
 name|__builtin_msa_sld_b
 argument_list|(
+name|v16i8_r
+argument_list|,
 name|v16i8_a
 argument_list|,
 literal|10
@@ -5555,6 +5557,8 @@ name|v8i16_r
 operator|=
 name|__builtin_msa_sld_h
 argument_list|(
+name|v8i16_r
+argument_list|,
 name|v8i16_a
 argument_list|,
 literal|10
@@ -5565,6 +5569,8 @@ name|v4i32_r
 operator|=
 name|__builtin_msa_sld_w
 argument_list|(
+name|v4i32_r
+argument_list|,
 name|v4i32_a
 argument_list|,
 literal|10
@@ -5575,6 +5581,8 @@ name|v2i64_r
 operator|=
 name|__builtin_msa_sld_d
 argument_list|(
+name|v2i64_r
+argument_list|,
 name|v2i64_a
 argument_list|,
 literal|10
@@ -5585,6 +5593,8 @@ name|v16i8_r
 operator|=
 name|__builtin_msa_sldi_b
 argument_list|(
+name|v16i8_r
+argument_list|,
 name|v16i8_a
 argument_list|,
 literal|3
@@ -5595,6 +5605,8 @@ name|v8i16_r
 operator|=
 name|__builtin_msa_sldi_h
 argument_list|(
+name|v8i16_r
+argument_list|,
 name|v8i16_a
 argument_list|,
 literal|3
@@ -5605,6 +5617,8 @@ name|v4i32_r
 operator|=
 name|__builtin_msa_sldi_w
 argument_list|(
+name|v4i32_r
+argument_list|,
 name|v4i32_a
 argument_list|,
 literal|3
@@ -5615,6 +5629,8 @@ name|v2i64_r
 operator|=
 name|__builtin_msa_sldi_d
 argument_list|(
+name|v2i64_r
+argument_list|,
 name|v2i64_a
 argument_list|,
 literal|3

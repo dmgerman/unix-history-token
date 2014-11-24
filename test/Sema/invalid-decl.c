@@ -234,5 +234,18 @@ parameter_list|()
 block|{ }
 end_function
 
+begin_function_decl
+name|void
+name|ellipsis1
+parameter_list|(
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-error {{ISO C requires a named parameter before '...'}}
+end_comment
+
 end_unit
 

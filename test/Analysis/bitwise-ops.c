@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,debug.ExprInspection -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,debug.ExprInspection -triple x86_64-apple-darwin13 -Wno-shift-count-overflow -verify %s
 end_comment
 
 begin_function_decl
@@ -65,6 +65,58 @@ name|y
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{UNKNOWN}}
+block|}
+end_function
+
+begin_function
+name|int
+name|testConstantShifts_PR18073
+parameter_list|(
+name|int
+name|which
+parameter_list|)
+block|{
+comment|// FIXME: We should have a checker that actually specifically checks bitwise
+comment|// shifts against the width of the LHS's /static/ type, rather than just
+comment|// having BasicValueFactory return "undefined" when dealing with two constant
+comment|// operands.
+switch|switch
+condition|(
+name|which
+condition|)
+block|{
+case|case
+literal|1
+case|:
+return|return
+literal|0ULL
+operator|<<
+literal|63
+return|;
+comment|// no-warning
+case|case
+literal|2
+case|:
+return|return
+literal|0ULL
+operator|<<
+literal|64
+return|;
+comment|// expected-warning{{The result of the '<<' expression is undefined}}
+case|case
+literal|3
+case|:
+return|return
+literal|0ULL
+operator|<<
+literal|65
+return|;
+comment|// expected-warning{{The result of the '<<' expression is undefined}}
+default|default:
+return|return
+literal|0
+return|;
+block|}
 block|}
 end_function
 

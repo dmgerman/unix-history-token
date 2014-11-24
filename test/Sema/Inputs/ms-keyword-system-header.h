@@ -23,7 +23,7 @@ name|defined
 argument_list|(
 name|NOT_SYSTEM
 argument_list|)
-comment|// expected-warning@-2 {{keyword '__uptr' will be treated as an identifier here}}
+comment|// expected-warning@-2 {{keyword '__uptr' will be made available as an identifier here}}
 endif|#
 directive|endif
 name|int

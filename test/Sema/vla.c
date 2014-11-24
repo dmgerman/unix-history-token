@@ -114,7 +114,7 @@ index|[
 name|m
 index|]
 decl_stmt|;
-comment|// expected-error {{variable length array declaration can not have 'extern' linkage}}
+comment|// expected-error {{variable length array declaration cannot have 'extern' linkage}}
 name|e1
 index|[
 literal|0
@@ -193,7 +193,7 @@ index|[
 name|i
 index|]
 decl_stmt|;
-comment|// expected-error {{variable length array declaration can not have 'static' storage duration}}
+comment|// expected-error {{variable length array declaration cannot have 'static' storage duration}}
 specifier|extern
 name|int
 name|b
@@ -201,14 +201,14 @@ index|[
 name|i
 index|]
 decl_stmt|;
-comment|// expected-error {{variable length array declaration can not have 'extern' linkage}}
+comment|// expected-error {{variable length array declaration cannot have 'extern' linkage}}
 extern|extern int (*c1
 block|)
 function|[i];
 end_function
 
 begin_comment
-comment|// expected-error {{variably modified type declaration can not have 'extern' linkage}}
+comment|// expected-error {{variably modified type declaration cannot have 'extern' linkage}}
 end_comment
 
 begin_expr_stmt

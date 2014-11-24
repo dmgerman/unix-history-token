@@ -8,7 +8,7 @@ comment|// RUN:   not c-index-test -test-load-source-reparse 1 local \
 end_comment
 
 begin_comment
-comment|// RUN:   -remap-file="%s;%S/Inputs/crash-recovery-reparse-remap.c" \
+comment|// RUN:   -remap-file="%s,%S/Inputs/crash-recovery-reparse-remap.c" \
 end_comment
 
 begin_comment

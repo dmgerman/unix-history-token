@@ -133,6 +133,10 @@ comment|// ENDCOMPARE
 end_comment
 
 begin_comment
+comment|// CHECK: {{^}}# 1 "{{.*}}rewrite-includes.c"{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK: {{^}}// STARTCOMPARE{{$}}
 end_comment
 
@@ -154,6 +158,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 6 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
 begin_comment
@@ -193,6 +201,10 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: {{^}}# 3 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes1.h" 3{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes2.h" 1 3{{$}}
 end_comment
 
@@ -229,6 +241,10 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: {{^}}# 9 "{{.*}}rewrite-includes.c"{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes3.h" 1{{$}}
 end_comment
 
@@ -258,6 +274,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 11 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
 begin_comment
@@ -293,6 +313,10 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: {{^}}# 15 "{{.*}}rewrite-includes.c"{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: {{^}}# 1 "{{.*[/\\]Inputs(/|\\\\)}}rewrite-includes5.h" 1{{$}}
 end_comment
 
@@ -314,6 +338,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 16 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
 begin_comment
@@ -365,6 +393,10 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: {{^}}# 19 "{{.*}}rewrite-includes.c"{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: {{^}}# 20 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
@@ -378,6 +410,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 20 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
 begin_comment
@@ -421,6 +457,10 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: {{^}}# 21 "{{.*}}rewrite-includes.c"{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: {{^}}# 22 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
@@ -434,6 +474,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: {{^}}# 22 "{{.*}}rewrite-includes.c"{{$}}
 end_comment
 
 begin_comment

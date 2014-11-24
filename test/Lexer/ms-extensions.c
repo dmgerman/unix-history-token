@@ -7,6 +7,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify -fms-compatibility %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i386-pc-win32 -fms-compatibility %s
+end_comment
+
 begin_decl_stmt
 name|__int8
 name|x1
@@ -49,6 +53,21 @@ init|=
 literal|0x42I64
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__SIZEOF_INT128__
+end_ifndef
+
+begin_comment
+comment|// expected-error@+2 {{__int128 is not supported on this target}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|__int64
@@ -102,6 +121,33 @@ end_decl_stmt
 begin_comment
 comment|// expected-error {{invalid suffix}}
 end_comment
+
+begin_decl_stmt
+name|__complex
+name|double
+name|c1
+init|=
+literal|1i
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__complex
+name|double
+name|c2
+init|=
+literal|1.0i
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__complex
+name|float
+name|c3
+init|=
+literal|1.0if
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// radar 7562363

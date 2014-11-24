@@ -12,6 +12,10 @@ comment|// CHECK-LOAD-SOURCE-CRASH: Unable to load translation unit
 end_comment
 
 begin_comment
+comment|// RUN: env LIBCLANG_DISABLE_CRASH_RECOVERY=1 not --crash c-index-test -test-load-source all %s
+end_comment
+
+begin_comment
 comment|//
 end_comment
 

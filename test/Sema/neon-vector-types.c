@@ -32,8 +32,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|unsigned
-name|long
-name|long
+name|__INT64_TYPE__
 name|uint64_t
 typedef|;
 end_typedef
@@ -192,23 +191,6 @@ end_comment
 
 begin_comment
 comment|// Only certain element types are allowed.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|__attribute__
-argument_list|(
-argument|(neon_vector_type(
-literal|2
-argument|))
-argument_list|)
-name|double
-name|double_elt
-typedef|;
-end_typedef
-
-begin_comment
-comment|// expected-error{{invalid vector element type}}
 end_comment
 
 begin_typedef

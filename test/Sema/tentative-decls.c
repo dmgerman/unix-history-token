@@ -203,7 +203,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{previous definition is here}}
+comment|// expected-note {{previous declaration is here}}
 end_comment
 
 begin_decl_stmt
@@ -368,7 +368,7 @@ specifier|extern
 name|int
 name|i6
 decl_stmt|;
-comment|// expected-note {{previous definition is here}}
+comment|// expected-note {{previous declaration is here}}
 specifier|static
 name|int
 name|i6

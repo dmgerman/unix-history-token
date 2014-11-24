@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: not %clang_cc1 -emit-llvm %s -o -
+comment|// RUN: %clang_cc1 -verify -fsyntax-only %s
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-error {argument may not have 'void' type}
+comment|// expected-error {{argument may not have 'void' type}}
 end_comment
 
 end_unit

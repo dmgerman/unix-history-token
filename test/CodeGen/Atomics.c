@@ -1480,7 +1480,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i8
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i8
+comment|// CHECK: extractvalue { i8, i1 } [[PAIR]], 0
 name|uc
 operator|=
 name|__sync_val_compare_and_swap
@@ -1493,7 +1494,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i8
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i8
+comment|// CHECK: extractvalue { i8, i1 } [[PAIR]], 0
 name|ss
 operator|=
 name|__sync_val_compare_and_swap
@@ -1506,7 +1508,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i16
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i16
+comment|// CHECK: extractvalue { i16, i1 } [[PAIR]], 0
 name|us
 operator|=
 name|__sync_val_compare_and_swap
@@ -1519,7 +1522,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i16
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i16
+comment|// CHECK: extractvalue { i16, i1 } [[PAIR]], 0
 name|si
 operator|=
 name|__sync_val_compare_and_swap
@@ -1532,7 +1536,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i32
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i32
+comment|// CHECK: extractvalue { i32, i1 } [[PAIR]], 0
 name|ui
 operator|=
 name|__sync_val_compare_and_swap
@@ -1545,7 +1550,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i32
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i32
+comment|// CHECK: extractvalue { i32, i1 } [[PAIR]], 0
 name|sll
 operator|=
 name|__sync_val_compare_and_swap
@@ -1558,7 +1564,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i64
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i64
+comment|// CHECK: extractvalue { i64, i1 } [[PAIR]], 0
 name|ull
 operator|=
 name|__sync_val_compare_and_swap
@@ -1571,7 +1578,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg i64
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i64
+comment|// CHECK: extractvalue { i64, i1 } [[PAIR]], 0
 name|ui
 operator|=
 name|__sync_bool_compare_and_swap
@@ -1584,7 +1592,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i8
+comment|// CHECK: extractvalue { i8, i1 } [[PAIR]], 1
 name|ui
 operator|=
 name|__sync_bool_compare_and_swap
@@ -1597,7 +1606,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i8
+comment|// CHECK: extractvalue { i8, i1 } [[PAIR]], 1
 name|ui
 operator|=
 name|__sync_bool_compare_and_swap
@@ -1610,7 +1620,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i16
+comment|// CHECK: extractvalue { i16, i1 } [[PAIR]], 1
 name|ui
 operator|=
 name|__sync_bool_compare_and_swap
@@ -1623,7 +1634,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i16
+comment|// CHECK: extractvalue { i16, i1 } [[PAIR]], 1
 name|ui
 operator|=
 name|__sync_bool_compare_and_swap
@@ -1636,7 +1648,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i32
+comment|// CHECK: extractvalue { i32, i1 } [[PAIR]], 1
 name|ui
 operator|=
 name|__sync_bool_compare_and_swap
@@ -1649,7 +1662,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i32
+comment|// CHECK: extractvalue { i32, i1 } [[PAIR]], 1
 name|ui
 operator|=
 name|__sync_bool_compare_and_swap
@@ -1662,7 +1676,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i64
+comment|// CHECK: extractvalue { i64, i1 } [[PAIR]], 1
 name|ui
 operator|=
 name|__sync_bool_compare_and_swap
@@ -1675,7 +1690,8 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: cmpxchg
+comment|// CHECK: [[PAIR:%[a-z0-9._]+]] = cmpxchg i64
+comment|// CHECK: extractvalue { i64, i1 } [[PAIR]], 1
 block|}
 end_function
 

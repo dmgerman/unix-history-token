@@ -1,26 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i386-apple-darwin9 -pedantic -DALLOWED %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i386-apple-darwin9 -Wformat-non-iso -DALLOWED %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple thumbv6-apple-ios4.0 -pedantic -DALLOWED %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple thumbv6-apple-ios4.0 -Wformat-non-iso -DALLOWED %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-mingw32 -pedantic %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-mingw32 -Wformat-non-iso %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i686-pc-win32 -pedantic %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i686-pc-win32 -Wformat-non-iso %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i686-linux-gnu -pedantic %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i686-linux-gnu -Wformat-non-iso %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-unknown-freebsd -pedantic %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple x86_64-unknown-freebsd -Wformat-non-iso %s
 end_comment
 
 begin_function_decl

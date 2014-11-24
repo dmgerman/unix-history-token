@@ -246,7 +246,7 @@ parameter_list|,
 name|CXTranslationUnit
 name|TU
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Create an Objective-C superclass reference at the given location.
@@ -630,7 +630,7 @@ index|[
 literal|1
 index|]
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|const

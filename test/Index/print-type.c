@@ -138,11 +138,11 @@ comment|// CHECK: FunctionDecl=f:3:6 (Definition) [type=int *(int *, char *, Foo
 end_comment
 
 begin_comment
-comment|// CHECK: ParmDecl=p:3:13 (Definition) [type=int *] [typekind=Pointer] [isPOD=1]
+comment|// CHECK: ParmDecl=p:3:13 (Definition) [type=int *] [typekind=Pointer] [isPOD=1] [pointeetype=int] [pointeekind=Int]
 end_comment
 
 begin_comment
-comment|// CHECK: ParmDecl=x:3:22 (Definition) [type=char *] [typekind=Pointer] [isPOD=1]
+comment|// CHECK: ParmDecl=x:3:22 (Definition) [type=char *] [typekind=Pointer] [isPOD=1] [pointeetype=char] [pointeekind=Char_{{[US]}}]
 end_comment
 
 begin_comment
@@ -162,7 +162,7 @@ comment|// CHECK: IntegerLiteral= [type=int] [typekind=Int] [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: ParmDecl=fn:3:55 (Definition) [type=void (*)(int)] [typekind=Pointer] [canonicaltype=void (*)(int)] [canonicaltypekind=Pointer] [isPOD=1]
+comment|// CHECK: ParmDecl=fn:3:55 (Definition) [type=void (*)(int)] [typekind=Pointer] [canonicaltype=void (*)(int)] [canonicaltypekind=Pointer] [isPOD=1] [pointeetype=void (int)] [pointeekind=Unexposed]
 end_comment
 
 begin_comment
@@ -178,7 +178,7 @@ comment|// CHECK: CallExpr=fn:3:55 [type=void] [typekind=Void] [args= [int] [Int
 end_comment
 
 begin_comment
-comment|// CHECK: DeclRefExpr=fn:3:55 [type=void (*)(int)] [typekind=Pointer] [canonicaltype=void (*)(int)] [canonicaltypekind=Pointer] [isPOD=1]
+comment|// CHECK: DeclRefExpr=fn:3:55 [type=void (*)(int)] [typekind=Pointer] [canonicaltype=void (*)(int)] [canonicaltypekind=Pointer] [isPOD=1] [pointeetype=void (int)] [pointeekind=Unexposed]
 end_comment
 
 begin_comment
@@ -186,7 +186,7 @@ comment|// CHECK: UnaryOperator= [type=int] [typekind=Int] [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: DeclRefExpr=p:3:13 [type=int *] [typekind=Pointer] [isPOD=1]
+comment|// CHECK: DeclRefExpr=p:3:13 [type=int *] [typekind=Pointer] [isPOD=1] [pointeetype=int] [pointeekind=Int]
 end_comment
 
 begin_comment
@@ -210,15 +210,15 @@ comment|// CHECK: ReturnStmt= [type=] [typekind=Invalid] [isPOD=0]
 end_comment
 
 begin_comment
-comment|// CHECK: BinaryOperator= [type=int *] [typekind=Pointer] [isPOD=1]
+comment|// CHECK: BinaryOperator= [type=int *] [typekind=Pointer] [isPOD=1] [pointeetype=int] [pointeekind=Int]
 end_comment
 
 begin_comment
-comment|// CHECK: BinaryOperator= [type=int *] [typekind=Pointer] [isPOD=1]
+comment|// CHECK: BinaryOperator= [type=int *] [typekind=Pointer] [isPOD=1] [pointeetype=int] [pointeekind=Int]
 end_comment
 
 begin_comment
-comment|// CHECK: DeclRefExpr=p:3:13 [type=int *] [typekind=Pointer] [isPOD=1]
+comment|// CHECK: DeclRefExpr=p:3:13 [type=int *] [typekind=Pointer] [isPOD=1] [pointeetype=int] [pointeekind=Int]
 end_comment
 
 begin_comment

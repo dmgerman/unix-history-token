@@ -39,6 +39,8 @@ name|numerator
 operator|/
 name|denominator
 expr_stmt|;
+name|__leave
+expr_stmt|;
 block|}
 name|__except
 argument_list|(
@@ -61,7 +63,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-NOT error
+comment|// CHECK-NOT: error:
 end_comment
 
 begin_comment
@@ -69,7 +71,7 @@ comment|// CHECK: error: cannot compile this SEH __try yet
 end_comment
 
 begin_comment
-comment|// CHECK-NOT error
+comment|// CHECK-NOT: error:
 end_comment
 
 end_unit

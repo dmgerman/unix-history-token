@@ -11,10 +11,17 @@ directive|define
 name|E_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|HEADER
+value|"a.h"
+end_define
+
 begin_include
 include|#
 directive|include
-file|"a.h"
+include|HEADER
 end_include
 
 begin_include

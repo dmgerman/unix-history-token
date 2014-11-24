@@ -236,7 +236,6 @@ switch|switch
 condition|(
 name|bit
 condition|)
-comment|// expected-warning {{switch statement has empty body}} expected-note {{put the semicolon on a separate line to silence this warning}}
 switch|switch
 condition|(
 name|env
@@ -408,18 +407,6 @@ break|break;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|// PR 8880
-end_comment
-
-begin_comment
-comment|// FIXME: Clang should reject this, since GCC does.  Previously this
-end_comment
-
-begin_comment
-comment|// was causing a crash in the CFG builder.
-end_comment
 
 begin_function
 name|int

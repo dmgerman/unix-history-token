@@ -8,7 +8,7 @@ comment|//<rdar://problem/10655949>
 end_comment
 
 begin_comment
-comment|// CHECK: @.str = internal unnamed_addr constant [9 x i16] [i16 252, i16 98, i16 101, i16 114, i16 104, i16 117, i16 110, i16 100, i16 0], align 2
+comment|// CHECK: @.str = private unnamed_addr constant [9 x i16] [i16 252, i16 98, i16 101, i16 114, i16 104, i16 117, i16 110, i16 100, i16 0], section "__TEXT,__ustring", align 2
 end_comment
 
 begin_define

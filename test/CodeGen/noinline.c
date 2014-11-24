@@ -33,6 +33,30 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|inline
+name|__attribute__
+argument_list|(
+argument|(__always_inline__)
+argument_list|)
+name|int
+name|inline_me
+argument_list|(
+argument|int a
+argument_list|,
+argument|int b
+argument_list|)
+block|{
+return|return
+operator|(
+name|a
+operator|*
+name|b
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_decl_stmt
 specifier|volatile
 name|int
@@ -73,8 +97,35 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+comment|// NOINLINE-NOT: inline_me
+name|pa
+index|[
+literal|3
+index|]
+operator|=
+name|inline_me
+argument_list|(
+name|pa
+index|[
+literal|4
+index|]
+argument_list|,
+name|pa
+index|[
+literal|5
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// NOINLINE: Function Attrs: noinline
+end_comment
+
+begin_comment
+comment|// NOINLINE: @dont_inline_me
+end_comment
 
 end_unit
 

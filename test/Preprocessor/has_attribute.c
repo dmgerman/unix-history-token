@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -E %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple arm-unknown-linux -E %s -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -205,6 +205,57 @@ end_if
 begin_function_decl
 name|int
 name|has_no_volatile_attribute
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CHECK: has_arm_interrupt
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
+name|interrupt
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|has_arm_interrupt
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CHECK: does_not_have_dllexport
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_attribute
+argument_list|(
+name|dllexport
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|does_not_have_dllexport
 parameter_list|()
 function_decl|;
 end_function_decl

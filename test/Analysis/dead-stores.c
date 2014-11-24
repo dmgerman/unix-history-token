@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,alpha.deadcode.IdempotentOperations -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,alpha.deadcode.IdempotentOperations -analyzer-store=region -analyzer-constraints=range -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores -analyzer-store=region -analyzer-constraints=range -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_function
@@ -73,7 +73,7 @@ name|c
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{implicitly declaring library function 'printf' with type 'int (const char *, ...)'}} \
-comment|// expected-note{{please include the header<stdio.h> or explicitly provide a declaration for 'printf'}}
+comment|// expected-note{{include the header<stdio.h> or explicitly provide a declaration for 'printf'}}
 block|}
 end_function
 
@@ -668,7 +668,6 @@ operator|*
 literal|2
 index|]
 argument_list|)
-comment|// expected-warning{{The left operand to '+' is always 0}} expected-warning{{The left operand to '*' is always 1}}
 condition|?
 literal|5
 else|:
@@ -2318,6 +2317,10 @@ function|;
 end_function
 
 begin_comment
+comment|// expected-warning {{'break' is bound to current loop, GCC binds it to the enclosing loop}}
+end_comment
+
+begin_comment
 comment|// Note that the next value stored to 'i' is never executed
 end_comment
 
@@ -2339,7 +2342,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-warning{{Value stored to 'i' is never read}} expected-warning{{The left operand to '*' is always 1}}
+comment|// expected-warning{{Value stored to 'i' is never read}}
 end_comment
 
 begin_comment

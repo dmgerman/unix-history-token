@@ -106,7 +106,7 @@ comment|// CHECK-DAR: private unnamed_addr constant [18 x i32] [i32 84,
 end_comment
 
 begin_comment
-comment|// CHECK-WIN: private unnamed_addr constant [18 x i16] [i16 84,
+comment|// CHECK-WIN: linkonce_odr unnamed_addr constant [18 x i16] [i16 84,
 end_comment
 
 begin_function_decl

@@ -81,102 +81,102 @@ name|v1
 operator|=
 name|v2
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2s' from 'v2u'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2s' (vector of 2 'int' values) from 'v2u' (vector of 2 'unsigned int' values)}}
 name|v1
 operator|=
 name|v3
 expr_stmt|;
-comment|// expected-error {{assigning to 'v2s' from incompatible type 'v1s'}}
+comment|// expected-error {{assigning to 'v2s' (vector of 2 'int' values) from incompatible type 'v1s' (vector of 1 'int' value)}}
 name|v1
 operator|=
 name|v4
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2s' from 'v2f'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2s' (vector of 2 'int' values) from 'v2f' (vector of 2 'float' values)}}
 name|v1
 operator|=
 name|v5
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2s' from 'v4ss'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2s' (vector of 2 'int' values) from 'v4ss' (vector of 4 'short' values)}}
 name|v2
 operator|=
 name|v1
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' from 'v2s'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from 'v2s' (vector of 2 'int' values)}}
 name|v2
 operator|=
 name|v3
 expr_stmt|;
-comment|// expected-error {{assigning to 'v2u' from incompatible type 'v1s'}}
+comment|// expected-error {{assigning to 'v2u' (vector of 2 'unsigned int' values) from incompatible type 'v1s' (vector of 1 'int' value)}}
 name|v2
 operator|=
 name|v4
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' from 'v2f'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from 'v2f' (vector of 2 'float' values)}}
 name|v2
 operator|=
 name|v5
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2u' from 'v4ss'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from 'v4ss' (vector of 4 'short' values)}}
 name|v3
 operator|=
 name|v1
 expr_stmt|;
-comment|// expected-error {{assigning to 'v1s' from incompatible type 'v2s'}}
+comment|// expected-error {{assigning to 'v1s' (vector of 1 'int' value) from incompatible type 'v2s' (vector of 2 'int' values)}}
 name|v3
 operator|=
 name|v2
 expr_stmt|;
-comment|// expected-error {{assigning to 'v1s' from incompatible type 'v2u'}}
+comment|// expected-error {{assigning to 'v1s' (vector of 1 'int' value) from incompatible type 'v2u' (vector of 2 'unsigned int' values)}}
 name|v3
 operator|=
 name|v4
 expr_stmt|;
-comment|// expected-error {{assigning to 'v1s' from incompatible type 'v2f'}}
+comment|// expected-error {{assigning to 'v1s' (vector of 1 'int' value) from incompatible type 'v2f' (vector of 2 'float' values)}}
 name|v3
 operator|=
 name|v5
 expr_stmt|;
-comment|// expected-error {{assigning to 'v1s' from incompatible type 'v4ss'}}
+comment|// expected-error {{assigning to 'v1s' (vector of 1 'int' value) from incompatible type 'v4ss'}}
 name|v4
 operator|=
 name|v1
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' from 'v2s'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from 'v2s' (vector of 2 'int' values)}}
 name|v4
 operator|=
 name|v2
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' from 'v2u'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from 'v2u' (vector of 2 'unsigned int' values)}}
 name|v4
 operator|=
 name|v3
 expr_stmt|;
-comment|// expected-error {{assigning to 'v2f' from incompatible type 'v1s'}}
+comment|// expected-error {{assigning to 'v2f' (vector of 2 'float' values) from incompatible type 'v1s' (vector of 1 'int' value)}}
 name|v4
 operator|=
 name|v5
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v2f' from 'v4ss'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v2f' (vector of 2 'float' values) from 'v4ss' (vector of 4 'short' values)}}
 name|v5
 operator|=
 name|v1
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v4ss' from 'v2s'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v4ss' (vector of 4 'short' values) from 'v2s' (vector of 2 'int' values)}}
 name|v5
 operator|=
 name|v2
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v4ss' from 'v2u'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v4ss' (vector of 4 'short' values) from 'v2u' (vector of 2 'unsigned int' values)}}
 name|v5
 operator|=
 name|v3
 expr_stmt|;
-comment|// expected-error {{assigning to 'v4ss' from incompatible type 'v1s'}}
+comment|// expected-error {{assigning to 'v4ss' (vector of 4 'short' values) from incompatible type 'v1s' (vector of 1 'int' value)}}
 name|v5
 operator|=
 name|v4
 expr_stmt|;
-comment|// expected-warning {{incompatible vector types assigning to 'v4ss' from 'v2f'}}
+comment|// expected-warning {{incompatible vector types assigning to 'v4ss' (vector of 4 'short' values) from 'v2f'}}
 block|}
 end_function
 

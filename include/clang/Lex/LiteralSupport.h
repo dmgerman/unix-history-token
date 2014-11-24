@@ -130,6 +130,21 @@ decl_stmt|;
 name|class
 name|LangOptions
 decl_stmt|;
+comment|/// Copy characters from Input to Buf, expanding any UCNs.
+name|void
+name|expandUCNs
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Buf
+argument_list|,
+name|StringRef
+name|Input
+argument_list|)
+decl_stmt|;
 comment|/// NumericLiteralParser - This performs strict semantic analysis of the content
 comment|/// of a ppnumber, classifying it as either integer, floating, or erroneous,
 comment|/// determines the radix of the value and can convert it to a useful value.
@@ -178,6 +193,12 @@ name|saw_period
 decl_stmt|,
 name|saw_ud_suffix
 decl_stmt|;
+name|SmallString
+operator|<
+literal|32
+operator|>
+name|UDSuffixBuf
+expr_stmt|;
 name|public
 label|:
 name|NumericLiteralParser
@@ -210,8 +231,8 @@ name|bool
 name|isImaginary
 decl_stmt|;
 comment|// 1.0i
-name|bool
-name|isMicrosoftInteger
+name|uint8_t
+name|MicrosoftInteger
 decl_stmt|;
 comment|// Microsoft suffix extension i8, i16, i32, or i64.
 name|bool
@@ -258,14 +279,7 @@ name|saw_ud_suffix
 argument_list|)
 block|;
 return|return
-name|StringRef
-argument_list|(
-name|SuffixBegin
-argument_list|,
-name|ThisTokEnd
-operator|-
-name|SuffixBegin
-argument_list|)
+name|UDSuffixBuf
 return|;
 block|}
 name|unsigned
@@ -777,9 +791,7 @@ name|public
 label|:
 name|StringLiteralParser
 argument_list|(
-argument|const Token *StringToks
-argument_list|,
-argument|unsigned NumStringToks
+argument|ArrayRef<Token> StringToks
 argument_list|,
 argument|Preprocessor&PP
 argument_list|,
@@ -788,20 +800,34 @@ argument_list|)
 empty_stmt|;
 name|StringLiteralParser
 argument_list|(
-argument|const Token *StringToks
+name|ArrayRef
+operator|<
+name|Token
+operator|>
+name|StringToks
 argument_list|,
-argument|unsigned NumStringToks
+specifier|const
+name|SourceManager
+operator|&
+name|sm
 argument_list|,
-argument|const SourceManager&sm
+specifier|const
+name|LangOptions
+operator|&
+name|features
 argument_list|,
-argument|const LangOptions&features
+specifier|const
+name|TargetInfo
+operator|&
+name|target
 argument_list|,
-argument|const TargetInfo&target
-argument_list|,
-argument|DiagnosticsEngine *diags =
-literal|0
+name|DiagnosticsEngine
+operator|*
+name|diags
+operator|=
+name|nullptr
 argument_list|)
-block|:
+operator|:
 name|SM
 argument_list|(
 name|sm
@@ -865,8 +891,6 @@ block|{
 name|init
 argument_list|(
 name|StringToks
-argument_list|,
-name|NumStringToks
 argument_list|)
 block|;   }
 name|bool
@@ -1067,16 +1091,14 @@ name|private
 label|:
 name|void
 name|init
-parameter_list|(
-specifier|const
+argument_list|(
+name|ArrayRef
+operator|<
 name|Token
-modifier|*
+operator|>
 name|StringToks
-parameter_list|,
-name|unsigned
-name|NumStringToks
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|CopyStringFragment
 parameter_list|(

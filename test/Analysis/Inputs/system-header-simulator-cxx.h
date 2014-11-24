@@ -674,7 +674,7 @@ name|pop_front
 argument_list|()
 block|{
 comment|// Fake use-after-free.
-comment|// No warning is expected as we are suppressing warning comming
+comment|// No warning is expected as we are suppressing warning coming
 comment|// out of std::list.
 name|int
 name|z
@@ -722,11 +722,33 @@ argument|))
 argument_list|)
 name|basic_string
 block|{
+name|bool
+name|isLong
+block|;
+expr|union
+block|{
 name|_CharT
 name|localStorage
 index|[
 literal|4
 index|]
+block|;
+name|_CharT
+operator|*
+name|externalStorage
+block|;
+name|void
+name|assignExternal
+argument_list|(
+argument|_CharT *newExternal
+argument_list|)
+block|{
+name|externalStorage
+operator|=
+name|newExternal
+block|;       }
+block|}
+name|storage
 block|;
 typedef|typedef
 name|allocator_traits
@@ -737,26 +759,57 @@ name|__alloc_traits
 expr_stmt|;
 name|public
 operator|:
+name|basic_string
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|void
 name|push_back
-argument_list|(
-argument|int c
-argument_list|)
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 block|{
 comment|// Fake error trigger.
-comment|// No warning is expected as we are suppressing warning comming
+comment|// No warning is expected as we are suppressing warning coming
 comment|// out of std::basic_string.
 name|int
 name|z
-operator|=
+init|=
 literal|0
-block|;
+decl_stmt|;
 name|z
 operator|=
 literal|5
 operator|/
 name|z
-block|;     }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|_CharT
+modifier|*
+name|getBuffer
+parameter_list|()
+block|{
+return|return
+name|isLong
+condition|?
+name|storage
+operator|.
+name|externalStorage
+else|:
+name|storage
+operator|.
+name|localStorage
+return|;
+block|}
+end_function
+
+begin_expr_stmt
 name|basic_string
 operator|&
 name|operator
@@ -768,13 +821,45 @@ operator|)
 block|{
 comment|// Fake deallocate stack-based storage.
 comment|// No warning is expected as we are suppressing warnings within
-comment|// allocators being used by std::basic_string.
+comment|// std::basic_string.
 name|__alloc_traits
 operator|::
 name|deallocate
 argument_list|(
+name|getBuffer
+argument_list|()
+argument_list|)
+block|;     }
+name|basic_string
 operator|&
-name|localStorage
+name|operator
+operator|=
+operator|(
+specifier|const
+name|basic_string
+operator|&
+name|other
+operator|)
+block|{
+comment|// Fake deallocate stack-based storage, then use the variable in the
+comment|// same union.
+comment|// No warning is expected as we are suppressing warnings within
+comment|// std::basic_string.
+name|__alloc_traits
+operator|::
+name|deallocate
+argument_list|(
+name|getBuffer
+argument_list|()
+argument_list|)
+block|;
+name|storage
+operator|.
+name|assignExternal
+argument_list|(
+argument|new _CharT[
+literal|4
+argument|]
 argument_list|)
 block|;     }
 end_expr_stmt

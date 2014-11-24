@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: struct.object_entry = type { [4 x i8] }
+comment|// CHECK: struct.object_entry = type { i32 }
 end_comment
 
 begin_struct

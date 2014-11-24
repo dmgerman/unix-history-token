@@ -347,7 +347,7 @@ case|:
 case|case
 literal|3
 case|:
-comment|// expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|// expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 break|break;
 block|}
 switch|switch
@@ -364,10 +364,10 @@ case|:
 case|case
 literal|3
 operator|...
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 literal|4
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 break|break;
 block|}
 switch|switch
@@ -392,7 +392,7 @@ literal|0
 operator|...
 literal|2
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 break|break;
 block|}
 switch|switch
@@ -405,7 +405,7 @@ literal|1
 operator|...
 literal|3
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 break|break;
 block|}
 switch|switch
@@ -416,10 +416,10 @@ block|{
 case|case
 literal|0
 operator|...
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 literal|3
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 break|break;
 block|}
 block|}
@@ -507,21 +507,21 @@ block|{
 case|case
 literal|0
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 case|case
 literal|1
 case|:
 case|case
 literal|2
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 case|case
 literal|3
 case|:
 case|case
 literal|4
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 break|break;
 block|}
 block|}
@@ -560,10 +560,10 @@ block|{
 case|case
 literal|0
 operator|...
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 literal|1
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 case|case
 literal|2
 operator|...
@@ -572,10 +572,10 @@ case|:
 case|case
 literal|5
 operator|...
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 literal|9
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 case|case
 literal|10
 operator|...
@@ -584,10 +584,10 @@ case|:
 case|case
 literal|13
 operator|...
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 literal|16
 case|:
-comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
+comment|//expected-warning{{case value not in enumerated type 'enum (anonymous enum}}
 break|break;
 block|}
 block|}
@@ -1089,6 +1089,108 @@ name|a
 case|:
 comment|// expected-error {{duplicate case value 'a'}}
 break|break;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// Allow the warning 'case value not in enumerated type' to be silenced with
+end_comment
+
+begin_comment
+comment|// the following pattern.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// If 'case' expression refers to a static const variable of the correct enum
+end_comment
+
+begin_comment
+comment|// type, then we count this as a sufficient declaration of intent by the user,
+end_comment
+
+begin_comment
+comment|// so we silence the warning.
+end_comment
+
+begin_enum
+enum|enum
+name|ExtendedEnum1
+block|{
+name|EE1_a
+block|,
+name|EE1_b
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|ExtendedEnum1_unrelated
+block|{
+name|EE1_misc
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|enum
+name|ExtendedEnum1
+name|EE1_c
+init|=
+literal|100
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|enum
+name|ExtendedEnum1_unrelated
+name|EE1_d
+init|=
+literal|101
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|switch_on_ExtendedEnum1
+parameter_list|(
+name|enum
+name|ExtendedEnum1
+name|e
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|e
+condition|)
+block|{
+case|case
+name|EE1_a
+case|:
+break|break;
+case|case
+name|EE1_b
+case|:
+break|break;
+case|case
+name|EE1_c
+case|:
+break|break;
+comment|// no-warning
+case|case
+name|EE1_d
+case|:
+break|break;
+comment|// expected-warning {{case value not in enumerated type 'enum ExtendedEnum1'}}
 block|}
 block|}
 end_function

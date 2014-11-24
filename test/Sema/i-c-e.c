@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang %s -ffreestanding -Wno-int-to-pointer-cast -fsyntax-only -Xclang -verify -pedantic -fpascal-strings -std=c99
+comment|// RUN: %clang_cc1 %s -ffreestanding -Wno-int-to-pointer-cast -fsyntax-only -verify -pedantic -fpascal-strings -std=c99
 end_comment
 
 begin_include

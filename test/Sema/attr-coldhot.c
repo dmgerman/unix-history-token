@@ -84,7 +84,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-error{{'__hot__' and cold attributes are not compatible}}
+comment|// expected-error{{'__hot__' and 'cold' attributes are not compatible}}
 end_comment
 
 begin_function_decl
@@ -108,7 +108,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-error{{'__cold__' and hot attributes are not compatible}}
+comment|// expected-error{{'__cold__' and 'hot' attributes are not compatible}}
 end_comment
 
 end_unit

@@ -621,5 +621,22 @@ begin_comment
 comment|// expected-error {{function declared 'stdcall' here was previously declared without calling convention}}
 end_comment
 
+begin_struct
+struct|struct
+name|type_test
+block|{}
+name|__attribute__
+argument_list|(
+operator|(
+name|stdcall
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_comment
+comment|// expected-warning {{'stdcall' attribute only applies to functions and methods}}
+end_comment
+
 end_unit
 

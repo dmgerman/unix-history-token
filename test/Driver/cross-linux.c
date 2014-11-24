@@ -72,6 +72,38 @@ comment|// RUN:   --gcc-toolchain=%S/Inputs/basic_cross_linux_tree/usr \
 end_comment
 
 begin_comment
+comment|// RUN:   --target=x86_64-unknown-linux-gnux32 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-X32 %s
+end_comment
+
+begin_comment
+comment|// CHECK-X32: "-cc1" "-triple" "x86_64-unknown-linux-gnux32"
+end_comment
+
+begin_comment
+comment|// CHECK-X32: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\}}as" "--x32"
+end_comment
+
+begin_comment
+comment|// CHECK-X32: "{{.*}}/Inputs/basic_cross_linux_tree/usr/lib/gcc/x86_64-unknown-linux-gnu/4.6.0/../../../../x86_64-unknown-linux-gnu/bin{{/|\\}}ld" {{.*}} "-m" "elf32_x86_64"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -o %t %s 2>&1 -no-integrated-as \
+end_comment
+
+begin_comment
+comment|// RUN:   --gcc-toolchain=%S/Inputs/basic_cross_linux_tree/usr \
+end_comment
+
+begin_comment
 comment|// RUN:   --target=x86_64-unknown-linux-gnu -m32 \
 end_comment
 

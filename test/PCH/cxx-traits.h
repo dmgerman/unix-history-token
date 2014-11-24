@@ -12,7 +12,7 @@ operator|>
 expr|struct
 name|__is_pod
 block|{
-comment|// expected-warning {{keyword '__is_pod' will be treated as an identifier for the remainder of the translation unit}}
+comment|// expected-warning {{keyword '__is_pod' will be made available as an identifier for the remainder of the translation unit}}
 block|enum
 block|{
 name|__value
@@ -30,7 +30,7 @@ operator|>
 expr|struct
 name|__is_empty
 block|{
-comment|// expected-warning {{keyword '__is_empty' will be treated as an identifier for the remainder of the translation unit}}
+comment|// expected-warning {{keyword '__is_empty' will be made available as an identifier for the remainder of the translation unit}}
 block|enum
 block|{
 name|__value

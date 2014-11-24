@@ -20,11 +20,11 @@ comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path=%t %s
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -E -fmodules -x objective-c -fmodules-cache-path=%t %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
+comment|// RUN: not %clang_cc1 -E -fmodules -x objective-c -fmodules-cache-path=%t -I %S/Inputs %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
 end_comment
 
 begin_comment
@@ -48,19 +48,11 @@ comment|// expected-note@Inputs/macros_right.h:12{{expanding this definition of 
 end_comment
 
 begin_comment
-comment|// expected-note@Inputs/macros_top.h:13{{other definition of 'TOP_RIGHT_REDEF'}}
-end_comment
-
-begin_comment
 comment|// expected-note@Inputs/macros_right.h:13{{expanding this definition of 'LEFT_RIGHT_DIFFERENT2'}}
 end_comment
 
 begin_comment
 comment|// expected-note@Inputs/macros_left.h:14{{other definition of 'LEFT_RIGHT_DIFFERENT'}}
-end_comment
-
-begin_comment
-comment|// expected-note@Inputs/macros_right.h:17{{expanding this definition of 'TOP_RIGHT_REDEF'}}
 end_comment
 
 begin_decl_stmt
@@ -327,16 +319,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TOP_LEFT_UNDEF
-end_ifndef
+end_ifdef
 
 begin_error
 error|#
 directive|error
-error|TOP_LEFT_UNDEF should still be defined
+error|TOP_LEFT_UNDEF should not be defined
 end_error
 
 begin_endif
@@ -466,7 +458,7 @@ init|=
 operator|&
 name|f
 decl_stmt|;
-comment|// expected-warning{{ambiguous expansion of macro 'TOP_RIGHT_REDEF'}}
+comment|// ok, right's definition overrides top's definition
 name|LEFT_RIGHT_IDENTICAL
 modifier|*
 name|ip
@@ -562,22 +554,153 @@ name|undef
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_comment
+comment|// FIXME: When macros_right.undef is built, macros_top is visible because
+end_comment
+
+begin_comment
+comment|// the state from building macros_right leaks through, so macros_right.undef
+end_comment
+
+begin_comment
+comment|// undefines macros_top's macro.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TOP_RIGHT_UNDEF
-end_ifndef
+end_ifdef
 
 begin_error
 error|#
 directive|error
-error|TOP_RIGHT_UNDEF should still be defined
+error|TOP_RIGHT_UNDEF should not be defined
 end_error
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+unit|@
+name|import
+name|macros_other
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TOP_OTHER_UNDEF1
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|TOP_OTHER_UNDEF1 should still be defined
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TOP_OTHER_UNDEF2
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|TOP_OTHER_UNDEF2 should still be defined
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TOP_OTHER_REDEF1
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|TOP_OTHER_REDEF1 should still be defined
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
+name|n1
+init|=
+name|TOP_OTHER_REDEF1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{ambiguous expansion of macro 'TOP_OTHER_REDEF1'}}
+end_comment
+
+begin_comment
+comment|// expected-note@macros_top.h:19 {{expanding this definition}}
+end_comment
+
+begin_comment
+comment|// expected-note@macros_other.h:4 {{other definition}}
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TOP_OTHER_REDEF2
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|TOP_OTHER_REDEF2 should still be defined
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
+name|n2
+init|=
+name|TOP_OTHER_REDEF2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// ok
+end_comment
+
+begin_decl_stmt
+name|int
+name|n3
+init|=
+name|TOP_OTHER_DEF_RIGHT_UNDEF
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// ok
+end_comment
 
 end_unit
 

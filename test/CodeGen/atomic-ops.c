@@ -68,7 +68,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi1
+comment|// CHECK-LABEL: @fi1
 comment|// CHECK: load atomic i32* {{.*}} seq_cst
 return|return
 name|__c11_atomic_load
@@ -90,7 +90,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi1a
+comment|// CHECK-LABEL: @fi1a
 comment|// CHECK: load atomic i32* {{.*}} seq_cst
 name|int
 name|v
@@ -120,7 +120,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi1b
+comment|// CHECK-LABEL: @fi1b
 comment|// CHECK: load atomic i32* {{.*}} seq_cst
 return|return
 name|__atomic_load_n
@@ -145,7 +145,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi2
+comment|// CHECK-LABEL: @fi2
 comment|// CHECK: store atomic i32 {{.*}} seq_cst
 name|__c11_atomic_store
 argument_list|(
@@ -168,7 +168,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi2a
+comment|// CHECK-LABEL: @fi2a
 comment|// CHECK: store atomic i32 {{.*}} seq_cst
 name|int
 name|v
@@ -197,7 +197,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi2b
+comment|// CHECK-LABEL: @fi2b
 comment|// CHECK: store atomic i32 {{.*}} seq_cst
 name|__atomic_store_n
 argument_list|(
@@ -223,7 +223,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi3
+comment|// CHECK-LABEL: @fi3
 comment|// CHECK: atomicrmw and
 comment|// CHECK-NOT: and
 return|return
@@ -248,7 +248,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi3a
+comment|// CHECK-LABEL: @fi3a
 comment|// CHECK: atomicrmw xor
 comment|// CHECK-NOT: xor
 return|return
@@ -273,7 +273,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi3b
+comment|// CHECK-LABEL: @fi3b
 comment|// CHECK: atomicrmw add
 comment|// CHECK: add
 return|return
@@ -298,7 +298,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi3c
+comment|// CHECK-LABEL: @fi3c
 comment|// CHECK: atomicrmw nand
 comment|// CHECK-NOT: and
 return|return
@@ -323,7 +323,7 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi3d
+comment|// CHECK-LABEL: @fi3d
 comment|// CHECK: atomicrmw nand
 comment|// CHECK: and
 comment|// CHECK: xor
@@ -352,8 +352,12 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi4
-comment|// CHECK: cmpxchg i32*
+comment|// CHECK-LABEL: @fi4
+comment|// CHECK: [[PAIR:%[.0-9A-Z_a-z]+]] = cmpxchg i32* [[PTR:%[.0-9A-Z_a-z]+]], i32 [[EXPECTED:%[.0-9A-Z_a-z]+]], i32 [[DESIRED:%[.0-9A-Z_a-z]+]]
+comment|// CHECK: [[OLD:%[.0-9A-Z_a-z]+]] = extractvalue { i32, i1 } [[PAIR]], 0
+comment|// CHECK: [[CMP:%[.0-9A-Z_a-z]+]] = extractvalue { i32, i1 } [[PAIR]], 1
+comment|// CHECK: br i1 [[CMP]], label %[[STORE_EXPECTED:[.0-9A-Z_a-z]+]], label %[[CONTINUE:[.0-9A-Z_a-z]+]]
+comment|// CHECK: store i32 [[OLD]]
 name|int
 name|cmp
 init|=
@@ -386,8 +390,12 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi4
-comment|// CHECK: cmpxchg i32*
+comment|// CHECK-LABEL: @fi4
+comment|// CHECK: [[PAIR:%[.0-9A-Z_a-z]+]] = cmpxchg i32* [[PTR:%[.0-9A-Z_a-z]+]], i32 [[EXPECTED:%[.0-9A-Z_a-z]+]], i32 [[DESIRED:%[.0-9A-Z_a-z]+]]
+comment|// CHECK: [[OLD:%[.0-9A-Z_a-z]+]] = extractvalue { i32, i1 } [[PAIR]], 0
+comment|// CHECK: [[CMP:%[.0-9A-Z_a-z]+]] = extractvalue { i32, i1 } [[PAIR]], 1
+comment|// CHECK: br i1 [[CMP]], label %[[STORE_EXPECTED:[.0-9A-Z_a-z]+]], label %[[CONTINUE:[.0-9A-Z_a-z]+]]
+comment|// CHECK: store i32 [[OLD]]
 name|int
 name|cmp
 init|=
@@ -428,8 +436,12 @@ modifier|*
 name|i
 parameter_list|)
 block|{
-comment|// CHECK: @fi4
-comment|// CHECK: cmpxchg i32*
+comment|// CHECK-LABEL: @fi4
+comment|// CHECK: [[PAIR:%[.0-9A-Z_a-z]+]] = cmpxchg weak i32* [[PTR:%[.0-9A-Z_a-z]+]], i32 [[EXPECTED:%[.0-9A-Z_a-z]+]], i32 [[DESIRED:%[.0-9A-Z_a-z]+]]
+comment|// CHECK: [[OLD:%[.0-9A-Z_a-z]+]] = extractvalue { i32, i1 } [[PAIR]], 0
+comment|// CHECK: [[CMP:%[.0-9A-Z_a-z]+]] = extractvalue { i32, i1 } [[PAIR]], 1
+comment|// CHECK: br i1 [[CMP]], label %[[STORE_EXPECTED:[.0-9A-Z_a-z]+]], label %[[CONTINUE:[.0-9A-Z_a-z]+]]
+comment|// CHECK: store i32 [[OLD]]
 name|int
 name|cmp
 init|=
@@ -467,7 +479,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-comment|// CHECK: @ff1
+comment|// CHECK-LABEL: @ff1
 comment|// CHECK: load atomic i32* {{.*}} monotonic
 return|return
 name|__c11_atomic_load
@@ -492,7 +504,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-comment|// CHECK: @ff2
+comment|// CHECK-LABEL: @ff2
 comment|// CHECK: store atomic i32 {{.*}} release
 name|__c11_atomic_store
 argument_list|(
@@ -545,7 +557,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: @fp1
+comment|// CHECK-LABEL: @fp1
 comment|// CHECK: load atomic i32* {{.*}} seq_cst
 return|return
 name|__c11_atomic_load
@@ -572,7 +584,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: @fp2
+comment|// CHECK-LABEL: @fp2
 comment|// CHECK: store i32 4
 comment|// CHECK: atomicrmw add {{.*}} monotonic
 return|return
@@ -599,7 +611,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: @fp2a
+comment|// CHECK-LABEL: @fp2a
 comment|// CHECK: store i32 4
 comment|// CHECK: atomicrmw sub {{.*}} monotonic
 comment|// Note, the GNU builtins do not multiply by sizeof(T)!
@@ -630,7 +642,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @fc
+comment|// CHECK-LABEL: @fc
 comment|// CHECK: atomicrmw xchg i64*
 return|return
 name|__c11_atomic_exchange
@@ -670,7 +682,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @fs
+comment|// CHECK-LABEL: @fs
 comment|// CHECK: atomicrmw xchg i32*
 return|return
 name|__c11_atomic_exchange
@@ -703,7 +715,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-comment|// CHECK: @fsa
+comment|// CHECK-LABEL: @fsa
 comment|// CHECK: atomicrmw xchg i32*
 name|X
 name|ret
@@ -735,7 +747,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-comment|// CHECK: @fsb
+comment|// CHECK-LABEL: @fsb
 comment|// CHECK: atomicrmw xchg i8*
 return|return
 name|__atomic_exchange_n
@@ -847,7 +859,7 @@ modifier|*
 name|incomplete
 parameter_list|)
 block|{
-comment|// CHECK: @lock_free
+comment|// CHECK-LABEL: @lock_free
 comment|// CHECK: call i32 @__atomic_is_lock_free(i32 3, i8* null)
 name|__c11_atomic_is_lock_free
 argument_list|(
@@ -1034,7 +1046,7 @@ name|void
 name|structAtomicStore
 parameter_list|()
 block|{
-comment|// CHECK: @structAtomicStore
+comment|// CHECK-LABEL: @structAtomicStore
 name|struct
 name|foo
 name|f
@@ -1083,7 +1095,7 @@ name|void
 name|structAtomicLoad
 parameter_list|()
 block|{
-comment|// CHECK: @structAtomicLoad
+comment|// CHECK-LABEL: @structAtomicLoad
 name|struct
 name|bar
 name|b
@@ -1129,7 +1141,7 @@ name|foo
 name|structAtomicExchange
 parameter_list|()
 block|{
-comment|// CHECK: @structAtomicExchange
+comment|// CHECK-LABEL: @structAtomicExchange
 name|struct
 name|foo
 name|f
@@ -1177,7 +1189,7 @@ name|int
 name|structAtomicCmpExchange
 parameter_list|()
 block|{
-comment|// CHECK: @structAtomicCmpExchange
+comment|// CHECK-LABEL: @structAtomicCmpExchange
 name|_Bool
 name|x
 init|=
@@ -1267,7 +1279,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @atomic_init_foo
+comment|// CHECK-LABEL: @atomic_init_foo
 end_comment
 
 begin_function
@@ -1303,62 +1315,297 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @invalid_atomic
+comment|// CHECK-LABEL: @failureOrder
 end_comment
 
 begin_function
 name|void
-name|invalid_atomic
+name|failureOrder
 parameter_list|(
 atomic|_Atomic
 argument_list|(
 name|int
 argument_list|)
 modifier|*
-name|i
+name|ptr
+parameter_list|,
+name|int
+modifier|*
+name|ptr2
 parameter_list|)
 block|{
-name|__c11_atomic_store
+name|__c11_atomic_compare_exchange_strong
 argument_list|(
-name|i
+name|ptr
 argument_list|,
-literal|1
+name|ptr2
 argument_list|,
-name|memory_order_consume
+literal|43
+argument_list|,
+name|memory_order_acquire
+argument_list|,
+name|memory_order_relaxed
 argument_list|)
 expr_stmt|;
-name|__c11_atomic_store
+comment|// CHECK: cmpxchg i32* {{%[0-9A-Za-z._]+}}, i32 {{%[0-9A-Za-z._]+}}, i32 {{%[0-9A-Za-z_.]+}} acquire monotonic
+name|__c11_atomic_compare_exchange_weak
 argument_list|(
-name|i
+name|ptr
 argument_list|,
-literal|1
+name|ptr2
+argument_list|,
+literal|43
+argument_list|,
+name|memory_order_seq_cst
 argument_list|,
 name|memory_order_acquire
 argument_list|)
 expr_stmt|;
-name|__c11_atomic_store
+comment|// CHECK: cmpxchg weak i32* {{%[0-9A-Za-z._]+}}, i32 {{%[0-9A-Za-z._]+}}, i32 {{%[0-9A-Za-z_.]+}} seq_cst acquire
+comment|// Unknown ordering: conservatively pick strongest valid option (for now!).
+name|__atomic_compare_exchange
 argument_list|(
-name|i
+name|ptr2
+argument_list|,
+name|ptr2
+argument_list|,
+name|ptr2
+argument_list|,
+literal|0
+argument_list|,
+name|memory_order_acq_rel
+argument_list|,
+operator|*
+name|ptr2
+argument_list|)
+expr_stmt|;
+comment|// CHECK: cmpxchg i32* {{%[0-9A-Za-z._]+}}, i32 {{%[0-9A-Za-z._]+}}, i32 {{%[0-9A-Za-z_.]+}} acq_rel acquire
+comment|// Undefined behaviour: don't really care what that last ordering is so leave
+comment|// it out:
+name|__atomic_compare_exchange_n
+argument_list|(
+name|ptr2
+argument_list|,
+name|ptr2
+argument_list|,
+literal|43
 argument_list|,
 literal|1
 argument_list|,
-name|memory_order_acq_rel
-argument_list|)
-expr_stmt|;
-name|__c11_atomic_load
-argument_list|(
-name|i
+name|memory_order_seq_cst
 argument_list|,
-name|memory_order_release
+literal|42
 argument_list|)
 expr_stmt|;
-name|__c11_atomic_load
+comment|// CHECK: cmpxchg weak i32* {{%[0-9A-Za-z._]+}}, i32 {{%[0-9A-Za-z._]+}}, i32 {{%[0-9A-Za-z_.]+}} seq_cst
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: @generalFailureOrder
+end_comment
+
+begin_function
+name|void
+name|generalFailureOrder
+parameter_list|(
+atomic|_Atomic
 argument_list|(
-name|i
+name|int
+argument_list|)
+modifier|*
+name|ptr
+parameter_list|,
+name|int
+modifier|*
+name|ptr2
+parameter_list|,
+name|int
+name|success
+parameter_list|,
+name|int
+name|fail
+parameter_list|)
+block|{
+name|__c11_atomic_compare_exchange_strong
+argument_list|(
+name|ptr
 argument_list|,
-name|memory_order_acq_rel
+name|ptr2
+argument_list|,
+literal|42
+argument_list|,
+name|success
+argument_list|,
+name|fail
 argument_list|)
 expr_stmt|;
+comment|// CHECK: switch i32 {{.*}}, label %[[MONOTONIC:[0-9a-zA-Z._]+]] [
+comment|// CHECK-NEXT: i32 1, label %[[ACQUIRE:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: i32 2, label %[[ACQUIRE]]
+comment|// CHECK-NEXT: i32 3, label %[[RELEASE:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: i32 4, label %[[ACQREL:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: i32 5, label %[[SEQCST:[0-9a-zA-Z._]+]]
+comment|// CHECK: [[MONOTONIC]]
+comment|// CHECK: switch {{.*}}, label %[[MONOTONIC_MONOTONIC:[0-9a-zA-Z._]+]] [
+comment|// CHECK-NEXT: ]
+comment|// CHECK: [[ACQUIRE]]
+comment|// CHECK: switch {{.*}}, label %[[ACQUIRE_MONOTONIC:[0-9a-zA-Z._]+]] [
+comment|// CHECK-NEXT: i32 1, label %[[ACQUIRE_ACQUIRE:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: i32 2, label %[[ACQUIRE_ACQUIRE:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: ]
+comment|// CHECK: [[RELEASE]]
+comment|// CHECK: switch {{.*}}, label %[[RELEASE_MONOTONIC:[0-9a-zA-Z._]+]] [
+comment|// CHECK-NEXT: ]
+comment|// CHECK: [[ACQREL]]
+comment|// CHECK: switch {{.*}}, label %[[ACQREL_MONOTONIC:[0-9a-zA-Z._]+]] [
+comment|// CHECK-NEXT: i32 1, label %[[ACQREL_ACQUIRE:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: i32 2, label %[[ACQREL_ACQUIRE:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: ]
+comment|// CHECK: [[SEQCST]]
+comment|// CHECK: switch {{.*}}, label %[[SEQCST_MONOTONIC:[0-9a-zA-Z._]+]] [
+comment|// CHECK-NEXT: i32 1, label %[[SEQCST_ACQUIRE:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: i32 2, label %[[SEQCST_ACQUIRE:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: i32 5, label %[[SEQCST_SEQCST:[0-9a-zA-Z._]+]]
+comment|// CHECK-NEXT: ]
+comment|// CHECK: [[MONOTONIC_MONOTONIC]]
+comment|// CHECK: cmpxchg {{.*}} monotonic monotonic
+comment|// CHECK: br
+comment|// CHECK: [[ACQUIRE_MONOTONIC]]
+comment|// CHECK: cmpxchg {{.*}} acquire monotonic
+comment|// CHECK: br
+comment|// CHECK: [[ACQUIRE_ACQUIRE]]
+comment|// CHECK: cmpxchg {{.*}} acquire acquire
+comment|// CHECK: br
+comment|// CHECK: [[ACQREL_MONOTONIC]]
+comment|// CHECK: cmpxchg {{.*}} acq_rel monotonic
+comment|// CHECK: br
+comment|// CHECK: [[ACQREL_ACQUIRE]]
+comment|// CHECK: cmpxchg {{.*}} acq_rel acquire
+comment|// CHECK: br
+comment|// CHECK: [[SEQCST_MONOTONIC]]
+comment|// CHECK: cmpxchg {{.*}} seq_cst monotonic
+comment|// CHECK: br
+comment|// CHECK: [[SEQCST_ACQUIRE]]
+comment|// CHECK: cmpxchg {{.*}} seq_cst acquire
+comment|// CHECK: br
+comment|// CHECK: [[SEQCST_SEQCST]]
+comment|// CHECK: cmpxchg {{.*}} seq_cst seq_cst
+comment|// CHECK: br
+block|}
+end_function
+
+begin_function
+name|void
+name|generalWeakness
+parameter_list|(
+name|int
+modifier|*
+name|ptr
+parameter_list|,
+name|int
+modifier|*
+name|ptr2
+parameter_list|,
+name|_Bool
+name|weak
+parameter_list|)
+block|{
+name|__atomic_compare_exchange_n
+argument_list|(
+name|ptr
+argument_list|,
+name|ptr2
+argument_list|,
+literal|42
+argument_list|,
+name|weak
+argument_list|,
+name|memory_order_seq_cst
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+expr_stmt|;
+comment|// CHECK: switch i1 {{.*}}, label %[[WEAK:[0-9a-zA-Z._]+]] [
+comment|// CHECK-NEXT: i1 false, label %[[STRONG:[0-9a-zA-Z._]+]]
+comment|// CHECK: [[STRONG]]
+comment|// CHECK-NOT: br
+comment|// CHECK: cmpxchg {{.*}} seq_cst seq_cst
+comment|// CHECK: br
+comment|// CHECK: [[WEAK]]
+comment|// CHECK-NOT: br
+comment|// CHECK: cmpxchg weak {{.*}} seq_cst seq_cst
+comment|// CHECK: br
+block|}
+end_function
+
+begin_comment
+comment|// Having checked the flow in the previous two cases, we'll trust clang to
+end_comment
+
+begin_comment
+comment|// combine them sanely.
+end_comment
+
+begin_function
+name|void
+name|EMIT_ALL_THE_THINGS
+parameter_list|(
+name|int
+modifier|*
+name|ptr
+parameter_list|,
+name|int
+modifier|*
+name|ptr2
+parameter_list|,
+name|int
+name|new
+parameter_list|,
+name|_Bool
+name|weak
+parameter_list|,
+name|int
+name|success
+parameter_list|,
+name|int
+name|fail
+parameter_list|)
+block|{
+name|__atomic_compare_exchange
+argument_list|(
+name|ptr
+argument_list|,
+name|ptr2
+argument_list|,
+operator|&
+name|new
+argument_list|,
+name|weak
+argument_list|,
+name|success
+argument_list|,
+name|fail
+argument_list|)
+expr_stmt|;
+comment|// CHECK: = cmpxchg {{.*}} monotonic monotonic
+comment|// CHECK: = cmpxchg weak {{.*}} monotonic monotonic
+comment|// CHECK: = cmpxchg {{.*}} acquire monotonic
+comment|// CHECK: = cmpxchg {{.*}} acquire acquire
+comment|// CHECK: = cmpxchg weak {{.*}} acquire monotonic
+comment|// CHECK: = cmpxchg weak {{.*}} acquire acquire
+comment|// CHECK: = cmpxchg {{.*}} release monotonic
+comment|// CHECK: = cmpxchg weak {{.*}} release monotonic
+comment|// CHECK: = cmpxchg {{.*}} acq_rel monotonic
+comment|// CHECK: = cmpxchg {{.*}} acq_rel acquire
+comment|// CHECK: = cmpxchg weak {{.*}} acq_rel monotonic
+comment|// CHECK: = cmpxchg weak {{.*}} acq_rel acquire
+comment|// CHECK: = cmpxchg {{.*}} seq_cst monotonic
+comment|// CHECK: = cmpxchg {{.*}} seq_cst acquire
+comment|// CHECK: = cmpxchg {{.*}} seq_cst seq_cst
+comment|// CHECK: = cmpxchg weak {{.*}} seq_cst monotonic
+comment|// CHECK: = cmpxchg weak {{.*}} seq_cst acquire
+comment|// CHECK: = cmpxchg weak {{.*}} seq_cst seq_cst
 block|}
 end_function
 

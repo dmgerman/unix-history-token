@@ -514,31 +514,31 @@ argument|int testFundef1(int *a) __attribute__((nonnull(
 literal|1
 argument|))) {
 comment|// \
-comment|// expected-warning {{GCC does not allow nonnull attribute in this position on a function definition}}
+comment|// expected-warning {{GCC does not allow 'nonnull' attribute in this position on a function definition}}
 argument|return *a; }
 comment|// noreturn is lifted to type qualifier
 argument|void testFundef2() __attribute__((noreturn)) {
 comment|// \
-comment|// expected-warning {{GCC does not allow noreturn attribute in this position on a function definition}}
+comment|// expected-warning {{GCC does not allow 'noreturn' attribute in this position on a function definition}}
 argument|testFundef2(); }  int testFundef3(int *a) __attribute__((nonnull(
 literal|1
 argument|),
 comment|// \
-comment|// expected-warning {{GCC does not allow nonnull attribute in this position on a function definition}}
+comment|// expected-warning {{GCC does not allow 'nonnull' attribute in this position on a function definition}}
 argument|pure)) {
 comment|// \
-comment|// expected-warning {{GCC does not allow pure attribute in this position on a function definition}}
+comment|// expected-warning {{GCC does not allow 'pure' attribute in this position on a function definition}}
 argument|return *a; }  int testFundef4(int *a) __attribute__((nonnull(
 literal|1
 argument|)))
 comment|// \
-comment|// expected-warning {{GCC does not allow nonnull attribute in this position on a function definition}}
+comment|// expected-warning {{GCC does not allow 'nonnull' attribute in this position on a function definition}}
 argument|__attribute((pure)) {
 comment|// \
-comment|// expected-warning {{GCC does not allow pure attribute in this position on a function definition}}
+comment|// expected-warning {{GCC does not allow 'pure' attribute in this position on a function definition}}
 argument|return *a; }
 comment|// GCC allows these
-argument|void testFundef5() __attribute__(()) { }  __attribute__((pure)) int testFundef6(int a) { return a; }
+argument|void testFundef5() __attribute__(()) { }  __attribute__((pure)) int testFundef6(int a) { return a; }  void deprecatedTestFun(void) __attribute__((deprecated()));
 end_decl_stmt
 
 end_unit

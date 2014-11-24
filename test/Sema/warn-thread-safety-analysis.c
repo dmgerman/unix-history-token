@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -fsyntax-only -verify -Wthread-safety -Wthread-safety-beta -fcxx-exceptions %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wthread-safety -Wthread-safety-beta %s
 end_comment
 
 begin_define
@@ -220,10 +220,10 @@ struct|;
 end_struct
 
 begin_comment
-comment|// Define mutex lock/unlock functions.
+comment|// Declare mutex lock/unlock functions.
 end_comment
 
-begin_function
+begin_function_decl
 name|void
 name|mutex_exclusive_lock
 parameter_list|(
@@ -232,14 +232,14 @@ name|Mutex
 modifier|*
 name|mu
 parameter_list|)
-function|EXCLUSIVE_LOCK_FUNCTION
+function_decl|EXCLUSIVE_LOCK_FUNCTION
 parameter_list|(
 name|mu
 parameter_list|)
-block|{ }
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
+begin_function_decl
 name|void
 name|mutex_shared_lock
 parameter_list|(
@@ -248,14 +248,14 @@ name|Mutex
 modifier|*
 name|mu
 parameter_list|)
-function|SHARED_LOCK_FUNCTION
+function_decl|SHARED_LOCK_FUNCTION
 parameter_list|(
 name|mu
 parameter_list|)
-block|{ }
-end_function
+function_decl|;
+end_function_decl
 
-begin_function
+begin_function_decl
 name|void
 name|mutex_unlock
 parameter_list|(
@@ -264,12 +264,56 @@ name|Mutex
 modifier|*
 name|mu
 parameter_list|)
-function|UNLOCK_FUNCTION
+function_decl|UNLOCK_FUNCTION
 parameter_list|(
 name|mu
 parameter_list|)
-block|{ }
-end_function
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mutex_shared_unlock
+parameter_list|(
+name|struct
+name|Mutex
+modifier|*
+name|mu
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(release_shared_capability
+parameter_list|(
+name|mu
+parameter_list|)
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|mutex_exclusive_unlock
+parameter_list|(
+name|struct
+name|Mutex
+modifier|*
+name|mu
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(release_capability
+parameter_list|(
+name|mu
+parameter_list|)
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|// Define global variables.
@@ -496,7 +540,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{calling function 'Foo_fun1' requires shared lock on 'mu2'}} \
+comment|// expected-warning{{calling function 'Foo_fun1' requires holding mutex 'mu2'}} \
 name|expected
 operator|-
 name|warning
@@ -506,10 +550,10 @@ name|calling
 name|function
 literal|'Foo_fun1'
 name|requires
-name|exclusive
-name|lock
-name|on
+name|holding
+name|mutex
 literal|'mu1'
+name|exclusively
 block|}
 block|}
 name|mutex_exclusive_lock
@@ -535,7 +579,7 @@ operator|&
 name|mu1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{locking 'mu1' that is already locked}}
+comment|// expected-warning{{acquiring mutex 'mu1' that is already held}}
 name|mutex_unlock
 argument_list|(
 operator|&
@@ -605,7 +649,7 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{cannot call function 'Foo_func3' while mutex 'mu1' is locked}}
+comment|// expected-warning{{cannot call function 'Foo_func3' while mutex 'mu1' is held}}
 name|mutex_unlock
 argument_list|(
 operator|&
@@ -625,13 +669,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{calling function 'setA' requires exclusive lock on 'foo_.mu_'}}
+comment|// expected-warning{{calling function 'set_value' requires holding mutex 'foo_.mu_' exclusively}}
 name|get_value
 argument_list|(
 name|b_
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{calling function 'getB' requires shared lock on 'foo_.mu_'}}
+comment|// expected-warning{{calling function 'get_value' requires holding mutex 'foo_.mu_'}}
 name|mutex_exclusive_lock
 argument_list|(
 name|foo_
@@ -684,7 +728,7 @@ name|c_
 operator|=
 literal|0
 expr_stmt|;
-comment|// expected-warning{{writing variable 'c_' requires locking any mutex exclusively}}
+comment|// expected-warning{{writing variable 'c_' requires holding any mutex exclusively}}
 call|(
 name|void
 call|)
@@ -695,7 +739,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{reading the value pointed to by 'd_' requires locking any mutex}}
+comment|// expected-warning{{reading the value pointed to by 'd_' requires holding any mutex}}
 name|mutex_exclusive_lock
 argument_list|(
 name|foo_
@@ -722,6 +766,44 @@ argument_list|(
 name|foo_
 operator|.
 name|mu_
+argument_list|)
+expr_stmt|;
+name|mutex_exclusive_lock
+argument_list|(
+operator|&
+name|mu1
+argument_list|)
+expr_stmt|;
+name|mutex_shared_unlock
+argument_list|(
+operator|&
+name|mu1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{releasing mutex 'mu1' using shared access, expected exclusive access}}
+name|mutex_exclusive_unlock
+argument_list|(
+operator|&
+name|mu1
+argument_list|)
+expr_stmt|;
+name|mutex_shared_lock
+argument_list|(
+operator|&
+name|mu1
+argument_list|)
+expr_stmt|;
+name|mutex_exclusive_unlock
+argument_list|(
+operator|&
+name|mu1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{releasing mutex 'mu1' using exclusive access, expected shared access}}
+name|mutex_shared_unlock
+argument_list|(
+operator|&
+name|mu1
 argument_list|)
 expr_stmt|;
 return|return

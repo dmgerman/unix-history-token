@@ -232,5 +232,18 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|func_14
+parameter_list|()
+block|{
+return|return
+name|data1
+operator|==
+literal|0
+return|;
+block|}
+end_function
+
 end_unit
 

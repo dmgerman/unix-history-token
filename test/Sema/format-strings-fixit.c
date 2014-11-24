@@ -60,6 +60,13 @@ name|ptrdiff_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|__WCHAR_TYPE__
+name|wchar_t
+typedef|;
+end_typedef
+
 begin_function
 name|void
 name|test
@@ -562,13 +569,26 @@ end_function_decl
 begin_function
 name|void
 name|test2
-parameter_list|()
+parameter_list|(
+name|int
+name|intSAParm
+index|[
+specifier|static
+literal|2
+index|]
+parameter_list|)
 block|{
 name|char
 name|str
 index|[
 literal|100
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|vstr
+init|=
+literal|"abc"
 decl_stmt|;
 name|short
 name|shortVar
@@ -579,6 +599,12 @@ name|uShortVar
 decl_stmt|;
 name|int
 name|intVar
+decl_stmt|;
+name|int
+name|intAVar
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|unsigned
 name|uIntVar
@@ -621,6 +647,17 @@ decl_stmt|;
 name|ptrdiff_t
 name|ptrdiffVar
 decl_stmt|;
+enum|enum
+block|{
+name|A
+block|,
+name|B
+block|,
+name|C
+block|}
+name|enumVar
+enum|;
+comment|// Some string types.
 name|scanf
 argument_list|(
 literal|"%lf"
@@ -628,6 +665,28 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%lf"
+argument_list|,
+name|vstr
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%ls"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%ls"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+comment|// Some integer types.
 name|scanf
 argument_list|(
 literal|"%f"
@@ -650,6 +709,20 @@ literal|"%p"
 argument_list|,
 operator|&
 name|intVar
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%f"
+argument_list|,
+name|intAVar
+argument_list|)
+expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%f"
+argument_list|,
+name|intSAParm
 argument_list|)
 expr_stmt|;
 name|scanf
@@ -716,6 +789,15 @@ operator|&
 name|uLongLongVar
 argument_list|)
 expr_stmt|;
+name|scanf
+argument_list|(
+literal|"%d"
+argument_list|,
+operator|&
+name|enumVar
+argument_list|)
+expr_stmt|;
+comment|// FIXME: We ought to fix specifiers for enums.
 comment|// Some named ints.
 name|scanf
 argument_list|(
@@ -1111,7 +1193,19 @@ comment|// CHECK: printf("%LA", (long double) 42);
 end_comment
 
 begin_comment
-comment|// CHECK: scanf("%s", str);
+comment|// CHECK: scanf("%99s", str);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%s", vstr);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%99s", str);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%99s", str);
 end_comment
 
 begin_comment
@@ -1124,6 +1218,14 @@ end_comment
 
 begin_comment
 comment|// CHECK: scanf("%d",&intVar);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%d", intAVar);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%d", intSAParm);
 end_comment
 
 begin_comment
@@ -1156,6 +1258,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: scanf("%llu",&uLongLongVar);
+end_comment
+
+begin_comment
+comment|// CHECK: scanf("%d",&enumVar);
 end_comment
 
 begin_comment

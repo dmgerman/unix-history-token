@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -86,7 +86,9 @@ operator|:
 name|unsigned
 name|Act
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|llvm
 operator|::
@@ -118,17 +120,15 @@ name|CodeGenAction
 argument_list|(
 argument|unsigned _Act
 argument_list|,
-argument|llvm::LLVMContext *_VMContext =
-literal|0
+argument|llvm::LLVMContext *_VMContext = nullptr
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|hasIRSupport
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|ASTConsumer
 operator|*
 name|CreateASTConsumer
@@ -137,16 +137,17 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|EndSourceFileAction
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -210,7 +211,7 @@ name|LLVMContext
 operator|*
 name|_VMContext
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|; }
 decl_stmt|;
@@ -235,7 +236,7 @@ name|LLVMContext
 operator|*
 name|_VMContext
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|; }
 decl_stmt|;
@@ -260,7 +261,7 @@ name|LLVMContext
 operator|*
 name|_VMContext
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|; }
 decl_stmt|;
@@ -285,7 +286,7 @@ name|LLVMContext
 operator|*
 name|_VMContext
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|; }
 decl_stmt|;
@@ -310,7 +311,7 @@ name|LLVMContext
 operator|*
 name|_VMContext
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|; }
 decl_stmt|;
@@ -335,7 +336,7 @@ name|LLVMContext
 operator|*
 name|_VMContext
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|; }
 decl_stmt|;

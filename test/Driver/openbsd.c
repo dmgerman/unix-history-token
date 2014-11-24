@@ -152,6 +152,22 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK-POWERPC %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target sparc-unknown-openbsd -### -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-SPARC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target sparc64-unknown-openbsd -### -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-SPARC64 %s
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target mips64-unknown-openbsd -### -no-integrated-as -c %s 2>&1 \
 end_comment
 
@@ -192,6 +208,14 @@ comment|// CHECK-POWERPC: as{{.*}}" "-mppc" "-many"
 end_comment
 
 begin_comment
+comment|// CHECK-SPARC: as{{.*}}" "-32"
+end_comment
+
+begin_comment
+comment|// CHECK-SPARC64: as{{.*}}" "-64" "-Av9a"
+end_comment
+
+begin_comment
 comment|// CHECK-MIPS64: as{{.*}}" "-mabi" "64" "-EB"
 end_comment
 
@@ -205,6 +229,38 @@ end_comment
 
 begin_comment
 comment|// CHECK-MIPS64EL-PIC: as{{.*}}" "-mabi" "64" "-EL" "-KPIC"
+end_comment
+
+begin_comment
+comment|// Check that the integrated assembler is enabled for PowerPC and SPARC
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc-unknown-openbsd -### -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-IAS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target sparc-unknown-openbsd -### -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-IAS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target sparc64-unknown-openbsd -### -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-IAS %s
+end_comment
+
+begin_comment
+comment|// CHECK-IAS-NOT: "-no-integrated-as"
 end_comment
 
 end_unit

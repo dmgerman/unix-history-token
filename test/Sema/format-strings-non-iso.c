@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-linux-gnu -fsyntax-only -verify -std=c99 -pedantic %s
+comment|// RUN: %clang_cc1 -triple i686-linux-gnu -fsyntax-only -verify -std=c99 -Wformat-non-iso %s
 end_comment
 
 begin_function_decl

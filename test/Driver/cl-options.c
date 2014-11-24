@@ -20,11 +20,31 @@ comment|// Alias options:
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /c -### -- %s 2>&1 | FileCheck -check-prefix=C %s
+comment|// RUN: %clang_cl /c -### -- %s 2>&1 | FileCheck -check-prefix=c %s
 end_comment
 
 begin_comment
-comment|// C: -c
+comment|// c: -c
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /C -### -- %s 2>&1 | FileCheck -check-prefix=C %s
+end_comment
+
+begin_comment
+comment|// C: error: invalid argument '-C' only allowed with '/E, /P or /EP'
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /C /P -### -- %s 2>&1 | FileCheck -check-prefix=C_P %s
+end_comment
+
+begin_comment
+comment|// C_P: "-E"
+end_comment
+
+begin_comment
+comment|// C_P: "-C"
 end_comment
 
 begin_comment
@@ -37,6 +57,34 @@ end_comment
 
 begin_comment
 comment|// D: "-D" "foo=bar"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /E -### -- %s 2>&1 | FileCheck -check-prefix=E %s
+end_comment
+
+begin_comment
+comment|// E: "-E"
+end_comment
+
+begin_comment
+comment|// E: "-o" "-"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /EP -### -- %s 2>&1 | FileCheck -check-prefix=EP %s
+end_comment
+
+begin_comment
+comment|// EP: "-E"
+end_comment
+
+begin_comment
+comment|// EP: "-P"
+end_comment
+
+begin_comment
+comment|// EP: "-o" "-"
 end_comment
 
 begin_comment
@@ -53,6 +101,38 @@ end_comment
 
 begin_comment
 comment|// GR_: -fno-rtti
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Gy -### -- %s 2>&1 | FileCheck -check-prefix=Gy %s
+end_comment
+
+begin_comment
+comment|// Gy: -ffunction-sections
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Gy /Gy- -### -- %s 2>&1 | FileCheck -check-prefix=Gy_ %s
+end_comment
+
+begin_comment
+comment|// Gy_-NOT: -ffunction-sections
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Gw -### -- %s 2>&1 | FileCheck -check-prefix=Gw %s
+end_comment
+
+begin_comment
+comment|// Gw: -fdata-sections
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Gw /Gw- -### -- %s 2>&1 | FileCheck -check-prefix=Gw_ %s
+end_comment
+
+begin_comment
+comment|// Gw_-NOT: -fdata-sections
 end_comment
 
 begin_comment
@@ -152,19 +232,23 @@ comment|// Oy_: -mdisable-fp-elim
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /P -### -- %s 2>&1 | FileCheck -check-prefix=P %s
-end_comment
-
-begin_comment
-comment|// P: -E
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cl /showIncludes -### -- %s 2>&1 | FileCheck -check-prefix=showIncludes %s
 end_comment
 
 begin_comment
 comment|// showIncludes: --show-includes
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /E /showIncludes -### -- %s 2>&1 | FileCheck -check-prefix=showIncludes_E %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /EP /showIncludes -### -- %s 2>&1 | FileCheck -check-prefix=showIncludes_E %s
+end_comment
+
+begin_comment
+comment|// showIncludes_E: warning: argument unused during compilation: '--show-includes'
 end_comment
 
 begin_comment
@@ -177,6 +261,62 @@ end_comment
 
 begin_comment
 comment|// U: "-U" "mymacro"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /vd2 -### -- %s 2>&1 | FileCheck -check-prefix=VD2 %s
+end_comment
+
+begin_comment
+comment|// VD2: -vtordisp-mode=2
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /vmg -### -- %s 2>&1 | FileCheck -check-prefix=VMG %s
+end_comment
+
+begin_comment
+comment|// VMG: "-fms-memptr-rep=virtual"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /vmg /vms -### -- %s 2>&1 | FileCheck -check-prefix=VMS %s
+end_comment
+
+begin_comment
+comment|// VMS: "-fms-memptr-rep=single"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /vmg /vmm -### -- %s 2>&1 | FileCheck -check-prefix=VMM %s
+end_comment
+
+begin_comment
+comment|// VMM: "-fms-memptr-rep=multiple"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /vmg /vmv -### -- %s 2>&1 | FileCheck -check-prefix=VMV %s
+end_comment
+
+begin_comment
+comment|// VMV: "-fms-memptr-rep=virtual"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /vmg /vmb -### -- %s 2>&1 | FileCheck -check-prefix=VMB %s
+end_comment
+
+begin_comment
+comment|// VMB: '/vmg' not allowed with '/vmb'
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /vmg /vmm /vms -### -- %s 2>&1 | FileCheck -check-prefix=VMX %s
+end_comment
+
+begin_comment
+comment|// VMX: '/vms' not allowed with '/vmm'
 end_comment
 
 begin_comment
@@ -276,15 +416,59 @@ comment|// WJoined: "-Wunused-pragmas"
 end_comment
 
 begin_comment
+comment|// We recognize -f[no-]strict-aliasing.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -c -### -- %s 2>&1 | FileCheck -check-prefix=DEFAULTSTRICT %s
+end_comment
+
+begin_comment
+comment|// DEFAULTSTRICT: "-relaxed-aliasing"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -c -fstrict-aliasing -### -- %s 2>&1 | FileCheck -check-prefix=STRICT %s
+end_comment
+
+begin_comment
+comment|// STRICT-NOT: "-relaxed-aliasing"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -c -fno-strict-aliasing -### -- %s 2>&1 | FileCheck -check-prefix=NOSTRICT %s
+end_comment
+
+begin_comment
+comment|// NOSTRICT: "-relaxed-aliasing"
+end_comment
+
+begin_comment
+comment|// For some warning ids, we can map from MSVC warning to Clang warning.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -wd4005 -### -- %s 2>&1 | FileCheck -check-prefix=wd4005 %s
+end_comment
+
+begin_comment
+comment|// wd4005: "-cc1"
+end_comment
+
+begin_comment
+comment|// wd4005: "-Wno-macro-redefined"
+end_comment
+
+begin_comment
 comment|// Ignored options. Check that we don't get "unused during compilation" errors.
 end_comment
 
 begin_comment
-comment|// (/Zs is for syntax-only, /WX is for -Werror)
+comment|// (/Zs is for syntax-only)
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Zs /WX \
+comment|// RUN: %clang_cl /Zs \
 end_comment
 
 begin_comment
@@ -356,7 +540,19 @@ comment|// RUN:    /Zc:wchar_t \
 end_comment
 
 begin_comment
-comment|// RUN:    -- %s
+comment|// RUN:    /Zc:inline \
+end_comment
+
+begin_comment
+comment|// RUN:    /Zc:rvalueCast \
+end_comment
+
+begin_comment
+comment|// RUN:    -### -- %s 2>&1 | FileCheck -check-prefix=IGNORED %s
+end_comment
+
+begin_comment
+comment|// IGNORED-NOT: argument unused during compilation
 end_comment
 
 begin_comment
@@ -392,7 +588,7 @@ comment|// RUN: %clang_cl /Abracadabra -Qunused-arguments -### -- %s 2>&1 | File
 end_comment
 
 begin_comment
-comment|// UNUSED-NOT: warning
+comment|// UNUSED-NOT: argument unused during compilation
 end_comment
 
 begin_comment
@@ -412,10 +608,6 @@ comment|// RUN:     /AIfoo \
 end_comment
 
 begin_comment
-comment|// RUN:     /arch:sse2 \
-end_comment
-
-begin_comment
 comment|// RUN:     /clr:pure \
 end_comment
 
@@ -424,15 +616,11 @@ comment|// RUN:     /docname \
 end_comment
 
 begin_comment
-comment|// RUN:     /E \
+comment|// RUN:     /d2Zi+ \
 end_comment
 
 begin_comment
 comment|// RUN:     /EHsc \
-end_comment
-
-begin_comment
-comment|// RUN:     /EP \
 end_comment
 
 begin_comment
@@ -568,14 +756,6 @@ comment|// RUN:     /GX \
 end_comment
 
 begin_comment
-comment|// RUN:     /Gy \
-end_comment
-
-begin_comment
-comment|// RUN:     /Gy- \
-end_comment
-
-begin_comment
 comment|// RUN:     /Gz \
 end_comment
 
@@ -645,26 +825,6 @@ end_comment
 
 begin_comment
 comment|// RUN:     /V \
-end_comment
-
-begin_comment
-comment|// RUN:     /vd2 \
-end_comment
-
-begin_comment
-comment|// RUN:     /vmb \
-end_comment
-
-begin_comment
-comment|// RUN:     /vmm \
-end_comment
-
-begin_comment
-comment|// RUN:     /vms \
-end_comment
-
-begin_comment
-comment|// RUN:     /vmv \
 end_comment
 
 begin_comment
@@ -756,6 +916,10 @@ comment|// RUN:     /Zp \
 end_comment
 
 begin_comment
+comment|// RUN:     /Zp1 \
+end_comment
+
+begin_comment
 comment|// RUN:     /ZW:nostdlib \
 end_comment
 
@@ -780,11 +944,75 @@ comment|// Xclang: "hellocc1"
 end_comment
 
 begin_comment
-comment|// We support -m32 and -m64.
+comment|// RTTI is on by default. /GR- controls -fno-rtti-data.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /Zs /WX -m32 -m64 -- %s
+comment|// RUN: %clang_cl /c /GR- -### -- %s 2>&1 | FileCheck -check-prefix=NoRTTI %s
+end_comment
+
+begin_comment
+comment|// NoRTTI: "-fno-rtti-data"
+end_comment
+
+begin_comment
+comment|// NoRTTI-NOT: "-fno-rtti"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /c /GR -### -- %s 2>&1 | FileCheck -check-prefix=RTTI %s
+end_comment
+
+begin_comment
+comment|// RTTI-NOT: "-fno-rtti-data"
+end_comment
+
+begin_comment
+comment|// RTTI-NOT: "-fno-rtti"
+end_comment
+
+begin_comment
+comment|// Accept "core" clang options.
+end_comment
+
+begin_comment
+comment|// (/Zs is for syntax-only)
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl \
+end_comment
+
+begin_comment
+comment|// RUN:     --driver-mode=cl \
+end_comment
+
+begin_comment
+comment|// RUN:     -ferror-limit=10 \
+end_comment
+
+begin_comment
+comment|// RUN:     -fmsc-version=1800 \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-strict-aliasing \
+end_comment
+
+begin_comment
+comment|// RUN:     -fstrict-aliasing \
+end_comment
+
+begin_comment
+comment|// RUN:     -mllvm -disable-llvm-optzns \
+end_comment
+
+begin_comment
+comment|// RUN:     -Wunused-variables \
+end_comment
+
+begin_comment
+comment|// RUN:     /Zs -- %s 2>&1
 end_comment
 
 begin_function

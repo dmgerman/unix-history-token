@@ -74,5 +74,15 @@ function_decl|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|namespace
+name|AddAndReexportBeforeImport
+block|{
+name|int
+name|S
+decl_stmt|;
+block|}
+end_decl_stmt
+
 end_unit
 

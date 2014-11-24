@@ -26,6 +26,10 @@ comment|// CHECK-NEXT: {{^}}#endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: {{^}}# 3 "{{.*}}rewrite-includes-missing.c"{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: {{^}}# 4 "{{.*}}rewrite-includes-missing.c"{{$}}
 end_comment
 

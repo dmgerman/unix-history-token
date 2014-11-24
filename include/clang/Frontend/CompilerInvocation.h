@@ -201,7 +201,7 @@ name|DiagnosticsEngine
 operator|*
 name|Diags
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 name|class
@@ -213,17 +213,31 @@ operator|<
 name|CompilerInvocation
 operator|>
 block|{
-name|protected
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|CompilerInvocationBase
+operator|&
+operator|)
+name|LLVM_DELETED_FUNCTION
+block|;
+name|public
 operator|:
 comment|/// Options controlling the language variant.
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|LangOptions
 operator|>
 name|LangOpts
 block|;
 comment|/// Options controlling the target.
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|TargetOptions
 operator|>
@@ -250,8 +264,10 @@ name|PreprocessorOptions
 operator|>
 name|PreprocessorOpts
 block|;
-name|public
-operator|:
+name|CompilerInvocationBase
+argument_list|()
+block|;
+operator|~
 name|CompilerInvocationBase
 argument_list|()
 block|;
@@ -271,7 +287,7 @@ block|{
 return|return
 name|LangOpts
 operator|.
-name|getPtr
+name|get
 argument_list|()
 return|;
 block|}
@@ -285,7 +301,7 @@ block|{
 return|return
 name|LangOpts
 operator|.
-name|getPtr
+name|get
 argument_list|()
 return|;
 block|}
@@ -298,7 +314,7 @@ return|return
 operator|*
 name|TargetOpts
 operator|.
-name|getPtr
+name|get
 argument_list|()
 return|;
 block|}
@@ -313,7 +329,7 @@ return|return
 operator|*
 name|TargetOpts
 operator|.
-name|getPtr
+name|get
 argument_list|()
 return|;
 block|}
@@ -642,6 +658,30 @@ return|;
 block|}
 comment|/// @}
 expr|}
+block|;
+name|namespace
+name|vfs
+block|{
+name|class
+name|FileSystem
+block|; }
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|createVFSFromCompilerInvocation
+argument_list|(
+specifier|const
+name|CompilerInvocation
+operator|&
+name|CI
+argument_list|,
+name|DiagnosticsEngine
+operator|&
+name|Diags
+argument_list|)
 block|;  }
 end_decl_stmt
 

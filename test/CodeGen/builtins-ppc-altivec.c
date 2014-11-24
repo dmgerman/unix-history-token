@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: ppc32-registered-target
+comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -faltivec -triple powerpc-unknown-unknown -emit-llvm %s -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -faltivec -triple powerpc64-unknown-unknown -emit-llvm %s -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -faltivec -triple powerpc64le-unknown-unknown -emit-llvm %s -o - | FileCheck %s -check-prefix=CHECK-LE
 end_comment
 
 begin_decl_stmt
@@ -512,6 +520,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vmaxsb
+comment|// CHECK-LE: sub<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsb
 name|vs
 operator|=
 name|vec_abs
@@ -521,6 +531,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vmaxsh
+comment|// CHECK-LE: sub<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsh
 name|vi
 operator|=
 name|vec_abs
@@ -530,6 +542,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vmaxsw
+comment|// CHECK-LE: sub<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsw
 name|vf
 operator|=
 name|vec_abs
@@ -538,6 +552,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 comment|/* vec_abs */
 name|vsc
 operator|=
@@ -548,6 +563,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsbs
 comment|// CHECK: @llvm.ppc.altivec.vmaxsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsb
 name|vs
 operator|=
 name|vec_abss
@@ -557,6 +574,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubshs
 comment|// CHECK: @llvm.ppc.altivec.vmaxsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsh
 name|vi
 operator|=
 name|vec_abss
@@ -566,6 +585,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsws
 comment|// CHECK: @llvm.ppc.altivec.vmaxsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsw
 comment|/*  vec_add */
 name|res_vsc
 operator|=
@@ -577,6 +598,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vsc
 operator|=
 name|vec_add
@@ -587,6 +609,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vsc
 operator|=
 name|vec_add
@@ -597,6 +620,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vuc
 operator|=
 name|vec_add
@@ -607,6 +631,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vuc
 operator|=
 name|vec_add
@@ -617,6 +642,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vuc
 operator|=
 name|vec_add
@@ -627,6 +653,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vs
 operator|=
 name|vec_add
@@ -637,6 +664,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_add
@@ -647,6 +675,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_add
@@ -657,6 +686,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vus
 operator|=
 name|vec_add
@@ -667,6 +697,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vus
 operator|=
 name|vec_add
@@ -677,6 +708,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vus
 operator|=
 name|vec_add
@@ -687,6 +719,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vi
 operator|=
 name|vec_add
@@ -697,6 +730,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vi
 operator|=
 name|vec_add
@@ -707,6 +741,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vi
 operator|=
 name|vec_add
@@ -717,6 +752,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vui
 operator|=
 name|vec_add
@@ -727,6 +763,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vui
 operator|=
 name|vec_add
@@ -737,6 +774,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vui
 operator|=
 name|vec_add
@@ -747,6 +785,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vf
 operator|=
 name|vec_add
@@ -757,6 +796,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: fadd<4 x float>
+comment|// CHECK-LE: fadd<4 x float>
 name|res_vsc
 operator|=
 name|vec_vaddubm
@@ -767,6 +807,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vaddubm
@@ -777,6 +818,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vaddubm
@@ -787,6 +829,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vaddubm
@@ -797,6 +840,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vaddubm
@@ -807,6 +851,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vaddubm
@@ -817,6 +862,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<16 x i8>
+comment|// CHECK-LE: add<16 x i8>
 name|res_vs
 operator|=
 name|vec_vadduhm
@@ -827,6 +873,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_vadduhm
@@ -837,6 +884,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_vadduhm
@@ -847,6 +895,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vus
 operator|=
 name|vec_vadduhm
@@ -857,6 +906,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vus
 operator|=
 name|vec_vadduhm
@@ -867,6 +917,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vus
 operator|=
 name|vec_vadduhm
@@ -877,6 +928,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vi
 operator|=
 name|vec_vadduwm
@@ -887,6 +939,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vi
 operator|=
 name|vec_vadduwm
@@ -897,6 +950,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vi
 operator|=
 name|vec_vadduwm
@@ -907,6 +961,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vui
 operator|=
 name|vec_vadduwm
@@ -917,6 +972,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vui
 operator|=
 name|vec_vadduwm
@@ -927,6 +983,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vui
 operator|=
 name|vec_vadduwm
@@ -937,6 +994,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: add<4 x i32>
+comment|// CHECK-LE: add<4 x i32>
 name|res_vf
 operator|=
 name|vec_vaddfp
@@ -947,6 +1005,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: fadd<4 x float>
+comment|// CHECK-LE: fadd<4 x float>
 comment|/* vec_addc */
 name|res_vui
 operator|=
@@ -957,7 +1016,8 @@ argument_list|,
 name|vui
 argument_list|)
 expr_stmt|;
-comment|// HECK: @llvm.ppc.altivec.vaddcuw
+comment|// CHECK: @llvm.ppc.altivec.vaddcuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddcuw
 name|res_vui
 operator|=
 name|vec_vaddcuw
@@ -967,7 +1027,8 @@ argument_list|,
 name|vui
 argument_list|)
 expr_stmt|;
-comment|// HECK: @llvm.ppc.altivec.vaddcuw
+comment|// CHECK: @llvm.ppc.altivec.vaddcuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddcuw
 comment|/* vec_adds */
 name|res_vsc
 operator|=
@@ -979,6 +1040,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsbs
 name|res_vsc
 operator|=
 name|vec_adds
@@ -989,6 +1051,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsbs
 name|res_vsc
 operator|=
 name|vec_adds
@@ -999,6 +1062,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsbs
 name|res_vuc
 operator|=
 name|vec_adds
@@ -1009,6 +1073,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddubs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddubs
 name|res_vuc
 operator|=
 name|vec_adds
@@ -1019,6 +1084,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddubs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddubs
 name|res_vuc
 operator|=
 name|vec_adds
@@ -1029,6 +1095,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddubs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddubs
 name|res_vs
 operator|=
 name|vec_adds
@@ -1039,6 +1106,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddshs
 name|res_vs
 operator|=
 name|vec_adds
@@ -1049,6 +1117,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddshs
 name|res_vs
 operator|=
 name|vec_adds
@@ -1059,6 +1128,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddshs
 name|res_vus
 operator|=
 name|vec_adds
@@ -1069,6 +1139,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduhs
 name|res_vus
 operator|=
 name|vec_adds
@@ -1079,6 +1150,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduhs
 name|res_vus
 operator|=
 name|vec_adds
@@ -1089,6 +1161,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduhs
 name|res_vi
 operator|=
 name|vec_adds
@@ -1099,6 +1172,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsws
 name|res_vi
 operator|=
 name|vec_adds
@@ -1109,6 +1183,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsws
 name|res_vi
 operator|=
 name|vec_adds
@@ -1119,6 +1194,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsws
 name|res_vui
 operator|=
 name|vec_adds
@@ -1129,6 +1205,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduws
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduws
 name|res_vui
 operator|=
 name|vec_adds
@@ -1139,6 +1216,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduws
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduws
 name|res_vui
 operator|=
 name|vec_adds
@@ -1149,6 +1227,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduws
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduws
 name|res_vsc
 operator|=
 name|vec_vaddsbs
@@ -1159,6 +1238,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsbs
 name|res_vsc
 operator|=
 name|vec_vaddsbs
@@ -1169,6 +1249,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsbs
 name|res_vsc
 operator|=
 name|vec_vaddsbs
@@ -1179,6 +1260,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsbs
 name|res_vuc
 operator|=
 name|vec_vaddubs
@@ -1189,6 +1271,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddubs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddubs
 name|res_vuc
 operator|=
 name|vec_vaddubs
@@ -1199,6 +1282,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddubs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddubs
 name|res_vuc
 operator|=
 name|vec_vaddubs
@@ -1209,6 +1293,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddubs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddubs
 name|res_vs
 operator|=
 name|vec_vaddshs
@@ -1219,6 +1304,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddshs
 name|res_vs
 operator|=
 name|vec_vaddshs
@@ -1229,6 +1315,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddshs
 name|res_vs
 operator|=
 name|vec_vaddshs
@@ -1239,6 +1326,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddshs
 name|res_vus
 operator|=
 name|vec_vadduhs
@@ -1249,6 +1337,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduhs
 name|res_vus
 operator|=
 name|vec_vadduhs
@@ -1259,6 +1348,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduhs
 name|res_vus
 operator|=
 name|vec_vadduhs
@@ -1269,6 +1359,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduhs
 name|res_vi
 operator|=
 name|vec_vaddsws
@@ -1279,6 +1370,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsws
 name|res_vi
 operator|=
 name|vec_vaddsws
@@ -1289,6 +1381,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsws
 name|res_vi
 operator|=
 name|vec_vaddsws
@@ -1299,6 +1392,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vaddsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vaddsws
 name|res_vui
 operator|=
 name|vec_vadduws
@@ -1309,6 +1403,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduws
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduws
 name|res_vui
 operator|=
 name|vec_vadduws
@@ -1319,6 +1414,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduws
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduws
 name|res_vui
 operator|=
 name|vec_vadduws
@@ -1329,6 +1425,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vadduws
+comment|// CHECK-LE: @llvm.ppc.altivec.vadduws
 comment|/* vec_and */
 name|res_vsc
 operator|=
@@ -1340,6 +1437,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vsc
 operator|=
 name|vec_and
@@ -1350,6 +1448,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vsc
 operator|=
 name|vec_and
@@ -1360,6 +1459,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_and
@@ -1370,6 +1470,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_and
@@ -1380,6 +1481,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_and
@@ -1390,6 +1492,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vbc
 operator|=
 name|vec_and
@@ -1400,6 +1503,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vs
 operator|=
 name|vec_and
@@ -1410,6 +1514,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vs
 operator|=
 name|vec_and
@@ -1420,6 +1525,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vs
 operator|=
 name|vec_and
@@ -1430,6 +1536,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_and
@@ -1440,6 +1547,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_and
@@ -1450,6 +1558,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_and
@@ -1460,6 +1569,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vbs
 operator|=
 name|vec_and
@@ -1470,6 +1580,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vi
 operator|=
 name|vec_and
@@ -1480,6 +1591,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vi
 operator|=
 name|vec_and
@@ -1490,6 +1602,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-le: and<4 x i32>
 name|res_vi
 operator|=
 name|vec_and
@@ -1500,6 +1613,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_and
@@ -1510,6 +1624,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_and
@@ -1520,6 +1635,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_and
@@ -1530,6 +1646,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vbi
 operator|=
 name|vec_and
@@ -1540,6 +1657,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vand
@@ -1550,6 +1668,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vand
@@ -1560,6 +1679,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vand
@@ -1570,6 +1690,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vand
@@ -1580,6 +1701,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vand
@@ -1590,6 +1712,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vand
@@ -1600,6 +1723,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vbc
 operator|=
 name|vec_vand
@@ -1610,6 +1734,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vs
 operator|=
 name|vec_vand
@@ -1620,6 +1745,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vs
 operator|=
 name|vec_vand
@@ -1630,6 +1756,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vs
 operator|=
 name|vec_vand
@@ -1640,6 +1767,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_vand
@@ -1650,6 +1778,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_vand
@@ -1660,6 +1789,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_vand
@@ -1670,6 +1800,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vbs
 operator|=
 name|vec_vand
@@ -1680,6 +1811,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vi
 operator|=
 name|vec_vand
@@ -1690,6 +1822,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vi
 operator|=
 name|vec_vand
@@ -1700,6 +1833,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vi
 operator|=
 name|vec_vand
@@ -1710,6 +1844,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_vand
@@ -1720,6 +1855,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_vand
@@ -1730,6 +1866,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_vand
@@ -1740,6 +1877,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vbi
 operator|=
 name|vec_vand
@@ -1750,6 +1888,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 comment|/* vec_andc */
 name|res_vsc
 operator|=
@@ -1762,6 +1901,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vsc
 operator|=
 name|vec_andc
@@ -1773,6 +1914,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vsc
 operator|=
 name|vec_andc
@@ -1784,6 +1927,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_andc
@@ -1795,6 +1940,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_andc
@@ -1806,6 +1953,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_andc
@@ -1815,8 +1964,8 @@ argument_list|,
 name|vbc
 argument_list|)
 expr_stmt|;
-comment|// CHECK: xor<16 x i8>
-comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vbc
 operator|=
 name|vec_andc
@@ -1828,6 +1977,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vs
 operator|=
 name|vec_andc
@@ -1839,6 +1990,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vs
 operator|=
 name|vec_andc
@@ -1850,6 +2003,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vs
 operator|=
 name|vec_andc
@@ -1861,6 +2016,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_andc
@@ -1872,6 +2029,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_andc
@@ -1883,6 +2042,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_andc
@@ -1894,6 +2055,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vbs
 operator|=
 name|vec_andc
@@ -1905,6 +2068,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vi
 operator|=
 name|vec_andc
@@ -1916,6 +2081,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vi
 operator|=
 name|vec_andc
@@ -1927,6 +2094,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vi
 operator|=
 name|vec_andc
@@ -1938,6 +2107,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_andc
@@ -1949,6 +2120,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_andc
@@ -1960,6 +2133,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_andc
@@ -1971,6 +2146,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vf
 operator|=
 name|vec_andc
@@ -1982,6 +2159,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vf
 operator|=
 name|vec_andc
@@ -1993,6 +2172,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vf
 operator|=
 name|vec_andc
@@ -2004,6 +2185,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vandc
@@ -2015,6 +2198,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vandc
@@ -2026,6 +2211,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vandc
@@ -2037,6 +2224,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vandc
@@ -2048,6 +2237,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vandc
@@ -2059,6 +2250,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vandc
@@ -2070,6 +2263,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vbc
 operator|=
 name|vec_vandc
@@ -2081,6 +2276,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
 name|res_vs
 operator|=
 name|vec_vandc
@@ -2092,6 +2289,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vs
 operator|=
 name|vec_vandc
@@ -2103,6 +2302,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vs
 operator|=
 name|vec_vandc
@@ -2114,6 +2315,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_vandc
@@ -2125,6 +2328,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_vandc
@@ -2136,6 +2341,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vus
 operator|=
 name|vec_vandc
@@ -2147,6 +2354,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vbs
 operator|=
 name|vec_vandc
@@ -2158,6 +2367,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
 name|res_vi
 operator|=
 name|vec_vandc
@@ -2169,6 +2380,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vi
 operator|=
 name|vec_vandc
@@ -2180,6 +2393,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vi
 operator|=
 name|vec_vandc
@@ -2191,6 +2406,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_vandc
@@ -2202,6 +2419,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_vandc
@@ -2213,6 +2432,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vui
 operator|=
 name|vec_vandc
@@ -2224,6 +2445,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vf
 operator|=
 name|vec_vandc
@@ -2235,6 +2458,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vf
 operator|=
 name|vec_vandc
@@ -2246,6 +2471,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 name|res_vf
 operator|=
 name|vec_vandc
@@ -2257,6 +2484,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
 block|}
 end_function
 
@@ -2280,6 +2509,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavgsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vavgsb
 name|res_vuc
 operator|=
 name|vec_avg
@@ -2290,6 +2520,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavgub
+comment|// CHECK-LE: @llvm.ppc.altivec.vavgub
 name|res_vs
 operator|=
 name|vec_avg
@@ -2300,6 +2531,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavgsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vavgsh
 name|res_vus
 operator|=
 name|vec_avg
@@ -2310,6 +2542,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavguh
+comment|// CHECK-LE: @llvm.ppc.altivec.vavguh
 name|res_vi
 operator|=
 name|vec_avg
@@ -2320,6 +2553,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavgsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vavgsw
 name|res_vui
 operator|=
 name|vec_avg
@@ -2330,6 +2564,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavguw
+comment|// CHECK-LE: @llvm.ppc.altivec.vavguw
 name|res_vsc
 operator|=
 name|vec_vavgsb
@@ -2340,6 +2575,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavgsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vavgsb
 name|res_vuc
 operator|=
 name|vec_vavgub
@@ -2350,6 +2586,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavgub
+comment|// CHECK-LE: @llvm.ppc.altivec.vavgub
 name|res_vs
 operator|=
 name|vec_vavgsh
@@ -2360,6 +2597,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavgsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vavgsh
 name|res_vus
 operator|=
 name|vec_vavguh
@@ -2370,6 +2608,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavguh
+comment|// CHECK-LE: @llvm.ppc.altivec.vavguh
 name|res_vi
 operator|=
 name|vec_vavgsw
@@ -2380,6 +2619,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavgsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vavgsw
 name|res_vui
 operator|=
 name|vec_vavguw
@@ -2390,6 +2630,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vavguw
+comment|// CHECK-LE: @llvm.ppc.altivec.vavguw
 comment|/* vec_ceil */
 name|res_vf
 operator|=
@@ -2399,6 +2640,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrfip
+comment|// CHECK-LE: @llvm.ppc.altivec.vrfip
 name|res_vf
 operator|=
 name|vec_vrfip
@@ -2407,6 +2649,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrfip
+comment|// CHECK-LE: @llvm.ppc.altivec.vrfip
 comment|/* vec_cmpb */
 name|res_vi
 operator|=
@@ -2418,6 +2661,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpbfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpbfp
 name|res_vi
 operator|=
 name|vec_vcmpbfp
@@ -2428,6 +2672,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpbfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpbfp
 comment|/* vec_cmpeq */
 name|res_vbc
 operator|=
@@ -2439,6 +2684,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb
 name|res_vbc
 operator|=
 name|vec_cmpeq
@@ -2449,6 +2695,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb
 name|res_vbs
 operator|=
 name|vec_cmpeq
@@ -2459,6 +2706,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh
 name|res_vbs
 operator|=
 name|vec_cmpeq
@@ -2469,6 +2717,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh
 name|res_vbi
 operator|=
 name|vec_cmpeq
@@ -2479,6 +2728,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw
 name|res_vbi
 operator|=
 name|vec_cmpeq
@@ -2489,6 +2739,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw
 name|res_vbi
 operator|=
 name|vec_cmpeq
@@ -2499,6 +2750,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp
 comment|/* vec_cmpge */
 name|res_vbi
 operator|=
@@ -2510,6 +2762,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp
 name|res_vbi
 operator|=
 name|vec_vcmpgefp
@@ -2520,6 +2773,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp
 block|}
 end_function
 
@@ -2543,6 +2797,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb
 name|res_vbc
 operator|=
 name|vec_cmpgt
@@ -2553,6 +2808,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub
 name|res_vbs
 operator|=
 name|vec_cmpgt
@@ -2563,6 +2819,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh
 name|res_vbs
 operator|=
 name|vec_cmpgt
@@ -2573,6 +2830,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh
 name|res_vbi
 operator|=
 name|vec_cmpgt
@@ -2583,6 +2841,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw
 name|res_vbi
 operator|=
 name|vec_cmpgt
@@ -2593,6 +2852,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw
 name|res_vbi
 operator|=
 name|vec_cmpgt
@@ -2603,6 +2863,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp
 name|res_vbc
 operator|=
 name|vec_vcmpgtsb
@@ -2613,6 +2874,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb
 name|res_vbc
 operator|=
 name|vec_vcmpgtub
@@ -2623,6 +2885,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub
 name|res_vbs
 operator|=
 name|vec_vcmpgtsh
@@ -2633,6 +2896,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh
 name|res_vbs
 operator|=
 name|vec_vcmpgtuh
@@ -2643,6 +2907,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh
 name|res_vbi
 operator|=
 name|vec_vcmpgtsw
@@ -2653,6 +2918,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw
 name|res_vbi
 operator|=
 name|vec_vcmpgtuw
@@ -2663,6 +2929,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw
 name|res_vbi
 operator|=
 name|vec_vcmpgtfp
@@ -2673,6 +2940,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp
 comment|/* vec_cmple */
 name|res_vbi
 operator|=
@@ -2684,6 +2952,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp
 block|}
 end_function
 
@@ -2707,6 +2976,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb
 name|res_vbc
 operator|=
 name|vec_cmplt
@@ -2717,6 +2987,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub
 name|res_vbs
 operator|=
 name|vec_cmplt
@@ -2727,6 +2998,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh
 name|res_vbs
 operator|=
 name|vec_cmplt
@@ -2737,6 +3009,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh
 name|res_vbi
 operator|=
 name|vec_cmplt
@@ -2747,6 +3020,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw
 name|res_vbi
 operator|=
 name|vec_cmplt
@@ -2757,6 +3031,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw
 name|res_vbi
 operator|=
 name|vec_cmplt
@@ -2767,6 +3042,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp
 comment|/* vec_ctf */
 name|res_vf
 operator|=
@@ -2778,6 +3054,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcfsx
+comment|// CHECK-LE: @llvm.ppc.altivec.vcfsx
 name|res_vf
 operator|=
 name|vec_ctf
@@ -2788,6 +3065,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcfux
+comment|// CHECK-LE: @llvm.ppc.altivec.vcfux
 name|res_vf
 operator|=
 name|vec_vcfsx
@@ -2798,6 +3076,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcfsx
+comment|// CHECK-LE: @llvm.ppc.altivec.vcfsx
 name|res_vf
 operator|=
 name|vec_vcfux
@@ -2808,6 +3087,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcfux
+comment|// CHECK-LE: @llvm.ppc.altivec.vcfux
 comment|/* vec_cts */
 name|res_vi
 operator|=
@@ -2819,6 +3099,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vctsxs
+comment|// CHECK-LE: @llvm.ppc.altivec.vctsxs
 name|res_vi
 operator|=
 name|vec_vctsxs
@@ -2829,6 +3110,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vctsxs
+comment|// CHECK-LE: @llvm.ppc.altivec.vctsxs
 comment|/* vec_ctu */
 name|res_vui
 operator|=
@@ -2840,6 +3122,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vctuxs
+comment|// CHECK-LE: @llvm.ppc.altivec.vctuxs
 name|res_vui
 operator|=
 name|vec_vctuxs
@@ -2850,6 +3133,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vctuxs
+comment|// CHECK-LE: @llvm.ppc.altivec.vctuxs
 comment|/* vec_dss */
 name|vec_dss
 argument_list|(
@@ -2857,11 +3141,13 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.dss
+comment|// CHECK-LE: @llvm.ppc.altivec.dss
 comment|/* vec_dssall */
 name|vec_dssall
 argument_list|()
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.dssall
+comment|// CHECK-LE: @llvm.ppc.altivec.dssall
 comment|/* vec_dst */
 name|vec_dst
 argument_list|(
@@ -2874,6 +3160,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.dst
+comment|// CHECK-LE: @llvm.ppc.altivec.dst
 comment|/* vec_dstst */
 name|vec_dstst
 argument_list|(
@@ -2886,6 +3173,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.dstst
+comment|// CHECK-LE: @llvm.ppc.altivec.dstst
 comment|/* vec_dststt */
 name|vec_dststt
 argument_list|(
@@ -2898,6 +3186,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.dststt
+comment|// CHECK-LE: @llvm.ppc.altivec.dststt
 comment|/* vec_dstt */
 name|vec_dstt
 argument_list|(
@@ -2910,6 +3199,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.dstt
+comment|// CHECK-LE: @llvm.ppc.altivec.dstt
 comment|/* vec_expte */
 name|res_vf
 operator|=
@@ -2919,6 +3209,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vexptefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vexptefp
 name|res_vf
 operator|=
 name|vec_vexptefp
@@ -2927,6 +3218,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vexptefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vexptefp
 comment|/* vec_floor */
 name|res_vf
 operator|=
@@ -2936,6 +3228,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrfim
+comment|// CHECK-LE: @llvm.ppc.altivec.vrfim
 name|res_vf
 operator|=
 name|vec_vrfim
@@ -2944,6 +3237,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrfim
+comment|// CHECK-LE: @llvm.ppc.altivec.vrfim
 comment|/* vec_ld */
 name|res_vsc
 operator|=
@@ -2956,6 +3250,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vsc
 operator|=
 name|vec_ld
@@ -2967,6 +3262,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vuc
 operator|=
 name|vec_ld
@@ -2978,6 +3274,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vuc
 operator|=
 name|vec_ld
@@ -2989,6 +3286,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vbc
 operator|=
 name|vec_ld
@@ -3000,6 +3298,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vs
 operator|=
 name|vec_ld
@@ -3011,6 +3310,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vs
 operator|=
 name|vec_ld
@@ -3022,6 +3322,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vus
 operator|=
 name|vec_ld
@@ -3033,6 +3334,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vus
 operator|=
 name|vec_ld
@@ -3044,6 +3346,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vbs
 operator|=
 name|vec_ld
@@ -3055,6 +3358,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vp
 operator|=
 name|vec_ld
@@ -3066,6 +3370,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vi
 operator|=
 name|vec_ld
@@ -3077,6 +3382,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vi
 operator|=
 name|vec_ld
@@ -3088,6 +3394,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vui
 operator|=
 name|vec_ld
@@ -3099,6 +3406,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vui
 operator|=
 name|vec_ld
@@ -3110,6 +3418,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vbi
 operator|=
 name|vec_ld
@@ -3121,6 +3430,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vf
 operator|=
 name|vec_ld
@@ -3132,6 +3442,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vf
 operator|=
 name|vec_ld
@@ -3143,6 +3454,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vsc
 operator|=
 name|vec_lvx
@@ -3154,6 +3466,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vsc
 operator|=
 name|vec_lvx
@@ -3165,6 +3478,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vuc
 operator|=
 name|vec_lvx
@@ -3176,6 +3490,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vuc
 operator|=
 name|vec_lvx
@@ -3187,6 +3502,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vbc
 operator|=
 name|vec_lvx
@@ -3198,6 +3514,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vs
 operator|=
 name|vec_lvx
@@ -3209,6 +3526,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vs
 operator|=
 name|vec_lvx
@@ -3220,6 +3538,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vus
 operator|=
 name|vec_lvx
@@ -3231,6 +3550,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vus
 operator|=
 name|vec_lvx
@@ -3242,6 +3562,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vbs
 operator|=
 name|vec_lvx
@@ -3253,6 +3574,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vp
 operator|=
 name|vec_lvx
@@ -3264,6 +3586,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vi
 operator|=
 name|vec_lvx
@@ -3275,6 +3598,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vi
 operator|=
 name|vec_lvx
@@ -3286,6 +3610,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vui
 operator|=
 name|vec_lvx
@@ -3297,6 +3622,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vui
 operator|=
 name|vec_lvx
@@ -3308,6 +3634,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vbi
 operator|=
 name|vec_lvx
@@ -3319,6 +3646,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vf
 operator|=
 name|vec_lvx
@@ -3330,6 +3658,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 name|res_vf
 operator|=
 name|vec_lvx
@@ -3341,6 +3670,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
 comment|/* vec_lde */
 name|res_vsc
 operator|=
@@ -3353,6 +3683,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvebx
 name|res_vuc
 operator|=
 name|vec_lde
@@ -3364,6 +3695,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvebx
 name|res_vs
 operator|=
 name|vec_lde
@@ -3375,6 +3707,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvehx
 name|res_vus
 operator|=
 name|vec_lde
@@ -3386,6 +3719,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvehx
 name|res_vi
 operator|=
 name|vec_lde
@@ -3397,6 +3731,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvewx
 name|res_vui
 operator|=
 name|vec_lde
@@ -3408,6 +3743,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvewx
 name|res_vf
 operator|=
 name|vec_lde
@@ -3419,6 +3755,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvewx
 name|res_vsc
 operator|=
 name|vec_lvebx
@@ -3430,6 +3767,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvebx
 name|res_vuc
 operator|=
 name|vec_lvebx
@@ -3441,6 +3779,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvebx
 name|res_vs
 operator|=
 name|vec_lvehx
@@ -3452,6 +3791,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvehx
 name|res_vus
 operator|=
 name|vec_lvehx
@@ -3463,6 +3803,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvehx
 name|res_vi
 operator|=
 name|vec_lvewx
@@ -3474,6 +3815,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvewx
 name|res_vui
 operator|=
 name|vec_lvewx
@@ -3485,6 +3827,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvewx
 name|res_vf
 operator|=
 name|vec_lvewx
@@ -3496,6 +3839,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvewx
 comment|/* vec_ldl */
 name|res_vsc
 operator|=
@@ -3508,6 +3852,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vsc
 operator|=
 name|vec_ldl
@@ -3519,6 +3864,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vuc
 operator|=
 name|vec_ldl
@@ -3530,6 +3876,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vuc
 operator|=
 name|vec_ldl
@@ -3541,6 +3888,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vbc
 operator|=
 name|vec_ldl
@@ -3552,6 +3900,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vs
 operator|=
 name|vec_ldl
@@ -3563,6 +3912,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vs
 operator|=
 name|vec_ldl
@@ -3574,6 +3924,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vus
 operator|=
 name|vec_ldl
@@ -3585,6 +3936,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vus
 operator|=
 name|vec_ldl
@@ -3596,6 +3948,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vbs
 operator|=
 name|vec_ldl
@@ -3607,6 +3960,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vp
 operator|=
 name|vec_ldl
@@ -3618,6 +3972,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vi
 operator|=
 name|vec_ldl
@@ -3629,6 +3984,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vi
 operator|=
 name|vec_ldl
@@ -3640,6 +3996,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vui
 operator|=
 name|vec_ldl
@@ -3651,6 +4008,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vui
 operator|=
 name|vec_ldl
@@ -3662,6 +4020,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vbi
 operator|=
 name|vec_ldl
@@ -3673,6 +4032,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vf
 operator|=
 name|vec_ldl
@@ -3684,6 +4044,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vf
 operator|=
 name|vec_ldl
@@ -3695,6 +4056,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vsc
 operator|=
 name|vec_lvxl
@@ -3706,6 +4068,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vsc
 operator|=
 name|vec_lvxl
@@ -3717,6 +4080,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vuc
 operator|=
 name|vec_lvxl
@@ -3728,6 +4092,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vbc
 operator|=
 name|vec_lvxl
@@ -3739,6 +4104,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vuc
 operator|=
 name|vec_lvxl
@@ -3750,6 +4116,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vs
 operator|=
 name|vec_lvxl
@@ -3761,6 +4128,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vs
 operator|=
 name|vec_lvxl
@@ -3772,6 +4140,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vus
 operator|=
 name|vec_lvxl
@@ -3783,6 +4152,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vus
 operator|=
 name|vec_lvxl
@@ -3794,6 +4164,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vbs
 operator|=
 name|vec_lvxl
@@ -3805,6 +4176,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vp
 operator|=
 name|vec_lvxl
@@ -3816,6 +4188,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vi
 operator|=
 name|vec_lvxl
@@ -3827,6 +4200,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vi
 operator|=
 name|vec_lvxl
@@ -3838,6 +4212,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vui
 operator|=
 name|vec_lvxl
@@ -3849,6 +4224,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vui
 operator|=
 name|vec_lvxl
@@ -3860,6 +4236,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vbi
 operator|=
 name|vec_lvxl
@@ -3871,6 +4248,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vf
 operator|=
 name|vec_lvxl
@@ -3882,6 +4260,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 name|res_vf
 operator|=
 name|vec_lvxl
@@ -3893,6 +4272,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
 comment|/* vec_loge */
 name|res_vf
 operator|=
@@ -3902,6 +4282,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vlogefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vlogefp
 name|res_vf
 operator|=
 name|vec_vlogefp
@@ -3910,6 +4291,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vlogefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vlogefp
 comment|/* vec_lvsl */
 name|res_vuc
 operator|=
@@ -3922,6 +4304,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
 comment|/* vec_lvsr */
 name|res_vuc
 operator|=
@@ -3934,6 +4317,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
 comment|/* vec_madd */
 name|res_vf
 operator|=
@@ -3947,6 +4331,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaddfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaddfp
 name|res_vf
 operator|=
 name|vec_vmaddfp
@@ -3959,6 +4344,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaddfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaddfp
 comment|/* vec_madds */
 name|res_vs
 operator|=
@@ -3972,6 +4358,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmhaddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmhaddshs
 name|res_vs
 operator|=
 name|vec_vmhaddshs
@@ -3984,6 +4371,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmhaddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmhaddshs
 comment|/* vec_max */
 name|res_vsc
 operator|=
@@ -3995,6 +4383,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsb
 name|res_vsc
 operator|=
 name|vec_max
@@ -4005,6 +4394,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsb
 name|res_vsc
 operator|=
 name|vec_max
@@ -4015,6 +4405,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsb
 name|res_vuc
 operator|=
 name|vec_max
@@ -4025,6 +4416,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxub
 name|res_vuc
 operator|=
 name|vec_max
@@ -4035,6 +4427,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxub
 name|res_vuc
 operator|=
 name|vec_max
@@ -4045,6 +4438,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxub
 name|res_vs
 operator|=
 name|vec_max
@@ -4055,6 +4449,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsh
 name|res_vs
 operator|=
 name|vec_max
@@ -4065,6 +4460,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsh
 name|res_vs
 operator|=
 name|vec_max
@@ -4075,6 +4471,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsh
 name|res_vus
 operator|=
 name|vec_max
@@ -4085,6 +4482,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuh
 name|res_vus
 operator|=
 name|vec_max
@@ -4095,6 +4493,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuh
 name|res_vus
 operator|=
 name|vec_max
@@ -4105,6 +4504,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuh
 name|res_vi
 operator|=
 name|vec_max
@@ -4115,6 +4515,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsw
 name|res_vi
 operator|=
 name|vec_max
@@ -4125,6 +4526,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsw
 name|res_vi
 operator|=
 name|vec_max
@@ -4135,6 +4537,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsw
 name|res_vui
 operator|=
 name|vec_max
@@ -4145,6 +4548,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuw
 name|res_vui
 operator|=
 name|vec_max
@@ -4155,6 +4559,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuw
 name|res_vui
 operator|=
 name|vec_max
@@ -4165,6 +4570,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuw
 name|res_vf
 operator|=
 name|vec_max
@@ -4175,6 +4581,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxfp
 name|res_vsc
 operator|=
 name|vec_vmaxsb
@@ -4185,6 +4592,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsb
 name|res_vsc
 operator|=
 name|vec_vmaxsb
@@ -4195,6 +4603,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsb
 name|res_vsc
 operator|=
 name|vec_vmaxsb
@@ -4205,6 +4614,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsb
 name|res_vuc
 operator|=
 name|vec_vmaxub
@@ -4215,6 +4625,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxub
 name|res_vuc
 operator|=
 name|vec_vmaxub
@@ -4225,6 +4636,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxub
 name|res_vuc
 operator|=
 name|vec_vmaxub
@@ -4235,6 +4647,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxub
 name|res_vs
 operator|=
 name|vec_vmaxsh
@@ -4245,6 +4658,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsh
 name|res_vs
 operator|=
 name|vec_vmaxsh
@@ -4255,6 +4669,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsh
 name|res_vs
 operator|=
 name|vec_vmaxsh
@@ -4265,6 +4680,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsh
 name|res_vus
 operator|=
 name|vec_vmaxuh
@@ -4275,6 +4691,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuh
 name|res_vus
 operator|=
 name|vec_vmaxuh
@@ -4285,6 +4702,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuh
 name|res_vus
 operator|=
 name|vec_vmaxuh
@@ -4295,6 +4713,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuh
 name|res_vi
 operator|=
 name|vec_vmaxsw
@@ -4305,6 +4724,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsw
 name|res_vi
 operator|=
 name|vec_vmaxsw
@@ -4315,6 +4735,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsw
 name|res_vi
 operator|=
 name|vec_vmaxsw
@@ -4325,6 +4746,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsw
 name|res_vui
 operator|=
 name|vec_vmaxuw
@@ -4335,6 +4757,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuw
 name|res_vui
 operator|=
 name|vec_vmaxuw
@@ -4345,6 +4768,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuw
 name|res_vui
 operator|=
 name|vec_vmaxuw
@@ -4355,6 +4779,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxuw
 name|res_vf
 operator|=
 name|vec_vmaxfp
@@ -4365,6 +4790,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxfp
 comment|/* vec_mergeh */
 name|res_vsc
 operator|=
@@ -4376,6 +4802,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_mergeh
@@ -4386,6 +4813,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_mergeh
@@ -4396,6 +4824,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_mergeh
@@ -4406,6 +4835,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_mergeh
@@ -4416,6 +4846,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_mergeh
@@ -4426,6 +4857,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_mergeh
@@ -4436,6 +4868,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_mergeh
@@ -4446,6 +4879,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_mergeh
@@ -4456,6 +4890,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_mergeh
@@ -4466,6 +4901,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_mergeh
@@ -4476,6 +4912,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_vmrghb
@@ -4486,6 +4923,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_vmrghb
@@ -4496,6 +4934,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_vmrghb
@@ -4506,6 +4945,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_vmrghh
@@ -4516,6 +4956,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_vmrghh
@@ -4526,6 +4967,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_vmrghh
@@ -4536,6 +4978,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_vmrghh
@@ -4546,6 +4989,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_vmrghw
@@ -4556,6 +5000,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_vmrghw
@@ -4566,6 +5011,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_vmrghw
@@ -4576,6 +5022,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_vmrghw
@@ -4586,6 +5033,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_mergel */
 name|res_vsc
 operator|=
@@ -4597,6 +5045,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_mergel
@@ -4607,6 +5056,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_mergel
@@ -4617,6 +5067,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_mergel
@@ -4627,6 +5078,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_mergeh
@@ -4637,6 +5089,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_mergel
@@ -4647,6 +5100,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_mergel
@@ -4657,6 +5111,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_mergel
@@ -4667,6 +5122,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_mergel
@@ -4677,6 +5133,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_mergel
@@ -4687,6 +5144,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_mergel
@@ -4697,6 +5155,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_vmrglb
@@ -4707,6 +5166,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_vmrglb
@@ -4717,6 +5177,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_vmrglb
@@ -4727,6 +5188,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_vmrglh
@@ -4737,6 +5199,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_vmrglh
@@ -4747,6 +5210,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_vmrglh
@@ -4757,6 +5221,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_vmrglh
@@ -4767,6 +5232,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_vmrglw
@@ -4777,6 +5243,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_vmrglw
@@ -4787,6 +5254,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_vmrglw
@@ -4797,6 +5265,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_vmrglw
@@ -4807,6 +5276,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_mfvscr */
 name|vus
 operator|=
@@ -4814,6 +5284,7 @@ name|vec_mfvscr
 argument_list|()
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mfvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mfvscr
 comment|/* vec_min */
 name|res_vsc
 operator|=
@@ -4825,6 +5296,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsb
 name|res_vsc
 operator|=
 name|vec_min
@@ -4835,6 +5307,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsb
 name|res_vsc
 operator|=
 name|vec_min
@@ -4845,6 +5318,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsb
 name|res_vuc
 operator|=
 name|vec_min
@@ -4855,6 +5329,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminub
+comment|// CHECK-LE: @llvm.ppc.altivec.vminub
 name|res_vuc
 operator|=
 name|vec_min
@@ -4865,6 +5340,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminub
+comment|// CHECK-LE: @llvm.ppc.altivec.vminub
 name|res_vuc
 operator|=
 name|vec_min
@@ -4875,6 +5351,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminub
+comment|// CHECK-LE: @llvm.ppc.altivec.vminub
 name|res_vs
 operator|=
 name|vec_min
@@ -4885,6 +5362,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsh
 name|res_vs
 operator|=
 name|vec_min
@@ -4895,6 +5373,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsh
 name|res_vs
 operator|=
 name|vec_min
@@ -4905,6 +5384,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsh
 name|res_vus
 operator|=
 name|vec_min
@@ -4915,6 +5395,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuh
 name|res_vus
 operator|=
 name|vec_min
@@ -4925,6 +5406,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuh
 name|res_vus
 operator|=
 name|vec_min
@@ -4935,6 +5417,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuh
 name|res_vi
 operator|=
 name|vec_min
@@ -4945,6 +5428,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsw
 name|res_vi
 operator|=
 name|vec_min
@@ -4955,6 +5439,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsw
 name|res_vi
 operator|=
 name|vec_min
@@ -4965,6 +5450,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsw
 name|res_vui
 operator|=
 name|vec_min
@@ -4975,6 +5461,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuw
 name|res_vui
 operator|=
 name|vec_min
@@ -4985,6 +5472,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuw
 name|res_vui
 operator|=
 name|vec_min
@@ -4995,6 +5483,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuw
 name|res_vf
 operator|=
 name|vec_min
@@ -5005,6 +5494,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vminfp
 name|res_vsc
 operator|=
 name|vec_vminsb
@@ -5015,6 +5505,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsb
 name|res_vsc
 operator|=
 name|vec_vminsb
@@ -5025,6 +5516,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsb
 name|res_vsc
 operator|=
 name|vec_vminsb
@@ -5035,6 +5527,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsb
 name|res_vuc
 operator|=
 name|vec_vminub
@@ -5045,6 +5538,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminub
+comment|// CHECK-LE: @llvm.ppc.altivec.vminub
 name|res_vuc
 operator|=
 name|vec_vminub
@@ -5055,6 +5549,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminub
+comment|// CHECK-LE: @llvm.ppc.altivec.vminub
 name|res_vuc
 operator|=
 name|vec_vminub
@@ -5065,6 +5560,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminub
+comment|// CHECK-LE: @llvm.ppc.altivec.vminub
 name|res_vs
 operator|=
 name|vec_vminsh
@@ -5075,6 +5571,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsh
 name|res_vs
 operator|=
 name|vec_vminsh
@@ -5085,6 +5582,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsh
 name|res_vs
 operator|=
 name|vec_vminsh
@@ -5095,6 +5593,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsh
 name|res_vus
 operator|=
 name|vec_vminuh
@@ -5105,6 +5604,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuh
 name|res_vus
 operator|=
 name|vec_vminuh
@@ -5115,6 +5615,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuh
 name|res_vus
 operator|=
 name|vec_vminuh
@@ -5125,6 +5626,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuh
 name|res_vi
 operator|=
 name|vec_vminsw
@@ -5135,6 +5637,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsw
 name|res_vi
 operator|=
 name|vec_vminsw
@@ -5145,6 +5648,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsw
 name|res_vi
 operator|=
 name|vec_vminsw
@@ -5155,6 +5659,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsw
 name|res_vui
 operator|=
 name|vec_vminuw
@@ -5165,6 +5670,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuw
 name|res_vui
 operator|=
 name|vec_vminuw
@@ -5175,6 +5681,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuw
 name|res_vui
 operator|=
 name|vec_vminuw
@@ -5185,6 +5692,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vminuw
 name|res_vf
 operator|=
 name|vec_vminfp
@@ -5195,6 +5703,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vminfp
 comment|/* vec_mladd */
 name|res_vus
 operator|=
@@ -5209,6 +5718,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: mul<8 x i16>
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: mul<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_mladd
@@ -5222,6 +5733,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: mul<8 x i16>
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: mul<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_mladd
@@ -5235,6 +5748,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: mul<8 x i16>
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: mul<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 name|res_vs
 operator|=
 name|vec_mladd
@@ -5248,6 +5763,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: mul<8 x i16>
 comment|// CHECK: add<8 x i16>
+comment|// CHECK-LE: mul<8 x i16>
+comment|// CHECK-LE: add<8 x i16>
 comment|/* vec_mradds */
 name|res_vs
 operator|=
@@ -5261,6 +5778,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmhraddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmhraddshs
 name|res_vs
 operator|=
 name|vec_vmhraddshs
@@ -5273,6 +5791,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmhraddshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmhraddshs
 comment|/* vec_msum */
 name|res_vi
 operator|=
@@ -5286,6 +5805,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsummbm
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsummbm
 name|res_vui
 operator|=
 name|vec_msum
@@ -5298,6 +5818,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumubm
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumubm
 name|res_vi
 operator|=
 name|vec_msum
@@ -5310,6 +5831,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumshm
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumshm
 name|res_vui
 operator|=
 name|vec_msum
@@ -5322,6 +5844,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumuhm
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumuhm
 name|res_vi
 operator|=
 name|vec_vmsummbm
@@ -5334,6 +5857,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsummbm
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsummbm
 name|res_vui
 operator|=
 name|vec_vmsumubm
@@ -5346,6 +5870,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumubm
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumubm
 name|res_vi
 operator|=
 name|vec_vmsumshm
@@ -5358,6 +5883,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumshm
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumshm
 name|res_vui
 operator|=
 name|vec_vmsumuhm
@@ -5370,6 +5896,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumuhm
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumuhm
 comment|/* vec_msums */
 name|res_vi
 operator|=
@@ -5383,6 +5910,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumshs
 name|res_vui
 operator|=
 name|vec_msums
@@ -5395,6 +5923,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumuhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumuhs
 name|res_vi
 operator|=
 name|vec_vmsumshs
@@ -5407,6 +5936,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumshs
 name|res_vui
 operator|=
 name|vec_vmsumuhs
@@ -5419,6 +5949,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmsumuhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vmsumuhs
 comment|/* vec_mtvscr */
 name|vec_mtvscr
 argument_list|(
@@ -5426,60 +5957,70 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 name|vec_mtvscr
 argument_list|(
 name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 name|vec_mtvscr
 argument_list|(
 name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 name|vec_mtvscr
 argument_list|(
 name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 name|vec_mtvscr
 argument_list|(
 name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 name|vec_mtvscr
 argument_list|(
 name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 name|vec_mtvscr
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 name|vec_mtvscr
 argument_list|(
 name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 name|vec_mtvscr
 argument_list|(
 name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 name|vec_mtvscr
 argument_list|(
 name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.mtvscr
+comment|// CHECK-LE: @llvm.ppc.altivec.mtvscr
 comment|/* vec_mule */
 name|res_vs
 operator|=
@@ -5491,6 +6032,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulesb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulosb
 name|res_vus
 operator|=
 name|vec_mule
@@ -5501,6 +6043,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmuleub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmuloub
 name|res_vi
 operator|=
 name|vec_mule
@@ -5511,6 +6054,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulesh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulosh
 name|res_vui
 operator|=
 name|vec_mule
@@ -5521,6 +6065,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmuleuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulouh
 name|res_vs
 operator|=
 name|vec_vmulesb
@@ -5531,6 +6076,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulesb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulosb
 name|res_vus
 operator|=
 name|vec_vmuleub
@@ -5541,6 +6087,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmuleub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmuloub
 name|res_vi
 operator|=
 name|vec_vmulesh
@@ -5551,6 +6098,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulesh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulosh
 name|res_vui
 operator|=
 name|vec_vmuleuh
@@ -5561,6 +6109,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmuleuh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulouh
 comment|/* vec_mulo */
 name|res_vs
 operator|=
@@ -5572,6 +6121,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulosb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulesb
 name|res_vus
 operator|=
 name|vec_mulo
@@ -5582,6 +6132,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmuloub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmuleub
 name|res_vi
 operator|=
 name|vec_mulo
@@ -5592,6 +6143,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulosh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulesh
 name|res_vui
 operator|=
 name|vec_mulo
@@ -5602,6 +6154,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulouh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmuleuh
 name|res_vs
 operator|=
 name|vec_vmulosb
@@ -5612,6 +6165,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulosb
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulesb
 name|res_vus
 operator|=
 name|vec_vmuloub
@@ -5622,6 +6176,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmuloub
+comment|// CHECK-LE: @llvm.ppc.altivec.vmuleub
 name|res_vi
 operator|=
 name|vec_vmulosh
@@ -5632,6 +6187,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulosh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmulesh
 name|res_vui
 operator|=
 name|vec_vmulouh
@@ -5642,6 +6198,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmulouh
+comment|// CHECK-LE: @llvm.ppc.altivec.vmuleuh
 comment|/* vec_nmsub */
 name|res_vf
 operator|=
@@ -5655,6 +6212,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vnmsubfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vnmsubfp
 name|res_vf
 operator|=
 name|vec_vnmsubfp
@@ -5667,6 +6225,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vnmsubfp
+comment|// CHECK-LE: @llvm.ppc.altivec.vnmsubfp
 comment|/* vec_nor */
 name|res_vsc
 operator|=
@@ -5679,6 +6238,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_nor
@@ -5690,6 +6251,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_nor
@@ -5701,6 +6264,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vs
 operator|=
 name|vec_nor
@@ -5712,6 +6277,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_nor
@@ -5723,6 +6290,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_nor
@@ -5734,6 +6303,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vi
 operator|=
 name|vec_nor
@@ -5745,6 +6316,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_nor
@@ -5756,6 +6329,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_nor
@@ -5767,6 +6342,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vf
 operator|=
 name|vec_nor
@@ -5778,6 +6355,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vnor
@@ -5789,6 +6368,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vnor
@@ -5800,6 +6381,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vnor
@@ -5811,6 +6394,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vs
 operator|=
 name|vec_vnor
@@ -5822,6 +6407,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_vnor
@@ -5833,6 +6420,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_vnor
@@ -5844,6 +6433,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vi
 operator|=
 name|vec_vnor
@@ -5855,6 +6446,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_vnor
@@ -5866,6 +6459,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_vnor
@@ -5877,6 +6472,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vf
 operator|=
 name|vec_vnor
@@ -5888,6 +6485,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 comment|/* vec_or */
 name|res_vsc
 operator|=
@@ -5899,6 +6498,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vsc
 operator|=
 name|vec_or
@@ -5909,6 +6509,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vsc
 operator|=
 name|vec_or
@@ -5919,6 +6520,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_or
@@ -5929,6 +6531,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_or
@@ -5939,6 +6542,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_or
@@ -5949,6 +6553,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vbc
 operator|=
 name|vec_or
@@ -5959,6 +6564,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vs
 operator|=
 name|vec_or
@@ -5969,6 +6575,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vs
 operator|=
 name|vec_or
@@ -5979,6 +6586,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vs
 operator|=
 name|vec_or
@@ -5989,6 +6597,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_or
@@ -5999,6 +6608,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_or
@@ -6009,6 +6619,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_or
@@ -6019,6 +6630,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vbs
 operator|=
 name|vec_or
@@ -6029,6 +6641,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vi
 operator|=
 name|vec_or
@@ -6039,6 +6652,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vi
 operator|=
 name|vec_or
@@ -6049,6 +6663,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vi
 operator|=
 name|vec_or
@@ -6059,6 +6674,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_or
@@ -6069,6 +6685,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_or
@@ -6079,6 +6696,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_or
@@ -6089,6 +6707,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vbi
 operator|=
 name|vec_or
@@ -6099,6 +6718,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_or
@@ -6109,6 +6729,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_or
@@ -6119,6 +6740,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_or
@@ -6129,6 +6751,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vor
@@ -6139,6 +6762,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vor
@@ -6149,6 +6773,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vor
@@ -6159,6 +6784,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vor
@@ -6169,6 +6795,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vor
@@ -6179,6 +6806,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vor
@@ -6189,6 +6817,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vbc
 operator|=
 name|vec_vor
@@ -6199,6 +6828,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vs
 operator|=
 name|vec_vor
@@ -6209,6 +6839,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vs
 operator|=
 name|vec_vor
@@ -6219,6 +6850,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vs
 operator|=
 name|vec_vor
@@ -6229,6 +6861,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_vor
@@ -6239,6 +6872,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_vor
@@ -6249,6 +6883,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_vor
@@ -6259,6 +6894,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vbs
 operator|=
 name|vec_vor
@@ -6269,6 +6905,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vi
 operator|=
 name|vec_vor
@@ -6279,6 +6916,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vi
 operator|=
 name|vec_vor
@@ -6289,6 +6927,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vi
 operator|=
 name|vec_vor
@@ -6299,6 +6938,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_vor
@@ -6309,6 +6949,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_vor
@@ -6319,6 +6960,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_vor
@@ -6329,6 +6971,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vbi
 operator|=
 name|vec_vor
@@ -6339,6 +6982,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_vor
@@ -6349,6 +6993,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_vor
@@ -6359,6 +7004,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_vor
@@ -6369,6 +7015,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 comment|/* vec_pack */
 name|res_vsc
 operator|=
@@ -6380,6 +7027,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_pack
@@ -6390,6 +7038,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_pack
@@ -6400,6 +7049,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_pack
@@ -6410,6 +7060,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_pack
@@ -6420,6 +7071,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_pack
@@ -6430,6 +7082,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_vpkuhum
@@ -6440,6 +7093,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_vpkuhum
@@ -6450,6 +7104,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_vpkuhum
@@ -6460,6 +7115,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_vpkuwum
@@ -6470,6 +7126,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_vpkuwum
@@ -6480,6 +7137,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_vpkuwum
@@ -6490,6 +7148,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_packpx */
 name|res_vp
 operator|=
@@ -6501,6 +7160,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkpx
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkpx
 name|res_vp
 operator|=
 name|vec_vpkpx
@@ -6511,6 +7171,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkpx
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkpx
 comment|/* vec_packs */
 name|res_vsc
 operator|=
@@ -6522,6 +7183,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkshss
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkshss
 name|res_vuc
 operator|=
 name|vec_packs
@@ -6532,6 +7194,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkuhus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkuhus
 name|res_vs
 operator|=
 name|vec_packs
@@ -6542,6 +7205,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkswss
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkswss
 name|res_vus
 operator|=
 name|vec_packs
@@ -6552,6 +7216,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkuwus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkuwus
 name|res_vsc
 operator|=
 name|vec_vpkshss
@@ -6562,6 +7227,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkshss
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkshss
 name|res_vuc
 operator|=
 name|vec_vpkuhus
@@ -6572,6 +7238,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkuhus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkuhus
 name|res_vs
 operator|=
 name|vec_vpkswss
@@ -6582,6 +7249,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkswss
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkswss
 name|res_vus
 operator|=
 name|vec_vpkuwus
@@ -6592,6 +7260,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkuwus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkuwus
 comment|/* vec_packsu */
 name|res_vuc
 operator|=
@@ -6603,6 +7272,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkshus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkshus
 name|res_vuc
 operator|=
 name|vec_packsu
@@ -6613,6 +7283,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkuhus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkuhus
 name|res_vus
 operator|=
 name|vec_packsu
@@ -6623,6 +7294,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkswus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkswus
 name|res_vus
 operator|=
 name|vec_packsu
@@ -6633,6 +7305,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkuwus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkuwus
 name|res_vuc
 operator|=
 name|vec_vpkshus
@@ -6643,6 +7316,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkshus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkshus
 name|res_vuc
 operator|=
 name|vec_vpkshus
@@ -6653,6 +7327,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkuhus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkuhus
 name|res_vus
 operator|=
 name|vec_vpkswus
@@ -6663,6 +7338,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkswus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkswus
 name|res_vus
 operator|=
 name|vec_vpkswus
@@ -6673,6 +7349,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpkuwus
+comment|// CHECK-LE: @llvm.ppc.altivec.vpkuwus
 comment|/* vec_perm */
 name|res_vsc
 operator|=
@@ -6686,6 +7363,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_perm
@@ -6698,6 +7376,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_perm
@@ -6710,6 +7389,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_perm
@@ -6722,6 +7402,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_perm
@@ -6734,6 +7415,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_perm
@@ -6746,6 +7428,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_perm
@@ -6758,6 +7441,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_perm
@@ -6770,6 +7454,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_perm
@@ -6782,6 +7467,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_perm
@@ -6794,6 +7480,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_perm
@@ -6806,6 +7493,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_vperm
@@ -6818,6 +7506,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_vperm
@@ -6830,6 +7519,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_vperm
@@ -6842,6 +7532,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_vperm
@@ -6854,6 +7545,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_vperm
@@ -6866,6 +7558,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_vperm
@@ -6878,6 +7571,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_vperm
@@ -6890,6 +7584,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_vperm
@@ -6902,6 +7597,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_vperm
@@ -6914,6 +7610,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_vperm
@@ -6926,6 +7623,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_vperm
@@ -6938,6 +7636,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_re */
 name|res_vf
 operator|=
@@ -6947,6 +7646,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vrefp
 name|res_vf
 operator|=
 name|vec_vrefp
@@ -6955,6 +7655,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vrefp
 comment|/* vec_rl */
 name|res_vsc
 operator|=
@@ -6966,6 +7667,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlb
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlb
 name|res_vuc
 operator|=
 name|vec_rl
@@ -6976,6 +7678,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlb
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlb
 name|res_vs
 operator|=
 name|vec_rl
@@ -6986,6 +7689,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlh
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlh
 name|res_vus
 operator|=
 name|vec_rl
@@ -6996,6 +7700,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlh
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlh
 name|res_vi
 operator|=
 name|vec_rl
@@ -7006,6 +7711,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlw
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlw
 name|res_vui
 operator|=
 name|vec_rl
@@ -7016,6 +7722,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlw
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlw
 name|res_vsc
 operator|=
 name|vec_vrlb
@@ -7026,6 +7733,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlb
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlb
 name|res_vuc
 operator|=
 name|vec_vrlb
@@ -7036,6 +7744,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlb
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlb
 name|res_vs
 operator|=
 name|vec_vrlh
@@ -7046,6 +7755,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlh
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlh
 name|res_vus
 operator|=
 name|vec_vrlh
@@ -7056,6 +7766,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlh
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlh
 name|res_vi
 operator|=
 name|vec_vrlw
@@ -7066,6 +7777,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlw
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlw
 name|res_vui
 operator|=
 name|vec_vrlw
@@ -7076,6 +7788,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrlw
+comment|// CHECK-LE: @llvm.ppc.altivec.vrlw
 comment|/* vec_round */
 name|res_vf
 operator|=
@@ -7085,6 +7798,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrfin
+comment|// CHECK-LE: @llvm.ppc.altivec.vrfin
 name|res_vf
 operator|=
 name|vec_vrfin
@@ -7093,6 +7807,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrfin
+comment|// CHECK-LE: @llvm.ppc.altivec.vrfin
 comment|/* vec_rsqrte */
 name|res_vf
 operator|=
@@ -7102,6 +7817,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrsqrtefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vrsqrtefp
 name|res_vf
 operator|=
 name|vec_vrsqrtefp
@@ -7110,6 +7826,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrsqrtefp
+comment|// CHECK-LE: @llvm.ppc.altivec.vrsqrtefp
 comment|/* vec_sel */
 name|res_vsc
 operator|=
@@ -7126,6 +7843,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vsc
 operator|=
 name|vec_sel
@@ -7141,6 +7862,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_sel
@@ -7156,6 +7881,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_sel
@@ -7171,6 +7900,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vbc
 operator|=
 name|vec_sel
@@ -7186,6 +7919,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vbc
 operator|=
 name|vec_sel
@@ -7201,6 +7938,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vs
 operator|=
 name|vec_sel
@@ -7216,6 +7957,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vs
 operator|=
 name|vec_sel
@@ -7231,6 +7976,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_sel
@@ -7246,6 +7995,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_sel
@@ -7261,6 +8014,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vbs
 operator|=
 name|vec_sel
@@ -7276,6 +8033,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vbs
 operator|=
 name|vec_sel
@@ -7291,6 +8052,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vi
 operator|=
 name|vec_sel
@@ -7306,6 +8071,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vi
 operator|=
 name|vec_sel
@@ -7321,6 +8090,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_sel
@@ -7336,6 +8109,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_sel
@@ -7351,6 +8128,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vbi
 operator|=
 name|vec_sel
@@ -7366,6 +8147,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vbi
 operator|=
 name|vec_sel
@@ -7381,6 +8166,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_sel
@@ -7396,6 +8185,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_sel
@@ -7411,6 +8204,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vsel
@@ -7426,6 +8223,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vsel
@@ -7441,6 +8242,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vsel
@@ -7456,6 +8261,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vsel
@@ -7471,6 +8280,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vbc
 operator|=
 name|vec_vsel
@@ -7486,6 +8299,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vbc
 operator|=
 name|vec_vsel
@@ -7501,6 +8318,10 @@ comment|// CHECK: xor<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: and<16 x i8>
 comment|// CHECK: or<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: and<16 x i8>
+comment|// CHECK-LE: or<16 x i8>
 name|res_vs
 operator|=
 name|vec_vsel
@@ -7516,6 +8337,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vs
 operator|=
 name|vec_vsel
@@ -7531,6 +8356,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_vsel
@@ -7546,6 +8375,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vus
 operator|=
 name|vec_vsel
@@ -7561,6 +8394,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vbs
 operator|=
 name|vec_vsel
@@ -7576,6 +8413,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vbs
 operator|=
 name|vec_vsel
@@ -7591,6 +8432,10 @@ comment|// CHECK: xor<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: and<8 x i16>
 comment|// CHECK: or<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: and<8 x i16>
+comment|// CHECK-LE: or<8 x i16>
 name|res_vi
 operator|=
 name|vec_vsel
@@ -7606,6 +8451,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vi
 operator|=
 name|vec_vsel
@@ -7621,6 +8470,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_vsel
@@ -7636,6 +8489,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vui
 operator|=
 name|vec_vsel
@@ -7651,6 +8508,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vbi
 operator|=
 name|vec_vsel
@@ -7666,6 +8527,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vbi
 operator|=
 name|vec_vsel
@@ -7681,6 +8546,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_vsel
@@ -7696,6 +8565,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 name|res_vf
 operator|=
 name|vec_vsel
@@ -7711,6 +8584,10 @@ comment|// CHECK: xor<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: and<4 x i32>
 comment|// CHECK: or<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: and<4 x i32>
+comment|// CHECK-LE: or<4 x i32>
 comment|/* vec_sl */
 name|res_vsc
 operator|=
@@ -7722,6 +8599,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<16 x i8>
+comment|// CHECK-LE: shl<16 x i8>
 name|res_vuc
 operator|=
 name|vec_sl
@@ -7732,6 +8610,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<16 x i8>
+comment|// CHECK-LE: shl<16 x i8>
 name|res_vs
 operator|=
 name|vec_sl
@@ -7742,6 +8621,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<8 x i16>
+comment|// CHECK-LE: shl<8 x i16>
 name|res_vus
 operator|=
 name|vec_sl
@@ -7752,6 +8632,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<8 x i16>
+comment|// CHECK-LE: shl<8 x i16>
 name|res_vi
 operator|=
 name|vec_sl
@@ -7762,6 +8643,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<4 x i32>
+comment|// CHECK-LE: shl<4 x i32>
 name|res_vui
 operator|=
 name|vec_sl
@@ -7772,6 +8654,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<4 x i32>
+comment|// CHECK-LE: shl<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vslb
@@ -7782,6 +8665,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<16 x i8>
+comment|// CHECK-LE: shl<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vslb
@@ -7792,6 +8676,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<16 x i8>
+comment|// CHECK-LE: shl<16 x i8>
 name|res_vs
 operator|=
 name|vec_vslh
@@ -7802,6 +8687,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<8 x i16>
+comment|// CHECK-LE: shl<8 x i16>
 name|res_vus
 operator|=
 name|vec_vslh
@@ -7812,6 +8698,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<8 x i16>
+comment|// CHECK-LE: shl<8 x i16>
 name|res_vi
 operator|=
 name|vec_vslw
@@ -7822,6 +8709,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<4 x i32>
+comment|// CHECK-LE: shl<4 x i32>
 name|res_vui
 operator|=
 name|vec_vslw
@@ -7832,6 +8720,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shl<4 x i32>
+comment|// CHECK-LE: shl<4 x i32>
 comment|/* vec_sld */
 name|res_vsc
 operator|=
@@ -7845,6 +8734,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_sld
@@ -7857,6 +8747,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_sld
@@ -7869,6 +8760,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_sld
@@ -7881,6 +8773,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_sld
@@ -7893,6 +8786,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_sld
@@ -7905,6 +8799,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_sld
@@ -7917,6 +8812,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_sld
@@ -7929,6 +8825,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_vsldoi
@@ -7941,6 +8838,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_vsldoi
@@ -7953,6 +8851,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_vsldoi
@@ -7965,6 +8864,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_vsldoi
@@ -7977,6 +8877,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_vsldoi
@@ -7989,6 +8890,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_vsldoi
@@ -8001,6 +8903,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_vsldoi
@@ -8013,6 +8916,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_vsldoi
@@ -8025,6 +8929,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_sll */
 name|res_vsc
 operator|=
@@ -8036,6 +8941,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vsc
 operator|=
 name|vec_sll
@@ -8046,6 +8952,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vsc
 operator|=
 name|vec_sll
@@ -8056,6 +8963,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vuc
 operator|=
 name|vec_sll
@@ -8066,6 +8974,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vuc
 operator|=
 name|vec_sll
@@ -8076,6 +8985,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vuc
 operator|=
 name|vec_sll
@@ -8086,6 +8996,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbc
 operator|=
 name|vec_sll
@@ -8096,6 +9007,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbc
 operator|=
 name|vec_sll
@@ -8106,6 +9018,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbc
 operator|=
 name|vec_sll
@@ -8116,6 +9029,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vs
 operator|=
 name|vec_sll
@@ -8126,6 +9040,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vs
 operator|=
 name|vec_sll
@@ -8136,6 +9051,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vs
 operator|=
 name|vec_sll
@@ -8146,6 +9062,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vus
 operator|=
 name|vec_sll
@@ -8156,6 +9073,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vus
 operator|=
 name|vec_sll
@@ -8166,6 +9084,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vus
 operator|=
 name|vec_sll
@@ -8176,6 +9095,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbs
 operator|=
 name|vec_sll
@@ -8186,6 +9106,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbs
 operator|=
 name|vec_sll
@@ -8196,6 +9117,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbs
 operator|=
 name|vec_sll
@@ -8206,6 +9128,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vp
 operator|=
 name|vec_sll
@@ -8216,6 +9139,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vp
 operator|=
 name|vec_sll
@@ -8226,6 +9150,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vp
 operator|=
 name|vec_sll
@@ -8236,6 +9161,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vi
 operator|=
 name|vec_sll
@@ -8246,6 +9172,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vi
 operator|=
 name|vec_sll
@@ -8256,6 +9183,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vi
 operator|=
 name|vec_sll
@@ -8266,6 +9194,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vui
 operator|=
 name|vec_sll
@@ -8276,6 +9205,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vui
 operator|=
 name|vec_sll
@@ -8286,6 +9216,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vui
 operator|=
 name|vec_sll
@@ -8296,6 +9227,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbi
 operator|=
 name|vec_sll
@@ -8306,6 +9238,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbi
 operator|=
 name|vec_sll
@@ -8316,6 +9249,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbi
 operator|=
 name|vec_sll
@@ -8326,6 +9260,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vsc
 operator|=
 name|vec_vsl
@@ -8336,6 +9271,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vsc
 operator|=
 name|vec_vsl
@@ -8346,6 +9282,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vsc
 operator|=
 name|vec_vsl
@@ -8356,6 +9293,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vuc
 operator|=
 name|vec_vsl
@@ -8366,6 +9304,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vuc
 operator|=
 name|vec_vsl
@@ -8376,6 +9315,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vuc
 operator|=
 name|vec_vsl
@@ -8386,6 +9326,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbc
 operator|=
 name|vec_vsl
@@ -8396,6 +9337,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbc
 operator|=
 name|vec_vsl
@@ -8406,6 +9348,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbc
 operator|=
 name|vec_vsl
@@ -8416,6 +9359,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vs
 operator|=
 name|vec_vsl
@@ -8426,6 +9370,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vs
 operator|=
 name|vec_vsl
@@ -8436,6 +9381,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vs
 operator|=
 name|vec_vsl
@@ -8446,6 +9392,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vus
 operator|=
 name|vec_vsl
@@ -8456,6 +9403,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vus
 operator|=
 name|vec_vsl
@@ -8466,6 +9414,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vus
 operator|=
 name|vec_vsl
@@ -8476,6 +9425,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbs
 operator|=
 name|vec_vsl
@@ -8486,6 +9436,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbs
 operator|=
 name|vec_vsl
@@ -8496,6 +9447,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbs
 operator|=
 name|vec_vsl
@@ -8506,6 +9458,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vp
 operator|=
 name|vec_vsl
@@ -8516,6 +9469,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vp
 operator|=
 name|vec_vsl
@@ -8526,6 +9480,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vp
 operator|=
 name|vec_vsl
@@ -8536,6 +9491,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vi
 operator|=
 name|vec_vsl
@@ -8546,6 +9502,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vi
 operator|=
 name|vec_vsl
@@ -8556,6 +9513,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vi
 operator|=
 name|vec_vsl
@@ -8566,6 +9524,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vui
 operator|=
 name|vec_vsl
@@ -8576,6 +9535,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vui
 operator|=
 name|vec_vsl
@@ -8586,6 +9546,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vui
 operator|=
 name|vec_vsl
@@ -8596,6 +9557,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbi
 operator|=
 name|vec_vsl
@@ -8606,6 +9568,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbi
 operator|=
 name|vec_vsl
@@ -8616,6 +9579,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 name|res_vbi
 operator|=
 name|vec_vsl
@@ -8626,6 +9590,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vsl
 comment|/* vec_slo */
 name|res_vsc
 operator|=
@@ -8637,6 +9602,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vsc
 operator|=
 name|vec_slo
@@ -8647,6 +9613,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vuc
 operator|=
 name|vec_slo
@@ -8657,6 +9624,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vuc
 operator|=
 name|vec_slo
@@ -8667,6 +9635,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vs
 operator|=
 name|vec_slo
@@ -8677,6 +9646,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vs
 operator|=
 name|vec_slo
@@ -8687,6 +9657,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vus
 operator|=
 name|vec_slo
@@ -8697,6 +9668,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vus
 operator|=
 name|vec_slo
@@ -8707,6 +9679,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vp
 operator|=
 name|vec_slo
@@ -8717,6 +9690,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vp
 operator|=
 name|vec_slo
@@ -8727,6 +9701,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vi
 operator|=
 name|vec_slo
@@ -8737,6 +9712,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vi
 operator|=
 name|vec_slo
@@ -8747,6 +9723,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vui
 operator|=
 name|vec_slo
@@ -8757,6 +9734,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vui
 operator|=
 name|vec_slo
@@ -8767,6 +9745,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vf
 operator|=
 name|vec_slo
@@ -8777,6 +9756,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vf
 operator|=
 name|vec_slo
@@ -8787,6 +9767,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vsc
 operator|=
 name|vec_vslo
@@ -8797,6 +9778,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vsc
 operator|=
 name|vec_vslo
@@ -8807,6 +9789,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vuc
 operator|=
 name|vec_vslo
@@ -8817,6 +9800,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vuc
 operator|=
 name|vec_vslo
@@ -8827,6 +9811,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vs
 operator|=
 name|vec_vslo
@@ -8837,6 +9822,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vs
 operator|=
 name|vec_vslo
@@ -8847,6 +9833,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vus
 operator|=
 name|vec_vslo
@@ -8857,6 +9844,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vus
 operator|=
 name|vec_vslo
@@ -8867,6 +9855,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vp
 operator|=
 name|vec_vslo
@@ -8877,6 +9866,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vp
 operator|=
 name|vec_vslo
@@ -8887,6 +9877,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vi
 operator|=
 name|vec_vslo
@@ -8897,6 +9888,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vi
 operator|=
 name|vec_vslo
@@ -8907,6 +9899,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vui
 operator|=
 name|vec_vslo
@@ -8917,6 +9910,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vui
 operator|=
 name|vec_vslo
@@ -8927,6 +9921,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vf
 operator|=
 name|vec_vslo
@@ -8937,6 +9932,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 name|res_vf
 operator|=
 name|vec_vslo
@@ -8947,6 +9943,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vslo
+comment|// CHECK-LE: @llvm.ppc.altivec.vslo
 comment|/* vec_splat */
 name|res_vsc
 operator|=
@@ -8958,6 +9955,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_splat
@@ -8968,6 +9966,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_splat
@@ -8978,6 +9977,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_splat
@@ -8988,6 +9988,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_splat
@@ -8998,6 +9999,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_splat
@@ -9008,6 +10010,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_splat
@@ -9018,6 +10021,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_splat
@@ -9028,6 +10032,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_splat
@@ -9038,6 +10043,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_splat
@@ -9048,6 +10054,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_splat
@@ -9058,6 +10065,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_vspltb
@@ -9068,6 +10076,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_vspltb
@@ -9078,6 +10087,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_vspltb
@@ -9088,6 +10098,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_vsplth
@@ -9098,6 +10109,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_vsplth
@@ -9108,6 +10120,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_vsplth
@@ -9118,6 +10131,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_vsplth
@@ -9128,6 +10142,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_vspltw
@@ -9138,6 +10153,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_vspltw
@@ -9148,6 +10164,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_vspltw
@@ -9158,6 +10175,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_vspltw
@@ -9168,6 +10186,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_splat_s8 */
 name|res_vsc
 operator|=
@@ -9257,6 +10276,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<16 x i8>
+comment|// CHECK-LE: shr<16 x i8>
 name|res_vuc
 operator|=
 name|vec_sr
@@ -9267,6 +10287,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<16 x i8>
+comment|// CHECK-LE: shr<16 x i8>
 name|res_vs
 operator|=
 name|vec_sr
@@ -9277,6 +10298,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<8 x i16>
+comment|// CHECK-LE: shr<8 x i16>
 name|res_vus
 operator|=
 name|vec_sr
@@ -9287,6 +10309,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<8 x i16>
+comment|// CHECK-LE: shr<8 x i16>
 name|res_vi
 operator|=
 name|vec_sr
@@ -9297,6 +10320,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<4 x i32>
+comment|// CHECK-LE: shr<4 x i32>
 name|res_vui
 operator|=
 name|vec_sr
@@ -9307,6 +10331,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<4 x i32>
+comment|// CHECK-LE: shr<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vsrb
@@ -9317,6 +10342,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<16 x i8>
+comment|// CHECK-LE: shr<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vsrb
@@ -9327,6 +10353,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<16 x i8>
+comment|// CHECK-LE: shr<16 x i8>
 name|res_vs
 operator|=
 name|vec_vsrh
@@ -9337,6 +10364,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<8 x i16>
+comment|// CHECK-LE: shr<8 x i16>
 name|res_vus
 operator|=
 name|vec_vsrh
@@ -9347,6 +10375,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<8 x i16>
+comment|// CHECK-LE: shr<8 x i16>
 name|res_vi
 operator|=
 name|vec_vsrw
@@ -9357,6 +10386,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<4 x i32>
+comment|// CHECK-LE: shr<4 x i32>
 name|res_vui
 operator|=
 name|vec_vsrw
@@ -9367,6 +10397,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: shr<4 x i32>
+comment|// CHECK-LE: shr<4 x i32>
 comment|/* vec_sra */
 name|res_vsc
 operator|=
@@ -9378,6 +10409,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsrab
+comment|// CHECK-LE: @llvm.ppc.altivec.vsrab
 name|res_vuc
 operator|=
 name|vec_sra
@@ -9388,6 +10420,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsrab
+comment|// CHECK-LE: @llvm.ppc.altivec.vsrab
 name|res_vs
 operator|=
 name|vec_sra
@@ -9398,6 +10431,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsrah
+comment|// CHECK-LE: @llvm.ppc.altivec.vsrah
 name|res_vus
 operator|=
 name|vec_sra
@@ -9408,6 +10442,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsrah
+comment|// CHECK-LE: @llvm.ppc.altivec.vsrah
 name|res_vi
 operator|=
 name|vec_sra
@@ -9418,6 +10453,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsraw
+comment|// CHECK-LE: @llvm.ppc.altivec.vsraw
 name|res_vui
 operator|=
 name|vec_sra
@@ -9428,6 +10464,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsraw
+comment|// CHECK-LE: @llvm.ppc.altivec.vsraw
 name|res_vsc
 operator|=
 name|vec_vsrab
@@ -9438,6 +10475,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsrab
+comment|// CHECK-LE: @llvm.ppc.altivec.vsrab
 name|res_vuc
 operator|=
 name|vec_vsrab
@@ -9448,6 +10486,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsrab
+comment|// CHECK-LE: @llvm.ppc.altivec.vsrab
 name|res_vs
 operator|=
 name|vec_vsrah
@@ -9458,6 +10497,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsrah
+comment|// CHECK-LE: @llvm.ppc.altivec.vsrah
 name|res_vus
 operator|=
 name|vec_vsrah
@@ -9468,6 +10508,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsrah
+comment|// CHECK-LE: @llvm.ppc.altivec.vsrah
 name|res_vi
 operator|=
 name|vec_vsraw
@@ -9478,6 +10519,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsraw
+comment|// CHECK-LE: @llvm.ppc.altivec.vsraw
 name|res_vui
 operator|=
 name|vec_vsraw
@@ -9488,6 +10530,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsraw
+comment|// CHECK-LE: @llvm.ppc.altivec.vsraw
 comment|/* vec_srl */
 name|res_vsc
 operator|=
@@ -9499,6 +10542,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vsc
 operator|=
 name|vec_srl
@@ -9509,6 +10553,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vsc
 operator|=
 name|vec_srl
@@ -9519,6 +10564,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vuc
 operator|=
 name|vec_srl
@@ -9529,6 +10575,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vuc
 operator|=
 name|vec_srl
@@ -9539,6 +10586,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vuc
 operator|=
 name|vec_srl
@@ -9549,6 +10597,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbc
 operator|=
 name|vec_srl
@@ -9559,6 +10608,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbc
 operator|=
 name|vec_srl
@@ -9569,6 +10619,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbc
 operator|=
 name|vec_srl
@@ -9579,6 +10630,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vs
 operator|=
 name|vec_srl
@@ -9589,6 +10641,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vs
 operator|=
 name|vec_srl
@@ -9599,6 +10652,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vs
 operator|=
 name|vec_srl
@@ -9609,6 +10663,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vus
 operator|=
 name|vec_srl
@@ -9619,6 +10674,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vus
 operator|=
 name|vec_srl
@@ -9629,6 +10685,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vus
 operator|=
 name|vec_srl
@@ -9639,6 +10696,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbs
 operator|=
 name|vec_srl
@@ -9649,6 +10707,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbs
 operator|=
 name|vec_srl
@@ -9659,6 +10718,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbs
 operator|=
 name|vec_srl
@@ -9669,6 +10729,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vp
 operator|=
 name|vec_srl
@@ -9679,6 +10740,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vp
 operator|=
 name|vec_srl
@@ -9689,6 +10751,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vp
 operator|=
 name|vec_srl
@@ -9699,6 +10762,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vi
 operator|=
 name|vec_srl
@@ -9709,6 +10773,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vi
 operator|=
 name|vec_srl
@@ -9719,6 +10784,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vi
 operator|=
 name|vec_srl
@@ -9729,6 +10795,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vui
 operator|=
 name|vec_srl
@@ -9739,6 +10806,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vui
 operator|=
 name|vec_srl
@@ -9749,6 +10817,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vui
 operator|=
 name|vec_srl
@@ -9759,6 +10828,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbi
 operator|=
 name|vec_srl
@@ -9769,6 +10839,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbi
 operator|=
 name|vec_srl
@@ -9779,6 +10850,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbi
 operator|=
 name|vec_srl
@@ -9789,6 +10861,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vsc
 operator|=
 name|vec_vsr
@@ -9799,6 +10872,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vsc
 operator|=
 name|vec_vsr
@@ -9809,6 +10883,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vsc
 operator|=
 name|vec_vsr
@@ -9819,6 +10894,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vuc
 operator|=
 name|vec_vsr
@@ -9829,6 +10905,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vuc
 operator|=
 name|vec_vsr
@@ -9839,6 +10916,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vuc
 operator|=
 name|vec_vsr
@@ -9849,6 +10927,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbc
 operator|=
 name|vec_vsr
@@ -9859,6 +10938,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbc
 operator|=
 name|vec_vsr
@@ -9869,6 +10949,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbc
 operator|=
 name|vec_vsr
@@ -9879,6 +10960,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vs
 operator|=
 name|vec_vsr
@@ -9889,6 +10971,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vs
 operator|=
 name|vec_vsr
@@ -9899,6 +10982,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vs
 operator|=
 name|vec_vsr
@@ -9909,6 +10993,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vus
 operator|=
 name|vec_vsr
@@ -9919,6 +11004,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vus
 operator|=
 name|vec_vsr
@@ -9929,6 +11015,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vus
 operator|=
 name|vec_vsr
@@ -9939,6 +11026,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbs
 operator|=
 name|vec_vsr
@@ -9949,6 +11037,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbs
 operator|=
 name|vec_vsr
@@ -9959,6 +11048,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbs
 operator|=
 name|vec_vsr
@@ -9969,6 +11059,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vp
 operator|=
 name|vec_vsr
@@ -9979,6 +11070,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vp
 operator|=
 name|vec_vsr
@@ -9989,6 +11081,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vp
 operator|=
 name|vec_vsr
@@ -9999,6 +11092,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vi
 operator|=
 name|vec_vsr
@@ -10009,6 +11103,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vi
 operator|=
 name|vec_vsr
@@ -10019,6 +11114,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vi
 operator|=
 name|vec_vsr
@@ -10029,6 +11125,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vui
 operator|=
 name|vec_vsr
@@ -10039,6 +11136,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vui
 operator|=
 name|vec_vsr
@@ -10049,6 +11147,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vui
 operator|=
 name|vec_vsr
@@ -10059,6 +11158,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbi
 operator|=
 name|vec_vsr
@@ -10069,6 +11169,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbi
 operator|=
 name|vec_vsr
@@ -10079,6 +11180,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 name|res_vbi
 operator|=
 name|vec_vsr
@@ -10089,6 +11191,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vsr
 comment|/* vec_sro */
 name|res_vsc
 operator|=
@@ -10100,6 +11203,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vsc
 operator|=
 name|vec_sro
@@ -10110,6 +11214,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vuc
 operator|=
 name|vec_sro
@@ -10120,6 +11225,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vuc
 operator|=
 name|vec_sro
@@ -10130,6 +11236,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vs
 operator|=
 name|vec_sro
@@ -10140,6 +11247,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vs
 operator|=
 name|vec_sro
@@ -10150,6 +11258,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vus
 operator|=
 name|vec_sro
@@ -10160,6 +11269,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vus
 operator|=
 name|vec_sro
@@ -10170,6 +11280,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vp
 operator|=
 name|vec_sro
@@ -10180,6 +11291,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vp
 operator|=
 name|vec_sro
@@ -10190,6 +11302,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vi
 operator|=
 name|vec_sro
@@ -10200,6 +11313,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vi
 operator|=
 name|vec_sro
@@ -10210,6 +11324,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vui
 operator|=
 name|vec_sro
@@ -10220,6 +11335,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vui
 operator|=
 name|vec_sro
@@ -10230,6 +11346,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vf
 operator|=
 name|vec_sro
@@ -10240,6 +11357,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vf
 operator|=
 name|vec_sro
@@ -10250,6 +11368,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vsc
 operator|=
 name|vec_vsro
@@ -10260,6 +11379,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vsc
 operator|=
 name|vec_vsro
@@ -10270,6 +11390,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vuc
 operator|=
 name|vec_vsro
@@ -10280,6 +11401,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vuc
 operator|=
 name|vec_vsro
@@ -10290,6 +11412,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vs
 operator|=
 name|vec_vsro
@@ -10300,6 +11423,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vs
 operator|=
 name|vec_vsro
@@ -10310,6 +11434,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vus
 operator|=
 name|vec_vsro
@@ -10320,6 +11445,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vus
 operator|=
 name|vec_vsro
@@ -10330,6 +11456,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vp
 operator|=
 name|vec_vsro
@@ -10340,6 +11467,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vp
 operator|=
 name|vec_vsro
@@ -10350,6 +11478,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vi
 operator|=
 name|vec_vsro
@@ -10360,6 +11489,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vi
 operator|=
 name|vec_vsro
@@ -10370,6 +11500,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vui
 operator|=
 name|vec_vsro
@@ -10380,6 +11511,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vui
 operator|=
 name|vec_vsro
@@ -10390,6 +11522,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vf
 operator|=
 name|vec_vsro
@@ -10400,6 +11533,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 name|res_vf
 operator|=
 name|vec_vsro
@@ -10410,6 +11544,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsro
+comment|// CHECK-LE: @llvm.ppc.altivec.vsro
 comment|/* vec_st */
 name|vec_st
 argument_list|(
@@ -10422,6 +11557,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vsc
@@ -10433,6 +11569,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vuc
@@ -10444,6 +11581,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vuc
@@ -10455,6 +11593,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vbc
@@ -10466,6 +11605,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vbc
@@ -10477,6 +11617,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vbc
@@ -10488,6 +11629,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vs
@@ -10499,6 +11641,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vs
@@ -10510,6 +11653,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vus
@@ -10521,6 +11665,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vus
@@ -10532,6 +11677,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vbs
@@ -10543,6 +11689,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vbs
@@ -10554,6 +11701,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vbs
@@ -10565,6 +11713,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vp
@@ -10576,6 +11725,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vp
@@ -10587,6 +11737,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vp
@@ -10598,6 +11749,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vi
@@ -10609,6 +11761,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vi
@@ -10620,6 +11773,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vui
@@ -10631,6 +11785,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vui
@@ -10642,6 +11797,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vbi
@@ -10653,6 +11809,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vbi
@@ -10664,6 +11821,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vbi
@@ -10675,6 +11833,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vf
@@ -10686,6 +11845,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_st
 argument_list|(
 name|vf
@@ -10697,6 +11857,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vsc
@@ -10708,6 +11869,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vsc
@@ -10719,6 +11881,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vuc
@@ -10730,6 +11893,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vuc
@@ -10741,6 +11905,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vbc
@@ -10752,6 +11917,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vbc
@@ -10763,6 +11929,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vbc
@@ -10774,6 +11941,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vs
@@ -10785,6 +11953,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vs
@@ -10796,6 +11965,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vus
@@ -10807,6 +11977,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vus
@@ -10818,6 +11989,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vbs
@@ -10829,6 +12001,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vbs
@@ -10840,6 +12013,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vbs
@@ -10851,6 +12025,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vp
@@ -10862,6 +12037,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vp
@@ -10873,6 +12049,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vp
@@ -10884,6 +12061,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vi
@@ -10895,6 +12073,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vi
@@ -10906,6 +12085,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vui
@@ -10917,6 +12097,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vui
@@ -10928,6 +12109,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vbi
@@ -10939,6 +12121,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vbi
@@ -10950,6 +12133,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vbi
@@ -10961,6 +12145,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vf
@@ -10972,6 +12157,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvx
 argument_list|(
 name|vf
@@ -10983,6 +12169,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 comment|/* vec_ste */
 name|vec_ste
 argument_list|(
@@ -10995,6 +12182,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvebx
 name|vec_ste
 argument_list|(
 name|vuc
@@ -11006,6 +12194,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvebx
 name|vec_ste
 argument_list|(
 name|vbc
@@ -11017,6 +12206,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvebx
 name|vec_ste
 argument_list|(
 name|vbc
@@ -11028,6 +12218,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvebx
 name|vec_ste
 argument_list|(
 name|vs
@@ -11039,6 +12230,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_ste
 argument_list|(
 name|vus
@@ -11050,6 +12242,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_ste
 argument_list|(
 name|vbs
@@ -11061,6 +12254,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_ste
 argument_list|(
 name|vbs
@@ -11072,6 +12266,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_ste
 argument_list|(
 name|vp
@@ -11083,6 +12278,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_ste
 argument_list|(
 name|vp
@@ -11094,6 +12290,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_ste
 argument_list|(
 name|vi
@@ -11105,6 +12302,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 name|vec_ste
 argument_list|(
 name|vui
@@ -11116,6 +12314,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 name|vec_ste
 argument_list|(
 name|vbi
@@ -11127,6 +12326,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 name|vec_ste
 argument_list|(
 name|vbi
@@ -11138,6 +12338,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 name|vec_ste
 argument_list|(
 name|vf
@@ -11149,6 +12350,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 name|vec_stvebx
 argument_list|(
 name|vsc
@@ -11160,6 +12362,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvebx
 name|vec_stvebx
 argument_list|(
 name|vuc
@@ -11171,6 +12374,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvebx
 name|vec_stvebx
 argument_list|(
 name|vbc
@@ -11182,6 +12386,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvebx
 name|vec_stvebx
 argument_list|(
 name|vbc
@@ -11193,6 +12398,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvebx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvebx
 name|vec_stvehx
 argument_list|(
 name|vs
@@ -11204,6 +12410,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_stvehx
 argument_list|(
 name|vus
@@ -11215,6 +12422,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_stvehx
 argument_list|(
 name|vbs
@@ -11226,6 +12434,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_stvehx
 argument_list|(
 name|vbs
@@ -11237,6 +12446,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_stvehx
 argument_list|(
 name|vp
@@ -11248,6 +12458,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_stvehx
 argument_list|(
 name|vp
@@ -11259,6 +12470,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvehx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvehx
 name|vec_stvewx
 argument_list|(
 name|vi
@@ -11270,6 +12482,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 name|vec_stvewx
 argument_list|(
 name|vui
@@ -11281,6 +12494,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 name|vec_stvewx
 argument_list|(
 name|vbi
@@ -11292,6 +12506,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 name|vec_stvewx
 argument_list|(
 name|vbi
@@ -11303,6 +12518,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 name|vec_stvewx
 argument_list|(
 name|vf
@@ -11314,6 +12530,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvewx
+comment|// CHECK-LE: @llvm.ppc.altivec.stvewx
 comment|/* vec_stl */
 name|vec_stl
 argument_list|(
@@ -11326,6 +12543,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vsc
@@ -11337,6 +12555,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vuc
@@ -11348,6 +12567,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vuc
@@ -11359,6 +12579,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vbc
@@ -11370,6 +12591,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vbc
@@ -11381,6 +12603,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vbc
@@ -11392,6 +12615,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vs
@@ -11403,6 +12627,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vs
@@ -11414,6 +12639,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vus
@@ -11425,6 +12651,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vus
@@ -11436,6 +12663,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vbs
@@ -11447,6 +12675,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vbs
@@ -11458,6 +12687,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vbs
@@ -11469,6 +12699,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vp
@@ -11480,6 +12711,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vp
@@ -11491,6 +12723,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vp
@@ -11502,6 +12735,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vi
@@ -11513,6 +12747,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vi
@@ -11524,6 +12759,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vui
@@ -11535,6 +12771,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vui
@@ -11546,6 +12783,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vbi
@@ -11557,6 +12795,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vbi
@@ -11568,6 +12807,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vbi
@@ -11579,6 +12819,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vf
@@ -11590,6 +12831,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stl
 argument_list|(
 name|vf
@@ -11601,6 +12843,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vsc
@@ -11612,6 +12855,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vsc
@@ -11623,6 +12867,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vuc
@@ -11634,6 +12879,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vuc
@@ -11645,6 +12891,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vbc
@@ -11656,6 +12903,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vbc
@@ -11667,6 +12915,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vbc
@@ -11678,6 +12927,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vs
@@ -11689,6 +12939,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vs
@@ -11700,6 +12951,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vus
@@ -11711,6 +12963,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vus
@@ -11722,6 +12975,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vbs
@@ -11733,6 +12987,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vbs
@@ -11744,6 +12999,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vbs
@@ -11755,6 +13011,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vp
@@ -11766,6 +13023,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vp
@@ -11777,6 +13035,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vp
@@ -11788,6 +13047,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vi
@@ -11799,6 +13059,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vi
@@ -11810,6 +13071,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vui
@@ -11821,6 +13083,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vui
@@ -11832,6 +13095,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vbi
@@ -11843,6 +13107,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vbi
@@ -11854,6 +13119,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vbi
@@ -11865,6 +13131,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vf
@@ -11876,6 +13143,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvxl
 argument_list|(
 name|vf
@@ -11887,6 +13155,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 comment|/* vec_sub */
 name|res_vsc
 operator|=
@@ -11898,6 +13167,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vsc
 operator|=
 name|vec_sub
@@ -11908,6 +13178,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vsc
 operator|=
 name|vec_sub
@@ -11918,6 +13189,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vuc
 operator|=
 name|vec_sub
@@ -11928,6 +13200,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vuc
 operator|=
 name|vec_sub
@@ -11938,6 +13211,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vuc
 operator|=
 name|vec_sub
@@ -11948,6 +13222,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vs
 operator|=
 name|vec_sub
@@ -11958,6 +13233,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vs
 operator|=
 name|vec_sub
@@ -11968,6 +13244,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vs
 operator|=
 name|vec_sub
@@ -11978,6 +13255,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vus
 operator|=
 name|vec_sub
@@ -11988,6 +13266,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vus
 operator|=
 name|vec_sub
@@ -11998,6 +13277,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vus
 operator|=
 name|vec_sub
@@ -12008,6 +13288,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vi
 operator|=
 name|vec_sub
@@ -12018,6 +13299,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vi
 operator|=
 name|vec_sub
@@ -12028,6 +13310,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vi
 operator|=
 name|vec_sub
@@ -12038,6 +13321,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vui
 operator|=
 name|vec_sub
@@ -12048,6 +13332,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vui
 operator|=
 name|vec_sub
@@ -12058,6 +13343,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vui
 operator|=
 name|vec_sub
@@ -12068,6 +13354,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vf
 operator|=
 name|vec_sub
@@ -12078,6 +13365,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: fsub<4 x float>
+comment|// CHECK-LE: fsub<4 x float>
 name|res_vsc
 operator|=
 name|vec_vsububm
@@ -12088,6 +13376,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vsububm
@@ -12098,6 +13387,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vsububm
@@ -12108,6 +13398,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vsububm
@@ -12118,6 +13409,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vsububm
@@ -12128,6 +13420,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vsububm
@@ -12138,6 +13431,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<16 x i8>
+comment|// CHECK-LE: sub<16 x i8>
 name|res_vs
 operator|=
 name|vec_vsubuhm
@@ -12148,6 +13442,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vs
 operator|=
 name|vec_vsubuhm
@@ -12158,6 +13453,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vs
 operator|=
 name|vec_vsubuhm
@@ -12168,6 +13464,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vus
 operator|=
 name|vec_vsubuhm
@@ -12178,6 +13475,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vus
 operator|=
 name|vec_vsubuhm
@@ -12188,6 +13486,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vus
 operator|=
 name|vec_vsubuhm
@@ -12198,6 +13497,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<8 x i16>
+comment|// CHECK-LE: sub<8 x i16>
 name|res_vi
 operator|=
 name|vec_vsubuwm
@@ -12208,6 +13508,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vi
 operator|=
 name|vec_vsubuwm
@@ -12218,6 +13519,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vi
 operator|=
 name|vec_vsubuwm
@@ -12228,6 +13530,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vui
 operator|=
 name|vec_vsubuwm
@@ -12238,6 +13541,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vui
 operator|=
 name|vec_vsubuwm
@@ -12248,6 +13552,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vui
 operator|=
 name|vec_vsubuwm
@@ -12258,6 +13563,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: sub<4 x i32>
+comment|// CHECK-LE: sub<4 x i32>
 name|res_vf
 operator|=
 name|vec_vsubfp
@@ -12268,6 +13574,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: fsub<4 x float>
+comment|// CHECK-LE: fsub<4 x float>
 comment|/* vec_subc */
 name|res_vui
 operator|=
@@ -12279,6 +13586,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubcuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubcuw
 name|res_vui
 operator|=
 name|vec_vsubcuw
@@ -12289,6 +13597,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubcuw
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubcuw
 comment|/* vec_subs */
 name|res_vsc
 operator|=
@@ -12300,6 +13609,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsbs
 name|res_vsc
 operator|=
 name|vec_subs
@@ -12310,6 +13620,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsbs
 name|res_vsc
 operator|=
 name|vec_subs
@@ -12320,6 +13631,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsbs
 name|res_vuc
 operator|=
 name|vec_subs
@@ -12330,6 +13642,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsububs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsububs
 name|res_vuc
 operator|=
 name|vec_subs
@@ -12340,6 +13653,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsububs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsububs
 name|res_vuc
 operator|=
 name|vec_subs
@@ -12350,6 +13664,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsububs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsububs
 name|res_vs
 operator|=
 name|vec_subs
@@ -12360,6 +13675,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubshs
 name|res_vs
 operator|=
 name|vec_subs
@@ -12370,6 +13686,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubshs
 name|res_vs
 operator|=
 name|vec_subs
@@ -12380,6 +13697,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubshs
 name|res_vus
 operator|=
 name|vec_subs
@@ -12390,6 +13708,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuhs
 name|res_vus
 operator|=
 name|vec_subs
@@ -12400,6 +13719,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuhs
 name|res_vus
 operator|=
 name|vec_subs
@@ -12410,6 +13730,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuhs
 name|res_vi
 operator|=
 name|vec_subs
@@ -12420,6 +13741,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsws
 name|res_vi
 operator|=
 name|vec_subs
@@ -12430,6 +13752,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsws
 name|res_vi
 operator|=
 name|vec_subs
@@ -12440,6 +13763,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsws
 name|res_vui
 operator|=
 name|vec_subs
@@ -12450,6 +13774,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuws
 name|res_vui
 operator|=
 name|vec_subs
@@ -12460,6 +13785,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuws
 name|res_vui
 operator|=
 name|vec_subs
@@ -12470,6 +13796,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuws
 name|res_vsc
 operator|=
 name|vec_vsubsbs
@@ -12480,6 +13807,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsbs
 name|res_vsc
 operator|=
 name|vec_vsubsbs
@@ -12490,6 +13818,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsbs
 name|res_vsc
 operator|=
 name|vec_vsubsbs
@@ -12500,6 +13829,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsbs
 name|res_vuc
 operator|=
 name|vec_vsububs
@@ -12510,6 +13840,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsububs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsububs
 name|res_vuc
 operator|=
 name|vec_vsububs
@@ -12520,6 +13851,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsububs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsububs
 name|res_vuc
 operator|=
 name|vec_vsububs
@@ -12530,6 +13862,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsububs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsububs
 name|res_vs
 operator|=
 name|vec_vsubshs
@@ -12540,6 +13873,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubshs
 name|res_vs
 operator|=
 name|vec_vsubshs
@@ -12550,6 +13884,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubshs
 name|res_vs
 operator|=
 name|vec_vsubshs
@@ -12560,6 +13895,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubshs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubshs
 name|res_vus
 operator|=
 name|vec_vsubuhs
@@ -12570,6 +13906,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuhs
 name|res_vus
 operator|=
 name|vec_vsubuhs
@@ -12580,6 +13917,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuhs
 name|res_vus
 operator|=
 name|vec_vsubuhs
@@ -12590,6 +13928,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuhs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuhs
 name|res_vi
 operator|=
 name|vec_vsubsws
@@ -12600,6 +13939,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsws
 name|res_vi
 operator|=
 name|vec_vsubsws
@@ -12610,6 +13950,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsws
 name|res_vi
 operator|=
 name|vec_vsubsws
@@ -12620,6 +13961,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubsws
 name|res_vui
 operator|=
 name|vec_vsubuws
@@ -12630,6 +13972,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuws
 name|res_vui
 operator|=
 name|vec_vsubuws
@@ -12640,6 +13983,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuws
 name|res_vui
 operator|=
 name|vec_vsubuws
@@ -12650,6 +13994,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsubuws
+comment|// CHECK-LE: @llvm.ppc.altivec.vsubuws
 comment|/* vec_sum4s */
 name|res_vi
 operator|=
@@ -12661,6 +14006,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsum4sbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsum4sbs
 name|res_vui
 operator|=
 name|vec_sum4s
@@ -12671,6 +14017,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsum4ubs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsum4ubs
 name|res_vi
 operator|=
 name|vec_sum4s
@@ -12681,6 +14028,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsum4shs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsum4shs
 name|res_vi
 operator|=
 name|vec_vsum4sbs
@@ -12691,6 +14039,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsum4sbs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsum4sbs
 name|res_vui
 operator|=
 name|vec_vsum4ubs
@@ -12701,6 +14050,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsum4ubs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsum4ubs
 name|res_vi
 operator|=
 name|vec_vsum4shs
@@ -12711,6 +14061,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsum4shs
+comment|// CHECK-LE: @llvm.ppc.altivec.vsum4shs
 comment|/* vec_sum2s */
 name|res_vi
 operator|=
@@ -12722,6 +14073,9 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsum2sws
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vsum2sws
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_vsum2sws
@@ -12732,6 +14086,9 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsum2sws
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vsum2sws
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_sums */
 name|res_vi
 operator|=
@@ -12743,6 +14100,8 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsumsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vsumsws
 name|res_vi
 operator|=
 name|vec_vsumsws
@@ -12753,6 +14112,8 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vsumsws
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.vsumsws
 comment|/* vec_trunc */
 name|res_vf
 operator|=
@@ -12762,6 +14123,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrfiz
+comment|// CHECK-LE: @llvm.ppc.altivec.vrfiz
 name|res_vf
 operator|=
 name|vec_vrfiz
@@ -12770,6 +14132,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vrfiz
+comment|// CHECK-LE: @llvm.ppc.altivec.vrfiz
 comment|/* vec_unpackh */
 name|res_vs
 operator|=
@@ -12779,6 +14142,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupkhsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklsb
 name|res_vbs
 operator|=
 name|vec_unpackh
@@ -12787,6 +14151,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupkhsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklsb
 name|res_vi
 operator|=
 name|vec_unpackh
@@ -12795,6 +14160,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupkhsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklsh
 name|res_vbi
 operator|=
 name|vec_unpackh
@@ -12803,6 +14169,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupkhsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklsh
 name|res_vui
 operator|=
 name|vec_unpackh
@@ -12810,7 +14177,8 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|// CHECK: @llvm.ppc.altivec.vupkhsh
+comment|// CHECK: @llvm.ppc.altivec.vupkhpx
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklpx
 name|res_vs
 operator|=
 name|vec_vupkhsb
@@ -12819,6 +14187,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupkhsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklsb
 name|res_vbs
 operator|=
 name|vec_vupkhsb
@@ -12827,6 +14196,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupkhsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklsb
 name|res_vi
 operator|=
 name|vec_vupkhsh
@@ -12835,6 +14205,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupkhsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklsh
 name|res_vbi
 operator|=
 name|vec_vupkhsh
@@ -12843,6 +14214,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupkhsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklsh
 name|res_vui
 operator|=
 name|vec_vupkhsh
@@ -12850,7 +14222,8 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|// CHECK: @llvm.ppc.altivec.vupkhsh
+comment|// CHECK: @llvm.ppc.altivec.vupkhpx
+comment|// CHECK-LE: @llvm.ppc.altivec.vupklpx
 comment|/* vec_unpackl */
 name|res_vs
 operator|=
@@ -12860,6 +14233,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupklsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhsb
 name|res_vbs
 operator|=
 name|vec_unpackl
@@ -12868,6 +14242,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupklsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhsb
 name|res_vi
 operator|=
 name|vec_unpackl
@@ -12876,6 +14251,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupklsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhsh
 name|res_vbi
 operator|=
 name|vec_unpackl
@@ -12884,6 +14260,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupklsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhsh
 name|res_vui
 operator|=
 name|vec_unpackl
@@ -12891,7 +14268,8 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|// CHECK: @llvm.ppc.altivec.vupklsh
+comment|// CHECK: @llvm.ppc.altivec.vupklpx
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhpx
 name|res_vs
 operator|=
 name|vec_vupklsb
@@ -12900,6 +14278,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupklsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhsb
 name|res_vbs
 operator|=
 name|vec_vupklsb
@@ -12908,6 +14287,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupklsb
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhsb
 name|res_vi
 operator|=
 name|vec_vupklsh
@@ -12916,6 +14296,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupklsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhsh
 name|res_vbi
 operator|=
 name|vec_vupklsh
@@ -12924,6 +14305,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vupklsh
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhsh
 name|res_vui
 operator|=
 name|vec_vupklsh
@@ -12931,7 +14313,8 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|// CHECK: @llvm.ppc.altivec.vupklsh
+comment|// CHECK: @llvm.ppc.altivec.vupklpx
+comment|// CHECK-LE: @llvm.ppc.altivec.vupkhpx
 comment|/* vec_xor */
 name|res_vsc
 operator|=
@@ -12943,6 +14326,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vsc
 operator|=
 name|vec_xor
@@ -12953,6 +14337,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vsc
 operator|=
 name|vec_xor
@@ -12963,6 +14348,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_xor
@@ -12973,6 +14359,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_xor
@@ -12983,6 +14370,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_xor
@@ -12993,6 +14381,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vbc
 operator|=
 name|vec_xor
@@ -13003,6 +14392,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vs
 operator|=
 name|vec_xor
@@ -13013,6 +14403,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vs
 operator|=
 name|vec_xor
@@ -13023,6 +14414,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vs
 operator|=
 name|vec_xor
@@ -13033,6 +14425,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_xor
@@ -13043,6 +14436,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_xor
@@ -13053,6 +14447,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_xor
@@ -13063,6 +14458,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vbs
 operator|=
 name|vec_xor
@@ -13073,6 +14469,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vi
 operator|=
 name|vec_xor
@@ -13083,6 +14480,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vi
 operator|=
 name|vec_xor
@@ -13093,6 +14491,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vi
 operator|=
 name|vec_xor
@@ -13103,6 +14502,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_xor
@@ -13113,6 +14513,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_xor
@@ -13123,6 +14524,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_xor
@@ -13133,6 +14535,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vbi
 operator|=
 name|vec_xor
@@ -13143,6 +14546,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vf
 operator|=
 name|vec_xor
@@ -13153,6 +14557,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vf
 operator|=
 name|vec_xor
@@ -13163,6 +14568,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vf
 operator|=
 name|vec_xor
@@ -13173,6 +14579,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vsc
 operator|=
 name|vec_vxor
@@ -13183,6 +14590,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vxor
@@ -13193,6 +14601,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vsc
 operator|=
 name|vec_vxor
@@ -13203,6 +14612,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vxor
@@ -13213,6 +14623,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vxor
@@ -13223,6 +14634,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vuc
 operator|=
 name|vec_vxor
@@ -13233,6 +14645,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vbc
 operator|=
 name|vec_vxor
@@ -13243,6 +14656,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<16 x i8>
+comment|// CHECK-LE: xor<16 x i8>
 name|res_vs
 operator|=
 name|vec_vxor
@@ -13253,6 +14667,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vs
 operator|=
 name|vec_vxor
@@ -13263,6 +14678,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vs
 operator|=
 name|vec_vxor
@@ -13273,6 +14689,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_vxor
@@ -13283,6 +14700,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_vxor
@@ -13293,6 +14711,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vus
 operator|=
 name|vec_vxor
@@ -13303,6 +14722,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vbs
 operator|=
 name|vec_vxor
@@ -13313,6 +14733,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<8 x i16>
+comment|// CHECK-LE: xor<8 x i16>
 name|res_vi
 operator|=
 name|vec_vxor
@@ -13323,6 +14744,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vi
 operator|=
 name|vec_vxor
@@ -13333,6 +14755,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vi
 operator|=
 name|vec_vxor
@@ -13343,6 +14766,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_vxor
@@ -13353,6 +14777,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_vxor
@@ -13363,6 +14788,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vui
 operator|=
 name|vec_vxor
@@ -13373,6 +14799,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vbi
 operator|=
 name|vec_vxor
@@ -13383,6 +14810,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vf
 operator|=
 name|vec_vxor
@@ -13393,6 +14821,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vf
 operator|=
 name|vec_vxor
@@ -13403,6 +14832,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 name|res_vf
 operator|=
 name|vec_vxor
@@ -13413,6 +14843,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|// CHECK-LE: xor<4 x i32>
 comment|/* ------------------------------ extensions -------------------------------------- */
 comment|/* vec_extract */
 name|res_sc
@@ -13425,6 +14856,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: extractelement<16 x i8>
+comment|// CHECK-LE: extractelement<16 x i8>
 name|res_uc
 operator|=
 name|vec_extract
@@ -13435,6 +14867,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: extractelement<16 x i8>
+comment|// CHECK-LE: extractelement<16 x i8>
 name|res_s
 operator|=
 name|vec_extract
@@ -13445,6 +14878,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: extractelement<8 x i16>
+comment|// CHECK-LE: extractelement<8 x i16>
 name|res_us
 operator|=
 name|vec_extract
@@ -13455,6 +14889,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: extractelement<8 x i16>
+comment|// CHECK-LE: extractelement<8 x i16>
 name|res_i
 operator|=
 name|vec_extract
@@ -13465,6 +14900,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK-LE: extractelement<4 x i32>
 name|res_ui
 operator|=
 name|vec_extract
@@ -13475,6 +14911,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: extractelement<4 x i32>
+comment|// CHECK-LE: extractelement<4 x i32>
 name|res_f
 operator|=
 name|vec_extract
@@ -13485,6 +14922,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: extractelement<4 x float>
+comment|// CHECK-LE: extractelement<4 x float>
 comment|/* vec_insert */
 name|res_vsc
 operator|=
@@ -13498,6 +14936,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<16 x i8>
+comment|// CHECK-LE: insertelement<16 x i8>
 name|res_vuc
 operator|=
 name|vec_insert
@@ -13510,6 +14949,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<16 x i8>
+comment|// CHECK-LE: insertelement<16 x i8>
 name|res_vs
 operator|=
 name|vec_insert
@@ -13522,6 +14962,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<8 x i16>
+comment|// CHECK-LE: insertelement<8 x i16>
 name|res_vus
 operator|=
 name|vec_insert
@@ -13534,6 +14975,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<8 x i16>
+comment|// CHECK-LE: insertelement<8 x i16>
 name|res_vi
 operator|=
 name|vec_insert
@@ -13546,6 +14988,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK-LE: insertelement<4 x i32>
 name|res_vui
 operator|=
 name|vec_insert
@@ -13558,6 +15001,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK-LE: insertelement<4 x i32>
 name|res_vf
 operator|=
 name|vec_insert
@@ -13570,6 +15014,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<4 x float>
+comment|// CHECK-LE: insertelement<4 x float>
 comment|/* vec_lvlx */
 name|res_vsc
 operator|=
@@ -13585,6 +15030,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_lvlx
@@ -13599,6 +15048,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_lvlx
@@ -13613,6 +15066,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_lvlx
@@ -13627,6 +15084,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_lvlx
@@ -13641,6 +15102,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_lvlx
@@ -13655,6 +15120,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_lvlx
@@ -13669,6 +15138,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_lvlx
@@ -13683,6 +15156,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_lvlx
@@ -13697,6 +15174,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_lvlx
@@ -13711,6 +15192,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_lvlx
@@ -13725,6 +15210,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_lvlx
@@ -13739,6 +15228,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_lvlx
@@ -13753,6 +15246,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_lvlx
@@ -13767,6 +15264,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_lvlx
@@ -13781,6 +15282,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_lvlx
@@ -13795,6 +15300,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_lvlx
@@ -13809,6 +15318,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x float> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_lvlxl */
 name|res_vsc
 operator|=
@@ -13824,6 +15337,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_lvlxl
@@ -13838,6 +15355,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_lvlxl
@@ -13852,6 +15373,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_lvlxl
@@ -13866,6 +15391,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_lvlxl
@@ -13880,6 +15409,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_lvlxl
@@ -13894,6 +15427,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_lvlxl
@@ -13908,6 +15445,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_lvlxl
@@ -13922,6 +15463,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_lvlxl
@@ -13936,6 +15481,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_lvlxl
@@ -13950,6 +15499,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_lvlxl
@@ -13964,6 +15517,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_lvlxl
@@ -13978,6 +15535,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_lvlxl
@@ -13992,6 +15553,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_lvlxl
@@ -14006,6 +15571,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_lvlxl
@@ -14020,6 +15589,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_lvlxl
@@ -14034,6 +15607,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_lvlxl
@@ -14048,6 +15625,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x float> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_lvrx */
 name|res_vsc
 operator|=
@@ -14063,6 +15644,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_lvrx
@@ -14077,6 +15662,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_lvrx
@@ -14091,6 +15680,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_lvrx
@@ -14105,6 +15698,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_lvrx
@@ -14119,6 +15716,10 @@ comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_lvrx
@@ -14133,6 +15734,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_lvrx
@@ -14147,6 +15752,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_lvrx
@@ -14161,6 +15770,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_lvrx
@@ -14175,6 +15788,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_lvrx
@@ -14189,6 +15806,10 @@ comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_lvrx
@@ -14203,6 +15824,10 @@ comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_lvrx
@@ -14217,6 +15842,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_lvrx
@@ -14231,6 +15860,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_lvrx
@@ -14245,6 +15878,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_lvrx
@@ -14259,6 +15896,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_lvrx
@@ -14273,6 +15914,10 @@ comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_lvrx
@@ -14287,6 +15932,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvx
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x float> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_lvrxl */
 name|res_vsc
 operator|=
@@ -14302,6 +15951,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vsc
 operator|=
 name|vec_lvrxl
@@ -14316,6 +15969,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_lvrxl
@@ -14330,6 +15987,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vuc
 operator|=
 name|vec_lvrxl
@@ -14344,6 +16005,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbc
 operator|=
 name|vec_lvrxl
@@ -14358,6 +16023,10 @@ comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_lvrxl
@@ -14372,6 +16041,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vs
 operator|=
 name|vec_lvrxl
@@ -14386,6 +16059,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_lvrxl
@@ -14400,6 +16077,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vus
 operator|=
 name|vec_lvrxl
@@ -14414,6 +16095,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbs
 operator|=
 name|vec_lvrxl
@@ -14428,6 +16113,10 @@ comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vp
 operator|=
 name|vec_lvrxl
@@ -14442,6 +16131,10 @@ comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_lvrxl
@@ -14456,6 +16149,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vi
 operator|=
 name|vec_lvrxl
@@ -14470,6 +16167,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_lvrxl
@@ -14484,6 +16185,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vui
 operator|=
 name|vec_lvrxl
@@ -14498,6 +16203,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vbi
 operator|=
 name|vec_lvrxl
@@ -14512,6 +16221,10 @@ comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 name|res_vf
 operator|=
 name|vec_lvrxl
@@ -14526,6 +16239,10 @@ comment|// CHECK: @llvm.ppc.altivec.lvxl
 comment|// CHECK: @llvm.ppc.altivec.lvsl
 comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x float> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
 comment|/* vec_stvlx */
 name|vec_stvlx
 argument_list|(
@@ -14544,6 +16261,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vsc
@@ -14561,6 +16285,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vuc
@@ -14578,6 +16309,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vuc
@@ -14595,6 +16333,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vbc
@@ -14612,6 +16357,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vs
@@ -14629,6 +16381,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vs
@@ -14646,6 +16405,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vus
@@ -14663,6 +16429,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vus
@@ -14680,6 +16453,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vbs
@@ -14697,6 +16477,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vp
@@ -14714,6 +16501,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vi
@@ -14731,6 +16525,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vi
@@ -14748,6 +16549,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vui
@@ -14765,6 +16573,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vui
@@ -14782,6 +16597,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vbi
@@ -14799,6 +16621,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvlx
 argument_list|(
 name|vf
@@ -14816,6 +16645,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x float> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 comment|/* vec_stvlxl */
 name|vec_stvlxl
 argument_list|(
@@ -14834,6 +16670,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vsc
@@ -14851,6 +16694,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vuc
@@ -14868,6 +16718,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vuc
@@ -14885,6 +16742,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vbc
@@ -14902,6 +16766,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vs
@@ -14919,6 +16790,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vs
@@ -14936,6 +16814,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vus
@@ -14953,6 +16838,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vus
@@ -14970,6 +16862,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vbs
@@ -14987,6 +16886,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vp
@@ -15004,6 +16910,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vi
@@ -15021,6 +16934,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vi
@@ -15038,6 +16958,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vui
@@ -15055,6 +16982,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vui
@@ -15072,6 +17006,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vbi
@@ -15089,6 +17030,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvlxl
 argument_list|(
 name|vf
@@ -15106,6 +17054,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x float> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 comment|/* vec_stvrx */
 name|vec_stvrx
 argument_list|(
@@ -15124,6 +17079,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vsc
@@ -15141,6 +17103,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vuc
@@ -15158,6 +17127,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vuc
@@ -15175,6 +17151,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vbc
@@ -15192,6 +17175,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vs
@@ -15209,6 +17199,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vs
@@ -15226,6 +17223,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vus
@@ -15243,6 +17247,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vus
@@ -15260,6 +17271,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vbs
@@ -15277,6 +17295,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vp
@@ -15294,6 +17319,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vi
@@ -15311,6 +17343,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vi
@@ -15328,6 +17367,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vui
@@ -15345,6 +17391,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vui
@@ -15362,6 +17415,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vbi
@@ -15379,6 +17439,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 name|vec_stvrx
 argument_list|(
 name|vf
@@ -15396,6 +17463,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x float> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvx
 comment|/* vec_stvrxl */
 name|vec_stvrxl
 argument_list|(
@@ -15414,6 +17488,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vsc
@@ -15431,6 +17512,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vuc
@@ -15448,6 +17536,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vuc
@@ -15465,6 +17560,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vbc
@@ -15482,6 +17584,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vs
@@ -15499,6 +17608,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vs
@@ -15516,6 +17632,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vus
@@ -15533,6 +17656,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vus
@@ -15550,6 +17680,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vbs
@@ -15567,6 +17704,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vp
@@ -15584,6 +17728,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vi
@@ -15601,6 +17752,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vi
@@ -15618,6 +17776,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vui
@@ -15635,6 +17800,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vui
@@ -15652,6 +17824,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vbi
@@ -15669,6 +17848,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 name|vec_stvrxl
 argument_list|(
 name|vf
@@ -15686,6 +17872,13 @@ comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.lvsr
 comment|// CHECK: @llvm.ppc.altivec.vperm
 comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|// CHECK-LE: @llvm.ppc.altivec.lvx
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsl
+comment|// CHECK-LE: store<4 x float> zeroinitializer
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.lvsr
+comment|// CHECK-LE: @llvm.ppc.altivec.vperm
+comment|// CHECK-LE: @llvm.ppc.altivec.stvxl
 comment|/* vec_promote */
 name|res_vsc
 operator|=
@@ -15698,6 +17891,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: insertelement<16 x i8>
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: insertelement<16 x i8>
 name|res_vuc
 operator|=
 name|vec_promote
@@ -15709,6 +17904,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: store<16 x i8> zeroinitializer
 comment|// CHECK: insertelement<16 x i8>
+comment|// CHECK-LE: store<16 x i8> zeroinitializer
+comment|// CHECK-LE: insertelement<16 x i8>
 name|res_vs
 operator|=
 name|vec_promote
@@ -15720,6 +17917,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: insertelement<8 x i16>
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: insertelement<8 x i16>
 name|res_vus
 operator|=
 name|vec_promote
@@ -15731,6 +17930,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: store<8 x i16> zeroinitializer
 comment|// CHECK: insertelement<8 x i16>
+comment|// CHECK-LE: store<8 x i16> zeroinitializer
+comment|// CHECK-LE: insertelement<8 x i16>
 name|res_vi
 operator|=
 name|vec_promote
@@ -15742,6 +17943,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: insertelement<4 x i32>
 name|res_vui
 operator|=
 name|vec_promote
@@ -15753,6 +17956,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: store<4 x i32> zeroinitializer
 comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK-LE: store<4 x i32> zeroinitializer
+comment|// CHECK-LE: insertelement<4 x i32>
 name|res_vf
 operator|=
 name|vec_promote
@@ -15764,6 +17969,8 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: store<4 x float> zeroinitializer
 comment|// CHECK: insertelement<4 x float>
+comment|// CHECK-LE: store<4 x float> zeroinitializer
+comment|// CHECK-LE: insertelement<4 x float>
 comment|/* vec_splats */
 name|res_vsc
 operator|=
@@ -15773,6 +17980,7 @@ name|param_sc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<16 x i8>
+comment|// CHECK-LE: insertelement<16 x i8>
 name|res_vuc
 operator|=
 name|vec_splats
@@ -15781,6 +17989,7 @@ name|param_uc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<16 x i8>
+comment|// CHECK-LE: insertelement<16 x i8>
 name|res_vs
 operator|=
 name|vec_splats
@@ -15789,6 +17998,7 @@ name|param_s
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<8 x i16>
+comment|// CHECK-LE: insertelement<8 x i16>
 name|res_vus
 operator|=
 name|vec_splats
@@ -15797,6 +18007,7 @@ name|param_us
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<8 x i16>
+comment|// CHECK-LE: insertelement<8 x i16>
 name|res_vi
 operator|=
 name|vec_splats
@@ -15805,6 +18016,7 @@ name|param_i
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK-LE: insertelement<4 x i32>
 name|res_vui
 operator|=
 name|vec_splats
@@ -15813,6 +18025,7 @@ name|param_ui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<4 x i32>
+comment|// CHECK-LE: insertelement<4 x i32>
 name|res_vf
 operator|=
 name|vec_splats
@@ -15821,6 +18034,7 @@ name|param_f
 argument_list|)
 expr_stmt|;
 comment|// CHECK: insertelement<4 x float>
+comment|// CHECK-LE: insertelement<4 x float>
 comment|/* ------------------------------ predicates -------------------------------------- */
 comment|/* vec_all_eq */
 name|res_i
@@ -15833,6 +18047,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15843,6 +18058,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15853,6 +18069,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15863,6 +18080,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15873,6 +18091,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15883,6 +18102,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15893,6 +18113,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15903,6 +18124,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15913,6 +18135,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15923,6 +18146,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15933,6 +18157,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15943,6 +18168,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15953,6 +18179,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15963,6 +18190,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15973,6 +18201,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15983,6 +18212,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -15993,6 +18223,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -16003,6 +18234,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -16013,6 +18245,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -16023,6 +18256,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -16033,6 +18267,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -16043,6 +18278,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_eq
@@ -16053,6 +18289,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p
 comment|/* vec_all_ge */
 name|res_i
 operator|=
@@ -16064,6 +18301,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16074,6 +18312,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16084,6 +18323,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16094,6 +18334,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16104,6 +18345,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16114,6 +18356,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16124,6 +18367,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16134,6 +18378,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16144,6 +18389,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16154,6 +18400,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16164,6 +18411,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16174,6 +18422,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16184,6 +18433,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16194,6 +18444,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16204,6 +18455,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16214,6 +18466,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16224,6 +18477,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16234,6 +18488,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16244,6 +18499,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16254,6 +18510,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16264,6 +18521,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_ge
@@ -16274,6 +18532,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p
 comment|/* vec_all_gt */
 name|res_i
 operator|=
@@ -16285,6 +18544,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16295,6 +18555,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16305,6 +18566,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16315,6 +18577,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16325,6 +18588,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16335,6 +18599,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16345,6 +18610,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16355,6 +18621,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16365,6 +18632,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16375,6 +18643,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16385,6 +18654,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16395,6 +18665,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16405,6 +18676,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16415,6 +18687,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16425,6 +18698,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16435,6 +18709,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16445,6 +18720,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16455,6 +18731,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16465,6 +18742,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16475,6 +18753,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16485,6 +18764,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_gt
@@ -16495,6 +18775,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p
 comment|/* vec_all_in */
 name|res_i
 operator|=
@@ -16506,6 +18787,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpbfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpbfp.p
 comment|/* vec_all_le */
 name|res_i
 operator|=
@@ -16517,6 +18799,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16527,6 +18810,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16537,6 +18821,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16547,6 +18832,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16557,6 +18843,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16567,6 +18854,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16577,6 +18865,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16587,6 +18876,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16597,6 +18887,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16607,6 +18898,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16617,6 +18909,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16627,6 +18920,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16637,6 +18931,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16647,6 +18942,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16657,6 +18953,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16667,6 +18964,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16677,6 +18975,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16687,6 +18986,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16697,6 +18997,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16707,6 +19008,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16717,6 +19019,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_le
@@ -16727,6 +19030,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p
 comment|/* vec_all_lt */
 name|res_i
 operator|=
@@ -16738,6 +19042,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16748,6 +19053,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16758,6 +19064,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16768,6 +19075,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16778,6 +19086,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16788,6 +19097,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16798,6 +19108,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16808,6 +19119,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16818,6 +19130,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16828,6 +19141,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16838,6 +19152,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16848,6 +19163,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16858,6 +19174,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16868,6 +19185,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16878,6 +19196,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16888,6 +19207,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16898,6 +19218,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16908,6 +19229,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16918,6 +19240,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16928,6 +19251,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16938,6 +19262,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_all_lt
@@ -16948,6 +19273,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p
 comment|/* vec_all_nan */
 name|res_i
 operator|=
@@ -16957,6 +19283,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p
 comment|/*  vec_all_ne */
 name|res_i
 operator|=
@@ -16968,6 +19295,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -16978,6 +19306,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -16988,6 +19317,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -16998,6 +19328,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17008,6 +19339,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17018,6 +19350,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17028,6 +19361,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17038,6 +19372,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17048,6 +19383,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17058,6 +19394,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17068,6 +19405,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17078,6 +19416,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17088,6 +19427,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17098,6 +19438,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17108,6 +19449,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17118,6 +19460,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17128,6 +19471,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17138,6 +19482,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17148,6 +19493,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17158,6 +19504,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17168,6 +19515,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17178,6 +19526,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_all_ne
@@ -17188,6 +19537,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p
 comment|/* vec_all_nge */
 name|res_i
 operator|=
@@ -17199,6 +19549,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p
 comment|/* vec_all_ngt */
 name|res_i
 operator|=
@@ -17210,6 +19561,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p
 comment|/* vec_all_nle */
 name|res_i
 operator|=
@@ -17221,6 +19573,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p
 comment|/* vec_all_nlt */
 name|res_i
 operator|=
@@ -17232,6 +19585,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p
 comment|/* vec_all_numeric */
 name|res_i
 operator|=
@@ -17241,6 +19595,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p
 comment|/*  vec_any_eq */
 name|res_i
 operator|=
@@ -17252,6 +19607,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17262,6 +19618,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17272,6 +19629,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17282,6 +19640,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17292,6 +19651,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17302,6 +19662,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17312,6 +19673,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17322,6 +19684,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17332,6 +19695,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17342,6 +19706,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17352,6 +19717,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17362,6 +19728,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17372,6 +19739,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17382,6 +19750,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17392,6 +19761,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17402,6 +19772,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17412,6 +19783,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17422,6 +19794,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17432,6 +19805,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17442,6 +19816,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17452,6 +19827,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17462,6 +19838,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_eq
@@ -17472,6 +19849,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p
 comment|/* vec_any_ge */
 name|res_i
 operator|=
@@ -17483,6 +19861,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17493,6 +19872,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17503,6 +19883,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17513,6 +19894,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17523,6 +19905,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17533,6 +19916,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17543,6 +19927,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17553,6 +19938,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17563,6 +19949,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17573,6 +19960,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17583,6 +19971,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17593,6 +19982,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17603,6 +19993,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17613,6 +20004,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17623,6 +20015,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17633,6 +20026,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17643,6 +20037,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17653,6 +20048,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17663,6 +20059,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17673,6 +20070,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17683,6 +20081,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_ge
@@ -17693,6 +20092,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p
 comment|/* vec_any_gt */
 name|res_i
 operator|=
@@ -17704,6 +20104,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17714,6 +20115,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17724,6 +20126,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17734,6 +20137,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17744,6 +20148,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17754,6 +20159,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17764,6 +20170,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17774,6 +20181,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17784,6 +20192,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17794,6 +20203,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17804,6 +20214,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17814,6 +20225,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17824,6 +20236,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17834,6 +20247,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17844,6 +20258,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17854,6 +20269,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17864,6 +20280,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17874,6 +20291,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17884,6 +20302,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17894,6 +20313,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17904,6 +20324,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_gt
@@ -17914,6 +20335,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p
 comment|/* vec_any_le */
 name|res_i
 operator|=
@@ -17925,6 +20347,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -17935,6 +20358,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -17945,6 +20369,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -17955,6 +20380,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -17965,6 +20391,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -17975,6 +20402,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -17985,6 +20413,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -17995,6 +20424,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18005,6 +20435,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18015,6 +20446,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18025,6 +20457,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18035,6 +20468,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18045,6 +20479,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18055,6 +20490,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18065,6 +20501,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18075,6 +20512,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18085,6 +20523,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18095,6 +20534,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18105,6 +20545,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18115,6 +20556,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18125,6 +20567,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_le
@@ -18135,6 +20578,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p
 comment|/* vec_any_lt */
 name|res_i
 operator|=
@@ -18146,6 +20590,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18156,6 +20601,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18166,6 +20612,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18176,6 +20623,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18186,6 +20634,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18196,6 +20645,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18206,6 +20656,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18216,6 +20667,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18226,6 +20678,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18236,6 +20689,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18246,6 +20700,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18256,6 +20711,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18266,6 +20722,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18276,6 +20733,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18286,6 +20744,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18296,6 +20755,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18306,6 +20766,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18316,6 +20777,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18326,6 +20788,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18336,6 +20799,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18346,6 +20810,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p
 name|res_i
 operator|=
 name|vec_any_lt
@@ -18356,6 +20821,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p
 comment|/* vec_any_nan */
 name|res_i
 operator|=
@@ -18365,6 +20831,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p
 comment|/* vec_any_ne */
 name|res_i
 operator|=
@@ -18376,6 +20843,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18386,6 +20854,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18396,6 +20865,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18406,6 +20876,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18416,6 +20887,7 @@ name|vsc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18426,6 +20898,7 @@ name|vuc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18436,6 +20909,7 @@ name|vbc
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18446,6 +20920,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18456,6 +20931,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18466,6 +20942,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18476,6 +20953,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18486,6 +20964,7 @@ name|vs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18496,6 +20975,7 @@ name|vus
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18506,6 +20986,7 @@ name|vbs
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18516,6 +20997,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18526,6 +21008,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18536,6 +21019,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18546,6 +21030,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18556,6 +21041,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18566,6 +21052,7 @@ name|vi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18576,6 +21063,7 @@ name|vui
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18586,6 +21074,7 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p
 name|res_i
 operator|=
 name|vec_any_ne
@@ -18596,6 +21085,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p
 comment|/* vec_any_nge */
 name|res_i
 operator|=
@@ -18607,6 +21097,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p
 comment|/* vec_any_ngt */
 name|res_i
 operator|=
@@ -18618,6 +21109,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p
 comment|/* vec_any_nle */
 name|res_i
 operator|=
@@ -18629,6 +21121,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p
 comment|/* vec_any_nlt */
 name|res_i
 operator|=
@@ -18640,6 +21133,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p
 comment|/* vec_any_numeric */
 name|res_i
 operator|=
@@ -18649,6 +21143,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p
 comment|/* vec_any_out */
 name|res_i
 operator|=
@@ -18660,6 +21155,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpbfp.p
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpbfp.p
 block|}
 end_function
 
@@ -18715,6 +21211,7 @@ name|vsc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18724,6 +21221,7 @@ name|vsc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -18733,6 +21231,7 @@ name|vsc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18742,6 +21241,7 @@ name|vsc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18751,6 +21251,7 @@ name|vsc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -18760,6 +21261,7 @@ name|vsc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsb.p(i32 0
 name|vector
 name|unsigned
 name|char
@@ -18797,6 +21299,7 @@ name|vuc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18806,6 +21309,7 @@ name|vuc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequb.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -18815,6 +21319,7 @@ name|vuc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18824,6 +21329,7 @@ name|vuc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18833,6 +21339,7 @@ name|vuc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -18842,6 +21349,7 @@ name|vuc2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtub.p(i32 0
 name|vector
 name|short
 name|vs1
@@ -18877,6 +21385,7 @@ name|vs2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18886,6 +21395,7 @@ name|vs2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -18895,6 +21405,7 @@ name|vs2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18904,6 +21415,7 @@ name|vs2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18913,6 +21425,7 @@ name|vs2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -18922,6 +21435,7 @@ name|vs2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsh.p(i32 0
 name|vector
 name|unsigned
 name|short
@@ -18959,6 +21473,7 @@ name|vus2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18968,6 +21483,7 @@ name|vus2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequh.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -18977,6 +21493,7 @@ name|vus2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18986,6 +21503,7 @@ name|vus2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -18995,6 +21513,7 @@ name|vus2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -19004,6 +21523,7 @@ name|vus2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuh.p(i32 0
 name|vector
 name|int
 name|vi1
@@ -19039,6 +21559,7 @@ name|vi2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19048,6 +21569,7 @@ name|vi2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -19057,6 +21579,7 @@ name|vi2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19066,6 +21589,7 @@ name|vi2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19075,6 +21599,7 @@ name|vi2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -19084,6 +21609,7 @@ name|vi2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtsw.p(i32 0
 name|vector
 name|unsigned
 name|int
@@ -19121,6 +21647,7 @@ name|vui2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19130,6 +21657,7 @@ name|vui2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpequw.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -19139,6 +21667,7 @@ name|vui2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19148,6 +21677,7 @@ name|vui2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19157,6 +21687,7 @@ name|vui2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -19166,6 +21697,7 @@ name|vui2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtuw.p(i32 0
 name|vector
 name|float
 name|vf1
@@ -19199,6 +21731,7 @@ name|vf2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19208,6 +21741,7 @@ name|vf2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p(i32 0
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpeqfp.p(i32 0
 name|res_i
 operator|=
 operator|(
@@ -19217,6 +21751,7 @@ name|vf2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19226,6 +21761,7 @@ name|vf2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtfp.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19235,6 +21771,7 @@ name|vf2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p(i32 2
 name|res_i
 operator|=
 operator|(
@@ -19244,6 +21781,7 @@ name|vf2
 operator|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p(i32 2
+comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgefp.p(i32 2
 block|}
 end_function
 

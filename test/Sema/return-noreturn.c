@@ -28,7 +28,6 @@ block|{ }
 block|}
 argument_list|()
 expr_stmt|;
-comment|// expected-warning {{block could be declared with attribute 'noreturn'}}
 lambda|^
 parameter_list|(
 name|void
@@ -208,6 +207,31 @@ parameter_list|()
 block|{
 name|test2_positive
 argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// rdar://16274746
+end_comment
+
+begin_function
+name|void
+name|test6
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+lambda|^
+block|{
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
+block|}
 expr_stmt|;
 block|}
 end_function

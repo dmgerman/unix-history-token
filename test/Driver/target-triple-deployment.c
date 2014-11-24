@@ -36,6 +36,14 @@ comment|// RUN: %clang -target armv7-apple-ios5.0 -### %t.o 2>> %t.log
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armv7-apple-ios7.0 -### %t.o 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64-apple-ios -### %t.o 2>> %t.log
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -88,7 +96,7 @@ comment|// CHECK: -iphoneos_version_min
 end_comment
 
 begin_comment
-comment|// CHECK: 3.0.0
+comment|// CHECK: 5.0.0
 end_comment
 
 begin_comment
@@ -100,7 +108,7 @@ comment|// CHECK: -iphoneos_version_min
 end_comment
 
 begin_comment
-comment|// CHECK: 3.0.0
+comment|// CHECK: 5.0.0
 end_comment
 
 begin_comment
@@ -125,6 +133,30 @@ end_comment
 
 begin_comment
 comment|// CHECK: 5.0.0
+end_comment
+
+begin_comment
+comment|// CHECK: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// CHECK: -iphoneos_version_min
+end_comment
+
+begin_comment
+comment|// CHECK: 7.0.0
+end_comment
+
+begin_comment
+comment|// CHECK: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// CHECK: -iphoneos_version_min
+end_comment
+
+begin_comment
+comment|// CHECK: 7.0.0
 end_comment
 
 end_unit

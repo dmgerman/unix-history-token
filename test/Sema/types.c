@@ -317,7 +317,7 @@ name|char
 name|__attribute__
 argument_list|(
 operator|(
-name|align
+name|aligned
 argument_list|(
 literal|8
 argument_list|)
@@ -326,7 +326,7 @@ argument_list|)
 operator|)
 name|i
 decl_stmt|;
-comment|// expected-warning {{'align' attribute ignored when parsing type}}
+comment|// expected-warning {{'aligned' attribute ignored when parsing type}}
 block|}
 end_function
 
@@ -443,6 +443,68 @@ end_enum
 begin_comment
 comment|// expected-error {{invalid vector element type}}
 end_comment
+
+begin_decl_stmt
+name|int
+name|x4
+name|__attribute__
+argument_list|(
+operator|(
+name|ext_vector_type
+argument_list|(
+literal|64
+argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{'ext_vector_type' attribute only applies to types}}
+end_comment
+
+begin_comment
+comment|// rdar://16492792
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(ext_vector_type(
+literal|32
+argument|),__aligned__(
+literal|32
+argument|))
+argument_list|)
+name|unsigned
+name|char
+name|uchar32
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|convert
+parameter_list|()
+block|{
+name|uchar32
+name|r
+init|=
+literal|0
+decl_stmt|;
+name|r
+operator|.
+name|s
+index|[
+literal|1234
+index|]
+operator|=
+literal|1
+expr_stmt|;
+comment|// expected-error {{illegal vector component name 's'}}
+block|}
+end_function
 
 end_unit
 

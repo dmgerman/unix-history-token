@@ -20,7 +20,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS32-EB-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS32-EB-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB"
+comment|// MIPS32-EB-AS: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32" "-EB"
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS32-EB-PIC %s
 end_comment
 
 begin_comment
-comment|// MIPS32-EB-PIC: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB"
+comment|// MIPS32-EB-PIC: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32" "-EB"
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS32-EB-PIC-SMALL %s
 end_comment
 
 begin_comment
-comment|// MIPS32-EB-PIC-SMALL: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB"
+comment|// MIPS32-EB-PIC-SMALL: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32" "-EB"
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS32-EB-PIE %s
 end_comment
 
 begin_comment
-comment|// MIPS32-EB-PIE: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB"
+comment|// MIPS32-EB-PIE: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32" "-EB"
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS32-EB-PIE-SMALL %s
 end_comment
 
 begin_comment
-comment|// MIPS32-EB-PIE-SMALL: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EB"
+comment|// MIPS32-EB-PIE-SMALL: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32" "-EB"
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS32-DEF-EL-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS32-DEF-EL-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EL"
+comment|// MIPS32-DEF-EL-AS: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32" "-EL"
 end_comment
 
 begin_comment
@@ -160,7 +160,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS64-EB-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS64-EB-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EB"
+comment|// MIPS64-EB-AS: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64" "-EB"
 end_comment
 
 begin_comment
@@ -180,7 +180,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS64-DEF-EL-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS64-DEF-EL-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EL"
+comment|// MIPS64-DEF-EL-AS: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64" "-EL"
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS-EABI %s
 end_comment
 
 begin_comment
-comment|// MIPS-EABI: as{{(.exe)?}}" "-march" "mips32" "-mabi" "eabi" "-EB"
+comment|// MIPS-EABI: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "eabi" "-EB"
 end_comment
 
 begin_comment
@@ -220,7 +220,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS-N32 %s
 end_comment
 
 begin_comment
-comment|// MIPS-N32: as{{(.exe)?}}" "-march" "mips64" "-mabi" "n32" "-EB"
+comment|// MIPS-N32: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "n32" "-EB"
 end_comment
 
 begin_comment
@@ -240,7 +240,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS32-EL-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS32-EL-AS: as{{(.exe)?}}" "-march" "mips32" "-mabi" "32" "-EL"
+comment|// MIPS32-EL-AS: as{{(.exe)?}}" "-march" "mips32r2" "-mabi" "32" "-EL"
 end_comment
 
 begin_comment
@@ -260,7 +260,7 @@ comment|// RUN:   | FileCheck -check-prefix=MIPS64-EL-AS %s
 end_comment
 
 begin_comment
-comment|// MIPS64-EL-AS: as{{(.exe)?}}" "-march" "mips64" "-mabi" "64" "-EL"
+comment|// MIPS64-EL-AS: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64" "-EL"
 end_comment
 
 begin_comment
@@ -328,7 +328,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target mips-unknown-freebsd -mips64 -### \
+comment|// RUN: %clang -target mips64-unknown-freebsd -mips64 -### \
 end_comment
 
 begin_comment
@@ -348,7 +348,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target mips-unknown-freebsd -mips64r2 -### \
+comment|// RUN: %clang -target mips64-unknown-freebsd -mips64r2 -### \
 end_comment
 
 begin_comment

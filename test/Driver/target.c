@@ -24,30 +24,6 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Also, ensure we don't blindly hand our target selection logic down to GCC.
-end_comment
-
-begin_comment
-comment|// CHECK: "{{.*gcc(\.[Ee][Xx][Ee])?}}"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "-target"
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: "unknown-unknown-unknown"
-end_comment
-
-begin_comment
-comment|// CHECK: "-x" "assembler"
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
 comment|// Also check that the legacy spelling works.
 end_comment
 

@@ -44,6 +44,18 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-INFS %s
 end_comment
 
 begin_comment
+comment|// infinites [sic] is a supported alternative spelling of infinities.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-honor-infinites -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-INFS %s
+end_comment
+
+begin_comment
 comment|// CHECK-NO-INFS: "-cc1"
 end_comment
 

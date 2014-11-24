@@ -24,11 +24,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|// RUN: rm -rf %t/cache
+end_comment
+
+begin_comment
 comment|// RUN: c-index-test -test-load-source all %s -I %S/Inputs | FileCheck %s
 end_comment
 
 begin_comment
 comment|// RUN: c-index-test -test-load-source all %s -fretain-comments-from-system-headers -I %S/Inputs | FileCheck %s -check-prefix=CHECK-RETAIN
+end_comment
+
+begin_comment
+comment|// Modules:
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -test-load-source all %s -I %S/Inputs -fmodules -fmodules-cache-path=%t/cache -fmodule-map-file=%S/Inputs/retain-comments-from-system-headers-module.map | FileCheck %s -check-prefix=CHECK
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -test-load-source all %s -fretain-comments-from-system-headers -I %S/Inputs -fmodules -fmodules-cache-path=%t/cache -fmodule-map-file=%S/Inputs/retain-comments-from-system-headers-module.map | FileCheck %s -check-prefix=CHECK-RETAIN
 end_comment
 
 begin_comment

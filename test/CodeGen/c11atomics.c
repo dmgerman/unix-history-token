@@ -47,6 +47,14 @@ begin_comment
 comment|// are correct.
 end_comment
 
+begin_comment
+comment|// CHECK: @testStructGlobal = global {{.*}} { i16 1, i16 2, i16 3, i16 4 }
+end_comment
+
+begin_comment
+comment|// CHECK: @testPromotedStructGlobal = global {{.*}} { %{{.*}} { i16 1, i16 2, i16 3 }, [2 x i8] zeroinitializer }
+end_comment
+
 begin_typedef
 typedef|typedef
 name|int
@@ -575,6 +583,26 @@ name|S
 typedef|;
 end_typedef
 
+begin_decl_stmt
+specifier|_Atomic
+name|S
+name|testStructGlobal
+init|=
+operator|(
+name|S
+operator|)
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// CHECK: define arm_aapcscc void @testStruct([[S:.*]]*
 end_comment
@@ -691,6 +719,24 @@ block|}
 name|PS
 typedef|;
 end_typedef
+
+begin_decl_stmt
+specifier|_Atomic
+name|PS
+name|testPromotedStructGlobal
+init|=
+operator|(
+name|PS
+operator|)
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// CHECK: define arm_aapcscc void @testPromotedStruct([[APS:.*]]*

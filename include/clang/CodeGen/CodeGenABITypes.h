@@ -169,11 +169,6 @@ name|ASTContext
 operator|&
 name|C
 argument_list|,
-specifier|const
-name|CodeGenOptions
-operator|&
-name|CodeGenOpts
-argument_list|,
 name|llvm
 operator|::
 name|Module
@@ -186,10 +181,6 @@ operator|::
 name|DataLayout
 operator|&
 name|TD
-argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|Diags
 argument_list|)
 expr_stmt|;
 operator|~
@@ -255,13 +246,11 @@ function_decl|;
 specifier|const
 name|CGFunctionInfo
 modifier|&
-name|arrangeLLVMFunctionInfo
+name|arrangeFreeFunctionCall
 argument_list|(
 name|CanQualType
 name|returnType
 argument_list|,
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|CanQualType
@@ -279,6 +268,14 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
+comment|/// Default CodeGenOptions object used to initialize the
+comment|/// CodeGenModule and otherwise not used. More specifically, it is
+comment|/// not used in ABI type generation, so none of the options matter.
+name|CodeGenOptions
+modifier|*
+name|CGO
+decl_stmt|;
+comment|/// The CodeGenModule we use get to the CodeGenTypes object.
 name|CodeGen
 operator|::
 name|CodeGenModule

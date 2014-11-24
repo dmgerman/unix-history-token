@@ -8,7 +8,7 @@ comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_REMAP_AFTER_TRIAL=1 c-index-
 end_comment
 
 begin_comment
-comment|// RUN:           "-remap-file=%s;%s.remap" %s -include %t.h -D CMD_MACRO=1 2>&1 | FileCheck %s
+comment|// RUN:           "-remap-file=%s,%s.remap" %s -include %t.h -D CMD_MACRO=1 2>&1 | FileCheck %s
 end_comment
 
 begin_comment

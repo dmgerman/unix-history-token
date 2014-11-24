@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang %s -fsyntax-only -Xclang -verify
+comment|// RUN: %clang_cc1 %s -fsyntax-only -verify
 end_comment
 
 begin_comment
-comment|// RUN: %clang %s -fsyntax-only -fshort-wchar -Xclang -verify -DSHORT_WCHAR
+comment|// RUN: %clang_cc1 %s -fsyntax-only -fshort-wchar -verify -DSHORT_WCHAR
 end_comment
 
 begin_typedef

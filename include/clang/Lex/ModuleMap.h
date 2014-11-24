@@ -149,12 +149,10 @@ name|SourceManager
 modifier|&
 name|SourceMgr
 decl_stmt|;
-name|IntrusiveRefCntPtr
-operator|<
 name|DiagnosticsEngine
-operator|>
+modifier|&
 name|Diags
-expr_stmt|;
+decl_stmt|;
 specifier|const
 name|LangOptions
 modifier|&
@@ -257,7 +255,7 @@ argument_list|()
 operator|:
 name|Storage
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|NormalHeader
 argument_list|)
@@ -336,7 +334,7 @@ operator|.
 name|getPointer
 argument_list|()
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 block|}
@@ -409,6 +407,13 @@ name|unsigned
 name|InferSystemModules
 range|:
 literal|1
+decl_stmt|;
+comment|/// \brief If \c InferModules is non-zero, the module map file that allowed
+comment|/// inferred modules.  Otherwise, nullptr.
+specifier|const
+name|FileEntry
+modifier|*
+name|ModuleMapFile
 decl_stmt|;
 comment|/// \brief The names of modules that cannot be inferred within this
 comment|/// directory.
@@ -510,6 +515,82 @@ name|Complain
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Looks up the modules that \p File corresponds to.
+comment|///
+comment|/// If \p File represents a builtin header within Clang's builtin include
+comment|/// directory, this also loads all of the module maps to see if it will get
+comment|/// associated with a specific module (e.g. in /usr/include).
+name|HeadersMap
+operator|::
+name|iterator
+name|findKnownHeader
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|)
+expr_stmt|;
+comment|/// \brief Searches for a module whose umbrella directory contains \p File.
+comment|///
+comment|/// \param File The header to search for.
+comment|///
+comment|/// \param IntermediateDirs On success, contains the set of directories
+comment|/// searched before finding \p File.
+name|KnownHeader
+name|findHeaderInUmbrellaDirs
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|DirectoryEntry
+operator|*
+operator|>
+operator|&
+name|IntermediateDirs
+argument_list|)
+decl_stmt|;
+comment|/// \brief A convenience method to determine if \p File is (possibly nested)
+comment|/// in an umbrella directory.
+name|bool
+name|isHeaderInUmbrellaDirs
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+block|{
+name|SmallVector
+operator|<
+specifier|const
+name|DirectoryEntry
+operator|*
+operator|,
+literal|2
+operator|>
+name|IntermediateDirs
+expr_stmt|;
+return|return
+name|static_cast
+operator|<
+name|bool
+operator|>
+operator|(
+name|findHeaderInUmbrellaDirs
+argument_list|(
+name|File
+argument_list|,
+name|IntermediateDirs
+argument_list|)
+operator|)
+return|;
+block|}
 name|public
 label|:
 comment|/// \brief Construct a new module map.
@@ -518,8 +599,7 @@ comment|/// \param SourceMgr The source manager used to find module files and he
 comment|/// This source manager should be shared with the header-search mechanism,
 comment|/// since they will refer to the same headers.
 comment|///
-comment|/// \param DC A diagnostic consumer that will be cloned for use in generating
-comment|/// diagnostics.
+comment|/// \param Diags A diagnostic engine used for diagnostics.
 comment|///
 comment|/// \param LangOpts Language options for this translation unit.
 comment|///
@@ -530,9 +610,9 @@ name|SourceManager
 operator|&
 name|SourceMgr
 argument_list|,
-name|DiagnosticConsumer
+name|DiagnosticsEngine
 operator|&
-name|DC
+name|Diags
 argument_list|,
 specifier|const
 name|LangOptions
@@ -604,7 +684,35 @@ name|Module
 modifier|*
 name|RequestingModule
 init|=
-name|NULL
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// \brief Reports errors if a module must not include a specific file.
+comment|///
+comment|/// \param RequestingModule The module including a file.
+comment|///
+comment|/// \param FilenameLoc The location of the inclusion's filename.
+comment|///
+comment|/// \param Filename The included filename as written.
+comment|///
+comment|/// \param File The included file.
+name|void
+name|diagnoseHeaderInclusion
+parameter_list|(
+name|Module
+modifier|*
+name|RequestingModule
+parameter_list|,
+name|SourceLocation
+name|FilenameLoc
+parameter_list|,
+name|StringRef
+name|Filename
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|File
 parameter_list|)
 function_decl|;
 comment|/// \brief Determine whether the given header is part of a module
@@ -616,6 +724,23 @@ specifier|const
 name|FileEntry
 operator|*
 name|Header
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Determine whether the given header is unavailable as part
+comment|/// of the specified module.
+name|bool
+name|isHeaderUnavailableInModule
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|Header
+argument_list|,
+specifier|const
+name|Module
+operator|*
+name|RequestingModule
 argument_list|)
 decl|const
 decl_stmt|;
@@ -685,6 +810,9 @@ comment|///
 comment|/// \param Parent The module that will act as the parent of this submodule,
 comment|/// or NULL to indicate that this is a top-level module.
 comment|///
+comment|/// \param ModuleMap The module map that defines or allows the inference of
+comment|/// this module.
+comment|///
 comment|/// \param IsFramework Whether this is a framework module.
 comment|///
 comment|/// \param IsExplicit Whether this is an explicit submodule.
@@ -705,6 +833,8 @@ argument_list|(
 argument|StringRef Name
 argument_list|,
 argument|Module *Parent
+argument_list|,
+argument|const FileEntry *ModuleMap
 argument_list|,
 argument|bool IsFramework
 argument_list|,

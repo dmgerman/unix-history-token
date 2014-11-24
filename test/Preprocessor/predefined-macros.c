@@ -12,7 +12,7 @@ comment|// RUN: %clang_cc1 %s -E -dM -triple i686-pc-win32 -fms-extensions -fms-
 end_comment
 
 begin_comment
-comment|// RUN:     -fmsc-version=1300 -o - | FileCheck %s --check-prefix=CHECK-MS
+comment|// RUN:     -fms-compatibility-version=13.00 -o - | FileCheck %s --check-prefix=CHECK-MS
 end_comment
 
 begin_comment
@@ -40,7 +40,295 @@ comment|// CHECK-MS: #define _WIN32 1
 end_comment
 
 begin_comment
-comment|// CHECK-MS-NOT: #define __GNUC__
+comment|// CHECK-MS-NOT: #define __STRICT_ANSI__
+end_comment
+
+begin_comment
+comment|// CHECK-MS-NOT: GCC
+end_comment
+
+begin_comment
+comment|// CHECK-MS-NOT: GNU
+end_comment
+
+begin_comment
+comment|// CHECK-MS-NOT: GXX
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -triple x86_64-pc-win32 -fms-extensions -fms-compatibility \
+end_comment
+
+begin_comment
+comment|// RUN:     -fms-compatibility-version=13.00 -o - | FileCheck %s --check-prefix=CHECK-MS64
+end_comment
+
+begin_comment
+comment|// CHECK-MS64: #define _INTEGRAL_MAX_BITS 64
+end_comment
+
+begin_comment
+comment|// CHECK-MS64: #define _MSC_EXTENSIONS 1
+end_comment
+
+begin_comment
+comment|// CHECK-MS64: #define _MSC_VER 1300
+end_comment
+
+begin_comment
+comment|// CHECK-MS64: #define _M_AMD64 1
+end_comment
+
+begin_comment
+comment|// CHECK-MS64: #define _M_X64 1
+end_comment
+
+begin_comment
+comment|// CHECK-MS64: #define _WIN64 1
+end_comment
+
+begin_comment
+comment|// CHECK-MS64-NOT: #define __STRICT_ANSI__
+end_comment
+
+begin_comment
+comment|// CHECK-MS64-NOT: GCC
+end_comment
+
+begin_comment
+comment|// CHECK-MS64-NOT: GNU
+end_comment
+
+begin_comment
+comment|// CHECK-MS64-NOT: GXX
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -E -dM -triple i686-pc-win32 -fms-compatibility \
+end_comment
+
+begin_comment
+comment|// RUN:     -o - | FileCheck %s --check-prefix=CHECK-MS-STDINT
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INTPTR_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_FAST8_TYPE__ char
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST16_MAX__ 32767
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST16_TYPE__ short
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST32_MAX__ 2147483647
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST32_TYPE__ int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST64_MAX__ 9223372036854775807LL
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST64_TYPE__ long long int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST8_MAX__ 127
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __INT_LEAST8_TYPE__ char
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT16_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT16_MAX__ 65535U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT32_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT64_C_SUFFIX__ ULL
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT8_C_SUFFIX__ U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT8_MAX__ 255U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINTMAX_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINTPTR_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINTPTR_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINTPTR_WIDTH__ 32
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST16_MAX__ 65535U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST8_MAX__ 255U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_FAST8_TYPE__ unsigned char
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST16_MAX__ 65535U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST16_TYPE__ unsigned short
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST32_MAX__ 4294967295U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST32_TYPE__ unsigned int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST64_MAX__ 18446744073709551615ULL
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST64_TYPE__ long long unsigned int
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST8_MAX__ 255U
+end_comment
+
+begin_comment
+comment|// CHECK-MS-STDINT-NOT:#define __UINT_LEAST8_TYPE__ unsigned char
 end_comment
 
 begin_comment

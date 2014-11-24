@@ -1159,5 +1159,25 @@ comment|// expected-warning {{implicit declaration}}
 block|}
 end_function
 
+begin_function
+name|void
+name|unavailable
+parameter_list|()
+block|{
+name|__builtin_operator_new
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{'__builtin_operator_new' is only available in C++}}
+name|__builtin_operator_delete
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{'__builtin_operator_delete' is only available in C++}}
+block|}
+end_function
+
 end_unit
 

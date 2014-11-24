@@ -16,6 +16,12 @@ decl_stmt|;
 name|long
 name|c
 decl_stmt|;
+name|long
+name|d
+decl_stmt|;
+name|long
+name|e
+decl_stmt|;
 block|}
 struct|;
 end_struct

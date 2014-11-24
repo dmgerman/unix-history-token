@@ -163,5 +163,13 @@ begin_comment
 comment|// CHECK-LOCATION: "x86_64-apple-darwin10" - "darwin::Dsymutil", inputs: ["bar/foo"], output: "bar/foo.dSYM"
 end_comment
 
+begin_comment
+comment|// Check that we don't crash when translating arguments for dsymutil.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -m32 -arch x86_64 -g %s -###
+end_comment
+
 end_unit
 

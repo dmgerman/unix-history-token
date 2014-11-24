@@ -20,6 +20,22 @@ comment|// RUN: %clangxx -no-canonical-prefixes -target amd64-pc-bitrig %s -### 
 end_comment
 
 begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-CXX-STDLIB %s
+end_comment
+
+begin_comment
+comment|// CHECK-LD-CXX-STDLIB: clang{{.*}}" "-cc1" "-triple" "amd64-pc-bitrig"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-CXX-STDLIB: ld{{.*}}" {{.*}} "-lc++" "-lc++abi" "-lpthread" "-lm" "-lc" "-lclang_rt.amd64"
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -stdlib=libstdc++ -no-canonical-prefixes -target amd64-pc-bitrig %s -### 2>&1 \
+end_comment
+
+begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-CXX %s
 end_comment
 
@@ -29,22 +45,6 @@ end_comment
 
 begin_comment
 comment|// CHECK-LD-CXX: ld{{.*}}" {{.*}} "-lstdc++" "-lm" "-lc" "-lclang_rt.amd64"
-end_comment
-
-begin_comment
-comment|// RUN: %clangxx -stdlib=libc++ -no-canonical-prefixes -target amd64-pc-bitrig %s -### 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-CXX-STDLIB %s
-end_comment
-
-begin_comment
-comment|// CHECK-LD-CXX-STDLIB: clang{{.*}}" "-cc1" "-triple" "amd64-pc-bitrig"
-end_comment
-
-begin_comment
-comment|// CHECK-LD-CXX-STDLIB: ld{{.*}}" {{.*}} "-lc++" "-lcxxrt" "-lgcc" "-lm" "-lc" "-lclang_rt.amd64"
 end_comment
 
 begin_comment

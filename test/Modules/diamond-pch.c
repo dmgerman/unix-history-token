@@ -20,11 +20,11 @@ comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-pch -fmodules-cache-path=%t -o %t.pch %S/Inputs/diamond.h
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-pch -fmodules-cache-path=%t -I %S/Inputs -o %t.pch %S/Inputs/diamond.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -include-pch %t.pch %s -verify
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -include-pch %t.pch %s -I %S/Inputs -verify
 end_comment
 
 begin_comment

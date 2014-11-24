@@ -696,5 +696,30 @@ comment|// CHECK: call void asm sideeffect "/* $0 */", "i|r,~{dirflag},~{fpsr},~
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|t29_var
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|t29
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|asm
+specifier|volatile
+asm|("movl %%eax, %0"                :                : "m"(t29_var));
+comment|// CHECK: @t29
+comment|// CHECK: call void asm sideeffect "movl %eax, $0", "*m,~{dirflag},~{fpsr},~{flags}"([1 x i32]* @t29_var)
+block|}
+end_function
+
 end_unit
 

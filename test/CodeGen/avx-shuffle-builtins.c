@@ -244,5 +244,81 @@ return|;
 block|}
 end_function
 
+begin_function
+name|__m128
+name|test_mm_broadcast_ss
+parameter_list|(
+name|float
+specifier|const
+modifier|*
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_broadcast_ss
+comment|// CHECK: insertelement<4 x float> {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x float> {{.*}}, i32 1
+comment|// CHECK: insertelement<4 x float> {{.*}}, i32 2
+comment|// CHECK: insertelement<4 x float> {{.*}}, i32 3
+return|return
+name|_mm_broadcast_ss
+argument_list|(
+name|__a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256d
+name|test_mm256_broadcast_sd
+parameter_list|(
+name|double
+specifier|const
+modifier|*
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_broadcast_sd
+comment|// CHECK: insertelement<4 x double> {{.*}}, i32 0
+comment|// CHECK: insertelement<4 x double> {{.*}}, i32 1
+comment|// CHECK: insertelement<4 x double> {{.*}}, i32 2
+comment|// CHECK: insertelement<4 x double> {{.*}}, i32 3
+return|return
+name|_mm256_broadcast_sd
+argument_list|(
+name|__a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256
+name|test_mm256_broadcast_ss
+parameter_list|(
+name|float
+specifier|const
+modifier|*
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_broadcast_ss
+comment|// CHECK: insertelement<8 x float> {{.*}}, i32 0
+comment|// CHECK: insertelement<8 x float> {{.*}}, i32 1
+comment|// CHECK: insertelement<8 x float> {{.*}}, i32 2
+comment|// CHECK: insertelement<8 x float> {{.*}}, i32 3
+comment|// CHECK: insertelement<8 x float> {{.*}}, i32 4
+comment|// CHECK: insertelement<8 x float> {{.*}}, i32 5
+comment|// CHECK: insertelement<8 x float> {{.*}}, i32 6
+comment|// CHECK: insertelement<8 x float> {{.*}}, i32 7
+return|return
+name|_mm256_broadcast_ss
+argument_list|(
+name|__a
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

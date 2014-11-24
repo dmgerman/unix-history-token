@@ -108,10 +108,6 @@ comment|// RUN: %clang_cl /c -### -- %s 2>&1 | FileCheck -check-prefix=COMPILE %
 end_comment
 
 begin_comment
-comment|// COMPILE: "-cxx-abi" "microsoft"
-end_comment
-
-begin_comment
 comment|// COMPILE: "-fdiagnostics-format" "msvc"
 end_comment
 

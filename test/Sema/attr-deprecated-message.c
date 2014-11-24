@@ -18,7 +18,7 @@ typedef|("Please avoid INT1")));
 end_typedef
 
 begin_comment
-comment|// expected-note 3 {{'INT1' declared here}}
+comment|// expected-note 3 {{'INT1' has been explicitly marked deprecated here}}
 end_comment
 
 begin_typedef
@@ -87,7 +87,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note {{'f1' declared here}}
+comment|// expected-note {{'f1' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function_decl
@@ -121,7 +121,7 @@ typedef|("Please avoid Color")));
 end_typedef
 
 begin_comment
-comment|// expected-note {{'Color' declared here}}
+comment|// expected-note {{'Color' has been explicitly marked deprecated here}}
 end_comment
 
 begin_decl_stmt
@@ -156,7 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{'g2' declared here}}
+comment|// expected-note {{'g2' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function

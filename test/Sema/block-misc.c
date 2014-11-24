@@ -575,7 +575,7 @@ name|Q
 init|=
 lambda|^
 block|{
-comment|// References test14's "X": outer block is non constant.
+comment|// References test14's "X": outer block is non-constant.
 return|return
 name|X
 operator|+

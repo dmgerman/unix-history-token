@@ -591,10 +591,16 @@ comment|// expected-warning{{TRUE}}
 name|int
 name|localInt
 decl_stmt|;
-name|clang_analyzer_eval
-argument_list|(
+name|int
+modifier|*
+name|ptr
+init|=
 operator|&
 name|localInt
+decl_stmt|;
+name|clang_analyzer_eval
+argument_list|(
+name|ptr
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{TRUE}}

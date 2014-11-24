@@ -30,5 +30,20 @@ block|}
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|namespace
+name|X
+block|{
+specifier|inline
+name|namespace
+name|Y
+block|{
+struct_decl|struct
+name|Z
+struct_decl|;
+block|}
+block|}
+end_decl_stmt
+
 end_unit
 

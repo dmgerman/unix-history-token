@@ -1,14 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: rm -rf %t
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 -fmodules %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 -fmodules -fmodules-cache-path=%t %s
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 -ffreestanding %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -std=c11 -triple i686-pc-win32 -fms-compatibility-version=17.00 %s
 end_comment
 
 begin_function_decl
@@ -148,6 +156,109 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|max_align_t
+argument_list|)
+operator|>=
+expr|sizeof
+operator|(
+name|long
+name|long
+operator|)
+argument_list|,
+literal|""
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|alignof
+argument_list|(
+name|max_align_t
+argument_list|)
+operator|>=
+name|alignof
+argument_list|(
+argument|long long
+argument_list|)
+argument_list|,
+literal|""
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|max_align_t
+argument_list|)
+operator|>=
+expr|sizeof
+operator|(
+name|long
+name|double
+operator|)
+argument_list|,
+literal|""
+argument_list|)
+assert|;
+end_assert
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+name|alignof
+argument_list|(
+name|max_align_t
+argument_list|)
+operator|>=
+name|alignof
+argument_list|(
+argument|long double
+argument_list|)
+argument_list|,
+literal|""
+argument_list|)
+assert|;
+end_assert
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|max_align_t
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|double
+argument_list|)
+argument_list|,
+literal|""
+argument_list|)
+assert|;
+end_assert
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// If we are freestanding, then also check RSIZE_MAX (in a hosted implementation

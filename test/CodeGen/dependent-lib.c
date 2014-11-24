@@ -12,11 +12,11 @@ comment|// RUN: %clang_cc1 %s --dependent-lib=msvcrt -triple i686-pc-linux -emit
 end_comment
 
 begin_comment
-comment|// CHECK: !llvm.module.flags = !{!0}
+comment|// CHECK: !llvm.module.flags = !{{{.*}}}
 end_comment
 
 begin_comment
-comment|// CHECK: !0 = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
+comment|// CHECK: !{{[0-9]+}} = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
 end_comment
 
 begin_comment
@@ -28,11 +28,11 @@ comment|// CHECK: ![[msvcrt]] = metadata !{metadata !"/DEFAULTLIB:msvcrt.lib"}
 end_comment
 
 begin_comment
-comment|// LINUX: !llvm.module.flags = !{!0}
+comment|// LINUX: !llvm.module.flags = !{{{.*}}}
 end_comment
 
 begin_comment
-comment|// LINUX: !0 = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
+comment|// LINUX: !{{[0-9]+}} = metadata !{i32 6, metadata !"Linker Options", metadata ![[link_opts:[0-9]+]]}
 end_comment
 
 begin_comment

@@ -32,15 +32,11 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-macos10.7.0 -fsyntax-only %s
 end_comment
 
 begin_comment
-comment|// FIXME: I thought it was supported actually?
+comment|// RUN: %clang_cc1 -triple x86_64-pc-win32 -fsyntax-only %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -triple x86_64-pc-win32 -fsyntax-only %s
-end_comment
-
-begin_comment
-comment|// RUN: not %clang_cc1 -triple i386-pc-win32 -fsyntax-only %s
+comment|// RUN: %clang_cc1 -triple i386-pc-win32 -fsyntax-only %s
 end_comment
 
 begin_comment
@@ -61,6 +57,18 @@ end_comment
 
 begin_comment
 comment|// RUN: not %clang_cc1 -triple i586-pc-haiku -fsyntax-only %s
+end_comment
+
+begin_comment
+comment|// Bitrig suppports TLS.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-pc-bitrig -fsyntax-only %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple armv6-unknown-bitrig -fsyntax-only %s
 end_comment
 
 begin_decl_stmt

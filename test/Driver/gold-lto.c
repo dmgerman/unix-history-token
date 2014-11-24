@@ -83,5 +83,25 @@ begin_comment
 comment|// CHECK-ARM-V7A: "-plugin-opt=foo"
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i686-linux-android -### %t.o -flto 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     | FileCheck %s --check-prefix=CHECK-X86-ANDROID
+end_comment
+
+begin_comment
+comment|// CHECK-X86-ANDROID: "-pie"
+end_comment
+
+begin_comment
+comment|// CHECK-X86-ANDROID: "-plugin" "{{.*}}/LLVMgold.so"
+end_comment
+
 end_unit
 

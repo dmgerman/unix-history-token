@@ -34,14 +34,32 @@ name|test_nest_captured_stmt
 parameter_list|(
 name|int
 name|param
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|int
+name|param_arr
+index|[
+name|size
+index|]
 parameter_list|)
 block|{
 name|int
 name|w
 decl_stmt|;
-comment|// CHECK1: %struct.anon{{.*}} = type { i32*, i32* }
-comment|// CHECK1: %struct.anon{{.*}} = type { i32*, i32*, i32**, i32* }
-comment|// CHECK1: [[T:%struct.anon.*]] = type { i32*, i32*, %struct.A*, i32**, i32* }
+name|int
+name|arr
+index|[
+name|param
+index|]
+index|[
+name|size
+index|]
+decl_stmt|;
+comment|// CHECK1: %struct.anon{{.*}} = type { i32*, i32*, i{{.+}}*, i32**, i32* }
+comment|// CHECK1: %struct.anon{{.*}} = type { i32*, i32*, i32**, i32*, i{{.+}}*, i32**, i32* }
+comment|// CHECK1: [[T:%struct.anon.*]] = type { i32*, i32*, %struct.A*, i32**, i32*, i{{.+}}*, i32**, i32* }
 pragma|#
 directive|pragma
 name|clang
@@ -101,12 +119,33 @@ name|c
 operator|=
 literal|'c'
 expr_stmt|;
+name|param_arr
+index|[
+name|size
+operator|-
+literal|1
+index|]
+operator|=
+literal|2
+expr_stmt|;
+name|arr
+index|[
+literal|10
+index|]
+index|[
+name|z
+operator|.
+name|a
+index|]
+operator|=
+literal|12
+expr_stmt|;
 comment|// CHECK1: define internal void @__captured_stmt{{.*}}([[T]]
 comment|//
 comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 2
 comment|// CHECK1-NEXT: load %struct.A**
 comment|// CHECK1-NEXT: getelementptr inbounds %struct.A*
-comment|// CHECK1-NEXT: store i32 1
+comment|// CHECK1-NEXT: store i{{.+}} 1
 comment|//
 comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 1
 comment|// CHECK1-NEXT: load i32**
@@ -133,6 +172,27 @@ comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i32 0, i32 2
 comment|// CHECK1-NEXT: load %struct.A**
 comment|// CHECK1-NEXT: getelementptr inbounds %struct.A*
 comment|// CHECK1-NEXT: store i8 99
+comment|//
+comment|// CHECK1: [[SIZE_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 5
+comment|// CHECK1-DAG: [[SIZE_ADDR:%.*]] = load i{{.+}}** [[SIZE_ADDR_REF]]
+comment|// CHECK1-DAG: [[SIZE:%.*]] = load i{{.+}}* [[SIZE_ADDR]]
+comment|// CHECK1-DAG: [[PARAM_ARR_IDX:%.*]] = sub nsw i{{.+}} [[SIZE]], 1
+comment|// CHECK1-DAG: [[PARAM_ARR_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 6
+comment|// CHECK1-DAG: [[PARAM_ARR_ADDR:%.*]] = load i{{.+}}*** [[PARAM_ARR_ADDR_REF]]
+comment|// CHECK1-DAG: [[PARAM_ARR:%.*]] = load i{{.+}}** [[PARAM_ARR_ADDR]]
+comment|// CHECK1-DAG: [[PARAM_ARR_SIZE_MINUS_1_ADDR:%.*]] = getelementptr inbounds i{{.+}}* [[PARAM_ARR]], i{{.*}}
+comment|// CHECK1: store i{{.+}} 2, i{{.+}}* [[PARAM_ARR_SIZE_MINUS_1_ADDR]]
+comment|//
+comment|// CHECK1: [[Z_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 2
+comment|// CHECK1-DAG: [[Z_ADDR:%.*]] = load %struct.A** [[Z_ADDR_REF]]
+comment|// CHECK1-DAG: [[Z_A_ADDR:%.*]] = getelementptr inbounds %struct.A* [[Z_ADDR]], i{{.+}} 0, i{{.+}} 0
+comment|// CHECK1-DAG: [[ARR_IDX_2:%.*]] = load i{{.+}}* [[Z_A_ADDR]]
+comment|// CHECK1-DAG: [[ARR_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 7
+comment|// CHECK1-DAG: [[ARR_ADDR:%.*]] = load i{{.+}}** [[ARR_ADDR_REF]]
+comment|// CHECK1-DAG: [[ARR_IDX_1:%.*]] = mul {{.*}} 10
+comment|// CHECK1-DAG: [[ARR_10_ADDR:%.*]] = getelementptr inbounds i{{.+}}* [[ARR_ADDR]], i{{.*}} [[ARR_IDX_1]]
+comment|// CHECK1-DAG: [[ARR_10_Z_A_ADDR:%.*]] = getelementptr inbounds i{{.+}}* [[ARR_10_ADDR]], i{{.*}}
+comment|// CHECK1: store i{{.+}} 12, i{{.+}}* [[ARR_10_Z_A_ADDR]]
 block|}
 block|}
 block|}

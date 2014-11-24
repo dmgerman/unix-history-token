@@ -264,6 +264,26 @@ comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
 end_comment
 
 begin_comment
+comment|// RUN: -### -S %s -mcpu=power8 2>&1 | FileCheck -check-prefix=PPCPWR8 %s
+end_comment
+
+begin_comment
+comment|// PPCPWR8: clang
+end_comment
+
+begin_comment
+comment|// PPCPWR8: "-cc1"
+end_comment
+
+begin_comment
+comment|// PPCPWR8: "-target-cpu" "pwr8"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc64-unknown-linux-gnu \
+end_comment
+
+begin_comment
 comment|// RUN: -### -S %s -mcpu=a2q 2>&1 | FileCheck -check-prefix=PPCA2Q %s
 end_comment
 
@@ -708,7 +728,7 @@ comment|// AMD64-MINGW: "-triple"
 end_comment
 
 begin_comment
-comment|// AMD64-MINGW: "amd64--mingw32"
+comment|// AMD64-MINGW: "amd64--windows-gnu"
 end_comment
 
 begin_comment
@@ -716,7 +736,7 @@ comment|// AMD64-MINGW: "-munwind-tables"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target i386-linux-android -### -S %s 2>&1 \
+comment|// RUN: %clang -target i686-linux-android -### -S %s 2>&1 \
 end_comment
 
 begin_comment
@@ -732,7 +752,183 @@ comment|// ANDROID-X86: clang
 end_comment
 
 begin_comment
-comment|// ANDROID-X86: "-target-cpu" "core2"
+comment|// ANDROID-X86: "-target-cpu" "i686"
+end_comment
+
+begin_comment
+comment|// ANDROID-X86: "-target-feature" "+ssse3"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-linux-android -### -S %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:        --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=ANDROID-X86_64 %s
+end_comment
+
+begin_comment
+comment|// ANDROID-X86_64: clang
+end_comment
+
+begin_comment
+comment|// ANDROID-X86_64: "-target-cpu" "x86-64"
+end_comment
+
+begin_comment
+comment|// ANDROID-X86_64: "-target-feature" "+sse4.2"
+end_comment
+
+begin_comment
+comment|// ANDROID-X86_64: "-target-feature" "+popcnt"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -S %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=MIPS %s
+end_comment
+
+begin_comment
+comment|// MIPS: clang
+end_comment
+
+begin_comment
+comment|// MIPS: "-cc1"
+end_comment
+
+begin_comment
+comment|// MIPS: "-target-cpu" "mips32r2"
+end_comment
+
+begin_comment
+comment|// MIPS: "-mfloat-abi" "hard"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mipsel-linux-gnu -### -S %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=MIPSEL %s
+end_comment
+
+begin_comment
+comment|// MIPSEL: clang
+end_comment
+
+begin_comment
+comment|// MIPSEL: "-cc1"
+end_comment
+
+begin_comment
+comment|// MIPSEL: "-target-cpu" "mips32r2"
+end_comment
+
+begin_comment
+comment|// MIPSEL: "-mfloat-abi" "hard"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mipsel-linux-android -### -S %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=MIPSEL-ANDROID %s
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID: clang
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID: "-cc1"
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID: "-target-cpu" "mips32r2"
+end_comment
+
+begin_comment
+comment|// MIPSEL-ANDROID: "-mfloat-abi" "hard"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64-linux-gnu -### -S %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=MIPS64 %s
+end_comment
+
+begin_comment
+comment|// MIPS64: clang
+end_comment
+
+begin_comment
+comment|// MIPS64: "-cc1"
+end_comment
+
+begin_comment
+comment|// MIPS64: "-target-cpu" "mips64r2"
+end_comment
+
+begin_comment
+comment|// MIPS64: "-mfloat-abi" "hard"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-linux-gnu -### -S %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=MIPS64EL %s
+end_comment
+
+begin_comment
+comment|// MIPS64EL: clang
+end_comment
+
+begin_comment
+comment|// MIPS64EL: "-cc1"
+end_comment
+
+begin_comment
+comment|// MIPS64EL: "-target-cpu" "mips64r2"
+end_comment
+
+begin_comment
+comment|// MIPS64EL: "-mfloat-abi" "hard"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64el-linux-android -### -S %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=MIPS64EL-ANDROID %s
+end_comment
+
+begin_comment
+comment|// MIPS64EL-ANDROID: clang
+end_comment
+
+begin_comment
+comment|// MIPS64EL-ANDROID: "-cc1"
+end_comment
+
+begin_comment
+comment|// MIPS64EL-ANDROID: "-target-cpu" "mips64r2"
+end_comment
+
+begin_comment
+comment|// MIPS64EL-ANDROID: "-mfloat-abi" "hard"
 end_comment
 
 end_unit

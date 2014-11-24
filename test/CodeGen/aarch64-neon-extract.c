@@ -4,7 +4,7 @@ comment|// REQUIRES: aarch64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -target-feature +neon \
+comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_s8
+comment|// CHECK-LABEL: test_vext_s8
 return|return
 name|vext_s8
 argument_list|(
@@ -43,7 +43,7 @@ argument_list|,
 literal|2
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #0x2
+comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #{{(0x)?2}}
 block|}
 end_function
 
@@ -58,7 +58,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_s16
+comment|// CHECK-LABEL: test_vext_s16
 return|return
 name|vext_s16
 argument_list|(
@@ -69,7 +69,7 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #0x6
+comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #{{(0x)?6}}
 block|}
 end_function
 
@@ -84,7 +84,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_s32
+comment|// CHECK-LABEL: test_vext_s32
 return|return
 name|vext_s32
 argument_list|(
@@ -95,7 +95,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #0x4
+comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #{{(0x)?4}}
 block|}
 end_function
 
@@ -110,7 +110,7 @@ name|int64x1_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_s64
+comment|// CHECK-LABEL: test_vext_s64
 return|return
 name|vext_s64
 argument_list|(
@@ -135,7 +135,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_s8
+comment|// CHECK-LABEL: test_vextq_s8
 return|return
 name|vextq_s8
 argument_list|(
@@ -146,7 +146,7 @@ argument_list|,
 literal|2
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x2
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?2}}
 block|}
 end_function
 
@@ -161,7 +161,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_s16
+comment|// CHECK-LABEL: test_vextq_s16
 return|return
 name|vextq_s16
 argument_list|(
@@ -172,7 +172,7 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x6
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?6}}
 block|}
 end_function
 
@@ -187,7 +187,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_s32
+comment|// CHECK-LABEL: test_vextq_s32
 return|return
 name|vextq_s32
 argument_list|(
@@ -198,7 +198,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x4
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?4}}
 block|}
 end_function
 
@@ -213,7 +213,7 @@ name|int64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_s64
+comment|// CHECK-LABEL: test_vextq_s64
 return|return
 name|vextq_s64
 argument_list|(
@@ -224,7 +224,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x8
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?8}}
 block|}
 end_function
 
@@ -239,7 +239,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_u8
+comment|// CHECK-LABEL: test_vext_u8
 return|return
 name|vext_u8
 argument_list|(
@@ -250,7 +250,7 @@ argument_list|,
 literal|2
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #0x2
+comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #{{(0x)?2}}
 block|}
 end_function
 
@@ -265,7 +265,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_u16
+comment|// CHECK-LABEL: test_vext_u16
 return|return
 name|vext_u16
 argument_list|(
@@ -276,7 +276,7 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #0x6
+comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #{{(0x)?6}}
 block|}
 end_function
 
@@ -291,7 +291,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_u32
+comment|// CHECK-LABEL: test_vext_u32
 return|return
 name|vext_u32
 argument_list|(
@@ -302,7 +302,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #0x4
+comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #{{(0x)?4}}
 block|}
 end_function
 
@@ -317,7 +317,7 @@ name|uint64x1_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_u64
+comment|// CHECK-LABEL: test_vext_u64
 return|return
 name|vext_u64
 argument_list|(
@@ -342,7 +342,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_u8
+comment|// CHECK-LABEL: test_vextq_u8
 return|return
 name|vextq_u8
 argument_list|(
@@ -353,7 +353,7 @@ argument_list|,
 literal|2
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x2
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?2}}
 block|}
 end_function
 
@@ -368,7 +368,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_u16
+comment|// CHECK-LABEL: test_vextq_u16
 return|return
 name|vextq_u16
 argument_list|(
@@ -379,7 +379,7 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x6
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?6}}
 block|}
 end_function
 
@@ -394,7 +394,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_u32
+comment|// CHECK-LABEL: test_vextq_u32
 return|return
 name|vextq_u32
 argument_list|(
@@ -405,7 +405,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x4
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?4}}
 block|}
 end_function
 
@@ -420,7 +420,7 @@ name|uint64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_u64
+comment|// CHECK-LABEL: test_vextq_u64
 return|return
 name|vextq_u64
 argument_list|(
@@ -431,7 +431,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x8
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?8}}
 block|}
 end_function
 
@@ -446,7 +446,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_f32
+comment|// CHECK-LABEL: test_vext_f32
 return|return
 name|vext_f32
 argument_list|(
@@ -457,7 +457,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #0x4
+comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #{{(0x)?4}}
 block|}
 end_function
 
@@ -472,7 +472,7 @@ name|float64x1_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_f64
+comment|// CHECK-LABEL: test_vext_f64
 return|return
 name|vext_f64
 argument_list|(
@@ -497,7 +497,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_f32
+comment|// CHECK-LABEL: test_vextq_f32
 return|return
 name|vextq_f32
 argument_list|(
@@ -508,7 +508,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x4
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?4}}
 block|}
 end_function
 
@@ -523,7 +523,7 @@ name|float64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_f64
+comment|// CHECK-LABEL: test_vextq_f64
 return|return
 name|vextq_f64
 argument_list|(
@@ -534,7 +534,7 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x8
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?8}}
 block|}
 end_function
 
@@ -549,7 +549,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_p8
+comment|// CHECK-LABEL: test_vext_p8
 return|return
 name|vext_p8
 argument_list|(
@@ -560,7 +560,7 @@ argument_list|,
 literal|2
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #0x2
+comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #{{(0x)?2}}
 block|}
 end_function
 
@@ -575,7 +575,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vext_p16
+comment|// CHECK-LABEL: test_vext_p16
 return|return
 name|vext_p16
 argument_list|(
@@ -586,7 +586,7 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #0x6
+comment|// CHECK: ext {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, {{v[0-9]+}}.8b, #{{(0x)?6}}
 block|}
 end_function
 
@@ -601,7 +601,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_p8
+comment|// CHECK-LABEL: test_vextq_p8
 return|return
 name|vextq_p8
 argument_list|(
@@ -612,7 +612,7 @@ argument_list|,
 literal|2
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x2
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?2}}
 block|}
 end_function
 
@@ -627,7 +627,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vextq_p16
+comment|// CHECK-LABEL: test_vextq_p16
 return|return
 name|vextq_p16
 argument_list|(
@@ -638,7 +638,7 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #0x6
+comment|// CHECK: ext {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, {{v[0-9]+}}.16b, #{{(0x)?6}}
 block|}
 end_function
 

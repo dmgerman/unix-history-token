@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm< %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple=%itanium_abi_triple -emit-llvm< %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-IT
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple=%ms_abi_triple -emit-llvm< %s | FileCheck %s -check-prefix CHECK -check-prefix CHECK-MS
 end_comment
 
 begin_decl_stmt
@@ -371,7 +375,8 @@ name|BF
 operator|.
 name|x
 expr_stmt|;
-comment|// CHECK: load i8* getelementptr {{.*}} @BF
+comment|// CHECK-IT: load i8* getelementptr {{.*}} @BF
+comment|// CHECK-MS: load i32* getelementptr {{.*}} @BF
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -379,7 +384,8 @@ name|vBF
 operator|.
 name|x
 expr_stmt|;
-comment|// CHECK: load volatile i8* getelementptr {{.*}} @vBF
+comment|// CHECK-IT: load volatile i8* getelementptr {{.*}} @vBF
+comment|// CHECK-MS: load volatile i32* getelementptr {{.*}} @vBF
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -546,8 +552,10 @@ operator|=
 name|i
 expr_stmt|;
 comment|// CHECK: load i32* [[I]]
-comment|// CHECK: load i8* getelementptr {{.*}} @BF
-comment|// CHECK: store i8 {{.*}}, i8* getelementptr {{.*}} @BF
+comment|// CHECK-IT: load i8* getelementptr {{.*}} @BF
+comment|// CHECK-MS: load i32* getelementptr {{.*}} @BF
+comment|// CHECK-IT: store i8 {{.*}}, i8* getelementptr {{.*}} @BF
+comment|// CHECK-MS: store i32 {{.*}}, i32* getelementptr {{.*}} @BF
 name|vBF
 operator|.
 name|x
@@ -555,8 +563,10 @@ operator|=
 name|i
 expr_stmt|;
 comment|// CHECK: load i32* [[I]]
-comment|// CHECK: load volatile i8* getelementptr {{.*}} @vBF
-comment|// CHECK: store volatile i8 {{.*}}, i8* getelementptr {{.*}} @vBF
+comment|// CHECK-IT: load volatile i8* getelementptr {{.*}} @vBF
+comment|// CHECK-MS: load volatile i32* getelementptr {{.*}} @vBF
+comment|// CHECK-IT: store volatile i8 {{.*}}, i8* getelementptr {{.*}} @vBF
+comment|// CHECK-MS: store volatile i32 {{.*}}, i32* getelementptr {{.*}} @vBF
 name|V
 index|[
 literal|3

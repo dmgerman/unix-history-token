@@ -1,4 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|// FIXME: This import has no effect, because the submodule isn't built yet, and
+end_comment
+
+begin_comment
+comment|// we don't map an @import to a #include in this case.
+end_comment
+
 begin_decl_stmt
 unit|@
 name|import
@@ -25,7 +33,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// FIXME: This should work but does not; names from 'b' are not actually visible here.
+comment|// FIXME: This should work but does not; names from 'c' are not actually visible here.
 end_comment
 
 begin_comment

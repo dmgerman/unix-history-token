@@ -133,16 +133,6 @@ name|CallEventKind
 block|{
 name|CE_Function
 block|,
-name|CE_Block
-block|,
-name|CE_BEG_SIMPLE_CALLS
-init|=
-name|CE_Function
-block|,
-name|CE_END_SIMPLE_CALLS
-init|=
-name|CE_Block
-block|,
 name|CE_CXXMember
 block|,
 name|CE_CXXMemberOperator
@@ -168,6 +158,8 @@ block|,
 name|CE_END_FUNCTION_CALLS
 init|=
 name|CE_CXXAllocator
+block|,
+name|CE_Block
 block|,
 name|CE_ObjCMessage
 block|}
@@ -244,7 +236,7 @@ block|{
 return|return
 name|this
 operator|->
-name|getPtr
+name|get
 argument_list|()
 operator|->
 name|template
@@ -276,7 +268,7 @@ block|{
 return|return
 name|this
 operator|->
-name|getPtr
+name|get
 argument_list|()
 return|;
 block|}
@@ -315,12 +307,12 @@ argument_list|()
 operator|:
 name|D
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|R
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|RuntimeDefinition
@@ -338,7 +330,7 @@ argument_list|)
 block|,
 name|R
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|RuntimeDefinition
@@ -384,7 +376,7 @@ block|{
 return|return
 name|R
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// When other definitions are possible, returns the region whose runtime type
@@ -911,7 +903,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Returns the source range for errors associated with this argument.
@@ -1024,7 +1016,7 @@ operator|!
 name|ND
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|ND
@@ -1053,7 +1045,7 @@ name|ProgramPointTag
 operator|*
 name|Tag
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1085,7 +1077,7 @@ argument_list|,
 name|ProgramStateRef
 name|Orig
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1290,19 +1282,8 @@ name|public
 label|:
 end_label
 
-begin_typedef
-typedef|typedef
-specifier|const
-name|ParmVarDecl
-modifier|*
-specifier|const
-modifier|*
-name|param_iterator
-typedef|;
-end_typedef
-
 begin_comment
-comment|/// Returns an iterator over the call's formal parameters.
+comment|/// Return call's formal parameters.
 end_comment
 
 begin_comment
@@ -1321,37 +1302,14 @@ begin_comment
 comment|/// correspond with the argument value returned by \c getArgSVal(0).
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// If the call has no accessible declaration, \c param_begin() will be equal
-end_comment
-
-begin_comment
-comment|/// to \c param_end().
-end_comment
-
 begin_expr_stmt
 name|virtual
-name|param_iterator
-name|param_begin
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// \sa param_begin()
-end_comment
-
-begin_expr_stmt
-name|virtual
-name|param_iterator
-name|param_end
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+name|parameters
 argument_list|()
 specifier|const
 operator|=
@@ -1365,7 +1323,13 @@ name|llvm
 operator|::
 name|mapped_iterator
 operator|<
-name|param_iterator
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+operator|::
+name|iterator
 operator|,
 name|get_type_fun
 operator|>
@@ -1404,7 +1368,10 @@ name|llvm
 operator|::
 name|map_iterator
 argument_list|(
-name|param_begin
+name|parameters
+argument_list|()
+operator|.
+name|begin
 argument_list|()
 argument_list|,
 name|get_type_fun
@@ -1434,7 +1401,10 @@ name|llvm
 operator|::
 name|map_iterator
 argument_list|(
-name|param_end
+name|parameters
+argument_list|()
+operator|.
+name|end
 argument_list|()
 argument_list|,
 name|get_type_fun
@@ -1466,7 +1436,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
@@ -1545,13 +1514,13 @@ name|public
 operator|:
 comment|// This function is overridden by subclasses, but they must return
 comment|// a FunctionDecl.
-name|virtual
 specifier|const
 name|FunctionDecl
 operator|*
 name|getDecl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -1566,11 +1535,11 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 name|RuntimeDefinition
 name|getRuntimeDefinition
 argument_list|()
 specifier|const
+name|override
 block|{
 specifier|const
 name|FunctionDecl
@@ -1627,13 +1596,12 @@ name|RuntimeDefinition
 argument_list|()
 return|;
 block|}
-name|virtual
 name|bool
 name|argumentsMayEscape
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|getInitialStackFrameContents
 argument_list|(
@@ -1642,18 +1610,17 @@ argument_list|,
 argument|BindingsTy&Bindings
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
-name|param_iterator
-name|param_begin
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+name|parameters
 argument_list|()
 specifier|const
-block|;
-name|virtual
-name|param_iterator
-name|param_end
-argument_list|()
-specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1680,16 +1647,22 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents a call to a non-C++ function, written as a CallExpr.
+comment|/// \brief Represents a C function or static C++ member function call.
+comment|///
+comment|/// Example: \c fun()
 name|class
-name|SimpleCall
+name|SimpleFunctionCall
 operator|:
 name|public
 name|AnyFunctionCall
 block|{
+name|friend
+name|class
+name|CallEventManager
+block|;
 name|protected
 operator|:
-name|SimpleCall
+name|SimpleFunctionCall
 argument_list|(
 argument|const CallExpr *CE
 argument_list|,
@@ -1707,10 +1680,10 @@ argument_list|,
 argument|LCtx
 argument_list|)
 block|{}
-name|SimpleCall
+name|SimpleFunctionCall
 argument_list|(
 specifier|const
-name|SimpleCall
+name|SimpleFunctionCall
 operator|&
 name|Other
 argument_list|)
@@ -1720,6 +1693,24 @@ argument_list|(
 argument|Other
 argument_list|)
 block|{}
+name|void
+name|cloneTo
+argument_list|(
+argument|void *Dest
+argument_list|)
+specifier|const
+name|override
+block|{
+name|new
+argument_list|(
+argument|Dest
+argument_list|)
+name|SimpleFunctionCall
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;   }
 name|public
 operator|:
 name|virtual
@@ -1743,19 +1734,19 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 specifier|const
 name|FunctionDecl
 operator|*
 name|getDecl
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -1765,7 +1756,6 @@ name|getNumArgs
 argument_list|()
 return|;
 block|}
-name|virtual
 specifier|const
 name|Expr
 operator|*
@@ -1774,6 +1764,7 @@ argument_list|(
 argument|unsigned Index
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -1785,102 +1776,11 @@ name|Index
 argument_list|)
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CallEvent *CA
-argument_list|)
-block|{
-return|return
-name|CA
-operator|->
-name|getKind
-argument_list|()
-operator|>=
-name|CE_BEG_SIMPLE_CALLS
-operator|&&
-name|CA
-operator|->
-name|getKind
-argument_list|()
-operator|<=
-name|CE_END_SIMPLE_CALLS
-return|;
-block|}
-expr|}
-block|;
-comment|/// \brief Represents a C function or static C++ member function call.
-comment|///
-comment|/// Example: \c fun()
-name|class
-name|FunctionCall
-operator|:
-name|public
-name|SimpleCall
-block|{
-name|friend
-name|class
-name|CallEventManager
-block|;
-name|protected
-operator|:
-name|FunctionCall
-argument_list|(
-argument|const CallExpr *CE
-argument_list|,
-argument|ProgramStateRef St
-argument_list|,
-argument|const LocationContext *LCtx
-argument_list|)
-operator|:
-name|SimpleCall
-argument_list|(
-argument|CE
-argument_list|,
-argument|St
-argument_list|,
-argument|LCtx
-argument_list|)
-block|{}
-name|FunctionCall
-argument_list|(
-specifier|const
-name|FunctionCall
-operator|&
-name|Other
-argument_list|)
-operator|:
-name|SimpleCall
-argument_list|(
-argument|Other
-argument_list|)
-block|{}
-name|virtual
-name|void
-name|cloneTo
-argument_list|(
-argument|void *Dest
-argument_list|)
-specifier|const
-block|{
-name|new
-argument_list|(
-argument|Dest
-argument_list|)
-name|FunctionCall
-argument_list|(
-operator|*
-name|this
-argument_list|)
-block|; }
-name|public
-operator|:
-name|virtual
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CE_Function
@@ -1911,7 +1811,7 @@ name|class
 name|BlockCall
 operator|:
 name|public
-name|SimpleCall
+name|CallEvent
 block|{
 name|friend
 name|class
@@ -1928,7 +1828,7 @@ argument_list|,
 argument|const LocationContext *LCtx
 argument_list|)
 operator|:
-name|SimpleCall
+name|CallEvent
 argument_list|(
 argument|CE
 argument_list|,
@@ -1945,18 +1845,18 @@ operator|&
 name|Other
 argument_list|)
 operator|:
-name|SimpleCall
+name|CallEvent
 argument_list|(
 argument|Other
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|cloneTo
 argument_list|(
 argument|void *Dest
 argument_list|)
 specifier|const
+name|override
 block|{
 name|new
 argument_list|(
@@ -1968,16 +1868,71 @@ operator|*
 name|this
 argument_list|)
 block|; }
-name|virtual
 name|void
 name|getExtraInvalidatedValues
 argument_list|(
 argument|ValueList&Values
 argument_list|)
 specifier|const
+name|override
 block|;
 name|public
 operator|:
+name|virtual
+specifier|const
+name|CallExpr
+operator|*
+name|getOriginExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|CallExpr
+operator|>
+operator|(
+name|CallEvent
+operator|::
+name|getOriginExpr
+argument_list|()
+operator|)
+return|;
+block|}
+name|unsigned
+name|getNumArgs
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getOriginExpr
+argument_list|()
+operator|->
+name|getNumArgs
+argument_list|()
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getArgExpr
+argument_list|(
+argument|unsigned Index
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|getOriginExpr
+argument_list|()
+operator|->
+name|getArg
+argument_list|(
+name|Index
+argument_list|)
+return|;
+block|}
 comment|/// \brief Returns the region associated with this instance of the block.
 comment|///
 comment|/// This may be NULL if the block's origin is unknown.
@@ -1988,16 +1943,13 @@ name|getBlockRegion
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Gets the declaration of the block.
-comment|///
-comment|/// This is not an override of getDecl() because AnyFunctionCall has already
-comment|/// assumed that it's a FunctionDecl.
 specifier|const
 name|BlockDecl
 operator|*
-name|getBlockDecl
+name|getDecl
 argument_list|()
 specifier|const
+name|override
 block|{
 specifier|const
 name|BlockDataRegion
@@ -2013,7 +1965,7 @@ operator|!
 name|BR
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|BR
@@ -2022,21 +1974,30 @@ name|getDecl
 argument_list|()
 return|;
 block|}
-name|virtual
 name|RuntimeDefinition
 name|getRuntimeDefinition
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|RuntimeDefinition
 argument_list|(
-name|getBlockDecl
+name|getDecl
 argument_list|()
 argument_list|)
 return|;
 block|}
-name|virtual
+name|bool
+name|argumentsMayEscape
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
 name|void
 name|getInitialStackFrameContents
 argument_list|(
@@ -2045,24 +2006,23 @@ argument_list|,
 argument|BindingsTy&Bindings
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
-name|param_iterator
-name|param_begin
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+name|parameters
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
-name|param_iterator
-name|param_end
-argument_list|()
-specifier|const
-block|;
-name|virtual
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CE_Block
@@ -2096,13 +2056,13 @@ name|AnyFunctionCall
 block|{
 name|protected
 operator|:
-name|virtual
 name|void
 name|getExtraInvalidatedValues
 argument_list|(
 argument|ValueList&Values
 argument_list|)
 specifier|const
+name|override
 block|;
 name|CXXInstanceCall
 argument_list|(
@@ -2165,7 +2125,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Returns the value of the implicit 'this' object.
@@ -2175,21 +2135,20 @@ name|getCXXThisVal
 argument_list|()
 specifier|const
 block|;
-name|virtual
 specifier|const
 name|FunctionDecl
 operator|*
 name|getDecl
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|RuntimeDefinition
 name|getRuntimeDefinition
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|getInitialStackFrameContents
 argument_list|(
@@ -2198,6 +2157,7 @@ argument_list|,
 argument|BindingsTy&Bindings
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -2270,13 +2230,13 @@ argument_list|(
 argument|Other
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|cloneTo
 argument_list|(
 argument|void *Dest
 argument_list|)
 specifier|const
+name|override
 block|{
 name|new
 argument_list|(
@@ -2311,11 +2271,11 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -2337,7 +2297,6 @@ return|return
 literal|0
 return|;
 block|}
-name|virtual
 specifier|const
 name|Expr
 operator|*
@@ -2346,6 +2305,7 @@ argument_list|(
 argument|unsigned Index
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -2357,25 +2317,25 @@ name|Index
 argument_list|)
 return|;
 block|}
-name|virtual
 specifier|const
 name|Expr
 operator|*
 name|getCXXThisExpr
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|RuntimeDefinition
 name|getRuntimeDefinition
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CE_CXXMember
@@ -2446,13 +2406,13 @@ argument_list|(
 argument|Other
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|cloneTo
 argument_list|(
 argument|void *Dest
 argument_list|)
 specifier|const
+name|override
 block|{
 name|new
 argument_list|(
@@ -2487,11 +2447,11 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -2503,7 +2463,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|virtual
 specifier|const
 name|Expr
 operator|*
@@ -2512,6 +2471,7 @@ argument_list|(
 argument|unsigned Index
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -2525,19 +2485,19 @@ literal|1
 argument_list|)
 return|;
 block|}
-name|virtual
 specifier|const
 name|Expr
 operator|*
 name|getCXXThisExpr
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CE_CXXMemberOperator
@@ -2655,13 +2615,13 @@ argument_list|(
 argument|Other
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|cloneTo
 argument_list|(
 argument|void *Dest
 argument_list|)
 specifier|const
+name|override
 block|{
 name|new
 argument_list|(
@@ -2672,41 +2632,41 @@ argument_list|(
 operator|*
 name|this
 argument_list|)
-block|; }
+block|;}
 name|public
 operator|:
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Location
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|0
 return|;
 block|}
-name|virtual
 name|RuntimeDefinition
 name|getRuntimeDefinition
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Returns the value of the implicit 'this' object.
-name|virtual
 name|SVal
 name|getCXXThisVal
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// Returns true if this is a call to a base class destructor.
 name|bool
@@ -2726,11 +2686,11 @@ name|getInt
 argument_list|()
 return|;
 block|}
-name|virtual
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CE_CXXDestructor
@@ -2813,13 +2773,13 @@ argument_list|(
 argument|Other
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|cloneTo
 argument_list|(
 argument|void *Dest
 argument_list|)
 specifier|const
+name|override
 block|{
 name|new
 argument_list|(
@@ -2831,13 +2791,13 @@ operator|*
 name|this
 argument_list|)
 block|; }
-name|virtual
 name|void
 name|getExtraInvalidatedValues
 argument_list|(
 argument|ValueList&Values
 argument_list|)
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -2862,13 +2822,13 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 specifier|const
 name|CXXConstructorDecl
 operator|*
 name|getDecl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -2878,11 +2838,11 @@ name|getConstructor
 argument_list|()
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -2892,7 +2852,6 @@ name|getNumArgs
 argument_list|()
 return|;
 block|}
-name|virtual
 specifier|const
 name|Expr
 operator|*
@@ -2901,6 +2860,7 @@ argument_list|(
 argument|unsigned Index
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -2918,7 +2878,6 @@ name|getCXXThisVal
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|void
 name|getInitialStackFrameContents
 argument_list|(
@@ -2927,12 +2886,13 @@ argument_list|,
 argument|BindingsTy&Bindings
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CE_CXXConstructor
@@ -3002,13 +2962,13 @@ argument_list|(
 argument|Other
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|cloneTo
 argument_list|(
 argument|void *Dest
 argument_list|)
 specifier|const
+name|override
 block|{
 name|new
 argument_list|(
@@ -3043,13 +3003,13 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 specifier|const
 name|FunctionDecl
 operator|*
 name|getDecl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -3059,11 +3019,11 @@ name|getOperatorNew
 argument_list|()
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -3075,7 +3035,6 @@ operator|+
 literal|1
 return|;
 block|}
-name|virtual
 specifier|const
 name|Expr
 operator|*
@@ -3084,6 +3043,7 @@ argument_list|(
 argument|unsigned Index
 argument_list|)
 specifier|const
+name|override
 block|{
 comment|// The first argument of an allocator call is the size of the allocation.
 if|if
@@ -3093,7 +3053,7 @@ operator|==
 literal|0
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|getOriginExpr
@@ -3107,11 +3067,11 @@ literal|1
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CE_CXXAllocator
@@ -3191,7 +3151,7 @@ argument_list|)
 block|{
 name|Data
 operator|=
-literal|0
+name|nullptr
 block|;   }
 name|ObjCMethodCall
 argument_list|(
@@ -3206,13 +3166,13 @@ argument_list|(
 argument|Other
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|cloneTo
 argument_list|(
 argument|void *Dest
 argument_list|)
 specifier|const
+name|override
 block|{
 name|new
 argument_list|(
@@ -3224,13 +3184,13 @@ operator|*
 name|this
 argument_list|)
 block|; }
-name|virtual
 name|void
 name|getExtraInvalidatedValues
 argument_list|(
 argument|ValueList&Values
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Check if the selector may have multiple definitions (may have overrides).
 name|virtual
@@ -3266,13 +3226,13 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 specifier|const
 name|ObjCMethodDecl
 operator|*
 name|getDecl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -3282,11 +3242,11 @@ name|getMethodDecl
 argument_list|()
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getNumArgs
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -3296,7 +3256,6 @@ name|getNumArgs
 argument_list|()
 return|;
 block|}
-name|virtual
 specifier|const
 name|Expr
 operator|*
@@ -3305,6 +3264,7 @@ argument_list|(
 argument|unsigned Index
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|getOriginExpr
@@ -3355,11 +3315,11 @@ name|getSelector
 argument_list|()
 return|;
 block|}
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Returns the value of the receiver at the time of this call.
 name|SVal
@@ -3451,13 +3411,18 @@ literal|"Unknown message kind"
 argument_list|)
 expr_stmt|;
 block|}
-name|virtual
 name|RuntimeDefinition
 name|getRuntimeDefinition
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
+name|bool
+name|argumentsMayEscape
+argument_list|()
+specifier|const
+name|override
+block|;
 name|void
 name|getInitialStackFrameContents
 argument_list|(
@@ -3466,24 +3431,23 @@ argument_list|,
 argument|BindingsTy&Bindings
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
-name|param_iterator
-name|param_begin
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+name|parameters
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
-name|param_iterator
-name|param_end
-argument_list|()
-specifier|const
-block|;
-name|virtual
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|CE_ObjCMessage
@@ -3536,6 +3500,10 @@ literal|8
 operator|>
 name|Cache
 block|;
+typedef|typedef
+name|SimpleFunctionCall
+name|CallEventTemplateTy
+typedef|;
 name|void
 name|reclaim
 argument_list|(
@@ -3574,7 +3542,7 @@ name|Alloc
 operator|.
 name|Allocate
 operator|<
-name|FunctionCall
+name|CallEventTemplateTy
 operator|>
 operator|(
 operator|)
@@ -3606,6 +3574,21 @@ argument_list|,
 argument|const LocationContext *LCtx
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|CallEventTemplateTy
+argument_list|)
+argument_list|,
+literal|"CallEvent subclasses are not all the same size"
+argument_list|)
+block|;
 return|return
 name|new
 argument_list|(
@@ -3645,6 +3628,21 @@ argument_list|,
 argument|const LocationContext *LCtx
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|CallEventTemplateTy
+argument_list|)
+argument_list|,
+literal|"CallEvent subclasses are not all the same size"
+argument_list|)
+block|;
 return|return
 name|new
 argument_list|(
@@ -3691,6 +3689,21 @@ argument_list|,
 argument|const LocationContext *LCtx
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|CallEventTemplateTy
+argument_list|)
+argument_list|,
+literal|"CallEvent subclasses are not all the same size"
+argument_list|)
+block|;
 return|return
 name|new
 argument_list|(
@@ -3744,6 +3757,21 @@ argument_list|,
 argument|const LocationContext *LCtx
 argument_list|)
 block|{
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|T
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|CallEventTemplateTy
+argument_list|)
+argument_list|,
+literal|"CallEvent subclasses are not all the same size"
+argument_list|)
+block|;
 return|return
 name|new
 argument_list|(
@@ -3960,7 +3988,7 @@ operator|&&
 literal|"Cloning to unrelated type"
 argument_list|)
 block|;
-name|assert
+name|static_assert
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3971,7 +3999,7 @@ sizeof|sizeof
 argument_list|(
 name|CallEvent
 argument_list|)
-operator|&&
+argument_list|,
 literal|"Subclasses may not add fields"
 argument_list|)
 block|;
@@ -4142,7 +4170,7 @@ block|{
 return|return
 name|Val
 operator|.
-name|getPtr
+name|get
 argument_list|()
 return|;
 block|}

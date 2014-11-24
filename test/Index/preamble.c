@@ -17,6 +17,20 @@ directive|include
 file|"preamble-with-error.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|MACRO_UNUSED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MACRO_USED
+value|2
+end_define
+
 begin_function_decl
 name|int
 name|wibble
@@ -33,7 +47,11 @@ parameter_list|(
 name|int
 name|x
 parameter_list|)
-block|{    }
+block|{
+name|x
+operator|=
+name|MACRO_USED
+block|}
 end_function
 
 begin_comment
@@ -41,7 +59,7 @@ comment|// RUN: c-index-test -write-pch %t.pch -x c-header %S/Inputs/prefix.h
 end_comment
 
 begin_comment
-comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -test-load-source-reparse 5 local -I %S/Inputs -include %t %s 2> %t.stderr.txt | FileCheck %s
+comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -test-load-source-reparse 5 local -I %S/Inputs -include %t %s -Wunused-macros 2> %t.stderr.txt | FileCheck %s
 end_comment
 
 begin_comment
@@ -73,11 +91,11 @@ comment|// CHECK: preamble.h:5:10: IntegerLiteral= Extent=[5:10 - 5:11]
 end_comment
 
 begin_comment
-comment|// CHECK: preamble.c:5:5: FunctionDecl=wibble:5:5 Extent=[5:1 - 5:16]
+comment|// CHECK: preamble.c:8:5: FunctionDecl=wibble:8:5 Extent=[8:1 - 8:16]
 end_comment
 
 begin_comment
-comment|// CHECK: preamble.c:5:15: ParmDecl=:5:15 (Definition) Extent=[5:12 - 5:16]
+comment|// CHECK: preamble.c:8:15: ParmDecl=:8:15 (Definition) Extent=[8:12 - 8:15]
 end_comment
 
 begin_comment
@@ -85,7 +103,19 @@ comment|// CHECK-DIAG: preamble.h:4:7:{4:9-4:13}: warning: incompatible pointer 
 end_comment
 
 begin_comment
-comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -code-completion-at=%s:8:1 -I %S/Inputs -include %t %s 2> %t.stderr.txt | FileCheck -check-prefix CHECK-CC %s
+comment|// FIXME: Should see:
+end_comment
+
+begin_comment
+comment|//     preamble.c:5:9: warning: macro is not used
+end_comment
+
+begin_comment
+comment|// CHECK-DIAG-NOT: preamble.c:6:9: warning: macro is not used
+end_comment
+
+begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -code-completion-at=%s:11:1 -I %S/Inputs -include %t %s 2> %t.stderr.txt | FileCheck -check-prefix CHECK-CC %s
 end_comment
 
 begin_comment

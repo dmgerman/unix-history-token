@@ -593,14 +593,33 @@ begin_comment
 comment|// expected-error {{expected ';' at end of declaration}}
 end_comment
 
+begin_function
+name|void
+name|knrNoSemi
+parameter_list|(
+name|i
+parameter_list|)
+name|int
+name|i
+decl_stmt|{
+end_function
+
+begin_comment
+unit|}
+comment|// expected-error {{expected ';' at end of declaration}}
+end_comment
+
 begin_comment
 comment|// PR12595
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|test18
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|int
 name|x
@@ -616,7 +635,7 @@ init|)
 decl_stmt|;
 comment|// expected-error {{extraneous ')' before ';'}}
 block|}
-end_function
+end_block
 
 begin_enum
 enum|enum
@@ -647,6 +666,155 @@ name|n
 block|; }
 operator|:
 comment|// expected-error {{expected ';'}}
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|// PR10982
+end_comment
+
+begin_enum
+enum|enum
+name|E11
+block|{
+name|A1
+init|=
+literal|1
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|E12
+block|{   ,
+comment|// expected-error{{expected identifier}}
+name|A2
+block|}
+enum|;
+end_enum
+
+begin_function
+name|void
+name|func_E12
+parameter_list|(
+name|enum
+name|E12
+modifier|*
+name|p
+parameter_list|)
+block|{
+operator|*
+name|p
+operator|=
+name|A2
+expr_stmt|;
+block|}
+end_function
+
+begin_enum
+enum|enum
+name|E13
+block|{
+literal|1D
+operator|,
+comment|// expected-error{{expected identifier}}
+name|A3
+block|}
+enum|;
+end_enum
+
+begin_function
+name|void
+name|func_E13
+parameter_list|(
+name|enum
+name|E13
+modifier|*
+name|p
+parameter_list|)
+block|{
+operator|*
+name|p
+operator|=
+name|A3
+expr_stmt|;
+block|}
+end_function
+
+begin_enum
+enum|enum
+name|E14
+block|{
+name|A4
+decl|12
+block|,
+comment|// expected-error{{expected '= constant-expression' or end of enumerator definition}}
+name|A4a
+block|}
+enum|;
+end_enum
+
+begin_function
+name|void
+name|func_E14
+parameter_list|(
+name|enum
+name|E14
+modifier|*
+name|p
+parameter_list|)
+block|{
+operator|*
+name|p
+operator|=
+name|A4a
+expr_stmt|;
+block|}
+end_function
+
+begin_enum
+enum|enum
+name|E15
+block|{
+name|A5
+init|=
+literal|12
+literal|4
+block|,
+comment|// expected-error{{expected '}' or ','}}
+name|A5a
+block|}
+enum|;
+end_enum
+
+begin_function
+name|void
+name|func_E15
+parameter_list|(
+name|enum
+name|E15
+modifier|*
+name|p
+parameter_list|)
+block|{
+operator|*
+name|p
+operator|=
+name|A5a
+expr_stmt|;
+block|}
+end_function
+
+begin_enum
+enum|enum
+name|E16
+block|{
+name|A6
+empty_stmt|;
+comment|// expected-error{{expected '= constant-expression' or end of enumerator definition}}
+name|A6a
 block|}
 enum|;
 end_enum

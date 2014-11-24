@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: not %clang_cc1_only -c %s -o -> /dev/null
+comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-comment|// expected-error {{assignment of read-only location}}
+comment|// expected-error {{read-only variable is not assignable}}
 block|}
 end_function
 
@@ -75,7 +75,7 @@ name|bar
 operator|=
 literal|1
 expr_stmt|;
-comment|// expected-error {{ assignment of read-only member}}
+comment|// expected-error {{read-only variable is not assignable}}
 return|return
 name|sfoo
 operator|.

@@ -100,6 +100,18 @@ comment|// CHECKBASIC-DAG: @f1 = alias void ()* @f0
 end_comment
 
 begin_comment
+comment|// CHECKBASIC-DAG: @test8_foo = alias weak bitcast (void ()* @test8_bar to void (...)*)
+end_comment
+
+begin_comment
+comment|// CHECKBASIC-DAG: @test8_zed = alias bitcast (void ()* @test8_bar to void (...)*)
+end_comment
+
+begin_comment
+comment|// CHECKBASIC-DAG: @test9_zed = alias void ()* @test9_bar
+end_comment
+
+begin_comment
 comment|// CHECKBASIC: define void @f0() [[NUW:#[0-9]+]] {
 end_comment
 
@@ -342,6 +354,92 @@ end_comment
 begin_comment
 comment|// CHECKCC: attributes [[NUW]] = { nounwind{{.*}} }
 end_comment
+
+begin_function
+name|void
+name|test8_bar
+parameter_list|()
+block|{}
+end_function
+
+begin_function_decl
+name|void
+name|test8_foo
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(weak
+operator|,
+function_decl|alias
+parameter_list|(
+function_decl|"test8_bar"
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|test8_zed
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(alias
+parameter_list|(
+function_decl|"test8_foo"
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function
+name|void
+name|test9_bar
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function_decl
+name|void
+name|test9_zed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(section
+parameter_list|(
+function_decl|"test"
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|test9_zed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(alias
+parameter_list|(
+function_decl|"test9_bar"
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

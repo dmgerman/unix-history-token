@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -64,6 +64,46 @@ argument_list|,
 name|focus_changed_cb
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|vla
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|__builtin_va_list
+name|ap
+decl_stmt|;
+name|void
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|__builtin_va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|typeof
+argument_list|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+index|[
+operator|++
+name|n
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// CHECK: add nsw i32 {{.*}}, 1
 block|}
 end_function
 

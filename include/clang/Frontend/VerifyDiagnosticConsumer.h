@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -83,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<climits>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -108,12 +108,12 @@ comment|/// Indicating that a line expects an error or a warning is simple. Put 
 comment|/// comment on the line that has the diagnostic, use:
 comment|///
 comment|/// \code
-comment|///   expected-{error,warning,note}
+comment|///   expected-{error,warning,remark,note}
 comment|/// \endcode
 comment|///
-comment|/// to tag if it's an expected error or warning, and place the expected text
-comment|/// between {{ and }} markers. The full text doesn't have to be included, only
-comment|/// enough to ensure that the correct diagnostic was emitted.
+comment|/// to tag if it's an expected error, remark or warning, and place the expected
+comment|/// text between {{ and }} markers. The full text doesn't have to be included,
+comment|/// only enough to ensure that the correct diagnostic was emitted.
 comment|///
 comment|/// Here's an example:
 comment|///
@@ -145,7 +145,10 @@ comment|///   // expected-error@path/include.h:15 {{error message}}
 comment|/// \endcode
 comment|///
 comment|/// The path can be absolute or relative and the same search paths will be used
-comment|/// as for #include directives.
+comment|/// as for #include directives.  The line number in an external file may be
+comment|/// substituted with '*' meaning that any line number will match (useful where
+comment|/// the included file is, for example, a system header where the actual line
+comment|/// number may change and is not critical).
 comment|///
 comment|/// The simple syntax above allows each specification to match exactly one
 comment|/// error.  You can use the extended syntax to customize this. The extended
@@ -182,10 +185,11 @@ comment|/// \endcode
 comment|///
 comment|/// In this example, the diagnostic may appear only once, if at all.
 comment|///
-comment|/// Regex matching mode may be selected by appending '-re' to type, such as:
+comment|/// Regex matching mode may be selected by appending '-re' to type and
+comment|/// including regexes wrapped in double curly braces in the directive, such as:
 comment|///
 comment|/// \code
-comment|///   expected-error-re
+comment|///   expected-error-re {{format specifies type 'wchar_t **' (aka '{{.+}}')}}
 comment|/// \endcode
 comment|///
 comment|/// Examples matching error: "variable has incomplete type 'struct s'"
@@ -194,10 +198,10 @@ comment|/// \code
 comment|///   // expected-error {{variable has incomplete type 'struct s'}}
 comment|///   // expected-error {{variable has incomplete type}}
 comment|///
-comment|///   // expected-error-re {{variable has has type 'struct .'}}
-comment|///   // expected-error-re {{variable has has type 'struct .*'}}
-comment|///   // expected-error-re {{variable has has type 'struct (.*)'}}
-comment|///   // expected-error-re {{variable has has type 'struct[[:space:]](.*)'}}
+comment|///   // expected-error-re {{variable has type 'struct {{.}}'}}
+comment|///   // expected-error-re {{variable has type 'struct {{.*}}'}}
+comment|///   // expected-error-re {{variable has type 'struct {{(.*)}}'}}
+comment|///   // expected-error-re {{variable has type 'struct{{[[:space:]](.*)}}'}}
 comment|/// \endcode
 comment|///
 comment|/// VerifyDiagnosticConsumer expects at least one expected-* directive to
@@ -240,6 +244,9 @@ parameter_list|,
 name|SourceLocation
 name|DiagnosticLoc
 parameter_list|,
+name|bool
+name|MatchAnyLine
+parameter_list|,
 name|StringRef
 name|Text
 parameter_list|,
@@ -276,6 +283,9 @@ name|unsigned
 name|Min
 decl_stmt|,
 name|Max
+decl_stmt|;
+name|bool
+name|MatchAnyLine
 decl_stmt|;
 name|virtual
 operator|~
@@ -316,6 +326,8 @@ argument|SourceLocation DirectiveLoc
 argument_list|,
 argument|SourceLocation DiagnosticLoc
 argument_list|,
+argument|bool MatchAnyLine
+argument_list|,
 argument|StringRef Text
 argument_list|,
 argument|unsigned Min
@@ -345,7 +357,12 @@ argument_list|)
 operator|,
 name|Max
 argument_list|(
-argument|Max
+name|Max
+argument_list|)
+operator|,
+name|MatchAnyLine
+argument_list|(
+argument|MatchAnyLine
 argument_list|)
 block|{
 name|assert
@@ -412,11 +429,14 @@ name|DirectiveList
 name|Warnings
 decl_stmt|;
 name|DirectiveList
+name|Remarks
+decl_stmt|;
+name|DirectiveList
 name|Notes
 decl_stmt|;
-operator|~
-name|ExpectedData
-argument_list|()
+name|void
+name|Reset
+parameter_list|()
 block|{
 name|llvm
 operator|::
@@ -424,21 +444,36 @@ name|DeleteContainerPointers
 argument_list|(
 name|Errors
 argument_list|)
-block|;
+expr_stmt|;
 name|llvm
 operator|::
 name|DeleteContainerPointers
 argument_list|(
 name|Warnings
 argument_list|)
-block|;
+expr_stmt|;
+name|llvm
+operator|::
+name|DeleteContainerPointers
+argument_list|(
+name|Remarks
+argument_list|)
+expr_stmt|;
 name|llvm
 operator|::
 name|DeleteContainerPointers
 argument_list|(
 name|Notes
 argument_list|)
-block|;     }
+expr_stmt|;
+block|}
+operator|~
+name|ExpectedData
+argument_list|()
+block|{
+name|Reset
+argument_list|()
+block|; }
 block|}
 struct|;
 enum|enum
@@ -466,7 +501,9 @@ decl_stmt|;
 name|bool
 name|OwnsPrimaryClient
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|TextDiagnosticBuffer
 operator|>
@@ -528,9 +565,7 @@ operator|&
 name|SM
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
+comment|// These facilities are used for validation in debug builds.
 name|class
 name|UnparsedFileStatus
 block|{
@@ -622,8 +657,6 @@ decl_stmt|;
 name|UnparsedFilesMap
 name|UnparsedFiles
 decl_stmt|;
-endif|#
-directive|endif
 name|public
 label|:
 comment|/// Create a new verifying diagnostic client, which will issue errors to
@@ -640,26 +673,26 @@ operator|~
 name|VerifyDiagnosticConsumer
 argument_list|()
 expr_stmt|;
-name|virtual
 name|void
 name|BeginSourceFile
-parameter_list|(
+argument_list|(
 specifier|const
 name|LangOptions
-modifier|&
+operator|&
 name|LangOpts
-parameter_list|,
+argument_list|,
 specifier|const
 name|Preprocessor
-modifier|*
+operator|*
 name|PP
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|EndSourceFile
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 enum|enum
 name|ParsedStatus
 block|{
@@ -688,19 +721,18 @@ name|ParsedStatus
 name|PS
 parameter_list|)
 function_decl|;
-name|virtual
 name|bool
 name|HandleComment
-parameter_list|(
+argument_list|(
 name|Preprocessor
-modifier|&
+operator|&
 name|PP
-parameter_list|,
+argument_list|,
 name|SourceRange
 name|Comment
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -714,6 +746,7 @@ name|Diagnostic
 operator|&
 name|Info
 argument_list|)
+name|override
 decl_stmt|;
 block|}
 empty_stmt|;

@@ -386,7 +386,7 @@ name|test3_helper
 argument_list|()
 block|}
 decl_stmt|;
-comment|// expected-error 2 {{initializing 'short4' with an expression of incompatible type 'short8'}}
+comment|// expected-error 2 {{initializing 'short4' (vector of 4 'short' values) with an expression of incompatible type 'short8' (vector of 8 'short' values)}}
 block|}
 end_function
 

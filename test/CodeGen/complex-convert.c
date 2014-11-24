@@ -117,9 +117,13 @@ name|long
 name|cull1
 decl_stmt|;
 comment|// CHECK-LABEL: define void @foo(
-comment|// CHECK: alloca i[[CHSIZE:[0-9]+]], align [[CHALIGN:[0-9]+]]
-comment|// CHECK-NEXT: alloca i[[CHSIZE]], align [[CHALIGN]]
-comment|// CHECK-NEXT: alloca i[[LLSIZE:[0-9]+]], align [[LLALIGN:[0-9]+]]
+comment|// Match the prototype to pick up the size of sc and sll.
+comment|// CHECK: i[[CHSIZE:[0-9]+]]{{[^,]*}},
+comment|// CHECK: i[[CHSIZE]]{{[^,]*}},
+comment|// CHECK: i[[LLSIZE:[0-9]+]]
+comment|// Match against the allocas to pick up the alignments.
+comment|// CHECK: alloca i[[CHSIZE]], align [[CHALIGN:[0-9]+]]
+comment|// CHECK: alloca i[[LLSIZE]], align [[LLALIGN:[0-9]+]]
 name|sc1
 operator|=
 name|csc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -emit-llvm %s -o %t
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_typedef
@@ -25,7 +25,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// RUN: grep "union._attr_union = type<{ i32, i8 }>" %t
+comment|// CHECK: %union._attr_union = type<{ i32, i8 }>
 end_comment
 
 begin_typedef

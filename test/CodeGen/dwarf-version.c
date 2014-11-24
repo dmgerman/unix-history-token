@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -gdwarf-2 -S -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang -target x86_64-linux-gnu -gdwarf-2 -S -emit-llvm -o - %s | FileCheck %s --check-prefix=VER2
 end_comment
 
 begin_comment
@@ -12,11 +12,19 @@ comment|// RUN: %clang -target x86_64-linux-gnu -gdwarf-4 -S -emit-llvm -o - %s 
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-linux-gnu -g -S -emit-llvm -o - %s | FileCheck %s --check-prefix=LINUX
+comment|// RUN: %clang -target x86_64-linux-gnu -g -S -emit-llvm -o - %s | FileCheck %s --check-prefix=VER4
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target x86_64-apple-darwin -g -S -emit-llvm -o - %s | FileCheck %s --check-prefix=DARWIN
+comment|// RUN: %clang -target x86_64-apple-darwin -g -S -emit-llvm -o - %s | FileCheck %s --check-prefix=VER2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc-unknown-openbsd -g -S -emit-llvm -o - %s | FileCheck %s --check-prefix=VER2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target powerpc-unknown-freebsd -g -S -emit-llvm -o - %s | FileCheck %s --check-prefix=VER2
 end_comment
 
 begin_function
@@ -33,7 +41,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: metadata !{i32 2, metadata !"Dwarf Version", i32 2}
+comment|// VER2: metadata !{i32 2, metadata !"Dwarf Version", i32 2}
 end_comment
 
 begin_comment
@@ -42,14 +50,6 @@ end_comment
 
 begin_comment
 comment|// VER4: metadata !{i32 2, metadata !"Dwarf Version", i32 4}
-end_comment
-
-begin_comment
-comment|// LINUX: metadata !{i32 2, metadata !"Dwarf Version", i32 4}
-end_comment
-
-begin_comment
-comment|// DARWIN: metadata !{i32 2, metadata !"Dwarf Version", i32 2}
 end_comment
 
 end_unit

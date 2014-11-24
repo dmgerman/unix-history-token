@@ -1,13 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-mingw32 -fsyntax-only -verify -fms-extensions  -Wno-missing-declarations -x objective-c++ %s
+comment|// RUN: %clang_cc1 -triple i386-mingw32 -fsyntax-only -Wno-missing-declarations -verify -fms-extensions  %s
 end_comment
 
 begin_function_decl
 name|__stdcall
 name|int
 name|func0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -15,7 +17,9 @@ begin_function_decl
 name|int
 name|__stdcall
 name|func
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -27,7 +31,9 @@ name|__cdecl
 modifier|*
 name|tptr
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_typedef
 
@@ -38,34 +44,11 @@ modifier|*
 name|__fastcall
 name|fastpfunc
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|struct
-name|__declspec
-argument_list|(
-name|uuid
-argument_list|(
-literal|"00000000-0000-0000-C000-000000000046"
-argument_list|)
-argument_list|)
-name|__declspec
-argument_list|(
-name|novtable
-argument_list|)
-name|IUnknown
-block|{}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* expected-warning{{__declspec attribute 'novtable' is not supported}} */
-end_comment
 
 begin_extern
 extern|extern __declspec(dllimport
@@ -76,7 +59,9 @@ unit|)
 name|void
 name|__stdcall
 name|VarR4FromDec
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -227,31 +212,8 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|__forceinline
-name|InterlockedBitTestAndSet
-parameter_list|(
-name|long
-modifier|*
-name|Base
-parameter_list|,
-name|long
-name|Bit
-parameter_list|)
-block|{
-comment|// FIXME: Re-enable this once MS inline asm stabilizes.
-if|#
-directive|if
-literal|0
-block|__asm {     mov eax, Bit     mov ecx, Base     lock bts [ecx], eax     setc al   };
-endif|#
-directive|endif
-block|}
-end_function
-
 begin_comment
-comment|// Both inline and __forceinline is OK.
+comment|/* Both inline and __forceinline is OK. */
 end_comment
 
 begin_function
@@ -259,8 +221,10 @@ specifier|inline
 name|void
 name|__forceinline
 name|pr8264
-parameter_list|()
-block|{ }
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
 end_function
 
 begin_function
@@ -268,8 +232,10 @@ name|__forceinline
 name|void
 specifier|inline
 name|pr8264_1
-parameter_list|()
-block|{ }
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
 end_function
 
 begin_function
@@ -277,8 +243,10 @@ name|void
 specifier|inline
 name|__forceinline
 name|pr8264_2
-parameter_list|()
-block|{ }
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
 end_function
 
 begin_function
@@ -286,12 +254,14 @@ name|void
 name|__forceinline
 specifier|inline
 name|pr8264_3
-parameter_list|()
-block|{ }
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
 end_function
 
 begin_comment
-comment|// But duplicate __forceinline causes warning.
+comment|/* But duplicate __forceinline causes warning. */
 end_comment
 
 begin_function
@@ -299,9 +269,11 @@ name|void
 name|__forceinline
 name|__forceinline
 name|pr8264_4
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-comment|// expected-warning{{duplicate '__forceinline' declaration specifier}}
+comment|/* expected-warning{{duplicate '__forceinline' declaration specifier}} */
 block|}
 end_function
 
@@ -309,7 +281,9 @@ begin_function
 name|_inline
 name|int
 name|foo99
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|99
@@ -320,7 +294,9 @@ end_function
 begin_function
 name|void
 name|test_ms_alignof_alias
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -341,78 +317,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-name|void
-modifier|*
-name|_alloca
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|foo
-parameter_list|()
-block|{
-name|__declspec
-argument_list|(
-argument|align(
-literal|16
-argument|)
-argument_list|)
-name|int
-modifier|*
-name|buffer
-init|=
-operator|(
-name|int
-operator|*
-operator|)
-name|_alloca
-argument_list|(
-literal|9
-argument_list|)
-decl_stmt|;
-block|}
-end_function
-
-begin_typedef
-typedef|typedef
-name|bool
-function_decl|(
-name|__stdcall
-name|__stdcall
-modifier|*
-name|blarg
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_function
-name|void
-name|local_callconv
-parameter_list|()
-block|{
-name|bool
-function_decl|(
-name|__stdcall
-modifier|*
-name|p
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-block|}
-end_function
-
 begin_comment
-comment|// Charify extension.
+comment|/* Charify extension. */
 end_comment
 
 begin_define
@@ -466,7 +372,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note {{declared here}}
+comment|/* expected-note {{'E2' has been explicitly marked deprecated here}} */
 end_comment
 
 begin_expr_stmt
@@ -488,7 +394,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-note {{declared here}}
+comment|/* expected-note {{'e' has been explicitly marked deprecated here}} */
 end_comment
 
 begin_function
@@ -498,54 +404,30 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// Test to make sure the deprecated warning follows the right thing
+comment|/* Test to make sure the deprecated warning follows the right thing */
 name|enum
 name|E2
 name|e1
 decl_stmt|;
-comment|// expected-warning {{'E2' is deprecated}}
+comment|/* expected-warning {{'E2' is deprecated}} */
 name|enum
 name|E3
 name|e2
 decl_stmt|;
-comment|// No warning expected, the deprecation follows the variable
+comment|/* No warning expected, the deprecation follows the variable */
 name|enum
 name|E3
 name|e3
 init|=
 name|e
 decl_stmt|;
-comment|// expected-warning {{'e' is deprecated}}
+comment|/* expected-warning {{'e' is deprecated}} */
 block|}
 end_function
 
 begin_comment
 comment|/* Microsoft attribute tests */
 end_comment
-
-begin_expr_stmt
-index|[
-name|repeatable
-index|]
-index|[
-name|source_annotation_attribute
-argument_list|(
-name|Parameter
-operator||
-name|ReturnValue
-argument_list|)
-index|]
-expr|struct
-name|SA_Post
-block|{
-name|SA_Post
-argument_list|()
-block|;
-name|int
-name|attr
-block|; }
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 index|[
@@ -610,7 +492,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* expected-warning {{unknown __declspec attribute 'frobble' ignored}} */
+comment|/* expected-warning {{__declspec attribute 'frobble' is not supported}} */
 end_comment
 
 begin_struct
@@ -642,6 +524,64 @@ end_struct
 begin_comment
 comment|/* expected-warning {{__declspec attribute '"testing"' is not supported}} */
 end_comment
+
+begin_comment
+comment|/* declspecs with arguments cannot have an empty argument list, even if the    arguments are optional. */
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|deprecated()
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|dep_func_test
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* expected-error {{parentheses must be omitted if 'deprecated' attribute's argument list is empty}} */
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|deprecated
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|dep_func_test2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|deprecated(
+literal|""
+argument|)
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|dep_func_test3
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Ensure multiple declspec attributes are supported */
@@ -677,7 +617,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* expected-warning {{unknown __declspec attribute 'frobble' ignored}} expected-warning {{__declspec attribute '"testing"' is not supported}} */
+comment|/* expected-warning {{__declspec attribute 'frobble' is not supported}} expected-warning {{__declspec attribute '"testing"' is not supported}} */
 end_comment
 
 begin_struct
@@ -694,63 +634,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* expected-warning {{unknown __declspec attribute 'unknown' ignored}}*/
+comment|/* expected-warning {{__declspec attribute 'unknown' is not supported}}*/
 end_comment
-
-begin_struct
-struct|struct
-name|S7
-block|{
-name|int
-name|foo
-parameter_list|()
-block|{
-return|return
-literal|12
-return|;
-block|}
-name|__declspec
-argument_list|(
-argument|property(get=foo) deprecated
-argument_list|)
-name|int
-name|t
-decl_stmt|;
-comment|// expected-note {{declared here}}
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Technically, this is legal (though it does nothing) */
-end_comment
-
-begin_macro
-name|__declspec
-argument_list|()
-end_macro
-
-begin_function
-name|void
-name|quux
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|S7
-name|s
-decl_stmt|;
-name|int
-name|i
-init|=
-name|s
-operator|.
-name|t
-decl_stmt|;
-comment|/* expected-warning {{'t' is deprecated}} */
-block|}
-end_function
 
 begin_decl_stmt
 name|int

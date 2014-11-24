@@ -249,6 +249,22 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK-GNU89-LABEL: define i32 @fB()
+end_comment
+
+begin_function
+specifier|inline
+name|int
+name|fB
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|// CHECK-GNU89-LABEL: define available_externally i32 @f4()
 end_comment
 
@@ -351,6 +367,10 @@ begin_comment
 comment|// CHECK-C99-LABEL: define available_externally i32 @fA()
 end_comment
 
+begin_comment
+comment|// CHECK-C99-LABEL: define i32 @fB()
+end_comment
+
 begin_function
 name|int
 name|test_all
@@ -389,9 +409,21 @@ argument_list|()
 operator|+
 name|fA
 argument_list|()
+operator|+
+name|fB
+argument_list|()
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|int
+name|fB
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

@@ -42,7 +42,7 @@ name|f64
 argument_list|)
 expr_stmt|;
 comment|// CHECK: ImplicitCastExpr {{.*}} 'double'<FloatingCast>
-comment|// CHECK-NEXT: 'half'
+comment|// CHECK-NEXT: '__fp16'
 comment|// CHECK: ImplicitCastExpr {{.*}} 'double'<FloatingCast>
 comment|// CHECK-NEXT: 'float'
 block|}

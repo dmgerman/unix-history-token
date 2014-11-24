@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -O3 -triple=x86_64-apple-darwin -target-feature +avx2 -emit-llvm -o - -Werror | FileCheck %s
+comment|// RUN: %clang_cc1 %s -O0 -triple=x86_64-apple-darwin -target-feature +avx2 -emit-llvm -o - -Werror | FileCheck %s
 end_comment
 
 begin_comment
@@ -798,6 +798,18 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// FIXME: We should also lower the __builtin_ia32_pblendw128 (and similar)
+end_comment
+
+begin_comment
+comment|// functions to this IR. In the future we could delete the corresponding
+end_comment
+
+begin_comment
+comment|// intrinsic in LLVM if it's not being used anymore.
+end_comment
+
 begin_function
 name|__m256i
 name|test_mm256_blend_epi16
@@ -809,7 +821,9 @@ name|__m256i
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pblendw(<16 x i16> %{{.*}},<16 x i16> %{{.*}}, i32 2)
+comment|// CHECK-LABEL: test_mm256_blend_epi16
+comment|// CHECK-NOT: @llvm.x86.avx2.pblendw
+comment|// CHECK: shufflevector<16 x i16> %{{.*}},<16 x i16> %{{.*}},<16 x i32><i32 0, i32 17, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 25, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 return|return
 name|_mm256_blend_epi16
 argument_list|(
@@ -1893,7 +1907,7 @@ name|__m256i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> undef,<8 x i32><i32 3, i32 3, i32 0, i32 0, i32 7, i32 7, i32 4, i32 4>
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<8 x i32><i32 3, i32 3, i32 0, i32 0, i32 7, i32 7, i32 4, i32 4>
 return|return
 name|_mm256_shuffle_epi32
 argument_list|(
@@ -1913,7 +1927,7 @@ name|__m256i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<16 x i16> %{{.*}},<16 x i16> undef,<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 7, i32 6, i32 6, i32 5, i32 8, i32 9, i32 10, i32 11, i32 15, i32 14, i32 14, i32 13>
+comment|// CHECK: shufflevector<16 x i16> %{{.*}},<16 x i16> %{{.*}},<16 x i32><i32 0, i32 1, i32 2, i32 3, i32 7, i32 6, i32 6, i32 5, i32 8, i32 9, i32 10, i32 11, i32 15, i32 14, i32 14, i32 13>
 return|return
 name|_mm256_shufflehi_epi16
 argument_list|(
@@ -1933,7 +1947,7 @@ name|__m256i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: shufflevector<16 x i16> %{{.*}},<16 x i16> undef,<16 x i32><i32 3, i32 0, i32 1, i32 1, i32 4, i32 5, i32 6, i32 7, i32 11, i32 8, i32 9, i32 9, i32 12, i32 13, i32 14, i32 15>
+comment|// CHECK: shufflevector<16 x i16> %{{.*}},<16 x i16> %{{.*}},<16 x i32><i32 3, i32 0, i32 1, i32 1, i32 4, i32 5, i32 6, i32 7, i32 11, i32 8, i32 9, i32 9, i32 12, i32 13, i32 14, i32 15>
 return|return
 name|_mm256_shufflelo_epi16
 argument_list|(
@@ -2684,7 +2698,9 @@ name|__m128i
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pblendd.128
+comment|// CHECK-LABEL: test_mm_blend_epi32
+comment|// CHECK-NOT: @llvm.x86.avx2.pblendd.128
+comment|// CHECK: shufflevector<4 x i32> %{{.*}},<4 x i32> %{{.*}},<4 x i32><i32 4, i32 1, i32 6, i32 3>
 return|return
 name|_mm_blend_epi32
 argument_list|(
@@ -2692,7 +2708,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-literal|57
+literal|0x35
 argument_list|)
 return|;
 block|}
@@ -2709,7 +2725,9 @@ name|__m256i
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.pblendd.256
+comment|// CHECK-LABEL: test_mm256_blend_epi32
+comment|// CHECK-NOT: @llvm.x86.avx2.pblendd.256
+comment|// CHECK: shufflevector<8 x i32> %{{.*}},<8 x i32> %{{.*}},<8 x i32><i32 8, i32 1, i32 10, i32 3, i32 12, i32 13, i32 6, i32 7>
 return|return
 name|_mm256_blend_epi32
 argument_list|(
@@ -2717,7 +2735,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-literal|57
+literal|0x35
 argument_list|)
 return|;
 block|}

@@ -14,7 +14,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: VarDecl 0x{{[^ ]*}}<{{.*}}:4:1, col:5> TestLocation
+comment|// CHECK: VarDecl 0x{{[^ ]*}}<{{.*}}:4:1, col:5> col:5 TestLocation
 end_comment
 
 begin_struct
@@ -157,7 +157,7 @@ comment|// CHECK:      RecordDecl{{.*}} TestEnumDeclAnon
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:   EnumDecl{{.*>$}}
+comment|// CHECK-NEXT:   EnumDecl{{.*> .*$}}
 end_comment
 
 begin_enum_decl

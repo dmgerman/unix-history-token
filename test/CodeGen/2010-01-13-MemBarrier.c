@@ -4,10 +4,6 @@ comment|// RUN: %clang_cc1 %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// XFAIL: sparc
-end_comment
-
-begin_comment
 comment|// rdar://7536390
 end_comment
 

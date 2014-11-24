@@ -55,6 +55,14 @@ directive|include
 file|"llvm/Support/Registry.h"
 end_include
 
+begin_comment
+comment|// Instantiated in FrontendAction.cpp.
+end_comment
+
+begin_extern
+extern|extern template class llvm::Registry<clang::PluginASTAction>;
+end_extern
+
 begin_decl_stmt
 name|namespace
 name|clang

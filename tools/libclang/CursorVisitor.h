@@ -147,11 +147,9 @@ argument|Kind k
 argument_list|,
 argument|const void *d1
 argument_list|,
-argument|const void *d2 =
-literal|0
+argument|const void *d2 = nullptr
 argument_list|,
-argument|const void *d3 =
-literal|0
+argument|const void *d3 = nullptr
 argument_list|)
 block|:
 name|parent
@@ -511,8 +509,7 @@ argument|SourceRange RegionOfInterest = SourceRange()
 argument_list|,
 argument|bool VisitDeclsOnly = false
 argument_list|,
-argument|PostChildrenVisitorTy PostChildrenVisitor =
-literal|0
+argument|PostChildrenVisitorTy PostChildrenVisitor = nullptr
 argument_list|)
 block|:
 name|TU
@@ -567,12 +564,12 @@ argument_list|)
 operator|,
 name|DI_current
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|FileDI_current
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|Parent
@@ -588,7 +585,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+name|nullptr
 block|;
 name|Parent
 operator|.
@@ -597,7 +594,7 @@ index|[
 literal|1
 index|]
 operator|=
-literal|0
+name|nullptr
 block|;
 name|Parent
 operator|.
@@ -606,11 +603,11 @@ index|[
 literal|2
 index|]
 operator|=
-literal|0
+name|nullptr
 block|;
 name|StmtParent
 operator|=
-literal|0
+name|nullptr
 block|;   }
 operator|~
 name|CursorVisitor

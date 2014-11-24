@@ -187,15 +187,15 @@ comment|// CHECK-YES: declare x86_fp80 @powl(x86_fp80, x86_fp80)
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare float @llvm.pow.f32(float, float) [[NUW_RO:#[0-9]+]]
+comment|// CHECK-NO: declare float @llvm.pow.f32(float, float) [[NUW_RNI:#[0-9]+]]
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare double @llvm.pow.f64(double, double) [[NUW_RO]]
+comment|// CHECK-NO: declare double @llvm.pow.f64(double, double) [[NUW_RNI]]
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare x86_fp80 @llvm.pow.f80(x86_fp80, x86_fp80) [[NUW_RO]]
+comment|// CHECK-NO: declare x86_fp80 @llvm.pow.f80(x86_fp80, x86_fp80) [[NUW_RNI]]
 end_comment
 
 begin_comment
@@ -310,8 +310,8 @@ name|double
 name|ld
 parameter_list|)
 block|{
-comment|// CHEC-NO: @test_builtins
-comment|// CHEC-YES: @test_builtins
+comment|// CHECK-NO: @test_builtins
+comment|// CHECK-YES: @test_builtins
 name|double
 name|atan_
 init|=
@@ -454,7 +454,7 @@ comment|// CHECK-NO: attributes [[NUW_RN]] = { nounwind readnone{{.*}} }
 end_comment
 
 begin_comment
-comment|// CHECK-NO: attributes [[NUW_RO]] = { nounwind readonly }
+comment|// CHECK-NO: attributes [[NUW_RNI]] = { nounwind readnone }
 end_comment
 
 end_unit

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang-c/Documentation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/ASTContext.h"
 end_include
 
@@ -199,7 +205,7 @@ operator|!
 name|C
 condition|)
 return|return
-name|NULL
+name|nullptr
 return|;
 return|return
 name|dyn_cast

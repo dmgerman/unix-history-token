@@ -20,7 +20,7 @@ comment|// CHECK-X64: %struct.s0 = type<{ i64, i64, i32, [12 x i32] }>
 end_comment
 
 begin_comment
-comment|// CHECK-X64: %struct.s1 = type<{ [15 x i32], %struct.s0 }>
+comment|// CHECK-X64: %struct.s1 = type { [15 x i32], %struct.s0 }
 end_comment
 
 begin_comment

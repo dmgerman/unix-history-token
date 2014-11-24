@@ -4,7 +4,7 @@ comment|// REQUIRES: aarch64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -target-feature +neon \
+comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1_s8
+comment|// CHECK-LABEL: test_vuzp1_s8
 return|return
 name|vuzp1_s8
 argument_list|(
@@ -56,7 +56,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_s8
+comment|// CHECK-LABEL: test_vuzp1q_s8
 return|return
 name|vuzp1q_s8
 argument_list|(
@@ -80,7 +80,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1_s16
+comment|// CHECK-LABEL: test_vuzp1_s16
 return|return
 name|vuzp1_s16
 argument_list|(
@@ -104,7 +104,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_s16
+comment|// CHECK-LABEL: test_vuzp1q_s16
 return|return
 name|vuzp1q_s16
 argument_list|(
@@ -128,7 +128,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1_s32
+comment|// CHECK-LABEL: test_vuzp1_s32
 return|return
 name|vuzp1_s32
 argument_list|(
@@ -137,7 +137,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -152,7 +152,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_s32
+comment|// CHECK-LABEL: test_vuzp1q_s32
 return|return
 name|vuzp1q_s32
 argument_list|(
@@ -176,7 +176,7 @@ name|int64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_s64
+comment|// CHECK-LABEL: test_vuzp1q_s64
 return|return
 name|vuzp1q_s64
 argument_list|(
@@ -185,7 +185,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: {{ins v[0-9]+.d\[1\], v[0-9]+.d\[0\]|zip1 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -200,7 +200,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1_u8
+comment|// CHECK-LABEL: test_vuzp1_u8
 return|return
 name|vuzp1_u8
 argument_list|(
@@ -224,7 +224,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_u8
+comment|// CHECK-LABEL: test_vuzp1q_u8
 return|return
 name|vuzp1q_u8
 argument_list|(
@@ -248,7 +248,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1_u16
+comment|// CHECK-LABEL: test_vuzp1_u16
 return|return
 name|vuzp1_u16
 argument_list|(
@@ -272,7 +272,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_u16
+comment|// CHECK-LABEL: test_vuzp1q_u16
 return|return
 name|vuzp1q_u16
 argument_list|(
@@ -296,7 +296,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1_u32
+comment|// CHECK-LABEL: test_vuzp1_u32
 return|return
 name|vuzp1_u32
 argument_list|(
@@ -305,7 +305,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -320,7 +320,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_u32
+comment|// CHECK-LABEL: test_vuzp1q_u32
 return|return
 name|vuzp1q_u32
 argument_list|(
@@ -344,7 +344,7 @@ name|uint64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_u64
+comment|// CHECK-LABEL: test_vuzp1q_u64
 return|return
 name|vuzp1q_u64
 argument_list|(
@@ -353,7 +353,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: {{ins v[0-9]+.d\[1\], v[0-9]+.d\[0\]|zip1 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -368,7 +368,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1_f32
+comment|// CHECK-LABEL: test_vuzp1_f32
 return|return
 name|vuzp1_f32
 argument_list|(
@@ -377,7 +377,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -392,7 +392,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_f32
+comment|// CHECK-LABEL: test_vuzp1q_f32
 return|return
 name|vuzp1q_f32
 argument_list|(
@@ -416,7 +416,7 @@ name|float64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_f64
+comment|// CHECK-LABEL: test_vuzp1q_f64
 return|return
 name|vuzp1q_f64
 argument_list|(
@@ -425,7 +425,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: {{ins v[0-9]+.d\[1\], v[0-9]+.d\[0\]|zip1 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -440,7 +440,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1_p8
+comment|// CHECK-LABEL: test_vuzp1_p8
 return|return
 name|vuzp1_p8
 argument_list|(
@@ -464,7 +464,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_p8
+comment|// CHECK-LABEL: test_vuzp1q_p8
 return|return
 name|vuzp1q_p8
 argument_list|(
@@ -488,7 +488,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1_p16
+comment|// CHECK-LABEL: test_vuzp1_p16
 return|return
 name|vuzp1_p16
 argument_list|(
@@ -512,7 +512,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp1q_p16
+comment|// CHECK-LABEL: test_vuzp1q_p16
 return|return
 name|vuzp1q_p16
 argument_list|(
@@ -536,7 +536,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2_s8
+comment|// CHECK-LABEL: test_vuzp2_s8
 return|return
 name|vuzp2_s8
 argument_list|(
@@ -560,7 +560,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_s8
+comment|// CHECK-LABEL: test_vuzp2q_s8
 return|return
 name|vuzp2q_s8
 argument_list|(
@@ -584,7 +584,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2_s16
+comment|// CHECK-LABEL: test_vuzp2_s16
 return|return
 name|vuzp2_s16
 argument_list|(
@@ -608,7 +608,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_s16
+comment|// CHECK-LABEL: test_vuzp2q_s16
 return|return
 name|vuzp2q_s16
 argument_list|(
@@ -632,7 +632,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2_s32
+comment|// CHECK-LABEL: test_vuzp2_s32
 return|return
 name|vuzp2_s32
 argument_list|(
@@ -641,7 +641,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -656,7 +656,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_s32
+comment|// CHECK-LABEL: test_vuzp2q_s32
 return|return
 name|vuzp2q_s32
 argument_list|(
@@ -680,7 +680,7 @@ name|int64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_s64
+comment|// CHECK-LABEL: test_vuzp2q_s64
 return|return
 name|vuzp2q_s64
 argument_list|(
@@ -689,7 +689,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[0], {{v[0-9]+}}.d[1]
+comment|// CHECK: {{ins v[0-9]+.d\[0\], v[0-9]+.d\[1\]|zip2 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -704,7 +704,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2_u8
+comment|// CHECK-LABEL: test_vuzp2_u8
 return|return
 name|vuzp2_u8
 argument_list|(
@@ -728,7 +728,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_u8
+comment|// CHECK-LABEL: test_vuzp2q_u8
 return|return
 name|vuzp2q_u8
 argument_list|(
@@ -752,7 +752,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2_u16
+comment|// CHECK-LABEL: test_vuzp2_u16
 return|return
 name|vuzp2_u16
 argument_list|(
@@ -776,7 +776,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_u16
+comment|// CHECK-LABEL: test_vuzp2q_u16
 return|return
 name|vuzp2q_u16
 argument_list|(
@@ -800,7 +800,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2_u32
+comment|// CHECK-LABEL: test_vuzp2_u32
 return|return
 name|vuzp2_u32
 argument_list|(
@@ -809,7 +809,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -824,7 +824,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_u32
+comment|// CHECK-LABEL: test_vuzp2q_u32
 return|return
 name|vuzp2q_u32
 argument_list|(
@@ -848,7 +848,7 @@ name|uint64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_u64
+comment|// CHECK-LABEL: test_vuzp2q_u64
 return|return
 name|vuzp2q_u64
 argument_list|(
@@ -857,7 +857,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[0], {{v[0-9]+}}.d[1]
+comment|// CHECK: {{ins v[0-9]+.d\[0\], v[0-9]+.d\[1\]|zip2 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -872,7 +872,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2_f32
+comment|// CHECK-LABEL: test_vuzp2_f32
 return|return
 name|vuzp2_f32
 argument_list|(
@@ -881,7 +881,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -896,7 +896,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_f32
+comment|// CHECK-LABEL: test_vuzp2q_f32
 return|return
 name|vuzp2q_f32
 argument_list|(
@@ -920,7 +920,7 @@ name|float64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_f64
+comment|// CHECK-LABEL: test_vuzp2q_f64
 return|return
 name|vuzp2q_f64
 argument_list|(
@@ -929,7 +929,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[0], {{v[0-9]+}}.d[1]
+comment|// CHECK: {{ins v[0-9]+.d\[0\], v[0-9]+.d\[1\]|zip2 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -944,7 +944,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2_p8
+comment|// CHECK-LABEL: test_vuzp2_p8
 return|return
 name|vuzp2_p8
 argument_list|(
@@ -968,7 +968,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_p8
+comment|// CHECK-LABEL: test_vuzp2q_p8
 return|return
 name|vuzp2q_p8
 argument_list|(
@@ -992,7 +992,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2_p16
+comment|// CHECK-LABEL: test_vuzp2_p16
 return|return
 name|vuzp2_p16
 argument_list|(
@@ -1016,7 +1016,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp2q_p16
+comment|// CHECK-LABEL: test_vuzp2q_p16
 return|return
 name|vuzp2q_p16
 argument_list|(
@@ -1040,7 +1040,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1_s8
+comment|// CHECK-LABEL: test_vzip1_s8
 return|return
 name|vzip1_s8
 argument_list|(
@@ -1064,7 +1064,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_s8
+comment|// CHECK-LABEL: test_vzip1q_s8
 return|return
 name|vzip1q_s8
 argument_list|(
@@ -1088,7 +1088,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1_s16
+comment|// CHECK-LABEL: test_vzip1_s16
 return|return
 name|vzip1_s16
 argument_list|(
@@ -1112,7 +1112,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_s16
+comment|// CHECK-LABEL: test_vzip1q_s16
 return|return
 name|vzip1q_s16
 argument_list|(
@@ -1136,7 +1136,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1_s32
+comment|// CHECK-LABEL: test_vzip1_s32
 return|return
 name|vzip1_s32
 argument_list|(
@@ -1145,7 +1145,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -1160,7 +1160,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_s32
+comment|// CHECK-LABEL: test_vzip1q_s32
 return|return
 name|vzip1q_s32
 argument_list|(
@@ -1184,7 +1184,7 @@ name|int64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_s64
+comment|// CHECK-LABEL: test_vzip1q_s64
 return|return
 name|vzip1q_s64
 argument_list|(
@@ -1193,7 +1193,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: {{ins v[0-9]+.d\[1\], v[0-9]+.d\[0\]|zip1 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -1208,7 +1208,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1_u8
+comment|// CHECK-LABEL: test_vzip1_u8
 return|return
 name|vzip1_u8
 argument_list|(
@@ -1232,7 +1232,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_u8
+comment|// CHECK-LABEL: test_vzip1q_u8
 return|return
 name|vzip1q_u8
 argument_list|(
@@ -1256,7 +1256,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1_u16
+comment|// CHECK-LABEL: test_vzip1_u16
 return|return
 name|vzip1_u16
 argument_list|(
@@ -1280,7 +1280,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_u16
+comment|// CHECK-LABEL: test_vzip1q_u16
 return|return
 name|vzip1q_u16
 argument_list|(
@@ -1304,7 +1304,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1_u32
+comment|// CHECK-LABEL: test_vzip1_u32
 return|return
 name|vzip1_u32
 argument_list|(
@@ -1313,7 +1313,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -1328,7 +1328,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_u32
+comment|// CHECK-LABEL: test_vzip1q_u32
 return|return
 name|vzip1q_u32
 argument_list|(
@@ -1352,7 +1352,7 @@ name|uint64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_u64
+comment|// CHECK-LABEL: test_vzip1q_u64
 return|return
 name|vzip1q_u64
 argument_list|(
@@ -1361,7 +1361,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: {{ins v[0-9]+.d\[1\], v[0-9]+.d\[0\]|zip1 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -1376,7 +1376,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1_f32
+comment|// CHECK-LABEL: test_vzip1_f32
 return|return
 name|vzip1_f32
 argument_list|(
@@ -1385,7 +1385,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -1400,7 +1400,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_f32
+comment|// CHECK-LABEL: test_vzip1q_f32
 return|return
 name|vzip1q_f32
 argument_list|(
@@ -1424,7 +1424,7 @@ name|float64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_f64
+comment|// CHECK-LABEL: test_vzip1q_f64
 return|return
 name|vzip1q_f64
 argument_list|(
@@ -1433,7 +1433,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: {{ins v[0-9]+.d\[1\], v[0-9]+.d\[0\]|zip1 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -1448,7 +1448,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1_p8
+comment|// CHECK-LABEL: test_vzip1_p8
 return|return
 name|vzip1_p8
 argument_list|(
@@ -1472,7 +1472,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_p8
+comment|// CHECK-LABEL: test_vzip1q_p8
 return|return
 name|vzip1q_p8
 argument_list|(
@@ -1496,7 +1496,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1_p16
+comment|// CHECK-LABEL: test_vzip1_p16
 return|return
 name|vzip1_p16
 argument_list|(
@@ -1520,7 +1520,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip1q_p16
+comment|// CHECK-LABEL: test_vzip1q_p16
 return|return
 name|vzip1q_p16
 argument_list|(
@@ -1544,7 +1544,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2_s8
+comment|// CHECK-LABEL: test_vzip2_s8
 return|return
 name|vzip2_s8
 argument_list|(
@@ -1568,7 +1568,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_s8
+comment|// CHECK-LABEL: test_vzip2q_s8
 return|return
 name|vzip2q_s8
 argument_list|(
@@ -1592,7 +1592,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2_s16
+comment|// CHECK-LABEL: test_vzip2_s16
 return|return
 name|vzip2_s16
 argument_list|(
@@ -1616,7 +1616,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_s16
+comment|// CHECK-LABEL: test_vzip2q_s16
 return|return
 name|vzip2q_s16
 argument_list|(
@@ -1640,7 +1640,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2_s32
+comment|// CHECK-LABEL: test_vzip2_s32
 return|return
 name|vzip2_s32
 argument_list|(
@@ -1649,7 +1649,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -1664,7 +1664,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_s32
+comment|// CHECK-LABEL: test_vzip2q_s32
 return|return
 name|vzip2q_s32
 argument_list|(
@@ -1688,7 +1688,7 @@ name|int64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_s64
+comment|// CHECK-LABEL: test_vzip2q_s64
 return|return
 name|vzip2q_s64
 argument_list|(
@@ -1697,7 +1697,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[0], {{v[0-9]+}}.d[1]
+comment|// CHECK: {{ins v[0-9]+.d\[0\], v[0-9]+.d\[1\]|zip2 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -1712,7 +1712,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2_u8
+comment|// CHECK-LABEL: test_vzip2_u8
 return|return
 name|vzip2_u8
 argument_list|(
@@ -1736,7 +1736,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_u8
+comment|// CHECK-LABEL: test_vzip2q_u8
 return|return
 name|vzip2q_u8
 argument_list|(
@@ -1760,7 +1760,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2_u16
+comment|// CHECK-LABEL: test_vzip2_u16
 return|return
 name|vzip2_u16
 argument_list|(
@@ -1784,7 +1784,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_u16
+comment|// CHECK-LABEL: test_vzip2q_u16
 return|return
 name|vzip2q_u16
 argument_list|(
@@ -1808,7 +1808,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2_u32
+comment|// CHECK-LABEL: test_vzip2_u32
 return|return
 name|vzip2_u32
 argument_list|(
@@ -1817,7 +1817,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -1832,7 +1832,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_u32
+comment|// CHECK-LABEL: test_vzip2q_u32
 return|return
 name|vzip2q_u32
 argument_list|(
@@ -1856,7 +1856,7 @@ name|uint64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_u64
+comment|// CHECK-LABEL: test_vzip2q_u64
 return|return
 name|vzip2q_u64
 argument_list|(
@@ -1865,7 +1865,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[0], {{v[0-9]+}}.d[1]
+comment|// CHECK: {{ins v[0-9]+.d\[0\], v[0-9]+.d\[1\]|zip2 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -1880,7 +1880,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2_f32
+comment|// CHECK-LABEL: test_vzip2_f32
 return|return
 name|vzip2_f32
 argument_list|(
@@ -1889,7 +1889,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -1904,7 +1904,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_f32
+comment|// CHECK-LABEL: test_vzip2q_f32
 return|return
 name|vzip2q_f32
 argument_list|(
@@ -1928,7 +1928,7 @@ name|float64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_f64
+comment|// CHECK-LABEL: test_vzip2q_f64
 return|return
 name|vzip2q_f64
 argument_list|(
@@ -1937,7 +1937,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[0], {{v[0-9]+}}.d[1]
+comment|// CHECK: {{ins v[0-9]+.d\[0\], v[0-9]+.d\[1\]|zip2 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -1952,7 +1952,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2_p8
+comment|// CHECK-LABEL: test_vzip2_p8
 return|return
 name|vzip2_p8
 argument_list|(
@@ -1976,7 +1976,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_p8
+comment|// CHECK-LABEL: test_vzip2q_p8
 return|return
 name|vzip2q_p8
 argument_list|(
@@ -2000,7 +2000,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2_p16
+comment|// CHECK-LABEL: test_vzip2_p16
 return|return
 name|vzip2_p16
 argument_list|(
@@ -2024,7 +2024,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip2q_p16
+comment|// CHECK-LABEL: test_vzip2q_p16
 return|return
 name|vzip2q_p16
 argument_list|(
@@ -2048,7 +2048,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1_s8
+comment|// CHECK-LABEL: test_vtrn1_s8
 return|return
 name|vtrn1_s8
 argument_list|(
@@ -2072,7 +2072,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_s8
+comment|// CHECK-LABEL: test_vtrn1q_s8
 return|return
 name|vtrn1q_s8
 argument_list|(
@@ -2096,7 +2096,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1_s16
+comment|// CHECK-LABEL: test_vtrn1_s16
 return|return
 name|vtrn1_s16
 argument_list|(
@@ -2120,7 +2120,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_s16
+comment|// CHECK-LABEL: test_vtrn1q_s16
 return|return
 name|vtrn1q_s16
 argument_list|(
@@ -2144,7 +2144,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1_s32
+comment|// CHECK-LABEL: test_vtrn1_s32
 return|return
 name|vtrn1_s32
 argument_list|(
@@ -2153,7 +2153,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -2168,7 +2168,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_s32
+comment|// CHECK-LABEL: test_vtrn1q_s32
 return|return
 name|vtrn1q_s32
 argument_list|(
@@ -2192,7 +2192,7 @@ name|int64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_s64
+comment|// CHECK-LABEL: test_vtrn1q_s64
 return|return
 name|vtrn1q_s64
 argument_list|(
@@ -2201,7 +2201,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: {{ins v[0-9]+.d\[1\], v[0-9]+.d\[0\]|zip1 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -2216,7 +2216,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1_u8
+comment|// CHECK-LABEL: test_vtrn1_u8
 return|return
 name|vtrn1_u8
 argument_list|(
@@ -2240,7 +2240,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_u8
+comment|// CHECK-LABEL: test_vtrn1q_u8
 return|return
 name|vtrn1q_u8
 argument_list|(
@@ -2264,7 +2264,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1_u16
+comment|// CHECK-LABEL: test_vtrn1_u16
 return|return
 name|vtrn1_u16
 argument_list|(
@@ -2288,7 +2288,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_u16
+comment|// CHECK-LABEL: test_vtrn1q_u16
 return|return
 name|vtrn1q_u16
 argument_list|(
@@ -2312,7 +2312,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1_u32
+comment|// CHECK-LABEL: test_vtrn1_u32
 return|return
 name|vtrn1_u32
 argument_list|(
@@ -2321,7 +2321,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -2336,7 +2336,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_u32
+comment|// CHECK-LABEL: test_vtrn1q_u32
 return|return
 name|vtrn1q_u32
 argument_list|(
@@ -2360,7 +2360,7 @@ name|uint64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_u64
+comment|// CHECK-LABEL: test_vtrn1q_u64
 return|return
 name|vtrn1q_u64
 argument_list|(
@@ -2369,7 +2369,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: {{ins v[0-9]+.d\[1\], v[0-9]+.d\[0\]|zip1 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -2384,7 +2384,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1_f32
+comment|// CHECK-LABEL: test_vtrn1_f32
 return|return
 name|vtrn1_f32
 argument_list|(
@@ -2393,7 +2393,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -2408,7 +2408,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_f32
+comment|// CHECK-LABEL: test_vtrn1q_f32
 return|return
 name|vtrn1q_f32
 argument_list|(
@@ -2432,7 +2432,7 @@ name|float64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_f64
+comment|// CHECK-LABEL: test_vtrn1q_f64
 return|return
 name|vtrn1q_f64
 argument_list|(
@@ -2441,7 +2441,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[1], {{v[0-9]+}}.d[0]
+comment|// CHECK: {{ins v[0-9]+.d\[1\], v[0-9]+.d\[0\]|zip1 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -2456,7 +2456,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1_p8
+comment|// CHECK-LABEL: test_vtrn1_p8
 return|return
 name|vtrn1_p8
 argument_list|(
@@ -2480,7 +2480,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_p8
+comment|// CHECK-LABEL: test_vtrn1q_p8
 return|return
 name|vtrn1q_p8
 argument_list|(
@@ -2504,7 +2504,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1_p16
+comment|// CHECK-LABEL: test_vtrn1_p16
 return|return
 name|vtrn1_p16
 argument_list|(
@@ -2528,7 +2528,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn1q_p16
+comment|// CHECK-LABEL: test_vtrn1q_p16
 return|return
 name|vtrn1q_p16
 argument_list|(
@@ -2552,7 +2552,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2_s8
+comment|// CHECK-LABEL: test_vtrn2_s8
 return|return
 name|vtrn2_s8
 argument_list|(
@@ -2576,7 +2576,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_s8
+comment|// CHECK-LABEL: test_vtrn2q_s8
 return|return
 name|vtrn2q_s8
 argument_list|(
@@ -2600,7 +2600,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2_s16
+comment|// CHECK-LABEL: test_vtrn2_s16
 return|return
 name|vtrn2_s16
 argument_list|(
@@ -2624,7 +2624,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_s16
+comment|// CHECK-LABEL: test_vtrn2q_s16
 return|return
 name|vtrn2q_s16
 argument_list|(
@@ -2648,7 +2648,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2_s32
+comment|// CHECK-LABEL: test_vtrn2_s32
 return|return
 name|vtrn2_s32
 argument_list|(
@@ -2657,7 +2657,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -2672,7 +2672,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_s32
+comment|// CHECK-LABEL: test_vtrn2q_s32
 return|return
 name|vtrn2q_s32
 argument_list|(
@@ -2696,7 +2696,7 @@ name|int64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_s64
+comment|// CHECK-LABEL: test_vtrn2q_s64
 return|return
 name|vtrn2q_s64
 argument_list|(
@@ -2705,7 +2705,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[0], {{v[0-9]+}}.d[1]
+comment|// CHECK: {{ins v[0-9]+.d\[0\], v[0-9]+.d\[1\]|zip2 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -2720,7 +2720,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2_u8
+comment|// CHECK-LABEL: test_vtrn2_u8
 return|return
 name|vtrn2_u8
 argument_list|(
@@ -2744,7 +2744,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_u8
+comment|// CHECK-LABEL: test_vtrn2q_u8
 return|return
 name|vtrn2q_u8
 argument_list|(
@@ -2768,7 +2768,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2_u16
+comment|// CHECK-LABEL: test_vtrn2_u16
 return|return
 name|vtrn2_u16
 argument_list|(
@@ -2792,7 +2792,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_u16
+comment|// CHECK-LABEL: test_vtrn2q_u16
 return|return
 name|vtrn2q_u16
 argument_list|(
@@ -2816,7 +2816,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2_u32
+comment|// CHECK-LABEL: test_vtrn2_u32
 return|return
 name|vtrn2_u32
 argument_list|(
@@ -2825,7 +2825,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -2840,7 +2840,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_u32
+comment|// CHECK-LABEL: test_vtrn2q_u32
 return|return
 name|vtrn2q_u32
 argument_list|(
@@ -2864,7 +2864,7 @@ name|uint64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_u64
+comment|// CHECK-LABEL: test_vtrn2q_u64
 return|return
 name|vtrn2q_u64
 argument_list|(
@@ -2873,7 +2873,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[0], {{v[0-9]+}}.d[1]
+comment|// CHECK: {{ins v[0-9]+.d\[0\], v[0-9]+.d\[1\]|zip2 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -2888,7 +2888,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2_f32
+comment|// CHECK-LABEL: test_vtrn2_f32
 return|return
 name|vtrn2_f32
 argument_list|(
@@ -2897,7 +2897,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v0.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -2912,7 +2912,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_f32
+comment|// CHECK-LABEL: test_vtrn2q_f32
 return|return
 name|vtrn2q_f32
 argument_list|(
@@ -2936,7 +2936,7 @@ name|float64x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_f64
+comment|// CHECK-LABEL: test_vtrn2q_f64
 return|return
 name|vtrn2q_f64
 argument_list|(
@@ -2945,7 +2945,7 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.d[0], {{v[0-9]+}}.d[1]
+comment|// CHECK: {{ins v[0-9]+.d\[0\], v[0-9]+.d\[1\]|zip2 v0.2d, v0.2d, v1.2d}}
 block|}
 end_function
 
@@ -2960,7 +2960,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2_p8
+comment|// CHECK-LABEL: test_vtrn2_p8
 return|return
 name|vtrn2_p8
 argument_list|(
@@ -2984,7 +2984,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_p8
+comment|// CHECK-LABEL: test_vtrn2q_p8
 return|return
 name|vtrn2q_p8
 argument_list|(
@@ -3008,7 +3008,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2_p16
+comment|// CHECK-LABEL: test_vtrn2_p16
 return|return
 name|vtrn2_p16
 argument_list|(
@@ -3032,7 +3032,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn2q_p16
+comment|// CHECK-LABEL: test_vtrn2q_p16
 return|return
 name|vtrn2q_p16
 argument_list|(
@@ -3056,7 +3056,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp_s8
+comment|// CHECK-LABEL: test_vuzp_s8
 return|return
 name|vuzp_s8
 argument_list|(
@@ -3081,7 +3081,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp_s16
+comment|// CHECK-LABEL: test_vuzp_s16
 return|return
 name|vuzp_s16
 argument_list|(
@@ -3106,7 +3106,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp_s32
+comment|// CHECK-LABEL: test_vuzp_s32
 return|return
 name|vuzp_s32
 argument_list|(
@@ -3115,8 +3115,8 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v2.2s, v0.2s, v1.2s}}
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v1.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -3131,7 +3131,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp_u8
+comment|// CHECK-LABEL: test_vuzp_u8
 return|return
 name|vuzp_u8
 argument_list|(
@@ -3156,7 +3156,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp_u16
+comment|// CHECK-LABEL: test_vuzp_u16
 return|return
 name|vuzp_u16
 argument_list|(
@@ -3181,7 +3181,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp_u32
+comment|// CHECK-LABEL: test_vuzp_u32
 return|return
 name|vuzp_u32
 argument_list|(
@@ -3190,8 +3190,8 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v2.2s, v0.2s, v1.2s}}
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v1.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -3206,7 +3206,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp_f32
+comment|// CHECK-LABEL: test_vuzp_f32
 return|return
 name|vuzp_f32
 argument_list|(
@@ -3215,8 +3215,8 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v2.2s, v0.2s, v1.2s}}
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v1.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -3231,7 +3231,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp_p8
+comment|// CHECK-LABEL: test_vuzp_p8
 return|return
 name|vuzp_p8
 argument_list|(
@@ -3256,7 +3256,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzp_p16
+comment|// CHECK-LABEL: test_vuzp_p16
 return|return
 name|vuzp_p16
 argument_list|(
@@ -3281,7 +3281,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzpq_s8
+comment|// CHECK-LABEL: test_vuzpq_s8
 return|return
 name|vuzpq_s8
 argument_list|(
@@ -3306,7 +3306,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzpq_s16
+comment|// CHECK-LABEL: test_vuzpq_s16
 return|return
 name|vuzpq_s16
 argument_list|(
@@ -3331,7 +3331,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzpq_s32
+comment|// CHECK-LABEL: test_vuzpq_s32
 return|return
 name|vuzpq_s32
 argument_list|(
@@ -3356,7 +3356,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzpq_u8
+comment|// CHECK-LABEL: test_vuzpq_u8
 return|return
 name|vuzpq_u8
 argument_list|(
@@ -3381,7 +3381,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzpq_u16
+comment|// CHECK-LABEL: test_vuzpq_u16
 return|return
 name|vuzpq_u16
 argument_list|(
@@ -3406,7 +3406,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzpq_u32
+comment|// CHECK-LABEL: test_vuzpq_u32
 return|return
 name|vuzpq_u32
 argument_list|(
@@ -3431,7 +3431,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzpq_f32
+comment|// CHECK-LABEL: test_vuzpq_f32
 return|return
 name|vuzpq_f32
 argument_list|(
@@ -3456,7 +3456,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzpq_p8
+comment|// CHECK-LABEL: test_vuzpq_p8
 return|return
 name|vuzpq_p8
 argument_list|(
@@ -3481,7 +3481,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vuzpq_p16
+comment|// CHECK-LABEL: test_vuzpq_p16
 return|return
 name|vuzpq_p16
 argument_list|(
@@ -3506,7 +3506,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip_s8
+comment|// CHECK-LABEL: test_vzip_s8
 return|return
 name|vzip_s8
 argument_list|(
@@ -3531,7 +3531,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip_s16
+comment|// CHECK-LABEL: test_vzip_s16
 return|return
 name|vzip_s16
 argument_list|(
@@ -3556,7 +3556,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip_s32
+comment|// CHECK-LABEL: test_vzip_s32
 return|return
 name|vzip_s32
 argument_list|(
@@ -3565,8 +3565,8 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v2.2s, v0.2s, v1.2s}}
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v1.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -3581,7 +3581,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip_u8
+comment|// CHECK-LABEL: test_vzip_u8
 return|return
 name|vzip_u8
 argument_list|(
@@ -3606,7 +3606,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip_u16
+comment|// CHECK-LABEL: test_vzip_u16
 return|return
 name|vzip_u16
 argument_list|(
@@ -3631,7 +3631,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip_u32
+comment|// CHECK-LABEL: test_vzip_u32
 return|return
 name|vzip_u32
 argument_list|(
@@ -3640,8 +3640,8 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v2.2s, v0.2s, v1.2s}}
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v1.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -3656,7 +3656,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip_f32
+comment|// CHECK-LABEL: test_vzip_f32
 return|return
 name|vzip_f32
 argument_list|(
@@ -3665,8 +3665,8 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v2.2s, v0.2s, v1.2s}}
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v1.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -3681,7 +3681,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip_p8
+comment|// CHECK-LABEL: test_vzip_p8
 return|return
 name|vzip_p8
 argument_list|(
@@ -3706,7 +3706,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzip_p16
+comment|// CHECK-LABEL: test_vzip_p16
 return|return
 name|vzip_p16
 argument_list|(
@@ -3731,7 +3731,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzipq_s8
+comment|// CHECK-LABEL: test_vzipq_s8
 return|return
 name|vzipq_s8
 argument_list|(
@@ -3756,7 +3756,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzipq_s16
+comment|// CHECK-LABEL: test_vzipq_s16
 return|return
 name|vzipq_s16
 argument_list|(
@@ -3781,7 +3781,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzipq_s32
+comment|// CHECK-LABEL: test_vzipq_s32
 return|return
 name|vzipq_s32
 argument_list|(
@@ -3806,7 +3806,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzipq_u8
+comment|// CHECK-LABEL: test_vzipq_u8
 return|return
 name|vzipq_u8
 argument_list|(
@@ -3831,7 +3831,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzipq_u16
+comment|// CHECK-LABEL: test_vzipq_u16
 return|return
 name|vzipq_u16
 argument_list|(
@@ -3856,7 +3856,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzipq_u32
+comment|// CHECK-LABEL: test_vzipq_u32
 return|return
 name|vzipq_u32
 argument_list|(
@@ -3881,7 +3881,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzipq_f32
+comment|// CHECK-LABEL: test_vzipq_f32
 return|return
 name|vzipq_f32
 argument_list|(
@@ -3906,7 +3906,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzipq_p8
+comment|// CHECK-LABEL: test_vzipq_p8
 return|return
 name|vzipq_p8
 argument_list|(
@@ -3931,7 +3931,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vzipq_p16
+comment|// CHECK-LABEL: test_vzipq_p16
 return|return
 name|vzipq_p16
 argument_list|(
@@ -3956,7 +3956,7 @@ name|int8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn_s8
+comment|// CHECK-LABEL: test_vtrn_s8
 return|return
 name|vtrn_s8
 argument_list|(
@@ -3981,7 +3981,7 @@ name|int16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn_s16
+comment|// CHECK-LABEL: test_vtrn_s16
 return|return
 name|vtrn_s16
 argument_list|(
@@ -4006,7 +4006,7 @@ name|int32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn_s32
+comment|// CHECK-LABEL: test_vtrn_s32
 return|return
 name|vtrn_s32
 argument_list|(
@@ -4015,8 +4015,8 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v2.2s, v0.2s, v1.2s}}
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v1.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -4031,7 +4031,7 @@ name|uint8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn_u8
+comment|// CHECK-LABEL: test_vtrn_u8
 return|return
 name|vtrn_u8
 argument_list|(
@@ -4056,7 +4056,7 @@ name|uint16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn_u16
+comment|// CHECK-LABEL: test_vtrn_u16
 return|return
 name|vtrn_u16
 argument_list|(
@@ -4081,7 +4081,7 @@ name|uint32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn_u32
+comment|// CHECK-LABEL: test_vtrn_u32
 return|return
 name|vtrn_u32
 argument_list|(
@@ -4090,8 +4090,8 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v2.2s, v0.2s, v1.2s}}
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v1.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -4106,7 +4106,7 @@ name|float32x2_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn_f32
+comment|// CHECK-LABEL: test_vtrn_f32
 return|return
 name|vtrn_f32
 argument_list|(
@@ -4115,8 +4115,8 @@ argument_list|,
 name|b
 argument_list|)
 return|;
-comment|// CHECK: ins {{v[0-9]+}}.s[1], {{v[0-9]+}}.s[0]
-comment|// CHECK: ins {{v[0-9]+}}.s[0], {{v[0-9]+}}.s[1]
+comment|// CHECK: {{ins v[0-9]+.s\[1\], v[0-9]+.s\[0\]|zip1 v2.2s, v0.2s, v1.2s}}
+comment|// CHECK: {{ins v[0-9]+.s\[0\], v[0-9]+.s\[1\]|zip2 v1.2s, v0.2s, v1.2s}}
 block|}
 end_function
 
@@ -4131,7 +4131,7 @@ name|poly8x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn_p8
+comment|// CHECK-LABEL: test_vtrn_p8
 return|return
 name|vtrn_p8
 argument_list|(
@@ -4156,7 +4156,7 @@ name|poly16x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrn_p16
+comment|// CHECK-LABEL: test_vtrn_p16
 return|return
 name|vtrn_p16
 argument_list|(
@@ -4181,7 +4181,7 @@ name|int8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrnq_s8
+comment|// CHECK-LABEL: test_vtrnq_s8
 return|return
 name|vtrnq_s8
 argument_list|(
@@ -4206,7 +4206,7 @@ name|int16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrnq_s16
+comment|// CHECK-LABEL: test_vtrnq_s16
 return|return
 name|vtrnq_s16
 argument_list|(
@@ -4231,7 +4231,7 @@ name|int32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrnq_s32
+comment|// CHECK-LABEL: test_vtrnq_s32
 return|return
 name|vtrnq_s32
 argument_list|(
@@ -4256,7 +4256,7 @@ name|uint8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrnq_u8
+comment|// CHECK-LABEL: test_vtrnq_u8
 return|return
 name|vtrnq_u8
 argument_list|(
@@ -4281,7 +4281,7 @@ name|uint16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrnq_u16
+comment|// CHECK-LABEL: test_vtrnq_u16
 return|return
 name|vtrnq_u16
 argument_list|(
@@ -4306,7 +4306,7 @@ name|uint32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrnq_u32
+comment|// CHECK-LABEL: test_vtrnq_u32
 return|return
 name|vtrnq_u32
 argument_list|(
@@ -4331,7 +4331,7 @@ name|float32x4_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrnq_f32
+comment|// CHECK-LABEL: test_vtrnq_f32
 return|return
 name|vtrnq_f32
 argument_list|(
@@ -4356,7 +4356,7 @@ name|poly8x16_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrnq_p8
+comment|// CHECK-LABEL: test_vtrnq_p8
 return|return
 name|vtrnq_p8
 argument_list|(
@@ -4381,7 +4381,7 @@ name|poly16x8_t
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: test_vtrnq_p16
+comment|// CHECK-LABEL: test_vtrnq_p16
 return|return
 name|vtrnq_p16
 argument_list|(

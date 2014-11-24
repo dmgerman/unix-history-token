@@ -18,7 +18,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-note 2 {{declared here}}
+comment|// expected-note 2 {{'f' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function_decl
@@ -43,7 +43,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'g' has been explicitly marked deprecated here}}
 end_comment
 
 begin_decl_stmt
@@ -60,7 +60,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'var' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function
@@ -106,7 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'var' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function
@@ -143,7 +143,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'old_fn' has been explicitly marked deprecated here}}
 end_comment
 
 begin_function_decl
@@ -190,7 +190,7 @@ name|deprecated
 operator|)
 argument_list|)
 decl_stmt|;
-comment|// expected-note 3 {{declared here}}
+comment|// expected-note 3 {{'x' has been explicitly marked deprecated here}}
 block|}
 struct|;
 end_struct
@@ -247,7 +247,7 @@ typedef|));
 end_typedef
 
 begin_comment
-comment|// expected-note 12 {{declared here}}
+comment|// expected-note 12 {{'foo_dep' has been explicitly marked deprecated here}}
 end_comment
 
 begin_decl_stmt
@@ -276,7 +276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{unknown attribute 'invalid_attribute' ignored}} expected-note 2 {{declared here}}
+comment|// expected-warning {{unknown attribute 'invalid_attribute' ignored}} expected-note 2 {{'bar_dep' has been explicitly marked deprecated here}}
 end_comment
 
 begin_decl_stmt
@@ -647,7 +647,7 @@ operator|)
 argument_list|)
 name|Test20
 block|{
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'Test20' has been explicitly marked deprecated here}}
 name|test20_a
 name|__attribute__
 argument_list|(
@@ -656,9 +656,9 @@ name|deprecated
 operator|)
 argument_list|)
 decl_stmt|,
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'test20_a' has been explicitly marked deprecated here}}
 name|test20_b
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'test20_b' has been explicitly marked deprecated here}}
 block|}
 end_decl_stmt
 
@@ -770,7 +770,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-note {{'test23_ty' declared here}} expected-warning {{redefinition of typedef 'test23_ty' is a C11 feature}}
+comment|// expected-note {{'test23_ty' has been explicitly marked deprecated here}} expected-warning {{redefinition of typedef 'test23_ty' is a C11 feature}}
 end_comment
 
 begin_decl_stmt

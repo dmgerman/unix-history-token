@@ -8,11 +8,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef signed long long int int64_t;
+comment|// ARM:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|// ARM:typedef unsigned long long int uint64_t;
+comment|// ARM:typedef long long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef signed int int32_t;
+comment|// ARM:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ARM:typedef signed short int16_t;
+comment|// ARM:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -440,11 +440,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef signed long long int int64_t;
+comment|// I386:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|// I386:typedef unsigned long long int uint64_t;
+comment|// I386:typedef long long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -468,7 +468,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef signed int int32_t;
+comment|// I386:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -496,7 +496,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386:typedef signed short int16_t;
+comment|// I386:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -868,11 +868,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS:typedef signed long long int int64_t;
+comment|// MIPS:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|// MIPS:typedef unsigned long long int uint64_t;
+comment|// MIPS:typedef long long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -896,7 +896,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS:typedef signed int int32_t;
+comment|// MIPS:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -924,7 +924,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS:typedef signed short int16_t;
+comment|// MIPS:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -1296,11 +1296,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef signed long long int int64_t;
+comment|// MIPS64:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef unsigned long long int uint64_t;
+comment|// MIPS64:typedef long long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -1324,7 +1324,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef signed int int32_t;
+comment|// MIPS64:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -1352,7 +1352,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MIPS64:typedef signed short int16_t;
+comment|// MIPS64:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -1724,11 +1724,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:typedef signed long int int32_t;
+comment|// MSP430:typedef long int int32_t;
 end_comment
 
 begin_comment
-comment|// MSP430:typedef unsigned long int uint32_t;
+comment|// MSP430:typedef long unsigned int uint32_t;
 end_comment
 
 begin_comment
@@ -1752,7 +1752,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// MSP430:typedef signed short int16_t;
+comment|// MSP430:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -2124,11 +2124,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef signed long int int64_t;
+comment|// PPC64:typedef long int int64_t;
 end_comment
 
 begin_comment
-comment|// PPC64:typedef unsigned long int uint64_t;
+comment|// PPC64:typedef long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -2152,7 +2152,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef signed int int32_t;
+comment|// PPC64:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -2180,7 +2180,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC64:typedef signed short int16_t;
+comment|// PPC64:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -2556,11 +2556,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef signed long long int int64_t;
+comment|// PPC:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|// PPC:typedef unsigned long long int uint64_t;
+comment|// PPC:typedef long long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -2584,7 +2584,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef signed int int32_t;
+comment|// PPC:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -2612,7 +2612,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// PPC:typedef signed short int16_t;
+comment|// PPC:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -2984,11 +2984,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef signed long long int int64_t;
+comment|// S390X:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef unsigned long long int uint64_t;
+comment|// S390X:typedef long long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -3012,7 +3012,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef signed int int32_t;
+comment|// S390X:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -3040,7 +3040,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef signed short int16_t;
+comment|// S390X:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -3412,11 +3412,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef signed long long int int64_t;
+comment|// SPARC:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|// SPARC:typedef unsigned long long int uint64_t;
+comment|// SPARC:typedef long long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -3440,7 +3440,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef signed int int32_t;
+comment|// SPARC:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -3468,7 +3468,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// SPARC:typedef signed short int16_t;
+comment|// SPARC:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -3840,7 +3840,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:typedef signed int int32_t;
+comment|// TCE:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -3868,7 +3868,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// TCE:typedef signed short int16_t;
+comment|// TCE:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -4244,11 +4244,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef signed long int int64_t;
+comment|// X86_64:typedef long int int64_t;
 end_comment
 
 begin_comment
-comment|// X86_64:typedef unsigned long int uint64_t;
+comment|// X86_64:typedef long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -4272,7 +4272,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef signed int int32_t;
+comment|// X86_64:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -4300,7 +4300,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// X86_64:typedef signed short int16_t;
+comment|// X86_64:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -4700,11 +4700,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// I386_MINGW32:WCHAR_MAX_ 65535U
+comment|// I386_MINGW32:WCHAR_MAX_ 65535
 end_comment
 
 begin_comment
-comment|// I386_MINGW32:WCHAR_MIN_ 0U
+comment|// I386_MINGW32:WCHAR_MIN_ 0
 end_comment
 
 begin_comment
@@ -4724,11 +4724,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// XCORE:typedef signed long long int int64_t;
+comment|// XCORE:typedef long long int int64_t;
 end_comment
 
 begin_comment
-comment|// XCORE:typedef unsigned long long int uint64_t;
+comment|// XCORE:typedef long long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -4752,7 +4752,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// XCORE:typedef signed int int32_t;
+comment|// XCORE:typedef int int32_t;
 end_comment
 
 begin_comment
@@ -4780,7 +4780,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// XCORE:typedef signed short int16_t;
+comment|// XCORE:typedef short int16_t;
 end_comment
 
 begin_comment
@@ -5084,7 +5084,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// XCORE:WCHAR_MAX_ 255U
+comment|// XCORE:WCHAR_MAX_ 255
 end_comment
 
 begin_comment

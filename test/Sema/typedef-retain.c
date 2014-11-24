@@ -53,7 +53,7 @@ index|]
 operator|=
 name|a
 expr_stmt|;
-comment|// expected-error {{assigning to 'int4' from incompatible type 'float4'}}
+comment|// expected-error {{assigning to 'int4' (vector of 4 'int' values) from incompatible type 'float4' (vector of 4 'float' values)}}
 block|}
 end_function
 
@@ -78,7 +78,7 @@ index|]
 operator|=
 name|a
 expr_stmt|;
-comment|// expected-error {{assigning to 'int4' from incompatible type 'float4'}}
+comment|// expected-error {{assigning to 'int4' (vector of 4 'int' values) from incompatible type 'float4' (vector of 4 'float' values)}}
 block|}
 end_function
 

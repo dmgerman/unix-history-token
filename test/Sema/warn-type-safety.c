@@ -472,6 +472,31 @@ begin_comment
 comment|// expected-error {{invalid comparison flag 'not_a_flag'}}
 end_comment
 
+begin_function_decl
+name|void
+name|datatype_wrong7
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(type_tag_for_datatype
+parameter_list|(
+name|datatype_wrong7
+parameter_list|,
+name|int
+parameter_list|)
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error {{'type_tag_for_datatype' attribute only applies to variables}}
+end_comment
+
 begin_comment
 comment|// Using a tag with kind A in a place where the function requires kind B should
 end_comment

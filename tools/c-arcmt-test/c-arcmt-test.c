@@ -467,17 +467,28 @@ operator|->
 name|argv
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__CYGWIN__
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|flush_atexit
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* stdout, and surprisingly even stderr, are not always flushed on process    * and thread exit, particularly when the system is under heavy load. */
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-comment|/* stdout is not flushed on Cygwin. */
-endif|#
-directive|endif
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -498,6 +509,11 @@ block|{
 name|thread_info
 name|client_data
 decl_stmt|;
+name|atexit
+argument_list|(
+name|flush_atexit
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined

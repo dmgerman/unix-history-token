@@ -576,6 +576,30 @@ comment|// expected-error@-1 {{missing or invalid line number}}
 end_comment
 
 begin_comment
+comment|// expected-warning@verify-directive.h:0 {{ }}
+end_comment
+
+begin_comment
+comment|// expected-error@-1 {{missing or invalid line number}}
+end_comment
+
+begin_comment
+comment|// expected-warning@verify-directive.h:0*{{ }}
+end_comment
+
+begin_comment
+comment|// expected-error@-1 {{missing or invalid line number}}
+end_comment
+
+begin_comment
+comment|// expected-warning@verify-directive.h:*0{{ }}
+end_comment
+
+begin_comment
+comment|// syntactically ok -- means match in any line for 0 occurrences.
+end_comment
+
+begin_comment
 comment|// expected-warning@verify-directive.h:1 {{diagnostic}}
 end_comment
 
@@ -584,7 +608,7 @@ comment|//      CHECK8: error: 'warning' diagnostics expected but not seen:
 end_comment
 
 begin_comment
-comment|// CHECK8-NEXT:   File {{.*}}verify-directive.h Line 1 (directive at {{.*}}verify.c:137): diagnostic
+comment|// CHECK8-NEXT:   File {{.*}}verify-directive.h Line 1 (directive at {{.*}}verify.c:146): diagnostic
 end_comment
 
 begin_comment

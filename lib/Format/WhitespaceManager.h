@@ -170,7 +170,7 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Adds information about an unchangable token's whitespace.
+comment|/// \brief Adds information about an unchangeable token's whitespace.
 comment|///
 comment|/// Needs to be called for every token for which \c replaceWhitespace
 comment|/// was not called.
@@ -191,6 +191,12 @@ comment|///
 comment|/// Inserts \p PreviousPostfix, \p Newlines, \p Spaces and \p CurrentPrefix
 comment|/// (in this order) at \p Offset inside \p Tok, replacing \p ReplaceChars
 comment|/// characters.
+comment|///
+comment|/// Note: \p Spaces can be negative to retain information about initial
+comment|/// relative column offset between a line of a block comment and the start of
+comment|/// the comment. This negative offset may be compensated by trailing comment
+comment|/// alignment here. In all other cases negative \p Spaces will be truncated to
+comment|/// 0.
 comment|///
 comment|/// When \p InPPDirective is true, escaped newlines are inserted. \p Spaces is
 comment|/// used to align backslashes correctly.
@@ -223,7 +229,7 @@ parameter_list|,
 name|unsigned
 name|IndentLevel
 parameter_list|,
-name|unsigned
+name|int
 name|Spaces
 parameter_list|)
 function_decl|;
@@ -307,7 +313,7 @@ argument|const SourceRange&OriginalWhitespaceRange
 argument_list|,
 argument|unsigned IndentLevel
 argument_list|,
-argument|unsigned Spaces
+argument|int Spaces
 argument_list|,
 argument|unsigned StartOfTokenColumn
 argument_list|,
@@ -366,7 +372,10 @@ name|IndentLevel
 decl_stmt|;
 comment|// The number of spaces in front of the token or broken part of the token.
 comment|// This will be adapted when aligning tokens.
-name|unsigned
+comment|// Can be negative to retain information about the initial relative offset
+comment|// of the lines in a block comment. This is used when aligning trailing
+comment|// comments. Uncompensated negative offset is truncated to 0.
+name|int
 name|Spaces
 decl_stmt|;
 comment|// \c IsTrailingComment, \c TokenLength, \c PreviousEndOfTokenColumn and
@@ -383,6 +392,22 @@ name|PreviousEndOfTokenColumn
 decl_stmt|;
 name|unsigned
 name|EscapedNewlineColumn
+decl_stmt|;
+comment|// These fields are used to retain correct relative line indentation in a
+comment|// block comment when aligning trailing comments.
+comment|//
+comment|// If this Change represents a continuation of a block comment,
+comment|// \c StartOfBlockComment is pointer to the first Change in the block
+comment|// comment. \c IndentationOffset is a relative column offset to this
+comment|// change, so that the correct column can be reconstructed at the end of
+comment|// the alignment process.
+specifier|const
+name|Change
+modifier|*
+name|StartOfBlockComment
+decl_stmt|;
+name|int
+name|IndentationOffset
 decl_stmt|;
 block|}
 struct|;

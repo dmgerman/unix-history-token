@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang-c/Index.h"
+file|"CLog.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"CXString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang-c/Index.h"
 end_include
 
 begin_decl_stmt
@@ -176,7 +182,7 @@ operator|!
 name|TU
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|TU
@@ -184,6 +190,38 @@ operator|->
 name|TheASTUnit
 return|;
 block|}
+comment|/// \returns true if the ASTUnit has a diagnostic about the AST file being
+comment|/// corrupted.
+name|bool
+name|isASTReadError
+parameter_list|(
+name|ASTUnit
+modifier|*
+name|AU
+parameter_list|)
+function_decl|;
+specifier|static
+specifier|inline
+name|bool
+name|isNotUsableTU
+parameter_list|(
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+block|{
+return|return
+operator|!
+name|TU
+return|;
+block|}
+define|#
+directive|define
+name|LOG_BAD_TU
+parameter_list|(
+name|TU
+parameter_list|)
+define|\
+value|do {                                                \       LOG_FUNC_SECTION {                                \         *Log<< "called with a bad TU: "<< TU;         \       }                                                 \     } while(false)
 name|class
 name|CXTUOwner
 block|{
@@ -232,7 +270,7 @@ name|TU
 decl_stmt|;
 name|TU
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 name|retTU

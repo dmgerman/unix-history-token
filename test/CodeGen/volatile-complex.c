@@ -24,11 +24,7 @@ comment|// 64-bit aligned, and uses x86-64 as a target that should have this
 end_comment
 
 begin_comment
-comment|// datalayout.
-end_comment
-
-begin_comment
-comment|// CHECK: target datalayout = "{{.*}}f32:32:32-f64:64:64{{.*}}"
+comment|// property.
 end_comment
 
 begin_decl_stmt
@@ -82,7 +78,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK-LABEL-LABEL: define void @test_cf()
+comment|// CHECK-LABEL: define void @test_cf()
 end_comment
 
 begin_function
@@ -117,7 +113,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL-LABEL: define void @test_cd()
+comment|// CHECK-LABEL: define void @test_cd()
 end_comment
 
 begin_function
@@ -152,7 +148,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL-LABEL: define void @test_cf32()
+comment|// CHECK-LABEL: define void @test_cf32()
 end_comment
 
 begin_function
@@ -187,7 +183,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL-LABEL: define void @test_cd32()
+comment|// CHECK-LABEL: define void @test_cd32()
 end_comment
 
 begin_function

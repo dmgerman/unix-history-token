@@ -20,7 +20,7 @@ comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t %s -verify
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -I %S/Inputs %s -verify
 end_comment
 
 begin_comment

@@ -8,7 +8,7 @@ comment|// RUN:   not c-index-test -code-completion-at=%s:20:1 \
 end_comment
 
 begin_comment
-comment|// RUN:   "-remap-file=%s;%S/Inputs/crash-recovery-code-complete-remap.c" \
+comment|// RUN:   "-remap-file=%s,%S/Inputs/crash-recovery-code-complete-remap.c" \
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|// FIXME: Please investigate abnormal path in MemoryBuffer.
 end_comment
 
 begin_comment
-comment|// XFAIL: mingw32,win32
+comment|// REQUIRES: can-remove-opened-file
 end_comment
 
 begin_warning

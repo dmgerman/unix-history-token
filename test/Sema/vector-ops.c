@@ -85,7 +85,7 @@ operator|~
 name|v2fa
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{invalid argument type 'v2f' to unary}}
+comment|// expected-error{{invalid argument type 'v2f' (vector of 2 'float' values) to unary}}
 comment|// Comparison operators
 name|v2ua
 operator|=
@@ -95,7 +95,7 @@ operator|==
 name|v2sa
 operator|)
 expr_stmt|;
-comment|// expected-warning{{incompatible vector types assigning to 'v2u' from 'int __attribute__((ext_vector_type(2)))'}}
+comment|// expected-warning{{incompatible vector types assigning to 'v2u' (vector of 2 'unsigned int' values) from 'int __attribute__((ext_vector_type(2)))' (vector of 2 'int' values)}}
 name|v2sa
 operator|=
 operator|(
@@ -111,7 +111,7 @@ index|[
 name|v2ua
 index|]
 decl_stmt|;
-comment|// expected-error{{size of array has non-integer type 'v2u'}}
+comment|// expected-error{{size of array has non-integer type 'v2u' (vector of 2 'unsigned int' values)}}
 name|int
 name|array2
 index|[

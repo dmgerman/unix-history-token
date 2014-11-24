@@ -4,6 +4,10 @@ comment|// RUN: %clang -target aarch64-none-linux-gnu -### %s -fsyntax-only 2>&1
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm64-none-linux-gnu -### %s -fsyntax-only 2>&1 | FileCheck %s
+end_comment
+
+begin_comment
 comment|// The AArch64 PCS states that chars should be unsigned.
 end_comment
 

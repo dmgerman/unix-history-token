@@ -63,7 +63,7 @@ argument_list|)
 name|int
 name|n1
 decl_stmt|;
-comment|// expected-error {{'section' attribute is not valid on local variables}}
+comment|// expected-error {{'section' attribute only applies to functions and global variables}}
 name|__attribute__
 argument_list|(
 argument|(section(
@@ -124,6 +124,31 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-warning {{section does not match previous declaration}}
+end_comment
+
+begin_decl_stmt
+name|enum
+name|__attribute__
+argument_list|(
+operator|(
+name|section
+argument_list|(
+literal|"NEAR,x"
+argument_list|)
+operator|)
+argument_list|)
+name|e
+block|{
+name|one
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error {{'section' attribute only applies to functions and global variables}}
 end_comment
 
 end_unit

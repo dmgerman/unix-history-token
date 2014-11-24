@@ -110,7 +110,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|//expected-error{{attribute takes no more than 2 arguments}}
+comment|//expected-error{{'sentinel' attribute takes no more than 2 arguments}}
 end_comment
 
 begin_function_decl

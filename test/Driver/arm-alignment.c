@@ -4,7 +4,7 @@ comment|// RUN: %clang -target arm-none-gnueabi -munaligned-access -### %s 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED< %t %s
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-ARM< %t %s
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: %clang -target arm-none-gnueabi -mstrict-align -munaligned-acces
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED< %t %s
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-ARM< %t %s
 end_comment
 
 begin_comment
@@ -20,11 +20,39 @@ comment|// RUN: %clang -target arm-none-gnueabi -mno-unaligned-access -munaligne
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED< %t %s
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-ARM< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK-UNALIGNED: "-backend-option" "-arm-no-strict-align"
+comment|// RUN: %clang -target aarch64-none-gnueabi -munaligned-access -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-AARCH64< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-gnueabi -mstrict-align -munaligned-access -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-AARCH64< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-gnueabi -mno-unaligned-access -munaligned-access -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-UNALIGNED-AARCH64< %t %s
+end_comment
+
+begin_comment
+comment|// CHECK-UNALIGNED-ARM: "-backend-option" "-arm-no-strict-align"
+end_comment
+
+begin_comment
+comment|// CHECK-UNALIGNED-AARCH64: "-backend-option" "-aarch64-no-strict-align"
 end_comment
 
 begin_comment
@@ -32,7 +60,7 @@ comment|// RUN: %clang -target arm-none-gnueabi -mno-unaligned-access -### %s 2>
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED< %t %s
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
 end_comment
 
 begin_comment
@@ -40,7 +68,7 @@ comment|// RUN: %clang -target arm-none-gnueabi -mstrict-align -### %s 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED< %t %s
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
 end_comment
 
 begin_comment
@@ -48,7 +76,7 @@ comment|// RUN: %clang -target arm-none-gnueabi -munaligned-access -mno-unaligne
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED< %t %s
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
 end_comment
 
 begin_comment
@@ -56,11 +84,47 @@ comment|// RUN: %clang -target arm-none-gnueabi -munaligned-access -mstrict-alig
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED< %t %s
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-ARM< %t %s
 end_comment
 
 begin_comment
-comment|// CHECK-ALIGNED: "-backend-option" "-arm-strict-align"
+comment|// RUN: %clang -target aarch64-none-gnueabi -mno-unaligned-access -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-AARCH64< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-gnueabi -mstrict-align -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-AARCH64< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-gnueabi -munaligned-access -mno-unaligned-access -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-AARCH64< %t %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target aarch64-none-gnueabi -munaligned-access -mstrict-align -### %s 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-ALIGNED-AARCH64< %t %s
+end_comment
+
+begin_comment
+comment|// CHECK-ALIGNED-ARM: "-backend-option" "-arm-strict-align"
+end_comment
+
+begin_comment
+comment|// CHECK-ALIGNED-AARCH64: "-backend-option" "-aarch64-strict-align"
 end_comment
 
 end_unit

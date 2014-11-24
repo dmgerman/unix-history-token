@@ -175,6 +175,32 @@ comment|// expected-error {{incomplete type 'void' is not assignable}}
 block|}
 end_function
 
+begin_function
+name|void
+name|test3
+parameter_list|()
+block|{
+name|__builtin_arm_dsb
+argument_list|(
+literal|16
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 15}}
+name|__builtin_arm_dmb
+argument_list|(
+literal|17
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 15}}
+name|__builtin_arm_isb
+argument_list|(
+literal|18
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{argument should be a value from 0 to 15}}
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif

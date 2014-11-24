@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang-c/Index.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -184,7 +190,7 @@ return|return
 name|getEnvVar
 argument_list|()
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|static
@@ -249,7 +255,7 @@ name|trace
 argument_list|)
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|explicit
@@ -561,7 +567,8 @@ name|LOG_SECTION
 parameter_list|(
 name|NAME
 parameter_list|)
-value|if (LogRef Log = clang::cxindex::Logger::make(NAME))
+define|\
+value|if (clang::cxindex::LogRef Log = clang::cxindex::Logger::make(NAME))
 end_define
 
 begin_define

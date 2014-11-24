@@ -44,7 +44,7 @@ comment|// RUN: %clang_cc1 -fmodules -x objective-c++ -fmodules-cache-path=%t -f
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
+comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -I %S/Inputs -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// CHECK-NONEXISTENT: load_failure.c:2:9: fatal error: module 'load_none
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -fdisable-module-hash %s -DFAILURE 2> %t.out
+comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodules-cache-path=%t -I %S/Inputs -fdisable-module-hash %s -DFAILURE 2> %t.out
 end_comment
 
 begin_comment

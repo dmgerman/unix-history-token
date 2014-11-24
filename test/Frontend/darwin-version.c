@@ -99,5 +99,13 @@ begin_comment
 comment|// RUN: grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t | grep '1060' | count 1
 end_comment
 
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-macosx -mmacosx-version-min=10.10 -dM -E -o %t %s
+end_comment
+
+begin_comment
+comment|// RUN: grep '__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__' %t | grep '101000' | count 1
+end_comment
+
 end_unit
 

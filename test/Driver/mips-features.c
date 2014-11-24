@@ -248,6 +248,94 @@ comment|//
 end_comment
 
 begin_comment
+comment|// -modd-spreg
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -mno-odd-spreg -modd-spreg 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MODDSPREG %s
+end_comment
+
+begin_comment
+comment|// CHECK-MODDSPREG: "-target-feature" "-nooddspreg"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mno-odd-spreg
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -modd-spreg -mno-odd-spreg 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOMODDSPREG %s
+end_comment
+
+begin_comment
+comment|// CHECK-NOMODDSPREG: "-target-feature" "+nooddspreg"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfpxx
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -mfpxx 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MFPXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-MFPXX: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|// CHECK-MFPXX: "-target-feature" "+nooddspreg"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mfpxx -modd-spreg
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s -mfpxx -modd-spreg 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MFPXX-ODDSPREG %s
+end_comment
+
+begin_comment
+comment|// CHECK-MFPXX-ODDSPREG: "-target-feature" "+fpxx"
+end_comment
+
+begin_comment
+comment|// CHECK-MFPXX-ODDSPREG: "-target-feature" "-nooddspreg"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// -mfp64
 end_comment
 
@@ -289,6 +377,54 @@ end_comment
 
 begin_comment
 comment|// CHECK-NOMFP64: "-target-feature" "-fp64"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mnan=2008
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mnan=legacy -mnan=2008 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NAN2008 %s
+end_comment
+
+begin_comment
+comment|// CHECK-NAN2008: "-target-feature" "+nan2008"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// -mnan=legacy
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+end_comment
+
+begin_comment
+comment|// RUN:     -mnan=2008 -mnan=legacy 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NANLEGACY %s
+end_comment
+
+begin_comment
+comment|// CHECK-NANLEGACY: "-target-feature" "-nan2008"
 end_comment
 
 begin_comment

@@ -15,7 +15,7 @@ name|int
 name|test
 parameter_list|()
 block|{
-comment|// expected-warning-re{{test -> Total CFGBlocks: [0-9]+ \| Unreachable CFGBlocks: 0 \| Exhausted Block: no \| Empty WorkList: yes}}
+comment|// expected-warning-re{{test -> Total CFGBlocks: {{[0-9]+}} | Unreachable CFGBlocks: 0 | Exhausted Block: no | Empty WorkList: yes}}
 name|int
 name|a
 init|=

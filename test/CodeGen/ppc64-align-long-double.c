@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: ppc64-registered-target
+comment|// REQUIRES: powerpc-registered-target
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -triple powerpc64-unknown-linux-gnu -emit-llvm -o - %s | FileCheck %s
-end_comment
-
-begin_comment
-comment|// CHECK: -f128:128:128-
 end_comment
 
 begin_struct

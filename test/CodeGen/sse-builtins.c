@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-apple-macosx10.8.0 -target-feature +sse4.1 -g -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -ffreestanding -triple x86_64-apple-macosx10.8.0 -target-feature +sse4.1 -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_include
@@ -197,7 +197,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: define void @test_store_ss
-comment|// CHECK: store {{.*}} float* {{.*}}, align 1,
+comment|// CHECK: store {{.*}} float* {{.*}}, align 1{{$}}
 name|_mm_store_ss
 argument_list|(
 name|y
@@ -859,6 +859,84 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|__m128d
+name|test_blend_pd
+parameter_list|(
+name|__m128d
+name|V1
+parameter_list|,
+name|__m128d
+name|V2
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_blend_pd
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<2 x i32><i32 2, i32 1>
+return|return
+name|_mm_blend_pd
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_blend_ps
+parameter_list|(
+name|__m128
+name|V1
+parameter_list|,
+name|__m128
+name|V2
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_blend_ps
+comment|// CHECK: shufflevector<4 x float> %{{.*}},<4 x float> %{{.*}},<4 x i32><i32 4, i32 1, i32 6, i32 3>
+return|return
+name|_mm_blend_ps
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_blend_epi16
+parameter_list|(
+name|__m128i
+name|V1
+parameter_list|,
+name|__m128i
+name|V2
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_blend_epi16
+comment|// CHECK: shufflevector<8 x i16> %{{.*}},<8 x i16> %{{.*}},<8 x i32><i32 0, i32 9, i32 2, i32 11, i32 4, i32 13, i32 6, i32 7>
+return|return
+name|_mm_blend_epi16
+argument_list|(
+name|V1
+argument_list|,
+name|V2
+argument_list|,
+literal|42
+argument_list|)
+return|;
 block|}
 end_function
 

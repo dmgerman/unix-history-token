@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -triple i686-apple-darwin
+comment|// RUN: %clang_cc1 -verify %s -triple i686-apple-darwin
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {'weak_import' attribute cannot be specified on a definition}
+comment|// expected-warning {{'weak_import' attribute cannot be specified on a definition}}
 end_comment
 
 begin_decl_stmt
@@ -59,7 +59,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {'weak_import' attribute cannot be specified on a definition}
+comment|// expected-warning {{'weak_import' attribute cannot be specified on a definition}}
 end_comment
 
 begin_comment

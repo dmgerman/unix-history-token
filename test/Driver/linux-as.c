@@ -248,6 +248,110 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target sparc64-linux -mcpu=invalid-cpu -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-SPARCV9 %s
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9: as
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9: -64
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9: -Av9a
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9-NOT: -KPIC
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9: -o
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target sparc64-linux -mcpu=invalid-cpu -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -fpic -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-SPARCV9PIC %s
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9PIC: as
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9PIC: -64
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9PIC: -Av9a
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9PIC: -KPIC
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV9PIC: -o
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target sparc-linux -mcpu=invalid-cpu -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-SPARCV8 %s
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8: as
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8: -32
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8: -Av8plusa
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8: -o
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target s390x-linux -### -no-integrated-as -c %s 2>&1 \
 end_comment
 

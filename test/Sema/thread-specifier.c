@@ -113,7 +113,7 @@ name|__cplusplus
 end_ifdef
 
 begin_comment
-comment|// expected-error-re@-2 {{'(__thread|_Thread_local|thread_local)' is only allowed on variable declarations}}
+comment|// expected-error-re@-2 {{'{{__thread|_Thread_local|thread_local}}' is only allowed on variable declarations}}
 end_comment
 
 begin_else
@@ -237,7 +237,7 @@ specifier|auto
 name|int
 name|t12a
 decl_stmt|;
-comment|// expected-error-re {{cannot combine with previous '(__thread|_Thread_local)' declaration specifier}}
+comment|// expected-error-re {{cannot combine with previous '{{__thread|_Thread_local}}' declaration specifier}}
 specifier|auto
 name|__thread
 name|int
@@ -257,14 +257,14 @@ name|t12a
 init|=
 literal|0
 decl_stmt|;
-comment|// expected-error-re {{'_Thread_local' variables must have global storage}}
+comment|// expected-error {{'_Thread_local' variables must have global storage}}
 specifier|auto
 name|__thread
 name|t12b
 init|=
 literal|0
 decl_stmt|;
-comment|// expected-error-re {{'_Thread_local' variables must have global storage}}
+comment|// expected-error {{'_Thread_local' variables must have global storage}}
 endif|#
 directive|endif
 name|__thread
@@ -272,7 +272,7 @@ specifier|register
 name|int
 name|t13a
 decl_stmt|;
-comment|// expected-error-re {{cannot combine with previous '(__thread|_Thread_local|thread_local)' declaration specifier}}
+comment|// expected-error-re {{cannot combine with previous '{{__thread|_Thread_local|thread_local}}' declaration specifier}}
 specifier|register
 name|__thread
 name|int
@@ -294,7 +294,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error-re {{cannot combine with previous '(__thread|_Thread_local|thread_local)' declaration specifier}}
+comment|// expected-error-re {{cannot combine with previous '{{__thread|_Thread_local|thread_local}}' declaration specifier}}
 end_comment
 
 begin_decl_stmt
@@ -305,7 +305,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{previous declaration is here}}
+comment|// expected-note {{previous definition is here}}
 end_comment
 
 begin_decl_stmt
@@ -582,6 +582,71 @@ end_if
 
 begin_comment
 comment|// expected-error@-2 {{type of thread-local variable has non-trivial destruction}}
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__cplusplus
+operator|>=
+literal|201103L
+end_if
+
+begin_comment
+comment|// expected-note@-4 {{use 'thread_local' to allow this}}
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_struct
+struct|struct
+name|HasCtor
+block|{
+name|HasCtor
+argument_list|()
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|__thread
+name|HasCtor
+name|var_with_ctor
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CXX11
+argument_list|)
+end_if
+
+begin_comment
+comment|// expected-error@-2 {{initializer for thread-local variable must be a constant expression}}
 end_comment
 
 begin_if

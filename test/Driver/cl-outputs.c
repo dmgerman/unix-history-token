@@ -315,5 +315,41 @@ begin_comment
 comment|// FaMULTIPLESOURCE: error: cannot specify '/Faa.asm' when compiling multiple source files
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cl /P -### -- %s 2>&1 | FileCheck -check-prefix=P %s
+end_comment
+
+begin_comment
+comment|// P: "-E"
+end_comment
+
+begin_comment
+comment|// P: "-o" "cl-outputs.i"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /P /Fifoo -### -- %s 2>&1 | FileCheck -check-prefix=Fi1 %s
+end_comment
+
+begin_comment
+comment|// Fi1: "-E"
+end_comment
+
+begin_comment
+comment|// Fi1: "-o" "foo.i"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /P /Fifoo.x -### -- %s 2>&1 | FileCheck -check-prefix=Fi2 %s
+end_comment
+
+begin_comment
+comment|// Fi2: "-E"
+end_comment
+
+begin_comment
+comment|// Fi2: "-o" "foo.x"
+end_comment
+
 end_unit
 

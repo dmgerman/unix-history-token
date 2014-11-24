@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -fms-extensions %s -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
 comment|// CHECK: @__func__.plainFunction = private unnamed_addr constant [14 x i8] c"plainFunction\00"
 end_comment
 

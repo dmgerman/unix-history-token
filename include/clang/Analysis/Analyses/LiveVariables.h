@@ -147,12 +147,12 @@ argument_list|()
 operator|:
 name|liveStmts
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|liveDecls
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|LivenessValues

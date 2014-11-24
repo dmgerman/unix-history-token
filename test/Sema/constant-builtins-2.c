@@ -1553,7 +1553,7 @@ end_define
 
 begin_decl_stmt
 name|char
-name|g22
+name|clz1
 index|[
 name|__builtin_clz
 argument_list|(
@@ -1577,7 +1577,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g23
+name|clz2
 index|[
 name|__builtin_clz
 argument_list|(
@@ -1601,7 +1601,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g24
+name|clz3
 index|[
 name|__builtin_clz
 argument_list|(
@@ -1629,7 +1629,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|g25
+name|clz4
 init|=
 name|__builtin_clz
 argument_list|(
@@ -1644,7 +1644,7 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|g26
+name|clz5
 index|[
 name|__builtin_clzl
 argument_list|(
@@ -1668,7 +1668,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g27
+name|clz6
 index|[
 name|__builtin_clzll
 argument_list|(
@@ -1692,7 +1692,79 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g28
+name|clz7
+index|[
+name|__builtin_clzs
+argument_list|(
+literal|0x1
+argument_list|)
+operator|==
+name|BITSIZE
+argument_list|(
+name|short
+argument_list|)
+operator|-
+literal|1
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|clz8
+index|[
+name|__builtin_clzs
+argument_list|(
+literal|0xf
+argument_list|)
+operator|==
+name|BITSIZE
+argument_list|(
+name|short
+argument_list|)
+operator|-
+literal|4
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|clz9
+index|[
+name|__builtin_clzs
+argument_list|(
+literal|0xfff
+argument_list|)
+operator|==
+name|BITSIZE
+argument_list|(
+name|short
+argument_list|)
+operator|-
+literal|12
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|ctz1
 index|[
 name|__builtin_ctz
 argument_list|(
@@ -1711,7 +1783,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g29
+name|ctz2
 index|[
 name|__builtin_ctz
 argument_list|(
@@ -1730,7 +1802,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g30
+name|ctz3
 index|[
 name|__builtin_ctz
 argument_list|(
@@ -1763,7 +1835,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|g31
+name|ctz4
 init|=
 name|__builtin_ctz
 argument_list|(
@@ -1778,7 +1850,7 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|g32
+name|ctz5
 index|[
 name|__builtin_ctzl
 argument_list|(
@@ -1797,7 +1869,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g33
+name|ctz6
 index|[
 name|__builtin_ctzll
 argument_list|(
@@ -1816,7 +1888,40 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g34
+name|ctz7
+index|[
+name|__builtin_ctzs
+argument_list|(
+literal|1
+operator|<<
+operator|(
+name|BITSIZE
+argument_list|(
+name|short
+argument_list|)
+operator|-
+literal|1
+operator|)
+argument_list|)
+operator|==
+name|BITSIZE
+argument_list|(
+name|short
+argument_list|)
+operator|-
+literal|1
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|popcount1
 index|[
 name|__builtin_popcount
 argument_list|(
@@ -1835,7 +1940,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g35
+name|popcount2
 index|[
 name|__builtin_popcount
 argument_list|(
@@ -1854,7 +1959,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g36
+name|popcount3
 index|[
 name|__builtin_popcount
 argument_list|(
@@ -1877,7 +1982,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g37
+name|popcount4
 index|[
 name|__builtin_popcount
 argument_list|(
@@ -1900,7 +2005,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g38
+name|popcount5
 index|[
 name|__builtin_popcountl
 argument_list|(
@@ -1919,7 +2024,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g39
+name|popcount6
 index|[
 name|__builtin_popcountl
 argument_list|(
@@ -1938,7 +2043,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g40
+name|popcount7
 index|[
 name|__builtin_popcountl
 argument_list|(
@@ -1961,7 +2066,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g41
+name|popcount8
 index|[
 name|__builtin_popcountll
 argument_list|(
@@ -1980,7 +2085,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g42
+name|popcount9
 index|[
 name|__builtin_popcountll
 argument_list|(
@@ -1999,7 +2104,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g43
+name|popcount10
 index|[
 name|__builtin_popcountll
 argument_list|(
@@ -2022,7 +2127,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g44
+name|parity1
 index|[
 name|__builtin_parity
 argument_list|(
@@ -2041,7 +2146,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g45
+name|parity2
 index|[
 name|__builtin_parity
 argument_list|(
@@ -2060,7 +2165,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g46
+name|parity3
 index|[
 name|__builtin_parity
 argument_list|(
@@ -2079,7 +2184,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g47
+name|parity4
 index|[
 name|__builtin_parity
 argument_list|(
@@ -2098,7 +2203,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g48
+name|parity5
 index|[
 name|__builtin_parity
 argument_list|(
@@ -2117,7 +2222,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g49
+name|parity6
 index|[
 name|__builtin_parity
 argument_list|(
@@ -2136,7 +2241,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g50
+name|parity7
 index|[
 name|__builtin_parity
 argument_list|(
@@ -2155,7 +2260,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g51
+name|parity8
 index|[
 name|__builtin_parity
 argument_list|(
@@ -2175,7 +2280,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g52
+name|parity9
 index|[
 name|__builtin_parityl
 argument_list|(
@@ -2203,7 +2308,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g53
+name|parity10
 index|[
 name|__builtin_parityll
 argument_list|(
@@ -2231,7 +2336,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g54
+name|ffs1
 index|[
 name|__builtin_ffs
 argument_list|(
@@ -2250,7 +2355,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g55
+name|ffs2
 index|[
 name|__builtin_ffs
 argument_list|(
@@ -2269,7 +2374,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g56
+name|ffs3
 index|[
 name|__builtin_ffs
 argument_list|(
@@ -2288,7 +2393,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g57
+name|ffs4
 index|[
 name|__builtin_ffs
 argument_list|(
@@ -2307,7 +2412,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g58
+name|ffs5
 index|[
 name|__builtin_ffs
 argument_list|(
@@ -2338,7 +2443,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g59
+name|ffs6
 index|[
 name|__builtin_ffsl
 argument_list|(
@@ -2357,7 +2462,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|g60
+name|ffs7
 index|[
 name|__builtin_ffsll
 argument_list|(

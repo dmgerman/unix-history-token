@@ -115,5 +115,56 @@ begin_comment
 comment|// WARN-NOT: note
 end_comment
 
+begin_comment
+comment|// RUN: not %clang_cl - 2>&1 | FileCheck -check-prefix=STDIN %s
+end_comment
+
+begin_comment
+comment|// STDIN: error: use /Tc or /Tp
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -### /Tc - 2>&1 | FileCheck -check-prefix=STDINTc %s
+end_comment
+
+begin_comment
+comment|// STDINTc: "-x" "c"
+end_comment
+
+begin_comment
+comment|// RUN: env LIB=%S/Inputs/cl-libs %clang_cl -### -- %s cl-test.lib 2>&1 | FileCheck -check-prefix=LIBINPUT %s
+end_comment
+
+begin_comment
+comment|// LIBINPUT: link.exe"
+end_comment
+
+begin_comment
+comment|// LIBINPUT: "cl-test.lib"
+end_comment
+
+begin_comment
+comment|// RUN: env LIB=%S/Inputs/cl-libs %clang_cl -### -- %s cl-test2.lib 2>&1 | FileCheck -check-prefix=LIBINPUT2 %s
+end_comment
+
+begin_comment
+comment|// LIBINPUT2: error: no such file or directory: 'cl-test2.lib'
+end_comment
+
+begin_comment
+comment|// LIBINPUT2: link.exe"
+end_comment
+
+begin_comment
+comment|// LIBINPUT2-NOT: "cl-test2.lib"
+end_comment
+
+begin_function_decl
+name|void
+name|f
+parameter_list|()
+function_decl|;
+end_function_decl
+
 end_unit
 

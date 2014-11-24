@@ -105,8 +105,6 @@ block|{
 name|private
 label|:
 typedef|typedef
-name|llvm
-operator|::
 name|MutableArrayRef
 operator|<
 name|DeclAccessPair

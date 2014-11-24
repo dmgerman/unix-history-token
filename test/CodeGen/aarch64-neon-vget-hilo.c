@@ -4,11 +4,11 @@ comment|// REQUIRES: aarch64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -target-feature +neon \
+comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
-comment|// RUN:   -ffp-contract=fast -S -O3 -o - %s | FileCheck %s
+comment|// RUN:   -ffp-contract=fast -S -O3 -o - %s | FileCheck %s --check-prefix CHECK-COMMON --check-prefix CHECK-ARM64
 end_comment
 
 begin_comment
@@ -29,14 +29,14 @@ name|int8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_s8:
+comment|// CHECK-COMMON-LABEL: test_vget_high_s8:
 return|return
 name|vget_high_s8
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -48,14 +48,14 @@ name|int16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_s16:
+comment|// CHECK-COMMON-LABEL: test_vget_high_s16:
 return|return
 name|vget_high_s16
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -67,14 +67,14 @@ name|int32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_s32:
+comment|// CHECK-COMMON-LABEL: test_vget_high_s32:
 return|return
 name|vget_high_s32
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -86,14 +86,14 @@ name|int64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_s64:
+comment|// CHECK-COMMON-LABEL: test_vget_high_s64:
 return|return
 name|vget_high_s64
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -105,14 +105,14 @@ name|uint8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_u8:
+comment|// CHECK-COMMON-LABEL: test_vget_high_u8:
 return|return
 name|vget_high_u8
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -124,14 +124,14 @@ name|uint16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_u16:
+comment|// CHECK-COMMON-LABEL: test_vget_high_u16:
 return|return
 name|vget_high_u16
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -143,14 +143,14 @@ name|uint32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_u32:
+comment|// CHECK-COMMON-LABEL: test_vget_high_u32:
 return|return
 name|vget_high_u32
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -162,14 +162,14 @@ name|uint64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_u64:
+comment|// CHECK-COMMON-LABEL: test_vget_high_u64:
 return|return
 name|vget_high_u64
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -181,14 +181,14 @@ name|poly64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_p64:
+comment|// CHECK-COMMON-LABEL: test_vget_high_p64:
 return|return
 name|vget_high_p64
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -200,14 +200,14 @@ name|float16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_f16:
+comment|// CHECK-COMMON-LABEL: test_vget_high_f16:
 return|return
 name|vget_high_f16
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -219,14 +219,14 @@ name|float32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_f32:
+comment|// CHECK-COMMON-LABEL: test_vget_high_f32:
 return|return
 name|vget_high_f32
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -238,14 +238,14 @@ name|poly8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_p8:
+comment|// CHECK-COMMON-LABEL: test_vget_high_p8:
 return|return
 name|vget_high_p8
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -257,14 +257,14 @@ name|poly16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_p16
+comment|// CHECK-COMMON-LABEL: test_vget_high_p16
 return|return
 name|vget_high_p16
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -276,14 +276,14 @@ name|float64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_high_f64
+comment|// CHECK-COMMON-LABEL: test_vget_high_f64
 return|return
 name|vget_high_f64
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK: dup d0, {{v[0-9]+}}.d[1]
+comment|// CHECK-ARM64: ext v0.16b, v0.16b, v0.16b, #8
 block|}
 end_function
 
@@ -295,14 +295,14 @@ name|int8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_s8:
+comment|// CHECK-COMMON-LABEL: test_vget_low_s8:
 return|return
 name|vget_low_s8
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -314,14 +314,14 @@ name|int16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_s16:
+comment|// CHECK-COMMON-LABEL: test_vget_low_s16:
 return|return
 name|vget_low_s16
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -333,14 +333,14 @@ name|int32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_s32:
+comment|// CHECK-COMMON-LABEL: test_vget_low_s32:
 return|return
 name|vget_low_s32
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -352,14 +352,14 @@ name|int64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_s64:
+comment|// CHECK-COMMON-LABEL: test_vget_low_s64:
 return|return
 name|vget_low_s64
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -371,14 +371,14 @@ name|uint8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_u8:
+comment|// CHECK-COMMON-LABEL: test_vget_low_u8:
 return|return
 name|vget_low_u8
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -390,14 +390,14 @@ name|uint16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_u16:
+comment|// CHECK-COMMON-LABEL: test_vget_low_u16:
 return|return
 name|vget_low_u16
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -409,14 +409,14 @@ name|uint32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_u32:
+comment|// CHECK-COMMON-LABEL: test_vget_low_u32:
 return|return
 name|vget_low_u32
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -428,14 +428,14 @@ name|uint64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_u64:
+comment|// CHECK-COMMON-LABEL: test_vget_low_u64:
 return|return
 name|vget_low_u64
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -447,14 +447,14 @@ name|poly64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_p64:
+comment|// CHECK-COMMON-LABEL: test_vget_low_p64:
 return|return
 name|vget_low_p64
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -466,14 +466,14 @@ name|float16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_f16:
+comment|// CHECK-COMMON-LABEL: test_vget_low_f16:
 return|return
 name|vget_low_f16
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -485,14 +485,14 @@ name|float32x4_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_f32:
+comment|// CHECK-COMMON-LABEL: test_vget_low_f32:
 return|return
 name|vget_low_f32
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -504,14 +504,14 @@ name|poly8x16_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_p8:
+comment|// CHECK-COMMON-LABEL: test_vget_low_p8:
 return|return
 name|vget_low_p8
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -523,14 +523,14 @@ name|poly16x8_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_p16:
+comment|// CHECK-COMMON-LABEL: test_vget_low_p16:
 return|return
 name|vget_low_p16
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 
@@ -542,14 +542,14 @@ name|float64x2_t
 name|a
 parameter_list|)
 block|{
-comment|// CHECK-LABEL: test_vget_low_f64:
+comment|// CHECK-COMMON-LABEL: test_vget_low_f64:
 return|return
 name|vget_low_f64
 argument_list|(
 name|a
 argument_list|)
 return|;
-comment|// CHECK-NEXT: ret
+comment|// CHECK-COMMON-NEXT: ret
 block|}
 end_function
 

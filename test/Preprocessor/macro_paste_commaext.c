@@ -12,11 +12,11 @@ comment|// RUN: %clang_cc1 %s -E | grep 'X, 1, 2);'
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -E | grep 'Y, );'
+comment|// RUN: %clang_cc1 %s -E | grep 'Y,);'
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 %s -E | grep 'Z, );'
+comment|// RUN: %clang_cc1 %s -E | grep 'Z,);'
 end_comment
 
 begin_define

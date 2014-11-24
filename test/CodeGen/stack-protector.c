@@ -16,7 +16,15 @@ comment|// WITHSSP: define void @test1(i8* %msg) #0 {
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 2 | FileCheck -check-prefix=SSPREQ %s
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 2 | FileCheck -check-prefix=SSPSTRONG %s
+end_comment
+
+begin_comment
+comment|// SSPSTRONG: define void @test1(i8* %msg) #0 {
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s -stack-protector 3 | FileCheck -check-prefix=SSPREQ %s
 end_comment
 
 begin_comment
@@ -117,6 +125,10 @@ end_comment
 
 begin_comment
 comment|// WITHSSP: attributes #{{.*}} = { nounwind ssp{{.*}} }
+end_comment
+
+begin_comment
+comment|// SSPSTRONG: attributes #{{.*}} = { nounwind sspstrong{{.*}} }
 end_comment
 
 begin_comment

@@ -45,5 +45,9 @@ directive|error
 error|quux
 end_error
 
+begin_comment
+comment|// expected-warning@-2 {{backslash and newline separated by space}}
+end_comment
+
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -Wno-unused-value -Wmicrosoft -verify -fms-extensions
+comment|// RUN: %clang_cc1 -triple i686-windows %s -fsyntax-only -Wno-unused-value -Wmicrosoft -verify -fms-extensions
 end_comment
 
 begin_struct
@@ -55,6 +55,23 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|uuid(
+literal|"00000000-0000-0000-C000-000000000046"
+argument|)
+argument_list|)
+name|IUnknown
+block|{}
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-error {{'uuid' attribute is not supported in C}} */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -307,7 +324,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// expected-note {{'e1' declared here}}
+comment|// expected-note {{'e1' has been explicitly marked deprecated here}}
 end_comment
 
 begin_struct
@@ -329,7 +346,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-note {{declared here}}
+comment|// expected-note {{'DS1' has been explicitly marked deprecated here}}
 end_comment
 
 begin_define
@@ -356,7 +373,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// expected-note {{'Dfunc1' declared here}}
+comment|// expected-note {{'Dfunc1' has been explicitly marked deprecated here}}
 end_comment
 
 begin_struct
@@ -636,6 +653,100 @@ end_decl_stmt
 begin_comment
 comment|// expected-error {{'__ptr32' attribute only applies to pointer arguments}}
 end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|my_va_list
+typedef|;
+end_typedef
+
+begin_function_decl
+name|void
+name|__va_start
+parameter_list|(
+name|my_va_list
+modifier|*
+name|ap
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note {{passing argument to parameter 'ap' here}}
+end_comment
+
+begin_function_decl
+name|void
+name|vmyprintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|f
+parameter_list|,
+name|my_va_list
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|myprintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|f
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|my_va_list
+name|ap
+decl_stmt|;
+if|if
+condition|(
+literal|1
+condition|)
+block|{
+name|__va_start
+argument_list|(
+operator|&
+name|ap
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+name|vmyprintf
+argument_list|(
+name|f
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|ap
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|__va_start
+argument_list|(
+name|ap
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{incompatible pointer types passing 'my_va_list'}}
+block|}
+block|}
+end_function
 
 end_unit
 

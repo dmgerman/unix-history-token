@@ -8,11 +8,11 @@ comment|// Verify that clang version appears in the llvm.ident metadata.
 end_comment
 
 begin_comment
-comment|// CHECK: !llvm.ident = !{!0}
+comment|// CHECK: !llvm.ident = !{{{.*}}}
 end_comment
 
 begin_comment
-comment|// CHECK: !0 = metadata !{metadata !{{.*}}
+comment|// CHECK: !{{[0-9]+}} = metadata !{metadata !{{.*}}
 end_comment
 
 end_unit

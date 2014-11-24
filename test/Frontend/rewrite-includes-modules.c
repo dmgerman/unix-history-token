@@ -50,6 +50,10 @@ comment|// CHECK-NEXT: #endif /* expanded by -frewrite-includes */{{$}}
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT: # 5 "{{.*[/\\]}}rewrite-includes-modules.c"{{$}}
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT: @import Module; /* clang -frewrite-includes: implicit import */{{$}}
 end_comment
 
@@ -71,6 +75,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT: #endif /* expanded by -frewrite-includes */{{$}}
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: # 7 "{{.*[/\\]}}rewrite-includes-modules.c"{{$}}
 end_comment
 
 begin_comment

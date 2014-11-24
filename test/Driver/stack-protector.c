@@ -4,7 +4,7 @@ comment|// RUN: %clang -fno-stack-protector -### %s 2>&1 | FileCheck %s -check-p
 end_comment
 
 begin_comment
-comment|// NOSSP-NOT: "-stack-protector" "1"
+comment|// NOSSP-NOT: "-stack-protector"
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// NOSSP-NOT: "-stack-protector-buffer-size"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fstack-protector -### %s 2>&1 | FileCheck %s -check-prefix=SSP
+comment|// RUN: %clang -target i386-unknown-linux -fstack-protector -### %s 2>&1 | FileCheck %s -check-prefix=SSP
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// SSP-NOT: "-stack-protector-buffer-size"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fstack-protector --param ssp-buffer-size=16 -### %s 2>&1 | FileCheck %s -check-prefix=SSP-BUF
+comment|// RUN: %clang -target i386-unknown-linux -fstack-protector --param ssp-buffer-size=16 -### %s 2>&1 | FileCheck %s -check-prefix=SSP-BUF
 end_comment
 
 begin_comment
@@ -40,15 +40,39 @@ comment|// RUN: %clang -target i386-pc-openbsd -### %s 2>&1 | FileCheck %s -chec
 end_comment
 
 begin_comment
-comment|// OPENBSD: "-stack-protector" "1"
+comment|// OPENBSD: "-stack-protector" "2"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target i386-pc-openbsd -fno-stack-protector -### %s 2>&1 | FileCheck %s -check-prefix=OPENBSD_OFF
+comment|// RUN: %clang -target i386-pc-openbsd -fstack-protector -### %s 2>&1 | FileCheck %s -check-prefix=OPENBSD_SPS
 end_comment
 
 begin_comment
-comment|// OPENBSD_OFF-NOT: "-stack-protector"
+comment|// OPENBSD_SPS: "-stack-protector" "2"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fstack-protector-strong -### %s 2>&1 | FileCheck %s -check-prefix=SSP-STRONG
+end_comment
+
+begin_comment
+comment|// SSP-STRONG: "-stack-protector" "2"
+end_comment
+
+begin_comment
+comment|// SSP-STRONG-NOT: "-stack-protector-buffer-size"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fstack-protector-all -### %s 2>&1 | FileCheck %s -check-prefix=SSP-ALL
+end_comment
+
+begin_comment
+comment|// SSP-ALL: "-stack-protector" "3"
+end_comment
+
+begin_comment
+comment|// SSP-ALL-NOT: "-stack-protector-buffer-size"
 end_comment
 
 end_unit

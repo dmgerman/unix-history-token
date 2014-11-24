@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,alpha.core,alpha.unix
 end_comment
 
 begin_comment
+comment|// expected-no-diagnostics
+end_comment
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -164,7 +168,6 @@ index|]
 decl_stmt|;
 block|}
 struct|;
-comment|// FIXME: Not warn for this.
 name|struct
 name|vec
 modifier|*
@@ -179,9 +182,13 @@ name|vec
 argument_list|)
 operator|+
 literal|10
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 argument_list|)
 decl_stmt|;
-comment|// expected-warning {{Cast a region whose size is not a multiple of the destination type size}}
 name|a
 operator|->
 name|len

@@ -25,11 +25,11 @@ name|vec256
 name|out
 decl_stmt|;
 asm|asm("something %0" : : "y"(in));
-comment|// expected-error {{invalid type 'vec256' in asm input for constraint 'y'}}
+comment|// expected-error {{invalid type 'vec256' (vector of 8 'int' values) in asm input for constraint 'y'}}
 asm|asm("something %0" : "=y"(out));
-comment|// expected-error {{invalid type 'vec256' in asm input for constraint 'y'}}
+comment|// expected-error {{invalid type 'vec256' (vector of 8 'int' values) in asm input for constraint 'y'}}
 asm|asm("something %0, %0" : "+y"(out));
-comment|// expected-error {{invalid type 'vec256' in asm input for constraint 'y'}}
+comment|// expected-error {{invalid type 'vec256' (vector of 8 'int' values) in asm input for constraint 'y'}}
 return|return
 name|out
 return|;

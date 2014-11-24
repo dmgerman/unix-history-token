@@ -16,7 +16,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-phases \
 end_comment
 
 begin_comment
-comment|// RUN:   -verify -arch i386 -arch x86_64 %s -g 2> %t
+comment|// RUN:   --verify-debug-info -arch i386 -arch x86_64 %s -g 2> %t
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// CHECK-MULTIARCH-ACTIONS: 8: dsymutil, {7}, dSYM
 end_comment
 
 begin_comment
-comment|// CHECK-MULTIARCH-ACTIONS: 9: verify, {8}, none
+comment|// CHECK-MULTIARCH-ACTIONS: 9: verify-debug-info, {8}, none
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-bindings \
 end_comment
 
 begin_comment
-comment|// RUN:   -verify -arch i386 -arch x86_64 %s -g 2> %t
+comment|// RUN:   --verify-debug-info -arch i386 -arch x86_64 %s -g 2> %t
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-bindings \
 end_comment
 
 begin_comment
-comment|// RUN:   -verify -o foo %s -g 2> %t
+comment|// RUN:   --verify-debug-info -o foo %s -g 2> %t
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-bindings \
 end_comment
 
 begin_comment
-comment|// RUN:   -verify -o foo %t.o -g 2> %t
+comment|// RUN:   --verify-debug-info -o foo %t.o -g 2> %t
 end_comment
 
 begin_comment

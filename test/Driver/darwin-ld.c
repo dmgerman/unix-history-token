@@ -160,6 +160,62 @@ comment|// LINK_IPHONE_3_1: -lSystem
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target i386-apple-darwin9 -### -arch i386 -mios-simulator-version-min=3.0 %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-darwin9 -### -arch i386 -mios-simulator-version-min=3.0 -dynamiclib %t.o 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target i386-apple-darwin9 -### -arch i386 -mios-simulator-version-min=3.0 -bundle %t.o 2>> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_IOSSIM_3_0 %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0-NOT: -lcrt1.o
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0: -lSystem
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0: -dylib
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0-NOT: -ldylib1.o
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0: -lSystem
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0-NOT: -lbundle1.o
+end_comment
+
+begin_comment
+comment|// LINK_IOSSIM_3_0: -lSystem
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target i386-apple-darwin9 -### -fpie %t.o 2> %t.log
 end_comment
 
@@ -436,6 +492,18 @@ comment|// LINK_NO_IOS_CRT1-NOT: crt
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm64-apple-ios5.0 -miphoneos-version-min=5.0 -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_NO_IOS_ARM64_CRT1 %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_NO_IOS_ARM64_CRT1-NOT: crt
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target i386-apple-darwin12 -pg -### %t.o 2> %t.log
 end_comment
 
@@ -449,6 +517,34 @@ end_comment
 
 begin_comment
 comment|// LINK_PG: -no_new_main
+end_comment
+
+begin_comment
+comment|// Check that clang links with libgcc_s.1 for iOS 4 and earlier, but not arm64.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7-apple-ios4.0 -miphoneos-version-min=4.0 -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_IOS_LIBGCC_S %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_IOS_LIBGCC_S: lgcc_s.1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm64-apple-ios4.0 -miphoneos-version-min=4.0 -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_NO_IOS_ARM64_LIBGCC_S %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_NO_IOS_ARM64_LIBGCC_S-NOT: lgcc_s.1
 end_comment
 
 begin_comment
@@ -489,6 +585,86 @@ end_comment
 
 begin_comment
 comment|// LINK_EXPORT_DYNAMIC: "-export_dynamic"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64h-apple-darwin -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_X86_64H_ARCH %s< %t.log
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// LINK_X86_64H_ARCH: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_X86_64H_ARCH: "x86_64h"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin -arch x86_64 -arch x86_64h -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_X86_64H_MULTIARCH %s< %t.log
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// LINK_X86_64H_MULTIARCH: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_X86_64H_MULTIARCH: "x86_64"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// LINK_X86_64H_MULTIARCH: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK_X86_64H_MULTIARCH: "x86_64h"
+end_comment
+
+begin_comment
+comment|// Check that clang passes -iphoneos_version_min to the linker when building
+end_comment
+
+begin_comment
+comment|// for the iOS simulator but when -mios-simulator-version-min is not
+end_comment
+
+begin_comment
+comment|// explicitly specified (<rdar://problem/15959009>).
+end_comment
+
+begin_comment
+comment|// RUN: env IPHONEOS_DEPLOYMENT_TARGET=7.0 \
+end_comment
+
+begin_comment
+comment|// RUN:   %clang -target i386-apple-darwin -### %t.o 2> %t.log
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=LINK_IPHONEOS_VERSION_MIN %s< %t.log
+end_comment
+
+begin_comment
+comment|// LINK_IPHONEOS_VERSION_MIN: -iphoneos_version_min
 end_comment
 
 end_unit

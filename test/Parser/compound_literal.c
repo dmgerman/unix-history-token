@@ -4,6 +4,10 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -x c++ %s
+end_comment
+
+begin_comment
 comment|// expected-no-diagnostics
 end_comment
 
@@ -24,6 +28,18 @@ index|[]
 operator|)
 block|{
 literal|"whatever"
+block|}
+expr_stmt|;
+name|s
+operator|=
+operator|(
+name|char
+argument_list|(
+operator|*
+argument_list|)
+operator|)
+block|{
+name|s
 block|}
 expr_stmt|;
 block|}

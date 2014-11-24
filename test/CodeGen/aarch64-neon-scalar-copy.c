@@ -4,7 +4,7 @@ comment|// REQUIRES: aarch64-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple aarch64-none-linux-gnu -target-feature +neon \
+comment|// RUN: %clang_cc1 -triple arm64-none-linux-gnu -target-feature +neon \
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ file|<arm_neon.h>
 end_include
 
 begin_comment
-comment|// CHECK: test_vdups_lane_f32
+comment|// CHECK-LABEL: test_vdups_lane_f32
 end_comment
 
 begin_function
@@ -43,7 +43,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupd_lane_f64
+comment|// CHECK-LABEL: test_vdupd_lane_f64
 end_comment
 
 begin_function
@@ -68,7 +68,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdups_laneq_f32
+comment|// CHECK-LABEL: test_vdups_laneq_f32
 end_comment
 
 begin_function
@@ -93,7 +93,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupd_laneq_f64
+comment|// CHECK-LABEL: test_vdupd_laneq_f64
 end_comment
 
 begin_function
@@ -118,7 +118,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupb_lane_s8
+comment|// CHECK-LABEL: test_vdupb_lane_s8
 end_comment
 
 begin_function
@@ -137,12 +137,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.b[7]
+comment|// CHECK: {{umov|smov}} {{w[0-9]+}}, {{v[0-9]+}}.b[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vduph_lane_s16
+comment|// CHECK-LABEL: test_vduph_lane_s16
 end_comment
 
 begin_function
@@ -161,12 +161,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.h[3]
+comment|// CHECK: {{umov|smov}} {{w[0-9]+}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdups_lane_s32
+comment|// CHECK-LABEL: test_vdups_lane_s32
 end_comment
 
 begin_function
@@ -185,12 +185,12 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.s[1]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.s[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupd_lane_s64
+comment|// CHECK-LABEL: test_vdupd_lane_s64
 end_comment
 
 begin_function
@@ -214,7 +214,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupb_lane_u8
+comment|// CHECK-LABEL: test_vdupb_lane_u8
 end_comment
 
 begin_function
@@ -233,12 +233,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.b[7]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.b[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vduph_lane_u16
+comment|// CHECK-LABEL: test_vduph_lane_u16
 end_comment
 
 begin_function
@@ -257,12 +257,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.h[3]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdups_lane_u32
+comment|// CHECK-LABEL: test_vdups_lane_u32
 end_comment
 
 begin_function
@@ -281,12 +281,12 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.s[1]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.s[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupd_lane_u64
+comment|// CHECK-LABEL: test_vdupd_lane_u64
 end_comment
 
 begin_function
@@ -310,7 +310,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupb_laneq_s8
+comment|// CHECK-LABEL: test_vdupb_laneq_s8
 end_comment
 
 begin_function
@@ -329,12 +329,12 @@ argument_list|,
 literal|15
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.b[15]
+comment|// CHECK: {{umov|smov}} {{w[0-9]+}}, {{v[0-9]+}}.b[15]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vduph_laneq_s16
+comment|// CHECK-LABEL: test_vduph_laneq_s16
 end_comment
 
 begin_function
@@ -353,12 +353,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.h[7]
+comment|// CHECK: {{umov|smov}} {{w[0-9]+}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdups_laneq_s32
+comment|// CHECK-LABEL: test_vdups_laneq_s32
 end_comment
 
 begin_function
@@ -377,12 +377,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.s[3]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.s[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupd_laneq_s64
+comment|// CHECK-LABEL: test_vdupd_laneq_s64
 end_comment
 
 begin_function
@@ -401,12 +401,12 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: umov {{x[0-9]+}}, {{v[0-9]+}}.d[1]
+comment|// CHECK: {{mov|umov}} {{x[0-9]+}}, {{v[0-9]+}}.d[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupb_laneq_u8
+comment|// CHECK-LABEL: test_vdupb_laneq_u8
 end_comment
 
 begin_function
@@ -425,12 +425,12 @@ argument_list|,
 literal|15
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.b[15]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.b[15]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vduph_laneq_u16
+comment|// CHECK-LABEL: test_vduph_laneq_u16
 end_comment
 
 begin_function
@@ -449,12 +449,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.h[7]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdups_laneq_u32
+comment|// CHECK-LABEL: test_vdups_laneq_u32
 end_comment
 
 begin_function
@@ -473,12 +473,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.s[3]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.s[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupd_laneq_u64
+comment|// CHECK-LABEL: test_vdupd_laneq_u64
 end_comment
 
 begin_function
@@ -497,12 +497,12 @@ argument_list|,
 literal|1
 argument_list|)
 return|;
-comment|// CHECK: umov {{x[0-9]+}}, {{v[0-9]+}}.d[1]
+comment|// CHECK: {{mov|umov}} {{x[0-9]+}}, {{v[0-9]+}}.d[1]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupb_lane_p8
+comment|// CHECK-LABEL: test_vdupb_lane_p8
 end_comment
 
 begin_function
@@ -521,12 +521,12 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.b[7]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.b[7]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vduph_lane_p16
+comment|// CHECK-LABEL: test_vduph_lane_p16
 end_comment
 
 begin_function
@@ -545,12 +545,12 @@ argument_list|,
 literal|3
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.h[3]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.h[3]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vdupb_laneq_p8
+comment|// CHECK-LABEL: test_vdupb_laneq_p8
 end_comment
 
 begin_function
@@ -569,12 +569,12 @@ argument_list|,
 literal|15
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.b[15]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.b[15]
 block|}
 end_function
 
 begin_comment
-comment|// CHECK: test_vduph_laneq_p16
+comment|// CHECK-LABEL: test_vduph_laneq_p16
 end_comment
 
 begin_function
@@ -593,7 +593,7 @@ argument_list|,
 literal|7
 argument_list|)
 return|;
-comment|// CHECK: umov {{w[0-9]+}}, {{v[0-9]+}}.h[7]
+comment|// CHECK: {{mov|umov}} {{w[0-9]+}}, {{v[0-9]+}}.h[7]
 block|}
 end_function
 

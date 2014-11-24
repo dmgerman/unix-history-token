@@ -1902,6 +1902,54 @@ name|double
 specifier|_Complex
 parameter_list|)
 function_decl|;
+name|double
+name|__sinpi
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+name|float
+name|__sinpif
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
+name|double
+name|__cospi
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+name|float
+name|__cospif
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
+name|double
+name|__tanpi
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+name|float
+name|__tanpif
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
+name|double
+name|__exp10
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+name|float
+name|__exp10f
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus
@@ -3116,7 +3164,47 @@ argument_list|)
 block|,
 name|F
 argument_list|(
-argument|ctanhl
+name|ctanhl
+argument_list|)
+block|,
+name|F
+argument_list|(
+name|__sinpi
+argument_list|)
+block|,
+name|F
+argument_list|(
+name|__sinpif
+argument_list|)
+block|,
+name|F
+argument_list|(
+name|__cospi
+argument_list|)
+block|,
+name|F
+argument_list|(
+name|__cospif
+argument_list|)
+block|,
+name|F
+argument_list|(
+name|__tanpi
+argument_list|)
+block|,
+name|F
+argument_list|(
+name|__tanpif
+argument_list|)
+block|,
+name|F
+argument_list|(
+name|__exp10
+argument_list|)
+block|,
+name|F
+argument_list|(
+argument|__exp10f
 argument_list|)
 block|}
 decl_stmt|;
@@ -3956,6 +4044,38 @@ end_comment
 
 begin_comment
 comment|// CHECK-NOERRNO: declare<2 x float> @ctanhf(<2 x float>) [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: declare double @__sinpi(double) [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: declare float @__sinpif(float) [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: declare double @__cospi(double) [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: declare float @__cospif(float) [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: declare double @__tanpi(double) [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: declare float @__tanpif(float) [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: declare double @__exp10(double) [[NUW]]
+end_comment
+
+begin_comment
+comment|// CHECK-NOERRNO: declare float @__exp10f(float) [[NUW]]
 end_comment
 
 begin_comment
