@@ -3880,22 +3880,14 @@ block|}
 comment|/* 	 * Enforce initiator-name and initiator-portal. 	 */
 if|if
 condition|(
-name|auth_name_defined
-argument_list|(
-name|ag
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|auth_name_find
+name|auth_name_check
 argument_list|(
 name|ag
 argument_list|,
 name|initiator_name
 argument_list|)
-operator|==
-name|NULL
+operator|!=
+literal|0
 condition|)
 block|{
 name|login_send_error
@@ -3911,37 +3903,13 @@ name|log_errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"initiator does not match allowed "
-literal|"initiator names"
-argument_list|)
-expr_stmt|;
-block|}
-name|log_debugx
-argument_list|(
-literal|"initiator matches allowed initiator names"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|log_debugx
-argument_list|(
-literal|"auth-group does not define initiator name "
-literal|"restrictions"
+literal|"initiator does not match allowed initiator names"
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|auth_portal_defined
-argument_list|(
-name|ag
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|auth_portal_find
+name|auth_portal_check
 argument_list|(
 name|ag
 argument_list|,
@@ -3950,8 +3918,8 @@ name|conn
 operator|->
 name|conn_initiator_sa
 argument_list|)
-operator|==
-name|NULL
+operator|!=
+literal|0
 condition|)
 block|{
 name|login_send_error
@@ -3969,21 +3937,6 @@ literal|1
 argument_list|,
 literal|"initiator does not match allowed "
 literal|"initiator portals"
-argument_list|)
-expr_stmt|;
-block|}
-name|log_debugx
-argument_list|(
-literal|"initiator matches allowed initiator portals"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|log_debugx
-argument_list|(
-literal|"auth-group does not define initiator portal "
-literal|"restrictions"
 argument_list|)
 expr_stmt|;
 block|}
