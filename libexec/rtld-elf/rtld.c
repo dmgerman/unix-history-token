@@ -9701,7 +9701,7 @@ name|mapbase
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__PIC__
+name|PIC
 name|objtmp
 operator|.
 name|relocbase

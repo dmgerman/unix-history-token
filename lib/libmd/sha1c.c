@@ -97,7 +97,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__PIC__
+name|PIC
 end_ifdef
 
 begin_undef

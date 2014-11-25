@@ -29,7 +29,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__PIC__
+name|PIC
 end_ifdef
 
 begin_function
