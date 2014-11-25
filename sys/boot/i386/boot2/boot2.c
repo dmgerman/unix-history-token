@@ -1606,13 +1606,13 @@ decl_stmt|;
 name|uint32_t
 name|addr
 decl_stmt|;
+name|int
+name|k
+decl_stmt|;
 name|uint8_t
 name|i
 decl_stmt|,
 name|j
-decl_stmt|;
-name|int
-name|k
 decl_stmt|;
 if|if
 condition|(
