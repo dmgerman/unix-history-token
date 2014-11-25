@@ -2160,9 +2160,6 @@ name|unsigned
 name|int
 name|drv
 decl_stmt|;
-name|uint8_t
-name|i
-decl_stmt|;
 name|int
 name|c
 decl_stmt|,
@@ -2170,6 +2167,9 @@ name|j
 decl_stmt|;
 name|size_t
 name|k
+decl_stmt|;
+name|uint8_t
+name|i
 decl_stmt|;
 while|while
 condition|(
