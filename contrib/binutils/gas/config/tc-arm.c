@@ -24494,7 +24494,7 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|(v<< n | v>> (32 - n))
+value|(v<< (n % 32) | v>> ((32 - n) % 32))
 end_define
 
 begin_comment
