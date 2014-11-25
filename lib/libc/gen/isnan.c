@@ -22,7 +22,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__PIC__
+name|PIC
 end_ifdef
 
 begin_expr_stmt
@@ -141,7 +141,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __PIC__ */
+comment|/* PIC */
 end_comment
 
 end_unit

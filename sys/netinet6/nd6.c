@@ -8294,16 +8294,6 @@ case|case
 name|IFT_INFINIBAND
 case|:
 case|case
-name|IFT_GIF
-case|:
-comment|/* XXX need more cases? */
-case|case
-name|IFT_PPP
-case|:
-case|case
-name|IFT_TUNNEL
-case|:
-case|case
 name|IFT_BRIDGE
 case|:
 case|case
@@ -8356,6 +8346,20 @@ name|ia_ifa
 operator|.
 name|ifa_ifp
 expr_stmt|;
+if|if
+condition|(
+name|nd6_need_cache
+argument_list|(
+name|ifp
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|IF_AFDATA_LOCK
 argument_list|(
 name|ifp

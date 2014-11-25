@@ -26,7 +26,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__PIC__
+name|PIC
 argument_list|)
 operator|&&
 operator|!

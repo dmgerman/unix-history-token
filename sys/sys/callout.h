@@ -370,7 +370,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), (c)->c_cpu, flags)
+value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), (c)->c_cpu, (flags))
 end_define
 
 begin_define
@@ -391,7 +391,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), PCPU_GET(cpuid), flags)
+value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), PCPU_GET(cpuid),\         (flags))
 end_define
 
 begin_define
@@ -410,7 +410,7 @@ parameter_list|,
 name|cpu
 parameter_list|)
 define|\
-value|callout_reset_sbt_on((c), (tick_sbt * (to_ticks)), 0, (fn), (arg), \         (cpu), C_HARDCLOCK)
+value|callout_reset_sbt_on((c), tick_sbt * (to_ticks), 0, (fn), (arg),	\         (cpu), C_HARDCLOCK)
 end_define
 
 begin_define
@@ -445,6 +445,59 @@ name|arg
 parameter_list|)
 define|\
 value|callout_reset_on((c), (on_tick), (fn), (arg), PCPU_GET(cpuid))
+end_define
+
+begin_define
+define|#
+directive|define
+name|callout_schedule_sbt_on
+parameter_list|(
+name|c
+parameter_list|,
+name|sbt
+parameter_list|,
+name|pr
+parameter_list|,
+name|cpu
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|callout_reset_sbt_on((c), (sbt), (pr), (c)->c_func, (c)->c_arg,	\         (cpu), (flags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|callout_schedule_sbt
+parameter_list|(
+name|c
+parameter_list|,
+name|sbt
+parameter_list|,
+name|pr
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|callout_schedule_sbt_on((c), (sbt), (pr), (c)->c_cpu, (flags))
+end_define
+
+begin_define
+define|#
+directive|define
+name|callout_schedule_sbt_curcpu
+parameter_list|(
+name|c
+parameter_list|,
+name|sbt
+parameter_list|,
+name|pr
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|callout_schedule_sbt_on((c), (sbt), (pr), PCPU_GET(cpuid), (flags))
 end_define
 
 begin_function_decl
