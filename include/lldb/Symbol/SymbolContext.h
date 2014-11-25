@@ -305,7 +305,7 @@ comment|/// Dump a description of the contents of this object to the
 comment|/// supplied stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|void
 name|Dump
@@ -332,7 +332,7 @@ comment|/// that will be output. Else just the address at which the target
 comment|/// was stopped will be displayed.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] so_addr
 comment|///     The resolved section offset address.
@@ -827,7 +827,7 @@ comment|/// This class provides a common structure that can be used to contain
 comment|/// the result of a query that can contain a multiple results. Examples
 comment|/// of such queries include:
 comment|///     @li Looking up a function by name.
-comment|///     @li Finding all addressses for a specified file and line number.
+comment|///     @li Finding all addresses for a specified file and line number.
 comment|//----------------------------------------------------------------------
 name|class
 name|SymbolContextList
@@ -932,7 +932,7 @@ comment|/// Dump a description of the contents of each symbol context in
 comment|/// the list to the supplied stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|void
 name|Dump

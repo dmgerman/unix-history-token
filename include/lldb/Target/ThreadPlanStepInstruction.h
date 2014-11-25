@@ -143,6 +143,11 @@ name|bool
 name|MischiefManaged
 argument_list|()
 block|;
+name|virtual
+name|bool
+name|IsPlanStale
+argument_list|()
+block|;
 name|protected
 operator|:
 name|virtual
@@ -166,6 +171,10 @@ argument|Vote stop_vote
 argument_list|,
 argument|Vote run_vote
 argument_list|)
+block|;
+name|void
+name|SetUpState
+argument_list|()
 block|;
 name|private
 operator|:

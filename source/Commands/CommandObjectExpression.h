@@ -278,6 +278,10 @@ init|=
 name|NULL
 parameter_list|)
 function_decl|;
+name|void
+name|GetMultilineExpression
+parameter_list|()
+function_decl|;
 name|OptionGroupOptions
 name|m_option_group
 decl_stmt|;

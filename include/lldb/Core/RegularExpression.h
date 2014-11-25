@@ -459,7 +459,7 @@ name|RegularExpression
 argument_list|()
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Constructor that takes a regulare expression with flags.
+comment|/// Constructor that takes a regular expression with flags.
 comment|///
 comment|/// Constructor that compiles \a re using \a flags and stores the
 comment|/// resulting compiled regular expression into this object.
@@ -469,7 +469,7 @@ comment|///     A c string that represents the regular expression to
 comment|///     compile.
 comment|///
 comment|/// @param[in] flags
-comment|///     Flags that are passed the the \c regcomp() function.
+comment|///     Flags that are passed to the \c regcomp() function.
 comment|//------------------------------------------------------------------
 name|explicit
 name|RegularExpression
@@ -496,7 +496,7 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Destructor.
 comment|///
-comment|/// Any previosuly compiled regular expression contained in this
+comment|/// Any previously compiled regular expression contained in this
 comment|/// object will be freed.
 comment|//------------------------------------------------------------------
 operator|~
@@ -527,10 +527,10 @@ comment|//------------------------------------------------------------------
 comment|/// Compile a regular expression.
 comment|///
 comment|/// Compile a regular expression using the supplied regular
-comment|/// expression text and flags. The compied regular expression lives
+comment|/// expression text and flags. The compiled regular expression lives
 comment|/// in this object so that it can be readily used for regular
 comment|/// expression matches. Execute() can be called after the regular
-comment|/// expression is compiled. Any previosuly compiled regular
+comment|/// expression is compiled. Any previously compiled regular
 comment|/// expression contained in this object will be freed.
 comment|///
 comment|/// @param[in] re
@@ -538,7 +538,7 @@ comment|///     A NULL terminated C string that represents the regular
 comment|///     expression to compile.
 comment|///
 comment|/// @param[in] flags
-comment|///     Flags that are passed the the \c regcomp() function.
+comment|///     Flags that are passed to the \c regcomp() function.
 comment|///
 comment|/// @return
 comment|///     \b true if the regular expression compiles successfully,

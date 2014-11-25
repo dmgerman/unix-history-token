@@ -76,6 +76,12 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/IOObject.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -89,23 +95,25 @@ comment|/// functionality.
 comment|//----------------------------------------------------------------------
 name|class
 name|File
+range|:
+name|public
+name|IOObject
 block|{
 name|public
-label|:
+operator|:
 specifier|static
 name|int
 name|kInvalidDescriptor
-decl_stmt|;
+block|;
 specifier|static
 name|FILE
-modifier|*
+operator|*
 name|kInvalidStream
-decl_stmt|;
-enum|enum
+block|;      enum
 name|OpenOptions
 block|{
 name|eOpenOptionRead
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
@@ -114,7 +122,7 @@ operator|)
 block|,
 comment|// Open file for reading
 name|eOpenOptionWrite
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
@@ -123,7 +131,7 @@ operator|)
 block|,
 comment|// Open file for writing
 name|eOpenOptionAppend
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
@@ -132,7 +140,7 @@ operator|)
 block|,
 comment|// Don't truncate file when opening, append to end of file
 name|eOpenOptionTruncate
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
@@ -141,7 +149,7 @@ operator|)
 block|,
 comment|// Truncate file when opening
 name|eOpenOptionNonBlocking
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
@@ -150,7 +158,7 @@ operator|)
 block|,
 comment|// File reads
 name|eOpenOptionCanCreate
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
@@ -159,7 +167,7 @@ operator|)
 block|,
 comment|// Create file if doesn't already exist
 name|eOpenOptionCanCreateNewOnly
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
@@ -168,55 +176,56 @@ operator|)
 block|,
 comment|// Can create file only if it doesn't already exist
 name|eOpenoptionDontFollowSymlinks
-init|=
+operator|=
 operator|(
 literal|1u
 operator|<<
 literal|7
 operator|)
 block|}
-enum|;
+block|;
 specifier|static
 name|mode_t
 name|ConvertOpenOptionsForPOSIXOpen
-parameter_list|(
-name|uint32_t
-name|open_options
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|uint32_t open_options
+argument_list|)
+block|;
 name|File
 argument_list|()
 operator|:
+name|IOObject
+argument_list|(
+name|eFDTypeFile
+argument_list|,
+name|false
+argument_list|)
+block|,
 name|m_descriptor
 argument_list|(
 name|kInvalidDescriptor
 argument_list|)
-operator|,
+block|,
 name|m_stream
 argument_list|(
 name|kInvalidStream
 argument_list|)
-operator|,
+block|,
 name|m_options
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|m_own_stream
 argument_list|(
 name|false
 argument_list|)
-operator|,
-name|m_own_descriptor
-argument_list|(
-name|false
-argument_list|)
-operator|,
+block|,
 name|m_is_interactive
 argument_list|(
 name|eLazyBoolCalculate
 argument_list|)
-operator|,
+block|,
 name|m_is_real_terminal
 argument_list|(
 argument|eLazyBoolCalculate
@@ -229,36 +238,38 @@ argument_list|,
 argument|bool transfer_ownership
 argument_list|)
 operator|:
+name|IOObject
+argument_list|(
+name|eFDTypeFile
+argument_list|,
+name|false
+argument_list|)
+block|,
 name|m_descriptor
 argument_list|(
 name|kInvalidDescriptor
 argument_list|)
-operator|,
+block|,
 name|m_stream
 argument_list|(
 name|fh
 argument_list|)
-operator|,
+block|,
 name|m_options
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|m_own_stream
 argument_list|(
 name|transfer_ownership
 argument_list|)
-operator|,
-name|m_own_descriptor
-argument_list|(
-name|false
-argument_list|)
-operator|,
+block|,
 name|m_is_interactive
 argument_list|(
 name|eLazyBoolCalculate
 argument_list|)
-operator|,
+block|,
 name|m_is_real_terminal
 argument_list|(
 argument|eLazyBoolCalculate
@@ -271,18 +282,18 @@ name|File
 operator|&
 name|rhs
 argument_list|)
-expr_stmt|;
+block|;
 name|File
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|File
 operator|&
 name|rhs
 operator|)
-decl_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor with path.
 comment|///
@@ -309,7 +320,7 @@ argument|uint32_t options
 argument_list|,
 argument|uint32_t permissions = lldb::eFilePermissionsFileDefault
 argument_list|)
-empty_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor with FileSpec.
 comment|///
@@ -336,37 +347,39 @@ argument|uint32_t options
 argument_list|,
 argument|uint32_t permissions = lldb::eFilePermissionsFileDefault
 argument_list|)
-empty_stmt|;
+block|;
 name|File
 argument_list|(
 argument|int fd
 argument_list|,
 argument|bool transfer_ownership
 argument_list|)
-block|:
+operator|:
+name|IOObject
+argument_list|(
+name|eFDTypeFile
+argument_list|,
+name|transfer_ownership
+argument_list|)
+block|,
 name|m_descriptor
 argument_list|(
 name|fd
 argument_list|)
-operator|,
+block|,
 name|m_stream
 argument_list|(
 name|kInvalidStream
 argument_list|)
-operator|,
+block|,
 name|m_options
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|m_own_stream
 argument_list|(
-name|false
-argument_list|)
-operator|,
-name|m_own_descriptor
-argument_list|(
-argument|transfer_ownership
+argument|false
 argument_list|)
 block|{     }
 comment|//------------------------------------------------------------------
@@ -378,7 +391,7 @@ name|virtual
 operator|~
 name|File
 argument_list|()
-expr_stmt|;
+block|;
 name|bool
 name|IsValid
 argument_list|()
@@ -463,12 +476,10 @@ comment|//------------------------------------------------------------------
 name|Error
 name|GetFileSpec
 argument_list|(
-name|FileSpec
-operator|&
-name|file_spec
+argument|FileSpec&file_spec
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Open a file for read/writing with the specified options.
 comment|///
@@ -486,67 +497,57 @@ comment|///     Options to use when opening (see File::Permissions)
 comment|//------------------------------------------------------------------
 name|Error
 name|Open
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|uint32_t
-name|options
-parameter_list|,
-name|uint32_t
-name|permissions
-init|=
-name|lldb
-operator|::
-name|eFilePermissionsFileDefault
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const char *path
+argument_list|,
+argument|uint32_t options
+argument_list|,
+argument|uint32_t permissions = lldb::eFilePermissionsFileDefault
+argument_list|)
+block|;
 name|Error
 name|Close
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|Error
 name|Duplicate
-parameter_list|(
+argument_list|(
 specifier|const
 name|File
-modifier|&
+operator|&
 name|rhs
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|int
 name|GetDescriptor
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
+name|WaitableHandle
+name|GetWaitableHandle
+argument_list|()
+block|;
 name|void
 name|SetDescriptor
-parameter_list|(
-name|int
-name|fd
-parameter_list|,
-name|bool
-name|transfer_ownership
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|int fd
+argument_list|,
+argument|bool transfer_ownership
+argument_list|)
+block|;
 name|FILE
-modifier|*
+operator|*
 name|GetStream
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|void
 name|SetStream
-parameter_list|(
-name|FILE
-modifier|*
-name|fh
-parameter_list|,
-name|bool
-name|transfer_ownership
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|FILE *fh
+argument_list|,
+argument|bool transfer_ownership
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Read bytes from a file from the current file position.
 comment|///
@@ -567,16 +568,16 @@ comment|///     failure.
 comment|//------------------------------------------------------------------
 name|Error
 name|Read
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|buf
-parameter_list|,
+argument_list|,
 name|size_t
-modifier|&
+operator|&
 name|num_bytes
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Write bytes to a file at the current file position.
 comment|///
@@ -598,17 +599,17 @@ comment|///     failure.
 comment|//------------------------------------------------------------------
 name|Error
 name|Write
-parameter_list|(
+argument_list|(
 specifier|const
 name|void
-modifier|*
+operator|*
 name|buf
-parameter_list|,
+argument_list|,
 name|size_t
-modifier|&
+operator|&
 name|num_bytes
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Seek to an offset relative to the beginning of the file.
 comment|///
@@ -631,17 +632,12 @@ comment|///     The resulting seek offset, or -1 on error.
 comment|//------------------------------------------------------------------
 name|off_t
 name|SeekFromStart
-parameter_list|(
-name|off_t
-name|offset
-parameter_list|,
-name|Error
-modifier|*
-name|error_ptr
-init|=
-name|NULL
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|off_t offset
+argument_list|,
+argument|Error *error_ptr = NULL
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Seek to an offset relative to the current file position.
 comment|///
@@ -664,17 +660,12 @@ comment|///     The resulting seek offset, or -1 on error.
 comment|//------------------------------------------------------------------
 name|off_t
 name|SeekFromCurrent
-parameter_list|(
-name|off_t
-name|offset
-parameter_list|,
-name|Error
-modifier|*
-name|error_ptr
-init|=
-name|NULL
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|off_t offset
+argument_list|,
+argument|Error *error_ptr = NULL
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Seek to an offset relative to the end of the file.
 comment|///
@@ -686,7 +677,7 @@ comment|/// @see File::Write (const void *, size_t, off_t&)
 comment|///
 comment|/// @param[in/out] offset
 comment|///     The offset to seek to within the file relative to the
-comment|///     end of the file which gets filled in the the resulting
+comment|///     end of the file which gets filled in with the resulting
 comment|///     absolute file offset.
 comment|///
 comment|/// @param[in] error_ptr
@@ -698,17 +689,12 @@ comment|///     The resulting seek offset, or -1 on error.
 comment|//------------------------------------------------------------------
 name|off_t
 name|SeekFromEnd
-parameter_list|(
-name|off_t
-name|offset
-parameter_list|,
-name|Error
-modifier|*
-name|error_ptr
-init|=
-name|NULL
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|off_t offset
+argument_list|,
+argument|Error *error_ptr = NULL
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Read bytes from a file from the specified file offset.
 comment|///
@@ -734,20 +720,20 @@ comment|///     failure.
 comment|//------------------------------------------------------------------
 name|Error
 name|Read
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|dst
-parameter_list|,
+argument_list|,
 name|size_t
-modifier|&
+operator|&
 name|num_bytes
-parameter_list|,
+argument_list|,
 name|off_t
-modifier|&
+operator|&
 name|offset
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Read bytes from a file from the specified file offset.
 comment|///
@@ -780,24 +766,15 @@ comment|//------------------------------------------------------------------
 name|Error
 name|Read
 argument_list|(
-name|size_t
-operator|&
-name|num_bytes
+argument|size_t&num_bytes
 argument_list|,
-name|off_t
-operator|&
-name|offset
+argument|off_t&offset
 argument_list|,
-name|bool
-name|null_terminate
+argument|bool null_terminate
 argument_list|,
-name|lldb
-operator|::
-name|DataBufferSP
-operator|&
-name|data_buffer_sp
+argument|lldb::DataBufferSP&data_buffer_sp
 argument_list|)
-decl_stmt|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Write bytes to a file at the specified file offset.
 comment|///
@@ -825,21 +802,21 @@ comment|///     failure.
 comment|//------------------------------------------------------------------
 name|Error
 name|Write
-parameter_list|(
+argument_list|(
 specifier|const
 name|void
-modifier|*
+operator|*
 name|src
-parameter_list|,
+argument_list|,
 name|size_t
-modifier|&
+operator|&
 name|num_bytes
-parameter_list|,
+argument_list|,
 name|off_t
-modifier|&
+operator|&
 name|offset
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Flush the current stream
 comment|///
@@ -849,8 +826,8 @@ comment|///     failure.
 comment|//------------------------------------------------------------------
 name|Error
 name|Flush
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Sync to disk.
 comment|///
@@ -860,8 +837,8 @@ comment|///     failure.
 comment|//------------------------------------------------------------------
 name|Error
 name|Sync
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Get the permissions for a this file.
 comment|///
@@ -872,26 +849,24 @@ comment|//------------------------------------------------------------------
 name|uint32_t
 name|GetPermissions
 argument_list|(
+argument|Error&error
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|uint32_t
+name|GetPermissions
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|path
+argument_list|,
 name|Error
 operator|&
 name|error
 argument_list|)
-decl|const
-decl_stmt|;
-specifier|static
-name|uint32_t
-name|GetPermissions
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|Error
-modifier|&
-name|error
-parameter_list|)
-function_decl|;
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Return true if this file is interactive.
 comment|///
@@ -901,14 +876,14 @@ comment|///     otherwise.
 comment|//------------------------------------------------------------------
 name|bool
 name|GetIsInteractive
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Return true if this file from a real terminal.
 comment|///
 comment|/// Just knowing a file is a interactive isn't enough, we also need
 comment|/// to know if the terminal has a width and height so we can do
-comment|/// cursor movement and other terminal maninpulations by sending
+comment|/// cursor movement and other terminal manipulations by sending
 comment|/// escape sequences.
 comment|///
 comment|/// @return
@@ -917,8 +892,8 @@ comment|///     a non-zero width and height, false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
 name|GetIsRealTerminal
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Output printf formatted output to the stream.
 comment|///
@@ -933,65 +908,45 @@ comment|///     format string \a format.
 comment|//------------------------------------------------------------------
 name|size_t
 name|Printf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+argument|const char *format
+argument_list|,
+argument|...
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
 name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__attribute__
-parameter_list|(
-function_decl|(format
-parameter_list|(
+argument_list|(
 name|printf
-parameter_list|,
-function_decl|2
-operator|,
-function_decl|3
-block|)
-decl_stmt|)
-block|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+argument_list|,
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+operator|)
+argument_list|)
+block|;
 name|size_t
 name|PrintfVarArg
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|format
-parameter_list|,
-name|va_list
-name|args
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
+argument_list|(
+argument|const char *format
+argument_list|,
+argument|va_list args
+argument_list|)
+block|;
 name|void
 name|SetOptions
-parameter_list|(
-name|uint32_t
-name|options
-parameter_list|)
+argument_list|(
+argument|uint32_t options
+argument_list|)
 block|{
 name|m_options
 operator|=
 name|options
-expr_stmt|;
-block|}
-end_function
-
-begin_label
+block|;     }
 name|protected
-label|:
-end_label
-
-begin_expr_stmt
+operator|:
 name|bool
 name|DescriptorIsValid
 argument_list|()
@@ -1003,9 +958,6 @@ operator|>=
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|StreamIsValid
 argument_list|()
@@ -1017,72 +969,37 @@ operator|!=
 name|kInvalidStream
 return|;
 block|}
-end_expr_stmt
-
-begin_function_decl
 name|void
 name|CalculateInteractiveAndTerminal
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
-end_comment
-
-begin_comment
 comment|// Member variables
-end_comment
-
-begin_comment
 comment|//------------------------------------------------------------------
-end_comment
-
-begin_decl_stmt
 name|int
 name|m_descriptor
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|FILE
-modifier|*
+operator|*
 name|m_stream
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|uint32_t
 name|m_options
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|bool
 name|m_own_stream
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|m_own_descriptor
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|LazyBool
 name|m_is_interactive
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|LazyBool
 name|m_is_real_terminal
+block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
-unit|};  }
 comment|// namespace lldb_private
 end_comment
 

@@ -721,7 +721,7 @@ parameter_list|)
 function_decl|;
 comment|// This version just returns matches, and doesn't compute the substring.  It is here so the
 comment|// Help command can call it for the first argument.
-comment|// word_complete tells whether a the completions are considered a "complete" response (so the
+comment|// word_complete tells whether the completions are considered a "complete" response (so the
 comment|// completer should complete the quote& put a space after the word.
 name|int
 name|HandleCompletionMatches
@@ -938,6 +938,10 @@ parameter_list|()
 function_decl|;
 name|void
 name|Initialize
+parameter_list|()
+function_decl|;
+name|void
+name|Clear
 parameter_list|()
 function_decl|;
 name|void
@@ -1265,7 +1269,7 @@ argument_list|)
 decl_stmt|;
 name|virtual
 name|ConstString
-name|GetControlSequence
+name|IOHandlerGetControlSequence
 parameter_list|(
 name|char
 name|ch
@@ -1288,6 +1292,15 @@ name|ConstString
 argument_list|()
 return|;
 block|}
+name|virtual
+name|bool
+name|IOHandlerInterrupt
+parameter_list|(
+name|IOHandler
+modifier|&
+name|io_handler
+parameter_list|)
+function_decl|;
 name|size_t
 name|GetProcessOutput
 parameter_list|()

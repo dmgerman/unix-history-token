@@ -680,7 +680,7 @@ argument_list|)
 block|;     }
 decl_stmt|;
 comment|//----------------------------------------------------------------------
-comment|// SouceFileCompleter implements the source file completer
+comment|// SourceFileCompleter implements the source file completer
 comment|//----------------------------------------------------------------------
 name|class
 name|SourceFileCompleter

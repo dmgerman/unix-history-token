@@ -288,7 +288,7 @@ comment|/// Dump a description of the contents of this object to the
 comment|/// supplied stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|void
 name|Dump
@@ -444,7 +444,7 @@ comment|//------------------------------------------------------------------
 comment|/// Set accessor for the declaration file specification.
 comment|///
 comment|/// @param[in] file_spec
-comment|///     The new declaration file specifciation.
+comment|///     The new declaration file specification.
 comment|//------------------------------------------------------------------
 name|void
 name|SetFile

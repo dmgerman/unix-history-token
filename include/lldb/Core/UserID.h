@@ -57,12 +57,12 @@ comment|//----------------------------------------------------------------------
 comment|/// @class UserID UserID.h "lldb/Core/UserID.h"
 comment|/// @brief A mix in class that contains a generic user ID.
 comment|///
-comment|/// UserID is desinged as a mix in class that can contain an integer
-comment|/// based unique identifier for a varietly of objects in lldb.
+comment|/// UserID is designed as a mix in class that can contain an integer
+comment|/// based unique identifier for a variety of objects in lldb.
 comment|///
 comment|/// The value for this identifier is chosen by each parser plug-in. A
 comment|/// value should be chosen that makes sense for each kind of object
-comment|/// should and allows quick access to further and more in depth parsing.
+comment|/// and should allow quick access to further and more in depth parsing.
 comment|///
 comment|/// Symbol table entries can use this to store the original symbol table
 comment|/// index, functions can use it to store the symbol table index or the

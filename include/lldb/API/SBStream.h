@@ -163,7 +163,7 @@ comment|// If the stream is redirected to a file, forget about the file and if
 end_comment
 
 begin_comment
-comment|// ownership of the file was transfered to this object, close the file.
+comment|// ownership of the file was transferred to this object, close the file.
 end_comment
 
 begin_comment
@@ -382,6 +382,13 @@ begin_decl_stmt
 name|friend
 name|class
 name|SBType
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|SBTypeEnumMember
 decl_stmt|;
 end_decl_stmt
 

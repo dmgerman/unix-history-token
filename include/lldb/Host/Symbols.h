@@ -138,7 +138,7 @@ comment|//----------------------------------------------------------------------
 comment|// Locate the object and symbol file given a module specification.
 comment|//
 comment|// Locating the file can try to download the file from a corporate build
-comment|// respository, or using any other means necessary to locate both the
+comment|// repository, or using any other means necessary to locate both the
 comment|// unstripped object file and the debug symbols.
 comment|// The force_lookup argument controls whether the external program is called
 comment|// unconditionally to find the symbol file, or if the user's settings are

@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/POSIX/RegisterContextPOSIX_x86.h"
+file|"Plugins/Process/Utility/RegisterContextPOSIX_x86.h"
 end_include
 
 begin_decl_stmt
@@ -66,6 +66,8 @@ name|Thread
 operator|&
 name|thread
 argument_list|,
+name|lldb_private
+operator|::
 name|RegisterInfoInterface
 operator|*
 name|register_info

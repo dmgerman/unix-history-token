@@ -153,7 +153,7 @@ condition|(
 name|m_infinite
 condition|)
 return|return
-name|NULL
+name|nullptr
 return|;
 return|return
 operator|&

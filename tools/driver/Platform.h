@@ -43,12 +43,18 @@ directive|define
 name|lldb_Platform_h_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/HostGetOpt.h"
+end_include
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|_MSC_VER
+name|_WIN32
 argument_list|)
 end_if
 
@@ -68,11 +74,25 @@ directive|include
 file|<io.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<eh.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -83,28 +103,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lldb/Host/windows/Windows.h"
+file|"lldb/Host/windows/windows.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"lldb/Host/HostGetOpt.h"
-end_include
-
-begin_struct
-struct|struct
-name|timeval
-block|{
-name|long
-name|tv_sec
-decl_stmt|;
-name|long
-name|tv_usec
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -161,6 +161,56 @@ define|#
 directive|define
 name|TIOCGWINSZ
 value|0x5413
+end_define
+
+begin_comment
+comment|// signal handler function pointer type
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|sighandler_t
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|// signal.h
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGINT
+value|2
+end_define
+
+begin_comment
+comment|// default handler
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_DFL
+value|( (sighandler_t) -1 )
+end_define
+
+begin_comment
+comment|// ignored
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_IGN
+value|( (sighandler_t) -2 )
 end_define
 
 begin_comment
@@ -256,6 +306,26 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_struct
+struct|struct
+name|timeval
+block|{
+name|long
+name|tv_sec
+decl_stmt|;
+name|long
+name|tv_usec
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 name|long
@@ -266,9 +336,22 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|STDIN_FILENO
-value|0
+name|snprintf
+value|_snprintf
 end_define
+
+begin_function_decl
+specifier|extern
+name|sighandler_t
+name|signal
+parameter_list|(
+name|int
+name|sig
+parameter_list|,
+name|sighandler_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -277,11 +360,16 @@ name|PATH_MAX
 value|MAX_PATH
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
-name|snprintf
-value|_snprintf
+name|STDIN_FILENO
+value|0
 end_define
 
 begin_function_decl
@@ -350,69 +438,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|// signal handler function pointer type
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|sighandler_t
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|// signal.h
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIGINT
-value|2
-end_define
-
-begin_comment
-comment|// default handler
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIG_DFL
-value|( (sighandler_t) -1 )
-end_define
-
-begin_comment
-comment|// ignored
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIG_IGN
-value|( (sighandler_t) -2 )
-end_define
-
-begin_function_decl
-specifier|extern
-name|sighandler_t
-name|signal
-parameter_list|(
-name|int
-name|sig
-parameter_list|,
-name|sighandler_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_else
 else|#
 directive|else
@@ -422,12 +447,6 @@ begin_include
 include|#
 directive|include
 file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<getopt.h>
 end_include
 
 begin_include
@@ -478,6 +497,11 @@ directive|if
 name|defined
 argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
 argument_list|)
 end_if
 

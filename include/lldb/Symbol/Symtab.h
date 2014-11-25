@@ -171,6 +171,10 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|void
+name|SectionFileAddressesChanged
+parameter_list|()
+function_decl|;
+name|void
 name|Dump
 parameter_list|(
 name|Stream

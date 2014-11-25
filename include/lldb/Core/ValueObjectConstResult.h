@@ -224,6 +224,11 @@ name|GetTypeName
 argument_list|()
 block|;
 name|virtual
+name|ConstString
+name|GetDisplayTypeName
+argument_list|()
+block|;
+name|virtual
 name|bool
 name|IsInScope
 argument_list|()

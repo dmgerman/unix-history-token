@@ -211,6 +211,13 @@ name|char
 operator|*
 name|working_dir
 argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
+argument_list|,
 name|lldb_private
 operator|::
 name|Error
@@ -665,11 +672,9 @@ name|uint32_t
 name|signo
 argument_list|)
 decl_stmt|;
-comment|/// Sends the inferior process a PTRACE_KILL signal.  The inferior will
-comment|/// still exists and can be interrogated.  Once resumed it will exit as
-comment|/// though it received a SIGKILL.
+comment|/// Terminate the traced process.
 name|bool
-name|BringProcessIntoLimbo
+name|Kill
 parameter_list|()
 function_decl|;
 name|lldb_private

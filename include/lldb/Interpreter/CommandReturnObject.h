@@ -641,6 +641,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|bool
+name|GetInteractive
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|SetInteractive
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|private
 label|:
@@ -685,6 +703,16 @@ name|bool
 name|m_did_change_process_state
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|m_interactive
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// If true, then the input handle from the debugger will be hooked up
+end_comment
 
 begin_comment
 unit|};  }
