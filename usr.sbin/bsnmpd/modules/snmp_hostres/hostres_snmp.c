@@ -542,7 +542,7 @@ call|(
 name|u_char
 call|)
 argument_list|(
-name|abs
+name|labs
 argument_list|(
 name|tm
 operator|->
@@ -562,7 +562,7 @@ name|u_char
 call|)
 argument_list|(
 operator|(
-name|abs
+name|labs
 argument_list|(
 name|tm
 operator|->
