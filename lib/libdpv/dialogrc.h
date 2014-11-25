@@ -122,7 +122,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|config
+name|fp_config
 modifier|*
 name|dialogrc_config_option
 parameter_list|(

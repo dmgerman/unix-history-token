@@ -760,7 +760,7 @@ name|out
 argument_list|)
 expr_stmt|;
 block|}
-name|overall_read
+name|dpv_overall_read
 operator|+=
 name|r
 expr_stmt|;
@@ -1012,7 +1012,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|overall_read
+name|dpv_overall_read
 operator|++
 operator|,
 name|p

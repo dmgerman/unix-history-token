@@ -140,7 +140,7 @@ name|int
 name|setattr
 parameter_list|(
 name|struct
-name|config
+name|fp_config
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -160,7 +160,7 @@ name|int
 name|setbool
 parameter_list|(
 name|struct
-name|config
+name|fp_config
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -180,7 +180,7 @@ name|int
 name|setnum
 parameter_list|(
 name|struct
-name|config
+name|fp_config
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -200,7 +200,7 @@ name|int
 name|setstr
 parameter_list|(
 name|struct
-name|config
+name|fp_config
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -221,14 +221,14 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|config
+name|fp_config
 name|dialogrc_config
 index|[]
 init|=
 block|{
-comment|/* TYPE     Directive			DEFAULT		HANDLER */
+comment|/* TYPE        Directive                     DEFAULT        HANDLER */
 block|{
-name|TYPE_INT
+name|FP_TYPE_INT
 block|,
 literal|"aspect"
 block|,
@@ -245,7 +245,7 @@ name|setnum
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"separate_widget"
 block|,
@@ -258,7 +258,7 @@ name|setstr
 block|}
 block|,
 block|{
-name|TYPE_INT
+name|FP_TYPE_INT
 block|,
 literal|"tab_len"
 block|,
@@ -275,7 +275,7 @@ name|setnum
 block|}
 block|,
 block|{
-name|TYPE_BOOL
+name|FP_TYPE_BOOL
 block|,
 literal|"visit_items"
 block|,
@@ -292,7 +292,7 @@ name|setbool
 block|}
 block|,
 block|{
-name|TYPE_BOOL
+name|FP_TYPE_BOOL
 block|,
 literal|"use_shadow"
 block|,
@@ -309,7 +309,7 @@ name|setbool
 block|}
 block|,
 block|{
-name|TYPE_BOOL
+name|FP_TYPE_BOOL
 block|,
 literal|"use_colors"
 block|,
@@ -326,7 +326,7 @@ name|setbool
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"screen_color"
 block|,
@@ -339,7 +339,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"shadow_color"
 block|,
@@ -352,7 +352,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"dialog_color"
 block|,
@@ -365,7 +365,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"title_color"
 block|,
@@ -378,7 +378,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"border_color"
 block|,
@@ -391,7 +391,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"button_active_color"
 block|,
@@ -404,7 +404,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"button_inactive_color"
 block|,
@@ -417,7 +417,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"button_key_active_color"
 block|,
@@ -430,7 +430,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"button_key_inactive_color"
 block|,
@@ -443,7 +443,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"button_label_active_color"
 block|,
@@ -456,7 +456,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"button_label_inactive_color"
 block|,
@@ -469,7 +469,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"inputbox_color"
 block|,
@@ -482,7 +482,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"inputbox_border_color"
 block|,
@@ -495,7 +495,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"searchbox_color"
 block|,
@@ -508,7 +508,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"searchbox_title_color"
 block|,
@@ -521,7 +521,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"searchbox_border_color"
 block|,
@@ -534,7 +534,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"position_indicator_color"
 block|,
@@ -547,7 +547,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"menubox_color"
 block|,
@@ -560,7 +560,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"menubox_border_color"
 block|,
@@ -573,7 +573,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"item_color"
 block|,
@@ -586,7 +586,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"item_selected_color"
 block|,
@@ -599,7 +599,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"tag_color"
 block|,
@@ -612,7 +612,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"tag_selected_color"
 block|,
@@ -625,7 +625,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"tag_key_color"
 block|,
@@ -638,7 +638,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"tag_key_selected_color"
 block|,
@@ -651,7 +651,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"check_color"
 block|,
@@ -664,7 +664,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"check_selected_color"
 block|,
@@ -677,7 +677,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"uarrow_color"
 block|,
@@ -690,7 +690,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"darrow_color"
 block|,
@@ -703,7 +703,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"itemhelp_color"
 block|,
@@ -716,7 +716,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"form_active_text_color"
 block|,
@@ -729,7 +729,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"form_text_color"
 block|,
@@ -742,7 +742,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"form_item_readonly_color"
 block|,
@@ -755,7 +755,7 @@ name|setattr
 block|}
 block|,
 block|{
-name|TYPE_STR
+name|FP_TYPE_STR
 block|,
 literal|"gauge_color"
 block|,
@@ -792,7 +792,7 @@ name|int
 name|setattr
 parameter_list|(
 name|struct
-name|config
+name|fp_config
 modifier|*
 name|option
 parameter_list|,
@@ -1452,7 +1452,7 @@ name|int
 name|setbool
 parameter_list|(
 name|struct
-name|config
+name|fp_config
 modifier|*
 name|option
 parameter_list|,
@@ -1547,7 +1547,7 @@ name|int
 name|setnum
 parameter_list|(
 name|struct
-name|config
+name|fp_config
 modifier|*
 name|option
 parameter_list|,
@@ -1633,7 +1633,7 @@ name|int
 name|setstr
 parameter_list|(
 name|struct
-name|config
+name|fp_config
 modifier|*
 name|option
 parameter_list|,
@@ -1977,7 +1977,7 @@ name|path
 argument_list|,
 name|NULL
 argument_list|,
-name|BREAK_ON_EQUALS
+name|FP_BREAK_ON_EQUALS
 argument_list|)
 expr_stmt|;
 comment|/* Set some globals based on what we parsed */
@@ -2030,12 +2030,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a pointer to the `.dialogrc' config option specific to `directive' or  * static dummy_config (full of NULLs) if none found (see get_config_option(3);  * part of figpar(3)).  */
+comment|/*  * Return a pointer to the `.dialogrc' config option specific to `directive' or  * static fp_dummy_config (full of NULLs) if none found (see  * get_config_option(3); part of figpar(3)).  */
 end_comment
 
 begin_function
 name|struct
-name|config
+name|fp_config
 modifier|*
 name|dialogrc_config_option
 parameter_list|(
