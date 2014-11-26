@@ -982,6 +982,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|context
+operator|->
+name|cqe_size
+operator|=
+name|resp
+operator|.
+name|cqe_size
+expr_stmt|;
 name|pthread_spin_init
 argument_list|(
 operator|&
