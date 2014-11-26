@@ -80,7 +80,7 @@ comment|/// their execution context without having to keep a complete
 comment|/// ExecutionContext object in the object state. Examples of these
 comment|/// objects include: Process, Thread, RegisterContext and StackFrame.
 comment|///
-comment|/// Bbjects can contain a valid pointer to an instance of this so they
+comment|/// Objects can contain a valid pointer to an instance of this so they
 comment|/// can reconstruct the execution context.
 comment|///
 comment|/// Objects that adhere to this protocol can reconstruct enough of a

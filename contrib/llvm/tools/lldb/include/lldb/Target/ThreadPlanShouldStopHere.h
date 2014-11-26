@@ -72,8 +72,9 @@ block|{
 comment|// This is an interface that ThreadPlans can adopt to allow flexible modifications of the behavior
 comment|// when a thread plan comes to a place where it would ordinarily stop.  If such modification makes
 comment|// sense for your plan, inherit from this class, and when you would be about to stop (in your ShouldStop
-comment|// method), call InvokeShouldStopHereCallback, and if that returns a non-NULL plan, execute that
-comment|// plan instead of stopping.
+comment|// method), call InvokeShouldStopHereCallback, passing in the frame comparison between where the step operation
+comment|// started and where you arrived.  If it returns true, then QueueStepOutFromHere will queue the plan
+comment|// to execute instead of stopping.
 comment|//
 comment|// The classic example of the use of this is ThreadPlanStepInRange not stopping in frames that have
 comment|// no debug information.
@@ -86,6 +87,58 @@ name|ThreadPlanShouldStopHere
 block|{
 name|public
 label|:
+struct|struct
+name|ThreadPlanShouldStopHereCallbacks
+block|{
+name|ThreadPlanShouldStopHereCallbacks
+argument_list|()
+block|{
+name|should_stop_here_callback
+operator|=
+name|nullptr
+expr_stmt|;
+name|step_from_here_callback
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
+name|ThreadPlanShouldStopHereCallbacks
+argument_list|(
+argument|ThreadPlanShouldStopHereCallback should_stop
+argument_list|,
+argument|ThreadPlanStepFromHereCallback step_from_here
+argument_list|)
+block|{
+name|should_stop_here_callback
+operator|=
+name|should_stop
+expr_stmt|;
+name|step_from_here_callback
+operator|=
+name|step_from_here
+expr_stmt|;
+block|}
+name|void
+name|Clear
+parameter_list|()
+block|{
+name|should_stop_here_callback
+operator|=
+name|nullptr
+expr_stmt|;
+name|step_from_here_callback
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
+name|ThreadPlanShouldStopHereCallback
+name|should_stop_here_callback
+decl_stmt|;
+name|ThreadPlanStepFromHereCallback
+name|step_from_here_callback
+decl_stmt|;
+block|}
+struct|;
 enum|enum
 block|{
 name|eNone
@@ -100,12 +153,20 @@ operator|<<
 literal|0
 operator|)
 block|,
-name|eAvoidNoDebug
+name|eStepInAvoidNoDebug
 init|=
 operator|(
 literal|1
 operator|<<
 literal|1
+operator|)
+block|,
+name|eStepOutAvoidNoDebug
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
 operator|)
 block|}
 enum|;
@@ -114,34 +175,128 @@ comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
 name|ThreadPlanShouldStopHere
 argument_list|(
-argument|ThreadPlan *owner
-argument_list|,
-argument|ThreadPlanShouldStopHereCallback callback = NULL
-argument_list|,
-argument|void *baton = NULL
+name|ThreadPlan
+operator|*
+name|owner
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+name|ThreadPlanShouldStopHere
+argument_list|(
+name|ThreadPlan
+operator|*
+name|owner
+argument_list|,
+specifier|const
+name|ThreadPlanShouldStopHereCallbacks
+operator|*
+name|callbacks
+argument_list|,
+name|void
+operator|*
+name|baton
+operator|=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|virtual
 operator|~
 name|ThreadPlanShouldStopHere
 argument_list|()
 expr_stmt|;
+comment|// Set the ShouldStopHere callbacks.  Pass in null to clear them and have no special behavior (though you
+comment|// can also call ClearShouldStopHereCallbacks for that purpose.  If you pass in a valid pointer, it will
+comment|// adopt the non-null fields, and any null fields will be set to the default values.
 name|void
-name|SetShouldStopHereCallback
+name|SetShouldStopHereCallbacks
 parameter_list|(
-name|ThreadPlanShouldStopHereCallback
-name|callback
+specifier|const
+name|ThreadPlanShouldStopHereCallbacks
+modifier|*
+name|callbacks
 parameter_list|,
 name|void
 modifier|*
 name|baton
 parameter_list|)
-function_decl|;
+block|{
+if|if
+condition|(
+name|callbacks
+condition|)
+block|{
+name|m_callbacks
+operator|=
+operator|*
+name|callbacks
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|m_callbacks
+operator|.
+name|should_stop_here_callback
+condition|)
+name|m_callbacks
+operator|.
+name|should_stop_here_callback
+operator|=
+name|ThreadPlanShouldStopHere
+operator|::
+name|DefaultShouldStopHereCallback
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|m_callbacks
+operator|.
+name|step_from_here_callback
+condition|)
+name|m_callbacks
+operator|.
+name|step_from_here_callback
+operator|=
+name|ThreadPlanShouldStopHere
+operator|::
+name|DefaultStepFromHereCallback
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ClearShouldStopHereCallbacks
+argument_list|()
+expr_stmt|;
+block|}
+name|m_baton
+operator|=
+name|baton
+expr_stmt|;
+block|}
+name|void
+name|ClearShouldStopHereCallbacks
+parameter_list|()
+block|{
+name|m_callbacks
+operator|.
+name|Clear
+argument_list|()
+expr_stmt|;
+block|}
+name|bool
+name|InvokeShouldStopHereCallback
+argument_list|(
+name|lldb
+operator|::
+name|FrameComparison
+name|operation
+argument_list|)
+decl_stmt|;
 name|lldb
 operator|::
 name|ThreadPlanSP
-name|InvokeShouldStopHereCallback
-argument_list|()
+name|CheckShouldStopHereAndQueueStepOut
+argument_list|(
+argument|lldb::FrameComparison operation
+argument_list|)
 expr_stmt|;
 name|lldb_private
 operator|::
@@ -169,6 +324,54 @@ return|;
 block|}
 name|protected
 label|:
+specifier|static
+name|bool
+name|DefaultShouldStopHereCallback
+argument_list|(
+name|ThreadPlan
+operator|*
+name|current_plan
+argument_list|,
+name|Flags
+operator|&
+name|flags
+argument_list|,
+name|lldb
+operator|::
+name|FrameComparison
+name|operation
+argument_list|,
+name|void
+operator|*
+name|baton
+argument_list|)
+decl_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|ThreadPlanSP
+name|DefaultStepFromHereCallback
+argument_list|(
+argument|ThreadPlan *current_plan
+argument_list|,
+argument|Flags&flags
+argument_list|,
+argument|lldb::FrameComparison operation
+argument_list|,
+argument|void *baton
+argument_list|)
+expr_stmt|;
+name|virtual
+name|lldb
+operator|::
+name|ThreadPlanSP
+name|QueueStepOutFromHerePlan
+argument_list|(
+argument|Flags&flags
+argument_list|,
+argument|lldb::FrameComparison operation
+argument_list|)
+expr_stmt|;
 comment|// Implement this, and call it in the plan's constructor to set the default flags.
 name|virtual
 name|void
@@ -180,8 +383,8 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Classes that inherit from ThreadPlanShouldStopHere can see and modify these
 comment|//------------------------------------------------------------------
-name|ThreadPlanShouldStopHereCallback
-name|m_callback
+name|ThreadPlanShouldStopHereCallbacks
+name|m_callbacks
 decl_stmt|;
 name|void
 modifier|*

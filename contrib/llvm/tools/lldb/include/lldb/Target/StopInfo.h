@@ -400,6 +400,8 @@ argument_list|(
 argument|lldb::ThreadPlanSP&plan
 argument_list|,
 argument|lldb::ValueObjectSP return_valobj_sp
+argument_list|,
+argument|lldb::ClangExpressionVariableSP expression_variable_sp
 argument_list|)
 expr_stmt|;
 specifier|static
@@ -434,6 +436,19 @@ name|lldb
 operator|::
 name|ValueObjectSP
 name|GetReturnValueObject
+argument_list|(
+name|lldb
+operator|::
+name|StopInfoSP
+operator|&
+name|stop_info_sp
+argument_list|)
+expr_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|ClangExpressionVariableSP
+name|GetExpressionVariable
 argument_list|(
 name|lldb
 operator|::

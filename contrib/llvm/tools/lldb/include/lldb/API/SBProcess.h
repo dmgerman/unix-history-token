@@ -569,6 +569,12 @@ argument_list|(
 argument|int signal
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|SBUnixSignals
+name|GetUnixSignals
+argument_list|()
+expr_stmt|;
 name|void
 name|SendAsyncInterrupt
 parameter_list|()
@@ -808,6 +814,17 @@ name|SBError
 name|UnloadImage
 argument_list|(
 argument|uint32_t image_token
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBError
+name|SendEventData
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|data
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------

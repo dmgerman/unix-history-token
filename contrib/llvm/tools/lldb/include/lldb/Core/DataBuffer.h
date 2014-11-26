@@ -72,7 +72,7 @@ comment|//----------------------------------------------------------------------
 comment|/// @class DataBuffer DataBuffer.h "lldb/Core/DataBuffer.h"
 comment|/// @brief A pure virtual protocol class for abstracted data buffers.
 comment|///
-comment|/// DataBuffer is an abtract class that gets packaged into a shared pointer
+comment|/// DataBuffer is an abstract class that gets packaged into a shared pointer
 comment|/// that can use to implement various ways to store data (on the heap,
 comment|/// memory mapped, cached inferior memory). It gets used by DataExtractor
 comment|/// so many DataExtractor objects can share the same data and sub-ranges

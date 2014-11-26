@@ -199,7 +199,7 @@ function_decl|;
 comment|// Called when CTRL+C is pressed which usually causes
 comment|// Debugger::DispatchInputInterrupt to be called.
 name|virtual
-name|void
+name|bool
 name|Interrupt
 parameter_list|()
 init|=
@@ -410,7 +410,7 @@ comment|/// Check if the input is being supplied interactively by a user
 comment|///
 comment|/// This will return true if the input stream is a terminal (tty or
 comment|/// pty) and can cause IO handlers to do different things (like
-comment|/// for a comfirmation when deleting all breakpoints).
+comment|/// for a confirmation when deleting all breakpoints).
 comment|//------------------------------------------------------------------
 name|bool
 name|GetIsInteractive
@@ -420,9 +420,9 @@ comment|//------------------------------------------------------------------
 comment|/// Check if the input is coming from a real terminal.
 comment|///
 comment|/// A real terminal has a valid size with a certain number of rows
-comment|/// and colums. If this function returns true, then terminal escape
+comment|/// and columns. If this function returns true, then terminal escape
 comment|/// sequences are expected to work (cursor movement escape sequences,
-comment|/// clearning lines, etc).
+comment|/// clearing lines, etc).
 comment|//------------------------------------------------------------------
 name|bool
 name|GetIsRealTerminal
@@ -544,7 +544,7 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Called when a line or lines have been retrieved.
 comment|///
-comment|/// This funtion can handle the current line and possibly call
+comment|/// This function can handle the current line and possibly call
 comment|/// IOHandler::SetIsDone(true) when the IO handler is done like when
 comment|/// "quit" is entered as a command, of when an empty line is
 comment|/// received. It is up to the delegate to determine when a line
@@ -613,7 +613,7 @@ comment|// that are getting single lines.
 block|}
 name|virtual
 name|ConstString
-name|GetControlSequence
+name|IOHandlerGetControlSequence
 parameter_list|(
 name|char
 name|ch
@@ -622,6 +622,25 @@ block|{
 return|return
 name|ConstString
 argument_list|()
+return|;
+block|}
+comment|//------------------------------------------------------------------
+comment|// Intercept the IOHandler::Interrupt() calls and do something.
+comment|//
+comment|// Return true if the interrupt was handled, false if the IOHandler
+comment|// should continue to try handle the interrupt itself.
+comment|//------------------------------------------------------------------
+name|virtual
+name|bool
+name|IOHandlerInterrupt
+parameter_list|(
+name|IOHandler
+modifier|&
+name|io_handler
+parameter_list|)
+block|{
+return|return
+name|false
 return|;
 block|}
 name|protected
@@ -677,7 +696,7 @@ argument_list|()
 block|{         }
 name|virtual
 name|ConstString
-name|GetControlSequence
+name|IOHandlerGetControlSequence
 argument_list|(
 argument|char ch
 argument_list|)
@@ -766,11 +785,13 @@ index|]
 operator|==
 name|m_end_line
 condition|)
+block|{
 return|return
 name|LineStatus
 operator|::
 name|Done
 return|;
+block|}
 block|}
 return|return
 name|LineStatus
@@ -813,6 +834,9 @@ argument|const char *prompt
 argument_list|,
 argument|bool multi_line
 argument_list|,
+argument|uint32_t line_number_start
+argument_list|,
+comment|// If non-zero show line numbers starting at 'line_number_start'
 argument|IOHandlerDelegate&delegate
 argument_list|)
 block|;
@@ -835,6 +859,9 @@ argument|const char *prompt
 argument_list|,
 argument|bool multi_line
 argument_list|,
+argument|uint32_t line_number_start
+argument_list|,
+comment|// If non-zero show line numbers starting at 'line_number_start'
 argument|IOHandlerDelegate&delegate
 argument_list|)
 block|;
@@ -864,7 +891,7 @@ name|Cancel
 argument_list|()
 block|;
 name|virtual
-name|void
+name|bool
 name|Interrupt
 argument_list|()
 block|;
@@ -901,7 +928,7 @@ block|{
 return|return
 name|m_delegate
 operator|.
-name|GetControlSequence
+name|IOHandlerGetControlSequence
 argument_list|(
 name|ch
 argument_list|)
@@ -932,6 +959,10 @@ operator|::
 name|string
 operator|&
 name|line
+argument_list|,
+name|bool
+operator|&
+name|interrupted
 argument_list|)
 block|;
 name|bool
@@ -940,6 +971,16 @@ argument_list|(
 name|StringList
 operator|&
 name|lines
+argument_list|,
+name|bool
+operator|&
+name|interrupted
+argument_list|)
+block|;
+name|void
+name|SetBaseLineNumber
+argument_list|(
+argument|uint32_t line
 argument_list|)
 block|;
 name|private
@@ -997,6 +1038,10 @@ operator|::
 name|string
 name|m_prompt
 block|;
+name|uint32_t
+name|m_base_line_number
+block|;
+comment|// If non-zero, then show line numbers in prompt
 name|bool
 name|m_multi_line
 block|;             }
@@ -1145,7 +1190,7 @@ name|Cancel
 argument_list|()
 block|;
 name|virtual
-name|void
+name|bool
 name|Interrupt
 argument_list|()
 block|;
@@ -1215,8 +1260,8 @@ name|Refresh
 argument_list|()
 block|;
 name|virtual
-name|void
-name|Interrupt
+name|bool
+name|HandleInterrupt
 argument_list|()
 block|;
 name|virtual

@@ -148,6 +148,12 @@ modifier|*
 name|GetTypeName
 parameter_list|()
 function_decl|;
+specifier|const
+name|char
+modifier|*
+name|GetDisplayTypeName
+parameter_list|()
+function_decl|;
 name|size_t
 name|GetByteSize
 parameter_list|()
@@ -457,7 +463,7 @@ expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Get a child value by index from a value.
 comment|///
-comment|/// Structs, unions, classes, arrays and and pointers have child
+comment|/// Structs, unions, classes, arrays and pointers have child
 comment|/// values that can be access by index.
 comment|///
 comment|/// Structs and unions access child members using a zero based index
@@ -492,7 +498,7 @@ comment|/// @param[in] idx
 comment|///     The index of the child value to get
 comment|///
 comment|/// @param[in] use_dynamic
-comment|///     An enumeration that specifies wether to get dynamic values,
+comment|///     An enumeration that specifies whether to get dynamic values,
 comment|///     and also if the target can be run to figure out the dynamic
 comment|///     type of the child value.
 comment|///

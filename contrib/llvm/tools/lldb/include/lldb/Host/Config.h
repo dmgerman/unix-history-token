@@ -95,6 +95,11 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_elif
 
 begin_include

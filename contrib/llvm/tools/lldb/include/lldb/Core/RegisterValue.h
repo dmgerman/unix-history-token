@@ -1097,6 +1097,15 @@ name|GetByteSize
 argument_list|()
 specifier|const
 expr_stmt|;
+specifier|static
+name|uint32_t
+name|GetMaxByteSize
+parameter_list|()
+block|{
+return|return
+name|kMaxRegisterByteSize
+return|;
+block|}
 name|void
 name|Clear
 parameter_list|()

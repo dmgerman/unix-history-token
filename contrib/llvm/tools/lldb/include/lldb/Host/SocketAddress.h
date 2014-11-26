@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<WS2tcpip.h>
+file|<ws2tcpip.h>
 end_include
 
 begin_typedef
@@ -303,7 +303,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|//------------------------------------------------------------------
-comment|// Get the mex length for the the largest socket address supported.
+comment|// Get the max length for the largest socket address supported.
 comment|//------------------------------------------------------------------
 specifier|static
 name|socklen_t
@@ -534,7 +534,7 @@ comment|//------------------------------------------------------------------
 comment|// Conversion operators to allow getting the contents of this class
 comment|// as a pointer to the appropriate structure. This allows an instance
 comment|// of this class to be used in calls that take one of the sockaddr
-comment|// structure variants without having to manally use the correct
+comment|// structure variants without having to manually use the correct
 comment|// accessor function.
 comment|//------------------------------------------------------------------
 name|operator

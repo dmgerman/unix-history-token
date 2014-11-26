@@ -83,6 +83,20 @@ directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
+begin_comment
+comment|// forward define the llvm::Type class
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|Type
+decl_stmt|;
+block|}
+end_decl_stmt
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -95,6 +109,45 @@ name|PluginInterface
 block|{
 name|public
 operator|:
+expr|struct
+name|CallArgument
+block|{         enum
+name|eType
+block|{
+name|HostPointer
+operator|=
+literal|0
+block|,
+comment|/* pointer to host data */
+name|TargetValue
+block|,
+comment|/* value is on the target or literal */
+block|}
+block|;
+name|eType
+name|type
+block|;
+comment|/* value of eType */
+name|size_t
+name|size
+block|;
+comment|/* size in bytes of this argument */
+expr|union
+block|{
+name|lldb
+operator|::
+name|addr_t
+name|value
+block|;
+comment|/* literal value */
+name|uint8_t
+operator|*
+name|data
+block|;
+comment|/* host data pointer */
+block|}
+block|;     }
+block|;
 name|virtual
 operator|~
 name|ABI
@@ -112,7 +165,7 @@ name|virtual
 name|bool
 name|PrepareTrivialCall
 argument_list|(
-argument|Thread&thread
+argument|lldb_private::Thread&thread
 argument_list|,
 argument|lldb::addr_t sp
 argument_list|,
@@ -125,6 +178,31 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
+block|;
+comment|// Prepare trivial call used from ThreadPlanFunctionCallGDB
+comment|// AD:
+comment|//  . Because i don't want to change other ABI's this is not declared pure virtual.
+comment|//    The dummy implementation will simply fail.  Only HexagonABI will currently
+comment|//    use this method.
+comment|//  . Two PrepareTrivialCall's is not good design so perhaps this should be combined.
+comment|//
+name|virtual
+name|bool
+name|PrepareTrivialCall
+argument_list|(
+argument|lldb_private::Thread&thread
+argument_list|,
+argument|lldb::addr_t sp
+argument_list|,
+argument|lldb::addr_t functionAddress
+argument_list|,
+argument|lldb::addr_t returnAddress
+argument_list|,
+argument|llvm::Type&prototype
+argument_list|,
+argument|llvm::ArrayRef<CallArgument> args
+argument_list|)
+specifier|const
 block|;
 name|virtual
 name|bool
@@ -146,6 +224,20 @@ argument_list|(
 argument|Thread&thread
 argument_list|,
 argument|ClangASTType&type
+argument_list|,
+argument|bool persistent = true
+argument_list|)
+specifier|const
+block|;
+comment|// specialized to work with llvm IR types
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetReturnValueObject
+argument_list|(
+argument|Thread&thread
+argument_list|,
+argument|llvm::Type&type
 argument_list|,
 argument|bool persistent = true
 argument_list|)
@@ -174,7 +266,7 @@ block|;
 name|protected
 operator|:
 comment|// This is the method the ABI will call to actually calculate the return value.
-comment|// Don't put it in a persistant value object, that will be done by the ABI::GetReturnValueObject.
+comment|// Don't put it in a persistent value object, that will be done by the ABI::GetReturnValueObject.
 name|virtual
 name|lldb
 operator|::
@@ -183,11 +275,24 @@ name|GetReturnValueObjectImpl
 argument_list|(
 argument|Thread&thread
 argument_list|,
-argument|ClangASTType&type
+argument|ClangASTType&ast_type
 argument_list|)
 specifier|const
 operator|=
 literal|0
+block|;
+comment|// specialized to work with llvm IR types
+name|virtual
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetReturnValueObjectImpl
+argument_list|(
+argument|Thread&thread
+argument_list|,
+argument|llvm::Type&ir_type
+argument_list|)
+specifier|const
 block|;
 name|public
 operator|:

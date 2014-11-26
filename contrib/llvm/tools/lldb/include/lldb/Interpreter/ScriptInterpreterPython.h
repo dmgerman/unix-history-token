@@ -95,6 +95,12 @@ file|"lldb/Host/Terminal.h"
 end_include
 
 begin_decl_stmt
+name|class
+name|IOHandlerPythonInterpreter
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
@@ -194,7 +200,7 @@ name|ExecuteScriptOptions
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|bool
+name|Error
 name|ExportFunctionDefinitionToInterpreter
 parameter_list|(
 name|StringList
@@ -488,7 +494,7 @@ operator|&
 name|error
 argument_list|)
 decl_stmt|;
-name|bool
+name|Error
 name|GenerateFunction
 parameter_list|(
 specifier|const
@@ -502,7 +508,7 @@ modifier|&
 name|input
 parameter_list|)
 function_decl|;
-name|bool
+name|Error
 name|GenerateBreakpointCommandCallbackData
 argument_list|(
 name|StringList
@@ -611,6 +617,11 @@ operator|&
 name|retval
 argument_list|)
 decl_stmt|;
+name|virtual
+name|void
+name|Clear
+parameter_list|()
+function_decl|;
 name|virtual
 name|bool
 name|GetDocumentationForItem
@@ -814,16 +825,22 @@ argument_list|()
 expr_stmt|;
 name|void
 name|CollectDataForBreakpointCommandCallback
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
 name|BreakpointOptions
-modifier|*
-name|bp_options
-parameter_list|,
+operator|*
+operator|>
+operator|&
+name|bp_options_vec
+argument_list|,
 name|CommandReturnObject
-modifier|&
+operator|&
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|CollectDataForWatchpointCommandCallback
 parameter_list|(
@@ -836,8 +853,8 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
-comment|/// Set a Python one-liner as the callback for the breakpoint.
-name|void
+comment|/// Set the callback body text into the callback for the breakpoint.
+name|Error
 name|SetBreakpointCommandCallback
 parameter_list|(
 name|BreakpointOptions
@@ -847,7 +864,20 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|oneliner
+name|callback_body
+parameter_list|)
+function_decl|;
+name|void
+name|SetBreakpointCommandCallbackFunction
+parameter_list|(
+name|BreakpointOptions
+modifier|*
+name|bp_options
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|function_name
 parameter_list|)
 function_decl|;
 comment|/// Set a one-liner as the callback for the watchpoint.
@@ -963,6 +993,32 @@ operator|.
 name|c_str
 argument_list|()
 return|;
+block|}
+name|PyThreadState
+modifier|*
+name|GetThreadState
+parameter_list|()
+block|{
+return|return
+name|m_command_thread_state
+return|;
+block|}
+name|void
+name|SetThreadState
+parameter_list|(
+name|PyThreadState
+modifier|*
+name|s
+parameter_list|)
+block|{
+if|if
+condition|(
+name|s
+condition|)
+name|m_command_thread_state
+operator|=
+name|s
+expr_stmt|;
 block|}
 comment|//----------------------------------------------------------------------
 comment|// IOHandlerDelegate
@@ -1109,11 +1165,16 @@ operator|~
 name|ScriptInterpreterPythonObject
 argument_list|()
 block|{
+if|if
+condition|(
+name|Py_IsInitialized
+argument_list|()
+condition|)
 name|Py_XDECREF
 argument_list|(
 name|m_object
 argument_list|)
-block|;
+expr_stmt|;
 name|m_object
 operator|=
 name|NULL
@@ -1124,8 +1185,9 @@ name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|ScriptInterpreterPythonObject
 argument_list|)
-block|;     }
 decl_stmt|;
+block|}
+empty_stmt|;
 name|public
 label|:
 name|class
@@ -1234,7 +1296,7 @@ name|PyGILState_STATE
 name|m_GILState
 block|; 	}
 decl_stmt|;
-name|private
+name|protected
 label|:
 enum|enum
 name|ActiveIOHandler
@@ -1317,11 +1379,14 @@ modifier|*
 name|m_command_thread_state
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// namespace lldb_private
 end_comment
 

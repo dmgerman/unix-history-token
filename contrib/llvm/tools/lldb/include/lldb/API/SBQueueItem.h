@@ -55,12 +55,6 @@ directive|include
 file|"lldb/API/SBAddress.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lldb/API/SBThread.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|lldb

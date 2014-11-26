@@ -693,7 +693,7 @@ name|Error
 name|StartListenThread
 argument_list|(
 argument|const char *hostname =
-literal|"localhost"
+literal|"127.0.0.1"
 argument_list|,
 argument|uint16_t port =
 literal|0

@@ -76,12 +76,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/Support/MachO.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lldb/Target/DynamicLoader.h"
 end_include
 

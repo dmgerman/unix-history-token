@@ -229,6 +229,17 @@ name|ModulePass
 block|{
 name|public
 operator|:
+expr|enum
+name|class
+name|LookupResult
+block|{
+name|Success
+block|,
+name|Fail
+block|,
+name|Ignore
+block|}
+block|;
 comment|//------------------------------------------------------------------
 comment|/// Constructor
 comment|///
@@ -392,7 +403,7 @@ comment|/// A function-level pass to check whether the function has side
 comment|/// effects.
 comment|//------------------------------------------------------------------
 comment|//------------------------------------------------------------------
-comment|/// Get the address of a fuction, and a location to put the complete
+comment|/// Get the address of a function, and a location to put the complete
 comment|/// Value of the function if one is available.
 comment|///
 comment|/// @param[in] function
@@ -411,7 +422,7 @@ comment|///
 comment|/// @return
 comment|///     The pointer.
 comment|//------------------------------------------------------------------
-name|bool
+name|LookupResult
 name|GetFunctionAddress
 argument_list|(
 name|llvm
@@ -997,7 +1008,7 @@ name|ReplaceStrings
 argument_list|()
 block|;
 comment|//------------------------------------------------------------------
-comment|/// A basick block-level pass to find all literals that will be
+comment|/// A basic block-level pass to find all literals that will be
 comment|/// allocated as statics by the JIT (in contrast to the Strings,
 comment|/// which already are statics) and synthesize loads for them.
 comment|//------------------------------------------------------------------

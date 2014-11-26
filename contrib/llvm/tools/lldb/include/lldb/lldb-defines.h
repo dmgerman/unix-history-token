@@ -52,6 +52,105 @@ end_include
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|EXPORT_LIBLLDB
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLDB_API
+value|__declspec(dllexport)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|IMPORT_LIBLLDB
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLDB_API
+value|__declspec(dllimport)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLDB_API
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// defined (_MSC_VER)
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLDB_API
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|INT32_MAX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|INT32_MAX
+value|2147483647
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
@@ -448,6 +547,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LLDB_INVALID_MODULE_VERSION
+value|UINT32_MAX
+end_define
+
+begin_define
+define|#
+directive|define
 name|LLDB_INVALID_REGNUM
 value|UINT32_MAX
 end_define
@@ -517,7 +623,7 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// CPU Type defintions
+comment|/// CPU Type definitions
 end_comment
 
 begin_comment
@@ -557,7 +663,7 @@ comment|//----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// Option Set defintions
+comment|/// Option Set definitions
 end_comment
 
 begin_comment
@@ -668,11 +774,20 @@ parameter_list|)
 value|(((1U<< (B)) - 1) ^ (((1U<< (A))-1)>> 1))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_WIN32
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MAX_PATH
+argument_list|)
+end_if
 
 begin_define
 define|#

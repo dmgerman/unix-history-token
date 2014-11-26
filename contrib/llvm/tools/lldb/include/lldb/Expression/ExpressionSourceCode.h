@@ -60,6 +60,9 @@ name|namespace
 name|lldb_private
 block|{
 name|class
+name|ExecutionContext
+decl_stmt|;
+name|class
 name|ExpressionSourceCode
 block|{
 name|public
@@ -172,6 +175,10 @@ name|const_object
 argument_list|,
 name|bool
 name|static_method
+argument_list|,
+name|ExecutionContext
+operator|&
+name|exe_ctx
 argument_list|)
 decl|const
 decl_stmt|;

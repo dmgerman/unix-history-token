@@ -228,7 +228,7 @@ block|;
 comment|//------------------------------------------------------------------
 comment|/// Delete a Target object from the list.
 comment|///
-comment|/// When clients are done with the Target objets, this function
+comment|/// When clients are done with the Target objects, this function
 comment|/// should be called to release the memory associated with a target
 comment|/// object.
 comment|///

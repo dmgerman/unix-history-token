@@ -78,7 +78,7 @@ comment|//----------------------------------------------------------------------
 comment|/// @class PseudoTerminal PseudoTerminal.h "lldb/Core/PseudoTerminal.h"
 comment|/// @brief A pseudo terminal helper class.
 comment|///
-comment|/// The pseudo terminal class abtracts the use of pseudo terminals on
+comment|/// The pseudo terminal class abstracts the use of pseudo terminals on
 comment|/// the host system.
 comment|//----------------------------------------------------------------------
 name|class
@@ -108,7 +108,7 @@ comment|//------------------------------------------------------------------
 comment|/// Destructor
 comment|///
 comment|/// The destructor will close the master and slave file descriptors
-comment|/// if they are valid and ownwership has not been released using
+comment|/// if they are valid and ownership has not been released using
 comment|/// one of:
 comment|/// @li PseudoTerminal::ReleaseMasterFileDescriptor()
 comment|/// @li PseudoTerminal::ReleaseSaveFileDescriptor()

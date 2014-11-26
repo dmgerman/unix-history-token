@@ -59,20 +59,17 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
-typedef|typedef
+struct_decl|struct
+name|OptionDefinition
+struct_decl|;
 struct|struct
 name|Option
 block|{
-comment|// name of long option
+comment|// The definition of the option that this refers to.
 specifier|const
-name|char
+name|OptionDefinition
 modifier|*
-name|name
-decl_stmt|;
-comment|// one of no_argument, required_argument, and optional_argument:
-comment|// whether option takes an argument
-name|int
-name|has_arg
+name|definition
 decl_stmt|;
 comment|// if not NULL, set *flag to val when option found
 name|int
@@ -84,8 +81,7 @@ name|int
 name|val
 decl_stmt|;
 block|}
-name|Option
-typedef|;
+struct|;
 name|class
 name|OptionParser
 block|{

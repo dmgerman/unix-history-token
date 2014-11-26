@@ -257,6 +257,9 @@ name|execution_policy
 argument_list|,
 name|bool
 name|keep_result_in_memory
+argument_list|,
+name|bool
+name|generate_debug_info
 argument_list|)
 decl_stmt|;
 name|bool
@@ -302,7 +305,9 @@ comment|///
 comment|/// @return
 comment|///     A Process::Execution results value.
 comment|//------------------------------------------------------------------
-name|ExecutionResults
+name|lldb
+operator|::
+name|ExpressionResults
 name|Execute
 argument_list|(
 name|Stream
@@ -328,7 +333,7 @@ name|ClangExpressionVariableSP
 operator|&
 name|result
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Apply the side effects of the function to program state.
 comment|///
@@ -345,7 +350,7 @@ comment|///     expression's result is stored.
 comment|///
 comment|/// @param[in] function_stack_pointer
 comment|///     A pointer to the base of the function's stack frame.  This
-comment|///     is used to determine whether the expession result resides in
+comment|///     is used to determine whether the expression result resides in
 comment|///     memory that will still be valid, or whether it needs to be
 comment|///     treated as homeless for the purpose of future expressions.
 comment|///
@@ -545,10 +550,12 @@ comment|///     Filled in with an error in case the expression evaluation
 comment|///     fails to parse, run, or evaluated.
 comment|///
 comment|/// @result
-comment|///      A Process::ExecutionResults value.  eExecutionCompleted for success.
+comment|///      A Process::ExpressionResults value.  eExpressionCompleted for success.
 comment|//------------------------------------------------------------------
 specifier|static
-name|ExecutionResults
+name|lldb
+operator|::
+name|ExpressionResults
 name|Evaluate
 argument_list|(
 name|ExecutionContext
@@ -580,7 +587,7 @@ name|Error
 operator|&
 name|error
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 specifier|static
 specifier|const
 name|Error
@@ -594,7 +601,7 @@ comment|///< ValueObject::GetError() returns this if there is no result from the
 name|private
 label|:
 comment|//------------------------------------------------------------------
-comment|/// Populate m_cplusplus and m_objetivec based on the environment.
+comment|/// Populate m_cplusplus and m_objectivec based on the environment.
 comment|//------------------------------------------------------------------
 name|void
 name|ScanContext
@@ -743,11 +750,11 @@ expr_stmt|;
 comment|///< The map to use when parsing the expression.
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|IRExecutionUnit
 operator|>
-name|m_execution_unit_ap
+name|m_execution_unit_sp
 expr_stmt|;
 comment|///< The execution unit the expression is stored in.
 name|std
@@ -768,6 +775,11 @@ operator|>
 name|m_result_synthesizer
 expr_stmt|;
 comment|///< The result synthesizer, if one is needed.
+name|lldb
+operator|::
+name|ModuleWP
+name|m_jit_module_wp
+expr_stmt|;
 name|bool
 name|m_enforce_valid_object
 decl_stmt|;

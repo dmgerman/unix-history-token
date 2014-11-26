@@ -54,7 +54,7 @@ comment|//   1. Unwinding from a call site (a valid exception throw location)
 comment|//      This is often sourced from the eh_frame exception handling info
 comment|//   2. Unwinding from a non-call site (any location in the function)
 comment|//      This is often done by analyzing the function prologue assembly
-comment|//      langauge instructions
+comment|//      language instructions
 comment|//   3. A fast unwind method for this function which only retrieves a
 comment|//      limited set of registers necessary to walk the stack
 comment|//   4. An architectural default unwind plan when none of the above are
@@ -65,8 +65,6 @@ comment|// stack frame setup instructions when we don't have line table informat
 name|FuncUnwinders
 argument_list|(
 argument|lldb_private::UnwindTable& unwind_table
-argument_list|,
-argument|const lldb::UnwindAssemblySP& assembly_profiler
 argument_list|,
 argument|AddressRange range
 argument_list|)
@@ -93,11 +91,11 @@ operator|::
 name|UnwindPlanSP
 name|GetUnwindPlanAtNonCallSite
 argument_list|(
-name|lldb_private
-operator|::
-name|Thread
-operator|&
-name|thread
+argument|Target& target
+argument_list|,
+argument|lldb_private::Thread& thread
+argument_list|,
+argument|int current_offset
 argument_list|)
 expr_stmt|;
 name|lldb
@@ -188,15 +186,16 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
+name|lldb
+operator|::
+name|UnwindAssemblySP
+name|GetUnwindAssemblyProfiler
+argument_list|()
+expr_stmt|;
 name|UnwindTable
 modifier|&
 name|m_unwind_table
 decl_stmt|;
-name|lldb
-operator|::
-name|UnwindAssemblySP
-name|m_assembly_profiler
-expr_stmt|;
 name|AddressRange
 name|m_range
 decl_stmt|;
