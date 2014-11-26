@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ARM64_GCC_Registers.h"
+file|"Utility/ARM64_GCC_Registers.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ARM64_DWARF_Registers.h"
+file|"Utility/ARM64_DWARF_Registers.h"
 end_include
 
 begin_ifndef
