@@ -331,7 +331,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by proc slock  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      q - td_contested lock  *      r - p_peers lock  *      t - thread lock  *      x - created at fork, only changes during single threading in exec  *      y - created at first aio, doesn't change until exit or exec at which  *          point we are single-threaded and only curthread changes it  *      z - zombie threads lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by proc slock  *      k - only accessed by curthread  *	k*- only accessed by curthread and from an interrupt  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      q - td_contested lock  *      r - p_peers lock  *      t - thread lock  *	u - process stat lock  *	w - process timer lock  *      x - created at fork, only changes during single threading in exec  *      y - created at first aio, doesn't change until exit or exec at which  *          point we are single-threaded and only curthread changes it  *      z - zombie threads lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -437,7 +437,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking for p_rux: (cj) means (j) for p_rux and (c) for p_crux.  * Locking for td_rux: (t) for all fields.  */
+comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking for p_rux: (cu) means (u) for p_rux and (c) for p_crux.  * Locking for td_rux: (t) for all fields.  */
 end_comment
 
 begin_struct
@@ -447,19 +447,19 @@ block|{
 name|uint64_t
 name|rux_runtime
 decl_stmt|;
-comment|/* (cj) Real time. */
+comment|/* (cu) Real time. */
 name|uint64_t
 name|rux_uticks
 decl_stmt|;
-comment|/* (cj) Statclock hits in user mode. */
+comment|/* (cu) Statclock hits in user mode. */
 name|uint64_t
 name|rux_sticks
 decl_stmt|;
-comment|/* (cj) Statclock hits in sys mode. */
+comment|/* (cu) Statclock hits in sys mode. */
 name|uint64_t
 name|rux_iticks
 decl_stmt|;
-comment|/* (cj) Statclock hits in intr mode. */
+comment|/* (cu) Statclock hits in intr mode. */
 name|uint64_t
 name|rux_uu
 decl_stmt|;
@@ -2388,6 +2388,21 @@ name|p_mtx
 decl_stmt|;
 comment|/* (n) Lock for this struct. */
 name|struct
+name|mtx
+name|p_statmtx
+decl_stmt|;
+comment|/* Lock for the stats */
+name|struct
+name|mtx
+name|p_itimmtx
+decl_stmt|;
+comment|/* Lock for the virt/prof timers */
+name|struct
+name|mtx
+name|p_profmtx
+decl_stmt|;
+comment|/* Lock for the profiling */
+name|struct
 name|ksiginfo
 modifier|*
 name|p_ksi
@@ -2434,7 +2449,7 @@ name|struct
 name|rusage_ext
 name|p_rux
 decl_stmt|;
-comment|/* (cj) Internal resource usage. */
+comment|/* (cu) Internal resource usage. */
 name|struct
 name|rusage_ext
 name|p_crux
@@ -2814,6 +2829,102 @@ parameter_list|,
 name|type
 parameter_list|)
 value|mtx_assert(&(p)->p_slock, (type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_STATLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_lock_spin(&(p)->p_statmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_STATUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_unlock_spin(&(p)->p_statmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_STATLOCK_ASSERT
+parameter_list|(
+name|p
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(p)->p_statmtx, (type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_ITIMLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_lock_spin(&(p)->p_itimmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_ITIMUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_unlock_spin(&(p)->p_itimmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_ITIMLOCK_ASSERT
+parameter_list|(
+name|p
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(p)->p_itimmtx, (type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_PROFLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_lock_spin(&(p)->p_profmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_PROFUNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_unlock_spin(&(p)->p_profmtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROC_PROFLOCK_ASSERT
+parameter_list|(
+name|p
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(&(p)->p_profmtx, (type))
 end_define
 
 begin_comment

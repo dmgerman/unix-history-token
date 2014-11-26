@@ -51,7 +51,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  *  * Locking key:  *      b - created at fork, never changes  *      c - locked by proc mtx  *      j - locked by proc slock  *      k - only accessed by curthread  */
+comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  *  * Locking key:  *      b - created at fork, never changes  *      c - locked by proc mtx  *      k - only accessed by curthread  *      w - locked by proc itim lock  *	w2 - locked by proc prof lock  */
 end_comment
 
 begin_struct
@@ -74,7 +74,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* (j) Virtual-time timers. */
+comment|/* (w) Virtual-time timers. */
 define|#
 directive|define
 name|pstat_endzero
@@ -90,19 +90,19 @@ comment|/* Profile arguments. */
 name|caddr_t
 name|pr_base
 decl_stmt|;
-comment|/* (c + j) Buffer base. */
+comment|/* (c + w2) Buffer base. */
 name|u_long
 name|pr_size
 decl_stmt|;
-comment|/* (c + j) Buffer size. */
+comment|/* (c + w2) Buffer size. */
 name|u_long
 name|pr_off
 decl_stmt|;
-comment|/* (c + j) PC offset. */
+comment|/* (c + w2) PC offset. */
 name|u_long
 name|pr_scale
 decl_stmt|;
-comment|/* (c + j) PC scaling. */
+comment|/* (c + w2) PC scaling. */
 block|}
 name|p_prof
 struct|;

@@ -1705,7 +1705,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1733,7 +1733,7 @@ name|TDF_ALRMPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1755,7 +1755,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1783,7 +1783,7 @@ name|TDF_PROFPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2100,7 +2100,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2130,7 +2130,7 @@ name|TDF_ALRMPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2152,7 +2152,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2182,7 +2182,7 @@ name|TDF_PROFPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
