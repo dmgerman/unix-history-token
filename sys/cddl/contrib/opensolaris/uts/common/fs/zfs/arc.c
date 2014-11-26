@@ -22808,7 +22808,7 @@ name|dev
 operator|->
 name|l2ad_vdev
 argument_list|,
-name|write_psize
+name|write_asize
 argument_list|,
 literal|0
 argument_list|,

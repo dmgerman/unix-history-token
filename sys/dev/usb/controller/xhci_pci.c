@@ -423,6 +423,14 @@ operator|(
 literal|"Intel Lynx Point USB 3.0 controller"
 operator|)
 return|;
+case|case
+literal|0x8cb18086
+case|:
+return|return
+operator|(
+literal|"Intel Wildcat Point USB 3.0 controller"
+operator|)
+return|;
 default|default:
 break|break;
 block|}
