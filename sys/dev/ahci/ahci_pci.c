@@ -1088,6 +1088,86 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x8c828086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c838086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c848086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c858086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c868086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c878086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c8e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c8f8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x8d028086
 block|,
 literal|0x00
