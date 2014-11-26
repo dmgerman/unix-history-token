@@ -5331,15 +5331,28 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Invalid size %d "
-literal|"(valid range is %Zd to %d)\n"
+literal|"(valid range is %d to %d)\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|cb
 operator|->
 name|size
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|RPING_MIN_BUFSIZE
+argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|RPING_BUFSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ret
