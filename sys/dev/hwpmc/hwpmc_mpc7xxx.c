@@ -3578,6 +3578,8 @@ name|SPR_MMCR0_FC
 operator||
 name|SPR_MMCR0_PMXE
 operator||
+name|SPR_MMCR0_FCECE
+operator||
 name|SPR_MMCR0_PMC1CE
 operator||
 name|SPR_MMCR0_PMCNCE
@@ -3588,14 +3590,6 @@ argument_list|(
 name|SPR_MMCR1
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|mtmsr
-argument_list|(
-name|mfmsr
-argument_list|()
-operator||
-name|PSL_PMM
 argument_list|)
 expr_stmt|;
 return|return
@@ -4041,9 +4035,6 @@ name|powerpc_cpu
 modifier|*
 name|pac
 decl_stmt|;
-name|pmc_value_t
-name|v
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|cpu
@@ -4105,15 +4096,9 @@ name|mfspr
 argument_list|(
 name|SPR_MMCR0
 argument_list|)
-expr_stmt|;
-name|mtspr
-argument_list|(
-name|SPR_MMCR0
-argument_list|,
-name|config
-operator||
+operator|&
+operator|~
 name|SPR_MMCR0_FC
-argument_list|)
 expr_stmt|;
 comment|/* 	 * look for all PMCs that have interrupted: 	 * - look for a running, sampling PMC which has overflowed 	 *   and which has a valid 'struct pmc' association 	 * 	 * If found, we call a helper to process the interrupt. 	 */
 for|for
@@ -4182,23 +4167,7 @@ operator|!=
 name|PMC_STATE_RUNNING
 condition|)
 continue|continue;
-comment|/* Stop the PMC, reload count. */
-name|v
-operator|=
-name|pm
-operator|->
-name|pm_sc
-operator|.
-name|pm_reloadcount
-expr_stmt|;
-name|mpc7xxx_pmcn_write
-argument_list|(
-name|i
-argument_list|,
-name|v
-argument_list|)
-expr_stmt|;
-comment|/* Restart the counter if logging succeeded. */
+comment|/* Stop the counter if logging fails. */
 name|error
 operator|=
 name|pmc_process_interrupt
@@ -4230,6 +4199,21 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* reload count. */
+name|mpc7xxx_write_pmc
+argument_list|(
+name|cpu
+argument_list|,
+name|i
+argument_list|,
+name|pm
+operator|->
+name|pm_sc
+operator|.
+name|pm_reloadcount
+argument_list|)
+expr_stmt|;
+block|}
 name|atomic_add_int
 argument_list|(
 name|retval
@@ -4247,8 +4231,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Re-enable PERF exceptions. */
+if|if
+condition|(
+name|retval
+condition|)
 name|mtspr
 argument_list|(
 name|SPR_MMCR0
