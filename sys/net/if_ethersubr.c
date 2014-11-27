@@ -1240,6 +1240,12 @@ case|case
 name|pseudo_AF_HDRCMPLT
 case|:
 block|{
+specifier|const
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
 name|hdrcmplt
 operator|=
 literal|1
@@ -1256,6 +1262,7 @@ comment|/* if this is for us, don't do it */
 name|eh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ether_header
 operator|*
