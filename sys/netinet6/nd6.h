@@ -2050,9 +2050,7 @@ parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
-name|struct
-name|llentry
-modifier|*
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;

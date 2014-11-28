@@ -2402,6 +2402,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|device_getenv_int
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|knob
+parameter_list|,
+name|int
+modifier|*
+name|iptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|sysctl_ctx_list
 modifier|*

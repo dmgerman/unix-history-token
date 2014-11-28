@@ -369,7 +369,7 @@ begin_define
 define|#
 directive|define
 name|ATPDPHASHSIZE
-value|16
+value|32
 end_define
 
 begin_define
@@ -679,6 +679,9 @@ argument|tstate
 argument_list|)
 name|next
 expr_stmt|;
+name|lun_id_t
+name|ts_lun
+decl_stmt|;
 name|struct
 name|cam_path
 modifier|*

@@ -1317,7 +1317,7 @@ name|struct
 name|rusage
 name|ru
 decl_stmt|;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|targetp
 argument_list|)
@@ -1338,7 +1338,7 @@ name|p_rux
 operator|.
 name|rux_runtime
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|targetp
 argument_list|)
@@ -1576,7 +1576,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1592,7 +1592,7 @@ operator|&
 name|sys
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1619,7 +1619,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1635,7 +1635,7 @@ operator|&
 name|sys
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -3346,7 +3346,7 @@ block|}
 block|}
 else|else
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -3363,7 +3363,7 @@ index|[
 name|which
 index|]
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -3923,7 +3923,7 @@ name|tv_usec
 operator|=
 name|tick
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -3952,7 +3952,7 @@ operator|=
 operator|*
 name|aitv
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)

@@ -257,12 +257,6 @@ end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|llentry
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|ifaddr
 struct_decl|;
 end_struct_decl
@@ -276,10 +270,8 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-name|rt
+name|int
+name|is_gw
 parameter_list|,
 name|struct
 name|mbuf
@@ -296,11 +288,9 @@ name|u_char
 modifier|*
 name|desten
 parameter_list|,
-name|struct
-name|llentry
+name|uint32_t
 modifier|*
-modifier|*
-name|lle
+name|pflags
 parameter_list|)
 function_decl|;
 end_function_decl

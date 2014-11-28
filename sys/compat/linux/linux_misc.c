@@ -3220,7 +3220,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_STATLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -3236,7 +3236,7 @@ operator|&
 name|stime
 argument_list|)
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)

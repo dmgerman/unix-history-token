@@ -2115,6 +2115,11 @@ name|p_klist
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Save our children's rusage information in our exit rusage. 	 */
+name|PROC_STATLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|ruadd
 argument_list|(
 operator|&
@@ -2138,6 +2143,11 @@ operator|&
 name|p
 operator|->
 name|p_crux
+argument_list|)
+expr_stmt|;
+name|PROC_STATUNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure the scheduler takes this thread out of its tables etc. 	 * This will also release this thread's reference to the ucred. 	 * Other thread parts to release include pcb bits and such. 	 */
@@ -3788,11 +3798,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|siginfo
@@ -3944,6 +3949,11 @@ name|p
 operator|->
 name|p_ru
 expr_stmt|;
+name|PROC_STATLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|calcru
 argument_list|(
 name|p
@@ -3957,6 +3967,11 @@ operator|&
 name|rup
 operator|->
 name|ru_stime
+argument_list|)
+expr_stmt|;
+name|PROC_STATUNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|rup
@@ -4000,6 +4015,11 @@ operator|==
 name|PRS_ZOMBIE
 condition|)
 block|{
+name|PROC_SLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|proc_reap
 argument_list|(
 name|td
@@ -4018,11 +4038,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p

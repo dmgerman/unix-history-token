@@ -1772,6 +1772,21 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|PROC_STATLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|PROC_SUNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* Do the same timestamp bookkeeping that mi_switch() would do. */
 name|new_switchtime
 operator|=
@@ -1848,12 +1863,7 @@ operator|->
 name|td_ru
 argument_list|)
 expr_stmt|;
-name|thread_lock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_STATUNLOCK
 argument_list|(
 name|p
 argument_list|)
