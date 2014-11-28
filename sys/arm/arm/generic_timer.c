@@ -332,6 +332,8 @@ block|,
 literal|3
 block|,
 name|RF_ACTIVE
+operator||
+name|RF_OPTIONAL
 block|}
 block|,
 comment|/* Hyp */
