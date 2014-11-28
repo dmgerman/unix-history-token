@@ -343,9 +343,14 @@ decl_stmt|;
 name|int
 name|isphds
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|int
 name|is_gw
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
