@@ -61505,6 +61505,8 @@ name|struct
 name|ctl_softc
 modifier|*
 name|ctl_softc
+init|=
+name|control_softc
 decl_stmt|;
 name|void
 function_decl|(
@@ -61899,21 +61901,10 @@ name|targ_mapped_lun
 operator|)
 argument_list|)
 expr_stmt|;
-name|fe_done
-argument_list|(
-name|io
-argument_list|)
-expr_stmt|;
 goto|goto
 name|bailout
 goto|;
 block|}
-name|ctl_softc
-operator|=
-name|lun
-operator|->
-name|ctl_softc
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -62243,6 +62234,8 @@ operator|->
 name|lun_lock
 argument_list|)
 expr_stmt|;
+name|bailout
+label|:
 comment|/* 	 * If this command has been aborted, make sure we set the status 	 * properly.  The FETD is responsible for freeing the I/O and doing 	 * whatever it needs to do to clean up its state. 	 */
 if|if
 condition|(
@@ -62637,8 +62630,6 @@ argument_list|(
 name|io
 argument_list|)
 expr_stmt|;
-name|bailout
-label|:
 return|return
 operator|(
 name|CTL_RETVAL_COMPLETE
