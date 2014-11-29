@@ -8053,9 +8053,7 @@ name|vattr
 operator|.
 name|va_size
 operator|>
-literal|100
-operator|*
-literal|1024
+name|LINKER_HINTS_MAX
 condition|)
 block|{
 name|printf
