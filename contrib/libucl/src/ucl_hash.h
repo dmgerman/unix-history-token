@@ -168,6 +168,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Replace element in the hash  */
+end_comment
+
+begin_function_decl
+name|void
+name|ucl_hash_replace
+parameter_list|(
+name|ucl_hash_t
+modifier|*
+name|hashlin
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|old
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|new
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Delete an element from the the hashtable.  */
 end_comment
 

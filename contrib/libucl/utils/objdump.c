@@ -226,6 +226,10 @@ operator|.
 name|ov
 argument_list|)
 expr_stmt|;
+name|it_obj
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(

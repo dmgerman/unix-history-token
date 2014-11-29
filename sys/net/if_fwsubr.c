@@ -300,9 +300,14 @@ specifier|static
 name|int
 name|next_dgl
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|int
 name|is_gw
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|MAC
