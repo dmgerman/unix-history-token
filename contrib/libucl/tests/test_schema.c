@@ -185,7 +185,6 @@ name|err
 parameter_list|)
 block|{
 specifier|const
-specifier|const
 name|ucl_object_t
 modifier|*
 name|valid

@@ -648,6 +648,9 @@ name|unsigned
 name|int
 name|column
 decl_stmt|;
+name|unsigned
+name|priority
+decl_stmt|;
 name|struct
 name|ucl_chunk
 modifier|*
@@ -724,6 +727,9 @@ decl_stmt|;
 name|struct
 name|ucl_variable
 modifier|*
+name|prev
+decl_stmt|,
+modifier|*
 name|next
 decl_stmt|;
 block|}
@@ -756,6 +762,10 @@ decl_stmt|;
 name|ucl_object_t
 modifier|*
 name|cur_obj
+decl_stmt|;
+name|char
+modifier|*
+name|cur_file
 decl_stmt|;
 name|struct
 name|ucl_macro
@@ -797,6 +807,23 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ucl_object_userdata
+block|{
+name|ucl_object_t
+name|obj
+decl_stmt|;
+name|ucl_userdata_dtor
+name|dtor
+decl_stmt|;
+name|ucl_userdata_emitter
+name|emitter
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/**  * Unescape json string inplace  * @param str  */
 end_comment
@@ -832,6 +859,11 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|args
+parameter_list|,
 name|void
 modifier|*
 name|ud
@@ -851,6 +883,11 @@ name|data
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|args
 parameter_list|,
 name|void
 modifier|*
@@ -875,6 +912,11 @@ name|data
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+specifier|const
+name|ucl_object_t
+modifier|*
+name|args
 parameter_list|,
 name|void
 modifier|*
@@ -1072,11 +1114,15 @@ name|len
 parameter_list|)
 block|{
 specifier|const
-name|unsigned
 name|char
 modifier|*
 name|p
 init|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|start
 decl_stmt|;
 name|bool
@@ -1554,12 +1600,36 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Serialise string  * @param str string to emit  * @param buf target buffer  */
+comment|/**  * Serialize string as JSON string  * @param str string to emit  * @param buf target buffer  */
 end_comment
 
 begin_function_decl
 name|void
 name|ucl_elt_string_write_json
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|struct
+name|ucl_emitter_context
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Write multiline string using `EOD` as string terminator  * @param str  * @param size  * @param ctx  */
+end_comment
+
+begin_function_decl
+name|void
+name|ucl_elt_string_write_multiline
 parameter_list|(
 specifier|const
 name|char
@@ -1586,6 +1656,22 @@ name|unsigned
 name|char
 modifier|*
 name|ucl_object_emit_single_json
+parameter_list|(
+specifier|const
+name|ucl_object_t
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Check whether a specified string is long and should be likely printed in  * multiline mode  * @param obj  * @return  */
+end_comment
+
+begin_function_decl
+name|bool
+name|ucl_maybe_long_string
 parameter_list|(
 specifier|const
 name|ucl_object_t
