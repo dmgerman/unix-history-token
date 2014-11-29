@@ -1126,7 +1126,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|auth_group_set_type_str
+name|auth_group_set_type
 parameter_list|(
 name|struct
 name|auth_group
@@ -1441,7 +1441,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|portal_group_set_filter_str
+name|portal_group_set_filter
 parameter_list|(
 name|struct
 name|portal_group
