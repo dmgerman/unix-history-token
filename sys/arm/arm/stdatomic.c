@@ -2187,7 +2187,7 @@ literal|"ldrb"
 argument_list|,
 literal|"strb"
 argument_list|,
-literal|"streqb"
+literal|"strbeq"
 argument_list|)
 end_macro
 
@@ -2202,7 +2202,7 @@ literal|"ldrh"
 argument_list|,
 literal|"strh"
 argument_list|,
-literal|"streqh"
+literal|"strheq"
 argument_list|)
 end_macro
 
