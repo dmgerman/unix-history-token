@@ -331,16 +331,6 @@ end_endif
 begin_enum
 enum|enum
 block|{
-name|MLX4_CQ_ENTRY_SIZE
-init|=
-literal|0x20
-block|}
-enum|;
-end_enum
-
-begin_enum
-enum|enum
-block|{
 name|MLX4_STAT_RATE_OFFSET
 init|=
 literal|5
@@ -610,6 +600,9 @@ decl_stmt|;
 name|int
 name|max_cqe
 decl_stmt|;
+name|int
+name|cqe_size
+decl_stmt|;
 struct|struct
 block|{
 name|struct
@@ -719,6 +712,9 @@ name|arm_db
 decl_stmt|;
 name|int
 name|arm_sn
+decl_stmt|;
+name|int
+name|cqe_size
 decl_stmt|;
 block|}
 struct|;
@@ -1408,6 +1404,9 @@ name|buf
 parameter_list|,
 name|int
 name|nent
+parameter_list|,
+name|int
+name|entry_size
 parameter_list|)
 function_decl|;
 end_function_decl
