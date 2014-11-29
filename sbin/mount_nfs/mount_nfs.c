@@ -233,6 +233,7 @@ comment|/* Table for af,sotype -> netid conversions. */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|nc_protos
 block|{
@@ -350,6 +351,7 @@ value|8
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|retrycnt
 init|=
@@ -359,6 +361,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|opflags
 init|=
@@ -367,6 +370,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfsproto
 init|=
@@ -375,6 +379,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mnttcp_ok
 init|=
@@ -383,6 +388,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|noconn
 init|=
@@ -390,7 +396,13 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The 'portspec' is the server nfs port; NULL means look up via rpcbind. */
+end_comment
+
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|portspec
@@ -399,11 +411,8 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Server nfs port; NULL means look up via rpcbind. */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr
 modifier|*
@@ -412,6 +421,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|addrlen
 init|=
@@ -420,6 +430,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_char
 modifier|*
 name|fh
@@ -429,6 +440,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fhsize
 init|=
@@ -437,6 +449,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|secflavor
 init|=
@@ -446,6 +459,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|got_principal
 init|=
@@ -454,6 +468,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_enum
+specifier|static
 enum|enum
 name|mountmode
 block|{
@@ -498,6 +513,7 @@ specifier|static
 name|int
 name|sec_name_to_num
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|sec
@@ -507,6 +523,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sec_num_to_name
@@ -696,7 +713,7 @@ name|iovlen
 decl_stmt|;
 name|char
 modifier|*
-name|name
+name|mntname
 decl_stmt|,
 modifier|*
 name|p
@@ -705,7 +722,7 @@ modifier|*
 name|spec
 decl_stmt|,
 modifier|*
-name|fstype
+name|tmp
 decl_stmt|;
 name|char
 name|mntpath
@@ -726,15 +743,20 @@ operator|+
 literal|1
 index|]
 decl_stmt|,
-modifier|*
-name|gssname
-decl_stmt|,
 name|gssn
 index|[
 name|MAXHOSTNAMELEN
 operator|+
 literal|50
 index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fstype
+decl_stmt|,
+modifier|*
+name|gssname
 decl_stmt|;
 name|iov
 operator|=
@@ -1141,6 +1163,7 @@ name|pnextopt
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|val
@@ -1486,7 +1509,7 @@ expr_stmt|;
 name|asprintf
 argument_list|(
 operator|&
-name|portspec
+name|tmp
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -1498,7 +1521,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|portspec
+name|tmp
 operator|==
 name|NULL
 condition|)
@@ -1508,6 +1531,10 @@ literal|1
 argument_list|,
 literal|"asprintf"
 argument_list|)
+expr_stmt|;
+name|portspec
+operator|=
+name|tmp
 expr_stmt|;
 block|}
 elseif|else
@@ -1980,6 +2007,7 @@ if|if
 condition|(
 name|pass_flag_to_nmount
 condition|)
+block|{
 name|build_iovec
 argument_list|(
 operator|&
@@ -1990,7 +2018,13 @@ name|iovlen
 argument_list|,
 name|opt
 argument_list|,
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|val
+argument_list|)
 argument_list|,
 name|strlen
 argument_list|(
@@ -2000,6 +2034,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|opt
 operator|=
 name|pnextopt
@@ -2288,7 +2323,7 @@ operator|*
 name|argv
 operator|++
 expr_stmt|;
-name|name
+name|mntname
 operator|=
 operator|*
 name|argv
@@ -2414,7 +2449,13 @@ name|iovlen
 argument_list|,
 literal|"gssname"
 argument_list|,
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|gssname
+argument_list|)
 argument_list|,
 name|strlen
 argument_list|(
@@ -2449,7 +2490,7 @@ if|if
 condition|(
 name|checkpath
 argument_list|(
-name|name
+name|mntname
 argument_list|,
 name|mntpath
 argument_list|)
@@ -2475,7 +2516,13 @@ name|iovlen
 argument_list|,
 literal|"fstype"
 argument_list|,
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|fstype
+argument_list|)
 argument_list|,
 operator|(
 name|size_t
@@ -2556,6 +2603,7 @@ specifier|static
 name|int
 name|sec_name_to_num
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|sec
@@ -2632,6 +2680,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sec_num_to_name
@@ -3586,8 +3635,7 @@ name|netid
 decl_stmt|,
 modifier|*
 name|netid_mnt
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|secname
 decl_stmt|;
@@ -3602,7 +3650,7 @@ name|sotype
 decl_stmt|;
 name|enum
 name|clnt_stat
-name|stat
+name|clntstat
 decl_stmt|;
 name|enum
 name|mountmode
@@ -3828,6 +3876,11 @@ name|nfsvers
 operator|=
 literal|4
 expr_stmt|;
+name|mntvers
+operator|=
+literal|3
+expr_stmt|;
+comment|/* Workaround for GCC. */
 block|}
 elseif|else
 if|if
@@ -4123,7 +4176,7 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-name|stat
+name|clntstat
 operator|=
 name|clnt_call
 argument_list|(
@@ -4150,14 +4203,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|stat
+name|clntstat
 operator|!=
 name|RPC_SUCCESS
 condition|)
 block|{
 if|if
 condition|(
-name|stat
+name|clntstat
 operator|==
 name|RPC_PROGVERSMISMATCH
 operator|&&
@@ -4219,7 +4272,7 @@ return|return
 operator|(
 name|returncode
 argument_list|(
-name|stat
+name|clntstat
 argument_list|,
 operator|&
 name|rpcerr
@@ -4304,6 +4357,7 @@ name|secname
 operator|!=
 name|NULL
 condition|)
+block|{
 name|build_iovec
 argument_list|(
 name|iov
@@ -4312,7 +4366,13 @@ name|iovlen
 argument_list|,
 literal|"sec"
 argument_list|,
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|secname
+argument_list|)
 argument_list|,
 operator|(
 name|size_t
@@ -4321,6 +4381,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|build_iovec
 argument_list|(
 name|iov
@@ -4446,7 +4507,7 @@ name|vers
 operator|=
 name|mntvers
 expr_stmt|;
-name|stat
+name|clntstat
 operator|=
 name|clnt_call
 argument_list|(
@@ -4481,14 +4542,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|stat
+name|clntstat
 operator|!=
 name|RPC_SUCCESS
 condition|)
 block|{
 if|if
 condition|(
-name|stat
+name|clntstat
 operator|==
 name|RPC_PROGVERSMISMATCH
 operator|&&
@@ -4550,7 +4611,7 @@ return|return
 operator|(
 name|returncode
 argument_list|(
-name|stat
+name|clntstat
 argument_list|,
 operator|&
 name|rpcerr
@@ -4706,6 +4767,7 @@ if|if
 condition|(
 name|secname
 condition|)
+block|{
 name|build_iovec
 argument_list|(
 name|iov
@@ -4714,7 +4776,13 @@ name|iovlen
 argument_list|,
 literal|"sec"
 argument_list|,
+name|__DECONST
+argument_list|(
+name|void
+operator|*
+argument_list|,
 name|secname
+argument_list|)
 argument_list|,
 operator|(
 name|size_t
@@ -4723,6 +4791,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|nfsvers
@@ -4762,7 +4831,7 @@ name|returncode
 parameter_list|(
 name|enum
 name|clnt_stat
-name|stat
+name|clntstat
 parameter_list|,
 name|struct
 name|rpc_err
@@ -4772,7 +4841,7 @@ parameter_list|)
 block|{
 switch|switch
 condition|(
-name|stat
+name|clntstat
 condition|)
 block|{
 case|case
