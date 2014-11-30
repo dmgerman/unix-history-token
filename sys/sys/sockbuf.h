@@ -721,18 +721,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sbcheck
-parameter_list|(
-name|struct
-name|sockbuf
-modifier|*
-name|sb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|sbcompress
 parameter_list|(
 name|struct
@@ -1288,16 +1276,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|SBLASTRECORDCHK
-parameter_list|(
-name|sb
-parameter_list|)
-value|sblastrecordchk((sb), __FILE__, __LINE__)
-end_define
-
 begin_function_decl
 name|void
 name|sblastmbufchk
@@ -1315,6 +1293,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sbcheck
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|SBLASTRECORDCHK
+parameter_list|(
+name|sb
+parameter_list|)
+value|sblastrecordchk((sb), __FILE__, __LINE__)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1323,6 +1328,16 @@ parameter_list|(
 name|sb
 parameter_list|)
 value|sblastmbufchk((sb), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBCHECK
+parameter_list|(
+name|sb
+parameter_list|)
+value|sbcheck((sb), __FILE__, __LINE__)
 end_define
 
 begin_else
@@ -1337,11 +1352,8 @@ name|SBLASTRECORDCHK
 parameter_list|(
 name|sb
 parameter_list|)
+value|do {} while (0)
 end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
 
 begin_define
 define|#
@@ -1350,11 +1362,18 @@ name|SBLASTMBUFCHK
 parameter_list|(
 name|sb
 parameter_list|)
+value|do {} while (0)
 end_define
 
-begin_comment
-comment|/* nothing */
-end_comment
+begin_define
+define|#
+directive|define
+name|SBCHECK
+parameter_list|(
+name|sb
+parameter_list|)
+value|do {} while (0)
+end_define
 
 begin_endif
 endif|#
