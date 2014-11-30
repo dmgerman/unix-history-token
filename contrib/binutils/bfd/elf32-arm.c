@@ -17779,7 +17779,7 @@ operator|)
 expr_stmt|;
 name|value
 operator|=
-name|abs
+name|llabs
 argument_list|(
 name|relocation
 argument_list|)
@@ -17956,7 +17956,7 @@ operator|)
 expr_stmt|;
 name|value
 operator|=
-name|abs
+name|llabs
 argument_list|(
 name|relocation
 argument_list|)
@@ -22325,7 +22325,7 @@ name|g_n
 operator|=
 name|calculate_group_reloc_mask
 argument_list|(
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22391,7 +22391,7 @@ name|rel
 operator|->
 name|r_offset
 argument_list|,
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22629,7 +22629,7 @@ expr_stmt|;
 comment|/* Calculate the value of the relevant G_{n-1} to obtain            the residual at that stage.  */
 name|calculate_group_reloc_mask
 argument_list|(
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22671,7 +22671,7 @@ name|rel
 operator|->
 name|r_offset
 argument_list|,
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22914,7 +22914,7 @@ expr_stmt|;
 comment|/* Calculate the value of the relevant G_{n-1} to obtain            the residual at that stage.  */
 name|calculate_group_reloc_mask
 argument_list|(
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22956,7 +22956,7 @@ name|rel
 operator|->
 name|r_offset
 argument_list|,
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -23205,7 +23205,7 @@ expr_stmt|;
 comment|/* Calculate the value of the relevant G_{n-1} to obtain            the residual at that stage.  */
 name|calculate_group_reloc_mask
 argument_list|(
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -23255,7 +23255,7 @@ name|rel
 operator|->
 name|r_offset
 argument_list|,
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
