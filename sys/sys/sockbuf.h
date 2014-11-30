@@ -1088,6 +1088,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sballoc
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbfree
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Return how much data is available to be taken out of socket  * bufffer right now.  */
 end_comment
@@ -1222,38 +1252,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* adjust counters in sb reflecting allocation of m */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sballoc
-parameter_list|(
-name|sb
-parameter_list|,
-name|m
-parameter_list|)
-value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	(sb)->sb_mcnt += 1; \ 	if ((m)->m_flags& M_EXT) { \ 		(sb)->sb_mbcnt += (m)->m_ext.ext_size; \ 		(sb)->sb_ccnt += 1; \ 	} \ }
-end_define
-
-begin_comment
-comment|/* adjust counters in sb reflecting freeing of m */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sbfree
-parameter_list|(
-name|sb
-parameter_list|,
-name|m
-parameter_list|)
-value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	(sb)->sb_mcnt -= 1; \ 	if ((m)->m_flags& M_EXT) { \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ 		(sb)->sb_ccnt -= 1; \ 	} \ 	if ((sb)->sb_sndptr == (m)) { \ 		(sb)->sb_sndptr = NULL; \ 		(sb)->sb_sndptroff = 0; \ 	} \ 	if ((sb)->sb_sndptroff != 0) \ 		(sb)->sb_sndptroff -= (m)->m_len; \ }
-end_define
 
 begin_define
 define|#
