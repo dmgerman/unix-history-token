@@ -2579,6 +2579,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|SOCKBUF_LOCK_ASSERT
@@ -2625,6 +2628,14 @@ argument_list|(
 name|m
 argument_list|,
 literal|1
+argument_list|,
+name|flags
+operator|&
+name|PRUS_NOTREADY
+condition|?
+name|M_NOTREADY
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 name|sbcompress
@@ -2671,6 +2682,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|SOCKBUF_LOCK
@@ -2683,6 +2697,8 @@ argument_list|(
 name|sb
 argument_list|,
 name|m
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|SOCKBUF_UNLOCK

@@ -1024,6 +1024,8 @@ argument_list|(
 name|sb
 argument_list|,
 name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|toep
@@ -2374,6 +2376,8 @@ argument_list|(
 name|sb
 argument_list|,
 name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|toep

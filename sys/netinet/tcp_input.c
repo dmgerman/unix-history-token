@@ -8277,6 +8277,8 @@ operator|->
 name|so_rcv
 argument_list|,
 name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -12162,6 +12164,8 @@ operator|->
 name|so_rcv
 argument_list|,
 name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NB: sorwakeup_locked() does an implicit unlock. */

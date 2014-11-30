@@ -3726,6 +3726,8 @@ operator|->
 name|so_snd
 argument_list|,
 name|m
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -3939,6 +3941,8 @@ operator|->
 name|so_snd
 argument_list|,
 name|m
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|SOCKBUF_UNLOCK
