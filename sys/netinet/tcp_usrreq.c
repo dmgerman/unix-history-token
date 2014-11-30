@@ -4042,11 +4042,13 @@ name|tp
 operator|->
 name|snd_una
 operator|+
+name|sbavail
+argument_list|(
+operator|&
 name|so
 operator|->
 name|so_snd
-operator|.
-name|sb_cc
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
