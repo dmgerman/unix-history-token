@@ -432,7 +432,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Caller will handle '=' if necessary */
 if|if
 condition|(
 name|p
@@ -441,7 +440,7 @@ name|strcspn
 argument_list|(
 name|p
 argument_list|,
-literal|"|&;<>()$`\\\"' \t\n*?[~#"
+literal|"|&;<>()$`\\\"' \t\n*?[~#="
 argument_list|)
 index|]
 operator|==
