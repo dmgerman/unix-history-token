@@ -2329,7 +2329,11 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-operator|(
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 name|i
 operator|=
 operator|*
@@ -2337,7 +2341,7 @@ name|arg
 operator|++
 operator|-
 literal|'0'
-operator|)
+argument_list|)
 operator|<=
 literal|9
 condition|)
