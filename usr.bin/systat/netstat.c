@@ -1600,7 +1600,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 expr_stmt|;
 name|p
 operator|->
@@ -1610,7 +1610,7 @@ name|so
 operator|->
 name|so_snd
 operator|.
-name|sb_cc
+name|sb_ccc
 expr_stmt|;
 block|}
 block|}

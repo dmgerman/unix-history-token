@@ -5249,6 +5249,7 @@ operator|&
 name|buf_flag
 condition|)
 block|{
+comment|/* XXXGL: shouldn't here be sbwait() call? */
 name|sb
 operator|->
 name|sb_flags
@@ -5260,7 +5261,7 @@ argument_list|(
 operator|&
 name|sb
 operator|->
-name|sb_cc
+name|sb_acc
 argument_list|,
 operator|&
 name|sb

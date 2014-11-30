@@ -215,7 +215,7 @@ name|so_sbcc
 operator|=
 name|sb
 operator|->
-name|sb_cc
+name|sb_ccc
 expr_stmt|;
 if|if
 condition|(
@@ -233,7 +233,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|sb_cc
+name|sb_ccc
 expr_stmt|;
 else|else
 name|sctp_clog
@@ -23177,7 +23177,7 @@ endif|#
 directive|endif
 parameter_list|)
 block|{
-comment|/* 	 * Here we must place the control on the end of the socket read 	 * queue AND increment sb_cc so that select will work properly on 	 * read. 	 */
+comment|/* 	 * Here we must place the control on the end of the socket read 	 * queue AND increment sb_ccc so that select will work properly on 	 * read. 	 */
 name|struct
 name|mbuf
 modifier|*
@@ -23801,7 +23801,7 @@ modifier|*
 name|sb
 parameter_list|)
 block|{
-comment|/* 	 * A partial delivery API event is underway. OR we are appending on 	 * the reassembly queue. 	 *  	 * If PDAPI this means we need to add m to the end of the data. 	 * Increase the length in the control AND increment the sb_cc. 	 * Otherwise sb is NULL and all we need to do is put it at the end 	 * of the mbuf chain. 	 */
+comment|/* 	 * A partial delivery API event is underway. OR we are appending on 	 * the reassembly queue. 	 *  	 * If PDAPI this means we need to add m to the end of the data. 	 * Increase the length in the control AND increment the sb_ccc. 	 * Otherwise sb is NULL and all we need to do is put it at the end 	 * of the mbuf chain. 	 */
 name|int
 name|len
 init|=
@@ -24842,7 +24842,7 @@ name|sctp_socket
 operator|->
 name|so_snd
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|>=
 name|tp1
 operator|->
@@ -24855,7 +24855,7 @@ name|sctp_socket
 operator|->
 name|so_snd
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|-=
 name|tp1
 operator|->
@@ -24870,7 +24870,7 @@ name|sctp_socket
 operator|->
 name|so_snd
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|=
 literal|0
 expr_stmt|;
@@ -27566,7 +27566,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 argument_list|,
 name|uio
 operator|->
@@ -27596,7 +27596,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 argument_list|,
 name|uio
 operator|->
@@ -27699,7 +27699,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|==
 literal|0
 operator|)
@@ -27746,7 +27746,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|==
 literal|0
 condition|)
@@ -27769,7 +27769,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|<=
 name|held_length
 operator|)
@@ -27785,7 +27785,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|==
 literal|0
 operator|)
@@ -27944,7 +27944,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|==
 literal|0
 condition|)
@@ -28199,7 +28199,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|!=
 literal|0
 operator|)
@@ -28219,7 +28219,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|=
 literal|0
 expr_stmt|;
@@ -28742,14 +28742,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * if we reach here, not suitable replacement is available 		 *<or> fragment interleave is NOT on. So stuff the sb_cc 		 * into the our held count, and its time to sleep again. 		 */
+comment|/* 		 * if we reach here, not suitable replacement is available 		 *<or> fragment interleave is NOT on. So stuff the sb_ccc 		 * into the our held count, and its time to sleep again. 		 */
 name|held_length
 operator|=
 name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 expr_stmt|;
 name|control
 operator|->
@@ -28759,7 +28759,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 expr_stmt|;
 goto|goto
 name|restart
@@ -30254,7 +30254,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 argument_list|,
 name|cp_len
 argument_list|)
@@ -30279,7 +30279,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|sb_cc
+name|sb_ccc
 argument_list|,
 name|cp_len
 argument_list|)
@@ -30891,7 +30891,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|<=
 name|control
 operator|->
@@ -31069,7 +31069,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 operator|>
 name|held_length
 condition|)
@@ -31082,7 +31082,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 expr_stmt|;
 name|held_length
 operator|=
@@ -31790,7 +31790,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 argument_list|)
 expr_stmt|;
 block|}
@@ -31824,7 +31824,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 argument_list|)
 expr_stmt|;
 block|}
