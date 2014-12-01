@@ -1896,7 +1896,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|archive_read_support_compression_none
+name|archive_read_support_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -1934,7 +1934,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -2086,7 +2086,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|archive_read_support_compression_none
+name|archive_read_support_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -2428,7 +2428,7 @@ argument_list|)
 expr_stmt|;
 name|ACV
 argument_list|(
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -2497,7 +2497,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|archive_write_set_compression_none
+name|archive_write_add_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -2804,7 +2804,7 @@ argument_list|)
 expr_stmt|;
 name|ACV
 argument_list|(
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
