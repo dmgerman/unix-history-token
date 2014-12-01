@@ -9502,11 +9502,12 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m0
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 name|m0
 operator|->

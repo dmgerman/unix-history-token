@@ -5245,15 +5245,10 @@ name|flowid
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|flowid_type
+name|uint8_t
+name|flowtype
 init|=
-literal|0
-decl_stmt|;
-name|int
-name|use_flowid
-init|=
-literal|0
+name|M_HASHTYPE_NONE
 decl_stmt|;
 comment|/* 	 * udp_output() may need to temporarily bind or connect the current 	 * inpcb.  As such, we don't know up front whether we will need the 	 * pcbinfo lock or not.  Do any work to decide what is needed up 	 * front before acquiring any locks. 	 */
 if|if
@@ -5607,7 +5602,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|flowid_type
+name|flowtype
 operator|=
 operator|*
 operator|(
@@ -5618,10 +5613,6 @@ name|CMSG_DATA
 argument_list|(
 name|cm
 argument_list|)
-expr_stmt|;
-name|use_flowid
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 ifdef|#
@@ -6746,15 +6737,11 @@ expr_stmt|;
 comment|/* 	 * Setup flowid / RSS information for outbound socket. 	 * 	 * Once the UDP code decides to set a flowid some other way, 	 * this allows the flowid to be overridden by userland. 	 */
 if|if
 condition|(
-name|use_flowid
+name|flowtype
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 block|{
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
-expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr
@@ -6767,7 +6754,7 @@ name|M_HASHTYPE_SET
 argument_list|(
 name|m
 argument_list|,
-name|flowid_type
+name|flowtype
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -6813,12 +6800,6 @@ operator|.
 name|flowid
 operator|=
 name|hash_val
-expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
 expr_stmt|;
 name|M_HASHTYPE_SET
 argument_list|(

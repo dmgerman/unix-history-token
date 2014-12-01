@@ -9213,13 +9213,15 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* check if flowid is set */
 if|if
 condition|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 name|qidx
 operator|=
@@ -15756,13 +15758,15 @@ name|adap
 operator|->
 name|timestamp
 condition|)
+block|{
+name|M_HASHTYPE_SET
+argument_list|(
 name|mh
 operator|->
 name|mh_head
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 name|mh
 operator|->
@@ -15774,6 +15778,7 @@ name|flowid
 operator|=
 name|rss_hash
 expr_stmt|;
+block|}
 block|}
 name|ethpad
 operator|=

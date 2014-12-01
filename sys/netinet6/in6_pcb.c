@@ -5402,15 +5402,14 @@ argument_list|(
 name|pcbinfo
 argument_list|)
 operator|&&
-operator|!
-operator|(
 name|M_HASHTYPE_TEST
 argument_list|(
 name|m
 argument_list|,
 name|M_HASHTYPE_NONE
 argument_list|)
-operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|pcbgroup

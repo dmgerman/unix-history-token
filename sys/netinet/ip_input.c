@@ -5136,12 +5136,6 @@ argument_list|,
 name|rss_type
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
-expr_stmt|;
 block|}
 comment|/* 	 * Queue/dispatch for reprocessing. 	 * 	 * Note: this is much slower than just handling the frame in the 	 * current receive context.  It's likely worth investigating 	 * why this is. 	 */
 name|netisr_dispatch

@@ -1708,7 +1708,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Default value for using M_FLOWID */
+comment|/* Default value for using flowid */
 end_comment
 
 begin_expr_stmt
@@ -1756,7 +1756,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Default value for using M_FLOWID */
+comment|/* Default value for flowid shift */
 end_comment
 
 begin_expr_stmt
@@ -10576,13 +10576,12 @@ operator|&
 name|LAGG_OPT_USE_FLOWID
 operator|)
 operator|&&
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 name|p
 operator|=
