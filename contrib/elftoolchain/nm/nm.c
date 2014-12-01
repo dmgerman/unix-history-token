@@ -263,16 +263,14 @@ begin_comment
 comment|/* output filter list */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument|filter_head
 argument_list|,
 argument|filter_entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|nm_out_filter
 operator|=
 name|SLIST_HEAD_INITIALIZER

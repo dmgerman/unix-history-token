@@ -176,6 +176,7 @@ value|((c)>= 0&& (c)<= 255&& 				\ 	  ((c) == '\t' || isprint((c)) ||			\ 	     
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|encoding_size
 decl_stmt|,
@@ -190,6 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|enum
 name|encoding_style
 name|encoding
@@ -197,6 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|enum
 name|radix_style
 name|radix
