@@ -467,13 +467,13 @@ name|sockb
 operator|.
 name|so_rcv
 operator|.
-name|sb_cc
+name|sb_ccc
 argument_list|,
 name|sockb
 operator|.
 name|so_snd
 operator|.
-name|sb_cc
+name|sb_ccc
 argument_list|)
 expr_stmt|;
 comment|/* Get info on associated node */

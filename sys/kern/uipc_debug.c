@@ -1798,11 +1798,20 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"sb_cc: %u   "
+literal|"sb_acc: %u   "
 argument_list|,
 name|sb
 operator|->
-name|sb_cc
+name|sb_acc
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"sb_ccc: %u   "
+argument_list|,
+name|sb
+operator|->
+name|sb_ccc
 argument_list|)
 expr_stmt|;
 name|db_printf

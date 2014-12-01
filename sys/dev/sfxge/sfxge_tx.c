@@ -2525,13 +2525,15 @@ name|index
 init|=
 literal|0
 decl_stmt|;
+comment|/* check if flowid is set */
 if|if
 condition|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 block|{
 name|uint32_t

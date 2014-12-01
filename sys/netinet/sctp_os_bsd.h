@@ -1818,7 +1818,7 @@ parameter_list|(
 name|sb
 parameter_list|)
 define|\
-value|(sb).sb_cc = 0;		\ 	(sb).sb_mb = NULL;	\ 	(sb).sb_mbcnt = 0;
+value|(sb).sb_ccc = 0;		\ 	(sb).sb_mb = NULL;	\ 	(sb).sb_mbcnt = 0;
 end_define
 
 begin_define

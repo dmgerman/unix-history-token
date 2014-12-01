@@ -2499,6 +2499,25 @@ name|frame
 operator|->
 name|exc
 decl_stmt|;
+comment|/* Ignore DTrace traps. */
+if|if
+condition|(
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|frame
+operator|->
+name|srr0
+operator|==
+name|EXC_DTRACE
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|type

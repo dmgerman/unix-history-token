@@ -791,7 +791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Transmit routine used by generic_netmap_txsync(). Returns 0 on success  * and non-zero on error (which may be packet drops or other errors).  * addr and len identify the netmap buffer, m is the (preallocated)  * mbuf to use for transmissions.  *  * We should add a reference to the mbuf so the m_freem() at the end  * of the transmission does not consume resources.  *  * On FreeBSD, and on multiqueue cards, we can force the queue using  *      if ((m->m_flags& M_FLOWID) != 0)  *              i = m->m_pkthdr.flowid % adapter->num_queues;  *      else  *              i = curcpu % adapter->num_queues;  *  */
+comment|/*  * Transmit routine used by generic_netmap_txsync(). Returns 0 on success  * and non-zero on error (which may be packet drops or other errors).  * addr and len identify the netmap buffer, m is the (preallocated)  * mbuf to use for transmissions.  *  * We should add a reference to the mbuf so the m_freem() at the end  * of the transmission does not consume resources.  *  * On FreeBSD, and on multiqueue cards, we can force the queue using  *      if (M_HASHTYPE_GET(m) != M_HASHTYPE_NONE)  *              i = m->m_pkthdr.flowid % adapter->num_queues;  *      else  *              i = curcpu % adapter->num_queues;  *  */
 end_comment
 
 begin_function
@@ -943,11 +943,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 name|m
 operator|->

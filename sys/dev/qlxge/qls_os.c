@@ -5328,13 +5328,15 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* check if flowid is set */
 if|if
 condition|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m_head
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 name|txr_idx
 operator|=

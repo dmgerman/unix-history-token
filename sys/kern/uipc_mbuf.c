@@ -1809,6 +1809,9 @@ name|m0
 parameter_list|,
 name|int
 name|all
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -1910,6 +1913,8 @@ operator||
 name|M_RDONLY
 operator||
 name|M_NOFREE
+operator||
+name|flags
 operator|)
 expr_stmt|;
 block|}
@@ -5010,6 +5015,8 @@ argument_list|(
 name|n
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|m_cat

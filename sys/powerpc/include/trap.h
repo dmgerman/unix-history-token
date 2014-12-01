@@ -538,6 +538,17 @@ name|EXC_PGM_TRAP
 value|(1UL<< 17)
 end_define
 
+begin_comment
+comment|/* DTrace trap opcode. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_DTRACE
+value|0x7c810808
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

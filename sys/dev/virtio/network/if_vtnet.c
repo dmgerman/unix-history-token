@@ -8420,11 +8420,12 @@ name|rxq
 operator|->
 name|vtnrx_id
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 comment|/* 	 * BMV: FreeBSD does not have the UNNECESSARY and PARTIAL checksum 	 * distinction that Linux does. Need to reevaluate if performing 	 * offloading for the NEEDS_CSUM case is really appropriate. 	 */
 if|if
@@ -11256,13 +11257,15 @@ name|sc
 operator|->
 name|vtnet_act_vq_pairs
 expr_stmt|;
+comment|/* check if flowid is set */
 if|if
 condition|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 name|i
 operator|=

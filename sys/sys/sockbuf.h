@@ -326,14 +326,24 @@ modifier|*
 name|sb_sndptr
 decl_stmt|;
 comment|/* (c/d) pointer into mbuf chain */
+name|struct
+name|mbuf
+modifier|*
+name|sb_fnrdy
+decl_stmt|;
+comment|/* (c/d) pointer to first not ready buffer */
 name|u_int
 name|sb_sndptroff
 decl_stmt|;
 comment|/* (c/d) byte offset of ptr into chain */
 name|u_int
-name|sb_cc
+name|sb_acc
 decl_stmt|;
-comment|/* (c/d) actual chars in buffer */
+comment|/* (c/d) available chars in buffer */
+name|u_int
+name|sb_ccc
+decl_stmt|;
+comment|/* (c/d) claimed chars in buffer */
 name|u_int
 name|sb_hiwat
 decl_stmt|;
@@ -489,6 +499,39 @@ parameter_list|)
 value|mtx_assert(SOCKBUF_MTX(_sb), MA_NOTOWNED)
 end_define
 
+begin_comment
+comment|/*  * Socket buffer private mbuf(9) flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NOTREADY
+value|M_PROTO1
+end_define
+
+begin_comment
+comment|/* m_data not populated yet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_BLOCKED
+value|M_PROTO2
+end_define
+
+begin_comment
+comment|/* M_NOTREADY in front of m */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NOTAVAIL
+value|(M_NOTREADY | M_BLOCKED)
+end_define
+
 begin_function_decl
 name|void
 name|sbappend
@@ -536,6 +579,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -553,6 +599,9 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -715,18 +764,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sbcheck
-parameter_list|(
-name|struct
-name|sockbuf
-modifier|*
-name|sb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1088,8 +1125,55 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sballoc
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbfree
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sbready
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Return how much data is available to be taken out of socket  * bufffer right now.  */
+comment|/*  * Return how much data is available to be taken out of socket  * buffer right now.  */
 end_comment
 
 begin_function
@@ -1114,7 +1198,7 @@ return|return
 operator|(
 name|sb
 operator|->
-name|sb_cc
+name|sb_acc
 operator|)
 return|;
 block|}
@@ -1146,19 +1230,19 @@ return|return
 operator|(
 name|sb
 operator|->
-name|sb_cc
+name|sb_ccc
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * How much space is there in a socket buffer (so->so_snd or so->so_rcv)?  * This is problematical if the fields are unsigned, as the space might  * still be negative (cc> hiwat or mbcnt> mbmax).  Should detect  * overflow and return 0.  Should use "lmin" but it doesn't exist now.  */
+comment|/*  * How much space is there in a socket buffer (so->so_snd or so->so_rcv)?  * This is problematical if the fields are unsigned, as the space might  * still be negative (ccc> hiwat or mbcnt> mbmax).  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|long
 name|sbspace
 parameter_list|(
@@ -1170,10 +1254,15 @@ parameter_list|)
 block|{
 name|long
 name|bleft
-decl_stmt|;
-name|long
+decl_stmt|,
 name|mleft
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|SOCKBUF_LOCK_ASSERT(sb);
+endif|#
+directive|endif
 if|if
 condition|(
 name|sb
@@ -1195,7 +1284,7 @@ name|sb_hiwat
 operator|-
 name|sb
 operator|->
-name|sb_cc
+name|sb_ccc
 expr_stmt|;
 name|mleft
 operator|=
@@ -1222,38 +1311,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* adjust counters in sb reflecting allocation of m */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sballoc
-parameter_list|(
-name|sb
-parameter_list|,
-name|m
-parameter_list|)
-value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	(sb)->sb_mcnt += 1; \ 	if ((m)->m_flags& M_EXT) { \ 		(sb)->sb_mbcnt += (m)->m_ext.ext_size; \ 		(sb)->sb_ccnt += 1; \ 	} \ }
-end_define
-
-begin_comment
-comment|/* adjust counters in sb reflecting freeing of m */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sbfree
-parameter_list|(
-name|sb
-parameter_list|,
-name|m
-parameter_list|)
-value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	if ((m)->m_type != MT_DATA&& (m)->m_type != MT_OOBDATA) \ 		(sb)->sb_ctl -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	(sb)->sb_mcnt -= 1; \ 	if ((m)->m_flags& M_EXT) { \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ 		(sb)->sb_ccnt -= 1; \ 	} \ 	if ((sb)->sb_sndptr == (m)) { \ 		(sb)->sb_sndptr = NULL; \ 		(sb)->sb_sndptroff = 0; \ 	} \ 	if ((sb)->sb_sndptroff != 0) \ 		(sb)->sb_sndptroff -= (m)->m_len; \ }
-end_define
 
 begin_define
 define|#
@@ -1290,16 +1347,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|SBLASTRECORDCHK
-parameter_list|(
-name|sb
-parameter_list|)
-value|sblastrecordchk((sb), __FILE__, __LINE__)
-end_define
-
 begin_function_decl
 name|void
 name|sblastmbufchk
@@ -1317,6 +1364,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sbcheck
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|SBLASTRECORDCHK
+parameter_list|(
+name|sb
+parameter_list|)
+value|sblastrecordchk((sb), __FILE__, __LINE__)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1325,6 +1399,16 @@ parameter_list|(
 name|sb
 parameter_list|)
 value|sblastmbufchk((sb), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBCHECK
+parameter_list|(
+name|sb
+parameter_list|)
+value|sbcheck((sb), __FILE__, __LINE__)
 end_define
 
 begin_else
@@ -1339,11 +1423,8 @@ name|SBLASTRECORDCHK
 parameter_list|(
 name|sb
 parameter_list|)
+value|do {} while (0)
 end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
 
 begin_define
 define|#
@@ -1352,11 +1433,18 @@ name|SBLASTMBUFCHK
 parameter_list|(
 name|sb
 parameter_list|)
+value|do {} while (0)
 end_define
 
-begin_comment
-comment|/* nothing */
-end_comment
+begin_define
+define|#
+directive|define
+name|SBCHECK
+parameter_list|(
+name|sb
+parameter_list|)
+value|do {} while (0)
+end_define
 
 begin_endif
 endif|#

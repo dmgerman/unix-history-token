@@ -1221,7 +1221,7 @@ name|frame
 operator|->
 name|srr0
 operator|==
-literal|0x7c810808
+name|EXC_DTRACE
 condition|)
 block|{
 if|if

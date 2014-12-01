@@ -3694,12 +3694,6 @@ operator|*
 name|laddr
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
-expr_stmt|;
 name|M_HASHTYPE_SET
 argument_list|(
 name|m
