@@ -51027,9 +51027,6 @@ name|ctl_cmd_entry
 modifier|*
 name|entry
 decl_stmt|;
-name|uint32_t
-name|initidx
-decl_stmt|;
 name|int
 name|isc_retval
 decl_stmt|;
@@ -51153,18 +51150,6 @@ expr_stmt|;
 name|softc
 operator|=
 name|control_softc
-expr_stmt|;
-name|initidx
-operator|=
-name|ctl_get_initindex
-argument_list|(
-operator|&
-name|cur_blocked
-operator|->
-name|io_hdr
-operator|.
-name|nexus
-argument_list|)
 expr_stmt|;
 comment|/* 			 * Check this I/O for LUN state changes that may 			 * have happened while this command was blocked. 			 * The LUN state may have been changed by a command 			 * ahead of us in the queue, so we need to re-check 			 * for any states that can be caused by SCSI 			 * commands. 			 */
 if|if
@@ -54535,7 +54520,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|uint32_t initindex;
+block|uint32_t initidx;
 endif|#
 directive|endif
 name|int
@@ -54610,7 +54595,7 @@ comment|/* 	 * This version sets unit attention for every 	 */
 if|#
 directive|if
 literal|0
-block|initindex = ctl_get_initindex(&io->io_hdr.nexus); 	for (i = 0; i< CTL_MAX_INITIATORS; i++) { 		if (initindex == i) 			continue; 		lun->pending_ua[i] |= ua_type; 	}
+block|initidx = ctl_get_initindex(&io->io_hdr.nexus); 	for (i = 0; i< CTL_MAX_INITIATORS; i++) { 		if (initidx == i) 			continue; 		lun->pending_ua[i] |= ua_type; 	}
 endif|#
 directive|endif
 comment|/* 	 * A reset (any kind, really) clears reservations established with 	 * RESERVE/RELEASE.  It does not clear reservations established 	 * with PERSISTENT RESERVE OUT, but we don't support that at the 	 * moment anyway.  See SPC-2, section 5.6.  SPC-3 doesn't address 	 * reservations made with the RESERVE/RELEASE commands, because 	 * those commands are obsolete in SPC-3. 	 */
@@ -55156,11 +55141,11 @@ modifier|*
 name|lun
 decl_stmt|;
 name|uint32_t
-name|initindex
+name|initidx
 decl_stmt|,
 name|residx
 decl_stmt|;
-name|initindex
+name|initidx
 operator|=
 name|ctl_get_initindex
 argument_list|(
@@ -55253,7 +55238,7 @@ name|lun
 operator|->
 name|have_ca
 argument_list|,
-name|initindex
+name|initidx
 argument_list|)
 expr_stmt|;
 endif|#
@@ -55287,7 +55272,7 @@ name|lun
 operator|->
 name|pending_ua
 index|[
-name|initindex
+name|initidx
 index|]
 operator||=
 name|CTL_UA_I_T_NEXUS_LOSS
