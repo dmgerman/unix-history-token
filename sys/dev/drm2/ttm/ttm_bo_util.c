@@ -2415,7 +2415,7 @@ operator|&
 name|TTM_PL_FLAG_CACHED
 operator|)
 condition|?
-name|VM_MEMATTR_WRITE_COMBINING
+name|VM_MEMATTR_DEFAULT
 else|:
 name|ttm_io_prot
 argument_list|(
