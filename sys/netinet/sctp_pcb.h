@@ -1031,7 +1031,7 @@ decl_stmt|;
 block|}
 name|ip_inp
 union|;
-comment|/* Socket buffer lock protects read_queue and of course sb_ccc */
+comment|/* Socket buffer lock protects read_queue and of course sb_cc */
 name|struct
 name|sctp_readhead
 name|read_queue

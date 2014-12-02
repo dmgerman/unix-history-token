@@ -36860,7 +36860,7 @@ name|sctp_socket
 operator|->
 name|so_snd
 operator|.
-name|sb_ccc
+name|sb_cc
 argument_list|,
 name|sp
 operator|->
@@ -57810,7 +57810,7 @@ name|sctp_socket
 operator|->
 name|so_rcv
 operator|.
-name|sb_ccc
+name|sb_cc
 argument_list|)
 expr_stmt|;
 block|}

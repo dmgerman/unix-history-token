@@ -1775,6 +1775,17 @@ value|((so)->so_type)
 end_define
 
 begin_comment
+comment|/* Use a macro for renaming sb_cc to sb_ccc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sb_cc
+value|sb_ccc
+end_define
+
+begin_comment
 comment|/* reserve sb space for a socket */
 end_comment
 
@@ -1818,7 +1829,7 @@ parameter_list|(
 name|sb
 parameter_list|)
 define|\
-value|(sb).sb_ccc = 0;		\ 	(sb).sb_mb = NULL;	\ 	(sb).sb_mbcnt = 0;
+value|(sb).sb_cc = 0;		\ 	(sb).sb_mb = NULL;	\ 	(sb).sb_mbcnt = 0;
 end_define
 
 begin_define

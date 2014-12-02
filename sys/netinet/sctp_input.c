@@ -5285,7 +5285,7 @@ name|sctp_socket
 operator|->
 name|so_snd
 operator|.
-name|sb_ccc
+name|sb_cc
 operator|=
 literal|0
 expr_stmt|;

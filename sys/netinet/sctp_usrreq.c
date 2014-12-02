@@ -2786,7 +2786,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_ccc
+name|sb_cc
 operator|>
 literal|0
 operator|)
@@ -3548,7 +3548,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_ccc
+name|sb_cc
 operator|>
 literal|0
 operator|)
@@ -4368,7 +4368,7 @@ name|so
 operator|->
 name|so_rcv
 operator|.
-name|sb_ccc
+name|sb_cc
 operator|=
 literal|0
 expr_stmt|;
@@ -4409,7 +4409,7 @@ name|so
 operator|->
 name|so_snd
 operator|.
-name|sb_ccc
+name|sb_cc
 operator|=
 literal|0
 expr_stmt|;

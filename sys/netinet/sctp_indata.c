@@ -140,7 +140,7 @@ name|calc
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * This is really set wrong with respect to a 1-2-m socket. Since 	 * the sb_ccc is the count that everyone as put up. When we re-write 	 * sctp_soreceive then we will fix this so that ONLY this 	 * associations data is taken into account. 	 */
+comment|/* 	 * This is really set wrong with respect to a 1-2-m socket. Since 	 * the sb_cc is the count that everyone as put up. When we re-write 	 * sctp_soreceive then we will fix this so that ONLY this 	 * associations data is taken into account. 	 */
 if|if
 condition|(
 name|stcb
@@ -160,7 +160,7 @@ name|stcb
 operator|->
 name|asoc
 operator|.
-name|sb_ccc
+name|sb_cc
 operator|==
 literal|0
 operator|&&
@@ -6710,7 +6710,7 @@ name|sctp_socket
 operator|->
 name|so_rcv
 operator|.
-name|sb_ccc
+name|sb_cc
 condition|)
 block|{
 comment|/* some to read, wake-up */

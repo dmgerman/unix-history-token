@@ -2937,9 +2937,9 @@ name|uint32_t
 name|total_output_queue_size
 decl_stmt|;
 name|uint32_t
-name|sb_ccc
+name|sb_cc
 decl_stmt|;
-comment|/* shadow of sb_ccc */
+comment|/* shadow of sb_cc */
 name|uint32_t
 name|sb_send_resv
 decl_stmt|;
