@@ -1536,6 +1536,9 @@ name|int
 name|port_offset
 decl_stmt|;
 name|int
+name|persis_offset
+decl_stmt|;
+name|int
 name|inquiry_pq_no_lun
 decl_stmt|;
 name|struct
