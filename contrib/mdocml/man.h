@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: man.h,v 1.65 2014/06/20 23:02:31 schwarze Exp $ */
+comment|/*	$Id: man.h,v 1.66 2014/11/28 05:51:32 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -123,8 +123,6 @@ block|,
 name|MAN_HEAD
 block|,
 name|MAN_BODY
-block|,
-name|MAN_TAIL
 block|,
 name|MAN_TBL
 block|,

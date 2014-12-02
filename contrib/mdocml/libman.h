@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: libman.h,v 1.63 2014/08/01 21:24:17 schwarze Exp $ */
+comment|/*	$Id: libman.h,v 1.65 2014/11/28 05:51:32 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_ifndef
@@ -112,7 +112,7 @@ begin_struct
 struct|struct
 name|man_macro
 block|{
-name|int
+name|void
 function_decl|(
 modifier|*
 name|fp
@@ -153,6 +153,11 @@ directive|define
 name|MAN_BSCOPE
 value|(1<< 5)
 comment|/* Break BLINE scope. */
+define|#
+directive|define
+name|MAN_JOIN
+value|(1<< 6)
+comment|/* Join arguments together. */
 block|}
 struct|;
 end_struct
@@ -170,7 +175,7 @@ end_decl_stmt
 
 begin_function_decl
 name|__BEGIN_DECLS
-name|int
+name|void
 name|man_word_alloc
 parameter_list|(
 name|struct
@@ -189,7 +194,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
+name|man_word_append
+parameter_list|(
+name|struct
+name|man
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|man_block_alloc
 parameter_list|(
 name|struct
@@ -207,7 +227,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_head_alloc
 parameter_list|(
 name|struct
@@ -225,25 +245,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|man_tail_alloc
-parameter_list|(
-name|struct
-name|man
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|enum
-name|mant
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+name|void
 name|man_body_alloc
 parameter_list|(
 name|struct
@@ -261,7 +263,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_elem_alloc
 parameter_list|(
 name|struct
@@ -315,7 +317,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_macroend
 parameter_list|(
 name|struct
@@ -326,7 +328,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_valid_post
 parameter_list|(
 name|struct
@@ -337,7 +339,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|man_unscope
 parameter_list|(
 name|struct
