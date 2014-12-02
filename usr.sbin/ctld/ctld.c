@@ -8785,7 +8785,7 @@ name|log_warnx
 argument_list|(
 literal|"failed to add target %s"
 argument_list|,
-name|oldtarg
+name|newtarg
 operator|->
 name|t_name
 argument_list|)
