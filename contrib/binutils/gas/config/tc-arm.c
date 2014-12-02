@@ -73425,7 +73425,7 @@ name|RCP
 expr|,
 name|I7b
 expr|,
-name|RR
+name|APSR_RR
 expr|,
 name|RCN
 expr|,
@@ -74155,7 +74155,7 @@ name|RCP
 expr|,
 name|I7b
 expr|,
-name|RR
+name|APSR_RR
 expr|,
 name|RCN
 expr|,
