@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -270,29 +264,6 @@ include|#
 directive|include
 file|<netinet6/send.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipsec/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -11038,23 +11009,6 @@ operator|&
 name|sdst
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-name|key_sa_routechange
-argument_list|(
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|sdst
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPSEC */
 block|}
 name|freeit
 label|:

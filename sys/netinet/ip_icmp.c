@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipsec.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -190,29 +184,6 @@ ifdef|#
 directive|ifdef
 name|INET
 end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netipsec/ipsec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netipsec/key.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3199,22 +3170,6 @@ operator|&
 name|icmpsrc
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-name|key_sa_routechange
-argument_list|(
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|icmpsrc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 comment|/* 	 * No kernel processing for the following; 	 * just fall through to send to raw listener. 	 */
 case|case
