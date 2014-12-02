@@ -559,13 +559,13 @@ modifier|*
 name|tcp_tw_2msl_scan
 parameter_list|(
 name|int
-name|_reuse
+name|reuse
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* XXX temporary */
+comment|/* XXX temporary? */
 end_comment
 
 begin_function_decl

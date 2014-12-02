@@ -2819,10 +2819,8 @@ parameter_list|(
 name|struct
 name|tcptw
 modifier|*
-name|_tw
 parameter_list|,
 name|int
-name|_reuse
 parameter_list|)
 function_decl|;
 end_function_decl
